@@ -1,8 +1,59 @@
 import { createClient } from "@/lib/supabase/server";
 import { differenceInDays } from "date-fns";
 import KopieerLink from "@/components/team/KopieerLink";
+import { TeamBoom } from "@/components/team/TeamBoom";
 
 const RUN_START = new Date("2026-04-12");
+
+interface TeamLid {
+  id: string;
+  full_name: string;
+  email: string;
+  onboarding_klaar: boolean;
+  created_at: string;
+  kinderen: TeamLid[];
+}
+
+async function haalTeamBoomOp(supabase: any, userId: string, diepte: number = 0, maxDiepte: number = 10): Promise<TeamLid[]> {
+  if (diepte >= maxDiepte) return [];
+
+  // Haal directe teamleden op (mensen die door deze persoon zijn uitgenodigd)
+  const { data: directeleden } = await supabase
+    .from("profiles")
+    .select("id, full_name, email, onboarding_klaar, created_at")
+    .eq("invited_by", userId)
+    .order("created_at", { ascending: true });
+
+  if (!directeleden || directeleden.length === 0) return [];
+
+  // Voor elk teamlid, haal recursief hun teamleden op
+  const boom: TeamLid[] = [];
+  for (const lid of directeleden) {
+    const kinderen = await haalTeamBoomOp(supabase, lid.id, diepte + 1, maxDiepte);
+    boom.push({
+      ...lid,
+      kinderen,
+    });
+  }
+
+  return boom;
+}
+
+function telTotaal(leden: TeamLid[]): number {
+  let totaal = leden.length;
+  for (const lid of leden) {
+    totaal += telTotaal(lid.kinderen);
+  }
+  return totaal;
+}
+
+function telPerLevel(leden: TeamLid[], level: number = 1, counts: Record<number, number> = {}): Record<number, number> {
+  counts[level] = (counts[level] || 0) + leden.length;
+  for (const lid of leden) {
+    telPerLevel(lid.kinderen, level + 1, counts);
+  }
+  return counts;
+}
 
 export default async function TeamPagina() {
   const supabase = await createClient();
@@ -12,44 +63,87 @@ export default async function TeamPagina() {
 
   if (!user) return null;
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
-
-  const { data: teamleden } = await supabase
-    .from("team_members")
-    .select("lid_id, toegetreden_op, profiles:lid_id(full_name, email, run_startdatum)")
-    .eq("leider_id", user.id);
-
   const dag = Math.max(1, Math.min(60, differenceInDays(new Date(), RUN_START) + 1));
 
+  // Haal de volledige teamboom op
+  const teamboom = await haalTeamBoomOp(supabase, user.id);
+  const totaalLeden = telTotaal(teamboom);
+  const levelCounts = telPerLevel(teamboom);
+  const aantalLevels = Object.keys(levelCounts).length;
+
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-5xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-display font-bold text-cm-white">
             Mijn Team
           </h1>
           <p className="text-cm-muted mt-1">
-            Dag {dag} van 60 — {teamleden?.length || 0} teamleden
+            Dag {dag} van 60
           </p>
         </div>
       </div>
 
       {/* Uitnodigingslink */}
       <div className="card border-gold-subtle">
-        <h2 className="text-cm-gold font-semibold mb-2">🔗 Teamlid uitnodigen</h2>
+        <h2 className="text-cm-gold font-semibold mb-2">Teamlid uitnodigen</h2>
         <p className="text-cm-muted text-sm mb-3">
-          Stuur dit registratielink naar je nieuwe teamleden. Ze worden
-          automatisch aan jouw team gekoppeld.
+          Stuur deze link naar je nieuwe teamleden. Ze worden automatisch aan jouw team gekoppeld.
         </p>
         <KopieerLink userId={user.id} />
       </div>
 
-      {/* Teamleden lijst */}
-      {!teamleden || teamleden.length === 0 ? (
+      {/* Overzicht statistieken */}
+      {totaalLeden > 0 && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="card text-center">
+            <div className="text-2xl font-bold text-cm-gold">{teamboom.length}</div>
+            <div className="text-xs text-cm-muted mt-1">Level 1 (direct)</div>
+          </div>
+          <div className="card text-center">
+            <div className="text-2xl font-bold text-cm-white">{totaalLeden}</div>
+            <div className="text-xs text-cm-muted mt-1">Totaal in team</div>
+          </div>
+          <div className="card text-center">
+            <div className="text-2xl font-bold text-cm-white">{aantalLevels}</div>
+            <div className="text-xs text-cm-muted mt-1">Levels diep</div>
+          </div>
+          <div className="card text-center">
+            <div className="text-2xl font-bold text-[#4ACB6A]">
+              {totaalLeden > 0 ? Math.round((teamboom.reduce((acc, l) => acc + telTotaal(l.kinderen), 0) / totaalLeden) * 100) : 0}%
+            </div>
+            <div className="text-xs text-cm-muted mt-1">Duplicatie</div>
+          </div>
+        </div>
+      )}
+
+      {/* Level overzicht */}
+      {aantalLevels > 0 && (
+        <div className="card">
+          <h2 className="text-sm font-semibold text-cm-muted uppercase tracking-wider mb-3">
+            Per level
+          </h2>
+          <div className="space-y-2">
+            {Object.entries(levelCounts).map(([level, count]) => (
+              <div key={level} className="flex items-center justify-between">
+                <span className="text-cm-white text-sm">Level {level}</span>
+                <div className="flex items-center gap-3">
+                  <div className="w-32 h-2 bg-cm-surface-2 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-gold rounded-full"
+                      style={{ width: `${Math.min(100, (count / Math.max(1, totaalLeden)) * 100)}%` }}
+                    />
+                  </div>
+                  <span className="text-cm-gold text-sm font-semibold w-8 text-right">{count}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Stamboom */}
+      {totaalLeden === 0 ? (
         <div className="card text-center py-16">
           <div className="text-5xl mb-4">👥</div>
           <p className="text-cm-white font-semibold mb-2">
@@ -60,24 +154,11 @@ export default async function TeamPagina() {
           </p>
         </div>
       ) : (
-        <div className="grid gap-3">
-          {teamleden.map((lid) => (
-            <div key={lid.lid_id} className="card flex items-center justify-between">
-              <div>
-                <p className="text-cm-white font-semibold">
-                  {(lid.profiles as unknown as { full_name: string })?.full_name || "Teamlid"}
-                </p>
-                <p className="text-cm-muted text-sm">
-                  {(lid.profiles as unknown as { email: string })?.email}
-                </p>
-              </div>
-              <div className="text-right">
-                <p className="text-cm-gold text-sm">
-                  {lid.toegetreden_op ? "✓ Actief" : "⏳ Uitgenodigd"}
-                </p>
-              </div>
-            </div>
-          ))}
+        <div className="card">
+          <h2 className="text-sm font-semibold text-cm-muted uppercase tracking-wider mb-4">
+            Teamstructuur
+          </h2>
+          <TeamBoom leden={teamboom} />
         </div>
       )}
     </div>

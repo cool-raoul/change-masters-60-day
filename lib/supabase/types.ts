@@ -20,6 +20,8 @@ export type HerinneringType =
 
 export type GebruikersRol = "leider" | "lid";
 
+export type Taal = "nl" | "en" | "fr" | "es" | "de" | "pt";
+
 export interface Profile {
   id: string;
   full_name: string;
@@ -27,6 +29,8 @@ export interface Profile {
   role: GebruikersRol;
   run_startdatum: string;
   onboarding_klaar: boolean;
+  invited_by: string | null;
+  taal: Taal;
   created_at: string;
 }
 

@@ -12,6 +12,8 @@ CREATE TABLE IF NOT EXISTS profiles (
   role text NOT NULL DEFAULT 'lid' CHECK (role IN ('leider', 'lid')),
   run_startdatum date NOT NULL DEFAULT '2026-04-12',
   onboarding_klaar boolean NOT NULL DEFAULT false,
+  invited_by uuid REFERENCES profiles(id) ON DELETE SET NULL,
+  taal text NOT NULL DEFAULT 'nl' CHECK (taal IN ('nl', 'en', 'fr', 'es', 'de', 'pt')),
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now()
 );
@@ -19,14 +21,27 @@ CREATE TABLE IF NOT EXISTS profiles (
 -- Maak automatisch een profiel aan bij nieuwe gebruiker
 CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS TRIGGER AS $$
+DECLARE
+  uitnodiger_id uuid;
 BEGIN
-  INSERT INTO public.profiles (id, full_name, email, role)
+  uitnodiger_id := NULLIF(NEW.raw_user_meta_data->>'invited_by', '')::uuid;
+
+  INSERT INTO public.profiles (id, full_name, email, role, invited_by)
   VALUES (
     NEW.id,
     COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.email),
     NEW.email,
-    COALESCE(NEW.raw_user_meta_data->>'role', 'lid')
+    COALESCE(NEW.raw_user_meta_data->>'role', 'lid'),
+    uitnodiger_id
   );
+
+  -- Automatisch team_members koppeling maken als er een uitnodiger is
+  IF uitnodiger_id IS NOT NULL THEN
+    INSERT INTO public.team_members (leider_id, lid_id, uitgenodigd_op, toegetreden_op)
+    VALUES (uitnodiger_id, NEW.id, now(), now())
+    ON CONFLICT (leider_id, lid_id) DO NOTHING;
+  END IF;
+
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
