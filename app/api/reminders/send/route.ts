@@ -2,11 +2,10 @@ import { createClient } from "@/lib/supabase/server";
 import { Resend } from "resend";
 import { NextResponse } from "next/server";
 
-// Dit endpoint wordt dagelijks aangeroepen via Vercel Cron
-// Het stuurt e-mail herinneringen naar gebruikers met openstaande taken
+// Wordt elke ochtend om 07:00 aangeroepen via Vercel Cron
+// Elke gebruiker heeft zijn eigen Resend API key en krijgt zijn eigen herinneringen
 
 export async function GET(request: Request) {
-  // Verificatie via geheime sleutel (zodat niet iedereen dit kan aanroepen)
   const { searchParams } = new URL(request.url);
   const secret = searchParams.get("secret");
 
@@ -14,102 +13,66 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Niet geautoriseerd" }, { status: 401 });
   }
 
-  const resendKey = process.env.RESEND_API_KEY;
-  if (!resendKey) {
-    return NextResponse.json({ error: "RESEND_API_KEY niet geconfigureerd" }, { status: 500 });
-  }
-
-  const resend = new Resend(resendKey);
   const supabase = await createClient();
   const vandaag = new Date().toISOString().split("T")[0];
 
-  // Haal alle openstaande herinneringen op voor vandaag
-  const { data: herinneringen, error } = await supabase
-    .from("herinneringen")
-    .select(`
-      id,
-      titel,
-      beschrijving,
-      vervaldatum,
-      herinnering_type,
-      user_id,
-      prospect_id,
-      prospect:prospects(volledige_naam),
-      user:profiles!herinneringen_user_id_fkey(full_name, email)
-    `)
-    .lte("vervaldatum", vandaag)
-    .eq("voltooid", false);
+  // Haal alle gebruikers op die een Resend key hebben ingesteld
+  const { data: gebruikers } = await supabase
+    .from("profiles")
+    .select("id, full_name, email, resend_api_key")
+    .not("resend_api_key", "is", null);
 
-  if (error) {
-    console.error("Fout bij ophalen herinneringen:", error);
-    return NextResponse.json({ error: "Database fout" }, { status: 500 });
-  }
-
-  if (!herinneringen || herinneringen.length === 0) {
-    return NextResponse.json({ message: "Geen herinneringen voor vandaag", verzonden: 0 });
-  }
-
-  // Groepeer herinneringen per gebruiker
-  const perGebruiker: Record<string, {
-    email: string;
-    naam: string;
-    herinneringen: typeof herinneringen;
-  }> = {};
-
-  for (const her of herinneringen) {
-    const user = her.user as unknown as { full_name: string; email: string } | null;
-    if (!user?.email) continue;
-
-    if (!perGebruiker[her.user_id]) {
-      perGebruiker[her.user_id] = {
-        email: user.email,
-        naam: user.full_name,
-        herinneringen: [],
-      };
-    }
-    perGebruiker[her.user_id].herinneringen.push(her);
+  if (!gebruikers || gebruikers.length === 0) {
+    return NextResponse.json({ message: "Geen gebruikers met e-mail ingesteld", verzonden: 0 });
   }
 
   let verzonden = 0;
-  const fouten: string[] = [];
 
-  // Stuur per gebruiker 1 e-mail met al hun herinneringen
-  for (const [userId, data] of Object.entries(perGebruiker)) {
-    const herinneringenLijst = data.herinneringen
+  for (const gebruiker of gebruikers) {
+    if (!gebruiker.resend_api_key) continue;
+
+    // Haal openstaande herinneringen op voor deze gebruiker
+    const { data: herinneringen } = await supabase
+      .from("herinneringen")
+      .select("id, titel, beschrijving, vervaldatum, prospect:prospects(volledige_naam)")
+      .eq("user_id", gebruiker.id)
+      .lte("vervaldatum", vandaag)
+      .eq("voltooid", false);
+
+    if (!herinneringen || herinneringen.length === 0) continue;
+
+    // Bouw de e-mail tekst op
+    const herinneringenTekst = herinneringen
       .map((h) => {
         const prospect = h.prospect as unknown as { volledige_naam: string } | null;
         const prospectNaam = prospect?.volledige_naam ? ` (${prospect.volledige_naam})` : "";
-        const isOverdue = h.vervaldatum < vandaag;
-        return `${isOverdue ? "⚠️ VERLOPEN" : "📌"} ${h.titel}${prospectNaam}${h.beschrijving ? `\n   ${h.beschrijving}` : ""}`;
+        const isVerlopen = h.vervaldatum < vandaag;
+        return `${isVerlopen ? "VERLOPEN" : "Vandaag"}: ${h.titel}${prospectNaam}`;
       })
-      .join("\n\n");
+      .join("\n");
 
     try {
+      const resend = new Resend(gebruiker.resend_api_key);
       await resend.emails.send({
-        from: "Change Masters <herinneringen@resend.dev>",
-        to: data.email,
-        subject: `${data.herinneringen.length} herinnering${data.herinneringen.length > 1 ? "en" : ""} voor vandaag`,
-        text: `Hoi ${data.naam.split(" ")[0]},
+        from: "Change Masters <onboarding@resend.dev>",
+        to: gebruiker.email,
+        subject: `${herinneringen.length} herinnering${herinneringen.length > 1 ? "en" : ""} voor vandaag`,
+        text: `Hoi ${gebruiker.full_name.split(" ")[0]},
 
-Je hebt ${data.herinneringen.length} openstaande herinnering${data.herinneringen.length > 1 ? "en" : ""}:
+Je hebt ${herinneringen.length} openstaande herinnering${herinneringen.length > 1 ? "en" : ""} voor vandaag:
 
-${herinneringenLijst}
+${herinneringenTekst}
 
-Ga naar je dashboard om ze af te vinken.
+Log in op je dashboard om ze af te vinken.
 
 Succes vandaag!
 Change Masters`,
       });
       verzonden++;
-    } catch (e: any) {
-      console.error(`Fout bij verzenden naar ${data.email}:`, e);
-      fouten.push(data.email);
+    } catch (e) {
+      console.error(`Fout bij verzenden naar ${gebruiker.email}:`, e);
     }
   }
 
-  return NextResponse.json({
-    message: `${verzonden} e-mails verzonden`,
-    verzonden,
-    fouten: fouten.length > 0 ? fouten : undefined,
-  });
+  return NextResponse.json({ message: `${verzonden} e-mails verzonden`, verzonden });
 }
