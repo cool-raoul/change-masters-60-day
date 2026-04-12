@@ -43,9 +43,9 @@ export function Topbar({ gebruikersnaam }: { gebruikersnaam: string }) {
   }, []);
 
   return (
-    <header className="h-16 border-b border-cm-border bg-cm-surface flex items-center justify-between px-6">
+    <header className="h-16 border-b border-cm-border bg-cm-surface flex items-center justify-between px-4 lg:px-6">
       {/* Dag teller */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 ml-10 lg:ml-0">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-cm-gold flex items-center justify-center">
             <span className="text-cm-black text-xs font-bold">{dag}</span>

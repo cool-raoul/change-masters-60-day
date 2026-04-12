@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
 const navigatie = [
   { href: "/dashboard", label: "Dashboard", icoon: "⚡" },
@@ -18,6 +19,22 @@ export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
+  const [mobielmenuOpen, setMobielmenuOpen] = useState(false);
+
+  // Sluit menu bij navigatie
+  useEffect(() => {
+    setMobielmenuOpen(false);
+  }, [pathname]);
+
+  // Voorkom scrollen als menu open is
+  useEffect(() => {
+    if (mobielmenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [mobielmenuOpen]);
 
   async function uitloggen() {
     await supabase.auth.signOut();
@@ -25,14 +42,23 @@ export function Sidebar() {
     router.refresh();
   }
 
-  return (
-    <aside className="w-64 bg-cm-surface border-r border-cm-border flex flex-col h-screen sticky top-0">
+  const menuInhoud = (
+    <>
       {/* Logo */}
-      <div className="p-6 border-b border-cm-border">
-        <h1 className="text-xl font-display font-bold text-gold-gradient">
-          Change Masters
-        </h1>
-        <p className="text-cm-muted text-xs mt-0.5">60 Dagen Run</p>
+      <div className="p-6 border-b border-cm-border flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-display font-bold text-gold-gradient">
+            Change Masters
+          </h1>
+          <p className="text-cm-muted text-xs mt-0.5">60 Dagen Run</p>
+        </div>
+        {/* Sluit knop alleen op mobiel */}
+        <button
+          onClick={() => setMobielmenuOpen(false)}
+          className="lg:hidden text-cm-muted hover:text-cm-white text-2xl"
+        >
+          ✕
+        </button>
       </div>
 
       {/* Navigatie */}
@@ -77,6 +103,42 @@ export function Sidebar() {
           <span>🚪</span> Uitloggen
         </button>
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* Hamburger knop — alleen op mobiel */}
+      <button
+        onClick={() => setMobielmenuOpen(true)}
+        className="lg:hidden fixed top-3 left-3 z-50 bg-cm-surface border border-cm-border rounded-lg p-2 text-cm-gold"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+
+      {/* Desktop sidebar */}
+      <aside className="hidden lg:flex w-64 bg-cm-surface border-r border-cm-border flex-col h-screen sticky top-0">
+        {menuInhoud}
+      </aside>
+
+      {/* Mobiel overlay */}
+      {mobielmenuOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 flex">
+          {/* Donkere achtergrond */}
+          <div
+            className="absolute inset-0 bg-black/60"
+            onClick={() => setMobielmenuOpen(false)}
+          />
+          {/* Menu drawer */}
+          <aside className="relative w-72 max-w-[85vw] bg-cm-surface border-r border-cm-border flex flex-col h-full animate-slide-in">
+            {menuInhoud}
+          </aside>
+        </div>
+      )}
+    </>
   );
 }
