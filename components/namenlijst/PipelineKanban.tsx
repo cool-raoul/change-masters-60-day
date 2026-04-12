@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 import { PIPELINE_FASEN, Prospect, PipelineFase } from "@/lib/supabase/types";
 import { createClient } from "@/lib/supabase/client";
@@ -21,18 +21,39 @@ const FASE_BADGE_STIJL: Record<PipelineFase, string> = {
   partner: "bg-[#1A2A1A] text-[#E8C96B]",
 };
 
-function ProspectKaart({ prospect, onFaseWijzig }: { prospect: Prospect; onFaseWijzig: (id: string, fase: PipelineFase) => void }) {
-  const [laden, setLaden] = useState(false);
+const FASE_KLEUREN: Record<PipelineFase, string> = {
+  lead: "#999",
+  uitgenodigd: "#4A9EDB",
+  presentatie: "#9A6ADB",
+  followup: "#C9A84C",
+  klant: "#4ACB6A",
+  partner: "#E8C96B",
+};
+
+function ProspectKaart({
+  prospect,
+  onFaseWijzig,
+  onDragStart,
+}: {
+  prospect: Prospect;
+  onFaseWijzig: (id: string, fase: PipelineFase) => void;
+  onDragStart: (e: React.DragEvent, id: string) => void;
+}) {
   const dagSindsContact = prospect.laatste_contact
     ? Math.floor((Date.now() - new Date(prospect.laatste_contact).getTime()) / (1000 * 60 * 60 * 24))
     : null;
 
   return (
-    <div className="bg-cm-surface border border-cm-border rounded-xl p-3 space-y-2 hover:border-cm-gold-dim transition-colors cursor-pointer group">
+    <div
+      draggable
+      onDragStart={(e) => onDragStart(e, prospect.id)}
+      className="bg-cm-surface border border-cm-border rounded-xl p-3 space-y-2 hover:border-cm-gold-dim transition-colors cursor-grab active:cursor-grabbing group"
+    >
       <div className="flex items-start justify-between">
         <Link
           href={`/namenlijst/${prospect.id}`}
           className="font-semibold text-cm-white text-sm hover:text-cm-gold transition-colors flex-1"
+          onClick={(e) => e.stopPropagation()}
         >
           {prospect.volledige_naam}
         </Link>
@@ -66,13 +87,12 @@ function ProspectKaart({ prospect, onFaseWijzig }: { prospect: Prospect; onFaseW
         )}
       </div>
 
-      {/* Fase wijzigen knoppen */}
+      {/* Fase wijzigen knoppen (als fallback voor touch/non-drag) */}
       <div className="hidden group-hover:flex gap-1 pt-1 border-t border-cm-border flex-wrap">
         {PIPELINE_FASEN.filter((f) => f.fase !== prospect.pipeline_fase).map((f) => (
           <button
             key={f.fase}
             onClick={() => onFaseWijzig(prospect.id, f.fase)}
-            disabled={laden}
             className="text-xs px-2 py-0.5 rounded bg-cm-surface-2 text-cm-muted hover:text-cm-white transition-colors"
           >
             → {f.label}
@@ -85,7 +105,50 @@ function ProspectKaart({ prospect, onFaseWijzig }: { prospect: Prospect; onFaseW
 
 export function PipelineKanban({ prospects }: Props) {
   const [lokaleProspects, setLokaleProspects] = useState(prospects);
+  const [dragOverFase, setDragOverFase] = useState<PipelineFase | null>(null);
+  const draggedIdRef = useRef<string | null>(null);
   const supabase = createClient();
+
+  function handleDragStart(e: React.DragEvent, id: string) {
+    draggedIdRef.current = id;
+    e.dataTransfer.effectAllowed = "move";
+    // Maak de kaart semi-transparant tijdens slepen
+    if (e.currentTarget instanceof HTMLElement) {
+      e.currentTarget.style.opacity = "0.5";
+    }
+  }
+
+  function handleDragEnd(e: React.DragEvent) {
+    if (e.currentTarget instanceof HTMLElement) {
+      e.currentTarget.style.opacity = "1";
+    }
+    setDragOverFase(null);
+    draggedIdRef.current = null;
+  }
+
+  function handleDragOver(e: React.DragEvent, fase: PipelineFase) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    setDragOverFase(fase);
+  }
+
+  function handleDragLeave() {
+    setDragOverFase(null);
+  }
+
+  function handleDrop(e: React.DragEvent, nieuweFase: PipelineFase) {
+    e.preventDefault();
+    setDragOverFase(null);
+
+    const id = draggedIdRef.current;
+    if (!id) return;
+
+    const prospect = lokaleProspects.find((p) => p.id === id);
+    if (!prospect || prospect.pipeline_fase === nieuweFase) return;
+
+    wijzigFase(id, nieuweFase);
+    draggedIdRef.current = null;
+  }
 
   async function wijzigFase(id: string, nieuweFase: PipelineFase) {
     // Optimistisch bijwerken
@@ -114,13 +177,29 @@ export function PipelineKanban({ prospects }: Props) {
       <div className="flex gap-4 min-w-max">
         {PIPELINE_FASEN.map(({ fase, label }) => {
           const faseProspects = lokaleProspects.filter((p) => p.pipeline_fase === fase);
+          const isDragOver = dragOverFase === fase;
+
           return (
-            <div key={fase} className="w-64 flex-shrink-0">
+            <div
+              key={fase}
+              className="w-64 flex-shrink-0"
+              onDragOver={(e) => handleDragOver(e, fase)}
+              onDragLeave={handleDragLeave}
+              onDrop={(e) => handleDrop(e, fase)}
+            >
               {/* Kolom header */}
-              <div className={`rounded-t-xl px-3 py-2 mb-2 flex items-center justify-between`}
-                style={{ background: `${FASE_BADGE_STIJL[fase].split(" ")[0].replace("bg-[", "").replace("]", "")}20` }}
+              <div
+                className="rounded-t-xl px-3 py-2 mb-2 flex items-center justify-between transition-colors"
+                style={{
+                  background: isDragOver
+                    ? `${FASE_KLEUREN[fase]}30`
+                    : `${FASE_KLEUREN[fase]}10`,
+                }}
               >
-                <span className={`text-sm font-semibold ${FASE_BADGE_STIJL[fase].split(" ")[1]}`}>
+                <span
+                  className="text-sm font-semibold"
+                  style={{ color: FASE_KLEUREN[fase] }}
+                >
                   {label}
                 </span>
                 <span className="bg-cm-surface-2 text-cm-muted text-xs font-medium px-2 py-0.5 rounded-full">
@@ -129,13 +208,31 @@ export function PipelineKanban({ prospects }: Props) {
               </div>
 
               {/* Kaarten */}
-              <div className="space-y-2 min-h-[200px]">
+              <div
+                className={`space-y-2 min-h-[200px] rounded-b-xl p-1 transition-all ${
+                  isDragOver
+                    ? "ring-2 ring-cm-gold bg-cm-surface-2/30"
+                    : ""
+                }`}
+              >
                 {faseProspects.map((p) => (
-                  <ProspectKaart key={p.id} prospect={p} onFaseWijzig={wijzigFase} />
+                  <div key={p.id} onDragEnd={handleDragEnd}>
+                    <ProspectKaart
+                      prospect={p}
+                      onFaseWijzig={wijzigFase}
+                      onDragStart={handleDragStart}
+                    />
+                  </div>
                 ))}
                 {faseProspects.length === 0 && (
-                  <div className="border-2 border-dashed border-cm-border rounded-xl p-4 text-center text-cm-muted text-xs">
-                    Geen contacten
+                  <div
+                    className={`border-2 border-dashed rounded-xl p-4 text-center text-xs transition-colors ${
+                      isDragOver
+                        ? "border-cm-gold text-cm-gold"
+                        : "border-cm-border text-cm-muted"
+                    }`}
+                  >
+                    {isDragOver ? "Laat hier los" : "Geen contacten"}
                   </div>
                 )}
               </div>
