@@ -12,6 +12,7 @@ export default function RegistreerPagina() {
   const [wachtwoord, setWachtwoord] = useState("");
   const [wachtwoordBevestig, setWachtwoordBevestig] = useState("");
   const [laden, setLaden] = useState(false);
+  const [geregistreerd, setGeregistreerd] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
@@ -44,13 +45,63 @@ export default function RegistreerPagina() {
 
     if (error) {
       toast.error("Registratie mislukt: " + error.message);
+      setLaden(false);
     } else {
-      toast.success("Account aangemaakt! Je wordt doorgestuurd...");
-      router.push("/mijn-why");
-      router.refresh();
+      setGeregistreerd(true);
+      setLaden(false);
     }
+  }
 
-    setLaden(false);
+  // Bevestigingsscherm na registratie
+  if (geregistreerd) {
+    return (
+      <div className="min-h-screen bg-cm-black flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-display font-bold text-gold-gradient mb-2">
+              Change Masters
+            </h1>
+          </div>
+
+          <div className="card border-gold-subtle text-center">
+            <div className="text-5xl mb-4">📧</div>
+            <h2 className="text-xl font-semibold text-cm-white mb-3">
+              Check je e-mail!
+            </h2>
+            <p className="text-cm-muted leading-relaxed mb-2">
+              We hebben een bevestigingslink gestuurd naar:
+            </p>
+            <p className="text-cm-gold font-semibold mb-4">
+              {email}
+            </p>
+            <div className="bg-cm-surface-2 rounded-lg p-4 mb-6 text-left space-y-2">
+              <p className="text-cm-white text-sm font-medium">Hoe werkt het:</p>
+              <ol className="text-cm-muted text-sm space-y-1.5 list-decimal list-inside">
+                <li>Open je e-mail (check ook je spam-map)</li>
+                <li>Klik op de bevestigingslink in de mail</li>
+                <li>Je wordt automatisch doorgestuurd</li>
+                <li>Log daarna in met je e-mail en wachtwoord</li>
+              </ol>
+            </div>
+            <Link
+              href="/login"
+              className="btn-gold w-full block text-center"
+            >
+              Naar inloggen
+            </Link>
+            <p className="text-cm-muted text-xs mt-4">
+              Geen mail ontvangen?{" "}
+              <button
+                onClick={() => setGeregistreerd(false)}
+                className="text-cm-gold hover:text-cm-gold-light transition-colors underline"
+              >
+                Probeer opnieuw
+              </button>
+            </p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
