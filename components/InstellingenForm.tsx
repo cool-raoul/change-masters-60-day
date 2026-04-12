@@ -12,6 +12,7 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
   const [wachtwoord, setWachtwoord] = useState("");
   const [wachtwoordBevestig, setWachtwoordBevestig] = useState("");
   const [resendKey, setResendKey] = useState((profile as any)?.resend_api_key || "");
+  const [notificatieEmail, setNotificatieEmail] = useState((profile as any)?.notificatie_email || "");
   const [resendLaden, setResendLaden] = useState(false);
   const [resendTesten, setResendTesten] = useState(false);
   const router = useRouter();
@@ -63,7 +64,10 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
 
     const { error } = await supabase
       .from("profiles")
-      .update({ resend_api_key: resendKey || null })
+      .update({
+        resend_api_key: resendKey || null,
+        notificatie_email: notificatieEmail || null,
+      })
       .eq("id", profile?.id);
 
     if (error) {
@@ -82,10 +86,12 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
     }
     setResendTesten(true);
 
+    const stuurNaar = notificatieEmail || email;
+
     const response = await fetch("/api/reminders/test", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ resendKey, email }),
+      body: JSON.stringify({ resendKey, email: stuurNaar }),
     });
 
     if (response.ok) {
@@ -170,6 +176,21 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
         </div>
 
         <form onSubmit={slaResendKeyOp} className="space-y-3">
+          <div>
+            <label className="block text-sm text-cm-muted mb-1.5">
+              E-mailadres voor herinneringen
+            </label>
+            <input
+              type="email"
+              value={notificatieEmail}
+              onChange={(e) => setNotificatieEmail(e.target.value)}
+              placeholder={email + " (laat leeg om je aanmeld e-mail te gebruiken)"}
+              className="input-cm"
+            />
+            <p className="text-cm-muted text-xs mt-1">
+              Vul hier een ander e-mailadres in als je de herinneringen ergens anders wilt ontvangen.
+            </p>
+          </div>
           <div>
             <label className="block text-sm text-cm-muted mb-1.5">
               Resend API Key

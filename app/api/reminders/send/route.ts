@@ -19,7 +19,7 @@ export async function GET(request: Request) {
   // Haal alle gebruikers op die een Resend key hebben ingesteld
   const { data: gebruikers } = await supabase
     .from("profiles")
-    .select("id, full_name, email, resend_api_key")
+    .select("id, full_name, email, notificatie_email, resend_api_key")
     .not("resend_api_key", "is", null);
 
   if (!gebruikers || gebruikers.length === 0) {
@@ -52,10 +52,11 @@ export async function GET(request: Request) {
       .join("\n");
 
     try {
+      const stuurNaar = (gebruiker as any).notificatie_email || gebruiker.email;
       const resend = new Resend(gebruiker.resend_api_key);
       await resend.emails.send({
         from: "Change Masters <onboarding@resend.dev>",
-        to: gebruiker.email,
+        to: stuurNaar,
         subject: `${herinneringen.length} herinnering${herinneringen.length > 1 ? "en" : ""} voor vandaag`,
         text: `Hoi ${gebruiker.full_name.split(" ")[0]},
 
