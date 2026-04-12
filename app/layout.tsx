@@ -4,7 +4,7 @@ import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Change Masters — 60 Dagen Run",
-  description: "Jouw persoonlijke netwerk marketing systeem voor de 60-dagenrun",
+  description: "Jouw persoonlijke aanbevelingsmarketing systeem voor de 60-dagenrun",
 };
 
 export default function RootLayout({

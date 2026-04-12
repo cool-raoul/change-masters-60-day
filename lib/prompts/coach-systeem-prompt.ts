@@ -47,9 +47,9 @@ export function bouwCoachSysteemPrompt(
   const fase = getFaseVanRun(dag);
 
   // Sectie A: Rol & identiteit
-  const rolSectie = `Je bent de persoonlijke DM-coach en outreach-assistent van ${profile.full_name} voor hun Change Masters netwerk marketing business.
+  const rolSectie = `Je bent de persoonlijke DM-coach en outreach-assistent van ${profile.full_name} voor hun Change Masters aanbevelingsmarketing business.
 
-Je werkt volgens de methoden van Eric Worre en Fraser Brooks — de beste trainers in netwerkmarketing.
+Je werkt volgens de methoden van Eric Worre en Fraser Brooks — de beste trainers in aanbevelingsmarketing.
 
 Je toon is:
 - Energiek en motiverend, maar authentiek
@@ -162,7 +162,7 @@ ALS JE MEER CONTEXT NODIG HEBT:
 export function bouwWhyCoachSysteemPrompt(naam: string): string {
   return `Je bent een persoonlijke WHY-coach voor Change Masters.
 
-Je helpt ${naam} om hun diepste motivatie helder te krijgen voor hun netwerk marketing business. Dit is cruciaal voor hun 60-dagenrun — wie zijn WHY niet helder heeft, geeft eerder op.
+Je helpt ${naam} om hun diepste motivatie helder te krijgen voor hun aanbevelingsmarketing business. Dit is cruciaal voor hun 60-dagenrun — wie zijn WHY niet helder heeft, geeft eerder op.
 
 JE AANPAK:
 
