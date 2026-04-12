@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cm-black text-cm-white font-sans antialiased;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-cm-surface;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-cm-border rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-cm-gold-dim;
+  }
+}
+
+@layer components {
+  /* Gouden accent lijn */
+  .gold-border-left {
+    @apply border-l-2 border-cm-gold pl-4;
+  }
+
+  /* Card basis stijl */
+  .card {
+    @apply bg-cm-surface border border-cm-border rounded-xl p-4;
+  }
+
+  /* Gouden knop */
+  .btn-gold {
+    @apply bg-cm-gold text-cm-black font-semibold px-4 py-2 rounded-lg
+           hover:bg-cm-gold-light transition-colors duration-200
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Secundaire knop */
+  .btn-secondary {
+    @apply border border-cm-border text-cm-white font-medium px-4 py-2 rounded-lg
+           hover:border-cm-gold hover:text-cm-gold transition-colors duration-200
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Input stijl */
+  .input-cm {
+    @apply bg-cm-surface-2 border border-cm-border text-cm-white rounded-lg px-3 py-2
+           focus:outline-none focus:border-cm-gold focus:ring-1 focus:ring-cm-gold
+           placeholder:text-cm-muted transition-colors duration-200 w-full;
+  }
+
+  /* Textarea stijl */
+  .textarea-cm {
+    @apply input-cm resize-none;
+  }
+
+  /* Pipeline fase badge */
+  .fase-badge {
+    @apply text-xs font-medium px-2 py-0.5 rounded-full;
+  }
+}
+
+@layer utilities {
+  .text-gold-gradient {
+    background: linear-gradient(135deg, #C9A84C, #E8C96B);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-gold-subtle {
+    background: rgba(201, 168, 76, 0.08);
+  }
+
+  .border-gold-subtle {
+    border-color: rgba(201, 168, 76, 0.3);
+  }
+}
