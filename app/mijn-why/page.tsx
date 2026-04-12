@@ -13,6 +13,9 @@ export default function MijnWhyPagina() {
   const [gestartMetCoach, setGestartMetCoach] = useState(false);
   const [gebruikersnaam, setGebruikersnaam] = useState("");
   const [opgeslagen, setOpgeslagen] = useState(false);
+  const [voorgesteldWhy, setVoorgesteldWhy] = useState<string | null>(null);
+  const [volledigeAntwoord, setVolledigeAntwoord] = useState("");
+  const [bestaandeWhy, setBestaandeWhy] = useState<string | null>(null);
   const chatEindRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const supabase = createClient();
@@ -21,6 +24,19 @@ export default function MijnWhyPagina() {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (user?.user_metadata?.full_name) {
         setGebruikersnaam(user.user_metadata.full_name.split(" ")[0]);
+      }
+      if (user) {
+        // Check of er al een WHY is opgeslagen
+        supabase
+          .from("why_profiles")
+          .select("why_samenvatting")
+          .eq("user_id", user.id)
+          .single()
+          .then(({ data }) => {
+            if (data?.why_samenvatting) {
+              setBestaandeWhy(data.why_samenvatting);
+            }
+          });
       }
     });
   }, []);
@@ -32,6 +48,7 @@ export default function MijnWhyPagina() {
   async function startCoach() {
     setGestartMetCoach(true);
     setLaden(true);
+    setBestaandeWhy(null); // Verberg bestaande WHY tijdens gesprek
 
     const beginBerichten: ChatBericht[] = [
       {
@@ -80,7 +97,6 @@ export default function MijnWhyPagina() {
       const decoder = new TextDecoder();
       let antwoordTekst = "";
 
-      // Voeg leeg assistent bericht toe
       const tijdelijkBericht: ChatBericht = {
         role: "assistant",
         content: "",
@@ -102,9 +118,15 @@ export default function MijnWhyPagina() {
         });
       }
 
-      // Controleer of WHY samenvatting aanwezig is
+      setVolledigeAntwoord(antwoordTekst);
+
+      // Controleer of WHY samenvatting aanwezig is — toon bevestiging
       if (antwoordTekst.includes("MIJN WHY:")) {
-        await slaWhyOp([...berPakket, { role: "assistant", content: antwoordTekst, timestamp: new Date().toISOString() }], antwoordTekst);
+        const whyMatch = antwoordTekst.match(/MIJN WHY:([\s\S]+?)(?:\n\n|$)/);
+        const whySamenvatting = whyMatch
+          ? whyMatch[1].trim()
+          : antwoordTekst.substring(0, 500);
+        setVoorgesteldWhy(whySamenvatting);
       }
     } catch {
       toast.error("Er is iets misgegaan. Probeer opnieuw.");
@@ -113,38 +135,56 @@ export default function MijnWhyPagina() {
     }
   }
 
-  async function slaWhyOp(transcript: ChatBericht[], whyTekst: string) {
+  async function bevestigWhy() {
+    if (!voorgesteldWhy) return;
+
     const {
       data: { user },
     } = await supabase.auth.getUser();
     if (!user) return;
 
-    // Extraheer de WHY samenvatting
-    const whyMatch = whyTekst.match(/MIJN WHY:([\s\S]+?)(?:\n\n|$)/);
-    const whySamenvatting = whyMatch
-      ? whyMatch[1].trim()
-      : whyTekst.substring(0, 500);
+    const transcript = berichten.map((b) => ({
+      role: b.role,
+      content: b.content,
+      timestamp: b.timestamp,
+    }));
 
-    // Sla op in database
     await supabase.from("why_profiles").upsert({
       user_id: user.id,
       gesprek_transcript: transcript,
-      why_samenvatting: whySamenvatting,
+      why_samenvatting: voorgesteldWhy,
       updated_at: new Date().toISOString(),
     });
 
-    // Markeer onboarding als klaar
     await supabase
       .from("profiles")
       .update({ onboarding_klaar: true })
       .eq("id", user.id);
 
     setOpgeslagen(true);
+    setVoorgesteldWhy(null);
+    toast.success("Jouw WHY is opgeslagen!");
+  }
+
+  async function finetuneWhy() {
+    setVoorgesteldWhy(null);
+    // Stuur automatisch een bericht om verder te finetunen
+    const nieuwBericht: ChatBericht = {
+      role: "user",
+      content: "Ik wil mijn WHY nog iets aanscherpen. Kun je me helpen om het nog krachtiger te maken?",
+      timestamp: new Date().toISOString(),
+    };
+    const bijgewerkt = [...berichten, nieuwBericht];
+    setBerichten(bijgewerkt);
+    setLaden(true);
+    await streamAntwoord(bijgewerkt);
   }
 
   async function handleInvoer(e: React.FormEvent) {
     e.preventDefault();
     if (!invoer.trim() || laden) return;
+
+    setVoorgesteldWhy(null); // Reset WHY voorstel bij nieuw bericht
 
     const nieuwBericht: ChatBericht = {
       role: "user",
@@ -171,13 +211,52 @@ export default function MijnWhyPagina() {
             Ontdek wat jou écht drijft — de basis van jouw 60-dagenrun
           </p>
         </div>
+        {opgeslagen && (
+          <button
+            onClick={() => router.push("/dashboard")}
+            className="btn-gold text-sm"
+          >
+            Naar dashboard →
+          </button>
+        )}
         <div className="text-cm-gold text-2xl">✦</div>
       </div>
 
       {/* Chat venster */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 max-w-2xl mx-auto w-full">
-        {!gestartMetCoach ? (
-          // Start scherm
+        {/* Bestaande WHY tonen als er al één is */}
+        {bestaandeWhy && !gestartMetCoach && (
+          <div className="mb-6">
+            <div className="card border-gold-subtle">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-2xl">🎯</span>
+                <h2 className="text-lg font-display font-bold text-cm-gold">
+                  Jouw huidige WHY
+                </h2>
+              </div>
+              <p className="text-cm-white text-sm leading-relaxed italic mb-4">
+                &ldquo;{bestaandeWhy}&rdquo;
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => router.push("/dashboard")}
+                  className="btn-secondary text-sm flex-1"
+                >
+                  ← Terug naar dashboard
+                </button>
+                <button
+                  onClick={startCoach}
+                  className="btn-gold text-sm flex-1"
+                >
+                  WHY opnieuw ontdekken
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {!gestartMetCoach && !bestaandeWhy ? (
+          // Start scherm — eerste keer
           <div className="flex flex-col items-center justify-center h-full text-center py-20">
             <div className="text-6xl mb-6">🎯</div>
             <h2 className="text-2xl font-display font-bold text-cm-white mb-4">
@@ -205,7 +284,7 @@ export default function MijnWhyPagina() {
               Start het gesprek →
             </button>
           </div>
-        ) : (
+        ) : gestartMetCoach ? (
           // Chat berichten
           <>
             {berichten.map((bericht, i) => (
@@ -245,20 +324,54 @@ export default function MijnWhyPagina() {
                 </div>
               </div>
             )}
+
+            {/* WHY Bevestiging */}
+            {voorgesteldWhy && !opgeslagen && (
+              <div className="card border-2 border-cm-gold bg-gold-subtle mx-auto max-w-md">
+                <div className="text-center mb-4">
+                  <div className="text-3xl mb-2">✦</div>
+                  <h3 className="text-lg font-display font-bold text-cm-gold">
+                    Jouw WHY
+                  </h3>
+                </div>
+                <p className="text-cm-white text-sm leading-relaxed italic text-center mb-6 px-2">
+                  &ldquo;{voorgesteldWhy}&rdquo;
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={finetuneWhy}
+                    className="btn-secondary flex-1 text-sm py-3"
+                  >
+                    Verder finetunen
+                  </button>
+                  <button
+                    onClick={bevestigWhy}
+                    className="btn-gold flex-1 text-sm py-3 font-bold"
+                  >
+                    Dit is &apos;m! ✓
+                  </button>
+                </div>
+              </div>
+            )}
+
             <div ref={chatEindRef} />
           </>
-        )}
+        ) : null}
       </div>
 
       {/* Opgeslagen banner */}
       {opgeslagen && (
-        <div className="bg-gold-subtle border-t border-gold-subtle p-4 text-center">
-          <p className="text-cm-gold font-semibold mb-3">
-            ✦ Jouw WHY is opgeslagen! Je bent klaar om te beginnen.
+        <div className="bg-gold-subtle border-t border-gold-subtle p-6 text-center">
+          <div className="text-3xl mb-2">🎉</div>
+          <p className="text-cm-gold font-semibold text-lg mb-1">
+            Jouw WHY is opgeslagen!
+          </p>
+          <p className="text-cm-muted text-sm mb-4">
+            Je kunt je WHY altijd terugvinden op het dashboard en hier aanpassen.
           </p>
           <button
             onClick={() => router.push("/dashboard")}
-            className="btn-gold"
+            className="btn-gold px-8 py-3"
           >
             Naar het dashboard →
           </button>
@@ -266,7 +379,7 @@ export default function MijnWhyPagina() {
       )}
 
       {/* Invoer */}
-      {gestartMetCoach && !opgeslagen && (
+      {gestartMetCoach && !opgeslagen && !voorgesteldWhy && (
         <div className="border-t border-cm-border p-4 max-w-2xl mx-auto w-full">
           <form onSubmit={handleInvoer} className="flex gap-3">
             <input

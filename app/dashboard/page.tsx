@@ -173,14 +173,19 @@ export default async function DashboardPagina() {
           {/* WHY kaart */}
           {why?.why_samenvatting && (
             <div className="card border-gold-subtle">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-cm-gold">🎯</span>
-                <h2 className="text-sm font-semibold text-cm-gold uppercase tracking-wider">
-                  Jouw WHY
-                </h2>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-cm-gold">🎯</span>
+                  <h2 className="text-sm font-semibold text-cm-gold uppercase tracking-wider">
+                    Jouw WHY
+                  </h2>
+                </div>
+                <Link href="/mijn-why" className="text-cm-muted text-xs hover:text-cm-gold">
+                  Bekijken / Aanpassen
+                </Link>
               </div>
               <p className="text-cm-muted text-sm leading-relaxed italic">
-                "{why.why_samenvatting}"
+                &ldquo;{why.why_samenvatting}&rdquo;
               </p>
               {why.financieel_doel_maand && (
                 <div className="mt-3 bg-gold-subtle rounded-lg p-2 text-center">
