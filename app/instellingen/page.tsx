@@ -21,7 +21,7 @@ export default async function InstellingenPagina() {
         <h1 className="text-2xl font-display font-bold text-cm-white">
           Instellingen
         </h1>
-        <p className="text-cm-muted mt-1">Beheer jouw profiel en account</p>
+        <p className="text-cm-white mt-1">Beheer jouw profiel en account</p>
       </div>
 
       <InstellingenForm profile={profile} email={user.email || ""} />

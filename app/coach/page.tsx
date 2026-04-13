@@ -34,7 +34,7 @@ export default async function CoachPagina() {
           <h1 className="text-2xl font-display font-bold text-cm-white">
             🤖 AI Coach
           </h1>
-          <p className="text-cm-muted mt-1">
+          <p className="text-cm-white mt-1">
             Jouw persoonlijke DM & outreach coach — altijd klaar
           </p>
         </div>
@@ -49,7 +49,7 @@ export default async function CoachPagina() {
             <h2 className="text-cm-white font-semibold mb-1">
               Wat kan de coach voor jou doen?
             </h2>
-            <ul className="text-cm-muted text-sm space-y-1">
+            <ul className="text-cm-white text-sm space-y-1">
               <li>✓ DM-scripts schrijven op maat voor een specifiek prospect</li>
               <li>✓ Bezwaren behandelen met Feel-Felt-Found</li>
               <li>✓ Follow-up berichten formuleren</li>
@@ -62,14 +62,14 @@ export default async function CoachPagina() {
 
       {/* Eerdere gesprekken */}
       <div>
-        <h2 className="text-sm font-semibold text-cm-muted uppercase tracking-wider mb-3">
+        <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider mb-3">
           Eerdere gesprekken
         </h2>
 
         {(!gesprekken || gesprekken.length === 0) ? (
           <div className="card text-center py-12">
             <div className="text-4xl mb-3">💬</div>
-            <p className="text-cm-muted">
+            <p className="text-cm-white">
               Nog geen gesprekken. Start een nieuw gesprek met de coach!
             </p>
           </div>
@@ -85,13 +85,13 @@ export default async function CoachPagina() {
                   <p className="text-cm-white font-medium text-sm">
                     {g.titel || "Gesprek met coach"}
                   </p>
-                  <p className="text-cm-muted text-xs mt-0.5">
+                  <p className="text-cm-white text-xs mt-0.5">
                     {g.prospect?.volledige_naam ? `👤 ${g.prospect.volledige_naam} • ` : ""}
                     {g.berichten?.length || 0} berichten •{" "}
                     {format(new Date(g.updated_at), "d MMM HH:mm", { locale: nl })}
                   </p>
                 </div>
-                <span className="text-cm-muted">→</span>
+                <span className="text-cm-white">→</span>
               </Link>
             ))}
           </div>

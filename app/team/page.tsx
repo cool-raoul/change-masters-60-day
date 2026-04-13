@@ -78,7 +78,7 @@ export default async function TeamPagina() {
           <h1 className="text-2xl font-display font-bold text-cm-white">
             Mijn Team
           </h1>
-          <p className="text-cm-muted mt-1">
+          <p className="text-cm-white mt-1">
             Dag {dag} van 60
           </p>
         </div>
@@ -87,7 +87,7 @@ export default async function TeamPagina() {
       {/* Uitnodigingslink */}
       <div className="card border-gold-subtle">
         <h2 className="text-cm-gold font-semibold mb-2">Teamlid uitnodigen</h2>
-        <p className="text-cm-muted text-sm mb-3">
+        <p className="text-cm-white text-sm mb-3">
           Stuur deze link naar je nieuwe teamleden. Ze worden automatisch aan jouw team gekoppeld.
         </p>
         <KopieerLink userId={user.id} />
@@ -98,21 +98,21 @@ export default async function TeamPagina() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div className="card text-center">
             <div className="text-2xl font-bold text-cm-gold">{teamboom.length}</div>
-            <div className="text-xs text-cm-muted mt-1">Level 1 (direct)</div>
+            <div className="text-xs text-cm-white mt-1">Level 1 (direct)</div>
           </div>
           <div className="card text-center">
             <div className="text-2xl font-bold text-cm-white">{totaalLeden}</div>
-            <div className="text-xs text-cm-muted mt-1">Totaal in team</div>
+            <div className="text-xs text-cm-white mt-1">Totaal in team</div>
           </div>
           <div className="card text-center">
             <div className="text-2xl font-bold text-cm-white">{aantalLevels}</div>
-            <div className="text-xs text-cm-muted mt-1">Levels diep</div>
+            <div className="text-xs text-cm-white mt-1">Levels diep</div>
           </div>
           <div className="card text-center">
             <div className="text-2xl font-bold text-[#4ACB6A]">
               {totaalLeden > 0 ? Math.round((teamboom.reduce((acc, l) => acc + telTotaal(l.kinderen), 0) / totaalLeden) * 100) : 0}%
             </div>
-            <div className="text-xs text-cm-muted mt-1">Duplicatie</div>
+            <div className="text-xs text-cm-white mt-1">Duplicatie</div>
           </div>
         </div>
       )}
@@ -120,7 +120,7 @@ export default async function TeamPagina() {
       {/* Level overzicht */}
       {aantalLevels > 0 && (
         <div className="card">
-          <h2 className="text-sm font-semibold text-cm-muted uppercase tracking-wider mb-3">
+          <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider mb-3">
             Per level
           </h2>
           <div className="space-y-2">
@@ -149,13 +149,13 @@ export default async function TeamPagina() {
           <p className="text-cm-white font-semibold mb-2">
             Nog geen teamleden
           </p>
-          <p className="text-cm-muted text-sm">
+          <p className="text-cm-white text-sm">
             Deel de uitnodigingslink hierboven om je eerste teamlid toe te voegen.
           </p>
         </div>
       ) : (
         <div className="card">
-          <h2 className="text-sm font-semibold text-cm-muted uppercase tracking-wider mb-4">
+          <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider mb-4">
             Teamstructuur
           </h2>
           <TeamBoom leden={teamboom} />

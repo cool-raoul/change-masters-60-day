@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 const navigatie = [
   { href: "/dashboard", label: "Dashboard", icoon: "⚡" },
   { href: "/namenlijst", label: "Namenlijst", icoon: "👥" },
+  { href: "/zoeken", label: "Zoeken", icoon: "🔍" },
   { href: "/coach", label: "AI Coach", icoon: "🤖" },
   { href: "/scripts", label: "Scripts", icoon: "📋" },
   { href: "/herinneringen", label: "Herinneringen", icoon: "🔔" },
@@ -50,12 +51,12 @@ export function Sidebar() {
           <h1 className="text-xl font-display font-bold text-gold-gradient">
             Change Masters
           </h1>
-          <p className="text-cm-muted text-xs mt-0.5">60 Dagen Run</p>
+          <p className="text-cm-white text-xs mt-0.5 opacity-60">60 Dagen Run</p>
         </div>
         {/* Sluit knop alleen op mobiel */}
         <button
           onClick={() => setMobielmenuOpen(false)}
-          className="lg:hidden text-cm-muted hover:text-cm-white text-2xl"
+          className="lg:hidden text-cm-white opacity-60 hover:opacity-100 text-2xl"
         >
           ✕
         </button>
@@ -72,7 +73,7 @@ export function Sidebar() {
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                 actief
                   ? "bg-gold-subtle border border-gold-subtle text-cm-gold"
-                  : "text-cm-muted hover:text-cm-white hover:bg-cm-surface-2"
+                  : "text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2"
               }`}
             >
               <span className="text-base">{item.icoon}</span>
@@ -86,19 +87,19 @@ export function Sidebar() {
       <div className="p-4 border-t border-cm-border space-y-2">
         <Link
           href="/instellingen"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-muted hover:text-cm-white hover:bg-cm-surface-2 transition-colors"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
         >
           <span>⚙️</span> Instellingen
         </Link>
         <Link
           href="/mijn-why"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-muted hover:text-cm-white hover:bg-cm-surface-2 transition-colors"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
         >
           <span>🎯</span> Mijn WHY
         </Link>
         <button
           onClick={uitloggen}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-muted hover:text-red-400 hover:bg-cm-surface-2 transition-colors w-full text-left"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:text-red-400 hover:bg-cm-surface-2 transition-colors w-full text-left"
         >
           <span>🚪</span> Uitloggen
         </button>

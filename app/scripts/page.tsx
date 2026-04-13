@@ -39,7 +39,7 @@ export default function ScriptsPagina() {
         <h1 className="text-2xl font-display font-bold text-cm-white">
           Scriptbibliotheek
         </h1>
-        <p className="text-cm-muted mt-1">
+        <p className="text-cm-white mt-1">
           Alle uitnodigingen, bezwaren en follow-up scripts op één plek
         </p>
       </div>
@@ -62,7 +62,7 @@ export default function ScriptsPagina() {
             className={`text-sm px-4 py-2 rounded-lg transition-colors ${
               actieveCategorie === cat
                 ? "bg-cm-gold text-cm-black font-semibold"
-                : "border border-cm-border text-cm-muted hover:text-cm-white hover:border-cm-gold-dim"
+                : "border border-cm-border text-cm-white hover:text-cm-white hover:border-cm-gold-dim"
             }`}
           >
             {label}
@@ -74,7 +74,7 @@ export default function ScriptsPagina() {
       <div className="space-y-4">
         {gefilterd.length === 0 ? (
           <div className="card text-center py-12">
-            <p className="text-cm-muted">Geen scripts gevonden voor deze zoekopdracht.</p>
+            <p className="text-cm-white">Geen scripts gevonden voor deze zoekopdracht.</p>
           </div>
         ) : (
           gefilterd.map((script) => (
@@ -123,7 +123,7 @@ function ScriptKaart({
             {script.tags.slice(0, 3).map((tag) => (
               <span
                 key={tag}
-                className="text-xs px-2 py-0.5 rounded-full bg-cm-surface-2 text-cm-muted"
+                className="text-xs px-2 py-0.5 rounded-full bg-cm-surface-2 text-cm-white"
               >
                 {tag}
               </span>
@@ -132,7 +132,7 @@ function ScriptKaart({
 
           {/* Preview of de volledige tekst */}
           <p
-            className={`text-cm-muted text-xs leading-relaxed whitespace-pre-wrap ${
+            className={`text-cm-white text-xs leading-relaxed whitespace-pre-wrap ${
               uitgeklapt ? "" : "line-clamp-3"
             }`}
           >

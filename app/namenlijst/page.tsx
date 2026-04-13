@@ -27,7 +27,7 @@ export default async function NamenlijstPagina() {
           <h1 className="text-2xl font-display font-bold text-cm-white">
             Namenlijst
           </h1>
-          <p className="text-cm-muted mt-1">
+          <p className="text-cm-white mt-1">
             {alleProspects.length} contacten in jouw pipeline
           </p>
         </div>

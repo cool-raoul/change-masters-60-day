@@ -63,12 +63,12 @@ export function DagStatForm({ userId, bestaandeStats, datum }: Props) {
         {statVelden.map(({ key, label, icoon }) => (
           <div key={key} className="bg-cm-surface-2 rounded-xl p-3">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs text-cm-muted">{icoon} {label}</span>
+              <span className="text-xs text-cm-white">{icoon} {label}</span>
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => updateStat(key, -1)}
-                className="w-7 h-7 rounded-lg bg-cm-border text-cm-muted hover:text-cm-white hover:bg-cm-surface transition-colors text-sm font-bold"
+                className="w-7 h-7 rounded-lg bg-cm-border text-cm-white hover:text-cm-white hover:bg-cm-surface transition-colors text-sm font-bold"
               >
                 −
               </button>
@@ -86,7 +86,7 @@ export function DagStatForm({ userId, bestaandeStats, datum }: Props) {
         ))}
       </div>
       {opslaan && (
-        <p className="text-cm-muted text-xs mt-2 text-right animate-fade-in">
+        <p className="text-cm-white text-xs mt-2 text-right animate-fade-in">
           Opgeslagen ✓
         </p>
       )}

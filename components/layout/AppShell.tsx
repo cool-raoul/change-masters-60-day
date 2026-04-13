@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Topbar } from "@/components/layout/Topbar";
+import { WelcomePopup } from "@/components/layout/WelcomePopup";
 
 export async function AppShell({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -21,6 +22,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex h-screen bg-cm-black overflow-hidden">
+      <WelcomePopup />
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Topbar gebruikersnaam={profile?.full_name || user.email || "Teamlid"} />

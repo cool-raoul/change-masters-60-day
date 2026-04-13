@@ -40,7 +40,7 @@ export default function LoginPagina() {
           <h1 className="text-3xl font-display font-bold text-gold-gradient mb-2">
             Change Masters
           </h1>
-          <p className="text-cm-muted">60 Dagen Run Systeem</p>
+          <p className="text-cm-white">60 Dagen Run Systeem</p>
         </div>
 
         {/* Login kaart */}
@@ -51,7 +51,7 @@ export default function LoginPagina() {
 
           <form onSubmit={handleInloggen} className="space-y-4">
             <div>
-              <label className="block text-sm text-cm-muted mb-1.5">
+              <label className="block text-sm text-cm-white mb-1.5">
                 E-mailadres
               </label>
               <input
@@ -65,7 +65,7 @@ export default function LoginPagina() {
             </div>
 
             <div>
-              <label className="block text-sm text-cm-muted mb-1.5">
+              <label className="block text-sm text-cm-white mb-1.5">
                 Wachtwoord
               </label>
               <input
@@ -87,7 +87,7 @@ export default function LoginPagina() {
             </button>
           </form>
 
-          <p className="text-center text-cm-muted text-sm mt-4">
+          <p className="text-center text-cm-white text-sm mt-4">
             Nog geen account?{" "}
             <Link
               href="/registreer"
@@ -99,7 +99,7 @@ export default function LoginPagina() {
         </div>
 
         {/* Motivatie quote */}
-        <p className="text-center text-cm-muted text-xs mt-6 italic">
+        <p className="text-center text-cm-white text-xs mt-6 italic">
           "Success is not owned, it's rented — and rent is due every day."
           <br />
           — Rory Vaden

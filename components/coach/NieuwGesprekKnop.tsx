@@ -57,7 +57,7 @@ export function NieuwGesprekKnop({ userId, prospects }: Props) {
         </h2>
 
         <div>
-          <label className="block text-sm text-cm-muted mb-1.5">
+          <label className="block text-sm text-cm-white mb-1.5">
             Over welk prospect? (optioneel)
           </label>
           <select
@@ -72,7 +72,7 @@ export function NieuwGesprekKnop({ userId, prospects }: Props) {
               </option>
             ))}
           </select>
-          <p className="text-cm-muted text-xs mt-1">
+          <p className="text-cm-white text-xs mt-1">
             Als je een prospect selecteert, weet de coach direct hun situatie.
           </p>
         </div>

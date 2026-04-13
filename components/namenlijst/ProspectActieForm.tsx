@@ -78,7 +78,7 @@ export function ProspectActieForm({ prospect, userId }: Props) {
     if (error) {
       toast.error("Kon niet opslaan");
     } else {
-      toast.success("Contact gelogd en prospect bijgewerkt");
+      toast.success("Aantekening opgeslagen en prospect bijgewerkt");
       setActief(null);
       router.refresh();
     }
@@ -112,8 +112,8 @@ export function ProspectActieForm({ prospect, userId }: Props) {
 
   return (
     <div className="card space-y-4">
-      <h2 className="text-sm font-semibold text-cm-muted uppercase tracking-wider">
-        Actie toevoegen
+      <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
+        Bijhouden wat besproken
       </h2>
 
       {/* Knoppen */}
@@ -126,7 +126,7 @@ export function ProspectActieForm({ prospect, userId }: Props) {
               : "btn-secondary"
           }`}
         >
-          📝 Contact loggen
+          📝 Aantekening toevoegen
         </button>
         <button
           onClick={() => setActief(actief === "bestelling" ? null : "bestelling")}
@@ -140,12 +140,12 @@ export function ProspectActieForm({ prospect, userId }: Props) {
         </button>
       </div>
 
-      {/* Contact loggen form */}
+      {/* Aantekening toevoegen form */}
       {actief === "actie" && (
         <form onSubmit={slaActieOp} className="space-y-3 border-t border-cm-border pt-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs text-cm-muted mb-1">Type contact</label>
+              <label className="block text-xs text-cm-white mb-1">Type contact</label>
               <select
                 value={contactType}
                 onChange={(e) => setContactType(e.target.value)}
@@ -159,7 +159,7 @@ export function ProspectActieForm({ prospect, userId }: Props) {
               </select>
             </div>
             <div>
-              <label className="block text-xs text-cm-muted mb-1">Nieuwe fase</label>
+              <label className="block text-xs text-cm-white mb-1">Nieuwe fase</label>
               <select
                 value={nieuweFase}
                 onChange={(e) => setNieuweFase(e.target.value as PipelineFase)}
@@ -175,7 +175,7 @@ export function ProspectActieForm({ prospect, userId }: Props) {
           </div>
 
           <div>
-            <label className="block text-xs text-cm-muted mb-1">Wat is er besproken?</label>
+            <label className="block text-xs text-cm-white mb-1">Wat is er besproken?</label>
             <textarea
               value={contactNotitie}
               onChange={(e) => setContactNotitie(e.target.value)}
@@ -186,10 +186,10 @@ export function ProspectActieForm({ prospect, userId }: Props) {
           </div>
 
           <div className="border-t border-cm-border pt-3">
-            <p className="text-xs text-cm-muted mb-2">Volgende actie plannen (optioneel)</p>
+            <p className="text-xs text-cm-white mb-2">Volgende actie plannen (optioneel)</p>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-cm-muted mb-1">Datum</label>
+                <label className="block text-xs text-cm-white mb-1">Datum</label>
                 <input
                   type="date"
                   value={volgendeDatum}
@@ -199,7 +199,7 @@ export function ProspectActieForm({ prospect, userId }: Props) {
                 />
               </div>
               <div>
-                <label className="block text-xs text-cm-muted mb-1">Wat ga je doen?</label>
+                <label className="block text-xs text-cm-white mb-1">Wat ga je doen?</label>
                 <input
                   type="text"
                   value={volgendeNotitie}
@@ -212,7 +212,7 @@ export function ProspectActieForm({ prospect, userId }: Props) {
           </div>
 
           <button type="submit" disabled={laden} className="btn-gold w-full text-sm">
-            {laden ? "Opslaan..." : "Contact loggen"}
+            {laden ? "Opslaan..." : "Aantekening opslaan"}
           </button>
         </form>
       )}
@@ -222,16 +222,16 @@ export function ProspectActieForm({ prospect, userId }: Props) {
         <form onSubmit={slaBestellingOp} className="space-y-3 border-t border-cm-border pt-4">
           <div className="bg-gold-subtle border border-gold-subtle rounded-lg p-3">
             <p className="text-cm-gold text-xs font-semibold mb-1">
-              🔔 Automatische herinnering
+              🔔 Automatische herinneringen
             </p>
-            <p className="text-cm-muted text-xs">
-              21 dagen na de bestelling krijg je automatisch een herinnering om
-              contact op te nemen voor de tweede bestelling.
+            <p className="text-cm-white text-xs">
+              Na 21 dagen, na 51 dagen en na 81 dagen krijg je automatisch herinneringen
+              om contact op te nemen voor een herbestelling.
             </p>
           </div>
 
           <div>
-            <label className="block text-xs text-cm-muted mb-1">Besteldatum</label>
+            <label className="block text-xs text-cm-white mb-1">Besteldatum</label>
             <input
               type="date"
               value={besteldatum}
@@ -242,7 +242,7 @@ export function ProspectActieForm({ prospect, userId }: Props) {
           </div>
 
           <div>
-            <label className="block text-xs text-cm-muted mb-1">Product omschrijving</label>
+            <label className="block text-xs text-cm-white mb-1">Product omschrijving</label>
             <input
               type="text"
               value={productOmschrijving}

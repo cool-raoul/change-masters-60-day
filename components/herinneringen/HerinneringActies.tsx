@@ -7,11 +7,13 @@ import { useRouter } from "next/navigation";
 
 export function HerinneringActies({ herinneringId }: { herinneringId: string }) {
   const [laden, setLaden] = useState(false);
+  const [voltooid, setVoltooid] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
   async function markeerVoltooid() {
     setLaden(true);
+    setVoltooid(true);
     const { error } = await supabase
       .from("herinneringen")
       .update({ voltooid: true })
@@ -19,8 +21,9 @@ export function HerinneringActies({ herinneringId }: { herinneringId: string }) 
 
     if (error) {
       toast.error("Kon herinnering niet markeren");
+      setVoltooid(false);
     } else {
-      toast.success("Herinnering afgevinkt ✓");
+      toast.success("Afgevinkt!");
       router.refresh();
     }
     setLaden(false);
@@ -29,11 +32,15 @@ export function HerinneringActies({ herinneringId }: { herinneringId: string }) 
   return (
     <button
       onClick={markeerVoltooid}
-      disabled={laden}
-      className="text-cm-muted hover:text-green-400 transition-colors p-1 text-lg"
-      title="Markeer als voltooid"
+      disabled={laden || voltooid}
+      className={`w-8 h-8 rounded-lg border-2 flex items-center justify-center flex-shrink-0 transition-all ${
+        voltooid
+          ? "bg-green-500 border-green-500 text-white"
+          : "border-cm-border hover:border-green-400 hover:bg-green-400/10 text-transparent hover:text-green-400"
+      }`}
+      title="Afvinken"
     >
-      ✓
+      <span className="text-sm font-bold">✓</span>
     </button>
   );
 }

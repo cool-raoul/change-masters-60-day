@@ -207,7 +207,7 @@ export default function MijnWhyPagina() {
             Jouw{" "}
             <span className="text-gold-gradient">WHY</span>
           </h1>
-          <p className="text-cm-muted text-sm">
+          <p className="text-cm-white text-sm">
             Ontdek wat jou écht drijft — de basis van jouw 60-dagenrun
           </p>
         </div>
@@ -257,29 +257,50 @@ export default function MijnWhyPagina() {
 
         {!gestartMetCoach && !bestaandeWhy ? (
           // Start scherm — eerste keer
-          <div className="flex flex-col items-center justify-center h-full text-center py-20">
+          <div className="flex flex-col items-center justify-center h-full text-center py-12 max-w-lg mx-auto">
             <div className="text-6xl mb-6">🎯</div>
             <h2 className="text-2xl font-display font-bold text-cm-white mb-4">
               Welkom, {gebruikersnaam || "teamlid"}!
             </h2>
-            <p className="text-cm-muted max-w-md mb-8 leading-relaxed">
-              Voordat je begint aan de 60-dagenrun, is het cruciaal dat jouw{" "}
-              <strong className="text-cm-white">WHY</strong> helder is.
-              <br /><br />
-              Onze AI-coach gaat met jou in gesprek om te ontdekken wat jou
-              écht drijft. Dit duurt ongeveer 5-10 minuten.
-            </p>
-            <div className="bg-gold-subtle border border-gold-subtle rounded-xl p-4 max-w-sm mb-8 text-left">
-              <p className="text-cm-gold text-sm font-semibold mb-2">
-                Wat we gaan ontdekken:
+
+            {/* Uitleg wat een WHY is */}
+            <div className="text-left w-full mb-6">
+              <h3 className="text-cm-gold font-semibold mb-2">Wat is een WHY?</h3>
+              <p className="text-cm-white text-sm leading-relaxed">
+                Je WHY is jouw persoonlijke motivatie. Het antwoord op de vraag: &ldquo;Waarom doe ik dit echt?&rdquo;
+                Niet het geld, niet de auto — maar wat er in jouw leven verandert als je dit voor elkaar krijgt.
               </p>
-              <ul className="text-cm-muted text-sm space-y-1.5">
-                <li>✓ Waarom je dit echt wilt doen</li>
-                <li>✓ Jouw financiële doel (concreet bedrag)</li>
-                <li>✓ Hoe jouw leven eruitziet als het lukt</li>
-                <li>✓ Jouw persoonlijke WHY-tekst</li>
-              </ul>
+              <p className="text-cm-white text-sm leading-relaxed mt-2">
+                Je WHY is ook je anker. Op de dagen dat het moeilijk is, lees je hem terug.
+                En hij is zo geschreven dat je hem trots kunt delen met mensen in je omgeving.
+              </p>
             </div>
+
+            {/* Voorbeeld WHY */}
+            <div className="w-full bg-gold-subtle border border-gold-subtle rounded-xl p-4 mb-6 text-left">
+              <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider mb-2">
+                ✦ Voorbeeld WHY
+              </p>
+              <p className="text-cm-white text-sm leading-relaxed italic">
+                &ldquo;Ik doe dit omdat ik het zat ben dat geld bepaalt wat ik wel en niet kan doen voor mijn gezin.
+                Ik wil er zijn voor de mensen die ik liefheb, zonder de stress van rekeningen en beperkingen.
+                Ik doe dit zodat mijn kinderen later trots op me zijn en zien dat je je eigen pad kunt kiezen.
+                Ik doe dit omdat ik weet dat er een versie van mijn leven bestaat waar ik volledig vrij ben, en die wil ik.&rdquo;
+              </p>
+            </div>
+
+            {/* Wat er gaat gebeuren */}
+            <div className="w-full bg-cm-surface-2 border border-cm-border rounded-xl p-4 mb-8 text-left">
+              <p className="text-cm-white text-sm font-semibold mb-2">
+                Wat gaat er straks gebeuren?
+              </p>
+              <p className="text-cm-white text-sm leading-relaxed">
+                De AI-coach stelt je een paar vragen over jouw situatie, je dromen en wat je echt drijft.
+                Wees eerlijk — hoe opener je bent, hoe krachtiger je WHY wordt.
+                Het duurt ongeveer 5 tot 10 minuten.
+              </p>
+            </div>
+
             <button onClick={startCoach} className="btn-gold px-8 py-3 text-lg">
               Start het gesprek →
             </button>
@@ -366,7 +387,7 @@ export default function MijnWhyPagina() {
           <p className="text-cm-gold font-semibold text-lg mb-1">
             Jouw WHY is opgeslagen!
           </p>
-          <p className="text-cm-muted text-sm mb-4">
+          <p className="text-cm-white text-sm mb-4">
             Je kunt je WHY altijd terugvinden op het dashboard en hier aanpassen.
           </p>
           <button

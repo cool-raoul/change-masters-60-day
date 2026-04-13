@@ -22,10 +22,10 @@ export function ContactLogLijst({ contactLogs }: Props) {
   if (contactLogs.length === 0) {
     return (
       <div className="card text-center py-8">
-        <p className="text-cm-muted text-sm">
-          Nog geen contactmomenten gelogd.
+        <p className="text-cm-white text-sm">
+          Nog geen aantekeningen toegevoegd.
           <br />
-          Gebruik "Contact loggen" hierboven om te beginnen.
+          Gebruik &ldquo;Aantekeningen&rdquo; hierboven om te beginnen.
         </p>
       </div>
     );
@@ -33,8 +33,8 @@ export function ContactLogLijst({ contactLogs }: Props) {
 
   return (
     <div className="card space-y-3">
-      <h2 className="text-sm font-semibold text-cm-muted uppercase tracking-wider">
-        Contacthistorie ({contactLogs.length})
+      <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
+        Aantekeningen ({contactLogs.length})
       </h2>
 
       <div className="space-y-3">
@@ -55,7 +55,7 @@ export function ContactLogLijst({ contactLogs }: Props) {
                 <span className="text-cm-white text-xs font-semibold capitalize">
                   {log.contact_type}
                 </span>
-                <span className="text-cm-muted text-xs">
+                <span className="text-cm-white text-xs opacity-60">
                   {format(new Date(log.created_at), "d MMM yyyy, HH:mm", {
                     locale: nl,
                   })}
@@ -63,7 +63,7 @@ export function ContactLogLijst({ contactLogs }: Props) {
               </div>
 
               {log.notities && (
-                <p className="text-cm-muted text-xs leading-relaxed">{log.notities}</p>
+                <p className="text-cm-white text-xs leading-relaxed">{log.notities}</p>
               )}
 
               {log.fase_voor && log.fase_na && log.fase_voor !== log.fase_na && (

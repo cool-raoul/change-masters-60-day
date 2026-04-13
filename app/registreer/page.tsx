@@ -79,7 +79,7 @@ function RegistreerFormulier() {
             <h2 className="text-xl font-semibold text-cm-white mb-3">
               {v("bevestig.titel")}
             </h2>
-            <p className="text-cm-muted leading-relaxed mb-2">
+            <p className="text-cm-white leading-relaxed mb-2">
               {v("bevestig.gestuurd")}
             </p>
             <p className="text-cm-gold font-semibold mb-4">
@@ -87,7 +87,7 @@ function RegistreerFormulier() {
             </p>
             <div className="bg-cm-surface-2 rounded-lg p-4 mb-6 text-left space-y-2">
               <p className="text-cm-white text-sm font-medium">{v("bevestig.hoe")}</p>
-              <ol className="text-cm-muted text-sm space-y-1.5 list-decimal list-inside">
+              <ol className="text-cm-white text-sm space-y-1.5 list-decimal list-inside">
                 <li>{v("bevestig.stap1")}</li>
                 <li>{v("bevestig.stap2")}</li>
                 <li>{v("bevestig.stap3")}</li>
@@ -100,7 +100,7 @@ function RegistreerFormulier() {
             >
               {v("bevestig.naar_login")}
             </Link>
-            <p className="text-cm-muted text-xs mt-4">
+            <p className="text-cm-white text-xs mt-4">
               {v("bevestig.geen_mail")}{" "}
               <button
                 onClick={() => setGeregistreerd(false)}
@@ -127,7 +127,7 @@ function RegistreerFormulier() {
               className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
                 taal === optie.code
                   ? "bg-cm-gold text-cm-black font-semibold"
-                  : "bg-cm-surface border border-cm-border text-cm-muted hover:text-cm-white"
+                  : "bg-cm-surface border border-cm-border text-cm-white hover:text-cm-white"
               }`}
             >
               {optie.vlag} {optie.label}
@@ -140,7 +140,7 @@ function RegistreerFormulier() {
           <h1 className="text-3xl font-display font-bold text-gold-gradient mb-2">
             Change Masters
           </h1>
-          <p className="text-cm-muted">{v("registreer.welkom")}</p>
+          <p className="text-cm-white">{v("registreer.welkom")}</p>
         </div>
 
         {/* Uitgenodigd banner */}
@@ -160,7 +160,7 @@ function RegistreerFormulier() {
 
           <form onSubmit={handleRegistreren} className="space-y-4">
             <div>
-              <label className="block text-sm text-cm-muted mb-1.5">
+              <label className="block text-sm text-cm-white mb-1.5">
                 {v("registreer.naam")}
               </label>
               <input
@@ -174,7 +174,7 @@ function RegistreerFormulier() {
             </div>
 
             <div>
-              <label className="block text-sm text-cm-muted mb-1.5">
+              <label className="block text-sm text-cm-white mb-1.5">
                 {v("registreer.email")}
               </label>
               <input
@@ -188,7 +188,7 @@ function RegistreerFormulier() {
             </div>
 
             <div>
-              <label className="block text-sm text-cm-muted mb-1.5">
+              <label className="block text-sm text-cm-white mb-1.5">
                 {v("registreer.wachtwoord")}
               </label>
               <input
@@ -202,7 +202,7 @@ function RegistreerFormulier() {
             </div>
 
             <div>
-              <label className="block text-sm text-cm-muted mb-1.5">
+              <label className="block text-sm text-cm-white mb-1.5">
                 {v("registreer.wachtwoord_bevestig")}
               </label>
               <input
@@ -224,7 +224,7 @@ function RegistreerFormulier() {
             </button>
           </form>
 
-          <p className="text-center text-cm-muted text-sm mt-4">
+          <p className="text-center text-cm-white text-sm mt-4">
             {v("registreer.al_account")}{" "}
             <Link
               href="/login"
@@ -243,7 +243,7 @@ export default function RegistreerPagina() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-cm-black flex items-center justify-center">
-        <div className="text-cm-muted">Laden...</div>
+        <div className="text-cm-white">Laden...</div>
       </div>
     }>
       <RegistreerFormulier />

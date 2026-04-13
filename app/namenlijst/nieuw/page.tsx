@@ -66,21 +66,21 @@ export default function NieuwProspectPagina() {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="flex items-center gap-4">
-        <Link href="/namenlijst" className="text-cm-muted hover:text-cm-white">
+        <Link href="/namenlijst" className="text-cm-white hover:text-cm-white">
           ← Terug
         </Link>
         <div>
           <h1 className="text-2xl font-display font-bold text-cm-white">
             Nieuw Prospect
           </h1>
-          <p className="text-cm-muted text-sm">Voeg iemand toe aan je namenlijst</p>
+          <p className="text-cm-white text-sm">Voeg iemand toe aan je namenlijst</p>
         </div>
       </div>
 
       <form onSubmit={handleOpslaan} className="card space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="sm:col-span-2">
-            <label className="block text-sm text-cm-muted mb-1.5">
+            <label className="block text-sm text-cm-white mb-1.5">
               Volledige naam <span className="text-red-400">*</span>
             </label>
             <input
@@ -94,7 +94,7 @@ export default function NieuwProspectPagina() {
           </div>
 
           <div>
-            <label className="block text-sm text-cm-muted mb-1.5">Telefoon</label>
+            <label className="block text-sm text-cm-white mb-1.5">Telefoon</label>
             <input
               type="tel"
               value={formData.telefoon}
@@ -105,7 +105,7 @@ export default function NieuwProspectPagina() {
           </div>
 
           <div>
-            <label className="block text-sm text-cm-muted mb-1.5">E-mail</label>
+            <label className="block text-sm text-cm-white mb-1.5">E-mail</label>
             <input
               type="email"
               value={formData.email}
@@ -116,7 +116,7 @@ export default function NieuwProspectPagina() {
           </div>
 
           <div>
-            <label className="block text-sm text-cm-muted mb-1.5">Instagram</label>
+            <label className="block text-sm text-cm-white mb-1.5">Instagram</label>
             <input
               type="text"
               value={formData.instagram}
@@ -127,7 +127,7 @@ export default function NieuwProspectPagina() {
           </div>
 
           <div>
-            <label className="block text-sm text-cm-muted mb-1.5">Facebook</label>
+            <label className="block text-sm text-cm-white mb-1.5">Facebook</label>
             <input
               type="text"
               value={formData.facebook}
@@ -138,7 +138,7 @@ export default function NieuwProspectPagina() {
           </div>
 
           <div>
-            <label className="block text-sm text-cm-muted mb-1.5">Bron</label>
+            <label className="block text-sm text-cm-white mb-1.5">Bron</label>
             <select
               value={formData.bron}
               onChange={(e) => updateVeld("bron", e.target.value)}
@@ -152,7 +152,7 @@ export default function NieuwProspectPagina() {
           </div>
 
           <div>
-            <label className="block text-sm text-cm-muted mb-1.5">Prioriteit</label>
+            <label className="block text-sm text-cm-white mb-1.5">Prioriteit</label>
             <select
               value={formData.prioriteit}
               onChange={(e) => updateVeld("prioriteit", e.target.value)}
@@ -165,7 +165,7 @@ export default function NieuwProspectPagina() {
           </div>
 
           <div>
-            <label className="block text-sm text-cm-muted mb-1.5">Pipeline fase</label>
+            <label className="block text-sm text-cm-white mb-1.5">Pipeline fase</label>
             <select
               value={formData.pipeline_fase}
               onChange={(e) => updateVeld("pipeline_fase", e.target.value)}
@@ -181,7 +181,7 @@ export default function NieuwProspectPagina() {
           </div>
 
           <div className="sm:col-span-2">
-            <label className="block text-sm text-cm-muted mb-1.5">Notities</label>
+            <label className="block text-sm text-cm-white mb-1.5">Notities</label>
             <textarea
               value={formData.notities}
               onChange={(e) => updateVeld("notities", e.target.value)}

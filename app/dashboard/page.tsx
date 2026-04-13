@@ -10,10 +10,7 @@ const RUN_START = new Date("2026-04-12");
 function getDagInfo() {
   const vandaag = new Date();
   const dag = Math.max(1, Math.min(60, differenceInDays(vandaag, RUN_START) + 1));
-  const fase = dag <= 20 ? 1 : dag <= 40 ? 2 : 3;
-  const faseLabel = fase === 1 ? "Team bouwen" : fase === 2 ? "Team helpen bouwen" : "Opschalen";
-  const dagInFase = fase === 1 ? dag : fase === 2 ? dag - 20 : dag - 40;
-  return { dag, fase, faseLabel, dagInFase };
+  return { dag };
 }
 
 export default async function DashboardPagina() {
@@ -24,10 +21,9 @@ export default async function DashboardPagina() {
 
   if (!user) return null;
 
-  const { dag, fase, faseLabel, dagInFase } = getDagInfo();
+  const { dag } = getDagInfo();
   const vandaagStr = new Date().toISOString().split("T")[0];
 
-  // Laad alle data parallel
   const [
     { data: whyProfile },
     { data: vandaagStats },
@@ -43,7 +39,7 @@ export default async function DashboardPagina() {
       .single(),
     supabase
       .from("herinneringen")
-      .select("*, prospect:prospects(volledige_naam)")
+      .select("*, prospect:prospects(id, volledige_naam)")
       .eq("user_id", user.id)
       .lte("vervaldatum", vandaagStr)
       .eq("voltooid", false)
@@ -57,22 +53,23 @@ export default async function DashboardPagina() {
   ]);
 
   const stats = vandaagStats as DagelijkseStat | null;
-  const herinneringenLijst = (herinneringen as (Herinnering & { prospect: { volledige_naam: string } | null })[]) || [];
+  const herinneringenLijst = (herinneringen as (Herinnering & { prospect: { id: string; volledige_naam: string } | null })[]) || [];
   const why = whyProfile as WhyProfile | null;
 
-  // Bereken pipeline aantallen
   const faseCounts: Record<string, number> = {};
   (pipelineCounts || []).forEach((p: { pipeline_fase: string }) => {
     faseCounts[p.pipeline_fase] = (faseCounts[p.pipeline_fase] || 0) + 1;
   });
 
   const faseKleuren: Record<string, string> = {
-    lead: "text-[#999]",
+    prospect: "text-[#CCCCCC]",
     uitgenodigd: "text-[#4A9EDB]",
+    one_pager: "text-[#7A6ADB]",
     presentatie: "text-[#9A6ADB]",
     followup: "text-cm-gold",
-    klant: "text-[#4ACB6A]",
-    partner: "text-cm-gold-light",
+    not_yet: "text-[#DB6A6A]",
+    shopper: "text-[#4ACB6A]",
+    member: "text-[#E8C96B]",
   };
 
   return (
@@ -80,55 +77,35 @@ export default async function DashboardPagina() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-display font-bold text-cm-white">
-          Goedemorgen! Dag <span className="text-cm-gold">{dag}</span> van 60.
+          Dag <span className="text-cm-gold">{dag}</span> van 60
         </h1>
-        <p className="text-cm-muted mt-1">
-          {format(new Date(), "EEEE d MMMM yyyy", { locale: nl })} •{" "}
-          <span className="text-cm-gold">Fase {fase}: {faseLabel}</span> • Dag {dagInFase} van 20
+        <p className="text-cm-white mt-1">
+          {format(new Date(), "EEEE d MMMM yyyy", { locale: nl })}
         </p>
       </div>
 
-      {/* Fase voortgang */}
+      {/* Voortgang */}
       <div className="card">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-semibold text-cm-muted uppercase tracking-wider">
-            60-Dagenrun Voortgang
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
+            60 Dagenrun voortgang
           </h2>
-          <span className="text-cm-gold text-sm font-semibold">{Math.round((dag / 60) * 100)}% voltooid</span>
+          <span className="text-cm-gold text-sm font-semibold">{Math.round((dag / 60) * 100)}%</span>
         </div>
-        <div className="h-3 bg-cm-surface-2 rounded-full overflow-hidden mb-3">
+        <div className="h-3 bg-cm-surface-2 rounded-full overflow-hidden">
           <div
             className="h-full bg-gradient-gold rounded-full transition-all duration-1000"
             style={{ width: `${(dag / 60) * 100}%` }}
           />
         </div>
-        <div className="grid grid-cols-3 gap-2">
-          {[1, 2, 3].map((f) => (
-            <div
-              key={f}
-              className={`text-center p-2 rounded-lg text-xs ${
-                fase === f
-                  ? "bg-gold-subtle border border-gold-subtle text-cm-gold"
-                  : fase > f
-                  ? "bg-cm-surface-2 text-cm-muted line-through"
-                  : "text-cm-muted"
-              }`}
-            >
-              <div className="font-semibold">Fase {f}</div>
-              <div className="opacity-75">
-                {f === 1 ? "Team bouwen" : f === 2 ? "Team helpen" : "Opschalen"}
-              </div>
-              <div className="opacity-60">Dag {(f - 1) * 20 + 1}-{f * 20}</div>
-            </div>
-          ))}
-        </div>
+        <p className="text-cm-white text-xs mt-2">{60 - dag} dagen te gaan</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Dagelijkse stats */}
         <div className="lg:col-span-2 space-y-4">
           <div className="card">
-            <h2 className="text-sm font-semibold text-cm-muted uppercase tracking-wider mb-4">
+            <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider mb-4">
               Vandaag bijhouden
             </h2>
             <DagStatForm
@@ -141,27 +118,29 @@ export default async function DashboardPagina() {
           {/* Pipeline overzicht */}
           <div className="card">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-semibold text-cm-muted uppercase tracking-wider">
-                Pipeline Status
+              <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
+                Pipeline
               </h2>
               <Link href="/namenlijst" className="text-cm-gold text-sm hover:text-cm-gold-light">
                 Bekijk alles →
               </Link>
             </div>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-4 gap-2">
               {[
-                { fase: "lead", label: "Leads" },
+                { fase: "prospect", label: "Prospects" },
                 { fase: "uitgenodigd", label: "Uitgenodigd" },
+                { fase: "one_pager", label: "One Pager" },
                 { fase: "presentatie", label: "Presentatie" },
-                { fase: "followup", label: "Follow-up" },
-                { fase: "klant", label: "Klanten" },
-                { fase: "partner", label: "Partners" },
+                { fase: "followup", label: "Follow up" },
+                { fase: "not_yet", label: "Not Yet" },
+                { fase: "shopper", label: "Shoppers" },
+                { fase: "member", label: "Members" },
               ].map(({ fase: f, label }) => (
-                <div key={f} className="bg-cm-surface-2 rounded-lg p-3 text-center">
-                  <div className={`text-2xl font-bold ${faseKleuren[f]}`}>
+                <div key={f} className="bg-cm-surface-2 rounded-lg p-2 text-center">
+                  <div className={`text-xl font-bold ${faseKleuren[f]}`}>
                     {faseCounts[f] || 0}
                   </div>
-                  <div className="text-xs text-cm-muted mt-0.5">{label}</div>
+                  <div className="text-xs text-cm-white mt-0.5">{label}</div>
                 </div>
               ))}
             </div>
@@ -180,28 +159,20 @@ export default async function DashboardPagina() {
                     Jouw WHY
                   </h2>
                 </div>
-                <Link href="/mijn-why" className="text-cm-muted text-xs hover:text-cm-gold">
-                  Bekijken / Aanpassen
+                <Link href="/mijn-why" className="text-cm-white text-xs hover:text-cm-gold">
+                  Aanpassen
                 </Link>
               </div>
-              <p className="text-cm-muted text-sm leading-relaxed italic">
+              <p className="text-cm-white text-sm leading-relaxed italic">
                 &ldquo;{why.why_samenvatting}&rdquo;
               </p>
-              {why.financieel_doel_maand && (
-                <div className="mt-3 bg-gold-subtle rounded-lg p-2 text-center">
-                  <p className="text-cm-gold font-bold text-lg">
-                    €{why.financieel_doel_maand.toLocaleString("nl-NL")}
-                  </p>
-                  <p className="text-cm-muted text-xs">per maand doel</p>
-                </div>
-              )}
             </div>
           )}
 
           {/* Herinneringen */}
           <div className="card">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-sm font-semibold text-cm-muted uppercase tracking-wider">
+              <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
                 Herinneringen
               </h2>
               {herinneringenLijst.length > 0 && (
@@ -212,8 +183,8 @@ export default async function DashboardPagina() {
             </div>
 
             {herinneringenLijst.length === 0 ? (
-              <p className="text-cm-muted text-sm">
-                Geen openstaande herinneringen. Goed bezig! 🎉
+              <p className="text-cm-white text-sm">
+                Geen openstaande herinneringen. Goed bezig!
               </p>
             ) : (
               <div className="space-y-2">
@@ -224,9 +195,12 @@ export default async function DashboardPagina() {
                   >
                     <p className="text-cm-white text-sm font-medium">{her.titel}</p>
                     {her.prospect && (
-                      <p className="text-cm-muted text-xs mt-0.5">
-                        👤 {her.prospect.volledige_naam}
-                      </p>
+                      <Link
+                        href={`/namenlijst/${her.prospect.id}`}
+                        className="text-cm-gold text-xs mt-0.5 hover:text-cm-gold-light flex items-center gap-1 w-fit"
+                      >
+                        👤 {her.prospect.volledige_naam} →
+                      </Link>
                     )}
                     <p className="text-cm-gold text-xs mt-1">
                       {her.vervaldatum === vandaagStr ? "Vandaag" : her.vervaldatum}
@@ -245,7 +219,7 @@ export default async function DashboardPagina() {
 
           {/* Snelle acties */}
           <div className="card">
-            <h2 className="text-sm font-semibold text-cm-muted uppercase tracking-wider mb-3">
+            <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider mb-3">
               Snelle acties
             </h2>
             <div className="space-y-2">
@@ -253,10 +227,10 @@ export default async function DashboardPagina() {
                 + Prospect toevoegen
               </Link>
               <Link href="/coach" className="btn-secondary w-full text-sm text-center block">
-                🤖 Coach raadplegen
+                AI Coach raadplegen
               </Link>
               <Link href="/scripts" className="btn-secondary w-full text-sm text-center block">
-                📋 Scripts bekijken
+                Scripts bekijken
               </Link>
             </div>
           </div>

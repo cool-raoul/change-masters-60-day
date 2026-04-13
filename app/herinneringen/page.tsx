@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { nl } from "date-fns/locale";
 import { Herinnering } from "@/lib/supabase/types";
 import { HerinneringActies } from "@/components/herinneringen/HerinneringActies";
+import Link from "next/link";
 
 export default async function HerinneringenPagina() {
   const supabase = await createClient();
@@ -19,12 +20,12 @@ export default async function HerinneringenPagina() {
 
   const { data: herinneringen } = await supabase
     .from("herinneringen")
-    .select("*, prospect:prospects(volledige_naam)")
+    .select("*, prospect:prospects(id, volledige_naam)")
     .eq("user_id", user.id)
     .eq("voltooid", false)
     .order("vervaldatum", { ascending: true });
 
-  const lijst = (herinneringen as (Herinnering & { prospect: { volledige_naam: string } | null })[]) || [];
+  const lijst = (herinneringen as (Herinnering & { prospect: { id: string; volledige_naam: string } | null })[]) || [];
 
   const verlopen = lijst.filter((h) => h.vervaldatum < vandaag);
   const vandaagLijst = lijst.filter((h) => h.vervaldatum === vandaag);
@@ -39,7 +40,7 @@ export default async function HerinneringenPagina() {
         <h1 className="text-2xl font-display font-bold text-cm-white">
           Herinneringen
         </h1>
-        <p className="text-cm-muted mt-1">
+        <p className="text-cm-white mt-1">
           {lijst.length} openstaande herinneringen
         </p>
       </div>
@@ -48,52 +49,58 @@ export default async function HerinneringenPagina() {
         <div className="card text-center py-16">
           <div className="text-5xl mb-4">🎉</div>
           <p className="text-cm-white font-semibold mb-2">Alles bijgewerkt!</p>
-          <p className="text-cm-muted">
+          <p className="text-cm-white">
             Geen openstaande herinneringen. Ga zo door!
           </p>
         </div>
       )}
 
       {verlopen.length > 0 && (
-        <HerinnerigsGroep
-          titel="⚠️ Verlopen"
+        <HerinneringenGroep
+          titel="Verlopen"
           herinneringen={verlopen}
           kleur="border-l-red-500"
+          icoonKleur="text-red-400"
         />
       )}
       {vandaagLijst.length > 0 && (
-        <HerinnerigsGroep
-          titel="🔴 Vandaag"
+        <HerinneringenGroep
+          titel="Vandaag"
           herinneringen={vandaagLijst}
           kleur="border-l-cm-gold"
+          icoonKleur="text-cm-gold"
         />
       )}
       {komendeLijst.length > 0 && (
-        <HerinnerigsGroep
-          titel="📅 Komende 7 dagen"
+        <HerinneringenGroep
+          titel="Komende 7 dagen"
           herinneringen={komendeLijst}
           kleur="border-l-blue-500"
+          icoonKleur="text-blue-400"
         />
       )}
       {laterLijst.length > 0 && (
-        <HerinnerigsGroep
-          titel="⏰ Later"
+        <HerinneringenGroep
+          titel="Later"
           herinneringen={laterLijst}
           kleur="border-l-cm-border"
+          icoonKleur="text-cm-white"
         />
       )}
     </div>
   );
 }
 
-function HerinnerigsGroep({
+function HerinneringenGroep({
   titel,
   herinneringen,
   kleur,
+  icoonKleur,
 }: {
   titel: string;
-  herinneringen: (Herinnering & { prospect: { volledige_naam: string } | null })[];
+  herinneringen: (Herinnering & { prospect: { id: string; volledige_naam: string } | null })[];
   kleur: string;
+  icoonKleur: string;
 }) {
   const TYPE_ICOON: Record<string, string> = {
     followup: "🔄",
@@ -103,29 +110,32 @@ function HerinnerigsGroep({
 
   return (
     <div>
-      <h2 className="text-sm font-semibold text-cm-muted uppercase tracking-wider mb-3">
+      <h2 className={`text-sm font-semibold uppercase tracking-wider mb-3 ${icoonKleur}`}>
         {titel} ({herinneringen.length})
       </h2>
       <div className="space-y-2">
         {herinneringen.map((her) => (
           <div
             key={her.id}
-            className={`card border-l-2 ${kleur} flex items-start justify-between gap-4`}
+            className={`card border-l-4 ${kleur} flex items-center justify-between gap-4`}
           >
             <div className="flex-1">
               <div className="flex items-center gap-2">
-                <span>{TYPE_ICOON[her.herinnering_type] || "📌"}</span>
-                <p className="text-cm-white font-medium text-sm">{her.titel}</p>
+                <span className="text-lg">{TYPE_ICOON[her.herinnering_type] || "📌"}</span>
+                <p className="text-cm-white font-semibold text-sm">{her.titel}</p>
               </div>
               {her.beschrijving && (
-                <p className="text-cm-muted text-xs mt-1">{her.beschrijving}</p>
+                <p className="text-cm-white text-xs mt-1 ml-7">{her.beschrijving}</p>
               )}
               {her.prospect && (
-                <p className="text-cm-muted text-xs mt-0.5">
-                  👤 {her.prospect.volledige_naam}
-                </p>
+                <Link
+                  href={`/namenlijst/${her.prospect.id}`}
+                  className="text-cm-gold text-xs mt-0.5 ml-7 hover:text-cm-gold-light transition-colors flex items-center gap-1 w-fit"
+                >
+                  👤 {her.prospect.volledige_naam} →
+                </Link>
               )}
-              <p className="text-cm-gold text-xs mt-1">
+              <p className="text-cm-white text-xs mt-1 ml-7">
                 {format(new Date(her.vervaldatum), "EEEE d MMMM yyyy", {
                   locale: nl,
                 })}

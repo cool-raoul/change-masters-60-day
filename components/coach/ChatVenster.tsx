@@ -99,7 +99,7 @@ function SwipeableBericht({
             {/* Desktop verwijder knop (hover) */}
             <button
               onClick={() => onVerwijder(index)}
-              className="hidden group-hover:flex absolute -top-2 -right-2 w-5 h-5 bg-cm-surface-2 border border-cm-border rounded-full items-center justify-center text-cm-muted hover:text-red-400 hover:border-red-400 transition-colors text-xs"
+              className="hidden group-hover:flex absolute -top-2 -right-2 w-5 h-5 bg-cm-surface-2 border border-cm-border rounded-full items-center justify-center text-cm-white hover:text-red-400 hover:border-red-400 transition-colors text-xs"
               title="Bericht verwijderen"
             >
               x
@@ -237,7 +237,7 @@ export function ChatVenster({
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <Link href="/coach" className="text-cm-muted hover:text-cm-white">
+          <Link href="/coach" className="text-cm-white hover:text-cm-white">
             ←
           </Link>
           <div>
@@ -272,7 +272,7 @@ export function ChatVenster({
         {berichten.length === 0 && (
           <div className="text-center py-12">
             <div className="text-5xl mb-4">🤖</div>
-            <p className="text-cm-muted mb-6">
+            <p className="text-cm-white mb-6">
               Stel je vraag aan de coach of kies een snelle vraag hieronder.
             </p>
             <div className="flex flex-wrap gap-2 justify-center">
@@ -280,7 +280,7 @@ export function ChatVenster({
                 <button
                   key={v}
                   onClick={() => stuurBericht(v)}
-                  className="text-xs px-3 py-1.5 bg-cm-surface-2 border border-cm-border rounded-full text-cm-muted hover:text-cm-white hover:border-cm-gold-dim transition-colors"
+                  className="text-xs px-3 py-1.5 bg-cm-surface-2 border border-cm-border rounded-full text-cm-white hover:text-cm-white hover:border-cm-gold-dim transition-colors"
                 >
                   {v}
                 </button>
@@ -344,7 +344,7 @@ export function ChatVenster({
               key={v}
               onClick={() => stuurBericht(v)}
               disabled={laden}
-              className="text-xs px-3 py-1.5 bg-cm-surface-2 border border-cm-border rounded-full text-cm-muted hover:text-cm-white hover:border-cm-gold-dim transition-colors"
+              className="text-xs px-3 py-1.5 bg-cm-surface-2 border border-cm-border rounded-full text-cm-white hover:text-cm-white hover:border-cm-gold-dim transition-colors"
             >
               {v}
             </button>

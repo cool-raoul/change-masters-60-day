@@ -106,11 +106,11 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
     <div className="space-y-6">
       {/* Profiel */}
       <form onSubmit={slaProfielOp} className="card space-y-4">
-        <h2 className="text-sm font-semibold text-cm-muted uppercase tracking-wider">
+        <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
           Profiel
         </h2>
         <div>
-          <label className="block text-sm text-cm-muted mb-1.5">Naam</label>
+          <label className="block text-sm text-cm-white mb-1.5">Naam</label>
           <input
             type="text"
             value={naam}
@@ -119,7 +119,7 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
           />
         </div>
         <div>
-          <label className="block text-sm text-cm-muted mb-1.5">E-mailadres</label>
+          <label className="block text-sm text-cm-white mb-1.5">E-mailadres</label>
           <input
             type="email"
             value={email}
@@ -128,7 +128,7 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
           />
         </div>
         <div>
-          <label className="block text-sm text-cm-muted mb-1.5">Rol</label>
+          <label className="block text-sm text-cm-white mb-1.5">Rol</label>
           <input
             type="text"
             value={profile?.role === "leider" ? "Teamleider" : "Teamlid"}
@@ -144,10 +144,10 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
       {/* E-mail herinneringen via Resend */}
       <div className="card space-y-4">
         <div>
-          <h2 className="text-sm font-semibold text-cm-muted uppercase tracking-wider">
+          <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
             E-mail herinneringen
           </h2>
-          <p className="text-cm-muted text-xs mt-1">
+          <p className="text-cm-white text-xs mt-1">
             Koppel je eigen gratis e-mailaccount zodat je elke ochtend een herinnering krijgt van openstaande taken.
           </p>
         </div>
@@ -155,7 +155,7 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
         {/* Uitleg stappen */}
         <div className="bg-cm-surface-2 rounded-lg p-4 space-y-3">
           <p className="text-cm-white text-sm font-medium">Hoe stel je dit in? (2 minuten)</p>
-          <ol className="text-cm-muted text-sm space-y-2">
+          <ol className="text-cm-white text-sm space-y-2">
             <li className="flex gap-2">
               <span className="text-cm-gold font-bold flex-shrink-0">1.</span>
               <span>Ga naar <span className="text-cm-gold font-medium">resend.com</span> en maak een gratis account aan (100 mails per dag, gratis)</span>
@@ -177,7 +177,7 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
 
         <form onSubmit={slaResendKeyOp} className="space-y-3">
           <div>
-            <label className="block text-sm text-cm-muted mb-1.5">
+            <label className="block text-sm text-cm-white mb-1.5">
               E-mailadres voor herinneringen
             </label>
             <input
@@ -187,12 +187,12 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
               placeholder={email + " (laat leeg om je aanmeld e-mail te gebruiken)"}
               className="input-cm"
             />
-            <p className="text-cm-muted text-xs mt-1">
+            <p className="text-cm-white text-xs mt-1">
               Vul hier een ander e-mailadres in als je de herinneringen ergens anders wilt ontvangen.
             </p>
           </div>
           <div>
-            <label className="block text-sm text-cm-muted mb-1.5">
+            <label className="block text-sm text-cm-white mb-1.5">
               Resend API Key
             </label>
             <input
@@ -202,7 +202,7 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
               placeholder="re_xxxxxxxxxxxxxxxxxxxxxxxxxx"
               className="input-cm font-mono text-sm"
             />
-            <p className="text-cm-muted text-xs mt-1">
+            <p className="text-cm-white text-xs mt-1">
               Je key wordt versleuteld opgeslagen. Niemand anders kan hem zien.
             </p>
           </div>
@@ -238,11 +238,11 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
 
       {/* Wachtwoord */}
       <form onSubmit={wijzigWachtwoord} className="card space-y-4">
-        <h2 className="text-sm font-semibold text-cm-muted uppercase tracking-wider">
+        <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
           Wachtwoord wijzigen
         </h2>
         <div>
-          <label className="block text-sm text-cm-muted mb-1.5">Nieuw wachtwoord</label>
+          <label className="block text-sm text-cm-white mb-1.5">Nieuw wachtwoord</label>
           <input
             type="password"
             value={wachtwoord}
@@ -252,7 +252,7 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
           />
         </div>
         <div>
-          <label className="block text-sm text-cm-muted mb-1.5">Bevestig wachtwoord</label>
+          <label className="block text-sm text-cm-white mb-1.5">Bevestig wachtwoord</label>
           <input
             type="password"
             value={wachtwoordBevestig}

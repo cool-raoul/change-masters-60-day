@@ -52,7 +52,7 @@ export function Topbar({ gebruikersnaam }: { gebruikersnaam: string }) {
           </div>
           <div>
             <p className="text-cm-white text-sm font-semibold">Dag {dag} van 60</p>
-            <p className="text-cm-muted text-xs">Fase {fase} actief</p>
+            <p className="text-cm-white text-xs">Fase {fase} actief</p>
           </div>
         </div>
 
@@ -64,7 +64,7 @@ export function Topbar({ gebruikersnaam }: { gebruikersnaam: string }) {
               style={{ width: `${(dag / 60) * 100}%` }}
             />
           </div>
-          <span className="text-cm-muted text-xs">{Math.round((dag / 60) * 100)}%</span>
+          <span className="text-cm-white text-xs">{Math.round((dag / 60) * 100)}%</span>
         </div>
       </div>
 
@@ -72,7 +72,7 @@ export function Topbar({ gebruikersnaam }: { gebruikersnaam: string }) {
       <div className="flex items-center gap-4">
         <Link
           href="/herinneringen"
-          className="relative p-2 text-cm-muted hover:text-cm-white transition-colors"
+          className="relative p-2 text-cm-white hover:text-cm-white transition-colors"
         >
           <span className="text-lg">🔔</span>
           {aantalHerinneringen > 0 && (

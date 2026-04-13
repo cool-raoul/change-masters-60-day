@@ -12,22 +12,15 @@ interface Props {
   prospects: Prospect[];
 }
 
-const FASE_BADGE_STIJL: Record<PipelineFase, string> = {
-  lead: "bg-[#3A3A3A] text-[#999]",
-  uitgenodigd: "bg-[#1A2A3A] text-[#4A9EDB]",
-  presentatie: "bg-[#2A1A3A] text-[#9A6ADB]",
-  followup: "bg-[#2A2A1A] text-[#C9A84C]",
-  klant: "bg-[#1A2A1A] text-[#4ACB6A]",
-  partner: "bg-[#1A2A1A] text-[#E8C96B]",
-};
-
 const FASE_KLEUREN: Record<PipelineFase, string> = {
-  lead: "#999",
+  prospect: "#CCCCCC",
   uitgenodigd: "#4A9EDB",
+  one_pager: "#7A6ADB",
   presentatie: "#9A6ADB",
   followup: "#C9A84C",
-  klant: "#4ACB6A",
-  partner: "#E8C96B",
+  not_yet: "#DB6A6A",
+  shopper: "#4ACB6A",
+  member: "#E8C96B",
 };
 
 function ProspectKaart({
@@ -63,13 +56,13 @@ function ProspectKaart({
       </div>
 
       {prospect.volgende_actie_notitie && (
-        <p className="text-xs text-cm-muted line-clamp-2">
-          → {prospect.volgende_actie_notitie}
+        <p className="text-xs text-cm-white line-clamp-2">
+          {prospect.volgende_actie_notitie}
         </p>
       )}
 
       <div className="flex items-center justify-between pt-1">
-        <span className="text-xs text-cm-muted">
+        <span className="text-xs text-cm-white">
           {dagSindsContact !== null
             ? dagSindsContact === 0
               ? "Vandaag"
@@ -82,20 +75,20 @@ function ProspectKaart({
               ? "text-red-400"
               : "text-cm-gold"
           }`}>
-            🔔 {format(new Date(prospect.volgende_actie_datum), "d MMM", { locale: nl })}
+            {format(new Date(prospect.volgende_actie_datum), "d MMM", { locale: nl })}
           </span>
         )}
       </div>
 
-      {/* Fase wijzigen knoppen (als fallback voor touch/non-drag) */}
+      {/* Fase wijzigen knoppen bij hover */}
       <div className="hidden group-hover:flex gap-1 pt-1 border-t border-cm-border flex-wrap">
         {PIPELINE_FASEN.filter((f) => f.fase !== prospect.pipeline_fase).map((f) => (
           <button
             key={f.fase}
             onClick={() => onFaseWijzig(prospect.id, f.fase)}
-            className="text-xs px-2 py-0.5 rounded bg-cm-surface-2 text-cm-muted hover:text-cm-white transition-colors"
+            className="text-xs px-2 py-0.5 rounded bg-cm-surface-2 text-cm-white hover:text-cm-gold transition-colors"
           >
-            → {f.label}
+            {f.label}
           </button>
         ))}
       </div>
@@ -107,12 +100,12 @@ export function PipelineKanban({ prospects }: Props) {
   const [lokaleProspects, setLokaleProspects] = useState(prospects);
   const [dragOverFase, setDragOverFase] = useState<PipelineFase | null>(null);
   const draggedIdRef = useRef<string | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
 
   function handleDragStart(e: React.DragEvent, id: string) {
     draggedIdRef.current = id;
     e.dataTransfer.effectAllowed = "move";
-    // Maak de kaart semi-transparant tijdens slepen
     if (e.currentTarget instanceof HTMLElement) {
       e.currentTarget.style.opacity = "0.5";
     }
@@ -139,106 +132,117 @@ export function PipelineKanban({ prospects }: Props) {
   function handleDrop(e: React.DragEvent, nieuweFase: PipelineFase) {
     e.preventDefault();
     setDragOverFase(null);
-
     const id = draggedIdRef.current;
     if (!id) return;
-
     const prospect = lokaleProspects.find((p) => p.id === id);
     if (!prospect || prospect.pipeline_fase === nieuweFase) return;
-
     wijzigFase(id, nieuweFase);
     draggedIdRef.current = null;
   }
 
   async function wijzigFase(id: string, nieuweFase: PipelineFase) {
-    // Optimistisch bijwerken
     setLokaleProspects((prev) =>
       prev.map((p) => (p.id === id ? { ...p, pipeline_fase: nieuweFase } : p))
     );
-
     const { error } = await supabase
       .from("prospects")
-      .update({
-        pipeline_fase: nieuweFase,
-        updated_at: new Date().toISOString(),
-      })
+      .update({ pipeline_fase: nieuweFase, updated_at: new Date().toISOString() })
       .eq("id", id);
-
     if (error) {
       toast.error("Kon fase niet wijzigen");
       setLokaleProspects(prospects);
     } else {
-      toast.success("Fase bijgewerkt");
+      toast.success("Bijgewerkt");
     }
   }
 
+  function scrollLinks() {
+    scrollRef.current?.scrollBy({ left: -300, behavior: "smooth" });
+  }
+
+  function scrollRechts() {
+    scrollRef.current?.scrollBy({ left: 300, behavior: "smooth" });
+  }
+
   return (
-    <div className="overflow-x-auto pb-4">
-      <div className="flex gap-4 min-w-max">
-        {PIPELINE_FASEN.map(({ fase, label }) => {
-          const faseProspects = lokaleProspects.filter((p) => p.pipeline_fase === fase);
-          const isDragOver = dragOverFase === fase;
+    <div className="relative">
+      {/* Scroll pijlen */}
+      <button
+        onClick={scrollLinks}
+        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-cm-surface border border-cm-border rounded-full flex items-center justify-center text-cm-gold hover:bg-cm-surface-2 transition-colors shadow-lg"
+      >
+        ←
+      </button>
+      <button
+        onClick={scrollRechts}
+        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-cm-surface border border-cm-border rounded-full flex items-center justify-center text-cm-gold hover:bg-cm-surface-2 transition-colors shadow-lg"
+      >
+        →
+      </button>
 
-          return (
-            <div
-              key={fase}
-              className="w-64 flex-shrink-0"
-              onDragOver={(e) => handleDragOver(e, fase)}
-              onDragLeave={handleDragLeave}
-              onDrop={(e) => handleDrop(e, fase)}
-            >
-              {/* Kolom header */}
+      {/* Kanban scroll container */}
+      <div ref={scrollRef} className="overflow-x-auto pb-4 px-10">
+        <div className="flex gap-4 min-w-max">
+          {PIPELINE_FASEN.map(({ fase, label }) => {
+            const faseProspects = lokaleProspects.filter((p) => p.pipeline_fase === fase);
+            const isDragOver = dragOverFase === fase;
+
+            return (
               <div
-                className="rounded-t-xl px-3 py-2 mb-2 flex items-center justify-between transition-colors"
-                style={{
-                  background: isDragOver
-                    ? `${FASE_KLEUREN[fase]}30`
-                    : `${FASE_KLEUREN[fase]}10`,
-                }}
+                key={fase}
+                className="w-56 flex-shrink-0"
+                onDragOver={(e) => handleDragOver(e, fase)}
+                onDragLeave={handleDragLeave}
+                onDrop={(e) => handleDrop(e, fase)}
               >
-                <span
-                  className="text-sm font-semibold"
-                  style={{ color: FASE_KLEUREN[fase] }}
+                {/* Kolom header */}
+                <div
+                  className="rounded-t-xl px-3 py-2 mb-2 flex items-center justify-between transition-colors"
+                  style={{
+                    background: isDragOver
+                      ? `${FASE_KLEUREN[fase]}30`
+                      : `${FASE_KLEUREN[fase]}15`,
+                  }}
                 >
-                  {label}
-                </span>
-                <span className="bg-cm-surface-2 text-cm-muted text-xs font-medium px-2 py-0.5 rounded-full">
-                  {faseProspects.length}
-                </span>
-              </div>
+                  <span className="text-sm font-semibold" style={{ color: FASE_KLEUREN[fase] }}>
+                    {label}
+                  </span>
+                  <span className="bg-cm-surface-2 text-cm-white text-xs font-medium px-2 py-0.5 rounded-full">
+                    {faseProspects.length}
+                  </span>
+                </div>
 
-              {/* Kaarten */}
-              <div
-                className={`space-y-2 min-h-[200px] rounded-b-xl p-1 transition-all ${
-                  isDragOver
-                    ? "ring-2 ring-cm-gold bg-cm-surface-2/30"
-                    : ""
-                }`}
-              >
-                {faseProspects.map((p) => (
-                  <div key={p.id} onDragEnd={handleDragEnd}>
-                    <ProspectKaart
-                      prospect={p}
-                      onFaseWijzig={wijzigFase}
-                      onDragStart={handleDragStart}
-                    />
-                  </div>
-                ))}
-                {faseProspects.length === 0 && (
-                  <div
-                    className={`border-2 border-dashed rounded-xl p-4 text-center text-xs transition-colors ${
-                      isDragOver
-                        ? "border-cm-gold text-cm-gold"
-                        : "border-cm-border text-cm-muted"
-                    }`}
-                  >
-                    {isDragOver ? "Laat hier los" : "Geen contacten"}
-                  </div>
-                )}
+                {/* Kaarten */}
+                <div
+                  className={`space-y-2 min-h-[200px] rounded-b-xl p-1 transition-all ${
+                    isDragOver ? "ring-2 ring-cm-gold bg-cm-surface-2/30" : ""
+                  }`}
+                >
+                  {faseProspects.map((p) => (
+                    <div key={p.id} onDragEnd={handleDragEnd}>
+                      <ProspectKaart
+                        prospect={p}
+                        onFaseWijzig={wijzigFase}
+                        onDragStart={handleDragStart}
+                      />
+                    </div>
+                  ))}
+                  {faseProspects.length === 0 && (
+                    <div
+                      className={`border-2 border-dashed rounded-xl p-4 text-center text-xs transition-colors ${
+                        isDragOver
+                          ? "border-cm-gold text-cm-gold"
+                          : "border-cm-border text-cm-white"
+                      }`}
+                    >
+                      {isDragOver ? "Laat hier los" : "Leeg"}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );

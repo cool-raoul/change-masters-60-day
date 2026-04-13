@@ -1,10 +1,12 @@
 export type PipelineFase =
-  | "lead"
+  | "prospect"
   | "uitgenodigd"
+  | "one_pager"
   | "presentatie"
   | "followup"
-  | "klant"
-  | "partner";
+  | "not_yet"
+  | "shopper"
+  | "member";
 
 export type ContactType =
   | "dm"
@@ -153,12 +155,14 @@ export interface AiGesprek {
 }
 
 export const PIPELINE_FASEN: { fase: PipelineFase; label: string; kleur: string; tekstkleur: string }[] = [
-  { fase: "lead", label: "Lead", kleur: "#3A3A3A", tekstkleur: "#999999" },
+  { fase: "prospect", label: "Prospect", kleur: "#3A3A3A", tekstkleur: "#CCCCCC" },
   { fase: "uitgenodigd", label: "Uitgenodigd", kleur: "#1A2A3A", tekstkleur: "#4A9EDB" },
+  { fase: "one_pager", label: "One Pager", kleur: "#1A1A3A", tekstkleur: "#7A6ADB" },
   { fase: "presentatie", label: "Presentatie", kleur: "#2A1A3A", tekstkleur: "#9A6ADB" },
-  { fase: "followup", label: "Follow-up", kleur: "#2A2A1A", tekstkleur: "#C9A84C" },
-  { fase: "klant", label: "Klant", kleur: "#1A2A1A", tekstkleur: "#4ACB6A" },
-  { fase: "partner", label: "Partner", kleur: "#1A2A1A", tekstkleur: "#C9A84C" },
+  { fase: "followup", label: "Follow up", kleur: "#2A2A1A", tekstkleur: "#C9A84C" },
+  { fase: "not_yet", label: "Not Yet", kleur: "#2A1A1A", tekstkleur: "#DB6A6A" },
+  { fase: "shopper", label: "Shopper", kleur: "#1A2A1A", tekstkleur: "#4ACB6A" },
+  { fase: "member", label: "Member", kleur: "#2A2A0A", tekstkleur: "#E8C96B" },
 ];
 
 export const RUN_START_DATUM = new Date("2026-04-12");

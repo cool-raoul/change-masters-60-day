@@ -47,13 +47,13 @@ function TeamLidKaart({ lid, level }: { lid: TeamLid; level: number }) {
           <p className="text-cm-white text-sm font-semibold truncate">
             {lid.full_name}
           </p>
-          <p className="text-cm-muted text-xs truncate">{lid.email}</p>
+          <p className="text-cm-white text-xs truncate">{lid.email}</p>
         </div>
 
         {/* Status en team info */}
         <div className="flex items-center gap-2 flex-shrink-0">
           {heeftKinderen && (
-            <span className="text-cm-muted text-xs bg-cm-surface-2 px-2 py-0.5 rounded-full">
+            <span className="text-cm-white text-xs bg-cm-surface-2 px-2 py-0.5 rounded-full">
               {lid.kinderen.length} direct {totaalOnder > lid.kinderen.length && `(${totaalOnder} totaal)`}
             </span>
           )}
