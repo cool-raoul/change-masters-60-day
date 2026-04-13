@@ -131,12 +131,36 @@ export default function MijnWhyPagina() {
       setVolledigeAntwoord(antwoordTekst);
 
       // Controleer of WHY samenvatting aanwezig is — toon bevestiging
-      if (antwoordTekst.includes("MIJN WHY:")) {
-        const whyMatch = antwoordTekst.match(/MIJN WHY:([\s\S]+?)(?:\n\n|$)/);
-        const whySamenvatting = whyMatch
-          ? whyMatch[1].trim()
-          : antwoordTekst.substring(0, 500);
-        setVoorgesteldWhy(whySamenvatting);
+      // Zoek naar variaties: "MIJN WHY:", "Mijn WHY:", "JOUW WHY:", etc.
+      const whyPatterns = [
+        /MIJN WHY:\s*([\s\S]+?)$/i,
+        /JOUW WHY:\s*([\s\S]+?)$/i,
+        /YOUR WHY:\s*([\s\S]+?)$/i,
+        /MY WHY:\s*([\s\S]+?)$/i,
+        /WHY:\s*([\s\S]+?)$/i,
+      ];
+
+      let gevondenWhy: string | null = null;
+      for (const pattern of whyPatterns) {
+        const match = antwoordTekst.match(pattern);
+        if (match && match[1].trim().length > 30) {
+          gevondenWhy = match[1].trim().replace(/^["'\u201c\u201e]+|["'\u201d]+$/g, "").trim();
+          break;
+        }
+      }
+
+      if (gevondenWhy) {
+        setVoorgesteldWhy(gevondenWhy);
+      } else if (berPakket.length >= 10 && antwoordTekst.length > 100) {
+        // Na genoeg berichten: bied hele antwoord aan als mogelijke WHY
+        // Verwijder intro-zinnen als die er zijn
+        const schoneTekst = antwoordTekst
+          .replace(/^(Dankjewel|Bedankt|Hier is|Dit is|Geweldig)[^\n]*\n*/i, "")
+          .replace(/\*+/g, "")
+          .trim();
+        if (schoneTekst.length > 50) {
+          setVoorgesteldWhy(schoneTekst);
+        }
       }
     } catch {
       toast.error("Er is iets misgegaan. Probeer opnieuw.");
@@ -153,24 +177,48 @@ export default function MijnWhyPagina() {
     } = await supabase.auth.getUser();
     if (!user) return;
 
+    // Schoon de WHY tekst op
+    const schoneWhy = voorgesteldWhy
+      .replace(/\*+/g, "")
+      .replace(/^["'\u201c\u201e]+|["'\u201d]+$/g, "")
+      .trim();
+
     const transcript = berichten.map((b) => ({
       role: b.role,
       content: b.content,
       timestamp: b.timestamp,
     }));
 
-    await supabase.from("why_profiles").upsert({
-      user_id: user.id,
-      gesprek_transcript: transcript,
-      why_samenvatting: voorgesteldWhy,
-      updated_at: new Date().toISOString(),
-    });
+    // Probeer eerst update, dan insert als er nog geen row is
+    const { data: bestaand } = await supabase
+      .from("why_profiles")
+      .select("id")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (bestaand) {
+      await supabase
+        .from("why_profiles")
+        .update({
+          gesprek_transcript: transcript,
+          why_samenvatting: schoneWhy,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("user_id", user.id);
+    } else {
+      await supabase.from("why_profiles").insert({
+        user_id: user.id,
+        gesprek_transcript: transcript,
+        why_samenvatting: schoneWhy,
+      });
+    }
 
     await supabase
       .from("profiles")
       .update({ onboarding_klaar: true })
       .eq("id", user.id);
 
+    setBestaandeWhy(schoneWhy);
     setOpgeslagen(true);
     setVoorgesteldWhy(null);
     toast.success("Jouw WHY is opgeslagen!");

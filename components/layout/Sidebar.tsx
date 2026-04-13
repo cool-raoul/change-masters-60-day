@@ -5,22 +5,24 @@ import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-
-const navigatie = [
-  { href: "/dashboard", label: "Dashboard", icoon: "⚡" },
-  { href: "/namenlijst", label: "Namenlijst", icoon: "👥" },
-  { href: "/zoeken", label: "Zoeken", icoon: "🔍" },
-  { href: "/coach", label: "AI Coach", icoon: "🤖" },
-  { href: "/scripts", label: "Scripts", icoon: "📋" },
-  { href: "/herinneringen", label: "Herinneringen", icoon: "🔔" },
-  { href: "/team", label: "Mijn Team", icoon: "🏆" },
-];
+import { useTaal } from "@/lib/i18n/TaalContext";
 
 export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
   const [mobielmenuOpen, setMobielmenuOpen] = useState(false);
+  const { v } = useTaal();
+
+  const navigatie = [
+    { href: "/dashboard", labelKey: "nav.dashboard", icoon: "\u26a1" },
+    { href: "/namenlijst", labelKey: "nav.namenlijst", icoon: "\ud83d\udc65" },
+    { href: "/zoeken", labelKey: "nav.zoeken", icoon: "\ud83d\udd0d" },
+    { href: "/coach", labelKey: "nav.coach", icoon: "\ud83e\udd16" },
+    { href: "/scripts", labelKey: "nav.scripts", icoon: "\ud83d\udccb" },
+    { href: "/herinneringen", labelKey: "nav.herinneringen", icoon: "\ud83d\udd14" },
+    { href: "/team", labelKey: "nav.team", icoon: "\ud83c\udfc6" },
+  ];
 
   // Sluit menu bij navigatie
   useEffect(() => {
@@ -52,7 +54,7 @@ export function Sidebar() {
             <img src="/eleva-icon.png" alt="ELEVA" className="h-8 w-8" />
             <div>
               <h1 className="text-xl eleva-brand">ELEVA</h1>
-              <p className="text-cm-white text-[10px] opacity-60 -mt-0.5">60 Dagen Run</p>
+              <p className="text-cm-white text-[10px] opacity-60 -mt-0.5">{v("nav.60dagen")}</p>
             </div>
           </div>
         </div>
@@ -61,7 +63,7 @@ export function Sidebar() {
           onClick={() => setMobielmenuOpen(false)}
           className="lg:hidden text-cm-white opacity-60 hover:opacity-100 text-2xl"
         >
-          ✕
+          \u2715
         </button>
       </div>
 
@@ -80,7 +82,7 @@ export function Sidebar() {
               }`}
             >
               <span className="text-base">{item.icoon}</span>
-              {item.label}
+              {v(item.labelKey)}
             </Link>
           );
         })}
@@ -92,19 +94,19 @@ export function Sidebar() {
           href="/instellingen"
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
         >
-          <span>⚙️</span> Instellingen
+          <span>\u2699\ufe0f</span> {v("nav.instellingen")}
         </Link>
         <Link
           href="/mijn-why"
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
         >
-          <span>🎯</span> Mijn WHY
+          <span>\ud83c\udfaf</span> {v("nav.mijn_why")}
         </Link>
         <button
           onClick={uitloggen}
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:text-red-400 hover:bg-cm-surface-2 transition-colors w-full text-left"
         >
-          <span>🚪</span> Uitloggen
+          <span>\ud83d\udeaa</span> {v("nav.uitloggen")}
         </button>
       </div>
     </>

@@ -32,7 +32,7 @@ export default async function NamenlijstPagina() {
           </p>
         </div>
         <Link href="/namenlijst/nieuw" className="btn-gold">
-          + Prospect toevoegen
+          + Nieuw toevoegen
         </Link>
       </div>
 

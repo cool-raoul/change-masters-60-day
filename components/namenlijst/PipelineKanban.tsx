@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import { PIPELINE_FASEN, Prospect, PipelineFase } from "@/lib/supabase/types";
 import { createClient } from "@/lib/supabase/client";
@@ -26,11 +26,15 @@ const FASE_KLEUREN: Record<PipelineFase, string> = {
 function ProspectKaart({
   prospect,
   onFaseWijzig,
+  isDragging,
   onDragStart,
+  onDragEnd,
 }: {
   prospect: Prospect;
   onFaseWijzig: (id: string, fase: PipelineFase) => void;
+  isDragging: boolean;
   onDragStart: (e: React.DragEvent, id: string) => void;
+  onDragEnd: () => void;
 }) {
   const dagSindsContact = prospect.laatste_contact
     ? Math.floor((Date.now() - new Date(prospect.laatste_contact).getTime()) / (1000 * 60 * 60 * 24))
@@ -40,13 +44,17 @@ function ProspectKaart({
     <div
       draggable
       onDragStart={(e) => onDragStart(e, prospect.id)}
-      className="bg-cm-surface border border-cm-border rounded-xl p-3 space-y-2 hover:border-cm-gold-dim transition-colors cursor-grab active:cursor-grabbing group"
+      onDragEnd={onDragEnd}
+      className={`bg-cm-surface border border-cm-border rounded-xl p-3 space-y-2 hover:border-cm-gold-dim transition-all cursor-grab active:cursor-grabbing group select-none ${
+        isDragging ? "opacity-40 ring-2 ring-cm-gold" : "opacity-100"
+      }`}
     >
       <div className="flex items-start justify-between">
         <Link
           href={`/namenlijst/${prospect.id}`}
           className="font-semibold text-cm-white text-sm hover:text-cm-gold transition-colors flex-1"
           onClick={(e) => e.stopPropagation()}
+          draggable={false}
         >
           {prospect.volledige_naam}
         </Link>
@@ -62,7 +70,7 @@ function ProspectKaart({
       )}
 
       <div className="flex items-center justify-between pt-1">
-        <span className="text-xs text-cm-white">
+        <span className="text-xs text-cm-white opacity-60">
           {dagSindsContact !== null
             ? dagSindsContact === 0
               ? "Vandaag"
@@ -85,7 +93,12 @@ function ProspectKaart({
         {PIPELINE_FASEN.filter((f) => f.fase !== prospect.pipeline_fase).map((f) => (
           <button
             key={f.fase}
-            onClick={() => onFaseWijzig(prospect.id, f.fase)}
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onFaseWijzig(prospect.id, f.fase);
+            }}
             className="text-xs px-2 py-0.5 rounded bg-cm-surface-2 text-cm-white hover:text-cm-gold transition-colors"
           >
             {f.label}
@@ -99,46 +112,59 @@ function ProspectKaart({
 export function PipelineKanban({ prospects }: Props) {
   const [lokaleProspects, setLokaleProspects] = useState(prospects);
   const [dragOverFase, setDragOverFase] = useState<PipelineFase | null>(null);
+  const [draggingId, setDraggingId] = useState<string | null>(null);
   const draggedIdRef = useRef<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
 
-  function handleDragStart(e: React.DragEvent, id: string) {
+  const handleDragStart = useCallback((e: React.DragEvent, id: string) => {
     draggedIdRef.current = id;
+    setDraggingId(id);
     e.dataTransfer.effectAllowed = "move";
-    if (e.currentTarget instanceof HTMLElement) {
-      e.currentTarget.style.opacity = "0.5";
-    }
-  }
+    e.dataTransfer.setData("text/plain", id);
+  }, []);
 
-  function handleDragEnd(e: React.DragEvent) {
-    if (e.currentTarget instanceof HTMLElement) {
-      e.currentTarget.style.opacity = "1";
-    }
+  const handleDragEnd = useCallback(() => {
+    setDraggingId(null);
     setDragOverFase(null);
     draggedIdRef.current = null;
-  }
+  }, []);
 
-  function handleDragOver(e: React.DragEvent, fase: PipelineFase) {
+  const handleDragOver = useCallback((e: React.DragEvent, fase: PipelineFase) => {
     e.preventDefault();
+    e.stopPropagation();
     e.dataTransfer.dropEffect = "move";
     setDragOverFase(fase);
-  }
+  }, []);
 
-  function handleDragLeave() {
-    setDragOverFase(null);
-  }
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    // Alleen resetten als we echt de kolom verlaten (niet naar een child)
+    const related = e.relatedTarget as HTMLElement | null;
+    if (!e.currentTarget.contains(related)) {
+      setDragOverFase(null);
+    }
+  }, []);
 
-  function handleDrop(e: React.DragEvent, nieuweFase: PipelineFase) {
+  const handleDrop = useCallback((e: React.DragEvent, nieuweFase: PipelineFase) => {
     e.preventDefault();
+    e.stopPropagation();
     setDragOverFase(null);
-    const id = draggedIdRef.current;
+
+    // Probeer id uit dataTransfer of ref
+    const id = e.dataTransfer.getData("text/plain") || draggedIdRef.current;
     if (!id) return;
+
     const prospect = lokaleProspects.find((p) => p.id === id);
-    if (!prospect || prospect.pipeline_fase === nieuweFase) return;
+    if (!prospect || prospect.pipeline_fase === nieuweFase) {
+      setDraggingId(null);
+      draggedIdRef.current = null;
+      return;
+    }
+
     wijzigFase(id, nieuweFase);
+    setDraggingId(null);
     draggedIdRef.current = null;
-  }
+  }, [lokaleProspects]);
 
   async function wijzigFase(id: string, nieuweFase: PipelineFase) {
     setLokaleProspects((prev) =>
@@ -152,16 +178,16 @@ export function PipelineKanban({ prospects }: Props) {
       toast.error("Kon fase niet wijzigen");
       setLokaleProspects(prospects);
     } else {
-      toast.success("Bijgewerkt");
+      toast.success("Bijgewerkt ✓");
     }
   }
 
   function scrollLinks() {
-    scrollRef.current?.scrollBy({ left: -300, behavior: "smooth" });
+    scrollRef.current?.scrollBy({ left: -280, behavior: "smooth" });
   }
 
   function scrollRechts() {
-    scrollRef.current?.scrollBy({ left: 300, behavior: "smooth" });
+    scrollRef.current?.scrollBy({ left: 280, behavior: "smooth" });
   }
 
   return (
@@ -202,6 +228,7 @@ export function PipelineKanban({ prospects }: Props) {
                     background: isDragOver
                       ? `${FASE_KLEUREN[fase]}30`
                       : `${FASE_KLEUREN[fase]}15`,
+                    borderBottom: isDragOver ? `2px solid ${FASE_KLEUREN[fase]}` : "2px solid transparent",
                   }}
                 >
                   <span className="text-sm font-semibold" style={{ color: FASE_KLEUREN[fase] }}>
@@ -212,30 +239,31 @@ export function PipelineKanban({ prospects }: Props) {
                   </span>
                 </div>
 
-                {/* Kaarten */}
+                {/* Kaarten dropzone */}
                 <div
                   className={`space-y-2 min-h-[200px] rounded-b-xl p-1 transition-all ${
-                    isDragOver ? "ring-2 ring-cm-gold bg-cm-surface-2/30" : ""
+                    isDragOver ? "ring-2 ring-cm-gold bg-cm-surface-2/20" : ""
                   }`}
                 >
                   {faseProspects.map((p) => (
-                    <div key={p.id} onDragEnd={handleDragEnd}>
-                      <ProspectKaart
-                        prospect={p}
-                        onFaseWijzig={wijzigFase}
-                        onDragStart={handleDragStart}
-                      />
-                    </div>
+                    <ProspectKaart
+                      key={p.id}
+                      prospect={p}
+                      onFaseWijzig={wijzigFase}
+                      isDragging={draggingId === p.id}
+                      onDragStart={handleDragStart}
+                      onDragEnd={handleDragEnd}
+                    />
                   ))}
                   {faseProspects.length === 0 && (
                     <div
-                      className={`border-2 border-dashed rounded-xl p-4 text-center text-xs transition-colors ${
+                      className={`border-2 border-dashed rounded-xl p-4 text-center text-xs transition-colors min-h-[80px] flex items-center justify-center ${
                         isDragOver
-                          ? "border-cm-gold text-cm-gold"
-                          : "border-cm-border text-cm-white"
+                          ? "border-cm-gold text-cm-gold bg-cm-gold/5"
+                          : "border-cm-border text-cm-white opacity-40"
                       }`}
                     >
-                      {isDragOver ? "Laat hier los" : "Leeg"}
+                      {isDragOver ? "↓ Laat hier los" : "Leeg"}
                     </div>
                   )}
                 </div>

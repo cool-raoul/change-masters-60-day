@@ -160,9 +160,9 @@ export const PIPELINE_FASEN: { fase: PipelineFase; label: string; kleur: string;
   { fase: "one_pager", label: "One Pager", kleur: "#1A1A3A", tekstkleur: "#7A6ADB" },
   { fase: "presentatie", label: "Presentatie", kleur: "#2A1A3A", tekstkleur: "#9A6ADB" },
   { fase: "followup", label: "Follow up", kleur: "#2A2A1A", tekstkleur: "#C9A84C" },
-  { fase: "not_yet", label: "Not Yet", kleur: "#2A1A1A", tekstkleur: "#DB6A6A" },
-  { fase: "shopper", label: "Shopper", kleur: "#1A2A1A", tekstkleur: "#4ACB6A" },
   { fase: "member", label: "Member", kleur: "#2A2A0A", tekstkleur: "#E8C96B" },
+  { fase: "shopper", label: "Shopper", kleur: "#1A2A1A", tekstkleur: "#4ACB6A" },
+  { fase: "not_yet", label: "Not Yet", kleur: "#2A1A1A", tekstkleur: "#DB6A6A" },
 ];
 
 export const RUN_START_DATUM = new Date("2026-04-12");

@@ -196,7 +196,7 @@ export default function NieuwProspectPagina() {
 
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={laden} className="btn-gold flex-1">
-            {laden ? "Opslaan..." : "Prospect toevoegen"}
+            {laden ? "Opslaan..." : "Nieuw toevoegen"}
           </button>
           <Link href="/namenlijst" className="btn-secondary px-6 text-center">
             Annuleren

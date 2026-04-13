@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { TaalProvider } from "@/lib/i18n/TaalContext";
 
 export const metadata: Metadata = {
   title: "ELEVA — 60 Dagen Run",
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="nl">
       <body>
-        {children}
+        <TaalProvider>
+          {children}
+        </TaalProvider>
         <Toaster
           theme="dark"
           toastOptions={{

@@ -224,7 +224,7 @@ export default async function DashboardPagina() {
             </h2>
             <div className="space-y-2">
               <Link href="/namenlijst/nieuw" className="btn-secondary w-full text-sm text-center block">
-                + Prospect toevoegen
+                + Nieuw toevoegen
               </Link>
               <Link href="/coach" className="btn-secondary w-full text-sm text-center block">
                 AI Coach raadplegen
