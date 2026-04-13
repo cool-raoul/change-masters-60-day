@@ -36,8 +36,10 @@ export default function MijnWhyPagina() {
             .select("why_samenvatting")
             .eq("user_id", user.id)
             .maybeSingle();
-          if (data?.why_samenvatting) {
-            setBestaandeWhy(data.why_samenvatting);
+          // Alleen opslaan als het een echte tekst is (niet *** of te kort)
+          const why = data?.why_samenvatting;
+          if (why && why.replace(/\*/g, "").trim().length > 20) {
+            setBestaandeWhy(why.replace(/\*+/g, "").trim());
           }
         }
       } catch (err) {
