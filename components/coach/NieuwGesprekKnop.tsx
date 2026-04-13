@@ -20,14 +20,14 @@ export function NieuwGesprekKnop({ userId, prospects }: Props) {
 
   async function maakNieuwGesprek() {
     setLaden(true);
+    const geselecteerdProspect = prospects.find((p) => p.id === selectedProspect);
     const { data, error } = await supabase
       .from("ai_gesprekken")
       .insert({
         user_id: userId,
         prospect_id: selectedProspect || null,
-        titel: selectedProspect
-          ? `Coach gesprek`
-          : "Algemeen coach gesprek",
+        // Geen titel zetten — wordt automatisch ingesteld bij eerste bericht
+        titel: geselecteerdProspect ? `Over ${geselecteerdProspect.volledige_naam}` : null,
         berichten: [],
       })
       .select()
