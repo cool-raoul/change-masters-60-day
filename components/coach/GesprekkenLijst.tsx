@@ -31,7 +31,7 @@ export function GesprekkenLijst({ gesprekken }: { gesprekken: Gesprek[] }) {
     if (error) {
       toast.error("Kon gesprek niet verwijderen");
     } else {
-      setVerwijderd((prev) => new Set([...prev, id]));
+      setVerwijderd((prev) => new Set(Array.from(prev).concat(id)));
       setBevestig(null);
       toast.success("Gesprek verwijderd");
       router.refresh();
