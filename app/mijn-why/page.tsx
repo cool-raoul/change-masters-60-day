@@ -22,27 +22,31 @@ export default function MijnWhyPagina() {
   const supabase = createClient();
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user?.user_metadata?.full_name) {
-        setGebruikersnaam(user.user_metadata.full_name.split(" ")[0]);
-      }
-      if (user) {
-        // Check of er al een WHY is opgeslagen
-        supabase
-          .from("why_profiles")
-          .select("why_samenvatting")
-          .eq("user_id", user.id)
-          .single()
-          .then(({ data }) => {
-            if (data?.why_samenvatting) {
-              setBestaandeWhy(data.why_samenvatting);
-            }
-            setPaginaLaden(false);
-          });
-      } else {
+    async function laadGegevens() {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user?.user_metadata?.full_name) {
+          setGebruikersnaam(user.user_metadata.full_name.split(" ")[0]);
+        } else if (user?.email) {
+          setGebruikersnaam(user.email.split("@")[0]);
+        }
+        if (user) {
+          const { data } = await supabase
+            .from("why_profiles")
+            .select("why_samenvatting")
+            .eq("user_id", user.id)
+            .maybeSingle();
+          if (data?.why_samenvatting) {
+            setBestaandeWhy(data.why_samenvatting);
+          }
+        }
+      } catch (err) {
+        console.error("Fout bij laden WHY:", err);
+      } finally {
         setPaginaLaden(false);
       }
-    });
+    }
+    laadGegevens();
   }, []);
 
   useEffect(() => {
