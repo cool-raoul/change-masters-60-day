@@ -5,8 +5,10 @@ import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Profile } from "@/lib/supabase/types";
+import { useTaal } from "@/lib/i18n/TaalContext";
 
 export function InstellingenForm({ profile, email }: { profile: Profile | null; email: string }) {
+  const { v } = useTaal();
   const [naam, setNaam] = useState(profile?.full_name || "");
   const [laden, setLaden] = useState(false);
   const [wachtwoord, setWachtwoord] = useState("");
@@ -28,9 +30,9 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
       .eq("id", profile?.id);
 
     if (error) {
-      toast.error("Kon profiel niet opslaan");
+      toast.error(v("actie.fout"));
     } else {
-      toast.success("Profiel bijgewerkt!");
+      toast.success(v("instellingen.profiel") + " " + v("algemeen.opslaan").toLowerCase() + "d!");
       router.refresh();
     }
     setLaden(false);
@@ -39,19 +41,19 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
   async function wijzigWachtwoord(e: React.FormEvent) {
     e.preventDefault();
     if (wachtwoord !== wachtwoordBevestig) {
-      toast.error("Wachtwoorden komen niet overeen");
+      toast.error(v("registreer.wachtwoorden_niet_gelijk"));
       return;
     }
     if (wachtwoord.length < 6) {
-      toast.error("Wachtwoord moet minimaal 6 tekens zijn");
+      toast.error(v("registreer.wachtwoord_te_kort"));
       return;
     }
     setLaden(true);
     const { error } = await supabase.auth.updateUser({ password: wachtwoord });
     if (error) {
-      toast.error("Kon wachtwoord niet wijzigen");
+      toast.error(v("actie.fout"));
     } else {
-      toast.success("Wachtwoord gewijzigd!");
+      toast.success(v("instellingen.wachtwoord_wijzigen") + "d!");
       setWachtwoord("");
       setWachtwoordBevestig("");
     }
@@ -71,9 +73,9 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
       .eq("id", profile?.id);
 
     if (error) {
-      toast.error("Kon e-mail instelling niet opslaan");
+      toast.error(v("actie.fout"));
     } else {
-      toast.success("E-mail instelling opgeslagen!");
+      toast.success(v("instellingen.email_herinneringen") + " " + v("algemeen.opslaan").toLowerCase() + "d!");
       router.refresh();
     }
     setResendLaden(false);
@@ -81,7 +83,7 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
 
   async function testResendKey() {
     if (!resendKey) {
-      toast.error("Vul eerst een API key in");
+      toast.error(v("instellingen.resend_key"));
       return;
     }
     setResendTesten(true);
@@ -95,9 +97,9 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
     });
 
     if (response.ok) {
-      toast.success("Testmail verstuurd! Check je inbox.");
+      toast.success(v("instellingen.testmail") + " ✓");
     } else {
-      toast.error("API key werkt niet. Controleer of je hem goed hebt gekopieerd.");
+      toast.error(v("actie.fout"));
     }
     setResendTesten(false);
   }
@@ -107,10 +109,10 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
       {/* Profiel */}
       <form onSubmit={slaProfielOp} className="card space-y-4">
         <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
-          Profiel
+          {v("instellingen.profiel")}
         </h2>
         <div>
-          <label className="block text-sm text-cm-white mb-1.5">Naam</label>
+          <label className="block text-sm text-cm-white mb-1.5">{v("instellingen.naam")}</label>
           <input
             type="text"
             value={naam}
@@ -119,7 +121,7 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
           />
         </div>
         <div>
-          <label className="block text-sm text-cm-white mb-1.5">E-mailadres</label>
+          <label className="block text-sm text-cm-white mb-1.5">{v("registreer.email")}</label>
           <input
             type="email"
             value={email}
@@ -128,16 +130,16 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
           />
         </div>
         <div>
-          <label className="block text-sm text-cm-white mb-1.5">Rol</label>
+          <label className="block text-sm text-cm-white mb-1.5">{v("instellingen.rol")}</label>
           <input
             type="text"
-            value={profile?.role === "leider" ? "Teamleider" : "Teamlid"}
+            value={profile?.role === "leider" ? v("instellingen.leider") : v("instellingen.lid")}
             disabled
             className="input-cm opacity-50 cursor-not-allowed"
           />
         </div>
         <button type="submit" disabled={laden} className="btn-gold">
-          {laden ? "Opslaan..." : "Profiel opslaan"}
+          {laden ? v("algemeen.laden") : v("instellingen.profiel_opslaan")}
         </button>
       </form>
 
@@ -145,32 +147,32 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
       <div className="card space-y-4">
         <div>
           <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
-            E-mail herinneringen
+            {v("instellingen.email_herinneringen")}
           </h2>
           <p className="text-cm-white text-xs mt-1">
-            Koppel je eigen gratis e-mailaccount zodat je elke ochtend een herinnering krijgt van openstaande taken.
+            {v("instellingen.email_subtitel")}
           </p>
         </div>
 
         {/* Uitleg stappen */}
         <div className="bg-cm-surface-2 rounded-lg p-4 space-y-3">
-          <p className="text-cm-white text-sm font-medium">Hoe stel je dit in? (2 minuten)</p>
+          <p className="text-cm-white text-sm font-medium">{v("instellingen.hoe_stap")}</p>
           <ol className="text-cm-white text-sm space-y-2">
             <li className="flex gap-2">
               <span className="text-cm-gold font-bold flex-shrink-0">1.</span>
-              <span>Ga naar <span className="text-cm-gold font-medium">resend.com</span> en maak een gratis account aan (100 mails per dag, gratis)</span>
+              <span>{v("instellingen.stap1")}</span>
             </li>
             <li className="flex gap-2">
               <span className="text-cm-gold font-bold flex-shrink-0">2.</span>
-              <span>Klik na het inloggen op <span className="text-cm-white font-medium">API Keys</span> in het menu links</span>
+              <span>{v("instellingen.stap2")}</span>
             </li>
             <li className="flex gap-2">
               <span className="text-cm-gold font-bold flex-shrink-0">3.</span>
-              <span>Klik op <span className="text-cm-white font-medium">Create API Key</span>, geef hem een naam en kopieer de key</span>
+              <span>{v("instellingen.stap3")}</span>
             </li>
             <li className="flex gap-2">
               <span className="text-cm-gold font-bold flex-shrink-0">4.</span>
-              <span>Plak de key hieronder en klik op opslaan</span>
+              <span>{v("instellingen.stap4")}</span>
             </li>
           </ol>
         </div>
@@ -178,22 +180,22 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
         <form onSubmit={slaResendKeyOp} className="space-y-3">
           <div>
             <label className="block text-sm text-cm-white mb-1.5">
-              E-mailadres voor herinneringen
+              {v("instellingen.notificatie_email")}
             </label>
             <input
               type="email"
               value={notificatieEmail}
               onChange={(e) => setNotificatieEmail(e.target.value)}
-              placeholder={email + " (laat leeg om je aanmeld e-mail te gebruiken)"}
+              placeholder={email}
               className="input-cm"
             />
             <p className="text-cm-white text-xs mt-1">
-              Vul hier een ander e-mailadres in als je de herinneringen ergens anders wilt ontvangen.
+              {v("instellingen.notificatie_uitleg")}
             </p>
           </div>
           <div>
             <label className="block text-sm text-cm-white mb-1.5">
-              Resend API Key
+              {v("instellingen.resend_key")}
             </label>
             <input
               type="password"
@@ -203,7 +205,7 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
               className="input-cm font-mono text-sm"
             />
             <p className="text-cm-white text-xs mt-1">
-              Je key wordt versleuteld opgeslagen. Niemand anders kan hem zien.
+              {v("instellingen.key_uitleg")}
             </p>
           </div>
 
@@ -213,7 +215,7 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
               disabled={resendLaden}
               className="btn-gold flex-1"
             >
-              {resendLaden ? "Opslaan..." : "Opslaan"}
+              {resendLaden ? v("algemeen.laden") : v("algemeen.opslaan")}
             </button>
             {resendKey && (
               <button
@@ -222,7 +224,7 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
                 disabled={resendTesten}
                 className="btn-secondary px-4"
               >
-                {resendTesten ? "Testen..." : "Testmail sturen"}
+                {resendTesten ? v("instellingen.testen") : v("instellingen.testmail")}
               </button>
             )}
           </div>
@@ -231,7 +233,7 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
         {(profile as any)?.resend_api_key && (
           <div className="flex items-center gap-2 text-[#4ACB6A] text-sm">
             <span>✓</span>
-            <span>E-mail herinneringen zijn actief. Je krijgt elke ochtend om 07:00 een mail als je openstaande herinneringen hebt.</span>
+            <span>{v("instellingen.actief")}</span>
           </div>
         )}
       </div>
@@ -239,30 +241,30 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
       {/* Wachtwoord */}
       <form onSubmit={wijzigWachtwoord} className="card space-y-4">
         <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
-          Wachtwoord wijzigen
+          {v("instellingen.wachtwoord")}
         </h2>
         <div>
-          <label className="block text-sm text-cm-white mb-1.5">Nieuw wachtwoord</label>
+          <label className="block text-sm text-cm-white mb-1.5">{v("instellingen.nieuw_wachtwoord")}</label>
           <input
             type="password"
             value={wachtwoord}
             onChange={(e) => setWachtwoord(e.target.value)}
-            placeholder="Minimaal 6 tekens"
+            placeholder={v("instellingen.wachtwoord_placeholder")}
             className="input-cm"
           />
         </div>
         <div>
-          <label className="block text-sm text-cm-white mb-1.5">Bevestig wachtwoord</label>
+          <label className="block text-sm text-cm-white mb-1.5">{v("instellingen.bevestig_wachtwoord")}</label>
           <input
             type="password"
             value={wachtwoordBevestig}
             onChange={(e) => setWachtwoordBevestig(e.target.value)}
-            placeholder="Herhaal nieuw wachtwoord"
+            placeholder={v("instellingen.herhaal_placeholder")}
             className="input-cm"
           />
         </div>
         <button type="submit" disabled={laden} className="btn-secondary">
-          {laden ? "Wijzigen..." : "Wachtwoord wijzigen"}
+          {laden ? v("instellingen.wijzigen_laden") : v("instellingen.wachtwoord_wijzigen")}
         </button>
       </form>
     </div>

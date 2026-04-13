@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Topbar } from "@/components/layout/Topbar";
 import { WelcomePopup } from "@/components/layout/WelcomePopup";
+import { TaalProvider } from "@/lib/i18n/TaalContext";
+import { Taal } from "@/lib/i18n/vertalingen";
 
 export async function AppShell({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -20,14 +22,19 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 
   if (!profile?.onboarding_klaar) redirect("/mijn-why");
 
+  // Lees taal uit user metadata — direct beschikbaar voor alle client componenten
+  const taal = (user.user_metadata?.taal as Taal) || "nl";
+
   return (
-    <div className="flex h-screen bg-cm-black overflow-hidden">
-      <WelcomePopup />
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Topbar gebruikersnaam={profile?.full_name || user.email || "Teamlid"} />
-        <main className="flex-1 overflow-y-auto p-6">{children}</main>
+    <TaalProvider initialTaal={taal}>
+      <div className="flex h-screen bg-cm-black overflow-hidden">
+        <WelcomePopup />
+        <Sidebar />
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <Topbar gebruikersnaam={profile?.full_name || user.email || "Teamlid"} />
+          <main className="flex-1 overflow-y-auto p-6">{children}</main>
+        </div>
       </div>
-    </div>
+    </TaalProvider>
   );
 }

@@ -2,11 +2,15 @@ import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { format } from "date-fns";
-import { nl } from "date-fns/locale";
+import { nl, enUS, fr, es, de, pt } from "date-fns/locale";
 import { PIPELINE_FASEN } from "@/lib/supabase/types";
 import { ProspectActieForm } from "@/components/namenlijst/ProspectActieForm";
 import { ContactLogLijst } from "@/components/namenlijst/ContactLogLijst";
 import { ContactgegevensForm } from "@/components/namenlijst/ContactgegevensForm";
+import { getServerTaal, v } from "@/lib/i18n/server";
+import { Locale } from "date-fns";
+
+const DATE_LOCALES: Record<string, Locale> = { nl, en: enUS, fr, es, de, pt };
 
 export default async function ProspectDetailPagina({
   params,
@@ -20,6 +24,9 @@ export default async function ProspectDetailPagina({
   } = await supabase.auth.getUser();
 
   if (!user) return null;
+
+  const taal = await getServerTaal();
+  const datumLocale = DATE_LOCALES[taal] || nl;
 
   const [{ data: prospect }, { data: contactLogs }, { data: bestellingen }, { data: coachGesprekken }] =
     await Promise.all([
@@ -71,14 +78,14 @@ export default async function ProspectDetailPagina({
                 {faseInfo?.label}
               </span>
               {prospect.prioriteit === "hoog" && (
-                <span className="text-cm-gold text-xs">⭐ Hoge prioriteit</span>
+                <span className="text-cm-gold text-xs">{v("prospect.hoge_prioriteit", taal)}</span>
               )}
             </div>
           </div>
         </div>
         <div className="flex gap-2">
           <Link href={`/coach?prospect=${id}`} className="btn-secondary text-sm">
-            🤖 Coach
+            🤖 {v("nav.coach", taal)}
           </Link>
         </div>
       </div>
@@ -89,25 +96,25 @@ export default async function ProspectDetailPagina({
           <ContactgegevensForm prospect={prospect} />
 
           <div className="border-t border-cm-border pt-3 mt-3">
-            <p className="text-xs text-cm-white opacity-60">Toegevoegd op</p>
+            <p className="text-xs text-cm-white opacity-60">{v("prospect.toegevoegd", taal)}</p>
             <p className="text-cm-white text-sm">
-              {format(new Date(prospect.created_at), "d MMMM yyyy", { locale: nl })}
+              {format(new Date(prospect.created_at), "d MMMM yyyy", { locale: datumLocale })}
             </p>
           </div>
 
           {/* Productbestellingen */}
           {bestellingen && bestellingen.length > 0 && (
             <div className="border-t border-cm-border pt-3 mt-3">
-              <p className="text-xs text-cm-white mb-2">Productbestellingen</p>
+              <p className="text-xs text-cm-white mb-2">{v("prospect.bestellingen", taal)}</p>
               {bestellingen.map((b) => (
                 <div key={b.id} className="bg-cm-surface-2 rounded-lg p-2 text-xs mb-2">
                   <p className="text-cm-white">
-                    {format(new Date(b.besteldatum), "d MMM yyyy", { locale: nl })}
+                    {format(new Date(b.besteldatum), "d MMM yyyy", { locale: datumLocale })}
                   </p>
                   <p className="text-cm-white">{b.product_omschrijving}</p>
                   <p className="text-cm-gold mt-1">
-                    🔔 Herinnering:{" "}
-                    {format(new Date(b.tweede_bestelling_reminder_datum), "d MMM yyyy", { locale: nl })}
+                    {v("prospect.herinnering", taal)}{" "}
+                    {format(new Date(b.tweede_bestelling_reminder_datum), "d MMM yyyy", { locale: datumLocale })}
                   </p>
                 </div>
               ))}
@@ -128,19 +135,19 @@ export default async function ProspectDetailPagina({
           <div className="card space-y-3">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
-                🤖 AI Coach gesprekken
+                {v("prospect.coach_gesprekken", taal)}
               </h2>
               <Link
                 href={`/coach?prospect=${id}`}
                 className="text-cm-gold text-xs hover:text-cm-gold-light"
               >
-                + Nieuw gesprek
+                {v("prospect.nieuw_gesprek", taal)}
               </Link>
             </div>
 
             {(!coachGesprekken || coachGesprekken.length === 0) ? (
               <p className="text-cm-white text-sm">
-                Nog geen coach gesprekken over {prospect.volledige_naam}.
+                {v("prospect.geen_gesprekken", taal)}
               </p>
             ) : (
               <div className="space-y-2">
@@ -152,10 +159,10 @@ export default async function ProspectDetailPagina({
                   >
                     <div>
                       <p className="text-cm-white text-sm font-medium group-hover:text-cm-gold transition-colors">
-                        {gesprek.titel || "Coach gesprek"}
+                        {gesprek.titel || v("prospect.coach_gesprek", taal)}
                       </p>
                       <p className="text-cm-white text-xs opacity-60 mt-0.5">
-                        {format(new Date(gesprek.updated_at), "d MMM yyyy, HH:mm", { locale: nl })}
+                        {format(new Date(gesprek.updated_at), "d MMM yyyy, HH:mm", { locale: datumLocale })}
                       </p>
                     </div>
                     <span className="text-cm-gold text-sm">→</span>

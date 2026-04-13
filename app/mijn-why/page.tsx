@@ -5,8 +5,10 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { ChatBericht } from "@/lib/supabase/types";
 import { toast } from "sonner";
+import { useTaal } from "@/lib/i18n/TaalContext";
 
 export default function MijnWhyPagina() {
+  const { v } = useTaal();
   const [berichten, setBerichten] = useState<ChatBericht[]>([]);
   const [invoer, setInvoer] = useState("");
   const [laden, setLaden] = useState(false);
@@ -221,7 +223,7 @@ export default function MijnWhyPagina() {
     setBestaandeWhy(schoneWhy);
     setOpgeslagen(true);
     setVoorgesteldWhy(null);
-    toast.success("Jouw WHY is opgeslagen!");
+    toast.success(v("why.opgeslagen"));
   }
 
   async function finetuneWhy() {
@@ -229,7 +231,7 @@ export default function MijnWhyPagina() {
     // Stuur automatisch een bericht om verder te finetunen
     const nieuwBericht: ChatBericht = {
       role: "user",
-      content: "Ik wil mijn WHY nog iets aanscherpen. Kun je me helpen om het nog krachtiger te maken?",
+      content: v("why.finetunen"),
       timestamp: new Date().toISOString(),
     };
     const bijgewerkt = [...berichten, nieuwBericht];
@@ -262,11 +264,10 @@ export default function MijnWhyPagina() {
       <div className="border-b border-cm-border p-4 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-display font-bold text-cm-white">
-            Jouw{" "}
-            <span className="text-gold-gradient">WHY</span>
+            {v("why.titel")}
           </h1>
           <p className="text-cm-white text-sm">
-            Ontdek wat jou écht drijft — de basis van jouw 60-dagenrun
+            {v("why.subtitel")}
           </p>
         </div>
         {opgeslagen && (
@@ -274,7 +275,7 @@ export default function MijnWhyPagina() {
             onClick={() => router.push("/dashboard")}
             className="btn-gold text-sm"
           >
-            Naar dashboard →
+            {v("why.naar_dashboard")} →
           </button>
         )}
         <div className="text-cm-gold text-2xl">✦</div>
@@ -301,7 +302,7 @@ export default function MijnWhyPagina() {
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-2xl">🎯</span>
                 <h2 className="text-lg font-display font-bold text-cm-gold">
-                  Jouw huidige WHY
+                  {v("why.huidige")}
                 </h2>
               </div>
               <p className="text-cm-white text-sm leading-relaxed italic mb-4">
@@ -312,13 +313,13 @@ export default function MijnWhyPagina() {
                   onClick={() => router.push("/dashboard")}
                   className="btn-secondary text-sm flex-1"
                 >
-                  ← Terug naar dashboard
+                  {v("why.terug")}
                 </button>
                 <button
                   onClick={startCoach}
                   className="btn-gold text-sm flex-1"
                 >
-                  WHY opnieuw ontdekken
+                  {v("why.opnieuw")}
                 </button>
               </div>
             </div>
@@ -330,26 +331,24 @@ export default function MijnWhyPagina() {
           <div className="flex flex-col items-center justify-center h-full text-center py-12 max-w-lg mx-auto">
             <div className="text-6xl mb-6">🎯</div>
             <h2 className="text-2xl font-display font-bold text-cm-white mb-4">
-              Welkom, {gebruikersnaam || "teamlid"}!
+              {v("why.welkom")} {gebruikersnaam || "teamlid"}!
             </h2>
 
             {/* Uitleg wat een WHY is */}
             <div className="text-left w-full mb-6">
-              <h3 className="text-cm-gold font-semibold mb-2">Wat is een WHY?</h3>
+              <h3 className="text-cm-gold font-semibold mb-2">{v("why.wat_is")}</h3>
               <p className="text-cm-white text-sm leading-relaxed">
-                Je WHY is jouw persoonlijke motivatie. Het antwoord op de vraag: &ldquo;Waarom doe ik dit echt?&rdquo;
-                Niet het geld, niet de auto — maar wat er in jouw leven verandert als je dit voor elkaar krijgt.
+                {v("why.uitleg1")}
               </p>
               <p className="text-cm-white text-sm leading-relaxed mt-2">
-                Je WHY is ook je anker. Op de dagen dat het moeilijk is, lees je hem terug.
-                En hij is zo geschreven dat je hem trots kunt delen met mensen in je omgeving.
+                {v("why.uitleg2")}
               </p>
             </div>
 
             {/* Voorbeeld WHY */}
             <div className="w-full bg-gold-subtle border border-gold-subtle rounded-xl p-4 mb-6 text-left">
               <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider mb-2">
-                ✦ Voorbeeld WHY
+                ✦ {v("why.voorbeeld")}
               </p>
               <p className="text-cm-white text-sm leading-relaxed italic">
                 &ldquo;Ik ben moeder van twee kids en ik werk als accountmanager. Ik heb altijd fulltime gewerkt om alle rekeningen te betalen en mezelf daarin weggecijferd. Ik wil dolgraag met mijn gezin meer van de wereld zien. Ik heb een manier gevonden om online extra inkomsten op te bouwen zonder investeringen en zonder risico, zonder dat dit mijn huidige werk in de weg zit. Ik ben super enthousiast, want ik kan plaatsonafhankelijk werken, wat mij veel meer vrijheid geeft.&rdquo;
@@ -359,17 +358,15 @@ export default function MijnWhyPagina() {
             {/* Wat er gaat gebeuren */}
             <div className="w-full bg-cm-surface-2 border border-cm-border rounded-xl p-4 mb-8 text-left">
               <p className="text-cm-white text-sm font-semibold mb-2">
-                Wat gaat er straks gebeuren?
+                {v("why.wat_gebeurt")}
               </p>
               <p className="text-cm-white text-sm leading-relaxed">
-                De AI-coach stelt je een paar vragen over jouw situatie, je dromen en wat je echt drijft.
-                Wees eerlijk — hoe opener je bent, hoe krachtiger je WHY wordt.
-                Het duurt ongeveer 5 tot 10 minuten.
+                {v("why.wat_gebeurt_uitleg")}
               </p>
             </div>
 
             <button onClick={startCoach} className="btn-gold px-8 py-3 text-lg">
-              Start het gesprek →
+              {v("why.start")} →
             </button>
           </div>
         ) : gestartMetCoach ? (
@@ -419,7 +416,7 @@ export default function MijnWhyPagina() {
                 <div className="text-center mb-4">
                   <div className="text-3xl mb-2">✦</div>
                   <h3 className="text-lg font-display font-bold text-cm-gold">
-                    Jouw WHY
+                    {v("why.titel")}
                   </h3>
                 </div>
                 <p className="text-cm-white text-sm leading-relaxed italic text-center mb-6 px-2">
@@ -430,13 +427,13 @@ export default function MijnWhyPagina() {
                     onClick={finetuneWhy}
                     className="btn-secondary flex-1 text-sm py-3"
                   >
-                    Verder finetunen
+                    {v("why.finetunen")}
                   </button>
                   <button
                     onClick={bevestigWhy}
                     className="btn-gold flex-1 text-sm py-3 font-bold"
                   >
-                    Dit is &apos;m! ✓
+                    {v("why.bevestig")} ✓
                   </button>
                 </div>
               </div>
@@ -452,16 +449,16 @@ export default function MijnWhyPagina() {
         <div className="bg-gold-subtle border-t border-gold-subtle p-6 text-center">
           <div className="text-3xl mb-2">🎉</div>
           <p className="text-cm-gold font-semibold text-lg mb-1">
-            Jouw WHY is opgeslagen!
+            {v("why.opgeslagen")}
           </p>
           <p className="text-cm-white text-sm mb-4">
-            Je kunt je WHY altijd terugvinden op het dashboard en hier aanpassen.
+            {v("why.terugvinden")}
           </p>
           <button
             onClick={() => router.push("/dashboard")}
             className="btn-gold px-8 py-3"
           >
-            Naar het dashboard →
+            {v("why.naar_dashboard")} →
           </button>
         </div>
       )}
@@ -474,7 +471,7 @@ export default function MijnWhyPagina() {
               type="text"
               value={invoer}
               onChange={(e) => setInvoer(e.target.value)}
-              placeholder="Jouw antwoord..."
+              placeholder={v("why.antwoord")}
               className="input-cm flex-1"
               disabled={laden}
             />

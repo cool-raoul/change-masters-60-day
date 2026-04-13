@@ -3,6 +3,7 @@ import { differenceInDays } from "date-fns";
 import KopieerLink from "@/components/team/KopieerLink";
 import { TeamBoom } from "@/components/team/TeamBoom";
 import Link from "next/link";
+import { getServerTaal, v } from "@/lib/i18n/server";
 
 const RUN_START = new Date("2026-04-12");
 
@@ -64,6 +65,7 @@ export default async function TeamPagina() {
 
   if (!user) return null;
 
+  const taal = await getServerTaal();
   const dag = Math.max(1, Math.min(60, differenceInDays(new Date(), RUN_START) + 1));
 
   // Haal de volledige teamboom op
@@ -75,24 +77,24 @@ export default async function TeamPagina() {
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       <Link href="/dashboard" className="text-cm-white opacity-60 hover:opacity-100 text-sm flex items-center gap-1 mb-4">
-        ← Terug
+        {v("algemeen.terug", taal)}
       </Link>
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-display font-bold text-cm-white">
-            Mijn Team
+            {v("team.titel", taal)}
           </h1>
           <p className="text-cm-white mt-1">
-            Dag {dag} van 60
+            {v("team.dag", taal)} {dag} {v("dashboard.van_60", taal)}
           </p>
         </div>
       </div>
 
       {/* Uitnodigingslink */}
       <div className="card border-gold-subtle">
-        <h2 className="text-cm-gold font-semibold mb-2">Teamlid uitnodigen</h2>
+        <h2 className="text-cm-gold font-semibold mb-2">{v("team.uitnodigen", taal)}</h2>
         <p className="text-cm-white text-sm mb-3">
-          Stuur deze link naar je nieuwe teamleden. Ze worden automatisch aan jouw team gekoppeld.
+          {v("team.uitnodiging_subtitel", taal)}
         </p>
         <KopieerLink userId={user.id} />
       </div>
@@ -102,21 +104,21 @@ export default async function TeamPagina() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div className="card text-center">
             <div className="text-2xl font-bold text-cm-gold">{teamboom.length}</div>
-            <div className="text-xs text-cm-white mt-1">Level 1 (direct)</div>
+            <div className="text-xs text-cm-white mt-1">{v("team.level_direct", taal)}</div>
           </div>
           <div className="card text-center">
             <div className="text-2xl font-bold text-cm-white">{totaalLeden}</div>
-            <div className="text-xs text-cm-white mt-1">Totaal in team</div>
+            <div className="text-xs text-cm-white mt-1">{v("team.totaal", taal)}</div>
           </div>
           <div className="card text-center">
             <div className="text-2xl font-bold text-cm-white">{aantalLevels}</div>
-            <div className="text-xs text-cm-white mt-1">Levels diep</div>
+            <div className="text-xs text-cm-white mt-1">{v("team.levels", taal)}</div>
           </div>
           <div className="card text-center">
             <div className="text-2xl font-bold text-[#4ACB6A]">
               {totaalLeden > 0 ? Math.round((teamboom.reduce((acc, l) => acc + telTotaal(l.kinderen), 0) / totaalLeden) * 100) : 0}%
             </div>
-            <div className="text-xs text-cm-white mt-1">Duplicatie</div>
+            <div className="text-xs text-cm-white mt-1">{v("team.duplicatie", taal)}</div>
           </div>
         </div>
       )}
@@ -125,7 +127,7 @@ export default async function TeamPagina() {
       {aantalLevels > 0 && (
         <div className="card">
           <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider mb-3">
-            Per level
+            {v("team.per_level", taal)}
           </h2>
           <div className="space-y-2">
             {Object.entries(levelCounts).map(([level, count]) => (
@@ -151,16 +153,16 @@ export default async function TeamPagina() {
         <div className="card text-center py-16">
           <div className="text-5xl mb-4">👥</div>
           <p className="text-cm-white font-semibold mb-2">
-            Nog geen teamleden
+            {v("team.geen_leden", taal)}
           </p>
           <p className="text-cm-white text-sm">
-            Deel de uitnodigingslink hierboven om je eerste teamlid toe te voegen.
+            {v("team.geen_uitleg", taal)}
           </p>
         </div>
       ) : (
         <div className="card">
           <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider mb-4">
-            Teamstructuur
+            {v("team.structuur", taal)}
           </h2>
           <TeamBoom leden={teamboom} />
         </div>

@@ -4,19 +4,21 @@ import { useState } from "react";
 import { SCRIPTS_DATA } from "@/lib/scripts-data";
 import { toast } from "sonner";
 import Link from "next/link";
-
-const CATEGORIE_LABELS: Record<string, string> = {
-  alle: "Alle scripts",
-  uitnodiging: "📤 Uitnodigingen",
-  bezwaar: "🛡️ Bezwaren",
-  followup: "🔄 Follow-up",
-  sluiting: "🎯 Sluiting",
-  presentatie: "🎤 Presentatie",
-};
+import { useTaal } from "@/lib/i18n/TaalContext";
 
 export default function ScriptsPagina() {
+  const { v } = useTaal();
   const [actieveCategorie, setActieveCategorie] = useState("alle");
   const [zoekterm, setZoekterm] = useState("");
+
+  const CATEGORIE_LABELS: Record<string, string> = {
+    alle: v("scripts.alle"),
+    uitnodiging: v("scripts.uitnodiging"),
+    bezwaar: v("scripts.bezwaar"),
+    followup: v("scripts.followup"),
+    sluiting: v("scripts.sluiting"),
+    presentatie: v("scripts.presentatie"),
+  };
 
   const gefilterd = SCRIPTS_DATA.filter((s) => {
     const categorieMatch =
@@ -31,20 +33,20 @@ export default function ScriptsPagina() {
 
   function kopieer(tekst: string, titel: string) {
     navigator.clipboard.writeText(tekst);
-    toast.success(`"${titel}" gekopieerd!`);
+    toast.success(`"${titel}" ${v("scripts.gekopieerd")}`);
   }
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <Link href="/dashboard" className="text-cm-white opacity-60 hover:opacity-100 text-sm flex items-center gap-1 mb-4">
-        ← Terug
+        {v("algemeen.terug")}
       </Link>
       <div>
         <h1 className="text-2xl font-display font-bold text-cm-white">
-          Scriptbibliotheek
+          {v("scripts.titel")}
         </h1>
         <p className="text-cm-white mt-1">
-          Alle uitnodigingen, bezwaren en follow-up scripts op één plek
+          {v("scripts.subtitel")}
         </p>
       </div>
 
@@ -53,7 +55,7 @@ export default function ScriptsPagina() {
         type="text"
         value={zoekterm}
         onChange={(e) => setZoekterm(e.target.value)}
-        placeholder="Zoek in scripts..."
+        placeholder={v("scripts.zoeken")}
         className="input-cm"
       />
 
@@ -78,7 +80,7 @@ export default function ScriptsPagina() {
       <div className="space-y-4">
         {gefilterd.length === 0 ? (
           <div className="card text-center py-12">
-            <p className="text-cm-white">Geen scripts gevonden voor deze zoekopdracht.</p>
+            <p className="text-cm-white">{v("scripts.niet_gevonden")}</p>
           </div>
         ) : (
           gefilterd.map((script) => (
@@ -86,6 +88,9 @@ export default function ScriptsPagina() {
               key={script.titel}
               script={script}
               onKopieer={() => kopieer(script.inhoud, script.titel)}
+              vMeer={v("scripts.meer")}
+              vMinder={v("scripts.minder")}
+              vKopieer={v("scripts.kopieer")}
             />
           ))
         )}
@@ -97,9 +102,15 @@ export default function ScriptsPagina() {
 function ScriptKaart({
   script,
   onKopieer,
+  vMeer,
+  vMinder,
+  vKopieer,
 }: {
   script: (typeof SCRIPTS_DATA)[0];
   onKopieer: () => void;
+  vMeer: string;
+  vMinder: string;
+  vKopieer: string;
 }) {
   const [uitgeklapt, setUitgeklapt] = useState(false);
 
@@ -147,7 +158,7 @@ function ScriptKaart({
             onClick={() => setUitgeklapt(!uitgeklapt)}
             className="text-cm-gold text-xs mt-1 hover:text-cm-gold-light"
           >
-            {uitgeklapt ? "Minder tonen ↑" : "Volledig tonen ↓"}
+            {uitgeklapt ? vMinder : vMeer}
           </button>
         </div>
 
@@ -155,7 +166,7 @@ function ScriptKaart({
           onClick={onKopieer}
           className="btn-secondary text-xs px-3 py-1.5 whitespace-nowrap"
         >
-          📋 Kopieer
+          {vKopieer}
         </button>
       </div>
     </div>

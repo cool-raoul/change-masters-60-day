@@ -4,8 +4,12 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { format } from "date-fns";
-import { nl } from "date-fns/locale";
+import { nl, enUS, fr, es, de, pt } from "date-fns/locale";
 import { PIPELINE_FASEN } from "@/lib/supabase/types";
+import { useTaal } from "@/lib/i18n/TaalContext";
+import { Locale } from "date-fns";
+
+const DATE_LOCALES: Record<string, Locale> = { nl, en: enUS, fr, es, de, pt };
 
 interface ZoekResultaat {
   type: "prospect" | "coach";
@@ -18,6 +22,8 @@ interface ZoekResultaat {
 }
 
 export default function ZoekenPagina() {
+  const { v, taal } = useTaal();
+  const datumLocale = DATE_LOCALES[taal] || nl;
   const [zoekterm, setZoekterm] = useState("");
   const [resultaten, setResultaten] = useState<ZoekResultaat[]>([]);
   const [laden, setLaden] = useState(false);
@@ -69,7 +75,7 @@ export default function ZoekenPagina() {
       gevonden.push({
         type: "coach",
         id: g.id,
-        titel: g.titel || "Coach gesprek",
+        titel: g.titel || v("prospect.coach_gesprek"),
         datum: g.updated_at,
         href: `/coach/${g.id}`,
       });
@@ -82,14 +88,14 @@ export default function ZoekenPagina() {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <Link href="/dashboard" className="text-cm-white opacity-60 hover:opacity-100 text-sm flex items-center gap-1 mb-4">
-        ← Terug
+        {v("algemeen.terug")}
       </Link>
       <div>
         <h1 className="text-2xl font-display font-bold text-cm-white">
-          Zoeken
+          {v("zoeken.titel")}
         </h1>
         <p className="text-cm-white mt-1 opacity-70">
-          Zoek contacten, gesprekken en notities
+          {v("zoeken.subtitel")}
         </p>
       </div>
 
@@ -102,7 +108,7 @@ export default function ZoekenPagina() {
           type="text"
           value={zoekterm}
           onChange={(e) => zoek(e.target.value)}
-          placeholder="Naam, notitie, telefoonnummer, e-mail..."
+          placeholder={v("zoeken.placeholder")}
           className="input-cm w-full pl-12 py-3 text-base"
           autoFocus
         />
@@ -119,16 +125,16 @@ export default function ZoekenPagina() {
       {/* Resultaten */}
       {laden && (
         <div className="text-center py-8 text-cm-white opacity-60">
-          Zoeken...
+          {v("zoeken.laden")}
         </div>
       )}
 
       {gezocht && !laden && resultaten.length === 0 && (
         <div className="card text-center py-12">
           <div className="text-4xl mb-3">🔍</div>
-          <p className="text-cm-white font-semibold">Niets gevonden</p>
+          <p className="text-cm-white font-semibold">{v("zoeken.niets")}</p>
           <p className="text-cm-white text-sm mt-1 opacity-60">
-            Probeer een andere zoekterm
+            {v("zoeken.andere")}
           </p>
         </div>
       )}
@@ -139,7 +145,7 @@ export default function ZoekenPagina() {
           {resultaten.filter((r) => r.type === "prospect").length > 0 && (
             <div>
               <p className="text-xs text-cm-white opacity-50 uppercase tracking-wider mb-2 px-1">
-                Contacten
+                {v("zoeken.contacten")}
               </p>
               <div className="space-y-2">
                 {resultaten
@@ -181,7 +187,7 @@ export default function ZoekenPagina() {
           {resultaten.filter((r) => r.type === "coach").length > 0 && (
             <div className="mt-4">
               <p className="text-xs text-cm-white opacity-50 uppercase tracking-wider mb-2 px-1">
-                Coach gesprekken
+                {v("zoeken.gesprekken")}
               </p>
               <div className="space-y-2">
                 {resultaten
@@ -200,7 +206,7 @@ export default function ZoekenPagina() {
                           </p>
                           {r.datum && (
                             <p className="text-cm-white text-xs opacity-60 mt-0.5">
-                              {format(new Date(r.datum), "d MMM yyyy", { locale: nl })}
+                              {format(new Date(r.datum), "d MMM yyyy", { locale: datumLocale })}
                             </p>
                           )}
                         </div>
@@ -217,9 +223,9 @@ export default function ZoekenPagina() {
       {!gezocht && (
         <div className="card text-center py-12 border-dashed">
           <div className="text-4xl mb-3">🔍</div>
-          <p className="text-cm-white">Type een naam of zoekterm</p>
+          <p className="text-cm-white">{v("zoeken.type")}</p>
           <p className="text-cm-white text-sm mt-1 opacity-60">
-            Zoekt in contacten, notities, telefoonnummers en coach gesprekken
+            {v("zoeken.zoekt_in")}
           </p>
         </div>
       )}
