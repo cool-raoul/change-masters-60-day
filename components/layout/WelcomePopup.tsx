@@ -36,7 +36,7 @@ export function WelcomePopup() {
         {/* Header */}
         <div className="text-center">
           <img src="/eleva-icon.png" alt="ELEVA" className="h-14 w-14 mx-auto mb-3" />
-          <h2 className="text-2xl font-display font-bold text-gold-gradient">
+          <h2 className="text-3xl eleva-brand">
             Welkom bij ELEVA!
           </h2>
           <p className="text-cm-white mt-2">

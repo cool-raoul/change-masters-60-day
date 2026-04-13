@@ -70,7 +70,7 @@ function RegistreerFormulier() {
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <img src="/eleva-icon.png" alt="ELEVA" className="h-16 w-16 mx-auto mb-3" />
-            <h1 className="text-3xl font-display font-bold text-gold-gradient mb-2">
+            <h1 className="text-4xl eleva-brand mb-2">
               ELEVA
             </h1>
           </div>
@@ -139,7 +139,7 @@ function RegistreerFormulier() {
         {/* Logo */}
         <div className="text-center mb-8">
           <img src="/eleva-icon.png" alt="ELEVA" className="h-16 w-16 mx-auto mb-3" />
-          <h1 className="text-3xl font-display font-bold text-gold-gradient mb-2">
+          <h1 className="text-4xl eleva-brand mb-2">
             ELEVA
           </h1>
           <p className="text-cm-white">{v("registreer.welkom")}</p>
