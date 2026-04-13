@@ -20,7 +20,7 @@ export default function NieuwProspectPagina() {
     bron: "warm",
     prioriteit: "normaal",
     notities: "",
-    pipeline_fase: "lead",
+    pipeline_fase: "prospect",
   });
 
   function updateVeld(veld: string, waarde: string) {
@@ -171,12 +171,14 @@ export default function NieuwProspectPagina() {
               onChange={(e) => updateVeld("pipeline_fase", e.target.value)}
               className="input-cm"
             >
-              <option value="lead">Lead</option>
+              <option value="prospect">Prospect</option>
               <option value="uitgenodigd">Uitgenodigd</option>
+              <option value="one_pager">One Pager</option>
               <option value="presentatie">Presentatie</option>
               <option value="followup">Follow-up</option>
-              <option value="klant">Klant</option>
-              <option value="partner">Partner</option>
+              <option value="not_yet">Not Yet</option>
+              <option value="shopper">Shopper</option>
+              <option value="member">Member</option>
             </select>
           </div>
 
