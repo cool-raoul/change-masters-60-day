@@ -48,8 +48,13 @@ export function Sidebar() {
       {/* Logo */}
       <div className="p-6 border-b border-cm-border flex items-center justify-between">
         <div>
-          <img src="/eleva-logo.svg" alt="ELEVA" className="h-8 w-auto" />
-          <p className="text-cm-white text-xs mt-0.5 opacity-60">60 Dagen Run</p>
+          <div className="flex items-center gap-2">
+            <img src="/eleva-icon.png" alt="ELEVA" className="h-8 w-8" />
+            <div>
+              <h1 className="text-xl font-display font-bold text-gold-gradient">ELEVA</h1>
+              <p className="text-cm-white text-[10px] opacity-60 -mt-0.5">60 Dagen Run</p>
+            </div>
+          </div>
         </div>
         {/* Sluit knop alleen op mobiel */}
         <button
