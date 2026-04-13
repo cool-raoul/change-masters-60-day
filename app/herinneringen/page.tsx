@@ -36,6 +36,9 @@ export default async function HerinneringenPagina() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
+      <Link href="/dashboard" className="text-cm-white opacity-60 hover:opacity-100 text-sm flex items-center gap-1 mb-4">
+        ← Terug
+      </Link>
       <div>
         <h1 className="text-2xl font-display font-bold text-cm-white">
           Herinneringen

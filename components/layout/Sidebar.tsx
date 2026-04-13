@@ -13,7 +13,7 @@ const navigatie = [
   { href: "/coach", label: "AI Coach", icoon: "🤖" },
   { href: "/scripts", label: "Scripts", icoon: "📋" },
   { href: "/herinneringen", label: "Herinneringen", icoon: "🔔" },
-  { href: "/team", label: "Team", icoon: "🏆" },
+  { href: "/team", label: "Mijn Team", icoon: "🏆" },
 ];
 
 export function Sidebar() {
@@ -48,9 +48,7 @@ export function Sidebar() {
       {/* Logo */}
       <div className="p-6 border-b border-cm-border flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-display font-bold text-gold-gradient">
-            Change Masters
-          </h1>
+          <img src="/eleva-logo.svg" alt="ELEVA" className="h-8 w-auto" />
           <p className="text-cm-white text-xs mt-0.5 opacity-60">60 Dagen Run</p>
         </div>
         {/* Sluit knop alleen op mobiel */}

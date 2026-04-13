@@ -3,7 +3,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
-  title: "Change Masters — 60 Dagen Run",
+  title: "ELEVA — 60 Dagen Run",
   description: "Jouw persoonlijke aanbevelingsmarketing systeem voor de 60-dagenrun",
 };
 

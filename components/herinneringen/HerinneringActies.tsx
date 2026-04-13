@@ -36,7 +36,7 @@ export function HerinneringActies({ herinneringId }: { herinneringId: string }) 
       className={`w-8 h-8 rounded-lg border-2 flex items-center justify-center flex-shrink-0 transition-all ${
         voltooid
           ? "bg-green-500 border-green-500 text-white"
-          : "border-cm-border hover:border-green-400 hover:bg-green-400/10 text-transparent hover:text-green-400"
+          : "border-white/60 bg-white/10 hover:border-green-400 hover:bg-green-400/20 text-white/80 hover:text-green-400"
       }`}
       title="Afvinken"
     >

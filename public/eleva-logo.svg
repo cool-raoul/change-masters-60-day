@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" fill="none">
+  <!-- Upward arrow / elevation symbol -->
+  <polygon points="20,40 30,20 40,40" fill="#C9A84C" opacity="0.9"/>
+  <polygon points="28,40 36,26 44,40" fill="#C9A84C" opacity="0.5"/>
+
+  <!-- ELEVA text -->
+  <text
+    x="54"
+    y="42"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="28"
+    font-weight="700"
+    letter-spacing="6"
+    fill="#C9A84C"
+  >ELEVA</text>
+
+  <!-- Thin gold underline -->
+  <line x1="54" y1="48" x2="196" y2="48" stroke="#C9A84C" stroke-width="1.5" opacity="0.4"/>
+</svg>

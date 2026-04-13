@@ -6,6 +6,7 @@ import { nl } from "date-fns/locale";
 import { PIPELINE_FASEN } from "@/lib/supabase/types";
 import { ProspectActieForm } from "@/components/namenlijst/ProspectActieForm";
 import { ContactLogLijst } from "@/components/namenlijst/ContactLogLijst";
+import { ContactgegevensForm } from "@/components/namenlijst/ContactgegevensForm";
 
 export default async function ProspectDetailPagina({
   params,
@@ -85,47 +86,10 @@ export default async function ProspectDetailPagina({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Contactgegevens */}
         <div className="card space-y-3">
-          <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
-            Contactgegevens
-          </h2>
-          {prospect.telefoon && (
-            <div>
-              <p className="text-xs text-cm-white">Telefoon</p>
-              <p className="text-cm-white text-sm">{prospect.telefoon}</p>
-            </div>
-          )}
-          {prospect.email && (
-            <div>
-              <p className="text-xs text-cm-white">E-mail</p>
-              <p className="text-cm-white text-sm">{prospect.email}</p>
-            </div>
-          )}
-          {prospect.instagram && (
-            <div>
-              <p className="text-xs text-cm-white">Instagram</p>
-              <p className="text-cm-white text-sm">{prospect.instagram}</p>
-            </div>
-          )}
-          {prospect.facebook && (
-            <div>
-              <p className="text-xs text-cm-white">Facebook</p>
-              <p className="text-cm-white text-sm">{prospect.facebook}</p>
-            </div>
-          )}
-          {prospect.bron && (
-            <div>
-              <p className="text-xs text-cm-white">Bron</p>
-              <p className="text-cm-white text-sm capitalize">{prospect.bron}</p>
-            </div>
-          )}
-          {prospect.notities && (
-            <div>
-              <p className="text-xs text-cm-white">Notities</p>
-              <p className="text-cm-white text-sm">{prospect.notities}</p>
-            </div>
-          )}
-          <div>
-            <p className="text-xs text-cm-white">Toegevoegd op</p>
+          <ContactgegevensForm prospect={prospect} />
+
+          <div className="border-t border-cm-border pt-3 mt-3">
+            <p className="text-xs text-cm-white opacity-60">Toegevoegd op</p>
             <p className="text-cm-white text-sm">
               {format(new Date(prospect.created_at), "d MMMM yyyy", { locale: nl })}
             </p>

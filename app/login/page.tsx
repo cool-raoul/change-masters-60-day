@@ -38,7 +38,7 @@ export default function LoginPagina() {
         {/* Logo */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-display font-bold text-gold-gradient mb-2">
-            Change Masters
+            ELEVA
           </h1>
           <p className="text-cm-white">60 Dagen Run Systeem</p>
         </div>

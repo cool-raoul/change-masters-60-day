@@ -194,7 +194,7 @@ export function ProspectActieForm({ prospect, userId }: Props) {
                   type="date"
                   value={volgendeDatum}
                   onChange={(e) => setVolgendeDatum(e.target.value)}
-                  className="input-cm text-sm"
+                  className="input-cm text-sm [&::-webkit-calendar-picker-indicator]:invert"
                   min={new Date().toISOString().split("T")[0]}
                 />
               </div>
@@ -236,7 +236,7 @@ export function ProspectActieForm({ prospect, userId }: Props) {
               type="date"
               value={besteldatum}
               onChange={(e) => setBesteldatum(e.target.value)}
-              className="input-cm text-sm"
+              className="input-cm text-sm [&::-webkit-calendar-picker-indicator]:invert"
               required
             />
           </div>

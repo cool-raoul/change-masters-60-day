@@ -23,13 +23,21 @@ export function WelcomePopup() {
   if (!zichtbaar) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70">
-      <div className="bg-cm-surface border border-cm-border rounded-2xl max-w-lg w-full p-6 space-y-5 shadow-2xl animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-4 bg-black/70 overflow-y-auto">
+      <div className="bg-cm-surface border border-cm-border rounded-2xl max-w-lg w-full p-6 space-y-5 shadow-2xl my-4 relative">
+        {/* Sluit knop */}
+        <button
+          onClick={sluit}
+          className="absolute top-4 right-4 text-cm-white opacity-50 hover:opacity-100 text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-cm-surface-2"
+        >
+          ✕
+        </button>
+
         {/* Header */}
         <div className="text-center">
           <div className="text-5xl mb-3">✦</div>
           <h2 className="text-2xl font-display font-bold text-gold-gradient">
-            Welkom bij Change Masters!
+            Welkom bij ELEVA!
           </h2>
           <p className="text-cm-white mt-2">
             Jouw persoonlijke 60-dagenrun systeem is klaar voor gebruik.

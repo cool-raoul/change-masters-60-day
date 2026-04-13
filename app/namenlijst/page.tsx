@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
-import { PIPELINE_FASEN, Prospect } from "@/lib/supabase/types";
-import { PipelineKanban } from "@/components/namenlijst/PipelineKanban";
+import { Prospect } from "@/lib/supabase/types";
+import { NamenlijstToggle } from "@/components/namenlijst/NamenlijstToggle";
 
 export default async function NamenlijstPagina() {
   const supabase = await createClient();
@@ -36,7 +36,7 @@ export default async function NamenlijstPagina() {
         </Link>
       </div>
 
-      <PipelineKanban prospects={alleProspects} />
+      <NamenlijstToggle prospects={alleProspects} />
     </div>
   );
 }

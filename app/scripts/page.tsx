@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { SCRIPTS_DATA } from "@/lib/scripts-data";
 import { toast } from "sonner";
+import Link from "next/link";
 
 const CATEGORIE_LABELS: Record<string, string> = {
   alle: "Alle scripts",
@@ -35,6 +36,9 @@ export default function ScriptsPagina() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
+      <Link href="/dashboard" className="text-cm-white opacity-60 hover:opacity-100 text-sm flex items-center gap-1 mb-4">
+        ← Terug
+      </Link>
       <div>
         <h1 className="text-2xl font-display font-bold text-cm-white">
           Scriptbibliotheek

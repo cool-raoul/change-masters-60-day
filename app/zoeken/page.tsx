@@ -81,6 +81,9 @@ export default function ZoekenPagina() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
+      <Link href="/dashboard" className="text-cm-white opacity-60 hover:opacity-100 text-sm flex items-center gap-1 mb-4">
+        ← Terug
+      </Link>
       <div>
         <h1 className="text-2xl font-display font-bold text-cm-white">
           Zoeken

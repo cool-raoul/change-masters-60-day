@@ -304,10 +304,7 @@ export default function MijnWhyPagina() {
                 ✦ Voorbeeld WHY
               </p>
               <p className="text-cm-white text-sm leading-relaxed italic">
-                &ldquo;Ik doe dit omdat ik het zat ben dat geld bepaalt wat ik wel en niet kan doen voor mijn gezin.
-                Ik wil er zijn voor de mensen die ik liefheb, zonder de stress van rekeningen en beperkingen.
-                Ik doe dit zodat mijn kinderen later trots op me zijn en zien dat je je eigen pad kunt kiezen.
-                Ik doe dit omdat ik weet dat er een versie van mijn leven bestaat waar ik volledig vrij ben, en die wil ik.&rdquo;
+                &ldquo;Ik ben moeder van twee kids en ik werk als accountmanager. Ik heb altijd fulltime gewerkt om alle rekeningen te betalen en mezelf daarin weggecijferd. Ik wil dolgraag met mijn gezin meer van de wereld zien. Ik heb een manier gevonden om online extra inkomsten op te bouwen zonder investeringen en zonder risico, zonder dat dit mijn huidige werk in de weg zit. Ik ben super enthousiast, want ik kan plaatsonafhankelijk werken, wat mij veel meer vrijheid geeft.&rdquo;
               </p>
             </div>
 

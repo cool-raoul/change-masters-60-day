@@ -1,8 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
-import Link from "next/link";
-import { format } from "date-fns";
-import { nl } from "date-fns/locale";
 import { NieuwGesprekKnop } from "@/components/coach/NieuwGesprekKnop";
+import { GesprekkenLijst } from "@/components/coach/GesprekkenLijst";
 
 export default async function CoachPagina() {
   const supabase = await createClient();
@@ -55,6 +53,9 @@ export default async function CoachPagina() {
               <li>✓ Follow-up berichten formuleren</li>
               <li>✓ De Doel-Tijd-Termijn closing toepassen</li>
               <li>✓ Strategisch advies per pipeline-fase</li>
+              <li>✓ Mindset coaching en motivatie op moeilijke momenten</li>
+              <li>✓ Persoonlijke tips en adviezen voor jouw situatie</li>
+              <li>✓ Accountability — houd jij je aan jouw dagelijkse acties?</li>
             </ul>
           </div>
         </div>
@@ -66,36 +67,7 @@ export default async function CoachPagina() {
           Eerdere gesprekken
         </h2>
 
-        {(!gesprekken || gesprekken.length === 0) ? (
-          <div className="card text-center py-12">
-            <div className="text-4xl mb-3">💬</div>
-            <p className="text-cm-white">
-              Nog geen gesprekken. Start een nieuw gesprek met de coach!
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {gesprekken.map((g) => (
-              <Link
-                key={g.id}
-                href={`/coach/${g.id}`}
-                className="card hover:border-cm-gold-dim transition-colors flex items-center justify-between"
-              >
-                <div>
-                  <p className="text-cm-white font-medium text-sm">
-                    {g.titel || "Gesprek met coach"}
-                  </p>
-                  <p className="text-cm-white text-xs mt-0.5">
-                    {g.prospect?.volledige_naam ? `👤 ${g.prospect.volledige_naam} • ` : ""}
-                    {g.berichten?.length || 0} berichten •{" "}
-                    {format(new Date(g.updated_at), "d MMM HH:mm", { locale: nl })}
-                  </p>
-                </div>
-                <span className="text-cm-white">→</span>
-              </Link>
-            ))}
-          </div>
-        )}
+        <GesprekkenLijst gesprekken={gesprekken || []} />
       </div>
     </div>
   );

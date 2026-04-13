@@ -70,7 +70,7 @@ function RegistreerFormulier() {
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-display font-bold text-gold-gradient mb-2">
-              Change Masters
+              ELEVA
             </h1>
           </div>
 
@@ -138,7 +138,7 @@ function RegistreerFormulier() {
         {/* Logo */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-display font-bold text-gold-gradient mb-2">
-            Change Masters
+            ELEVA
           </h1>
           <p className="text-cm-white">{v("registreer.welkom")}</p>
         </div>

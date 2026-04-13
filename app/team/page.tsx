@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { differenceInDays } from "date-fns";
 import KopieerLink from "@/components/team/KopieerLink";
 import { TeamBoom } from "@/components/team/TeamBoom";
+import Link from "next/link";
 
 const RUN_START = new Date("2026-04-12");
 
@@ -73,6 +74,9 @@ export default async function TeamPagina() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
+      <Link href="/dashboard" className="text-cm-white opacity-60 hover:opacity-100 text-sm flex items-center gap-1 mb-4">
+        ← Terug
+      </Link>
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-display font-bold text-cm-white">
