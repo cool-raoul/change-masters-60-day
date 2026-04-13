@@ -10,6 +10,7 @@ export default function MijnWhyPagina() {
   const [berichten, setBerichten] = useState<ChatBericht[]>([]);
   const [invoer, setInvoer] = useState("");
   const [laden, setLaden] = useState(false);
+  const [paginaLaden, setPaginaLaden] = useState(true);
   const [gestartMetCoach, setGestartMetCoach] = useState(false);
   const [gebruikersnaam, setGebruikersnaam] = useState("");
   const [opgeslagen, setOpgeslagen] = useState(false);
@@ -36,7 +37,10 @@ export default function MijnWhyPagina() {
             if (data?.why_samenvatting) {
               setBestaandeWhy(data.why_samenvatting);
             }
+            setPaginaLaden(false);
           });
+      } else {
+        setPaginaLaden(false);
       }
     });
   }, []);
@@ -224,8 +228,20 @@ export default function MijnWhyPagina() {
 
       {/* Chat venster */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 max-w-2xl mx-auto w-full">
+
+        {/* Laadscherm */}
+        {paginaLaden && (
+          <div className="flex items-center justify-center h-full py-20">
+            <div className="flex space-x-2">
+              <div className="w-3 h-3 bg-cm-gold rounded-full animate-bounce" />
+              <div className="w-3 h-3 bg-cm-gold rounded-full animate-bounce delay-100" />
+              <div className="w-3 h-3 bg-cm-gold rounded-full animate-bounce delay-200" />
+            </div>
+          </div>
+        )}
+
         {/* Bestaande WHY tonen als er al één is */}
-        {bestaandeWhy && !gestartMetCoach && (
+        {!paginaLaden && bestaandeWhy && !gestartMetCoach && (
           <div className="mb-6">
             <div className="card border-gold-subtle">
               <div className="flex items-center gap-2 mb-3">
@@ -255,7 +271,7 @@ export default function MijnWhyPagina() {
           </div>
         )}
 
-        {!gestartMetCoach && !bestaandeWhy ? (
+        {!paginaLaden && !gestartMetCoach && !bestaandeWhy ? (
           // Start scherm — eerste keer
           <div className="flex flex-col items-center justify-center h-full text-center py-12 max-w-lg mx-auto">
             <div className="text-6xl mb-6">🎯</div>
