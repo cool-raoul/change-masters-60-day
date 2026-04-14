@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { format } from "date-fns";
-import { nl } from "date-fns/locale";
+import { nl, enUS } from "date-fns/locale";
 import { ContactLog, Prospect } from "@/lib/supabase/types";
+import { useTaal } from "@/lib/i18n/TaalContext";
+import { Locale } from "date-fns";
 
 const CONTACT_TYPE_ICONEN: Record<string, string> = {
   dm: "💬",
@@ -13,21 +15,15 @@ const CONTACT_TYPE_ICONEN: Record<string, string> = {
   notitie: "📝",
 };
 
-const CONTACT_TYPE_LABELS: Record<string, string> = {
-  dm: "DM",
-  bel: "Bel",
-  presentatie: "Presentatie",
-  followup: "Follow-up",
-  notitie: "Notitie",
-};
-
 interface Props {
   contactLogs: ContactLog[];
   prospect: Prospect;
   userId: string;
 }
 
-function LogItem({ log, index, totaal }: { log: ContactLog; index: number; totaal: number }) {
+const DATE_LOCALES: Record<string, Locale> = { nl, en: enUS };
+
+function LogItem({ log, index, totaal, v, datumLocale }: { log: ContactLog; index: number; totaal: number; v: (key: string) => string; datumLocale: Locale }) {
   const [uitgevouwen, setUitgevouwen] = useState(false);
   const heeftNotes = !!(log.notities && log.notities.trim().length > 0);
   const isLang = heeftNotes && log.notities!.length > 80;
@@ -52,11 +48,11 @@ function LogItem({ log, index, totaal }: { log: ContactLog; index: number; totaa
       >
         <div className="flex items-center justify-between mb-1">
           <span className="text-cm-white text-xs font-semibold">
-            {CONTACT_TYPE_LABELS[log.contact_type] || log.contact_type}
+            {v(`contactlog.${log.contact_type}`) || log.contact_type}
           </span>
           <div className="flex items-center gap-2">
             <span className="text-cm-white text-xs opacity-60">
-              {format(new Date(log.created_at), "d MMM yyyy, HH:mm", { locale: nl })}
+              {format(new Date(log.created_at), "d MMM yyyy, HH:mm", { locale: datumLocale })}
             </span>
             {heeftNotes && (
               <span className="text-cm-gold text-xs">{uitgevouwen ? "▲" : "▼"}</span>
@@ -74,7 +70,7 @@ function LogItem({ log, index, totaal }: { log: ContactLog; index: number; totaa
         )}
 
         {!heeftNotes && (
-          <p className="text-cm-white text-xs opacity-40 italic">Geen notities</p>
+          <p className="text-cm-white text-xs opacity-40 italic">{v("contactlog.geen_notities")}</p>
         )}
 
         {log.fase_voor && log.fase_na && log.fase_voor !== log.fase_na && (
@@ -88,13 +84,15 @@ function LogItem({ log, index, totaal }: { log: ContactLog; index: number; totaa
 }
 
 export function ContactLogLijst({ contactLogs }: Props) {
+  const { v, taal } = useTaal();
+  const datumLocale = DATE_LOCALES[taal] || nl;
   if (contactLogs.length === 0) {
     return (
       <div className="card text-center py-8">
         <p className="text-cm-white text-sm">
-          Nog geen aantekeningen toegevoegd.
+          {v("contactlog.geen_aantekeningen")}
           <br />
-          Gebruik &ldquo;Aantekeningen&rdquo; hierboven om te beginnen.
+          {v("contactlog.gebruik_hint")}
         </p>
       </div>
     );
@@ -103,12 +101,12 @@ export function ContactLogLijst({ contactLogs }: Props) {
   return (
     <div className="card space-y-3">
       <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
-        Aantekeningen ({contactLogs.length})
+        {v("contactlog.titel")} ({contactLogs.length})
       </h2>
 
       <div className="space-y-3">
         {contactLogs.map((log, i) => (
-          <LogItem key={log.id} log={log} index={i} totaal={contactLogs.length} />
+          <LogItem key={log.id} log={log} index={i} totaal={contactLogs.length} v={v} datumLocale={datumLocale} />
         ))}
       </div>
     </div>

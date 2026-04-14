@@ -28,7 +28,7 @@ export default async function NamenlijstPagina() {
             {v("namenlijst.titel", taal)}
           </h1>
           <p className="text-cm-white mt-1">
-            {alleProspects.length} {taal === "nl" ? "contacten in jouw pipeline" : taal === "en" ? "contacts in your pipeline" : taal === "fr" ? "contacts dans votre pipeline" : taal === "es" ? "contactos en tu pipeline" : taal === "de" ? "Kontakte in deiner Pipeline" : "contatos no seu pipeline"}
+            {alleProspects.length} {v("namenlijst.contacten_in_pipeline", taal)}
           </p>
         </div>
         <Link href="/namenlijst/nieuw" className="btn-gold">

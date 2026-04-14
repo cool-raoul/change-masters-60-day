@@ -167,7 +167,7 @@ export default function MijnWhyPagina() {
         setVoorgesteldWhy(gevondenWhy);
       }
     } catch {
-      toast.error("Er is iets misgegaan. Probeer opnieuw.");
+      toast.error(v("actie.fout"));
     } finally {
       setLaden(false);
     }
@@ -361,7 +361,9 @@ export default function MijnWhyPagina() {
                 ✦ {v("why.voorbeeld")}
               </p>
               <p className="text-cm-white text-sm leading-relaxed italic">
-                &ldquo;Ik ben moeder van twee kids en ik werk als accountmanager. Ik heb altijd fulltime gewerkt om alle rekeningen te betalen en mezelf daarin weggecijferd. Ik wil dolgraag met mijn gezin meer van de wereld zien. Ik heb een manier gevonden om online extra inkomsten op te bouwen zonder investeringen en zonder risico, zonder dat dit mijn huidige werk in de weg zit. Ik ben super enthousiast, want ik kan plaatsonafhankelijk werken, wat mij veel meer vrijheid geeft.&rdquo;
+                &ldquo;{taal === "en"
+                  ? "I'm a mother of two and I work as an account manager. I've always worked full-time to pay the bills and lost myself in the process. I desperately want to see more of the world with my family. I've found a way to build extra income online without investment and without risk, without it interfering with my current job. I'm super excited because I can work from anywhere, which gives me so much more freedom."
+                  : "Ik ben moeder van twee kids en ik werk als accountmanager. Ik heb altijd fulltime gewerkt om alle rekeningen te betalen en mezelf daarin weggecijferd. Ik wil dolgraag met mijn gezin meer van de wereld zien. Ik heb een manier gevonden om online extra inkomsten op te bouwen zonder investeringen en zonder risico, zonder dat dit mijn huidige werk in de weg zit. Ik ben super enthousiast, want ik kan plaatsonafhankelijk werken, wat mij veel meer vrijheid geeft."}&rdquo;
               </p>
             </div>
 

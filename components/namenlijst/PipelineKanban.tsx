@@ -32,12 +32,14 @@ function ProspectKaart({
   isDragging,
   onDragStart,
   onDragEnd,
+  datumLocale,
 }: {
   prospect: Prospect;
   onFaseWijzig: (id: string, fase: PipelineFase) => void;
   isDragging: boolean;
   onDragStart: (e: React.DragEvent, id: string) => void;
   onDragEnd: () => void;
+  datumLocale: Locale;
 }) {
   const dagSindsContact = prospect.laatste_contact
     ? Math.floor((Date.now() - new Date(prospect.laatste_contact).getTime()) / (1000 * 60 * 60 * 24))
@@ -86,7 +88,7 @@ function ProspectKaart({
               ? "text-red-400"
               : "text-cm-gold"
           }`}>
-            {format(new Date(prospect.volgende_actie_datum), "d MMM", { locale: nl })}
+            {format(new Date(prospect.volgende_actie_datum), "d MMM", { locale: datumLocale })}
           </span>
         )}
       </div>
@@ -265,6 +267,7 @@ export function PipelineKanban({ prospects }: Props) {
                       isDragging={draggingId === p.id}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
+                      datumLocale={datumLocale}
                     />
                   ))}
                   {faseProspects.length === 0 && (

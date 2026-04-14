@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTaal } from "@/lib/i18n/TaalContext";
 
 interface TeamLid {
   id: string;
@@ -13,6 +14,7 @@ interface TeamLid {
 
 function TeamLidKaart({ lid, level }: { lid: TeamLid; level: number }) {
   const [open, setOpen] = useState(level < 2); // Eerste 2 levels standaard open
+  const { v } = useTaal();
   const heeftKinderen = lid.kinderen.length > 0;
   const totaalOnder = telTotaal(lid.kinderen);
 
@@ -54,7 +56,7 @@ function TeamLidKaart({ lid, level }: { lid: TeamLid; level: number }) {
         <div className="flex items-center gap-2 flex-shrink-0">
           {heeftKinderen && (
             <span className="text-cm-white text-xs bg-cm-surface-2 px-2 py-0.5 rounded-full">
-              {lid.kinderen.length} direct {totaalOnder > lid.kinderen.length && `(${totaalOnder} totaal)`}
+              {lid.kinderen.length} {v("team.direct_label")} {totaalOnder > lid.kinderen.length && `(${totaalOnder} ${v("team.totaal_label")})`}
             </span>
           )}
           <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
@@ -62,7 +64,7 @@ function TeamLidKaart({ lid, level }: { lid: TeamLid; level: number }) {
               ? "bg-[#1A2A1A] text-[#4ACB6A]"
               : "bg-[#2A2A1A] text-[#C9A84C]"
           }`}>
-            {lid.onboarding_klaar ? "Actief" : "Bezig"}
+            {lid.onboarding_klaar ? v("team.actief") : v("team.bezig")}
           </span>
         </div>
       </div>

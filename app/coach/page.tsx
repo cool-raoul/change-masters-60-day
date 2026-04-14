@@ -34,13 +34,13 @@ export default async function CoachPagina() {
           <div>
             <h2 className="text-cm-white font-semibold mb-2">{v("coach.wat_kan", taal)}</h2>
             <ul className="text-cm-white text-sm space-y-1">
-              <li>✓ {taal === "en" ? "Write personalized DM scripts for a specific prospect" : taal === "fr" ? "Écrire des scripts DM personnalisés pour un prospect" : taal === "es" ? "Escribir scripts DM personalizados para un prospecto" : taal === "de" ? "Personalisierte DM-Skripte für einen Kontakt schreiben" : taal === "pt" ? "Escrever scripts DM personalizados para um prospecto" : "DM-scripts schrijven op maat voor een specifiek prospect"}</li>
-              <li>✓ {taal === "en" ? "Handle objections with Feel-Felt-Found" : taal === "fr" ? "Traiter les objections avec Feel-Felt-Found" : taal === "es" ? "Manejar objeciones con Feel-Felt-Found" : taal === "de" ? "Einwände mit Feel-Felt-Found behandeln" : taal === "pt" ? "Lidar com objeções com Feel-Felt-Found" : "Bezwaren behandelen met Feel-Felt-Found"}</li>
-              <li>✓ {taal === "en" ? "Write follow-up messages" : taal === "fr" ? "Formuler des messages de suivi" : taal === "es" ? "Formular mensajes de seguimiento" : taal === "de" ? "Follow-up Nachrichten formulieren" : taal === "pt" ? "Formular mensagens de acompanhamento" : "Follow up berichten formuleren"}</li>
-              <li>✓ {taal === "en" ? "Apply the Goal-Time-Deadline closing" : taal === "fr" ? "Appliquer la clôture Objectif-Temps-Délai" : taal === "es" ? "Aplicar el cierre Objetivo-Tiempo-Plazo" : taal === "de" ? "Die Ziel-Zeit-Termin-Abschluss anwenden" : taal === "pt" ? "Aplicar o fechamento Meta-Tempo-Prazo" : "De Doel-Tijd-Termijn closing toepassen"}</li>
-              <li>✓ {taal === "en" ? "Strategic advice per pipeline phase" : taal === "fr" ? "Conseils stratégiques par phase pipeline" : taal === "es" ? "Consejos estratégicos por fase de pipeline" : taal === "de" ? "Strategische Beratung pro Pipeline-Phase" : taal === "pt" ? "Conselhos estratégicos por fase do pipeline" : "Strategisch advies per pipeline-fase"}</li>
-              <li>✓ {taal === "en" ? "Mindset coaching and motivation" : taal === "fr" ? "Coaching mindset et motivation" : taal === "es" ? "Coaching de mentalidad y motivación" : taal === "de" ? "Mindset-Coaching und Motivation" : taal === "pt" ? "Coaching de mentalidade e motivação" : "Mindset coaching en motivatie"}</li>
-              <li>✓ {taal === "en" ? "Accountability — are you keeping up with your daily actions?" : taal === "fr" ? "Responsabilité — respectes-tu tes actions quotidiennes ?" : taal === "es" ? "Responsabilidad — ¿cumples con tus acciones diarias?" : taal === "de" ? "Accountability — hältst du deine täglichen Aktionen ein?" : taal === "pt" ? "Responsabilidade — você está cumprindo suas ações diárias?" : "Accountability — houd jij je aan jouw dagelijkse acties?"}</li>
+              <li>✓ {v("coach.kan_dm", taal)}</li>
+              <li>✓ {v("coach.kan_bezwaar", taal)}</li>
+              <li>✓ {v("coach.kan_followup", taal)}</li>
+              <li>✓ {v("coach.kan_closing", taal)}</li>
+              <li>✓ {v("coach.kan_strategie", taal)}</li>
+              <li>✓ {v("coach.kan_mindset", taal)}</li>
+              <li>✓ {v("coach.kan_accountability", taal)}</li>
             </ul>
           </div>
         </div>

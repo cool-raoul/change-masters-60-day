@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useTaal } from "@/lib/i18n/TaalContext";
 import { Prospect, PIPELINE_FASEN } from "@/lib/supabase/types";
 import { PipelineKanban } from "@/components/namenlijst/PipelineKanban";
 
@@ -11,6 +12,7 @@ interface Props {
 
 export function NamenlijstToggle({ prospects }: Props) {
   const [weergave, setWeergave] = useState<"pipeline" | "lijst">("pipeline");
+  const { v } = useTaal();
 
   const gesorteerd = [...prospects].sort((a, b) =>
     a.volledige_naam.localeCompare(b.volledige_naam, "nl")
@@ -50,7 +52,7 @@ export function NamenlijstToggle({ prospects }: Props) {
         <div className="space-y-2">
           {gesorteerd.length === 0 ? (
             <div className="card text-center py-12">
-              <p className="text-cm-white">Nog geen contacten in je pipeline.</p>
+              <p className="text-cm-white">{v("namenlijst.geen_contacten")}</p>
             </div>
           ) : (
             gesorteerd.map((prospect) => {
@@ -82,7 +84,7 @@ export function NamenlijstToggle({ prospects }: Props) {
                           </span>
                         )}
                         {prospect.prioriteit === "hoog" && (
-                          <span className="text-cm-gold text-xs">⭐ Hoog</span>
+                          <span className="text-cm-gold text-xs">⭐ {v("namenlijst.hoog")}</span>
                         )}
                       </div>
                     </div>

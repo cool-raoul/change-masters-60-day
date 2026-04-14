@@ -23,10 +23,12 @@ export async function POST(request: Request) {
       berichten,
       prospectId,
       gesprekId,
+      taal,
     }: {
       berichten: ChatBericht[];
       prospectId?: string;
       gesprekId?: string;
+      taal?: string;
     } = body;
 
     // Haal profiel op
@@ -71,7 +73,7 @@ export async function POST(request: Request) {
     }
 
     // Bouw system prompt
-    const systeemPrompt = bouwCoachSysteemPrompt(profile, whyProfile, prospect);
+    const systeemPrompt = bouwCoachSysteemPrompt(profile, whyProfile, prospect, taal || "nl");
 
     // Format berichten voor Claude API
     const apiMessages = berichten.map((b) => ({

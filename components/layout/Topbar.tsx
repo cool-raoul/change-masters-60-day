@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { differenceInDays } from "date-fns";
 import Link from "next/link";
+import { useTaal } from "@/lib/i18n/TaalContext";
 
 const RUN_START = new Date("2026-04-12");
 
@@ -11,6 +12,7 @@ export function Topbar({ gebruikersnaam }: { gebruikersnaam: string }) {
   const [aantalHerinneringen, setAantalHerinneringen] = useState(0);
   const dag = Math.max(1, Math.min(60, differenceInDays(new Date(), RUN_START) + 1));
   const fase = dag <= 20 ? 1 : dag <= 40 ? 2 : 3;
+  const { v } = useTaal();
 
   const supabase = createClient();
 
@@ -51,8 +53,8 @@ export function Topbar({ gebruikersnaam }: { gebruikersnaam: string }) {
             <span className="text-cm-black text-xs font-bold">{dag}</span>
           </div>
           <div>
-            <p className="text-cm-white text-sm font-semibold">Dag {dag} van 60</p>
-            <p className="text-cm-white text-xs">Fase {fase} actief</p>
+            <p className="text-cm-white text-sm font-semibold">{v("dashboard.dag")} {dag} {v("dashboard.van_60")}</p>
+            <p className="text-cm-white text-xs">{v("topbar.fase")} {fase}</p>
           </div>
         </div>
 

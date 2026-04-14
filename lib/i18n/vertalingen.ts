@@ -1,12 +1,8 @@
 export type Taal = "nl" | "en" | "fr" | "es" | "de" | "pt";
 
 export const TAAL_OPTIES: { code: Taal; label: string; vlag: string }[] = [
-  { code: "nl", label: "Nederlands", vlag: "\u{1F1F3}\u{1F1F1}" },
-  { code: "en", label: "English", vlag: "\u{1F1EC}\u{1F1E7}" },
-  { code: "fr", label: "Fran\u00e7ais", vlag: "\u{1F1EB}\u{1F1F7}" },
-  { code: "es", label: "Espa\u00f1ol", vlag: "\u{1F1EA}\u{1F1F8}" },
-  { code: "de", label: "Deutsch", vlag: "\u{1F1E9}\u{1F1EA}" },
-  { code: "pt", label: "Portugu\u00eas", vlag: "\u{1F1E7}\u{1F1F7}" },
+  { code: "nl", label: "Nederlands", vlag: "🇳🇱" },
+  { code: "en", label: "English", vlag: "🇬🇧" },
 ];
 
 type Vertalingen = Record<string, Record<Taal, string>>;
@@ -848,6 +844,48 @@ export const t: Vertalingen = {
   // ===== EXTRA LABELS =====
   "algemeen.telefoon": { nl: "Telefoon", en: "Phone", fr: "Téléphone", es: "Teléfono", de: "Telefon", pt: "Telefone" },
   "namenlijst.leeg": { nl: "Leeg", en: "Empty", fr: "Vide", es: "Vacío", de: "Leer", pt: "Vazio" },
+
+  // ===== TOPBAR =====
+  "topbar.fase": { nl: "Fase", en: "Phase", fr: "Phase", es: "Fase", de: "Phase", pt: "Fase" },
+
+  // ===== TEAM EXTRA =====
+  "team.actief": { nl: "Actief", en: "Active", fr: "Actif", es: "Activo", de: "Aktiv", pt: "Ativo" },
+  "team.bezig": { nl: "Bezig", en: "In progress", fr: "En cours", es: "En progreso", de: "In Arbeit", pt: "Em andamento" },
+  "team.direct_label": { nl: "direct", en: "direct", fr: "direct", es: "directo", de: "direkt", pt: "direto" },
+  "team.totaal_label": { nl: "totaal", en: "total", fr: "total", es: "total", de: "gesamt", pt: "total" },
+
+  // ===== KOPIEER LINK =====
+  "link.gekopieerd": { nl: "Link gekopieerd!", en: "Link copied!", fr: "Lien copié !", es: "¡Enlace copiado!", de: "Link kopiert!", pt: "Link copiado!" },
+  "link.kopieer": { nl: "Kopieer", en: "Copy", fr: "Copier", es: "Copiar", de: "Kopieren", pt: "Copiar" },
+
+  // ===== CONTACT LOG =====
+  "contactlog.dm": { nl: "DM", en: "DM", fr: "DM", es: "DM", de: "DM", pt: "DM" },
+  "contactlog.bel": { nl: "Bel", en: "Call", fr: "Appel", es: "Llamada", de: "Anruf", pt: "Ligação" },
+  "contactlog.presentatie": { nl: "Presentatie", en: "Presentation", fr: "Présentation", es: "Presentación", de: "Präsentation", pt: "Apresentação" },
+  "contactlog.followup": { nl: "Follow-up", en: "Follow-up", fr: "Suivi", es: "Seguimiento", de: "Follow-up", pt: "Acompanhamento" },
+  "contactlog.notitie": { nl: "Notitie", en: "Note", fr: "Note", es: "Nota", de: "Notiz", pt: "Nota" },
+  "contactlog.geen_notities": { nl: "Geen notities", en: "No notes", fr: "Pas de notes", es: "Sin notas", de: "Keine Notizen", pt: "Sem notas" },
+  "contactlog.geen_aantekeningen": { nl: "Nog geen aantekeningen toegevoegd.", en: "No notes added yet.", fr: "Aucune note ajoutée.", es: "Sin notas añadidas.", de: "Noch keine Notizen.", pt: "Nenhuma nota adicionada." },
+  "contactlog.gebruik_hint": { nl: "Gebruik \"Aantekeningen\" hierboven om te beginnen.", en: "Use \"Notes\" above to get started.", fr: "Utilisez \"Notes\" ci-dessus pour commencer.", es: "Usa \"Notas\" arriba para comenzar.", de: "Verwende \"Notizen\" oben, um zu beginnen.", pt: "Use \"Notas\" acima para começar." },
+  "contactlog.titel": { nl: "Aantekeningen", en: "Notes", fr: "Notes", es: "Notas", de: "Notizen", pt: "Notas" },
+
+  // ===== NAMENLIJST EXTRA =====
+  "namenlijst.geen_contacten": { nl: "Nog geen contacten in je pipeline.", en: "No contacts in your pipeline yet.", fr: "Pas encore de contacts dans votre pipeline.", es: "Aún no hay contactos en tu pipeline.", de: "Noch keine Kontakte in deiner Pipeline.", pt: "Ainda sem contatos no seu pipeline." },
+  "namenlijst.contacten_in_pipeline": { nl: "contacten in jouw pipeline", en: "contacts in your pipeline", fr: "contacts dans votre pipeline", es: "contactos en tu pipeline", de: "Kontakte in deiner Pipeline", pt: "contatos no seu pipeline" },
+  "namenlijst.hoog": { nl: "Hoog", en: "High", fr: "Haute", es: "Alta", de: "Hoch", pt: "Alta" },
+
+  // ===== COACH CAPABILITIES =====
+  "coach.kan_dm": { nl: "DM-scripts schrijven op maat voor een specifiek prospect", en: "Write personalized DM scripts for a specific prospect", fr: "Écrire des scripts DM personnalisés pour un prospect", es: "Escribir scripts DM personalizados para un prospecto", de: "Personalisierte DM-Skripte für einen Kontakt schreiben", pt: "Escrever scripts DM personalizados para um prospecto" },
+  "coach.kan_bezwaar": { nl: "Bezwaren behandelen met Feel-Felt-Found", en: "Handle objections with Feel-Felt-Found", fr: "Traiter les objections avec Feel-Felt-Found", es: "Manejar objeciones con Feel-Felt-Found", de: "Einwände mit Feel-Felt-Found behandeln", pt: "Lidar com objeções com Feel-Felt-Found" },
+  "coach.kan_followup": { nl: "Follow up berichten formuleren", en: "Write follow-up messages", fr: "Formuler des messages de suivi", es: "Formular mensajes de seguimiento", de: "Follow-up Nachrichten formulieren", pt: "Formular mensagens de acompanhamento" },
+  "coach.kan_closing": { nl: "De Doel-Tijd-Termijn closing toepassen", en: "Apply the Goal-Time-Deadline closing", fr: "Appliquer la clôture Objectif-Temps-Délai", es: "Aplicar el cierre Objetivo-Tiempo-Plazo", de: "Die Ziel-Zeit-Termin-Abschluss anwenden", pt: "Aplicar o fechamento Meta-Tempo-Prazo" },
+  "coach.kan_strategie": { nl: "Strategisch advies per pipeline-fase", en: "Strategic advice per pipeline phase", fr: "Conseils stratégiques par phase pipeline", es: "Consejos estratégicos por fase de pipeline", de: "Strategische Beratung pro Pipeline-Phase", pt: "Conselhos estratégicos por fase do pipeline" },
+  "coach.kan_mindset": { nl: "Mindset coaching en motivatie", en: "Mindset coaching and motivation", fr: "Coaching mindset et motivation", es: "Coaching de mentalidad y motivación", de: "Mindset-Coaching und Motivation", pt: "Coaching de mentalidade e motivação" },
+  "coach.kan_accountability": { nl: "Accountability — houd jij je aan jouw dagelijkse acties?", en: "Accountability — are you keeping up with your daily actions?", fr: "Responsabilité — respectes-tu tes actions quotidiennes ?", es: "Responsabilidad — ¿cumples con tus acciones diarias?", de: "Accountability — hältst du deine täglichen Aktionen ein?", pt: "Responsabilidade — você está cumprindo suas ações diárias?" },
+
+  // ===== STATS EXTRA =====
+  "stats.vorige_dagen": { nl: "Vorige dagen aanvullen", en: "Fill in previous days", fr: "Compléter les jours précédents", es: "Completar días anteriores", de: "Vorherige Tage ausfüllen", pt: "Preencher dias anteriores" },
+  "stats.datum_kiezen": { nl: "Kies een datum", en: "Choose a date", fr: "Choisir une date", es: "Elegir una fecha", de: "Datum wählen", pt: "Escolher uma data" },
 };
 
 export function vertaal(sleutel: string, taal: Taal = "nl"): string {

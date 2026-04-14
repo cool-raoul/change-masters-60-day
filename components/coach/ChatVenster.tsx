@@ -253,6 +253,7 @@ export function ChatVenster({
           berichten: bijgewerkt,
           prospectId: selectedProspect || null,
           gesprekId,
+          taal,
         }),
       });
 

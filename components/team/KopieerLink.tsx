@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
+import { useTaal } from "@/lib/i18n/TaalContext";
 
 export default function KopieerLink({ userId }: { userId: string }) {
   const [link, setLink] = useState("");
+  const { v } = useTaal();
 
   const getLink = () => {
     if (typeof window !== "undefined") {
@@ -24,11 +26,11 @@ export default function KopieerLink({ userId }: { userId: string }) {
       <button
         onClick={() => {
           navigator.clipboard.writeText(getLink());
-          toast.success("Link gekopieerd!");
+          toast.success(v("link.gekopieerd"));
         }}
         className="btn-secondary text-sm px-4"
       >
-        Kopieer
+        {v("link.kopieer")}
       </button>
     </div>
   );

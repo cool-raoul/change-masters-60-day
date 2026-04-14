@@ -245,7 +245,7 @@ export default function RegistreerPagina() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-cm-black flex items-center justify-center">
-        <div className="text-cm-white">Laden...</div>
+        <div className="text-cm-white">Loading...</div>
       </div>
     }>
       <RegistreerFormulier />
