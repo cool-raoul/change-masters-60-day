@@ -7,6 +7,7 @@ import { PIPELINE_FASEN } from "@/lib/supabase/types";
 import { ProspectActieForm } from "@/components/namenlijst/ProspectActieForm";
 import { ContactLogLijst } from "@/components/namenlijst/ContactLogLijst";
 import { ContactgegevensForm } from "@/components/namenlijst/ContactgegevensForm";
+import { OnboardingChecklist } from "@/components/namenlijst/OnboardingChecklist";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { Locale } from "date-fns";
 
@@ -101,6 +102,9 @@ export default async function ProspectDetailPagina({
               {format(new Date(prospect.created_at), "d MMMM yyyy", { locale: datumLocale })}
             </p>
           </div>
+
+          {/* Onboarding checklist (alleen zichtbaar bij members) */}
+          <OnboardingChecklist prospect={prospect} />
 
           {/* Productbestellingen */}
           {bestellingen && bestellingen.length > 0 && (

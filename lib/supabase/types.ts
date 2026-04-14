@@ -72,6 +72,7 @@ export interface Prospect {
   volgende_actie_datum: string | null;
   volgende_actie_notitie: string | null;
   gearchiveerd: boolean;
+  gekoppelde_user_id: string | null;
   created_at: string;
   updated_at: string;
 }

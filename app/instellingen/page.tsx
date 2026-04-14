@@ -32,6 +32,17 @@ export default async function InstellingenPagina() {
       </div>
 
       <InstellingenForm profile={profile} email={user.email || ""} />
+
+      {/* Onboarding preview */}
+      <div className="card space-y-3">
+        <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">🎓 Onboarding</h2>
+        <p className="text-cm-white text-sm opacity-60">
+          Bekijk de volledige onboarding-wizard zoals een nieuw member die ziet. Handig als sponsor om nieuwe members te begeleiden.
+        </p>
+        <Link href="/onboarding?preview=true" className="btn-secondary text-sm inline-block">
+          Bekijk onboarding (preview) →
+        </Link>
+      </div>
     </div>
   );
 }
