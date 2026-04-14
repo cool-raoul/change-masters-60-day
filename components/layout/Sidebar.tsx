@@ -68,8 +68,8 @@ export function Sidebar() {
         </button>
       </div>
 
-      {/* Navigatie */}
-      <nav className="flex-1 p-4 space-y-1">
+      {/* Navigatie — scrollbaar zodat alles bereikbaar is op kleine schermen */}
+      <nav className="flex-1 overflow-y-auto p-4 space-y-1">
         {navigatie.map((item) => {
           const actief = pathname.startsWith(item.href);
           return (
@@ -87,29 +87,29 @@ export function Sidebar() {
             </Link>
           );
         })}
-      </nav>
 
-      {/* Onderkant */}
-      <div className="p-4 border-t border-cm-border space-y-2">
-        <Link
-          href="/instellingen"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
-        >
-          <span>⚙️</span> {v("nav.instellingen")}
-        </Link>
-        <Link
-          href="/mijn-why"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
-        >
-          <span>🎯</span> {v("nav.mijn_why")}
-        </Link>
-        <button
-          onClick={uitloggen}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:text-red-400 hover:bg-cm-surface-2 transition-colors w-full text-left"
-        >
-          <span>🚪</span> {v("nav.uitloggen")}
-        </button>
-      </div>
+        {/* Onderkant items direct in de scroll-zone zodat ze altijd bereikbaar zijn */}
+        <div className="pt-3 mt-3 border-t border-cm-border space-y-1">
+          <Link
+            href="/instellingen"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
+          >
+            <span>⚙️</span> {v("nav.instellingen")}
+          </Link>
+          <Link
+            href="/mijn-why"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
+          >
+            <span>🎯</span> {v("nav.mijn_why")}
+          </Link>
+          <button
+            onClick={uitloggen}
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:text-red-400 hover:bg-cm-surface-2 transition-colors w-full text-left"
+          >
+            <span>🚪</span> {v("nav.uitloggen")}
+          </button>
+        </div>
+      </nav>
     </>
   );
 
