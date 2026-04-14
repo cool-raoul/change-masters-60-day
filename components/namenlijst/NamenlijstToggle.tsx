@@ -20,8 +20,8 @@ export function NamenlijstToggle({ prospects }: Props) {
 
   return (
     <div className="space-y-4">
-      {/* Toggle knoppen */}
-      <div className="flex gap-2">
+      {/* Toggle knoppen + Nieuw toevoegen */}
+      <div className="flex items-center gap-2">
         <button
           onClick={() => setWeergave("pipeline")}
           className={`text-sm px-4 py-2 rounded-lg transition-colors ${
@@ -42,6 +42,10 @@ export function NamenlijstToggle({ prospects }: Props) {
         >
           📝 Lijst
         </button>
+        <div className="flex-1" />
+        <Link href="/namenlijst/nieuw" className="btn-gold text-sm">
+          + {v("namenlijst.nieuw")}
+        </Link>
       </div>
 
       {/* Pipeline weergave */}
