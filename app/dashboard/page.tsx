@@ -81,8 +81,28 @@ export default async function DashboardPagina() {
         <p className="text-cm-white text-xs mt-2">{60 - dag} {v("dashboard.dagen_te_gaan", taal)}</p>
       </div>
 
+      {/* Snelle acties — prominent bovenaan */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <Link href="/namenlijst/nieuw" className="card text-center py-4 hover:border-cm-gold-dim transition-colors group">
+          <div className="text-2xl mb-1">➕</div>
+          <span className="text-cm-white text-sm group-hover:text-cm-gold transition-colors">{v("namenlijst.nieuw", taal)}</span>
+        </Link>
+        <Link href="/coach" className="card text-center py-4 hover:border-cm-gold-dim transition-colors group">
+          <div className="text-2xl mb-1">🤖</div>
+          <span className="text-cm-white text-sm group-hover:text-cm-gold transition-colors">{v("dashboard.coach_raadplegen", taal)}</span>
+        </Link>
+        <Link href="/scripts" className="card text-center py-4 hover:border-cm-gold-dim transition-colors group">
+          <div className="text-2xl mb-1">📋</div>
+          <span className="text-cm-white text-sm group-hover:text-cm-gold transition-colors">{v("dashboard.scripts_bekijken", taal)}</span>
+        </Link>
+        <Link href="/statistieken" className="card text-center py-4 hover:border-cm-gold-dim transition-colors group">
+          <div className="text-2xl mb-1">📊</div>
+          <span className="text-cm-white text-sm group-hover:text-cm-gold transition-colors">{v("nav.statistieken", taal)}</span>
+        </Link>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Dagelijkse stats */}
+        {/* Dagelijkse stats + pipeline */}
         <div className="lg:col-span-2 space-y-4">
           <div className="card">
             <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider mb-4">
@@ -177,24 +197,6 @@ export default async function DashboardPagina() {
                 </Link>
               </div>
             )}
-          </div>
-
-          {/* Snelle acties */}
-          <div className="card">
-            <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider mb-3">
-              {v("dashboard.snelle_acties", taal)}
-            </h2>
-            <div className="space-y-2">
-              <Link href="/namenlijst/nieuw" className="btn-secondary w-full text-sm text-center block">
-                {v("namenlijst.nieuw", taal)}
-              </Link>
-              <Link href="/coach" className="btn-secondary w-full text-sm text-center block">
-                {v("dashboard.coach_raadplegen", taal)}
-              </Link>
-              <Link href="/scripts" className="btn-secondary w-full text-sm text-center block">
-                {v("dashboard.scripts_bekijken", taal)}
-              </Link>
-            </div>
           </div>
         </div>
       </div>

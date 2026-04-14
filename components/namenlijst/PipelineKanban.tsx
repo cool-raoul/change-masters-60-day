@@ -2,11 +2,14 @@
 
 import { useState, useRef, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { PIPELINE_FASEN, Prospect, PipelineFase } from "@/lib/supabase/types";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import { nl } from "date-fns/locale";
+import { nl, enUS, fr, es, de, pt } from "date-fns/locale";
+import { useTaal } from "@/lib/i18n/TaalContext";
+import { Locale } from "date-fns";
 
 interface Props {
   prospects: Prospect[];
@@ -73,9 +76,9 @@ function ProspectKaart({
         <span className="text-xs text-cm-white opacity-60">
           {dagSindsContact !== null
             ? dagSindsContact === 0
-              ? "Vandaag"
-              : `${dagSindsContact}d geleden`
-            : "Nog geen contact"}
+              ? "✓"
+              : `${dagSindsContact}d`
+            : "—"}
         </span>
         {prospect.volgende_actie_datum && (
           <span className={`text-xs font-medium ${
@@ -109,6 +112,8 @@ function ProspectKaart({
   );
 }
 
+const DATE_LOCALES: Record<string, Locale> = { nl, en: enUS, fr, es, de, pt };
+
 export function PipelineKanban({ prospects }: Props) {
   const [lokaleProspects, setLokaleProspects] = useState(prospects);
   const [dragOverFase, setDragOverFase] = useState<PipelineFase | null>(null);
@@ -116,6 +121,9 @@ export function PipelineKanban({ prospects }: Props) {
   const draggedIdRef = useRef<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
+  const router = useRouter();
+  const { v, taal } = useTaal();
+  const datumLocale = DATE_LOCALES[taal] || nl;
 
   const handleDragStart = useCallback((e: React.DragEvent, id: string) => {
     draggedIdRef.current = id;
@@ -167,6 +175,7 @@ export function PipelineKanban({ prospects }: Props) {
   }, [lokaleProspects]);
 
   async function wijzigFase(id: string, nieuweFase: PipelineFase) {
+    // Optimistisch lokaal bijwerken
     setLokaleProspects((prev) =>
       prev.map((p) => (p.id === id ? { ...p, pipeline_fase: nieuweFase } : p))
     );
@@ -175,10 +184,13 @@ export function PipelineKanban({ prospects }: Props) {
       .update({ pipeline_fase: nieuweFase, updated_at: new Date().toISOString() })
       .eq("id", id);
     if (error) {
-      toast.error("Kon fase niet wijzigen");
-      setLokaleProspects(prospects);
+      toast.error(v("actie.fout"));
+      // Herstel naar origineel bij fout
+      setLokaleProspects(lokaleProspects);
     } else {
-      toast.success("Bijgewerkt ✓");
+      toast.success(v("stats.opgeslagen") + " ✓");
+      // Ververs server data zodat lijstweergave + detail pagina ook klopt
+      router.refresh();
     }
   }
 
@@ -263,7 +275,7 @@ export function PipelineKanban({ prospects }: Props) {
                           : "border-cm-border text-cm-white opacity-40"
                       }`}
                     >
-                      {isDragOver ? "↓ Laat hier los" : "Leeg"}
+                      {isDragOver ? "↓" : v("namenlijst.leeg")}
                     </div>
                   )}
                 </div>

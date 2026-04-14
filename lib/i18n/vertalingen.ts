@@ -488,8 +488,8 @@ export const t: Vertalingen = {
     es: "Contactos", de: "Kontakte", pt: "Contatos",
   },
   "namenlijst.nieuw": {
-    nl: "+ Nieuw prospect", en: "+ New prospect", fr: "+ Nouveau prospect",
-    es: "+ Nuevo prospecto", de: "+ Neuer Kontakt", pt: "+ Novo prospecto",
+    nl: "+ Nieuw toevoegen", en: "+ Add new", fr: "+ Ajouter nouveau",
+    es: "+ Agregar nuevo", de: "+ Neu hinzufügen", pt: "+ Adicionar novo",
   },
   "namenlijst.zoeken": {
     nl: "Zoek prospect...", en: "Search prospect...", fr: "Rechercher un prospect...",
@@ -847,6 +847,7 @@ export const t: Vertalingen = {
 
   // ===== EXTRA LABELS =====
   "algemeen.telefoon": { nl: "Telefoon", en: "Phone", fr: "Téléphone", es: "Teléfono", de: "Telefon", pt: "Telefone" },
+  "namenlijst.leeg": { nl: "Leeg", en: "Empty", fr: "Vide", es: "Vacío", de: "Leer", pt: "Vazio" },
 };
 
 export function vertaal(sleutel: string, taal: Taal = "nl"): string {
