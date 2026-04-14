@@ -30,7 +30,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
       <div className="flex h-dvh bg-cm-black overflow-hidden">
         <WelcomePopup />
         <Sidebar />
-        <div className="flex-1 flex flex-col min-h-0">
+        <div className="flex-1 flex flex-col min-h-0 min-w-0">
           <Topbar gebruikersnaam={profile?.full_name || user.email || "Teamlid"} />
           <main className="flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain p-6 mobile-scroll">{children}</main>
         </div>
