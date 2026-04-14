@@ -96,7 +96,7 @@ export default function NieuwProspectPagina() {
           </div>
 
           <div>
-            <label className="block text-sm text-cm-white mb-1.5">{v("registreer.naam")}</label>
+            <label className="block text-sm text-cm-white mb-1.5">{v("algemeen.telefoon")}</label>
             <input
               type="tel"
               value={formData.telefoon}

@@ -15,13 +15,14 @@ export function Sidebar() {
   const { v } = useTaal();
 
   const navigatie = [
-    { href: "/dashboard", labelKey: "nav.dashboard", icoon: "\u26a1" },
-    { href: "/namenlijst", labelKey: "nav.namenlijst", icoon: "\ud83d\udc65" },
-    { href: "/zoeken", labelKey: "nav.zoeken", icoon: "\ud83d\udd0d" },
-    { href: "/coach", labelKey: "nav.coach", icoon: "\ud83e\udd16" },
-    { href: "/scripts", labelKey: "nav.scripts", icoon: "\ud83d\udccb" },
-    { href: "/herinneringen", labelKey: "nav.herinneringen", icoon: "\ud83d\udd14" },
-    { href: "/team", labelKey: "nav.team", icoon: "\ud83c\udfc6" },
+    { href: "/dashboard", labelKey: "nav.dashboard", icoon: "⚡" },
+    { href: "/namenlijst", labelKey: "nav.namenlijst", icoon: "👥" },
+    { href: "/zoeken", labelKey: "nav.zoeken", icoon: "🔍" },
+    { href: "/coach", labelKey: "nav.coach", icoon: "🤖" },
+    { href: "/scripts", labelKey: "nav.scripts", icoon: "📋" },
+    { href: "/statistieken", labelKey: "nav.statistieken", icoon: "📊" },
+    { href: "/herinneringen", labelKey: "nav.herinneringen", icoon: "🔔" },
+    { href: "/team", labelKey: "nav.team", icoon: "🏆" },
   ];
 
   // Sluit menu bij navigatie
@@ -63,7 +64,7 @@ export function Sidebar() {
           onClick={() => setMobielmenuOpen(false)}
           className="lg:hidden text-cm-white opacity-60 hover:opacity-100 text-2xl"
         >
-          \u2715
+          ✕
         </button>
       </div>
 
@@ -94,19 +95,19 @@ export function Sidebar() {
           href="/instellingen"
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
         >
-          <span>\u2699\ufe0f</span> {v("nav.instellingen")}
+          <span>⚙️</span> {v("nav.instellingen")}
         </Link>
         <Link
           href="/mijn-why"
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
         >
-          <span>\ud83c\udfaf</span> {v("nav.mijn_why")}
+          <span>🎯</span> {v("nav.mijn_why")}
         </Link>
         <button
           onClick={uitloggen}
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:text-red-400 hover:bg-cm-surface-2 transition-colors w-full text-left"
         >
-          <span>\ud83d\udeaa</span> {v("nav.uitloggen")}
+          <span>🚪</span> {v("nav.uitloggen")}
         </button>
       </div>
     </>

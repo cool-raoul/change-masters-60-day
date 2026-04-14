@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { useTaal } from "@/lib/i18n/TaalContext";
 
 export default function MijnWhyPagina() {
-  const { v } = useTaal();
+  const { v, taal } = useTaal();
   const [berichten, setBerichten] = useState<ChatBericht[]>([]);
   const [invoer, setInvoer] = useState("");
   const [laden, setLaden] = useState(false);
@@ -62,10 +62,19 @@ export default function MijnWhyPagina() {
     setLaden(true);
     setBestaandeWhy(null); // Verberg bestaande WHY tijdens gesprek
 
+    const startMessages: Record<string, string> = {
+      nl: `Hoi, ik ben ${gebruikersnaam}. Ik wil graag mijn WHY helder krijgen.`,
+      en: `Hi, I'm ${gebruikersnaam}. I'd like to get clear on my WHY.`,
+      fr: `Salut, je suis ${gebruikersnaam}. J'aimerais clarifier mon WHY.`,
+      es: `Hola, soy ${gebruikersnaam}. Me gustaría tener claro mi WHY.`,
+      de: `Hallo, ich bin ${gebruikersnaam}. Ich möchte mein WHY klar bekommen.`,
+      pt: `Oi, eu sou ${gebruikersnaam}. Gostaria de esclarecer meu WHY.`,
+    };
+
     const beginBerichten: ChatBericht[] = [
       {
         role: "user",
-        content: `Hoi, ik ben ${gebruikersnaam}. Ik wil graag mijn WHY helder krijgen.`,
+        content: startMessages[taal] || startMessages["nl"],
         timestamp: new Date().toISOString(),
       },
     ];
@@ -98,7 +107,7 @@ export default function MijnWhyPagina() {
       const response = await fetch("/api/why-coach", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ berichten: berPakket, naam: gebruikersnaam }),
+        body: JSON.stringify({ berichten: berPakket, naam: gebruikersnaam, taal }),
       });
 
       if (!response.ok) throw new Error("API fout");
@@ -139,7 +148,10 @@ export default function MijnWhyPagina() {
         /JOUW WHY:\s*([\s\S]+?)$/i,
         /YOUR WHY:\s*([\s\S]+?)$/i,
         /MY WHY:\s*([\s\S]+?)$/i,
-        /WHY:\s*([\s\S]+?)$/i,
+        /MON WHY:\s*([\s\S]+?)$/i,
+        /MI WHY:\s*([\s\S]+?)$/i,
+        /MEIN WHY:\s*([\s\S]+?)$/i,
+        /MEU WHY:\s*([\s\S]+?)$/i,
       ];
 
       let gevondenWhy: string | null = null;
@@ -153,16 +165,6 @@ export default function MijnWhyPagina() {
 
       if (gevondenWhy) {
         setVoorgesteldWhy(gevondenWhy);
-      } else if (berPakket.length >= 10 && antwoordTekst.length > 100) {
-        // Na genoeg berichten: bied hele antwoord aan als mogelijke WHY
-        // Verwijder intro-zinnen als die er zijn
-        const schoneTekst = antwoordTekst
-          .replace(/^(Dankjewel|Bedankt|Hier is|Dit is|Geweldig)[^\n]*\n*/i, "")
-          .replace(/\*+/g, "")
-          .trim();
-        if (schoneTekst.length > 50) {
-          setVoorgesteldWhy(schoneTekst);
-        }
       }
     } catch {
       toast.error("Er is iets misgegaan. Probeer opnieuw.");
@@ -229,9 +231,17 @@ export default function MijnWhyPagina() {
   async function finetuneWhy() {
     setVoorgesteldWhy(null);
     // Stuur automatisch een bericht om verder te finetunen
+    const finetuneMessages: Record<string, string> = {
+      nl: "Ik wil mijn WHY nog iets aanscherpen. Kun je me helpen om het nog krachtiger te maken?",
+      en: "I want to refine my WHY a bit more. Can you help me make it even more powerful?",
+      fr: "Je veux affiner mon WHY un peu plus. Peux-tu m'aider à le rendre encore plus puissant ?",
+      es: "Quiero afinar mi WHY un poco más. ¿Puedes ayudarme a hacerlo aún más poderoso?",
+      de: "Ich möchte mein WHY noch etwas verfeinern. Kannst du mir helfen, es noch kraftvoller zu machen?",
+      pt: "Quero refinar meu WHY um pouco mais. Pode me ajudar a torná-lo ainda mais poderoso?",
+    };
     const nieuwBericht: ChatBericht = {
       role: "user",
-      content: v("why.finetunen"),
+      content: finetuneMessages[taal] || finetuneMessages["nl"],
       timestamp: new Date().toISOString(),
     };
     const bijgewerkt = [...berichten, nieuwBericht];

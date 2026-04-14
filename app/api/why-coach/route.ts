@@ -13,9 +13,9 @@ export async function POST(request: Request) {
     const anthropic = new Anthropic({ apiKey });
 
     const body = await request.json();
-    const { berichten, naam }: { berichten: ChatBericht[]; naam: string } = body;
+    const { berichten, naam, taal }: { berichten: ChatBericht[]; naam: string; taal?: string } = body;
 
-    const systeemPrompt = bouwWhyCoachSysteemPrompt(naam);
+    const systeemPrompt = bouwWhyCoachSysteemPrompt(naam, taal || "nl");
 
     const apiMessages = berichten.map((b) => ({
       role: b.role as "user" | "assistant",

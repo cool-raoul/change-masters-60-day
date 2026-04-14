@@ -795,6 +795,58 @@ export const t: Vertalingen = {
   "contact.bijgewerkt": { nl: "Contactgegevens bijgewerkt", en: "Contact details updated", fr: "Coordonnées mises à jour", es: "Datos de contacto actualizados", de: "Kontaktdaten aktualisiert", pt: "Dados de contato atualizados" },
   "contact.fout": { nl: "Kon wijzigingen niet opslaan", en: "Could not save changes", fr: "Impossible d'enregistrer les modifications", es: "No se pudieron guardar los cambios", de: "Änderungen konnten nicht gespeichert werden", pt: "Não foi possível salvar as alterações" },
   "contact.extra_info": { nl: "Extra informatie over dit contact...", en: "Extra information about this contact...", fr: "Informations supplémentaires sur ce contact...", es: "Información adicional sobre este contacto...", de: "Zusätzliche Informationen über diesen Kontakt...", pt: "Informações adicionais sobre este contato..." },
+
+  // ===== STATISTIEKEN / KPI =====
+  "nav.statistieken": { nl: "Statistieken", en: "Statistics", fr: "Statistiques", es: "Estadísticas", de: "Statistiken", pt: "Estatísticas" },
+  "stats.titel": { nl: "Statistieken & KPI's", en: "Statistics & KPIs", fr: "Statistiques & KPI", es: "Estadísticas & KPIs", de: "Statistiken & KPIs", pt: "Estatísticas & KPIs" },
+  "stats.subtitel": { nl: "Jouw voortgang over de hele 60 dagenrun", en: "Your progress across the entire 60-day run", fr: "Votre progression sur l'ensemble des 60 jours", es: "Tu progreso durante los 60 días", de: "Dein Fortschritt über den gesamten 60-Tage-Lauf", pt: "Seu progresso ao longo dos 60 dias" },
+
+  // Totalen kaarten
+  "stats.totaal_contacten": { nl: "Totaal contacten", en: "Total contacts", fr: "Total contacts", es: "Total contactos", de: "Kontakte gesamt", pt: "Total contatos" },
+  "stats.totaal_uitnodigingen": { nl: "Totaal uitnodigingen", en: "Total invitations", fr: "Total invitations", es: "Total invitaciones", de: "Einladungen gesamt", pt: "Total convites" },
+  "stats.totaal_followups": { nl: "Totaal follow-ups", en: "Total follow-ups", fr: "Total suivis", es: "Total seguimientos", de: "Follow-ups gesamt", pt: "Total acompanhamentos" },
+  "stats.totaal_presentaties": { nl: "Totaal presentaties", en: "Total presentations", fr: "Total présentations", es: "Total presentaciones", de: "Präsentationen gesamt", pt: "Total apresentações" },
+  "stats.totaal_klanten": { nl: "Nieuwe klanten", en: "New customers", fr: "Nouveaux clients", es: "Nuevos clientes", de: "Neue Kunden", pt: "Novos clientes" },
+  "stats.totaal_partners": { nl: "Nieuwe partners", en: "New partners", fr: "Nouveaux partenaires", es: "Nuevos socios", de: "Neue Partner", pt: "Novos parceiros" },
+
+  // KPI sectie
+  "stats.kpi_titel": { nl: "Key Performance Indicators", en: "Key Performance Indicators", fr: "Indicateurs clés de performance", es: "Indicadores clave de rendimiento", de: "Leistungskennzahlen", pt: "Indicadores chave de desempenho" },
+  "stats.gem_contacten_dag": { nl: "Gem. contacten per dag", en: "Avg. contacts per day", fr: "Moy. contacts par jour", es: "Prom. contactos por día", de: "Ø Kontakte pro Tag", pt: "Méd. contatos por dia" },
+  "stats.conversie_uitnodiging": { nl: "Conversie naar uitnodiging", en: "Invitation conversion rate", fr: "Taux de conversion invitation", es: "Tasa de conversión invitación", de: "Einladungs-Konversionsrate", pt: "Taxa de conversão convite" },
+  "stats.conversie_presentatie": { nl: "Conversie naar presentatie", en: "Presentation conversion rate", fr: "Taux de conversion présentation", es: "Tasa de conversión presentación", de: "Präsentations-Konversionsrate", pt: "Taxa de conversão apresentação" },
+  "stats.conversie_klant_partner": { nl: "Conversie naar klant/partner", en: "Customer/partner conversion", fr: "Conversion en client/partenaire", es: "Conversión a cliente/socio", de: "Kunden/Partner-Konversion", pt: "Conversão para cliente/parceiro" },
+  "stats.actieve_dagen": { nl: "Actieve dagen", en: "Active days", fr: "Jours actifs", es: "Días activos", de: "Aktive Tage", pt: "Dias ativos" },
+  "stats.consistentie": { nl: "Consistentie score", en: "Consistency score", fr: "Score de régularité", es: "Puntuación de consistencia", de: "Konsistenz-Score", pt: "Pontuação de consistência" },
+  "stats.streak": { nl: "Huidige streak", en: "Current streak", fr: "Série en cours", es: "Racha actual", de: "Aktuelle Serie", pt: "Sequência atual" },
+  "stats.langste_streak": { nl: "Langste streak", en: "Longest streak", fr: "Série la plus longue", es: "Racha más larga", de: "Längste Serie", pt: "Sequência mais longa" },
+  "stats.beste_dag": { nl: "Beste dag", en: "Best day", fr: "Meilleur jour", es: "Mejor día", de: "Bester Tag", pt: "Melhor dia" },
+  "stats.dagen": { nl: "dagen", en: "days", fr: "jours", es: "días", de: "Tage", pt: "dias" },
+
+  // Grafiek secties
+  "stats.activiteit_grafiek": { nl: "Dagelijkse activiteit", en: "Daily activity", fr: "Activité quotidienne", es: "Actividad diaria", de: "Tägliche Aktivität", pt: "Atividade diária" },
+  "stats.cumulatief_grafiek": { nl: "Cumulatieve groei", en: "Cumulative growth", fr: "Croissance cumulative", es: "Crecimiento acumulado", de: "Kumulatives Wachstum", pt: "Crescimento cumulativo" },
+  "stats.pipeline_funnel": { nl: "Pipeline funnel", en: "Pipeline funnel", fr: "Entonnoir pipeline", es: "Embudo de pipeline", de: "Pipeline-Trichter", pt: "Funil de pipeline" },
+  "stats.weekoverzicht": { nl: "Weekoverzicht", en: "Weekly overview", fr: "Aperçu hebdomadaire", es: "Resumen semanal", de: "Wochenübersicht", pt: "Visão semanal" },
+
+  // Prognose
+  "stats.prognose": { nl: "Prognose einde run", en: "End-of-run forecast", fr: "Prévision fin de course", es: "Pronóstico fin de carrera", de: "Prognose Laufende", pt: "Previsão fim da corrida" },
+  "stats.huidig_tempo": { nl: "Huidig tempo", en: "Current pace", fr: "Rythme actuel", es: "Ritmo actual", de: "Aktuelles Tempo", pt: "Ritmo atual" },
+  "stats.verwacht_einde": { nl: "Verwacht bij dag 60", en: "Expected at day 60", fr: "Prévu au jour 60", es: "Esperado en el día 60", de: "Erwartet am Tag 60", pt: "Esperado no dia 60" },
+
+  // Leeg
+  "stats.geen_data": { nl: "Nog geen data beschikbaar. Begin met het bijhouden van je dagelijkse activiteiten op het dashboard!", en: "No data available yet. Start tracking your daily activities on the dashboard!", fr: "Pas encore de données disponibles. Commencez à suivre vos activités quotidiennes !", es: "Aún no hay datos disponibles. ¡Comienza a registrar tus actividades diarias!", de: "Noch keine Daten verfügbar. Beginne mit dem Erfassen deiner täglichen Aktivitäten!", pt: "Nenhum dado disponível ainda. Comece a registrar suas atividades diárias!" },
+
+  // DagStatForm labels
+  "stats.contacten": { nl: "Contacten", en: "Contacts", fr: "Contacts", es: "Contactos", de: "Kontakte", pt: "Contatos" },
+  "stats.uitnodigingen": { nl: "Uitnodigingen", en: "Invitations", fr: "Invitations", es: "Invitaciones", de: "Einladungen", pt: "Convites" },
+  "stats.followups": { nl: "Follow-ups", en: "Follow-ups", fr: "Suivis", es: "Seguimientos", de: "Follow-ups", pt: "Acompanhamentos" },
+  "stats.presentaties": { nl: "Presentaties", en: "Presentations", fr: "Présentations", es: "Presentaciones", de: "Präsentationen", pt: "Apresentações" },
+  "stats.nieuwe_klanten": { nl: "Nieuwe klanten", en: "New customers", fr: "Nouveaux clients", es: "Nuevos clientes", de: "Neue Kunden", pt: "Novos clientes" },
+  "stats.nieuwe_partners": { nl: "Nieuwe partners", en: "New partners", fr: "Nouveaux partenaires", es: "Nuevos socios", de: "Neue Partner", pt: "Novos parceiros" },
+  "stats.opgeslagen": { nl: "Opgeslagen", en: "Saved", fr: "Enregistré", es: "Guardado", de: "Gespeichert", pt: "Salvo" },
+
+  // ===== EXTRA LABELS =====
+  "algemeen.telefoon": { nl: "Telefoon", en: "Phone", fr: "Téléphone", es: "Teléfono", de: "Telefon", pt: "Telefone" },
 };
 
 export function vertaal(sleutel: string, taal: Taal = "nl"): string {

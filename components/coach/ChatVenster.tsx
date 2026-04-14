@@ -22,12 +22,12 @@ interface SnelleOptie {
 }
 
 const SNELLE_OPTIES: SnelleOptie[] = [
-  { icoon: "\u{1F4AC}", labelKey: "coach.snel.dm", berichtKey: "coach.snel.dm.bericht" },
-  { icoon: "\u{1F6E1}", labelKey: "coach.snel.bezwaar", berichtKey: "coach.snel.bezwaar.bericht" },
-  { icoon: "\u{1F504}", labelKey: "coach.snel.followup", berichtKey: "coach.snel.followup.bericht" },
-  { icoon: "\u2705", labelKey: "coach.snel.accountability", berichtKey: "coach.snel.accountability.bericht" },
-  { icoon: "\u{1F525}", labelKey: "coach.snel.motivatie", berichtKey: "coach.snel.motivatie.bericht" },
-  { icoon: "\u{1F3AF}", labelKey: "coach.snel.closing", berichtKey: "coach.snel.closing.bericht" },
+  { icoon: "💬", labelKey: "coach.snel.dm", berichtKey: "coach.snel.dm.bericht" },
+  { icoon: "🛡️", labelKey: "coach.snel.bezwaar", berichtKey: "coach.snel.bezwaar.bericht" },
+  { icoon: "🔄", labelKey: "coach.snel.followup", berichtKey: "coach.snel.followup.bericht" },
+  { icoon: "✅", labelKey: "coach.snel.accountability", berichtKey: "coach.snel.accountability.bericht" },
+  { icoon: "🔥", labelKey: "coach.snel.motivatie", berichtKey: "coach.snel.motivatie.bericht" },
+  { icoon: "🎯", labelKey: "coach.snel.closing", berichtKey: "coach.snel.closing.bericht" },
 ];
 
 // Berichten per taal voor snelle opties
@@ -35,16 +35,16 @@ const SNELLE_BERICHTEN: Record<string, Record<string, string>> = {
   "coach.snel.dm.bericht": {
     nl: "Schrijf een uitnodigings DM voor dit prospect",
     en: "Write an invitation DM for this prospect",
-    fr: "\u00c9cris un DM d'invitation pour ce prospect",
-    es: "Escribe un DM de invitaci\u00f3n para este prospecto",
-    de: "Schreibe eine Einladungs-DM f\u00fcr diesen Kontakt",
+    fr: "Écris un DM d'invitation pour ce prospect",
+    es: "Escribe un DM de invitación para este prospecto",
+    de: "Schreibe eine Einladungs-DM für diesen Kontakt",
     pt: "Escreva um DM de convite para este prospecto",
   },
   "coach.snel.bezwaar.bericht": {
     nl: "Hoe reageer ik op het bezwaar 'ik heb geen tijd'?",
     en: "How do I respond to the objection 'I don't have time'?",
-    fr: "Comment r\u00e9pondre \u00e0 l'objection 'je n'ai pas le temps' ?",
-    es: "\u00bfC\u00f3mo respondo a la objeci\u00f3n 'no tengo tiempo'?",
+    fr: "Comment répondre à l'objection 'je n'ai pas le temps' ?",
+    es: "¿Cómo respondo a la objeción 'no tengo tiempo'?",
     de: "Wie reagiere ich auf den Einwand 'Ich habe keine Zeit'?",
     pt: "Como respondo \u00e0 obje\u00e7\u00e3o 'n\u00e3o tenho tempo'?",
   },
@@ -54,31 +54,31 @@ const SNELLE_BERICHTEN: Record<string, Record<string, string>> = {
     fr: "Donne-moi un message de suivi",
     es: "Dame un mensaje de seguimiento",
     de: "Gib mir eine Follow-up Nachricht",
-    pt: "Me d\u00ea uma mensagem de acompanhamento",
+    pt: "Me dê uma mensagem de acompanhamento",
   },
   "coach.snel.accountability.bericht": {
     nl: "Houd me accountable! Wat had ik vandaag moeten doen en wat heb ik echt gedaan? Stel me de lastige vragen.",
     en: "Hold me accountable! What should I have done today and what did I actually do? Ask me the tough questions.",
-    fr: "Tiens-moi responsable ! Qu'est-ce que j'aurais d\u00fb faire aujourd'hui et qu'est-ce que j'ai vraiment fait ?",
-    es: "\u00a1Hazme responsable! \u00bfQu\u00e9 deber\u00eda haber hecho hoy y qu\u00e9 hice realmente?",
-    de: "Halte mich verantwortlich! Was h\u00e4tte ich heute tun sollen und was habe ich wirklich getan?",
+    fr: "Tiens-moi responsable ! Qu'est-ce que j'aurais dû faire aujourd'hui et qu'est-ce que j'ai vraiment fait ?",
+    es: "¡Hazme responsable! ¿Qué debería haber hecho hoy y qué hice realmente?",
+    de: "Halte mich verantwortlich! Was hätte ich heute tun sollen und was habe ich wirklich getan?",
     pt: "Me cobre! O que eu deveria ter feito hoje e o que realmente fiz?",
   },
   "coach.snel.motivatie.bericht": {
     nl: "Ik heb even een motivatie boost nodig. Het valt me zwaar vandaag. Help me om door te zetten.",
     en: "I need a motivation boost. It's been tough today. Help me push through.",
-    fr: "J'ai besoin d'un coup de boost. C'est dur aujourd'hui. Aide-moi \u00e0 tenir.",
-    es: "Necesito un impulso de motivaci\u00f3n. Ha sido dif\u00edcil hoy. Ay\u00fadame a seguir.",
-    de: "Ich brauche einen Motivations-Boost. Es f\u00e4llt mir heute schwer. Hilf mir durchzuhalten.",
-    pt: "Preciso de um impulso de motiva\u00e7\u00e3o. Est\u00e1 dif\u00edcil hoje. Me ajude a continuar.",
+    fr: "J'ai besoin d'un coup de boost. C'est dur aujourd'hui. Aide-moi à tenir.",
+    es: "Necesito un impulso de motivación. Ha sido difícil hoy. Ayúdame a seguir.",
+    de: "Ich brauche einen Motivations-Boost. Es fällt mir heute schwer. Hilf mir durchzuhalten.",
+    pt: "Preciso de um impulso de motivação. Está difícil hoje. Me ajude a continuar.",
   },
   "coach.snel.closing.bericht": {
     nl: "Hoe sluit ik dit gesprek af en vraag ik om de beslissing?",
     en: "How do I close this conversation and ask for the decision?",
-    fr: "Comment conclure cette conversation et demander la d\u00e9cision ?",
-    es: "\u00bfC\u00f3mo cierro esta conversaci\u00f3n y pido la decisi\u00f3n?",
-    de: "Wie schlie\u00dfe ich dieses Gespr\u00e4ch ab und frage nach der Entscheidung?",
-    pt: "Como fecho esta conversa e pe\u00e7o a decis\u00e3o?",
+    fr: "Comment conclure cette conversation et demander la décision ?",
+    es: "¿Cómo cierro esta conversación y pido la decisión?",
+    de: "Wie schließe ich dieses Gespräch ab und frage nach der Entscheidung?",
+    pt: "Como fecho esta conversa e peço a decisão?",
   },
 };
 
@@ -312,7 +312,7 @@ export function ChatVenster({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <Link href="/coach" className="text-cm-white hover:text-cm-white">
-            \u2190
+            ←
           </Link>
           <div>
             <h1 className="text-lg font-display font-bold text-cm-white">
@@ -345,7 +345,7 @@ export function ChatVenster({
       <div className="flex-1 overflow-y-auto space-y-4 mb-4 pr-1">
         {berichten.length === 0 && (
           <div className="text-center py-8">
-            <div className="text-5xl mb-4">\ud83e\udd16</div>
+            <div className="text-5xl mb-4">🤖</div>
             <p className="text-cm-white mb-6">
               {v("coach.stel_vraag")}
             </p>
@@ -434,7 +434,7 @@ export function ChatVenster({
             disabled={laden || !invoer.trim()}
             className="btn-gold px-6"
           >
-            \u2192
+            →
           </button>
         </form>
       </div>

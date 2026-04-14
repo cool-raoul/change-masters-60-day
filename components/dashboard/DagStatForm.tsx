@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { DagelijkseStat } from "@/lib/supabase/types";
 import { toast } from "sonner";
+import { useTaal } from "@/lib/i18n/TaalContext";
 
 interface Props {
   userId: string;
@@ -12,17 +13,18 @@ interface Props {
 }
 
 const statVelden = [
-  { key: "contacten_gemaakt", label: "Contacten", icoon: "💬" },
-  { key: "uitnodigingen", label: "Uitnodigingen", icoon: "📤" },
-  { key: "followups", label: "Follow-ups", icoon: "🔄" },
-  { key: "presentaties", label: "Presentaties", icoon: "🎯" },
-  { key: "nieuwe_klanten", label: "Nieuwe klanten", icoon: "✅" },
-  { key: "nieuwe_partners", label: "Nieuwe partners", icoon: "🤝" },
+  { key: "contacten_gemaakt", labelKey: "stats.contacten", icoon: "💬" },
+  { key: "uitnodigingen", labelKey: "stats.uitnodigingen", icoon: "📤" },
+  { key: "followups", labelKey: "stats.followups", icoon: "🔄" },
+  { key: "presentaties", labelKey: "stats.presentaties", icoon: "🎯" },
+  { key: "nieuwe_klanten", labelKey: "stats.nieuwe_klanten", icoon: "✅" },
+  { key: "nieuwe_partners", labelKey: "stats.nieuwe_partners", icoon: "🤝" },
 ] as const;
 
 type StatKey = typeof statVelden[number]["key"];
 
 export function DagStatForm({ userId, bestaandeStats, datum }: Props) {
+  const { v } = useTaal();
   const [stats, setStats] = useState<Record<StatKey, number>>({
     contacten_gemaakt: bestaandeStats?.contacten_gemaakt || 0,
     uitnodigingen: bestaandeStats?.uitnodigingen || 0,
@@ -51,7 +53,7 @@ export function DagStatForm({ userId, bestaandeStats, datum }: Props) {
     );
 
     if (error) {
-      toast.error("Kon niet opslaan");
+      toast.error(v("actie.fout"));
     } else {
       setTimeout(() => setOpslaan(false), 1000);
     }
@@ -60,10 +62,10 @@ export function DagStatForm({ userId, bestaandeStats, datum }: Props) {
   return (
     <div>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        {statVelden.map(({ key, label, icoon }) => (
+        {statVelden.map(({ key, labelKey, icoon }) => (
           <div key={key} className="bg-cm-surface-2 rounded-xl p-3">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs text-cm-white">{icoon} {label}</span>
+              <span className="text-xs text-cm-white">{icoon} {v(labelKey)}</span>
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -87,7 +89,7 @@ export function DagStatForm({ userId, bestaandeStats, datum }: Props) {
       </div>
       {opslaan && (
         <p className="text-cm-white text-xs mt-2 text-right animate-fade-in">
-          Opgeslagen ✓
+          {v("stats.opgeslagen")} ✓
         </p>
       )}
     </div>
