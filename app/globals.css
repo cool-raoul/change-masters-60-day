@@ -106,6 +106,12 @@
   }
 }
 
+/* Soepel scrollen op iOS Safari */
+.mobile-scroll {
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
 /* Slide-in animatie voor mobiel menu */
 @keyframes slide-in {
   from { transform: translateX(-100%); }
