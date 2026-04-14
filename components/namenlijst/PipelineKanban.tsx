@@ -205,17 +205,25 @@ export function PipelineKanban({ prospects }: Props) {
   }
 
   return (
-    <div className="flex items-start gap-2">
-      {/* Scroll pijl links */}
-      <button
-        onClick={scrollLinks}
-        className="flex-shrink-0 mt-10 w-8 h-8 bg-cm-surface border border-cm-border rounded-full flex items-center justify-center text-cm-gold hover:bg-cm-surface-2 transition-colors shadow-lg"
-      >
-        ←
-      </button>
+    <div className="space-y-2">
+      {/* Scroll pijlen rechtsboven */}
+      <div className="flex justify-end gap-2">
+        <button
+          onClick={scrollLinks}
+          className="w-8 h-8 bg-cm-surface border border-cm-border rounded-full flex items-center justify-center text-cm-gold hover:bg-cm-surface-2 transition-colors"
+        >
+          ←
+        </button>
+        <button
+          onClick={scrollRechts}
+          className="w-8 h-8 bg-cm-surface border border-cm-border rounded-full flex items-center justify-center text-cm-gold hover:bg-cm-surface-2 transition-colors"
+        >
+          →
+        </button>
+      </div>
 
       {/* Kanban scroll container */}
-      <div ref={scrollRef} className="flex-1 min-w-0 overflow-x-auto pb-4">
+      <div ref={scrollRef} className="overflow-x-auto pb-2">
         <div className="flex gap-4 min-w-max">
           {PIPELINE_FASEN.map(({ fase, label }) => {
             const faseProspects = lokaleProspects.filter((p) => p.pipeline_fase === fase);
@@ -281,14 +289,6 @@ export function PipelineKanban({ prospects }: Props) {
           })}
         </div>
       </div>
-
-      {/* Scroll pijl rechts */}
-      <button
-        onClick={scrollRechts}
-        className="flex-shrink-0 mt-10 w-8 h-8 bg-cm-surface border border-cm-border rounded-full flex items-center justify-center text-cm-gold hover:bg-cm-surface-2 transition-colors shadow-lg"
-      >
-        →
-      </button>
     </div>
   );
 }
