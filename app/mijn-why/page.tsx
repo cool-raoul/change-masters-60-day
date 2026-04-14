@@ -222,6 +222,11 @@ export default function MijnWhyPagina() {
       .update({ onboarding_klaar: true })
       .eq("id", user.id);
 
+    // Stel onboarding_stap in als dit de eerste keer is (niet voor bestaande gebruikers)
+    if (!user.user_metadata?.onboarding_stap) {
+      await supabase.auth.updateUser({ data: { onboarding_stap: 1 } });
+    }
+
     setBestaandeWhy(schoneWhy);
     setOpgeslagen(true);
     setVoorgesteldWhy(null);
@@ -467,10 +472,10 @@ export default function MijnWhyPagina() {
             {v("why.terugvinden")}
           </p>
           <button
-            onClick={() => router.push("/dashboard")}
+            onClick={() => router.push("/onboarding")}
             className="btn-gold px-8 py-3"
           >
-            {v("why.naar_dashboard")} →
+            Volgende stap →
           </button>
         </div>
       )}

@@ -42,7 +42,14 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (user && !isPublicRoute && pathname !== "/mijn-why" && !pathname.startsWith("/api/")) {
+  const isProtectedRoute =
+    user &&
+    !isPublicRoute &&
+    pathname !== "/mijn-why" &&
+    pathname !== "/onboarding" &&
+    !pathname.startsWith("/api/");
+
+  if (isProtectedRoute) {
     // Controleer of onboarding klaar is
     const { data: profile } = await supabase
       .from("profiles")
@@ -50,10 +57,20 @@ export async function updateSession(request: NextRequest) {
       .eq("id", user.id)
       .single();
 
+    const url = request.nextUrl.clone();
+
     if (profile && !profile.onboarding_klaar) {
-      const url = request.nextUrl.clone();
       url.pathname = "/mijn-why";
       return NextResponse.redirect(url);
+    }
+
+    // Onboarding klaar maar stappen nog niet afgerond → naar /onboarding
+    if (profile?.onboarding_klaar) {
+      const onboardingStap = user.user_metadata?.onboarding_stap;
+      if (onboardingStap !== undefined && onboardingStap !== null && Number(onboardingStap) < 99) {
+        url.pathname = "/onboarding";
+        return NextResponse.redirect(url);
+      }
     }
   }
 
