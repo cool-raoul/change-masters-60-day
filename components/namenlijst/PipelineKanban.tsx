@@ -215,7 +215,7 @@ export function PipelineKanban({ prospects }: Props) {
       </button>
 
       {/* Kanban scroll container */}
-      <div ref={scrollRef} className="flex-1 overflow-x-auto pb-4">
+      <div ref={scrollRef} className="flex-1 min-w-0 overflow-x-auto pb-4">
         <div className="flex gap-4 min-w-max">
           {PIPELINE_FASEN.map(({ fase, label }) => {
             const faseProspects = lokaleProspects.filter((p) => p.pipeline_fase === fase);

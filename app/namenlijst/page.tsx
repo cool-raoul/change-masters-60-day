@@ -1,5 +1,4 @@
 import { createClient } from "@/lib/supabase/server";
-import Link from "next/link";
 import { Prospect } from "@/lib/supabase/types";
 import { NamenlijstToggle } from "@/components/namenlijst/NamenlijstToggle";
 import { getServerTaal, v } from "@/lib/i18n/server";
@@ -22,18 +21,13 @@ export default async function NamenlijstPagina() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-display font-bold text-cm-white">
-            {v("namenlijst.titel", taal)}
-          </h1>
-          <p className="text-cm-white mt-1">
-            {alleProspects.length} {v("namenlijst.contacten_in_pipeline", taal)}
-          </p>
-        </div>
-        <Link href="/namenlijst/nieuw" className="btn-gold">
-          {v("namenlijst.nieuw", taal)}
-        </Link>
+      <div>
+        <h1 className="text-2xl font-display font-bold text-cm-white">
+          {v("namenlijst.titel", taal)}
+        </h1>
+        <p className="text-cm-white mt-1">
+          {alleProspects.length} {v("namenlijst.contacten_in_pipeline", taal)}
+        </p>
       </div>
 
       <NamenlijstToggle prospects={alleProspects} />
