@@ -802,8 +802,8 @@ export const t: Vertalingen = {
   "stats.totaal_uitnodigingen": { nl: "Totaal uitnodigingen", en: "Total invitations", fr: "Total invitations", es: "Total invitaciones", de: "Einladungen gesamt", pt: "Total convites" },
   "stats.totaal_followups": { nl: "Totaal follow-ups", en: "Total follow-ups", fr: "Total suivis", es: "Total seguimientos", de: "Follow-ups gesamt", pt: "Total acompanhamentos" },
   "stats.totaal_presentaties": { nl: "Totaal presentaties", en: "Total presentations", fr: "Total présentations", es: "Total presentaciones", de: "Präsentationen gesamt", pt: "Total apresentações" },
-  "stats.totaal_klanten": { nl: "Nieuwe klanten", en: "New customers", fr: "Nouveaux clients", es: "Nuevos clientes", de: "Neue Kunden", pt: "Novos clientes" },
-  "stats.totaal_partners": { nl: "Nieuwe partners", en: "New partners", fr: "Nouveaux partenaires", es: "Nuevos socios", de: "Neue Partner", pt: "Novos parceiros" },
+  "stats.totaal_klanten": { nl: "Nieuwe shoppers", en: "New shoppers", fr: "Nouveaux shoppers", es: "Nuevos shoppers", de: "Neue Shoppers", pt: "Novos shoppers" },
+  "stats.totaal_partners": { nl: "Nieuwe members", en: "New members", fr: "Nouveaux members", es: "Nuevos members", de: "Neue Members", pt: "Novos members" },
 
   // KPI sectie
   "stats.kpi_titel": { nl: "Key Performance Indicators", en: "Key Performance Indicators", fr: "Indicateurs clés de performance", es: "Indicadores clave de rendimiento", de: "Leistungskennzahlen", pt: "Indicadores chave de desempenho" },
@@ -837,8 +837,8 @@ export const t: Vertalingen = {
   "stats.uitnodigingen": { nl: "Uitnodigingen", en: "Invitations", fr: "Invitations", es: "Invitaciones", de: "Einladungen", pt: "Convites" },
   "stats.followups": { nl: "Follow-ups", en: "Follow-ups", fr: "Suivis", es: "Seguimientos", de: "Follow-ups", pt: "Acompanhamentos" },
   "stats.presentaties": { nl: "Presentaties", en: "Presentations", fr: "Présentations", es: "Presentaciones", de: "Präsentationen", pt: "Apresentações" },
-  "stats.nieuwe_klanten": { nl: "Nieuwe klanten", en: "New customers", fr: "Nouveaux clients", es: "Nuevos clientes", de: "Neue Kunden", pt: "Novos clientes" },
-  "stats.nieuwe_partners": { nl: "Nieuwe partners", en: "New partners", fr: "Nouveaux partenaires", es: "Nuevos socios", de: "Neue Partner", pt: "Novos parceiros" },
+  "stats.nieuwe_klanten": { nl: "Nieuwe shoppers", en: "New shoppers", fr: "Nouveaux shoppers", es: "Nuevos shoppers", de: "Neue Shoppers", pt: "Novos shoppers" },
+  "stats.nieuwe_partners": { nl: "Nieuwe members", en: "New members", fr: "Nouveaux members", es: "Nuevos members", de: "Neue Members", pt: "Novos members" },
   "stats.opgeslagen": { nl: "Opgeslagen", en: "Saved", fr: "Enregistré", es: "Guardado", de: "Gespeichert", pt: "Salvo" },
 
   // ===== EXTRA LABELS =====
