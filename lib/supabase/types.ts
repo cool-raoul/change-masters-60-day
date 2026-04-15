@@ -155,6 +155,63 @@ export interface AiGesprek {
   prospect?: Prospect;
 }
 
+export type VideoCategorie = "training" | "motivatie" | "testimoniaal" | "systeem";
+
+export interface Video {
+  id: string;
+  titel: string;
+  beschrijving: string | null;
+  categorie: VideoCategorie;
+  thumbnail_url: string | null;
+  youtube_url: string | null;
+  vimeo_url: string | null;
+  supabase_storage_path: string | null;
+  beschikbaar_vanaf: string | null;
+  beschikbaar_tot: string | null;
+  duratie_seconden: number | null;
+  leider_id: string;
+  sort_order: number;
+  is_published: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface VideoView {
+  id: string;
+  video_id: string;
+  viewer_id: string;
+  seconds_watched: number;
+  max_seconds_reached: number;
+  watched_percentage: number;
+  is_completed: boolean;
+  first_viewed_at: string;
+  last_viewed_at: string;
+  video?: Video;
+}
+
+export interface VideoCoManager {
+  id: string;
+  leider_id: string;
+  manager_id: string;
+  kan_uploaden: boolean;
+  kan_bewerken: boolean;
+  kan_verwijderen: boolean;
+  kan_publiceren: boolean;
+  toegevoegd_op: string;
+}
+
+export interface OnboardingVoortgang {
+  id: string;
+  user_id: string;
+  stap_1_welkom: boolean;
+  stap_2_run: boolean;
+  stap_3_namen: boolean;
+  stap_4_script: boolean;
+  stap_5_doelen: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export const PIPELINE_FASEN: { fase: PipelineFase; label: string; kleur: string; tekstkleur: string }[] = [
   { fase: "prospect", label: "Prospect", kleur: "#3A3A3A", tekstkleur: "#CCCCCC" },
   { fase: "uitgenodigd", label: "Uitgenodigd", kleur: "#1A2A3A", tekstkleur: "#4A9EDB" },

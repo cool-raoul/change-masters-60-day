@@ -314,3 +314,186 @@ CREATE POLICY "Leiders beheren team" ON team_members
   FOR ALL USING (auth.uid() = leider_id);
 CREATE POLICY "Leden zien eigen koppeling" ON team_members
   FOR SELECT USING (auth.uid() = lid_id);
+
+-- =============================================
+-- VIDEO SYSTEM (Trainings- en motivatievideos)
+-- =============================================
+CREATE TABLE IF NOT EXISTS videos (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  titel text NOT NULL,
+  beschrijving text,
+  categorie text NOT NULL CHECK (categorie IN ('training', 'motivatie', 'testimoniaal', 'systeem')),
+  thumbnail_url text,
+  -- Video source: either YouTube URL, Vimeo URL, or Supabase storage path
+  youtube_url text,
+  vimeo_url text,
+  supabase_storage_path text,
+  -- Scheduling
+  beschikbaar_vanaf date,
+  beschikbaar_tot date,
+  -- Metadata
+  duratie_seconden integer,
+  leider_id uuid REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
+  sort_order integer NOT NULL DEFAULT 0,
+  is_published boolean NOT NULL DEFAULT true,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT video_source_check CHECK (
+    (youtube_url IS NOT NULL) OR (vimeo_url IS NOT NULL) OR (supabase_storage_path IS NOT NULL)
+  )
+);
+
+-- =============================================
+-- VIDEO VIEWS (Trackingdata voor videokijken)
+-- =============================================
+CREATE TABLE IF NOT EXISTS video_views (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  video_id uuid REFERENCES videos(id) ON DELETE CASCADE NOT NULL,
+  viewer_id uuid REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
+  seconds_watched integer NOT NULL DEFAULT 0,
+  max_seconds_reached integer NOT NULL DEFAULT 0,
+  watched_percentage integer GENERATED ALWAYS AS (
+    CASE
+      WHEN (SELECT duratie_seconden FROM videos WHERE id = video_id) IS NULL OR (SELECT duratie_seconden FROM videos WHERE id = video_id) = 0
+      THEN 0
+      ELSE ROUND((100.0 * max_seconds_reached) / (SELECT duratie_seconden FROM videos WHERE id = video_id))
+    END
+  ) STORED,
+  is_completed boolean NOT NULL DEFAULT false,
+  first_viewed_at timestamptz NOT NULL DEFAULT now(),
+  last_viewed_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE(video_id, viewer_id)
+);
+
+-- =============================================
+-- VIDEO CO-MANAGERS (Beheerders van videovoorraad)
+-- =============================================
+CREATE TABLE IF NOT EXISTS video_co_managers (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  leider_id uuid REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
+  manager_id uuid REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
+  kan_uploaden boolean NOT NULL DEFAULT true,
+  kan_bewerken boolean NOT NULL DEFAULT true,
+  kan_verwijderen boolean NOT NULL DEFAULT false,
+  kan_publiceren boolean NOT NULL DEFAULT false,
+  toegevoegd_op timestamptz NOT NULL DEFAULT now(),
+  UNIQUE(leider_id, manager_id),
+  CONSTRAINT niet_jezelf_toevoegen CHECK (leider_id != manager_id)
+);
+
+-- =============================================
+-- PUSH SUBSCRIPTIONS (Web Push notificaties)
+-- =============================================
+CREATE TABLE IF NOT EXISTS push_subscriptions (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid REFERENCES profiles(id) ON DELETE CASCADE UNIQUE NOT NULL,
+  endpoint text NOT NULL,
+  p256dh text NOT NULL,
+  auth text NOT NULL,
+  user_agent text,
+  subscribed_at timestamptz NOT NULL DEFAULT now(),
+  last_used_at timestamptz NOT NULL DEFAULT now(),
+  is_active boolean NOT NULL DEFAULT true
+);
+
+CREATE INDEX IF NOT EXISTS push_subscriptions_user_id_idx ON push_subscriptions(user_id);
+
+ALTER TABLE push_subscriptions ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Iedereen beheerd eigen subscription" ON push_subscriptions
+  FOR ALL USING (auth.uid() = user_id);
+
+-- =============================================
+-- ONBOARDING VOORTGANG (Voor member tracking)
+-- =============================================
+CREATE TABLE IF NOT EXISTS onboarding_voortgang (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid REFERENCES profiles(id) ON DELETE CASCADE UNIQUE NOT NULL,
+  stap_1_welkom boolean NOT NULL DEFAULT false,
+  stap_2_run boolean NOT NULL DEFAULT false,
+  stap_3_namen boolean NOT NULL DEFAULT false,
+  stap_4_script boolean NOT NULL DEFAULT false,
+  stap_5_doelen boolean NOT NULL DEFAULT false,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+-- =============================================
+-- VIDEO INDEXES & RLS
+-- =============================================
+CREATE INDEX IF NOT EXISTS videos_leider_id_idx ON videos(leider_id);
+CREATE INDEX IF NOT EXISTS videos_categorie_idx ON videos(categorie);
+CREATE INDEX IF NOT EXISTS videos_beschikbaar_idx ON videos(beschikbaar_vanaf, beschikbaar_tot);
+CREATE INDEX IF NOT EXISTS video_views_video_id_idx ON video_views(video_id);
+CREATE INDEX IF NOT EXISTS video_views_viewer_id_idx ON video_views(viewer_id);
+CREATE INDEX IF NOT EXISTS video_views_first_viewed_idx ON video_views(first_viewed_at);
+CREATE INDEX IF NOT EXISTS video_co_managers_leider_idx ON video_co_managers(leider_id);
+CREATE INDEX IF NOT EXISTS onboarding_voortgang_user_idx ON onboarding_voortgang(user_id);
+
+-- Enable RLS
+ALTER TABLE videos ENABLE ROW LEVEL SECURITY;
+ALTER TABLE video_views ENABLE ROW LEVEL SECURITY;
+ALTER TABLE video_co_managers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE onboarding_voortgang ENABLE ROW LEVEL SECURITY;
+
+-- Videos policies
+CREATE POLICY "Iedereen in het team ziet gepubliceerde videos" ON videos
+  FOR SELECT USING (
+    is_published = true
+    AND (beschikbaar_vanaf IS NULL OR beschikbaar_vanaf <= CURRENT_DATE)
+    AND (beschikbaar_tot IS NULL OR beschikbaar_tot >= CURRENT_DATE)
+    AND leider_id IN (SELECT id FROM profiles WHERE id = (SELECT leider_id FROM team_members WHERE lid_id = auth.uid()) OR id = auth.uid())
+  );
+
+CREATE POLICY "Leider beheert eigen videos" ON videos
+  FOR ALL USING (auth.uid() = leider_id);
+
+CREATE POLICY "Co-managers met rechten beheren videos" ON videos
+  FOR UPDATE USING (
+    auth.uid() IN (
+      SELECT manager_id FROM video_co_managers
+      WHERE leider_id = videos.leider_id
+      AND (kan_bewerken = true OR kan_verwijderen = true)
+    )
+  );
+
+-- Video views policies
+CREATE POLICY "Iedereen kan eigen views zien" ON video_views
+  FOR SELECT USING (auth.uid() = viewer_id);
+
+CREATE POLICY "Leider ziet team views" ON video_views
+  FOR SELECT USING (
+    viewer_id IN (
+      SELECT lid_id FROM team_members WHERE leider_id = auth.uid()
+    )
+  );
+
+CREATE POLICY "Iedereen registreert eigen views" ON video_views
+  FOR INSERT WITH CHECK (auth.uid() = viewer_id);
+
+CREATE POLICY "Iedereen updated eigen views" ON video_views
+  FOR UPDATE USING (auth.uid() = viewer_id);
+
+-- Video co-managers policies
+CREATE POLICY "Leider beheert co-managers" ON video_co_managers
+  FOR ALL USING (auth.uid() = leider_id);
+
+CREATE POLICY "Managers zien hun eigen rechten" ON video_co_managers
+  FOR SELECT USING (auth.uid() = manager_id);
+
+-- Onboarding voortgang policies
+CREATE POLICY "Iedereen ziet eigen voortgang" ON onboarding_voortgang
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Iedereen update eigen voortgang" ON onboarding_voortgang
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Iedereen update eigen voortgang - UPDATE" ON onboarding_voortgang
+  FOR UPDATE USING (auth.uid() = user_id);
+
+CREATE POLICY "Leider ziet team voortgang" ON onboarding_voortgang
+  FOR SELECT USING (
+    user_id IN (
+      SELECT lid_id FROM team_members WHERE leider_id = auth.uid()
+    )
+  );

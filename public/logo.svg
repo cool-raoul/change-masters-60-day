@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <!-- Achtergrond -->
+  <rect width="192" height="192" fill="#000000"/>
+
+  <!-- Gouden cirkel -->
+  <circle cx="96" cy="96" r="85" fill="none" stroke="#D4AF37" stroke-width="3"/>
+
+  <!-- "C" voor Change Masters -->
+  <text x="96" y="110" font-size="80" font-weight="bold" fill="#D4AF37" text-anchor="middle" font-family="Arial, sans-serif">⚡</text>
+</svg>

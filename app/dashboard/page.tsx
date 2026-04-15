@@ -4,6 +4,7 @@ import { nl, enUS, fr, es, de, pt } from "date-fns/locale";
 import Link from "next/link";
 import { DagelijkseStat, Herinnering, WhyProfile } from "@/lib/supabase/types";
 import { DagStatForm } from "@/components/dashboard/DagStatForm";
+import { PushNotificationToggle } from "@/components/pwa/PushNotificationToggle";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { Locale } from "date-fns";
 
@@ -198,6 +199,9 @@ export default async function DashboardPagina() {
               </div>
             )}
           </div>
+
+          {/* Push Notifications */}
+          <PushNotificationToggle />
         </div>
       </div>
     </div>
