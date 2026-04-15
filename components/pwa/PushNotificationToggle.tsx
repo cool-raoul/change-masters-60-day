@@ -61,7 +61,7 @@ export function PushNotificationToggle() {
       // Zet push aan
       if (!isSubscribed) {
         const registration = await navigator.serviceWorker.ready;
-        const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+        const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY?.trim();
 
         if (!vapidPublicKey) {
           toast.error("Push notifications niet geconfigureerd");
