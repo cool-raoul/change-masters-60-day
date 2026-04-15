@@ -2,14 +2,6 @@ import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import { sendPushToLeiders } from "@/lib/push/sendPush";
 
-const STAP_NAMEN: Record<string, string> = {
-  stap_1_welkom: "Stap 1: Welkom",
-  stap_2_why: "Stap 2: WHY ingevuld",
-  stap_3_app: "Stap 3: App geïnstalleerd",
-  stap_4_namenlijst: "Stap 4: Namenlijst aangemaakt",
-  stap_5_doelen: "Stap 5: Doelen bepaald",
-};
-
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient();
@@ -21,7 +13,7 @@ export async function POST(request: NextRequest) {
 
     const { stap } = await request.json();
 
-    if (!stap || !STAP_NAMEN[stap]) {
+    if (!stap || typeof stap !== "string" || stap.length > 100) {
       return NextResponse.json({ error: "Ongeldige stap" }, { status: 400 });
     }
 
@@ -33,12 +25,11 @@ export async function POST(request: NextRequest) {
       .single();
 
     const naam = profile?.full_name || "Een teamlid";
-    const stapNaam = STAP_NAMEN[stap];
 
-    // Stuur push naar alle leiders
+    // Stuur push naar sponsor + alle leiders
     await sendPushToLeiders({
-      title: `🎉 ${naam} heeft ${stapNaam} voltooid!`,
-      body: "Bekijk de voortgang van je team in de app.",
+      title: `✅ ${naam}: ${stap}`,
+      body: "Tik om de voortgang van je team te bekijken.",
       url: "/team",
       tag: "onboarding",
     });
