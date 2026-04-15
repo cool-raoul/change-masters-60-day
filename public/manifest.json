@@ -1,6 +1,6 @@
 {
-  "name": "Eleva",
-  "short_name": "Eleva",
+  "name": "ELEVA",
+  "short_name": "ELEVA",
   "description": "Network marketing systeem met AI coach, CRM en video trainings",
   "start_url": "/dashboard",
   "scope": "/",
@@ -10,15 +10,15 @@
   "theme_color": "#D4AF37",
   "icons": [
     {
-      "src": "/logo.svg",
+      "src": "/eleva-icon.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/logo.svg",
+      "src": "/eleva-icon.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "maskable"
     }
   ],

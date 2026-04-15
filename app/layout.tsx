@@ -5,17 +5,17 @@ import { TaalProvider } from "@/lib/i18n/TaalContext";
 import { ServiceWorkerRegister } from "@/components/pwa/ServiceWorkerRegister";
 
 export const metadata: Metadata = {
-  title: "Eleva",
+  title: "ELEVA",
   description: "Jouw persoonlijke aanbevelingsmarketing systeem voor de 60-dagenrun",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Eleva",
+    title: "ELEVA",
   },
   icons: {
-    icon: "/logo.svg",
-    apple: "/logo.svg",
+    icon: "/eleva-icon.png",
+    apple: "/eleva-icon.png",
   },
 };
 
@@ -32,9 +32,9 @@ export default function RootLayout({
         <meta name="mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="Eleva" />
-        <link rel="apple-touch-icon" href="/logo.svg" />
-        <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+        <meta name="apple-mobile-web-app-title" content="ELEVA" />
+        <link rel="apple-touch-icon" href="/eleva-icon.png" />
+        <link rel="icon" type="image/svg+xml" href="/eleva-icon.png" />
       </head>
       <body>
         <TaalProvider>
