@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { Resend } from "resend";
 import { NextResponse } from "next/server";
+import { sendPushToUser } from "@/lib/push/sendPush";
 
 // Wordt elke ochtend om 07:00 NL-tijd aangeroepen via Vercel Cron
 // Schedule: "0 5 * * *" = 07:00 CEST (UTC+2, zomertijd)
@@ -103,6 +104,15 @@ export async function GET(request: Request) {
       });
 
       verzonden++;
+
+      // Stuur ook push notification
+      await sendPushToUser(gebruiker.id, {
+        title: `${herinneringen.length} herinnering${herinneringen.length > 1 ? "en" : ""} vandaag`,
+        body: herinneringen.slice(0, 3).map((h) => `• ${h.titel}`).join("\n"),
+        url: "/herinneringen",
+        tag: "herinnering",
+      });
+
     } catch (e: any) {
       const fout = `${gebruiker.email}: ${e?.message || "onbekende fout"}`;
       console.error("Fout bij verzenden:", fout);

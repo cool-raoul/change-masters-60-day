@@ -117,6 +117,13 @@ export function OnboardingChecklist({ prospect }: { prospect: Prospect }) {
     if (error) {
       setVoortgang((prev) => (prev ? { ...prev, [stapKey]: huidigeWaarde } : null));
       toast.error("Kon niet opslaan");
+    } else if (nieuweWaarde) {
+      // Stuur push notificatie naar leider
+      fetch("/api/onboarding/stap-voltooid", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ stap: stapKey }),
+      }).catch(() => {});
     }
   }
 
