@@ -1,10 +1,49 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
-  <!-- Achtergrond -->
+  <defs>
+    <radialGradient id="goldGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#FFE680"/>
+      <stop offset="50%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#A07820"/>
+    </radialGradient>
+    <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#D4AF37" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Zwarte achtergrond -->
   <rect width="192" height="192" fill="#000000"/>
 
-  <!-- Gouden cirkel -->
-  <circle cx="96" cy="96" r="85" fill="none" stroke="#D4AF37" stroke-width="3"/>
+  <!-- Glow effect -->
+  <circle cx="96" cy="96" r="80" fill="url(#glowGrad)"/>
 
-  <!-- "C" voor Change Masters -->
-  <text x="96" y="110" font-size="80" font-weight="bold" fill="#D4AF37" text-anchor="middle" font-family="Arial, sans-serif">⚡</text>
+  <!-- Buitenste gouden ring -->
+  <circle cx="96" cy="96" r="88" fill="none" stroke="url(#goldGrad)" stroke-width="2.5"/>
+
+  <!-- Tweede ring -->
+  <circle cx="96" cy="96" r="78" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" opacity="0.7"/>
+
+  <!-- Derde ring -->
+  <circle cx="96" cy="96" r="68" fill="none" stroke="url(#goldGrad)" stroke-width="1" opacity="0.4"/>
+
+  <!-- Power button boog -->
+  <path d="M 60 80 A 44 44 0 1 0 132 80" fill="none" stroke="url(#goldGrad)" stroke-width="10" stroke-linecap="round"/>
+
+  <!-- Power button verticale lijn -->
+  <line x1="96" y1="48" x2="96" y2="82" stroke="url(#goldGrad)" stroke-width="10" stroke-linecap="round"/>
+
+  <!-- Circuit bolletjes -->
+  <circle cx="44" cy="88" r="4" fill="#D4AF37" opacity="0.9"/>
+  <circle cx="148" cy="88" r="4" fill="#D4AF37" opacity="0.9"/>
+  <circle cx="60" cy="148" r="4" fill="#D4AF37" opacity="0.9"/>
+
+  <!-- Circuit lijnen -->
+  <line x1="44" y1="88" x2="62" y2="75" stroke="#D4AF37" stroke-width="1.5" opacity="0.6"/>
+  <line x1="148" y1="88" x2="130" y2="75" stroke="#D4AF37" stroke-width="1.5" opacity="0.6"/>
+  <line x1="60" y1="148" x2="75" y2="130" stroke="#D4AF37" stroke-width="1.5" opacity="0.6"/>
+
+  <!-- Lichtpuntjes glow -->
+  <circle cx="44" cy="88" r="7" fill="#FFE680" opacity="0.3"/>
+  <circle cx="148" cy="88" r="7" fill="#FFE680" opacity="0.3"/>
+  <circle cx="60" cy="148" r="7" fill="#FFE680" opacity="0.3"/>
 </svg>
