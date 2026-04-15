@@ -58,14 +58,19 @@ export default async function DashboardPagina() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-display font-bold text-cm-white">
-          {v("dashboard.dag", taal)} <span className="text-cm-gold">{dag}</span> {v("dashboard.van_60", taal)}
-        </h1>
-        <p className="text-cm-white mt-1">
-          {format(new Date(), "EEEE d MMMM yyyy", { locale: datumLocale })}
-        </p>
+      {/* Header + Push Notifications naast elkaar */}
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-display font-bold text-cm-white">
+            {v("dashboard.dag", taal)} <span className="text-cm-gold">{dag}</span> {v("dashboard.van_60", taal)}
+          </h1>
+          <p className="text-cm-white mt-1">
+            {format(new Date(), "EEEE d MMMM yyyy", { locale: datumLocale })}
+          </p>
+        </div>
+        <div className="shrink-0">
+          <PushNotificationToggle />
+        </div>
       </div>
 
       {/* Voortgang */}
@@ -200,8 +205,6 @@ export default async function DashboardPagina() {
             )}
           </div>
 
-          {/* Push Notifications */}
-          <PushNotificationToggle />
         </div>
       </div>
     </div>
