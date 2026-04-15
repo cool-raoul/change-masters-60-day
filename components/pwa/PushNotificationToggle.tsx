@@ -96,9 +96,9 @@ export function PushNotificationToggle() {
           toast.success("Push notifications uitgeschakeld");
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Push toggle error:", error);
-      toast.error("Kon push notifications niet wijzigen");
+      toast.error("Fout: " + (error?.message || String(error)));
     } finally {
       setIsLoading(false);
     }
