@@ -11,6 +11,7 @@ import { TAAL_OPTIES, vertaal, Taal } from "@/lib/i18n/vertalingen";
 function RegistreerFormulier() {
   const [naam, setNaam] = useState("");
   const [email, setEmail] = useState("");
+  const [emailBevestig, setEmailBevestig] = useState("");
   const [wachtwoord, setWachtwoord] = useState("");
   const [wachtwoordBevestig, setWachtwoordBevestig] = useState("");
   const [taal, setTaal] = useState<Taal>("nl");
@@ -28,6 +29,11 @@ function RegistreerFormulier() {
 
   async function handleRegistreren(e: React.FormEvent) {
     e.preventDefault();
+
+    if (email !== emailBevestig) {
+      toast.error("E-mailadressen komen niet overeen");
+      return;
+    }
 
     if (wachtwoord !== wachtwoordBevestig) {
       toast.error(v("registreer.wachtwoorden_niet_gelijk"));
@@ -59,8 +65,9 @@ function RegistreerFormulier() {
       toast.error(v("registreer.mislukt") + error.message);
       setLaden(false);
     } else {
-      setGeregistreerd(true);
-      setLaden(false);
+      // Geen e-mailbevestiging nodig — direct doorsturen naar onboarding
+      router.push("/onboarding");
+      router.refresh();
     }
   }
 
@@ -187,7 +194,30 @@ function RegistreerFormulier() {
                 placeholder="jouw@email.nl"
                 className="input-cm"
                 required
+                autoComplete="email"
               />
+            </div>
+
+            <div>
+              <label className="block text-sm text-cm-white mb-1.5">
+                E-mailadres bevestigen
+              </label>
+              <input
+                type="email"
+                value={emailBevestig}
+                onChange={(e) => setEmailBevestig(e.target.value)}
+                placeholder="jouw@email.nl (nogmaals)"
+                className={`input-cm ${emailBevestig && email !== emailBevestig ? "border-red-500" : emailBevestig && email === emailBevestig ? "border-green-500" : ""}`}
+                required
+                autoComplete="off"
+                onPaste={(e) => e.preventDefault()}
+              />
+              {emailBevestig && email !== emailBevestig && (
+                <p className="text-red-400 text-xs mt-1">E-mailadressen komen niet overeen</p>
+              )}
+              {emailBevestig && email === emailBevestig && (
+                <p className="text-green-400 text-xs mt-1">✓ E-mailadressen komen overeen</p>
+              )}
             </div>
 
             <div>
