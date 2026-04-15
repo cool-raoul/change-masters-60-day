@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS profiles (
   run_startdatum date NOT NULL DEFAULT '2026-04-12',
   onboarding_klaar boolean NOT NULL DEFAULT false,
   invited_by uuid REFERENCES profiles(id) ON DELETE SET NULL,
+  sponsor_id uuid REFERENCES profiles(id) ON DELETE SET NULL,
   taal text NOT NULL DEFAULT 'nl' CHECK (taal IN ('nl', 'en', 'fr', 'es', 'de', 'pt')),
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now()
@@ -22,25 +23,24 @@ CREATE TABLE IF NOT EXISTS profiles (
 CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS TRIGGER AS $$
 DECLARE
-  uitnodiger_id uuid;
+  sponsor_uuid uuid;
 BEGIN
-  uitnodiger_id := NULLIF(NEW.raw_user_meta_data->>'invited_by', '')::uuid;
+  -- Lees sponsor_id uit metadata (nieuwe stijl) of invited_by (oud)
+  sponsor_uuid := NULLIF(NEW.raw_user_meta_data->>'sponsor_id', '')::uuid;
+  IF sponsor_uuid IS NULL THEN
+    sponsor_uuid := NULLIF(NEW.raw_user_meta_data->>'invited_by', '')::uuid;
+  END IF;
 
-  INSERT INTO public.profiles (id, full_name, email, role, invited_by)
+  INSERT INTO public.profiles (id, full_name, email, role, sponsor_id, invited_by, taal)
   VALUES (
     NEW.id,
     COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.email),
     NEW.email,
     COALESCE(NEW.raw_user_meta_data->>'role', 'lid'),
-    uitnodiger_id
+    sponsor_uuid,
+    sponsor_uuid,
+    COALESCE(NEW.raw_user_meta_data->>'taal', 'nl')
   );
-
-  -- Automatisch team_members koppeling maken als er een uitnodiger is
-  IF uitnodiger_id IS NOT NULL THEN
-    INSERT INTO public.team_members (leider_id, lid_id, uitgenodigd_op, toegetreden_op)
-    VALUES (uitnodiger_id, NEW.id, now(), now())
-    ON CONFLICT (leider_id, lid_id) DO NOTHING;
-  END IF;
 
   RETURN NEW;
 END;
