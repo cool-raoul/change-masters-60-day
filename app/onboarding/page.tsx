@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -15,6 +15,7 @@ export default function OnboardingPagina() {
   const [dagdoelFollowups, setDagdoelFollowups] = useState(3);
   const [bezig, setBezig] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const supabase = createClient();
 
@@ -45,7 +46,6 @@ export default function OnboardingPagina() {
     laadGegevens();
   }, []);
 
-  // Sla voortgang op in onboarding_voortgang tabel (voor sponsor-inzage)
   async function slaVoortgangOp(velden: Record<string, boolean>) {
     if (isPreview || !userId) return;
     await supabase
@@ -57,11 +57,21 @@ export default function OnboardingPagina() {
     setBezig(true);
     if (!isPreview) {
       await supabase.auth.updateUser({ data: { onboarding_stap: nieuweStap } });
-      const stapVelden: Record<number, string> = { 2: "stap_1_welkom", 3: "stap_2_run", 4: "stap_3_namen", 5: "stap_4_script" };
+      const stapVelden: Record<number, string> = {
+        2: "stap_1_welkom",
+        3: "stap_2_why",
+        4: "stap_3_run",
+        5: "stap_4_namen",
+        6: "stap_5_doelen"
+      };
       if (stapVelden[nieuweStap]) await slaVoortgangOp({ [stapVelden[nieuweStap]]: true });
     }
     setStap(nieuweStap);
     setBezig(false);
+    // Scroll naar boven van de content container
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    }
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -69,12 +79,13 @@ export default function OnboardingPagina() {
     setBezig(true);
     if (!isPreview) {
       await supabase.auth.updateUser({
-        data: { onboarding_stap: 6, dagdoel_contacten: dagdoelContacten, dagdoel_uitnodigingen: dagdoelUitnodigingen, dagdoel_followups: dagdoelFollowups },
+        data: { onboarding_stap: 7, dagdoel_contacten: dagdoelContacten, dagdoel_uitnodigingen: dagdoelUitnodigingen, dagdoel_followups: dagdoelFollowups },
       });
       await slaVoortgangOp({ stap_5_doelen: true });
     }
     setBezig(false);
-    setStap(6);
+    setStap(7);
+    if (scrollRef.current) scrollRef.current.scrollTo({ top: 0, behavior: "smooth" });
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -99,8 +110,8 @@ export default function OnboardingPagina() {
     );
   }
 
-  const totaalStappen = 5;
-  const voortgang = stap < 6 ? (stap / totaalStappen) * 100 : 100;
+  const totaalStappen = 6;
+  const voortgang = stap < 7 ? ((stap - 1) / totaalStappen) * 100 : 100;
 
   return (
     <div className="min-h-screen bg-cm-black flex flex-col">
@@ -119,23 +130,23 @@ export default function OnboardingPagina() {
               Preview
             </span>
           )}
-          {stap < 6 && (
+          {stap < 7 && (
             <span className="text-sm text-cm-white opacity-60">Stap {stap} van {totaalStappen}</span>
           )}
         </div>
       </div>
 
       {/* Progress bar */}
-      {stap < 6 && (
+      {stap < 7 && (
         <div className="h-1 bg-cm-surface">
           <div className="h-1 bg-cm-gold transition-all duration-500" style={{ width: `${voortgang}%` }} />
         </div>
       )}
 
       {/* Stap bollen */}
-      {stap < 6 && (
+      {stap < 7 && (
         <div className="flex justify-center gap-2 py-4 px-6">
-          {[1, 2, 3, 4, 5].map((n) => (
+          {[1, 2, 3, 4, 5, 6].map((n) => (
             <div key={n} className={`flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold transition-all ${
               n < stap ? "bg-cm-gold text-cm-black" : n === stap ? "bg-cm-gold/20 border-2 border-cm-gold text-cm-gold" : "bg-cm-surface border border-cm-border text-cm-white opacity-40"
             }`}>
@@ -145,23 +156,53 @@ export default function OnboardingPagina() {
         </div>
       )}
 
-      <div className="flex-1 overflow-y-auto">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto">
         <div className="max-w-2xl mx-auto px-6 py-6 pb-16">
 
-          {/* STAP 1: WELKOM */}
+          {/* STAP 1: WELKOM + APP INSTALLEREN */}
           {stap === 1 && (
             <div className="space-y-6">
               <div className="text-center">
-                <div className="text-6xl mb-4">🚀</div>
+                <div className="text-6xl mb-4">👋</div>
                 <h2 className="text-3xl font-display font-bold text-cm-white mb-2">Welkom, {gebruikersnaam}!</h2>
-                <p className="text-cm-white opacity-60 text-sm">Je WHY staat vast. Nu bereiden we je voor op dag 1.</p>
+                <p className="text-cm-white opacity-60 text-sm">We zetten je in 6 stappen klaar voor de 60-dagenrun.</p>
               </div>
+
+              {/* App installeren */}
+              <div className="bg-[#D4AF37]/10 border-2 border-[#D4AF37]/40 rounded-xl p-5 space-y-4">
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl">📱</span>
+                  <div>
+                    <p className="text-[#D4AF37] font-bold text-base">Stap 0: Installeer de app</p>
+                    <p className="text-cm-white text-xs opacity-60">Doe dit nu — dan ontvang je ook meldingen</p>
+                  </div>
+                </div>
+                <div className="bg-black/30 rounded-lg p-4 space-y-2">
+                  <p className="text-cm-white text-sm font-semibold">📱 iPhone (Safari):</p>
+                  <ol className="text-cm-white text-sm opacity-80 space-y-1 list-decimal list-inside">
+                    <li>Tik op het deel-icoontje onderaan</li>
+                    <li>Kies "Zet op beginscherm"</li>
+                    <li>Tik op "Voeg toe"</li>
+                    <li>Open de app daarna vanuit je beginscherm</li>
+                  </ol>
+                </div>
+                <div className="bg-black/30 rounded-lg p-4 space-y-2">
+                  <p className="text-cm-white text-sm font-semibold">🤖 Android (Chrome):</p>
+                  <ol className="text-cm-white text-sm opacity-80 space-y-1 list-decimal list-inside">
+                    <li>Tik op de drie puntjes rechtsboven</li>
+                    <li>Kies "Toevoegen aan startscherm"</li>
+                    <li>Tik op "Toevoegen"</li>
+                  </ol>
+                </div>
+              </div>
+
               <div className="card space-y-3">
                 <h3 className="text-cm-gold font-semibold">Wat doe je in deze setup?</h3>
                 <ul className="space-y-2">
                   {[
+                    { icoon: "💛", tekst: "Je ontdekt jouw persoonlijke WHY" },
                     { icoon: "📖", tekst: "Je leert hoe de 60-dagenrun werkt" },
-                    { icoon: "📝", tekst: "Je voegt je eerste namen toe aan de namenlijst" },
+                    { icoon: "📝", tekst: "Je voegt je eerste namen toe" },
                     { icoon: "💬", tekst: "Je leest je eerste uitnodigingsscript" },
                     { icoon: "🎯", tekst: "Je stelt je persoonlijke dagdoelen in" },
                   ].map((item, i) => (
@@ -170,25 +211,64 @@ export default function OnboardingPagina() {
                     </li>
                   ))}
                 </ul>
-                <p className="text-cm-white text-xs opacity-50 pt-1">Dit kost je ongeveer 10 minuten.</p>
+                <p className="text-cm-white text-xs opacity-50 pt-1">Dit kost je ongeveer 15 minuten.</p>
               </div>
-              <div className="bg-amber-900/20 border border-amber-600/30 rounded-xl p-5">
+
+              <div className="bg-amber-900/20 border border-amber-600/30 rounded-xl p-4">
                 <div className="flex gap-3">
                   <span className="text-2xl flex-shrink-0">🤝</span>
                   <div>
-                    <p className="text-amber-400 font-semibold text-sm mb-2">Doe je eerste uitnodigingen samen met je sponsor</p>
+                    <p className="text-amber-400 font-semibold text-sm mb-1">Doe je eerste uitnodigingen samen met je sponsor</p>
                     <p className="text-cm-white text-sm leading-relaxed opacity-80">
-                      De meeste stappen doe je zelfstandig. Maar je <strong className="text-cm-white">eerste uitnodigingen</strong> doe je het beste samen met je sponsor — degene via wie je dit systeem hebt. Zij kennen het systeem, weten precies wat te zeggen en staan klaar als iemand reageert. Plan dit moment in zodra je setup klaar is.
+                      De meeste stappen doe je zelfstandig. Maar je <strong className="text-cm-white">eerste uitnodigingen</strong> doe je het beste samen met je sponsor. Plan dit zodra je setup klaar is.
                     </p>
                   </div>
                 </div>
               </div>
-              <button onClick={() => gaNaarStap(2)} disabled={bezig} className="btn-gold w-full py-3 text-base">Aan de slag →</button>
+
+              <button onClick={() => gaNaarStap(2)} disabled={bezig} className="btn-gold w-full py-3 text-base">App geïnstalleerd — aan de slag →</button>
             </div>
           )}
 
-          {/* STAP 2: HOE WERKT DE RUN */}
+          {/* STAP 2: JOUW WHY */}
           {stap === 2 && (
+            <div className="space-y-6">
+              <div className="text-center">
+                <div className="text-6xl mb-4">💛</div>
+                <h2 className="text-2xl font-display font-bold text-cm-white mb-2">Ontdek jouw WHY</h2>
+                <p className="text-cm-white opacity-60 text-sm">Dit is het fundament van alles. Zonder een sterke WHY stop je als het moeilijk wordt.</p>
+              </div>
+
+              <div className="card space-y-3">
+                <h3 className="text-cm-gold font-semibold">Waarom is dit zo belangrijk?</h3>
+                <p className="text-cm-white text-sm leading-relaxed opacity-80">
+                  Je WHY is de diepste reden waarom je dit doet. Niet "meer geld verdienen" — maar wat dat geld betekent voor jou en je gezin. Als je WHY sterk genoeg is, vind je altijd de weg.
+                </p>
+                <p className="text-cm-white text-sm leading-relaxed opacity-80">
+                  Een AI-coach stelt je de juiste vragen om jouw echte motivatie boven water te krijgen. Dit duurt 5–10 minuten.
+                </p>
+              </div>
+
+              <div className="bg-[#D4AF37]/10 border-2 border-[#D4AF37]/40 rounded-xl p-5 text-center space-y-4">
+                <p className="text-[#D4AF37] font-bold">Klaar om jouw WHY te ontdekken?</p>
+                <p className="text-cm-white text-sm opacity-70">Het gesprek opent in een nieuw scherm. Kom daarna hier terug om verder te gaan.</p>
+                <Link
+                  href="/mijn-why"
+                  className="btn-gold w-full py-3 text-center block"
+                >
+                  Start het WHY-gesprek →
+                </Link>
+              </div>
+
+              <div className="space-y-2">
+                <button onClick={() => gaNaarStap(3)} disabled={bezig} className="btn-gold w-full py-3 text-base">WHY gedaan — verder →</button>
+                <button onClick={() => gaNaarStap(3)} disabled={bezig} className="btn-secondary w-full py-2 text-sm opacity-60">Doe ik later — nu verder</button>
+              </div>
+            </div>
+          )}
+
+          {/* STAP 3: HOE WERKT DE RUN */}
+          {stap === 3 && (
             <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-display font-bold text-cm-white mb-1">Hoe werkt de 60-dagenrun?</h2>
@@ -225,12 +305,12 @@ export default function OnboardingPagina() {
                 <p className="text-cm-gold font-semibold text-sm mb-1 text-center">✦ De gouden regel</p>
                 <p className="text-cm-white text-sm text-center leading-relaxed italic">"Consistentie slaat motivatie altijd. Doe elke dag iets, ook als je het niet voelt."</p>
               </div>
-              <button onClick={() => gaNaarStap(3)} disabled={bezig} className="btn-gold w-full py-3 text-base">Begrepen — volgende stap →</button>
+              <button onClick={() => gaNaarStap(4)} disabled={bezig} className="btn-gold w-full py-3 text-base">Begrepen — volgende stap →</button>
             </div>
           )}
 
-          {/* STAP 3: WARME MARKT */}
-          {stap === 3 && (
+          {/* STAP 4: WARME MARKT */}
+          {stap === 4 && (
             <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-display font-bold text-cm-white mb-1">Bouw je warme markt</h2>
@@ -246,37 +326,24 @@ export default function OnboardingPagina() {
                   <span className="text-2xl">📝</span>
                   <div>
                     <p className="text-cm-gold font-semibold mb-1">Jouw actie nu</p>
-                    <p className="text-cm-white text-sm leading-relaxed opacity-90">Voeg minimaal <strong className="text-cm-white">10–20 namen</strong> toe aan de namenlijst. Zet ze in de fase "Prospect". Denk aan je telefoonboek, Instagram, Facebook, werk, sport, kerk, buurt...</p>
+                    <p className="text-cm-white text-sm leading-relaxed opacity-90">Voeg minimaal <strong className="text-cm-white">10–20 namen</strong> toe aan de namenlijst. Zet ze in de fase "Prospect".</p>
                   </div>
                 </div>
                 <Link href="/namenlijst" target="_blank" className="btn-gold w-full py-3 text-center block text-sm">→ Open namenlijst (nieuw tabblad)</Link>
               </div>
-              <div className="bg-amber-900/20 border border-amber-600/30 rounded-xl p-4">
-                <div className="flex gap-3">
-                  <span className="text-xl flex-shrink-0">🤝</span>
-                  <div>
-                    <p className="text-amber-400 font-semibold text-sm mb-1">Eerste uitnodigingen: plan dit met je sponsor</p>
-                    <p className="text-cm-white text-sm leading-relaxed opacity-80">Als je namen hebt toegevoegd, plan een sessie met je sponsor om samen je eerste 3–5 berichten te versturen. Je leert enorm veel van hoe zij het aanpakken.</p>
-                  </div>
-                </div>
-              </div>
               <div className="space-y-2">
-                <button onClick={() => gaNaarStap(4)} disabled={bezig} className="btn-gold w-full py-3 text-base">Namen toegevoegd — verder →</button>
-                <button onClick={() => gaNaarStap(4)} disabled={bezig} className="btn-secondary w-full py-2 text-sm">Doe ik later — nu verder</button>
+                <button onClick={() => gaNaarStap(5)} disabled={bezig} className="btn-gold w-full py-3 text-base">Namen toegevoegd — verder →</button>
+                <button onClick={() => gaNaarStap(5)} disabled={bezig} className="btn-secondary w-full py-2 text-sm">Doe ik later — nu verder</button>
               </div>
             </div>
           )}
 
-          {/* STAP 4: UITNODIGINGSSCRIPT */}
-          {stap === 4 && (
+          {/* STAP 5: UITNODIGINGSSCRIPT */}
+          {stap === 5 && (
             <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-display font-bold text-cm-white mb-1">Je eerste uitnodigingsscript</h2>
                 <p className="text-cm-white opacity-60 text-sm">Lees dit door, oefen het hardop, gebruik het.</p>
-              </div>
-              <div className="card space-y-2">
-                <h3 className="text-cm-gold font-semibold text-sm">Waarom een script?</h3>
-                <p className="text-cm-white text-sm leading-relaxed opacity-80">Een script geeft houvast. Je hoeft niet te improviseren — je volgt een beproefd pad. Na 10 gesprekken gaat het vanzelf en ga je het aanpassen naar jouw eigen stijl.</p>
               </div>
               <div className="bg-cm-surface-2 border border-cm-gold/30 rounded-xl p-5 space-y-4">
                 <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">✦ DM Script — Warme markt (WhatsApp / Instagram)</p>
@@ -291,35 +358,26 @@ export default function OnboardingPagina() {
               <div className="card space-y-3">
                 <h3 className="text-cm-gold font-semibold text-sm">Hoe gebruik je dit?</h3>
                 <ul className="space-y-2">
-                  {["Vervang [naam] door de echte naam van de persoon", "Stuur via WhatsApp, Instagram DM of een ander platform", "Wacht rustig op reactie — dring nooit aan", "Zeggen ze ja? Plan het gesprekje in met je sponsor erbij", "Zeggen ze nee? Noteer het in de namenlijst, blijf vriendelijk", "Meer scripts vind je straks in de Scripts bibliotheek"].map((tip, i) => (
+                  {["Vervang [naam] door de echte naam", "Stuur via WhatsApp, Instagram DM of ander platform", "Wacht rustig op reactie — dring nooit aan", "Zeggen ze ja? Plan het gesprekje met je sponsor erbij", "Meer scripts vind je in de Scripts bibliotheek"].map((tip, i) => (
                     <li key={i} className="flex gap-2 text-sm text-cm-white opacity-80">
                       <span className="text-cm-gold flex-shrink-0 mt-0.5">✓</span>{tip}
                     </li>
                   ))}
                 </ul>
               </div>
-              <div className="bg-amber-900/20 border border-amber-600/30 rounded-xl p-4">
-                <div className="flex gap-3">
-                  <span className="text-xl flex-shrink-0">🤝</span>
-                  <div>
-                    <p className="text-amber-400 font-semibold text-sm mb-1">Eerste berichten: doe dit samen met je sponsor</p>
-                    <p className="text-cm-white text-sm leading-relaxed opacity-80">Plan een moment met je sponsor om je eerste 3–5 berichten <em>samen</em> te versturen. Zo leer je de juiste toon en aanpak, en staat je sponsor klaar als iemand positief reageert.</p>
-                  </div>
-                </div>
-              </div>
-              <button onClick={() => gaNaarStap(5)} disabled={bezig} className="btn-gold w-full py-3 text-base">Gelezen en begrepen →</button>
+              <button onClick={() => gaNaarStap(6)} disabled={bezig} className="btn-gold w-full py-3 text-base">Gelezen en begrepen →</button>
             </div>
           )}
 
-          {/* STAP 5: DAGDOEL */}
-          {stap === 5 && (
+          {/* STAP 6: DAGDOEL */}
+          {stap === 6 && (
             <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-display font-bold text-cm-white mb-1">Stel je dagdoel in</h2>
-                <p className="text-cm-white opacity-60 text-sm">Wat ga jij elke dag minimaal doen? Wees realistisch — dit zijn je minimums.</p>
+                <p className="text-cm-white opacity-60 text-sm">Wat ga jij elke dag minimaal doen? Wees realistisch.</p>
               </div>
               <div className="card">
-                <p className="text-cm-white text-sm leading-relaxed opacity-80">Begin conservatief. Je kunt altijd meer doen. Het gaat erom dat je <strong className="text-cm-white">elke dag</strong> haalt wat je hier invult — ook op drukke of slechte dagen.</p>
+                <p className="text-cm-white text-sm leading-relaxed opacity-80">Begin conservatief. Je kunt altijd meer doen. Het gaat erom dat je <strong className="text-cm-white">elke dag</strong> haalt wat je hier invult.</p>
               </div>
               <div className="space-y-4">
                 {[
@@ -344,8 +402,8 @@ export default function OnboardingPagina() {
             </div>
           )}
 
-          {/* STAP 6: KLAAR! */}
-          {stap === 6 && (
+          {/* STAP 7: KLAAR! */}
+          {stap === 7 && (
             <div className="space-y-6 text-center">
               <div>
                 <div className="text-7xl mb-4">🎉</div>
@@ -365,7 +423,7 @@ export default function OnboardingPagina() {
               </div>
               <div className="card text-left space-y-2">
                 <h3 className="text-cm-gold font-semibold text-sm mb-3">Wat je hebt gedaan</h3>
-                {["WHY-gesprek voltooid", "60-dagenrun begrepen", "Eerste namen toegevoegd aan de lijst", "Uitnodigingsscript gelezen", "Dagdoelen ingesteld"].map((item, i) => (
+                {["App geïnstalleerd", "WHY-gesprek voltooid", "60-dagenrun begrepen", "Eerste namen toegevoegd", "Uitnodigingsscript gelezen", "Dagdoelen ingesteld"].map((item, i) => (
                   <div key={i} className="flex items-center gap-2 text-sm text-cm-white opacity-80">
                     <span className="text-cm-gold text-base">✓</span>{item}
                   </div>
@@ -376,7 +434,7 @@ export default function OnboardingPagina() {
                   <span className="text-2xl flex-shrink-0">🤝</span>
                   <div>
                     <p className="text-amber-400 font-semibold mb-1">Eerste actie: plan een sessie met je sponsor</p>
-                    <p className="text-cm-white text-sm leading-relaxed opacity-80">Stuur je sponsor een berichtje dat je klaar bent om te starten. Plan een moment om samen je eerste uitnodigingen te versturen. Succes begint met het eerste gesprek — en dat doe je nooit alleen.</p>
+                    <p className="text-cm-white text-sm leading-relaxed opacity-80">Stuur je sponsor een berichtje dat je klaar bent. Plan een moment om samen je eerste uitnodigingen te versturen.</p>
                   </div>
                 </div>
               </div>
