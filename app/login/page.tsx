@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { toast } from "sonner";
 import { useTaal } from "@/lib/i18n/TaalContext";
 
@@ -90,15 +89,6 @@ export default function LoginPagina() {
             </button>
           </form>
 
-          <p className="text-center text-cm-white text-sm mt-4">
-            {v("login.geen_account")}{" "}
-            <Link
-              href="/registreer"
-              className="text-cm-gold hover:text-cm-gold-light transition-colors"
-            >
-              {v("login.registreer")}
-            </Link>
-          </p>
         </div>
       </div>
     </div>

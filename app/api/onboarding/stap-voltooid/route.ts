@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { NextRequest, NextResponse } from "next/server";
-import { sendPushToLeiders } from "@/lib/push/sendPush";
+import { sendPushToUser, sendPushToLeiders } from "@/lib/push/sendPush";
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,22 +18,31 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Ongeldige stap" }, { status: 400 });
     }
 
-    // Haal naam op
-    const { data: profile } = await supabase
+    const adminSupabase = createAdminClient();
+
+    // Haal naam + sponsor_id op
+    const { data: profile } = await adminSupabase
       .from("profiles")
-      .select("full_name")
+      .select("full_name, sponsor_id, role")
       .eq("id", user.id)
       .single();
 
     const naam = profile?.full_name || "Een teamlid";
 
-    // Stuur push naar sponsor + alle leiders
-    await sendPushToLeiders({
+    const payload = {
       title: `✅ ${naam}: ${stap}`,
       body: "Tik om de voortgang van je team te bekijken.",
       url: "/team",
       tag: "onboarding",
-    });
+    };
+
+    // 1. Stuur naar directe sponsor (als die bestaat)
+    if (profile?.sponsor_id) {
+      await sendPushToUser(profile.sponsor_id, payload);
+    }
+
+    // 2. Stuur ook naar alle leiders (dubbele melding voor leiders is ok)
+    await sendPushToLeiders(payload);
 
     return NextResponse.json({ success: true });
   } catch (error) {

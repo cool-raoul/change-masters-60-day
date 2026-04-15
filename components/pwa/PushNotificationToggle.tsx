@@ -5,12 +5,12 @@ import { toast } from "sonner";
 
 export function PushNotificationToggle() {
   const [isSupported, setIsSupported] = useState(false);
+  const [isStandalone, setIsStandalone] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [permission, setPermission] = useState<"default" | "granted" | "denied">("default");
 
   useEffect(() => {
-    // Check browser support
     const supported =
       typeof window !== "undefined" &&
       "serviceWorker" in navigator &&
@@ -18,11 +18,15 @@ export function PushNotificationToggle() {
 
     setIsSupported(supported);
 
-    if (supported) {
-      // Check current permission
-      setPermission(Notification.permission as any);
+    // Detect if running as installed PWA
+    const standalone =
+      typeof window !== "undefined" &&
+      (window.matchMedia("(display-mode: standalone)").matches ||
+        (window.navigator as any).standalone === true);
+    setIsStandalone(standalone);
 
-      // Check if already subscribed
+    if (supported) {
+      setPermission(Notification.permission as any);
       checkSubscription();
     }
   }, []);
@@ -46,19 +50,16 @@ export function PushNotificationToggle() {
     setIsLoading(true);
 
     try {
-      // Vraag toestemming
       if (permission !== "granted") {
-        const permission = await Notification.requestPermission();
-        setPermission(permission);
-
-        if (permission !== "granted") {
+        const perm = await Notification.requestPermission();
+        setPermission(perm as any);
+        if (perm !== "granted") {
           toast.error("Toestemming geweigerd");
           setIsLoading(false);
           return;
         }
       }
 
-      // Zet push aan
       if (!isSubscribed) {
         const registration = await navigator.serviceWorker.ready;
         const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY?.trim();
@@ -74,7 +75,6 @@ export function PushNotificationToggle() {
           applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
         });
 
-        // Stuur subscription naar server
         const response = await fetch("/api/push/subscribe", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -86,7 +86,6 @@ export function PushNotificationToggle() {
         setIsSubscribed(true);
         toast.success("Push notifications ingeschakeld ✓");
       } else {
-        // Zet push uit
         const registration = await navigator.serviceWorker.ready;
         const subscription = await registration.pushManager.getSubscription();
         if (subscription) {
@@ -104,11 +103,34 @@ export function PushNotificationToggle() {
     }
   }
 
+  // Not in PWA mode — show install instruction
+  if (!isStandalone && !isSubscribed) {
+    return (
+      <div className="space-y-3">
+        <div className="p-4 bg-amber-900/20 border border-amber-600/30 rounded-xl">
+          <p className="text-amber-300 font-semibold text-sm mb-2">📱 Installeer de app eerst</p>
+          <p className="text-cm-white text-xs leading-relaxed opacity-80">
+            Push meldingen werken alleen vanuit de geïnstalleerde app. Volg de installatie-instructies hierboven, open daarna de app vanuit je beginscherm en kom terug naar deze pagina om meldingen in te schakelen.
+          </p>
+        </div>
+        {isSupported && (
+          <button
+            onClick={togglePushNotifications}
+            disabled={isLoading}
+            className="w-full px-4 py-2 rounded-lg text-sm font-semibold bg-cm-surface border border-cm-border text-cm-white hover:border-cm-gold transition-colors disabled:opacity-50"
+          >
+            {isLoading ? "Bezig..." : "Toch proberen (al geïnstalleerd)"}
+          </button>
+        )}
+      </div>
+    );
+  }
+
   if (!isSupported) {
     return (
       <div className="p-3 bg-cm-surface-2 rounded-lg border border-cm-border">
         <p className="text-xs text-cm-white opacity-60">
-          ⚠️ Push notifications worden niet ondersteund door je browser
+          ⚠️ Push notifications worden niet ondersteund door je browser. Gebruik Safari op iPhone of Chrome op Android.
         </p>
       </div>
     );
@@ -121,7 +143,7 @@ export function PushNotificationToggle() {
           <p className="text-sm font-semibold text-cm-white">🔔 Push Notifications</p>
           <p className="text-xs text-cm-white opacity-60 mt-0.5">
             {isSubscribed
-              ? "Ingeschakeld — je ontvangt meldingen"
+              ? "✅ Ingeschakeld — je ontvangt meldingen"
               : "Uitgeschakeld"}
           </p>
         </div>
@@ -131,7 +153,7 @@ export function PushNotificationToggle() {
           className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
             isSubscribed
               ? "bg-cm-gold text-cm-black hover:bg-cm-gold-light disabled:opacity-50"
-              : "bg-cm-surface border border-cm-border text-cm-white hover:border-cm-gold-dim disabled:opacity-50"
+              : "bg-cm-surface border border-cm-border text-cm-white hover:border-cm-gold disabled:opacity-50"
           }`}
         >
           {isLoading ? "..." : isSubscribed ? "Uit" : "Aan"}
@@ -141,7 +163,7 @@ export function PushNotificationToggle() {
       {permission === "denied" && (
         <div className="p-3 bg-red-900/20 border border-red-600/30 rounded-lg">
           <p className="text-xs text-red-400">
-            💻 Je hebt notificaties geweigerd. Je kunt dit wijzigen in je browser instellingen.
+            Je hebt notificaties geweigerd. Ga naar Instellingen → Safari/Chrome → Meldingen om dit te wijzigen.
           </p>
         </div>
       )}
@@ -149,7 +171,6 @@ export function PushNotificationToggle() {
   );
 }
 
-// Helper function om VAPID key om te zetten
 function urlBase64ToUint8Array(base64String: string) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding).replace(/\-/g, "+").replace(/_/g, "/");

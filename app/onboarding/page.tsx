@@ -8,6 +8,152 @@ import { PushNotificationToggle } from "@/components/pwa/PushNotificationToggle"
 
 const SPONSOR_TEL = "https://wa.me/31612345678"; // fallback — wordt dynamisch geladen
 
+function Stap4NamenlijstInline({
+  userId,
+  onVerder,
+  bezig,
+  sponsorNaam,
+  sponsorWaLink,
+}: {
+  userId: string | null;
+  onVerder: () => void;
+  bezig: boolean;
+  sponsorNaam: string;
+  sponsorWaLink: string;
+}) {
+  const [naam, setNaam] = useState("");
+  const [telefoon, setTelefoon] = useState("");
+  const [toegevoegd, setToegevoegd] = useState<{ naam: string; telefoon: string }[]>([]);
+  const [bezig2, setBezig2] = useState(false);
+  const supabase = createClient();
+
+  async function voegToe(e: React.FormEvent) {
+    e.preventDefault();
+    if (!naam.trim() || !userId) return;
+    setBezig2(true);
+    await supabase.from("prospects").insert({
+      user_id: userId,
+      volledige_naam: naam.trim(),
+      telefoon: telefoon.trim() || null,
+      pipeline_fase: "lead",
+      bron: "warm",
+    });
+    setToegevoegd((prev) => [...prev, { naam: naam.trim(), telefoon: telefoon.trim() }]);
+    setNaam("");
+    setTelefoon("");
+    setBezig2(false);
+  }
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-display font-bold text-cm-white mb-1">Bouw je warme markt</h2>
+        <p className="text-cm-white opacity-60 text-sm">Jouw eerste lijst met namen — dit is je startpunt.</p>
+      </div>
+
+      <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
+        <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom deze stap cruciaal is</p>
+        <p className="text-cm-white text-sm leading-relaxed opacity-90">
+          Geen namen = geen business. De namenlijst is je <strong className="text-cm-white">motor</strong>. Hoe meer namen, hoe meer gesprekken, hoe meer resultaten. Stel dit niet uit — elke naam telt.
+        </p>
+      </div>
+
+      <div className="card space-y-3">
+        <h3 className="text-cm-gold font-semibold text-sm">Wie zet je op de lijst?</h3>
+        <p className="text-cm-white text-sm leading-relaxed opacity-90">Iedereen die jij kent: vrienden, familie, collega&apos;s, buren, sportmaatjes, oud-klasgenoten, social media contacten.</p>
+        <p className="text-cm-white text-sm font-medium text-white opacity-95">Maar ook:</p>
+        <ul className="space-y-2 mt-1">
+          {[
+            "Mensen die op zoek zijn naar extra inkomen",
+            "Mensen die praten over meer vrijheid of hun leven veranderen",
+            "Mensen die hun eigen baas willen zijn",
+            "Mensen waarvan je hun WHY al kent",
+          ].map((tip, i) => (
+            <li key={i} className="flex gap-2 text-sm text-cm-white opacity-85">
+              <span className="text-cm-gold flex-shrink-0">✦</span>{tip}
+            </li>
+          ))}
+        </ul>
+        <p className="text-cm-white text-sm opacity-80 pt-1">
+          <strong className="text-cm-white">Oordeel niet vooraf.</strong> Schrijf iedereen op. Zij beslissen zelf.
+        </p>
+      </div>
+
+      {/* Inline add form */}
+      <div className="card space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-cm-gold font-semibold text-sm">Voeg namen toe</h3>
+          {toegevoegd.length > 0 && (
+            <span className="text-xs bg-green-900/40 border border-green-600/30 text-green-400 px-2 py-1 rounded-full">
+              {toegevoegd.length} toegevoegd ✓
+            </span>
+          )}
+        </div>
+
+        <form onSubmit={voegToe} className="space-y-3">
+          <input
+            type="text"
+            value={naam}
+            onChange={(e) => setNaam(e.target.value)}
+            placeholder="Volledige naam"
+            className="input-cm w-full"
+            required
+          />
+          <input
+            type="tel"
+            value={telefoon}
+            onChange={(e) => setTelefoon(e.target.value)}
+            placeholder="Telefoonnummer (optioneel)"
+            className="input-cm w-full"
+          />
+          <button
+            type="submit"
+            disabled={bezig2 || !naam.trim()}
+            className="btn-gold w-full py-2.5 text-sm disabled:opacity-50"
+          >
+            {bezig2 ? "Toevoegen..." : "+ Toevoegen aan lijst"}
+          </button>
+        </form>
+
+        {toegevoegd.length > 0 && (
+          <div className="space-y-1.5 max-h-48 overflow-y-auto">
+            {toegevoegd.map((item, i) => (
+              <div key={i} className="flex items-center gap-2 text-sm py-1 border-b border-cm-border last:border-0">
+                <span className="text-cm-gold">✓</span>
+                <span className="text-cm-white">{item.naam}</span>
+                {item.telefoon && <span className="text-cm-white opacity-50 text-xs ml-auto">{item.telefoon}</span>}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {sponsorNaam && (
+        <div className="bg-blue-900/20 border border-blue-600/30 rounded-xl p-4">
+          <div className="flex gap-3 items-start">
+            <span className="text-2xl flex-shrink-0">💬</span>
+            <div>
+              <p className="text-blue-300 font-semibold text-sm mb-1">Weet je niet wie je op de lijst moet zetten? Vraag {sponsorNaam}</p>
+              <a href={sponsorWaLink} target="_blank" rel="noopener noreferrer" className="text-xs bg-green-900/40 border border-green-600/30 text-green-400 px-3 py-1.5 rounded-lg inline-flex items-center gap-1">
+                💬 WhatsApp {sponsorNaam}
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="space-y-3">
+        <button onClick={onVerder} disabled={bezig} className="btn-gold w-full py-3 text-base">
+          {toegevoegd.length === 0 ? "Overslaan en verder →" : `${toegevoegd.length} naam${toegevoegd.length > 1 ? "en" : ""} toegevoegd — verder →`}
+        </button>
+        {toegevoegd.length === 0 && (
+          <p className="text-center text-xs text-cm-white opacity-40">Je kunt altijd later meer namen toevoegen vanuit de namenlijst.</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function OnboardingPagina() {
   const [stap, setStap] = useState(1);
   const [laden, setLaden] = useState(true);
@@ -20,10 +166,6 @@ export default function OnboardingPagina() {
   const [userId, setUserId] = useState<string | null>(null);
   const [sponsorNaam, setSponsorNaam] = useState("");
   const [sponsorWaLink, setSponsorWaLink] = useState("");
-  const [coachVraag, setCoachVraag] = useState("");
-  const [coachAntwoord, setCoachAntwoord] = useState("");
-  const [coachBezig, setCoachBezig] = useState(false);
-  const [coachGedaan, setCoachGedaan] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const supabase = createClient();
@@ -99,7 +241,6 @@ export default function OnboardingPagina() {
         4: { veld: "stap_3_namen",  pushNaam: "Stap 3: Run begrepen" },
         5: { veld: "stap_4_script", pushNaam: "Stap 4: Namenlijst aangemaakt" },
         6: { veld: "stap_4_script", pushNaam: "Stap 5: Script gelezen" },
-        7: { veld: "stap_4_script", pushNaam: "Stap 6: AI Coach ontdekt" },
       };
 
       if (stapActies[nieuweStap]) {
@@ -122,54 +263,14 @@ export default function OnboardingPagina() {
     setBezig(true);
     if (!isPreview) {
       await supabase.auth.updateUser({
-        data: { onboarding_stap: 8, dagdoel_contacten: dagdoelContacten, dagdoel_uitnodigingen: dagdoelUitnodigingen, dagdoel_followups: dagdoelFollowups },
+        data: { onboarding_stap: 99, dagdoel_contacten: dagdoelContacten, dagdoel_uitnodigingen: dagdoelUitnodigingen, dagdoel_followups: dagdoelFollowups },
       });
       await slaVoortgangOp({ stap_5_doelen: true });
-      await stuurPushNaarSponsor("Stap 7: Dagdoelen ingesteld — setup klaar! 🎉");
+      await stuurPushNaarSponsor("Setup volledig afgerond! 🎉");
     }
     setBezig(false);
-    setStap(8);
-    scrollNaarBoven();
-  }
-
-  async function startDashboard() {
-    if (!isPreview) {
-      setBezig(true);
-      await supabase.auth.updateUser({ data: { onboarding_stap: 99 } });
-    }
-    router.push("/dashboard");
+    router.push("/coach");
     router.refresh();
-  }
-
-  async function stelCoachVraag(vraag: string) {
-    setCoachVraag(vraag);
-    setCoachBezig(true);
-    setCoachAntwoord("");
-    try {
-      const response = await fetch("/api/coach", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          berichten: [{ role: "user", content: vraag }],
-        }),
-      });
-      if (!response.ok) throw new Error("Coach niet bereikbaar");
-      const reader = response.body?.getReader();
-      const decoder = new TextDecoder();
-      let tekst = "";
-      while (reader) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        tekst += decoder.decode(value, { stream: true });
-        setCoachAntwoord(tekst);
-      }
-      setCoachGedaan(true);
-    } catch (e) {
-      setCoachAntwoord("De coach is even niet bereikbaar. Ga toch verder — je kunt altijd een vraag stellen vanuit het dashboard.");
-      setCoachGedaan(true);
-    } finally {
-      setCoachBezig(false);
-    }
   }
 
   if (laden) {
@@ -184,8 +285,8 @@ export default function OnboardingPagina() {
     );
   }
 
-  const totaalStappen = 7;
-  const voortgang = stap < 8 ? ((stap - 1) / totaalStappen) * 100 : 100;
+  const totaalStappen = 6;
+  const voortgang = stap <= totaalStappen ? ((stap - 1) / totaalStappen) * 100 : 100;
 
   return (
     <div className="min-h-screen bg-cm-black flex flex-col">
@@ -202,23 +303,23 @@ export default function OnboardingPagina() {
           {isPreview && (
             <span className="text-xs bg-amber-900/40 border border-amber-600/30 text-amber-400 px-2 py-1 rounded-full">Preview</span>
           )}
-          {stap < 8 && (
+          {stap <= totaalStappen && (
             <span className="text-sm text-cm-white opacity-60">Stap {stap} van {totaalStappen}</span>
           )}
         </div>
       </div>
 
       {/* Progress bar */}
-      {stap < 8 && (
+      {stap <= totaalStappen && (
         <div className="h-1 bg-cm-surface">
           <div className="h-1 bg-cm-gold transition-all duration-500" style={{ width: `${voortgang}%` }} />
         </div>
       )}
 
       {/* Stap bollen */}
-      {stap < 8 && (
+      {stap <= totaalStappen && (
         <div className="flex justify-center gap-2 py-4 px-6">
-          {[1, 2, 3, 4, 5, 6, 7].map((n) => (
+          {[1, 2, 3, 4, 5, 6].map((n) => (
             <div key={n} className={`flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold transition-all ${
               n < stap ? "bg-cm-gold text-cm-black" : n === stap ? "bg-cm-gold/20 border-2 border-cm-gold text-cm-gold" : "bg-cm-surface border border-cm-border text-cm-white opacity-40"
             }`}>
@@ -237,7 +338,7 @@ export default function OnboardingPagina() {
               <div className="text-center">
                 <div className="text-6xl mb-4">👋</div>
                 <h2 className="text-3xl font-display font-bold text-cm-white mb-2">Welkom, {gebruikersnaam}!</h2>
-                <p className="text-cm-white opacity-60 text-sm">We zetten je in 7 stappen klaar voor de 60-dagenrun.</p>
+                <p className="text-cm-white opacity-60 text-sm">We zetten je in 6 stappen klaar voor de 60-dagenrun.</p>
               </div>
 
               {/* App installeren */}
@@ -253,8 +354,8 @@ export default function OnboardingPagina() {
                   <p className="text-cm-white text-sm font-semibold">📱 iPhone (Safari):</p>
                   <ol className="text-cm-white text-sm opacity-80 space-y-1 list-decimal list-inside">
                     <li>Tik op het deel-icoontje onderaan (vierkantje met pijl omhoog)</li>
-                    <li>Kies "Zet op beginscherm"</li>
-                    <li>Tik op "Voeg toe"</li>
+                    <li>Kies &quot;Zet op beginscherm&quot;</li>
+                    <li>Tik op &quot;Voeg toe&quot;</li>
                     <li>Open de app daarna vanuit je beginscherm</li>
                   </ol>
                 </div>
@@ -262,8 +363,8 @@ export default function OnboardingPagina() {
                   <p className="text-cm-white text-sm font-semibold">🤖 Android (Chrome):</p>
                   <ol className="text-cm-white text-sm opacity-80 space-y-1 list-decimal list-inside">
                     <li>Tik op de drie puntjes rechtsboven</li>
-                    <li>Kies "Toevoegen aan startscherm"</li>
-                    <li>Tik op "Toevoegen"</li>
+                    <li>Kies &quot;Toevoegen aan startscherm&quot;</li>
+                    <li>Tik op &quot;Toevoegen&quot;</li>
                   </ol>
                 </div>
               </div>
@@ -283,15 +384,14 @@ export default function OnboardingPagina() {
 
               {/* Wat je gaat doen */}
               <div className="card space-y-3">
-                <h3 className="text-cm-gold font-semibold">Wat doe je in deze 7 stappen?</h3>
+                <h3 className="text-cm-gold font-semibold">Wat doe je in deze 6 stappen?</h3>
                 <ul className="space-y-2">
                   {[
                     { icoon: "💛", tekst: "Je ontdekt jouw persoonlijke WHY" },
                     { icoon: "📖", tekst: "Je leert hoe de 60-dagenrun werkt" },
                     { icoon: "📝", tekst: "Je voegt je eerste namen toe" },
                     { icoon: "💬", tekst: "Je leest je uitnodigingsscript" },
-                    { icoon: "🤖", tekst: "Je ervaart de AI coach" },
-                    { icoon: "🎯", tekst: "Je stelt je persoonlijke dagdoelen in" },
+                    { icoon: "🎯", tekst: "Je stelt je dagdoelen in en opent de AI Coach" },
                   ].map((item, i) => (
                     <li key={i} className="flex items-center gap-3 text-sm text-cm-white">
                       <span className="text-xl">{item.icoon}</span>{item.tekst}
@@ -321,7 +421,7 @@ export default function OnboardingPagina() {
                 <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom deze stap cruciaal is</p>
                 <p className="text-cm-white text-sm leading-relaxed opacity-90">
                   De cijfers liegen niet: mensen die hun WHY helder hebben gaan <strong className="text-cm-white">3× zo lang door</strong> als het moeilijk wordt.
-                  Je WHY is niet "meer geld verdienen" — maar wat dat geld betekent voor jou en je gezin.
+                  Je WHY is niet &quot;meer geld verdienen&quot; — maar wat dat geld betekent voor jou en je gezin.
                   Als je WHY sterk genoeg is, vind je altijd de weg.
                 </p>
               </div>
@@ -380,7 +480,7 @@ export default function OnboardingPagina() {
               <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
                 <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom deze stap cruciaal is</p>
                 <p className="text-cm-white text-sm leading-relaxed opacity-90">
-                  Mensen die het systeem begrijpen presteren 5× beter dan mensen die "maar wat doen". De run heeft een structuur — en die structuur werkt. Je moet hem kennen om hem te kunnen volgen.
+                  Mensen die het systeem begrijpen presteren 5× beter dan mensen die &quot;maar wat doen&quot;. De run heeft een structuur — en die structuur werkt. Je moet hem kennen om hem te kunnen volgen.
                 </p>
               </div>
 
@@ -415,7 +515,7 @@ export default function OnboardingPagina() {
 
               <div className="bg-gold-subtle border border-gold-subtle rounded-xl p-4">
                 <p className="text-cm-gold font-semibold text-sm mb-1 text-center">✦ De gouden regel</p>
-                <p className="text-cm-white text-sm text-center leading-relaxed italic">"Consistentie slaat motivatie altijd. Doe elke dag iets, ook als je het niet voelt."</p>
+                <p className="text-cm-white text-sm text-center leading-relaxed italic">&quot;Consistentie slaat motivatie altijd. Doe elke dag iets, ook als je het niet voelt.&quot;</p>
               </div>
 
               <button onClick={() => gaNaarStap(4)} disabled={bezig} className="btn-gold w-full py-3 text-base">
@@ -424,84 +524,9 @@ export default function OnboardingPagina() {
             </div>
           )}
 
-          {/* ───── STAP 4: WARME MARKT ───── */}
+          {/* ───── STAP 4: WARME MARKT (inline form) ───── */}
           {stap === 4 && (
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-2xl font-display font-bold text-cm-white mb-1">Bouw je warme markt</h2>
-                <p className="text-cm-white opacity-60 text-sm">Jouw eerste lijst met namen — dit is je startpunt.</p>
-              </div>
-
-              {/* Waarom cruciaal */}
-              <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
-                <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom deze stap cruciaal is</p>
-                <p className="text-cm-white text-sm leading-relaxed opacity-90">
-                  Geen namen = geen business. De namenlijst is je <strong className="text-cm-white">motor</strong>. Hoe meer namen, hoe meer gesprekken, hoe meer resultaten. Stel dit niet uit — elke naam telt.
-                </p>
-              </div>
-
-              <div className="card space-y-3">
-                <h3 className="text-cm-gold font-semibold text-sm">Wie zet je op de lijst?</h3>
-                <p className="text-cm-white text-sm leading-relaxed opacity-90">Iedereen die jij kent is een potentieel contact. Denk aan vrienden, familie, collega's, buren, sportmaatjes, oud-klasgenoten, mensen van social media.</p>
-                <p className="text-cm-white text-sm leading-relaxed opacity-90 font-medium">Maar ook:</p>
-                <ul className="space-y-2 mt-1">
-                  {[
-                    "Mensen waarvan je weet dat ze op zoek zijn naar extra inkomen",
-                    "Mensen die altijd praten over meer vrijheid willen of hun leven veranderen",
-                    "Mensen die hun eigen baas willen zijn",
-                    "Mensen waarvan je hun WHY al kent — je weet waarom dit voor hen zou werken",
-                  ].map((tip, i) => (
-                    <li key={i} className="flex gap-2 text-sm text-cm-white opacity-85">
-                      <span className="text-cm-gold flex-shrink-0 mt-0.5">✦</span>{tip}
-                    </li>
-                  ))}
-                </ul>
-                <p className="text-cm-white text-sm leading-relaxed opacity-80 pt-2">
-                  <strong className="text-cm-white">Oordeel niet vooraf</strong> over wie wel of niet geïnteresseerd is. Dat is niet jouw taak. Jouw taak is uitnodigen — zij beslissen.
-                </p>
-                <p className="text-cm-white text-sm leading-relaxed opacity-80">
-                  Op de namenlijst mag je ook mensen toevoegen die het leuk vinden om producten te gebruiken — die worden dan klant. Schrijf iedereen op die in je hoofd opkomt.
-                </p>
-              </div>
-
-              <div className="border-2 border-cm-gold/40 rounded-xl p-5 space-y-4 bg-gold-subtle">
-                <div className="flex gap-3 items-start">
-                  <span className="text-2xl">📝</span>
-                  <div>
-                    <p className="text-cm-gold font-semibold mb-1">Jouw actie nu</p>
-                    <p className="text-cm-white text-sm leading-relaxed opacity-90 mb-2">
-                      Voeg minimaal <strong className="text-cm-white">10–20 namen</strong> toe. Zet ze als "Prospect". Je kunt altijd meer toevoegen.
-                    </p>
-                    <p className="text-cm-white text-xs opacity-70">
-                      👉 Na het toevoegen van namen: tik op "Terug naar setup" bovenaan de namenlijst om hier verder te gaan.
-                    </p>
-                  </div>
-                </div>
-                <Link href="/namenlijst?setup=true" className="btn-gold w-full py-3 text-center block text-sm font-bold">
-                  → Open mijn namenlijst
-                </Link>
-              </div>
-
-              {/* Sponsor contact */}
-              {sponsorNaam && (
-                <div className="bg-blue-900/20 border border-blue-600/30 rounded-xl p-4">
-                  <div className="flex gap-3 items-start">
-                    <span className="text-2xl flex-shrink-0">💬</span>
-                    <div>
-                      <p className="text-blue-300 font-semibold text-sm mb-1">Weet je niet wie je op de lijst moet zetten? Vraag {sponsorNaam}</p>
-                      <p className="text-cm-white text-sm opacity-80 mb-2">Je sponsor kan je helpen met je eerste namen en de juiste aanpak.</p>
-                      <a href={sponsorWaLink} target="_blank" rel="noopener noreferrer" className="text-xs bg-green-900/40 border border-green-600/30 text-green-400 px-3 py-1.5 rounded-lg inline-flex items-center gap-1">
-                        💬 WhatsApp {sponsorNaam}
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <button onClick={() => gaNaarStap(5)} disabled={bezig} className="btn-gold w-full py-3 text-base">
-                Namen toegevoegd — verder →
-              </button>
-            </div>
+            <Stap4NamenlijstInline userId={userId} onVerder={() => gaNaarStap(5)} bezig={bezig} sponsorNaam={sponsorNaam} sponsorWaLink={sponsorWaLink} />
           )}
 
           {/* ───── STAP 5: UITNODIGINGSSCRIPT ───── */}
@@ -570,108 +595,12 @@ export default function OnboardingPagina() {
             </div>
           )}
 
-          {/* ───── STAP 6: AI COACH ───── */}
+          {/* ───── STAP 6: DAGDOELEN + AI COACH FINALE ───── */}
           {stap === 6 && (
             <div className="space-y-6">
               <div className="text-center">
-                <div className="text-6xl mb-4">🤖</div>
-                <h2 className="text-2xl font-display font-bold text-cm-white mb-2">Maak kennis met jouw AI Coach</h2>
-                <p className="text-cm-white opacity-60 text-sm">Jouw persoonlijke coach, 24/7 beschikbaar.</p>
-              </div>
-
-              {/* Over de AI Coach */}
-              <div className="card space-y-3">
-                <h3 className="text-cm-gold font-semibold">Wat is de AI Coach?</h3>
-                <p className="text-cm-white text-sm leading-relaxed opacity-80">
-                  De AI Coach is gebouwd op basis van de trainingen van de allerbeste trainers in aanbevelingsmarketing — met ruim <strong className="text-cm-white">30 jaar gecombineerde ervaring</strong>. Denk aan methodes van Eric Worre en Fraser Brooks.
-                </p>
-                <p className="text-cm-white text-sm leading-relaxed opacity-80">
-                  De coach kent jouw WHY, je doelen en je pipeline. Samen met je sponsor is dit jouw krachtigste hulpmiddel. Gebruik hem voor:
-                </p>
-                <ul className="space-y-1.5">
-                  {[
-                    "Klaarstaande DM-teksten voor elk type contact",
-                    "Hulp bij bezwaren ('ik heb geen tijd', 'is dit een pyramid?')",
-                    "Follow-up strategieën voor prospects",
-                    "Motivatie als je een moeilijke dag hebt",
-                  ].map((item, i) => (
-                    <li key={i} className="flex gap-2 text-sm text-cm-white opacity-80">
-                      <span className="text-cm-gold flex-shrink-0">✦</span>{item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Mini chat */}
-              <div className="card space-y-4">
-                <h3 className="text-cm-gold font-semibold text-sm">Stel nu je eerste vraag</h3>
-                <p className="text-cm-white text-xs opacity-60">Kies een vraag of typ je eigen vraag:</p>
-
-                {!coachVraag && !coachBezig && (
-                  <div className="space-y-2">
-                    {[
-                      "Hoe reageer ik als iemand zegt 'is dit een pyramide'?",
-                      "Geef me een WhatsApp DM voor iemand die ik al een tijdje niet heb gesproken.",
-                      "Wat zeg ik als iemand zegt 'ik heb geen tijd'?",
-                    ].map((vraag, i) => (
-                      <button
-                        key={i}
-                        onClick={() => stelCoachVraag(vraag)}
-                        className="w-full text-left p-3 rounded-xl bg-cm-surface-2 border border-cm-border text-cm-white text-sm hover:border-cm-gold transition-colors"
-                      >
-                        💬 {vraag}
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-                {coachVraag && (
-                  <div className="space-y-3">
-                    <div className="flex justify-end">
-                      <div className="max-w-[85%] bg-cm-gold/20 border border-cm-gold/30 rounded-xl px-4 py-2.5">
-                        <p className="text-cm-white text-sm">{coachVraag}</p>
-                      </div>
-                    </div>
-
-                    {(coachBezig || coachAntwoord) && (
-                      <div className="flex gap-2 items-start">
-                        <div className="w-7 h-7 rounded-full bg-cm-gold/20 border border-cm-gold/40 flex items-center justify-center text-xs flex-shrink-0 mt-0.5">🤖</div>
-                        <div className="flex-1 bg-cm-surface-2 rounded-xl px-4 py-3">
-                          {coachBezig && !coachAntwoord && (
-                            <div className="flex gap-1 items-center">
-                              <div className="w-1.5 h-1.5 bg-cm-gold rounded-full animate-bounce" />
-                              <div className="w-1.5 h-1.5 bg-cm-gold rounded-full animate-bounce delay-100" />
-                              <div className="w-1.5 h-1.5 bg-cm-gold rounded-full animate-bounce delay-200" />
-                            </div>
-                          )}
-                          {coachAntwoord && (
-                            <p className="text-cm-white text-sm leading-relaxed whitespace-pre-wrap">{coachAntwoord}</p>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {coachGedaan && (
-                <button onClick={() => gaNaarStap(7)} disabled={bezig} className="btn-gold w-full py-3 text-base">
-                  Top — verder naar mijn dagdoelen →
-                </button>
-              )}
-              {!coachGedaan && !coachVraag && (
-                <button onClick={() => gaNaarStap(7)} disabled={bezig} className="btn-secondary w-full py-2.5 text-sm opacity-70">
-                  Sla over — ga door zonder vraag
-                </button>
-              )}
-            </div>
-          )}
-
-          {/* ───── STAP 7: DAGDOEL ───── */}
-          {stap === 7 && (
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-2xl font-display font-bold text-cm-white mb-1">Stel je dagdoel in</h2>
+                <div className="text-6xl mb-4">🎯</div>
+                <h2 className="text-2xl font-display font-bold text-cm-white mb-2">Stel je dagdoelen in</h2>
                 <p className="text-cm-white opacity-60 text-sm">Wat ga jij elke dag minimaal doen? Wees realistisch.</p>
               </div>
 
@@ -705,76 +634,39 @@ export default function OnboardingPagina() {
                 ))}
               </div>
 
-              <button onClick={slaDoelOp} disabled={bezig} className="btn-gold w-full py-3 text-base disabled:opacity-50">
-                {bezig ? "Opslaan..." : "Opslaan en naar de finish →"}
-              </button>
-            </div>
-          )}
-
-          {/* ───── STAP 8: KLAAR! ───── */}
-          {stap === 8 && (
-            <div className="space-y-6 text-center">
-              <div>
-                <div className="text-7xl mb-4">🎉</div>
-                <h2 className="text-3xl font-display font-bold text-cm-white mb-2">Je bent er helemaal klaar voor!</h2>
-                <p className="text-cm-white opacity-70">Setup afgerond. Nu begint de echte run.</p>
-              </div>
-
-              <div className="card text-left space-y-3">
-                <h3 className="text-cm-gold font-semibold text-sm uppercase tracking-wider">Jouw dagdoelen</h3>
-                <div className="grid grid-cols-3 gap-3">
-                  {[{ getal: dagdoelContacten, label: "Contacten" }, { getal: dagdoelUitnodigingen, label: "Uitnodigingen" }, { getal: dagdoelFollowups, label: "Follow-ups" }].map((item) => (
-                    <div key={item.label} className="bg-cm-surface-2 rounded-xl p-3 text-center">
-                      <p className="text-2xl font-bold text-cm-gold">{item.getal}</p>
-                      <p className="text-cm-white text-xs opacity-70 mt-0.5">{item.label}/dag</p>
-                    </div>
+              {/* AI Coach intro */}
+              <div className="card space-y-3">
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl">🤖</span>
+                  <h3 className="text-cm-gold font-semibold">Jouw AI Coach staat klaar</h3>
+                </div>
+                <p className="text-cm-white text-sm leading-relaxed opacity-80">
+                  De AI Coach is gebouwd op basis van 30 jaar gecombineerde ervaring in aanbevelingsmarketing. Na het opslaan van je doelen open je de coach direct — jouw krachtigste hulpmiddel naast je sponsor.
+                </p>
+                <ul className="space-y-1.5">
+                  {[
+                    "Klaarstaande DM-teksten voor elk type contact",
+                    "Hulp bij bezwaren ('ik heb geen tijd', 'is dit een pyramid?')",
+                    "Follow-up strategieën voor prospects",
+                    "Motivatie als je een moeilijke dag hebt",
+                  ].map((item, i) => (
+                    <li key={i} className="flex gap-2 text-sm text-cm-white opacity-80">
+                      <span className="text-cm-gold flex-shrink-0">✦</span>{item}
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
 
-              <div className="card text-left space-y-2">
-                <h3 className="text-cm-gold font-semibold text-sm mb-3">Wat je hebt afgerond</h3>
-                {[
-                  "✓ App geïnstalleerd",
-                  "✓ WHY-gesprek voltooid",
-                  "✓ 60-dagenrun begrepen",
-                  "✓ Eerste namen toegevoegd",
-                  "✓ Uitnodigingsscript gelezen",
-                  "✓ AI Coach ontdekt",
-                  "✓ Dagdoelen ingesteld",
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-2 text-sm text-cm-white opacity-80">
-                    <span className="text-cm-gold text-base">✓</span>{item.replace("✓ ", "")}
-                  </div>
-                ))}
+              <div className="bg-[#D4AF37]/10 border-2 border-[#D4AF37]/40 rounded-xl p-5 text-center space-y-3">
+                <p className="text-[#D4AF37] font-bold">Jouw setup is compleet 🎉</p>
+                <p className="text-cm-white text-sm opacity-70 leading-relaxed">
+                  Sla je dagdoelen op — de coach opent en je bent klaar om dag 1 te starten.
+                </p>
               </div>
 
-              <div className="bg-amber-900/20 border border-amber-600/30 rounded-xl p-5 text-left">
-                <div className="flex gap-3">
-                  <span className="text-2xl flex-shrink-0">🤝</span>
-                  <div>
-                    <p className="text-amber-400 font-semibold mb-1">
-                      Eerste actie: plan een sessie met {sponsorNaam || "je sponsor"}
-                    </p>
-                    <p className="text-cm-white text-sm leading-relaxed opacity-80 mb-2">
-                      Stuur je sponsor een berichtje dat je klaar bent. Plan een moment om samen je eerste uitnodigingen te versturen.
-                    </p>
-                    {sponsorNaam && (
-                      <a href={sponsorWaLink} target="_blank" rel="noopener noreferrer" className="text-xs bg-green-900/40 border border-green-600/30 text-green-400 px-3 py-1.5 rounded-lg inline-flex items-center gap-1">
-                        💬 Stuur {sponsorNaam} een WhatsApp
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {isPreview ? (
-                <button onClick={() => router.push("/dashboard")} className="btn-secondary w-full py-3 text-base">← Terug naar dashboard</button>
-              ) : (
-                <button onClick={startDashboard} disabled={bezig} className="btn-gold w-full py-4 text-lg font-bold disabled:opacity-50">
-                  {bezig ? "Laden..." : "Start dag 1 van mijn 60-dagenrun →"}
-                </button>
-              )}
+              <button onClick={slaDoelOp} disabled={bezig} className="btn-gold w-full py-4 text-lg font-bold disabled:opacity-50">
+                {bezig ? "Laden..." : "Opslaan en open de AI Coach →"}
+              </button>
             </div>
           )}
 
