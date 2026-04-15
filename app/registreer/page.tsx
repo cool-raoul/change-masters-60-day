@@ -19,6 +19,7 @@ function RegistreerFormulier() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const teamId = searchParams.get("team");
+  const sponsorId = searchParams.get("ref") || teamId;
   const supabase = createClient();
 
   function v(sleutel: string) {
@@ -47,10 +48,10 @@ function RegistreerFormulier() {
         data: {
           full_name: naam,
           role: "lid",
-          invited_by: teamId || null,
+          sponsor_id: sponsorId || null,
           taal: taal,
         },
-        emailRedirectTo: `${window.location.origin}/api/auth/callback${teamId ? `?team=${teamId}` : ""}`,
+        emailRedirectTo: `${window.location.origin}/api/auth/callback${sponsorId ? `?ref=${sponsorId}` : ""}`,
       },
     });
 

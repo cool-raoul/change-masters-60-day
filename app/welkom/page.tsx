@@ -1,7 +1,29 @@
 import Link from "next/link";
-import Image from "next/image";
+import { createAdminClient } from "@/lib/supabase/admin";
 
-export default function WelkomPagina() {
+async function getSponsorNaam(sponsorId: string | null): Promise<string> {
+  if (!sponsorId) return "";
+  try {
+    const supabase = createAdminClient();
+    const { data } = await supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", sponsorId)
+      .single();
+    return data?.full_name || "";
+  } catch {
+    return "";
+  }
+}
+
+export default async function WelkomPagina({
+  searchParams,
+}: {
+  searchParams: { ref?: string };
+}) {
+  const sponsorId = searchParams.ref || null;
+  const sponsorNaam = await getSponsorNaam(sponsorId);
+
   return (
     <div className="min-h-screen bg-black flex flex-col items-center justify-between px-6 py-12">
 
@@ -15,14 +37,28 @@ export default function WelkomPagina() {
       {/* Welkomst tekst */}
       <div className="flex flex-col items-center gap-6 text-center max-w-sm">
         <div className="w-16 h-px bg-[#D4AF37]/30" />
-        <h2 className="text-2xl font-semibold text-white leading-snug">
-          Welkom bij het team van<br />
-          <span className="text-[#D4AF37]">Raoul & Gaby</span>
-        </h2>
-        <p className="text-white/60 text-sm leading-relaxed">
-          Je bent uitgenodigd voor de 60-dagenrun.
-          Maak je account aan en installeer de app op je telefoon.
-        </p>
+        {sponsorNaam ? (
+          <>
+            <h2 className="text-2xl font-semibold text-white leading-snug">
+              Welkom bij het team van<br />
+              <span className="text-[#D4AF37]">{sponsorNaam}</span>
+            </h2>
+            <p className="text-white/60 text-sm leading-relaxed">
+              Je bent uitgenodigd voor de 60-dagenrun.
+              Maak je account aan en installeer de app op je telefoon.
+            </p>
+          </>
+        ) : (
+          <>
+            <h2 className="text-2xl font-semibold text-white leading-snug">
+              Welkom bij<br />
+              <span className="text-[#D4AF37]">ELEVA</span>
+            </h2>
+            <p className="text-white/60 text-sm leading-relaxed">
+              Maak je account aan en start de 60-dagenrun.
+            </p>
+          </>
+        )}
         <div className="w-16 h-px bg-[#D4AF37]/30" />
       </div>
 
@@ -42,7 +78,7 @@ export default function WelkomPagina() {
 
         {/* Start knop */}
         <Link
-          href="/registreer"
+          href={`/registreer${sponsorId ? `?ref=${sponsorId}` : ""}`}
           className="w-full bg-[#D4AF37] text-black font-bold text-lg py-4 rounded-xl text-center hover:bg-[#c9a030] transition-colors"
         >
           Maak je account aan →

@@ -23,7 +23,7 @@ async function haalTeamBoomOp(supabase: any, userId: string, diepte: number = 0,
   const { data: directeleden } = await supabase
     .from("profiles")
     .select("id, full_name, email, onboarding_klaar, created_at")
-    .eq("invited_by", userId)
+    .eq("sponsor_id", userId)
     .order("created_at", { ascending: true });
 
   if (!directeleden || directeleden.length === 0) return [];
