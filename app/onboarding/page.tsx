@@ -31,13 +31,19 @@ function Stap4NamenlijstInline({
     e.preventDefault();
     if (!naam.trim() || !userId) return;
     setBezig2(true);
-    await supabase.from("prospects").insert({
+    const { error } = await supabase.from("prospects").insert({
       user_id: userId,
       volledige_naam: naam.trim(),
       telefoon: telefoon.trim() || null,
-      pipeline_fase: "lead",
+      pipeline_fase: "prospect",
       bron: "warm",
     });
+    if (error) {
+      console.error("Prospect opslaan mislukt:", error);
+      alert("Opslaan mislukt: " + error.message);
+      setBezig2(false);
+      return;
+    }
     setToegevoegd((prev) => [...prev, { naam: naam.trim(), telefoon: telefoon.trim() }]);
     setNaam("");
     setTelefoon("");
@@ -90,12 +96,16 @@ function Stap4NamenlijstInline({
           )}
         </div>
 
+        <p className="text-cm-white text-xs opacity-60 -mt-1">
+          Naam en telefoonnummer is genoeg voor nu. Je kunt later meer informatie toevoegen (e-mail, notities, platform) via de namenlijst.
+        </p>
+
         <form onSubmit={voegToe} className="space-y-3">
           <input
             type="text"
             value={naam}
             onChange={(e) => setNaam(e.target.value)}
-            placeholder="Volledige naam"
+            placeholder="Voor- en achternaam"
             className="input-cm w-full"
             required
           />
@@ -116,12 +126,12 @@ function Stap4NamenlijstInline({
         </form>
 
         {toegevoegd.length > 0 && (
-          <div className="space-y-1.5 max-h-48 overflow-y-auto">
+          <div className="space-y-1.5 max-h-52 overflow-y-auto pt-1">
             {toegevoegd.map((item, i) => (
-              <div key={i} className="flex items-center gap-2 text-sm py-1 border-b border-cm-border last:border-0">
-                <span className="text-cm-gold">✓</span>
+              <div key={i} className="flex items-center gap-2 text-sm py-1.5 border-b border-cm-border/50 last:border-0">
+                <span className="text-cm-gold text-xs">✓</span>
                 <span className="text-cm-white">{item.naam}</span>
-                {item.telefoon && <span className="text-cm-white opacity-50 text-xs ml-auto">{item.telefoon}</span>}
+                {item.telefoon && <span className="text-cm-white opacity-40 text-xs ml-auto">{item.telefoon}</span>}
               </div>
             ))}
           </div>
