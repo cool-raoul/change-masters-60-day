@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     const naam = profile?.full_name || "Een teamlid";
 
     const payload = {
-      title: `✅ ${naam}: ${stap}`,
+      title: `${naam} ${stap}`,
       body: "Tik om de voortgang van je team te bekijken.",
       url: "/team",
       tag: "onboarding",

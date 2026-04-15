@@ -246,11 +246,11 @@ export default function OnboardingPagina() {
 
       // DB + push notificatie per stap
       const stapActies: Record<number, { veld: string; pushNaam: string }> = {
-        2: { veld: "stap_1_welkom", pushNaam: "Stap 1: Welkom & app geïnstalleerd" },
-        3: { veld: "stap_2_run",    pushNaam: "Stap 2: WHY ingevuld" },
-        4: { veld: "stap_3_namen",  pushNaam: "Stap 3: Run begrepen" },
-        5: { veld: "stap_4_script", pushNaam: "Stap 4: Namenlijst aangemaakt" },
-        6: { veld: "stap_4_script", pushNaam: "Stap 5: Script gelezen" },
+        2: { veld: "stap_1_welkom", pushNaam: "heeft de app geïnstalleerd 📱" },
+        3: { veld: "stap_2_run",    pushNaam: "heeft zijn/haar WHY gemaakt 💛" },
+        4: { veld: "stap_3_namen",  pushNaam: "begrijpt de 60-dagenrun 📖" },
+        5: { veld: "stap_4_script", pushNaam: "heeft de namenlijst aangemaakt 📝" },
+        6: { veld: "stap_4_script", pushNaam: "heeft het uitnodigingsscript gelezen 💬" },
       };
 
       if (stapActies[nieuweStap]) {
@@ -276,7 +276,7 @@ export default function OnboardingPagina() {
         data: { onboarding_stap: 99, dagdoel_contacten: dagdoelContacten, dagdoel_uitnodigingen: dagdoelUitnodigingen, dagdoel_followups: dagdoelFollowups },
       });
       await slaVoortgangOp({ stap_5_doelen: true });
-      await stuurPushNaarSponsor("Setup volledig afgerond! 🎉");
+      await stuurPushNaarSponsor("heeft de volledige setup afgerond en is klaar voor dag 1! 🎉");
     }
     setBezig(false);
     router.push("/coach");
