@@ -336,8 +336,8 @@ export const t: Vertalingen = {
     pt: "Seu mentor pessoal para DMs, obje\u00e7\u00f5es e fechamento \u2014 sempre pronto",
   },
   "coach.wat_kan": {
-    nl: "Wat kan de ELEVA Mentor voor jou doen?", en: "What can the ELEVA Mentor do for you?",
-    fr: "Que peut faire ELEVA Mentor pour toi ?", es: "\u00bfQu\u00e9 puede hacer el ELEVA Mentor por ti?",
+    nl: "Wat de ELEVA Mentor o.a. voor jou kan doen?", en: "What the ELEVA Mentor can do for you?",
+    fr: "Ce que l'ELEVA Mentor peut faire pour toi", es: "\u00bfQu\u00e9 puede hacer el ELEVA Mentor por ti",
     de: "Was kann der ELEVA Mentor f\u00fcr dich tun?", pt: "O que o ELEVA Mentor pode fazer por voc\u00ea?",
   },
   "coach.nieuw_gesprek": {
