@@ -119,16 +119,16 @@ export async function POST(request: Request) {
               timestamp: new Date().toISOString(),
             };
             const alleBerichten = [...berichten, nieuwBericht];
-            supabase
-              .from("ai_gesprekken")
-              .update({
-                berichten: alleBerichten,
-                updated_at: new Date().toISOString(),
-              })
-              .eq("id", gesprekId)
-              .eq("user_id", user.id)
-              .then(() => {})
-              .catch((err) => console.error("DB save fout:", err));
+            Promise.resolve(
+              supabase
+                .from("ai_gesprekken")
+                .update({
+                  berichten: alleBerichten,
+                  updated_at: new Date().toISOString(),
+                })
+                .eq("id", gesprekId)
+                .eq("user_id", user.id)
+            ).catch((err: any) => console.error("DB save fout:", err));
           }
         });
 
