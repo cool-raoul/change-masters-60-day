@@ -16,7 +16,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, onboarding_klaar")
+    .select("full_name, onboarding_klaar, role")
     .eq("id", user.id)
     .single();
 
@@ -29,7 +29,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
     <TaalProvider initialTaal={taal}>
       <div className="flex h-dvh bg-cm-black overflow-hidden">
         <WelcomePopup />
-        <Sidebar />
+        <Sidebar isLeider={(profile as any)?.role === "leider"} />
         <div className="flex-1 flex flex-col min-h-0 min-w-0">
           <Topbar gebruikersnaam={profile?.full_name || user.email || "Teamlid"} />
           <main className="flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain p-6 mobile-scroll">{children}</main>

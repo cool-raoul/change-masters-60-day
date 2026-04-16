@@ -32,7 +32,7 @@ export default async function DashboardPagina() {
     { data: herinneringen },
     { data: pipelineCounts },
   ] = await Promise.all([
-    supabase.from("profiles").select("run_startdatum").eq("id", user.id).maybeSingle(),
+    supabase.from("profiles").select("run_startdatum, role").eq("id", user.id).maybeSingle(),
     supabase.from("why_profiles").select("*").eq("user_id", user.id).maybeSingle(),
     supabase.from("dagelijkse_stats").select("*").eq("user_id", user.id).eq("stat_datum", vandaagStr).maybeSingle(),
     supabase.from("herinneringen").select("*, prospect:prospects(id, volledige_naam)").eq("user_id", user.id).lte("vervaldatum", vandaagStr).eq("voltooid", false).order("vervaldatum", { ascending: true }).limit(5),
@@ -40,6 +40,7 @@ export default async function DashboardPagina() {
   ]);
 
   const dag = berekenDag((profile as any)?.run_startdatum ?? null);
+  const isLeider = (profile as any)?.role === "leider";
 
   const stats = vandaagStats as DagelijkseStat | null;
   const herinneringenLijst = (herinneringen as (Herinnering & { prospect: { id: string; volledige_naam: string } | null })[]) || [];
@@ -82,6 +83,22 @@ export default async function DashboardPagina() {
         </div>
         <p className="text-cm-white text-xs mt-2">{60 - dag} {v("dashboard.dagen_te_gaan", taal)}</p>
       </div>
+
+      {/* Leider banner */}
+      {isLeider && (
+        <div className="flex items-center justify-between bg-cm-gold/10 border border-cm-gold/30 rounded-xl px-4 py-3">
+          <div className="flex items-center gap-3">
+            <span className="text-xl">👑</span>
+            <div>
+              <p className="text-cm-gold text-sm font-semibold">Jij bent Leider</p>
+              <p className="text-cm-white text-xs opacity-60">Je hebt extra bevoegdheden via de Team pagina</p>
+            </div>
+          </div>
+          <a href="/team" className="text-cm-gold text-xs hover:text-cm-gold-light">
+            Team →
+          </a>
+        </div>
+      )}
 
       {/* Snelle acties */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">

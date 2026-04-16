@@ -15,7 +15,6 @@ export function ContactgegevensForm({ prospect }: Props) {
   const { v } = useTaal();
   const [bewerkModus, setBewerkModus] = useState(false);
   const [laden, setLaden] = useState(false);
-  const [notitiesOpen, setNotitiesOpen] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
@@ -116,20 +115,8 @@ export function ContactgegevensForm({ prospect }: Props) {
         )}
         {prospect.notities && (
           <div>
-            <button
-              onClick={() => setNotitiesOpen((o) => !o)}
-              className="w-full flex items-center justify-between text-left group"
-            >
-              <p className="text-xs text-cm-white opacity-60 group-hover:opacity-90 transition-opacity">
-                {v("namenlijst.aantekeningen")}
-              </p>
-              <span className={`text-cm-gold text-sm transition-transform duration-200 ${notitiesOpen ? "rotate-180" : ""}`}>
-                ⌄
-              </span>
-            </button>
-            {notitiesOpen && (
-              <p className="text-cm-white text-sm mt-1 whitespace-pre-wrap">{prospect.notities}</p>
-            )}
+            <p className="text-xs text-cm-white opacity-60">{v("namenlijst.aantekeningen")}</p>
+            <p className="text-cm-white text-sm">{prospect.notities}</p>
           </div>
         )}
         <div>

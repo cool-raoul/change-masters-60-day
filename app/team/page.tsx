@@ -116,6 +116,22 @@ export default async function TeamPagina({ searchParams }: { searchParams: { lid
   const aantalLevels = Object.keys(levelCounts).length;
   const directeLeden = haalDirecteLedenPlat(teamboom);
 
+  const vandaagStr = new Date().toISOString().split("T")[0];
+  // Haal alle direct teamleden IDs op (plat)
+  const alleTeamIds = teamboom.flatMap(function flatten(l: TeamLid): string[] {
+    return [l.id, ...l.kinderen.flatMap(flatten)];
+  });
+
+  let teamStats: any[] = [];
+  if (alleTeamIds.length > 0) {
+    const { data: statsData } = await supabase
+      .from("dagelijkse_stats")
+      .select("*, profiel:profiles!user_id(full_name)")
+      .in("user_id", alleTeamIds)
+      .eq("stat_datum", vandaagStr);
+    teamStats = statsData || [];
+  }
+
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       <Link href="/dashboard" className="text-cm-white opacity-60 hover:opacity-100 text-sm flex items-center gap-1 mb-4">
@@ -140,6 +156,35 @@ export default async function TeamPagina({ searchParams }: { searchParams: { lid
         </p>
         <KopieerLink userId={user.id} />
       </div>
+
+      {/* Leider bevoegdheden */}
+      {isLeider && (
+        <div className="card border border-cm-gold/20 bg-cm-gold/5">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-cm-gold text-lg">👑</span>
+            <h2 className="text-sm font-semibold text-cm-gold uppercase tracking-wider">Jouw leider bevoegdheden</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {[
+              { icoon: "🏆", titel: "Team & stamboom", omschrijving: "Zie je volledige team op elk level" },
+              { icoon: "👑", titel: "Rollen beheren", omschrijving: "Maak teamleden leider of zet ze terug" },
+              { icoon: "⭐", titel: "Premium beheren", omschrijving: "Geef teamleden premium toegang" },
+              { icoon: "🔗", titel: "Uitnodigingslink", omschrijving: "Nodig nieuwe leden uit in jouw tak" },
+              { icoon: "📊", titel: "Onboarding inzicht", omschrijving: "Zie de voortgang van elk teamlid" },
+              { icoon: "📈", titel: "Team statistieken", omschrijving: "Bekijk de dagelijkse activiteit van je team" },
+            ].map((b) => (
+              <div key={b.titel} className="flex items-start gap-2 bg-cm-surface-2 rounded-lg p-2">
+                <span className="text-base mt-0.5">{b.icoon}</span>
+                <div>
+                  <p className="text-cm-white text-xs font-semibold">{b.titel}</p>
+                  <p className="text-cm-white text-xs opacity-50">{b.omschrijving}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="text-cm-white text-xs opacity-40 mt-3 italic">Meer bevoegdheden worden toegevoegd naarmate het systeem groeit.</p>
+        </div>
+      )}
 
       {/* Statistieken */}
       {totaalLeden > 0 && (
@@ -336,6 +381,50 @@ export default async function TeamPagina({ searchParams }: { searchParams: { lid
                     />
                   </div>
                   <span className="text-cm-gold text-sm font-semibold w-8 text-right">{count}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Team statistieken vandaag */}
+      {isLeider && teamStats.length > 0 && (
+        <div className="card">
+          <h2 className="text-sm font-semibold text-cm-gold uppercase tracking-wider mb-4">
+            📈 Team activiteit vandaag
+          </h2>
+          <div className="space-y-2">
+            <div className="hidden md:grid text-xs text-cm-white opacity-40 font-medium gap-2 mb-1"
+              style={{ gridTemplateColumns: "1fr repeat(6, 48px)" }}>
+              <span>Naam</span>
+              <span className="text-center" title="Contacten">👥</span>
+              <span className="text-center" title="Uitnodigingen">📨</span>
+              <span className="text-center" title="Follow-ups">🔄</span>
+              <span className="text-center" title="Presentaties">🎯</span>
+              <span className="text-center" title="Nieuwe partners">🤝</span>
+              <span className="text-center" title="Nieuwe klanten">⭐</span>
+            </div>
+            {teamStats.map((stat) => (
+              <div key={stat.id} className="bg-cm-surface-2 rounded-lg px-3 py-2">
+                <div className="hidden md:grid items-center gap-2 text-sm"
+                  style={{ gridTemplateColumns: "1fr repeat(6, 48px)" }}>
+                  <span className="text-cm-white font-medium">{(stat.profiel as any)?.full_name || "—"}</span>
+                  <span className="text-center text-cm-white">{stat.contacten_gemaakt}</span>
+                  <span className="text-center text-cm-white">{stat.uitnodigingen}</span>
+                  <span className="text-center text-cm-white">{stat.followups}</span>
+                  <span className="text-center text-cm-white">{stat.presentaties}</span>
+                  <span className="text-center text-[#4ACB6A]">{stat.nieuwe_partners}</span>
+                  <span className="text-center text-cm-gold">{stat.nieuwe_klanten}</span>
+                </div>
+                <div className="md:hidden flex items-center justify-between">
+                  <span className="text-cm-white text-sm font-medium">{(stat.profiel as any)?.full_name || "—"}</span>
+                  <div className="flex gap-3 text-xs text-cm-white opacity-70">
+                    <span>👥{stat.contacten_gemaakt}</span>
+                    <span>📨{stat.uitnodigingen}</span>
+                    <span>🎯{stat.presentaties}</span>
+                    <span className="text-[#4ACB6A]">🤝{stat.nieuwe_partners}</span>
+                  </div>
                 </div>
               </div>
             ))}
