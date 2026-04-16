@@ -8,7 +8,8 @@ import { ProspectActieForm } from "@/components/namenlijst/ProspectActieForm";
 import { ContactLogLijst } from "@/components/namenlijst/ContactLogLijst";
 import { ContactgegevensForm } from "@/components/namenlijst/ContactgegevensForm";
 import { OnboardingChecklist } from "@/components/namenlijst/OnboardingChecklist";
-import { DriewegGesprek } from "@/components/namenlijst/DriewegGesprek";
+import { DriewegGesprekInklapbaar } from "@/components/namenlijst/DriewegGesprek";
+import { ProspectVerwijderKnop } from "@/components/namenlijst/ProspectVerwijderKnop";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { Locale } from "date-fns";
 
@@ -30,7 +31,7 @@ export default async function ProspectDetailPagina({
   const taal = await getServerTaal();
   const datumLocale = DATE_LOCALES[taal] || nl;
 
-  const [{ data: prospect }, { data: contactLogs }, { data: bestellingen }, { data: coachGesprekken }] =
+  const [{ data: prospect }, { data: contactLogs }, { data: bestellingen }, { data: coachGesprekken }, { data: eigenProfiel }] =
     await Promise.all([
       supabase
         .from("prospects")
@@ -54,9 +55,26 @@ export default async function ProspectDetailPagina({
         .eq("prospect_id", id)
         .eq("user_id", user.id)
         .order("updated_at", { ascending: false }),
+      supabase
+        .from("profiles")
+        .select("sponsor_id")
+        .eq("id", user.id)
+        .single(),
     ]);
 
   if (!prospect) notFound();
+
+  // Haal sponsor naam op via sponsor_id
+  const sponsorId = (eigenProfiel as any)?.sponsor_id;
+  let sponsorNaam: string | null = null;
+  if (sponsorId) {
+    const { data: sponsorProfiel } = await supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", sponsorId)
+      .single();
+    sponsorNaam = sponsorProfiel?.full_name ?? null;
+  }
 
   const faseInfo = PIPELINE_FASEN.find((f) => f.fase === prospect.pipeline_fase);
 
@@ -85,10 +103,14 @@ export default async function ProspectDetailPagina({
             </div>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <Link href={`/coach?prospect=${id}`} className="btn-secondary text-sm">
             🤖 {v("nav.coach", taal)}
           </Link>
+          <ProspectVerwijderKnop
+            prospectId={id}
+            prospectNaam={prospect.volledige_naam}
+          />
         </div>
       </div>
 
@@ -136,19 +158,12 @@ export default async function ProspectDetailPagina({
             userId={user.id}
           />
 
-          {/* 3-weg gesprek */}
-          <div className="card space-y-3">
-            <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
-              💬 3-weg gesprek scripts
-            </h2>
-            <p className="text-cm-white text-xs opacity-50">
-              Stap-voor-stap scripts om een groepje aan te maken met je sponsor.
-            </p>
-            <DriewegGesprek
-              prospectNaam={prospect.volledige_naam}
-              prospectSituatie={prospect.notities || undefined}
-            />
-          </div>
+          {/* 3-weg gesprek — inklapbaar */}
+          <DriewegGesprekInklapbaar
+            prospectNaam={prospect.volledige_naam}
+            prospectSituatie={prospect.notities || undefined}
+            sponsorNaam={sponsorNaam || undefined}
+          />
 
           {/* AI Coach gesprekken */}
           <div className="card space-y-3">

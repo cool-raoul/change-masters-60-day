@@ -29,6 +29,7 @@ const FASE_KLEUREN: Record<PipelineFase, string> = {
 function ProspectKaart({
   prospect,
   onFaseWijzig,
+  onVerwijder,
   isDragging,
   onDragStart,
   onDragEnd,
@@ -36,11 +37,13 @@ function ProspectKaart({
 }: {
   prospect: Prospect;
   onFaseWijzig: (id: string, fase: PipelineFase) => void;
+  onVerwijder: (id: string, naam: string) => void;
   isDragging: boolean;
   onDragStart: (e: React.DragEvent, id: string) => void;
   onDragEnd: () => void;
   datumLocale: Locale;
 }) {
+  const [bevestigen, setBevestigen] = useState(false);
   const dagSindsContact = prospect.laatste_contact
     ? Math.floor((Date.now() - new Date(prospect.laatste_contact).getTime()) / (1000 * 60 * 60 * 24))
     : null;
@@ -109,6 +112,31 @@ function ProspectKaart({
             {f.label}
           </button>
         ))}
+        {/* Verwijder knop */}
+        {!bevestigen ? (
+          <button
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setBevestigen(true); }}
+            className="text-xs px-2 py-0.5 rounded bg-red-900/40 text-red-400 hover:bg-red-900/70 transition-colors ml-auto"
+          >
+            🗑
+          </button>
+        ) : (
+          <div className="flex items-center gap-1 ml-auto" onMouseDown={(e) => e.stopPropagation()}>
+            <button
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); onVerwijder(prospect.id, prospect.volledige_naam); }}
+              className="text-xs px-2 py-0.5 rounded bg-red-600 text-white hover:bg-red-500 transition-colors"
+            >
+              Ja
+            </button>
+            <button
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setBevestigen(false); }}
+              className="text-xs px-2 py-0.5 rounded bg-cm-surface-2 text-cm-white hover:text-cm-gold transition-colors"
+            >
+              Nee
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -175,6 +203,17 @@ export function PipelineKanban({ prospects }: Props) {
     setDraggingId(null);
     draggedIdRef.current = null;
   }, [lokaleProspects]);
+
+  async function verwijderProspect(id: string, naam: string) {
+    const { error } = await supabase.from("prospects").delete().eq("id", id);
+    if (error) {
+      toast.error(v("actie.fout"));
+    } else {
+      setLokaleProspects((prev) => prev.filter((p) => p.id !== id));
+      toast.success(`${naam} verwijderd`);
+      router.refresh();
+    }
+  }
 
   async function wijzigFase(id: string, nieuweFase: PipelineFase) {
     // Optimistisch lokaal bijwerken
@@ -266,6 +305,7 @@ export function PipelineKanban({ prospects }: Props) {
                       key={p.id}
                       prospect={p}
                       onFaseWijzig={wijzigFase}
+                      onVerwijder={verwijderProspect}
                       isDragging={draggingId === p.id}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}

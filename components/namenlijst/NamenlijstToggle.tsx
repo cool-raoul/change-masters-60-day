@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
 import { useTaal } from "@/lib/i18n/TaalContext";
 import { Prospect, PIPELINE_FASEN } from "@/lib/supabase/types";
 import { PipelineKanban } from "@/components/namenlijst/PipelineKanban";
@@ -12,11 +15,27 @@ interface Props {
 
 export function NamenlijstToggle({ prospects }: Props) {
   const [weergave, setWeergave] = useState<"pipeline" | "lijst">("pipeline");
+  const [lokaleProspects, setLokaleProspects] = useState(prospects);
+  const [bevestigenId, setBevestigenId] = useState<string | null>(null);
   const { v } = useTaal();
+  const router = useRouter();
+  const supabase = createClient();
 
-  const gesorteerd = [...prospects].sort((a, b) =>
+  const gesorteerd = [...lokaleProspects].sort((a, b) =>
     a.volledige_naam.localeCompare(b.volledige_naam, "nl")
   );
+
+  async function verwijder(id: string, naam: string) {
+    const { error } = await supabase.from("prospects").delete().eq("id", id);
+    if (error) {
+      toast.error("Verwijderen mislukt");
+    } else {
+      setLokaleProspects((prev) => prev.filter((p) => p.id !== id));
+      setBevestigenId(null);
+      toast.success(`${naam} verwijderd`);
+      router.refresh();
+    }
+  }
 
   return (
     <div className="space-y-4">
@@ -63,16 +82,19 @@ export function NamenlijstToggle({ prospects }: Props) {
               const faseInfo = PIPELINE_FASEN.find(
                 (f) => f.fase === prospect.pipeline_fase
               );
+              const bevestigen = bevestigenId === prospect.id;
               return (
-                <Link
+                <div
                   key={prospect.id}
-                  href={`/namenlijst/${prospect.id}`}
                   className="card flex items-center justify-between hover:border-cm-gold-dim transition-colors group"
                 >
-                  <div className="flex items-center gap-3">
+                  <Link
+                    href={`/namenlijst/${prospect.id}`}
+                    className="flex items-center gap-3 flex-1 min-w-0"
+                  >
                     <span className="text-xl">👤</span>
-                    <div>
-                      <p className="text-cm-white font-semibold text-sm group-hover:text-cm-gold transition-colors">
+                    <div className="min-w-0">
+                      <p className="text-cm-white font-semibold text-sm group-hover:text-cm-gold transition-colors truncate">
                         {prospect.volledige_naam}
                       </p>
                       <div className="flex items-center gap-2 mt-0.5 flex-wrap">
@@ -92,9 +114,9 @@ export function NamenlijstToggle({ prospects }: Props) {
                         )}
                       </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-3 text-right">
-                    <div className="hidden sm:block">
+                  </Link>
+                  <div className="flex items-center gap-2 ml-2 flex-shrink-0">
+                    <div className="hidden sm:block text-right">
                       {prospect.telefoon && (
                         <p className="text-cm-white text-xs opacity-60">
                           📞 {prospect.telefoon}
@@ -106,9 +128,34 @@ export function NamenlijstToggle({ prospects }: Props) {
                         </p>
                       )}
                     </div>
-                    <span className="text-cm-gold text-sm">→</span>
+                    {/* Verwijder */}
+                    {bevestigen ? (
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => verwijder(prospect.id, prospect.volledige_naam)}
+                          className="text-xs bg-red-600 hover:bg-red-500 text-white px-2 py-1 rounded transition-colors"
+                        >
+                          Ja
+                        </button>
+                        <button
+                          onClick={() => setBevestigenId(null)}
+                          className="text-xs text-cm-white opacity-60 hover:opacity-100 px-1 transition-opacity"
+                        >
+                          Nee
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setBevestigenId(prospect.id)}
+                        className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 text-sm px-2 transition-opacity"
+                        title="Verwijder"
+                      >
+                        🗑
+                      </button>
+                    )}
+                    <Link href={`/namenlijst/${prospect.id}`} className="text-cm-gold text-sm">→</Link>
                   </div>
-                </Link>
+                </div>
               );
             })
           )}

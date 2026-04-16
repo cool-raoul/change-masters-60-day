@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 
 interface Props {
   prospectNaam: string;
   prospectSituatie?: string;
+  sponsorNaam?: string;
 }
 
 type TabType = "product" | "business";
@@ -22,14 +23,16 @@ function vervangVariabelen(
   tekst: string,
   voornaam: string,
   volledigeNaam: string,
-  situatie: string | undefined
+  situatie: string | undefined,
+  sponsorNaam: string,
+  sponsorPeriode: string
 ): string {
   let result = tekst;
   result = result.replace(/\[naam prospect\]/g, volledigeNaam);
   result = result.replace(/\[naam\]/g, voornaam);
-  if (situatie) {
-    result = result.replace(/\[situatie\]/g, situatie);
-  }
+  if (sponsorNaam) result = result.replace(/\[naam sponsor\]/g, sponsorNaam);
+  if (sponsorPeriode) result = result.replace(/\[periode sponsor\]/g, sponsorPeriode);
+  if (situatie) result = result.replace(/\[situatie\]/g, situatie);
   return result;
 }
 
@@ -65,42 +68,35 @@ function WhatsAppKnop({ tekst }: { tekst: string }) {
   );
 }
 
+// Splits tekst op [placeholder] tokens en rendert placeholders als grijze badges
+function renderMetPlaceholders(tekst: string): React.ReactNode {
+  const delen = tekst.split(/(\[[^\]]+\])/g);
+  return delen.map((deel, i) =>
+    /^\[.+\]$/.test(deel) ? (
+      <span key={i} className="not-italic text-cm-white opacity-40 bg-cm-surface-2 px-1 rounded">
+        {deel}
+      </span>
+    ) : (
+      <span key={i}>{deel}</span>
+    )
+  );
+}
+
 function BerichtBlok({
   tekst,
-  situatie,
-  volledigeNaam,
 }: {
   tekst: string;
-  situatie: string | undefined;
-  volledigeNaam: string;
 }) {
-  const heeftSituatiePlaceholder = tekst.includes("[situatie]");
-  const heeftSituatie = !!situatie;
-  const verwerktTekst = heeftSituatiePlaceholder && !heeftSituatie ? tekst : tekst.replace(/\[situatie\]/g, situatie || "[situatie]");
+  const heeftPlaceholder = /\[[^\]]+\]/.test(tekst);
 
   return (
     <div className="space-y-2">
       <div className="bg-cm-surface rounded-xl p-4 text-cm-white text-sm leading-relaxed italic border-l-2 border-cm-gold/40 whitespace-pre-wrap">
-        {heeftSituatiePlaceholder && !heeftSituatie ? (
-          <>
-            {verwerktTekst.split("[situatie]").map((deel, i, arr) => (
-              <span key={i}>
-                {deel}
-                {i < arr.length - 1 && (
-                  <span className="not-italic text-cm-white opacity-40 bg-cm-surface-2 px-1 rounded">
-                    [situatie]
-                  </span>
-                )}
-              </span>
-            ))}
-          </>
-        ) : (
-          verwerktTekst
-        )}
+        {heeftPlaceholder ? renderMetPlaceholders(tekst) : tekst}
       </div>
       <div className="flex gap-2">
-        <KopieKnop tekst={verwerktTekst.replace(/\[situatie\]/g, situatie || "[situatie]")} />
-        <WhatsAppKnop tekst={verwerktTekst.replace(/\[situatie\]/g, situatie || "[situatie]")} />
+        <KopieKnop tekst={tekst} />
+        <WhatsAppKnop tekst={tekst} />
       </div>
     </div>
   );
@@ -111,14 +107,18 @@ function StapKaart({
   voornaam,
   volledigeNaam,
   situatie,
+  sponsorNaam,
+  sponsorPeriode,
 }: {
   stap: StapConfig;
   voornaam: string;
   volledigeNaam: string;
   situatie: string | undefined;
+  sponsorNaam: string;
+  sponsorPeriode: string;
 }) {
   function verwerk(tekst: string) {
-    return vervangVariabelen(tekst, voornaam, volledigeNaam, situatie);
+    return vervangVariabelen(tekst, voornaam, volledigeNaam, situatie, sponsorNaam, sponsorPeriode);
   }
 
   return (
@@ -144,8 +144,6 @@ function StapKaart({
       {stap.type === "bericht" && stap.bericht && (
         <BerichtBlok
           tekst={verwerk(stap.bericht)}
-          situatie={situatie}
-          volledigeNaam={volledigeNaam}
         />
       )}
 
@@ -179,7 +177,7 @@ const PRODUCT_STAPPEN: StapConfig[] = [
     context: "Stuur dit aan [naam] vóór je het groepje aanmaakt",
     type: "bericht",
     bericht:
-      "Hey [naam]! Ik maak even een groepje aan met [naam sponsor], want ik kan het zelf nog niet zo goed uitleggen 😄 Zij doet dit al een tijdje en heeft zelf ook super mooi resultaat behaald — ze kan met je mee kijken en al je vragen beantwoorden 🥰",
+      "Hey [naam]! Ik maak even een groepje aan met [naam sponsor], want ik kan het zelf nog niet zo goed uitleggen 😄 Zij doet dit al [periode sponsor] en heeft zelf ook super mooi resultaat behaald — ze kan met je mee kijken en al je vragen beantwoorden 🥰",
   },
   {
     nummer: 2,
@@ -228,7 +226,7 @@ const BUSINESS_STAPPEN: StapConfig[] = [
     context: "Stuur dit aan [naam] vóór je het groepje aanmaakt",
     type: "bericht",
     bericht:
-      "Hey [naam]! Ik maak even een groepje aan met [naam sponsor], want ik kan het zelf nog niet zo goed uitleggen 😄 Hij/zij doet dit al een tijdje en heeft zelf een mooie business opgebouwd — hij/zij kan met je mee kijken en al je vragen beantwoorden 👍🏽",
+      "Hey [naam]! Ik maak even een groepje aan met [naam sponsor], want ik kan het zelf nog niet zo goed uitleggen 😄 Hij/zij doet dit al [periode sponsor] en heeft zelf een mooie business opgebouwd — hij/zij kan met je mee kijken en al je vragen beantwoorden 👍🏽",
   },
   {
     nummer: 2,
@@ -270,14 +268,78 @@ const BUSINESS_STAPPEN: StapConfig[] = [
   },
 ];
 
-export function DriewegGesprek({ prospectNaam, prospectSituatie }: Props) {
+export function DriewegGesprekInklapbaar({ prospectNaam, prospectSituatie, sponsorNaam }: Props) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="card">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between text-left"
+      >
+        <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
+          💬 3-weg gesprek scripts
+        </h2>
+        <span className={`text-cm-gold text-lg transition-transform duration-200 ${open ? "rotate-180" : ""}`}>
+          ⌄
+        </span>
+      </button>
+
+      {open && (
+        <div className="mt-4">
+          <DriewegGesprek
+            prospectNaam={prospectNaam}
+            prospectSituatie={prospectSituatie}
+            sponsorNaam={sponsorNaam}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function DriewegGesprek({ prospectNaam, prospectSituatie, sponsorNaam: sponsorNaamProp }: Props) {
   const [actieveTab, setActieveTab] = useState<TabType>("product");
+  const [sponsorNaam, setSponsorNaam] = useState(sponsorNaamProp || "");
+  const [sponsorPeriode, setSponsorPeriode] = useState("");
 
   const voornaam = prospectNaam.split(" ")[0];
   const stappen = actieveTab === "product" ? PRODUCT_STAPPEN : BUSINESS_STAPPEN;
 
   return (
     <div className="space-y-4">
+      {/* Sponsor invulvelden */}
+      <div className="bg-cm-surface rounded-xl p-3 space-y-2 border border-cm-border">
+        <p className="text-xs text-cm-white opacity-50 uppercase tracking-wider">Jouw sponsor</p>
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <label className="text-xs text-cm-white opacity-60 mb-1 flex items-center gap-1">
+              Naam sponsor
+              {sponsorNaamProp && (
+                <span className="text-cm-gold opacity-70">· automatisch</span>
+              )}
+            </label>
+            <input
+              type="text"
+              value={sponsorNaam}
+              onChange={(e) => setSponsorNaam(e.target.value)}
+              placeholder="bv. Gaby"
+              className="w-full bg-cm-surface-2 border border-cm-border rounded-lg px-3 py-1.5 text-cm-white text-sm placeholder-cm-white/30 focus:outline-none focus:border-cm-gold"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-cm-white opacity-60 mb-1 block">Periode actief</label>
+            <input
+              type="text"
+              value={sponsorPeriode}
+              onChange={(e) => setSponsorPeriode(e.target.value)}
+              placeholder="bv. 2 jaar / 6 maanden"
+              className="w-full bg-cm-surface-2 border border-cm-border rounded-lg px-3 py-1.5 text-cm-white text-sm placeholder-cm-white/30 focus:outline-none focus:border-cm-gold"
+            />
+          </div>
+        </div>
+      </div>
+
       {/* Tabs */}
       <div className="flex gap-1 border-b border-cm-border">
         <button
@@ -311,6 +373,8 @@ export function DriewegGesprek({ prospectNaam, prospectSituatie }: Props) {
             voornaam={voornaam}
             volledigeNaam={prospectNaam}
             situatie={prospectSituatie}
+            sponsorNaam={sponsorNaam}
+            sponsorPeriode={sponsorPeriode}
           />
         ))}
       </div>
