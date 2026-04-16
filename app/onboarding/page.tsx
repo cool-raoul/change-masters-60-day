@@ -644,6 +644,20 @@ export default function OnboardingPagina() {
                 ))}
               </div>
 
+              {/* E-mail herinneringen instellen */}
+              <div className="bg-blue-900/20 border border-blue-600/30 rounded-xl p-4 space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">📧</span>
+                  <p className="text-blue-300 font-semibold text-sm">Stel je e-mail herinneringen in</p>
+                </div>
+                <p className="text-cm-white text-sm leading-relaxed opacity-80">
+                  Wil je elke ochtend een e-mail met je openstaande taken? Maak een gratis account aan op <strong className="text-cm-white">resend.com</strong>, kopieer je API-key en plak hem in je Instellingen. Dit kost 2 minuten.
+                </p>
+                <p className="text-cm-white text-xs opacity-50">
+                  Je kunt dit ook later doen via het menu → Instellingen → E-mail herinneringen.
+                </p>
+              </div>
+
               {/* AI Coach intro */}
               <div className="card space-y-3">
                 <div className="flex items-center gap-3">
