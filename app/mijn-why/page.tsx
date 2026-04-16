@@ -19,9 +19,15 @@ export default function MijnWhyPagina() {
   const [voorgesteldWhy, setVoorgesteldWhy] = useState<string | null>(null);
   const [volledigeAntwoord, setVolledigeAntwoord] = useState("");
   const [bestaandeWhy, setBestaandeWhy] = useState<string | null>(null);
+  const [isPreview, setIsPreview] = useState(false);
   const chatEindRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const supabase = createClient();
+
+  useEffect(() => {
+    const preview = new URLSearchParams(window.location.search).get("preview") === "true";
+    setIsPreview(preview);
+  }, []);
 
   useEffect(() => {
     async function laadGegevens() {
@@ -176,6 +182,16 @@ export default function MijnWhyPagina() {
   async function bevestigWhy() {
     if (!voorgesteldWhy) return;
 
+    // In preview-modus: toon alleen de WHY zonder op te slaan
+    if (isPreview) {
+      const schoneWhy = voorgesteldWhy.replace(/\*+/g, "").replace(/^["'\u201c\u201e]+|["'\u201d]+$/g, "").trim();
+      setBestaandeWhy(schoneWhy);
+      setOpgeslagen(true);
+      setVoorgesteldWhy(null);
+      toast.success("Preview — WHY wordt niet opgeslagen");
+      return;
+    }
+
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -275,6 +291,15 @@ export default function MijnWhyPagina() {
 
   return (
     <div className="min-h-screen bg-cm-black flex flex-col">
+      {/* Preview banner */}
+      {isPreview && (
+        <div className="bg-amber-900/40 border-b border-amber-600/40 px-4 py-2 text-center">
+          <p className="text-amber-300 text-xs font-semibold">
+            ⚠️ Preview-modus — gesprek en WHY worden NIET opgeslagen
+          </p>
+        </div>
+      )}
+
       {/* Header */}
       <div className="border-b border-cm-border p-4 flex items-center justify-between">
         <div>

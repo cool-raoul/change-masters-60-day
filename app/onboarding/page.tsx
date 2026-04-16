@@ -14,12 +14,14 @@ function Stap4NamenlijstInline({
   bezig,
   sponsorNaam,
   sponsorWaLink,
+  isPreview,
 }: {
   userId: string | null;
   onVerder: () => void;
   bezig: boolean;
   sponsorNaam: string;
   sponsorWaLink: string;
+  isPreview: boolean;
 }) {
   const [naam, setNaam] = useState("");
   const [telefoon, setTelefoon] = useState("");
@@ -31,19 +33,24 @@ function Stap4NamenlijstInline({
     e.preventDefault();
     if (!naam.trim() || !userId) return;
     setBezig2(true);
-    const { error } = await supabase.from("prospects").insert({
-      user_id: userId,
-      volledige_naam: naam.trim(),
-      telefoon: telefoon.trim() || null,
-      pipeline_fase: "prospect",
-      bron: "warm",
-    });
-    if (error) {
-      console.error("Prospect opslaan mislukt:", error);
-      alert("Opslaan mislukt: " + error.message);
-      setBezig2(false);
-      return;
+
+    // In preview-modus: sla niets op in de database
+    if (!isPreview) {
+      const { error } = await supabase.from("prospects").insert({
+        user_id: userId,
+        volledige_naam: naam.trim(),
+        telefoon: telefoon.trim() || null,
+        pipeline_fase: "prospect",
+        bron: "warm",
+      });
+      if (error) {
+        console.error("Prospect opslaan mislukt:", error);
+        alert("Opslaan mislukt: " + error.message);
+        setBezig2(false);
+        return;
+      }
     }
+
     setToegevoegd((prev) => [...prev, { naam: naam.trim(), telefoon: telefoon.trim() }]);
     setNaam("");
     setTelefoon("");
@@ -297,6 +304,10 @@ export default function OnboardingPagina() {
     router.refresh();
   }
 
+  // In preview-modus: toon sponsor-blokken altijd (met voorbeeldnaam als er geen sponsor is)
+  const toonSponsorNaam = sponsorNaam || (isPreview ? "jouw sponsor" : "");
+  const toonSponsorLink = sponsorWaLink || (isPreview ? "#" : "");
+
   if (laden) {
     return (
       <div className="min-h-screen bg-cm-black flex items-center justify-center">
@@ -465,21 +476,21 @@ export default function OnboardingPagina() {
                 <p className="text-cm-white text-sm opacity-70 leading-relaxed">
                   Het gesprek opent in dit scherm. <strong className="text-cm-white">Kom daarna terug naar deze pagina</strong> — je gaat automatisch verder bij stap 3.
                 </p>
-                <Link href="/mijn-why" className="btn-gold w-full py-3 text-center block font-bold">
-                  Start het WHY-gesprek →
+                <Link href={isPreview ? "/mijn-why?preview=true" : "/mijn-why"} className="btn-gold w-full py-3 text-center block font-bold">
+                  {isPreview ? "Preview: WHY-gesprek (slaat niets op)" : "Start het WHY-gesprek →"}
                 </Link>
               </div>
 
               {/* Sponsor contact */}
-              {sponsorNaam && (
+              {toonSponsorNaam && (
                 <div className="bg-blue-900/20 border border-blue-600/30 rounded-xl p-4">
                   <div className="flex gap-3 items-start">
                     <span className="text-2xl flex-shrink-0">💬</span>
                     <div>
-                      <p className="text-blue-300 font-semibold text-sm mb-1">Twijfel je? Neem contact op met {sponsorNaam}</p>
+                      <p className="text-blue-300 font-semibold text-sm mb-1">Twijfel je? Neem contact op met {toonSponsorNaam}</p>
                       <p className="text-cm-white text-sm opacity-80 mb-2">Je sponsor heeft dit zelf ook doorgemaakt en kan je helpen als je vastloopt.</p>
-                      <a href={sponsorWaLink} target="_blank" rel="noopener noreferrer" className="text-xs bg-green-900/40 border border-green-600/30 text-green-400 px-3 py-1.5 rounded-lg inline-flex items-center gap-1">
-                        💬 Stuur {sponsorNaam} een WhatsApp
+                      <a href={toonSponsorLink} target="_blank" rel="noopener noreferrer" className="text-xs bg-green-900/40 border border-green-600/30 text-green-400 px-3 py-1.5 rounded-lg inline-flex items-center gap-1">
+                        💬 Stuur {toonSponsorNaam} een WhatsApp
                       </a>
                     </div>
                   </div>
@@ -550,7 +561,7 @@ export default function OnboardingPagina() {
 
           {/* ───── STAP 4: WARME MARKT (inline form) ───── */}
           {stap === 4 && (
-            <Stap4NamenlijstInline userId={userId} onVerder={() => gaNaarStap(5)} bezig={bezig} sponsorNaam={sponsorNaam} sponsorWaLink={sponsorWaLink} />
+            <Stap4NamenlijstInline userId={userId} onVerder={() => gaNaarStap(5)} bezig={bezig} sponsorNaam={toonSponsorNaam} sponsorWaLink={toonSponsorLink} isPreview={isPreview} />
           )}
 
           {/* ───── STAP 5: UITNODIGINGSSCRIPT ───── */}
@@ -612,15 +623,15 @@ export default function OnboardingPagina() {
               </div>
 
               {/* Sponsor contact */}
-              {sponsorNaam && (
+              {toonSponsorNaam && (
                 <div className="bg-blue-900/20 border border-blue-600/30 rounded-xl p-4">
                   <div className="flex gap-3 items-start">
                     <span className="text-2xl flex-shrink-0">💬</span>
                     <div>
-                      <p className="text-blue-300 font-semibold text-sm mb-1">Plan nu al een sessie met {sponsorNaam}</p>
+                      <p className="text-blue-300 font-semibold text-sm mb-1">Plan nu al een sessie met {toonSponsorNaam}</p>
                       <p className="text-cm-white text-sm opacity-80 mb-2">Je eerste uitnodigingen doe je het beste <strong className="text-cm-white">samen</strong> met je sponsor. Stuur nu al een berichtje om dit in te plannen.</p>
-                      <a href={sponsorWaLink} target="_blank" rel="noopener noreferrer" className="text-xs bg-green-900/40 border border-green-600/30 text-green-400 px-3 py-1.5 rounded-lg inline-flex items-center gap-1">
-                        💬 Plan sessie met {sponsorNaam}
+                      <a href={toonSponsorLink} target="_blank" rel="noopener noreferrer" className="text-xs bg-green-900/40 border border-green-600/30 text-green-400 px-3 py-1.5 rounded-lg inline-flex items-center gap-1">
+                        💬 Plan sessie met {toonSponsorNaam}
                       </a>
                     </div>
                   </div>
