@@ -18,12 +18,18 @@ export async function GET(request: Request) {
   const supabase = createAdminClient();
   const vandaag = new Date().toISOString().split("T")[0];
 
-  // Haal alle gebruikers op die een Resend key hebben ingesteld
+  // Gebruik één centrale Resend key uit omgevingsvariabelen
+  const resendKey = process.env.RESEND_API_KEY;
+  if (!resendKey) {
+    return NextResponse.json({ message: "Geen RESEND_API_KEY ingesteld — e-mails overgeslagen, push gaat wel door", verzonden: 0 });
+  }
+  const resend = new Resend(resendKey);
+
+  // Haal alle gebruikers op
   const { data: gebruikers, error: gebruikersError } = await supabase
     .from("profiles")
-    .select("id, full_name, email, notificatie_email, resend_api_key")
-    .not("resend_api_key", "is", null)
-    .neq("resend_api_key", "");
+    .select("id, full_name, email")
+    .neq("email", "");
 
   if (gebruikersError) {
     console.error("Fout bij ophalen gebruikers:", gebruikersError);
@@ -31,15 +37,13 @@ export async function GET(request: Request) {
   }
 
   if (!gebruikers || gebruikers.length === 0) {
-    return NextResponse.json({ message: "Geen gebruikers met e-mail ingesteld", verzonden: 0 });
+    return NextResponse.json({ message: "Geen gebruikers gevonden", verzonden: 0 });
   }
 
   let verzonden = 0;
   const fouten: string[] = [];
 
   for (const gebruiker of gebruikers) {
-    if (!gebruiker.resend_api_key) continue;
-
     // Haal openstaande herinneringen op voor deze gebruiker
     const { data: herinneringen } = await supabase
       .from("herinneringen")
@@ -70,8 +74,7 @@ export async function GET(request: Request) {
     }
 
     try {
-      const stuurNaar = gebruiker.notificatie_email || gebruiker.email;
-      const resend = new Resend(gebruiker.resend_api_key);
+      const stuurNaar = gebruiker.email;
 
       await resend.emails.send({
         from: "ELEVA 60 Dagen Run <onboarding@resend.dev>",
