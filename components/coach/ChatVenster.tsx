@@ -257,7 +257,10 @@ export function ChatVenster({
         }),
       });
 
-      if (!response.ok) throw new Error("API fout");
+      if (!response.ok) {
+        const foutTekst = await response.text().catch(() => "onbekend");
+        throw new Error(`API fout ${response.status}: ${foutTekst}`);
+      }
 
       const reader = response.body?.getReader();
       if (!reader) throw new Error("Geen stream");
@@ -298,8 +301,10 @@ export function ChatVenster({
           updated_at: new Date().toISOString(),
         })
         .eq("id", gesprekId);
-    } catch {
-      toast.error("Er is iets misgegaan met de coach. Probeer opnieuw.");
+    } catch (err: any) {
+      const melding = err?.message || "Onbekende fout";
+      console.error("Coach fout:", melding);
+      toast.error(melding.length > 80 ? melding.substring(0, 80) + "..." : melding);
     } finally {
       setLaden(false);
     }
