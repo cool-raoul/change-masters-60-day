@@ -60,7 +60,6 @@ export async function POST(request: Request) {
         .single();
 
       if (prospectData) {
-        // Haal recente contact logs op
         const { data: logs } = await supabase
           .from("contact_logs")
           .select("*")
@@ -81,61 +80,47 @@ export async function POST(request: Request) {
       content: b.content,
     }));
 
-    // Stream response van Claude
+    // Één stream — tegelijk naar gebruiker én opslaan in DB
     const stream = anthropic.messages.stream({
-      model: "claude-sonnet-4-6",
-      max_tokens: 1500,
-      system: systeemPrompt,
-      messages: apiMessages,
-    });
-
-    // Sla het gesprek op na afloop
-    const volledigAntwoord = await new Promise<string>((resolve) => {
-      let tekst = "";
-      stream.on("text", (t) => (tekst += t));
-      stream.on("finalMessage", () => resolve(tekst));
-    });
-
-    // Update gesprek in database
-    const nieuwBericht: ChatBericht = {
-      role: "assistant",
-      content: volledigAntwoord,
-      timestamp: new Date().toISOString(),
-    };
-
-    if (gesprekId) {
-      const alleBerichten = [
-        ...berichten,
-        nieuwBericht,
-      ];
-      await supabase
-        .from("ai_gesprekken")
-        .update({
-          berichten: alleBerichten,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", gesprekId)
-        .eq("user_id", user.id);
-    }
-
-    // Herstart stream voor response
-    const streamVoorResponse = anthropic.messages.stream({
-      model: "claude-sonnet-4-6",
+      model: "claude-3-5-haiku-20241022",
       max_tokens: 1500,
       system: systeemPrompt,
       messages: apiMessages,
     });
 
     const encoder = new TextEncoder();
+    let volledigAntwoord = "";
+
     const readable = new ReadableStream({
       async start(controller) {
-        streamVoorResponse.on("text", (text) => {
+        stream.on("text", (text) => {
+          volledigAntwoord += text;
           controller.enqueue(encoder.encode(text));
         });
-        streamVoorResponse.on("finalMessage", () => {
+
+        stream.on("finalMessage", async () => {
           controller.close();
+
+          // Sla antwoord op in DB na afloop van de stream
+          if (gesprekId) {
+            const nieuwBericht: ChatBericht = {
+              role: "assistant",
+              content: volledigAntwoord,
+              timestamp: new Date().toISOString(),
+            };
+            const alleBerichten = [...berichten, nieuwBericht];
+            await supabase
+              .from("ai_gesprekken")
+              .update({
+                berichten: alleBerichten,
+                updated_at: new Date().toISOString(),
+              })
+              .eq("id", gesprekId)
+              .eq("user_id", user.id);
+          }
         });
-        streamVoorResponse.on("error", (err) => {
+
+        stream.on("error", (err) => {
           controller.error(err);
         });
       },
