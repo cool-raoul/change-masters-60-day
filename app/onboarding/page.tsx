@@ -648,13 +648,13 @@ export default function OnboardingPagina() {
               <div className="bg-blue-900/20 border border-blue-600/30 rounded-xl p-4 space-y-2">
                 <div className="flex items-center gap-2">
                   <span className="text-xl">📧</span>
-                  <p className="text-blue-300 font-semibold text-sm">Stel je e-mail herinneringen in</p>
+                  <p className="text-blue-300 font-semibold text-sm">Optioneel: e-mail herinneringen instellen</p>
                 </div>
                 <p className="text-cm-white text-sm leading-relaxed opacity-80">
-                  Wil je elke ochtend een e-mail met je openstaande taken? Maak een gratis account aan op <strong className="text-cm-white">resend.com</strong>, kopieer je API-key en plak hem in je Instellingen. Dit kost 2 minuten.
+                  Wil je naast app-meldingen ook een dagelijkse e-mail met je openstaande taken? Maak een gratis account aan op <strong className="text-cm-white">resend.com</strong>, kopieer je API-key en plak hem in Instellingen.
                 </p>
-                <p className="text-cm-white text-xs opacity-50">
-                  Je kunt dit ook later doen via het menu → Instellingen → E-mail herinneringen.
+                <p className="text-cm-white text-xs opacity-60">
+                  ✓ App-meldingen werken sowieso altijd — e-mail is een extra optie. Je kunt dit altijd later instellen via Instellingen.
                 </p>
               </div>
 
