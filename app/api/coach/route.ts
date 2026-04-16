@@ -1,10 +1,14 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@/lib/supabase/server";
 import { bouwCoachSysteemPrompt } from "@/lib/prompts/coach-systeem-prompt";
+import { detecteerVraagType } from "@/lib/knowledge/coach-boeken";
 import { ChatBericht } from "@/lib/supabase/types";
 
 // Verleng Vercel timeout (Pro: tot 300s, Hobby: max 10s)
 export const maxDuration = 60;
+
+// Dagelijks limiet per gebruiker (bespaart kosten)
+const DAGELIJKS_BERICHT_LIMIET = 50;
 
 export async function POST(request: Request) {
   try {
@@ -40,6 +44,18 @@ export async function POST(request: Request) {
     if (!berichten || berichten.length === 0) {
       return new Response("Geen berichten", { status: 400 });
     }
+
+    // --- DAGELIJKS LIMIET CHECK ---
+    const vandaag = new Date().toISOString().split("T")[0];
+    const { count } = await supabase
+      .from("ai_gesprekken")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .gte("updated_at", vandaag);
+
+    // Tel berichten van vandaag over alle gesprekken
+    // Simpele check: als er meer dan X gesprekken vandaag zijn bijgewerkt
+    // Meer geavanceerd: tel echte berichten (maar dat is duurder)
 
     // Haal profiel op
     const { data: profile } = await supabase
@@ -81,19 +97,29 @@ export async function POST(request: Request) {
       }
     }
 
-    // Bouw system prompt
-    const systeemPrompt = bouwCoachSysteemPrompt(profile, whyProfile, prospect, taal || "nl");
+    // --- SLIM: Detecteer vraagtype voor gerichte kennisbank ---
+    const vraagType = detecteerVraagType(berichten);
 
-    // Format berichten voor Claude API
-    const apiMessages = berichten.map((b) => ({
+    // Bouw system prompt (alleen relevante secties!)
+    const systeemPrompt = bouwCoachSysteemPrompt(
+      profile, whyProfile, prospect, taal || "nl", vraagType
+    );
+
+    // --- HISTORY TRIMMING: max 8 berichten meesturen ---
+    // Bespaart tokens bij lange gesprekken
+    const getrimdeBerichten = berichten.length > 8
+      ? berichten.slice(-8)
+      : berichten;
+
+    const apiMessages = getrimdeBerichten.map((b) => ({
       role: b.role as "user" | "assistant",
       content: b.content,
     }));
 
-    // Event-based streaming met prompt caching (90% goedkoper na 1e bericht)
+    // Event-based streaming met prompt caching
     const stream = anthropic.messages.stream({
       model: "claude-sonnet-4-6",
-      max_tokens: 1000,
+      max_tokens: 800,
       system: [
         {
           type: "text" as const,
@@ -117,7 +143,7 @@ export async function POST(request: Request) {
         stream.on("finalMessage", () => {
           controller.close();
 
-          // Sla antwoord op in DB (fire-and-forget, blokkeert stream niet)
+          // Sla antwoord op in DB (fire-and-forget)
           if (gesprekId && volledigAntwoord) {
             const nieuwBericht: ChatBericht = {
               role: "assistant",

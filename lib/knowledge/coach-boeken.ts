@@ -1,125 +1,205 @@
 // ============================================================
 // KENNISBANK AI COACH — ELEVA 60-Dagenrun
-// Compact format — alle kennis, minimale tokens
-// Bronnen: Eric Worre (Go Pro + 90 Day Run) + Fraser Brookes (I Dare You + Loser to Legend)
+// SLIM LADEN: alleen relevante secties per vraagtype
+// Bronnen: Eric Worre (Go Pro + 90 Day Run) + Fraser Brookes
 // ============================================================
 
-export function getKennisbank(): string {
-  return `
-## KENNISBASIS — WORRE + BROOKES
+export type VraagType = "dm" | "bezwaar" | "followup" | "closing" | "motivatie" | "accountability" | "social" | "algemeen";
 
-### WORRE — 7 VAARDIGHEDEN
+// Detecteer het type vraag op basis van keywords
+export function detecteerVraagType(berichten: { role: string; content: string }[]): VraagType {
+  // Pak de laatste user-berichten (max 2)
+  const recenteUserBerichten = berichten
+    .filter((b) => b.role === "user")
+    .slice(-2)
+    .map((b) => b.content.toLowerCase())
+    .join(" ");
 
-1. PROSPECTS VINDEN
-Geheugensteun-lijst: schrijf iedereen op zonder oordeel. Familie, vrienden, collega's, sport, hobby, buurt, social media, mensen die je regelmatig ziet. NOOIT vooraf oordelen wie interesse heeft. Let op: wie klaagt over geld/werk/tijd? Wie is ambitieus maar gefrustreerd?
+  if (/\b(dm|bericht|schrij|tekst|uitnodig|whatsapp|instagram|sturen)\b/.test(recenteUserBerichten)) return "dm";
+  if (/\b(bezwaar|objection|geen tijd|nadenken|niet van sales|ken te weinig|geen geld|partner overleg|twijfel)\b/.test(recenteUserBerichten)) return "bezwaar";
+  if (/\b(follow.?up|opvolg|stilte|geen reactie|niet gereageerd|terugkom)\b/.test(recenteUserBerichten)) return "followup";
+  if (/\b(clos|afsluit|besliss|doel.?tijd|starten|commitment)\b/.test(recenteUserBerichten)) return "closing";
+  if (/\b(motivat|opgev|moeilijk|geen zin|moe|gefrustreerd|why|waarom)\b/.test(recenteUserBerichten)) return "motivatie";
+  if (/\b(accountab|resultaat|activiteit|stats|nummers|gedaan|actie)\b/.test(recenteUserBerichten)) return "accountability";
+  if (/\b(social|post|story|stories|content|attract|online|tiktok|facebook|linkedin)\b/.test(recenteUserBerichten)) return "social";
+  return "algemeen";
+}
 
-2. UITNODIGEN (4 stappen)
-Stap 1: Wees druk. "Ik heb weinig tijd maar wilde dit even delen."
-Stap 2: Oprecht compliment. "Jij bent iemand die dingen voor elkaar krijgt."
-Stap 3: Nodig uit op 3 manieren:
-  Direct: "Ik ben gestart met iets nieuws, wil het je laten zien."
-  Indirect: "Dit is vast niets voor jou, maar ken jij iemand die extra wil verdienen?"
-  Super-indirect: "Ken jij mensen die openstaan voor bij-inkomen?"
-Stap 4: Plan. "Wanneer schikt het, vanavond of morgen?"
+// Kern die ALTIJD meegestuurd wordt (~800 tokens)
+const KERN = `
+### KERNMETHODE
+
+WORRE 7 VAARDIGHEDEN (samenvatting):
+1. Prospects vinden: geheugensteun-lijst, iedereen opschrijven, nooit vooroordelen
+2. Uitnodigen (4 stappen): druk zijn → compliment → uitnodigen (direct/indirect/super-indirect) → plannen
+3. Presenteren: jij = boodschapper, tools doen het werk, 3-weg met sponsor
+4. Follow-up: 24-48u regel, 5 exposures gemiddeld, nooit jagen
+5. Closing: helpen beslissen, Doel-Tijd-Termijn flow
+6. Opstarten: eerste 48u cruciaal, samen namenlijst, eerste 3 uitnodigingen
+7. Evenementen: derden-validatie
+
+60-DAGENRUN FASEN:
+Fase 1 (dag 1-20): 3 namen/dag, 2 uitnodigingen, 1 follow-up. Breed bouwen.
+Fase 2 (dag 21-40): eigen acties + team helpen. 3-weg gesprekken. Max 2 niveaus diep.
+Fase 3 (dag 41-60): social media attractie, leiderschap, duplicatie borgen.
+
+UNTIL-principe: niet stoppen totdat het lukt.
+5 soorten prospects: actief zoekend, open, productkoper, niet-nu, nooit.
+
+BROOKES FORM: F=Family O=Occupation R=Recreation M=Money → luister naar haken.
+Loser-to-Legend: jouw reis is je wapen, niet je succes.
+Duplicatie: als het niet te dupliceren is, doe het niet.`;
+
+// Secties per vraagtype (~300-500 tokens elk)
+const SECTIES: Record<string, string> = {
+  dm: `
+### DM & UITNODIGEN
+
+Worre 4-stappen uitnodiging:
+1. Wees druk: "Ik heb weinig tijd maar wilde dit even delen."
+2. Compliment: "Jij bent iemand die dingen voor elkaar krijgt."
+3. Uitnodigen:
+   Direct: "Ik ben gestart met iets nieuws, wil het je laten zien."
+   Indirect: "Dit is vast niets voor jou, maar ken jij iemand die extra wil verdienen?"
+   Super-indirect: "Ken jij mensen die openstaan voor bij-inkomen?"
+4. Plan: "Wanneer schikt het, vanavond of morgen?"
 JE TAAK = uitnodigen, NIET overtuigen.
 
-3. PRESENTEREN
-Jij = boodschapper, niet de boodschap. Laat tools het werk doen (video, presentatie, event). Gebruik sponsor voor 3-weg gesprekken.
-
-4. FOLLOW-UP
-24-48 uur regel. Gemiddeld 5 exposures nodig. Nooit jagen, nooit smeken, altijd kalm, altijd volgende stap aanbieden.
-
-5. CLOSING
-Niet overtuigen maar helpen beslissen.
-Doel-Tijd-Termijn flow:
-  "Hoeveel wil je per maand verdienen?"
-  "Binnen hoeveel maanden?"
-  "Hoeveel uur per week beschikbaar?"
-  "Dan is dit wat je nodig hebt. Starten?"
-
-6. NIEUWE LEDEN OPSTARTEN
-Eerste 48 uur cruciaal. Samen namenlijst (min 25), eerste 3 uitnodigingen plannen, basisscript leren, 3-weg gesprekken plannen.
-
-7. EVENEMENTEN PROMOTEN
-Derden-validatie. Mensen geloven anderen meer dan jou.
-
-### WORRE — 60-DAGENRUN FASEN
-
-FASE 1 (dag 1-20) TEAM BOUWEN
-Dagelijks: 3 nieuwe namen, 2 uitnodigingen, 1 follow-up.
-Mindset: breed bouwen, elke steen telt, niet wachten op perfecte kandidaat.
-
-FASE 2 (dag 21-40) TEAM HELPEN BOUWEN
-Dagelijks: 1-2 eigen uitnodigingen + 1 drieweggesprek voor teamlid + inchecken bij team.
-Mindset: mijn succes = succes van mijn team. Max 2 niveaus diep persoonlijk helpen.
-
-FASE 3 (dag 41-60) OPSCHALEN
-Social media attractie, leiderschap ontwikkelen, duplicatie borgen.
-Mindset: team bouwen dat zonder mij verder kan.
-
-### WORRE — EXTRA CONCEPTEN
-
-5 soorten prospects: (1) actief zoekend (2) open (3) productkoper (4) niet-nu (5) nooit
-UNTIL-principe: ik stop niet totdat het lukt. Niet bij nee, niet bij tegenslag. UNTIL.
-Lifestyle = beste marketing. Laat je leven zien, mensen kopen mensen.
-
-### BROOKES — METHODEN
-
-ATTRACTION MARKETING
-Mensen kopen mensen. 3 verhalen die je moet kunnen vertellen:
-  Persoonlijk: wie was je, wat veranderde, wie ben je nu?
-  Product: wat deden de producten voor jou?
-  Business: waarom dit model, wat heeft het gebracht?
-
-FORM TECHNIEK (om haken te vinden)
-F=Family: "Hoe is het thuis?"
-O=Occupation: "Wat doe je, bevalt het?"
-R=Recreation: "Wat doe je in vrije tijd?"
-M=Money: "Ben je tevreden met wat je verdient?"
-Luister goed: klaagt over werk → business. Wil tijd → vrijheid. Gezondheid → producten. Droomt van reizen → inkomen.
-
-SOCIAL MEDIA FORMULE (dagelijks)
-1. Waarde geven (tip, inspiratie)
-2. Verhaal delen (persoonlijk, resultaat)
-3. Zachte uitnodiging ("DM me als je meer wilt weten")
-NOOIT direct pitchen. Eerst nieuwsgierigheid.
-
-DM STRATEGIE
+Brookes DM strategie:
 1. Reageer oprecht op hun content
 2. Bouw rapport (FORM)
 3. Zoek opening: "Trouwens, ik doe momenteel iets interessants..."
 4. Nodig uit, niet pitchen
 
-I DARE YOU (challenge-recruiting)
-Frame als uitdaging: "Ik daag je uit 30 dagen mee te doen. Niet om te kijken of het werkt, maar om te ontdekken wat er in jou zit."
-Maak laagdrempelig, creëer exclusiviteit.
+I Dare You: "Ik daag je uit 30 dagen mee te doen."
+Maak laagdrempelig, creëer exclusiviteit.`,
 
-LOSER TO LEGEND
-Jouw verhaal van twijfel en groei = krachtigste wapen. Niet je succes, je reis.
-Deel beginpunt eerlijk, toon turning point, laat verandering zien.
+  bezwaar: `
+### BEZWAREN BEHANDELEN
 
-DUPLICATIE
-Als het niet te dupliceren is, doe het niet. Eén script, één format, één checklist.
-3-weg introductie: edificeer de sponsor eerst ("Ze heeft ongelofelijke ervaring, ik leer elke dag van haar").
+Feel-Felt-Found methode (altijd):
+FEEL: "Ik snap dat dat zo voelt."
+FELT: "Meer mensen voelden dat in het begin ook."
+FOUND: "Wat zij merkten was dat het simpeler was dan gedacht."
+Sluit ALTIJD af met een vraag naar de echte twijfel.
 
-### AFWIJZING BEHANDELEN
-
-Afwijzing = getal, geen oordeel. "Elke nee brengt je dichter bij ja." (Worre) "Nee nu is geen nee voor altijd." (Brookes)
-Zeg altijd: "Geen probleem. Mag ik je over 3 maanden nog eens vragen?"
+Veelvoorkomende bezwaren:
+"Geen tijd" → "Juist daarom, het is flexibel naast wat je al doet. Als het behapbaar is, sta je er dan voor open?"
+"Wil nadenken" → "Prima. Waar wil je precies over nadenken: duidelijkheid, vertrouwen of timing?"
+"Niet van sales" → "Hoeft niet. Het draait om delen en opvolgen. Zou het passen als je het op jouw manier kunt doen?"
+"Ken te weinig mensen" → "Dat denken velen. Het gaat om goed leren uitnodigen. Als je daar hulp bij krijgt?"
+"Geen geld/risico" → "Begrijpelijk. Als het laagdrempelig en realistisch is, wil je het dan serieus bekijken?"
+"Partner overleggen" → "Logisch. Zal ik helpen het simpel neer te zetten zodat jullie er samen naar kunnen kijken?"
 
 PRODUCT PIVOT bij business-afwijzing:
-1. Erken zonder druk: "Helemaal begrijpelijk."
+1. Erken zonder druk
 2. Vraag naar gezondheid/energie
-3. Stel producten voor als oplossing, niet als business
-4. Maak laagdrempelig: "Probeer een maand, geen verplichtingen"
-5. Noteer als Shopper, follow-up na 21 dagen
+3. Stel producten voor als oplossing
+4. "Probeer een maand, geen verplichtingen"
+5. Noteer als Shopper, follow-up na 21 dagen`,
 
-### MINDSET KERNREGELS
+  followup: `
+### FOLLOW-UP
 
-Elke dag één actie vooruit. Niet perfect, maar consistent.
-Vertrouwen komt van consistentie.
-Je verkoopt niet, je nodigt uit om levens te verbeteren.
-Enige mislukking = stoppen.
-Vergelijk met gisteren, niet met anderen.
-`;
+Worre 24-48u regel. 5 exposures gemiddeld nodig. Nooit jagen, nooit smeken.
+
+Follow-up reeks:
+1. "Heb je de info bekeken?"
+2. "Wat vond je ervan? Welke vragen?"
+3. "Dit wilde ik je ook nog laten zien..."
+4. "Er is binnenkort een event, wil je erbij zijn?"
+5. Sluit af of vraag naar echte twijfel
+
+Na video/presentatie: "Wat sprak je het meeste aan?"
+Na twijfel: "Wat is het belangrijkste punt om helder te krijgen?"
+Na stilte: "Even inchecken. Als het niets is, ook prima, laat het even weten."
+Na warmte: "Waar zie je het meeste potentieel: product, inkomen of allebei?"
+
+Basis: CHECK IN → PEIL → VERDIEP → LEID DOOR
+Niet jagen, niet smeken, wel richting geven.`,
+
+  closing: `
+### CLOSING
+
+Closing = helpen beslissen, niet overtuigen.
+
+Doel-Tijd-Termijn flow (letterlijk gebruiken):
+1. "Hoeveel euro/maand zou je willen verdienen zodat het de moeite waard is?"
+2. "Hoeveel uur/week heb je er realistisch voor?"
+3. "Na hoeveel maanden moet dat bedrag er staan?"
+4. "Als ik een realistisch plan kan laten zien daarvoor, wil je dat serieus bekijken?"
+5. "Als dat klopt en goed voelt, starten we dan gewoon?"
+De motivatie komt van HEN, niet van jou.
+
+Closingsvragen reeks:
+OPENEN: "Wat spreekt je hier het meeste aan?"
+PEILEN: "Hoe serieus kijk je hiernaar?"
+RICHTING: "Zie je jezelf als klant of ook de opbouwkant?"
+BESLISSING: "Wat heb je nog nodig voor een goede beslissing?"
+START: "Als het klopt, starten we dan?"
+
+Zachte variant: "Stel dat het realistisch is, sta je er dan voor open om het samen te bekijken?"
+Directe variant: "De echte vraag is niet of je iets wilt veranderen, maar of dit het juiste voertuig is. Klopt dat?"`,
+
+  motivatie: `
+### MOTIVATIE & MINDSET
+
+Brookes Loser-to-Legend: jouw verhaal van twijfel en groei is je krachtigste wapen.
+Deel je beginpunt eerlijk → toon turning point → laat verandering zien.
+
+Worre UNTIL: niet stoppen. Niet bij nee, niet bij tegenslag. UNTIL.
+"Behandel elke dag als dag 1." Houd urgentie.
+"Snelheid wint." Snel handelen slaat perfect handelen.
+"De run is jouw verhaal." Consistentie bouwt geloofwaardigheid.
+"Vergelijk met gisteren, niet met anderen."
+
+Afwijzing = getal, geen oordeel. "Elke nee = dichter bij ja."
+"Nee nu is geen nee voor altijd. Blijf in hun leven."
+Zeg: "Geen probleem. Mag ik over 3 maanden nog eens vragen?"
+
+Koppel ALTIJD terug aan persoonlijke WHY.
+Enige mislukking = stoppen.`,
+
+  accountability: `
+### ACCOUNTABILITY
+
+Dagelijks (5 min): Wat gedaan? Wat morgen? Waar loop ik vast?
+Wekelijks: Wat werkte? Wat niet? Wie wacht op follow-up? Focus komende week?
+
+6 KPI's: contacten, uitnodigingen, follow-ups, presentaties, nieuwe partners, nieuwe klanten.
+Eén dag nul = geen paniek. Twee dagen nul = actie nodig.
+Sponsor vraagt ALTIJD naar activiteit, niet alleen resultaten.
+
+Stel harde vragen. Geen zachte aanpak. Feiten vs excuses.
+"Hoeveel mensen heb je deze week daadwerkelijk gesproken?"
+"Wat was het plan en wat heb je echt gedaan?"`,
+
+  social: `
+### SOCIAL MEDIA & ATTRACTIE
+
+Brookes dagelijkse posting formule:
+1. WAARDE: tip, inspiratie, les
+2. VERHAAL: iets persoonlijks of resultaat
+3. ZACHTE UITNODIGING: "DM me als je meer wilt weten"
+NOOIT direct pitchen. Eerst nieuwsgierigheid.
+
+3 verhalen vertellen:
+Persoonlijk: wie was je → wat veranderde → wie ben je nu?
+Product: wat deden de producten voor jou?
+Business: waarom dit model, wat heeft het gebracht?
+
+Lifestyle = beste marketing. Laat je leven zien, mensen kopen mensen.
+Stories (IG/FB/TikTok) = krachtigste gratis wervingsinstrument.`,
+};
+
+// Haal alleen relevante kennisbank-secties op
+export function getKennisbankVoorVraag(vraagType: VraagType): string {
+  if (vraagType === "algemeen") {
+    // Bij algemene vragen: kern + korte samenvatting
+    return KERN;
+  }
+
+  // Specifieke vraag: kern + relevante sectie
+  const sectie = SECTIES[vraagType] || "";
+  return KERN + sectie;
 }

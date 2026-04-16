@@ -30,6 +30,35 @@ const SNELLE_OPTIES: SnelleOptie[] = [
   { icoon: "🎯", labelKey: "coach.snel.closing", berichtKey: "coach.snel.closing.bericht" },
 ];
 
+// Gratis eerste antwoorden — geen API call nodig!
+// De coach vraagt door zodat het 2e bericht (met context) wél naar de API gaat
+const GRATIS_ANTWOORDEN: Record<string, Record<string, string>> = {
+  "coach.snel.dm.bericht": {
+    nl: "Top! Voor wie wil je een DM schrijven? Vertel me even:\n\n1. Hoe heet diegene?\n2. Hoe kennen jullie elkaar?\n3. Heb je al eerder over de business gepraat?",
+    en: "Great! Who do you want to write a DM for? Tell me:\n\n1. What's their name?\n2. How do you know each other?\n3. Have you talked about the business before?",
+  },
+  "coach.snel.bezwaar.bericht": {
+    nl: "Oké, welk bezwaar krijg je? Vertel me even:\n\n1. Wat zegt de persoon precies?\n2. In welke fase van het gesprek kwam dit?\n3. Denk je dat er iets anders achter zit?",
+    en: "Okay, what objection are you getting? Tell me:\n\n1. What exactly did they say?\n2. At what point in the conversation?\n3. Do you think there's something else behind it?",
+  },
+  "coach.snel.followup.bericht": {
+    nl: "Goed! Vertel me even over deze persoon:\n\n1. Hoe heet diegene?\n2. Wat was jullie laatste contact?\n3. Hoe reageerde hij/zij toen?",
+    en: "Good! Tell me about this person:\n\n1. What's their name?\n2. What was your last contact?\n3. How did they respond?",
+  },
+  "coach.snel.accountability.bericht": {
+    nl: "Laten we even eerlijk kijken. Vertel me:\n\n1. Hoeveel mensen heb je deze week gesproken?\n2. Hoeveel uitnodigingen verstuurd?\n3. Waar loop je tegenaan?",
+    en: "Let's take an honest look. Tell me:\n\n1. How many people did you talk to this week?\n2. How many invitations sent?\n3. Where are you stuck?",
+  },
+  "coach.snel.motivatie.bericht": {
+    nl: "Ik ben er voor je. Vertel me even:\n\n1. Wat maakt het lastig op dit moment?\n2. Welke dag van je 60 dagenrun ben je?\n3. Wat was je laatste succes (hoe klein ook)?",
+    en: "I'm here for you. Tell me:\n\n1. What's making it tough right now?\n2. What day of your 60-day run are you on?\n3. What was your last win (however small)?",
+  },
+  "coach.snel.closing.bericht": {
+    nl: "Goed dat je hiermee aan de slag gaat! Vertel me:\n\n1. Over wie gaat het?\n2. Wat weten ze al van het plan?\n3. Hebben ze al interesse getoond of twijfelen ze nog?",
+    en: "Great that you're working on this! Tell me:\n\n1. Who is it about?\n2. What do they already know?\n3. Have they shown interest or are they still hesitant?",
+  },
+};
+
 // Berichten per taal voor snelle opties
 const SNELLE_BERICHTEN: Record<string, Record<string, string>> = {
   "coach.snel.dm.bericht": {
@@ -191,6 +220,45 @@ export function ChatVenster({
 
   function getSnelBericht(key: string): string {
     return SNELLE_BERICHTEN[key]?.[taal] || SNELLE_BERICHTEN[key]?.["nl"] || "";
+  }
+
+  // Gratis eerste antwoord: geen API call, coach vraagt door
+  async function stuurSnelStart(berichtKey: string) {
+    const berichtTekst = getSnelBericht(berichtKey);
+    if (!berichtTekst.trim() || laden) return;
+
+    const userBericht: ChatBericht = {
+      role: "user",
+      content: berichtTekst,
+      timestamp: new Date().toISOString(),
+    };
+
+    const gratisAntwoord = GRATIS_ANTWOORDEN[berichtKey]?.[taal]
+      || GRATIS_ANTWOORDEN[berichtKey]?.["nl"]
+      || "";
+
+    const coachBericht: ChatBericht = {
+      role: "assistant",
+      content: gratisAntwoord,
+      timestamp: new Date().toISOString(),
+    };
+
+    const bijgewerkt = [userBericht, coachBericht];
+    setBerichten(bijgewerkt);
+
+    // Sla op in DB met auto-titel
+    const autoTitel = berichtTekst.length > 40
+      ? berichtTekst.substring(0, 37) + "..."
+      : berichtTekst;
+
+    await supabase
+      .from("ai_gesprekken")
+      .update({
+        berichten: bijgewerkt,
+        titel: autoTitel,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", gesprekId);
   }
 
   async function verwijderBericht(index: number) {
@@ -360,7 +428,7 @@ export function ChatVenster({
               {SNELLE_OPTIES.map((optie) => (
                 <button
                   key={optie.labelKey}
-                  onClick={() => stuurBericht(getSnelBericht(optie.berichtKey))}
+                  onClick={() => stuurSnelStart(optie.berichtKey)}
                   className="flex flex-col items-center gap-2 p-4 bg-cm-surface-2 border border-cm-border rounded-xl text-cm-white hover:border-cm-gold-dim hover:text-cm-gold transition-colors"
                 >
                   <span className="text-2xl">{optie.icoon}</span>
