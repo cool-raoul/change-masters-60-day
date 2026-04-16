@@ -3,6 +3,7 @@ import { differenceInDays } from "date-fns";
 import KopieerLink from "@/components/team/KopieerLink";
 import { TeamBoom } from "@/components/team/TeamBoom";
 import { PremiumToggleKnop } from "@/components/team/PremiumToggleKnop";
+import { RolToggleKnop } from "@/components/team/RolToggleKnop";
 import Link from "next/link";
 import { getServerTaal, v } from "@/lib/i18n/server";
 
@@ -19,6 +20,7 @@ interface TeamLid {
   id: string;
   full_name: string;
   email: string;
+  role: "leider" | "lid";
   onboarding_klaar: boolean;
   created_at: string;
   run_startdatum: string | null;
@@ -32,7 +34,7 @@ async function haalTeamBoomOp(supabase: any, userId: string, diepte: number = 0,
 
   const { data: directeleden } = await supabase
     .from("profiles")
-    .select("id, full_name, email, onboarding_klaar, created_at, run_startdatum, premium_tot")
+    .select("id, full_name, email, role, onboarding_klaar, created_at, run_startdatum, premium_tot")
     .eq("sponsor_id", userId)
     .order("created_at", { ascending: true });
 
@@ -202,17 +204,24 @@ export default async function TeamPagina({ searchParams }: { searchParams: { lid
                   <div className="hidden md:grid items-center gap-2"
                     style={{ gridTemplateColumns: "1fr repeat(5, 40px)" }}>
                     <div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <p className="text-cm-white text-sm font-medium">{lid.full_name}</p>
                         {isLeider && (
-                          <PremiumToggleKnop
-                            lidId={lid.id}
-                            isPremium={
-                              lid.premium_tot
-                                ? new Date(lid.premium_tot) >= new Date()
-                                : false
-                            }
-                          />
+                          <>
+                            <RolToggleKnop
+                              lidId={lid.id}
+                              lidNaam={lid.full_name}
+                              huidigeRol={lid.role ?? "lid"}
+                            />
+                            <PremiumToggleKnop
+                              lidId={lid.id}
+                              isPremium={
+                                lid.premium_tot
+                                  ? new Date(lid.premium_tot) >= new Date()
+                                  : false
+                              }
+                            />
+                          </>
                         )}
                       </div>
                       <p className="text-cm-white opacity-40 text-xs">{aantalKlaar}/{ONBOARDING_STAPPEN.length} stappen</p>
@@ -233,17 +242,24 @@ export default async function TeamPagina({ searchParams }: { searchParams: { lid
                   {/* Mobiel: naam + voortgangsbalk + icoontjes */}
                   <div className="md:hidden">
                     <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <p className="text-cm-white text-sm font-medium">{lid.full_name}</p>
                         {isLeider && (
-                          <PremiumToggleKnop
-                            lidId={lid.id}
-                            isPremium={
-                              lid.premium_tot
-                                ? new Date(lid.premium_tot) >= new Date()
-                                : false
-                            }
-                          />
+                          <>
+                            <RolToggleKnop
+                              lidId={lid.id}
+                              lidNaam={lid.full_name}
+                              huidigeRol={lid.role ?? "lid"}
+                            />
+                            <PremiumToggleKnop
+                              lidId={lid.id}
+                              isPremium={
+                                lid.premium_tot
+                                  ? new Date(lid.premium_tot) >= new Date()
+                                  : false
+                              }
+                            />
+                          </>
                         )}
                       </div>
                       <span className={`text-xs font-bold ${lid.onboarding_klaar ? "text-[#4ACB6A]" : "text-cm-gold"}`}>
