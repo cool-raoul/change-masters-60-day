@@ -58,9 +58,12 @@ function Stap4NamenlijstInline({
       </div>
 
       <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
-        <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom deze stap cruciaal is</p>
+        <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom minimaal 5 namen verplicht zijn</p>
         <p className="text-cm-white text-sm leading-relaxed opacity-90">
-          Geen namen = geen business. De namenlijst is je <strong className="text-cm-white">motor</strong>. Hoe meer namen, hoe meer gesprekken, hoe meer resultaten. Stel dit niet uit — elke naam telt.
+          Geen namen = geen business. Wie met minder dan 5 namen begint, staat na dag 3 stil. De statistieken zijn duidelijk: teamleden die met 20+ namen starten hebben <strong className="text-cm-white">4× meer kans</strong> op succes in de eerste 30 dagen. Begin breed — jij beslist niet voor ze, zij beslissen zelf.
+        </p>
+        <p className="text-cm-white text-sm opacity-80">
+          🎯 Doel: zo veel mogelijk namen. Minimaal 5 om verder te gaan — maar 20 is beter.
         </p>
       </div>
 
@@ -89,11 +92,9 @@ function Stap4NamenlijstInline({
       <div className="card space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-cm-gold font-semibold text-sm">Voeg namen toe</h3>
-          {toegevoegd.length > 0 && (
-            <span className="text-xs bg-green-900/40 border border-green-600/30 text-green-400 px-2 py-1 rounded-full">
-              {toegevoegd.length} toegevoegd ✓
-            </span>
-          )}
+          <span className={`text-xs px-2 py-1 rounded-full border ${toegevoegd.length >= 5 ? "bg-green-900/40 border-green-600/30 text-green-400" : "bg-amber-900/30 border-amber-600/30 text-amber-300"}`}>
+            {toegevoegd.length}/5 minimum
+          </span>
         </div>
 
         <p className="text-cm-white text-xs opacity-60 -mt-1">
@@ -153,11 +154,24 @@ function Stap4NamenlijstInline({
       )}
 
       <div className="space-y-3">
-        <button onClick={onVerder} disabled={bezig} className="btn-gold w-full py-3 text-base">
-          {toegevoegd.length === 0 ? "Overslaan en verder →" : `${toegevoegd.length} naam${toegevoegd.length > 1 ? "en" : ""} toegevoegd — verder →`}
+        {toegevoegd.length < 5 && (
+          <div className="flex gap-1.5 justify-center">
+            {[1,2,3,4,5].map((n) => (
+              <div key={n} className={`h-2 flex-1 rounded-full transition-all ${n <= toegevoegd.length ? "bg-cm-gold" : "bg-cm-surface-2"}`} />
+            ))}
+          </div>
+        )}
+        <button
+          onClick={onVerder}
+          disabled={bezig || toegevoegd.length < 5}
+          className="btn-gold w-full py-3 text-base disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          {toegevoegd.length < 5
+            ? `Nog ${5 - toegevoegd.length} naam${5 - toegevoegd.length !== 1 ? "en" : ""} nodig`
+            : `${toegevoegd.length} namen toegevoegd — verder →`}
         </button>
-        {toegevoegd.length === 0 && (
-          <p className="text-center text-xs text-cm-white opacity-40">Je kunt altijd later meer namen toevoegen vanuit de namenlijst.</p>
+        {toegevoegd.length >= 5 && toegevoegd.length < 20 && (
+          <p className="text-center text-xs text-cm-white opacity-50">💡 Tip: meer namen = meer kans op succes. Je kunt altijd doorgaan via de namenlijst.</p>
         )}
       </div>
     </div>
@@ -555,14 +569,28 @@ export default function OnboardingPagina() {
                 </p>
               </div>
 
-              <div className="bg-cm-surface-2 border border-cm-gold/30 rounded-xl p-5 space-y-4">
-                <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">✦ DM Script — Warme markt (WhatsApp / Instagram)</p>
-                <div className="space-y-3 text-cm-white text-sm leading-relaxed border-l-2 border-cm-gold/30 pl-4">
-                  <p>Hey [naam] 👋</p>
-                  <p>Ik ben net gestart met iets nieuws en ik dacht meteen aan jou. Ik heb een manier gevonden om online extra inkomsten op te bouwen naast mijn gewone werk — zonder investering, zonder risico.</p>
-                  <p>Ik ben er super enthousiast over en wil het graag even met je delen.</p>
-                  <p>Heb je de komende dagen 20 minuten? Dan leg ik je alles uit in een video-gesprekje.</p>
-                  <p className="text-cm-gold font-medium">Laat het me weten! 😊</p>
+              {/* Script 1 — Persoonlijk */}
+              <div className="bg-cm-surface-2 border border-cm-gold/30 rounded-xl p-5 space-y-3">
+                <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">✦ Script 1 — Persoonlijk (bellen of voice memo)</p>
+                <div className="space-y-3 text-cm-white text-sm leading-relaxed border-l-2 border-cm-gold/30 pl-4 italic">
+                  <p>"Hey [naam], ik moest even aan je denken en daarom bel ik je.</p>
+                  <p>Ik ga over twee weken starten met iets waar ik 60 dagen echt vol voor ga. Een soort sprint, maar dan wel eentje waar ik echt impact mee wil maken.</p>
+                  <p>En toen ik nadacht met wie ik dat zou willen doen… kwam jij in me op.</p>
+                  <p>Ik weet niet of het bij je past. Maar ik weet wel dat jij iemand bent die dingen voor elkaar krijgt.</p>
+                  <p>Dus voordat ik het straks overal ga delen… wilde ik jou als eerste even meenemen.</p>
+                  <p className="not-italic text-cm-gold font-medium">Zullen we even samen zitten? Koffie, lunch of even via Zoom?"</p>
+                </div>
+              </div>
+
+              {/* Script 2 — DM / WhatsApp */}
+              <div className="bg-cm-surface-2 border border-cm-gold/30 rounded-xl p-5 space-y-3">
+                <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">✦ Script 2 — Direct & Eerlijk (WhatsApp / DM)</p>
+                <div className="space-y-3 text-cm-white text-sm leading-relaxed border-l-2 border-cm-gold/30 pl-4 italic">
+                  <p>"Oké, ik ga gewoon eerlijk zijn.</p>
+                  <p>Ik ga de komende 60 dagen iets neerzetten waar ik vol voor ga. En toen ik nadacht met wie ik dat zou willen doen… kwam jij meteen in me op.</p>
+                  <p>Omdat jij niet iemand bent die een beetje aanklooit. Als jij iets doet, doe je het goed.</p>
+                  <p>Ik ga je alles laten zien — de producten, het plan, hoe het werkt… dat komt allemaal. Maar eerst wil ik eigenlijk één ding weten:</p>
+                  <p className="not-italic text-cm-gold font-medium">Stel dat alles klopt, stel dat je voelt: dit past bij mij — zou je dan zeggen: hier wil ik bij zijn?"</p>
                 </div>
               </div>
 
@@ -570,11 +598,11 @@ export default function OnboardingPagina() {
                 <h3 className="text-cm-gold font-semibold text-sm">Hoe gebruik je dit?</h3>
                 <ul className="space-y-2">
                   {[
-                    "Vervang [naam] door de echte naam",
-                    "Stuur via WhatsApp, Instagram DM of ander platform",
+                    "Vervang [naam] door de echte naam — persoonlijk werkt altijd beter",
+                    "Bellen of voice memo werkt sterker dan tekst",
                     "Wacht rustig op reactie — dring nooit aan",
-                    "Zeggen ze ja? Plan het gesprekje met je sponsor erbij",
-                    "Meer scripts vind je in de Scripts bibliotheek",
+                    "Zeggen ze ja? Plan het gesprekje samen met je sponsor",
+                    "De AI Coach schrijft een persoonlijk DM voor elk contact op je lijst",
                   ].map((tip, i) => (
                     <li key={i} className="flex gap-2 text-sm text-cm-white opacity-80">
                       <span className="text-cm-gold flex-shrink-0 mt-0.5">✓</span>{tip}
@@ -651,7 +679,7 @@ export default function OnboardingPagina() {
                   <h3 className="text-cm-gold font-semibold">Jouw AI Coach staat klaar</h3>
                 </div>
                 <p className="text-cm-white text-sm leading-relaxed opacity-80">
-                  De AI Coach is gebouwd op basis van 30 jaar gecombineerde ervaring in aanbevelingsmarketing. Na het opslaan van je doelen open je de coach direct — jouw krachtigste hulpmiddel naast je sponsor.
+                  De AI Coach is gebouwd op basis van 60 jaar gecombineerde ervaring in aanbevelingsmarketing. Na het opslaan van je doelen open je de coach direct — jouw krachtigste hulpmiddel naast je sponsor.
                 </p>
                 <ul className="space-y-1.5">
                   {[

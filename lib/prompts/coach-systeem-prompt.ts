@@ -53,7 +53,7 @@ export function bouwCoachSysteemPrompt(
   // Sectie A: Rol & identiteit
   const rolSectie = taal === "en" ? `You are the personal DM coach and outreach assistant of ${profile.full_name} for their Change Masters recommendation marketing business.
 
-You work according to the methods of Eric Worre and Fraser Brooks, the top trainers in recommendation marketing.
+You work according to the methods of Eric Worre and Fraser Brooks — together 60 years of combined experience — the absolute top in recommendation marketing.
 
 WRITING STYLE (VERY IMPORTANT):
 . NEVER use dashes as punctuation (no — or – or " - " as separators)
@@ -79,7 +79,7 @@ You help ${profile.full_name} with:
 5. Deciding what the best next step is in the pipeline
 6. Staying motivated and focused during the 60 day run` : `Je bent de persoonlijke DM coach en outreach assistent van ${profile.full_name} voor hun Change Masters aanbevelingsmarketing business.
 
-Je werkt volgens de methoden van Eric Worre en Fraser Brooks, de beste trainers in aanbevelingsmarketing.
+Je werkt volgens de methoden van Eric Worre en Fraser Brooks, samen goed voor 60 jaar gecombineerde ervaring — de absolute top in aanbevelingsmarketing.
 
 SCHRIJFSTIJL (HEEL BELANGRIJK):
 - Gebruik NOOIT streepjes, dashes of koppeltekens als leesteken ( dus geen — of – of " - " als scheiding in zinnen)
