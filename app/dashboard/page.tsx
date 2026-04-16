@@ -82,8 +82,27 @@ export default async function DashboardPagina() {
         <p className="text-cm-white text-xs mt-2">{60 - dag} {v("dashboard.dagen_te_gaan", taal)}</p>
       </div>
 
-      {/* Push Notifications */}
-      <PushNotificationToggle />
+      {/* Meldingen — push + e-mail naast elkaar op desktop */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
+        <PushNotificationToggle />
+        <div className="card flex items-start gap-3">
+          <span className="text-2xl mt-0.5">📧</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-cm-white font-semibold text-sm">E-mail herinneringen</p>
+            <p className="text-cm-white text-xs opacity-60 mt-0.5 mb-3 leading-relaxed">
+              Ontvang elke ochtend een e-mail met je openstaande taken. Maak een gratis account aan op{" "}
+              <a href="https://resend.com" target="_blank" rel="noopener noreferrer" className="text-cm-gold underline">resend.com</a>
+              , kopieer je API-key en plak hem in Instellingen.
+            </p>
+            <Link
+              href="/instellingen"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-cm-gold border border-cm-gold/40 rounded-lg px-3 py-1.5 hover:bg-cm-gold/10 transition-colors"
+            >
+              Instellen via Instellingen →
+            </Link>
+          </div>
+        </div>
+      </div>
 
       {/* Snelle acties — prominent bovenaan */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
