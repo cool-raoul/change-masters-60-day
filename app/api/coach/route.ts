@@ -132,10 +132,11 @@ export async function POST(request: Request) {
           }
         });
 
-        stream.on("error", (err) => {
-          console.error("Stream fout:", err);
+        stream.on("error", (err: any) => {
+          const foutMsg = err?.message || err?.error?.message || JSON.stringify(err) || "onbekend";
+          console.error("Stream fout:", foutMsg);
           try {
-            controller.enqueue(encoder.encode("\n\n[Fout bij het genereren van antwoord]"));
+            controller.enqueue(encoder.encode(`\n\n[Coach fout: ${foutMsg}]`));
             controller.close();
           } catch {
             // Controller was al gesloten
