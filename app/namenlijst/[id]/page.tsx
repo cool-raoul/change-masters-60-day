@@ -58,23 +58,41 @@ export default async function ProspectDetailPagina({
         .order("updated_at", { ascending: false }),
       supabase
         .from("profiles")
-        .select("sponsor_id")
+        .select("sponsor_id, role")
         .eq("id", user.id)
         .single(),
     ]);
 
   if (!prospect) notFound();
 
-  // Haal sponsor naam op via sponsor_id — fallback op Ramon Sant (top van stamboom)
+  // Haal sponsor naam op via sponsor_id
   const sponsorId = (eigenProfiel as any)?.sponsor_id;
-  let sponsorNaam: string = "Ramon Sant";
+  const eigenRol = (eigenProfiel as any)?.role;
+  let sponsorNaam: string = "";
+
   if (sponsorId) {
+    // Gebruiker heeft een gekoppelde sponsor → gebruik die naam
     const { data: sponsorProfiel } = await supabase
       .from("profiles")
       .select("full_name")
       .eq("id", sponsorId)
       .single();
-    sponsorNaam = sponsorProfiel?.full_name ?? "Ramon Sant";
+    sponsorNaam = sponsorProfiel?.full_name ?? "";
+  } else if (eigenRol === "leider") {
+    // Leider (Raoul/Gaby) zit bovenaan de stamboom → hun sponsor is Ramon Sant
+    sponsorNaam = "Ramon Sant";
+  } else {
+    // Teamlid zonder sponsor_id → terugvallen op de leider(s)
+    const { data: leiders } = await supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("role", "leider")
+      .order("created_at", { ascending: true });
+    if (leiders && leiders.length > 0) {
+      sponsorNaam = leiders.map((l: { full_name: string }) => l.full_name).join(" / ");
+    } else {
+      sponsorNaam = "Ramon Sant";
+    }
   }
 
   const faseInfo = PIPELINE_FASEN.find((f) => f.fase === prospect.pipeline_fase);
