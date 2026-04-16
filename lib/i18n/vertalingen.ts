@@ -328,12 +328,12 @@ export const t: Vertalingen = {
     es: "ELEVA Mentor", de: "ELEVA Mentor", pt: "ELEVA Mentor",
   },
   "coach.subtitel": {
-    nl: "Jouw persoonlijke mentor voor DM's, bezwaren en closing \u2014 altijd klaar",
-    en: "Your personal mentor for DMs, objections and closing \u2014 always ready",
-    fr: "Ton mentor personnel pour DMs, objections et closing \u2014 toujours pr\u00eat",
-    es: "Tu mentor personal para DMs, objeciones y cierre \u2014 siempre listo",
-    de: "Dein pers\u00f6nlicher Mentor f\u00fcr DMs, Einw\u00e4nde und Closing \u2014 immer bereit",
-    pt: "Seu mentor pessoal para DMs, obje\u00e7\u00f5es e fechamento \u2014 sempre pronto",
+    nl: "Jouw persoonlijke mentor voor al jouw vragen omtrent deze business",
+    en: "Your personal mentor for all your questions about this business",
+    fr: "Ton mentor personnel pour toutes tes questions sur ce business",
+    es: "Tu mentor personal para todas tus preguntas sobre este negocio",
+    de: "Dein pers\u00f6nlicher Mentor f\u00fcr alle deine Fragen zu diesem Business",
+    pt: "Seu mentor pessoal para todas as suas perguntas sobre este neg\u00f3cio",
   },
   "coach.wat_kan": {
     nl: "Wat de ELEVA Mentor o.a. voor jou kan doen?", en: "What the ELEVA Mentor can do for you?",
