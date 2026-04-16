@@ -11,7 +11,6 @@ import { OnboardingChecklist } from "@/components/namenlijst/OnboardingChecklist
 import { DriewegGesprekInklapbaar } from "@/components/namenlijst/DriewegGesprek";
 import { ProspectVerwijderKnop } from "@/components/namenlijst/ProspectVerwijderKnop";
 import { CoachGesprekkenInklapbaar } from "@/components/namenlijst/CoachGesprekkenInklapbaar";
-import { AantekeningenInklapbaar } from "@/components/namenlijst/AantekeningenInklapbaar";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { Locale } from "date-fns";
 
@@ -177,8 +176,6 @@ export default async function ProspectDetailPagina({
             prospect={prospect}
             userId={user.id}
           />
-
-          <AantekeningenInklapbaar prospectId={id} notities={prospect.notities} />
 
           {/* 3-weg gesprek — inklapbaar */}
           <DriewegGesprekInklapbaar

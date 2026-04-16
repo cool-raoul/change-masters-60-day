@@ -86,6 +86,8 @@ function LogItem({ log, index, totaal, v, datumLocale }: { log: ContactLog; inde
 export function ContactLogLijst({ contactLogs }: Props) {
   const { v, taal } = useTaal();
   const datumLocale = DATE_LOCALES[taal] || nl;
+  const [open, setOpen] = useState(false);
+
   if (contactLogs.length === 0) {
     return (
       <div className="card text-center py-8">
@@ -100,15 +102,27 @@ export function ContactLogLijst({ contactLogs }: Props) {
 
   return (
     <div className="card space-y-3">
-      <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
-        {v("contactlog.titel")} ({contactLogs.length})
-      </h2>
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="w-full flex items-center justify-between text-left"
+      >
+        <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
+          {v("contactlog.titel")} ({contactLogs.length})
+        </h2>
+        <span
+          className={`text-cm-gold text-lg transition-transform ${open ? "rotate-180" : ""}`}
+        >
+          ⌄
+        </span>
+      </button>
 
-      <div className="space-y-3">
-        {contactLogs.map((log, i) => (
-          <LogItem key={log.id} log={log} index={i} totaal={contactLogs.length} v={v} datumLocale={datumLocale} />
-        ))}
-      </div>
+      {open && (
+        <div className="space-y-3">
+          {contactLogs.map((log, i) => (
+            <LogItem key={log.id} log={log} index={i} totaal={contactLogs.length} v={v} datumLocale={datumLocale} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
