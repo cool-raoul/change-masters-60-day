@@ -1,23 +1,20 @@
-import Anthropic from "@anthropic-ai/sdk";
+import OpenAI from "openai";
 import { createClient } from "@/lib/supabase/server";
 import { bouwCoachSysteemPrompt } from "@/lib/prompts/coach-systeem-prompt";
 import { detecteerVraagType } from "@/lib/knowledge/coach-boeken";
 import { ChatBericht } from "@/lib/supabase/types";
 
-// Verleng Vercel timeout (Pro: tot 300s, Hobby: max 10s)
+// Verleng Vercel timeout
 export const maxDuration = 60;
-
-// Dagelijks limiet per gebruiker (bespaart kosten)
-const DAGELIJKS_BERICHT_LIMIET = 50;
 
 export async function POST(request: Request) {
   try {
-    const apiKey = process.env.CM_CLAUDE_API_KEY;
+    const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
-      return new Response("CM_CLAUDE_API_KEY niet ingesteld in Vercel", { status: 500 });
+      return new Response("OPENAI_API_KEY niet ingesteld in Vercel", { status: 500 });
     }
 
-    const anthropic = new Anthropic({ apiKey });
+    const openai = new OpenAI({ apiKey });
 
     const supabase = await createClient();
     const {
@@ -44,18 +41,6 @@ export async function POST(request: Request) {
     if (!berichten || berichten.length === 0) {
       return new Response("Geen berichten", { status: 400 });
     }
-
-    // --- DAGELIJKS LIMIET CHECK ---
-    const vandaag = new Date().toISOString().split("T")[0];
-    const { count } = await supabase
-      .from("ai_gesprekken")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", user.id)
-      .gte("updated_at", vandaag);
-
-    // Tel berichten van vandaag over alle gesprekken
-    // Simpele check: als er meer dan X gesprekken vandaag zijn bijgewerkt
-    // Meer geavanceerd: tel echte berichten (maar dat is duurder)
 
     // Haal profiel op
     const { data: profile } = await supabase
@@ -97,50 +82,48 @@ export async function POST(request: Request) {
       }
     }
 
-    // --- SLIM: Detecteer vraagtype voor gerichte kennisbank ---
+    // Detecteer vraagtype voor slimme prompt selectie
     const vraagType = detecteerVraagType(berichten);
 
-    // Bouw system prompt (alleen relevante secties!)
+    // Bouw system prompt (alleen relevante secties)
     const systeemPrompt = bouwCoachSysteemPrompt(
       profile, whyProfile, prospect, taal || "nl", vraagType
     );
 
-    // --- HISTORY TRIMMING: max 8 berichten meesturen ---
-    // Bespaart tokens bij lange gesprekken
+    // History trimming: max 8 berichten meesturen
     const getrimdeBerichten = berichten.length > 8
       ? berichten.slice(-8)
       : berichten;
 
-    const apiMessages = getrimdeBerichten.map((b) => ({
-      role: b.role as "user" | "assistant",
-      content: b.content,
-    }));
+    const apiMessages = [
+      { role: "system" as const, content: systeemPrompt },
+      ...getrimdeBerichten.map((b) => ({
+        role: b.role as "user" | "assistant",
+        content: b.content,
+      })),
+    ];
 
-    // Event-based streaming met prompt caching
-    const stream = anthropic.messages.stream({
-      model: "claude-sonnet-4-6",
+    // OpenAI streaming
+    const stream = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
       max_tokens: 800,
-      system: [
-        {
-          type: "text" as const,
-          text: systeemPrompt,
-          cache_control: { type: "ephemeral" as const },
-        },
-      ],
       messages: apiMessages,
+      stream: true,
     });
 
     const encoder = new TextEncoder();
     let volledigAntwoord = "";
 
     const readable = new ReadableStream({
-      start(controller) {
-        stream.on("text", (text) => {
-          volledigAntwoord += text;
-          controller.enqueue(encoder.encode(text));
-        });
-
-        stream.on("finalMessage", () => {
+      async start(controller) {
+        try {
+          for await (const chunk of stream) {
+            const text = chunk.choices[0]?.delta?.content || "";
+            if (text) {
+              volledigAntwoord += text;
+              controller.enqueue(encoder.encode(text));
+            }
+          }
           controller.close();
 
           // Sla antwoord op in DB (fire-and-forget)
@@ -162,10 +145,8 @@ export async function POST(request: Request) {
                 .eq("user_id", user.id)
             ).catch((err: any) => console.error("DB save fout:", err));
           }
-        });
-
-        stream.on("error", (err: any) => {
-          const foutMsg = err?.message || err?.error?.message || JSON.stringify(err) || "onbekend";
+        } catch (err: any) {
+          const foutMsg = err?.message || JSON.stringify(err) || "onbekend";
           console.error("Stream fout:", foutMsg);
           try {
             controller.enqueue(encoder.encode(`\n\n[Coach fout: ${foutMsg}]`));
@@ -173,7 +154,7 @@ export async function POST(request: Request) {
           } catch {
             // Controller was al gesloten
           }
-        });
+        }
       },
     });
 

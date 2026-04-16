@@ -1,53 +1,58 @@
-import Anthropic from "@anthropic-ai/sdk";
+import OpenAI from "openai";
 import { bouwWhyCoachSysteemPrompt } from "@/lib/prompts/coach-systeem-prompt";
 import { ChatBericht } from "@/lib/supabase/types";
 
+export const maxDuration = 60;
+
 export async function POST(request: Request) {
   try {
-    const apiKey = process.env.CM_CLAUDE_API_KEY;
+    const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
-      console.error("CM_CLAUDE_API_KEY niet gevonden in environment");
-      return new Response("API key niet geconfigureerd", { status: 500 });
+      return new Response("OPENAI_API_KEY niet ingesteld in Vercel", { status: 500 });
     }
 
-    const anthropic = new Anthropic({ apiKey });
+    const openai = new OpenAI({ apiKey });
 
     const body = await request.json();
     const { berichten, naam, taal }: { berichten: ChatBericht[]; naam: string; taal?: string } = body;
 
     const systeemPrompt = bouwWhyCoachSysteemPrompt(naam, taal || "nl");
 
-    const apiMessages = berichten.map((b) => ({
-      role: b.role as "user" | "assistant",
-      content: b.content,
-    }));
+    const apiMessages = [
+      { role: "system" as const, content: systeemPrompt },
+      ...berichten.map((b) => ({
+        role: b.role as "user" | "assistant",
+        content: b.content,
+      })),
+    ];
 
-    const stream = anthropic.messages.stream({
-      model: "claude-sonnet-4-6",
+    const stream = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
       max_tokens: 1000,
-      system: [
-        {
-          type: "text" as const,
-          text: systeemPrompt,
-          cache_control: { type: "ephemeral" as const },
-        },
-      ],
       messages: apiMessages,
+      stream: true,
     });
 
     const encoder = new TextEncoder();
     const readable = new ReadableStream({
       async start(controller) {
-        stream.on("text", (text) => {
-          controller.enqueue(encoder.encode(text));
-        });
-        stream.on("finalMessage", () => {
+        try {
+          for await (const chunk of stream) {
+            const text = chunk.choices[0]?.delta?.content || "";
+            if (text) {
+              controller.enqueue(encoder.encode(text));
+            }
+          }
           controller.close();
-        });
-        stream.on("error", (err: any) => {
-          console.error("Stream error message:", err?.error?.error?.message || err?.message || JSON.stringify(err));
-          controller.error(err);
-        });
+        } catch (err: any) {
+          console.error("WHY stream fout:", err?.message || err);
+          try {
+            controller.enqueue(encoder.encode(`\n\n[Coach fout: ${err?.message || "onbekend"}]`));
+            controller.close();
+          } catch {
+            // al gesloten
+          }
+        }
       },
     });
 
@@ -57,8 +62,8 @@ export async function POST(request: Request) {
         "Transfer-Encoding": "chunked",
       },
     });
-  } catch (error) {
-    console.error("WHY Coach API fout:", error);
-    return new Response("Er is iets misgegaan", { status: 500 });
+  } catch (error: any) {
+    console.error("WHY Coach API fout:", error?.message || error);
+    return new Response(`Coach fout: ${error?.message || "onbekend"}`, { status: error?.status || 500 });
   }
 }
