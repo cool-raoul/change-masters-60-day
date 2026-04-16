@@ -22,6 +22,7 @@ export function Sidebar({ isLeider = false }: { isLeider?: boolean }) {
     { href: "/scripts", labelKey: "nav.scripts", icoon: "📋" },
     { href: "/statistieken", labelKey: "nav.statistieken", icoon: "📊" },
     { href: "/herinneringen", labelKey: "nav.herinneringen", icoon: "🔔" },
+    { href: "/team", labelKey: "nav.team", icoon: "🏆" },
   ];
 
   // Sluit menu bij navigatie
@@ -88,29 +89,10 @@ export function Sidebar({ isLeider = false }: { isLeider?: boolean }) {
         })}
 
         {isLeider && (
-          <div className="pt-3 mt-3 border-t border-cm-gold/20">
-            <p className="text-xs text-cm-gold/60 uppercase tracking-wider px-3 mb-2 flex items-center gap-1">
+          <div className="px-3 py-1.5 mt-1">
+            <span className="text-xs text-cm-gold/70 font-medium flex items-center gap-1">
               <span>👑</span> Leider
-            </p>
-            {[
-              { href: "/team", labelKey: "nav.team", icoon: "🏆" },
-            ].map((item) => {
-              const actief = pathname.startsWith(item.href);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-                    actief
-                      ? "bg-gold-subtle border border-gold-subtle text-cm-gold"
-                      : "text-cm-gold opacity-70 hover:opacity-100 hover:bg-cm-surface-2"
-                  }`}
-                >
-                  <span className="text-base">{item.icoon}</span>
-                  {v(item.labelKey)}
-                </Link>
-              );
-            })}
+            </span>
           </div>
         )}
 
