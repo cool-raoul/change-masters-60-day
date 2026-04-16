@@ -179,7 +179,7 @@ const PRODUCT_STAPPEN: StapConfig[] = [
     context: "Stuur dit aan [naam] vóór je het groepje aanmaakt",
     type: "bericht",
     bericht:
-      "Hey [naam]! Ik maak even een groepje aan met Gaby, want ik kan het zelf nog niet zo goed uitleggen 😄 Zij doet dit al 9 jaar en heeft zelf ook super mooi resultaat behaald — ze kan met je mee kijken en al je vragen beantwoorden 🥰",
+      "Hey [naam]! Ik maak even een groepje aan met [naam sponsor], want ik kan het zelf nog niet zo goed uitleggen 😄 Zij doet dit al een tijdje en heeft zelf ook super mooi resultaat behaald — ze kan met je mee kijken en al je vragen beantwoorden 🥰",
   },
   {
     nummer: 2,
@@ -187,7 +187,7 @@ const PRODUCT_STAPPEN: StapConfig[] = [
     context: "Stuur dit in het nieuwe groepje — edifieer de sponsor eerst",
     type: "bericht",
     bericht:
-      "Hi [naam prospect]! 😊 Dit is Gaby — mijn vriendin en mentor. Ze doet dit al 9 jaar en heeft zelf fantastische resultaten behaald. Ze helpt mij nu ook en heeft al heel veel mensen begeleid met precies wat jij zoekt 🥰\n\nGaby, dit is [naam prospect]. Ze is op zoek naar [situatie]. Wil jij haar even verder helpen? 🙏",
+      "Hi [naam prospect]! 😊 Dit is [naam sponsor] — mijn vriendin en mentor. Ze heeft zelf fantastische resultaten behaald. Ze helpt mij nu ook en heeft al heel veel mensen begeleid met precies wat jij zoekt 🥰\n\n[naam sponsor], dit is [naam prospect]. Ze is op zoek naar [situatie]. Wil jij haar even verder helpen? 🙏",
   },
   {
     nummer: 3,
@@ -228,7 +228,7 @@ const BUSINESS_STAPPEN: StapConfig[] = [
     context: "Stuur dit aan [naam] vóór je het groepje aanmaakt",
     type: "bericht",
     bericht:
-      "Hey [naam]! Ik maak even een groepje aan met Raoul, want ik kan het zelf nog niet zo goed uitleggen 😄 Hij doet dit al jaren en heeft zelf een mooie business opgebouwd — hij kan met je mee kijken en al je vragen beantwoorden 👍🏽",
+      "Hey [naam]! Ik maak even een groepje aan met [naam sponsor], want ik kan het zelf nog niet zo goed uitleggen 😄 Hij/zij doet dit al een tijdje en heeft zelf een mooie business opgebouwd — hij/zij kan met je mee kijken en al je vragen beantwoorden 👍🏽",
   },
   {
     nummer: 2,
@@ -236,7 +236,7 @@ const BUSINESS_STAPPEN: StapConfig[] = [
     context: "Stuur dit in het nieuwe groepje — edifieer de sponsor eerst",
     type: "bericht",
     bericht:
-      "Hi [naam prospect]! 😊 Dit is Raoul — hij doet dit al jaren en heeft zelf een mooie business opgebouwd. Hij helpt mij nu ook en heeft al veel mensen begeleid die precies op zoek waren naar wat jij zoekt 💪🏽\n\nRaoul, dit is [naam prospect]. Ze is op zoek naar [situatie]. Wil jij haar even meenemen in hoe dit werkt? 🙏",
+      "Hi [naam prospect]! 😊 Dit is [naam sponsor] — mijn mentor. Hij/zij heeft zelf een mooie business opgebouwd. Hij/zij helpt mij nu ook en heeft al veel mensen begeleid die precies op zoek waren naar wat jij zoekt 💪🏽\n\n[naam sponsor], dit is [naam prospect]. Ze is op zoek naar [situatie]. Wil jij haar even meenemen in hoe dit werkt? 🙏",
   },
   {
     nummer: 3,
