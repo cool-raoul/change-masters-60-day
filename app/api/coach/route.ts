@@ -90,11 +90,17 @@ export async function POST(request: Request) {
       content: b.content,
     }));
 
-    // Event-based streaming — bewezen werkend op Vercel
+    // Event-based streaming met prompt caching (90% goedkoper na 1e bericht)
     const stream = anthropic.messages.stream({
       model: "claude-sonnet-4-6",
-      max_tokens: 1500,
-      system: systeemPrompt,
+      max_tokens: 1000,
+      system: [
+        {
+          type: "text" as const,
+          text: systeemPrompt,
+          cache_control: { type: "ephemeral" as const },
+        },
+      ],
       messages: apiMessages,
     });
 
