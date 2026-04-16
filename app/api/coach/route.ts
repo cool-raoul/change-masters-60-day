@@ -84,8 +84,8 @@ export async function POST(request: Request) {
       content: b.content,
     }));
 
-    // Stream via async iterable — betrouwbaarder dan event-based aanpak
-    const stream = await anthropic.messages.stream({
+    // Stream via async iterable — NIET awaiten, anders wacht het op volledige response
+    const stream = anthropic.messages.stream({
       model: "claude-3-5-haiku-20241022",
       max_tokens: 1500,
       system: systeemPrompt,
