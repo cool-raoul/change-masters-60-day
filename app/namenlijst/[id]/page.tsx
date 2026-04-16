@@ -8,6 +8,7 @@ import { ProspectActieForm } from "@/components/namenlijst/ProspectActieForm";
 import { ContactLogLijst } from "@/components/namenlijst/ContactLogLijst";
 import { ContactgegevensForm } from "@/components/namenlijst/ContactgegevensForm";
 import { OnboardingChecklist } from "@/components/namenlijst/OnboardingChecklist";
+import { DriewegGesprek } from "@/components/namenlijst/DriewegGesprek";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { Locale } from "date-fns";
 
@@ -134,6 +135,20 @@ export default async function ProspectDetailPagina({
             prospect={prospect}
             userId={user.id}
           />
+
+          {/* 3-weg gesprek */}
+          <div className="card space-y-3">
+            <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
+              💬 3-weg gesprek scripts
+            </h2>
+            <p className="text-cm-white text-xs opacity-50">
+              Stap-voor-stap scripts om een groepje aan te maken met je sponsor.
+            </p>
+            <DriewegGesprek
+              prospectNaam={prospect.volledige_naam}
+              prospectSituatie={prospect.notities || undefined}
+            />
+          </div>
 
           {/* AI Coach gesprekken */}
           <div className="card space-y-3">

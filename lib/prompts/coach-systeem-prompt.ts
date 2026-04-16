@@ -24,6 +24,7 @@ const VRAAG_NAAR_SCRIPT_CATEGORIE: Record<VraagType, string[]> = {
   motivatie: [],
   accountability: [],
   social: [],
+  drieweg: [],
   algemeen: ["uitnodiging", "bezwaar", "followup", "sluiting"],
 };
 

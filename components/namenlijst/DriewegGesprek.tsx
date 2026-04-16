@@ -1,0 +1,319 @@
+"use client";
+
+import { useState } from "react";
+
+interface Props {
+  prospectNaam: string;
+  prospectSituatie?: string;
+}
+
+type TabType = "product" | "business";
+
+interface StapConfig {
+  nummer: number;
+  titel: string;
+  context: string;
+  type: "bericht" | "terug" | "follow-up";
+  bericht?: string;
+  berichten?: { label: string; tekst: string }[];
+}
+
+function vervangVariabelen(
+  tekst: string,
+  voornaam: string,
+  volledigeNaam: string,
+  situatie: string | undefined
+): string {
+  let result = tekst;
+  result = result.replace(/\[naam prospect\]/g, volledigeNaam);
+  result = result.replace(/\[naam\]/g, voornaam);
+  if (situatie) {
+    result = result.replace(/\[situatie\]/g, situatie);
+  }
+  return result;
+}
+
+function KopieKnop({ tekst }: { tekst: string }) {
+  const [gekopieerd, setGekopieerd] = useState(false);
+
+  async function kopieer() {
+    await navigator.clipboard.writeText(tekst);
+    setGekopieerd(true);
+    setTimeout(() => setGekopieerd(false), 2000);
+  }
+
+  return (
+    <button
+      onClick={kopieer}
+      className={`btn-gold text-xs px-3 py-1.5 transition-all ${gekopieerd ? "opacity-80" : ""}`}
+    >
+      {gekopieerd ? "✓ Gekopieerd!" : "Kopieer"}
+    </button>
+  );
+}
+
+function WhatsAppKnop({ tekst }: { tekst: string }) {
+  return (
+    <a
+      href={`https://wa.me/?text=${encodeURIComponent(tekst)}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-xs px-3 py-1.5 rounded-lg bg-green-900/40 border border-green-600/30 text-green-400 hover:bg-green-900/60 transition-colors"
+    >
+      WhatsApp
+    </a>
+  );
+}
+
+function BerichtBlok({
+  tekst,
+  situatie,
+  volledigeNaam,
+}: {
+  tekst: string;
+  situatie: string | undefined;
+  volledigeNaam: string;
+}) {
+  const heeftSituatiePlaceholder = tekst.includes("[situatie]");
+  const heeftSituatie = !!situatie;
+  const verwerktTekst = heeftSituatiePlaceholder && !heeftSituatie ? tekst : tekst.replace(/\[situatie\]/g, situatie || "[situatie]");
+
+  return (
+    <div className="space-y-2">
+      <div className="bg-cm-surface rounded-xl p-4 text-cm-white text-sm leading-relaxed italic border-l-2 border-cm-gold/40 whitespace-pre-wrap">
+        {heeftSituatiePlaceholder && !heeftSituatie ? (
+          <>
+            {verwerktTekst.split("[situatie]").map((deel, i, arr) => (
+              <span key={i}>
+                {deel}
+                {i < arr.length - 1 && (
+                  <span className="not-italic text-cm-white opacity-40 bg-cm-surface-2 px-1 rounded">
+                    [situatie]
+                  </span>
+                )}
+              </span>
+            ))}
+          </>
+        ) : (
+          verwerktTekst
+        )}
+      </div>
+      <div className="flex gap-2">
+        <KopieKnop tekst={verwerktTekst.replace(/\[situatie\]/g, situatie || "[situatie]")} />
+        <WhatsAppKnop tekst={verwerktTekst.replace(/\[situatie\]/g, situatie || "[situatie]")} />
+      </div>
+    </div>
+  );
+}
+
+function StapKaart({
+  stap,
+  voornaam,
+  volledigeNaam,
+  situatie,
+}: {
+  stap: StapConfig;
+  voornaam: string;
+  volledigeNaam: string;
+  situatie: string | undefined;
+}) {
+  function verwerk(tekst: string) {
+    return vervangVariabelen(tekst, voornaam, volledigeNaam, situatie);
+  }
+
+  return (
+    <div className="bg-cm-surface-2 rounded-xl p-4 space-y-3">
+      {/* Stap header */}
+      <div className="flex items-center gap-3">
+        <div className="w-7 h-7 rounded-full bg-cm-gold/20 border border-cm-gold/40 flex items-center justify-center text-cm-gold text-xs font-bold flex-shrink-0">
+          {stap.nummer}
+        </div>
+        <h3 className="text-cm-white text-sm font-semibold">{stap.titel}</h3>
+      </div>
+
+      {/* Context */}
+      <p className="text-cm-white text-xs opacity-50">{verwerk(stap.context)}</p>
+
+      {/* Inhoud per type */}
+      {stap.type === "terug" && (
+        <div className="bg-amber-900/20 border border-amber-600/30 rounded-xl p-4 text-amber-300 text-sm">
+          ⚠️ Niet meer reageren tenzij de sponsor je uitnodigt. Laat de sponsor het werk doen.
+        </div>
+      )}
+
+      {stap.type === "bericht" && stap.bericht && (
+        <BerichtBlok
+          tekst={verwerk(stap.bericht)}
+          situatie={situatie}
+          volledigeNaam={volledigeNaam}
+        />
+      )}
+
+      {stap.type === "follow-up" && stap.berichten && (
+        <div className="space-y-3">
+          {stap.berichten.map((optie, i) => {
+            const verwerktTekst = verwerk(optie.tekst);
+            return (
+              <div key={i} className="space-y-2">
+                <p className="text-cm-white text-xs opacity-50 font-medium">{optie.label}</p>
+                <div className="bg-cm-surface rounded-xl p-4 text-cm-white text-sm leading-relaxed italic border-l-2 border-cm-gold/40">
+                  {verwerktTekst}
+                </div>
+                <div className="flex gap-2">
+                  <KopieKnop tekst={verwerktTekst} />
+                  <WhatsAppKnop tekst={verwerktTekst} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+const PRODUCT_STAPPEN: StapConfig[] = [
+  {
+    nummer: 1,
+    titel: "Stap 1 — Aankondiging",
+    context: "Stuur dit aan [naam] vóór je het groepje aanmaakt",
+    type: "bericht",
+    bericht:
+      "Hey [naam]! Ik maak even een groepje aan met Gaby, want ik kan het zelf nog niet zo goed uitleggen 😄 Zij doet dit al 9 jaar en heeft zelf ook super mooi resultaat behaald — ze kan met je mee kijken en al je vragen beantwoorden 🥰",
+  },
+  {
+    nummer: 2,
+    titel: "Stap 2 — Introductie in het groepje",
+    context: "Stuur dit in het nieuwe groepje — edifieer de sponsor eerst",
+    type: "bericht",
+    bericht:
+      "Hi [naam prospect]! 😊 Dit is Gaby — mijn vriendin en mentor. Ze doet dit al 9 jaar en heeft zelf fantastische resultaten behaald. Ze helpt mij nu ook en heeft al heel veel mensen begeleid met precies wat jij zoekt 🥰\n\nGaby, dit is [naam prospect]. Ze is op zoek naar [situatie]. Wil jij haar even verder helpen? 🙏",
+  },
+  {
+    nummer: 3,
+    titel: "Stap 3 — Stap terug ⚠️",
+    context: "Nu ben jij klaar. Zeg niets meer tenzij de sponsor je vraagt. Jij = student, sponsor = expert.",
+    type: "terug",
+  },
+  {
+    nummer: 4,
+    titel: "Stap 4 — Sponsor opent",
+    context: "Dit bericht stuurt de sponsor als opening — deel dit met je sponsor als tip",
+    type: "bericht",
+    bericht:
+      "Hey [naam]! Wat leuk dat ik aan je voorgesteld word 🥰 Ik heb even gelezen wat er speelt bij jou — herkenbaar! Vertel eens, hoe lang speelt dit al bij je en wat heb je al geprobeerd? 😊",
+  },
+  {
+    nummer: 5,
+    titel: "Stap 5 — Follow-up",
+    context: "Stuur dit apart aan [naam] binnen 24 uur na het gesprek in het groepje",
+    type: "follow-up",
+    berichten: [
+      {
+        label: "Optie A",
+        tekst: "Hey [naam] 😊 Wat sprak je het meeste aan van wat je tot nu toe hebt gezien? 🥰",
+      },
+      {
+        label: "Optie B",
+        tekst: "Hey [naam] 😊 Zie je hoe dit je kan helpen om jouw doel te bereiken? 💛",
+      },
+    ],
+  },
+];
+
+const BUSINESS_STAPPEN: StapConfig[] = [
+  {
+    nummer: 1,
+    titel: "Stap 1 — Aankondiging",
+    context: "Stuur dit aan [naam] vóór je het groepje aanmaakt",
+    type: "bericht",
+    bericht:
+      "Hey [naam]! Ik maak even een groepje aan met Raoul, want ik kan het zelf nog niet zo goed uitleggen 😄 Hij doet dit al jaren en heeft zelf een mooie business opgebouwd — hij kan met je mee kijken en al je vragen beantwoorden 👍🏽",
+  },
+  {
+    nummer: 2,
+    titel: "Stap 2 — Introductie in het groepje",
+    context: "Stuur dit in het nieuwe groepje — edifieer de sponsor eerst",
+    type: "bericht",
+    bericht:
+      "Hi [naam prospect]! 😊 Dit is Raoul — hij doet dit al jaren en heeft zelf een mooie business opgebouwd. Hij helpt mij nu ook en heeft al veel mensen begeleid die precies op zoek waren naar wat jij zoekt 💪🏽\n\nRaoul, dit is [naam prospect]. Ze is op zoek naar [situatie]. Wil jij haar even meenemen in hoe dit werkt? 🙏",
+  },
+  {
+    nummer: 3,
+    titel: "Stap 3 — Stap terug ⚠️",
+    context: "Nu ben jij klaar. Zeg niets meer tenzij de sponsor je vraagt. Jij = student, sponsor = expert.",
+    type: "terug",
+  },
+  {
+    nummer: 4,
+    titel: "Stap 4 — Sponsor opent",
+    context: "Dit bericht stuurt de sponsor als opening — deel dit met je sponsor als tip",
+    type: "bericht",
+    bericht:
+      "Hey [naam]! Leuk dat ik aan je voorgesteld word 😊 Ik vertel je graag meer over hoe dit werkt — maar eerst even kennismaken! Vertel, wat doe je nu en wat zou jij willen veranderen als je helemaal eerlijk bent? 🥰",
+  },
+  {
+    nummer: 5,
+    titel: "Stap 5 — Follow-up",
+    context: "Stuur dit apart aan [naam] binnen 24 uur na het gesprek in het groepje",
+    type: "follow-up",
+    berichten: [
+      {
+        label: "Optie A",
+        tekst: "Hey [naam] 😊 Wat sprak je het meeste aan van wat je tot nu toe hebt gezien en gehoord? 🥰",
+      },
+      {
+        label: "Optie B",
+        tekst: "Hey [naam] 😊 Zie je hoe dit je kan helpen om jouw doel te bereiken? 💛",
+      },
+    ],
+  },
+];
+
+export function DriewegGesprek({ prospectNaam, prospectSituatie }: Props) {
+  const [actieveTab, setActieveTab] = useState<TabType>("product");
+
+  const voornaam = prospectNaam.split(" ")[0];
+  const stappen = actieveTab === "product" ? PRODUCT_STAPPEN : BUSINESS_STAPPEN;
+
+  return (
+    <div className="space-y-4">
+      {/* Tabs */}
+      <div className="flex gap-1 border-b border-cm-border">
+        <button
+          onClick={() => setActieveTab("product")}
+          className={`pb-2 px-1 text-sm font-medium transition-all ${
+            actieveTab === "product"
+              ? "text-cm-gold border-b-2 border-cm-gold"
+              : "text-cm-white opacity-60 hover:opacity-80"
+          }`}
+        >
+          💊 Product / Interesse
+        </button>
+        <button
+          onClick={() => setActieveTab("business")}
+          className={`pb-2 px-3 text-sm font-medium transition-all ${
+            actieveTab === "business"
+              ? "text-cm-gold border-b-2 border-cm-gold"
+              : "text-cm-white opacity-60 hover:opacity-80"
+          }`}
+        >
+          💼 Business / Opportunity
+        </button>
+      </div>
+
+      {/* Stappen */}
+      <div className="space-y-3">
+        {stappen.map((stap) => (
+          <StapKaart
+            key={stap.nummer}
+            stap={stap}
+            voornaam={voornaam}
+            volledigeNaam={prospectNaam}
+            situatie={prospectSituatie}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}

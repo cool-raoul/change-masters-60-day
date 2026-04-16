@@ -4,7 +4,7 @@
 // Bronnen: Eric Worre (Go Pro + 90 Day Run) + Fraser Brookes
 // ============================================================
 
-export type VraagType = "dm" | "bezwaar" | "followup" | "closing" | "motivatie" | "accountability" | "social" | "algemeen";
+export type VraagType = "dm" | "bezwaar" | "followup" | "closing" | "motivatie" | "accountability" | "social" | "drieweg" | "algemeen";
 
 // Detecteer het type vraag op basis van keywords
 export function detecteerVraagType(berichten: { role: string; content: string }[]): VraagType {
@@ -15,6 +15,7 @@ export function detecteerVraagType(berichten: { role: string; content: string }[
     .map((b) => b.content.toLowerCase())
     .join(" ");
 
+  if (/\b(3.?weg|drieweg|groepje|aanmaken|sponsor koppel|introduceer|edif|aankondig|presentatie.*groep|groep.*presentatie)\b/.test(recenteUserBerichten)) return "drieweg";
   if (/\b(dm|bericht|schrij|tekst|uitnodig|whatsapp|instagram|sturen)\b/.test(recenteUserBerichten)) return "dm";
   if (/\b(bezwaar|objection|geen tijd|nadenken|niet van sales|ken te weinig|geen geld|partner overleg|twijfel)\b/.test(recenteUserBerichten)) return "bezwaar";
   if (/\b(follow.?up|opvolg|stilte|geen reactie|niet gereageerd|terugkom)\b/.test(recenteUserBerichten)) return "followup";
@@ -173,6 +174,56 @@ Sponsor vraagt ALTIJD naar activiteit, niet alleen resultaten.
 Stel harde vragen. Geen zachte aanpak. Feiten vs excuses.
 "Hoeveel mensen heb je deze week daadwerkelijk gesproken?"
 "Wat was het plan en wat heb je echt gedaan?"`,
+
+  drieweg: `
+### 3-WEG GESPREK (Worre + Brooks + ELEVA stijl)
+
+KERNPRINCIPE: Jij = student, sponsor = expert. Zodra sponsor in het groepje is: stap terug.
+Geen toestemming vragen — aankondiging doen. Sponsor edifyen VOOR introductie, niet erna.
+
+FLOW PRODUCT/INTERESSE:
+Stap 1 — Aankondiging (jij aan prospect, vóór het groepje):
+"Hey [naam]! Ik maak even een groepje aan met Gaby, want ik kan het zelf nog niet zo goed uitleggen 😄 Zij doet dit al 9 jaar en heeft zelf ook super mooi resultaat behaald — ze kan met je mee kijken en al je vragen beantwoorden 🥰"
+
+Stap 2 — Introductie in het groepje (jij):
+"Hi [naam prospect]! 😊 Dit is Gaby — mijn vriendin en mentor. Ze doet dit al 9 jaar en heeft zelf fantastische resultaten behaald. Ze helpt mij nu ook en heeft al heel veel mensen begeleid met precies wat jij zoekt 🥰
+Gaby, dit is [naam prospect]. Ze is op zoek naar [situatie]. Wil jij haar even verder helpen? 🙏"
+
+Stap 3 — STAP TERUG. Zeg niets meer tenzij sponsor vraagt.
+
+Stap 4 — Sponsor opent:
+"Hey [naam]! Wat leuk dat [teamlid] ons aan elkaar koppelt 🥰 Ik heb even gelezen wat er speelt — herkenbaar! Vertel eens, hoe lang speelt dit al bij je en wat heb je al geprobeerd? 😊"
+
+Stap 5 — Follow-up (jij aan prospect, apart, binnen 24u):
+"Hey [naam] 😊 Wat sprak je het meeste aan van wat je tot nu toe hebt gezien? 🥰"
+OF: "Zie je hoe dit je kan helpen om [hun doel] te creëren? 💛"
+NOOIT: "Wat vond je ervan?" — vraagt naar mening, zet prospect als beoordelaar.
+
+FLOW BUSINESS/OPPORTUNITY:
+Stap 1 — Aankondiging (jij aan prospect, vóór het groepje):
+"Hey [naam]! Ik maak even een groepje aan met Raoul, want ik kan het zelf nog niet zo goed uitleggen 😄 Hij doet dit al jaren en heeft zelf een mooie business opgebouwd — hij kan met je mee kijken en al je vragen beantwoorden 👍🏽"
+
+Stap 2 — Introductie in het groepje (jij):
+"Hi [naam prospect]! 😊 Dit is Raoul — hij doet dit al jaren en heeft zelf een mooie business opgebouwd. Hij helpt mij nu ook en heeft al veel mensen begeleid die precies op zoek waren naar wat jij zoekt 💪🏽
+Raoul, dit is [naam prospect]. Ze is op zoek naar [situatie]. Wil jij haar even meenemen in hoe dit werkt? 🙏"
+
+Stap 3 — STAP TERUG. Zeg niets meer tenzij sponsor vraagt.
+
+Stap 4 — Sponsor opent:
+"Hey [naam]! Leuk dat [teamlid] ons aan elkaar koppelt 😊 Ik vertel je graag meer — maar eerst even kennismaken! Vertel, wat doe je nu en wat zou jij willen veranderen als je helemaal eerlijk bent? 🥰"
+
+Stap 5 — Follow-up (jij aan prospect, apart, binnen 24u):
+"Hey [naam] 😊 Wat sprak je het meeste aan van wat je tot nu toe hebt gezien en gehoord? 🥰"
+OF: "Zie je hoe dit je kan helpen om [hun doel] te bereiken? 💛"
+
+FOUTEN DIE MENSEN MAKEN:
+- Groepje aanmaken zonder aankondiging → voelt als verrassing
+- Zelf blijven praten na introductie → ondermijnt autoriteit sponsor
+- "Wat vond je ervan?" als follow-up → zet prospect als beoordelaar
+- Sponsor pitcht meteen → moet eerst rapport bouwen
+- Geen follow-up binnen 24u → momentum verloren
+
+EDITICATIE FORMULE (Worre): Wie ze zijn + Wat ze gedaan hebben + Waarom perfect voor deze persoon`,
 
   social: `
 ### SOCIAL MEDIA & ATTRACTIE
