@@ -3,12 +3,18 @@ import { createClient } from "@/lib/supabase/server";
 import { bouwCoachSysteemPrompt } from "@/lib/prompts/coach-systeem-prompt";
 import { ChatBericht } from "@/lib/supabase/types";
 
-const anthropic = new Anthropic({
-  apiKey: process.env.CM_CLAUDE_API_KEY,
-});
+// Verleng Vercel timeout (Pro: tot 300s, Hobby: max 10s)
+export const maxDuration = 60;
 
 export async function POST(request: Request) {
   try {
+    const apiKey = process.env.CM_CLAUDE_API_KEY;
+    if (!apiKey) {
+      return new Response("CM_CLAUDE_API_KEY niet ingesteld in Vercel", { status: 500 });
+    }
+
+    const anthropic = new Anthropic({ apiKey });
+
     const supabase = await createClient();
     const {
       data: { user },
@@ -84,7 +90,7 @@ export async function POST(request: Request) {
       content: b.content,
     }));
 
-    // Stream via async iterable — NIET awaiten, anders wacht het op volledige response
+    // Event-based streaming — bewezen werkend op Vercel
     const stream = anthropic.messages.stream({
       model: "claude-3-5-haiku-20241022",
       max_tokens: 1500,
@@ -96,21 +102,16 @@ export async function POST(request: Request) {
     let volledigAntwoord = "";
 
     const readable = new ReadableStream({
-      async start(controller) {
-        try {
-          for await (const chunk of stream) {
-            if (
-              chunk.type === "content_block_delta" &&
-              chunk.delta.type === "text_delta"
-            ) {
-              const tekst = chunk.delta.text;
-              volledigAntwoord += tekst;
-              controller.enqueue(encoder.encode(tekst));
-            }
-          }
+      start(controller) {
+        stream.on("text", (text) => {
+          volledigAntwoord += text;
+          controller.enqueue(encoder.encode(text));
+        });
+
+        stream.on("finalMessage", () => {
           controller.close();
 
-          // Sla antwoord op in DB na stream
+          // Sla antwoord op in DB (fire-and-forget, blokkeert stream niet)
           if (gesprekId && volledigAntwoord) {
             const nieuwBericht: ChatBericht = {
               role: "assistant",
@@ -118,19 +119,28 @@ export async function POST(request: Request) {
               timestamp: new Date().toISOString(),
             };
             const alleBerichten = [...berichten, nieuwBericht];
-            await supabase
+            supabase
               .from("ai_gesprekken")
               .update({
                 berichten: alleBerichten,
                 updated_at: new Date().toISOString(),
               })
               .eq("id", gesprekId)
-              .eq("user_id", user.id);
+              .eq("user_id", user.id)
+              .then(() => {})
+              .catch((err) => console.error("DB save fout:", err));
           }
-        } catch (streamFout) {
-          console.error("Stream fout:", streamFout);
-          controller.error(streamFout);
-        }
+        });
+
+        stream.on("error", (err) => {
+          console.error("Stream fout:", err);
+          try {
+            controller.enqueue(encoder.encode("\n\n[Fout bij het genereren van antwoord]"));
+            controller.close();
+          } catch {
+            // Controller was al gesloten
+          }
+        });
       },
     });
 
@@ -145,9 +155,9 @@ export async function POST(request: Request) {
     const status = error?.status || 500;
     const bericht =
       status === 401 ? "API sleutel ongeldig" :
-      status === 402 ? "API credits op — laad je account op via anthropic.com" :
-      status === 429 ? "Te veel verzoeken — probeer over een minuut opnieuw" :
-      "Er is iets misgegaan";
+      status === 402 ? "API credits op" :
+      status === 429 ? "Te veel verzoeken, probeer over een minuut" :
+      `Coach fout: ${error?.message || "onbekend"}`;
     return new Response(bericht, { status });
   }
 }
