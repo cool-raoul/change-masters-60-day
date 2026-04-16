@@ -31,6 +31,10 @@ export async function POST(request: Request) {
       taal?: string;
     } = body;
 
+    if (!berichten || berichten.length === 0) {
+      return new Response("Geen berichten", { status: 400 });
+    }
+
     // Haal profiel op
     const { data: profile } = await supabase
       .from("profiles")
@@ -47,7 +51,7 @@ export async function POST(request: Request) {
       .from("why_profiles")
       .select("*")
       .eq("user_id", user.id)
-      .single();
+      .maybeSingle();
 
     // Haal prospect op (indien meegegeven)
     let prospect = null;
@@ -80,8 +84,8 @@ export async function POST(request: Request) {
       content: b.content,
     }));
 
-    // Één stream — tegelijk naar gebruiker én opslaan in DB
-    const stream = anthropic.messages.stream({
+    // Stream via async iterable — betrouwbaarder dan event-based aanpak
+    const stream = await anthropic.messages.stream({
       model: "claude-3-5-haiku-20241022",
       max_tokens: 1500,
       system: systeemPrompt,
@@ -93,16 +97,21 @@ export async function POST(request: Request) {
 
     const readable = new ReadableStream({
       async start(controller) {
-        stream.on("text", (text) => {
-          volledigAntwoord += text;
-          controller.enqueue(encoder.encode(text));
-        });
-
-        stream.on("finalMessage", async () => {
+        try {
+          for await (const chunk of stream) {
+            if (
+              chunk.type === "content_block_delta" &&
+              chunk.delta.type === "text_delta"
+            ) {
+              const tekst = chunk.delta.text;
+              volledigAntwoord += tekst;
+              controller.enqueue(encoder.encode(tekst));
+            }
+          }
           controller.close();
 
-          // Sla antwoord op in DB na afloop van de stream
-          if (gesprekId) {
+          // Sla antwoord op in DB na stream
+          if (gesprekId && volledigAntwoord) {
             const nieuwBericht: ChatBericht = {
               role: "assistant",
               content: volledigAntwoord,
@@ -118,11 +127,10 @@ export async function POST(request: Request) {
               .eq("id", gesprekId)
               .eq("user_id", user.id);
           }
-        });
-
-        stream.on("error", (err) => {
-          controller.error(err);
-        });
+        } catch (streamFout) {
+          console.error("Stream fout:", streamFout);
+          controller.error(streamFout);
+        }
       },
     });
 
@@ -132,8 +140,14 @@ export async function POST(request: Request) {
         "Transfer-Encoding": "chunked",
       },
     });
-  } catch (error) {
-    console.error("Coach API fout:", error);
-    return new Response("Er is iets misgegaan", { status: 500 });
+  } catch (error: any) {
+    console.error("Coach API fout:", error?.message || error);
+    const status = error?.status || 500;
+    const bericht =
+      status === 401 ? "API sleutel ongeldig" :
+      status === 402 ? "API credits op — laad je account op via anthropic.com" :
+      status === 429 ? "Te veel verzoeken — probeer over een minuut opnieuw" :
+      "Er is iets misgegaan";
+    return new Response(bericht, { status });
   }
 }
