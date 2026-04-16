@@ -384,7 +384,7 @@ export default function OnboardingPagina() {
                   </ol>
                 </div>
                 <div className="bg-black/30 rounded-lg p-4 space-y-2">
-                  <p className="text-cm-white text-sm font-semibold">🤖 Android (Chrome):</p>
+                  <p className="text-cm-white text-sm font-semibold">🌟 Android (Chrome):</p>
                   <ol className="text-cm-white text-sm opacity-80 space-y-1 list-decimal list-inside">
                     <li>Tik op de drie puntjes rechtsboven</li>
                     <li>Kies &quot;Toevoegen aan startscherm&quot;</li>
@@ -415,7 +415,7 @@ export default function OnboardingPagina() {
                     { icoon: "📖", tekst: "Je leert hoe de 60-dagenrun werkt" },
                     { icoon: "📝", tekst: "Je voegt je eerste namen toe" },
                     { icoon: "💬", tekst: "Je leest je uitnodigingsscript" },
-                    { icoon: "🎯", tekst: "Je stelt je dagdoelen in en opent de AI Coach" },
+                    { icoon: "🎯", tekst: "Je stelt je dagdoelen in en opent de ELEVA Mentor" },
                   ].map((item, i) => (
                     <li key={i} className="flex items-center gap-3 text-sm text-cm-white">
                       <span className="text-xl">{item.icoon}</span>{item.tekst}
@@ -453,7 +453,7 @@ export default function OnboardingPagina() {
               <div className="card space-y-3">
                 <h3 className="text-cm-gold font-semibold">Hoe werkt het WHY-gesprek?</h3>
                 <p className="text-cm-white text-sm leading-relaxed opacity-80">
-                  Een AI-coach stelt je de juiste vragen om jouw echte motivatie boven water te krijgen — net zoals een echte persoonlijke coach dat zou doen. Geen formulier invullen, maar een echt gesprek. Dit duurt 5–10 minuten.
+                  Een ELEVA Mentor stelt je de juiste vragen om jouw echte motivatie boven water te krijgen — net zoals een echte persoonlijke coach dat zou doen. Geen formulier invullen, maar een echt gesprek. Dit duurt 5–10 minuten.
                 </p>
                 <p className="text-cm-white text-sm leading-relaxed opacity-80">
                   Na afloop wordt er een persoonlijke WHY-samenvatting voor je gemaakt. Die staat daarna altijd op je dashboard als motivatie-anker.
@@ -602,7 +602,7 @@ export default function OnboardingPagina() {
                     "Bellen of voice memo werkt sterker dan tekst",
                     "Wacht rustig op reactie — dring nooit aan",
                     "Zeggen ze ja? Plan het gesprekje samen met je sponsor",
-                    "De AI Coach schrijft een persoonlijk DM voor elk contact op je lijst",
+                    "De ELEVA Mentor schrijft een persoonlijk DM voor elk contact op je lijst",
                   ].map((tip, i) => (
                     <li key={i} className="flex gap-2 text-sm text-cm-white opacity-80">
                       <span className="text-cm-gold flex-shrink-0 mt-0.5">✓</span>{tip}
@@ -672,14 +672,14 @@ export default function OnboardingPagina() {
                 ))}
               </div>
 
-              {/* AI Coach intro */}
+              {/* ELEVA Mentor intro */}
               <div className="card space-y-3">
                 <div className="flex items-center gap-3">
-                  <span className="text-3xl">🤖</span>
-                  <h3 className="text-cm-gold font-semibold">Jouw AI Coach staat klaar</h3>
+                  <span className="text-3xl">🌟</span>
+                  <h3 className="text-cm-gold font-semibold">Jouw ELEVA Mentor staat klaar</h3>
                 </div>
                 <p className="text-cm-white text-sm leading-relaxed opacity-80">
-                  De AI Coach is gebouwd op basis van 60 jaar gecombineerde ervaring in aanbevelingsmarketing. Na het opslaan van je doelen open je de coach direct — jouw krachtigste hulpmiddel naast je sponsor.
+                  De ELEVA Mentor is gebouwd op basis van 60 jaar gecombineerde ervaring in aanbevelingsmarketing. Na het opslaan van je doelen open je de ELEVA Mentor direct — jouw krachtigste hulpmiddel naast je sponsor.
                 </p>
                 <ul className="space-y-1.5">
                   {[
@@ -703,7 +703,7 @@ export default function OnboardingPagina() {
               </div>
 
               <button onClick={slaDoelOp} disabled={bezig} className="btn-gold w-full py-4 text-lg font-bold disabled:opacity-50">
-                {bezig ? "Laden..." : "Opslaan en open de AI Coach →"}
+                {bezig ? "Laden..." : "Opslaan en open de ELEVA Mentor →"}
               </button>
             </div>
           )}

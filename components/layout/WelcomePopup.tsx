@@ -56,12 +56,12 @@ export function WelcomePopup() {
             </div>
           </div>
           <div className="flex items-start gap-3 bg-cm-surface-2 rounded-xl p-3">
-            <span className="text-xl mt-0.5">🤖</span>
+            <span className="text-xl mt-0.5">🌟</span>
             <div>
-              <p className="text-cm-white font-semibold text-sm">AI Coach</p>
+              <p className="text-cm-white font-semibold text-sm">ELEVA Mentor</p>
               <p className="text-cm-white text-xs opacity-70">
                 Vraag om een DM, help bij bezwaren, of bespreek een specifiek contact.
-                De coach kent jouw WHY en situatie.
+                De ELEVA Mentor kent jouw WHY en situatie.
               </p>
             </div>
           </div>

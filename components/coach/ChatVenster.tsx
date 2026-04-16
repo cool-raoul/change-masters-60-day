@@ -419,7 +419,7 @@ export function ChatVenster({
       <div className="flex-1 overflow-y-auto space-y-4 mb-4 pr-1">
         {berichten.length === 0 && (
           <div className="text-center py-8">
-            <div className="text-5xl mb-4">🤖</div>
+            <div className="text-5xl mb-4">🌟</div>
             <p className="text-cm-white mb-6">
               {v("coach.stel_vraag")}
             </p>
