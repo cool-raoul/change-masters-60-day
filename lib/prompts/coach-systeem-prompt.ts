@@ -2,11 +2,9 @@ import { Profile, WhyProfile, Prospect, ContactLog } from "@/lib/supabase/types"
 import { SCRIPTS_DATA } from "@/lib/scripts-data";
 import { differenceInDays } from "date-fns";
 
-const RUN_START = new Date("2026-04-12");
-
-function getDagVanRun(): number {
-  const vandaag = new Date();
-  const dag = differenceInDays(vandaag, RUN_START) + 1;
+function getDagVanRun(runStartdatum?: string | null): number {
+  const start = runStartdatum ? new Date(runStartdatum) : new Date();
+  const dag = differenceInDays(new Date(), start) + 1;
   return Math.max(1, Math.min(60, dag));
 }
 
@@ -49,7 +47,7 @@ export function bouwCoachSysteemPrompt(
   prospect: (Prospect & { recenteLogs?: ContactLog[] }) | null,
   taal: string = "nl"
 ): string {
-  const dag = getDagVanRun();
+  const dag = getDagVanRun(profile.run_startdatum);
   const fase = getFaseVanRun(dag, taal);
 
   // Sectie A: Rol & identiteit
@@ -112,12 +110,12 @@ Je helpt ${profile.full_name} met:
 ## YOUR CONTEXT — ${profile.full_name.toUpperCase()}
 
 60-DAY RUN STATUS:
-. Day ${dag} of 60 (started April 12, 2026)
+. Day ${dag} of 60 (started ${profile.run_startdatum || "today"})
 . Current phase: ${fase}` : `
 ## JOUW CONTEXT — ${profile.full_name.toUpperCase()}
 
 60-DAGENRUN STATUS:
-- Dag ${dag} van 60 (gestart op 12 april 2026)
+- Dag ${dag} van 60 (gestart op ${profile.run_startdatum || "vandaag"})
 - Huidige fase: ${fase}`;
 
   if (whyProfile?.why_samenvatting) {

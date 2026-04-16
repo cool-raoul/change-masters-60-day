@@ -8,14 +8,12 @@ import { PushNotificationToggle } from "@/components/pwa/PushNotificationToggle"
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { Locale } from "date-fns";
 
-const RUN_START = new Date("2026-04-12");
-
 const DATE_LOCALES: Record<string, Locale> = { nl, en: enUS, fr, es, de, pt };
 
-function getDagInfo() {
-  const vandaag = new Date();
-  const dag = Math.max(1, Math.min(60, differenceInDays(vandaag, RUN_START) + 1));
-  return { dag };
+function berekenDag(runStartdatum: string | null): number {
+  const start = runStartdatum ? new Date(runStartdatum) : new Date();
+  const dag = differenceInDays(new Date(), start) + 1;
+  return Math.max(1, Math.min(60, dag));
 }
 
 export default async function DashboardPagina() {
@@ -25,20 +23,23 @@ export default async function DashboardPagina() {
 
   const taal = await getServerTaal();
   const datumLocale = DATE_LOCALES[taal] || nl;
-  const { dag } = getDagInfo();
   const vandaagStr = new Date().toISOString().split("T")[0];
 
   const [
+    { data: profile },
     { data: whyProfile },
     { data: vandaagStats },
     { data: herinneringen },
     { data: pipelineCounts },
   ] = await Promise.all([
+    supabase.from("profiles").select("run_startdatum").eq("id", user.id).maybeSingle(),
     supabase.from("why_profiles").select("*").eq("user_id", user.id).maybeSingle(),
     supabase.from("dagelijkse_stats").select("*").eq("user_id", user.id).eq("stat_datum", vandaagStr).maybeSingle(),
     supabase.from("herinneringen").select("*, prospect:prospects(id, volledige_naam)").eq("user_id", user.id).lte("vervaldatum", vandaagStr).eq("voltooid", false).order("vervaldatum", { ascending: true }).limit(5),
     supabase.from("prospects").select("pipeline_fase").eq("user_id", user.id).eq("gearchiveerd", false),
   ]);
+
+  const dag = berekenDag((profile as any)?.run_startdatum ?? null);
 
   const stats = vandaagStats as DagelijkseStat | null;
   const herinneringenLijst = (herinneringen as (Herinnering & { prospect: { id: string; volledige_naam: string } | null })[]) || [];

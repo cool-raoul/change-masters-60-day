@@ -4,8 +4,6 @@ import Link from "next/link";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { StatsOverzicht } from "@/components/statistieken/StatsOverzicht";
 
-const RUN_START = new Date("2026-04-12");
-
 export default async function StatistiekenPagina() {
   const supabase = await createClient();
   const {
@@ -15,10 +13,10 @@ export default async function StatistiekenPagina() {
   if (!user) return null;
 
   const taal = await getServerTaal();
-  const dag = Math.max(1, Math.min(60, differenceInDays(new Date(), RUN_START) + 1));
 
   // Haal alle stats op voor de hele run
-  const [{ data: alleStats }, { data: prospects }] = await Promise.all([
+  const [{ data: profile }, { data: alleStats }, { data: prospects }] = await Promise.all([
+    supabase.from("profiles").select("run_startdatum").eq("id", user.id).maybeSingle(),
     supabase
       .from("dagelijkse_stats")
       .select("*")
@@ -30,6 +28,9 @@ export default async function StatistiekenPagina() {
       .eq("user_id", user.id)
       .eq("gearchiveerd", false),
   ]);
+
+  const runStart = (profile as any)?.run_startdatum ? new Date((profile as any).run_startdatum) : new Date();
+  const dag = Math.max(1, Math.min(60, differenceInDays(new Date(), runStart) + 1));
 
   // Pipeline counts
   const pipelineCounts: Record<string, number> = {};

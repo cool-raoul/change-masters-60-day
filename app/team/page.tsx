@@ -5,7 +5,6 @@ import { TeamBoom } from "@/components/team/TeamBoom";
 import Link from "next/link";
 import { getServerTaal, v } from "@/lib/i18n/server";
 
-const RUN_START = new Date("2026-04-12");
 
 interface TeamLid {
   id: string;
@@ -66,7 +65,11 @@ export default async function TeamPagina() {
   if (!user) return null;
 
   const taal = await getServerTaal();
-  const dag = Math.max(1, Math.min(60, differenceInDays(new Date(), RUN_START) + 1));
+
+  // Haal profiel op voor run_startdatum
+  const { data: profile } = await supabase.from("profiles").select("run_startdatum").eq("id", user.id).maybeSingle();
+  const runStart = (profile as any)?.run_startdatum ? new Date((profile as any).run_startdatum) : new Date();
+  const dag = Math.max(1, Math.min(60, differenceInDays(new Date(), runStart) + 1));
 
   // Haal de volledige teamboom op
   const teamboom = await haalTeamBoomOp(supabase, user.id);
