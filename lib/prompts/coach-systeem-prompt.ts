@@ -1,5 +1,6 @@
 import { Profile, WhyProfile, Prospect, ContactLog } from "@/lib/supabase/types";
 import { SCRIPTS_DATA } from "@/lib/scripts-data";
+import { getKennisbankNL, getKennisbankEN } from "@/lib/knowledge/coach-boeken";
 import { differenceInDays } from "date-fns";
 
 function getDagVanRun(runStartdatum?: string | null): number {
@@ -192,7 +193,10 @@ Recente contactmomenten:`;
     }
   }
 
-  // Sectie D: Scriptkennis
+  // Sectie D: Boeken kennisbank (Worre + Brookes)
+  const kennisbankSectie = taal === "en" ? getKennisbankEN() : getKennisbankNL();
+
+  // Sectie E: Scriptkennis
   const scriptSectie = taal === "en" ? `
 ## AVAILABLE SCRIPTS & TECHNIQUES
 
@@ -282,7 +286,7 @@ Als een prospect niet geïnteresseerd is in het opbouwen van de business, stel d
 
 Als je meer context nodig hebt, vraag gerust door. Betere context betekent beter advies.`;
 
-  return `${rolSectie}${gebruikersSectie}${prospectSectie}${scriptSectie}${instructiesSectie}`;
+  return `${rolSectie}${gebruikersSectie}${prospectSectie}${kennisbankSectie}${scriptSectie}${instructiesSectie}`;
 }
 
 // WHY Coach system prompt
