@@ -92,7 +92,7 @@ export async function POST(request: Request) {
 
     // Event-based streaming — bewezen werkend op Vercel
     const stream = anthropic.messages.stream({
-      model: "claude-3-haiku-20240307",
+      model: "claude-3-5-sonnet-20241022",
       max_tokens: 1500,
       system: systeemPrompt,
       messages: apiMessages,
