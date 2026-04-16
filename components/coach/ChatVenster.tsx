@@ -111,6 +111,61 @@ const SNELLE_BERICHTEN: Record<string, Record<string, string>> = {
   },
 };
 
+// Parse coach bericht: splits normale tekst en [STUUR]...[/STUUR] blokken
+function parseerCoachBericht(content: string): { type: "tekst" | "stuur"; inhoud: string }[] {
+  const delen: { type: "tekst" | "stuur"; inhoud: string }[] = [];
+  const regex = /\[STUUR\]([\s\S]*?)\[\/STUUR\]/g;
+  let lastIndex = 0;
+  let match;
+
+  while ((match = regex.exec(content)) !== null) {
+    if (match.index > lastIndex) {
+      const tekst = content.slice(lastIndex, match.index).trim();
+      if (tekst) delen.push({ type: "tekst", inhoud: tekst });
+    }
+    delen.push({ type: "stuur", inhoud: match[1].trim() });
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (lastIndex < content.length) {
+    const tekst = content.slice(lastIndex).trim();
+    if (tekst) delen.push({ type: "tekst", inhoud: tekst });
+  }
+
+  return delen.length > 0 ? delen : [{ type: "tekst", inhoud: content }];
+}
+
+// Kopieerbaar DM-blok component
+function StuurBlok({ tekst }: { tekst: string }) {
+  const [gekopieerd, setGekopieerd] = useState(false);
+
+  function kopieer() {
+    navigator.clipboard.writeText(tekst).then(() => {
+      setGekopieerd(true);
+      setTimeout(() => setGekopieerd(false), 2000);
+    });
+  }
+
+  return (
+    <div className="mt-3 rounded-xl border-2 border-cm-gold bg-cm-gold/10 overflow-hidden">
+      <div className="flex items-center justify-between px-3 py-2 border-b border-cm-gold/30">
+        <span className="text-cm-gold text-xs font-bold uppercase tracking-wide">📋 Klaar om te sturen</span>
+        <button
+          onClick={kopieer}
+          className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-lg transition-all ${
+            gekopieerd
+              ? "bg-green-500 text-white"
+              : "bg-cm-gold text-cm-black hover:bg-cm-gold/80"
+          }`}
+        >
+          {gekopieerd ? "✓ Gekopieerd!" : "Kopieer"}
+        </button>
+      </div>
+      <p className="px-3 py-3 text-sm text-cm-white leading-relaxed whitespace-pre-wrap">{tekst}</p>
+    </div>
+  );
+}
+
 function SwipeableBericht({
   bericht,
   index,
@@ -448,27 +503,31 @@ export function ChatVenster({
             laden={laden}
             onVerwijder={verwijderBericht}
           >
-            <div
-              className={`rounded-2xl px-4 py-3 ${
-                bericht.role === "user"
-                  ? "bg-cm-gold text-cm-black font-medium rounded-br-sm"
-                  : "bg-cm-surface-2 border border-cm-border text-cm-white rounded-bl-sm"
-              }`}
-            >
-              <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                {bericht.content}
-                {laden &&
-                  i === berichten.length - 1 &&
-                  bericht.role === "assistant" &&
-                  bericht.content === "" && (
-                    <span className="inline-flex gap-1 ml-1">
-                      <span className="w-1.5 h-1.5 bg-cm-gold rounded-full animate-bounce" />
-                      <span className="w-1.5 h-1.5 bg-cm-gold rounded-full animate-bounce delay-100" />
-                      <span className="w-1.5 h-1.5 bg-cm-gold rounded-full animate-bounce delay-200" />
-                    </span>
-                  )}
-              </p>
-            </div>
+            {bericht.role === "user" ? (
+              <div className="rounded-2xl px-4 py-3 bg-cm-gold text-cm-black font-medium rounded-br-sm">
+                <p className="text-sm leading-relaxed whitespace-pre-wrap">{bericht.content}</p>
+              </div>
+            ) : (
+              <div className="rounded-2xl px-4 py-3 bg-cm-surface-2 border border-cm-border text-cm-white rounded-bl-sm">
+                {bericht.content === "" && laden && i === berichten.length - 1 ? (
+                  <span className="inline-flex gap-1">
+                    <span className="w-1.5 h-1.5 bg-cm-gold rounded-full animate-bounce" />
+                    <span className="w-1.5 h-1.5 bg-cm-gold rounded-full animate-bounce delay-100" />
+                    <span className="w-1.5 h-1.5 bg-cm-gold rounded-full animate-bounce delay-200" />
+                  </span>
+                ) : (
+                  parseerCoachBericht(bericht.content).map((deel, di) =>
+                    deel.type === "stuur" ? (
+                      <StuurBlok key={di} tekst={deel.inhoud} />
+                    ) : (
+                      <p key={di} className="text-sm leading-relaxed whitespace-pre-wrap">
+                        {deel.inhoud}
+                      </p>
+                    )
+                  )
+                )}
+              </div>
+            )}
           </SwipeableBericht>
         ))}
 
