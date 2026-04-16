@@ -10,6 +10,7 @@ import { ContactgegevensForm } from "@/components/namenlijst/ContactgegevensForm
 import { OnboardingChecklist } from "@/components/namenlijst/OnboardingChecklist";
 import { DriewegGesprekInklapbaar } from "@/components/namenlijst/DriewegGesprek";
 import { ProspectVerwijderKnop } from "@/components/namenlijst/ProspectVerwijderKnop";
+import { CoachGesprekkenInklapbaar } from "@/components/namenlijst/CoachGesprekkenInklapbaar";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { Locale } from "date-fns";
 
@@ -165,46 +166,12 @@ export default async function ProspectDetailPagina({
             sponsorNaam={sponsorNaam || undefined}
           />
 
-          {/* AI Coach gesprekken */}
-          <div className="card space-y-3">
-            <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
-                {v("prospect.coach_gesprekken", taal)}
-              </h2>
-              <Link
-                href={`/coach?prospect=${id}`}
-                className="text-cm-gold text-xs hover:text-cm-gold-light"
-              >
-                {v("prospect.nieuw_gesprek", taal)}
-              </Link>
-            </div>
-
-            {(!coachGesprekken || coachGesprekken.length === 0) ? (
-              <p className="text-cm-white text-sm">
-                {v("prospect.geen_gesprekken", taal)}
-              </p>
-            ) : (
-              <div className="space-y-2">
-                {coachGesprekken.map((gesprek) => (
-                  <Link
-                    key={gesprek.id}
-                    href={`/coach/${gesprek.id}`}
-                    className="flex items-center justify-between bg-cm-surface-2 rounded-lg p-3 hover:border hover:border-cm-gold-dim transition-colors group"
-                  >
-                    <div>
-                      <p className="text-cm-white text-sm font-medium group-hover:text-cm-gold transition-colors">
-                        {gesprek.titel || v("prospect.coach_gesprek", taal)}
-                      </p>
-                      <p className="text-cm-white text-xs opacity-60 mt-0.5">
-                        {format(new Date(gesprek.updated_at), "d MMM yyyy, HH:mm", { locale: datumLocale })}
-                      </p>
-                    </div>
-                    <span className="text-cm-gold text-sm">→</span>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
+          {/* ELEVA Mentor gesprekken — inklapbaar */}
+          <CoachGesprekkenInklapbaar
+            gesprekken={coachGesprekken || []}
+            prospectId={id}
+            prospectNaam={prospect.volledige_naam}
+          />
         </div>
       </div>
     </div>
