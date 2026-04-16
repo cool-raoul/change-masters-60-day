@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { differenceInDays } from "date-fns";
 import KopieerLink from "@/components/team/KopieerLink";
 import { TeamBoom } from "@/components/team/TeamBoom";
+import { PremiumToggleKnop } from "@/components/team/PremiumToggleKnop";
 import Link from "next/link";
 import { getServerTaal, v } from "@/lib/i18n/server";
 
@@ -21,6 +22,7 @@ interface TeamLid {
   onboarding_klaar: boolean;
   created_at: string;
   run_startdatum: string | null;
+  premium_tot: string | null;
   kinderen: TeamLid[];
   onboarding?: OnboardingVoortgang | null;
 }
@@ -30,7 +32,7 @@ async function haalTeamBoomOp(supabase: any, userId: string, diepte: number = 0,
 
   const { data: directeleden } = await supabase
     .from("profiles")
-    .select("id, full_name, email, onboarding_klaar, created_at, run_startdatum")
+    .select("id, full_name, email, onboarding_klaar, created_at, run_startdatum, premium_tot")
     .eq("sponsor_id", userId)
     .order("created_at", { ascending: true });
 
@@ -101,7 +103,8 @@ export default async function TeamPagina({ searchParams }: { searchParams: { lid
 
   const taal = await getServerTaal();
 
-  const { data: profile } = await supabase.from("profiles").select("run_startdatum").eq("id", user.id).maybeSingle();
+  const { data: profile } = await supabase.from("profiles").select("run_startdatum, role").eq("id", user.id).maybeSingle();
+  const isLeider = (profile as any)?.role === "leider";
   const runStart = (profile as any)?.run_startdatum ? new Date((profile as any).run_startdatum) : new Date();
   const dag = Math.max(1, Math.min(60, differenceInDays(new Date(), runStart) + 1));
 
@@ -199,7 +202,19 @@ export default async function TeamPagina({ searchParams }: { searchParams: { lid
                   <div className="hidden md:grid items-center gap-2"
                     style={{ gridTemplateColumns: "1fr repeat(5, 40px)" }}>
                     <div>
-                      <p className="text-cm-white text-sm font-medium">{lid.full_name}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-cm-white text-sm font-medium">{lid.full_name}</p>
+                        {isLeider && (
+                          <PremiumToggleKnop
+                            lidId={lid.id}
+                            isPremium={
+                              lid.premium_tot
+                                ? new Date(lid.premium_tot) >= new Date()
+                                : false
+                            }
+                          />
+                        )}
+                      </div>
                       <p className="text-cm-white opacity-40 text-xs">{aantalKlaar}/{ONBOARDING_STAPPEN.length} stappen</p>
                     </div>
                     {ONBOARDING_STAPPEN.map((s) => {
@@ -218,7 +233,19 @@ export default async function TeamPagina({ searchParams }: { searchParams: { lid
                   {/* Mobiel: naam + voortgangsbalk + icoontjes */}
                   <div className="md:hidden">
                     <div className="flex items-center justify-between mb-2">
-                      <p className="text-cm-white text-sm font-medium">{lid.full_name}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-cm-white text-sm font-medium">{lid.full_name}</p>
+                        {isLeider && (
+                          <PremiumToggleKnop
+                            lidId={lid.id}
+                            isPremium={
+                              lid.premium_tot
+                                ? new Date(lid.premium_tot) >= new Date()
+                                : false
+                            }
+                          />
+                        )}
+                      </div>
                       <span className={`text-xs font-bold ${lid.onboarding_klaar ? "text-[#4ACB6A]" : "text-cm-gold"}`}>
                         {aantalKlaar}/{ONBOARDING_STAPPEN.length}
                       </span>

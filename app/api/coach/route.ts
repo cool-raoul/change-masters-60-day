@@ -42,6 +42,50 @@ export async function POST(request: Request) {
       return new Response("Geen berichten", { status: 400 });
     }
 
+    // Check dagelijks limiet
+    const vandaagStr = new Date().toISOString().split("T")[0];
+
+    // Haal premium status + huidig gebruik op
+    const [{ data: gebruikData }, { data: premiumData }] = await Promise.all([
+      supabase
+        .from("coach_gebruik")
+        .select("berichten_count")
+        .eq("user_id", user.id)
+        .eq("datum", vandaagStr)
+        .maybeSingle(),
+      supabase
+        .from("profiles")
+        .select("premium_tot")
+        .eq("id", user.id)
+        .single(),
+    ]);
+
+    const isPremium = premiumData?.premium_tot
+      ? new Date(premiumData.premium_tot) >= new Date()
+      : false;
+    const huidigGebruik = gebruikData?.berichten_count || 0;
+    const GRATIS_LIMIET = 20;
+
+    if (!isPremium && huidigGebruik >= GRATIS_LIMIET) {
+      return new Response(
+        JSON.stringify({ limietBereikt: true, gebruik: huidigGebruik, limiet: GRATIS_LIMIET }),
+        { status: 429, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // Verhoog teller direct (voor de stream start)
+    await supabase
+      .from("coach_gebruik")
+      .upsert(
+        {
+          user_id: user.id,
+          datum: vandaagStr,
+          berichten_count: huidigGebruik + 1,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "user_id,datum" }
+      );
+
     // Haal profiel op
     const { data: profile } = await supabase
       .from("profiles")

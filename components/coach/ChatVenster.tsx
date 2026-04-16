@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useTaal } from "@/lib/i18n/TaalContext";
+import { UpgradeModal } from "./UpgradeModal";
 
 interface Props {
   gesprekId: string;
@@ -265,6 +266,9 @@ export function ChatVenster({
   const [selectedProspect, setSelectedProspect] = useState(
     prospect?.id || ""
   );
+  const [upgradeTonen, setUpgradeTonen] = useState(false);
+  const [gebruikVandaag, setGebruikVandaag] = useState(0);
+  const [isPremium, setIsPremium] = useState(false);
   const chatEindRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
   const { taal, v } = useTaal();
@@ -272,6 +276,16 @@ export function ChatVenster({
   useEffect(() => {
     chatEindRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [berichten]);
+
+  useEffect(() => {
+    fetch("/api/coach/gebruik")
+      .then((r) => r.json())
+      .then((data) => {
+        setGebruikVandaag(data.gebruik || 0);
+        setIsPremium(data.isPremium || false);
+      })
+      .catch(() => {});
+  }, []);
 
   function getSnelBericht(key: string): string {
     return SNELLE_BERICHTEN[key]?.[taal] || SNELLE_BERICHTEN[key]?.["nl"] || "";
@@ -379,6 +393,14 @@ export function ChatVenster({
           taal,
         }),
       });
+
+      if (response.status === 429) {
+        const data = await response.json();
+        setGebruikVandaag(data.gebruik || 20);
+        setUpgradeTonen(true);
+        setLaden(false);
+        return;
+      }
 
       if (!response.ok) {
         const foutTekst = await response.text().catch(() => "onbekend");
@@ -562,15 +584,26 @@ export function ChatVenster({
             className="input-cm flex-1"
             disabled={laden}
           />
-          <button
-            type="submit"
-            disabled={laden || !invoer.trim()}
-            className="btn-gold px-6"
-          >
-            →
-          </button>
+          <div className="flex flex-col items-end gap-1">
+            <button
+              type="submit"
+              disabled={laden || !invoer.trim()}
+              className="btn-gold px-6"
+            >
+              →
+            </button>
+            {!isPremium && (
+              <span className="text-xs text-cm-white opacity-40 whitespace-nowrap">
+                {gebruikVandaag}/20 vandaag
+              </span>
+            )}
+          </div>
         </form>
       </div>
+
+      {upgradeTonen && (
+        <UpgradeModal gebruik={gebruikVandaag} onSluit={() => setUpgradeTonen(false)} />
+      )}
     </div>
   );
 }
