@@ -30,9 +30,9 @@ export async function POST(request: NextRequest) {
     const naam = profile?.full_name || "Een teamlid";
 
     const payload = {
-      title: `${naam} ${stap}`,
-      body: "Tik om de voortgang van je team te bekijken.",
-      url: "/team",
+      title: "⚡ ELEVA Team Update",
+      body: `${naam} ${stap}`,
+      url: `/team?lid=${user.id}`,
       tag: "onboarding",
     };
 

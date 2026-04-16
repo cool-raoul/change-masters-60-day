@@ -5,6 +5,14 @@ import { TeamBoom } from "@/components/team/TeamBoom";
 import Link from "next/link";
 import { getServerTaal, v } from "@/lib/i18n/server";
 
+interface OnboardingVoortgang {
+  user_id: string;
+  stap_1_welkom: boolean;
+  stap_2_run: boolean;
+  stap_3_namen: boolean;
+  stap_4_script: boolean;
+  stap_5_doelen: boolean;
+}
 
 interface TeamLid {
   id: string;
@@ -12,28 +20,41 @@ interface TeamLid {
   email: string;
   onboarding_klaar: boolean;
   created_at: string;
+  run_startdatum: string | null;
   kinderen: TeamLid[];
+  onboarding?: OnboardingVoortgang | null;
 }
 
 async function haalTeamBoomOp(supabase: any, userId: string, diepte: number = 0, maxDiepte: number = 10): Promise<TeamLid[]> {
   if (diepte >= maxDiepte) return [];
 
-  // Haal directe teamleden op (mensen die door deze persoon zijn uitgenodigd)
   const { data: directeleden } = await supabase
     .from("profiles")
-    .select("id, full_name, email, onboarding_klaar, created_at")
+    .select("id, full_name, email, onboarding_klaar, created_at, run_startdatum")
     .eq("sponsor_id", userId)
     .order("created_at", { ascending: true });
 
   if (!directeleden || directeleden.length === 0) return [];
 
-  // Voor elk teamlid, haal recursief hun teamleden op
+  // Haal onboarding voortgang op voor alle directe leden in één query
+  const ledenIds = directeleden.map((l: any) => l.id);
+  const { data: voortgangData } = await supabase
+    .from("onboarding_voortgang")
+    .select("*")
+    .in("user_id", ledenIds);
+
+  const voortgangMap: Record<string, OnboardingVoortgang> = {};
+  for (const v of (voortgangData || [])) {
+    voortgangMap[v.user_id] = v;
+  }
+
   const boom: TeamLid[] = [];
   for (const lid of directeleden) {
     const kinderen = await haalTeamBoomOp(supabase, lid.id, diepte + 1, maxDiepte);
     boom.push({
       ...lid,
       kinderen,
+      onboarding: voortgangMap[lid.id] || null,
     });
   }
 
@@ -56,7 +77,19 @@ function telPerLevel(leden: TeamLid[], level: number = 1, counts: Record<number,
   return counts;
 }
 
-export default async function TeamPagina() {
+function haalDirecteLedenPlat(leden: TeamLid[]): TeamLid[] {
+  return leden; // Alleen level 1 voor het overzicht
+}
+
+const ONBOARDING_STAPPEN = [
+  { key: "stap_1_welkom", label: "App geïnstalleerd", icoon: "📱" },
+  { key: "stap_2_run", label: "WHY gemaakt", icoon: "💛" },
+  { key: "stap_3_namen", label: "Namenlijst aangemaakt", icoon: "📝" },
+  { key: "stap_4_script", label: "Script gelezen", icoon: "💬" },
+  { key: "stap_5_doelen", label: "Doelen ingesteld", icoon: "🎯" },
+];
+
+export default async function TeamPagina({ searchParams }: { searchParams: { lid?: string } }) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -64,18 +97,19 @@ export default async function TeamPagina() {
 
   if (!user) return null;
 
+  const uitgelichtLid = searchParams?.lid || null;
+
   const taal = await getServerTaal();
 
-  // Haal profiel op voor run_startdatum
   const { data: profile } = await supabase.from("profiles").select("run_startdatum").eq("id", user.id).maybeSingle();
   const runStart = (profile as any)?.run_startdatum ? new Date((profile as any).run_startdatum) : new Date();
   const dag = Math.max(1, Math.min(60, differenceInDays(new Date(), runStart) + 1));
 
-  // Haal de volledige teamboom op
   const teamboom = await haalTeamBoomOp(supabase, user.id);
   const totaalLeden = telTotaal(teamboom);
   const levelCounts = telPerLevel(teamboom);
   const aantalLevels = Object.keys(levelCounts).length;
+  const directeLeden = haalDirecteLedenPlat(teamboom);
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -102,7 +136,7 @@ export default async function TeamPagina() {
         <KopieerLink userId={user.id} />
       </div>
 
-      {/* Overzicht statistieken */}
+      {/* Statistieken */}
       {totaalLeden > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div className="card text-center">
@@ -123,6 +157,121 @@ export default async function TeamPagina() {
             </div>
             <div className="text-xs text-cm-white mt-1">{v("team.duplicatie", taal)}</div>
           </div>
+        </div>
+      )}
+
+      {/* ONBOARDING VOORTGANG PER TEAMLID */}
+      {directeLeden.length > 0 && (
+        <div className="card">
+          <h2 className="text-sm font-semibold text-cm-gold uppercase tracking-wider mb-4">
+            📋 Onboarding voortgang — direct team
+          </h2>
+
+          {/* Header rij */}
+          <div className="hidden md:grid gap-2 mb-2 text-xs text-cm-white opacity-50 font-medium"
+            style={{ gridTemplateColumns: "1fr repeat(5, 40px)" }}>
+            <span>Naam</span>
+            {ONBOARDING_STAPPEN.map((s) => (
+              <span key={s.key} className="text-center" title={s.label}>{s.icoon}</span>
+            ))}
+          </div>
+
+          <div className="space-y-2">
+            {directeLeden.map((lid) => {
+              const voortgang = lid.onboarding;
+              const aantalKlaar = ONBOARDING_STAPPEN.filter(
+                (s) => voortgang?.[s.key as keyof OnboardingVoortgang]
+              ).length;
+              const klaarPct = Math.round((aantalKlaar / ONBOARDING_STAPPEN.length) * 100);
+              const isUitgelicht = uitgelichtLid === lid.id;
+
+              return (
+                <div
+                  key={lid.id}
+                  id={`lid-${lid.id}`}
+                  className={`rounded-xl px-3 py-3 transition-all ${
+                    isUitgelicht
+                      ? "bg-cm-gold/10 border-2 border-cm-gold/60 shadow-[0_0_16px_rgba(212,175,55,0.25)]"
+                      : "bg-cm-surface-2"
+                  }`}
+                >
+                  {/* Desktop: grid layout */}
+                  <div className="hidden md:grid items-center gap-2"
+                    style={{ gridTemplateColumns: "1fr repeat(5, 40px)" }}>
+                    <div>
+                      <p className="text-cm-white text-sm font-medium">{lid.full_name}</p>
+                      <p className="text-cm-white opacity-40 text-xs">{aantalKlaar}/{ONBOARDING_STAPPEN.length} stappen</p>
+                    </div>
+                    {ONBOARDING_STAPPEN.map((s) => {
+                      const gedaan = voortgang?.[s.key as keyof OnboardingVoortgang];
+                      return (
+                        <div key={s.key} className="flex justify-center" title={s.label}>
+                          {gedaan
+                            ? <span className="text-base">✅</span>
+                            : <span className="text-base opacity-20">⬜</span>
+                          }
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Mobiel: naam + voortgangsbalk + icoontjes */}
+                  <div className="md:hidden">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-cm-white text-sm font-medium">{lid.full_name}</p>
+                      <span className={`text-xs font-bold ${lid.onboarding_klaar ? "text-[#4ACB6A]" : "text-cm-gold"}`}>
+                        {aantalKlaar}/{ONBOARDING_STAPPEN.length}
+                      </span>
+                    </div>
+                    {/* Voortgangsbalk */}
+                    <div className="w-full h-1.5 bg-cm-surface rounded-full overflow-hidden mb-2">
+                      <div
+                        className={`h-full rounded-full transition-all ${lid.onboarding_klaar ? "bg-[#4ACB6A]" : "bg-gradient-gold"}`}
+                        style={{ width: `${klaarPct}%` }}
+                      />
+                    </div>
+                    {/* Stappen icoontjes */}
+                    <div className="flex gap-2 flex-wrap">
+                      {ONBOARDING_STAPPEN.map((s) => {
+                        const gedaan = voortgang?.[s.key as keyof OnboardingVoortgang];
+                        return (
+                          <div key={s.key}
+                            className={`flex items-center gap-1 text-xs px-2 py-0.5 rounded-full ${
+                              gedaan
+                                ? "bg-cm-gold/20 text-cm-gold"
+                                : "bg-cm-surface text-cm-white opacity-30"
+                            }`}
+                            title={s.label}
+                          >
+                            <span>{s.icoon}</span>
+                            <span className="hidden sm:inline">{s.label}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <p className="text-xs text-cm-white opacity-30 mt-3">
+            Alleen directe teamleden worden getoond. Klik op een naam in de stamboom voor meer detail.
+          </p>
+
+          {/* Auto-scroll naar uitgelicht lid (via push melding) */}
+          {uitgelichtLid && (
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                  (function() {
+                    var el = document.getElementById('lid-${uitgelichtLid}');
+                    if (el) { setTimeout(function() { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); }
+                  })();
+                `,
+              }}
+            />
+          )}
         </div>
       )}
 
