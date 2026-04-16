@@ -65,16 +65,16 @@ export default async function ProspectDetailPagina({
 
   if (!prospect) notFound();
 
-  // Haal sponsor naam op via sponsor_id
+  // Haal sponsor naam op via sponsor_id — fallback op Ramon Sant (top van stamboom)
   const sponsorId = (eigenProfiel as any)?.sponsor_id;
-  let sponsorNaam: string | null = null;
+  let sponsorNaam: string = "Ramon Sant";
   if (sponsorId) {
     const { data: sponsorProfiel } = await supabase
       .from("profiles")
       .select("full_name")
       .eq("id", sponsorId)
       .single();
-    sponsorNaam = sponsorProfiel?.full_name ?? null;
+    sponsorNaam = sponsorProfiel?.full_name ?? "Ramon Sant";
   }
 
   const faseInfo = PIPELINE_FASEN.find((f) => f.fase === prospect.pipeline_fase);
@@ -163,7 +163,7 @@ export default async function ProspectDetailPagina({
           <DriewegGesprekInklapbaar
             prospectNaam={prospect.volledige_naam}
             prospectSituatie={prospect.notities || undefined}
-            sponsorNaam={sponsorNaam || undefined}
+            sponsorNaam={sponsorNaam}
           />
 
           {/* ELEVA Mentor gesprekken — inklapbaar */}
