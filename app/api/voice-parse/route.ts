@@ -131,14 +131,45 @@ MOGELIJKE ACTIES:
 9. { "type": "update_herinnering", "herinnering_id": "uuid-uit-lijst", "nieuwe_vervaldatum": "YYYY-MM-DD" (optioneel), "nieuwe_titel": "..." (optioneel) }
    - Bestaande herinnering verzetten of titel wijzigen
 
+10. { "type": "product_bestelling", "prospect_naam": "Pieter de Hoogh", "product_omschrijving": "Omega 3 + Basis pakket", "besteldatum": "YYYY-MM-DD" (optioneel, default vandaag), "notities": "..." (optioneel) }
+   - Iemand heeft een product besteld
+   - ALTIJD toevoegen als de gebruiker zegt dat iemand iets besteld heeft, ingeschreven heeft als klant, of producten heeft aangeschaft
+   - Zet automatisch fase naar "shopper" als nog niet shopper/member
+   - Systeem maakt automatisch opvolg-herinnering op +21 dagen
+
 BELANGRIJKE REGELS:
 - Altijd lege arrays retourneren als er niks is
 - ALTIJD valid JSON, geen markdown
 - Als iemand al bestaat (naam match in lijst): gebruik update_prospect, niet nieuwe_prospect
 - Fuzzy matching op namen: "Pieter" = "Pieter de Hoogh" als die al bestaat
 - Neem notities altijd mee bij het aanmaken van een prospect als ze genoemd worden
-- Taken alleen aanmaken als expliciet een vervolgactie genoemd wordt ("moet nog spreken", "volgende maand starten", etc.)
+- Taken alleen aanmaken als expliciet een vervolgactie genoemd wordt ("moet nog spreken", "volgende maand starten", "opvolgen", "contacten", etc.)
 - Bij familie/relatie-info (bijv. "zijn zus"): neem dat op in notities van de nieuwe prospect en in het relatie-veld
+
+MULTI-ACTIE DENKEN — DIT IS BELANGRIJK:
+Eén zin kan MEERDERE acties bevatten. Splits alles in aparte acties.
+
+Voorbeeld 1: "Pieter heeft het basispakket besteld en zijn zus is geïnteresseerd, we moeten haar opvolgen"
+→ [
+    { "type": "update_prospect", "prospect_id": "<pieter-uuid>", "pipeline_fase": "shopper" } OF { "type": "nieuwe_prospect", "volledige_naam": "Pieter ...", "pipeline_fase": "shopper" },
+    { "type": "product_bestelling", "prospect_naam": "Pieter ...", "product_omschrijving": "basispakket" },
+    { "type": "nieuwe_prospect", "volledige_naam": "Zus van Pieter ...", "pipeline_fase": "prospect", "notities": "Interesse via Pieter", "relatie": "zus van Pieter ..." },
+    { "type": "taak", "prospect_naam": "Zus van Pieter ...", "titel": "Opvolgen interesse zus Pieter", "vervaldatum": "<+7 dagen>" }
+  ]
+
+Voorbeeld 2: "Ik heb vandaag 3 mensen gesproken, Anna wil meedoen als klant, Marie twijfelt nog"
+→ [
+    { "type": "stats_increment", "contacten_gemaakt": 3 },
+    { "type": "update_prospect"/"nieuwe_prospect" voor Anna → fase "shopper" of "member" },
+    { "type": "update_prospect"/"nieuwe_prospect" voor Marie → fase "followup", notitie "twijfelt nog" }
+  ]
+
+REGELS BIJ MULTI-ACTIE:
+- Noemt gebruiker bestelling/product/pakket/ingeschreven als klant? → ALTIJD product_bestelling actie
+- Noemt gebruiker een familielid of onbekende persoon zonder volledige naam? → nieuwe_prospect met beschrijvende naam ("Zus van X", "Vriend van Y")
+- Zegt gebruiker "opvolgen", "contacten", "bellen", "spreken", "terugkomen" + persoon? → taak actie aanmaken (ook al is de persoon net aangemaakt)
+- Bij net-aangemaakte prospect: gebruik dezelfde naam als "prospect_naam" in andere acties zodat ze gematched worden
+- Aantallen ("3 mensen gesproken", "2 uitgenodigd") → stats_increment actie toevoegen naast de andere acties
 
 OUTPUT FORMAT (exact zo):
 {

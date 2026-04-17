@@ -79,6 +79,14 @@ type ActieUpdateHerinnering = {
   nieuwe_titel?: string;
 };
 
+type ActieProductBestelling = {
+  type: "product_bestelling";
+  prospect_naam: string;
+  product_omschrijving: string;
+  besteldatum?: string;
+  notities?: string;
+};
+
 type Actie =
   | ActieNieuweProspect
   | ActieUpdateProspect
@@ -88,7 +96,8 @@ type Actie =
   | ActieContactLog
   | ActieStatsIncrement
   | ActieVoltooiHerinnering
-  | ActieUpdateHerinnering;
+  | ActieUpdateHerinnering
+  | ActieProductBestelling;
 
 type Intentie = "data" | "coach" | "mixed";
 
@@ -396,6 +405,40 @@ export function VoiceFab() {
       }
     }
     for (const a of acties) {
+      if (a.type === "product_bestelling") {
+        const id = naamNaarId[a.prospect_naam.toLowerCase()];
+        if (!id) continue;
+        const besteldatum = a.besteldatum || new Date().toISOString().split("T")[0];
+        const datum21 = new Date(besteldatum);
+        datum21.setDate(datum21.getDate() + 21);
+        await supabase.from("product_bestellingen").insert({
+          prospect_id: id,
+          user_id: user.id,
+          besteldatum,
+          product_omschrijving: a.product_omschrijving,
+          notities: a.notities || null,
+          tweede_bestelling_reminder_datum: datum21.toISOString().split("T")[0],
+        });
+        const { data: huidig } = await supabase
+          .from("prospects")
+          .select("pipeline_fase")
+          .eq("id", id)
+          .single();
+        const faseUpdate: any = {
+          laatste_contact: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        if (huidig?.pipeline_fase !== "shopper" && huidig?.pipeline_fase !== "member") {
+          faseUpdate.pipeline_fase = "shopper";
+        }
+        await supabase
+          .from("prospects")
+          .update(faseUpdate)
+          .eq("id", id)
+          .eq("user_id", user.id);
+      }
+    }
+    for (const a of acties) {
       if (a.type === "update_herinnering") {
         const updates: any = {};
         if (a.nieuwe_vervaldatum) {
@@ -676,6 +719,16 @@ function ActieKaart({ actie, onVerwijder }: { actie: Actie; onVerwijder: () => v
           details: [
             actie.nieuwe_titel ? `Nieuwe titel: ${actie.nieuwe_titel}` : null,
             actie.nieuwe_vervaldatum ? `Nieuwe datum: ${actie.nieuwe_vervaldatum}` : null,
+          ].filter(Boolean) as string[],
+        };
+      case "product_bestelling":
+        return {
+          icoon: "📦",
+          titel: `Bestelling: ${actie.product_omschrijving}`,
+          details: [
+            `Klant: ${actie.prospect_naam}`,
+            actie.besteldatum ? `Datum: ${actie.besteldatum}` : `Datum: vandaag`,
+            actie.notities || null,
           ].filter(Boolean) as string[],
         };
     }
