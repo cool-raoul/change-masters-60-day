@@ -347,4 +347,127 @@ Wel:
 
 ---
 
-<!-- STAP 5 + extra kaarten volgen in volgende commits -->
+## STAP 5 — SNEL PLAN NAAR BUILDER 🚀
+
+### In 1 maand naar Builder
+
+> Builder is dé basis, de stevige fundering van jouw business.
+
+**Builder-rank = 1500 IP totaal op je eerste 3 levels.**
+
+> Als jij leert hoe je zelf Builder wordt én je deze kennis doorgeeft, heb je de sleutel voor echte, exponentiële groei.
+
+**De formule:**
+1. Jij wordt Builder
+2. Jij helpt iemand anders om Builder te worden
+3. Zij leren het weer aan de volgende
+
+Richt je **elke maand op 2 mensen** (nieuw of in je team) die jij helpt om Builder te worden.
+
+### Wat heb je nodig om Builder te worden?
+
+- 10–15 uur per week
+- **150 IP eigen bestelling** (bijv. Darmprogramma of Holistic Reset)
+- Een sterke, persoonlijke WHY
+- **Totaal 1500 IP** (bijv. 7 shoppers + minimaal 3 members)
+- Toegang tot de Be The Change leeromgeving
+- Idealiter samenwerking met sponsor/upline
+
+---
+
+### De 5 Builder-stappen
+
+### 1. Start met het systeem
+Activeer je toegang tot Be The Change. Je eerste 48 uur = je start. Je leert hoe het systeem werkt, hoe je je webshop activeert — de video's begeleiden stap-voor-stap.
+
+### 2. Nodig je eerste 20-25 personen uit
+Twee lijsten:
+- **Warme contactenlijst** (20–25 mensen die je goed kent)
+- Opwarm-lijst (bij stap 3)
+
+**Waarom dit de eerste stap is:** deze mensen vertrouwen je, en jij weet wat ze nodig hebben:
+- Meer vrijheid
+- Meer inkomen
+- Meer energie/gezondheid
+
+**Wat je doet:**
+1. Maak je lijst van 20–25 mensen die je goed kent
+2. Denk bij elke naam: heeft hij/zij behoefte aan meer vrijheid, inkomen of gezondheid?
+3. Nodig ze uit met energie, enthousiasme en oprechte intentie
+4. Laat ze een kijkje nemen bij een presentatie, video of Zoom
+
+> **Jij nodigt uit. De tool doet de rest.**
+
+**Belangrijk — 90% van de uitnodiging is jouw energie.** Mensen voelen jouw vibe. Nodig uit met vertrouwen: *"Je moet dit even zien."* Jij hoeft niks uit te leggen — het systeem/video/presentator doet het werk.
+
+**Als iemand (nu) niet wilt:**
+> *"Helemaal goed, mag ik je op de hoogte houden van mijn reis? Dan deel ik over een paar maanden een update."*
+
+**De 3 soorten mensen:**
+1. Die het nu niet willen (not yet)
+2. Die informatie willen → die zoek jij
+3. Die het wel willen → die zoek jij
+
+> Focus op wie openstaat. Laat de rest los.
+
+Document: `BUILDER PLAN 2025` + 2 uitnodigingsteksten ter inspiratie.
+
+### 3. Maak een Opwarm-lijst (75–80 mensen)
+
+Mensen waarmee je het contact eerst weer wilt aanhalen. **Neem 10 dagen** om die 75–80 rustig opnieuw te benaderen.
+
+Gebruik het **L.O.R.D.-principe**:
+- **L**ocation — Waar woon je nu eigenlijk?
+- **O**ccupation — Wat doe je qua werk?
+- **R**ecreation — Wat doe je graag in je vrije tijd?
+- **D**reams — Heb je dromen of doelen dit jaar?
+
+Open simpel: *"Hey, we hebben elkaar al even niet gesproken. Lijkt me leuk om weer eens bij te praten!"*
+
+Ga **zonder verborgen agenda** in verbinding. Tijdens gesprek letten op signalen (product-/business-interesse), **noteer de haakjes** — goud waard bij later uitnodigen. Zelfs zonder haakje bouw je aan de relatie.
+
+Na opwarming: leidraad = document `Uitnodigen voor meer pret & poen`. Je hoeft niet te verkopen — nieuwsgierigheid, verbinding en enthousiasme.
+
+### 4. Plug mensen in — laat het systeem werken
+
+Enthousiast en wil meer weten? Jij hoeft het niet zelf te doen — pluggen in het systeem:
+
+1. Laat een uitlegvideo zien óf nodig uit voor Zoom-webinar / live presentatie
+2. Voeg toe aan een **3-way call** met jou en je upline
+3. Schrijf ze in of plaats in je *not yet box*
+
+> **Je bent niet de expert. Je bent de verbinder.** Het systeem en je upline doen het werk. Dat is schaalbaar én relaxed.
+
+**Doel:** zorg dat ze de juiste info krijgen, zich welkom voelen, en weten dat een team klaarstaat.
+
+> Je zet de deur open, zij mogen zelf beslissen of ze binnenkomen. Zonder druk. Zonder overtuigen. Met vertrouwen.
+
+### 5. Herhaal en verdiep
+
+**Elke maand 2 mensen** helpen naar Builder. Onderweg leer je:
+- Begeleiden zonder te trekken
+- Structuur aanbrengen in je week
+- Samen bouwen aan een energiek, zelfstandig team
+
+> **Jouw kracht zit in eenvoud.** Doe het samen, blijf leren, hou het leuk.
+
+---
+
+### Inspiratie-posts
+
+> *"Ik voel nu al verschil in m'n energie en ik ben pas net begonnen!"*
+> *"Ik gun dit écht iedereen die op zoek is naar vrijheid én gezondheid."*
+> *"Ik verdien nu al extra en dat voelt zó goed."*
+> *"Ik zie m'n team groeien en mensen veranderen fysiek én financieel."*
+
+### Vertrouw op
+
+- De tools
+- Je enthousiasme
+- Het proces
+
+> **En vooral: mis de dinsdagavond teamtraining niet.** Daar gebeurt het. Daar ontstaat momentum. Daar groeit jouw vuur.
+
+---
+
+<!-- Extra kaarten (30 Dagen Contentplan + Hoe gebruik je BOARDS-app) volgen -->
