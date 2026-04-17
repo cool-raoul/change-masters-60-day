@@ -470,4 +470,93 @@ Enthousiast en wil meer weten? Jij hoeft het niet zelf te doen — pluggen in he
 
 ---
 
-<!-- Extra kaarten (30 Dagen Contentplan + Hoe gebruik je BOARDS-app) volgen -->
+## EXTRA — 30 Dagen Contentplan
+
+> **Dit is geen losse kaart maar een subfolder** met 4 weekblokken:
+> - 1️⃣ DAG 1-7
+> - 2️⃣ DAG 8-14
+> - 3️⃣ Dag 15-21
+> - 4️⃣ Dag 22-30
+
+Inhoud per week is niet uitgelezen in deze ronde — apart kennisbank-bestand (`02a-30-dagen-contentplan.md`) aanbevolen zodra het relevant wordt voor ELEVA's Skill-van-de-dag of content-suggesties.
+
+---
+
+## EXTRA — Hoe gebruik je jouw BOARDS-platform
+
+> Jouw hele business in één systeem. Simpel. Krachtig. Duplicatie.
+
+### Wat zit erin
+
+- Prospectlinks voor vitaliteit & gezondheid
+- Businesslinks voor de opportunity
+- Opgenomen presentaties
+- Uitnodigingsteksten + WhatsApp-scripts
+- Content voor je socials
+- Het 10-dagen opstartplan
+- Tools voor je 100-namenlijst
+- Trainingen, documenten, video's — alles op één plek
+
+> **Dit is geen mapje. Dit is je engine.**
+
+### Waarom dit werkt
+
+Je hoeft niks meer zelf te verzinnen, niks te onthouden. Je hoeft alleen te **delen**:
+
+1. Rechtsboven → **Share → Copy link**
+2. Send via WhatsApp
+3. Je prospect/nieuwe member loopt automatisch alle stappen door: info, presentaties, uitleg, onboarding — tot aan hun eerste 10 dagen en hun eerste members.
+
+> Dat is duplicatie. Dat is momentum. Dat is hoe teams groeien.
+
+### Voor een business zonder grenzen
+
+Boards beschikbaar in: Nederlands · Engels · Duits · Spaans · Portugees (en meer).
+
+> Iedereen, waar dan ook, kan direct starten. Zelfde systeem. Zelfde kwaliteit. Zelfde eenvoud.
+
+### Wat dit systeem voor jou betekent
+
+- Je bouwt vanuit duidelijkheid
+- Je begeleidt vanuit eenvoud
+- Je creëert momentum zonder gedoe
+- Je helpt mensen sneller starten
+- Je bouwt een business die schaalbaar is
+- Je werkt vanuit één centrale plek
+- Je kunt meteen internationaal
+
+> **Alles is plug-and-play. Boards draagt het verhaal, jij brengt het vuur.**
+
+---
+
+## Synthese — Wat betekent folder 2 voor ELEVA?
+
+**Kern-insights van de volledige 10-dagen-flow voor de app:**
+
+1. **Dag-van-60 telling** moet minimaal de Builder-mijlpaal (1500 IP) kennen. STAP 5 zet Builder expliciet neer als het 1-maand-doel. ELEVA's dashboard kan progressie tonen tegen die milestone.
+
+2. **De 100 namenlijst = 25 warm + 75 opwarmen** is een concreet datamodel. De bestaande `/namenlijst` (kanban met 6 fases) moet waarschijnlijk een 7ᵉ status erbij krijgen: *"opwarmen"* (pre-uitnodiging). Of: een split 25/75 badge op het kanban-overzicht.
+
+3. **L.O.R.D.-principe** (Location, Occupation, Recreation, Dreams) is letterlijk het prompt-raamwerk voor de opwarm-fase. De DM-coach kan hier conversatie-prompts op genereren — één vraag per dag bijvoorbeeld, wisselend per L-O-R-D.
+
+4. **WHY = jouw haakje**: zowel voor eigen motivatie (onboarding) als voor het noteren van prospect-WHYs. De `/namenlijst/[id]` detailpagina zou een eigen WHY-veld moeten hebben per prospect (dat is goud bij uitnodigen). Dit is een **directe feature-kandidaat**.
+
+5. **Pre-post vs 21-dagen post**: de eerste uiting heeft twee routes afhankelijk van eigen resultaat. Het dashboard kan dit als eerste content-actie voorstellen (Dag 1-3), afhankelijk van een vraag *"heb je al resultaat op een programma?"*.
+
+6. **3-way call** is de standaard onboarding-tool. De sponsor is altijd erbij. Past perfect bij de human-first filter: **AI vervangt dit niet**. ELEVA helpt alleen met voorbereiding (WHY-koppeling, gesprek-agenda, follow-up).
+
+7. **Hot Market ≠ cold market**: natuurlijk blijven is de kernregel. De DM-coach mag geen robot-taal suggereren — maar de toon van de user zelf mirroren. Past bij de feedback-memory "menselijkheid-filter".
+
+8. **Dinsdagavond teamtraining** is het wekelijkse momentum-moment. ELEVA kan hier op haken (herinnering + recap + actie-item).
+
+9. **"Je bent niet op zoek naar iedereen. Je bent op zoek naar iemand die op zoek is."** — kernzin. Kan als ambient tagline in de app (loading screens, empty states).
+
+10. **Boards is de engine** voor alle content-deling. ELEVA vervangt Boards niet maar vult aan met persoonlijke groei-metrics die Boards niet kan leveren.
+
+---
+
+## Nog op te halen (voor volledigheid van folder 2)
+
+- [ ] Inhoud van subfolder `30 Dagen Contentplan` → Dag 1-7, 8-14, 15-21, 22-30 (apart bestand)
+- [ ] Embedded documenten/PDFs (HOT_MARKET_BENADERING 2025, Voorbereiding Pre Post, 21 Dagen Post, Hoe_maak_je_jouw_WHY, Meer pret & poen, BUILDER PLAN 2025, Contactenlijst_brainstorm, Jouw_100_Namenlijst_in_4_stappen) — alleen titels nu geïndexeerd
+- [ ] Video-transcripts (WOOP OR POOP, backoffice-intro, 30-60-90 doelen, verdienmodel, namenlijst-uitleg) → `videos-index.md`
