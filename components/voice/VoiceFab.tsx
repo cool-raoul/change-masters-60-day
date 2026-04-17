@@ -110,7 +110,7 @@ type ParseResultaat = {
   onduidelijk: string[];
 };
 
-type Fase = "dicht" | "opname" | "verwerken" | "preview" | "opslaan";
+type Fase = "dicht" | "opname" | "bewerken" | "verwerken" | "preview" | "opslaan";
 
 export function VoiceFab() {
   const { taal } = useTaal();
@@ -121,6 +121,7 @@ export function VoiceFab() {
   const [fase, setFase] = useState<Fase>("dicht");
   const [resultaat, setResultaat] = useState<ParseResultaat | null>(null);
   const [acties, setActies] = useState<Actie[]>([]);
+  const [bewerkTekst, setBewerkTekst] = useState("");
 
   const spraak = gebruikSpraak({
     taal,
@@ -151,7 +152,15 @@ export function VoiceFab() {
       setFase("dicht");
       return;
     }
-    verwerk(tekst);
+    setBewerkTekst(tekst);
+    setFase("bewerken");
+  }
+
+  function opnieuwOpnemen() {
+    spraak.reset();
+    setBewerkTekst("");
+    setFase("opname");
+    setTimeout(() => spraak.start(), 50);
   }
 
   async function verwerk(tekst: string) {
@@ -462,6 +471,7 @@ export function VoiceFab() {
     setFase("dicht");
     setResultaat(null);
     setActies([]);
+    setBewerkTekst("");
   }
 
   function verwijderActie(idx: number) {
@@ -543,7 +553,42 @@ export function VoiceFab() {
                     className="btn-gold flex-1"
                     disabled={spraak.huidigeTekst().length < 3}
                   >
-                    ✓ Klaar
+                    ✓ Stop & bewerk
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {fase === "bewerken" && (
+              <div className="p-6 space-y-4">
+                <div>
+                  <h2 className="text-lg font-display font-bold text-cm-white mb-1">
+                    📝 Bewerk je tekst
+                  </h2>
+                  <p className="text-cm-white text-xs opacity-70">
+                    Corrigeer spelfouten of verkeerd verstane woorden voordat ELEVA het verwerkt.
+                  </p>
+                </div>
+                <textarea
+                  value={bewerkTekst}
+                  onChange={(e) => setBewerkTekst(e.target.value)}
+                  className="textarea-cm text-sm w-full"
+                  rows={8}
+                  autoFocus
+                />
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <button onClick={sluit} className="btn-secondary sm:flex-1">
+                    Annuleren
+                  </button>
+                  <button onClick={opnieuwOpnemen} className="btn-secondary sm:flex-1">
+                    🎙️ Opnieuw
+                  </button>
+                  <button
+                    onClick={() => verwerk(bewerkTekst.trim())}
+                    className="btn-gold sm:flex-1"
+                    disabled={bewerkTekst.trim().length < 3}
+                  >
+                    ✓ Verwerk met ELEVA
                   </button>
                 </div>
               </div>
@@ -568,6 +613,17 @@ export function VoiceFab() {
                 <details className="card bg-cm-surface-2 text-sm">
                   <summary className="cursor-pointer text-cm-white opacity-70">Jouw tekst</summary>
                   <p className="text-cm-white text-sm mt-2 whitespace-pre-wrap">{resultaat.transcript}</p>
+                  <button
+                    onClick={() => {
+                      setBewerkTekst(resultaat.transcript);
+                      setResultaat(null);
+                      setActies([]);
+                      setFase("bewerken");
+                    }}
+                    className="mt-2 text-xs text-cm-gold hover:underline"
+                  >
+                    ✏️ Bewerk tekst en verwerk opnieuw
+                  </button>
                 </details>
 
                 {acties.length > 0 && (
