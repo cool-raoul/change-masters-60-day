@@ -23,6 +23,7 @@ interface SnelleOptie {
 }
 
 const SNELLE_OPTIES: SnelleOptie[] = [
+  { icoon: "🤝", labelKey: "coach.snel.drieweg", berichtKey: "coach.snel.drieweg.bericht" },
   { icoon: "💬", labelKey: "coach.snel.dm", berichtKey: "coach.snel.dm.bericht" },
   { icoon: "🛡️", labelKey: "coach.snel.bezwaar", berichtKey: "coach.snel.bezwaar.bericht" },
   { icoon: "🔄", labelKey: "coach.snel.followup", berichtKey: "coach.snel.followup.bericht" },
@@ -34,6 +35,10 @@ const SNELLE_OPTIES: SnelleOptie[] = [
 // Gratis eerste antwoorden — geen API call nodig!
 // De coach vraagt door zodat het 2e bericht (met context) wél naar de API gaat
 const GRATIS_ANTWOORDEN: Record<string, Record<string, string>> = {
+  "coach.snel.drieweg.bericht": {
+    nl: "De 3-weg gesprek scripts staan klaar in ELEVA! 🤝\n\nGa naar het profiel van je prospect in de namenlijst → klik op '💬 3-weg gesprek scripts'. Daar kies je:\n\n1. Product (vitaliteit) of Business flow\n2. Naam + geslacht van je sponsor (vrouw/man)\n3. Geslacht van je prospect (vrouw/man)\n\nAlle stap-voor-stap berichten worden automatisch op naam en geslacht ingevuld — klaar om te kopiëren of direct via WhatsApp te sturen.\n\nWil je ook hulp bij de voorbereiding? Vertel me:\n- Is het product of business?\n- Wie is je prospect en hoe kennen jullie elkaar?\n- Wie is je sponsor?",
+    en: "The 3-way conversation scripts are ready in ELEVA! 🤝\n\nGo to your prospect's profile in the name list → click '💬 3-way conversation scripts'. There you choose:\n\n1. Product (vitality) or Business flow\n2. Sponsor name + gender (female/male)\n3. Prospect gender (female/male)\n\nAll step-by-step messages are automatically filled in with name and gender — ready to copy or send via WhatsApp.\n\nWant help with preparation? Tell me:\n- Product or business?\n- Who is your prospect and how do you know them?\n- Who is your sponsor?",
+  },
   "coach.snel.dm.bericht": {
     nl: "Top! Voor wie wil je een DM schrijven? Vertel me even:\n\n1. Hoe heet diegene?\n2. Hoe kennen jullie elkaar?\n3. Heb je al eerder over de business gepraat?",
     en: "Great! Who do you want to write a DM for? Tell me:\n\n1. What's their name?\n2. How do you know each other?\n3. Have you talked about the business before?",
@@ -62,6 +67,14 @@ const GRATIS_ANTWOORDEN: Record<string, Record<string, string>> = {
 
 // Berichten per taal voor snelle opties
 const SNELLE_BERICHTEN: Record<string, Record<string, string>> = {
+  "coach.snel.drieweg.bericht": {
+    nl: "Help me een 3-weg gesprek opzetten",
+    en: "Help me set up a 3-way conversation",
+    fr: "Aide-moi à organiser une conversation à 3",
+    es: "Ayúdame a organizar una conversación a 3",
+    de: "Hilf mir ein 3-Wege-Gespräch einzurichten",
+    pt: "Me ajude a organizar uma conversa a 3",
+  },
   "coach.snel.dm.bericht": {
     nl: "Help me met een DM",
     en: "Help me with a DM",

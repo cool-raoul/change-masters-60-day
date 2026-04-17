@@ -199,7 +199,27 @@ OPENER-STRATEGIE BIJ INTERESSE (3-weg-chat-benadering):
 Zodra iemand geïnteresseerd reageert op een DM, is de standaard volgende stap NIET alles zelf uitleggen — maar direct een WhatsApp-groepje aanmaken met de upline/sponsor erbij. Dit bouwt vertrouwen via een derde persoon met ervaring en houdt de druk laag ("allemaal vrijblijvend").
 - BUSINESS-flow: framing is "samenwerken" + upline die zelf mooi resultaat heeft behaald. Opener start met "Top 👍🏽" en benadrukt dat de upline meekijkt, uitleg geeft en vragen beantwoordt.
 - PRODUCT/VITALITEIT-flow: framing is "holistisch vitaliteitsprogramma" + upline die de user EN vele anderen heeft geholpen. Opener start warm ("Leuk dat je geïnteresseerd bent 😃") en belooft "het allerbeste advies" — altijd geheel vrijblijvend.
-Kernprincipe: vrijblijvend, vertrouwen opbouwen via derde persoon met ervaring, user (= student) stapt zelf terug zodra upline is geïntroduceerd. De exacte Stap 1-teksten staan in de Drieweg-scripts (component DriewegGesprek) en zijn leidend.`;
+Kernprincipe: vrijblijvend, vertrouwen opbouwen via derde persoon met ervaring, user (= student) stapt zelf terug zodra upline is geïntroduceerd.
+
+3-WEG GESPREK SCRIPTS IN ELEVA (VERPLICHT VERMELDEN ALS IEMAND HIEROVER VRAAGT):
+ELEVA heeft een volledig uitgewerkte 3-weg gesprek tool — per prospect-profiel in de namenlijst, sectie "💬 3-weg gesprek scripts". De gebruiker hoeft dit NIET zelf te schrijven; alle berichten staan klaar.
+
+HOE HET WERKT:
+1. Namenlijst → open prospect-profiel → klik "💬 3-weg gesprek scripts"
+2. Kies flow: Product/Vitaliteit of Business/Opportunity
+3. Vul in: naam sponsor + geslacht sponsor (Vrouw/Man)
+4. Kies geslacht prospect (Vrouw/Man)
+5. Alle 5 stappen worden automatisch ingevuld met namen en correcte voornaamwoorden (zij/hij, haar/hem, Ze/Hij)
+
+DE 5 STAPPEN:
+- Stap 1: Aankondiging (stuur AAN prospect vóór je groepje aanmaakt)
+- Stap 2: Introductie in het groepje (edifieer sponsor, stel prospect voor, noem situatie)
+- Stap 3: Stap terug ⚠️ (gebruiker zwijgt — sponsor = expert, jij = student)
+- Stap 4: Sponsor opent (opening-bericht dat sponsor stuurt — geef dit als tip aan sponsor)
+- Stap 5: Follow-up (stuur apart aan prospect binnen 24u, 2 opties)
+
+ALS IEMAND VRAAGT OM HULP BIJ 3-WEG GESPREK:
+Wijs ALTIJD eerst op de ELEVA-tool in de namenlijst. Geef daarna advies over voorbereiding.`;
 
   // Sectie G: Werkwijze (compact)
   const werkwijze = `

@@ -34,6 +34,7 @@ export default async function CoachPagina() {
           <div>
             <h2 className="text-cm-white font-semibold mb-2">{v("coach.wat_kan", taal)}</h2>
             <ul className="text-cm-white text-sm space-y-1">
+              <li>✓ {v("coach.kan_drieweg", taal)}</li>
               <li>✓ {v("coach.kan_dm", taal)}</li>
               <li>✓ {v("coach.kan_bezwaar", taal)}</li>
               <li>✓ {v("coach.kan_followup", taal)}</li>
