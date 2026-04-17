@@ -139,6 +139,27 @@ MOGELIJKE ACTIES:
 
 ⚠️ KRITIEKE REGELS — HIER GAAT HET VAAK FOUT:
 
+REGEL 0 — BESTELLING = ALTIJD APART product_bestelling ACTIE
+Als de gebruiker ook maar IETS zegt over wat iemand besteld heeft, gekocht heeft, ingeschreven heeft als lid, product aangeschaft heeft, of welke producten dan ook gekoppeld aan een persoon:
+→ ALTIJD een aparte { "type": "product_bestelling", ... } actie genereren.
+→ NOOIT de bestelling alleen in het "notities" veld van een prospect stoppen. De bestelling moet ALTIJD als losse actie komen.
+→ Dit geldt OOK als de persoon nieuw is. Dan krijg je DRIE acties:
+   1. nieuwe_prospect (met fase "member" of "shopper")
+   2. product_bestelling (met het product + datum)
+   3. eventueel taak voor opvolging
+
+Waarom belangrijk: elke bestelling activeert een database-trigger die automatisch 3 opvolg-herinneringen plaatst (21, 51, 81 dagen later). Zonder product_bestelling actie gebeurt dat niet en mist de gebruiker al zijn opvolgingen.
+
+Signaalwoorden die ALTIJD product_bestelling vereisen:
+- "heeft [product] besteld"
+- "heeft [product] gekocht/aangeschaft"
+- "is klant/member geworden met [product]"
+- "heeft ingeschreven als klant met [product]"
+- "starterpakket / basispakket / welk product dan ook"
+- "heeft vandaag/gisteren/op [datum] [product] genomen"
+
+Datum: als gebruiker zegt "vandaag" → vandaag. "Gisteren" → -1 dag. "Vorige week" → -7 dagen. Geen datum genoemd → vandaag.
+
 REGEL 1 — PIPELINE_FASE VERANDER JE (BIJNA) NOOIT
 - Verander pipeline_fase ALLEEN als de gebruiker expliciet zegt dat iemand van status verandert.
 - Expliciete signalen: "X is klant geworden", "Y heeft besteld/ingeschreven", "Z wil niet meer", "heeft afgezegd", "is partner geworden"
@@ -175,6 +196,15 @@ STANDAARD REGELS:
 - "volgende maand" = +30 dagen, "volgende week" = +7 dagen, "morgen" = +1 dag, "deze week" = +3 dagen, geen tijd genoemd = +7 dagen
 
 VOORBEELDEN:
+
+Voorbeeld 0 (nieuwe member met bestelling — HEEL BELANGRIJK):
+"Ik heb Arno Oerlemans net ingeschreven als member, hij heeft gisteren het basispakket besteld"
+→ redenatie: "Arno is nieuw → nieuwe_prospect met fase 'member'. Hij heeft besteld → APARTE product_bestelling actie (de trigger zorgt voor 21/51/81 dagen reminders). Bestelling NIET alleen in notities zetten."
+→ acties: [
+    { "type": "nieuwe_prospect", "volledige_naam": "Arno Oerlemans", "pipeline_fase": "member" },
+    { "type": "product_bestelling", "prospect_naam": "Arno Oerlemans", "product_omschrijving": "basispakket", "besteldatum": "<gisteren YYYY-MM-DD>" }
+  ]
+→ FOUT zou zijn: alleen een nieuwe_prospect actie met "basispakket besteld op ..." in notities. Dan worden er GEEN opvolg-herinneringen gemaakt.
 
 Voorbeeld A (goede case): "Petra de Voogd is al member. Ik wil een notitie maken om haar op te volgen om te spreken over haar bestelling van deze maand."
 → redenatie: "Petra is al member — NIET haar fase veranderen. Gebruiker wil (1) een notitie bij haar dossier, (2) een herinnering om haar op te volgen over haar bestelling."
@@ -276,6 +306,33 @@ BELANGRIJK: Begin altijd met de "redenatie" stap. Dit dwingt je om te denken vó
             );
             delete a.pipeline_fase;
           }
+        }
+      }
+    }
+
+    // Detecteer: notities met bestel-signaal zonder bijbehorende product_bestelling
+    const bestelTrefwoorden = /\b(besteld|gekocht|pakket|ingeschreven als (klant|member|lid)|shakes?|producten?)\b/i;
+    const bestellingNamen = new Set(
+      acties
+        .filter((a: any) => a?.type === "product_bestelling" && a.prospect_naam)
+        .map((a: any) => a.prospect_naam.toLowerCase())
+    );
+
+    for (const a of acties) {
+      if (a?.type === "nieuwe_prospect" && a.notities && bestelTrefwoorden.test(a.notities)) {
+        const naam = (a.volledige_naam || "").toLowerCase();
+        if (!bestellingNamen.has(naam)) {
+          waarschuwingen.push(
+            `${a.volledige_naam || "Nieuwe prospect"} heeft mogelijk een bestelling genoemd in notities maar er is geen product_bestelling actie. Check handmatig.`
+          );
+        }
+      }
+      if (a?.type === "notitie" && a.notitie && bestelTrefwoorden.test(a.notitie)) {
+        const naam = (a.prospect_naam || "").toLowerCase();
+        if (!bestellingNamen.has(naam)) {
+          waarschuwingen.push(
+            `Notitie bij ${a.prospect_naam} bevat bestel-woorden maar er is geen product_bestelling actie. Check handmatig.`
+          );
         }
       }
     }

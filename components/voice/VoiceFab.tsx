@@ -282,15 +282,18 @@ export function VoiceFab() {
     }
     for (const a of acties) {
       if (a.type === "update_prospect") {
-        const updates: any = { updated_at: new Date().toISOString() };
+        const { data: huidig } = await supabase
+          .from("prospects")
+          .select("notities, pipeline_fase")
+          .eq("id", a.prospect_id)
+          .single();
+        const bestaandeNotitie = huidig?.notities || "";
+        const updates: any = {
+          updated_at: new Date().toISOString(),
+          laatste_contact: new Date().toISOString().split("T")[0],
+        };
         if (a.pipeline_fase) updates.pipeline_fase = a.pipeline_fase;
         if (a.notities_toevoegen) {
-          const { data: huidig } = await supabase
-            .from("prospects")
-            .select("notities")
-            .eq("id", a.prospect_id)
-            .single();
-          const bestaandeNotitie = huidig?.notities || "";
           updates.notities = bestaandeNotitie
             ? `${bestaandeNotitie}\n\n[${new Date().toLocaleDateString("nl-NL")}] ${a.notities_toevoegen}`
             : a.notities_toevoegen;
@@ -300,6 +303,17 @@ export function VoiceFab() {
           .update(updates)
           .eq("id", a.prospect_id)
           .eq("user_id", user.id);
+        // Audit-trail: log fase-wijziging of notitie-toevoeging in contact_logs
+        if (a.pipeline_fase || a.notities_toevoegen) {
+          await supabase.from("contact_logs").insert({
+            prospect_id: a.prospect_id,
+            user_id: user.id,
+            contact_type: "notitie",
+            notities: a.notities_toevoegen || null,
+            fase_voor: huidig?.pipeline_fase || null,
+            fase_na: a.pipeline_fase || huidig?.pipeline_fase || null,
+          });
+        }
       }
     }
     for (const a of acties) {
@@ -308,7 +322,7 @@ export function VoiceFab() {
         if (!id) continue;
         const { data: huidig } = await supabase
           .from("prospects")
-          .select("notities")
+          .select("notities, pipeline_fase")
           .eq("id", id)
           .single();
         const bestaandeNotitie = huidig?.notities || "";
@@ -317,9 +331,22 @@ export function VoiceFab() {
           : a.notitie;
         await supabase
           .from("prospects")
-          .update({ notities: nieuweNotitie, updated_at: new Date().toISOString() })
+          .update({
+            notities: nieuweNotitie,
+            updated_at: new Date().toISOString(),
+            laatste_contact: new Date().toISOString().split("T")[0],
+          })
           .eq("id", id)
           .eq("user_id", user.id);
+        // Audit-trail: elke notitie ook loggen in contact_logs
+        await supabase.from("contact_logs").insert({
+          prospect_id: id,
+          user_id: user.id,
+          contact_type: "notitie",
+          notities: a.notitie,
+          fase_voor: huidig?.pipeline_fase || null,
+          fase_na: huidig?.pipeline_fase || null,
+        });
       }
     }
     for (const a of acties) {
@@ -329,11 +356,10 @@ export function VoiceFab() {
         await supabase.from("herinneringen").insert({
           user_id: user.id,
           prospect_id: id,
-          herinnering_type: "custom",
+          herinnering_type: "followup",
           titel: a.titel,
-          beschrijving: a.prospect_naam,
+          beschrijving: a.titel,
           vervaldatum,
-          verlooptijd: new Date(vervaldatum + "T09:00:00").toISOString(),
         });
       }
     }
@@ -370,7 +396,7 @@ export function VoiceFab() {
           fase_na: a.nieuwe_fase || huidig?.pipeline_fase || null,
         });
         const prospectUpdate: any = {
-          laatste_contact: new Date().toISOString(),
+          laatste_contact: new Date().toISOString().split("T")[0],
           updated_at: new Date().toISOString(),
         };
         if (a.nieuwe_fase) prospectUpdate.pipeline_fase = a.nieuwe_fase;
@@ -420,15 +446,13 @@ export function VoiceFab() {
         const id = naamNaarId[a.prospect_naam.toLowerCase()];
         if (!id) continue;
         const besteldatum = a.besteldatum || new Date().toISOString().split("T")[0];
-        const datum21 = new Date(besteldatum);
-        datum21.setDate(datum21.getDate() + 21);
+        // Postgres trigger maakt automatisch reminders op 21/51/81 dagen
         await supabase.from("product_bestellingen").insert({
           prospect_id: id,
           user_id: user.id,
           besteldatum,
           product_omschrijving: a.product_omschrijving,
           notities: a.notities || null,
-          tweede_bestelling_reminder_datum: datum21.toISOString().split("T")[0],
         });
         const { data: huidig } = await supabase
           .from("prospects")
@@ -436,7 +460,7 @@ export function VoiceFab() {
           .eq("id", id)
           .single();
         const faseUpdate: any = {
-          laatste_contact: new Date().toISOString(),
+          laatste_contact: new Date().toISOString().split("T")[0],
           updated_at: new Date().toISOString(),
         };
         if (huidig?.pipeline_fase !== "shopper" && huidig?.pipeline_fase !== "member") {
@@ -452,10 +476,7 @@ export function VoiceFab() {
     for (const a of acties) {
       if (a.type === "update_herinnering") {
         const updates: any = {};
-        if (a.nieuwe_vervaldatum) {
-          updates.vervaldatum = a.nieuwe_vervaldatum;
-          updates.verlooptijd = new Date(a.nieuwe_vervaldatum + "T09:00:00").toISOString();
-        }
+        if (a.nieuwe_vervaldatum) updates.vervaldatum = a.nieuwe_vervaldatum;
         if (a.nieuwe_titel) updates.titel = a.nieuwe_titel;
         if (Object.keys(updates).length > 0) {
           await supabase
