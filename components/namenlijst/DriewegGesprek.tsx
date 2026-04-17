@@ -28,7 +28,8 @@ function vervangVariabelen(
   situatie: string | undefined,
   sponsorNaam: string,
   sponsorPeriode: string,
-  geslacht: Geslacht
+  sponsorGeslacht: Geslacht,
+  prospectGeslacht: Geslacht
 ): string {
   let result = tekst;
 
@@ -39,16 +40,21 @@ function vervangVariabelen(
   if (sponsorPeriode) result = result.replace(/\[periode sponsor\]/g, sponsorPeriode);
   if (situatie) result = result.replace(/\[situatie\]/g, situatie);
 
-  // Geslacht sponsor — altijd vervangen (geslacht is altijd "v" of "m")
-  const zij   = geslacht === "v" ? "zij"      : "hij";
-  const Zij   = geslacht === "v" ? "Zij"      : "Hij";
-  const haar  = geslacht === "v" ? "haar"     : "hem";
-  const vriend = geslacht === "v" ? "vriendin" : "vriend";
+  // Geslacht sponsor
+  const sZij   = sponsorGeslacht === "v" ? "Zij"      : "Hij";
+  const szij   = sponsorGeslacht === "v" ? "zij"      : "hij";
+  const vriend = sponsorGeslacht === "v" ? "vriendin" : "vriend";
 
-  result = result.replace(/\[Zij\/Hij\]/g, Zij);
-  result = result.replace(/\[zij\/hij\]/g, zij);
-  result = result.replace(/\[haar\/hem\]/g, haar);
+  result = result.replace(/\[Zij\/Hij\]/g, sZij);
+  result = result.replace(/\[zij\/hij\]/g, szij);
   result = result.replace(/\[vriendin\/vriend\]/g, vriend);
+
+  // Geslacht prospect
+  const pZij  = prospectGeslacht === "v" ? "Ze"   : "Hij";
+  const phaar = prospectGeslacht === "v" ? "haar"  : "hem";
+
+  result = result.replace(/\[Ze\/Hij\]/g, pZij);
+  result = result.replace(/\[haar\/hem\]/g, phaar);
 
   return result;
 }
@@ -126,7 +132,8 @@ function StapKaart({
   situatie,
   sponsorNaam,
   sponsorPeriode,
-  geslacht,
+  sponsorGeslacht,
+  prospectGeslacht,
 }: {
   stap: StapConfig;
   voornaam: string;
@@ -134,10 +141,11 @@ function StapKaart({
   situatie: string | undefined;
   sponsorNaam: string;
   sponsorPeriode: string;
-  geslacht: Geslacht;
+  sponsorGeslacht: Geslacht;
+  prospectGeslacht: Geslacht;
 }) {
   function verwerk(tekst: string) {
-    return vervangVariabelen(tekst, voornaam, volledigeNaam, situatie, sponsorNaam, sponsorPeriode, geslacht);
+    return vervangVariabelen(tekst, voornaam, volledigeNaam, situatie, sponsorNaam, sponsorPeriode, sponsorGeslacht, prospectGeslacht);
   }
 
   return (
@@ -204,7 +212,7 @@ const PRODUCT_STAPPEN: StapConfig[] = [
     context: "Stuur dit in het nieuwe groepje — edifieer de sponsor eerst",
     type: "bericht",
     bericht:
-      "Hi [naam prospect]! 😊 Dit is [naam sponsor] — mijn [vriendin/vriend] en mentor. [Zij/Hij] heeft zelf fantastische resultaten behaald. [Zij/Hij] helpt mij nu ook en heeft al heel veel mensen begeleid met precies wat jij zoekt 🥰\n\n[naam sponsor], dit is [naam prospect]. Ze is op zoek naar [situatie]. Wil jij [haar/hem] even verder helpen? 🙏",
+      "Hi [naam prospect]! 😊 Dit is [naam sponsor] — mijn [vriendin/vriend] en mentor. [Zij/Hij] heeft zelf fantastische resultaten behaald. [Zij/Hij] helpt mij nu ook en heeft al heel veel mensen begeleid met precies wat jij zoekt 🥰\n\n[naam sponsor], dit is [naam prospect]. [Ze/Hij] is op zoek naar [situatie]. Wil jij [haar/hem] even verder helpen? 🙏",
   },
   {
     nummer: 3,
@@ -253,7 +261,7 @@ const BUSINESS_STAPPEN: StapConfig[] = [
     context: "Stuur dit in het nieuwe groepje — edifieer de sponsor eerst",
     type: "bericht",
     bericht:
-      "Hi [naam prospect]! 😊 Dit is [naam sponsor] — mijn mentor. [Zij/Hij] heeft zelf een mooie business opgebouwd. [Zij/Hij] helpt mij nu ook en heeft al veel mensen begeleid die precies op zoek waren naar wat jij zoekt 💪🏽\n\n[naam sponsor], dit is [naam prospect]. Ze is op zoek naar [situatie]. Wil jij [haar/hem] even meenemen in hoe dit werkt? 🙏",
+      "Hi [naam prospect]! 😊 Dit is [naam sponsor] — mijn mentor. [Zij/Hij] heeft zelf een mooie business opgebouwd. [Zij/Hij] helpt mij nu ook en heeft al veel mensen begeleid die precies op zoek waren naar wat jij zoekt 💪🏽\n\n[naam sponsor], dit is [naam prospect]. [Ze/Hij] is op zoek naar [situatie]. Wil jij [haar/hem] even meenemen in hoe dit werkt? 🙏",
   },
   {
     nummer: 3,
@@ -321,7 +329,8 @@ export function DriewegGesprek({ prospectNaam, prospectSituatie, sponsorNaam: sp
   const [actieveTab, setActieveTab] = useState<TabType>("product");
   const [sponsorNaam, setSponsorNaam] = useState(sponsorNaamProp || "");
   const [sponsorPeriode, setSponsorPeriode] = useState("");
-  const [geslacht, setGeslacht] = useState<Geslacht>("v");
+  const [sponsorGeslacht, setSponsorGeslacht] = useState<Geslacht>("v");
+  const [prospectGeslacht, setProspectGeslacht] = useState<Geslacht>("v");
 
   const voornaam = prospectNaam.split(" ")[0];
   const stappen = actieveTab === "product" ? PRODUCT_STAPPEN : BUSINESS_STAPPEN;
@@ -361,9 +370,9 @@ export function DriewegGesprek({ prospectNaam, prospectSituatie, sponsorNaam: sp
             <label className="text-xs text-cm-white opacity-60 mb-1 block">Sponsor is een</label>
             <div className="flex gap-1">
               <button
-                onClick={() => setGeslacht("v")}
+                onClick={() => setSponsorGeslacht("v")}
                 className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-all border ${
-                  geslacht === "v"
+                  sponsorGeslacht === "v"
                     ? "bg-cm-gold text-cm-black border-cm-gold"
                     : "bg-cm-surface-2 text-cm-white border-cm-border hover:border-cm-gold-dim"
                 }`}
@@ -371,9 +380,36 @@ export function DriewegGesprek({ prospectNaam, prospectSituatie, sponsorNaam: sp
                 Vrouw
               </button>
               <button
-                onClick={() => setGeslacht("m")}
+                onClick={() => setSponsorGeslacht("m")}
                 className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-all border ${
-                  geslacht === "m"
+                  sponsorGeslacht === "m"
+                    ? "bg-cm-gold text-cm-black border-cm-gold"
+                    : "bg-cm-surface-2 text-cm-white border-cm-border hover:border-cm-gold-dim"
+                }`}
+              >
+                Man
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 border-t border-cm-border/50">
+          <div className="sm:col-start-3">
+            <label className="text-xs text-cm-white opacity-60 mb-1 block">Prospect is een</label>
+            <div className="flex gap-1">
+              <button
+                onClick={() => setProspectGeslacht("v")}
+                className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-all border ${
+                  prospectGeslacht === "v"
+                    ? "bg-cm-gold text-cm-black border-cm-gold"
+                    : "bg-cm-surface-2 text-cm-white border-cm-border hover:border-cm-gold-dim"
+                }`}
+              >
+                Vrouw
+              </button>
+              <button
+                onClick={() => setProspectGeslacht("m")}
+                className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-all border ${
+                  prospectGeslacht === "m"
                     ? "bg-cm-gold text-cm-black border-cm-gold"
                     : "bg-cm-surface-2 text-cm-white border-cm-border hover:border-cm-gold-dim"
                 }`}
@@ -420,7 +456,8 @@ export function DriewegGesprek({ prospectNaam, prospectSituatie, sponsorNaam: sp
             situatie={prospectSituatie}
             sponsorNaam={sponsorNaam}
             sponsorPeriode={sponsorPeriode}
-            geslacht={geslacht}
+            sponsorGeslacht={sponsorGeslacht}
+            prospectGeslacht={prospectGeslacht}
           />
         ))}
       </div>
