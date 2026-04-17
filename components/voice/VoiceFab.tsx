@@ -105,9 +105,11 @@ type ParseResultaat = {
   transcript: string;
   intentie: Intentie;
   samenvatting: string;
+  redenatie?: string;
   acties: Actie[];
   coach_bericht: string | null;
   onduidelijk: string[];
+  waarschuwingen?: string[];
 };
 
 type Fase = "dicht" | "opname" | "bewerken" | "verwerken" | "preview" | "opslaan";
@@ -626,6 +628,22 @@ export function VoiceFab() {
                   </button>
                 </details>
 
+                {resultaat.redenatie && (
+                  <details className="card bg-cm-surface-2 text-sm">
+                    <summary className="cursor-pointer text-cm-white opacity-70">🧠 Hoe ELEVA redeneerde</summary>
+                    <p className="text-cm-white text-xs mt-2 whitespace-pre-wrap opacity-80">{resultaat.redenatie}</p>
+                  </details>
+                )}
+
+                {resultaat.waarschuwingen && resultaat.waarschuwingen.length > 0 && (
+                  <div className="card border-red-500/40 bg-red-500/5">
+                    <p className="text-xs text-red-400 uppercase tracking-wider mb-1">⚠️ Waarschuwingen</p>
+                    {resultaat.waarschuwingen.map((w, i) => (
+                      <p key={i} className="text-cm-white text-sm">• {w}</p>
+                    ))}
+                  </div>
+                )}
+
                 {acties.length > 0 && (
                   <div className="space-y-2">
                     <p className="text-xs text-cm-white uppercase tracking-wider opacity-60">
@@ -737,10 +755,9 @@ function beschrijfActie(actie: any): { icoon: string; titel: string; details: st
         };
       case "update_prospect":
         return {
-          icoon: "🔄",
-          titel: "Bijwerken",
+          icoon: actie.pipeline_fase ? "⚠️" : "🔄",
+          titel: actie.pipeline_fase ? `Fase-wijziging → ${actie.pipeline_fase}` : "Bijwerken",
           details: [
-            actie.pipeline_fase ? `Nieuwe fase: ${actie.pipeline_fase}` : null,
             actie.notities_toevoegen ? `Notitie: ${actie.notities_toevoegen}` : null,
           ].filter(Boolean) as string[],
         };

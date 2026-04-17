@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 import { createClient } from "@/lib/supabase/server";
 
-export const maxDuration = 30;
+export const maxDuration = 45;
 
 export async function POST(request: Request) {
   try {
@@ -137,55 +137,94 @@ MOGELIJKE ACTIES:
    - Zet automatisch fase naar "shopper" als nog niet shopper/member
    - Systeem maakt automatisch opvolg-herinnering op +21 dagen
 
-BELANGRIJKE REGELS:
+⚠️ KRITIEKE REGELS — HIER GAAT HET VAAK FOUT:
+
+REGEL 1 — PIPELINE_FASE VERANDER JE (BIJNA) NOOIT
+- Verander pipeline_fase ALLEEN als de gebruiker expliciet zegt dat iemand van status verandert.
+- Expliciete signalen: "X is klant geworden", "Y heeft besteld/ingeschreven", "Z wil niet meer", "heeft afgezegd", "is partner geworden"
+- "Opvolgen", "bellen", "spreken met", "nog contact zoeken" → GEEN fase-verandering! Dit is een taak.
+- Iemand die al "member" of "shopper" is, blijft dat. Ga NOOIT terug naar "prospect", "followup" of "uitgenodigd".
+- Bij twijfel: laat pipeline_fase weg uit de actie.
+
+REGEL 2 — "OPVOLGEN" = TAAK, NIET FASE
+Als gebruiker zegt "ik moet X opvolgen/bellen/spreken/contacten":
+→ Maak een taak actie: { "type": "taak", "prospect_naam": "X", "titel": "Opvolgen: ...", "vervaldatum": "..." }
+→ NIET: pipeline_fase = "followup". Followup is een aparte pipeline-stage voor mensen die nog niet besteld hebben.
+
+REGEL 3 — BESTELLING VAN BESTAANDE KLANT
+Als een bestaande member/shopper een nieuwe bestelling doet:
+→ product_bestelling actie (altijd)
+→ Laat pipeline_fase ONGEMOEID (hij blijft member/shopper)
+→ Eventueel een taak voor opvolging als genoemd
+
+REGEL 4 — NOTITIES KOPPELEN
+Als gebruiker een notitie wil maken BIJ een bestaande persoon:
+→ Gebruik 'notitie' actie (NIET update_prospect met notities_toevoegen tenzij het een status-update is)
+→ Bij een taak kun je ook context meenemen in de titel
+
+REGEL 5 — BESTAANDE FASES RESPECTEREN
+Voor elke bestaande prospect in de lijst hierboven staat de HUIDIGE fase tussen haakjes. Ga hier NOOIT vanaf zonder expliciete reden in de tekst.
+
+STANDAARD REGELS:
 - Altijd lege arrays retourneren als er niks is
 - ALTIJD valid JSON, geen markdown
-- Als iemand al bestaat (naam match in lijst): gebruik update_prospect, niet nieuwe_prospect
+- Als iemand al bestaat (naam match in lijst): gebruik de bestaande prospect_id, maak GEEN nieuwe
 - Fuzzy matching op namen: "Pieter" = "Pieter de Hoogh" als die al bestaat
 - Neem notities altijd mee bij het aanmaken van een prospect als ze genoemd worden
-- Taken alleen aanmaken als expliciet een vervolgactie genoemd wordt ("moet nog spreken", "volgende maand starten", "opvolgen", "contacten", etc.)
 - Bij familie/relatie-info (bijv. "zijn zus"): neem dat op in notities van de nieuwe prospect en in het relatie-veld
+- "volgende maand" = +30 dagen, "volgende week" = +7 dagen, "morgen" = +1 dag, "deze week" = +3 dagen, geen tijd genoemd = +7 dagen
 
-MULTI-ACTIE DENKEN — DIT IS BELANGRIJK:
-Eén zin kan MEERDERE acties bevatten. Splits alles in aparte acties.
+VOORBEELDEN:
 
-Voorbeeld 1: "Pieter heeft het basispakket besteld en zijn zus is geïnteresseerd, we moeten haar opvolgen"
-→ [
-    { "type": "update_prospect", "prospect_id": "<pieter-uuid>", "pipeline_fase": "shopper" } OF { "type": "nieuwe_prospect", "volledige_naam": "Pieter ...", "pipeline_fase": "shopper" },
+Voorbeeld A (goede case): "Petra de Voogd is al member. Ik wil een notitie maken om haar op te volgen om te spreken over haar bestelling van deze maand."
+→ redenatie: "Petra is al member — NIET haar fase veranderen. Gebruiker wil (1) een notitie bij haar dossier, (2) een herinnering om haar op te volgen over haar bestelling."
+→ acties: [
+    { "type": "notitie", "prospect_naam": "Petra de Voogd", "notitie": "Opvolgen over bestelling van deze maand" },
+    { "type": "taak", "prospect_naam": "Petra de Voogd", "titel": "Petra bellen over bestelling deze maand", "vervaldatum": "<+7 dagen>" }
+  ]
+→ FOUT zou zijn: pipeline_fase = "followup" toevoegen. Dat mag hier absoluut NIET.
+
+Voorbeeld B (nieuwe klant + familie): "Pieter heeft het basispakket besteld en zijn zus is geïnteresseerd, we moeten haar opvolgen"
+→ redenatie: "Pieter is nieuw of bestaand → als bestaand: product_bestelling (geen fase-wijziging als hij al shopper is). Als nieuw: nieuwe_prospect met fase shopper. Zus is nieuwe prospect. Opvolgen = taak."
+→ acties: [
     { "type": "product_bestelling", "prospect_naam": "Pieter ...", "product_omschrijving": "basispakket" },
     { "type": "nieuwe_prospect", "volledige_naam": "Zus van Pieter ...", "pipeline_fase": "prospect", "notities": "Interesse via Pieter", "relatie": "zus van Pieter ..." },
     { "type": "taak", "prospect_naam": "Zus van Pieter ...", "titel": "Opvolgen interesse zus Pieter", "vervaldatum": "<+7 dagen>" }
   ]
 
-Voorbeeld 2: "Ik heb vandaag 3 mensen gesproken, Anna wil meedoen als klant, Marie twijfelt nog"
-→ [
+Voorbeeld C (stats + mensen): "Ik heb vandaag 3 mensen gesproken, Anna wil meedoen als klant, Marie twijfelt nog"
+→ redenatie: "3 contacten in stats, Anna wordt shopper/member (nieuw of bestaand), Marie twijfelt = notitie/taak, geen fase-verandering tenzij ze al bestaat als prospect."
+→ acties: [
     { "type": "stats_increment", "contacten_gemaakt": 3 },
-    { "type": "update_prospect"/"nieuwe_prospect" voor Anna → fase "shopper" of "member" },
-    { "type": "update_prospect"/"nieuwe_prospect" voor Marie → fase "followup", notitie "twijfelt nog" }
+    { Anna: nieuwe_prospect met fase "shopper" OF product_bestelling als bestaand },
+    { Marie: notitie "twijfelt nog" + eventueel taak voor opvolging }
   ]
 
-REGELS BIJ MULTI-ACTIE:
-- Noemt gebruiker bestelling/product/pakket/ingeschreven als klant? → ALTIJD product_bestelling actie
+MULTI-ACTIE REGELS:
+- Noemt gebruiker bestelling/product/pakket/ingeschreven als klant? → product_bestelling actie
 - Noemt gebruiker een familielid of onbekende persoon zonder volledige naam? → nieuwe_prospect met beschrijvende naam ("Zus van X", "Vriend van Y")
-- Zegt gebruiker "opvolgen", "contacten", "bellen", "spreken", "terugkomen" + persoon? → taak actie aanmaken (ook al is de persoon net aangemaakt)
+- Zegt gebruiker "opvolgen", "contacten", "bellen", "spreken", "terugkomen" + persoon? → taak actie aanmaken
 - Bij net-aangemaakte prospect: gebruik dezelfde naam als "prospect_naam" in andere acties zodat ze gematched worden
-- Aantallen ("3 mensen gesproken", "2 uitgenodigd") → stats_increment actie toevoegen naast de andere acties
+- Aantallen ("3 mensen gesproken", "2 uitgenodigd") → stats_increment actie toevoegen
 
 OUTPUT FORMAT (exact zo):
 {
+  "redenatie": "Stap-voor-stap: wat wil de gebruiker écht? Welke bestaande personen zijn genoemd en wat is hun huidige fase? Welke acties volgen hier logisch uit? Noem expliciet als je GEEN fase-verandering doet en waarom.",
   "intentie": "data" | "coach" | "mixed",
   "samenvatting": "Korte 1-zin samenvatting van wat je begrepen hebt",
   "acties": [ ... lijst met actie-objecten ... ],
   "coach_bericht": "Vraag voor mentor in jij-vorm, of null bij intentie 'data'",
   "onduidelijk": [ "optionele lijst met vragen als iets niet helder is" ]
-}`;
+}
+
+BELANGRIJK: Begin altijd met de "redenatie" stap. Dit dwingt je om te denken vóór je acties genereert. Als je in je redenatie NIET expliciet een reden geeft voor een fase-verandering, dan mag je geen pipeline_fase in de actie opnemen.`;
 
     const openai = new OpenAI({ apiKey });
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      max_tokens: 1500,
-      temperature: 0.2,
+      model: "gpt-4o",
+      max_tokens: 2000,
+      temperature: 0.1,
       response_format: { type: "json_object" },
       messages: [
         { role: "system", content: systeemPrompt },
@@ -206,14 +245,51 @@ OUTPUT FORMAT (exact zo):
       ? geparsed.intentie
       : "data";
 
+    // Server-side veiligheidscheck: voorkom ongewenste fase-regressie
+    const faseRangorde: Record<string, number> = {
+      prospect: 1,
+      uitgenodigd: 2,
+      one_pager: 3,
+      presentatie: 4,
+      followup: 5,
+      not_yet: 6,
+      shopper: 7,
+      member: 8,
+    };
+    const prospectById = new Map(
+      (bestaandeProspects || []).map((p: any) => [p.id, p])
+    );
+
+    const acties = Array.isArray(geparsed.acties) ? geparsed.acties : [];
+    const waarschuwingen: string[] = [];
+
+    for (const a of acties) {
+      if (a?.type === "update_prospect" && a.pipeline_fase && a.prospect_id) {
+        const bestaand: any = prospectById.get(a.prospect_id);
+        if (bestaand) {
+          const huidigRang = faseRangorde[bestaand.pipeline_fase] ?? 0;
+          const nieuwRang = faseRangorde[a.pipeline_fase] ?? 0;
+          // Blokkeer regressie van shopper/member naar lagere fase
+          if (huidigRang >= 7 && nieuwRang < huidigRang) {
+            waarschuwingen.push(
+              `Fase-verandering geblokkeerd: ${bestaand.volledige_naam} is al ${bestaand.pipeline_fase}, AI wilde terugzetten naar ${a.pipeline_fase}.`
+            );
+            delete a.pipeline_fase;
+          }
+        }
+      }
+    }
+
     return new Response(
       JSON.stringify({
         transcript,
         intentie,
         samenvatting: geparsed.samenvatting || "",
-        acties: Array.isArray(geparsed.acties) ? geparsed.acties : [],
+        redenatie: geparsed.redenatie || "",
+        acties,
         coach_bericht: geparsed.coach_bericht || null,
         onduidelijk: Array.isArray(geparsed.onduidelijk) ? geparsed.onduidelijk : [],
+        waarschuwingen,
       }),
       { headers: { "Content-Type": "application/json" } }
     );
