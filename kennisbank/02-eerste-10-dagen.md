@@ -296,4 +296,55 @@ Breng sponsor op de hoogte en ga door naar stap 4.
 
 ---
 
-<!-- STAP 4-5 + extra kaarten volgen in volgende commits -->
+## STAP 4 — UITLEG VERDIENMODEL
+
+### Hoe werkt het verdienmodel?
+
+> Dit is geen 'bijbaankansje'. Dit is een bewezen systeem dat werkt omdat het gebaseerd is op iets wat we allemaal doen: **delen waar we zelf enthousiast over zijn en delen wat werkt**. Alleen nu word je daar ook voor betaald. Eerlijk, transparant en schaalbaar.
+
+### Percentages
+
+Zodra mensen iets bestellen via jou, krijg jij uitbetaald — vrienden, familie, online volgers, iedereen die je kent of nog gaat kennen.
+
+**Over bestellingen in webshops (op de IP-waarde):**
+| Niveau | Commissie |
+|---|---|
+| Jouw eigen shop (jouw shoppers) | **25%** |
+| 1ᵉ-level members hun webshop | **10%** |
+| 2ᵉ-level members hun webshop | **5%** |
+| Diepere levels (vanaf Bronze status) | **3-12%**, tot in de diepte |
+
+**Over bestellingen van jouw members (op de IP-waarde):**
+| Niveau | Commissie |
+|---|---|
+| 1ᵉ-level members | **5%** |
+| 2ᵉ-level members | **25%** |
+| 3ᵉ-level members | **10%** |
+| Diepere levels (vanaf Bronze status) | **3-12%**, tot in de diepte |
+
+> ⚠ *Voor een stabiel en groter inkomen is het belangrijk om een team te bouwen van members met ieder hun eigen webshop.*
+
+**Doorlopende commissie:** ook als je op vakantie bent of in de speeltuin zit met je kids.
+
+### Waarom dit voor jou kan werken
+
+Je hoeft **geen** expert te zijn. Geen gladde verkoper. Geen mega netwerk nodig.
+
+Wel:
+- Je leert hoe je slim en simpel deelt wat voor jou werkt
+- Je krijgt support, training en tools — alles ligt klaar
+- Duizenden mensen wereldwijd doen dit al succesvol — jij kunt de volgende zijn
+
+> 💡 No worries — niemand snapt het gelijk volledig. Stap voor stap wordt alles duidelijker zodra je het vaker ziet en hoort.
+
+### Reflectievraag
+
+> Wat als je dit de komende 6 maanden écht serieus zou doen?
+> Waar zou je dan staan — financieel, persoonlijk, qua vrijheid?
+> Hoe zou je je dan voelen?
+>
+> Je hoeft niet alles perfect te doen. Je hoeft alleen te beginnen.
+
+---
+
+<!-- STAP 5 + extra kaarten volgen in volgende commits -->
