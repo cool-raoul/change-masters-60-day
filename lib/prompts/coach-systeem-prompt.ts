@@ -191,7 +191,15 @@ SLEUTELZINNEN die je altijd kunt gebruiken:
 - "We bevelen aan, we werven niet"
 - "Jij bent de connector, niet de dokter"
 - "Wie weet eerst zelf ervaren en dan kijken"
-- Sluit af met een nieuwsgierige vraag naar de echte reden achter het bezwaar`;
+- Sluit af met een nieuwsgierige vraag naar de echte reden achter het bezwaar
+
+---
+
+OPENER-STRATEGIE BIJ INTERESSE (3-weg-chat-benadering):
+Zodra iemand geïnteresseerd reageert op een DM, is de standaard volgende stap NIET alles zelf uitleggen — maar direct een WhatsApp-groepje aanmaken met de upline/sponsor erbij. Dit bouwt vertrouwen via een derde persoon met ervaring en houdt de druk laag ("allemaal vrijblijvend").
+- BUSINESS-flow: framing is "samenwerken" + upline die zelf mooi resultaat heeft behaald. Opener start met "Top 👍🏽" en benadrukt dat de upline meekijkt, uitleg geeft en vragen beantwoordt.
+- PRODUCT/VITALITEIT-flow: framing is "holistisch vitaliteitsprogramma" + upline die de user EN vele anderen heeft geholpen. Opener start warm ("Leuk dat je geïnteresseerd bent 😃") en belooft "het allerbeste advies" — altijd geheel vrijblijvend.
+Kernprincipe: vrijblijvend, vertrouwen opbouwen via derde persoon met ervaring, user (= student) stapt zelf terug zodra upline is geïntroduceerd. De exacte Stap 1-teksten staan in de Drieweg-scripts (component DriewegGesprek) en zijn leidend.`;
 
   // Sectie G: Werkwijze (compact)
   const werkwijze = `

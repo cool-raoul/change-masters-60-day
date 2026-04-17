@@ -196,7 +196,7 @@ const PRODUCT_STAPPEN: StapConfig[] = [
     context: "Stuur dit aan [naam] vóór je het groepje aanmaakt",
     type: "bericht",
     bericht:
-      "Hey [naam]! Ik maak even een groepje aan met [naam sponsor], want ik kan het zelf nog niet zo goed uitleggen 😄 [Zij/Hij] doet dit al [periode sponsor] en heeft zelf ook super mooi resultaat behaald — [zij/hij] kan met je mee kijken en al je vragen beantwoorden 🥰",
+      "Leuk dat je geïnteresseerd bent 😃 Om jou zo goed mogelijk te kunnen helpen maak ik een whats app groep aan met [naam sponsor] erbij. [Zij/Hij] heeft mij en vele andere geholpen met het holistische vitaliteitsprogramma dat ik heb gevolgd. Zo kunnen we jou het allerbeste advies geven. Allemaal geheel vrijblijvend uiteraard! 🍀",
   },
   {
     nummer: 2,
@@ -245,7 +245,7 @@ const BUSINESS_STAPPEN: StapConfig[] = [
     context: "Stuur dit aan [naam] vóór je het groepje aanmaakt",
     type: "bericht",
     bericht:
-      "Hey [naam]! Ik maak even een groepje aan met [naam sponsor], want ik kan het zelf nog niet zo goed uitleggen 😄 [Zij/Hij] doet dit al [periode sponsor] en heeft zelf een mooie business opgebouwd — [zij/hij] kan met je mee kijken en al je vragen beantwoorden 👍🏽",
+      "Top 👍🏽 Ik maak even een whatsapp groepje aan met [naam sponsor], [zij/hij] is degene waar ik mee samenwerk 😄\n[Zij/Hij] heeft zelf ook super mooi resultaat behaald en kan even met ons mee kijken, meer uitleg geven en eventuele vragen beantwoorden 👍🏽\n\nAllemaal vrijblijvend 😃",
   },
   {
     nummer: 2,
