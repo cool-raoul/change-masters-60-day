@@ -634,12 +634,45 @@ export function VoiceFab() {
 }
 
 function ActieKaart({ actie, onVerwijder }: { actie: Actie; onVerwijder: () => void }) {
-  const content = (() => {
+  const content = beschrijfActie(actie);
+
+  return (
+    <div className="card bg-cm-surface-2 flex gap-3">
+      <span className="text-2xl">{content.icoon}</span>
+      <div className="flex-1 min-w-0">
+        <p className="text-cm-white font-semibold text-sm">{content.titel}</p>
+        {content.details.map((d, i) => (
+          <p key={i} className="text-cm-white text-xs opacity-70 mt-0.5">{d}</p>
+        ))}
+      </div>
+      <button
+        onClick={onVerwijder}
+        className="text-red-400 hover:text-red-300 text-sm"
+        title="Verwijder deze actie"
+      >
+        ✕
+      </button>
+    </div>
+  );
+}
+
+function beschrijfActie(actie: any): { icoon: string; titel: string; details: string[] } {
+  const onbekend = {
+    icoon: "❓",
+    titel: `Onbekende actie: ${actie?.type ?? "geen type"}`,
+    details: [JSON.stringify(actie).slice(0, 120)],
+  };
+
+  if (!actie || typeof actie !== "object" || typeof actie.type !== "string") {
+    return onbekend;
+  }
+
+  try {
     switch (actie.type) {
       case "nieuwe_prospect":
         return {
           icoon: "📥",
-          titel: "Nieuwe: " + actie.volledige_naam,
+          titel: "Nieuwe: " + (actie.volledige_naam || "(geen naam)"),
           details: [
             actie.pipeline_fase ? `Fase: ${actie.pipeline_fase}` : null,
             actie.notities || null,
@@ -658,15 +691,15 @@ function ActieKaart({ actie, onVerwijder }: { actie: Actie; onVerwijder: () => v
       case "notitie":
         return {
           icoon: "📝",
-          titel: `Notitie bij ${actie.prospect_naam}`,
-          details: [actie.notitie],
+          titel: `Notitie bij ${actie.prospect_naam || "(onbekend)"}`,
+          details: [actie.notitie || ""].filter(Boolean),
         };
       case "taak":
         return {
           icoon: "⏰",
-          titel: actie.titel,
+          titel: actie.titel || "Nieuwe taak",
           details: [
-            `Bij: ${actie.prospect_naam}`,
+            actie.prospect_naam ? `Bij: ${actie.prospect_naam}` : null,
             actie.vervaldatum ? `Datum: ${actie.vervaldatum}` : null,
           ].filter(Boolean) as string[],
         };
@@ -685,9 +718,9 @@ function ActieKaart({ actie, onVerwijder }: { actie: Actie; onVerwijder: () => v
       case "contact_log":
         return {
           icoon: "💬",
-          titel: `Contact met ${actie.prospect_naam}`,
+          titel: `Contact met ${actie.prospect_naam || "(onbekend)"}`,
           details: [
-            `Type: ${actie.contact_type}`,
+            actie.contact_type ? `Type: ${actie.contact_type}` : null,
             actie.notities || null,
             actie.nieuwe_fase ? `→ Nieuwe fase: ${actie.nieuwe_fase}` : null,
           ].filter(Boolean) as string[],
@@ -710,7 +743,7 @@ function ActieKaart({ actie, onVerwijder }: { actie: Actie; onVerwijder: () => v
         return {
           icoon: "✅",
           titel: "Herinnering afvinken",
-          details: [`id: ${actie.herinnering_id.slice(0, 8)}...`],
+          details: [actie.herinnering_id ? `id: ${String(actie.herinnering_id).slice(0, 8)}...` : ""].filter(Boolean),
         };
       case "update_herinnering":
         return {
@@ -724,34 +757,19 @@ function ActieKaart({ actie, onVerwijder }: { actie: Actie; onVerwijder: () => v
       case "product_bestelling":
         return {
           icoon: "📦",
-          titel: `Bestelling: ${actie.product_omschrijving}`,
+          titel: `Bestelling: ${actie.product_omschrijving || "(geen beschrijving)"}`,
           details: [
-            `Klant: ${actie.prospect_naam}`,
+            actie.prospect_naam ? `Klant: ${actie.prospect_naam}` : null,
             actie.besteldatum ? `Datum: ${actie.besteldatum}` : `Datum: vandaag`,
             actie.notities || null,
           ].filter(Boolean) as string[],
         };
+      default:
+        return onbekend;
     }
-  })();
-
-  return (
-    <div className="card bg-cm-surface-2 flex gap-3">
-      <span className="text-2xl">{content.icoon}</span>
-      <div className="flex-1 min-w-0">
-        <p className="text-cm-white font-semibold text-sm">{content.titel}</p>
-        {content.details.map((d, i) => (
-          <p key={i} className="text-cm-white text-xs opacity-70 mt-0.5">{d}</p>
-        ))}
-      </div>
-      <button
-        onClick={onVerwijder}
-        className="text-red-400 hover:text-red-300 text-sm"
-        title="Verwijder deze actie"
-      >
-        ✕
-      </button>
-    </div>
-  );
+  } catch {
+    return onbekend;
+  }
 }
 
 function standaardDatum(): string {
