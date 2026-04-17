@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import { createClient } from "@/lib/supabase/server";
+import { PRODUCT_CATALOGUS_COMPACT } from "@/lib/lifeplus/producten";
 
 export const maxDuration = 45;
 
@@ -75,6 +76,11 @@ ${namenLijst || "(nog geen prospects)"}
 
 OPENSTAANDE HERINNERINGEN:
 ${herinneringenLijst || "(geen herinneringen)"}
+
+LIFEPLUS PRODUCTCATALOGUS (officiële namen + aliassen tussen [haakjes]):
+${PRODUCT_CATALOGUS_COMPACT}
+
+Productnaam-regel: als de gebruiker een product noemt (ook via alias of verkorte naam), gebruik in "product_omschrijving" de OFFICIËLE naam uit deze lijst. Bijvoorbeeld: "basispakket" → "Daily BioBasics", "omega 3" → "OmeGold", "coq10" → "Co-Q-10 Plus". Als meerdere producten genoemd worden, combineer ze met " + " (bv. "Daily BioBasics + OmeGold"). Onbekend product → schrijf letterlijk wat de gebruiker zei.
 
 JOUW TAAK:
 Lees het transcript en beslis:
