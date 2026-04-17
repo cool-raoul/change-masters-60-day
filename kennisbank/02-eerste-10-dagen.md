@@ -281,4 +281,19 @@ Wanneer je doelen zijn gesteld, namenlijst is gemaakt en opdrachten zijn gedaan 
 
 ---
 
-<!-- STAP 3-5 + extra kaarten volgen in volgende commits -->
+## STAP 3 — AANBEVELEN VIA JOUW WEBSHOP
+
+### Een deelbaar winkelmandje maken
+
+- 🎥 Video: hoe je een **deelbaar winkelmandje** maakt dat je met een nieuwe shopper/member kunt delen.
+- Kernvraag: *"Wat moet jouw nieuwe shopper of member weten na het ontvangen van jouw link met het gevulde winkelmandje?"*
+
+### Klaar voor STAP 4
+
+> Wat goed — je hebt je eerste productgebruikers gecreëerd en weet hoe je in je shop moet navigeren, een winkelmandje moet aanmaken en hoe je deze deelt met je shoppers of members.
+
+Breng sponsor op de hoogte en ga door naar stap 4.
+
+---
+
+<!-- STAP 4-5 + extra kaarten volgen in volgende commits -->
