@@ -219,8 +219,22 @@ export function VoiceFab() {
     if (!resultaat) return;
     setFase("opslaan");
     try {
-      await voerActiesUit();
-      toast.success(acties.length > 0 ? "Opgeslagen!" : "Klaar");
+      const gemaakt = await voerActiesUit();
+      if (acties.length > 0 && gemaakt.length > 0) {
+        toast.success("Opgeslagen!", {
+          duration: 12000,
+          action: {
+            label: "Ongedaan maken",
+            onClick: async () => {
+              await undoGemaakteActies(gemaakt);
+              toast.info(`${gemaakt.length} actie(s) ongedaan gemaakt`);
+              router.refresh();
+            },
+          },
+        });
+      } else {
+        toast.success(acties.length > 0 ? "Opgeslagen!" : "Klaar");
+      }
       // Sluit modal EERST zodat DOM settled is voor de refresh.
       // Voorkomt iOS Safari scroll-lock na router.refresh().
       sluit();
@@ -228,6 +242,19 @@ export function VoiceFab() {
     } catch (err: any) {
       toast.error("Opslaan mislukt: " + (err?.message || "onbekend"));
       setFase("preview");
+    }
+  }
+
+  async function undoGemaakteActies(
+    gemaakt: Array<{ tabel: string; id: string }>
+  ) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
+    // Omgekeerde volgorde: eerst side-effects (logs, herinneringen), dan prospects
+    for (const { tabel, id } of [...gemaakt].reverse()) {
+      await supabase.from(tabel).delete().eq("id", id).eq("user_id", user.id);
     }
   }
 
@@ -270,11 +297,12 @@ export function VoiceFab() {
     router.push(`/coach/${nieuw.id}?auto=${encodeURIComponent(bericht)}`);
   }
 
-  async function voerActiesUit() {
+  async function voerActiesUit(): Promise<Array<{ tabel: string; id: string }>> {
+    const gemaakt: Array<{ tabel: string; id: string }> = [];
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    if (!user) return;
+    if (!user) return gemaakt;
 
     const naamNaarId: Record<string, string> = {};
     const { data: bestaand } = await supabase
@@ -305,7 +333,10 @@ export function VoiceFab() {
           })
           .select()
           .single();
-        if (data) naamNaarId[a.volledige_naam.toLowerCase()] = data.id;
+        if (data) {
+          naamNaarId[a.volledige_naam.toLowerCase()] = data.id;
+          gemaakt.push({ tabel: "prospects", id: data.id });
+        }
       }
     }
     for (const a of acties) {
@@ -333,14 +364,19 @@ export function VoiceFab() {
           .eq("user_id", user.id);
         // Audit-trail: log fase-wijziging of notitie-toevoeging in contact_logs
         if (a.pipeline_fase || a.notities_toevoegen) {
-          await supabase.from("contact_logs").insert({
-            prospect_id: a.prospect_id,
-            user_id: user.id,
-            contact_type: "notitie",
-            notities: a.notities_toevoegen || null,
-            fase_voor: huidig?.pipeline_fase || null,
-            fase_na: a.pipeline_fase || huidig?.pipeline_fase || null,
-          });
+          const { data: log } = await supabase
+            .from("contact_logs")
+            .insert({
+              prospect_id: a.prospect_id,
+              user_id: user.id,
+              contact_type: "notitie",
+              notities: a.notities_toevoegen || null,
+              fase_voor: huidig?.pipeline_fase || null,
+              fase_na: a.pipeline_fase || huidig?.pipeline_fase || null,
+            })
+            .select("id")
+            .single();
+          if (log) gemaakt.push({ tabel: "contact_logs", id: log.id });
         }
       }
     }
@@ -367,28 +403,38 @@ export function VoiceFab() {
           .eq("id", id)
           .eq("user_id", user.id);
         // Audit-trail: elke notitie ook loggen in contact_logs
-        await supabase.from("contact_logs").insert({
-          prospect_id: id,
-          user_id: user.id,
-          contact_type: "notitie",
-          notities: a.notitie,
-          fase_voor: huidig?.pipeline_fase || null,
-          fase_na: huidig?.pipeline_fase || null,
-        });
+        const { data: log } = await supabase
+          .from("contact_logs")
+          .insert({
+            prospect_id: id,
+            user_id: user.id,
+            contact_type: "notitie",
+            notities: a.notitie,
+            fase_voor: huidig?.pipeline_fase || null,
+            fase_na: huidig?.pipeline_fase || null,
+          })
+          .select("id")
+          .single();
+        if (log) gemaakt.push({ tabel: "contact_logs", id: log.id });
       }
     }
     for (const a of acties) {
       if (a.type === "taak") {
         const id = naamNaarId[a.prospect_naam.toLowerCase()] || null;
         const vervaldatum = a.vervaldatum || standaardDatum();
-        await supabase.from("herinneringen").insert({
-          user_id: user.id,
-          prospect_id: id,
-          herinnering_type: "followup",
-          titel: a.titel,
-          beschrijving: a.titel,
-          vervaldatum,
-        });
+        const { data: h } = await supabase
+          .from("herinneringen")
+          .insert({
+            user_id: user.id,
+            prospect_id: id,
+            herinnering_type: "followup",
+            titel: a.titel,
+            beschrijving: a.titel,
+            vervaldatum,
+          })
+          .select("id")
+          .single();
+        if (h) gemaakt.push({ tabel: "herinneringen", id: h.id });
       }
     }
     for (const a of acties) {
@@ -415,14 +461,19 @@ export function VoiceFab() {
           .select("pipeline_fase")
           .eq("id", id)
           .single();
-        await supabase.from("contact_logs").insert({
-          prospect_id: id,
-          user_id: user.id,
-          contact_type: a.contact_type,
-          notities: a.notities || null,
-          fase_voor: huidig?.pipeline_fase || null,
-          fase_na: a.nieuwe_fase || huidig?.pipeline_fase || null,
-        });
+        const { data: log } = await supabase
+          .from("contact_logs")
+          .insert({
+            prospect_id: id,
+            user_id: user.id,
+            contact_type: a.contact_type,
+            notities: a.notities || null,
+            fase_voor: huidig?.pipeline_fase || null,
+            fase_na: a.nieuwe_fase || huidig?.pipeline_fase || null,
+          })
+          .select("id")
+          .single();
+        if (log) gemaakt.push({ tabel: "contact_logs", id: log.id });
         const prospectUpdate: any = {
           laatste_contact: new Date().toISOString().split("T")[0],
           updated_at: new Date().toISOString(),
@@ -475,13 +526,18 @@ export function VoiceFab() {
         if (!id) continue;
         const besteldatum = a.besteldatum || new Date().toISOString().split("T")[0];
         // Postgres trigger maakt automatisch reminders op 21/51/81 dagen
-        await supabase.from("product_bestellingen").insert({
-          prospect_id: id,
-          user_id: user.id,
-          besteldatum,
-          product_omschrijving: a.product_omschrijving,
-          notities: a.notities || null,
-        });
+        const { data: pb } = await supabase
+          .from("product_bestellingen")
+          .insert({
+            prospect_id: id,
+            user_id: user.id,
+            besteldatum,
+            product_omschrijving: a.product_omschrijving,
+            notities: a.notities || null,
+          })
+          .select("id")
+          .single();
+        if (pb) gemaakt.push({ tabel: "product_bestellingen", id: pb.id });
         const { data: huidig } = await supabase
           .from("prospects")
           .select("pipeline_fase")
@@ -515,6 +571,8 @@ export function VoiceFab() {
         }
       }
     }
+
+    return gemaakt;
   }
 
   function sluit() {
