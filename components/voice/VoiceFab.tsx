@@ -103,6 +103,7 @@ type Intentie = "data" | "coach" | "mixed";
 
 type ParseResultaat = {
   transcript: string;
+  gecorrigeerd_transcript?: string;
   intentie: Intentie;
   samenvatting: string;
   redenatie?: string;
@@ -660,8 +661,18 @@ export function VoiceFab() {
                   <p className="text-cm-white text-sm opacity-80">{resultaat.samenvatting}</p>
                 </div>
 
+                {resultaat.gecorrigeerd_transcript &&
+                  resultaat.gecorrigeerd_transcript.trim() !== resultaat.transcript.trim() && (
+                    <div className="card bg-cm-surface-2 text-sm border border-cm-gold/30">
+                      <p className="text-cm-gold text-xs font-medium mb-1">✨ ELEVA heeft dit begrepen als:</p>
+                      <p className="text-cm-white text-sm whitespace-pre-wrap">
+                        {resultaat.gecorrigeerd_transcript}
+                      </p>
+                    </div>
+                  )}
+
                 <details className="card bg-cm-surface-2 text-sm">
-                  <summary className="cursor-pointer text-cm-white opacity-70">Jouw tekst</summary>
+                  <summary className="cursor-pointer text-cm-white opacity-70">Jouw originele tekst</summary>
                   <p className="text-cm-white text-sm mt-2 whitespace-pre-wrap">{resultaat.transcript}</p>
                   <button
                     onClick={() => {

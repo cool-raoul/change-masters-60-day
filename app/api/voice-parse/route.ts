@@ -82,6 +82,44 @@ ${PRODUCT_CATALOGUS_COMPACT}
 
 Productnaam-regel: als de gebruiker een product noemt (ook via alias of verkorte naam), gebruik in "product_omschrijving" de OFFICIËLE naam uit deze lijst. Bijvoorbeeld: "basispakket" → "Daily BioBasics", "omega 3" → "OmeGold", "coq10" → "Co-Q-10 Plus". Als meerdere producten genoemd worden, combineer ze met " + " (bv. "Daily BioBasics + OmeGold"). Onbekend product → schrijf letterlijk wat de gebruiker zei.
 
+INTELLIGENTE TRANSCRIPT-INTERPRETATIE (heel belangrijk!):
+Het transcript komt uit spraakherkenning. Dat betekent:
+- Namen kunnen verkeerd gehoord zijn ("Petra de voor" = "Petra de Voogd" in de lijst)
+- Producten kunnen verkeerd gespeld zijn ("om ee gaot" = "OmeGold", "basis paket" = "basispakket")
+- De gebruiker kan stotteren, zichzelf herhalen, of eerst iets fout zeggen en dan verbeteren
+
+Interpreteer het transcript ALTIJD zo:
+
+1. ZELFCORRECTIES — LAATSTE VERSIE WINT
+   "Petra... eh nee, Pieter zei dat..." → de naam is Pieter, negeer Petra
+   "Morgen... eh, overmorgen bellen" → overmorgen
+   "100 euro... nee 150" → 150
+   Signaalwoorden voor correctie: "eh nee", "ik bedoel", "sorry", "nee wacht", "eigenlijk"
+
+2. HERHALINGEN / DENKPAUZES — CONSOLIDEER
+   "Pieter... Pieter heeft vandaag..." → "Pieter heeft vandaag..."
+   "ik heb ... eeh ... ik heb 3 mensen gesproken" → "ik heb 3 mensen gesproken"
+   "Petra de de de Voogd" → "Petra de Voogd"
+   Verwijder: "eh", "uhm", "uh", "ehm", "nou", "weet je", "zeg maar" (als puur vulwoord)
+
+3. NAAM-MATCHING MET BESTAANDE LIJST
+   Kijk FONETISCH naar de prospectlijst hierboven. Als de uitgesproken naam bijna klinkt als iemand in de lijst, gebruik die versie + het bestaande id. Voorbeelden:
+   - "Petra de voor" / "Peetra" / "Pietra" → Petra de Voogd (als die in lijst staat)
+   - "Arnoud" / "Arno" / "Arnold" → Arno Oerlemans (fuzzy match)
+   - "de hoogte" / "de hoog" → "de Hoogh" (als achternaam bij prospect past)
+
+4. LOGISCHE ZINSRECONSTRUCTIE
+   Spraak is vaak stuk: "Jan eh... gesproken vanmiddag... bezwaar tijd weet je... followup volgende week".
+   Construeer wat er logisch bedoeld werd: "Ik sprak Jan vanmiddag, hij noemde bezwaar tijd, followup volgende week." Gebruik die SCHONE versie voor de acties én zet hem in het "gecorrigeerd_transcript" veld.
+
+5. PRODUCT-FONETIEK
+   Ook producten fonetisch matchen: "life plus" / "life plus basis" / "biobasic" / "dagelijkse basics" → Daily BioBasics. "visolie" / "om ee gold" / "omega" → OmeGold.
+
+6. ALS ONZEKER → NOEM IN "onduidelijk"
+   Als de correctie raderwerk wordt (meerdere interpretaties mogelijk, geen fonetische match), schrijf in "onduidelijk" veld: "Ik hoorde 'X', bedoelde je Y of Z?"
+
+Altijd een "gecorrigeerd_transcript" teruggeven: de schone, logische versie zoals jij hem begreep. Dit is wat de gebruiker straks ziet op het bevestigingsscherm.
+
 JOUW TAAK:
 Lees het transcript en beslis:
 
@@ -246,6 +284,7 @@ MULTI-ACTIE REGELS:
 OUTPUT FORMAT (exact zo):
 {
   "redenatie": "Stap-voor-stap: wat wil de gebruiker écht? Welke bestaande personen zijn genoemd en wat is hun huidige fase? Welke acties volgen hier logisch uit? Noem expliciet als je GEEN fase-verandering doet en waarom.",
+  "gecorrigeerd_transcript": "De schone, logische versie van wat de gebruiker bedoelde. Stotteringen/vulwoorden eruit, zelfcorrecties toegepast, namen en producten gematcht tegen de lijsten. Als er niks te corrigeren valt: letterlijk het origineel.",
   "intentie": "data" | "coach" | "mixed",
   "samenvatting": "Korte 1-zin samenvatting van wat je begrepen hebt",
   "acties": [ ... lijst met actie-objecten ... ],
@@ -258,8 +297,10 @@ BELANGRIJK: Begin altijd met de "redenatie" stap. Dit dwingt je om te denken vó
     const openai = new OpenAI({ apiKey });
 
     // Model-router: simpele korte gevallen -> gpt-4o-mini (~15x goedkoper).
-    // Zodra er bestel-signalen, meerdere namen, of lange tekst in zit -> gpt-4o.
+    // Zodra er bestel-signalen, meerdere namen, stotter/zelfcorrectie, of lange tekst in zit -> gpt-4o.
     const kritiekeSignalen = /\b(besteld|gekocht|pakket|ingeschreven|member|klant|shopper|partner|opvolgen|afgezegd|wil niet|stopt|starterpakket|basispakket|shake)\b/i;
+    const stotterSignalen = /\b(eh+|uhm+|uh+|ehm+|hmm+|eigenlijk|ik bedoel|nee wacht|sorry|nou eh)\b/i;
+    const dubbelWoord = /\b(\w{3,})\s+\1\b/i; // zelfde woord twee keer achter elkaar
     const lengte = transcript.trim().length;
     const aantalNamen = (bestaandeProspects || []).filter((p: any) =>
       new RegExp(`\\b${p.volledige_naam.split(" ")[0]}\\b`, "i").test(transcript)
@@ -267,6 +308,8 @@ BELANGRIJK: Begin altijd met de "redenatie" stap. Dit dwingt je om te denken vó
     const gebruikMini =
       lengte < 140 &&
       !kritiekeSignalen.test(transcript) &&
+      !stotterSignalen.test(transcript) &&
+      !dubbelWoord.test(transcript) &&
       aantalNamen <= 1;
     const gekozenModel = gebruikMini ? "gpt-4o-mini" : "gpt-4o";
 
@@ -359,6 +402,7 @@ BELANGRIJK: Begin altijd met de "redenatie" stap. Dit dwingt je om te denken vó
     return new Response(
       JSON.stringify({
         transcript,
+        gecorrigeerd_transcript: geparsed.gecorrigeerd_transcript || transcript,
         intentie,
         samenvatting: geparsed.samenvatting || "",
         redenatie: geparsed.redenatie || "",
