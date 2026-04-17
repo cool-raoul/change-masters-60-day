@@ -257,8 +257,21 @@ BELANGRIJK: Begin altijd met de "redenatie" stap. Dit dwingt je om te denken vó
 
     const openai = new OpenAI({ apiKey });
 
+    // Model-router: simpele korte gevallen -> gpt-4o-mini (~15x goedkoper).
+    // Zodra er bestel-signalen, meerdere namen, of lange tekst in zit -> gpt-4o.
+    const kritiekeSignalen = /\b(besteld|gekocht|pakket|ingeschreven|member|klant|shopper|partner|opvolgen|afgezegd|wil niet|stopt|starterpakket|basispakket|shake)\b/i;
+    const lengte = transcript.trim().length;
+    const aantalNamen = (bestaandeProspects || []).filter((p: any) =>
+      new RegExp(`\\b${p.volledige_naam.split(" ")[0]}\\b`, "i").test(transcript)
+    ).length;
+    const gebruikMini =
+      lengte < 140 &&
+      !kritiekeSignalen.test(transcript) &&
+      aantalNamen <= 1;
+    const gekozenModel = gebruikMini ? "gpt-4o-mini" : "gpt-4o";
+
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: gekozenModel,
       max_tokens: 2000,
       temperature: 0.1,
       response_format: { type: "json_object" },
@@ -353,6 +366,7 @@ BELANGRIJK: Begin altijd met de "redenatie" stap. Dit dwingt je om te denken vó
         coach_bericht: geparsed.coach_bericht || null,
         onduidelijk: Array.isArray(geparsed.onduidelijk) ? geparsed.onduidelijk : [],
         waarschuwingen,
+        model_gebruikt: gekozenModel,
       }),
       { headers: { "Content-Type": "application/json" } }
     );
