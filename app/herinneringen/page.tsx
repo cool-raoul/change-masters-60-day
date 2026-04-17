@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { format } from "date-fns";
+import { differenceInDays, format } from "date-fns";
 import { nl, enUS, fr, es, de, pt } from "date-fns/locale";
 import { Herinnering } from "@/lib/supabase/types";
 import { HerinneringActies } from "@/components/herinneringen/HerinneringActies";
@@ -85,28 +85,42 @@ function HerinneringenGroep({
         {titel} ({herinneringen.length})
       </h2>
       <div className="space-y-2">
-        {herinneringen.map((her) => (
-          <div key={her.id} className={`card border-l-4 ${kleur} flex items-center justify-between gap-4`}>
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <span className="text-lg">{TYPE_ICOON[her.herinnering_type] || "📌"}</span>
-                <p className="text-cm-white font-semibold text-sm">{her.titel}</p>
+        {herinneringen.map((her) => {
+          const dagenTeLaat = differenceInDays(new Date(), new Date(her.vervaldatum));
+          const isVerlopen = dagenTeLaat > 0;
+          return (
+            <div
+              key={her.id}
+              className={`card border-l-4 ${kleur} flex items-center justify-between gap-4 ${
+                isVerlopen ? "bg-red-500/5" : ""
+              }`}
+            >
+              <div className="flex-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-lg">{TYPE_ICOON[her.herinnering_type] || "📌"}</span>
+                  <p className="text-cm-white font-semibold text-sm">{her.titel}</p>
+                  {isVerlopen && (
+                    <span className="text-[10px] font-bold uppercase tracking-wider bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded">
+                      {dagenTeLaat === 1 ? "1 dag te laat" : `${dagenTeLaat} dagen te laat`}
+                    </span>
+                  )}
+                </div>
+                {her.beschrijving && (
+                  <p className="text-cm-white text-xs mt-1 ml-7">{her.beschrijving}</p>
+                )}
+                {her.prospect && (
+                  <Link href={`/namenlijst/${her.prospect.id}`} className="text-cm-gold text-xs mt-0.5 ml-7 hover:text-cm-gold-light transition-colors flex items-center gap-1 w-fit">
+                    👤 {her.prospect.volledige_naam} →
+                  </Link>
+                )}
+                <p className={`text-xs mt-1 ml-7 ${isVerlopen ? "text-red-400" : "text-cm-white"}`}>
+                  {format(new Date(her.vervaldatum), "EEEE d MMMM yyyy", { locale: datumLocale })}
+                </p>
               </div>
-              {her.beschrijving && (
-                <p className="text-cm-white text-xs mt-1 ml-7">{her.beschrijving}</p>
-              )}
-              {her.prospect && (
-                <Link href={`/namenlijst/${her.prospect.id}`} className="text-cm-gold text-xs mt-0.5 ml-7 hover:text-cm-gold-light transition-colors flex items-center gap-1 w-fit">
-                  👤 {her.prospect.volledige_naam} →
-                </Link>
-              )}
-              <p className="text-cm-white text-xs mt-1 ml-7">
-                {format(new Date(her.vervaldatum), "EEEE d MMMM yyyy", { locale: datumLocale })}
-              </p>
+              <HerinneringActies herinneringId={her.id} />
             </div>
-            <HerinneringActies herinneringId={her.id} />
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

@@ -198,19 +198,35 @@ export default async function DashboardPagina() {
               <p className="text-cm-white text-sm">{v("dashboard.geen_herinneringen", taal)}</p>
             ) : (
               <div className="space-y-2">
-                {herinneringenLijst.map((her) => (
-                  <div key={her.id} className="bg-cm-surface-2 rounded-lg p-3 border-l-2 border-cm-gold">
-                    <p className="text-cm-white text-sm font-medium">{her.titel}</p>
-                    {her.prospect && (
-                      <Link href={`/namenlijst/${her.prospect.id}`} className="text-cm-gold text-xs mt-0.5 hover:text-cm-gold-light flex items-center gap-1 w-fit">
-                        👤 {her.prospect.volledige_naam} →
-                      </Link>
-                    )}
-                    <p className="text-cm-gold text-xs mt-1">
-                      {her.vervaldatum === vandaagStr ? v("algemeen.vandaag", taal) : her.vervaldatum}
-                    </p>
-                  </div>
-                ))}
+                {herinneringenLijst.map((her) => {
+                  const dagenTeLaat = differenceInDays(new Date(vandaagStr), new Date(her.vervaldatum));
+                  const isVerlopen = dagenTeLaat > 0;
+                  return (
+                    <div
+                      key={her.id}
+                      className={`bg-cm-surface-2 rounded-lg p-3 border-l-2 ${
+                        isVerlopen ? "border-red-500 bg-red-500/5" : "border-cm-gold"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="text-cm-white text-sm font-medium">{her.titel}</p>
+                        {isVerlopen && (
+                          <span className="text-[10px] font-bold uppercase tracking-wider bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded whitespace-nowrap">
+                            {dagenTeLaat === 1 ? "1 dag te laat" : `${dagenTeLaat} dagen te laat`}
+                          </span>
+                        )}
+                      </div>
+                      {her.prospect && (
+                        <Link href={`/namenlijst/${her.prospect.id}`} className="text-cm-gold text-xs mt-0.5 hover:text-cm-gold-light flex items-center gap-1 w-fit">
+                          👤 {her.prospect.volledige_naam} →
+                        </Link>
+                      )}
+                      <p className={`text-xs mt-1 ${isVerlopen ? "text-red-400" : "text-cm-gold"}`}>
+                        {her.vervaldatum === vandaagStr ? v("algemeen.vandaag", taal) : her.vervaldatum}
+                      </p>
+                    </div>
+                  );
+                })}
                 <Link href="/herinneringen" className="block text-center text-cm-gold text-sm hover:text-cm-gold-light mt-2">
                   {v("dashboard.alle_herinneringen", taal)} →
                 </Link>
