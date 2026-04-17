@@ -8,7 +8,6 @@ import { toast } from "sonner";
 import { useTaal } from "@/lib/i18n/TaalContext";
 import { Prospect, PIPELINE_FASEN } from "@/lib/supabase/types";
 import { PipelineKanban } from "@/components/namenlijst/PipelineKanban";
-import { VoiceInvoer } from "@/components/namenlijst/VoiceInvoer";
 
 interface Props {
   prospects: Prospect[];
@@ -63,7 +62,6 @@ export function NamenlijstToggle({ prospects }: Props) {
           📝 Lijst
         </button>
         <div className="flex-1" />
-        <VoiceInvoer />
         <Link href="/namenlijst/nieuw" className="btn-gold text-sm">
           + {v("namenlijst.nieuw")}
         </Link>

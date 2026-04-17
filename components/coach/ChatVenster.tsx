@@ -7,6 +7,8 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { useTaal } from "@/lib/i18n/TaalContext";
 import { UpgradeModal } from "./UpgradeModal";
+import { VoiceInputKnop } from "@/components/voice/VoiceInputKnop";
+import { useSearchParams } from "next/navigation";
 
 interface Props {
   gesprekId: string;
@@ -297,6 +299,8 @@ export function ChatVenster({
   const [isPremium, setIsPremium] = useState(false);
   const chatEindRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
+  const searchParams = useSearchParams();
+  const autoVerstuurdRef = useRef(false);
   const { taal, v } = useTaal();
 
   useEffect(() => {
@@ -312,6 +316,15 @@ export function ChatVenster({
       })
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    const autoBericht = searchParams?.get("auto");
+    if (autoBericht && !autoVerstuurdRef.current && berichten.length === 0) {
+      autoVerstuurdRef.current = true;
+      stuurBericht(autoBericht);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   function getSnelBericht(key: string): string {
     return SNELLE_BERICHTEN[key]?.[taal] || SNELLE_BERICHTEN[key]?.["nl"] || "";
@@ -609,6 +622,10 @@ export function ChatVenster({
             placeholder={v("coach.placeholder")}
             className="input-cm flex-1"
             disabled={laden}
+          />
+          <VoiceInputKnop
+            huidigeWaarde={invoer}
+            onTekst={setInvoer}
           />
           <div className="flex flex-col items-end gap-1">
             <button

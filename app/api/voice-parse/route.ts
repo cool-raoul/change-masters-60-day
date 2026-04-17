@@ -46,6 +46,19 @@ export async function POST(request: Request) {
       .map((p) => `- ${p.volledige_naam} (id: ${p.id}, fase: ${p.pipeline_fase})`)
       .join("\n");
 
+    // Haal openstaande herinneringen op
+    const { data: openHerinneringen } = await supabase
+      .from("herinneringen")
+      .select("id, titel, vervaldatum, prospect_id")
+      .eq("user_id", user.id)
+      .eq("voltooid", false)
+      .order("vervaldatum", { ascending: true })
+      .limit(30);
+
+    const herinneringenLijst = (openHerinneringen || [])
+      .map((h) => `- id:${h.id} "${h.titel}" (${h.vervaldatum})`)
+      .join("\n");
+
     const vandaag = new Date().toISOString().split("T")[0];
     const taalNaam: Record<string, string> = {
       nl: "Nederlands", en: "Engels", fr: "Frans", es: "Spaans", de: "Duits", pt: "Portugees",
@@ -60,35 +73,63 @@ Taal van transcript: ${taalLabel}
 BESTAANDE PROSPECTS / MEMBERS IN DE LIJST:
 ${namenLijst || "(nog geen prospects)"}
 
+OPENSTAANDE HERINNERINGEN:
+${herinneringenLijst || "(geen herinneringen)"}
+
 JOUW TAAK:
-Lees het transcript en geef een JSON object terug met een lijst van acties. Elke actie heeft een "type" en bijbehorende velden.
+Lees het transcript en beslis:
+
+A) INTENTIE — wat wil deze persoon?
+   - "data": alleen info over prospects/members vastleggen (bijv. "Pieter ingeschreven")
+   - "coach": een vraag of reflectie voor de ELEVA mentor/coach (bijv. "Hoe ga ik om met bezwaar tijd?", "Ik voel me onzeker", "Help me met een DM")
+   - "mixed": beide — feiten over een prospect PLUS een vraag om hulp ("Ik sprak Jan, hij zei geen tijd, hoe reageer ik?")
+
+B) ACTIES — welke database-acties moeten gebeuren (alleen bij "data" of "mixed")
+
+C) COACH_BERICHT — als intentie "coach" of "mixed": formuleer de vraag voor de mentor-coach in jij-vorm ("Hoe ga ik het beste om met het bezwaar 'geen tijd' van Jan?"). Als "data": null.
 
 MOGELIJKE ACTIES:
 
 1. { "type": "nieuwe_prospect", "volledige_naam": "Pieter de Hoogh", "pipeline_fase": "prospect", "notities": "...", "relatie": "zus van Pieter de Hoogh" (optioneel) }
    - Gebruik als iemand nieuw is (niet in bestaande lijst)
    - pipeline_fase opties: "prospect", "uitgenodigd", "one_pager", "presentatie", "followup", "shopper", "member", "not_yet"
-   - Als persoon net is ingeschreven als klant/lid: gebruik "member"
-   - Als ze net een product hebben besteld maar geen lid zijn: "shopper"
-   - Als nog in beginfase en open voor gesprek: "prospect"
-   - Als uitgenodigd voor gesprek maar nog niet gehad: "uitgenodigd"
-   - Als onbekende naam (bijv. "zus van Pieter"): gebruik beschrijvende naam zoals "Zus van Pieter de Hoogh"
+   - Net ingeschreven als klant/lid: "member"
+   - Product besteld, geen lid: "shopper"
+   - Open voor gesprek: "prospect"
+   - Uitgenodigd maar nog geen gesprek: "uitgenodigd"
+   - Onbekende naam: beschrijvend zoals "Zus van Pieter de Hoogh"
 
 2. { "type": "update_prospect", "prospect_id": "uuid-uit-lijst", "pipeline_fase": "member" (optioneel), "notities_toevoegen": "..." (optioneel) }
-   - Gebruik als iemand al bestaat en alleen status/notitie verandert
-   - Alleen velden meenemen die echt veranderen
+   - Iemand bestaat al en status/notitie verandert
 
 3. { "type": "notitie", "prospect_naam": "Pieter de Hoogh", "notitie": "Start met basisproducten" }
-   - Voor notities bij bestaande of net-aangemaakte prospects
-   - Gebruik de naam zoals genoemd (de commit-stap matcht m aan een prospect)
+   - Notitie bij bestaande of net-aangemaakte prospect
 
-4. { "type": "taak", "prospect_naam": "Pieter de Hoogh", "titel": "Aanbevelen bespreken", "vervaldatum": "2026-05-17" }
-   - Voor todo's / herinneringen
-   - vervaldatum in ISO formaat YYYY-MM-DD
-   - "volgende maand" = ongeveer 30 dagen vanaf vandaag (${vandaag})
-   - "volgende week" = 7 dagen vanaf vandaag
-   - "morgen" = 1 dag vanaf vandaag
-   - Als geen tijd genoemd: 7 dagen vanaf vandaag
+4. { "type": "taak", "prospect_naam": "Pieter de Hoogh", "titel": "Aanbevelen bespreken", "vervaldatum": "YYYY-MM-DD" }
+   - Nieuwe herinnering/todo
+   - "volgende maand" = +30 dagen, "volgende week" = +7 dagen, "morgen" = +1 dag
+   - Als geen tijd genoemd: +7 dagen
+
+5. { "type": "update_details", "prospect_id": "uuid-uit-lijst", "telefoon": "...", "email": "...", "instagram": "...", "facebook": "...", "prioriteit": "hoog|normaal|laag" }
+   - Contact-gegevens bijwerken
+   - Alleen velden invullen die genoemd worden
+
+6. { "type": "contact_log", "prospect_naam": "Pieter de Hoogh", "contact_type": "dm|bel|presentatie|followup|notitie", "notities": "...", "nieuwe_fase": "..." (optioneel) }
+   - Contact loggen dat plaatsvond (gesprek gehad, DM gestuurd, etc.)
+   - "nieuwe_fase" als pipeline-fase verandert door contact
+
+7. { "type": "stats_increment", "datum": "${vandaag}", "contacten_gemaakt": 1, "uitnodigingen": 0, "followups": 0, "presentaties": 0, "nieuwe_klanten": 0, "nieuwe_partners": 0 }
+   - Dagelijkse telling verhogen (alleen voor gebruiker's eigen dagstats)
+   - "Ik heb 3 mensen gesproken" → contacten_gemaakt: 3
+   - "2 uitnodigingen gestuurd" → uitnodigingen: 2
+   - Alleen niet-nul velden invullen. datum in YYYY-MM-DD (standaard vandaag)
+
+8. { "type": "voltooi_herinnering", "herinnering_id": "uuid-uit-lijst" }
+   - Bestaande herinnering als voltooid markeren
+   - Matchen op naam + context uit herinneringen lijst
+
+9. { "type": "update_herinnering", "herinnering_id": "uuid-uit-lijst", "nieuwe_vervaldatum": "YYYY-MM-DD" (optioneel), "nieuwe_titel": "..." (optioneel) }
+   - Bestaande herinnering verzetten of titel wijzigen
 
 BELANGRIJKE REGELS:
 - Altijd lege arrays retourneren als er niks is
@@ -101,9 +142,11 @@ BELANGRIJKE REGELS:
 
 OUTPUT FORMAT (exact zo):
 {
+  "intentie": "data" | "coach" | "mixed",
   "samenvatting": "Korte 1-zin samenvatting van wat je begrepen hebt",
   "acties": [ ... lijst met actie-objecten ... ],
-  "onduidelijk": [ "optionele lijst met vragen als iets niet helder is, bijv. 'Wat is de naam van de zus?'" ]
+  "coach_bericht": "Vraag voor mentor in jij-vorm, of null bij intentie 'data'",
+  "onduidelijk": [ "optionele lijst met vragen als iets niet helder is" ]
 }`;
 
     const openai = new OpenAI({ apiKey });
@@ -128,11 +171,17 @@ OUTPUT FORMAT (exact zo):
       geparsed = { samenvatting: "Kon niet interpreteren", acties: [], onduidelijk: [] };
     }
 
+    const intentie = ["data", "coach", "mixed"].includes(geparsed.intentie)
+      ? geparsed.intentie
+      : "data";
+
     return new Response(
       JSON.stringify({
         transcript,
+        intentie,
         samenvatting: geparsed.samenvatting || "",
         acties: Array.isArray(geparsed.acties) ? geparsed.acties : [],
+        coach_bericht: geparsed.coach_bericht || null,
         onduidelijk: Array.isArray(geparsed.onduidelijk) ? geparsed.onduidelijk : [],
       }),
       { headers: { "Content-Type": "application/json" } }

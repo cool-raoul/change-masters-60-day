@@ -5,6 +5,7 @@ import { Topbar } from "@/components/layout/Topbar";
 import { WelcomePopup } from "@/components/layout/WelcomePopup";
 import { TaalProvider } from "@/lib/i18n/TaalContext";
 import { Taal } from "@/lib/i18n/vertalingen";
+import { VoiceFab } from "@/components/voice/VoiceFab";
 
 export async function AppShell({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -34,6 +35,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
           <Topbar gebruikersnaam={profile?.full_name || user.email || "Teamlid"} />
           <main className="flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain p-6 mobile-scroll">{children}</main>
         </div>
+        <VoiceFab />
       </div>
     </TaalProvider>
   );
