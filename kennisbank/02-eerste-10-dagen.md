@@ -126,4 +126,159 @@ Mensen reageren onder je posts, op je stories, of sturen je een DM / WhatsApp.
 
 ---
 
-<!-- STAP 2-5 + extra kaarten volgen in volgende commits -->
+## STAP 2 — CONTACT & ACTIE
+
+### Jouw kracht zit in het delen
+
+> In aanbevelingsmarketing hoef je niemand iets te "verkopen" op de traditionele manier. Jouw kracht zit in het **delen** van je persoonlijke ervaring.
+
+- Mensen kopen niet van bedrijven, ze kopen van mensen **waarin ze zichzelf herkennen**.
+- We verkopen geen "producten" — we bieden **oplossingen voor bepaalde problemen**.
+
+### De kracht van jouw verhaal
+
+> **Jij bent je grootste marketingtool.**
+
+Waarom? Omdat je volgers/vrienden/netwerk je kennen, vertrouwen en volgen om **wie je bent**. Oprecht enthousiasme wekt nieuwsgierigheid — zonder pushen.
+
+**Jouw ervaring = jouw geloofwaardigheid.** Mensen willen weten:
+- Waarom ben je gestart?
+- Wat merkte je na een paar weken?
+- Hoe voel je je nu?
+- Wat is er veranderd in je gezondheid, energie of leefstijl?
+
+Dat deel je.
+
+> 💡 Tip: hou het **persoonlijk, kort en simpel**. Mensen haken aan op herkenning, niet op perfectie.
+
+---
+
+### ACTIE 1 — Jouw Hot Market
+
+**Kernregel: blijf natuurlijk.** Doe en praat zoals je altijd doet.
+
+> Als je je tante altijd via WhatsApp spreekt, doe dat nu dan ook.
+> Als je je moeder altijd belt, doe dat nu dan ook.
+
+- Document: `HOT_MARKET_BENADERING 2025` — de stappen om je hot market te benaderen
+
+**"WAHAAA ER KOMT EEN REACTIE WAT NU?"** — voorbeeldreactie als iemand wil bestellen of meer info wil:
+
+> *Wat leuk dat je enthousiast bent! Ik vind het zó tof dat je dit open bekijkt — ik ben je daar echt dankbaar voor. Ik stuur je zo een link met de producten die we hebben besproken. Kijk gewoon even rustig welke het meeste met je resoneert en laat me weten welke je wilt proberen, dan maak ik het voor je in orde. Wil je het liever iets groter aanpakken en echt aan de slag met je leefstijl en vitaliteit, dan kan ik je ook de link sturen naar het traject dat ik zelf heb gedaan: de **ResetCode**. Dat is een volledig programma waarmee je je lichaam en energie echt opnieuw kunt resetten. Laat maar weten wat je aanspreekt, ik help je graag op weg.*
+
+> 💡 Tip: voor uitgebreidere productinfo → ga naar `lifeplus.com`, kies **United States** als land, zoek het product op. Op de Amerikaanse site staat bij elke 'product fact sheet' **veel meer info** dan in EU.
+
+---
+
+### ACTIE 2 — De oefenlijst die jouw vrijheid bouwt
+
+Je start met **Action Marketing** voordat je Attraction Marketing (social media) gaat doen. Daarna combineer je die twee.
+
+> Dit leer je door te doen. De namenlijst is een **oefenlijst** — je leert communiceren, luisteren, verbinden, en bouwt aan je toekomst. Je helpt mensen verder én traint jezelf in:
+> - Invloed vanuit oprechtheid
+> - Verbinding vanuit nieuwsgierigheid
+> - Resultaat vanuit actie
+
+### Waarom Action Marketing?
+
+> Actie brengt duidelijkheid, niet andersom.
+
+- **Direct resultaat:** vandaag gesprekken, morgen vervolg
+- **Jij aan het stuur:** jij kiest wie je benadert
+- **Leren in het echt:** je hoort wat mensen écht willen en waar ze tegenaan lopen
+
+> Elke naam = oefening. Elk gesprek = groei.
+
+**Mensen willen:** meer energie, gezondheid, tijd/inkomen, vrijheid, richting. Maar voordat je ontdekt waar ze naar zoeken, moet je **eerst in gesprek komen**.
+
+---
+
+### De 100 Namenlijst = 25 + 75
+
+**Deel 1 — Je eerste 20-25 (warme kring):**
+- Mensen met wie je de afgelopen 9 maanden contact had
+- Je kent (een deel van) hun WHY — die kun je gebruiken in je uitnodiging
+- Direct uitnodigen via: Boards PROSPECT-link, 3-weg-chat/call samen met sponsor/messenger, webinar
+
+**Deel 2 — De overige 75-80 (opwarmen in 10 dagen):**
+- Mensen die je 1, 3 of 10 jaar niet gesproken hebt
+- Eerst opwarmen (korte, echte check-in), daarna pas uitnodigen
+
+**Doelen:**
+- ⏱ Binnen **48 uur**: minimaal 25 uitnodigingen gedaan
+- ⏱ Binnen **10 dagen**: 75 mensen opgewarmd + hun WHY genoteerd
+
+---
+
+### Voorbeeld-uitnodiging: Business
+
+> *Hey [naam], hoe gaat het met je?
+>
+> Ik wil graag iets persoonlijks delen en misschien herken je jezelf erin. Telkens wanneer ik bij de kassa stond, gaf het bedrag me een knijpgevoel. Zouden we het deze maand wel redden? Aan het einde van de maand zat ik weer krap en dat gaf een enorme druk. Ik was op zoek naar iets dat me meer ruimte zou geven in mijn portemonnee. En ik heb iets gevonden!
+>
+> Ik heb een manier gevonden om een extra inkomen op te bouwen, gewoon vanuit huis, zonder dat het m'n huidige werkzaamheden in de weg zit — zonder investeringen en zonder risico. Het is iets dat ik naast m'n werk kan doen, waardoor er nu al meer ademruimte is. Ik ben zó opgelucht dat ik dit ben aangegaan en dat het voor mij werkt!
+>
+> Mag ik je kort m'n verhaal vertellen? Misschien is het ook iets voor jou!*
+
+### Voorbeeld-uitnodiging: Vitaliteitsprogramma
+
+> *Hey [naam], hoe gaat het met je?
+>
+> Ik wil graag iets persoonlijks met je delen, want misschien herken je je erin. Tot een paar weken geleden lag ik vaak wakker. Dan was het weer half drie op de wekker en stond ik vermoeid op. Overdag was ik mezelf niet en ik was op zoek naar een verandering. Ik vind het nog steeds ongelofelijk, maar ik heb iets gevonden! Ik slaap veel dieper en ik word eindelijk weer uitgerust wakker. Ik ben zó opgelucht dat ik het ben aangegaan en dat dit zo goed voor mij werkt.
+>
+> Ik zou het fijn vinden als ik kort m'n verhaal met je mag delen, is dat oké?*
+
+---
+
+### EXTRA — Uitnodigingen voor je 100 Namenlijst
+
+**Waar vind je de overige 75 contacten?**
+WhatsApp · Telefoon · Instagram DM · Facebook · Messenger · E-mail · LinkedIn · Sport · Vereniging · School · Buurt · Yoga · Kerk · Club
+
+Documenten:
+- `Contactenlijst_brainstorm`
+- `Jouw_100_Namenlijst_in_4_stappen`
+
+---
+
+### De 75-80 mensen opwarmen (10 dagen)
+
+Geen verkooppraatjes. Geen scripts. **Echte aandacht.**
+
+**Wat zeg je dan?** Heel simpel:
+
+> *"Hey! Wat leuk om je weer even te spreken. Hoe is het met je?"*
+
+### Het L.O.R.D.-principe (leidraad voor gesprek)
+
+- **L – Location** — Waar woon je nu? Ben je verhuisd?
+- **O – Occupation** — Wat voor werk? Hoe gaat dat? Vind je het nog leuk?
+- **R – Recreation / Relationship** — Wat doe je in je vrije tijd? Hoe gaat het met je partner/kinderen?
+- **D – Dreams & Goals** — Heb je dromen of doelen dit jaar? Waar werk je naartoe?
+
+> ⚠ **Schrijf hun WHY altijd op.** Digitaal of in een schriftje. Je gebruikt hem over 10 dagen bij de daadwerkelijke uitnodiging. Hun WHY is jouw **haakje** — het helpt je persoonlijk en gericht uit te nodigen.
+
+### Hoe je dit aanpakt
+
+1. **Start met je WhatsApp-contacten.** Scroll door de lijst. Dit is je warme kring.
+2. **Gebruik de Memory Jogger.** Geheugensteuntje voor oude collega's, buren, sportmaatjes, schoolvrienden, yoga, kinderen, dorp.
+3. **Schrijf je 100 namen op.** Niet in je hoofd. Tastbaar — papier of digitaal.
+4. **Gebruik uitnodigingstemplates** uit `Meer pret & poen` (document bovenaan). Kant-en-klare voorbeeldberichten, eigen maken en direct via WhatsApp sturen.
+
+---
+
+### Belangrijke reminder
+
+> Je hoeft niemand te overtuigen. Je hoeft alleen maar op zoek te gaan naar de mensen die klaar zijn voor iets nieuws.
+>
+> **Je bent niet op zoek naar iedereen. Je bent op zoek naar iemand die op zoek is.**
+>
+> Je kunt nooit het verkeerde zeggen tegen de juiste persoon, en nooit het juiste tegen de verkeerde persoon. Alles is goed. Dus relax. Geniet van het proces. Verbind. Wees nieuwsgierig.
+
+### Klaar voor STAP 3
+
+Wanneer je doelen zijn gesteld, namenlijst is gemaakt en opdrachten zijn gedaan → klaar voor stap 3. Laat je sponsor weten dat je doorgaat zodat hij/zij je kan blijven begeleiden.
+
+---
+
+<!-- STAP 3-5 + extra kaarten volgen in volgende commits -->
