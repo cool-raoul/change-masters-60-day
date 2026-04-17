@@ -884,6 +884,7 @@ export const t: Vertalingen = {
   "coach.kan_accountability": { nl: "Accountability — houd jij je aan jouw dagelijkse acties?", en: "Accountability — are you keeping up with your daily actions?", fr: "Responsabilité — respectes-tu tes actions quotidiennes ?", es: "Responsabilidad — ¿cumples con tus acciones diarias?", de: "Accountability — hältst du deine täglichen Aktionen ein?", pt: "Responsabilidade — você está cumprindo suas ações diárias?" },
   "coach.kan_drieweg": { nl: "3-weg gesprek opzetten met sponsor (stap-voor-stap scripts + geslacht keuze)", en: "Set up a 3-way conversation with sponsor (step-by-step scripts + gender selection)", fr: "Mettre en place une conversation à 3 avec le sponsor (scripts étape par étape)", es: "Organizar conversación a 3 con el sponsor (scripts paso a paso)", de: "3-Wege-Gespräch mit Sponsor einrichten (Schritt-für-Schritt-Skripte)", pt: "Organizar conversa a 3 com o sponsor (scripts passo a passo)" },
   "coach.snel.drieweg": { nl: "3-weg gesprek", en: "3-way chat", fr: "Chat à 3", es: "Chat a 3", de: "3-Wege-Chat", pt: "Chat a 3" },
+  "coach.snel.mentor": { nl: "Mentor gesprek", en: "Mentor chat", fr: "Discussion mentor", es: "Conversación mentor", de: "Mentor-Gespräch", pt: "Conversa mentor" },
 
   // ===== STATS EXTRA =====
   "stats.vorige_dagen": { nl: "Vorige dagen aanvullen", en: "Fill in previous days", fr: "Compléter les jours précédents", es: "Completar días anteriores", de: "Vorherige Tage ausfüllen", pt: "Preencher dias anteriores" },
