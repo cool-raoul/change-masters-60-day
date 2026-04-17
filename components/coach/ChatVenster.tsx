@@ -23,7 +23,6 @@ interface SnelleOptie {
 }
 
 const SNELLE_OPTIES: SnelleOptie[] = [
-  { icoon: "🤝", labelKey: "coach.snel.drieweg", berichtKey: "coach.snel.drieweg.bericht" },
   { icoon: "💬", labelKey: "coach.snel.dm", berichtKey: "coach.snel.dm.bericht" },
   { icoon: "🛡️", labelKey: "coach.snel.bezwaar", berichtKey: "coach.snel.bezwaar.bericht" },
   { icoon: "🔄", labelKey: "coach.snel.followup", berichtKey: "coach.snel.followup.bericht" },
