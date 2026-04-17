@@ -196,6 +196,10 @@ export const t: Vertalingen = {
     nl: "Scripts", en: "Scripts", fr: "Scripts",
     es: "Guiones", de: "Skripte", pt: "Scripts",
   },
+  "nav.producten": {
+    nl: "Producten", en: "Products", fr: "Produits",
+    es: "Productos", de: "Produkte", pt: "Produtos",
+  },
   "nav.herinneringen": {
     nl: "Herinneringen", en: "Reminders", fr: "Rappels",
     es: "Recordatorios", de: "Erinnerungen", pt: "Lembretes",
