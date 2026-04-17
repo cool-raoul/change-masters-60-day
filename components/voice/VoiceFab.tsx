@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
@@ -131,6 +131,31 @@ export function VoiceFab() {
     onMaxBereikt: () => verwerkHuidig(),
   });
 
+  // Body-scroll lock tijdens modal: voorkomt iOS Safari stuck-scroll bug
+  // met geneste scroll-containers. Herstelt origineel op cleanup.
+  useEffect(() => {
+    if (fase === "dicht") return;
+    const html = document.documentElement;
+    const origOverflow = html.style.overflow;
+    const origTouch = html.style.touchAction;
+    html.style.overflow = "hidden";
+    html.style.touchAction = "none";
+    return () => {
+      html.style.overflow = origOverflow;
+      html.style.touchAction = origTouch;
+    };
+  }, [fase]);
+
+  // iOS Safari: na modal-sluiting layout forceren te herberekenen zodat
+  // touch/scroll state resetten op de main scroll-container.
+  useEffect(() => {
+    if (fase !== "dicht") return;
+    const t = setTimeout(() => {
+      window.dispatchEvent(new Event("resize"));
+    }, 0);
+    return () => clearTimeout(t);
+  }, [fase]);
+
   // Verberg op auth/onboarding pagina's
   const verbergen =
     pathname?.startsWith("/login") ||
@@ -195,8 +220,10 @@ export function VoiceFab() {
     try {
       await voerActiesUit();
       toast.success(acties.length > 0 ? "Opgeslagen!" : "Klaar");
-      router.refresh();
+      // Sluit modal EERST zodat DOM settled is voor de refresh.
+      // Voorkomt iOS Safari scroll-lock na router.refresh().
       sluit();
+      setTimeout(() => router.refresh(), 100);
     } catch (err: any) {
       toast.error("Opslaan mislukt: " + (err?.message || "onbekend"));
       setFase("preview");
