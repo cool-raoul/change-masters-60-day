@@ -21,9 +21,9 @@ export function ProductadviesKnop({ prospectId, prospectNaam, userId, notities }
     if (laden) return;
     setLaden(true);
 
-    const vraag = `Geef een concreet Lifeplus-productadvies voor ${prospectNaam}.${
-      notities ? ` Context die ik over haar/hem weet: ${notities}.` : ""
-    } Adviseer direct op basis van wat bekend is — geen intake-vragenrondje vooraf. Sluit af met één korte check-vraag zodat ik kan aanscherpen als ik wil.`;
+    const vraag = `Ik wil een Lifeplus-productadvies voor ${prospectNaam}.${
+      notities ? ` Context die ik al heb: ${notities}.` : ""
+    } Start met EXACT ÉÉN open intake-vraag ("Geef me zoveel mogelijk informatie zodat ik een gepast productadvies kan samenstellen") met één zin voorbeelden erbij (doel/klacht, leeftijd, leefstijl, medische context, budget). Geen losse vragenrondje. Zodra ik antwoord: direct concreet advies.`;
 
     const { data, error } = await supabase
       .from("ai_gesprekken")
