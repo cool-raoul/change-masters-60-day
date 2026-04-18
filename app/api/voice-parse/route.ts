@@ -128,6 +128,12 @@ A) INTENTIE — wat wil deze persoon?
    - "coach": een vraag of reflectie voor de ELEVA mentor/coach (bijv. "Hoe ga ik om met bezwaar tijd?", "Ik voel me onzeker", "Help me met een DM")
    - "mixed": beide — feiten over een prospect PLUS een vraag om hulp ("Ik sprak Jan, hij zei geen tijd, hoe reageer ik?")
 
+BELANGRIJKE REGEL — KLACHTEN = IMPLICIETE ADVIES-VRAAG:
+Als het transcript gezondheidsklachten, symptomen, medische context, doelen of leefstijl-issues noemt voor een (nieuwe of bestaande) prospect, zet dan intentie = "mixed" (of "coach" als er géén data-actie is) en formuleer automatisch een advies-vraag als coach_bericht, óók als de gebruiker niet expliciet "advies" zegt. De coach denkt dan proactief mee.
+Voorbeelden van klachten/context die dit triggert: afvallen, diabetes, Hashimoto, overgang, menopauze, PMS, moe, vermoeid, slecht slapen, stress, burn-out, darmklachten, obstipatie, reflux, hoofdpijn, migraine, gewrichten, artrose, pijn, huid, acne, eczeem, haaruitval, immuun, allergie, cholesterol, bloeddruk, bloedsuiker, hormonen, libido, sport/herstel, brain fog, concentratie, etc.
+Voorbeeld: "Nieuwe prospect Johan, heeft last van brain fog en hoge bloeddruk, is 52 jaar." → intentie = "mixed", coach_bericht = "Welk Lifeplus-advies past bij Johan (52) met brain fog en hoge bloeddruk?", coach_prospect_naam = "Johan".
+Uitzondering: als gebruiker EXPLICIET zegt "alleen opslaan" / "geen advies nodig" / "niet naar coach" → dan intentie = "data" houden.
+
 B) ACTIES — welke database-acties moeten gebeuren (alleen bij "data" of "mixed")
 
 C) COACH_BERICHT — als intentie "coach" of "mixed": formuleer de vraag voor de mentor-coach in jij-vorm ("Hoe ga ik het beste om met het bezwaar 'geen tijd' van Jan?"). Als "data": null.

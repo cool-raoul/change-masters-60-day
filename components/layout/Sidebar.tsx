@@ -30,15 +30,9 @@ export function Sidebar({ isLeider = false }: { isLeider?: boolean }) {
     setMobielmenuOpen(false);
   }, [pathname]);
 
-  // Voorkom scrollen als menu open is
-  useEffect(() => {
-    if (mobielmenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => { document.body.style.overflow = ""; };
-  }, [mobielmenuOpen]);
+  // Drawer is fixed inset-0 z-50 — covert viewport al volledig. Geen body-lock nodig.
+  // Body-lock (document.body.style.overflow = "hidden") veroorzaakt op iOS Safari
+  // rendering-glitches waarbij de hamburger verdwijnt na een ander modal.
 
   async function uitloggen() {
     await supabase.auth.signOut();
@@ -123,10 +117,11 @@ export function Sidebar({ isLeider = false }: { isLeider?: boolean }) {
 
   return (
     <>
-      {/* Hamburger knop — alleen op mobiel */}
+      {/* Hamburger knop — alleen op mobiel. z-[60] staat altijd boven modals (z-50)
+          zodat de knop niet verdwijnt na sluiten van een modal (iOS repaint-issue). */}
       <button
         onClick={() => setMobielmenuOpen(true)}
-        className="lg:hidden fixed top-3 left-3 z-50 bg-cm-surface border border-cm-border rounded-lg p-2 text-cm-gold"
+        className="lg:hidden fixed top-3 left-3 z-[60] bg-cm-surface border border-cm-border rounded-lg p-2 text-cm-gold"
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <line x1="3" y1="6" x2="21" y2="6" />

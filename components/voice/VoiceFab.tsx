@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
@@ -130,36 +130,61 @@ export function VoiceFab() {
   const [coachProspectId, setCoachProspectId] = useState<string | null>(null);
   const [coachProspectNaam, setCoachProspectNaam] = useState<string | null>(null);
 
+  // Scroll-aware: verbergen bij scroll-down, tonen bij scroll-up of aan top.
+  // Zo is de FAB nooit in de weg van knoppen/velden onderaan een pagina.
+  const [zichtbaar, setZichtbaar] = useState(true);
+  const laatsteScrollRef = useRef(0);
+  const scrollTimerRef = useRef<any>(null);
+
+  useEffect(() => {
+    // Zoek het scrollable main-element (AppShell heeft <main overflow-y-auto>).
+    // Val terug op window als main niet gevonden wordt (publieke pagina's).
+    const main = document.querySelector("main");
+    const target: HTMLElement | Window = main instanceof HTMLElement ? main : window;
+
+    function huidigeScroll() {
+      return target instanceof Window ? window.scrollY : (target as HTMLElement).scrollTop;
+    }
+
+    laatsteScrollRef.current = huidigeScroll();
+
+    function onScroll() {
+      const nu = huidigeScroll();
+      const delta = nu - laatsteScrollRef.current;
+      // Kleine jitter negeren
+      if (Math.abs(delta) < 8) return;
+      if (nu < 40) {
+        setZichtbaar(true);
+      } else if (delta > 0) {
+        // scroll-down
+        setZichtbaar(false);
+      } else {
+        // scroll-up
+        setZichtbaar(true);
+      }
+      laatsteScrollRef.current = nu;
+      // Na 1.5s zonder scroll weer tonen — zo kan de user altijd bij de knop
+      if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
+      scrollTimerRef.current = setTimeout(() => setZichtbaar(true), 1500);
+    }
+
+    target.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      target.removeEventListener("scroll", onScroll);
+      if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
+    };
+  }, [pathname]);
+
   const spraak = gebruikSpraak({
     taal,
     maxSeconden: MAX_SECONDEN,
     onMaxBereikt: () => verwerkHuidig(),
   });
 
-  // Body-scroll lock tijdens modal: voorkomt iOS Safari stuck-scroll bug
-  // met geneste scroll-containers. Herstelt origineel op cleanup.
-  useEffect(() => {
-    if (fase === "dicht") return;
-    const html = document.documentElement;
-    const origOverflow = html.style.overflow;
-    const origTouch = html.style.touchAction;
-    html.style.overflow = "hidden";
-    html.style.touchAction = "none";
-    return () => {
-      html.style.overflow = origOverflow;
-      html.style.touchAction = origTouch;
-    };
-  }, [fase]);
-
-  // iOS Safari: na modal-sluiting layout forceren te herberekenen zodat
-  // touch/scroll state resetten op de main scroll-container.
-  useEffect(() => {
-    if (fase !== "dicht") return;
-    const t = setTimeout(() => {
-      window.dispatchEvent(new Event("resize"));
-    }, 0);
-    return () => clearTimeout(t);
-  }, [fase]);
+  // Modal is fixed inset-0 z-50 en main heeft overscroll-y-contain —
+  // scroll-chaining wordt daardoor al voorkomen. Geen body-lock nodig;
+  // die veroorzaakte juist iOS stuck-scroll na sluiten (touchAction="none"
+  // werd niet altijd correct herberekend).
 
   // Verberg op auth/onboarding pagina's
   const verbergen =
@@ -631,18 +656,30 @@ export function VoiceFab() {
     return `${m}:${sec.toString().padStart(2, "0")}`;
   }
 
+  // FAB altijd in de DOM houden; alleen pointer-events/opacity/transform wisselen.
+  // iOS Safari heeft repaint-glitches bij position:fixed elementen die via React
+  // conditioneel unmounten/mounten na route-transities — daardoor verdween de knop.
+  const fabVerborgen = fase !== "dicht" || !zichtbaar;
+
   return (
     <>
-      {/* Floating Action Button */}
-      {fase === "dicht" && (
-        <button
-          onClick={openen}
-          className="fixed bottom-5 right-5 z-40 w-14 h-14 rounded-full bg-cm-gold text-cm-black shadow-gold-lg flex items-center justify-center text-2xl hover:scale-105 active:scale-95 transition-transform"
-          aria-label="Inspreken"
-        >
-          🎙️
-        </button>
-      )}
+      {/* Floating Action Button — altijd gerenderd, visueel verborgen via CSS */}
+      <button
+        onClick={openen}
+        className="fixed bottom-5 right-5 z-40 w-14 h-14 rounded-full bg-cm-gold text-cm-black shadow-gold-lg flex items-center justify-center text-2xl active:scale-95 transition-all duration-200"
+        style={{
+          opacity: fabVerborgen ? 0 : 1,
+          transform: fabVerborgen ? "translate3d(0, 96px, 0)" : "translate3d(0, 0, 0)",
+          pointerEvents: fabVerborgen ? "none" : "auto",
+          WebkitTransform: fabVerborgen ? "translate3d(0, 96px, 0)" : "translate3d(0, 0, 0)",
+          willChange: "transform, opacity",
+        }}
+        aria-label="Inspreken"
+        aria-hidden={fabVerborgen}
+        tabIndex={fabVerborgen ? -1 : 0}
+      >
+        🎙️
+      </button>
 
       {fase !== "dicht" && (
         <div className="fixed inset-0 z-50 bg-black/80 flex items-end sm:items-center justify-center p-0 sm:p-4">

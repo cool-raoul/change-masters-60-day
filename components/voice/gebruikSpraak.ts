@@ -31,6 +31,58 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
   const timerRef = useRef<any>(null);
   const finalRef = useRef("");
   const actiefRef = useRef(false);
+  const wakeLockRef = useRef<any>(null);
+  const noSleepRef = useRef<any>(null);
+
+  async function claimWakeLock() {
+    const nav: any = navigator;
+    // Primair: Wake Lock API (iOS 16.4+, Android Chrome 84+, moderne desktops)
+    if (nav?.wakeLock?.request) {
+      try {
+        wakeLockRef.current = await nav.wakeLock.request("screen");
+        wakeLockRef.current?.addEventListener?.("release", () => {
+          wakeLockRef.current = null;
+        });
+        return;
+      } catch {
+        // valt door naar NoSleep fallback
+      }
+    }
+    // Fallback: NoSleep.js silent-video truc (oude iOS / Android-browsers zonder Wake Lock)
+    try {
+      if (!noSleepRef.current) {
+        const NoSleepMod = await import("nosleep.js");
+        const NoSleep = (NoSleepMod as any).default || NoSleepMod;
+        noSleepRef.current = new NoSleep();
+      }
+      await noSleepRef.current.enable();
+    } catch {
+      // Geen van beide werkt — zeldzaam, maar opname loopt sowieso door
+    }
+  }
+
+  async function releaseWakeLock() {
+    try {
+      await wakeLockRef.current?.release?.();
+    } catch {}
+    wakeLockRef.current = null;
+    try {
+      noSleepRef.current?.disable?.();
+    } catch {}
+  }
+
+  // Als scherm kort zwart gaat (tab-wissel) dropt het OS de wake lock —
+  // opnieuw claimen zodra de pagina weer zichtbaar is en opname nog loopt.
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    function onVisible() {
+      if (document.visibilityState === "visible" && actiefRef.current && !wakeLockRef.current) {
+        claimWakeLock();
+      }
+    }
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -88,6 +140,7 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
       rec.start();
       recRef.current = rec;
       setActief(true);
+      claimWakeLock();
 
       if (maxSeconden) {
         timerRef.current = setInterval(() => {
@@ -123,6 +176,7 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
+    releaseWakeLock();
     const eind = (finalRef.current + " " + interim).trim();
     return eind;
   }
@@ -143,6 +197,7 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
         try { recRef.current.onend = null; recRef.current.stop(); } catch {}
       }
       if (timerRef.current) clearInterval(timerRef.current);
+      releaseWakeLock();
     };
   }, []);
 
