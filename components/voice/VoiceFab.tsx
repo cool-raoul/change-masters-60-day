@@ -115,7 +115,7 @@ type ParseResultaat = {
   waarschuwingen?: string[];
 };
 
-type Fase = "dicht" | "opname" | "bewerken" | "verwerken" | "preview" | "opslaan";
+type Fase = "dicht" | "opname" | "transcriberen" | "bewerken" | "verwerken" | "preview" | "opslaan";
 
 export function VoiceFab() {
   const { taal } = useTaal();
@@ -202,9 +202,26 @@ export function VoiceFab() {
     setTimeout(() => spraak.start(), 50);
   }
 
-  function verwerkHuidig() {
-    const tekst = spraak.stop();
-    if (tekst.length < 3) {
+  async function verwerkHuidig() {
+    // Fallback-pad: browser zonder MediaRecorder — user heeft in de textarea
+    // getypt. Geen Whisper nodig; tekst staat al in spraak.transcript.
+    if (!spraak.ondersteund || !spraak.toegang) {
+      const getypt = spraak.transcript.trim();
+      if (getypt.length < 3) {
+        toast.error("Geen tekst opgevangen");
+        setFase("dicht");
+        return;
+      }
+      spraak.reset();
+      setBewerkTekst(getypt);
+      setFase("bewerken");
+      return;
+    }
+
+    // Whisper-pad: toon tussenfase terwijl de server transcribeert (~2-4s).
+    setFase("transcriberen");
+    const tekst = await spraak.stop();
+    if (!tekst || tekst.length < 3) {
       toast.error("Geen tekst opgevangen");
       setFase("dicht");
       return;
@@ -702,7 +719,7 @@ export function VoiceFab() {
                 {!spraak.ondersteund || !spraak.toegang ? (
                   <div className="space-y-2">
                     <p className="text-sm text-cm-white opacity-80">
-                      Spraak-herkenning werkt niet in deze browser. Gebruik de microfoon-knop op je toetsenbord om te dicteren:
+                      Microfoon niet beschikbaar in deze browser. Gebruik de microfoon-knop op je toetsenbord om te dicteren:
                     </p>
                     <textarea
                       value={spraak.transcript}
@@ -714,17 +731,15 @@ export function VoiceFab() {
                     />
                   </div>
                 ) : (
-                  <div className="card bg-cm-surface-2 min-h-[120px]">
-                    {spraak.transcript || spraak.interim ? (
-                      <p className="text-cm-white text-sm whitespace-pre-wrap">
-                        {spraak.transcript}
-                        <span className="opacity-50">{spraak.interim}</span>
+                  <div className="card bg-cm-surface-2 min-h-[120px] flex items-center justify-center text-center">
+                    <div>
+                      <p className="text-cm-white text-sm opacity-80">
+                        🎙️ Spreek alles in wat je kwijt wilt...
                       </p>
-                    ) : (
-                      <p className="text-cm-white text-sm opacity-50 italic">
-                        Begin met praten...
+                      <p className="text-cm-white text-xs opacity-50 mt-2 italic">
+                        Tekst verschijnt na stoppen (ELEVA transcribeert met Whisper — veel nauwkeuriger dan browser-spraak).
                       </p>
-                    )}
+                    </div>
                   </div>
                 )}
 
@@ -735,11 +750,23 @@ export function VoiceFab() {
                   <button
                     onClick={verwerkHuidig}
                     className="btn-gold flex-1"
-                    disabled={spraak.huidigeTekst().length < 3}
+                    disabled={
+                      (!spraak.ondersteund || !spraak.toegang)
+                        ? spraak.transcript.trim().length < 3
+                        : spraak.seconden < 1
+                    }
                   >
                     ✓ Stop & bewerk
                   </button>
                 </div>
+              </div>
+            )}
+
+            {fase === "transcriberen" && (
+              <div className="p-8 text-center space-y-3">
+                <div className="inline-block w-12 h-12 border-4 border-cm-gold border-t-transparent rounded-full animate-spin"></div>
+                <p className="text-cm-white">ELEVA zet spraak om naar tekst...</p>
+                <p className="text-cm-white text-xs opacity-60">Dit duurt meestal 2-4 seconden</p>
               </div>
             )}
 

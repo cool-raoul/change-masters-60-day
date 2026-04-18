@@ -10,21 +10,9 @@ type TaalCode = "nl" | "en" | "fr" | "es" | "de" | "pt";
 // vóór de tekst ergens anders gebruikt wordt (API, chat, UI).
 export function normaliseerLifeplus(tekst: string): string {
   if (!tekst) return tekst;
-  // Case-insensitive varianten met optionele spatie/koppelteken in het midden.
-  // Varianten: life plus, life-plus, lifeplus, lijf plus, lijfplus, live plus,
-  //            leaf plus, laif plus, lifeplas, lief plus.
   const patroon = /\b(life|lijf|live|leaf|laif|lief)[\s\-]?(plus|plas)\b/gi;
   return tekst.replace(patroon, "Lifeplus");
 }
-
-const LOCALE_MAP: Record<string, string> = {
-  nl: "nl-NL",
-  en: "en-US",
-  fr: "fr-FR",
-  es: "es-ES",
-  de: "de-DE",
-  pt: "pt-PT",
-};
 
 type Opties = {
   taal?: TaalCode | string;
@@ -32,29 +20,56 @@ type Opties = {
   onMaxBereikt?: () => void;
 };
 
+// Kies de beste audio-codec die de browser ondersteunt. Whisper accepteert
+// webm/opus (Chrome/Firefox), mp4/aac (Safari) en ogg. We laten de browser
+// kiezen en sturen mime mee naar de server zodat die een passende bestands-
+// extensie kan zetten.
+function kiesMimeType(): string | undefined {
+  if (typeof MediaRecorder === "undefined") return undefined;
+  const kandidaten = [
+    "audio/webm;codecs=opus",
+    "audio/webm",
+    "audio/mp4;codecs=mp4a.40.2",
+    "audio/mp4",
+    "audio/ogg;codecs=opus",
+    "audio/ogg",
+  ];
+  for (const m of kandidaten) {
+    try {
+      if (MediaRecorder.isTypeSupported(m)) return m;
+    } catch {
+      // oudere Safari gooit op isTypeSupported — negeren
+    }
+  }
+  return undefined; // laat de browser default kiezen
+}
+
 export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties = {}) {
   const [actief, setActief] = useState(false);
+  // Bij Whisper hebben we tijdens opname geen live transcript. transcript
+  // wordt gevuld na server-ronde, en interim blijft leeg. We houden de
+  // velden in de API om VoiceFab minimaal aan te passen.
   const [transcript, setTranscript] = useState("");
   const [interim, setInterim] = useState("");
   const [seconden, setSeconden] = useState(0);
   const [ondersteund, setOndersteund] = useState(true);
   const [toegang, setToegang] = useState(true);
 
-  const recRef = useRef<any>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
+  const mimeRef = useRef<string | undefined>(undefined);
   const timerRef = useRef<any>(null);
-  const finalRef = useRef("");
-  const actiefRef = useRef(false);
   const wakeLockRef = useRef<any>(null);
   const noSleepRef = useRef<any>(null);
-  // iOS Safari stopt SpeechRecognition elke ~30-60s automatisch. We herstarten
-  // met een verse instance. Teller voorkomt oneindige loops bij stukke hardware.
-  const herstartTellerRef = useRef(0);
-  const laatsteHerstartRef = useRef(0);
-  const herstartTimerRef = useRef<any>(null);
+  const actiefRef = useRef(false);
+
+  // Promise die resolvet met de audio-Blob zodra MediaRecorder klaar is met
+  // flushen. stop() wacht hierop zodat we het volledige bestand hebben.
+  const stopResolverRef = useRef<((blob: Blob | null) => void) | null>(null);
 
   async function claimWakeLock() {
     const nav: any = navigator;
-    // Primair: Wake Lock API (iOS 16.4+, Android Chrome 84+, moderne desktops)
     if (nav?.wakeLock?.request) {
       try {
         wakeLockRef.current = await nav.wakeLock.request("screen");
@@ -63,10 +78,9 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
         });
         return;
       } catch {
-        // valt door naar NoSleep fallback
+        // fallback hieronder
       }
     }
-    // Fallback: NoSleep.js silent-video truc (oude iOS / Android-browsers zonder Wake Lock)
     try {
       if (!noSleepRef.current) {
         const NoSleepMod = await import("nosleep.js");
@@ -75,7 +89,7 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
       }
       await noSleepRef.current.enable();
     } catch {
-      // Geen van beide werkt — zeldzaam, maar opname loopt sowieso door
+      // geen wake lock — opname werkt sowieso door
     }
   }
 
@@ -89,8 +103,7 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
     } catch {}
   }
 
-  // Als scherm kort zwart gaat (tab-wissel) dropt het OS de wake lock —
-  // opnieuw claimen zodra de pagina weer zichtbaar is en opname nog loopt.
+  // Re-claim wake lock als tab zichtbaar wordt en opname nog loopt
   useEffect(() => {
     if (typeof document === "undefined") return;
     function onVisible() {
@@ -104,125 +117,83 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    setOndersteund(!!SR);
+    const heeftRecorder = typeof window.MediaRecorder !== "undefined";
+    const heeftMedia = !!navigator?.mediaDevices?.getUserMedia;
+    setOndersteund(heeftRecorder && heeftMedia);
   }, []);
 
-  // Maakt een verse SpeechRecognition-instance met alle handlers gebonden.
-  // Wordt zowel bij eerste start als bij elke iOS-auto-stop aangeroepen.
-  function maakRecognition(): any {
-    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (!SR) return null;
+  async function start(): Promise<boolean> {
+    if (actiefRef.current) return false;
 
-    const rec = new SR();
-    rec.lang = LOCALE_MAP[taal] || "nl-NL";
-    rec.continuous = true;
-    rec.interimResults = true;
-
-    rec.onresult = (event: any) => {
-      let interimText = "";
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const stukje = event.results[i][0].transcript;
-        if (event.results[i].isFinal) {
-          finalRef.current += stukje + " ";
-        } else {
-          interimText += stukje;
-        }
-      }
-      setTranscript(finalRef.current);
-      setInterim(interimText);
-    };
-
-    rec.onerror = (event: any) => {
-      // Fatale fouten: stop helemaal
-      if (event.error === "not-allowed" || event.error === "service-not-allowed") {
-        setToegang(false);
-        actiefRef.current = false;
-        setActief(false);
-        return;
-      }
-      // Herstelbare fouten (no-speech, aborted, network, audio-capture):
-      // niet stoppen, onend pakt de restart op.
-    };
-
-    rec.onend = () => {
-      if (!actiefRef.current) return;
-
-      // Rate-limit: als er >8 herstarts binnen 10 sec zijn, stop definitief
-      const nu = Date.now();
-      if (nu - laatsteHerstartRef.current < 10000) {
-        herstartTellerRef.current += 1;
-      } else {
-        herstartTellerRef.current = 1;
-      }
-      laatsteHerstartRef.current = nu;
-
-      if (herstartTellerRef.current > 8) {
-        console.warn("Spraak: te veel herstarts binnen 10s, stop.");
-        actiefRef.current = false;
-        setActief(false);
-        return;
-      }
-
-      // iOS heeft ~100ms nodig om audio-context te resetten.
-      // Een nieuwe instance is stabieler dan dezelfde opnieuw starten.
-      herstartTimerRef.current = setTimeout(() => {
-        if (!actiefRef.current) return;
-        const nieuweRec = maakRecognition();
-        if (!nieuweRec) {
-          actiefRef.current = false;
-          setActief(false);
-          return;
-        }
-        try {
-          nieuweRec.start();
-          recRef.current = nieuweRec;
-        } catch (err: any) {
-          // "InvalidStateError" komt voor als iets nog vasthangt — probeer nog 1x
-          setTimeout(() => {
-            if (!actiefRef.current) return;
-            try {
-              const extraRec = maakRecognition();
-              extraRec?.start();
-              recRef.current = extraRec;
-            } catch {
-              actiefRef.current = false;
-              setActief(false);
-            }
-          }, 300);
-        }
-      }, 150);
-    };
-
-    return rec;
-  }
-
-  function start() {
-    const rec = maakRecognition();
-    if (!rec) {
+    if (typeof window === "undefined" ||
+        typeof window.MediaRecorder === "undefined" ||
+        !navigator?.mediaDevices?.getUserMedia) {
       setOndersteund(false);
       return false;
     }
 
     try {
-      finalRef.current = "";
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        },
+      });
+      streamRef.current = stream;
+
+      const mime = kiesMimeType();
+      mimeRef.current = mime;
+      const recorder = mime
+        ? new MediaRecorder(stream, { mimeType: mime })
+        : new MediaRecorder(stream);
+      mediaRecorderRef.current = recorder;
+      chunksRef.current = [];
+
+      recorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) chunksRef.current.push(e.data);
+      };
+
+      recorder.onstop = () => {
+        const blobMime = mimeRef.current || "audio/webm";
+        const blob = chunksRef.current.length > 0
+          ? new Blob(chunksRef.current, { type: blobMime })
+          : null;
+        const resolver = stopResolverRef.current;
+        stopResolverRef.current = null;
+        resolver?.(blob);
+        // stream na stop opruimen — anders blijft mic-indicator aan
+        streamRef.current?.getTracks().forEach((t) => t.stop());
+        streamRef.current = null;
+      };
+
+      recorder.onerror = () => {
+        setToegang(false);
+        actiefRef.current = false;
+        setActief(false);
+      };
+
+      // 1s timeslice: periodiek data flushen, geeft stabielere afsluiting
+      recorder.start(1000);
+
+      actiefRef.current = true;
+      setActief(true);
       setTranscript("");
       setInterim("");
       setSeconden(0);
-      herstartTellerRef.current = 0;
-      laatsteHerstartRef.current = 0;
-
-      actiefRef.current = true;
-      rec.start();
-      recRef.current = rec;
-      setActief(true);
       claimWakeLock();
 
       if (maxSeconden) {
         timerRef.current = setInterval(() => {
           setSeconden((s) => {
             if (s + 1 >= maxSeconden) {
-              stop();
+              // Timer direct stoppen zodat onMaxBereikt niet herhaaldelijk
+              // vuurt (onMaxBereikt roept async stop() aan; tussen nu en de
+              // echte stop zou de interval anders blijven tikken).
+              if (timerRef.current) {
+                clearInterval(timerRef.current);
+                timerRef.current = null;
+              }
               onMaxBereikt?.();
               return maxSeconden;
             }
@@ -231,71 +202,128 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
         }, 1000);
       }
       return true;
-    } catch {
-      setActief(false);
+    } catch (err: any) {
+      if (err?.name === "NotAllowedError" || err?.name === "SecurityError") {
+        setToegang(false);
+      } else {
+        setOndersteund(false);
+      }
       actiefRef.current = false;
+      setActief(false);
       return false;
     }
   }
 
-  function stop(): string {
+  // stop() is nu async: MediaRecorder moet data flushen + server moet
+  // transcriberen. Resolvet met de getranscribeerde (+ genormaliseerde) tekst.
+  async function stop(): Promise<string> {
+    if (!actiefRef.current && !mediaRecorderRef.current) return "";
     actiefRef.current = false;
     setActief(false);
-    if (herstartTimerRef.current) {
-      clearTimeout(herstartTimerRef.current);
-      herstartTimerRef.current = null;
-    }
-    if (recRef.current) {
-      try {
-        recRef.current.onend = null;
-        recRef.current.onerror = null;
-        recRef.current.onresult = null;
-        recRef.current.stop();
-      } catch {}
-      recRef.current = null;
-    }
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
     releaseWakeLock();
-    const eind = (finalRef.current + " " + interim).trim();
-    return normaliseerLifeplus(eind);
+
+    // Vraag de Blob op via de onstop-promise
+    const blobPromise = new Promise<Blob | null>((resolve) => {
+      stopResolverRef.current = resolve;
+    });
+
+    try {
+      mediaRecorderRef.current?.stop();
+    } catch {
+      stopResolverRef.current = null;
+    }
+
+    const blob = await blobPromise.catch(() => null);
+    mediaRecorderRef.current = null;
+
+    if (!blob || blob.size < 1000) {
+      return "";
+    }
+
+    // POST naar Whisper-endpoint
+    try {
+      const form = new FormData();
+      form.append("audio", blob, `opname.${blob.type.includes("mp4") ? "mp4" : "webm"}`);
+      form.append("taal", String(taal));
+      const res = await fetch("/api/voice-transcribe", {
+        method: "POST",
+        body: form,
+      });
+      if (!res.ok) {
+        const txt = await res.text().catch(() => "");
+        console.warn("voice-transcribe faalde:", txt);
+        return "";
+      }
+      const data = await res.json();
+      const tekst = typeof data?.tekst === "string" ? data.tekst : "";
+      const genormaliseerd = normaliseerLifeplus(tekst);
+      setTranscript(genormaliseerd);
+      return genormaliseerd;
+    } catch (err) {
+      console.warn("voice-transcribe error:", err);
+      return "";
+    }
   }
 
   function reset() {
-    stop();
+    actiefRef.current = false;
+    setActief(false);
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    try {
+      mediaRecorderRef.current?.stop();
+    } catch {}
+    mediaRecorderRef.current = null;
+    streamRef.current?.getTracks().forEach((t) => t.stop());
+    streamRef.current = null;
+    chunksRef.current = [];
+    stopResolverRef.current = null;
     setTranscript("");
     setInterim("");
     setSeconden(0);
-    finalRef.current = "";
     setToegang(true);
+    releaseWakeLock();
   }
 
   useEffect(() => {
     return () => {
       actiefRef.current = false;
-      if (herstartTimerRef.current) clearTimeout(herstartTimerRef.current);
-      if (recRef.current) {
-        try {
-          recRef.current.onend = null;
-          recRef.current.onerror = null;
-          recRef.current.onresult = null;
-          recRef.current.stop();
-        } catch {}
-      }
       if (timerRef.current) clearInterval(timerRef.current);
+      try {
+        mediaRecorderRef.current?.stop();
+      } catch {}
+      streamRef.current?.getTracks().forEach((t) => t.stop());
       releaseWakeLock();
     };
   }, []);
 
+  // In Whisper-flow is huidigeTekst tijdens opname altijd leeg (geen live
+  // transcriptie). Pas ná stop() beschikbaar. VoiceFab gebruikt dit alleen
+  // om de "Stop & bewerk"-knop te disablen bij lege opname; we kijken daarom
+  // naar de opnameduur i.p.v. tekst.
   function huidigeTekst(): string {
-    return normaliseerLifeplus((finalRef.current + " " + interim).trim());
+    return transcript;
   }
 
   return {
-    actief, transcript, interim, seconden, ondersteund, toegang,
-    start, stop, reset, huidigeTekst,
-    setTranscript: (t: string) => { finalRef.current = t; setTranscript(t); },
+    actief,
+    transcript,
+    interim,
+    seconden,
+    ondersteund,
+    toegang,
+    start,
+    stop,
+    reset,
+    huidigeTekst,
+    setTranscript: (t: string) => {
+      setTranscript(t);
+    },
   };
 }
