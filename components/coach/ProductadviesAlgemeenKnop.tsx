@@ -19,7 +19,7 @@ export function ProductadviesAlgemeenKnop({ userId }: Props) {
     setLaden(true);
 
     const vraag =
-      "Ik wil algemeen productadvies van Lifeplus. Geef NOG GEEN advies. Stel mij eerst 2-4 korte vragen om doel/klacht, medische context, huidige supplementen én budget helder te krijgen. Pas NA mijn antwoorden geef je een concreet Lifeplus-advies.";
+      "Geef direct een algemeen Lifeplus-productadvies. Adviseer meteen op basis van wat gangbaar is (basis-stack, energie, darm, slaap, hormonen — afhankelijk van wat je redelijkerwijs kunt inschatten). Geen intake-vragenrondje vooraf. Sluit af met één korte check-vraag zodat ik kan aanscherpen als ik wil.";
 
     const { data, error } = await supabase
       .from("ai_gesprekken")

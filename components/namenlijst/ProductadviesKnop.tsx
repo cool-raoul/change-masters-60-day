@@ -21,9 +21,9 @@ export function ProductadviesKnop({ prospectId, prospectNaam, userId, notities }
     if (laden) return;
     setLaden(true);
 
-    const vraag = `Ik wil productadvies voor ${prospectNaam}.${
-      notities ? ` Wat ik over haar/hem weet: ${notities}` : ""
-    } Geef NOG GEEN advies. Stel mij eerst 2-4 korte vragen om haar/zijn doel, klacht of situatie én het budget helder te krijgen. Pas NA mijn antwoorden geef je een concreet Lifeplus-advies.`;
+    const vraag = `Geef een concreet Lifeplus-productadvies voor ${prospectNaam}.${
+      notities ? ` Context die ik over haar/hem weet: ${notities}.` : ""
+    } Adviseer direct op basis van wat bekend is — geen intake-vragenrondje vooraf. Sluit af met één korte check-vraag zodat ik kan aanscherpen als ik wil.`;
 
     const { data, error } = await supabase
       .from("ai_gesprekken")
