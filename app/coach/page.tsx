@@ -1,6 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { NieuwGesprekKnop } from "@/components/coach/NieuwGesprekKnop";
 import { GesprekkenLijst } from "@/components/coach/GesprekkenLijst";
+import { ProductadviesAlgemeenKnop } from "@/components/coach/ProductadviesAlgemeenKnop";
+import { productadviesBeschikbaar } from "@/lib/features/productadvies";
 import { getServerTaal, v } from "@/lib/i18n/server";
 
 export default async function CoachPagina() {
@@ -10,10 +12,13 @@ export default async function CoachPagina() {
 
   const taal = await getServerTaal();
 
-  const [{ data: gesprekken }, { data: prospects }] = await Promise.all([
+  const [{ data: gesprekken }, { data: prospects }, { data: eigenProfiel }] = await Promise.all([
     supabase.from("ai_gesprekken").select("*, prospect:prospects(volledige_naam)").eq("user_id", user.id).order("updated_at", { ascending: false }).limit(20),
     supabase.from("prospects").select("id, volledige_naam, pipeline_fase").eq("user_id", user.id).eq("gearchiveerd", false).order("volledige_naam"),
+    supabase.from("profiles").select("role").eq("id", user.id).single(),
   ]);
+
+  const toonProductadvies = productadviesBeschikbaar((eigenProfiel as { role?: string | null } | null)?.role);
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -24,7 +29,10 @@ export default async function CoachPagina() {
           </h1>
           <p className="text-cm-white mt-1">{v("coach.subtitel", taal)}</p>
         </div>
-        <NieuwGesprekKnop userId={user.id} prospects={prospects || []} />
+        <div className="flex gap-2 flex-wrap">
+          {toonProductadvies && <ProductadviesAlgemeenKnop userId={user.id} />}
+          <NieuwGesprekKnop userId={user.id} prospects={prospects || []} />
+        </div>
       </div>
 
       {/* Info kaart */}

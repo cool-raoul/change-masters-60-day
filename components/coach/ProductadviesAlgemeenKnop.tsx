@@ -6,31 +6,26 @@ import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 
 interface Props {
-  prospectId: string;
-  prospectNaam: string;
   userId: string;
-  notities?: string | null;
 }
 
-export function ProductadviesKnop({ prospectId, prospectNaam, userId, notities }: Props) {
+export function ProductadviesAlgemeenKnop({ userId }: Props) {
   const [laden, setLaden] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
-  async function vraagAdvies() {
+  async function start() {
     if (laden) return;
     setLaden(true);
 
-    const vraag = `Ik wil productadvies voor ${prospectNaam}.${
-      notities ? ` Wat ik over haar/hem weet: ${notities}` : ""
-    } Geef NOG GEEN advies. Stel mij eerst 2-4 korte vragen om haar/zijn doel, klacht of situatie én het budget helder te krijgen. Pas NA mijn antwoorden geef je een concreet Lifeplus-advies.`;
+    const vraag =
+      "Ik wil algemeen productadvies van Lifeplus. Geef NOG GEEN advies. Stel mij eerst 2-4 korte vragen om doel/klacht, medische context, huidige supplementen én budget helder te krijgen. Pas NA mijn antwoorden geef je een concreet Lifeplus-advies.";
 
     const { data, error } = await supabase
       .from("ai_gesprekken")
       .insert({
         user_id: userId,
-        prospect_id: prospectId,
-        titel: `Productadvies voor ${prospectNaam}`,
+        titel: "Productadvies (algemeen)",
         berichten: [],
       })
       .select("id")
@@ -47,10 +42,10 @@ export function ProductadviesKnop({ prospectId, prospectNaam, userId, notities }
 
   return (
     <button
-      onClick={vraagAdvies}
+      onClick={start}
       disabled={laden}
       className="btn-secondary text-sm disabled:opacity-50"
-      title="Laat ELEVA een pakket voorstellen op basis van notities en fase"
+      title="Start een adviesgesprek zonder dat een prospect geselecteerd is"
     >
       {laden ? "..." : "🧪 Productadvies"}
     </button>
