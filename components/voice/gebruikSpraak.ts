@@ -229,19 +229,50 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
     }
     releaseWakeLock();
 
-    // Vraag de Blob op via de onstop-promise
+    const recorder = mediaRecorderRef.current;
+    const blobMime = mimeRef.current || "audio/webm";
+
+    // Op iOS Safari vuurt onstop soms niet of heel laat. We race de onstop-
+    // promise tegen een timeout en bouwen anders de blob uit de chunks die
+    // we al via timeslice hebben ontvangen.
     const blobPromise = new Promise<Blob | null>((resolve) => {
       stopResolverRef.current = resolve;
     });
 
     try {
-      mediaRecorderRef.current?.stop();
+      // Forceer laatste chunk flush voor stop — helpt op Safari om data
+      // niet te verliezen in het laatste partial frame.
+      (recorder as any)?.requestData?.();
+    } catch {
+      // niet alle browsers ondersteunen requestData — stop() werkt alsnog
+    }
+
+    try {
+      recorder?.stop();
     } catch {
       stopResolverRef.current = null;
     }
 
-    const blob = await blobPromise.catch(() => null);
+    const timeout = new Promise<Blob | null>((resolve) => {
+      setTimeout(() => {
+        // Fallback: bouw blob rechtstreeks uit de chunks die we al hebben.
+        // Dit redt iOS Safari-sessies waar onstop niet vuurt.
+        if (chunksRef.current.length > 0) {
+          resolve(new Blob(chunksRef.current, { type: blobMime }));
+        } else {
+          resolve(null);
+        }
+      }, 4000);
+    });
+
+    const blob = await Promise.race([blobPromise, timeout]).catch(() => null);
+    // Na de race moet de MediaRecorder sowieso opgeruimd worden
+    try {
+      streamRef.current?.getTracks().forEach((t) => t.stop());
+    } catch {}
+    streamRef.current = null;
     mediaRecorderRef.current = null;
+    stopResolverRef.current = null;
 
     if (!blob) {
       return { tekst: "", fout: "Geen audio opgenomen — check microfoon-toegang." };
