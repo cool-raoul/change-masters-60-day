@@ -1,11 +1,33 @@
 "use client";
 
+import { useState } from "react";
+import { toast } from "sonner";
+
 interface Props {
   gebruik: number;
   onSluit: () => void;
 }
 
 export function UpgradeModal({ gebruik, onSluit }: Props) {
+  const [bezig, setBezig] = useState(false);
+
+  async function startCheckout() {
+    setBezig(true);
+    try {
+      const res = await fetch("/api/stripe/checkout", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok || !data.url) {
+        toast.error(data.fout || "Kon checkout niet starten");
+        setBezig(false);
+        return;
+      }
+      window.location.href = data.url;
+    } catch (err: any) {
+      toast.error(err?.message || "Er ging iets mis");
+      setBezig(false);
+    }
+  }
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-end sm:items-center justify-center"
@@ -33,7 +55,7 @@ export function UpgradeModal({ gebruik, onSluit }: Props) {
         {/* Premium voordelen */}
         <div className="bg-cm-gold/10 border border-cm-gold/30 rounded-xl p-4 space-y-2">
           <p className="text-cm-gold font-semibold text-sm">
-            🌟 ELEVA Mentor Premium — €1 per maand
+            🌟 ELEVA Mentor Premium — €2 per maand
           </p>
           <ul className="space-y-1.5">
             {[
@@ -55,20 +77,21 @@ export function UpgradeModal({ gebruik, onSluit }: Props) {
           <div>
             <p className="text-cm-white text-xs font-semibold">Kostendekkend + goed doel</p>
             <p className="text-cm-white text-xs opacity-60 mt-0.5 leading-relaxed">
-              De €1/maand dekt de serverkosten. Alles wat overblijft gaat naar de{" "}
-              <span className="text-cm-gold">Lifeplus Foundation</span>.
+              De €2/maand dekt de server- en AI-kosten. Alles wat overblijft gaat
+              naar de <span className="text-cm-gold">Lifeplus Foundation</span>.
             </p>
           </div>
         </div>
 
         {/* Knoppen */}
         <div className="space-y-2">
-          <a
-            href="mailto:raoul@eleva.nl?subject=Premium upgrade aanvraag&body=Hoi Raoul, ik wil graag upgraden naar ELEVA Mentor Premium (€1/maand). Mijn account: "
-            className="btn-gold w-full py-3 text-center block font-bold"
+          <button
+            onClick={startCheckout}
+            disabled={bezig}
+            className="btn-gold w-full py-3 text-center block font-bold disabled:opacity-60"
           >
-            Upgrade naar Premium →
-          </a>
+            {bezig ? "Bezig met doorsturen..." : "Upgrade naar Premium →"}
+          </button>
           <button
             onClick={onSluit}
             className="w-full py-2.5 text-cm-white opacity-60 hover:opacity-100 text-sm transition-opacity"
