@@ -215,9 +215,12 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
   }
 
   // stop() is nu async: MediaRecorder moet data flushen + server moet
-  // transcriberen. Resolvet met de getranscribeerde (+ genormaliseerde) tekst.
-  async function stop(): Promise<string> {
-    if (!actiefRef.current && !mediaRecorderRef.current) return "";
+  // transcriberen. Resolvet met { tekst, fout } zodat VoiceFab echte server-
+  // fouten kan tonen i.p.v. stille "Geen tekst opgevangen".
+  async function stop(): Promise<{ tekst: string; fout: string | null }> {
+    if (!actiefRef.current && !mediaRecorderRef.current) {
+      return { tekst: "", fout: null };
+    }
     actiefRef.current = false;
     setActief(false);
     if (timerRef.current) {
@@ -240,32 +243,47 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
     const blob = await blobPromise.catch(() => null);
     mediaRecorderRef.current = null;
 
-    if (!blob || blob.size < 1000) {
-      return "";
+    if (!blob) {
+      return { tekst: "", fout: "Geen audio opgenomen — check microfoon-toegang." };
+    }
+    if (blob.size < 1000) {
+      return { tekst: "", fout: "Opname te kort of stil (check microfoon-volume)." };
     }
 
-    // POST naar Whisper-endpoint
+    // POST naar transcriptie-endpoint
     try {
       const form = new FormData();
-      form.append("audio", blob, `opname.${blob.type.includes("mp4") ? "mp4" : "webm"}`);
+      let ext = "webm";
+      if (blob.type.includes("mp4") || blob.type.includes("m4a")) ext = "mp4";
+      else if (blob.type.includes("ogg")) ext = "ogg";
+      form.append("audio", blob, `opname.${ext}`);
       form.append("taal", String(taal));
       const res = await fetch("/api/voice-transcribe", {
         method: "POST",
         body: form,
       });
       if (!res.ok) {
-        const txt = await res.text().catch(() => "");
-        console.warn("voice-transcribe faalde:", txt);
-        return "";
+        let serverFout = `Server gaf ${res.status}`;
+        try {
+          const body = await res.json();
+          if (body?.fout) serverFout = String(body.fout);
+        } catch {
+          // geen JSON — laat de status-tekst staan
+        }
+        console.warn("voice-transcribe faalde:", serverFout);
+        return { tekst: "", fout: serverFout };
       }
       const data = await res.json();
       const tekst = typeof data?.tekst === "string" ? data.tekst : "";
       const genormaliseerd = normaliseerLifeplus(tekst);
       setTranscript(genormaliseerd);
-      return genormaliseerd;
-    } catch (err) {
+      if (!genormaliseerd.trim()) {
+        return { tekst: "", fout: "Whisper hoorde geen herkenbare spraak." };
+      }
+      return { tekst: genormaliseerd, fout: null };
+    } catch (err: any) {
       console.warn("voice-transcribe error:", err);
-      return "";
+      return { tekst: "", fout: err?.message || "Netwerkfout bij transcriberen." };
     }
   }
 

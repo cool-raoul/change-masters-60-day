@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef, useState } from "react";
+import { toast } from "sonner";
 import { gebruikSpraak } from "./gebruikSpraak";
 import { useTaal } from "@/lib/i18n/TaalContext";
 
@@ -14,18 +15,20 @@ export function VoiceInputKnop({ huidigeWaarde, onTekst, maxSeconden = 120 }: Pr
   const { taal } = useTaal();
   const spraak = gebruikSpraak({ taal, maxSeconden });
   const startWaardeRef = useRef("");
+  const [bezig, setBezig] = useState(false);
 
-  useEffect(() => {
-    if (!spraak.actief) return;
-    const live = (startWaardeRef.current + " " + spraak.transcript + " " + spraak.interim).trim();
-    onTekst(live);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [spraak.transcript, spraak.interim]);
-
-  function klik() {
+  async function klik() {
+    if (bezig) return;
     if (spraak.actief) {
-      const eind = spraak.stop();
-      onTekst((startWaardeRef.current ? startWaardeRef.current + " " : "") + eind);
+      setBezig(true);
+      const { tekst, fout } = await spraak.stop();
+      setBezig(false);
+      if (fout) {
+        toast.error(fout);
+        return;
+      }
+      if (!tekst) return;
+      onTekst((startWaardeRef.current ? startWaardeRef.current + " " : "") + tekst);
     } else {
       startWaardeRef.current = huidigeWaarde;
       spraak.reset();
@@ -35,19 +38,22 @@ export function VoiceInputKnop({ huidigeWaarde, onTekst, maxSeconden = 120 }: Pr
 
   if (!spraak.ondersteund) return null;
 
+  const aanHet = spraak.actief || bezig;
+
   return (
     <button
       type="button"
       onClick={klik}
+      disabled={bezig}
       className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
-        spraak.actief
+        aanHet
           ? "bg-red-600 text-white animate-pulse"
           : "border border-cm-border text-cm-white opacity-70 hover:opacity-100"
-      }`}
-      title={spraak.actief ? "Stop opname" : "Spreek je bericht in"}
+      } ${bezig ? "cursor-wait opacity-60" : ""}`}
+      title={spraak.actief ? "Stop opname" : bezig ? "Bezig met omzetten..." : "Spreek je bericht in"}
       aria-label="Microfoon"
     >
-      🎙️
+      {bezig ? "⏳" : "🎙️"}
     </button>
   );
 }

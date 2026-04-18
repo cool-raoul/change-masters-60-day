@@ -218,9 +218,14 @@ export function VoiceFab() {
       return;
     }
 
-    // Whisper-pad: toon tussenfase terwijl de server transcribeert (~2-4s).
+    // Server-pad: toon tussenfase terwijl de server transcribeert (~2-4s).
     setFase("transcriberen");
-    const tekst = await spraak.stop();
+    const { tekst, fout } = await spraak.stop();
+    if (fout) {
+      toast.error(fout);
+      setFase("dicht");
+      return;
+    }
     if (!tekst || tekst.length < 3) {
       toast.error("Geen tekst opgevangen");
       setFase("dicht");
@@ -737,7 +742,7 @@ export function VoiceFab() {
                         🎙️ Spreek alles in wat je kwijt wilt...
                       </p>
                       <p className="text-cm-white text-xs opacity-50 mt-2 italic">
-                        Tekst verschijnt na stoppen (ELEVA transcribeert met Whisper — veel nauwkeuriger dan browser-spraak).
+                        Tekst verschijnt nadat je op stop drukt.
                       </p>
                     </div>
                   </div>
@@ -765,7 +770,7 @@ export function VoiceFab() {
             {fase === "transcriberen" && (
               <div className="p-8 text-center space-y-3">
                 <div className="inline-block w-12 h-12 border-4 border-cm-gold border-t-transparent rounded-full animate-spin"></div>
-                <p className="text-cm-white">ELEVA zet spraak om naar tekst...</p>
+                <p className="text-cm-white">Spraak wordt omgezet naar tekst...</p>
                 <p className="text-cm-white text-xs opacity-60">Dit duurt meestal 2-4 seconden</p>
               </div>
             )}

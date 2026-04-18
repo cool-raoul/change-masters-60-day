@@ -1,36 +1,17 @@
 import OpenAI from "openai";
 import { createClient } from "@/lib/supabase/server";
-import { PRODUCT_NAMEN_LIJST } from "@/lib/lifeplus/producten";
 
 export const maxDuration = 30;
 
-// Extra vocabulaire dat Whisper slecht kent: medische termen uit de NL praktijk
-// + Lifeplus-brand + fonetische valkuilen. Whisper "prompt" = seed voor betere
-// herkenning van deze woorden in de audio. Limiet: ~224 tokens totaal.
-const MEDISCHE_TERMEN = [
-  "Hashimoto", "fibromyalgie", "colitis ulcerosa", "ziekte van Crohn",
-  "prikkelbare darm", "IBS", "menopauze", "overgang", "PMS",
-  "schildklier", "diabetes type 2", "hoge bloeddruk", "cholesterol",
-  "artrose", "reuma", "migraine", "burnout", "slapeloosheid",
-  "prostaat", "incontinentie", "osteoporose", "eczeem",
-  "candida", "lekkende darm", "histamine-intolerantie",
-  "ADHD", "autisme", "depressie", "angst",
-].join(", ");
-
-const LIFEPLUS_BRAND_HINTS = [
-  "Lifeplus", "Proanthenols", "OmeGold", "Evening Primrose Oil",
-  "Daily BioBasics", "Women's Special", "Men's Special",
-  "TVM-Plus", "Ubiquinol", "Biotic Blast", "Colloidal Silver",
-  "Mena Plus", "Co-Q-10", "CalMag Plus",
-].join(", ");
-
+// Whisper prompt-seed: maximaal ~224 tokens (1000 chars). Alleen de lastige
+// productnamen + medische termen die Whisper fonetisch verkeerd hoort. De
+// volledige productcatalogus hoort hier NIET in — die is te lang en Whisper
+// knipt de prompt aan de voorkant af.
 function bouwWhisperPrompt(taal: string): string {
-  // Whisper gebruikt deze prompt om woordgebruik te biasen, niet als instructie.
-  // Zo herkent hij "Proanthenols" i.p.v. "pro antenols", "colitis ulcerosa" correct, etc.
   if (taal === "nl" || !taal) {
-    return `Transcript van een Nederlandstalige netwerkmarketing coach die spreekt over Lifeplus supplementen en gezondheid. Producten: ${PRODUCT_NAMEN_LIJST}. Merk- en fonetische hints: ${LIFEPLUS_BRAND_HINTS}. Medische termen die voor kunnen komen: ${MEDISCHE_TERMEN}.`;
+    return "Gesprek van een Nederlandse coach over Lifeplus supplementen en gezondheid. Merken en producten: Lifeplus, Proanthenols, Daily BioBasics, OmeGold, Evening Primrose Oil, Biotic Blast, CalMag Plus, Co-Q-10, TVM-Plus, Ubiquinol, Women's Special, Men's Special, Mena Plus, Colloidal Silver, Iron Plus, Joint Formula. Mogelijke klachten: Hashimoto, fibromyalgie, colitis, Crohn, IBS, menopauze, schildklier, cholesterol, artrose, migraine, burnout, slapeloosheid, eczeem, candida.";
   }
-  return `Transcript of a network marketing coach talking about Lifeplus supplements and health. Products: ${PRODUCT_NAMEN_LIJST}. Brand hints: ${LIFEPLUS_BRAND_HINTS}.`;
+  return "Coaching conversation about Lifeplus supplements and health. Brands and products: Lifeplus, Proanthenols, Daily BioBasics, OmeGold, Evening Primrose Oil, Biotic Blast, CalMag Plus, Co-Q-10, TVM-Plus, Ubiquinol, Women's Special, Men's Special.";
 }
 
 export async function POST(request: Request) {
