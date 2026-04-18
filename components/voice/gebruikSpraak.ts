@@ -46,6 +46,11 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
   const actiefRef = useRef(false);
   const wakeLockRef = useRef<any>(null);
   const noSleepRef = useRef<any>(null);
+  // iOS Safari stopt SpeechRecognition elke ~30-60s automatisch. We herstarten
+  // met een verse instance. Teller voorkomt oneindige loops bij stukke hardware.
+  const herstartTellerRef = useRef(0);
+  const laatsteHerstartRef = useRef(0);
+  const herstartTimerRef = useRef<any>(null);
 
   async function claimWakeLock() {
     const nav: any = navigator;
@@ -103,51 +108,109 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
     setOndersteund(!!SR);
   }, []);
 
-  function start() {
+  // Maakt een verse SpeechRecognition-instance met alle handlers gebonden.
+  // Wordt zowel bij eerste start als bij elke iOS-auto-stop aangeroepen.
+  function maakRecognition(): any {
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (!SR) {
+    if (!SR) return null;
+
+    const rec = new SR();
+    rec.lang = LOCALE_MAP[taal] || "nl-NL";
+    rec.continuous = true;
+    rec.interimResults = true;
+
+    rec.onresult = (event: any) => {
+      let interimText = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const stukje = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalRef.current += stukje + " ";
+        } else {
+          interimText += stukje;
+        }
+      }
+      setTranscript(finalRef.current);
+      setInterim(interimText);
+    };
+
+    rec.onerror = (event: any) => {
+      // Fatale fouten: stop helemaal
+      if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+        setToegang(false);
+        actiefRef.current = false;
+        setActief(false);
+        return;
+      }
+      // Herstelbare fouten (no-speech, aborted, network, audio-capture):
+      // niet stoppen, onend pakt de restart op.
+    };
+
+    rec.onend = () => {
+      if (!actiefRef.current) return;
+
+      // Rate-limit: als er >8 herstarts binnen 10 sec zijn, stop definitief
+      const nu = Date.now();
+      if (nu - laatsteHerstartRef.current < 10000) {
+        herstartTellerRef.current += 1;
+      } else {
+        herstartTellerRef.current = 1;
+      }
+      laatsteHerstartRef.current = nu;
+
+      if (herstartTellerRef.current > 8) {
+        console.warn("Spraak: te veel herstarts binnen 10s, stop.");
+        actiefRef.current = false;
+        setActief(false);
+        return;
+      }
+
+      // iOS heeft ~100ms nodig om audio-context te resetten.
+      // Een nieuwe instance is stabieler dan dezelfde opnieuw starten.
+      herstartTimerRef.current = setTimeout(() => {
+        if (!actiefRef.current) return;
+        const nieuweRec = maakRecognition();
+        if (!nieuweRec) {
+          actiefRef.current = false;
+          setActief(false);
+          return;
+        }
+        try {
+          nieuweRec.start();
+          recRef.current = nieuweRec;
+        } catch (err: any) {
+          // "InvalidStateError" komt voor als iets nog vasthangt — probeer nog 1x
+          setTimeout(() => {
+            if (!actiefRef.current) return;
+            try {
+              const extraRec = maakRecognition();
+              extraRec?.start();
+              recRef.current = extraRec;
+            } catch {
+              actiefRef.current = false;
+              setActief(false);
+            }
+          }, 300);
+        }
+      }, 150);
+    };
+
+    return rec;
+  }
+
+  function start() {
+    const rec = maakRecognition();
+    if (!rec) {
       setOndersteund(false);
       return false;
     }
 
     try {
-      const rec = new SR();
-      rec.lang = LOCALE_MAP[taal] || "nl-NL";
-      rec.continuous = true;
-      rec.interimResults = true;
-
       finalRef.current = "";
       setTranscript("");
       setInterim("");
       setSeconden(0);
-
-      rec.onresult = (event: any) => {
-        let interimText = "";
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const stukje = event.results[i][0].transcript;
-          if (event.results[i].isFinal) {
-            finalRef.current += stukje + " ";
-          } else {
-            interimText += stukje;
-          }
-        }
-        setTranscript(finalRef.current);
-        setInterim(interimText);
-      };
-
-      rec.onerror = (event: any) => {
-        if (event.error === "not-allowed" || event.error === "service-not-allowed") {
-          setToegang(false);
-          actiefRef.current = false;
-          setActief(false);
-        }
-      };
-
-      rec.onend = () => {
-        if (actiefRef.current) {
-          try { rec.start(); } catch {}
-        }
-      };
+      herstartTellerRef.current = 0;
+      laatsteHerstartRef.current = 0;
 
       actiefRef.current = true;
       rec.start();
@@ -178,9 +241,15 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
   function stop(): string {
     actiefRef.current = false;
     setActief(false);
+    if (herstartTimerRef.current) {
+      clearTimeout(herstartTimerRef.current);
+      herstartTimerRef.current = null;
+    }
     if (recRef.current) {
       try {
         recRef.current.onend = null;
+        recRef.current.onerror = null;
+        recRef.current.onresult = null;
         recRef.current.stop();
       } catch {}
       recRef.current = null;
@@ -206,8 +275,14 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
   useEffect(() => {
     return () => {
       actiefRef.current = false;
+      if (herstartTimerRef.current) clearTimeout(herstartTimerRef.current);
       if (recRef.current) {
-        try { recRef.current.onend = null; recRef.current.stop(); } catch {}
+        try {
+          recRef.current.onend = null;
+          recRef.current.onerror = null;
+          recRef.current.onresult = null;
+          recRef.current.stop();
+        } catch {}
       }
       if (timerRef.current) clearInterval(timerRef.current);
       releaseWakeLock();
