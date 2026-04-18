@@ -18,15 +18,19 @@ export function ProductadviesAlgemeenKnop({ userId }: Props) {
     if (laden) return;
     setLaden(true);
 
-    const vraag =
-      "Ik wil algemeen Lifeplus-productadvies. Start met EXACT ÉÉN open intake-vraag (\"Geef me zoveel mogelijk informatie zodat ik een gepast productadvies kan samenstellen\") met één zin voorbeelden erbij (doel/klacht, leeftijd, leefstijl, medische context, budget). Geen losse vragenrondje. Zodra ik antwoord: direct concreet advies.";
+    const openingBericht = {
+      role: "assistant" as const,
+      content:
+        "Geef me zoveel mogelijk informatie zodat ik een gepast Lifeplus-productadvies voor je kan samenstellen. Denk bijvoorbeeld aan je doel of klacht, leeftijd, leefstijl, medische context en budget.",
+      timestamp: new Date().toISOString(),
+    };
 
     const { data, error } = await supabase
       .from("ai_gesprekken")
       .insert({
         user_id: userId,
         titel: "Productadvies (algemeen)",
-        berichten: [],
+        berichten: [openingBericht],
       })
       .select("id")
       .single();
@@ -37,7 +41,7 @@ export function ProductadviesAlgemeenKnop({ userId }: Props) {
       return;
     }
 
-    router.push(`/coach/${data.id}?auto=${encodeURIComponent(vraag)}`);
+    router.push(`/coach/${data.id}`);
   }
 
   return (

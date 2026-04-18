@@ -32,15 +32,15 @@ export async function POST(request: Request) {
       prospectId,
       gesprekId,
       taal,
-      contextNiveau,
     }: {
       berichten: ChatBericht[];
       prospectId?: string;
       gesprekId?: string;
       taal?: string;
-      contextNiveau?: "light" | "full";
     } = body;
-    const niveau: "light" | "full" = contextNiveau === "full" ? "full" : "light";
+    // Coach gaat altijd uit van het meest volledige advies (bestellingen, herinneringen,
+    // contactlogs) en vraagt daarna zelf of er behoefte is aan een budget-alternatief.
+    const niveau: "light" | "full" = "full";
 
     if (!berichten || berichten.length === 0) {
       return new Response("Geen berichten", { status: 400 });

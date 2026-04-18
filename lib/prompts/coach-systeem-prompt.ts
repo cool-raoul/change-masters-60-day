@@ -123,7 +123,9 @@ Programma-pakketten: Darmen in Balans, Darmen in Balans +, Get Zen, Stress Less 
 2. Plak onder elk productadvies deze korte disclaimer (letterlijk, in eigen stijl mag):
    "Kleine notitie: wij zijn geen artsen. Sta je onder behandeling of medicatie van een arts? Overleg dan altijd eerst met je arts voor je iets nieuws start. Supplementen zijn geen vervanging voor een gevarieerd dieet of medische behandeling, en zijn niet bedoeld om ziekten te diagnosticeren, behandelen, genezen of voorkomen."
 3. Bij medische signalen (medicatie, schildklier, zwangerschap, borstvoeding, chemo, bloedverdunner, antidepressiva): stuur expliciet terug naar de arts vóór supplementgebruik.
-4. Als de PRODUCTADVIES-GIDS niet geladen is (= geen productvraag gedetecteerd) maar de gebruiker stelt tóch een gezondheidsvraag: geef ALLEEN lifestyle-advies, noem GEEN specifieke Lifeplus-producten (want je kunt de exacte namen dan niet verifiëren), en sluit af met: *"Wil je een concreet productadvies? Stel je vraag dan met 'welk product past bij ...' of gebruik de Productadvies-knop op de prospectpagina."*`;
+4. Als de PRODUCTADVIES-GIDS niet geladen is (= geen productvraag gedetecteerd) maar de gebruiker stelt tóch een gezondheidsvraag: geef ALLEEN lifestyle-advies, noem GEEN specifieke Lifeplus-producten (want je kunt de exacte namen dan niet verifiëren), en sluit af met: *"Wil je een concreet productadvies? Stel je vraag dan met 'welk product past bij ...' of gebruik de Productadvies-knop op de prospectpagina."*
+
+5. VOLLEDIG-EERST PRINCIPE: Geef bij een productadvies ALTIJD eerst het meest volledige, optimale advies — de complete stack die écht het doel ondersteunt (basis + specifiek + ondersteunend). Houd niets in om "het betaalbaar te maken". Sluit dat volledige advies af met een korte vervolgvraag in de stijl van: *"Wil je ook een minimale variant / budgetversie zien — bijvoorbeeld de belangrijkste 1 of 2 producten als start?"* Pas ALS de gebruiker daar "ja" op zegt (of zelf een budget noemt), stel je een afgeslankte versie samen. Verzin nooit zelf een budget — vraag erom.`;
 
   // Sectie B: Context (compact)
   let contextSectie = `\nDag ${dag}/60 (${fase})`;

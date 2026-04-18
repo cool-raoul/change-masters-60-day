@@ -21,9 +21,13 @@ export function ProductadviesKnop({ prospectId, prospectNaam, userId, notities }
     if (laden) return;
     setLaden(true);
 
-    const vraag = `Ik wil een Lifeplus-productadvies voor ${prospectNaam}.${
-      notities ? ` Context die ik al heb: ${notities}.` : ""
-    } Start met EXACT ÉÉN open intake-vraag ("Geef me zoveel mogelijk informatie zodat ik een gepast productadvies kan samenstellen") met één zin voorbeelden erbij (doel/klacht, leeftijd, leefstijl, medische context, budget). Geen losse vragenrondje. Zodra ik antwoord: direct concreet advies.`;
+    const openingBericht = {
+      role: "assistant" as const,
+      content: `Geef me zoveel mogelijk informatie zodat ik een gepast Lifeplus-productadvies voor ${prospectNaam} kan samenstellen. Denk bijvoorbeeld aan doel of klacht, leeftijd, leefstijl, medische context en budget.${
+        notities ? `\n\n(Ik heb deze context al: ${notities})` : ""
+      }`,
+      timestamp: new Date().toISOString(),
+    };
 
     const { data, error } = await supabase
       .from("ai_gesprekken")
@@ -31,7 +35,7 @@ export function ProductadviesKnop({ prospectId, prospectNaam, userId, notities }
         user_id: userId,
         prospect_id: prospectId,
         titel: `Productadvies voor ${prospectNaam}`,
-        berichten: [],
+        berichten: [openingBericht],
       })
       .select("id")
       .single();
@@ -42,7 +46,7 @@ export function ProductadviesKnop({ prospectId, prospectNaam, userId, notities }
       return;
     }
 
-    router.push(`/coach/${data.id}?auto=${encodeURIComponent(vraag)}`);
+    router.push(`/coach/${data.id}`);
   }
 
   return (

@@ -35,6 +35,7 @@ export default async function CoachGesprekPagina({
   return (
     <ChatVenster
       gesprekId={id}
+      gesprekTitel={gesprek.titel || ""}
       bestaandeBerichten={gesprek.berichten || []}
       prospect={gesprek.prospect || null}
       alleProspects={prospects || []}
