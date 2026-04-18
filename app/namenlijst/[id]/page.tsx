@@ -147,27 +147,9 @@ export default async function ProspectDetailPagina({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Contactgegevens */}
         <div className="card space-y-3">
-          <ContactgegevensForm prospect={prospect} />
-
-          <div className="border-t border-cm-border pt-3 mt-3">
-            <p className="text-xs text-cm-white opacity-60">{v("prospect.toegevoegd", taal)}</p>
-            <p className="text-cm-white text-sm">
-              {format(new Date(prospect.created_at), "d MMMM yyyy", { locale: datumLocale })}
-            </p>
-          </div>
-
-          {/* Ingezette tools/media — afvinkbare dropdown */}
-          <IngezetteTools
-            prospectId={id}
-            ingezet={prospect.ingezette_tools || []}
-          />
-
-          {/* Onboarding checklist (alleen zichtbaar bij members) */}
-          <OnboardingChecklist prospect={prospect} />
-
-          {/* Productbestellingen */}
+          {/* Productbestellingen — bovenaan zodat meest relevante data eerst opvalt */}
           {bestellingen && bestellingen.length > 0 && (
-            <div className="border-t border-cm-border pt-3 mt-3">
+            <div className="pb-3 border-b border-cm-border">
               <p className="text-xs text-cm-white mb-2">{v("prospect.bestellingen", taal)}</p>
               {bestellingen.map((b) => (
                 <div key={b.id} className="bg-cm-surface-2 rounded-lg p-2 text-xs mb-2">
@@ -183,6 +165,24 @@ export default async function ProspectDetailPagina({
               ))}
             </div>
           )}
+
+          <ContactgegevensForm prospect={prospect} />
+
+          <div className="border-t border-cm-border pt-3 mt-3">
+            <p className="text-xs text-cm-white opacity-60">{v("prospect.toegevoegd", taal)}</p>
+            <p className="text-cm-white text-sm">
+              {format(new Date(prospect.created_at), "d MMMM yyyy", { locale: datumLocale })}
+            </p>
+          </div>
+
+          {/* Ingezette tools/media — afvinkbare dropdown */}
+          <IngezetteTools
+            prospectId={id}
+            ingezet={prospect.ingezette_tools || []}
+          />
+
+          {/* Onboarding checklist — helemaal onderaan (alleen zichtbaar bij members) */}
+          <OnboardingChecklist prospect={prospect} />
         </div>
 
         {/* Acties + contactlog */}
