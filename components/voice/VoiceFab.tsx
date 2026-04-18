@@ -115,7 +115,7 @@ type ParseResultaat = {
   waarschuwingen?: string[];
 };
 
-type Fase = "dicht" | "opname" | "transcriberen" | "bewerken" | "verwerken" | "preview" | "opslaan";
+type Fase = "dicht" | "opname" | "transcriberen" | "spraakfout" | "bewerken" | "verwerken" | "preview" | "opslaan";
 
 export function VoiceFab() {
   const { taal } = useTaal();
@@ -129,6 +129,8 @@ export function VoiceFab() {
   const [bewerkTekst, setBewerkTekst] = useState("");
   const [coachProspectId, setCoachProspectId] = useState<string | null>(null);
   const [coachProspectNaam, setCoachProspectNaam] = useState<string | null>(null);
+  const [spraakFoutTekst, setSpraakFoutTekst] = useState<string>("");
+  const [spraakFoutDebug, setSpraakFoutDebug] = useState<string>("");
 
   // Scroll-aware: verbergen bij scroll-down, tonen bij scroll-up of aan top.
   // Zo is de FAB nooit in de weg van knoppen/velden onderaan een pagina.
@@ -220,15 +222,17 @@ export function VoiceFab() {
 
     // Server-pad: toon tussenfase terwijl de server transcribeert (~2-4s).
     setFase("transcriberen");
-    const { tekst, fout } = await spraak.stop();
+    const { tekst, fout, debug } = await spraak.stop();
     if (fout) {
-      toast.error(fout);
-      setFase("dicht");
+      setSpraakFoutTekst(fout);
+      setSpraakFoutDebug(debug || "");
+      setFase("spraakfout");
       return;
     }
     if (!tekst || tekst.length < 3) {
-      toast.error("Geen tekst opgevangen");
-      setFase("dicht");
+      setSpraakFoutTekst("Geen tekst opgevangen — opname was mogelijk leeg.");
+      setSpraakFoutDebug(debug || "");
+      setFase("spraakfout");
       return;
     }
     setBewerkTekst(tekst);
@@ -238,6 +242,8 @@ export function VoiceFab() {
   function opnieuwOpnemen() {
     spraak.reset();
     setBewerkTekst("");
+    setSpraakFoutTekst("");
+    setSpraakFoutDebug("");
     setFase("opname");
     setTimeout(() => spraak.start(), 50);
   }
@@ -666,6 +672,8 @@ export function VoiceFab() {
     setBewerkTekst("");
     setCoachProspectId(null);
     setCoachProspectNaam(null);
+    setSpraakFoutTekst("");
+    setSpraakFoutDebug("");
   }
 
   function verwijderActie(idx: number) {
@@ -772,6 +780,39 @@ export function VoiceFab() {
                 <div className="inline-block w-12 h-12 border-4 border-cm-gold border-t-transparent rounded-full animate-spin"></div>
                 <p className="text-cm-white">Spraak wordt omgezet naar tekst...</p>
                 <p className="text-cm-white text-xs opacity-60">Dit duurt meestal 2-4 seconden</p>
+              </div>
+            )}
+
+            {fase === "spraakfout" && (
+              <div className="p-6 space-y-4">
+                <div className="text-center">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-600/20 mb-3">
+                    <span className="text-3xl">⚠️</span>
+                  </div>
+                  <h2 className="text-lg font-display font-bold text-cm-white">
+                    Spraak werkte niet
+                  </h2>
+                </div>
+                <div className="card bg-red-500/10 border border-red-500/40 space-y-2">
+                  <p className="text-red-300 text-sm font-medium">{spraakFoutTekst}</p>
+                  {spraakFoutDebug && (
+                    <p className="text-cm-white text-xs opacity-60 font-mono break-all">
+                      {spraakFoutDebug}
+                    </p>
+                  )}
+                </div>
+                <p className="text-cm-white text-xs opacity-70">
+                  Stuur deze melding door als het probleem blijft — dan kan het
+                  uitgezocht worden.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <button onClick={sluit} className="btn-secondary sm:flex-1">
+                    Sluiten
+                  </button>
+                  <button onClick={opnieuwOpnemen} className="btn-gold sm:flex-1">
+                    🎙️ Opnieuw proberen
+                  </button>
+                </div>
               </div>
             )}
 

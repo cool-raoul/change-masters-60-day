@@ -215,9 +215,9 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
   }
 
   // stop() is nu async: MediaRecorder moet data flushen + server moet
-  // transcriberen. Resolvet met { tekst, fout } zodat VoiceFab echte server-
-  // fouten kan tonen i.p.v. stille "Geen tekst opgevangen".
-  async function stop(): Promise<{ tekst: string; fout: string | null }> {
+  // transcriberen. Resolvet met { tekst, fout, debug } zodat VoiceFab echte
+  // server-fouten kan tonen met diagnose-info (blob size, mime, etc.).
+  async function stop(): Promise<{ tekst: string; fout: string | null; debug?: string }> {
     if (!actiefRef.current && !mediaRecorderRef.current) {
       return { tekst: "", fout: null };
     }
@@ -274,11 +274,23 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
     mediaRecorderRef.current = null;
     stopResolverRef.current = null;
 
+    const mime = blob?.type || "(onbekend)";
+    const size = blob?.size ?? 0;
+    const debugBasis = `blob: ${size}b, mime: ${mime}, chunks: ${chunksRef.current.length}`;
+
     if (!blob) {
-      return { tekst: "", fout: "Geen audio opgenomen — check microfoon-toegang." };
+      return {
+        tekst: "",
+        fout: "Geen audio opgenomen — check microfoon-toegang.",
+        debug: debugBasis,
+      };
     }
     if (blob.size < 1000) {
-      return { tekst: "", fout: "Opname te kort of stil (check microfoon-volume)." };
+      return {
+        tekst: "",
+        fout: "Opname te kort of stil (check microfoon-volume).",
+        debug: debugBasis,
+      };
     }
 
     // POST naar transcriptie-endpoint
@@ -302,19 +314,27 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
           // geen JSON — laat de status-tekst staan
         }
         console.warn("voice-transcribe faalde:", serverFout);
-        return { tekst: "", fout: serverFout };
+        return { tekst: "", fout: serverFout, debug: debugBasis };
       }
       const data = await res.json();
       const tekst = typeof data?.tekst === "string" ? data.tekst : "";
       const genormaliseerd = normaliseerLifeplus(tekst);
       setTranscript(genormaliseerd);
       if (!genormaliseerd.trim()) {
-        return { tekst: "", fout: "Whisper hoorde geen herkenbare spraak." };
+        return {
+          tekst: "",
+          fout: "Whisper hoorde geen herkenbare spraak.",
+          debug: debugBasis,
+        };
       }
       return { tekst: genormaliseerd, fout: null };
     } catch (err: any) {
       console.warn("voice-transcribe error:", err);
-      return { tekst: "", fout: err?.message || "Netwerkfout bij transcriberen." };
+      return {
+        tekst: "",
+        fout: err?.message || "Netwerkfout bij transcriberen.",
+        debug: debugBasis,
+      };
     }
   }
 
