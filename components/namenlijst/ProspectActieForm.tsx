@@ -29,6 +29,10 @@ export function ProspectActieForm({ prospect, userId }: Props) {
   const [nieuweFase, setNieuweFase] = useState<PipelineFase>(prospect.pipeline_fase);
   const [contactType, setContactType] = useState("followup");
   const [contactNotitie, setContactNotitie] = useState("");
+  // Datum van de aantekening zelf — default vandaag, user kan terug in de tijd
+  const [aantekeningDatum, setAantekeningDatum] = useState(
+    new Date().toISOString().split("T")[0]
+  );
 
   // Bestelling form
   const [besteldatum, setBesteldatum] = useState(
@@ -40,20 +44,26 @@ export function ProspectActieForm({ prospect, userId }: Props) {
     e.preventDefault();
     setLaden(true);
 
-    // Log het contact
-    await supabase.from("contact_logs").insert({
+    // Log het contact — override created_at als user een eerdere datum koos
+    const vandaag = new Date().toISOString().split("T")[0];
+    const contactLogData: any = {
       prospect_id: prospect.id,
       user_id: userId,
       contact_type: contactType,
       notities: contactNotitie,
       fase_voor: prospect.pipeline_fase,
       fase_na: nieuweFase,
-    });
+    };
+    if (aantekeningDatum && aantekeningDatum !== vandaag) {
+      // 12:00 UTC zodat tijdweergave consistent is in elke tijdzone
+      contactLogData.created_at = `${aantekeningDatum}T12:00:00.000Z`;
+    }
+    await supabase.from("contact_logs").insert(contactLogData);
 
-    // Update prospect
+    // Update prospect — laatste_contact = gekozen datum (niet per se vandaag)
     const updates: Partial<Prospect> = {
       pipeline_fase: nieuweFase,
-      laatste_contact: new Date().toISOString().split("T")[0],
+      laatste_contact: aantekeningDatum || vandaag,
       updated_at: new Date().toISOString(),
     };
 
@@ -185,11 +195,28 @@ export function ProspectActieForm({ prospect, userId }: Props) {
             />
           </div>
 
+          <div>
+            <label className="block text-xs text-cm-white mb-1">
+              Datum aantekening{" "}
+              <span className="opacity-60">(default vandaag, je kan terug in de tijd)</span>
+            </label>
+            <input
+              type="date"
+              value={aantekeningDatum}
+              onChange={(e) => setAantekeningDatum(e.target.value)}
+              className="input-cm text-sm [&::-webkit-calendar-picker-indicator]:invert"
+              max={new Date().toISOString().split("T")[0]}
+            />
+          </div>
+
           <div className="border-t border-cm-border pt-3">
-            <p className="text-xs text-cm-white mb-2">{v("actie.volgende")}</p>
+            <p className="text-xs text-cm-white mb-2">
+              🔔 Volgende actie plannen{" "}
+              <span className="opacity-60">(wordt een herinnering)</span>
+            </p>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-cm-white mb-1">{v("actie.datum")}</label>
+                <label className="block text-xs text-cm-white mb-1">Herinnering-datum</label>
                 <input
                   type="date"
                   value={volgendeDatum}
@@ -199,7 +226,7 @@ export function ProspectActieForm({ prospect, userId }: Props) {
                 />
               </div>
               <div>
-                <label className="block text-xs text-cm-white mb-1">{v("actie.wat_doen")}</label>
+                <label className="block text-xs text-cm-white mb-1">Wat herinneren</label>
                 <input
                   type="text"
                   value={volgendeNotitie}
