@@ -300,13 +300,23 @@ export function ChatVenster({
   const [gebruikVandaag, setGebruikVandaag] = useState(0);
   const [isPremium, setIsPremium] = useState(false);
   const chatEindRef = useRef<HTMLDivElement>(null);
+  const chatScrollRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
   const searchParams = useSearchParams();
   const autoVerstuurdRef = useRef(false);
   const { taal, v } = useTaal();
 
+  // Alleen auto-scrollen als user vlak bij de bodem zit. Zo kan hij/zij tijdens
+  // (en na) een lang productadvies rustig naar boven scrollen zonder dat elke
+  // nieuwe streaming-token de scrollpositie weer naar beneden rukt.
   useEffect(() => {
-    chatEindRef.current?.scrollIntoView({ behavior: "smooth" });
+    const scrollEl = chatScrollRef.current;
+    if (!scrollEl) return;
+    const afstandTotBodem =
+      scrollEl.scrollHeight - scrollEl.scrollTop - scrollEl.clientHeight;
+    if (afstandTotBodem < 120) {
+      chatEindRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
+    }
   }, [berichten]);
 
   useEffect(() => {
@@ -591,7 +601,10 @@ export function ChatVenster({
       </div>
 
       {/* Chat berichten */}
-      <div className="flex-1 overflow-y-auto space-y-4 mb-4 pr-1">
+      <div
+        ref={chatScrollRef}
+        className="flex-1 overflow-y-auto overscroll-contain space-y-4 mb-4 pr-1"
+      >
         {berichten.length === 0 && (
           <div className="text-center py-8">
             <div className="text-5xl mb-4">🌟</div>
