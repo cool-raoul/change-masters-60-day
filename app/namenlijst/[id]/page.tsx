@@ -11,6 +11,7 @@ import { OnboardingChecklist } from "@/components/namenlijst/OnboardingChecklist
 import { DriewegGesprekInklapbaar } from "@/components/namenlijst/DriewegGesprek";
 import { ProspectVerwijderKnop } from "@/components/namenlijst/ProspectVerwijderKnop";
 import { CoachGesprekkenInklapbaar } from "@/components/namenlijst/CoachGesprekkenInklapbaar";
+import { ProductadviesKnop } from "@/components/namenlijst/ProductadviesKnop";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { Locale } from "date-fns";
 
@@ -126,6 +127,12 @@ export default async function ProspectDetailPagina({
           <Link href={`/coach?prospect=${id}`} className="btn-secondary text-sm">
             🤖 {v("nav.coach", taal)}
           </Link>
+          <ProductadviesKnop
+            prospectId={id}
+            prospectNaam={prospect.volledige_naam}
+            userId={user.id}
+            notities={prospect.notities}
+          />
           <ProspectVerwijderKnop
             prospectId={id}
             prospectNaam={prospect.volledige_naam}

@@ -4,7 +4,7 @@
 // Bronnen: Eric Worre (Go Pro + 90 Day Run) + Fraser Brookes
 // ============================================================
 
-export type VraagType = "dm" | "bezwaar" | "followup" | "closing" | "motivatie" | "accountability" | "social" | "drieweg" | "algemeen";
+export type VraagType = "dm" | "bezwaar" | "followup" | "closing" | "motivatie" | "accountability" | "social" | "drieweg" | "productadvies" | "algemeen";
 
 // Detecteer het type vraag op basis van keywords
 export function detecteerVraagType(berichten: { role: string; content: string }[]): VraagType {
@@ -15,6 +15,7 @@ export function detecteerVraagType(berichten: { role: string; content: string }[
     .map((b) => b.content.toLowerCase())
     .join(" ");
 
+  if (/\b(productadvies|product advies|welk pakket|welke producten|pakket (voor|bij)|lifeplus advies|daily light|proanthenols|omegold|mena plus|key tonic|triple protein|be focused|be recharged|be sustained|golden milk|cacao boost|support tabs|purple flash|green medley|basispakket|afvallen|intermittent fasting|burn.?out|menopauze|hormonen|gewrichten|detox|sappenkuur|darmprogramma|holistic reset)\b/.test(recenteUserBerichten)) return "productadvies";
   if (/\b(3.?weg|drieweg|groepje|aanmaken|sponsor koppel|introduceer|edif|aankondig|presentatie.*groep|groep.*presentatie)\b/.test(recenteUserBerichten)) return "drieweg";
   if (/\b(dm|bericht|schrij|tekst|uitnodig|whatsapp|instagram|sturen)\b/.test(recenteUserBerichten)) return "dm";
   if (/\b(bezwaar|objection|geen tijd|nadenken|niet van sales|ken te weinig|geen geld|partner overleg|twijfel)\b/.test(recenteUserBerichten)) return "bezwaar";

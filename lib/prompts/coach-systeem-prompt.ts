@@ -1,6 +1,7 @@
 import { Profile, WhyProfile, Prospect, ContactLog } from "@/lib/supabase/types";
 import { SCRIPTS_DATA } from "@/lib/scripts-data";
 import { VraagType, getKennisbankVoorVraag } from "@/lib/knowledge/coach-boeken";
+import { bouwAdviesgidsPromptSectie } from "@/lib/lifeplus/adviesgids";
 import { differenceInDays } from "date-fns";
 
 function getDagVanRun(runStartdatum?: string | null): number {
@@ -25,6 +26,7 @@ const VRAAG_NAAR_SCRIPT_CATEGORIE: Record<VraagType, string[]> = {
   accountability: [],
   social: [],
   drieweg: [],
+  productadvies: [],
   algemeen: ["uitnodiging", "bezwaar", "followup", "sluiting"],
 };
 
@@ -88,7 +90,14 @@ Voorbeeld:
 [STUUR]
 Hey naam, ik wilde je dit even laten weten...
 [/STUUR]
-Schrijf het precies zoals iemand het zelf zou typen in WhatsApp of Instagram. Informeel, echt, menselijk. Geen hoofdletters waar dat onnatuurlijk is.`;
+Schrijf het precies zoals iemand het zelf zou typen in WhatsApp of Instagram. Informeel, echt, menselijk. Geen hoofdletters waar dat onnatuurlijk is.
+
+PRODUCTADVIES (VERPLICHTE REGEL — ALTIJD):
+Zodra je Lifeplus-producten noemt of aanraadt:
+1. Begin de productsuggestie ALTIJD met de frase: "Er zijn goede ervaringen met ..." (nooit "jij moet X nemen" of "X lost Y op").
+2. Plak onder elk productadvies deze korte disclaimer (letterlijk, in eigen stijl mag):
+   "Kleine notitie: wij zijn geen artsen. Sta je onder behandeling of medicatie van een arts? Overleg dan altijd eerst met je arts voor je iets nieuws start. Supplementen zijn geen vervanging voor een gevarieerd dieet of medische behandeling, en zijn niet bedoeld om ziekten te diagnosticeren, behandelen, genezen of voorkomen."
+3. Bij medische signalen (medicatie, schildklier, zwangerschap, borstvoeding, chemo, bloedverdunner, antidepressiva): stuur expliciet terug naar de arts vóór supplementgebruik.`;
 
   // Sectie B: Context (compact)
   let contextSectie = `\nDag ${dag}/60 (${fase})`;
@@ -118,6 +127,9 @@ Schrijf het precies zoals iemand het zelf zou typen in WhatsApp of Instagram. In
 
   // Sectie D: Kennisbank (SLIM — alleen relevante secties)
   const kennisbankSectie = getKennisbankVoorVraag(vraagType);
+
+  // Sectie D2: Productadvies-gids (alleen bij productvraag)
+  const adviesgidsSectie = vraagType === "productadvies" ? `\n\n${bouwAdviesgidsPromptSectie()}` : "";
 
   // Sectie E: Scripts (SLIM — alleen relevante categorie)
   const scriptSectie = formatScriptsVoorVraag(vraagType);
@@ -226,7 +238,7 @@ Wijs ALTIJD eerst op de ELEVA-tool in de namenlijst. Geef daarna advies over voo
 WERKWIJZE: Begrijp situatie → kies beste aanpak → geef ÉÉN advies → kort waarom.
 Bij afwijzing → product pivot. Meer context nodig → vraag door.`;
 
-  return `${rolSectie}${contextSectie}${prospectSectie}${kennisbankSectie}${scriptSectie}${voorbeeldenSectie}${werkwijze}`;
+  return `${rolSectie}${contextSectie}${prospectSectie}${kennisbankSectie}${adviesgidsSectie}${scriptSectie}${voorbeeldenSectie}${werkwijze}`;
 }
 
 // WHY Coach system prompt (ongewijzigd)
