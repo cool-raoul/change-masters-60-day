@@ -121,6 +121,17 @@ Interpreteer het transcript ALTIJD zo:
 
 5. PRODUCT-FONETIEK
    Ook producten fonetisch matchen: "life plus" / "life plus basis" / "biobasic" / "dagelijkse basics" → Daily BioBasics. "visolie" / "om ee gold" / "omega" → OmeGold.
+   Extra lastige merknaam-mishears (komt ALTIJD voor bij spraak):
+   - "pro antenols" / "pro anten ols" / "proantenolen" / "pro-anthenols" / "pro and enols" → Proanthenols (50 of 100)
+   - "oma gold" / "oh me gold" / "om egold" / "omega gold" / "ome gold" → OmeGold
+   - "evening prim rose" / "evening primose" / "avening primrose" / "primroos" / "teunisbloem(olie)" → Evening Primrose Oil
+   - "menaplus" / "mena plus" / "mina plus" → Mena Plus
+   - "key tonic" / "kee tonic" / "keetonic" → Key-Tonic
+   - "support tabs" / "suport taps" → Support Tabs Plus
+   - "biotic blast" / "bi otic blast" → Biotic Blast
+   - "golden milk" / "goolden melk" → Solis Golden Milk
+   - "cacao boost" / "kakao boost" → Solis Cacao Boost
+   Ook als het transcript maar ÉÉN van deze varianten bevat en verder niks — herken het toch als het product. Bij twijfel tussen losse vs product_bestelling, gebruik de productnaam in gecorrigeerd_transcript zodat de gebruiker ziet wat jij begrepen hebt.
 
 5a. LIFEPLUS-HERKENNING (VERPLICHT):
    De bedrijfsnaam "Lifeplus" wordt door spraakherkenning heel vaak verkeerd gehoord. Behandel elke fonetisch gelijkende variant — "life plus", "life-plus", "lijf plus", "lijfplus", "live plus", "leaf plus", "laif plus", "lief plus", "lifeplas" — ALTIJD als "Lifeplus" (één woord, hoofdletter L) in het gecorrigeerd_transcript en in alle notities/berichten. Dit geldt ook als het in combinatie voorkomt ("life plus basis" → "Lifeplus basis", "life plus producten" → "Lifeplus producten").
@@ -327,7 +338,7 @@ BELANGRIJK: Begin altijd met de "redenatie" stap. Dit dwingt je om te denken vó
 
     // Model-router: simpele korte gevallen -> gpt-4o-mini (~15x goedkoper).
     // Zodra er bestel-signalen, meerdere namen, stotter/zelfcorrectie, of lange tekst in zit -> gpt-4o.
-    const kritiekeSignalen = /\b(besteld|gekocht|pakket|ingeschreven|member|klant|shopper|partner|opvolgen|afgezegd|wil niet|stopt|starterpakket|basispakket|shake)\b/i;
+    const kritiekeSignalen = /\b(besteld|gekocht|pakket|ingeschreven|member|klant|shopper|partner|opvolgen|afgezegd|wil niet|stopt|starterpakket|basispakket|shake|lifeplus|proanthenols?|pro[\s-]?anten[oe]ls?|omegold|ome[\s-]gold|oma[\s-]gold|omega[\s-]?3|visolie|evening[\s-]?prim[\s-]?ro(o|se)|teunisbloem|daily[\s-]?biobasics|biobasics|dbb|mena[\s-]?plus|key[\s-]?tonic|cacao[\s-]?boost|golden[\s-]?milk|purple[\s-]?flash|green[\s-]?medley|biotic[\s-]?blast|cogelin|parabalance|somazyme|support[\s-]?tabs|be[\s-]?focused|be[\s-]?sustained|be[\s-]?recharged|be[\s-]?refueled|triple[\s-]?protein|darmen[\s-]in[\s-]balans|stress[\s-]?less|get[\s-]?zen|reset[\s-]?programma|women'?s[\s-]?gold|men'?s[\s-]?gold|maintain[\s-]?(and|&)?[\s-]?protect)\b/i;
     const stotterSignalen = /\b(eh+|uhm+|uh+|ehm+|hmm+|eigenlijk|ik bedoel|nee wacht|sorry|nou eh)\b/i;
     const dubbelWoord = /\b(\w{3,})\s+\1\b/i; // zelfde woord twee keer achter elkaar
     const lengte = transcript.trim().length;
