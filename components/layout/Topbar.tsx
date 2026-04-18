@@ -10,6 +10,7 @@ const RUN_START = new Date("2026-04-12");
 
 export function Topbar({ gebruikersnaam }: { gebruikersnaam: string }) {
   const [aantalHerinneringen, setAantalHerinneringen] = useState(0);
+  const [isPremium, setIsPremium] = useState(false);
   const dag = Math.max(1, Math.min(60, differenceInDays(new Date(), RUN_START) + 1));
   const fase = dag <= 20 ? 1 : dag <= 40 ? 2 : 3;
   const { v } = useTaal();
@@ -27,7 +28,20 @@ export function Topbar({ gebruikersnaam }: { gebruikersnaam: string }) {
       setAantalHerinneringen(count || 0);
     }
 
+    async function laadPremium() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data } = await supabase
+        .from("profiles")
+        .select("premium_tot")
+        .eq("id", user.id)
+        .single();
+      const tot = (data as any)?.premium_tot as string | null;
+      setIsPremium(!!tot && new Date(tot) >= new Date());
+    }
+
     laadHerinneringen();
+    laadPremium();
 
     // Realtime updates
     const channel = supabase
@@ -36,6 +50,11 @@ export function Topbar({ gebruikersnaam }: { gebruikersnaam: string }) {
         "postgres_changes",
         { event: "*", schema: "public", table: "herinneringen" },
         () => laadHerinneringen()
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "profiles" },
+        () => laadPremium()
       )
       .subscribe();
 
@@ -71,7 +90,18 @@ export function Topbar({ gebruikersnaam }: { gebruikersnaam: string }) {
       </div>
 
       {/* Rechts: herinneringen + gebruiker */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
+        {isPremium && (
+          <Link
+            href="/premium"
+            className="flex items-center gap-1 px-2 py-1 rounded-full bg-gradient-gold text-cm-black text-xs font-bold hover:opacity-90 transition-opacity"
+            title="Je hebt ELEVA Premium"
+          >
+            <span>⭐</span>
+            <span className="hidden sm:inline">Premium</span>
+          </Link>
+        )}
+
         <Link
           href="/herinneringen"
           className="relative p-2 text-cm-white hover:text-cm-white transition-colors"
@@ -85,10 +115,15 @@ export function Topbar({ gebruikersnaam }: { gebruikersnaam: string }) {
         </Link>
 
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-cm-surface-2 border border-cm-border flex items-center justify-center">
+          <div className={`relative w-8 h-8 rounded-full bg-cm-surface-2 border flex items-center justify-center ${
+            isPremium ? "border-cm-gold ring-2 ring-cm-gold/30" : "border-cm-border"
+          }`}>
             <span className="text-cm-gold text-sm font-semibold">
               {gebruikersnaam.charAt(0).toUpperCase()}
             </span>
+            {isPremium && (
+              <span className="absolute -top-1 -right-1 text-[10px]" title="Premium">⭐</span>
+            )}
           </div>
           <span className="text-cm-white text-sm hidden md:block">{gebruikersnaam}</span>
         </div>
