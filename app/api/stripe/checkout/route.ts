@@ -57,10 +57,15 @@ export async function POST(request: Request) {
       mode: "subscription",
       customer: customerId,
       line_items: [{ price: priceId, quantity: 1 }],
+      // Card + iDEAL/Bancontact (eerste betaling) → SEPA mandaat voor recurring.
+      // Stripe zet de eerste iDEAL/Bancontact-betaling automatisch om naar
+      // SEPA Direct Debit voor de maandelijkse incasso daarna.
+      payment_method_types: ["card", "ideal", "bancontact", "sepa_debit"],
       success_url: `${origin}/coach?upgrade=success`,
       cancel_url: `${origin}/coach?upgrade=cancel`,
       allow_promotion_codes: true,
       billing_address_collection: "auto",
+      locale: "nl",
       subscription_data: {
         metadata: { supabase_user_id: user.id },
       },
