@@ -749,9 +749,6 @@ export function VoiceFab() {
                       <p className="text-cm-white text-sm opacity-80">
                         🎙️ Spreek alles in wat je kwijt wilt...
                       </p>
-                      <p className="text-cm-white text-xs opacity-50 mt-2 italic">
-                        Tekst verschijnt nadat je op stop drukt.
-                      </p>
                     </div>
                   </div>
                 )}
