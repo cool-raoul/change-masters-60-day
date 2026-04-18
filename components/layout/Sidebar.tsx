@@ -93,6 +93,16 @@ export function Sidebar({ isLeider = false }: { isLeider?: boolean }) {
         {/* Onderkant items direct in de scroll-zone zodat ze altijd bereikbaar zijn */}
         <div className="pt-3 mt-3 border-t border-cm-border space-y-1">
           <Link
+            href="/premium"
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+              pathname.startsWith("/premium")
+                ? "bg-gold-subtle border border-gold-subtle text-cm-gold"
+                : "text-cm-gold opacity-90 hover:opacity-100 hover:bg-cm-surface-2"
+            }`}
+          >
+            <span>🌟</span> {v("nav.premium")}
+          </Link>
+          <Link
             href="/instellingen"
             className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
           >

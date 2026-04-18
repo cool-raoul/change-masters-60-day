@@ -33,6 +33,9 @@ function ProspectKaart({
   isDragging,
   onDragStart,
   onDragEnd,
+  onDragOverKaart,
+  onDropOpKaart,
+  dropIndicator,
   datumLocale,
 }: {
   prospect: Prospect;
@@ -41,6 +44,9 @@ function ProspectKaart({
   isDragging: boolean;
   onDragStart: (e: React.DragEvent, id: string) => void;
   onDragEnd: () => void;
+  onDragOverKaart: (e: React.DragEvent, id: string) => void;
+  onDropOpKaart: (e: React.DragEvent, id: string) => void;
+  dropIndicator: "boven" | "onder" | null;
   datumLocale: Locale;
 }) {
   const [bevestigen, setBevestigen] = useState(false);
@@ -54,9 +60,11 @@ function ProspectKaart({
       draggable
       onDragStart={(e) => onDragStart(e, prospect.id)}
       onDragEnd={onDragEnd}
-      className={`bg-cm-surface border border-cm-border rounded-xl p-3 space-y-2 hover:border-cm-gold-dim transition-all cursor-grab active:cursor-grabbing group select-none ${
+      onDragOver={(e) => onDragOverKaart(e, prospect.id)}
+      onDrop={(e) => onDropOpKaart(e, prospect.id)}
+      className={`relative bg-cm-surface border border-cm-border rounded-xl p-3 space-y-2 hover:border-cm-gold-dim transition-all cursor-grab active:cursor-grabbing group select-none ${
         isDragging ? "opacity-40 ring-2 ring-cm-gold" : nietActief ? "opacity-60" : "opacity-100"
-      }`}
+      } ${dropIndicator === "boven" ? "border-t-2 border-t-cm-gold" : ""} ${dropIndicator === "onder" ? "border-b-2 border-b-cm-gold" : ""}`}
     >
       <div className="flex items-start justify-between">
         <Link
@@ -152,6 +160,8 @@ export function PipelineKanban({ prospects }: Props) {
   const [lokaleProspects, setLokaleProspects] = useState(prospects);
   const [dragOverFase, setDragOverFase] = useState<PipelineFase | null>(null);
   const [draggingId, setDraggingId] = useState<string | null>(null);
+  // Welke kaart is target, en boven/onder = waar komt de gesleepte kaart terecht?
+  const [dragOverKaart, setDragOverKaart] = useState<{ id: string; positie: "boven" | "onder" } | null>(null);
   const draggedIdRef = useRef<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
@@ -169,6 +179,7 @@ export function PipelineKanban({ prospects }: Props) {
   const handleDragEnd = useCallback(() => {
     setDraggingId(null);
     setDragOverFase(null);
+    setDragOverKaart(null);
     draggedIdRef.current = null;
   }, []);
 
@@ -184,29 +195,143 @@ export function PipelineKanban({ prospects }: Props) {
     const related = e.relatedTarget as HTMLElement | null;
     if (!e.currentTarget.contains(related)) {
       setDragOverFase(null);
+      setDragOverKaart(null);
     }
   }, []);
+
+  // Drag over een specifieke kaart: bepaal "boven" of "onder" aan de hand van
+  // muispositie t.o.v. kaartmidden. Zorgt voor preciese insert-positie.
+  const handleDragOverKaart = useCallback((e: React.DragEvent, id: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (draggedIdRef.current === id) {
+      // Niet boven zichzelf tonen
+      setDragOverKaart(null);
+      return;
+    }
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const midden = rect.top + rect.height / 2;
+    const positie: "boven" | "onder" = e.clientY < midden ? "boven" : "onder";
+    setDragOverKaart((prev) =>
+      prev?.id === id && prev.positie === positie ? prev : { id, positie }
+    );
+  }, []);
+
+  const handleDropOpKaart = useCallback((e: React.DragEvent, doelId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const sleepId = e.dataTransfer.getData("text/plain") || draggedIdRef.current;
+    const positie = dragOverKaart?.positie ?? "onder";
+    setDragOverKaart(null);
+    setDragOverFase(null);
+    setDraggingId(null);
+    draggedIdRef.current = null;
+    if (!sleepId || sleepId === doelId) return;
+
+    const doelProspect = lokaleProspects.find((p) => p.id === doelId);
+    if (!doelProspect) return;
+
+    herordenNaarPositie(sleepId, doelProspect.pipeline_fase, doelId, positie);
+  }, [dragOverKaart, lokaleProspects]);
 
   const handleDrop = useCallback((e: React.DragEvent, nieuweFase: PipelineFase) => {
     e.preventDefault();
     e.stopPropagation();
-    setDragOverFase(null);
-
-    // Probeer id uit dataTransfer of ref
+    // Als we op een kaart droppen heeft handleDropOpKaart al gedraaid en de
+    // event niet verder bubbled; dit pad is alleen voor lege kolom-dropzone.
     const id = e.dataTransfer.getData("text/plain") || draggedIdRef.current;
+    setDragOverFase(null);
+    setDragOverKaart(null);
+    setDraggingId(null);
+    draggedIdRef.current = null;
     if (!id) return;
 
     const prospect = lokaleProspects.find((p) => p.id === id);
-    if (!prospect || prospect.pipeline_fase === nieuweFase) {
-      setDraggingId(null);
-      draggedIdRef.current = null;
-      return;
+    if (!prospect) return;
+
+    // Leeg kolom → achteraan plaatsen in de nieuwe fase
+    herordenNaarPositie(id, nieuweFase, null, "onder");
+  }, [lokaleProspects]);
+
+  // Kernfunctie: verplaats prospect naar target fase + positie, herbereken
+  // pipeline_volgorde voor de betreffende kolom(men), en sla op.
+  async function herordenNaarPositie(
+    sleepId: string,
+    doelFase: PipelineFase,
+    doelId: string | null,
+    positie: "boven" | "onder"
+  ) {
+    const sleep = lokaleProspects.find((p) => p.id === sleepId);
+    if (!sleep) return;
+
+    // Huidige kolom-leden (doelfase) gesorteerd op huidige volgorde, zonder
+    // de gesleepte zelf (voor het geval 'ie al in die fase zit).
+    const doelKolom = lokaleProspects
+      .filter((p) => p.pipeline_fase === doelFase && p.id !== sleepId)
+      .sort((a, b) => (a.pipeline_volgorde ?? 0) - (b.pipeline_volgorde ?? 0));
+
+    // Insert-index bepalen
+    let insertIdx = doelKolom.length; // default: achteraan
+    if (doelId) {
+      const doelIdx = doelKolom.findIndex((p) => p.id === doelId);
+      if (doelIdx !== -1) insertIdx = positie === "boven" ? doelIdx : doelIdx + 1;
     }
 
-    wijzigFase(id, nieuweFase);
-    setDraggingId(null);
-    draggedIdRef.current = null;
-  }, [lokaleProspects]);
+    const nieuweKolom = [
+      ...doelKolom.slice(0, insertIdx),
+      { ...sleep, pipeline_fase: doelFase },
+      ...doelKolom.slice(insertIdx),
+    ];
+
+    // Lokale state updaten: nieuwe volgorde in doelfase + fase wijzigen bij verplaats
+    setLokaleProspects((prev) =>
+      prev.map((p) => {
+        const idx = nieuweKolom.findIndex((k) => k.id === p.id);
+        if (idx === -1) return p;
+        return { ...p, pipeline_fase: doelFase, pipeline_volgorde: idx };
+      })
+    );
+
+    // Database: batch-update alle prospects in de nieuwe kolom met frisse index.
+    // We updaten alleen de rijen waarvan de waarde wijzigt om netwerkverkeer te
+    // beperken. Voor de gesleepte kaart altijd, want fase kan ook veranderd zijn.
+    const updates = nieuweKolom.map((p, idx) => ({
+      id: p.id,
+      pipeline_volgorde: idx,
+      veranderd:
+        p.id === sleepId ||
+        p.pipeline_volgorde !== idx ||
+        p.pipeline_fase !== doelFase,
+    }));
+
+    const faseVerandert = sleep.pipeline_fase !== doelFase;
+    const rows = updates.filter((u) => u.veranderd);
+    let foutGehad = false;
+    for (const rij of rows) {
+      const patch: Record<string, unknown> = {
+        pipeline_volgorde: rij.pipeline_volgorde,
+        updated_at: new Date().toISOString(),
+      };
+      if (rij.id === sleepId && faseVerandert) {
+        patch.pipeline_fase = doelFase;
+      }
+      const { error } = await supabase
+        .from("prospects")
+        .update(patch)
+        .eq("id", rij.id);
+      if (error) foutGehad = true;
+    }
+
+    if (foutGehad) {
+      toast.error(v("actie.fout"));
+      setLokaleProspects(lokaleProspects);
+      return;
+    }
+    if (faseVerandert) {
+      toast.success(v("stats.opgeslagen") + " ✓");
+    }
+    router.refresh();
+  }
 
   async function verwijderProspect(id: string, naam: string) {
     const { error } = await supabase.from("prospects").delete().eq("id", id);
@@ -272,16 +397,18 @@ export function PipelineKanban({ prospects }: Props) {
             const faseProspects = lokaleProspects
               .filter((p) => p.pipeline_fase === fase)
               .sort((a, b) => {
-                // Binnen member/shopper-kolom: actieve eerst, inactieve onderaan alfabetisch.
-                // Andere fases: geen extra sortering (volgorde van fetch respecteren).
-                if (fase !== "member" && fase !== "shopper") return 0;
-                const aActief = a.actief !== false;
-                const bActief = b.actief !== false;
-                if (aActief !== bActief) return aActief ? -1 : 1;
-                if (!aActief && !bActief) {
-                  return a.volledige_naam.localeCompare(b.volledige_naam, "nl");
+                // Member/shopper: actieve eerst, inactieve onderaan alfabetisch.
+                // Binnen gelijke actief-status en in alle andere kolommen sorteren
+                // we op handmatige pipeline_volgorde (lager = hoger in kolom).
+                if (fase === "member" || fase === "shopper") {
+                  const aActief = a.actief !== false;
+                  const bActief = b.actief !== false;
+                  if (aActief !== bActief) return aActief ? -1 : 1;
+                  if (!aActief && !bActief) {
+                    return a.volledige_naam.localeCompare(b.volledige_naam, "nl");
+                  }
                 }
-                return 0;
+                return (a.pipeline_volgorde ?? 0) - (b.pipeline_volgorde ?? 0);
               });
             const isDragOver = dragOverFase === fase;
 
@@ -326,6 +453,11 @@ export function PipelineKanban({ prospects }: Props) {
                       isDragging={draggingId === p.id}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
+                      onDragOverKaart={handleDragOverKaart}
+                      onDropOpKaart={handleDropOpKaart}
+                      dropIndicator={
+                        dragOverKaart?.id === p.id ? dragOverKaart.positie : null
+                      }
                       datumLocale={datumLocale}
                     />
                   ))}

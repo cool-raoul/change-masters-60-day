@@ -68,6 +68,7 @@ export interface Prospect {
   ingezette_tools: string[];
   notities: string | null;
   pipeline_fase: PipelineFase;
+  pipeline_volgorde: number;
   bron: string | null;
   prioriteit: "hoog" | "normaal" | "laag";
   laatste_contact: string | null;

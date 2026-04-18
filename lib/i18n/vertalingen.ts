@@ -216,6 +216,10 @@ export const t: Vertalingen = {
     nl: "Mijn WHY", en: "My WHY", fr: "Mon POURQUOI",
     es: "Mi POR QU\u00c9", de: "Mein WARUM", pt: "Meu PORQU\u00ca",
   },
+  "nav.premium": {
+    nl: "Premium", en: "Premium", fr: "Premium",
+    es: "Premium", de: "Premium", pt: "Premium",
+  },
   "nav.uitloggen": {
     nl: "Uitloggen", en: "Log out", fr: "Se d\u00e9connecter",
     es: "Cerrar sesi\u00f3n", de: "Abmelden", pt: "Sair",
