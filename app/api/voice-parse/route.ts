@@ -132,6 +132,15 @@ B) ACTIES — welke database-acties moeten gebeuren (alleen bij "data" of "mixed
 
 C) COACH_BERICHT — als intentie "coach" of "mixed": formuleer de vraag voor de mentor-coach in jij-vorm ("Hoe ga ik het beste om met het bezwaar 'geen tijd' van Jan?"). Als "data": null.
 
+C2) COACH_PROSPECT_ID + COACH_PROSPECT_NAAM — VERPLICHT invullen als de coach-vraag duidelijk over een bestaande persoon uit de prospectlijst gaat.
+   - Voorbeeld: "Wat is een goed productadvies voor Petra de Voogd?" → coach_prospect_id = het id van Petra uit de lijst hierboven, coach_prospect_naam = "Petra de Voogd", coach_bericht = "Geef een Lifeplus-productadvies voor Petra de Voogd."
+   - Ook bij indirecte vorm: "Ik wil voor Arno een advies", "Maak een advies voor Marieke", "Productadvies Petra" → koppel aan die prospect.
+   - Fonetisch matchen: "Petra de voor" / "Pietra" → Petra de Voogd als die in lijst staat.
+   - Als er GEEN naam genoemd is of de naam matcht niemand: zet beide velden op null.
+   - Als naam matcht maar 1 karakter afwijkt van bestaande prospect: gebruik bestaande id (fuzzy).
+   - Bij multi-naam in coach-vraag: kies de naam waarvoor de vraag duidelijk bedoeld is (de "voor X" naam).
+   - Format: { "coach_prospect_id": "uuid-uit-lijst-of-null", "coach_prospect_naam": "Volledige naam of null" }
+
 MOGELIJKE ACTIES:
 
 1. { "type": "nieuwe_prospect", "volledige_naam": "Pieter de Hoogh", "pipeline_fase": "prospect", "notities": "...", "relatie": "zus van Pieter de Hoogh" (optioneel) }
@@ -289,6 +298,8 @@ OUTPUT FORMAT (exact zo):
   "samenvatting": "Korte 1-zin samenvatting van wat je begrepen hebt",
   "acties": [ ... lijst met actie-objecten ... ],
   "coach_bericht": "Vraag voor mentor in jij-vorm, of null bij intentie 'data'",
+  "coach_prospect_id": "uuid-uit-prospects-lijst als coach-vraag over bestaande prospect gaat, anders null",
+  "coach_prospect_naam": "Volledige naam van die prospect of null",
   "onduidelijk": [ "optionele lijst met vragen als iets niet helder is" ]
 }
 
@@ -460,6 +471,32 @@ BELANGRIJK: Begin altijd met de "redenatie" stap. Dit dwingt je om te denken vó
       }
     }
 
+    // Fallback fuzzy-match voor coach_prospect als LLM het niet heeft ingevuld
+    let coachProspectId: string | null = typeof geparsed.coach_prospect_id === "string" ? geparsed.coach_prospect_id : null;
+    let coachProspectNaam: string | null = typeof geparsed.coach_prospect_naam === "string" ? geparsed.coach_prospect_naam : null;
+
+    if ((intentie === "coach" || intentie === "mixed") && !coachProspectId) {
+      const tekstOmTeScannen = `${geparsed.coach_bericht || ""} ${geparsed.gecorrigeerd_transcript || transcript}`.toLowerCase();
+      let beste: { id: string; naam: string; score: number } | null = null;
+      for (const p of bestaandeProspects || []) {
+        const volledig = p.volledige_naam.toLowerCase();
+        const voornaam = volledig.split(" ")[0] || "";
+        if (voornaam.length < 3) continue;
+        if (tekstOmTeScannen.includes(volledig)) {
+          beste = { id: p.id, naam: p.volledige_naam, score: 1 };
+          break;
+        }
+        if (new RegExp(`\\b${voornaam}\\b`, "i").test(tekstOmTeScannen)) {
+          const score = similarity(normaliseer(voornaam), normaliseer(tekstOmTeScannen.slice(0, 80)));
+          if (!beste || score > beste.score) beste = { id: p.id, naam: p.volledige_naam, score };
+        }
+      }
+      if (beste) {
+        coachProspectId = beste.id;
+        coachProspectNaam = beste.naam;
+      }
+    }
+
     return new Response(
       JSON.stringify({
         transcript,
@@ -469,6 +506,8 @@ BELANGRIJK: Begin altijd met de "redenatie" stap. Dit dwingt je om te denken vó
         redenatie: geparsed.redenatie || "",
         acties,
         coach_bericht: geparsed.coach_bericht || null,
+        coach_prospect_id: coachProspectId,
+        coach_prospect_naam: coachProspectNaam,
         onduidelijk: Array.isArray(geparsed.onduidelijk) ? geparsed.onduidelijk : [],
         waarschuwingen,
         model_gebruikt: gekozenModel,

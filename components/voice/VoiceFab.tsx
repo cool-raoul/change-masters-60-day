@@ -109,6 +109,8 @@ type ParseResultaat = {
   redenatie?: string;
   acties: Actie[];
   coach_bericht: string | null;
+  coach_prospect_id?: string | null;
+  coach_prospect_naam?: string | null;
   onduidelijk: string[];
   waarschuwingen?: string[];
 };
@@ -125,6 +127,8 @@ export function VoiceFab() {
   const [resultaat, setResultaat] = useState<ParseResultaat | null>(null);
   const [acties, setActies] = useState<Actie[]>([]);
   const [bewerkTekst, setBewerkTekst] = useState("");
+  const [coachProspectId, setCoachProspectId] = useState<string | null>(null);
+  const [coachProspectNaam, setCoachProspectNaam] = useState<string | null>(null);
 
   const spraak = gebruikSpraak({
     taal,
@@ -208,6 +212,8 @@ export function VoiceFab() {
       const data: ParseResultaat = await res.json();
       setResultaat(data);
       setActies(data.acties);
+      setCoachProspectId(data.coach_prospect_id || null);
+      setCoachProspectNaam(data.coach_prospect_naam || null);
       setFase("preview");
     } catch (err: any) {
       toast.error("Fout: " + (err?.message || "onbekend"));
@@ -276,12 +282,14 @@ export function VoiceFab() {
       return;
     }
 
-    const titel = bericht.length > 40 ? bericht.substring(0, 37) + "..." : bericht;
+    const titel = coachProspectNaam
+      ? `Advies voor ${coachProspectNaam}`
+      : bericht.length > 40 ? bericht.substring(0, 37) + "..." : bericht;
     const { data: nieuw, error } = await supabase
       .from("ai_gesprekken")
       .insert({
         user_id: user.id,
-        prospect_id: null,
+        prospect_id: coachProspectId || null,
         titel,
         berichten: [],
       })
@@ -581,6 +589,8 @@ export function VoiceFab() {
     setResultaat(null);
     setActies([]);
     setBewerkTekst("");
+    setCoachProspectId(null);
+    setCoachProspectNaam(null);
   }
 
   function verwijderActie(idx: number) {
@@ -773,11 +783,30 @@ export function VoiceFab() {
                 )}
 
                 {resultaat.coach_bericht && (
-                  <div className="card border-cm-gold/30 bg-cm-gold/5">
-                    <p className="text-xs text-cm-gold uppercase tracking-wider mb-1">
+                  <div className="card border-cm-gold/30 bg-cm-gold/5 space-y-2">
+                    <p className="text-xs text-cm-gold uppercase tracking-wider">
                       🧭 Vraag voor de mentor
                     </p>
                     <p className="text-cm-white text-sm">{resultaat.coach_bericht}</p>
+                    {coachProspectNaam && coachProspectId && (
+                      <div className="flex items-center justify-between gap-2 pt-1 border-t border-cm-gold/20">
+                        <p className="text-cm-white text-xs">
+                          👤 Wordt gekoppeld aan: <span className="font-semibold text-cm-gold">{coachProspectNaam}</span>
+                        </p>
+                        <button
+                          onClick={() => { setCoachProspectId(null); setCoachProspectNaam(null); }}
+                          className="text-red-400 hover:text-red-300 text-xs"
+                          title="Ontkoppel deze prospect (advies wordt algemeen)"
+                        >
+                          ✕ ontkoppel
+                        </button>
+                      </div>
+                    )}
+                    {!coachProspectNaam && resultaat.intentie !== "data" && (
+                      <p className="text-cm-white text-xs opacity-60 pt-1 border-t border-cm-gold/20">
+                        Geen prospect herkend — advies wordt algemeen opgeslagen.
+                      </p>
+                    )}
                   </div>
                 )}
 
