@@ -23,6 +23,7 @@ export function ContactgegevensForm({ prospect }: Props) {
   const [email, setEmail] = useState(prospect.email || "");
   const [instagram, setInstagram] = useState(prospect.instagram || "");
   const [facebook, setFacebook] = useState(prospect.facebook || "");
+  const [beroep, setBeroep] = useState(prospect.beroep || "");
   const [notities, setNotities] = useState(prospect.notities || "");
   const [prioriteit, setPrioriteit] = useState<"hoog" | "normaal" | "laag">(
     prospect.prioriteit
@@ -40,6 +41,7 @@ export function ContactgegevensForm({ prospect }: Props) {
         email: email || null,
         instagram: instagram || null,
         facebook: facebook || null,
+        beroep: beroep || null,
         notities: notities || null,
         prioriteit,
         updated_at: new Date().toISOString(),
@@ -63,6 +65,7 @@ export function ContactgegevensForm({ prospect }: Props) {
     setEmail(prospect.email || "");
     setInstagram(prospect.instagram || "");
     setFacebook(prospect.facebook || "");
+    setBeroep(prospect.beroep || "");
     setNotities(prospect.notities || "");
     setPrioriteit(prospect.prioriteit);
     setBewerkModus(false);
@@ -105,6 +108,12 @@ export function ContactgegevensForm({ prospect }: Props) {
           <div>
             <p className="text-xs text-cm-white opacity-60">Facebook</p>
             <p className="text-cm-white text-sm">{prospect.facebook}</p>
+          </div>
+        )}
+        {prospect.beroep && (
+          <div>
+            <p className="text-xs text-cm-white opacity-60">Beroep</p>
+            <p className="text-cm-white text-sm">{prospect.beroep}</p>
           </div>
         )}
         {prospect.bron && (
@@ -196,6 +205,19 @@ export function ContactgegevensForm({ prospect }: Props) {
           value={facebook}
           onChange={(e) => setFacebook(e.target.value)}
           placeholder="Naam of URL"
+          className="input-cm text-sm"
+        />
+      </div>
+
+      <div>
+        <label className="block text-xs text-cm-white opacity-60 mb-1">
+          Beroep
+        </label>
+        <input
+          type="text"
+          value={beroep}
+          onChange={(e) => setBeroep(e.target.value)}
+          placeholder="Bijv. docent, verpleegkundige, ondernemer"
           className="input-cm text-sm"
         />
       </div>

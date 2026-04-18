@@ -19,6 +19,7 @@ export default function NieuwProspectPagina() {
     email: "",
     instagram: "",
     facebook: "",
+    beroep: "",
     bron: "warm",
     prioriteit: "normaal",
     notities: "",
@@ -135,6 +136,17 @@ export default function NieuwProspectPagina() {
               value={formData.facebook}
               onChange={(e) => updateVeld("facebook", e.target.value)}
               placeholder="Facebook naam"
+              className="input-cm"
+            />
+          </div>
+
+          <div className="sm:col-span-2">
+            <label className="block text-sm text-cm-white mb-1.5">Beroep</label>
+            <input
+              type="text"
+              value={formData.beroep}
+              onChange={(e) => updateVeld("beroep", e.target.value)}
+              placeholder="Bijv. docent, verpleegkundige, ondernemer"
               className="input-cm"
             />
           </div>
