@@ -27,14 +27,21 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { transcript, taal }: { transcript: string; taal?: string } = body;
+    const { transcript: ruwTranscript, taal }: { transcript: string; taal?: string } = body;
 
-    if (!transcript || transcript.trim().length < 3) {
+    if (!ruwTranscript || ruwTranscript.trim().length < 3) {
       return new Response(JSON.stringify({ fout: "Geen transcript" }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
       });
     }
+
+    // Server-side vangnet: normaliseer "life plus"/"lijf plus"/etc. → "Lifeplus"
+    // voor het geval de client-side normalisatie wordt omzeild (externe clients).
+    const transcript = ruwTranscript.replace(
+      /\b(life|lijf|live|leaf|laif|lief)[\s\-]?(plus|plas)\b/gi,
+      "Lifeplus"
+    );
 
     // Haal bestaande prospects op voor naam-matching
     const { data: bestaandeProspects } = await supabase
@@ -114,6 +121,9 @@ Interpreteer het transcript ALTIJD zo:
 
 5. PRODUCT-FONETIEK
    Ook producten fonetisch matchen: "life plus" / "life plus basis" / "biobasic" / "dagelijkse basics" → Daily BioBasics. "visolie" / "om ee gold" / "omega" → OmeGold.
+
+5a. LIFEPLUS-HERKENNING (VERPLICHT):
+   De bedrijfsnaam "Lifeplus" wordt door spraakherkenning heel vaak verkeerd gehoord. Behandel elke fonetisch gelijkende variant — "life plus", "life-plus", "lijf plus", "lijfplus", "live plus", "leaf plus", "laif plus", "lief plus", "lifeplas" — ALTIJD als "Lifeplus" (één woord, hoofdletter L) in het gecorrigeerd_transcript en in alle notities/berichten. Dit geldt ook als het in combinatie voorkomt ("life plus basis" → "Lifeplus basis", "life plus producten" → "Lifeplus producten").
 
 6. ALS ONZEKER → NOEM IN "onduidelijk"
    Als de correctie raderwerk wordt (meerdere interpretaties mogelijk, geen fonetische match), schrijf in "onduidelijk" veld: "Ik hoorde 'X', bedoelde je Y of Z?"

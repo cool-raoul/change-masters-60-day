@@ -4,6 +4,19 @@ import { useEffect, useRef, useState } from "react";
 
 type TaalCode = "nl" | "en" | "fr" | "es" | "de" | "pt";
 
+// Lifeplus wordt door spraakherkenning vaak verkeerd gehoord
+// ("life plus", "lijf plus", "live plus", "leaf plus", etc.).
+// We normaliseren alle varianten naar de officiële schrijfwijze "Lifeplus"
+// vóór de tekst ergens anders gebruikt wordt (API, chat, UI).
+export function normaliseerLifeplus(tekst: string): string {
+  if (!tekst) return tekst;
+  // Case-insensitive varianten met optionele spatie/koppelteken in het midden.
+  // Varianten: life plus, life-plus, lifeplus, lijf plus, lijfplus, live plus,
+  //            leaf plus, laif plus, lifeplas, lief plus.
+  const patroon = /\b(life|lijf|live|leaf|laif|lief)[\s\-]?(plus|plas)\b/gi;
+  return tekst.replace(patroon, "Lifeplus");
+}
+
 const LOCALE_MAP: Record<string, string> = {
   nl: "nl-NL",
   en: "en-US",
@@ -178,7 +191,7 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
     }
     releaseWakeLock();
     const eind = (finalRef.current + " " + interim).trim();
-    return eind;
+    return normaliseerLifeplus(eind);
   }
 
   function reset() {
@@ -202,7 +215,7 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
   }, []);
 
   function huidigeTekst(): string {
-    return (finalRef.current + " " + interim).trim();
+    return normaliseerLifeplus((finalRef.current + " " + interim).trim());
   }
 
   return {
