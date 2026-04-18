@@ -32,12 +32,15 @@ export async function POST(request: Request) {
       prospectId,
       gesprekId,
       taal,
+      contextNiveau,
     }: {
       berichten: ChatBericht[];
       prospectId?: string;
       gesprekId?: string;
       taal?: string;
+      contextNiveau?: "light" | "full";
     } = body;
+    const niveau: "light" | "full" = contextNiveau === "full" ? "full" : "light";
 
     if (!berichten || berichten.length === 0) {
       return new Response("Geen berichten", { status: 400 });
@@ -116,14 +119,42 @@ export async function POST(request: Request) {
         .single();
 
       if (prospectData) {
+        const logLimit = niveau === "full" ? 10 : 3;
         const { data: logs } = await supabase
           .from("contact_logs")
           .select("*")
           .eq("prospect_id", prospectId)
           .order("created_at", { ascending: false })
-          .limit(3);
+          .limit(logLimit);
 
-        prospect = { ...prospectData, recenteLogs: logs || [] };
+        let bestellingen: any[] = [];
+        let herinneringen: any[] = [];
+        if (niveau === "full") {
+          const [{ data: bestellingenData }, { data: herinneringenData }] = await Promise.all([
+            supabase
+              .from("product_bestellingen")
+              .select("*")
+              .eq("prospect_id", prospectId)
+              .order("besteldatum", { ascending: false })
+              .limit(10),
+            supabase
+              .from("herinneringen")
+              .select("*")
+              .eq("prospect_id", prospectId)
+              .eq("voltooid", false)
+              .order("vervaldatum", { ascending: true })
+              .limit(5),
+          ]);
+          bestellingen = bestellingenData || [];
+          herinneringen = herinneringenData || [];
+        }
+
+        prospect = {
+          ...prospectData,
+          recenteLogs: logs || [],
+          bestellingen,
+          openHerinneringen: herinneringen,
+        };
       }
     }
 
@@ -137,7 +168,7 @@ export async function POST(request: Request) {
 
     // Bouw system prompt (alleen relevante secties)
     const systeemPrompt = bouwCoachSysteemPrompt(
-      profile, whyProfile, prospect, taal || "nl", vraagType
+      profile, whyProfile, prospect, taal || "nl", vraagType, niveau
     );
 
     // History trimming: max 8 berichten meesturen

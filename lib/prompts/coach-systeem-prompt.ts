@@ -56,9 +56,16 @@ function formatScriptsVoorVraag(vraagType: VraagType): string {
 export function bouwCoachSysteemPrompt(
   profile: Profile,
   whyProfile: WhyProfile | null,
-  prospect: (Prospect & { recenteLogs?: ContactLog[] }) | null,
+  prospect:
+    | (Prospect & {
+        recenteLogs?: ContactLog[];
+        bestellingen?: Array<{ besteldatum: string; product_omschrijving: string; notities?: string | null }>;
+        openHerinneringen?: Array<{ titel: string; vervaldatum: string }>;
+      })
+    | null,
   taal: string = "nl",
-  vraagType: VraagType = "algemeen"
+  vraagType: VraagType = "algemeen",
+  contextNiveau: "light" | "full" = "light"
 ): string {
   const dag = getDagVanRun(profile.run_startdatum);
   const fase = getFaseVanRun(dag);
@@ -137,9 +144,26 @@ Programma-pakketten: Darmen in Balans, Darmen in Balans +, Get Zen, Stress Less 
     };
     prospectSectie = `\nPROSPECT: ${prospect.volledige_naam} (${faseLabels[prospect.pipeline_fase] || prospect.pipeline_fase})`;
     if (prospect.notities) prospectSectie += ` | ${prospect.notities}`;
+
+    const logLimiet = contextNiveau === "full" ? 10 : 2;
     if (prospect.recenteLogs && prospect.recenteLogs.length > 0) {
-      for (const log of prospect.recenteLogs.slice(0, 2)) {
+      for (const log of prospect.recenteLogs.slice(0, logLimiet)) {
         prospectSectie += `\n${log.contact_type} (${new Date(log.created_at).toLocaleDateString("nl-NL")}): ${log.notities || "-"}`;
+      }
+    }
+
+    if (contextNiveau === "full") {
+      if (prospect.bestellingen && prospect.bestellingen.length > 0) {
+        prospectSectie += `\nBESTELLINGEN:`;
+        for (const b of prospect.bestellingen.slice(0, 10)) {
+          prospectSectie += `\n- ${b.besteldatum}: ${b.product_omschrijving}${b.notities ? ` (${b.notities})` : ""}`;
+        }
+      }
+      if (prospect.openHerinneringen && prospect.openHerinneringen.length > 0) {
+        prospectSectie += `\nOPEN HERINNERINGEN:`;
+        for (const h of prospect.openHerinneringen.slice(0, 5)) {
+          prospectSectie += `\n- ${h.vervaldatum}: ${h.titel}`;
+        }
       }
     }
   }

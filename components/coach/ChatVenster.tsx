@@ -297,6 +297,8 @@ export function ChatVenster({
   const [upgradeTonen, setUpgradeTonen] = useState(false);
   const [gebruikVandaag, setGebruikVandaag] = useState(0);
   const [isPremium, setIsPremium] = useState(false);
+  const [contextNiveau, setContextNiveau] = useState<"light" | "full">("light");
+  const [opslaanBezig, setOpslaanBezig] = useState(false);
   const chatEindRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
   const searchParams = useSearchParams();
@@ -325,6 +327,68 @@ export function ChatVenster({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
+
+  async function slaAdviesOpBijProspect() {
+    if (opslaanBezig) return;
+    if (!selectedProspect) {
+      toast.error("Koppel eerst een prospect aan dit gesprek");
+      return;
+    }
+    const laatsteAssistant = [...berichten].reverse().find((b) => b.role === "assistant");
+    if (!laatsteAssistant || !laatsteAssistant.content.trim()) {
+      toast.error("Nog geen advies om op te slaan");
+      return;
+    }
+
+    // Voorkeur: inhoud tussen [STUUR]...[/STUUR] (dat is het doorstuurbare deel)
+    const match = laatsteAssistant.content.match(/\[STUUR\]([\s\S]*?)\[\/STUUR\]/);
+    const adviesTekst = (match ? match[1] : laatsteAssistant.content).trim();
+
+    setOpslaanBezig(true);
+
+    const prospectNaam = alleProspects.find((p) => p.id === selectedProspect)?.volledige_naam ?? "prospect";
+
+    const { data: huidig } = await supabase
+      .from("prospects")
+      .select("notities, pipeline_fase")
+      .eq("id", selectedProspect)
+      .eq("user_id", userId)
+      .single();
+
+    const datumLabel = new Date().toLocaleDateString("nl-NL");
+    const nieuwNotitieBlok = `[${datumLabel}] ELEVA-advies:\n${adviesTekst}`;
+    const samengevoegd = huidig?.notities
+      ? `${huidig.notities}\n\n${nieuwNotitieBlok}`
+      : nieuwNotitieBlok;
+
+    const [{ error: updateError }, { error: logError }] = await Promise.all([
+      supabase
+        .from("prospects")
+        .update({
+          notities: samengevoegd,
+          laatste_contact: new Date().toISOString().split("T")[0],
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", selectedProspect)
+        .eq("user_id", userId),
+      supabase.from("contact_logs").insert({
+        prospect_id: selectedProspect,
+        user_id: userId,
+        contact_type: "notitie",
+        notities: `ELEVA-advies: ${adviesTekst.slice(0, 500)}${adviesTekst.length > 500 ? "..." : ""}`,
+        fase_voor: huidig?.pipeline_fase || null,
+        fase_na: huidig?.pipeline_fase || null,
+      }),
+    ]);
+
+    setOpslaanBezig(false);
+
+    if (updateError || logError) {
+      toast.error("Opslaan mislukt");
+      return;
+    }
+    toast.success(`Advies opgeslagen bij ${prospectNaam}`);
+  }
 
   async function wijzigProspect(nieuwId: string) {
     const huidig = selectedProspect;
@@ -457,6 +521,7 @@ export function ChatVenster({
           prospectId: selectedProspect || null,
           gesprekId,
           taal,
+          contextNiveau,
         }),
       });
 
@@ -526,37 +591,72 @@ export function ChatVenster({
   return (
     <div className="flex flex-col h-[calc(100vh-8rem)]">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <Link href="/coach" className="text-cm-white hover:text-cm-white">
-            ←
-          </Link>
-          <div>
-            <h1 className="text-lg font-display font-bold text-cm-white">
-              {v("coach.titel")}
-            </h1>
-            {huidigProspect && (
-              <p className="text-cm-gold text-xs">
-                Over: {huidigProspect.volledige_naam} ({huidigProspect.pipeline_fase})
-              </p>
-            )}
+      <div className="mb-4 space-y-2">
+        <div className="flex items-center justify-between gap-2 flex-wrap">
+          <div className="flex items-center gap-3">
+            <Link href="/coach" className="text-cm-white hover:text-cm-white">
+              ←
+            </Link>
+            <div>
+              <h1 className="text-lg font-display font-bold text-cm-white">
+                {v("coach.titel")}
+              </h1>
+              {huidigProspect && (
+                <p className="text-cm-gold text-xs">
+                  Over: {huidigProspect.volledige_naam} ({huidigProspect.pipeline_fase})
+                </p>
+              )}
+            </div>
           </div>
+
+          {/* Prospect selector — koppelt gesprek aan prospect, ook achteraf */}
+          <select
+            value={selectedProspect}
+            onChange={(e) => wijzigProspect(e.target.value)}
+            className="input-cm text-sm w-auto max-w-[200px]"
+            title="Koppel dit gesprek aan een prospect (kan altijd gewijzigd worden)"
+          >
+            <option value="">{v("coach.geen_prospect")}</option>
+            {alleProspects.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.volledige_naam}
+              </option>
+            ))}
+          </select>
         </div>
 
-        {/* Prospect selector — koppelt gesprek aan prospect, ook achteraf */}
-        <select
-          value={selectedProspect}
-          onChange={(e) => wijzigProspect(e.target.value)}
-          className="input-cm text-sm w-auto max-w-[200px]"
-          title="Koppel dit gesprek aan een prospect (kan altijd gewijzigd worden)"
-        >
-          <option value="">{v("coach.geen_prospect")}</option>
-          {alleProspects.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.volledige_naam}
-            </option>
-          ))}
-        </select>
+        {/* Context-toggle + save-knop (alleen relevant als prospect gekoppeld) */}
+        {selectedProspect && (
+          <div className="flex items-center justify-between gap-2 flex-wrap text-xs">
+            <div className="flex items-center gap-1 text-cm-white opacity-80">
+              <span className="opacity-60">Context:</span>
+              <button
+                onClick={() => setContextNiveau("light")}
+                className={`px-2 py-1 rounded ${contextNiveau === "light" ? "bg-cm-gold text-cm-black font-medium" : "bg-cm-surface-2 text-cm-white hover:text-cm-gold"}`}
+                title="Alleen naam, fase en notities"
+              >
+                📋 Licht
+              </button>
+              <button
+                onClick={() => setContextNiveau("full")}
+                className={`px-2 py-1 rounded ${contextNiveau === "full" ? "bg-cm-gold text-cm-black font-medium" : "bg-cm-surface-2 text-cm-white hover:text-cm-gold"}`}
+                title="Plus contactgeschiedenis, bestellingen en open herinneringen"
+              >
+                📚 Volledig
+              </button>
+            </div>
+            {berichten.some((b) => b.role === "assistant" && b.content.trim()) && (
+              <button
+                onClick={slaAdviesOpBijProspect}
+                disabled={opslaanBezig}
+                className="px-3 py-1 rounded bg-cm-surface-2 border border-cm-gold/40 text-cm-gold hover:bg-cm-gold hover:text-cm-black disabled:opacity-50 transition-colors"
+                title={`Voeg het laatste advies toe aan de kaart van ${huidigProspect?.volledige_naam ?? "deze prospect"}`}
+              >
+                {opslaanBezig ? "..." : `💾 Sla op bij ${huidigProspect?.volledige_naam?.split(" ")[0] ?? "prospect"}`}
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Chat berichten */}
