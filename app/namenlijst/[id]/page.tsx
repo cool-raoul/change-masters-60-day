@@ -8,6 +8,7 @@ import { ProspectActieForm } from "@/components/namenlijst/ProspectActieForm";
 import { ContactLogLijst } from "@/components/namenlijst/ContactLogLijst";
 import { ContactgegevensForm } from "@/components/namenlijst/ContactgegevensForm";
 import { OnboardingChecklist } from "@/components/namenlijst/OnboardingChecklist";
+import { IngezetteTools } from "@/components/namenlijst/IngezetteTools";
 import { DriewegGesprekInklapbaar } from "@/components/namenlijst/DriewegGesprek";
 import { ProspectVerwijderKnop } from "@/components/namenlijst/ProspectVerwijderKnop";
 import { CoachGesprekkenInklapbaar } from "@/components/namenlijst/CoachGesprekkenInklapbaar";
@@ -154,6 +155,12 @@ export default async function ProspectDetailPagina({
               {format(new Date(prospect.created_at), "d MMMM yyyy", { locale: datumLocale })}
             </p>
           </div>
+
+          {/* Ingezette tools/media — afvinkbare dropdown */}
+          <IngezetteTools
+            prospectId={id}
+            ingezet={prospect.ingezette_tools || []}
+          />
 
           {/* Onboarding checklist (alleen zichtbaar bij members) */}
           <OnboardingChecklist prospect={prospect} />

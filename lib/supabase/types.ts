@@ -65,6 +65,7 @@ export interface Prospect {
   instagram: string | null;
   facebook: string | null;
   beroep: string | null;
+  ingezette_tools: string[];
   notities: string | null;
   pipeline_fase: PipelineFase;
   bron: string | null;
