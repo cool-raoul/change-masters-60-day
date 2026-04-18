@@ -162,24 +162,37 @@ export default async function DashboardPagina() {
 
         {/* Rechter kolom */}
         <div className="space-y-4">
-          {/* WHY kaart */}
+          {/* WHY kaart — ingeklapt (details/summary), user klapt uit om te lezen */}
           {why?.why_samenvatting && (
-            <div className="card border-gold-subtle">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
+            <details className="card border-gold-subtle group">
+              <summary className="flex items-center justify-between cursor-pointer list-none">
+                <div className="flex items-center gap-2 min-w-0">
                   <span className="text-cm-gold">🎯</span>
-                  <h2 className="text-sm font-semibold text-cm-gold uppercase tracking-wider">
-                    {v("dashboard.jouw_why", taal)}
-                  </h2>
+                  <div className="min-w-0">
+                    <h2 className="text-sm font-semibold text-cm-gold uppercase tracking-wider">
+                      {v("dashboard.jouw_why", taal)}
+                    </h2>
+                    <p className="text-cm-white text-[11px] opacity-60 mt-0.5">
+                      Jouw opgeslagen why — bekijk &lsquo;m regelmatig
+                    </p>
+                  </div>
                 </div>
-                <Link href="/mijn-why" className="text-cm-white text-xs hover:text-cm-gold">
+                <span className="text-cm-gold text-xs transition-transform group-open:rotate-180 ml-2 flex-shrink-0">
+                  ▼
+                </span>
+              </summary>
+              <div className="mt-3 pt-3 border-t border-gold-subtle">
+                <p className="text-cm-white text-sm leading-relaxed italic">
+                  &ldquo;{why.why_samenvatting}&rdquo;
+                </p>
+                <Link
+                  href="/mijn-why"
+                  className="inline-block mt-3 text-cm-white text-xs hover:text-cm-gold"
+                >
                   {v("dashboard.aanpassen", taal)}
                 </Link>
               </div>
-              <p className="text-cm-white text-sm leading-relaxed italic">
-                &ldquo;{why.why_samenvatting}&rdquo;
-              </p>
-            </div>
+            </details>
           )}
 
           {/* Herinneringen */}
