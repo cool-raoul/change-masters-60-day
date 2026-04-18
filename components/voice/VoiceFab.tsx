@@ -905,11 +905,17 @@ export function VoiceFab() {
                   <button onClick={sluit} className="btn-secondary sm:flex-1">
                     Annuleren
                   </button>
-                  {/* Combi-flow: zowel data-acties als een vraag voor de mentor → één knop die alles afhandelt */}
+                  {/* Combi-flow: zowel data-acties als een vraag voor de mentor.
+                      Twee knoppen: opslaan + mentor, of alleen opslaan (mentor-vraag weggooien). */}
                   {resultaat.coach_bericht && acties.length > 0 && (
-                    <button onClick={naarMentor} className="btn-gold sm:flex-1">
-                      ✅ Opslaan + naar mentor
-                    </button>
+                    <>
+                      <button onClick={bevestig} className="btn-secondary sm:flex-1">
+                        ✅ Alleen opslaan
+                      </button>
+                      <button onClick={naarMentor} className="btn-gold sm:flex-1">
+                        🧭 Opslaan + naar mentor
+                      </button>
+                    </>
                   )}
                   {/* Alleen coach-vraag, geen data */}
                   {resultaat.coach_bericht && acties.length === 0 && (

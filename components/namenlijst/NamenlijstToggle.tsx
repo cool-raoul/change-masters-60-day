@@ -21,9 +21,15 @@ export function NamenlijstToggle({ prospects }: Props) {
   const router = useRouter();
   const supabase = createClient();
 
-  const gesorteerd = [...lokaleProspects].sort((a, b) =>
-    a.volledige_naam.localeCompare(b.volledige_naam, "nl")
-  );
+  // Sorteer: actieve prospects eerst alfabetisch, daarna niet-actieve onderaan
+  // (ook alfabetisch). Zo blijven afgesloten members/shoppers vindbaar maar niet
+  // in de weg.
+  const gesorteerd = [...lokaleProspects].sort((a, b) => {
+    const aActief = a.actief !== false;
+    const bActief = b.actief !== false;
+    if (aActief !== bActief) return aActief ? -1 : 1;
+    return a.volledige_naam.localeCompare(b.volledige_naam, "nl");
+  });
 
   async function verwijder(id: string, naam: string) {
     const { error } = await supabase.from("prospects").delete().eq("id", id);
@@ -83,10 +89,13 @@ export function NamenlijstToggle({ prospects }: Props) {
                 (f) => f.fase === prospect.pipeline_fase
               );
               const bevestigen = bevestigenId === prospect.id;
+              const nietActief = prospect.actief === false;
               return (
                 <div
                   key={prospect.id}
-                  className="card flex items-center justify-between hover:border-cm-gold-dim transition-colors group"
+                  className={`card flex items-center justify-between hover:border-cm-gold-dim transition-colors group ${
+                    nietActief ? "opacity-60" : ""
+                  }`}
                 >
                   <Link
                     href={`/namenlijst/${prospect.id}`}
@@ -111,6 +120,9 @@ export function NamenlijstToggle({ prospects }: Props) {
                         )}
                         {prospect.prioriteit === "hoog" && (
                           <span className="text-cm-gold text-xs">⭐ {v("namenlijst.hoog")}</span>
+                        )}
+                        {nietActief && (
+                          <span className="text-xs text-orange-400">💤 niet-actief</span>
                         )}
                       </div>
                     </div>

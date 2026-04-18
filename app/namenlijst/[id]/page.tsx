@@ -13,6 +13,7 @@ import { DriewegGesprekInklapbaar } from "@/components/namenlijst/DriewegGesprek
 import { ProspectVerwijderKnop } from "@/components/namenlijst/ProspectVerwijderKnop";
 import { CoachGesprekkenInklapbaar } from "@/components/namenlijst/CoachGesprekkenInklapbaar";
 import { ProductadviesKnop } from "@/components/namenlijst/ProductadviesKnop";
+import { ActiefToggle } from "@/components/namenlijst/ActiefToggle";
 import { productadviesBeschikbaar } from "@/lib/features/productadvies";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { Locale } from "date-fns";
@@ -112,7 +113,7 @@ export default async function ProspectDetailPagina({
             <h1 className="text-2xl font-display font-bold text-cm-white">
               {prospect.volledige_naam}
             </h1>
-            <div className="flex items-center gap-2 mt-1">
+            <div className="flex items-center gap-2 mt-1 flex-wrap">
               <span
                 className="text-xs font-medium px-2 py-0.5 rounded-full"
                 style={{ color: faseInfo?.tekstkleur, background: `${faseInfo?.kleur}` }}
@@ -121,6 +122,18 @@ export default async function ProspectDetailPagina({
               </span>
               {prospect.prioriteit === "hoog" && (
                 <span className="text-cm-gold text-xs">{v("prospect.hoge_prioriteit", taal)}</span>
+              )}
+              {(prospect.pipeline_fase === "member" || prospect.pipeline_fase === "shopper") && (
+                <ActiefToggle
+                  prospectId={id}
+                  prospectNaam={prospect.volledige_naam}
+                  actief={prospect.actief ?? true}
+                />
+              )}
+              {prospect.actief === false && (
+                <span className="text-xs text-orange-400 bg-orange-500/10 border border-orange-500/30 px-2 py-0.5 rounded-full">
+                  💤 Niet-actief
+                </span>
               )}
             </div>
           </div>

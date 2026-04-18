@@ -149,11 +149,16 @@ A) INTENTIE — wat wil deze persoon?
    - "coach": een vraag of reflectie voor de ELEVA mentor/coach (bijv. "Hoe ga ik om met bezwaar tijd?", "Ik voel me onzeker", "Help me met een DM")
    - "mixed": beide — feiten over een prospect PLUS een vraag om hulp ("Ik sprak Jan, hij zei geen tijd, hoe reageer ik?")
 
-BELANGRIJKE REGEL — KLACHTEN = IMPLICIETE ADVIES-VRAAG:
-Als het transcript gezondheidsklachten, symptomen, medische context, doelen of leefstijl-issues noemt voor een (nieuwe of bestaande) prospect, zet dan intentie = "mixed" (of "coach" als er géén data-actie is) en formuleer automatisch een advies-vraag als coach_bericht, óók als de gebruiker niet expliciet "advies" zegt. De coach denkt dan proactief mee.
-Voorbeelden van klachten/context die dit triggert: afvallen, diabetes, Hashimoto, overgang, menopauze, PMS, moe, vermoeid, slecht slapen, stress, burn-out, darmklachten, obstipatie, reflux, hoofdpijn, migraine, gewrichten, artrose, pijn, huid, acne, eczeem, haaruitval, immuun, allergie, cholesterol, bloeddruk, bloedsuiker, hormonen, libido, sport/herstel, brain fog, concentratie, etc.
-Voorbeeld: "Nieuwe prospect Johan, heeft last van brain fog en hoge bloeddruk, is 52 jaar." → intentie = "mixed", coach_bericht = "Welk Lifeplus-advies past bij Johan (52) met brain fog en hoge bloeddruk?", coach_prospect_naam = "Johan".
-Uitzondering: als gebruiker EXPLICIET zegt "alleen opslaan" / "geen advies nodig" / "niet naar coach" → dan intentie = "data" houden.
+BELANGRIJKE REGEL — KLACHTEN ZIJN NIET AUTOMATISCH EEN ADVIES-VRAAG:
+Als het transcript gezondheidsklachten, symptomen of medische context noemt (afvallen, moe, slaap, stress, darmen, hormonen, gewrichten, etc.) is dat ALLEEN ter informatie/notitie bij de prospect. Zet intentie dan = "data" en sla de klachten op als notitie bij de prospect.
+Maak ALLEEN een coach_bericht (intentie = "coach" of "mixed") als de gebruiker EXPLICIET om advies vraagt. Expliciete triggers zijn:
+- "advies", "productadvies", "wat raad je aan", "wat past bij"
+- "vraag aan coach", "vraag aan mentor", "stuur naar mentor", "stuur naar coach"
+- "help me met", "hoe ga ik om met", "wat zou jij adviseren"
+- "welk product", "welk pakket", "welke supplementen"
+Als geen van deze expliciete triggers in het transcript staat: GEEN coach_bericht aanmaken, ook niet als er klachten genoemd worden. De gebruiker kan later zelf op de klantenkaart een advies vragen.
+Voorbeeld: "Nieuwe prospect Johan, heeft last van brain fog en hoge bloeddruk, is 52 jaar." → intentie = "data", GEEN coach_bericht. Notities bij de prospect bevatten "brain fog, hoge bloeddruk, 52 jaar".
+Voorbeeld: "Nieuwe prospect Johan met brain fog, welk advies past?" → intentie = "mixed", coach_bericht = "Welk Lifeplus-advies past bij Johan met brain fog?".
 
 B) ACTIES — welke database-acties moeten gebeuren (alleen bij "data" of "mixed")
 

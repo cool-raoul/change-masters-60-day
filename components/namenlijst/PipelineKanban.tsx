@@ -48,13 +48,14 @@ function ProspectKaart({
     ? Math.floor((Date.now() - new Date(prospect.laatste_contact).getTime()) / (1000 * 60 * 60 * 24))
     : null;
 
+  const nietActief = prospect.actief === false;
   return (
     <div
       draggable
       onDragStart={(e) => onDragStart(e, prospect.id)}
       onDragEnd={onDragEnd}
       className={`bg-cm-surface border border-cm-border rounded-xl p-3 space-y-2 hover:border-cm-gold-dim transition-all cursor-grab active:cursor-grabbing group select-none ${
-        isDragging ? "opacity-40 ring-2 ring-cm-gold" : "opacity-100"
+        isDragging ? "opacity-40 ring-2 ring-cm-gold" : nietActief ? "opacity-60" : "opacity-100"
       }`}
     >
       <div className="flex items-start justify-between">
@@ -68,6 +69,9 @@ function ProspectKaart({
         </Link>
         {prospect.prioriteit === "hoog" && (
           <span className="text-cm-gold text-xs ml-2">⭐</span>
+        )}
+        {nietActief && (
+          <span className="text-orange-400 text-xs ml-2" title="Niet-actief">💤</span>
         )}
       </div>
 
@@ -265,7 +269,20 @@ export function PipelineKanban({ prospects }: Props) {
       <div ref={scrollRef} className="overflow-x-auto pb-2">
         <div className="flex gap-4 min-w-max">
           {PIPELINE_FASEN.map(({ fase, label }) => {
-            const faseProspects = lokaleProspects.filter((p) => p.pipeline_fase === fase);
+            const faseProspects = lokaleProspects
+              .filter((p) => p.pipeline_fase === fase)
+              .sort((a, b) => {
+                // Binnen member/shopper-kolom: actieve eerst, inactieve onderaan alfabetisch.
+                // Andere fases: geen extra sortering (volgorde van fetch respecteren).
+                if (fase !== "member" && fase !== "shopper") return 0;
+                const aActief = a.actief !== false;
+                const bActief = b.actief !== false;
+                if (aActief !== bActief) return aActief ? -1 : 1;
+                if (!aActief && !bActief) {
+                  return a.volledige_naam.localeCompare(b.volledige_naam, "nl");
+                }
+                return 0;
+              });
             const isDragOver = dragOverFase === fase;
 
             return (
