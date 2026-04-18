@@ -132,12 +132,14 @@ B) ACTIES — welke database-acties moeten gebeuren (alleen bij "data" of "mixed
 
 C) COACH_BERICHT — als intentie "coach" of "mixed": formuleer de vraag voor de mentor-coach in jij-vorm ("Hoe ga ik het beste om met het bezwaar 'geen tijd' van Jan?"). Als "data": null.
 
-C2) COACH_PROSPECT_ID + COACH_PROSPECT_NAAM — VERPLICHT invullen als de coach-vraag duidelijk over een bestaande persoon uit de prospectlijst gaat.
-   - Voorbeeld: "Wat is een goed productadvies voor Petra de Voogd?" → coach_prospect_id = het id van Petra uit de lijst hierboven, coach_prospect_naam = "Petra de Voogd", coach_bericht = "Geef een Lifeplus-productadvies voor Petra de Voogd."
+C2) COACH_PROSPECT_ID + COACH_PROSPECT_NAAM — VERPLICHT invullen als de coach-vraag duidelijk over een persoon gaat.
+   - BESTAANDE prospect in lijst: vul beide velden.
+     Voorbeeld: "Wat is een goed productadvies voor Petra de Voogd?" → coach_prospect_id = het id van Petra uit de lijst, coach_prospect_naam = "Petra de Voogd".
+   - NIEUWE prospect die in DEZE SPRAAK wordt aangemaakt (er is ook een nieuwe_prospect actie): vul alleen coach_prospect_naam met de volledige naam. Zet coach_prospect_id op null (die bestaat nog niet). De client koppelt later automatisch aan het nieuw-gemaakte id.
+     Voorbeeld: "Nieuwe prospect Frans Fransen, hij heeft diabetes type 1 en darmklachten. Welk advies past?" → coach_prospect_id = null, coach_prospect_naam = "Frans Fransen", coach_bericht = "Welk Lifeplus-advies past bij Frans Fransen met diabetes type 1 en darmklachten?".
    - Ook bij indirecte vorm: "Ik wil voor Arno een advies", "Maak een advies voor Marieke", "Productadvies Petra" → koppel aan die prospect.
-   - Fonetisch matchen: "Petra de voor" / "Pietra" → Petra de Voogd als die in lijst staat.
-   - Als er GEEN naam genoemd is of de naam matcht niemand: zet beide velden op null.
-   - Als naam matcht maar 1 karakter afwijkt van bestaande prospect: gebruik bestaande id (fuzzy).
+   - Fonetisch matchen op bestaande lijst: "Petra de voor" / "Pietra" → Petra de Voogd.
+   - Als er GEEN naam genoemd is én ook geen nieuwe prospect wordt aangemaakt: zet beide velden op null.
    - Bij multi-naam in coach-vraag: kies de naam waarvoor de vraag duidelijk bedoeld is (de "voor X" naam).
    - Format: { "coach_prospect_id": "uuid-uit-lijst-of-null", "coach_prospect_naam": "Volledige naam of null" }
 

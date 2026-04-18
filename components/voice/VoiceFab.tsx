@@ -225,7 +225,7 @@ export function VoiceFab() {
     if (!resultaat) return;
     setFase("opslaan");
     try {
-      const gemaakt = await voerActiesUit();
+      const { gemaakt } = await voerActiesUit();
       if (acties.length > 0 && gemaakt.length > 0) {
         toast.success("Opgeslagen!", {
           duration: 12000,
@@ -269,9 +269,13 @@ export function VoiceFab() {
 
     const bericht = resultaat.coach_bericht;
 
+    // Voer eerst alle acties uit zodat een net-aangemaakte prospect beschikbaar is
+    // voor koppeling aan het mentor-gesprek.
+    let naamNaarId: Record<string, string> = {};
     if (acties.length > 0) {
       setFase("opslaan");
-      await voerActiesUit();
+      const resultaatUit = await voerActiesUit();
+      naamNaarId = resultaatUit.naamNaarId;
     }
 
     const {
@@ -282,14 +286,38 @@ export function VoiceFab() {
       return;
     }
 
-    const titel = coachProspectNaam
-      ? `Advies voor ${coachProspectNaam}`
+    // Resolve prospect_id: eerst parser-match, anders via net-aangemaakte naam
+    let prospectIdVoorGesprek: string | null = coachProspectId;
+    let prospectNaamVoorTitel: string | null = coachProspectNaam;
+
+    if (!prospectIdVoorGesprek && coachProspectNaam) {
+      const match = naamNaarId[coachProspectNaam.toLowerCase()];
+      if (match) prospectIdVoorGesprek = match;
+    }
+
+    // Fallback: als er net een nieuwe_prospect is aangemaakt EN geen coach_prospect
+    // is herkend, maar het coach_bericht noemt die nieuwe naam → koppel alsnog.
+    if (!prospectIdVoorGesprek) {
+      for (const a of acties) {
+        if (a.type === "nieuwe_prospect" && a.volledige_naam) {
+          const id = naamNaarId[a.volledige_naam.toLowerCase()];
+          if (id && bericht.toLowerCase().includes(a.volledige_naam.toLowerCase().split(" ")[0])) {
+            prospectIdVoorGesprek = id;
+            prospectNaamVoorTitel = a.volledige_naam;
+            break;
+          }
+        }
+      }
+    }
+
+    const titel = prospectNaamVoorTitel
+      ? `Advies voor ${prospectNaamVoorTitel}`
       : bericht.length > 40 ? bericht.substring(0, 37) + "..." : bericht;
     const { data: nieuw, error } = await supabase
       .from("ai_gesprekken")
       .insert({
         user_id: user.id,
-        prospect_id: coachProspectId || null,
+        prospect_id: prospectIdVoorGesprek,
         titel,
         berichten: [],
       })
@@ -305,12 +333,12 @@ export function VoiceFab() {
     router.push(`/coach/${nieuw.id}?auto=${encodeURIComponent(bericht)}`);
   }
 
-  async function voerActiesUit(): Promise<Array<{ tabel: string; id: string }>> {
+  async function voerActiesUit(): Promise<{ gemaakt: Array<{ tabel: string; id: string }>; naamNaarId: Record<string, string> }> {
     const gemaakt: Array<{ tabel: string; id: string }> = [];
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    if (!user) return gemaakt;
+    if (!user) return { gemaakt, naamNaarId: {} };
 
     const naamNaarId: Record<string, string> = {};
     const { data: bestaand } = await supabase
@@ -580,7 +608,7 @@ export function VoiceFab() {
       }
     }
 
-    return gemaakt;
+    return { gemaakt, naamNaarId };
   }
 
   function sluit() {
@@ -782,33 +810,50 @@ export function VoiceFab() {
                   </div>
                 )}
 
-                {resultaat.coach_bericht && (
-                  <div className="card border-cm-gold/30 bg-cm-gold/5 space-y-2">
-                    <p className="text-xs text-cm-gold uppercase tracking-wider">
-                      🧭 Vraag voor de mentor
-                    </p>
-                    <p className="text-cm-white text-sm">{resultaat.coach_bericht}</p>
-                    {coachProspectNaam && coachProspectId && (
-                      <div className="flex items-center justify-between gap-2 pt-1 border-t border-cm-gold/20">
-                        <p className="text-cm-white text-xs">
-                          👤 Wordt gekoppeld aan: <span className="font-semibold text-cm-gold">{coachProspectNaam}</span>
-                        </p>
-                        <button
-                          onClick={() => { setCoachProspectId(null); setCoachProspectNaam(null); }}
-                          className="text-red-400 hover:text-red-300 text-xs"
-                          title="Ontkoppel deze prospect (advies wordt algemeen)"
-                        >
-                          ✕ ontkoppel
-                        </button>
-                      </div>
-                    )}
-                    {!coachProspectNaam && resultaat.intentie !== "data" && (
-                      <p className="text-cm-white text-xs opacity-60 pt-1 border-t border-cm-gold/20">
-                        Geen prospect herkend — advies wordt algemeen opgeslagen.
+                {resultaat.coach_bericht && (() => {
+                  // Zoek een nieuwe_prospect in de acties wiens voornaam in het coach_bericht voorkomt
+                  const bericht = resultaat.coach_bericht.toLowerCase();
+                  const nieuweMatch = acties.find(
+                    (a) => a.type === "nieuwe_prospect" &&
+                      a.volledige_naam &&
+                      bericht.includes(a.volledige_naam.toLowerCase().split(" ")[0])
+                  ) as { type: "nieuwe_prospect"; volledige_naam: string } | undefined;
+                  const weergaveNaam = coachProspectNaam || nieuweMatch?.volledige_naam || null;
+                  const isBestaand = !!(coachProspectNaam && coachProspectId);
+                  const isNieuw = !isBestaand && !!nieuweMatch;
+                  return (
+                    <div className="card border-cm-gold/30 bg-cm-gold/5 space-y-2">
+                      <p className="text-xs text-cm-gold uppercase tracking-wider">
+                        🧭 Vraag voor de mentor
                       </p>
-                    )}
-                  </div>
-                )}
+                      <p className="text-cm-white text-sm">{resultaat.coach_bericht}</p>
+                      {isBestaand && (
+                        <div className="flex items-center justify-between gap-2 pt-1 border-t border-cm-gold/20">
+                          <p className="text-cm-white text-xs">
+                            👤 Wordt gekoppeld aan: <span className="font-semibold text-cm-gold">{weergaveNaam}</span>
+                          </p>
+                          <button
+                            onClick={() => { setCoachProspectId(null); setCoachProspectNaam(null); }}
+                            className="text-red-400 hover:text-red-300 text-xs"
+                            title="Ontkoppel deze prospect (advies wordt algemeen)"
+                          >
+                            ✕ ontkoppel
+                          </button>
+                        </div>
+                      )}
+                      {isNieuw && (
+                        <p className="text-cm-white text-xs pt-1 border-t border-cm-gold/20">
+                          👤 Wordt gekoppeld aan <span className="font-semibold text-cm-gold">{weergaveNaam}</span> zodra die wordt aangemaakt.
+                        </p>
+                      )}
+                      {!isBestaand && !isNieuw && resultaat.intentie !== "data" && (
+                        <p className="text-cm-white text-xs opacity-60 pt-1 border-t border-cm-gold/20">
+                          Geen prospect herkend — advies wordt algemeen opgeslagen.
+                        </p>
+                      )}
+                    </div>
+                  );
+                })()}
 
                 {resultaat.onduidelijk.length > 0 && (
                   <div className="card border-yellow-500/30 bg-yellow-500/5">
@@ -823,16 +868,21 @@ export function VoiceFab() {
                   <button onClick={sluit} className="btn-secondary sm:flex-1">
                     Annuleren
                   </button>
-                  {resultaat.coach_bericht && (
+                  {/* Combi-flow: zowel data-acties als een vraag voor de mentor → één knop die alles afhandelt */}
+                  {resultaat.coach_bericht && acties.length > 0 && (
+                    <button onClick={naarMentor} className="btn-gold sm:flex-1">
+                      ✅ Opslaan + naar mentor
+                    </button>
+                  )}
+                  {/* Alleen coach-vraag, geen data */}
+                  {resultaat.coach_bericht && acties.length === 0 && (
                     <button onClick={naarMentor} className="btn-gold sm:flex-1">
                       🧭 Naar mentor
                     </button>
                   )}
-                  {acties.length > 0 && resultaat.intentie !== "coach" && (
-                    <button
-                      onClick={bevestig}
-                      className={`sm:flex-1 ${resultaat.coach_bericht ? "btn-secondary" : "btn-gold"}`}
-                    >
+                  {/* Alleen data, geen coach-vraag */}
+                  {acties.length > 0 && !resultaat.coach_bericht && (
+                    <button onClick={bevestig} className="btn-gold sm:flex-1">
                       ✅ Opslaan
                     </button>
                   )}
