@@ -466,6 +466,299 @@ export const LIFEPLUS_SUPERFOOD_ACHTERGROND = [
 
 export const LIFEPLUS_VERZENDREGEL = "Boven 80 IP: gratis verzending. Onder 80 IP: €8,75 verzendkosten.";
 
+// ============================================================
+// STRUCTURELE PRODUCTDETAILS (uit Lifeplus Product Information PDFs)
+// Gebruikt door de coach om zélf te redeneren welk advies past
+// op basis van klacht + doel + budget, inclusief fallbacks.
+// ============================================================
+
+export type ProductDetail = {
+  naam: string;
+  werking: string;
+  ingredienten: string;
+  dosering: string;
+  wanneerInzetten: string[];
+  budgetTier: "laag" | "midden" | "hoog";
+  goedkoperAlternatief?: string;
+  waarschuwing?: string;
+};
+
+export const LIFEPLUS_PRODUCT_DETAILS: ProductDetail[] = [
+  {
+    naam: "Daily BioBasics Light (shake)",
+    werking: "Meest complete dagelijkse basis: vitamines, mineralen, pre- & probiotica, superfoods, vezels.",
+    ingredienten: "Breed multivitamine + mineralen + vezelmix + pre/probiotica + superfoods (grapefruit-achtige smaak).",
+    dosering: "1 schep per dag in water of plantaardige melk.",
+    wanneerInzetten: ["basisvoorziening", "energie-dip", "onregelmatig eten", "darmflora", "afvallen (verzadiging)"],
+    budgetTier: "hoog",
+    goedkoperAlternatief: "Women's Gold of Men's Gold (€32) — lichtere multivitamine zonder superfoods/probiotica.",
+  },
+  {
+    naam: "Women's Gold Formula",
+    werking: "Lichte multivitamine voor vrouwen. Goedkope startbasis of aanvulling wanneer Daily Light te duur is.",
+    ingredienten: "Vitamines + mineralen afgestemd op vrouwen (ijzer, foliumzuur, B-complex).",
+    dosering: "Volgens etiket.",
+    wanneerInzetten: ["budget-startbasis vrouw", "aanvulling naast eiwitrijke voeding", "hormonale balans (naast Mena Plus)"],
+    budgetTier: "laag",
+  },
+  {
+    naam: "Men's Gold Formula",
+    werking: "Lichte multivitamine voor mannen. Goedkope startbasis of aanvulling wanneer Daily Light te duur is.",
+    ingredienten: "Vitamines + mineralen afgestemd op mannen.",
+    dosering: "Volgens etiket.",
+    wanneerInzetten: ["budget-startbasis man", "aanvulling naast eiwitrijke voeding"],
+    budgetTier: "laag",
+  },
+  {
+    naam: "Proanthenols 100",
+    werking: "Krachtige OPC-antioxidant (druivenpit/pijnboombast). Bloedcirculatie, bindweefsel, ontstekingsbalans.",
+    ingredienten: "OPC (oligomere proanthocyanidinen) 100 mg + vitamine C.",
+    dosering: "1 tab per dag.",
+    wanneerInzetten: ["huid/collageen", "bloedvaten", "gewrichten", "ontstekingsbalans", "antioxidant-bescherming"],
+    budgetTier: "midden",
+  },
+  {
+    naam: "OmeGold (omega-3)",
+    werking: "Hoogwaardige omega-3 (EPA/DHA) uit vis. Hart, hersenen, ontstekingsbalans, hormoonreceptoren.",
+    ingredienten: "EPA + DHA uit gezuiverde visolie + vitamine E.",
+    dosering: "1-2 caps per dag bij maaltijd.",
+    wanneerInzetten: ["hersenfunctie", "concentratie", "hart", "gewrichten", "stemming", "droge huid"],
+    budgetTier: "laag",
+    goedkoperAlternatief: "Geen — omega-3 is een van de goedkoopste basisproducten; bij veganistisch: Vegan OmeGold.",
+  },
+  {
+    naam: "Key-Tonic",
+    werking: "Ondersteunt metabolisme, bloedsuiker en vet-verbranding. Populair bij afvallen en intermittent fasting.",
+    ingredienten: "MCT + aminozuren + polyphenolen + cafeïne + B12.",
+    dosering: "1 schep in water, bij voorkeur 's ochtends of voor training.",
+    wanneerInzetten: ["afvallen", "intermittent fasting", "keto", "bloedsuikerstabilisatie", "ochtend-energie"],
+    budgetTier: "midden",
+    goedkoperAlternatief: "Enerxan (€27) — eenvoudiger metabolisme-boost zonder MCT/aminozuren.",
+    waarschuwing: "Bevat cafeïne — niet 's avonds nemen; niet bij cafeïne-gevoeligheid.",
+  },
+  {
+    naam: "Enerxan",
+    werking: "Natuurlijke energie- en metabolisme-boost. Goedkoop instapproduct voor energie/afvallen.",
+    ingredienten: "Green tea + guarana + yerba mate + kaneel + cacao + L-tyrosine + chroom.",
+    dosering: "1-2 tabs voor ontbijt en voor lunch.",
+    wanneerInzetten: ["energie-dip", "afvallen (budget)", "focus", "ochtend-boost"],
+    budgetTier: "laag",
+    waarschuwing: "Bevat cafeïne. NIET bij <18 jaar, zwangerschap/borstvoeding, hypertensie, leverziekte, of bij neuroleptica.",
+  },
+  {
+    naam: "Triple Protein Shake (vanille/chocolade/ongezoet)",
+    werking: "3-eiwit mix (whey, melk, soja) voor verzadiging, spierbehoud en herstel. Onmisbaar bij afvallen én sport.",
+    ingredienten: "Whey + melkeiwit + soja-eiwit + aminoprofiel + natuurlijke smaak.",
+    dosering: "1 schep in water/melk, als tussendoortje of post-workout.",
+    wanneerInzetten: ["afvallen (verzadiging + spierbehoud)", "sport/herstel", "ouder worden (spiermassa)", "eiwittekort"],
+    budgetTier: "hoog",
+    goedkoperAlternatief: "Be Refueled (€76,75) of bij veganistisch Vegan Protein (€88).",
+  },
+  {
+    naam: "Be Focused (pre-workout)",
+    werking: "Mentale focus en doorzettingsvermogen, vóór training of bij cognitief werk.",
+    ingredienten: "Aminozuren + adaptogenen + B-vitamines + natuurlijke cafeïne.",
+    dosering: "1 sachet / 1 schep 20 min voor training of mentaal werk.",
+    wanneerInzetten: ["sport pre-workout", "focus", "mentaal werk", "brain fog"],
+    budgetTier: "hoog",
+    goedkoperAlternatief: "Be Focused Sachets (€57) in plaats van pot (€77,50).",
+    waarschuwing: "Bevat cafeïne — niet 's avonds.",
+  },
+  {
+    naam: "Be Sustained (during-workout)",
+    werking: "Elektrolyten en energie tijdens duurinspanning. Voorkomt dehydratie en uitputting.",
+    ingredienten: "Elektrolyten + mineralen + koolhydraten + BCAA.",
+    dosering: "1 sachet / 1 schep in bidon tijdens training.",
+    wanneerInzetten: ["duursport", "hardlopen", "fietsen", "warme omstandigheden", "hike/marathon"],
+    budgetTier: "hoog",
+    goedkoperAlternatief: "Be Sustained Sachets (€62,75) in plaats van pot (€78,50).",
+  },
+  {
+    naam: "Be Recharged (post-workout)",
+    werking: "Spierherstel en anti-katerig gevoel na training. Aminozuren voor snelle opname.",
+    ingredienten: "L-glutamine + BCAA + aminozuren + mineralen.",
+    dosering: "1 sachet / 1 schep direct na training.",
+    wanneerInzetten: ["sportherstel", "spierpijn", "zware trainingsweek", "onderdeel Darmen in Balans+"],
+    budgetTier: "hoog",
+    goedkoperAlternatief: "Be Recharged Sachets (€59,25) in plaats van pot (€79,75).",
+  },
+  {
+    naam: "Support Tabs (Anti-Stress Formula)",
+    werking: "Ondersteunt zenuwstelsel bij stress, overbelasting, burn-out-herstel.",
+    ingredienten: "B-complex + L-tyrosine + L-phenylalanine + L-glutamine + C + E + bioflavonoiden + magnesium + American ginseng + Eleuthero + Gotu kola + Ginkgo.",
+    dosering: "4 tabs 2x per dag.",
+    wanneerInzetten: ["stress", "overbelasting", "burn-out herstel", "prikkelbaarheid", "mentale vermoeidheid"],
+    budgetTier: "midden",
+    waarschuwing: "Bevat L-phenylalanine — NIET bij PKU. NIET bij MAO-remmers (antidepressiva).",
+  },
+  {
+    naam: "Cacao Boost",
+    werking: "Feel-good superfood. Endorfine-productie, stemming, instap anti-stress.",
+    ingredienten: "Cacao-rijk superfoodpoeder + antioxidanten.",
+    dosering: "1 schep in warme plantaardige melk.",
+    wanneerInzetten: ["stress (instap)", "stemmingsdip", "feel-good ritueel", "kinderen"],
+    budgetTier: "midden",
+  },
+  {
+    naam: "Golden Milk",
+    werking: "Kurkuma/gember/ashwagandha. Ontstekingsremming, diepe slaap, serotonine, PMS.",
+    ingredienten: "Kurkuma + ashwagandha + nootmuskaat + gember + kardemom + kaneel.",
+    dosering: "1 schep in warme plantaardige melk voor het slapen.",
+    wanneerInzetten: ["slecht slapen", "ontstekingsbalans", "PMS/stemmingswisselingen", "herstel", "gewrichten"],
+    budgetTier: "midden",
+  },
+  {
+    naam: "Purple Flash",
+    werking: "Zeer hoge antioxidant-capaciteit. Vrije radicalen, immuun, detox.",
+    ingredienten: "Appelbes + açaí + bosbes + maquibes + granaatappel + braam + zwarte bessen + vlierbes + druivensap + baobab.",
+    dosering: "1 schep door yoghurt of in water.",
+    wanneerInzetten: ["detox/sappenkuur", "immuun", "vrije radicalen", "huid", "antioxidant-bescherming"],
+    budgetTier: "midden",
+  },
+  {
+    naam: "Green Medley",
+    werking: "Groene superfoodmix voor darmflora en ontgifting van zware metalen. Schildklierondersteuning via jodium.",
+    ingredienten: "Groene superfoods + jodium/kelp + chlorofyl + mineralen.",
+    dosering: "1 schep in water of smoothie.",
+    wanneerInzetten: ["darmkuur", "ontgiften", "zware metalen", "schildklier (zonder medicatie!)"],
+    budgetTier: "midden",
+    waarschuwing: "NIET bij schildkliermedicatie zonder arts-overleg (jodium). Alternatief: Aloë Vera Caps.",
+  },
+  {
+    naam: "Mena Plus",
+    werking: "Hormonale balans vrouw. PMS, menopauze, stemmingswisselingen.",
+    ingredienten: "Kruidenformule + fyto-oestrogenen + vitaminen specifiek voor hormoonbalans.",
+    dosering: "Volgens etiket.",
+    wanneerInzetten: ["PMS", "overgang/menopauze", "stemmingswisselingen", "hormonale klachten"],
+    budgetTier: "hoog",
+    goedkoperAlternatief: "Evening Primrose Oil (€14,50) — enkele GLA; veel beperkter maar instapmogelijk.",
+  },
+  {
+    naam: "Evening Primrose Oil",
+    werking: "GLA (gamma-linoleenzuur) voor hormoonreceptoren, huid en PMS.",
+    ingredienten: "Teunisbloemolie (GLA).",
+    dosering: "2 caps per dag.",
+    wanneerInzetten: ["PMS", "droge huid", "hormonale eczeem", "menopauze (mild)"],
+    budgetTier: "laag",
+  },
+  {
+    naam: "Vitamins D & K",
+    werking: "Bot- en immuunondersteuning. D3 voor opname calcium; K2 stuurt calcium naar bot i.p.v. bloedvaten.",
+    ingredienten: "Vitamine D3 + K2.",
+    dosering: "Volgens etiket.",
+    wanneerInzetten: ["botten", "immuun (winter)", "hormonale balans", "bij weinig zonlicht"],
+    budgetTier: "laag",
+  },
+];
+
+// Fallback-regels bij budgetbezwaar: kernadvies → goedkoper alternatief
+export const LIFEPLUS_BUDGET_FALLBACKS = [
+  {
+    thema: "Basis te duur (Daily Light €64,75)",
+    fallback: "Women's Gold of Men's Gold (€32) + eventueel Proanthenols (€71,25) erbij. Minder compleet, maar wel echte basis.",
+  },
+  {
+    thema: "Complete pakket te duur",
+    fallback: "Stap naar Plus-niveau. Bij verdere druk: Essential-niveau (alleen kernproduct). Bij darmprogramma: losse Biotic Blast (€41) i.p.v. Darmen in Balans (€236,25).",
+  },
+  {
+    thema: "Sport Complete (€316,75) te duur",
+    fallback: "Alleen Be Recharged (€79,75) of sachet-variant (€59,25). Desnoods alleen Triple Protein (€81) voor herstel.",
+  },
+  {
+    thema: "Hormonaal Complete te duur",
+    fallback: "Women's Gold (€32) + Evening Primrose (€14,50) als budget-start. Mena Plus pas wanneer budget het toelaat.",
+  },
+  {
+    thema: "Anti-stress Stress Less te duur",
+    fallback: "Alleen Get Zen (Golden Milk + Cacao Boost, €93,50) — supergoede instap zonder multivitamine.",
+  },
+  {
+    thema: "Afvallen Complete te duur",
+    fallback: "Key-Tonic (€74,50) alleen, of Enerxan (€27) als budget-vervanger van Key-Tonic. Triple Protein pas wanneer budget het toelaat.",
+  },
+  {
+    thema: "Energie Complete te duur",
+    fallback: "Alleen Daily Light (€64,75) óf Women's/Men's Gold + OmeGold (±€77). Be Focused pas later.",
+  },
+];
+
+// ============================================================
+// EVIDENCE-BASED KENNISBANK (wetenschappelijk-rigoureuze leefstijl)
+// Gebaseerd op peer-reviewed onderzoek; geen merknamen, geen pseudowetenschap.
+// Wordt gebruikt om lifestyle-adviezen te onderbouwen naast Lifeplus-producten.
+// ============================================================
+
+export const EVIDENCE_BASED_LEEFSTIJL = {
+  micronutrienten: [
+    "Triage-theorie (Ames): bij chronisch tekort aan micronutriënten prioriteert het lichaam kortetermijn-overleving boven langetermijn-DNA-reparatie. Zelfs 'milde' tekorten verhogen risico op chronische ziekte.",
+    "Omega-3 index (EPA+DHA in rode bloedcellen) streven: >8%. Onder 4% = verhoogd cardiovasculair en cognitief risico. 2-3g EPA+DHA per dag is goed onderbouwd.",
+    "25(OH)D (vitamine D bloedspiegel) streven: 40-60 ng/mL (100-150 nmol/L). 1000-4000 IE/dag typisch nodig; dosis afhankelijk van BMI en zonlicht.",
+    "Magnesium: ±50% van westerse bevolking krijgt onvoldoende (<RDA 310-420 mg). Glycinaat/citraat beter opneembaar dan oxide.",
+    "Eiwit: 1.6-2.2 g/kg lichaamsgewicht/dag voor spierbehoud bij ouder worden en afvallen. Leucine-drempel ±2.5g per maaltijd.",
+    "Vezels: 30+ g/dag voor darmflora, kortketenige vetzuren, insulinegevoeligheid. Gemiddelde Nederlandse inname ±17g.",
+  ],
+  hormesis: [
+    "Sauna (≥20 min, 80°C, 4x/week): gerandomiseerd gelinkt aan 40% lager all-cause mortality, lagere cardiovasculaire events, mogelijk minder dementie (Finse cohortstudies).",
+    "Koude blootstelling (cold plunge 11-15°C, 2-4 min / koude douche): verhoogt norepinefrine 200-300%, verbetert insulinegevoeligheid, stemming en bruin vetweefsel.",
+    "Intermittent fasting / time-restricted eating (8-10u eetvenster): verbetert HbA1c, triglyceriden, en autofagie-markers. Niet wondermiddel, wel een tool.",
+    "Sulforaphane (broccolikiemen, 1x/dag): activeert Nrf2-pathway → fase-2 ontgiftingsenzymen. 100g kiemen = ±30mg sulforaphane, ruim boven werkzame dosis in studies.",
+  ],
+  beweging: [
+    "VO2max is de sterkste voorspeller van all-cause mortality — sterker dan roken, diabetes of hoge bloeddruk. Hoogste kwartiel = 5x lager sterfterisico dan laagste.",
+    "Zone 2 cardio (praat-tempo, ±70% maxHF): 180 min/week verbetert mitochondriale dichtheid en vetoxidatie.",
+    "Krachttraining 2-3x/week: voorkomt sarcopenie (spierverlies na 40), verbetert insulinegevoeligheid, botdichtheid en cognitieve functie.",
+    "Wandelen na maaltijden (10-15 min): verlaagt postprandiale glucose-piek 20-30%.",
+  ],
+  slaap: [
+    "7-9 uur slaap is niet optioneel: één nacht <6u → insulinegevoeligheid -30%, testosteron ↓, ghreline ↑, leptine ↓.",
+    "Consistente bed- en opstatijd (±30 min) is belangrijker dan totale duur voor circadiaanse stabiliteit.",
+    "Ochtendzonlicht (5-10 min direct in ogen zonder bril) binnen 1u na ontwaken: synchroniseert circadiaans ritme en melatonine-curve.",
+    "Cafeïne t/m 10u na wakker worden (halfwaardetijd 5-6u). Avondcafeïne fragmenteert diepe slaap.",
+    "Kamer koel (16-19°C), donker, zonder schermen laatste 60 min.",
+  ],
+  stress: [
+    "Fysiologische zucht (2x inademen door neus, lange uitademing door mond): meest gevalideerde realtime-tool om parasympathicus te activeren en hartslag te verlagen.",
+    "Chronisch verhoogd cortisol: visceraal vet ↑, hippocampus-volume ↓, glucose-dysregulatie.",
+    "Sociale verbinding is een onafhankelijke mortality-voorspeller vergelijkbaar met roken.",
+  ],
+  voeding: [
+    "Bewerkte voeding-consumptie correleert lineair met all-cause mortality in grote cohorten (EPIC, NutriNet-Santé).",
+    "Plantdiversiteit (≥30 verschillende plantensoorten/week) correleert sterker met gezonde darmflora dan vegan/keto/paleo-labels.",
+    "Suiker-gezoete dranken zijn de enige categorie waar causaliteit met metabole ziekte sterk onderbouwd is. Fruit (heel) valt daar NIET onder.",
+    "Omega-6:omega-3 ratio westerse dieet ±15:1; evolutionair optimaal ±1-4:1. Verlagen via minder zaadolie (zonnebloem/mais/soja) en meer vette vis/visolie.",
+  ],
+};
+
+export function bouwEvidenceBasedSectie(): string {
+  const blok = (titel: string, items: string[]) =>
+    `**${titel}**\n${items.map((i) => `  • ${i}`).join("\n")}`;
+
+  return `
+### WETENSCHAPPELIJKE ONDERBOUWING — LEEFSTIJL (evidence-based)
+Gebruik deze peer-reviewed kennis om ELK gezondheidsadvies te onderbouwen. Combineer lifestyle-aanbevelingen met het Lifeplus-productadvies: eerst leefstijl-lever (goedkoopste, grootste effect), dán het product dat de lever ondersteunt.
+
+${blok("Micronutriënten & streefwaardes", EVIDENCE_BASED_LEEFSTIJL.micronutrienten)}
+
+${blok("Hormesis (kleine stressoren, groot effect)", EVIDENCE_BASED_LEEFSTIJL.hormesis)}
+
+${blok("Beweging", EVIDENCE_BASED_LEEFSTIJL.beweging)}
+
+${blok("Slaap", EVIDENCE_BASED_LEEFSTIJL.slaap)}
+
+${blok("Stress", EVIDENCE_BASED_LEEFSTIJL.stress)}
+
+${blok("Voeding", EVIDENCE_BASED_LEEFSTIJL.voeding)}
+
+### HOE DIT TE GEBRUIKEN
+- Onderbouw adviezen met "onderzoek toont", "cohortstudies wijzen op", "RCT's hebben aangetoond" — NOOIT een specifieke auteur, boek, podcast of naam noemen.
+- Geef concrete, meetbare parameters (bv. "7-9u slaap", "omega-3 index >8%", "VO2max in top-kwartiel").
+- Vermijd hype-claims. Als bewijs zwak is: zeg "voorlopig bewijs wijst op ..." i.p.v. stellig.
+- Combineer ALTIJD: gedragsverandering + Lifeplus-ondersteuning. Nooit uitsluitend "neem product X".
+- Bij vragen over dosering/bloedwaardes: verwijs naar huisarts voor bloedtest (25(OH)D, omega-3 index, HbA1c, ferritine, B12).
+`.trim();
+}
+
 // Compacte tekstversie voor in de AI-prompt (zonder tokens te verbranden)
 export function bouwAdviesgidsPromptSectie(): string {
   const pakketBlok = (cat: AdviesCategorie) => {
@@ -494,6 +787,15 @@ export function bouwAdviesgidsPromptSectie(): string {
     (s) => `  • **${s.product}** — ${s.werking}`
   ).join("\n");
 
+  const productDetailBlokken = LIFEPLUS_PRODUCT_DETAILS.map(
+    (p) =>
+      `  • **${p.naam}** [${p.budgetTier} budget] — ${p.werking}\n    Ingrediënten: ${p.ingredienten}\n    Dosering: ${p.dosering}\n    Wanneer inzetten: ${p.wanneerInzetten.join(", ")}${p.goedkoperAlternatief ? `\n    Goedkoper alternatief: ${p.goedkoperAlternatief}` : ""}${p.waarschuwing ? `\n    ⚠ ${p.waarschuwing}` : ""}`
+  ).join("\n");
+
+  const fallbackBlokken = LIFEPLUS_BUDGET_FALLBACKS.map(
+    (f) => `  • **${f.thema}** → ${f.fallback}`
+  ).join("\n");
+
   return `
 ## LIFEPLUS PRODUCTADVIES-GIDS
 
@@ -508,6 +810,13 @@ ${catBlokken}
 Dit zijn de officiële bundels die als geheel besteld kunnen worden.
 ${programmaBlokken}
 
+### PRODUCTDETAILS (voor eigen redenering)
+Gebruik deze detail-info om zélf te beredeneren welke combinatie past bij de specifieke klacht, het doel én het budget van de prospect. Je bent NIET beperkt tot alleen de vaste pakketten.
+${productDetailBlokken}
+
+### BUDGET-FALLBACKS (wat doe je als het pakket te duur is?)
+${fallbackBlokken}
+
 ### CONTRA-INDICATIES (altijd checken)
 ${contraBlokken}
 
@@ -517,12 +826,57 @@ ${superfoodBlokken}
 ### VERZENDING
 ${LIFEPLUS_VERZENDREGEL}
 
+${bouwEvidenceBasedSectie()}
+
 ### HOE ADVISEREN (VERPLICHTE STIJL)
 1. Luister naar het doel of de klacht. Bepaal welke hoofdcategorie past (soms meerdere).
 2. Start ALTIJD met de basis: 1 tot 3 basisproducten (Daily Light / Proanthenols / OmeGold of de combi Maintain & Protect 100), tenzij die al eerder besteld zijn (check prospect-notities).
 3. Voeg 1-3 ondersteunende producten toe voor de specifieke klacht. Kies bij voorkeur het bestaande Essential/Plus/Complete pakket.
 4. Als iemand net start en nog geen basis heeft gehad: overweeg "Darmen in Balans" of het uitgebreidere "Darmen in Balans +" als fundament.
 5. Noem ASAP-prijs en eventuele verzendkosten als relevant.
+
+### ZELF REDENEREN (REDENEER-SECTIE)
+Je bent NIET verplicht om klakkeloos één van de vaste pakketten te kiezen. Soms past een maatwerk-combi beter bij de specifieke situatie. Redeneer dan zélf vanuit de productdetails.
+
+**HARDE REGEL: UITSLUITEND LIFEPLUS ALS PRODUCT.**
+Adviseer NOOIT producten van andere merken, drogist-/apotheek-producten of generieke supplementen ("neem magnesium", "vitamine D van Kruidvat"). Alleen producten uit deze gids. Als de gids geen passend product biedt voor de specifieke behoefte: zeg dat eerlijk, adviseer om eerst de basis op te bouwen en/of met een arts te overleggen — maar tip nóóit iets buiten Lifeplus.
+
+**WEL TOEGESTAAN — LIFESTYLE-ADVIES.**
+Leefstijl-tips zijn geen product en mag je vrij geven naast het Lifeplus-advies: slaaproutine, wandelen/beweging, ademhaling, voedingsritme (intermittent fasting, meer groenten, minder suiker), hydratatie, zonlicht, stressmanagement, koudetraining, journaling, vaste bedtijd. Bij voorkeur combineer je: eerst 1-2 concrete leefstijl-stappen die de klacht aanpakken, daarna het Lifeplus-product dat het ondersteunt. Zo wordt de prospect sterker, niet afhankelijker.
+
+**Stap 1 — Klacht × Doel mappen op producten.**
+Kijk bij elk product naar "Wanneer inzetten". Een prospect die "moe, slecht slapen, stress op werk" noemt raakt 3 categorieën (Energie, Slaap, Stress). Dan kan een gecombineerd maatwerkpakket (bijv. Daily Light + Golden Milk + Support Tabs) beter zijn dan één vast pakket.
+
+**Stap 2 — Budget inschatten.**
+Vraag of lees uit notities wat het budget is. Hanteer dan deze regel:
+- Geen budget-info → begin Plus-niveau (veilige middenweg).
+- "Zuinig"/"krap" → Essential + 1 losse aanvulling.
+- "Niet haalbaar" na voorstel → stap terug via BUDGET-FALLBACKS-lijst.
+- "Ruim"/"volledig goed" → Complete-niveau of Maintain & Protect 100 + specifieke toevoegingen.
+
+**Stap 3 — Fallback-ladder bij budgetbezwaar.**
+Ga ALTIJD in deze volgorde terug:
+a) Zelfde pakket één niveau lager (Complete → Plus → Essential).
+b) Vervang Daily Light (€64,75) door Women's/Men's Gold (€32) als basis nog kan.
+c) Vervang pot-varianten door sachet-varianten (bijv. Be Recharged pot €79,75 → sachets €59,25).
+d) Schrap niet-kernproducten (bijv. lotion uit Reset pakket).
+e) Ultieme instap: alleen het kernproduct voor de hoofdklacht (bijv. bij stress alleen Golden Milk + Cacao Boost = Get Zen €93,50).
+
+**Stap 4 — IP-waarde meewegen.**
+Boven 80 IP is verzending gratis. Als een pakket net onder 80 IP zit, voeg een klein product toe (Evening Primrose €14,50, Enerxan €27, Vitamine D&K €20,25) om boven de grens te komen — dat is vaak goedkoper dan €8,75 verzending betalen.
+
+**Stap 5 — Substitutie-logica (redeneren over vervangers).**
+- Key-Tonic te duur? → Enerxan als eenvoudigere metabolisme-booster.
+- Be Focused te duur? → Sachet-variant, of Enerxan + Daily Light combi.
+- Mena Plus te duur? → Evening Primrose + Vitamine D&K als budget-hormoonbasis.
+- Triple Protein te duur? → Be Refueled (ook eiwit), of bij veganisme Vegan Protein.
+- Daily Light te duur? → Women's/Men's Gold als lichte basis.
+
+**Stap 6 — Combinaties bij meerdere klachten.**
+Bij meerdere gelijktijdige klachten: kies de BASIS eenmalig (niet 3x een multivitamine), en voeg dan 1 specifiek product per klacht toe. Voorbeeld: stress + gewricht + energie → Daily Light (basis) + Golden Milk (stress + ontsteking, dekt 2 klachten) + Proanthenols (gewricht + antioxidant). Eén basis + 2 slimme aanvullingen is beter dan 5 losse producten.
+
+**Stap 7 — Transparant zijn over trade-offs.**
+Bij een goedkoper alternatief: benoem EXPLICIET wat de prospect inlevert. Voorbeeld: *"Als budget krap is, kun je starten met Women's Gold in plaats van Daily Light. Je mist dan de superfoods, vezels en probiotica die in Daily Light zitten, maar de basis-vitamines en mineralen krijg je wel binnen."*
 
 ### VERPLICHTE FORMULERING (ALTIJD)
 Begin elke productsuggestie met: **"Er zijn goede ervaringen met"** (letterlijk). Nooit stellig "dit lost jouw probleem op" of "jij moet X nemen". Altijd ervarings-taal, bescheiden toon.

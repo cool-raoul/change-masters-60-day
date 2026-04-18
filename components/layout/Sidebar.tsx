@@ -20,7 +20,6 @@ export function Sidebar({ isLeider = false }: { isLeider?: boolean }) {
     { href: "/zoeken", labelKey: "nav.zoeken", icoon: "🔍" },
     { href: "/coach", labelKey: "nav.coach", icoon: "🤖" },
     { href: "/scripts", labelKey: "nav.scripts", icoon: "📋" },
-    { href: "/producten", labelKey: "nav.producten", icoon: "📦" },
     { href: "/statistieken", labelKey: "nav.statistieken", icoon: "📊" },
     { href: "/herinneringen", labelKey: "nav.herinneringen", icoon: "🔔" },
     { href: "/team", labelKey: "nav.team", icoon: "🏆" },
