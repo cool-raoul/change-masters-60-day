@@ -28,7 +28,14 @@ export function ActiefToggle({ prospectId, prospectNaam, actief }: Props) {
       .update({ actief: nieuweWaarde, updated_at: new Date().toISOString() })
       .eq("id", prospectId);
     if (error) {
-      toast.error("Status wijzigen mislukt");
+      // Kolom-ontbreekt meest voorkomende oorzaak → wijs direct naar migratie
+      const isKolomFout = /column .* does not exist|actief/i.test(error.message);
+      toast.error(
+        isKolomFout
+          ? "Database mist 'actief' kolom — SQL-migratie prospect_actief.sql nog uitvoeren"
+          : `Status wijzigen mislukt: ${error.message}`
+      );
+      console.error("ActiefToggle update fout:", error);
       setBezig(false);
       return;
     }
