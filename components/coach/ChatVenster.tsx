@@ -326,6 +326,33 @@ export function ChatVenster({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
+  async function wijzigProspect(nieuwId: string) {
+    const huidig = selectedProspect;
+    if (nieuwId === huidig) return;
+    setSelectedProspect(nieuwId);
+
+    const { error } = await supabase
+      .from("ai_gesprekken")
+      .update({
+        prospect_id: nieuwId || null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", gesprekId);
+
+    if (error) {
+      setSelectedProspect(huidig);
+      toast.error("Kon prospect niet koppelen");
+      return;
+    }
+
+    if (nieuwId) {
+      const naam = alleProspects.find((p) => p.id === nieuwId)?.volledige_naam ?? "prospect";
+      toast.success(`Gesprek gekoppeld aan ${naam}`);
+    } else {
+      toast.success("Koppeling met prospect losgemaakt");
+    }
+  }
+
   function getSnelBericht(key: string): string {
     return SNELLE_BERICHTEN[key]?.[taal] || SNELLE_BERICHTEN[key]?.["nl"] || "";
   }
@@ -516,11 +543,12 @@ export function ChatVenster({
           </div>
         </div>
 
-        {/* Prospect selector */}
+        {/* Prospect selector — koppelt gesprek aan prospect, ook achteraf */}
         <select
           value={selectedProspect}
-          onChange={(e) => setSelectedProspect(e.target.value)}
+          onChange={(e) => wijzigProspect(e.target.value)}
           className="input-cm text-sm w-auto max-w-[200px]"
+          title="Koppel dit gesprek aan een prospect (kan altijd gewijzigd worden)"
         >
           <option value="">{v("coach.geen_prospect")}</option>
           {alleProspects.map((p) => (
