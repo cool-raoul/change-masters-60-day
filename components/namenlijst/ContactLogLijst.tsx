@@ -6,6 +6,9 @@ import { nl, enUS } from "date-fns/locale";
 import { ContactLog, Prospect } from "@/lib/supabase/types";
 import { useTaal } from "@/lib/i18n/TaalContext";
 import { Locale } from "date-fns";
+import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const CONTACT_TYPE_ICONEN: Record<string, string> = {
   dm: "💬",
@@ -25,8 +28,29 @@ const DATE_LOCALES: Record<string, Locale> = { nl, en: enUS };
 
 function LogItem({ log, index, totaal, v, datumLocale }: { log: ContactLog; index: number; totaal: number; v: (key: string) => string; datumLocale: Locale }) {
   const [uitgevouwen, setUitgevouwen] = useState(false);
+  const [bezigMetVerwijderen, setBezigMetVerwijderen] = useState(false);
   const heeftNotes = !!(log.notities && log.notities.trim().length > 0);
   const isLang = heeftNotes && log.notities!.length > 80;
+  const supabase = createClient();
+  const router = useRouter();
+
+  async function verwijder(e: React.MouseEvent) {
+    e.stopPropagation();
+    if (bezigMetVerwijderen) return;
+    const bevestig = window.confirm(
+      v("contactlog.verwijder_bevestig") || "Aantekening verwijderen?"
+    );
+    if (!bevestig) return;
+    setBezigMetVerwijderen(true);
+    const { error } = await supabase.from("contact_logs").delete().eq("id", log.id);
+    if (error) {
+      toast.error(v("algemeen.fout") || "Verwijderen mislukt");
+      setBezigMetVerwijderen(false);
+      return;
+    }
+    toast.success(v("contactlog.verwijderd") || "Aantekening verwijderd");
+    router.refresh();
+  }
 
   return (
     <div className="relative pl-6">
@@ -40,7 +64,7 @@ function LogItem({ log, index, totaal, v, datumLocale }: { log: ContactLog; inde
         {CONTACT_TYPE_ICONEN[log.contact_type] || "📌"}
       </div>
 
-      <button
+      <div
         onClick={() => heeftNotes && setUitgevouwen((v) => !v)}
         className={`w-full text-left bg-cm-surface-2 rounded-xl p-3 transition-colors ${
           heeftNotes ? "hover:border hover:border-cm-gold-dim cursor-pointer" : ""
@@ -57,6 +81,14 @@ function LogItem({ log, index, totaal, v, datumLocale }: { log: ContactLog; inde
             {heeftNotes && (
               <span className="text-cm-gold text-xs">{uitgevouwen ? "▲" : "▼"}</span>
             )}
+            <button
+              onClick={verwijder}
+              disabled={bezigMetVerwijderen}
+              title={v("contactlog.verwijder") || "Verwijderen"}
+              className="text-cm-white/40 hover:text-red-400 text-sm px-1 transition-colors disabled:opacity-40"
+            >
+              {bezigMetVerwijderen ? "…" : "🗑️"}
+            </button>
           </div>
         </div>
 
@@ -78,7 +110,7 @@ function LogItem({ log, index, totaal, v, datumLocale }: { log: ContactLog; inde
             {log.fase_voor} → {log.fase_na}
           </p>
         )}
-      </button>
+      </div>
     </div>
   );
 }
