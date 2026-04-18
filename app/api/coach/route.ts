@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import { createClient } from "@/lib/supabase/server";
 import { bouwCoachSysteemPrompt } from "@/lib/prompts/coach-systeem-prompt";
 import { detecteerVraagType } from "@/lib/knowledge/coach-boeken";
+import { productadviesBeschikbaar } from "@/lib/features/productadvies";
 import { ChatBericht } from "@/lib/supabase/types";
 
 // Verleng Vercel timeout
@@ -127,7 +128,12 @@ export async function POST(request: Request) {
     }
 
     // Detecteer vraagtype voor slimme prompt selectie
-    const vraagType = detecteerVraagType(berichten);
+    let vraagType = detecteerVraagType(berichten);
+
+    // Feature-flag: als productadvies uit staat voor deze rol → downgrade naar algemeen
+    if (vraagType === "productadvies" && !productadviesBeschikbaar(profile.role)) {
+      vraagType = "algemeen";
+    }
 
     // Bouw system prompt (alleen relevante secties)
     const systeemPrompt = bouwCoachSysteemPrompt(
