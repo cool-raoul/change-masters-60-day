@@ -131,6 +131,9 @@ export function VoiceFab() {
   const [coachProspectNaam, setCoachProspectNaam] = useState<string | null>(null);
   const [spraakFoutTekst, setSpraakFoutTekst] = useState<string>("");
   const [spraakFoutDebug, setSpraakFoutDebug] = useState<string>("");
+  const [bewerkenTranscribeert, setBewerkenTranscribeert] = useState(false);
+  const bewerkTextareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const bewerkCursorRef = useRef<number>(0);
 
   // Scroll-aware: verbergen bij scroll-down, tonen bij scroll-up of aan top.
   // Zo is de FAB nooit in de weg van knoppen/velden onderaan een pagina.
@@ -248,6 +251,48 @@ export function VoiceFab() {
     setTimeout(() => spraak.start(), 50);
   }
 
+  // Inline opname tijdens bewerken: gebruiker spreekt extra in en de nieuwe
+  // tekst wordt op de cursor-positie in bewerkTekst ingevoegd. Daarna kan
+  // de user nog bewerken en klikken op "Verwerk met ELEVA" om acties uit
+  // de volledige tekst (oud + nieuw) te halen.
+  async function toggleBewerkOpname() {
+    if (bewerkenTranscribeert) return;
+    if (spraak.actief) {
+      setBewerkenTranscribeert(true);
+      const { tekst, fout } = await spraak.stop();
+      setBewerkenTranscribeert(false);
+      if (fout) {
+        toast.error(fout);
+        return;
+      }
+      if (!tekst || tekst.trim().length === 0) {
+        toast.info("Niets opgevangen");
+        return;
+      }
+      const pos = Math.min(bewerkCursorRef.current, bewerkTekst.length);
+      const voor = bewerkTekst.slice(0, pos);
+      const na = bewerkTekst.slice(pos);
+      const spatieVoor = voor.length > 0 && !/\s$/.test(voor) ? " " : "";
+      const spatieNa = na.length > 0 && !/^\s/.test(na) ? " " : "";
+      const invoeging = spatieVoor + tekst + spatieNa;
+      const nieuwe = voor + invoeging + na;
+      setBewerkTekst(nieuwe);
+      const nieuwePos = pos + invoeging.length;
+      setTimeout(() => {
+        const ta = bewerkTextareaRef.current;
+        if (ta) {
+          ta.focus();
+          ta.setSelectionRange(nieuwePos, nieuwePos);
+        }
+      }, 30);
+    } else {
+      const ta = bewerkTextareaRef.current;
+      bewerkCursorRef.current = ta?.selectionStart ?? bewerkTekst.length;
+      spraak.reset();
+      setTimeout(() => spraak.start(), 30);
+    }
+  }
+
   async function verwerk(tekst: string) {
     setFase("verwerken");
     try {
@@ -281,7 +326,7 @@ export function VoiceFab() {
       const { gemaakt } = await voerActiesUit();
       if (acties.length > 0 && gemaakt.length > 0) {
         toast.success("Opgeslagen!", {
-          duration: 5000,
+          duration: 4000,
           action: {
             label: "Ongedaan maken",
             onClick: async () => {
@@ -820,27 +865,70 @@ export function VoiceFab() {
                     📝 Bewerk je tekst
                   </h2>
                   <p className="text-cm-white text-xs opacity-70">
-                    Corrigeer spelfouten of verkeerd verstane woorden voordat ELEVA het verwerkt.
+                    Corrigeer, typ bij, of druk op 🎙️ om vanaf je cursor extra in te spreken. Klik Verwerk wanneer alles compleet is.
                   </p>
                 </div>
-                <textarea
-                  value={bewerkTekst}
-                  onChange={(e) => setBewerkTekst(e.target.value)}
-                  className="textarea-cm text-sm w-full"
-                  rows={8}
-                  autoFocus
-                />
+                <div className="relative">
+                  <textarea
+                    ref={bewerkTextareaRef}
+                    value={bewerkTekst}
+                    onChange={(e) => setBewerkTekst(e.target.value)}
+                    className="textarea-cm text-sm w-full pr-14"
+                    rows={8}
+                    autoFocus
+                    disabled={spraak.actief || bewerkenTranscribeert}
+                  />
+                  {spraak.ondersteund && spraak.toegang && (
+                    <button
+                      type="button"
+                      onClick={toggleBewerkOpname}
+                      disabled={bewerkenTranscribeert}
+                      className={`absolute bottom-2 right-2 w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
+                        spraak.actief
+                          ? "bg-red-600 text-white animate-pulse"
+                          : "border border-cm-border bg-cm-surface-2 text-cm-gold hover:opacity-90"
+                      } ${bewerkenTranscribeert ? "cursor-wait opacity-60" : ""}`}
+                      title={
+                        spraak.actief
+                          ? "Stop opname"
+                          : bewerkenTranscribeert
+                          ? "Bezig met omzetten..."
+                          : "Spreek vanaf cursor extra in"
+                      }
+                      aria-label="Microfoon"
+                    >
+                      {bewerkenTranscribeert ? "⏳" : "🎙️"}
+                    </button>
+                  )}
+                  {spraak.actief && (
+                    <div className="absolute top-2 right-2 text-[11px] text-red-400 font-semibold bg-cm-surface-2/90 px-2 py-0.5 rounded">
+                      🔴 {formatTijd(spraak.seconden)} / {formatTijd(MAX_SECONDEN)}
+                    </div>
+                  )}
+                </div>
                 <div className="flex flex-col sm:flex-row gap-2">
-                  <button onClick={sluit} className="btn-secondary sm:flex-1">
+                  <button
+                    onClick={sluit}
+                    className="btn-secondary sm:flex-1"
+                    disabled={spraak.actief || bewerkenTranscribeert}
+                  >
                     Annuleren
                   </button>
-                  <button onClick={opnieuwOpnemen} className="btn-secondary sm:flex-1">
-                    🎙️ Opnieuw
+                  <button
+                    onClick={opnieuwOpnemen}
+                    className="btn-secondary sm:flex-1"
+                    disabled={spraak.actief || bewerkenTranscribeert}
+                  >
+                    🔄 Helemaal opnieuw
                   </button>
                   <button
                     onClick={() => verwerk(bewerkTekst.trim())}
                     className="btn-gold sm:flex-1"
-                    disabled={bewerkTekst.trim().length < 3}
+                    disabled={
+                      bewerkTekst.trim().length < 3 ||
+                      spraak.actief ||
+                      bewerkenTranscribeert
+                    }
                   >
                     ✓ Verwerk met ELEVA
                   </button>
