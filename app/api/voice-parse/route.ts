@@ -54,6 +54,18 @@ export async function POST(request: Request) {
       .map((p) => `- ${p.volledige_naam} (id: ${p.id}, fase: ${p.pipeline_fase})`)
       .join("\n");
 
+    // Ook gearchiveerde prospects meesturen, zodat "herstel" / "haal terug" werkt
+    const { data: gearchiveerdeProspects } = await supabase
+      .from("prospects")
+      .select("id, volledige_naam, pipeline_fase")
+      .eq("user_id", user.id)
+      .eq("gearchiveerd", true)
+      .limit(200);
+
+    const archiefLijst = (gearchiveerdeProspects || [])
+      .map((p) => `- ${p.volledige_naam} (id: ${p.id}, fase: ${p.pipeline_fase})`)
+      .join("\n");
+
     // Haal openstaande herinneringen op
     const { data: openHerinneringen } = await supabase
       .from("herinneringen")
@@ -80,6 +92,9 @@ Taal van transcript: ${taalLabel}
 
 BESTAANDE PROSPECTS / MEMBERS IN DE LIJST:
 ${namenLijst || "(nog geen prospects)"}
+
+GEARCHIVEERDE PROSPECTS (voor herstel / "haal terug uit archief"):
+${archiefLijst || "(geen gearchiveerd)"}
 
 OPENSTAANDE HERINNERINGEN:
 ${herinneringenLijst || "(geen herinneringen)"}
@@ -234,6 +249,62 @@ MOGELIJKE ACTIES:
 12. { "type": "verwijder_herinnering", "herinnering_id": "uuid-uit-lijst", "titel": "..." }
    - Gebruiker wil een herinnering weg ("verwijder de herinnering om Maria te bellen"). Gebruik id uit OPENSTAANDE HERINNERINGEN lijst.
    - Onderscheid met voltooi_herinnering: "afvinken"/"is gedaan"/"voltooid" → voltooi_herinnering. "verwijder"/"wis"/"haal weg" → verwijder_herinnering.
+
+13. { "type": "herstel_prospect", "prospect_id": "uuid-uit-archieflijst", "volledige_naam": "..." }
+   - Gebruiker wil gearchiveerde prospect terughalen ("haal Francois terug", "herstel Pieter", "is per ongeluk verwijderd").
+   - Gebruik ALLEEN ids uit GEARCHIVEERDE PROSPECTS lijst. Als de naam niet matcht: in "onduidelijk" vermelden.
+
+14. { "type": "hernoem_prospect", "prospect_id": "uuid-uit-lijst", "nieuwe_naam": "Pieter de Hoogh", "oude_naam": "Pieter de Hoog" }
+   - Typefout in naam corrigeren ("Pieter heet eigenlijk Pieter de Hoogh", "de achternaam van Maria is anders").
+   - prospect_id komt uit BESTAANDE lijst. nieuwe_naam is de volledige correcte naam.
+
+15. { "type": "stats_set", "datum": "${vandaag}", "contacten_gemaakt": 5, ... }
+   - Correctie op dagstats ("Ik had vandaag niet 3 maar 5 contacten", "zet uitnodigingen op 7").
+   - VERSCHIL met stats_increment: stats_set VERVANGT de waarde, stats_increment TELT ER BIJ OP.
+   - Trigger-woorden voor SET: "is eigenlijk", "moet zijn", "zet op", "corrigeer naar", "niet X maar Y".
+   - Trigger-woorden voor INCREMENT: "nog X erbij", "ik heb net X gedaan", "er zijn X bijgekomen".
+   - Alleen de genoemde velden invullen (rest wordt uit DB behouden).
+
+16. { "type": "prioriteit_set", "prospect_id": "uuid-uit-lijst", "prioriteit": "hoog", "volledige_naam": "..." }
+   - "Zet Petra op hoog", "Maak X belangrijk", "Laag prioriteit voor Y", "X is niet zo belangrijk meer" → laag.
+   - Alternatief voor update_details als het PUUR om prioriteit gaat (gebruik update_details als ook contactgegevens veranderen).
+
+17. { "type": "wis_notities", "prospect_id": "uuid-uit-lijst", "volledige_naam": "..." }
+   - "Wis alle notities van X", "Haal de notities bij Y weg", "Schoon dossier van Z".
+   - Dit leegt het notities-veld volledig. Onderscheid met verwijder_prospect (hele kaart).
+
+18. { "type": "navigeer", "bestemming": "<keuze>", "prospect_id": "uuid-als-prospect", "volledige_naam": "..." }
+   - "Ga naar X", "Open X", "Laat X zien", "Ik wil naar X".
+   - bestemming opties: "dashboard" | "namenlijst" | "namenlijst_nieuw" | "herinneringen" | "coach" | "premium" | "statistieken" | "mijn_why" | "team" | "zoeken" | "instellingen" | "producten" | "scripts" | "prospect"
+   - Voor "prospect": vul prospect_id + volledige_naam (uit BESTAANDE lijst). "Ga naar Petra" / "open de kaart van Maria" → bestemming="prospect" + prospect_id.
+   - Typische mappings: "homepage/dashboard/start" → dashboard, "kanban/pijplijn/prospects/lijst" → namenlijst, "nieuwe prospect/voeg toe" → namenlijst_nieuw, "todos/taken/lijst" → herinneringen, "mentor/coach/AI" → coach, "abonnement/upgrade" → premium, "stats/grafieken/voortgang" → statistieken, "waarom/droom/doel" → mijn_why.
+   - Geen 2 navigeer-acties tegelijk.
+
+19. { "type": "zoek", "zoekterm": "diabetes" }
+   - "Zoek naar X", "Wie heeft Y in zijn dossier", "Welke prospects zijn Z".
+   - Opent de zoekpagina met de term ingevuld.
+   - Gebruik ALLEEN als gebruiker duidelijk een zoekopdracht geeft (niet als ze iets vastleggen).
+
+20. { "type": "mijn_why_update", "nieuwe_why": "Ik wil financiële vrijheid zodat ik fulltime voor mijn kinderen kan zorgen" }
+   - "Mijn WHY is ...", "Stel mijn WHY in op ...", "Update mijn droom naar ...", "Schrijf op waarom ik dit doe: ...".
+   - nieuwe_why is de complete vervangende tekst. Overschrijft bestaande why_samenvatting.
+
+21. { "type": "fase_batch", "prospect_ids": ["uuid1", "uuid2"], "nieuwe_fase": "followup", "namen": ["Pieter", "Anna"] }
+   - Bulk-fase-wijziging. "Zet Pieter, Anna en Marie op follow-up", "Alle shoppers naar member", "Drie mensen tegelijk in uitgenodigd".
+   - Verzamel ALLE prospect_ids uit BESTAANDE lijst die in de opdracht worden genoemd.
+   - Als gebruiker een hele groep noemt ("alle shoppers", "al mijn prospects in fase X"): neem alle ids uit lijst met die fase.
+   - "namen" veld is voor preview-weergave.
+   - ⚠️ Gebruik dit ALLEEN bij meerdere expliciete targets. Bij één naam: gebruik update_prospect.
+
+22. { "type": "member_notitie_bulk", "prospect_ids": ["uuid1", "uuid2"], "notitie": "Nieuwjaarsactie aangeboden", "namen": ["...", "..."] }
+   - Dezelfde notitie bij meerdere prospects ("Bij alle members noteren dat ik Kerstactie heb aangeboden", "Drie mensen: zelfde notitie dat campagne X loopt").
+   - Gebruikt als gebruiker expliciet een groep noemt én een notitie. Niet optelling van losse notitie-acties.
+
+BESTELLING_BEVESTIGEN (samengesteld, niet als nieuwe actie):
+   Als een 21/51/81-daagse opvolg-herinnering wordt afgevinkt met een nieuwe bestelling ("Arno's opvolging is gedaan, hij heeft opnieuw basispakket besteld"), geef DAN TWEE acties:
+   1. voltooi_herinnering voor de reminder
+   2. product_bestelling voor de nieuwe order
+   Zo blijven audit-trail en trigger-reminders beide kloppen.
 
 ⚠️ KRITIEKE REGELS — HIER GAAT HET VAAK FOUT:
 

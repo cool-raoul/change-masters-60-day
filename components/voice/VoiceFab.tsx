@@ -99,6 +99,90 @@ type ActieVerwijderHerinnering = {
   titel?: string;
 };
 
+type ActieHerstelProspect = {
+  type: "herstel_prospect";
+  prospect_id: string;
+  volledige_naam?: string;
+};
+
+type ActieHernoemProspect = {
+  type: "hernoem_prospect";
+  prospect_id: string;
+  nieuwe_naam: string;
+  oude_naam?: string;
+};
+
+type ActieStatsSet = {
+  type: "stats_set";
+  datum?: string;
+  contacten_gemaakt?: number;
+  uitnodigingen?: number;
+  followups?: number;
+  presentaties?: number;
+  nieuwe_klanten?: number;
+  nieuwe_partners?: number;
+};
+
+type ActiePrioriteitSet = {
+  type: "prioriteit_set";
+  prospect_id: string;
+  prioriteit: "hoog" | "normaal" | "laag";
+  volledige_naam?: string;
+};
+
+type ActieWisNotities = {
+  type: "wis_notities";
+  prospect_id: string;
+  volledige_naam?: string;
+};
+
+type NavigeerBestemming =
+  | "dashboard"
+  | "namenlijst"
+  | "namenlijst_nieuw"
+  | "herinneringen"
+  | "coach"
+  | "premium"
+  | "statistieken"
+  | "mijn_why"
+  | "team"
+  | "zoeken"
+  | "instellingen"
+  | "producten"
+  | "scripts"
+  | "prospect";
+
+type ActieNavigeer = {
+  type: "navigeer";
+  bestemming: NavigeerBestemming;
+  prospect_id?: string;
+  volledige_naam?: string;
+};
+
+type ActieZoek = {
+  type: "zoek";
+  zoekterm: string;
+};
+
+type ActieMijnWhyUpdate = {
+  type: "mijn_why_update";
+  nieuwe_why: string;
+};
+
+type ActieFaseBatch = {
+  type: "fase_batch";
+  prospect_ids: string[];
+  nieuwe_fase: PipelineFase;
+  namen?: string[];
+};
+
+type ActieMemberNotitieBulk = {
+  type: "member_notitie_bulk";
+  prospect_ids: string[];
+  notitie: string;
+  namen?: string[];
+};
+
 type Actie =
   | ActieNieuweProspect
   | ActieUpdateProspect
@@ -111,7 +195,17 @@ type Actie =
   | ActieUpdateHerinnering
   | ActieProductBestelling
   | ActieVerwijderProspect
-  | ActieVerwijderHerinnering;
+  | ActieVerwijderHerinnering
+  | ActieHerstelProspect
+  | ActieHernoemProspect
+  | ActieStatsSet
+  | ActiePrioriteitSet
+  | ActieWisNotities
+  | ActieNavigeer
+  | ActieZoek
+  | ActieMijnWhyUpdate
+  | ActieFaseBatch
+  | ActieMemberNotitieBulk;
 
 type Intentie = "data" | "coach" | "mixed";
 
@@ -356,10 +450,44 @@ export function VoiceFab() {
       // Sluit modal EERST zodat DOM settled is voor de refresh.
       // Voorkomt iOS Safari scroll-lock na router.refresh().
       sluit();
-      setTimeout(() => router.refresh(), 100);
+      // Navigeer/zoek: één actie krijgt voorrang boven refresh.
+      const nav = acties.find((a) => a.type === "navigeer") as ActieNavigeer | undefined;
+      const zoekActie = acties.find((a) => a.type === "zoek") as ActieZoek | undefined;
+      const doelUrl = nav
+        ? navigatieUrl(nav)
+        : zoekActie
+        ? `/zoeken?q=${encodeURIComponent(zoekActie.zoekterm)}`
+        : null;
+      if (doelUrl) {
+        setTimeout(() => router.push(doelUrl), 100);
+      } else {
+        setTimeout(() => router.refresh(), 100);
+      }
     } catch (err: any) {
       toast.error("Opslaan mislukt: " + (err?.message || "onbekend"));
       setFase("preview");
+    }
+  }
+
+  function navigatieUrl(a: ActieNavigeer): string {
+    switch (a.bestemming) {
+      case "dashboard": return "/dashboard";
+      case "namenlijst": return "/namenlijst";
+      case "namenlijst_nieuw": return "/namenlijst/nieuw";
+      case "herinneringen": return "/herinneringen";
+      case "coach": return "/coach";
+      case "premium": return "/premium";
+      case "statistieken": return "/statistieken";
+      case "mijn_why": return "/mijn-why";
+      case "team": return "/team";
+      case "zoeken": return "/zoeken";
+      case "instellingen": return "/instellingen";
+      case "producten": return "/producten";
+      case "scripts": return "/scripts";
+      case "prospect":
+        return a.prospect_id ? `/namenlijst/${a.prospect_id}` : "/namenlijst";
+      default:
+        return "/dashboard";
     }
   }
 
@@ -740,6 +868,140 @@ export function VoiceFab() {
           .delete()
           .eq("id", a.herinnering_id)
           .eq("user_id", user.id);
+      }
+    }
+    for (const a of acties) {
+      if (a.type === "herstel_prospect") {
+        if (!a.prospect_id) continue;
+        await supabase
+          .from("prospects")
+          .update({ gearchiveerd: false, updated_at: new Date().toISOString() })
+          .eq("id", a.prospect_id)
+          .eq("user_id", user.id);
+      }
+    }
+    for (const a of acties) {
+      if (a.type === "hernoem_prospect") {
+        if (!a.prospect_id || !a.nieuwe_naam) continue;
+        await supabase
+          .from("prospects")
+          .update({
+            volledige_naam: a.nieuwe_naam,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", a.prospect_id)
+          .eq("user_id", user.id);
+      }
+    }
+    for (const a of acties) {
+      if (a.type === "stats_set") {
+        const datum = a.datum || new Date().toISOString().split("T")[0];
+        const { data: huidig } = await supabase
+          .from("dagelijkse_stats")
+          .select("*")
+          .eq("user_id", user.id)
+          .eq("stat_datum", datum)
+          .maybeSingle();
+        await supabase.from("dagelijkse_stats").upsert(
+          {
+            user_id: user.id,
+            stat_datum: datum,
+            contacten_gemaakt: a.contacten_gemaakt ?? huidig?.contacten_gemaakt ?? 0,
+            uitnodigingen: a.uitnodigingen ?? huidig?.uitnodigingen ?? 0,
+            followups: a.followups ?? huidig?.followups ?? 0,
+            presentaties: a.presentaties ?? huidig?.presentaties ?? 0,
+            nieuwe_klanten: a.nieuwe_klanten ?? huidig?.nieuwe_klanten ?? 0,
+            nieuwe_partners: a.nieuwe_partners ?? huidig?.nieuwe_partners ?? 0,
+          },
+          { onConflict: "user_id,stat_datum" }
+        );
+      }
+    }
+    for (const a of acties) {
+      if (a.type === "prioriteit_set") {
+        if (!a.prospect_id || !a.prioriteit) continue;
+        await supabase
+          .from("prospects")
+          .update({ prioriteit: a.prioriteit, updated_at: new Date().toISOString() })
+          .eq("id", a.prospect_id)
+          .eq("user_id", user.id);
+      }
+    }
+    for (const a of acties) {
+      if (a.type === "wis_notities") {
+        if (!a.prospect_id) continue;
+        await supabase
+          .from("prospects")
+          .update({ notities: null, updated_at: new Date().toISOString() })
+          .eq("id", a.prospect_id)
+          .eq("user_id", user.id);
+      }
+    }
+    for (const a of acties) {
+      if (a.type === "mijn_why_update") {
+        if (!a.nieuwe_why) continue;
+        await supabase
+          .from("why_profiles")
+          .upsert(
+            {
+              user_id: user.id,
+              why_samenvatting: a.nieuwe_why,
+              updated_at: new Date().toISOString(),
+            },
+            { onConflict: "user_id" }
+          );
+      }
+    }
+    for (const a of acties) {
+      if (a.type === "fase_batch") {
+        const ids = (a.prospect_ids || []).filter(Boolean);
+        if (ids.length === 0 || !a.nieuwe_fase) continue;
+        await supabase
+          .from("prospects")
+          .update({
+            pipeline_fase: a.nieuwe_fase,
+            updated_at: new Date().toISOString(),
+          })
+          .in("id", ids)
+          .eq("user_id", user.id);
+      }
+    }
+    for (const a of acties) {
+      if (a.type === "member_notitie_bulk") {
+        const ids = (a.prospect_ids || []).filter(Boolean);
+        if (ids.length === 0 || !a.notitie) continue;
+        const stempel = `[${new Date().toLocaleDateString("nl-NL")}] ${a.notitie}`;
+        for (const id of ids) {
+          const { data: huidig } = await supabase
+            .from("prospects")
+            .select("notities")
+            .eq("id", id)
+            .eq("user_id", user.id)
+            .maybeSingle();
+          const nieuweNotitie = huidig?.notities
+            ? `${huidig.notities}\n\n${stempel}`
+            : stempel;
+          await supabase
+            .from("prospects")
+            .update({
+              notities: nieuweNotitie,
+              updated_at: new Date().toISOString(),
+              laatste_contact: new Date().toISOString().split("T")[0],
+            })
+            .eq("id", id)
+            .eq("user_id", user.id);
+          const { data: log } = await supabase
+            .from("contact_logs")
+            .insert({
+              prospect_id: id,
+              user_id: user.id,
+              contact_type: "notitie",
+              notities: a.notitie,
+            })
+            .select("id")
+            .single();
+          if (log) gemaakt.push({ tabel: "contact_logs", id: log.id });
+        }
       }
     }
 
@@ -1167,13 +1429,18 @@ export function VoiceFab() {
 function ActieKaart({ actie, onVerwijder }: { actie: Actie; onVerwijder: () => void }) {
   const content = beschrijfActie(actie);
   const isVerwijder =
-    actie.type === "verwijder_prospect" || actie.type === "verwijder_herinnering";
+    actie.type === "verwijder_prospect" ||
+    actie.type === "verwijder_herinnering" ||
+    actie.type === "wis_notities";
+  const isNavigatie = actie.type === "navigeer" || actie.type === "zoek";
 
   return (
     <div
       className={`card flex gap-3 ${
         isVerwijder
           ? "bg-red-500/10 border-red-500/40"
+          : isNavigatie
+          ? "bg-cm-gold/10 border-cm-gold/30"
           : "bg-cm-surface-2"
       }`}
     >
@@ -1305,6 +1572,101 @@ function beschrijfActie(actie: any): { icoon: string; titel: string; details: st
           icoon: "🗑️",
           titel: `Verwijder herinnering: ${actie.titel || "(geen titel)"}`,
           details: ["Wordt definitief verwijderd."],
+        };
+      case "herstel_prospect":
+        return {
+          icoon: "♻️",
+          titel: `Herstel: ${actie.volledige_naam || "prospect"}`,
+          details: ["Uit archief terughalen — verschijnt weer in alle lijsten."],
+        };
+      case "hernoem_prospect":
+        return {
+          icoon: "✏️",
+          titel: `Hernoemen → ${actie.nieuwe_naam || "(geen naam)"}`,
+          details: [
+            actie.oude_naam ? `Van: ${actie.oude_naam}` : null,
+          ].filter(Boolean) as string[],
+        };
+      case "stats_set": {
+        const items: string[] = [];
+        if (actie.contacten_gemaakt !== undefined) items.push(`Contacten = ${actie.contacten_gemaakt}`);
+        if (actie.uitnodigingen !== undefined) items.push(`Uitnodigingen = ${actie.uitnodigingen}`);
+        if (actie.followups !== undefined) items.push(`Follow-ups = ${actie.followups}`);
+        if (actie.presentaties !== undefined) items.push(`Presentaties = ${actie.presentaties}`);
+        if (actie.nieuwe_klanten !== undefined) items.push(`Klanten = ${actie.nieuwe_klanten}`);
+        if (actie.nieuwe_partners !== undefined) items.push(`Partners = ${actie.nieuwe_partners}`);
+        return {
+          icoon: "🔢",
+          titel: "Dagstats CORRIGEREN" + (actie.datum ? ` (${actie.datum})` : ""),
+          details: [...items, "Vervangt bestaande waarden — niet optellen."],
+        };
+      }
+      case "prioriteit_set":
+        return {
+          icoon: "⭐",
+          titel: `Prioriteit ${actie.prioriteit || "?"} — ${actie.volledige_naam || "prospect"}`,
+          details: [],
+        };
+      case "wis_notities":
+        return {
+          icoon: "🧹",
+          titel: `Notities wissen: ${actie.volledige_naam || "prospect"}`,
+          details: ["Alle bestaande notities bij deze prospect worden leeggemaakt."],
+        };
+      case "navigeer": {
+        const labels: Record<string, string> = {
+          dashboard: "Dashboard",
+          namenlijst: "Namenlijst",
+          namenlijst_nieuw: "Nieuwe prospect",
+          herinneringen: "Herinneringen",
+          coach: "ELEVA Mentor",
+          premium: "Premium",
+          statistieken: "Statistieken",
+          mijn_why: "Mijn WHY",
+          team: "Mijn team",
+          zoeken: "Zoeken",
+          instellingen: "Instellingen",
+          producten: "Producten",
+          scripts: "Scripts",
+          prospect: actie.volledige_naam ? `Kaart: ${actie.volledige_naam}` : "Prospect-kaart",
+        };
+        return {
+          icoon: "🧭",
+          titel: `Ga naar: ${labels[actie.bestemming] || actie.bestemming}`,
+          details: ["Opent de pagina na opslaan."],
+        };
+      }
+      case "zoek":
+        return {
+          icoon: "🔍",
+          titel: `Zoeken: "${actie.zoekterm || ""}"`,
+          details: ["Opent de zoekpagina met resultaten."],
+        };
+      case "mijn_why_update":
+        return {
+          icoon: "💡",
+          titel: "Mijn WHY bijwerken",
+          details: [actie.nieuwe_why ? `"${String(actie.nieuwe_why).slice(0, 120)}${String(actie.nieuwe_why).length > 120 ? "..." : ""}"` : ""].filter(Boolean),
+        };
+      case "fase_batch":
+        return {
+          icoon: "📦",
+          titel: `Bulk-fase → ${actie.nieuwe_fase || "?"}`,
+          details: [
+            `${(actie.prospect_ids || []).length} prospect(s)`,
+            ...(actie.namen || []).slice(0, 5).map((n: string) => `• ${n}`),
+            (actie.namen || []).length > 5 ? `... en ${(actie.namen || []).length - 5} meer` : null,
+          ].filter(Boolean) as string[],
+        };
+      case "member_notitie_bulk":
+        return {
+          icoon: "📝",
+          titel: `Notitie bij ${(actie.prospect_ids || []).length} prospect(s)`,
+          details: [
+            actie.notitie ? `"${String(actie.notitie).slice(0, 100)}"` : "",
+            ...((actie.namen || []).slice(0, 5).map((n: string) => `• ${n}`)),
+            (actie.namen || []).length > 5 ? `... en ${(actie.namen || []).length - 5} meer` : null,
+          ].filter(Boolean) as string[],
         };
       case "product_bestelling":
         return {

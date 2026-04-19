@@ -81,12 +81,29 @@ export const FEATURES: Feature[] = [
     bullets: [
       "Druk in, spreek natuurlijk wat je net hebt gedaan",
       "ELEVA begrijpt wie, wat, wanneer en voert het UIT in de app",
-      "Werkt voor: nieuwe prospects, fase wijzigen, notities, herinneringen plannen, contact loggen, stats bijwerken",
+      "22+ commando's: prospects, fases, notities, herinneringen, bestellingen, correcties, navigatie, verwijderen, herstellen",
       "Je kan blijven bijspreken en corrigeren voordat je opslaat",
+      "Volledige lijst met voorbeeldzinnen via Sidebar → Spraak-commando's",
     ],
     wow:
       "\"Sprak Maria bij de sportschool, wil zaterdag een presentatie, herinner me donderdag om haar te appen.\" → prospect aangemaakt, fase op 'uitgenodigd', follow-up voor donderdag ingepland, contact gelogd. Zonder één klik. Dit scheelt 20 minuten admin per dag.",
     volgorde: 30,
+    inRondleiding: true,
+  },
+  {
+    id: "spraak-commandos",
+    emoji: "📖",
+    titel: "Spraak-commando's — naslagwerk",
+    lead: "De volledige lijst met alles wat je kunt inspreken, gesorteerd per categorie.",
+    bullets: [
+      "Prospects, activiteit, bestellingen, herinneringen, correcties, verwijderen, navigatie, mentor",
+      "Voorbeeldzinnen per commando — je hoeft niet letterlijk te kopiëren",
+      "Tips per categorie om het snel onder de knie te krijgen",
+      "Altijd bereikbaar via Sidebar → 🎙️ Spraak-commando's",
+    ],
+    wow: "Geen gedoe met onthouden wat ELEVA snapt — één pagina met alles. Zie een commando, spreek het in, klaar.",
+    route: "/spraak-commandos",
+    volgorde: 35,
     inRondleiding: true,
   },
   {

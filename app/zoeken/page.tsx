@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { format } from "date-fns";
@@ -29,6 +30,15 @@ export default function ZoekenPagina() {
   const [laden, setLaden] = useState(false);
   const [gezocht, setGezocht] = useState(false);
   const supabase = createClient();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const q = searchParams?.get("q");
+    if (q && q.trim().length >= 2) {
+      zoek(q);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   async function zoek(term: string) {
     setZoekterm(term);
