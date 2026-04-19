@@ -107,7 +107,11 @@ export function DagStatForm({ userId, bestaandeStats, datum }: Props) {
     }
 
     laadStats();
-  }, [geselecteerdeDatum]);
+    // bestaandeStats + datum in deps: na router.refresh() (bv. na een
+    // voice-save met stats_increment) krijgt dit component nieuwe server-props
+    // binnen. Zonder deze deps bleef de local state op de oude waarden staan
+    // totdat de gebruiker naar een andere dag en terug switchte.
+  }, [geselecteerdeDatum, bestaandeStats, datum]);
 
   async function updateStat(key: StatKey, delta: number) {
     const nieuweWaarde = Math.max(0, stats[key] + delta);
