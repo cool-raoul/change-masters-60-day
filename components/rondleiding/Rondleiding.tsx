@@ -1,90 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { rondleidingFeatures } from "@/lib/features/registry";
 
-type Stap = {
-  emoji: string;
-  titel: string;
-  lead: string;
-  bullets: string[];
-  wow: string;
-};
-
-const STAPPEN: Stap[] = [
-  {
-    emoji: "🏠",
-    titel: "Dashboard — jouw command center",
-    lead: "Elke dag begint hier. In 30 seconden weet je wat vandaag telt.",
-    bullets: [
-      "Dag-teller (dag X van 60) en voortgangsbalk",
-      "Dagelijkse activiteiten loggen (contacten, uitnodigingen, presentaties)",
-      "Snelle pijplijn-blik: hoeveel prospects zitten in welke fase",
-      "Openstaande herinneringen en jouw WHY altijd in zicht",
-    ],
-    wow: "Open 's ochtends ELEVA. Klaar = je weet precies wat vandaag je focus is.",
-  },
-  {
-    emoji: "👥",
-    titel: "Namenlijst — je pijplijn als Kanban",
-    lead: "Al je prospects visueel, van eerste contact tot member.",
-    bullets: [
-      "Sleep prospects tussen fases: prospect → uitgenodigd → presentatie → follow-up → shopper → member",
-      "Elke kaart toont prioriteit, laatste contact, volgende stap",
-      "Klik op een naam voor alle details, notities en contact-historie",
-      "Sorteer zelf binnen een fase — belangrijkste bovenaan",
-    ],
-    wow: "Nooit meer iemand vergeten die aan het rijpen is.",
-  },
-  {
-    emoji: "🎙️",
-    titel: "Spraak-knop — DE killer-feature",
-    lead: "De ronde goudknop rechtsonder. Dit is waar ELEVA magisch wordt.",
-    bullets: [
-      "Druk in, spreek natuurlijk wat je net hebt gedaan",
-      "ELEVA begrijpt wie, wat, wanneer en voert het UIT in de app",
-      "Werkt voor: nieuwe prospects, fase wijzigen, notities, herinneringen plannen, contact loggen, stats bijwerken",
-      "Je kan blijven bijspreken en corrigeren voordat je opslaat",
-    ],
-    wow: "\"Sprak Maria bij de sportschool, wil zaterdag een presentatie, herinner me donderdag om haar te appen.\" → prospect aangemaakt, fase op 'uitgenodigd', follow-up voor donderdag ingepland, contact gelogd. Zonder één klik. Dit scheelt 20 minuten admin per dag.",
-  },
-  {
-    emoji: "🤖",
-    titel: "ELEVA Mentor — 24/7 coach in je broekzak",
-    lead: "Een AI-mentor die jouw methodiek kent en altijd tijd heeft.",
-    bullets: [
-      "Vraag alles: bezwaren pareren, uitnodigings-tekst, 3-wegen gesprek voorbereiden, closing, mindset",
-      "Stel je vraag over een specifieke prospect — de mentor kent de context",
-      "Premium: productadvies met medische disclaimer, onbeperkte gesprekken, voorrang",
-      "Eerdere gesprekken terug te vinden, zodat je nooit iets kwijt bent",
-    ],
-    wow: "\"Maria zegt: ik heb er geen geld voor — wat zeg ik?\" → binnen 3 seconden een antwoord op maat, getraind op jouw aanpak.",
-  },
-  {
-    emoji: "🔔",
-    titel: "Herinneringen — je brein hoeft niks te onthouden",
-    lead: "Alle follow-ups automatisch op de juiste stapel.",
-    bullets: [
-      "Verlopen (rood), vandaag (goud), komende 7 dagen (blauw), later (grijs)",
-      "Voltooi met één klik of schuif naar een nieuwe datum",
-      "Verschijnt automatisch wanneer je via spraak zegt \"herinner me...\"",
-      "Telling in de topbar rechts, zodat je nooit iets mist",
-    ],
-    wow: "Jij focust op gesprekken. ELEVA houdt de lijsten bij.",
-  },
-  {
-    emoji: "🌟",
-    titel: "Premium — €2/mnd, onbeperkt alles",
-    lead: "De kracht van ELEVA volledig ontketend voor de prijs van een koffie.",
-    bullets: [
-      "Onbeperkt chatten met de ELEVA Mentor",
-      "Onbeperkte spraak-opnames (geen limieten)",
-      "Voorrang bij drukte + early-access nieuwe features",
-      "Een deel van je bijdrage gaat naar de Lifeplus Foundation",
-      "Betaal met iDEAL, kaart of Apple/Google Pay — maandelijks opzegbaar",
-    ],
-    wow: "Als je serieus bent met je 60-day run, is €2/mnd het snelste rendement dat je kan boeken.",
-  },
-];
+// Stappen komen uit de centrale features-registry (lib/features/registry.ts).
+// Voeg daar een feature toe/verwijder/pas aan om de rondleiding mee te laten
+// veranderen — dit component hoeft niet aangeraakt te worden.
+const STAPPEN = rondleidingFeatures();
 
 export function Rondleiding() {
   const [open, setOpen] = useState(false);
