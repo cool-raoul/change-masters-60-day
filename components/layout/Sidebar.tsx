@@ -92,15 +92,6 @@ export function Sidebar({ isLeider = false }: { isLeider?: boolean }) {
 
         {/* Onderkant items direct in de scroll-zone zodat ze altijd bereikbaar zijn */}
         <div className="pt-3 mt-3 border-t border-cm-border space-y-1">
-          <button
-            onClick={() => {
-              setMobielmenuOpen(false);
-              window.dispatchEvent(new CustomEvent("rondleiding:open"));
-            }}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cm-white opacity-90 hover:opacity-100 hover:bg-cm-surface-2 transition-colors w-full text-left"
-          >
-            <span>🎓</span> Rondleiding
-          </button>
           <Link
             href="/premium"
             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
@@ -123,6 +114,15 @@ export function Sidebar({ isLeider = false }: { isLeider?: boolean }) {
           >
             <span>🎯</span> {v("nav.mijn_why")}
           </Link>
+          <button
+            onClick={() => {
+              setMobielmenuOpen(false);
+              window.dispatchEvent(new CustomEvent("rondleiding:open"));
+            }}
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors w-full text-left"
+          >
+            <span>🎓</span> Rondleiding
+          </button>
           <button
             onClick={uitloggen}
             className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:text-red-400 hover:bg-cm-surface-2 transition-colors w-full text-left"
