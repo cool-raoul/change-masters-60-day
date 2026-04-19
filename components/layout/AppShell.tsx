@@ -6,6 +6,7 @@ import { WelcomePopup } from "@/components/layout/WelcomePopup";
 import { TaalProvider } from "@/lib/i18n/TaalContext";
 import { Taal } from "@/lib/i18n/vertalingen";
 import { VoiceFab } from "@/components/voice/VoiceFab";
+import { Rondleiding } from "@/components/rondleiding/Rondleiding";
 
 export async function AppShell({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -36,6 +37,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
           <main className="flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain p-6 pb-28 sm:pb-6 mobile-scroll">{children}</main>
         </div>
         <VoiceFab />
+        <Rondleiding />
       </div>
     </TaalProvider>
   );

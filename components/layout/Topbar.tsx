@@ -102,6 +102,15 @@ export function Topbar({ gebruikersnaam }: { gebruikersnaam: string }) {
           </Link>
         )}
 
+        <button
+          onClick={() => window.dispatchEvent(new CustomEvent("rondleiding:open"))}
+          className="p-2 text-cm-white hover:text-cm-gold transition-colors"
+          title="Rondleiding door ELEVA"
+          aria-label="Rondleiding openen"
+        >
+          <span className="text-lg">❓</span>
+        </button>
+
         <Link
           href="/herinneringen"
           className="relative p-2 text-cm-white hover:text-cm-white transition-colors"
