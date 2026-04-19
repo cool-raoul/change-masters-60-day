@@ -132,6 +132,22 @@ export function Sidebar({ isLeider = false }: { isLeider?: boolean }) {
       <button
         onClick={() => setMobielmenuOpen(true)}
         className="lg:hidden fixed top-3 left-3 z-[60] bg-cm-surface border border-cm-border rounded-lg p-2 text-cm-gold"
+        aria-label="Menu openen"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+
+      {/* Tweede hamburger als FAB linksonder — duim-bereikbaar op telefoon en
+          werkt als fallback wanneer de top-knop onzichtbaar blijkt na modal-sluit. */}
+      <button
+        onClick={() => setMobielmenuOpen(true)}
+        className="lg:hidden fixed bottom-5 left-5 z-40 w-14 h-14 rounded-full bg-cm-surface border border-cm-border shadow-lg flex items-center justify-center text-cm-gold active:scale-95 transition-transform duration-200"
+        aria-label="Menu openen"
+        style={{ WebkitTapHighlightColor: "transparent" }}
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <line x1="3" y1="6" x2="21" y2="6" />

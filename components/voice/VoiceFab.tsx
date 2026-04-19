@@ -281,7 +281,7 @@ export function VoiceFab() {
       const { gemaakt } = await voerActiesUit();
       if (acties.length > 0 && gemaakt.length > 0) {
         toast.success("Opgeslagen!", {
-          duration: 12000,
+          duration: 5000,
           action: {
             label: "Ongedaan maken",
             onClick: async () => {
