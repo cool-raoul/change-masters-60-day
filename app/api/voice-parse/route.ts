@@ -224,6 +224,17 @@ MOGELIJKE ACTIES:
    - Zet automatisch fase naar "shopper" als nog niet shopper/member
    - Systeem maakt automatisch opvolg-herinnering op +21 dagen
 
+11. { "type": "verwijder_prospect", "prospect_id": "uuid-uit-lijst", "volledige_naam": "Pieter de Hoogh" }
+   - Gebruiker wil een prospect/member kwijt. Gebruik ALTIJD het bestaande prospect_id uit de lijst hierboven; nooit een naam verzinnen.
+   - Signaalwoorden: "verwijder", "wis", "haal weg", "delete", "archiveer", "gooi weg", "verwijder alle gegevens van"
+   - De prospect wordt gearchiveerd (reversibel) — dat is veilig genoeg om zonder extra bevestiging uit te voeren.
+   - Als de genoemde naam NIET fonetisch matcht met een bestaande prospect: géén actie, in plaats daarvan in "onduidelijk" vermelden dat er geen match is.
+   - Bij twijfel tussen meerdere matches: kies niets en vraag in "onduidelijk".
+
+12. { "type": "verwijder_herinnering", "herinnering_id": "uuid-uit-lijst", "titel": "..." }
+   - Gebruiker wil een herinnering weg ("verwijder de herinnering om Maria te bellen"). Gebruik id uit OPENSTAANDE HERINNERINGEN lijst.
+   - Onderscheid met voltooi_herinnering: "afvinken"/"is gedaan"/"voltooid" → voltooi_herinnering. "verwijder"/"wis"/"haal weg" → verwijder_herinnering.
+
 ⚠️ KRITIEKE REGELS — HIER GAAT HET VAAK FOUT:
 
 REGEL 0 — BESTELLING = ALTIJD APART product_bestelling ACTIE
@@ -273,8 +284,26 @@ Als gebruiker een notitie wil maken BIJ een bestaande persoon:
 REGEL 5 — BESTAANDE FASES RESPECTEREN
 Voor elke bestaande prospect in de lijst hierboven staat de HUIDIGE fase tussen haakjes. Ga hier NOOIT vanaf zonder expliciete reden in de tekst.
 
+REGEL 6 — NOOIT STIL TERUGKOMEN ZONDER UITLEG
+Als je GEEN acties kunt genereren én GEEN coach_bericht formuleert (intentie = "data" zonder matches):
+→ ALTIJD iets in "onduidelijk" zetten dat uitlegt WAAROM je niets kon doen.
+→ Voorbeelden: "Ik hoorde 'X' maar die naam staat niet in je namenlijst — wil je die als nieuwe prospect toevoegen?", "Ik begreep dat je iets wilde verwijderen maar kon niet bepalen wie — kun je de volledige naam zeggen?", "De opdracht was te kort of onduidelijk om een actie aan te koppelen."
+→ NOOIT een lege acties-lijst MET lege onduidelijk-lijst MET lege coach_bericht terugsturen. Dan zou de gebruiker alleen "Annuleren" zien en niet weten waarom.
+
+REGEL 7 — DENK LOGISCH MEE OVER COMMANDO'S
+Spraak is vrij en creatief. De gebruiker kan commando's op veel manieren verwoorden:
+- "Verwijder de kaart van X", "X mag weg", "Ik wil X kwijt" → verwijder_prospect
+- "Zet X op hoog", "Geef X prioriteit", "X is belangrijk" → update_details met prioriteit:"hoog"
+- "Noteer bij Y dat ...", "Schrijf op bij Y ..." → notitie
+- "Herinner me om Z te ...", "Zet op de lijst: Z" → taak
+- "Ik heb Z gebeld", "Gesproken met Z" → contact_log
+- "X heeft besteld", "X is klant geworden" → product_bestelling (+ eventueel nieuwe_prospect)
+- "Vink X af", "X is gedaan" (bestaande herinnering) → voltooi_herinnering
+- "Verzet X naar vrijdag" (bestaande herinnering) → update_herinnering
+Wees soepel in interpretatie maar wees strikt in identificatie: als de naam niet matcht met de lijst, gebruik dan "onduidelijk" i.p.v. gokken.
+
 STANDAARD REGELS:
-- Altijd lege arrays retourneren als er niks is
+- Altijd lege arrays retourneren als er niks is, MAAR: als acties leeg is EN coach_bericht null, vul dan ALTIJD "onduidelijk" met een uitleg (zie REGEL 6)
 - ALTIJD valid JSON, geen markdown
 - Als iemand al bestaat (naam match in lijst): gebruik de bestaande prospect_id, maak GEEN nieuwe
 - Fuzzy matching op namen: "Pieter" = "Pieter de Hoogh" als die al bestaat
@@ -531,6 +560,16 @@ BELANGRIJK: Begin altijd met de "redenatie" stap. Dit dwingt je om te denken vó
       }
     }
 
+    // Vangnet: als het LLM stil terugkomt (geen acties, geen coach, geen vragen),
+    // genereer dan toch een uitleg-bericht. Zo krijgt de gebruiker altijd feedback.
+    const onduidelijk: string[] = Array.isArray(geparsed.onduidelijk) ? geparsed.onduidelijk : [];
+    const coachBerichtUit = geparsed.coach_bericht || null;
+    if (acties.length === 0 && !coachBerichtUit && onduidelijk.length === 0) {
+      onduidelijk.push(
+        "ELEVA kon jouw verzoek niet koppelen aan een bekende actie. Probeer het anders te formuleren — noem een volledige naam, of geef aan wat je wilt vastleggen (nieuwe prospect, notitie, bestelling, herinnering, verwijderen)."
+      );
+    }
+
     return new Response(
       JSON.stringify({
         transcript,
@@ -539,10 +578,10 @@ BELANGRIJK: Begin altijd met de "redenatie" stap. Dit dwingt je om te denken vó
         samenvatting: geparsed.samenvatting || "",
         redenatie: geparsed.redenatie || "",
         acties,
-        coach_bericht: geparsed.coach_bericht || null,
+        coach_bericht: coachBerichtUit,
         coach_prospect_id: coachProspectId,
         coach_prospect_naam: coachProspectNaam,
-        onduidelijk: Array.isArray(geparsed.onduidelijk) ? geparsed.onduidelijk : [],
+        onduidelijk,
         waarschuwingen,
         model_gebruikt: gekozenModel,
       }),

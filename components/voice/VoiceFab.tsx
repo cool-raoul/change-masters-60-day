@@ -87,6 +87,18 @@ type ActieProductBestelling = {
   notities?: string;
 };
 
+type ActieVerwijderProspect = {
+  type: "verwijder_prospect";
+  prospect_id: string;
+  volledige_naam?: string;
+};
+
+type ActieVerwijderHerinnering = {
+  type: "verwijder_herinnering";
+  herinnering_id: string;
+  titel?: string;
+};
+
 type Actie =
   | ActieNieuweProspect
   | ActieUpdateProspect
@@ -97,7 +109,9 @@ type Actie =
   | ActieStatsIncrement
   | ActieVoltooiHerinnering
   | ActieUpdateHerinnering
-  | ActieProductBestelling;
+  | ActieProductBestelling
+  | ActieVerwijderProspect
+  | ActieVerwijderHerinnering;
 
 type Intentie = "data" | "coach" | "mixed";
 
@@ -705,6 +719,29 @@ export function VoiceFab() {
         }
       }
     }
+    // Verwijder-acties: we zetten gearchiveerd=true i.p.v. hard-delete, zodat
+    // de prospect uit alle views verdwijnt maar teruggehaald kan worden als
+    // het per ongeluk via spraak ging. Dit matcht het bestaande schema-patroon.
+    for (const a of acties) {
+      if (a.type === "verwijder_prospect") {
+        if (!a.prospect_id) continue;
+        await supabase
+          .from("prospects")
+          .update({ gearchiveerd: true, updated_at: new Date().toISOString() })
+          .eq("id", a.prospect_id)
+          .eq("user_id", user.id);
+      }
+    }
+    for (const a of acties) {
+      if (a.type === "verwijder_herinnering") {
+        if (!a.herinnering_id) continue;
+        await supabase
+          .from("herinneringen")
+          .delete()
+          .eq("id", a.herinnering_id)
+          .eq("user_id", user.id);
+      }
+    }
 
     return { gemaakt, naamNaarId };
   }
@@ -1059,6 +1096,29 @@ export function VoiceFab() {
                   </div>
                 )}
 
+                {acties.length === 0 && !resultaat.coach_bericht && (
+                  <div className="card border-cm-gold/30 bg-cm-gold/5 space-y-2">
+                    <p className="text-xs text-cm-gold uppercase tracking-wider">💡 Geen actie herkend</p>
+                    <p className="text-cm-white text-sm">
+                      ELEVA heeft je tekst begrepen, maar kon er geen concrete actie uit afleiden.
+                      Pas de tekst aan en probeer het opnieuw — bijvoorbeeld door een volledige
+                      naam te noemen of duidelijker te zeggen wat je wilt (toevoegen, verwijderen,
+                      notitie, herinnering, bestelling).
+                    </p>
+                    <button
+                      onClick={() => {
+                        setBewerkTekst(resultaat.gecorrigeerd_transcript || resultaat.transcript);
+                        setResultaat(null);
+                        setActies([]);
+                        setFase("bewerken");
+                      }}
+                      className="btn-gold text-sm mt-1"
+                    >
+                      ✏️ Bewerk tekst en probeer opnieuw
+                    </button>
+                  </div>
+                )}
+
                 <div className="flex flex-col sm:flex-row gap-2 pt-2">
                   <button onClick={sluit} className="btn-secondary sm:flex-1">
                     Annuleren
@@ -1106,9 +1166,17 @@ export function VoiceFab() {
 
 function ActieKaart({ actie, onVerwijder }: { actie: Actie; onVerwijder: () => void }) {
   const content = beschrijfActie(actie);
+  const isVerwijder =
+    actie.type === "verwijder_prospect" || actie.type === "verwijder_herinnering";
 
   return (
-    <div className="card bg-cm-surface-2 flex gap-3">
+    <div
+      className={`card flex gap-3 ${
+        isVerwijder
+          ? "bg-red-500/10 border-red-500/40"
+          : "bg-cm-surface-2"
+      }`}
+    >
       <span className="text-2xl">{content.icoon}</span>
       <div className="flex-1 min-w-0">
         <p className="text-cm-white font-semibold text-sm">{content.titel}</p>
@@ -1223,6 +1291,20 @@ function beschrijfActie(actie: any): { icoon: string; titel: string; details: st
             actie.nieuwe_titel ? `Nieuwe titel: ${actie.nieuwe_titel}` : null,
             actie.nieuwe_vervaldatum ? `Nieuwe datum: ${actie.nieuwe_vervaldatum}` : null,
           ].filter(Boolean) as string[],
+        };
+      case "verwijder_prospect":
+        return {
+          icoon: "🗑️",
+          titel: `Verwijder: ${actie.volledige_naam || "prospect"}`,
+          details: [
+            "Wordt gearchiveerd (verdwijnt uit alle lijsten, kan teruggehaald worden).",
+          ],
+        };
+      case "verwijder_herinnering":
+        return {
+          icoon: "🗑️",
+          titel: `Verwijder herinnering: ${actie.titel || "(geen titel)"}`,
+          details: ["Wordt definitief verwijderd."],
         };
       case "product_bestelling":
         return {
