@@ -61,7 +61,10 @@ export async function sendPushToUser(userId: string, payload: PushPayload) {
   }
 }
 
-export async function sendPushToLeiders(payload: PushPayload) {
+export async function sendPushToLeiders(
+  payload: PushPayload,
+  excludeUserIds: string[] = []
+) {
   const supabase = createAdminClient();
 
   const { data: leiders } = await supabase
@@ -72,6 +75,7 @@ export async function sendPushToLeiders(payload: PushPayload) {
   if (!leiders) return;
 
   for (const leider of leiders) {
+    if (excludeUserIds.includes(leider.id)) continue;
     await sendPushToUser(leider.id, payload);
   }
 }

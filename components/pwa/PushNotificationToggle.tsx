@@ -8,6 +8,7 @@ export function PushNotificationToggle() {
   const [isStandalone, setIsStandalone] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isTesting, setIsTesting] = useState(false);
   const [permission, setPermission] = useState<"default" | "granted" | "denied">("default");
 
   useEffect(() => {
@@ -103,6 +104,27 @@ export function PushNotificationToggle() {
     }
   }
 
+  async function stuurTestPush() {
+    setIsTesting(true);
+    try {
+      const response = await fetch("/api/push/test", { method: "POST" });
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok || data?.success === false) {
+        const reden = data?.reason || data?.error || `HTTP ${response.status}`;
+        toast.error("Test mislukt: " + reden);
+        return;
+      }
+
+      toast.success("Test verstuurd \u2014 check je meldingen");
+    } catch (error: any) {
+      console.error("Test push error:", error);
+      toast.error("Fout: " + (error?.message || String(error)));
+    } finally {
+      setIsTesting(false);
+    }
+  }
+
   // Not in PWA mode — show install instruction
   if (!isStandalone && !isSubscribed) {
     return (
@@ -166,6 +188,16 @@ export function PushNotificationToggle() {
             Je hebt notificaties geweigerd. Ga naar Instellingen → Safari/Chrome → Meldingen om dit te wijzigen.
           </p>
         </div>
+      )}
+
+      {isSubscribed && (
+        <button
+          onClick={stuurTestPush}
+          disabled={isTesting}
+          className="w-full px-4 py-2 rounded-lg text-sm font-semibold bg-cm-surface border border-cm-border text-cm-white hover:border-cm-gold transition-colors disabled:opacity-50"
+        >
+          {isTesting ? "Bezig met versturen..." : "🧪 Stuur test-melding"}
+        </button>
       )}
     </div>
   );

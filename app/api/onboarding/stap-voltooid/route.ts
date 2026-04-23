@@ -41,8 +41,12 @@ export async function POST(request: NextRequest) {
       await sendPushToUser(profile.sponsor_id, payload);
     }
 
-    // 2. Stuur ook naar alle leiders (dubbele melding voor leiders is ok)
-    await sendPushToLeiders(payload);
+    // 2. Stuur naar alle leiders, maar sluit sponsor + user zelf uit
+    //    zodat niemand een dubbele push krijgt.
+    const exclusies = [profile?.sponsor_id, user.id].filter(
+      (v): v is string => typeof v === "string" && v.length > 0
+    );
+    await sendPushToLeiders(payload, exclusies);
 
     return NextResponse.json({ success: true });
   } catch (error) {
