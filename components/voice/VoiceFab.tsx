@@ -696,20 +696,25 @@ export function VoiceFab() {
     }
     for (const a of acties) {
       if (a.type === "taak") {
-        const id = naamNaarId[a.prospect_naam.toLowerCase()] || null;
+        const prospectNaam = a.prospect_naam || "";
+        const id = prospectNaam ? naamNaarId[prospectNaam.toLowerCase()] || null : null;
         const vervaldatum = a.vervaldatum || standaardDatum();
-        const { data: h } = await supabase
+        const { data: h, error: taakFout } = await supabase
           .from("herinneringen")
           .insert({
             user_id: user.id,
             prospect_id: id,
             herinnering_type: "followup",
-            titel: a.titel,
-            beschrijving: a.titel,
+            titel: a.titel || "Herinnering zonder titel",
+            beschrijving: a.titel || "",
             vervaldatum,
           })
           .select("id")
           .single();
+        if (taakFout) {
+          console.error("Taak-insert fout:", taakFout, "actie:", a);
+          toast.error(`Herinnering mislukt: ${taakFout.message}`);
+        }
         if (h) gemaakt.push({ tabel: "herinneringen", id: h.id });
       }
     }
