@@ -26,6 +26,12 @@ export default function NieuwProspectPagina() {
     pipeline_fase: "prospect",
   });
 
+  // Optioneel eerste herinnering-blok. Leeg = geen herinnering aanmaken.
+  // Zo hoef je niet éérst op te slaan en dán naar de kaart om een follow-up
+  // te plannen — kan direct bij het aanmaken van het contact.
+  const [herinneringDatum, setHerinneringDatum] = useState("");
+  const [herinneringTekst, setHerinneringTekst] = useState("");
+
   function updateVeld(veld: string, waarde: string) {
     setFormData((prev) => ({ ...prev, [veld]: waarde }));
   }
@@ -58,11 +64,39 @@ export default function NieuwProspectPagina() {
 
     if (error) {
       toast.error(v("nieuw.fout") + ": " + error.message);
-    } else {
-      toast.success(`${formData.volledige_naam} ${v("nieuw.toegevoegd")}`);
-      router.push(`/namenlijst/${data.id}`);
+      setLaden(false);
+      return;
     }
 
+    // Als user een herinnering-datum heeft ingevuld, maak direct een
+    // herinnering aan, gekoppeld aan de zojuist aangemaakte prospect.
+    if (herinneringDatum) {
+      const { error: herrFout } = await supabase.from("herinneringen").insert({
+        user_id: user.id,
+        prospect_id: data.id,
+        herinnering_type: "followup",
+        titel: `Follow-up: ${formData.volledige_naam}`,
+        beschrijving:
+          herinneringTekst || `Opvolgen van ${formData.volledige_naam}`,
+        vervaldatum: herinneringDatum,
+      });
+
+      // Ook volgende_actie bijwerken zodat het in de prospect-data zit
+      if (!herrFout) {
+        await supabase
+          .from("prospects")
+          .update({
+            volgende_actie_datum: herinneringDatum,
+            volgende_actie_notitie: herinneringTekst || null,
+          })
+          .eq("id", data.id);
+      } else {
+        toast.error("Herinnering kon niet aangemaakt worden: " + herrFout.message);
+      }
+    }
+
+    toast.success(`${formData.volledige_naam} ${v("nieuw.toegevoegd")}`);
+    router.push(`/namenlijst/${data.id}`);
     setLaden(false);
   }
 
@@ -205,6 +239,43 @@ export default function NieuwProspectPagina() {
               className="textarea-cm"
               rows={3}
             />
+          </div>
+
+          {/* Optionele eerste herinnering / follow-up */}
+          <div className="sm:col-span-2 border-t border-cm-border pt-4">
+            <p className="text-sm text-cm-white mb-2 flex items-center gap-2">
+              🔔 Eerste follow-up plannen{" "}
+              <span className="opacity-60 text-xs">(optioneel)</span>
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs text-cm-white mb-1">
+                  Herinneringsdatum
+                </label>
+                <input
+                  type="date"
+                  value={herinneringDatum}
+                  onChange={(e) => setHerinneringDatum(e.target.value)}
+                  className="input-cm text-sm [&::-webkit-calendar-picker-indicator]:invert"
+                  min={new Date().toISOString().split("T")[0]}
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-cm-white mb-1">
+                  Wat herinneren
+                </label>
+                <input
+                  type="text"
+                  value={herinneringTekst}
+                  onChange={(e) => setHerinneringTekst(e.target.value)}
+                  placeholder="Bijv. bellen voor afspraak"
+                  className="input-cm text-sm"
+                />
+              </div>
+            </div>
+            <p className="text-xs text-cm-white opacity-50 mt-2">
+              Laat leeg als je nog geen follow-up wilt plannen.
+            </p>
           </div>
         </div>
 
