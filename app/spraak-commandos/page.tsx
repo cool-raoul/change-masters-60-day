@@ -261,6 +261,18 @@ const COMMANDOS: Commando[] = [
   },
   {
     categorie: "Navigatie",
+    icoon: "🎯",
+    titel: "Volgende acties (DOE-lijst)",
+    wat: "Spraak → opent de /acties pagina met alleen wat vandaag/verlopen is.",
+    voorbeelden: [
+      { zin: "\"Wat moet ik vandaag doen?\"" },
+      { zin: "\"Wie staat op me te wachten?\"" },
+      { zin: "\"Laat mijn volgende acties zien.\"" },
+      { zin: "\"Open mijn actielijst.\"" },
+    ],
+  },
+  {
+    categorie: "Navigatie",
     icoon: "🔍",
     titel: "Zoeken",
     wat: "Doorzoek prospects en gesprekken op een term.",

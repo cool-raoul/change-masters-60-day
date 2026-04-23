@@ -204,6 +204,10 @@ export const t: Vertalingen = {
     nl: "Herinneringen", en: "Reminders", fr: "Rappels",
     es: "Recordatorios", de: "Erinnerungen", pt: "Lembretes",
   },
+  "nav.acties": {
+    nl: "Volgende acties", en: "Next actions", fr: "Prochaines actions",
+    es: "Próximas acciones", de: "Nächste Aktionen", pt: "Próximas ações",
+  },
   "nav.team": {
     nl: "Mijn Team", en: "My Team", fr: "Mon \u00c9quipe",
     es: "Mi Equipo", de: "Mein Team", pt: "Minha Equipe",

@@ -140,6 +140,23 @@ export const FEATURES: Feature[] = [
     inRondleiding: true,
   },
   {
+    id: "acties",
+    emoji: "🎯",
+    titel: "Volgende acties — je DMO-outbox",
+    lead: "Eén pagina. Vandaag + verlopen. Klik op het juiste icoon en doen.",
+    bullets: [
+      "Alleen wat NU telt — geen \"later\" ruis, geen beheer-modus",
+      "Direct-klik iconen: WhatsApp, bellen, e-mail, Instagram, Facebook — zonder prospect-kaart te openen",
+      "Volledige herinnerings-tekst al zichtbaar — je ziet meteen waar het over ging",
+      "Afvinken met één klik als je hem gedaan hebt",
+      "Via spraak: \"Wat moet ik vandaag doen?\" / \"Wie staat op me te wachten?\"",
+    ],
+    wow: "Van \"ik moet nog iemand appen...\" naar klaar in 2 seconden. Dit is waar de DMO in de praktijk gebeurt.",
+    route: "/acties",
+    volgorde: 45,
+    inRondleiding: true,
+  },
+  {
     id: "premium",
     emoji: "🌟",
     titel: "Premium — €2/mnd, onbeperkt alles",

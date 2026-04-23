@@ -278,9 +278,10 @@ MOGELIJKE ACTIES:
 
 18. { "type": "navigeer", "bestemming": "<keuze>", "prospect_id": "uuid-als-prospect", "volledige_naam": "..." }
    - "Ga naar X", "Open X", "Laat X zien", "Ik wil naar X".
-   - bestemming opties: "dashboard" | "namenlijst" | "namenlijst_nieuw" | "herinneringen" | "coach" | "premium" | "statistieken" | "mijn_why" | "team" | "zoeken" | "instellingen" | "producten" | "scripts" | "prospect"
+   - bestemming opties: "dashboard" | "namenlijst" | "namenlijst_nieuw" | "herinneringen" | "acties" | "coach" | "premium" | "statistieken" | "mijn_why" | "team" | "zoeken" | "instellingen" | "producten" | "scripts" | "prospect"
    - Voor "prospect": vul prospect_id + volledige_naam (uit BESTAANDE lijst). "Ga naar Petra" / "open de kaart van Maria" → bestemming="prospect" + prospect_id.
-   - Typische mappings: "homepage/dashboard/start" → dashboard, "kanban/pijplijn/prospects/lijst" → namenlijst, "nieuwe prospect/voeg toe" → namenlijst_nieuw, "todos/taken/lijst" → herinneringen, "mentor/coach/AI" → coach, "abonnement/upgrade" → premium, "stats/grafieken/voortgang" → statistieken, "waarom/droom/doel" → mijn_why.
+   - Typische mappings: "homepage/dashboard/start" → dashboard, "kanban/pijplijn/prospects/lijst" → namenlijst, "nieuwe prospect/voeg toe" → namenlijst_nieuw, "todos/taken/lijst/volledig herinneringen-beheer" → herinneringen, "wat moet ik vandaag doen/wie moet ik bellen/wie staat op me te wachten/volgende acties/actielijst/doe-lijst/vandaag-lijst" → acties, "mentor/coach/AI" → coach, "abonnement/upgrade" → premium, "stats/grafieken/voortgang" → statistieken, "waarom/droom/doel" → mijn_why.
+   - Onderscheid acties vs herinneringen: "acties" is de DOE-pagina (vandaag + verlopen, met quick-action iconen); "herinneringen" is de BEHEER-pagina (volledige lijst inclusief later). Bij twijfel: kies "acties".
    - Geen 2 navigeer-acties tegelijk.
 
 19. { "type": "zoek", "zoekterm": "diabetes" }

@@ -141,6 +141,7 @@ type NavigeerBestemming =
   | "namenlijst"
   | "namenlijst_nieuw"
   | "herinneringen"
+  | "acties"
   | "coach"
   | "premium"
   | "statistieken"
@@ -475,6 +476,7 @@ export function VoiceFab() {
       case "namenlijst": return "/namenlijst";
       case "namenlijst_nieuw": return "/namenlijst/nieuw";
       case "herinneringen": return "/herinneringen";
+      case "acties": return "/acties";
       case "coach": return "/coach";
       case "premium": return "/premium";
       case "statistieken": return "/statistieken";
@@ -1624,6 +1626,7 @@ function beschrijfActie(actie: any): { icoon: string; titel: string; details: st
           namenlijst: "Namenlijst",
           namenlijst_nieuw: "Nieuwe prospect",
           herinneringen: "Herinneringen",
+          acties: "Volgende acties",
           coach: "ELEVA Mentor",
           premium: "Premium",
           statistieken: "Statistieken",

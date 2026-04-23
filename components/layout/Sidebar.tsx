@@ -16,6 +16,7 @@ export function Sidebar({ isLeider = false }: { isLeider?: boolean }) {
 
   const navigatie = [
     { href: "/dashboard", labelKey: "nav.dashboard", icoon: "⚡" },
+    { href: "/acties", labelKey: "nav.acties", icoon: "🎯" },
     { href: "/namenlijst", labelKey: "nav.namenlijst", icoon: "👥" },
     { href: "/zoeken", labelKey: "nav.zoeken", icoon: "🔍" },
     { href: "/coach", labelKey: "nav.coach", icoon: "🤖" },
