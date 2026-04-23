@@ -80,6 +80,9 @@ export async function POST(request: Request) {
       .join("\n");
 
     const vandaag = new Date().toISOString().split("T")[0];
+    const weekdagenNL = ["zondag", "maandag", "dinsdag", "woensdag", "donderdag", "vrijdag", "zaterdag"];
+    // Anker op noon UTC van vandaag, zodat de weekdag altijd matcht met de vandaag-datum
+    const huidigeWeekdag = weekdagenNL[new Date(vandaag + "T12:00:00Z").getUTCDay()];
     const taalNaam: Record<string, string> = {
       nl: "Nederlands", en: "Engels", fr: "Frans", es: "Spaans", de: "Duits", pt: "Portugees",
     };
@@ -87,7 +90,7 @@ export async function POST(request: Request) {
 
     const systeemPrompt = `Je bent een assistent die spraak-transcripten van een netwerkmarketing coach omzet naar gestructureerde acties in JSON.
 
-Vandaag is: ${vandaag}
+Vandaag is: ${vandaag} (${huidigeWeekdag})
 Taal van transcript: ${taalLabel}
 
 BESTAANDE PROSPECTS / MEMBERS IN DE LIJST:
@@ -329,12 +332,18 @@ Signaalwoorden die ALTIJD product_bestelling vereisen:
 
 Datum: als gebruiker zegt "vandaag" → vandaag. "Gisteren" → -1 dag. "Vorige week" → -7 dagen. Geen datum genoemd → vandaag.
 
-REGEL 1 — PIPELINE_FASE VERANDER JE (BIJNA) NOOIT
-- Verander pipeline_fase ALLEEN als de gebruiker expliciet zegt dat iemand van status verandert.
-- Expliciete signalen: "X is klant geworden", "Y heeft besteld/ingeschreven", "Z wil niet meer", "heeft afgezegd", "is partner geworden"
-- "Opvolgen", "bellen", "spreken met", "nog contact zoeken" → GEEN fase-verandering! Dit is een taak.
-- Iemand die al "member" of "shopper" is, blijft dat. Ga NOOIT terug naar "prospect", "followup" of "uitgenodigd".
-- Bij twijfel: laat pipeline_fase weg uit de actie.
+REGEL 1 — PIPELINE_FASE VERANDER JE ALLEEN BIJ EXPLICIETE SIGNALEN
+Verander pipeline_fase alleen als de gebruiker expliciet een status-wijziging vertelt. Triggers per fase:
+- → "uitgenodigd": "heb X uitgenodigd", "X komt [op datum] naar [presentatie / event / gesprek / meeting / kennismaking]", "X heeft toegezegd", "X is aangemeld voor ...", "X gaat met me mee naar ...", "X doet mee aan ..."
+- → "presentatie": "presentatie gegeven aan X", "X is bij de presentatie geweest", "presentatie met X gedaan"
+- → "followup": "X wil er nog over nadenken", "X vraagt bedenktijd", "X twijfelt"
+- → "shopper": "X heeft besteld", "X heeft [pakket/product] genomen" (zonder expliciet member-woord)
+- → "member": "X is klant/member geworden", "X heeft ingeschreven als member/lid/partner"
+- → "not_yet": "X heeft afgezegd", "X wil niet meer", "X is niet klaar", "X stopt ermee"
+
+"Opvolgen", "bellen", "spreken met", "nog contact zoeken" → GEEN fase-verandering! Dit is een taak (zie REGEL 8).
+Iemand die al "member" of "shopper" is, blijft dat. Ga NOOIT terug naar "prospect", "followup" of "uitgenodigd".
+Bij twijfel: laat pipeline_fase weg uit de actie.
 
 REGEL 2 — "OPVOLGEN" = TAAK, NIET FASE
 Als gebruiker zegt "ik moet X opvolgen/bellen/spreken/contacten":
@@ -373,6 +382,28 @@ Spraak is vrij en creatief. De gebruiker kan commando's op veel manieren verwoor
 - "Verzet X naar vrijdag" (bestaande herinnering) → update_herinnering
 Wees soepel in interpretatie maar wees strikt in identificatie: als de naam niet matcht met de lijst, gebruik dan "onduidelijk" i.p.v. gokken.
 
+REGEL 8 — TAAK-ACTIE ALLEEN BIJ EXPLICIETE HERINNER-TRIGGER
+Maak ALLEEN een { "type": "taak" } actie als de gebruiker zelf om een reminder/todo vraagt. Expliciete triggers:
+- "herinner me (om) ..."
+- "zet op mijn lijst ..."
+- "vergeet niet dat ik ..."
+- "plan in dat ik ..."
+- "ik moet X (nog) bellen / opvolgen / spreken / mailen"
+- "maak een herinnering om ..."
+
+GEEN taak aanmaken bij:
+- Feiten over een prospect ("X komt zaterdag", "X heeft besteld", "X heeft afgezegd") → dit is een fase-verandering of contact_log, NIET een taak.
+- Plannen of acties van de prospect zelf ("hij gaat volgende week beginnen") → notitie.
+- Agenda-afspraken die al vastliggen ("vrijdag heb ik een gesprek met X") zonder expliciete herinner-vraag → optioneel notitie, geen taak.
+
+Voorbeeld FOUT → GOED:
+Transcript: "Kees komt zaterdag naar de presentatie"
+→ FOUT: taak { titel: "Herinner aan presentatie", vervaldatum: zaterdag }
+→ GOED: update_prospect { prospect_id: <Kees>, pipeline_fase: "uitgenodigd" }
+
+Transcript: "Herinner me om Maria donderdag te bellen"
+→ GOED: taak { prospect_naam: "Maria", titel: "Maria bellen", vervaldatum: eerstvolgende donderdag }
+
 STANDAARD REGELS:
 - Altijd lege arrays retourneren als er niks is, MAAR: als acties leeg is EN coach_bericht null, vul dan ALTIJD "onduidelijk" met een uitleg (zie REGEL 6)
 - ALTIJD valid JSON, geen markdown
@@ -381,6 +412,7 @@ STANDAARD REGELS:
 - Neem notities altijd mee bij het aanmaken van een prospect als ze genoemd worden
 - Bij familie/relatie-info (bijv. "zijn zus"): neem dat op in notities van de nieuwe prospect en in het relatie-veld
 - "volgende maand" = +30 dagen, "volgende week" = +7 dagen, "morgen" = +1 dag, "deze week" = +3 dagen, geen tijd genoemd = +7 dagen
+- Weekdagen ("maandag" t/m "zondag", ook "aanstaande zaterdag", "a.s. vrijdag", "komende dinsdag") → eerstvolgende voorkomen van die dag vanaf vandaag. Vandaag is ${huidigeWeekdag}. Als de gebruiker diezelfde weekdag noemt als vandaag, dan +7 dagen. Reken zelf uit hoeveel dagen tot de genoemde weekdag en zet de exacte YYYY-MM-DD datum in "vervaldatum"/"besteldatum".
 
 VOORBEELDEN:
 
@@ -446,6 +478,10 @@ BELANGRIJK: Begin altijd met de "redenatie" stap. Dit dwingt je om te denken vó
     const kritiekeSignalen = /\b(besteld|gekocht|pakket|ingeschreven|member|klant|shopper|partner|opvolgen|afgezegd|wil niet|stopt|starterpakket|basispakket|shake|lifeplus|proanthenols?|pro[\s-]?anten[oe]ls?|omegold|ome[\s-]gold|oma[\s-]gold|omega[\s-]?3|visolie|evening[\s-]?prim[\s-]?ro(o|se)|teunisbloem|daily[\s-]?biobasics|biobasics|dbb|mena[\s-]?plus|key[\s-]?tonic|cacao[\s-]?boost|golden[\s-]?milk|purple[\s-]?flash|green[\s-]?medley|biotic[\s-]?blast|cogelin|parabalance|somazyme|support[\s-]?tabs|be[\s-]?focused|be[\s-]?sustained|be[\s-]?recharged|be[\s-]?refueled|triple[\s-]?protein|darmen[\s-]in[\s-]balans|stress[\s-]?less|get[\s-]?zen|reset[\s-]?programma|women'?s[\s-]?gold|men'?s[\s-]?gold|maintain[\s-]?(and|&)?[\s-]?protect)\b/i;
     const stotterSignalen = /\b(eh+|uhm+|uh+|ehm+|hmm+|eigenlijk|ik bedoel|nee wacht|sorry|nou eh)\b/i;
     const dubbelWoord = /\b(\w{3,})\s+\1\b/i; // zelfde woord twee keer achter elkaar
+    // Fase-signalen die nuance vragen (niet klakkeloos als taak interpreteren)
+    const faseSignalen = /\b(uitgenodigd|aangemeld|toegezegd|komt naar|komt op|presentatie gegeven|presentatie met|afgezegd|twijfelt|bedenktijd)\b/i;
+    // Weekdagen → volwaardige LLM nodig voor correcte datum-berekening
+    const weekdagSignalen = /\b(maandag|dinsdag|woensdag|donderdag|vrijdag|zaterdag|zondag)\b/i;
     const lengte = transcript.trim().length;
     const aantalNamen = (bestaandeProspects || []).filter((p: any) =>
       new RegExp(`\\b${p.volledige_naam.split(" ")[0]}\\b`, "i").test(transcript)
@@ -455,6 +491,8 @@ BELANGRIJK: Begin altijd met de "redenatie" stap. Dit dwingt je om te denken vó
       !kritiekeSignalen.test(transcript) &&
       !stotterSignalen.test(transcript) &&
       !dubbelWoord.test(transcript) &&
+      !faseSignalen.test(transcript) &&
+      !weekdagSignalen.test(transcript) &&
       aantalNamen <= 1;
     const gekozenModel = gebruikMini ? "gpt-4o-mini" : "gpt-4o";
 
