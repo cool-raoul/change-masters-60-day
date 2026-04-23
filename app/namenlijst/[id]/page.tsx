@@ -14,6 +14,7 @@ import { ProspectVerwijderKnop } from "@/components/namenlijst/ProspectVerwijder
 import { CoachGesprekkenInklapbaar } from "@/components/namenlijst/CoachGesprekkenInklapbaar";
 import { ProductadviesKnop } from "@/components/namenlijst/ProductadviesKnop";
 import { ActiefToggle } from "@/components/namenlijst/ActiefToggle";
+import { HerinneringenOpKaart } from "@/components/namenlijst/HerinneringenOpKaart";
 import { productadviesBeschikbaar } from "@/lib/features/productadvies";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { Locale } from "date-fns";
@@ -36,36 +37,51 @@ export default async function ProspectDetailPagina({
   const taal = await getServerTaal();
   const datumLocale = DATE_LOCALES[taal] || nl;
 
-  const [{ data: prospect }, { data: contactLogs }, { data: bestellingen }, { data: coachGesprekken }, { data: eigenProfiel }] =
-    await Promise.all([
-      supabase
-        .from("prospects")
-        .select("*")
-        .eq("id", id)
-        .eq("user_id", user.id)
-        .single(),
-      supabase
-        .from("contact_logs")
-        .select("*")
-        .eq("prospect_id", id)
-        .order("created_at", { ascending: false }),
-      supabase
-        .from("product_bestellingen")
-        .select("*")
-        .eq("prospect_id", id)
-        .order("besteldatum", { ascending: false }),
-      supabase
-        .from("ai_gesprekken")
-        .select("id, titel, created_at, updated_at")
-        .eq("prospect_id", id)
-        .eq("user_id", user.id)
-        .order("updated_at", { ascending: false }),
-      supabase
-        .from("profiles")
-        .select("sponsor_id, role")
-        .eq("id", user.id)
-        .single(),
-    ]);
+  const [
+    { data: prospect },
+    { data: contactLogs },
+    { data: bestellingen },
+    { data: coachGesprekken },
+    { data: eigenProfiel },
+    { data: herinneringen },
+  ] = await Promise.all([
+    supabase
+      .from("prospects")
+      .select("*")
+      .eq("id", id)
+      .eq("user_id", user.id)
+      .single(),
+    supabase
+      .from("contact_logs")
+      .select("*")
+      .eq("prospect_id", id)
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("product_bestellingen")
+      .select("*")
+      .eq("prospect_id", id)
+      .order("besteldatum", { ascending: false }),
+    supabase
+      .from("ai_gesprekken")
+      .select("id, titel, created_at, updated_at")
+      .eq("prospect_id", id)
+      .eq("user_id", user.id)
+      .order("updated_at", { ascending: false }),
+    supabase
+      .from("profiles")
+      .select("sponsor_id, role")
+      .eq("id", user.id)
+      .single(),
+    // Openstaande herinneringen voor deze prospect — toont ze op de kaart
+    // i.p.v. alleen op /herinneringen. Context hoort bij de persoon.
+    supabase
+      .from("herinneringen")
+      .select("*")
+      .eq("prospect_id", id)
+      .eq("user_id", user.id)
+      .eq("voltooid", false)
+      .order("vervaldatum", { ascending: true }),
+  ]);
 
   if (!prospect) notFound();
 
@@ -200,6 +216,8 @@ export default async function ProspectDetailPagina({
 
         {/* Acties + contactlog */}
         <div className="lg:col-span-2 space-y-4">
+          {/* Openstaande herinneringen — bovenaan zodat ze direct zichtbaar zijn */}
+          <HerinneringenOpKaart herinneringen={herinneringen || []} />
           <ProspectActieForm prospect={prospect} userId={user.id} />
           <ContactLogLijst
             contactLogs={contactLogs || []}
