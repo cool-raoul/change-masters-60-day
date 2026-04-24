@@ -34,6 +34,10 @@ export interface Profile {
   invited_by: string | null;
   taal: Taal;
   created_at: string;
+  // Gebundelde dagelijkse herinneringspush — live-pushes staan hier los van.
+  dagelijkse_push_uur?: number; // 0-23, default 7
+  tijdzone?: string; // IANA tz, default "Europe/Amsterdam"
+  dagelijkse_push_aan?: boolean; // default true
 }
 
 export interface WhyProfile {

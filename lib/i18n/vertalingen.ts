@@ -694,6 +694,14 @@ export const t: Vertalingen = {
   "instellingen.wachtwoord_wijzigen": { nl: "Wachtwoord wijzigen", en: "Change password", fr: "Modifier le mot de passe", es: "Cambiar contraseña", de: "Passwort ändern", pt: "Alterar senha" },
   "instellingen.wijzigen_laden": { nl: "Wijzigen...", en: "Changing...", fr: "Modification...", es: "Cambiando...", de: "Ändern...", pt: "Alterando..." },
 
+  // Dagelijkse push-tijd
+  "instellingen.push_titel": { nl: "Dagelijkse herinneringspush", en: "Daily reminder push", fr: "Push de rappels quotidien", es: "Push diario de recordatorios", de: "Täglicher Erinnerungs-Push", pt: "Push diário de lembretes" },
+  "instellingen.push_subtitel": { nl: "Eén gebundeld bericht per dag met al je openstaande herinneringen. Live-meldingen blijven altijd aan.", en: "One bundled message per day with all your open reminders. Live notifications always stay on.", fr: "Un seul message groupé par jour avec tous tes rappels ouverts. Les notifications en direct restent toujours actives.", es: "Un mensaje agrupado por día con todos tus recordatorios abiertos. Las notificaciones en vivo siempre están activas.", de: "Eine gebündelte Nachricht pro Tag mit all deinen offenen Erinnerungen. Live-Benachrichtigungen bleiben immer aktiv.", pt: "Uma mensagem agrupada por dia com todos os seus lembretes abertos. Notificações ao vivo permanecem sempre ativas." },
+  "instellingen.push_aan_label": { nl: "Dagelijkse push aan", en: "Daily push on", fr: "Push quotidien activé", es: "Push diario activado", de: "Täglicher Push an", pt: "Push diário ligado" },
+  "instellingen.push_uur_label": { nl: "Tijdstip (jouw tijdzone)", en: "Time (your timezone)", fr: "Heure (ton fuseau)", es: "Hora (tu zona horaria)", de: "Uhrzeit (deine Zeitzone)", pt: "Horário (seu fuso)" },
+  "instellingen.push_tijdzone_auto": { nl: "Tijdzone wordt automatisch opgeslagen bij opslaan", en: "Timezone is captured automatically on save", fr: "Le fuseau horaire est enregistré automatiquement", es: "La zona horaria se guarda automáticamente", de: "Die Zeitzone wird beim Speichern automatisch übernommen", pt: "O fuso horário é salvo automaticamente" },
+  "instellingen.push_opgeslagen": { nl: "Push-voorkeuren opgeslagen!", en: "Push preferences saved!", fr: "Préférences push enregistrées !", es: "¡Preferencias de push guardadas!", de: "Push-Einstellungen gespeichert!", pt: "Preferências de push salvas!" },
+
   // ===== NIEUW PROSPECT =====
   "nieuw.titel": { nl: "Nieuw Prospect", en: "New Prospect", fr: "Nouveau Prospect", es: "Nuevo Prospecto", de: "Neuer Kontakt", pt: "Novo Prospecto" },
   "nieuw.subtitel": { nl: "Voeg iemand toe aan je namenlijst", en: "Add someone to your list", fr: "Ajoutez quelqu'un à votre liste", es: "Añade a alguien a tu lista", de: "Jemanden zur Kontaktliste hinzufügen", pt: "Adicione alguém à sua lista" },

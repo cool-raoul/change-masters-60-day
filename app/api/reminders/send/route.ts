@@ -3,8 +3,48 @@ import { Resend } from "resend";
 import { NextResponse } from "next/server";
 import { sendPushToUser } from "@/lib/push/sendPush";
 
-// Wordt elke ochtend om 07:00 NL-tijd aangeroepen via Vercel Cron
-// Schedule: "0 5 * * *" = 07:00 CEST (UTC+2, zomertijd)
+// Wordt ELK UUR op het hele uur aangeroepen via Vercel Cron.
+// Schedule: "0 * * * *". Per user checken we of het NU het gewenste lokale uur
+// is in hun tijdzone (profiles.dagelijkse_push_uur + profiles.tijdzone). Alleen
+// voor matches sturen we de gebundelde push/mail. Zo kan iedereen z'n eigen
+// ochtend-tijdstip kiezen zonder 24 aparte cron-jobs.
+
+// Bereken het huidige uur (0-23) in een IANA-tijdzone. Intl.DateTimeFormat
+// geeft ons een gelokaliseerde string; we pakken het uur daaruit.
+function huidigUurInTijdzone(tz: string): number | null {
+  try {
+    const fmt = new Intl.DateTimeFormat("nl-NL", {
+      timeZone: tz,
+      hour: "numeric",
+      hour12: false,
+    });
+    // fmt.format geeft bv. "7" of "23" afhankelijk van tijd
+    const val = parseInt(fmt.format(new Date()), 10);
+    if (Number.isNaN(val) || val < 0 || val > 23) return null;
+    return val;
+  } catch {
+    // Ongeldige tijdzone: laat deze user dit uur over
+    return null;
+  }
+}
+
+// Bereken YYYY-MM-DD (ISO-datum) in een bepaalde tijdzone. Nodig omdat "vandaag"
+// anders in een UTC-log doet alsof er om middernacht UTC al een nieuwe dag is,
+// terwijl de user in een andere tz zit.
+function vandaagInTijdzone(tz: string): string {
+  try {
+    const fmt = new Intl.DateTimeFormat("en-CA", {
+      timeZone: tz,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+    // en-CA geeft "YYYY-MM-DD", perfect voor onze kolom
+    return fmt.format(new Date());
+  } catch {
+    return new Date().toISOString().split("T")[0];
+  }
+}
 
 export async function GET(request: Request) {
   // Vercel stuurt automatisch Authorization: Bearer CRON_SECRET mee bij cron calls
@@ -16,13 +56,15 @@ export async function GET(request: Request) {
   }
 
   const supabase = createAdminClient();
-  const vandaag = new Date().toISOString().split("T")[0];
 
-  // Haal alle users op die OF een Resend key hebben OF een actieve push-subscription
+  // Haal alle users op die OF een Resend key hebben OF een actieve push-subscription.
+  // We laden direct ook de push-schedule velden zodat we per user kunnen filteren.
   const [{ data: emailUsers }, { data: pushUsers }] = await Promise.all([
     supabase
       .from("profiles")
-      .select("id, full_name, email, resend_api_key")
+      .select(
+        "id, full_name, email, resend_api_key, dagelijkse_push_uur, tijdzone, dagelijkse_push_aan"
+      )
       .not("resend_api_key", "is", null)
       .neq("resend_api_key", ""),
     supabase
@@ -31,8 +73,18 @@ export async function GET(request: Request) {
       .eq("is_active", true),
   ]);
 
-  const userMap = new Map<string, { id: string; full_name: string | null; email: string; resend_api_key: string | null }>();
-  for (const u of emailUsers || []) {
+  type UserRij = {
+    id: string;
+    full_name: string | null;
+    email: string;
+    resend_api_key: string | null;
+    dagelijkse_push_uur: number | null;
+    tijdzone: string | null;
+    dagelijkse_push_aan: boolean | null;
+  };
+
+  const userMap = new Map<string, UserRij>();
+  for (const u of (emailUsers || []) as UserRij[]) {
     userMap.set(u.id, u);
   }
   const pushUserIds = new Set((pushUsers || []).map((p) => p.user_id));
@@ -40,14 +92,26 @@ export async function GET(request: Request) {
   if (ontbrekendePushUsers.length > 0) {
     const { data: extra } = await supabase
       .from("profiles")
-      .select("id, full_name, email, resend_api_key")
+      .select(
+        "id, full_name, email, resend_api_key, dagelijkse_push_uur, tijdzone, dagelijkse_push_aan"
+      )
       .in("id", ontbrekendePushUsers);
-    for (const u of extra || []) {
+    for (const u of (extra || []) as UserRij[]) {
       userMap.set(u.id, u);
     }
   }
 
-  const gebruikers = Array.from(userMap.values());
+  // Filter: alleen users waarvoor het NU hun ingestelde lokale uur is, en
+  // die de dagelijkse push aan hebben staan. Defaults (als de migratie nog
+  // niet gelopen heeft of een user niks heeft ingesteld): 07:00 Amsterdam aan.
+  const gebruikers = Array.from(userMap.values()).filter((u) => {
+    const aan = u.dagelijkse_push_aan ?? true;
+    if (!aan) return false;
+    const tz = u.tijdzone || "Europe/Amsterdam";
+    const gewenstUur = u.dagelijkse_push_uur ?? 7;
+    const huidigUur = huidigUurInTijdzone(tz);
+    return huidigUur !== null && huidigUur === gewenstUur;
+  });
 
   if (gebruikers.length === 0) {
     return NextResponse.json({ message: "Geen gebruikers met e-mail of push-abonnement", verzonden: 0 });
@@ -58,6 +122,12 @@ export async function GET(request: Request) {
   const fouten: string[] = [];
 
   for (const gebruiker of gebruikers) {
+    // "Vandaag" moet in de tijdzone van de gebruiker bepaald worden —
+    // anders zou een user in Azië zijn vandaag-herinneringen pas de dag
+    // erna binnenkrijgen. Zonder tijdzone val je terug op UTC-vandaag.
+    const gebruikerTz = gebruiker.tijdzone || "Europe/Amsterdam";
+    const vandaag = vandaagInTijdzone(gebruikerTz);
+
     // Haal openstaande herinneringen op voor deze gebruiker
     const { data: herinneringen } = await supabase
       .from("herinneringen")
