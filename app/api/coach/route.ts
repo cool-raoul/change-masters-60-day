@@ -186,9 +186,12 @@ export async function POST(request: Request) {
     ];
 
     // OpenAI streaming
+    // gpt-4o voor productadvies (uitgebreid redeneren, fase-plan, basis-stack),
+    // gpt-4o-mini voor de rest (DMs/bezwaren/scripts — kort en snel).
+    const isProductAdvies = vraagType === "productadvies";
     const stream = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      max_tokens: 800,
+      model: isProductAdvies ? "gpt-4o" : "gpt-4o-mini",
+      max_tokens: isProductAdvies ? 2000 : 800,
       messages: apiMessages,
       stream: true,
     });
