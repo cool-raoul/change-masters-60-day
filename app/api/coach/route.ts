@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { bouwCoachSysteemPrompt } from "@/lib/prompts/coach-systeem-prompt";
 import { detecteerVraagType } from "@/lib/knowledge/coach-boeken";
 import { productadviesBeschikbaar } from "@/lib/features/productadvies";
+import { checkCompliance, vatFlagsSamen } from "@/lib/coach/compliance-check";
 import { ChatBericht } from "@/lib/supabase/types";
 
 // Verleng Vercel timeout
@@ -206,6 +207,19 @@ export async function POST(request: Request) {
             }
           }
           controller.close();
+
+          // Compliance-scan op het volledige antwoord. PASSIEF — we
+          // blokkeren niets, we loggen alleen. Als de prompt goed werkt
+          // blijft dit stil; als er toch iets doorheen glipt zien we
+          // dat hier en kunnen we de prompt aanscherpen.
+          if (volledigAntwoord && vraagType === "productadvies") {
+            const compliance = checkCompliance(volledigAntwoord);
+            if (!compliance.ok) {
+              console.warn(
+                `[COACH-COMPLIANCE] user=${user.id} prospect=${prospectId || "n/a"} flags=${vatFlagsSamen(compliance.flags)}`
+              );
+            }
+          }
 
           // Sla antwoord op in DB (fire-and-forget)
           if (gesprekId && volledigAntwoord) {
