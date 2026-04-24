@@ -102,16 +102,22 @@ export async function GET(request: Request) {
   }
 
   // Filter: alleen users waarvoor het NU hun ingestelde lokale uur is, en
-  // die de dagelijkse push aan hebben staan. Defaults (als de migratie nog
-  // niet gelopen heeft of een user niks heeft ingesteld): 07:00 Amsterdam aan.
-  const gebruikers = Array.from(userMap.values()).filter((u) => {
-    const aan = u.dagelijkse_push_aan ?? true;
-    if (!aan) return false;
+  // die de dagelijkse push aan hebben staan. Defaults: 07:00 Amsterdam aan.
+  // NB: Vercel Hobby laat alleen een dagelijkse cron toe (geen hourly), dus
+  // de uur-check is voorlopig "soft": als GEEN user matcht (typisch wanneer
+  // de cron één vast moment per dag draait), sturen we alsnog naar iedereen
+  // met aan=true. Zodra we hourly draaien (via Pro of GitHub Actions) wordt
+  // de match vanzelf strikt en respecteren we de per-user tijd.
+  const aanUsers = Array.from(userMap.values()).filter(
+    (u) => (u.dagelijkse_push_aan ?? true)
+  );
+  const matchedOpUur = aanUsers.filter((u) => {
     const tz = u.tijdzone || "Europe/Amsterdam";
     const gewenstUur = u.dagelijkse_push_uur ?? 7;
     const huidigUur = huidigUurInTijdzone(tz);
     return huidigUur !== null && huidigUur === gewenstUur;
   });
+  const gebruikers = matchedOpUur.length > 0 ? matchedOpUur : aanUsers;
 
   if (gebruikers.length === 0) {
     return NextResponse.json({ message: "Geen gebruikers met e-mail of push-abonnement", verzonden: 0 });
