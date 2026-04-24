@@ -101,6 +101,29 @@ export default async function DashboardPagina() {
         </div>
       )}
 
+      {/* Playbook-preview banner — alleen voor leider/admin (content-review) */}
+      {isLeider && (
+        <Link
+          href="/playbook-preview"
+          className="flex items-center justify-between bg-cm-surface-2/40 border border-cm-white/10 rounded-xl px-4 py-3 hover:border-cm-gold/40 transition-colors group"
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-xl">🔍</span>
+            <div>
+              <p className="text-cm-white text-sm font-semibold group-hover:text-cm-gold transition-colors">
+                Playbook-preview
+              </p>
+              <p className="text-cm-white text-xs opacity-60">
+                Alle 21 dagen + weekritme + 3 fasen — content-review zonder voortgang te beïnvloeden
+              </p>
+            </div>
+          </div>
+          <span className="text-cm-white opacity-50 group-hover:text-cm-gold group-hover:opacity-100 transition-colors text-xs">
+            Open →
+          </span>
+        </Link>
+      )}
+
       {/* Snelle acties */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <Link href="/namenlijst/nieuw" className="card text-center py-4 hover:border-cm-gold-dim transition-colors group">
