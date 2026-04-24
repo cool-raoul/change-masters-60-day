@@ -15,6 +15,7 @@ import { CoachGesprekkenInklapbaar } from "@/components/namenlijst/CoachGesprekk
 import { ProductadviesKnop } from "@/components/namenlijst/ProductadviesKnop";
 import { ActiefToggle } from "@/components/namenlijst/ActiefToggle";
 import { HerinneringenOpKaart } from "@/components/namenlijst/HerinneringenOpKaart";
+import { ProductBestellingenLijst } from "@/components/namenlijst/ProductBestellingenLijst";
 import { productadviesBeschikbaar } from "@/lib/features/productadvies";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { Locale } from "date-fns";
@@ -176,23 +177,15 @@ export default async function ProspectDetailPagina({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Contactgegevens */}
         <div className="card space-y-3">
-          {/* Productbestellingen — bovenaan zodat meest relevante data eerst opvalt */}
+          {/* Productbestellingen — bovenaan zodat meest relevante data eerst opvalt.
+              Client component: bewerken + verwijderen direct hier, zonder modal. */}
           {bestellingen && bestellingen.length > 0 && (
-            <div className="pb-3 border-b border-cm-border">
-              <p className="text-xs text-cm-white mb-2">{v("prospect.bestellingen", taal)}</p>
-              {bestellingen.map((b) => (
-                <div key={b.id} className="bg-cm-surface-2 rounded-lg p-2 text-xs mb-2">
-                  <p className="text-cm-white">
-                    {format(new Date(b.besteldatum), "d MMM yyyy", { locale: datumLocale })}
-                  </p>
-                  <p className="text-cm-white">{b.product_omschrijving}</p>
-                  <p className="text-cm-gold mt-1">
-                    {v("prospect.herinnering", taal)}{" "}
-                    {format(new Date(b.tweede_bestelling_reminder_datum), "d MMM yyyy", { locale: datumLocale })}
-                  </p>
-                </div>
-              ))}
-            </div>
+            <ProductBestellingenLijst
+              bestellingen={bestellingen}
+              titel={v("prospect.bestellingen", taal)}
+              herinneringLabel={v("prospect.herinnering", taal)}
+              datumLocale={datumLocale}
+            />
           )}
 
           <ContactgegevensForm prospect={prospect} />
