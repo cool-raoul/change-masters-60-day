@@ -40,6 +40,13 @@ export const WEEKRITME: Weekdag[] = [
         verplicht: true,
       },
       {
+        id: "ma-inhaaldag-bouwen",
+        label: "Inhaaldag inbouwen indien nodig",
+        uitleg:
+          "Heb je vorige week dagen overgeslagen? Plan in deze week 1-2 dagen waar je +50% aantallen draait (15 invites ipv 10). Niet straffen — gewoon inhalen. Op andere dagen blijft het normale ritme.",
+        verplicht: false,
+      },
+      {
         id: "ma-10-invites",
         label: "10 uitnodigingen versturen",
         verplicht: true,
@@ -383,6 +390,20 @@ export const WEEKRITME: Weekdag[] = [
         verplicht: true,
       },
       {
+        id: "zo-inhaaldag-check",
+        label: "Inhaal-check: dagen overgeslagen? Plan inhaaldag(en)",
+        uitleg:
+          "Tellen: hoeveel dagen heb je deze week niet de lat geraakt? Geen schaamte. Plan voor volgende week 1-2 inhaaldagen waar je de aantallen verhoogt (+50% invites/follow-ups). Je staat zo weer op koers.",
+        verplicht: true,
+      },
+      {
+        id: "zo-overwelhm-check",
+        label: "Overwelhm-check: wat schuurde, wat gaf energie?",
+        uitleg:
+          "Wat voelde te veel? Wat ging makkelijker dan vorige week? Schrijf 1 zin op. Wat schuurt is meestal precies wat groei geeft — daar zit volgende week je oefening, niet je probleem.",
+        verplicht: true,
+      },
+      {
         id: "zo-sponsor-checkin",
         label: "Sponsor-check-in (optioneel)",
         uitleg:
@@ -409,7 +430,7 @@ export const WEEKRITME: Weekdag[] = [
       },
     ],
     teaching:
-      "Wat je niet meet, verbeter je niet. Wat je meet zonder te vieren, put je uit. De week-review combineert beide: harde cijfers (heb ik de lat gehaald?) en zachte voeding (wat heeft me gevormd?). Neem er 20 minuten voor. Het is de duurste 20 minuten van je week.",
+      "Wat je niet meet, verbeter je niet. Wat je meet zonder te vieren, put je uit. De week-review combineert beide: harde cijfers (heb ik de lat gehaald?) en zachte voeding (wat heeft me gevormd?). Neem er 20 minuten voor. Het is de duurste 20 minuten van je week.\n\nInhaal-regel: dagen worden niet 'verloren'. Een gemiste dag is een verzetbare dag. Plan 'm in de week erna in en til de aantallen op die dag op met 50%. Niet schuld dragen — gewoon doorgaan. De 60-dagenrun beloont volharding, niet perfectie.",
   },
 ];
 

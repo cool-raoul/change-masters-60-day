@@ -14,18 +14,20 @@ export const FASEN: Fase[] = [
     titel: "Fundament",
     dagen: [1, 7],
     samenvatting:
-      "Je eerste week is geen race — het is het neerzetten van je fundament. WHY vast, namenlijst gevuld, sponsor-ritueel staat, eerste uitnodigingen gaan de deur uit. Dit is de week waarin je leert hoe ELEVA voor jou werkt.",
+      "Je eerste week is geen race — het is het neerzetten van je fundament. WHY vast, namenlijst gevuld, sponsor-ritueel staat, eerste uitnodigingen gaan de deur uit. Dit is de week waarin je leert hoe ELEVA voor jou werkt — én waarin je beseft dat dit een aantallen-spel is. Niet 10 of 20 namen — een lijst die elke dag groeit, omdat je gemiddeld véél laat-zien-momenten nodig hebt voor één start. Jouw rol is niet verkopen, jouw rol is laten zien — zij beslissen. Tegelijk: je staat er niet alleen voor. Veel taken doe je samen met je sponsor; wat niet met sponsor kan, support de ELEVA Mentor. Dat het overweldigend voelt is normaal — je leert iets nieuws, je stapt uit je comfortzone, en bij elke nieuwe vaardigheid geldt: eerst onhandig, dan vaardig. Niet vechten tegen het oncomfortabele gevoel — gewoon doen.",
     controllableLat: [
-      "WHY ingevuld in ELEVA (dag 1-2)",
+      "WHY ingevuld in ELEVA (dag 1)",
       "vCard-import: 100+ contacten in je namenlijst (dag 1)",
       "Minimaal 20 namen handmatig opgeschreven, ook mensen buiten je telefoon (dag 2)",
-      "5 uitnodigingen per dag vanaf dag 4",
+      "Eerste 3 invites op dag 2 (samen met sponsor) — daarna 5 invites per dag (dag 3-7)",
       "3 follow-ups per dag vanaf dag 4",
       "3 namen per dag uit je socials (IG/FB/LinkedIn) vanaf dag 3",
+      "3-weg-principe begrepen op dag 2 — eerste 3-weg uiterlijk dag 4 (optioneel)",
+      "Inhaaldag-regel: dag overgeslagen? geen ramp — volgende dag aantallen +50% en doorgaan.",
     ],
     doel: "Deze week 2 one-pager-momenten in de agenda — bekeken of gepland.",
     kernprincipe:
-      "Je bouwt geen business op energie of motivatie — je bouwt 'm op systeem. Deze week installeer je het systeem.",
+      "Je bouwt geen business op energie of motivatie — je bouwt 'm op systeem én op aantallen. Deze week installeer je het systeem en leer je dat volume + sponsor-koppeling de echte versnellers zijn.",
   },
   {
     nummer: 2,

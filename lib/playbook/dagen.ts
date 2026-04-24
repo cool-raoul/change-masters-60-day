@@ -66,7 +66,7 @@ export const DAGEN: Dag[] = [
       },
     ],
     watJeLeert:
-      "Dag 1 is geen actie-dag, het is een fundament-dag. Je WHY is niet waar je bent — het is waar je naartoe gaat. Je namenlijst is geen actielijst, het is je voorraadkast: leeg? dan komt er geen gerecht op tafel. Vandaag zet je beide neer zodat je morgen kunt starten zonder 'wat was ook alweer de bedoeling'. De vCard-import neemt je 90% van het handmatige typen uit handen — de rest bouw je de komende weken organisch uit.",
+      "Dag 1 is geen actie-dag, het is een fundament-dag. Je WHY is niet waar je bent — het is waar je naartoe gaat. Je namenlijst is geen actielijst, het is je voorraadkast: leeg? dan komt er geen gerecht op tafel. De vCard-import neemt je 90% van het handmatige typen uit handen — de rest bouw je de komende weken organisch uit.\n\nBesef nu al: dit is een aantallen-spel. Een 60-dagenrun draaien met een lijst van 10 of 20 mensen gaat niet werken. Je gaat de komende 60 dagen elke dag namen toevoegen, omdat je gemiddeld véél laat-zien-momenten nodig hebt om mensen te vinden die kiezen voor de business of het product. Jouw taak = laten zien, zíj beslissen. Geen overtuigen, geen drammen — alleen tonen aan zoveel mogelijk mensen op het juiste moment.\n\nEn nog iets: dit voelt overweldigend. Mooi — dat hoort. Je leert iets nieuws, je stapt uit je comfortzone. Eerst onhandig, dan vaardig. Niet vechten tegen het oncomfortabele gevoel; gewoon dag voor dag doorlopen. Je sponsor staat naast je, ELEVA Mentor staat naast je. Je bent niet alleen.",
     waaromWerktDit: {
       tekst:
         "De mensen die op dag 47 nog doorgaan, zijn de mensen die op dag 1 hun WHY op papier hadden. Zonder fundament geen gebouw.",
@@ -76,7 +76,7 @@ export const DAGEN: Dag[] = [
 
   {
     nummer: 2,
-    titel: "NIVEA: 20 extra namen, geen filter",
+    titel: "NIVEA + eerste 3 invites samen met sponsor",
     fase: 1,
     vandaagDoen: [
       {
@@ -95,7 +95,21 @@ export const DAGEN: Dag[] = [
         id: "dag2-kennismaak",
         label: "Kennismakings-call of -app met je sponsor (30 min)",
         uitleg:
-          "Korte check-in. Jouw WHY laten lezen, sponsor vertelt wat jullie samen gaan doen fase 1.",
+          "Korte check-in. Jouw WHY laten lezen, sponsor vertelt wat jullie samen gaan doen fase 1. Vraag in deze call meteen om hulp bij je eerste 3 invites vandaag.",
+        verplicht: true,
+      },
+      {
+        id: "dag2-3-invites",
+        label: "Stuur je eerste 3 uitnodigingen — samen met sponsor of via Mentor",
+        uitleg:
+          "Kies 3 warmere mensen uit je lijst. Stel ze samen met je sponsor op (in jullie call), of vraag de Mentor: 'Schrijf een uitnodiging voor [naam] die [context]'. Drempel laag houden — gewoon doen, niet perfect.",
+        verplicht: true,
+      },
+      {
+        id: "dag2-3weg-uitleg",
+        label: "Lees kort: '3-weg-gesprek principe' (3 min)",
+        uitleg:
+          "Wat is een 3-weg en waarom werkt het? Korte uitleg in ELEVA. Je hoeft 'm nog niet te doen, je hoeft alleen te weten dát je je contacten kunt koppelen aan je sponsor — dat is de versneller in week 1.",
         verplicht: true,
       },
     ],
@@ -112,19 +126,28 @@ export const DAGEN: Dag[] = [
         actie: "Sponsor-contact",
         menupad: "Playbook → FAB rechtsonder → Bel/app mijn sponsor",
       },
+      {
+        actie: "Uitnodiging laten schrijven door Mentor",
+        menupad: "ELEVA Mentor",
+        spraak: "Schrijf een uitnodiging voor [naam] die [context]",
+      },
+      {
+        actie: "3-weg-principe lezen",
+        menupad: "Onboarding → Module '3-weg-gesprek (kort)'",
+      },
     ],
     watJeLeert:
-      "NIVEA = Niet Invullen Voor Een Ander. Jij bepaalt niet wie 'iemand voor dit zou zijn'. Niet 'zij heeft vast geen tijd', niet 'hij zit vast niet te wachten'. Iedereen die in je hoofd opkomt komt op de lijst. Filteren is later. Deze fout — op voorhand bepalen wie wel of niet — kost 80% van de starters hun eerste 10 potentiële partners. Iedereen die je kent heeft óf een vriend, óf een broer, óf een collega die wél matcht. Maar alleen als ze op je lijst staan.",
+      "NIVEA = Niet Invullen Voor Een Ander. Jij bepaalt niet wie 'iemand voor dit zou zijn'. Niet 'zij heeft vast geen tijd', niet 'hij zit vast niet te wachten'. Iedereen die in je hoofd opkomt komt op de lijst. Filteren is later. Deze fout — op voorhand bepalen wie wel of niet — kost 80% van de starters hun eerste 10 potentiële partners. Iedereen die je kent heeft óf een vriend, óf een broer, óf een collega die wél matcht. Maar alleen als ze op je lijst staan.\n\nVandaag stuur je ook al 3 uitnodigingen — samen met je sponsor of via de Mentor. Niet wachten, niet perfectioneren. Doen. De eerste invites voelen onhandig — dat klopt. Net daarom doe je ze met steun, niet alleen.\n\nEn even kennismaken met het 3-weg-principe: jij koppelt straks je prospect aan je sponsor in een groepje. Sponsor is expert, jij bent student, prospect ziet twee mensen die al samenwerken. Dat is de hefboom waardoor jij niet alles hoeft te weten.",
     waaromWerktDit: {
       tekst:
-        "De geheugensteunlijst is je voorraadkast. Hoe voller, hoe makkelijker de keuze wat je vanavond kookt.",
+        "De geheugensteunlijst is je voorraadkast. Hoe voller, hoe makkelijker de keuze wat je vanavond kookt. En de eerste invites zijn altijd het zwaarst — gewoon door.",
       bron: "Eric Worre, Go Pro",
     },
   },
 
   {
     nummer: 3,
-    titel: "Social-challenge: 3 namen uit Instagram/FB/LinkedIn",
+    titel: "Social-challenge + 5 invites doorlopen",
     fase: 1,
     vandaagDoen: [
       {
@@ -132,6 +155,13 @@ export const DAGEN: Dag[] = [
         label: "Open Instagram of LinkedIn, zet 3 namen in je lijst",
         uitleg:
           "Scroll 5 minuten. Wie reageert op je posts? Wie stuurt DMs? Wie post dingen over energie, doelen, gezondheid, ondernemen? 3 namen met 1 woord context ('fitness', 'oud-collega').",
+        verplicht: true,
+      },
+      {
+        id: "dag3-invites-5",
+        label: "5 uitnodigingen versturen",
+        uitleg:
+          "Bouw door op gisteren. Vandaag mag je het zelfstandig doen — vraag de Mentor om hulp als je vastloopt: 'Schrijf een uitnodiging voor [naam] die [context]'.",
         verplicht: true,
       },
       {
@@ -143,7 +173,14 @@ export const DAGEN: Dag[] = [
         id: "dag3-eerste-gesprek",
         label: "Start 1 losse chat met een warme prospect (geen pitch)",
         uitleg:
-          "Reageer op hun laatste post of story. Vraag hoe het gaat. Niets verkopen. Nog geen uitnodiging. Gewoon contact.",
+          "Reageer op hun laatste post of story. Vraag hoe het gaat. Niets verkopen. Nog geen uitnodiging. Gewoon contact — koude mensen warm maken vóór de invite later.",
+        verplicht: false,
+      },
+      {
+        id: "dag3-sponsor-checkin",
+        label: "Korte sponsor-checkin (1 bericht): 'Heb gister 3 invites gestuurd'",
+        uitleg:
+          "30 seconden. Sponsor weet dat je beweegt; jij voelt de lijn naar boven open. Niets uitgebreids — simpel update.",
         verplicht: false,
       },
     ],
@@ -171,33 +208,22 @@ export const DAGEN: Dag[] = [
 
   {
     nummer: 4,
-    titel: "Je eerste 5 uitnodigingen — 4 stappen",
+    titel: "Worre 4-stappen + (optioneel) eerste 3-weg met sponsor",
     fase: 1,
     vandaagDoen: [
       {
-        id: "dag4-uitnodiging-1",
-        label: "Stuur uitnodiging 1 vandaag",
+        id: "dag4-uitnodiging-1-5",
+        label: "5 uitnodigingen versturen — Worre 4-stappen toepassen",
+        uitleg:
+          "1) wees druk, 2) compliment, 3) uitnodig, 4) plan. Houd het kort. Doel = ja tegen kijkmoment, niet ja tegen jou.",
         verplicht: true,
       },
       {
-        id: "dag4-uitnodiging-2",
-        label: "Stuur uitnodiging 2",
-        verplicht: true,
-      },
-      {
-        id: "dag4-uitnodiging-3",
-        label: "Stuur uitnodiging 3",
-        verplicht: true,
-      },
-      {
-        id: "dag4-uitnodiging-4",
-        label: "Stuur uitnodiging 4",
-        verplicht: true,
-      },
-      {
-        id: "dag4-uitnodiging-5",
-        label: "Stuur uitnodiging 5",
-        verplicht: true,
+        id: "dag4-3weg-optioneel",
+        label: "Optioneel: 1 3-weg-gesprek met sponsor starten",
+        uitleg:
+          "Heb je al iemand die warm is uit dag 2-3? Koppel die aan je sponsor in een WhatsApp-groepje. Sponsor = expert, jij = student. Dit oefen je nu, niet over een week.",
+        verplicht: false,
       },
       {
         id: "dag4-social-3",
@@ -226,7 +252,7 @@ export const DAGEN: Dag[] = [
       },
     ],
     watJeLeert:
-      "Worre's 4-stappen-uitnodiging: 1) wees druk ('ik heb weinig tijd maar wilde dit even delen'), 2) compliment ('jij bent iemand die dingen voor elkaar krijgt'), 3) uitnodigen (direct / indirect / super-indirect afhankelijk van hoe warm ze zijn), 4) plan ('wanneer schikt het, vanavond of morgen?'). Jouw taak vandaag = uitnodigen, NIET overtuigen. Je wilt niet dat ze 'ja' zeggen tegen jou — je wilt dat ze 'ja' zeggen tegen een kijkmoment. Dat is een veel lagere drempel.",
+      "Worre's 4-stappen-uitnodiging: 1) wees druk ('ik heb weinig tijd maar wilde dit even delen'), 2) compliment ('jij bent iemand die dingen voor elkaar krijgt'), 3) uitnodigen (direct / indirect / super-indirect afhankelijk van hoe warm ze zijn), 4) plan ('wanneer schikt het, vanavond of morgen?'). Jouw taak vandaag = uitnodigen, NIET overtuigen. Je wilt niet dat ze 'ja' zeggen tegen jou — je wilt dat ze 'ja' zeggen tegen een kijkmoment. Dat is een veel lagere drempel.\n\nVandaag stap je actief uit je comfortzone. Het kan kriebelen — bang voor afwijzing, gedachten als 'wat als ze me raar vinden?'. Volstrekt normaal. Niemand begint vaardig — iedereen begint onhandig. Jij bent geen verkoper, je bent iemand die laat zien. Mensen zeggen geen nee tegen jou, ze zeggen nee tegen een idee — en dat is hun vrijheid. Doe gewoon wat je vandaag te doen hebt en ga door.",
     waaromWerktDit: {
       tekst:
         "Wees zakelijk. Wees professioneel. Wees kort. Dan neem je mensen serieus genoeg om ze de ruimte te geven zélf nee te zeggen.",
@@ -258,6 +284,13 @@ export const DAGEN: Dag[] = [
         id: "dag5-onboarding-bezwaar",
         label: "Lees de onboarding-module 'Bezwaren behandelen'",
         verplicht: true,
+      },
+      {
+        id: "dag5-roleplay",
+        label: "5 min roleplay bezwaren — met sponsor of Mentor",
+        uitleg:
+          "Vraag je sponsor om 1-2 typische bezwaren te 'spelen' en oefen Feel-Felt-Found. Geen sponsor beschikbaar? Mentor: 'Speel een prospect die zegt: ik heb geen tijd' — dan oefen je met Feel-Felt-Found.",
+        verplicht: false,
       },
     ],
     faseDoel:
@@ -303,6 +336,13 @@ export const DAGEN: Dag[] = [
         label: "3 namen uit socials",
         verplicht: true,
       },
+      {
+        id: "dag6-sponsor-tip",
+        label: "Vraag sponsor of Mentor: 1 tip op je lastigste follow-up",
+        uitleg:
+          "Heb je 1 contact waar je niet weet wat je moet sturen? Vraag je sponsor: 'Hoe zou jij dit aanpakken?'. Sponsor druk? Mentor: 'Help me met een follow-up voor [naam] die [situatie]'. Je hoeft het niet alleen te bedenken.",
+        verplicht: false,
+      },
     ],
     faseDoel:
       "Fase 1 (dag 1-7): deze week 2 one-pager-momenten gepland of bekeken krijgen.",
@@ -315,6 +355,10 @@ export const DAGEN: Dag[] = [
       {
         actie: "Follow-up-scripts",
         menupad: "ELEVA Mentor → 'Help me met een follow-up voor [naam]'",
+      },
+      {
+        actie: "Sponsor-contact",
+        menupad: "Playbook FAB → Bel/app mijn sponsor",
       },
     ],
     watJeLeert:
@@ -369,7 +413,7 @@ export const DAGEN: Dag[] = [
       },
     ],
     watJeLeert:
-      "Eén dag zonder actie = geen drama. Twee dagen = actie nodig. Een week review is geen rapportcijfer, het is een kompas-check. Wat controllables heb je deze week geraakt? Waar zat weerstand — bij jezelf, of bij je prospects? De review duurt 5 minuten maar scheelt je 5 dagen dwaling. Sponsor leest mee — niet om te beoordelen, om te ondersteunen.",
+      "Eén dag zonder actie = geen drama. Twee dagen = actie nodig. Inhaal-regel: dag overgeslagen? geen schaamte — volgende dag aantallen +50% en je staat weer op koers. Een week review is geen rapportcijfer, het is een kompas-check. Wat controllables heb je deze week geraakt? Waar zat weerstand — bij jezelf, of bij je prospects? De review duurt 5 minuten maar scheelt je 5 dagen dwaling. Sponsor leest mee — niet om te beoordelen, om te ondersteunen.\n\nWat schuurde deze week is geen falen — dat is groei. Je hebt 7 dagen geleden iets nieuws aangepakt. Onhandigheid op dag 1, iets meer vlotheid op dag 7. Dat is het hele plaatje. Schrijf op wat schuurde — daar zit volgende week je oefening.",
     waaromWerktDit: {
       tekst:
         "Vergelijk jezelf met gisteren, niet met anderen. De run is jouw verhaal — de review is hoe je het schrijft.",
@@ -425,7 +469,7 @@ export const DAGEN: Dag[] = [
 
   {
     nummer: 9,
-    titel: "3-weg gesprek: waarom het alles verandert",
+    titel: "3-weg verdieping: edification + de 5 stappen",
     fase: 2,
     vandaagDoen: [
       {
@@ -444,10 +488,10 @@ export const DAGEN: Dag[] = [
         verplicht: true,
       },
       {
-        id: "dag9-lees-3weg",
-        label: "Lees 3-weg-gesprek uitleg in ELEVA",
+        id: "dag9-3weg-verdieping",
+        label: "Lees 3-weg verdieping: 5 stappen + edification-zinnen",
         uitleg:
-          "Open een prospectkaart → klik op '💬 3-weg gesprek scripts'. Lees de 5 stappen. Morgen ga je er 1 doen.",
+          "Het principe ken je al sinds dag 2. Vandaag de scripts: hoe kondig je je sponsor aan, hoe edifieer je 'm vooraf, wat doe je als prospect een vraag stelt aan jou ipv aan sponsor? Open een prospectkaart → '💬 3-weg gesprek scripts'.",
         verplicht: true,
       },
     ],
@@ -475,14 +519,14 @@ export const DAGEN: Dag[] = [
 
   {
     nummer: 10,
-    titel: "Eerste 3-weg gesprek met sponsor",
+    titel: "3-weg in de praktijk — minstens 1 deze week",
     fase: 2,
     vandaagDoen: [
       {
         id: "dag10-3weg-1",
-        label: "Start minstens 1 3-weg gesprek vandaag",
+        label: "Start minstens 1 3-weg gesprek deze week (vandaag of morgen)",
         uitleg:
-          "Kies 1 warme prospect uit je lijst. Stuur eerst de aankondiging (stap 1 script). Maak dan groepje aan met je sponsor. Volg de 5 stappen.",
+          "Heb je al 1 op dag 4 gedaan? Top — vandaag een tweede plannen. Nog niet? Start nu. Kies 1 warme prospect, stuur de aankondiging (stap 1 script), maak groepje met sponsor. Volg de 5 stappen.",
         verplicht: true,
       },
       {
@@ -650,7 +694,14 @@ export const DAGEN: Dag[] = [
         label: "Gebruik FORM bewust in minstens 1 gesprek vandaag",
         uitleg:
           "Family, Occupation, Recreation, Money. Stel in elk gesprek 1 vraag uit elke categorie en luister naar 'haken' (pijnpunten, wensen).",
-        verplicht: false,
+        verplicht: true,
+      },
+      {
+        id: "dag13-koud-warm",
+        label: "1 koude prospect warm maken vóór de invite",
+        uitleg:
+          "Kies iemand uit je vCard met wie je weinig contact hebt. Eerst FORM-vraag (zonder pitch), reageer 1-2 dagen op hun socials, dán pas invite. Vraag de Mentor: 'Help me [naam] warm maken vóór ik 'm uitnodig — context: [situatie]'. De Mentor schrijft een opwarm-tekst die geen pitch is.",
+        verplicht: true,
       },
     ],
     faseDoel:
@@ -662,12 +713,17 @@ export const DAGEN: Dag[] = [
         spraak: "Leg FORM uit en geef voorbeelden",
       },
       {
+        actie: "Koude prospect warm maken (Mentor)",
+        menupad: "ELEVA Mentor",
+        spraak: "Help me [naam] warm maken vóór ik 'm uitnodig — context: [situatie]",
+      },
+      {
         actie: "Gesprek-notities vastleggen",
         menupad: "Prospectkaart → Contact toevoegen → Notities",
       },
     ],
     watJeLeert:
-      "FORM is Brookes' manier om in elk gesprek rapport te bouwen zonder dat het een verhoor wordt. Family: wie hoort bij jou? Occupation: wat doe je, wat vind je ervan? Recreation: wat doe je graag, waar krijg je energie van? Money: hoe tevreden ben je met je financiële situatie? Jij praat 30%, zij 70%. Luister naar 'haken' — zinnen als 'ik zou willen dat...', 'ik mis nog...', 'als ik meer tijd had...'. Daar zit je opening voor een uitnodiging.",
+      "FORM is Brookes' manier om in elk gesprek rapport te bouwen zonder dat het een verhoor wordt. Family: wie hoort bij jou? Occupation: wat doe je, wat vind je ervan? Recreation: wat doe je graag, waar krijg je energie van? Money: hoe tevreden ben je met je financiële situatie? Jij praat 30%, zij 70%. Luister naar 'haken' — zinnen als 'ik zou willen dat...', 'ik mis nog...', 'als ik meer tijd had...'. Daar zit je opening voor een uitnodiging.\n\nNiet iedereen op je lijst is meteen warm. Koude contacten kun je vóór een invite eerst opwarmen: reageer 2-3 keer waardevol op hun socials, stel een FORM-vraag in een DM zonder pitch, wees zichtbaar in hun leven. Pas dan de invite. De Mentor helpt je: vraag een opwarm-tekst aan ('hoe begin ik een gesprek met [naam] over [interesse], zonder pitch?'). Koud naar warm naar invite — dat is de echte volgorde.",
     waaromWerktDit: {
       tekst:
         "Mensen kopen geen producten of opportunities — ze kopen oplossingen voor wat ze voelen.",
@@ -875,7 +931,7 @@ export const DAGEN: Dag[] = [
 
   {
     nummer: 18,
-    titel: "Loser-to-Legend: jouw verhaal IS je wapen",
+    titel: "Edification: de zin die je sponsor laat schitteren",
     fase: 3,
     vandaagDoen: [
       {
@@ -894,28 +950,39 @@ export const DAGEN: Dag[] = [
         verplicht: true,
       },
       {
-        id: "dag18-verhaal",
-        label: "Schrijf je eigen Loser-to-Legend verhaal op (3 alinea's)",
+        id: "dag18-edification-zin",
+        label: "Schrijf jouw eigen edification-zin (5 min)",
         uitleg:
-          "Wie was ik? Wat was mijn turning point? Wie ben ik nu? Dit wordt je standaard-antwoord op 'waarom doe jij dit?'",
+          "Eén zin van max 25 woorden waarmee je je sponsor introduceert in elk 3-weg. Voorbeeld: 'Ik ga je voorstellen aan [Naam], die al X jaar mensen helpt met Y — degene die mij heeft laten zien hoe dit echt werkt.' Mentor helpt: 'Schrijf een edification-zin voor mijn sponsor [naam] die [achtergrond]'.",
         verplicht: true,
+      },
+      {
+        id: "dag18-edification-toepassen",
+        label: "Pas je edification-zin minstens 1× toe deze week",
+        uitleg:
+          "Bij je eerstvolgende 3-weg of presentatie: gebruik de zin letterlijk vóór je sponsor introduceert. Niet improviseren — gewoon zeggen.",
+        verplicht: false,
       },
     ],
     faseDoel:
       "Fase 3 (dag 15-21): minimaal 2 beslissingen binnen — member, shopper of not-yet.",
     waarInEleva: [
       {
-        actie: "Verhaal laten herschrijven door Mentor",
+        actie: "Edification-zin laten genereren",
         menupad: "ELEVA Mentor",
-        spraak: "Help me mijn Loser-to-Legend verhaal schrijven",
+        spraak: "Schrijf een edification-zin voor mijn sponsor [naam] die [achtergrond]",
+      },
+      {
+        actie: "Edification-voorbeelden in scripts",
+        menupad: "Menu → Hulpbronnen → Scripts → Edification",
       },
     ],
     watJeLeert:
-      "Brookes' krachtigste inzicht: mensen sluiten niet aan bij succes, ze sluiten aan bij verhalen. Jouw 'ik had het moeilijk met X' is tien keer krachtiger dan 'ik verdien nu Y'. Drie alinea's: wie was ik (pijn, twijfel, situatie), wat was het moment (wanneer besloot ik dat het anders moest), wie ben ik aan het worden (niet eindpunt — reis). Dit verhaal vertel je bij élke DM, elk presentatiemoment, elk 3-weg. Het is je anker.",
+      "Edification is geen overdrijving — het is de waarheid vertellen waarom de persoon die je introduceert gekwalificeerd is om te helpen. Zonder edification heeft je sponsor géén autoriteit in het 3-weg, en wordt het gesprek slap. Mét edification stap jij terug, klimt sponsor naar voren, en herkent prospect 'oh, deze persoon weet waar het over gaat'. 5 minuten investeren in jouw vaste edification-zin = 30+ 3-wegs sterker maken in de komende weken. Zonde om dit nooit op papier te zetten.",
     waaromWerktDit: {
       tekst:
-        "Mensen kopen geen cijfers, ze kopen verhalen waarin ze zichzelf herkennen.",
-      bron: "Fraser Brookes, Loser to Legend",
+        "Edification is wat een 3-weg een 3-weg maakt. Zonder dat is het gewoon nog een gesprek.",
+      bron: "Eric Worre + Fraser Brookes",
     },
   },
 
