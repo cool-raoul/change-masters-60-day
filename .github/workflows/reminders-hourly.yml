@@ -1,0 +1,41 @@
+name: Hourly reminders push
+
+# Elk uur wordt de reminders-endpoint op Vercel aangeroepen. De endpoint
+# filtert zelf per user op basis van hun ingestelde tijdstip + tijdzone,
+# dus hier hoeven we niets te weten over welke users waarvoor willen.
+#
+# GitHub Actions hourly cron is gratis (Vercel Hobby laat 'm niet toe),
+# vandaar deze route. Op 't hele uur staat 't planningsvenster niet
+# gegarandeerd strak (GitHub kan 'n paar minuten laat zijn tijdens piek),
+# maar voor een ochtendherinnering is dat ruim voldoende.
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch: {}
+
+# Zorg dat er nooit twee runs tegelijk schieten — scheelt dubbele pushes
+# als een run uitloopt.
+concurrency:
+  group: hourly-reminders
+  cancel-in-progress: false
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ping reminders endpoint
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          ENDPOINT: https://change-masters-60-day-q25o.vercel.app/api/reminders/send
+        run: |
+          set -euo pipefail
+          echo "Calling $ENDPOINT"
+          # -f laat curl niet-2xx als fout zien; -sS onderdrukt progress
+          # maar toont errors; --retry helpt bij transient Vercel hiccups.
+          curl -fsS \
+            --retry 3 --retry-delay 5 --retry-connrefused \
+            --max-time 60 \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            "$ENDPOINT"
