@@ -6,6 +6,7 @@ import { Prospect } from "@/lib/supabase/types";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useTaal } from "@/lib/i18n/TaalContext";
+import { KanaalIconen } from "@/components/gedeeld/KanaalIconen";
 
 interface Props {
   prospect: Prospect;
@@ -88,26 +89,50 @@ export function ContactgegevensForm({ prospect }: Props) {
 
         {prospect.telefoon && (
           <div>
-            <p className="text-xs text-cm-white opacity-60">{v("registreer.naam")}</p>
-            <p className="text-cm-white text-sm">{prospect.telefoon}</p>
+            <p className="text-xs text-cm-white opacity-60">Telefoon</p>
+            <div className="flex items-center gap-2">
+              <p className="text-cm-white text-sm flex-1 min-w-0 truncate">{prospect.telefoon}</p>
+              <KanaalIconen
+                prospect={{ telefoon: prospect.telefoon }}
+                grootte="compact"
+              />
+            </div>
           </div>
         )}
         {prospect.email && (
           <div>
             <p className="text-xs text-cm-white opacity-60">{v("registreer.email")}</p>
-            <p className="text-cm-white text-sm">{prospect.email}</p>
+            <div className="flex items-center gap-2">
+              <p className="text-cm-white text-sm flex-1 min-w-0 truncate">{prospect.email}</p>
+              <KanaalIconen
+                prospect={{ email: prospect.email }}
+                grootte="compact"
+              />
+            </div>
           </div>
         )}
         {prospect.instagram && (
           <div>
             <p className="text-xs text-cm-white opacity-60">Instagram</p>
-            <p className="text-cm-white text-sm">{prospect.instagram}</p>
+            <div className="flex items-center gap-2">
+              <p className="text-cm-white text-sm flex-1 min-w-0 truncate">{prospect.instagram}</p>
+              <KanaalIconen
+                prospect={{ instagram: prospect.instagram }}
+                grootte="compact"
+              />
+            </div>
           </div>
         )}
         {prospect.facebook && (
           <div>
             <p className="text-xs text-cm-white opacity-60">Facebook</p>
-            <p className="text-cm-white text-sm">{prospect.facebook}</p>
+            <div className="flex items-center gap-2">
+              <p className="text-cm-white text-sm flex-1 min-w-0 truncate">{prospect.facebook}</p>
+              <KanaalIconen
+                prospect={{ facebook: prospect.facebook }}
+                grootte="compact"
+              />
+            </div>
           </div>
         )}
         {prospect.beroep && (
@@ -161,52 +186,70 @@ export function ContactgegevensForm({ prospect }: Props) {
         <label className="block text-xs text-cm-white opacity-60 mb-1">
           Telefoon
         </label>
-        <input
-          type="tel"
-          value={telefoon}
-          onChange={(e) => setTelefoon(e.target.value)}
-          placeholder="+31 6 12345678"
-          className="input-cm text-sm"
-        />
+        <div className="flex items-center gap-2">
+          <input
+            type="tel"
+            value={telefoon}
+            onChange={(e) => setTelefoon(e.target.value)}
+            placeholder="+31 6 12345678"
+            className="input-cm text-sm flex-1 min-w-0"
+          />
+          {telefoon && (
+            <KanaalIconen prospect={{ telefoon }} grootte="compact" />
+          )}
+        </div>
       </div>
 
       <div>
         <label className="block text-xs text-cm-white opacity-60 mb-1">
           {v("registreer.email")}
         </label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="naam@email.nl"
-          className="input-cm text-sm"
-        />
+        <div className="flex items-center gap-2">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="naam@email.nl"
+            className="input-cm text-sm flex-1 min-w-0"
+          />
+          {email && <KanaalIconen prospect={{ email }} grootte="compact" />}
+        </div>
       </div>
 
       <div>
         <label className="block text-xs text-cm-white opacity-60 mb-1">
           Instagram
         </label>
-        <input
-          type="text"
-          value={instagram}
-          onChange={(e) => setInstagram(e.target.value)}
-          placeholder="@gebruikersnaam"
-          className="input-cm text-sm"
-        />
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            value={instagram}
+            onChange={(e) => setInstagram(e.target.value)}
+            placeholder="@gebruikersnaam"
+            className="input-cm text-sm flex-1 min-w-0"
+          />
+          {instagram && (
+            <KanaalIconen prospect={{ instagram }} grootte="compact" />
+          )}
+        </div>
       </div>
 
       <div>
         <label className="block text-xs text-cm-white opacity-60 mb-1">
           Facebook
         </label>
-        <input
-          type="text"
-          value={facebook}
-          onChange={(e) => setFacebook(e.target.value)}
-          placeholder="Naam of URL"
-          className="input-cm text-sm"
-        />
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            value={facebook}
+            onChange={(e) => setFacebook(e.target.value)}
+            placeholder="Naam of URL"
+            className="input-cm text-sm flex-1 min-w-0"
+          />
+          {facebook && (
+            <KanaalIconen prospect={{ facebook }} grootte="compact" />
+          )}
+        </div>
       </div>
 
       <div>

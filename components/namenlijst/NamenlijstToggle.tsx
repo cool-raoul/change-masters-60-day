@@ -6,9 +6,8 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { useTaal } from "@/lib/i18n/TaalContext";
-import { Prospect } from "@/lib/supabase/types";
+import { Prospect, PIPELINE_FASEN } from "@/lib/supabase/types";
 import { PipelineKanban } from "@/components/namenlijst/PipelineKanban";
-import { PipelineStepper } from "@/components/namenlijst/PipelineStepper";
 import { KanaalIconen } from "@/components/gedeeld/KanaalIconen";
 
 interface Props {
@@ -89,6 +88,9 @@ export function NamenlijstToggle({ prospects }: Props) {
             gesorteerd.map((prospect) => {
               const bevestigen = bevestigenId === prospect.id;
               const nietActief = prospect.actief === false;
+              const faseInfo = PIPELINE_FASEN.find(
+                (f) => f.fase === prospect.pipeline_fase
+              );
               return (
                 <div
                   key={prospect.id}
@@ -96,14 +98,14 @@ export function NamenlijstToggle({ prospects }: Props) {
                     nietActief ? "opacity-60" : ""
                   }`}
                 >
-                  {/* Rij bovenkant: naam + prio/niet-actief + quick-actions + verwijder */}
+                  {/* Rij bovenkant: naam (links, volledig zichtbaar) + fase-badge + delete + → */}
                   <div className="flex items-center justify-between gap-2">
                     <Link
                       href={`/namenlijst/${prospect.id}`}
                       className="flex items-center gap-3 flex-1 min-w-0"
                     >
                       <span className="text-xl">👤</span>
-                      <div className="min-w-0">
+                      <div className="min-w-0 flex-1">
                         <p className="text-cm-white font-semibold text-sm group-hover:text-cm-gold transition-colors truncate">
                           {prospect.volledige_naam}
                         </p>
@@ -117,11 +119,23 @@ export function NamenlijstToggle({ prospects }: Props) {
                         </div>
                       </div>
                     </Link>
-                    <div className="flex items-center gap-1 ml-2 flex-shrink-0">
-                      <KanaalIconen prospect={prospect} grootte="compact" />
+                    <div className="flex items-center gap-2 ml-2 flex-shrink-0">
+                      {/* Fase-badge — compact, altijd zichtbaar. Klik op rij-pijl
+                          om de fase te wijzigen in de detail-kaart. */}
+                      {faseInfo && (
+                        <span
+                          className="text-[10px] font-medium px-2 py-0.5 rounded-full whitespace-nowrap"
+                          style={{
+                            color: faseInfo.tekstkleur,
+                            background: faseInfo.kleur,
+                          }}
+                        >
+                          {faseInfo.label}
+                        </span>
+                      )}
                       {/* Verwijder */}
                       {bevestigen ? (
-                        <div className="flex items-center gap-1 ml-1">
+                        <div className="flex items-center gap-1">
                           <button
                             onClick={() =>
                               verwijder(prospect.id, prospect.volledige_naam)
@@ -154,15 +168,17 @@ export function NamenlijstToggle({ prospects }: Props) {
                       </Link>
                     </div>
                   </div>
-                  {/* Rij onderkant: inline pipeline-stepper. Laat je fase
-                      direct wijzigen zonder de kaart te openen. */}
-                  <div className="mt-2 pl-9">
-                    <PipelineStepper
-                      prospectId={prospect.id}
-                      huidigeFase={prospect.pipeline_fase}
-                      grootte="compact"
-                    />
-                  </div>
+                  {/* Rij onderkant: kanaal-iconen op eigen regel zodat ze
+                      nooit de naam overlappen. Alleen getoond als er ook echt
+                      een kanaal is ingevuld. */}
+                  {(prospect.telefoon ||
+                    prospect.email ||
+                    prospect.instagram ||
+                    prospect.facebook) && (
+                    <div className="mt-2 pl-9">
+                      <KanaalIconen prospect={prospect} grootte="compact" />
+                    </div>
+                  )}
                 </div>
               );
             })
