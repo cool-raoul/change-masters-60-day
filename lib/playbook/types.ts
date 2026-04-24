@@ -22,6 +22,12 @@ export type ControllableTaak = {
   uitleg?: string;
   /** Als true: telt mee voor "dag voltooid"-status. Optionele taken niet. */
   verplicht: boolean;
+  /**
+   * Optioneel: route waarheen klikken op de taak de gebruiker brengt.
+   * Bijv. "/mijn-why", "/namenlijst", "/coach". Als gevuld: rij wordt
+   * klikbaar in de tile-UI én in de preview.
+   */
+  actieRoute?: string;
 };
 
 /**

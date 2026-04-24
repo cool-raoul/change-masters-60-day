@@ -14,7 +14,7 @@ export const FASEN: Fase[] = [
     titel: "Fundament",
     dagen: [1, 7],
     samenvatting:
-      "Je eerste week is geen race — het is het neerzetten van je fundament. WHY vast, namenlijst gevuld, sponsor-ritueel staat, eerste uitnodigingen gaan de deur uit. Dit is de week waarin je leert hoe ELEVA voor jou werkt — én waarin je beseft dat dit een aantallen-spel is. Niet 10 of 20 namen — een lijst die elke dag groeit, omdat je gemiddeld véél laat-zien-momenten nodig hebt voor één start. Jouw rol is niet verkopen, jouw rol is laten zien — zij beslissen. Tegelijk: je staat er niet alleen voor. Veel taken doe je samen met je sponsor; wat niet met sponsor kan, support de ELEVA Mentor. Dat het overweldigend voelt is normaal — je leert iets nieuws, je stapt uit je comfortzone, en bij elke nieuwe vaardigheid geldt: eerst onhandig, dan vaardig. Niet vechten tegen het oncomfortabele gevoel — gewoon doen.",
+      "De eerste week is geen race — we leggen samen het fundament. Je WHY in ELEVA, je namenlijst gevuld, je sponsor-ritueel op gang, en de eerste uitnodigingen gaan al de deur uit. Het is de week waarin je leert hoe ELEVA jouw beste werkmaat wordt.\n\nEén ding mag direct duidelijk zijn: dit is een aantallen-verhaal. Met een lijstje van tien of twintig namen ga je het niet redden — daarom groeit je lijst elke dag, gewoon stapsgewijs. En jouw rol? Niet verkopen, niet overtuigen. Jij laat alleen zien. Zíj beslissen. Een flink stuk lichter dan veel mensen denken.\n\nJe staat er ook niet alleen voor. Veel doe je samen met je sponsor; wat niet met je sponsor kan, helpt de ELEVA Mentor je mee. En dat het overweldigend voelt deze week? Helemaal goed. Je leert iets nieuws, je stapt uit je comfortzone, dat hoort. Eerst onhandig, dan vaardig — voor iedereen hetzelfde. Niet vechten, gewoon doorgaan, dag voor dag.",
     controllableLat: [
       "WHY ingevuld in ELEVA (dag 1)",
       "vCard-import: 100+ contacten in je namenlijst (dag 1)",
@@ -27,7 +27,7 @@ export const FASEN: Fase[] = [
     ],
     doel: "Deze week 2 one-pager-momenten in de agenda — bekeken of gepland.",
     kernprincipe:
-      "Je bouwt geen business op energie of motivatie — je bouwt 'm op systeem én op aantallen. Deze week installeer je het systeem en leer je dat volume + sponsor-koppeling de echte versnellers zijn.",
+      "Een mooi bedrijf bouw je niet op pieken van energie of motivatie — die komen en gaan. Je bouwt 'm op een ritme dat klopt en op genoeg mensen om dat ritme heen. Deze week zetten we beide neer.",
   },
   {
     nummer: 2,

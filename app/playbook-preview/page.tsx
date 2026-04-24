@@ -83,13 +83,11 @@ function FaseKaart({ fase }: { fase: Fase }) {
 }
 
 function TaakRij({ taak }: { taak: ControllableTaak }) {
-  return (
-    <div className="flex gap-3 items-start py-1.5">
+  const inhoud = (
+    <>
       <span
-        className={`mt-0.5 inline-flex h-4 w-4 rounded border ${
-          taak.verplicht
-            ? "border-cm-gold"
-            : "border-cm-white opacity-40"
+        className={`mt-0.5 inline-flex h-4 w-4 rounded border shrink-0 ${
+          taak.verplicht ? "border-cm-gold" : "border-cm-white opacity-40"
         }`}
         aria-hidden
       />
@@ -101,6 +99,11 @@ function TaakRij({ taak }: { taak: ControllableTaak }) {
               optioneel
             </span>
           )}
+          {taak.actieRoute && (
+            <span className="text-[10px] uppercase tracking-wider text-cm-gold">
+              → klikbaar
+            </span>
+          )}
         </div>
         {taak.uitleg && (
           <p className="text-cm-white text-xs opacity-70 mt-1 leading-relaxed">
@@ -109,22 +112,46 @@ function TaakRij({ taak }: { taak: ControllableTaak }) {
         )}
         <p className="text-[10px] text-cm-white opacity-30 mt-0.5 font-mono">
           id: {taak.id}
+          {taak.actieRoute && (
+            <span className="ml-2 text-cm-gold opacity-80">
+              · {taak.actieRoute}
+            </span>
+          )}
         </p>
       </div>
-    </div>
+    </>
   );
+
+  if (taak.actieRoute) {
+    return (
+      <Link
+        href={taak.actieRoute}
+        className="flex gap-3 items-start py-1.5 px-2 -mx-2 rounded hover:bg-cm-gold/5 transition-colors"
+      >
+        {inhoud}
+      </Link>
+    );
+  }
+  return <div className="flex gap-3 items-start py-1.5">{inhoud}</div>;
 }
 
 function ElevaPadRij({ pad }: { pad: ElevaPad }) {
-  return (
+  const inhoud = (
     <div className="text-cm-white text-sm">
-      <p className="font-medium">{pad.actie}</p>
+      <p className="font-medium flex items-center gap-2">
+        {pad.actie}
+        {pad.route && (
+          <span className="text-[10px] uppercase tracking-wider text-cm-gold">
+            → open
+          </span>
+        )}
+      </p>
       {pad.menupad && (
         <p className="text-xs opacity-70 mt-0.5">📍 {pad.menupad}</p>
       )}
       {pad.spraak && (
         <p className="text-xs opacity-70 mt-0.5">
-          🎙️ <span className="italic">"{pad.spraak}"</span>
+          🎙️ <span className="italic">&quot;{pad.spraak}&quot;</span>
         </p>
       )}
       {pad.route && (
@@ -132,6 +159,18 @@ function ElevaPadRij({ pad }: { pad: ElevaPad }) {
       )}
     </div>
   );
+
+  if (pad.route) {
+    return (
+      <Link
+        href={pad.route}
+        className="block px-2 -mx-2 py-1 rounded hover:bg-cm-gold/5 transition-colors"
+      >
+        {inhoud}
+      </Link>
+    );
+  }
+  return <div>{inhoud}</div>;
 }
 
 function DagBlok({ dag }: { dag: Dag }) {

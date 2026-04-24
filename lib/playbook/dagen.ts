@@ -22,27 +22,31 @@ export const DAGEN: Dag[] = [
         id: "dag1-onboarding",
         label: "Voltooi de ELEVA-onboarding als je dat nog niet hebt",
         verplicht: true,
+        actieRoute: "/onboarding",
       },
       {
         id: "dag1-why",
         label: "Vul je WHY in met de ELEVA Mentor",
         uitleg:
-          "De Mentor stelt je een paar vragen, jij antwoordt (spraak mag). Aan het eind heb je een WHY die je later op moeilijke dagen teruglezen kunt.",
+          "De Mentor stelt je rustig een paar vragen, jij antwoordt — gewoon hardop praten mag ook. Aan het eind heb je een WHY die je op moeilijke dagen even kunt teruglezen.",
         verplicht: true,
+        actieRoute: "/mijn-why",
       },
       {
         id: "dag1-vcard",
         label: "Importeer je telefoon-contacten (vCard)",
         uitleg:
-          "Exporteer een vCard-bestand uit je Contacten-app en upload 'm in ELEVA. Dubbele contacten worden automatisch overgeslagen. Je lijst staat meteen met 100+ namen.",
+          "Open je Contacten-app op je telefoon, exporteer een vCard-bestand, en upload 'm in ELEVA. We slaan dubbele contacten automatisch over, dus geen zorg over rommel. In één keer staat je lijst met 100+ namen klaar — daar bouw je deze week verder op.",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag1-sponsor",
         label: "Stuur je sponsor een kort bericht: 'Ik ben gestart'",
         uitleg:
-          "Geen inhoud nodig — alleen aangeven dat je begonnen bent. Je sponsor ziet in ELEVA vanaf nu mee of je dagelijks je stappen voltooit.",
+          "Geen lang verhaal nodig, gewoon even laten weten dat je vertrokken bent. Vanaf nu kijkt je sponsor in ELEVA vriendelijk mee of je dagelijks je stappen zet — niet om te beoordelen, om je rugdekking te geven.",
         verplicht: true,
+        actieRoute: "/team",
       },
     ],
     faseDoel:
@@ -66,11 +70,10 @@ export const DAGEN: Dag[] = [
       },
     ],
     watJeLeert:
-      "Dag 1 is geen actie-dag, het is een fundament-dag. Je WHY is niet waar je bent — het is waar je naartoe gaat. Je namenlijst is geen actielijst, het is je voorraadkast: leeg? dan komt er geen gerecht op tafel. De vCard-import neemt je 90% van het handmatige typen uit handen — de rest bouw je de komende weken organisch uit.\n\nBesef nu al: dit is een aantallen-spel. Een 60-dagenrun draaien met een lijst van 10 of 20 mensen gaat niet werken. Je gaat de komende 60 dagen elke dag namen toevoegen, omdat je gemiddeld véél laat-zien-momenten nodig hebt om mensen te vinden die kiezen voor de business of het product. Jouw taak = laten zien, zíj beslissen. Geen overtuigen, geen drammen — alleen tonen aan zoveel mogelijk mensen op het juiste moment.\n\nEn nog iets: dit voelt overweldigend. Mooi — dat hoort. Je leert iets nieuws, je stapt uit je comfortzone. Eerst onhandig, dan vaardig. Niet vechten tegen het oncomfortabele gevoel; gewoon dag voor dag doorlopen. Je sponsor staat naast je, ELEVA Mentor staat naast je. Je bent niet alleen.",
+      "Vandaag is geen 'doe-dag', het is een fundament-dag. We gaan het rustig opbouwen. Je WHY zet je in ELEVA neer — dat is niet het rapport van wie je nu bent, dat is het kompas van waar je naartoe wilt. En je namenlijst is je voorraadkast: hoe meer er in zit, hoe makkelijker je elke dag iets nieuws kunt 'koken'. Met de vCard-import nemen we je het meeste typewerk uit handen — daar bouw je de komende weken bovenop verder.\n\nEén ding waar we eerlijk over willen zijn vanaf nu: dit is een aantallen-verhaal. Met een lijstje van tien of twintig mensen ga je het niet redden — niet omdat je faalt, maar omdat je gemiddeld veel laat-zien-momenten nodig hebt voordat iemand kiest. Daarom voeg je elke dag namen toe, gewoon stap voor stap. En weet: jouw taak is niét overtuigen of mensen 'binnenpraten'. Jij laat zien, zij beslissen. Dat is alles. Een flink stuk lichter dan veel mensen denken.\n\nTot slot: dat het overweldigend voelt is helemaal goed. Je leert iets nieuws, je stapt uit je comfortzone — natuurlijk schuurt dat. Eerst onhandig, dan vaardig — voor iedereen hetzelfde. Niet vechten tegen het oncomfortabele, gewoon dag voor dag doorlopen. Je sponsor staat naast je. De ELEVA Mentor ook. Je doet dit niet alleen.",
     waaromWerktDit: {
       tekst:
-        "De mensen die op dag 47 nog doorgaan, zijn de mensen die op dag 1 hun WHY op papier hadden. Zonder fundament geen gebouw.",
-      bron: "Les Brown-principe, vrij vertaald",
+        "De mensen die op dag 47 nog doorgaan, zijn vaak dezelfden die op dag 1 hun WHY hebben opgeschreven. Zonder fundament geen gebouw.",
     },
   },
 
