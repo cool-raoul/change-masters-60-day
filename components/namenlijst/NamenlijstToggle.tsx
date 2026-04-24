@@ -98,42 +98,20 @@ export function NamenlijstToggle({ prospects }: Props) {
                     nietActief ? "opacity-60" : ""
                   }`}
                 >
-                  {/* Rij bovenkant: naam (links, volledig zichtbaar) + fase-badge + delete + → */}
-                  <div className="flex items-center justify-between gap-2">
+                  {/* Rij 1: volledige naam krijgt bijna de hele rij. Alleen een
+                      mini-delete (bij hover) + → rechts, verder niks zodat de
+                      naam op een telefoon niet truncate-t. */}
+                  <div className="flex items-center gap-2">
                     <Link
                       href={`/namenlijst/${prospect.id}`}
                       className="flex items-center gap-3 flex-1 min-w-0"
                     >
-                      <span className="text-xl">👤</span>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-cm-white font-semibold text-sm group-hover:text-cm-gold transition-colors truncate">
-                          {prospect.volledige_naam}
-                        </p>
-                        <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                          {prospect.prioriteit === "hoog" && (
-                            <span className="text-cm-gold text-xs">⭐ {v("namenlijst.hoog")}</span>
-                          )}
-                          {nietActief && (
-                            <span className="text-xs text-orange-400">💤 niet-actief</span>
-                          )}
-                        </div>
-                      </div>
+                      <span className="text-xl flex-shrink-0">👤</span>
+                      <p className="text-cm-white font-semibold text-sm group-hover:text-cm-gold transition-colors truncate flex-1">
+                        {prospect.volledige_naam}
+                      </p>
                     </Link>
-                    <div className="flex items-center gap-2 ml-2 flex-shrink-0">
-                      {/* Fase-badge — compact, altijd zichtbaar. Klik op rij-pijl
-                          om de fase te wijzigen in de detail-kaart. */}
-                      {faseInfo && (
-                        <span
-                          className="text-[10px] font-medium px-2 py-0.5 rounded-full whitespace-nowrap"
-                          style={{
-                            color: faseInfo.tekstkleur,
-                            background: faseInfo.kleur,
-                          }}
-                        >
-                          {faseInfo.label}
-                        </span>
-                      )}
-                      {/* Verwijder */}
+                    <div className="flex items-center gap-1 flex-shrink-0">
                       {bevestigen ? (
                         <div className="flex items-center gap-1">
                           <button
@@ -162,20 +140,41 @@ export function NamenlijstToggle({ prospects }: Props) {
                       )}
                       <Link
                         href={`/namenlijst/${prospect.id}`}
-                        className="text-cm-gold text-sm"
+                        className="text-cm-gold text-sm px-1"
                       >
                         →
                       </Link>
                     </div>
                   </div>
-                  {/* Rij onderkant: kanaal-iconen op eigen regel zodat ze
-                      nooit de naam overlappen. Alleen getoond als er ook echt
-                      een kanaal is ingevuld. */}
+
+                  {/* Rij 2: fase-badge + prio/actief-markers op eigen regel
+                      zodat ze niet met de naam concurreren om ruimte. */}
+                  <div className="mt-1.5 pl-9 flex items-center gap-2 flex-wrap">
+                    {faseInfo && (
+                      <span
+                        className="text-[10px] font-medium px-2 py-0.5 rounded-full whitespace-nowrap"
+                        style={{
+                          color: faseInfo.tekstkleur,
+                          background: faseInfo.kleur,
+                        }}
+                      >
+                        {faseInfo.label}
+                      </span>
+                    )}
+                    {prospect.prioriteit === "hoog" && (
+                      <span className="text-cm-gold text-xs">⭐ {v("namenlijst.hoog")}</span>
+                    )}
+                    {nietActief && (
+                      <span className="text-xs text-orange-400">💤 niet-actief</span>
+                    )}
+                  </div>
+
+                  {/* Rij 3: kanaal-iconen — alleen als er een kanaal is. */}
                   {(prospect.telefoon ||
                     prospect.email ||
                     prospect.instagram ||
                     prospect.facebook) && (
-                    <div className="mt-2 pl-9">
+                    <div className="mt-1.5 pl-9">
                       <KanaalIconen prospect={prospect} grootte="compact" />
                     </div>
                   )}

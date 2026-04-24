@@ -10,6 +10,7 @@ import { format } from "date-fns";
 import { nl, enUS, fr, es, de, pt } from "date-fns/locale";
 import { useTaal } from "@/lib/i18n/TaalContext";
 import { Locale } from "date-fns";
+import { KanaalIconen } from "@/components/gedeeld/KanaalIconen";
 
 interface Props {
   prospects: Prospect[];
@@ -107,6 +108,14 @@ function ProspectKaart({
           </span>
         )}
       </div>
+
+      {/* Kanaal-iconen — direct bellen/appen/mailen zonder kaart te openen.
+          onMouseDown stopPropagation zodat drag niet start bij klik op icoon. */}
+      {(prospect.telefoon || prospect.email || prospect.instagram || prospect.facebook) && (
+        <div onMouseDown={(e) => e.stopPropagation()} draggable={false}>
+          <KanaalIconen prospect={prospect} grootte="compact" />
+        </div>
+      )}
 
       {/* Fase wijzigen knoppen bij hover */}
       <div className="hidden group-hover:flex gap-1 pt-1 border-t border-cm-border flex-wrap">
