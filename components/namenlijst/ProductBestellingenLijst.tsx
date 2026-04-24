@@ -8,7 +8,8 @@
 
 import { useState } from "react";
 import { format } from "date-fns";
-import { Locale } from "date-fns";
+import { nl, enUS, fr, es, de, pt } from "date-fns/locale";
+import type { Locale } from "date-fns";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -18,8 +19,14 @@ interface Props {
   bestellingen: ProductBestelling[];
   titel: string;
   herinneringLabel: string;
-  datumLocale: Locale;
+  // BELANGRIJK: Locale-objecten van date-fns bevatten functies en kunnen
+  // niet als prop van server → client worden doorgegeven (Next throwt een
+  // serialization error). Dus we nemen een simpele taal-key aan en kiezen
+  // de Locale client-side uit.
+  taal: string;
 }
+
+const DATE_LOCALES: Record<string, Locale> = { nl, en: enUS, fr, es, de, pt };
 
 // date-input verwacht YYYY-MM-DD; database kan een ISO string teruggeven.
 function naarInputDatum(iso: string): string {
@@ -30,8 +37,9 @@ export function ProductBestellingenLijst({
   bestellingen,
   titel,
   herinneringLabel,
-  datumLocale,
+  taal,
 }: Props) {
+  const datumLocale = DATE_LOCALES[taal] || nl;
   const [bewerkId, setBewerkId] = useState<string | null>(null);
   const [bevestigenId, setBevestigenId] = useState<string | null>(null);
   const [bezig, setBezig] = useState(false);

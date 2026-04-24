@@ -184,7 +184,7 @@ export default async function ProspectDetailPagina({
               bestellingen={bestellingen}
               titel={v("prospect.bestellingen", taal)}
               herinneringLabel={v("prospect.herinnering", taal)}
-              datumLocale={datumLocale}
+              taal={taal}
             />
           )}
 
