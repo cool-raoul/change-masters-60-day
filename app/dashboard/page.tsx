@@ -4,7 +4,6 @@ import { nl, enUS, fr, es, de, pt } from "date-fns/locale";
 import Link from "next/link";
 import { DagelijkseStat, Herinnering, WhyProfile } from "@/lib/supabase/types";
 import { DagStatForm } from "@/components/dashboard/DagStatForm";
-import { PushNotificationToggle } from "@/components/pwa/PushNotificationToggle";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { Locale } from "date-fns";
 
@@ -32,7 +31,7 @@ export default async function DashboardPagina() {
     { data: herinneringen },
     { data: pipelineCounts },
   ] = await Promise.all([
-    supabase.from("profiles").select("run_startdatum, role").eq("id", user.id).maybeSingle(),
+    supabase.from("profiles").select("run_startdatum, role, dagelijkse_push_aan, dagelijkse_push_uur").eq("id", user.id).maybeSingle(),
     supabase.from("why_profiles").select("*").eq("user_id", user.id).maybeSingle(),
     supabase.from("dagelijkse_stats").select("*").eq("user_id", user.id).eq("stat_datum", vandaagStr).maybeSingle(),
     supabase.from("herinneringen").select("*, prospect:prospects(id, volledige_naam)").eq("user_id", user.id).lte("vervaldatum", vandaagStr).eq("voltooid", false).order("vervaldatum", { ascending: true }).limit(5),
@@ -41,6 +40,8 @@ export default async function DashboardPagina() {
 
   const dag = berekenDag((profile as any)?.run_startdatum ?? null);
   const isLeider = (profile as any)?.role === "leider";
+  const pushAan = (profile as any)?.dagelijkse_push_aan ?? false;
+  const pushUur = (profile as any)?.dagelijkse_push_uur ?? 7;
 
   const stats = vandaagStats as DagelijkseStat | null;
   const herinneringenLijst = (herinneringen as (Herinnering & { prospect: { id: string; volledige_naam: string } | null })[]) || [];
@@ -250,21 +251,38 @@ export default async function DashboardPagina() {
         </div>
       </div>
 
-      {/* Instellingen — onderaan, alleen zichtbaar als nog niet ingesteld */}
+      {/* Instellingen — compacte status-regel. Eén bron van waarheid (/instellingen). */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 opacity-60 hover:opacity-100 transition-opacity">
-        <PushNotificationToggle />
-        <div className="card flex items-center gap-3 py-3">
+        <Link
+          href="/instellingen"
+          className="card flex items-center gap-3 py-3 hover:border-cm-gold-dim transition-colors"
+        >
+          <span className="text-lg">🔔</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-cm-white font-semibold text-sm">
+              {v("push.master_label", taal)}
+            </p>
+            <p className="text-cm-gold text-xs">
+              {pushAan
+                ? `${v("algemeen.aan", taal)} · ${String(pushUur).padStart(2, "0")}:00`
+                : v("algemeen.uit", taal)}
+            </p>
+          </div>
+          <span className="text-cm-gold text-xs">→</span>
+        </Link>
+        <Link
+          href="/instellingen"
+          className="card flex items-center gap-3 py-3 hover:border-cm-gold-dim transition-colors"
+        >
           <span className="text-lg">📧</span>
           <div className="flex-1 min-w-0">
             <p className="text-cm-white font-semibold text-sm">E-mail herinneringen</p>
-            <Link
-              href="/instellingen"
-              className="text-cm-gold text-xs hover:text-cm-gold-light"
-            >
-              Instellen via Instellingen →
-            </Link>
+            <p className="text-cm-gold text-xs">
+              Instellen via Instellingen
+            </p>
           </div>
-        </div>
+          <span className="text-cm-gold text-xs">→</span>
+        </Link>
       </div>
     </div>
   );

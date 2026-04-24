@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Profile } from "@/lib/supabase/types";
 import { useTaal } from "@/lib/i18n/TaalContext";
+import { PushInstellingenKaart } from "@/components/pwa/PushInstellingenKaart";
 
 export function InstellingenForm({ profile, email }: { profile: Profile | null; email: string }) {
   const { v } = useTaal();
@@ -18,17 +19,10 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
   const [resendLaden, setResendLaden] = useState(false);
   const [resendTesten, setResendTesten] = useState(false);
 
-  // Dagelijkse push-tijdstip. Default 07:00 Amsterdam aan. De tijdzone wordt
-  // zelfde bewaard als de gebruiker 'm ooit heeft ingesteld, maar bij opslaan
-  // pakken we altijd de actuele browser-tijdzone zodat 'ie meeschuift als een
-  // gebruiker verhuist.
-  const [pushAan, setPushAan] = useState<boolean>(
-    profile?.dagelijkse_push_aan ?? true
-  );
-  const [pushUur, setPushUur] = useState<number>(
-    profile?.dagelijkse_push_uur ?? 7
-  );
-  const [pushLaden, setPushLaden] = useState(false);
+  // De push-kaart beheert z'n eigen staat via props + Supabase. We passen
+  // alleen de initiële waardes mee zodat de UI meteen klopt zonder flicker.
+  const initieelPushUur = profile?.dagelijkse_push_uur ?? 7;
+  const initieelPushAan = profile?.dagelijkse_push_aan ?? true;
 
   const router = useRouter();
   const supabase = createClient();
@@ -92,38 +86,6 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
       router.refresh();
     }
     setResendLaden(false);
-  }
-
-  async function slaPushInstellingenOp(e: React.FormEvent) {
-    e.preventDefault();
-    setPushLaden(true);
-
-    // Pak de huidige browser-tijdzone op het moment van opslaan. Zo schuift het
-    // tijdstip automatisch mee als de gebruiker verhuist of op reis is.
-    let tijdzone = "Europe/Amsterdam";
-    try {
-      const gedetecteerd = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      if (gedetecteerd) tijdzone = gedetecteerd;
-    } catch {
-      // Fallback is Amsterdam — prima voor deze app-doelgroep
-    }
-
-    const { error } = await supabase
-      .from("profiles")
-      .update({
-        dagelijkse_push_aan: pushAan,
-        dagelijkse_push_uur: pushUur,
-        tijdzone,
-      })
-      .eq("id", profile?.id);
-
-    if (error) {
-      toast.error(v("actie.fout"));
-    } else {
-      toast.success(v("instellingen.push_opgeslagen"));
-      router.refresh();
-    }
-    setPushLaden(false);
   }
 
   async function testResendKey() {
@@ -283,65 +245,11 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
         )}
       </div>
 
-      {/* Dagelijkse push-tijd */}
-      <form onSubmit={slaPushInstellingenOp} className="card space-y-4">
-        <div>
-          <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
-            {v("instellingen.push_titel")}
-          </h2>
-          <p className="text-cm-white text-xs mt-1">
-            {v("instellingen.push_subtitel")}
-          </p>
-        </div>
-
-        {/* Aan/uit toggle */}
-        <label className="flex items-center justify-between gap-3 cursor-pointer">
-          <span className="text-sm text-cm-white">
-            {v("instellingen.push_aan_label")}
-          </span>
-          <button
-            type="button"
-            role="switch"
-            aria-checked={pushAan}
-            onClick={() => setPushAan((huidig) => !huidig)}
-            className={`relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors ${
-              pushAan ? "bg-cm-gold" : "bg-cm-surface-2"
-            }`}
-          >
-            <span
-              className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform ${
-                pushAan ? "translate-x-5" : "translate-x-0.5"
-              }`}
-            />
-          </button>
-        </label>
-
-        {/* Uur-keuze */}
-        <div>
-          <label className="block text-sm text-cm-white mb-1.5">
-            {v("instellingen.push_uur_label")}
-          </label>
-          <select
-            value={pushUur}
-            onChange={(e) => setPushUur(parseInt(e.target.value, 10))}
-            disabled={!pushAan}
-            className="input-cm disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {Array.from({ length: 24 }, (_, i) => (
-              <option key={i} value={i}>
-                {String(i).padStart(2, "0")}:00
-              </option>
-            ))}
-          </select>
-          <p className="text-cm-white text-xs mt-1 opacity-70">
-            {v("instellingen.push_tijdzone_auto")}
-          </p>
-        </div>
-
-        <button type="submit" disabled={pushLaden} className="btn-gold">
-          {pushLaden ? v("algemeen.laden") : v("algemeen.opslaan")}
-        </button>
-      </form>
+      {/* Pushnotificaties — één master-kaart: browser-subscribe + dagelijkse bundel */}
+      <PushInstellingenKaart
+        initieelUur={initieelPushUur}
+        initieelAan={initieelPushAan}
+      />
 
       {/* Wachtwoord */}
       <form onSubmit={wijzigWachtwoord} className="card space-y-4">

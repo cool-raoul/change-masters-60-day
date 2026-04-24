@@ -76,10 +76,18 @@ export function PushNotificationToggle() {
           applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
         });
 
+        // Browser-tijdzone meesturen zodat het endpoint 'm direct als default
+        // kan opslaan — anders zou onboarding-user Europe/Amsterdam krijgen.
+        let tijdzone = "Europe/Amsterdam";
+        try {
+          const gedetecteerd = Intl.DateTimeFormat().resolvedOptions().timeZone;
+          if (gedetecteerd) tijdzone = gedetecteerd;
+        } catch {}
+
         const response = await fetch("/api/push/subscribe", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ subscription: subscription.toJSON() }),
+          body: JSON.stringify({ subscription: subscription.toJSON(), tijdzone }),
         });
 
         if (!response.ok) throw new Error("Subscription mislukt");

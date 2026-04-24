@@ -662,6 +662,14 @@ export const t: Vertalingen = {
     nl: "Gisteren", en: "Yesterday", fr: "Hier",
     es: "Ayer", de: "Gestern", pt: "Ontem",
   },
+  "algemeen.aan": {
+    nl: "Aan", en: "On", fr: "Activé",
+    es: "Activado", de: "An", pt: "Ligado",
+  },
+  "algemeen.uit": {
+    nl: "Uit", en: "Off", fr: "Désactivé",
+    es: "Desactivado", de: "Aus", pt: "Desligado",
+  },
 
   // ===== INSTELLINGEN =====
   "instellingen.titel": { nl: "Instellingen", en: "Settings", fr: "Paramètres", es: "Ajustes", de: "Einstellungen", pt: "Configurações" },
@@ -701,6 +709,25 @@ export const t: Vertalingen = {
   "instellingen.push_uur_label": { nl: "Tijdstip (jouw tijdzone)", en: "Time (your timezone)", fr: "Heure (ton fuseau)", es: "Hora (tu zona horaria)", de: "Uhrzeit (deine Zeitzone)", pt: "Horário (seu fuso)" },
   "instellingen.push_tijdzone_auto": { nl: "Tijdzone wordt automatisch opgeslagen bij opslaan", en: "Timezone is captured automatically on save", fr: "Le fuseau horaire est enregistré automatiquement", es: "La zona horaria se guarda automáticamente", de: "Die Zeitzone wird beim Speichern automatisch übernommen", pt: "O fuso horário é salvo automaticamente" },
   "instellingen.push_opgeslagen": { nl: "Push-voorkeuren opgeslagen!", en: "Push preferences saved!", fr: "Préférences push enregistrées !", es: "¡Preferencias de push guardadas!", de: "Push-Einstellungen gespeichert!", pt: "Preferências de push salvas!" },
+
+  // Push-notificaties (master toggle + status) — alles wat in PushInstellingenKaart zit
+  "push.master_label": { nl: "Push meldingen", en: "Push notifications", fr: "Notifications push", es: "Notificaciones push", de: "Push-Benachrichtigungen", pt: "Notificações push" },
+  "push.master_aan": { nl: "Staat aan — je ontvangt live- én dagelijkse meldingen", en: "On — you get live and daily notifications", fr: "Activé — tu reçois des notifications en direct et quotidiennes", es: "Activado: recibes notificaciones en vivo y diarias", de: "An — du bekommst Live- und Tages-Benachrichtigungen", pt: "Ativado — você recebe notificações ao vivo e diárias" },
+  "push.master_uit": { nl: "Staat uit — je krijgt geen pushmeldingen", en: "Off — you don't receive push notifications", fr: "Désactivé — tu ne reçois pas de notifications push", es: "Desactivado: no recibes notificaciones push", de: "Aus — du erhältst keine Push-Benachrichtigungen", pt: "Desligado — você não recebe notificações push" },
+  "push.knop_aan": { nl: "Aanzetten", en: "Turn on", fr: "Activer", es: "Activar", de: "Einschalten", pt: "Ativar" },
+  "push.knop_uit": { nl: "Uitzetten", en: "Turn off", fr: "Désactiver", es: "Desactivar", de: "Ausschalten", pt: "Desativar" },
+  "push.aangezet": { nl: "Push meldingen aan!", en: "Push notifications on!", fr: "Notifications push activées !", es: "¡Notificaciones push activadas!", de: "Push-Benachrichtigungen an!", pt: "Notificações push ligadas!" },
+  "push.uitgezet": { nl: "Push meldingen uit", en: "Push notifications off", fr: "Notifications push désactivées", es: "Notificaciones push desactivadas", de: "Push-Benachrichtigungen aus", pt: "Notificações push desligadas" },
+  "push.toestemming_geweigerd": { nl: "Geen toestemming gegeven voor meldingen", en: "Notification permission denied", fr: "Permission de notification refusée", es: "Permiso de notificaciones denegado", de: "Keine Erlaubnis für Benachrichtigungen", pt: "Permissão para notificações negada" },
+  "push.permission_geweigerd_uitleg": { nl: "Je hebt meldingen eerder geblokkeerd. Zet ze in je browser-instellingen weer aan om verder te gaan.", en: "You've blocked notifications before. Re-enable them in your browser settings to continue.", fr: "Tu as déjà bloqué les notifications. Réactive-les dans les réglages du navigateur pour continuer.", es: "Has bloqueado las notificaciones antes. Vuelve a activarlas en la configuración del navegador para continuar.", de: "Du hast Benachrichtigungen zuvor blockiert. Aktiviere sie in den Browsereinstellungen, um fortzufahren.", pt: "Você bloqueou as notificações antes. Reative-as nas configurações do navegador para continuar." },
+  "push.niet_geconfigureerd": { nl: "Push is nog niet geconfigureerd op deze server", en: "Push is not configured on this server yet", fr: "Le push n'est pas encore configuré sur ce serveur", es: "El push aún no está configurado en este servidor", de: "Push ist auf diesem Server noch nicht konfiguriert", pt: "O push ainda não está configurado neste servidor" },
+  "push.subscribe_mislukt": { nl: "Aanmelden voor push mislukt", en: "Subscribing to push failed", fr: "Échec de l'abonnement aux notifications push", es: "Error al suscribirse al push", de: "Push-Anmeldung fehlgeschlagen", pt: "Falha ao se inscrever no push" },
+  "push.niet_ondersteund": { nl: "Deze browser ondersteunt geen pushmeldingen. Gebruik Chrome, Edge, Safari (iOS 16.4+) of Firefox.", en: "This browser doesn't support push notifications. Use Chrome, Edge, Safari (iOS 16.4+) or Firefox.", fr: "Ce navigateur ne prend pas en charge les notifications push. Utilise Chrome, Edge, Safari (iOS 16.4+) ou Firefox.", es: "Este navegador no admite notificaciones push. Usa Chrome, Edge, Safari (iOS 16.4+) o Firefox.", de: "Dieser Browser unterstützt keine Push-Benachrichtigungen. Nutze Chrome, Edge, Safari (iOS 16.4+) oder Firefox.", pt: "Este navegador não suporta notificações push. Use Chrome, Edge, Safari (iOS 16.4+) ou Firefox." },
+  "push.installeer_eerst_titel": { nl: "Installeer eerst de app", en: "Install the app first", fr: "Installe d'abord l'app", es: "Instala primero la app", de: "Installiere zuerst die App", pt: "Instale o app primeiro" },
+  "push.installeer_eerst_uitleg": { nl: "Push werkt alleen als je deze app als PWA op je startscherm hebt. Open het installeer-menu in je browser (delen → \"Zet op beginscherm\" op iOS, of \"App installeren\" op desktop).", en: "Push only works when this app is installed as a PWA on your home screen. Open the install menu in your browser (share → \"Add to Home Screen\" on iOS, or \"Install app\" on desktop).", fr: "Le push fonctionne uniquement si cette app est installée en PWA sur ton écran d'accueil. Ouvre le menu d'installation dans ton navigateur (partager → \"Ajouter à l'écran d'accueil\" sur iOS, ou \"Installer l'app\" sur desktop).", es: "El push solo funciona cuando esta app está instalada como PWA en tu pantalla de inicio. Abre el menú de instalación en tu navegador (compartir → \"Añadir a pantalla de inicio\" en iOS, o \"Instalar app\" en escritorio).", de: "Push funktioniert nur, wenn diese App als PWA auf deinem Startbildschirm installiert ist. Öffne das Installationsmenü in deinem Browser (Teilen → \"Zum Home-Bildschirm\" auf iOS oder \"App installieren\" auf dem Desktop).", pt: "O push só funciona quando este app está instalado como PWA na sua tela inicial. Abra o menu de instalação no navegador (compartilhar → \"Adicionar à tela inicial\" no iOS ou \"Instalar app\" no desktop)." },
+  "push.test_knop": { nl: "Stuur testmelding", en: "Send test notification", fr: "Envoyer une notif test", es: "Enviar notif de prueba", de: "Testbenachrichtigung senden", pt: "Enviar notificação de teste" },
+  "push.test_verstuurd": { nl: "Test verstuurd — check je meldingen", en: "Test sent — check your notifications", fr: "Test envoyé — vérifie tes notifications", es: "Prueba enviada: revisa tus notificaciones", de: "Test gesendet — prüfe deine Benachrichtigungen", pt: "Teste enviado — verifique suas notificações" },
+  "push.test_mislukt": { nl: "Testmelding mislukt", en: "Test notification failed", fr: "Échec de la notif test", es: "Error en notificación de prueba", de: "Testbenachrichtigung fehlgeschlagen", pt: "Falha na notificação de teste" },
 
   // ===== NIEUW PROSPECT =====
   "nieuw.titel": { nl: "Nieuw Prospect", en: "New Prospect", fr: "Nouveau Prospect", es: "Nuevo Prospecto", de: "Neuer Kontakt", pt: "Novo Prospecto" },
