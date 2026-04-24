@@ -17,17 +17,17 @@ import { Weekdag } from "./types";
 
 export const WEEKRITME: Weekdag[] = [
   // ──────────────────────────────────────────────────────────
-  // MAANDAG — Plannen
+  // MAANDAG · Plannen
   // ──────────────────────────────────────────────────────────
   {
     dagVanDeWeek: 1,
-    titel: "Maandag — Plannen",
+    titel: "Maandag · plannen",
     focus:
-      "Je week begint met overzicht. Wie zit waar in de pipeline? Wie krijgt deze week welke stap? Pak 20 minuten om je week te tekenen vóór je uitnodigingen stuurt.",
+      "Je week begint met overzicht. Wie zit waar in de pipeline? Wie krijgt deze week welke stap? Pak even 20 minuten om je week te tekenen vóór je uitnodigingen stuurt.",
     vandaagDoen: [
       {
         id: "ma-pipeline-review",
-        label: "Pipeline-review — wie zit in welke fase?",
+        label: "Pipeline-review: wie zit in welke fase?",
         uitleg:
           "Open Pipeline in ELEVA. Loop elke fase af: wie wacht op wat? Wie is langer dan 5 dagen niet bewogen? Die krijgen deze week prioriteit.",
         verplicht: true,
@@ -36,14 +36,14 @@ export const WEEKRITME: Weekdag[] = [
         id: "ma-week-plan",
         label: "Week-plan: 3 prioriteit-prospects kiezen",
         uitleg:
-          "Kies 3 mensen die deze week een beslissing nodig hebben. Niet meer — focus werkt.",
+          "Kies 3 mensen die deze week een beslissing nodig hebben. Niet meer. Focus werkt.",
         verplicht: true,
       },
       {
         id: "ma-inhaaldag-bouwen",
         label: "Inhaaldag inbouwen indien nodig",
         uitleg:
-          "Heb je vorige week dagen overgeslagen? Plan in deze week 1-2 dagen waar je +50% aantallen draait (15 invites ipv 10). Niet straffen — gewoon inhalen. Op andere dagen blijft het normale ritme.",
+          "Heb je vorige week dagen overgeslagen? Plan deze week 1-2 dagen waar je +50% aantallen draait (15 invites ipv 10). Niet straffen, gewoon inhalen. Op andere dagen blijft het normale ritme.",
         verplicht: false,
       },
       {
@@ -81,23 +81,23 @@ export const WEEKRITME: Weekdag[] = [
       },
     ],
     teaching:
-      "Een week die je niet plant, plant jou. Maandag 20 minuten vooruit-denken spaart je 5 dagen drijven. Pak pen en papier als ELEVA te klein voelt — het resultaat hoort in ELEVA, het denken mag overal.",
+      "Een week die je niet plant, plant jou. Maandag 20 minuten vooruit-denken spaart je 5 dagen drijven. Pak pen en papier als ELEVA even te klein voelt. Het resultaat hoort in ELEVA, het denken mag overal.",
   },
 
   // ──────────────────────────────────────────────────────────
-  // DINSDAG — Uitnodigen
+  // DINSDAG · Uitnodigen
   // ──────────────────────────────────────────────────────────
   {
     dagVanDeWeek: 2,
-    titel: "Dinsdag — Uitnodigen",
+    titel: "Dinsdag · uitnodigen",
     focus:
-      "Vandaag is invite-dag. De 10 uitnodigingen die je stuurt zijn niet random — ze komen uit je pipeline 'nieuw' en uit je maandag-plan. Kwantiteit mét richting.",
+      "Vandaag is invite-dag. De 10 uitnodigingen die je stuurt zijn niet random. Ze komen uit je pipeline 'nieuw' en uit je maandag-plan. Kwantiteit mét richting.",
     vandaagDoen: [
       {
         id: "di-10-invites",
         label: "10 uitnodigingen versturen",
         uitleg:
-          "Gebruik het 4-stappen-script (haast / complimentje / vraag / set tijd). Varieer de opening — een tweede invite aan dezelfde persoon vraagt om een andere hoek.",
+          "Gebruik het 4-stappen-script (haast, complimentje, vraag, set tijd). Varieer de opening. Een tweede invite aan dezelfde persoon vraagt om een andere hoek.",
         verplicht: true,
       },
       {
@@ -132,17 +132,17 @@ export const WEEKRITME: Weekdag[] = [
       },
     ],
     teaching:
-      "De Worre-regel: 'Make it short, make it urgent, get off the phone.' 30 seconden is genoeg. Hoe langer je praat, hoe meer je jezelf in de weg zit. Je bouwt geen rapport bij een uitnodiging — je zet alleen een afspraak.",
+      "De regel: 'Make it short, make it urgent, get off the phone.' 30 seconden is genoeg. Hoe langer je praat, hoe meer je jezelf in de weg zit. Je bouwt geen rapport bij een uitnodiging. Je zet alleen even een afspraak.",
   },
 
   // ──────────────────────────────────────────────────────────
-  // WOENSDAG — 3-weg / Samen werken
+  // WOENSDAG · 3-weg / Samen werken
   // ──────────────────────────────────────────────────────────
   {
     dagVanDeWeek: 3,
-    titel: "Woensdag — 3-weg",
+    titel: "Woensdag · 3-weg",
     focus:
-      "Midden-van-de-week: samen-werken met je sponsor of een geupline. Een 3-weg is geen presentatie — het is een getuigenis met drie stemmen.",
+      "Midden van de week: samenwerken met je sponsor of een geupline. Een 3-weg is geen presentatie. Het is een getuigenis met drie stemmen.",
     vandaagDoen: [
       {
         id: "wo-3weg-plannen",
@@ -188,23 +188,23 @@ export const WEEKRITME: Weekdag[] = [
       },
     ],
     teaching:
-      "Brookes' 3-weg-principe: jij bent de brug, de sponsor is de autoriteit, de prospect is de beslisser. Jouw taak is edificeren — niet antwoorden. Hoe minder jij zegt in een 3-weg, hoe meer je groeit als vakman.",
+      "Het 3-weg-principe: jij bent de brug, de sponsor is de autoriteit, de prospect is de beslisser. Jouw taak is edificeren, niet antwoorden. Hoe minder jij zegt in een 3-weg, hoe meer je groeit als vakman.",
   },
 
   // ──────────────────────────────────────────────────────────
-  // DONDERDAG — Follow-up
+  // DONDERDAG · Follow-up
   // ──────────────────────────────────────────────────────────
   {
     dagVanDeWeek: 4,
-    titel: "Donderdag — Follow-up",
+    titel: "Donderdag · follow-up",
     focus:
       "De fortuin zit in de follow-up. Vandaag extra gewicht op doorvragen: wie heeft iets gezien maar nog niet beslist? Met welke vraag breng je 'm een stap verder?",
     vandaagDoen: [
       {
         id: "do-10-followups-plus",
-        label: "10 follow-ups doen — met open vraag",
+        label: "10 follow-ups doen, met open vraag",
         uitleg:
-          'Niet "heb je nog nagedacht?" — maar "wat sprak je het meest aan?" of "wat was je grootste zorg?". Open vragen brengen antwoorden.',
+          'Niet "heb je nog nagedacht?", maar "wat sprak je het meest aan?" of "wat was je grootste zorg?". Open vragen brengen antwoorden.',
         verplicht: true,
       },
       {
@@ -221,7 +221,7 @@ export const WEEKRITME: Weekdag[] = [
         id: "do-beslissing-vragen",
         label: "Vraag bij 2 prospects de beslissing",
         uitleg:
-          "Wie al 2+ follow-ups heeft gehad zonder beslissing: vraag vandaag expliciet. 'Wat is je gevoel — meedoen als member, als shopper, of nu even niet?'",
+          "Wie al 2+ follow-ups heeft gehad zonder beslissing: vraag vandaag expliciet. 'Wat is je gevoel: meedoen als member, als shopper, of nu even niet?'",
         verplicht: false,
       },
     ],
@@ -242,26 +242,26 @@ export const WEEKRITME: Weekdag[] = [
   },
 
   // ──────────────────────────────────────────────────────────
-  // VRIJDAG — Socials / Lijst uitbreiden
+  // VRIJDAG · Socials / Lijst uitbreiden
   // ──────────────────────────────────────────────────────────
   {
     dagVanDeWeek: 5,
-    titel: "Vrijdag — Socials",
+    titel: "Vrijdag · socials",
     focus:
-      "Einde van de werkweek: uitbreiden. Wie heeft deze week op je sociale media gereageerd, geliked, gecommentarieerd? Die mensen willen gezien worden — geef ze een DM.",
+      "Einde van de werkweek: uitbreiden. Wie heeft deze week op je sociale media gereageerd, geliked, gecommentarieerd? Die mensen willen gezien worden, geef ze een DM.",
     vandaagDoen: [
       {
         id: "vr-5-dms",
         label: "5 DM's naar reageerders van deze week",
         uitleg:
-          "Geen verkoop-DM — een menselijk bericht. 'Leuk dat je reageerde op mijn post, hoe gaat het?' — FORM openen.",
+          "Geen verkoop-DM, gewoon een menselijk bericht. 'Leuk dat je reageerde op mijn post, hoe gaat het?'. En dan FORM openen.",
         verplicht: true,
       },
       {
         id: "vr-social-post",
         label: "1 waarde-post plaatsen (product OF lifestyle)",
         uitleg:
-          "Niet verkopen op socials — delen. Je workout, je ontbijt met Daily BioBasics, je ochtendritueel. Laat zien wie je bent, niet wat je verkoopt.",
+          "Niet verkopen op socials, gewoon delen. Je workout, je ontbijt met Daily BioBasics, je ochtendritueel. Laat zien wie je bent, niet wat je verkoopt.",
         verplicht: true,
       },
       {
@@ -294,23 +294,23 @@ export const WEEKRITME: Weekdag[] = [
       },
     ],
     teaching:
-      "Sociale media is geen verkoopkanaal — het is een vindkanaal. Mensen kopen niet uit je feed, ze ontdekken dat je bestaat. De verkoop gebeurt in de DM, dan in de one-pager, dan in de presentatie. Je feed doet stap 1, jij doet stap 2 t/m 5.",
+      "Sociale media is geen verkoopkanaal. Het is een vindkanaal. Mensen kopen niet uit je feed, ze ontdekken dat je bestaat. De verkoop gebeurt in de DM, dan in de one-pager, dan in de presentatie. Je feed doet stap 1, jij doet stap 2 t/m 5.",
   },
 
   // ──────────────────────────────────────────────────────────
-  // ZATERDAG — Events / Leren
+  // ZATERDAG · Events / Leren
   // ──────────────────────────────────────────────────────────
   {
     dagVanDeWeek: 6,
-    titel: "Zaterdag — Events & Leren",
+    titel: "Zaterdag · events & leren",
     focus:
-      "Lichtere dag. Weekend-events, team-calls, training, nieuwe leden onboarden. Een dag om te groeien als vakman — niet om door te duwen.",
+      "Lichtere dag. Weekend-events, team-calls, training, nieuwe leden onboarden. Een dag om te groeien als vakman, niet om door te duwen.",
     vandaagDoen: [
       {
         id: "za-event-of-training",
         label: "Aanwezig bij team-event OF 30 min training",
         uitleg:
-          "Als er een team-call / zoom / live-event is: erbij zijn. Geen event? Pak Go Pro, een Brookes-video, of een ELEVA-training uit de bibliotheek.",
+          "Als er een team-call, zoom of live-event is: erbij zijn. Geen event? Pak Go Pro, een goede networking-video, of een ELEVA-training uit de bibliotheek.",
         verplicht: true,
       },
       {
@@ -349,15 +349,15 @@ export const WEEKRITME: Weekdag[] = [
       },
     ],
     teaching:
-      "Je groeit niet door méér te doen — je groeit door beter te worden. Zaterdag is je leer-dag. 30 minuten bewust trainen is meer waard dan 3 uur hulpeloos invites versturen. Leer eerst, dan produceer.",
+      "Je groeit niet door méér te doen, je groeit door beter te worden. Zaterdag is je leer-dag. 30 minuten bewust trainen is meer waard dan 3 uur hulpeloos invites versturen. Leer eerst, dan produceer.",
   },
 
   // ──────────────────────────────────────────────────────────
-  // ZONDAG — Review & Reflectie
+  // ZONDAG · Review & Reflectie
   // ──────────────────────────────────────────────────────────
   {
     dagVanDeWeek: 0,
-    titel: "Zondag — Review",
+    titel: "Zondag · review",
     focus:
       "Einde van de week: terugkijken. Wat heb je gedaan? Wat heeft gewerkt? Wat niet? Welke prospect heeft je verrast? De review is je grootste leermoment.",
     vandaagDoen: [
@@ -379,14 +379,14 @@ export const WEEKRITME: Weekdag[] = [
         id: "zo-win-van-week",
         label: "1 win van de week vieren",
         uitleg:
-          "Klein of groot: iemand zei ja, iemand deed z'n eerste one-pager, je sponsor gaf complimentje. Schrijf het op — momentum voedt zich met erkenning.",
+          "Klein of groot: iemand zei ja, iemand deed z'n eerste one-pager, je sponsor gaf een complimentje. Schrijf het op. Momentum voedt zich met erkenning.",
         verplicht: true,
       },
       {
         id: "zo-volgende-week",
         label: "Top-3 prioriteiten volgende week bedenken",
         uitleg:
-          "Niet het plan — dat doe je maandag. Wél: welke 3 prospects krijgen volgende week jouw focus? Wat is je emotionele insteek?",
+          "Niet het plan zelf, dat doe je maandag. Wél: welke 3 prospects krijgen volgende week jouw focus? Wat is je emotionele insteek?",
         verplicht: true,
       },
       {
@@ -400,7 +400,7 @@ export const WEEKRITME: Weekdag[] = [
         id: "zo-overwelhm-check",
         label: "Overwelhm-check: wat schuurde, wat gaf energie?",
         uitleg:
-          "Wat voelde te veel? Wat ging makkelijker dan vorige week? Schrijf 1 zin op. Wat schuurt is meestal precies wat groei geeft — daar zit volgende week je oefening, niet je probleem.",
+          "Wat voelde te veel? Wat ging makkelijker dan vorige week? Schrijf 1 zin op. Wat schuurt is meestal precies wat groei geeft. Daar zit volgende week je oefening, niet je probleem.",
         verplicht: true,
       },
       {
@@ -430,7 +430,7 @@ export const WEEKRITME: Weekdag[] = [
       },
     ],
     teaching:
-      "Wat je niet meet, verbeter je niet. Wat je meet zonder te vieren, put je uit. De week-review combineert beide: harde cijfers (heb ik de lat gehaald?) en zachte voeding (wat heeft me gevormd?). Neem er 20 minuten voor. Het is de duurste 20 minuten van je week.\n\nInhaal-regel: dagen worden niet 'verloren'. Een gemiste dag is een verzetbare dag. Plan 'm in de week erna in en til de aantallen op die dag op met 50%. Niet schuld dragen — gewoon doorgaan. De 60-dagenrun beloont volharding, niet perfectie.",
+      "Wat je niet meet, verbeter je niet. Wat je meet zonder te vieren, put je uit. De week-review combineert beide: harde cijfers (heb ik de lat gehaald?) en zachte voeding (wat heeft me gevormd?). Neem er 20 minuten voor. Het is de duurste 20 minuten van je week.\n\nInhaal-regel: dagen worden niet 'verloren'. Een gemiste dag is een verzetbare dag. Plan 'm in de week erna in en til de aantallen op die dag op met 50%. Niet schuld dragen, gewoon doorgaan. De 60-dagenrun beloont volharding, niet perfectie.",
   },
 ];
 

@@ -102,7 +102,7 @@ export type Fase = {
 export type Weekdag = {
   /** 0 = zondag, 1 = maandag, ... 6 = zaterdag. */
   dagVanDeWeek: 0 | 1 | 2 | 3 | 4 | 5 | 6;
-  /** Bijv. "Maandag — Plannen". */
+  /** Bijv. "Maandag · plannen". */
   titel: string;
   /** Hoofdfocus in één zin. */
   focus: string;
