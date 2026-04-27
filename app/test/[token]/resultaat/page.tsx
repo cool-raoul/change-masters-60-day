@@ -105,13 +105,21 @@ export default async function ResultaatPage({
   const aanbevolenNiveau = uitslag.niveau;
   const bewustwording = BEWUSTWORDING[uitslag.categorie];
 
-  // Opstart-suggestie (Darmen in Balans / Holistic Reset)
+  // Sterke opstart-suggestie (uit het algoritme)
   const opstartPakket =
     uitslag.opstartSuggestie === "darmen-in-balans"
       ? getResetPakket("reset-darmen-basis")
       : uitslag.opstartSuggestie === "holistic-reset"
         ? getResetPakket("reset-holistic-m12")
         : null;
+
+  // Zachte algemene darm-aanbeveling: tonen als er geen sterke trigger is.
+  // Voor veel mensen is de basis-darm-opfrissing een waardevol vertrekpunt,
+  // ook al kwam er geen sterke darm-signaal uit de test.
+  const toonAlgemeenDarmBlok = uitslag.opstartSuggestie === "geen";
+  const algemeenDarmPakket = toonAlgemeenDarmBlok
+    ? getResetPakket("reset-darmen-basis")
+    : null;
 
   // Member-bestellinks ophalen om bestelknoppen te vullen
   const { data: bestellinks } = await supabase
@@ -199,7 +207,7 @@ export default async function ResultaatPage({
           </p>
         </section>
 
-        {/* Optionele opstart-suggestie */}
+        {/* Sterke opstart-suggestie (Holistic Reset of Darmen prominent) */}
         {opstartPakket && (
           <section className="bg-amber-50 border border-amber-200 rounded-2xl p-5 sm:p-6 mb-5">
             <div className="flex items-start gap-3">
@@ -224,6 +232,51 @@ export default async function ResultaatPage({
                     {opstartPakket.levensstijlAanpassing.split(".")[0]}.
                   </div>
                 </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Algemene darm-aanbeveling (alleen als er geen sterke trigger is) */}
+        {algemeenDarmPakket && (
+          <section className="bg-emerald-50 border border-emerald-100 rounded-2xl p-5 sm:p-6 mb-5">
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">🌿</span>
+              <div>
+                <h2 className="text-lg font-semibold text-emerald-900 mb-2">
+                  Wist je dat de basis vaak in de darmen ligt?
+                </h2>
+                <p className="text-sm text-emerald-900 mb-2">
+                  Voor veel mensen vormen de darmen een belangrijk fundament.
+                  Een groot deel van het immuunsysteem zit daar, je stemming
+                  wordt mede vanuit de darmen aangestuurd, en hoe goed je
+                  voedingsstoffen uit je eten haalt begint daar.
+                </p>
+                <p className="text-sm text-emerald-900 mb-3">
+                  Het is daarom voor veel mensen{" "}
+                  <strong>raadzaam om met een 16-daagse darm-opfrissing te
+                  starten</strong> voordat ze aan vervolgsupplementen beginnen.
+                  Niet omdat het moet, maar omdat alles wat je daarna gebruikt
+                  sterker werkt op een schoon fundament.
+                </p>
+                <div className="bg-white rounded-lg p-3 border border-emerald-100">
+                  <div className="font-semibold text-gray-900">
+                    {algemeenDarmPakket.naam}
+                  </div>
+                  <div className="text-sm text-gray-600 mt-1">
+                    €{algemeenDarmPakket.totaalPrijs.toFixed(2)} ASAP ·{" "}
+                    {algemeenDarmPakket.totaalIP} IP ·{" "}
+                    {algemeenDarmPakket.duurDagen} dagen
+                  </div>
+                  <div className="text-xs text-gray-500 mt-2 italic">
+                    Een opschoning van binnenuit. Daarna ga je verder met het
+                    advies hieronder.
+                  </div>
+                </div>
+                <p className="text-xs text-emerald-800 mt-3 italic">
+                  Twijfel je of dit iets voor jou is? {memberNaam} kijkt graag
+                  met je mee.
+                </p>
               </div>
             </div>
           </section>
