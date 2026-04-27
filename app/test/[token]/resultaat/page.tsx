@@ -244,20 +244,25 @@ export default async function ResultaatPage({
               <span className="text-2xl">🌿</span>
               <div>
                 <h2 className="text-lg font-semibold text-emerald-900 mb-2">
-                  Wist je dat de basis vaak in de darmen ligt?
+                  De darmen: het tweede brein van je lichaam
                 </h2>
                 <p className="text-sm text-emerald-900 mb-2">
-                  Voor veel mensen vormen de darmen een belangrijk fundament.
-                  Een groot deel van het immuunsysteem zit daar, je stemming
-                  wordt mede vanuit de darmen aangestuurd, en hoe goed je
-                  voedingsstoffen uit je eten haalt begint daar.
+                  Onze darmen worden ook wel het tweede brein genoemd. Ze staan
+                  in directe verbinding met je hele lichaam: hoe je je voelt,
+                  hoe goed je voedingsstoffen opneemt, hoe je weerstand werkt,
+                  zelfs je stemming.
                 </p>
                 <p className="text-sm text-emerald-900 mb-3">
-                  Het is daarom voor veel mensen{" "}
-                  <strong>raadzaam om met een 16-daagse darm-opfrissing te
-                  starten</strong> voordat ze aan vervolgsupplementen beginnen.
-                  Niet omdat het moet, maar omdat alles wat je daarna gebruikt
-                  sterker werkt op een schoon fundament.
+                  Net zoals je auto regelmatig een APK krijgt, is een
+                  opschoonmoment voor je lichaam slim om af en toe te doen. Een
+                  16-daagse darm-opfrissing is daar een mooi moment voor: even
+                  afvalstoffen lekker eruit, ruimte voor een fris startpunt.
+                </p>
+                <p className="text-sm text-emerald-900 mb-3">
+                  Het advies hieronder werkt op zichzelf prima. Een darmprogramma
+                  is geen voorwaarde, wel <strong>een raadzame aanvulling</strong>
+                  {" "}als je het overweegt. Eventueel kan dat ook prima later, een
+                  paar maanden na de start van je pakket.
                 </p>
                 <div className="bg-white rounded-lg p-3 border border-emerald-100">
                   <div className="font-semibold text-gray-900">
@@ -268,14 +273,11 @@ export default async function ResultaatPage({
                     {algemeenDarmPakket.totaalIP} IP ·{" "}
                     {algemeenDarmPakket.duurDagen} dagen
                   </div>
-                  <div className="text-xs text-gray-500 mt-2 italic">
-                    Een opschoning van binnenuit. Daarna ga je verder met het
-                    advies hieronder.
-                  </div>
                 </div>
                 <p className="text-xs text-emerald-800 mt-3 italic">
-                  Twijfel je of dit iets voor jou is? {memberNaam} kijkt graag
-                  met je mee.
+                  Wil je weten of dit iets voor jou is? Vraag {memberNaam} om
+                  mee te kijken — er is een korte vervolgvragenlijst die helpt
+                  bepalen welk darmprogramma het beste past.
                 </p>
               </div>
             </div>
