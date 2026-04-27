@@ -253,8 +253,10 @@ export function berekenUitslag(antwoorden: ZelftestAntwoorden): ZelftestUitslag 
   const totaalHoofdscore = Object.values(hoofdScores).reduce((s, n) => s + n, 0);
 
   // Bepaal niveau alvast
-  // 60-day = altijd Complete; anders op basis van intensiteit van winnende score
-  // (komt na de winnaar-bepaling, want niveau hangt af van winnende score)
+  // 60-day = altijd Complete; anders Plus als default, Complete bij sterke
+  // herkenning. Essential is NOOIT de standaard-suggestie (zou prospects naar
+  // de laagste optie sturen — wij willen dat ze bewust kiezen, en de meeste
+  // mensen kiezen psychologisch voor de middelste optie).
 
   // Fallback bij erg lage scores
   if (totaalHoofdscore <= 2) {
@@ -279,16 +281,16 @@ export function berekenUitslag(antwoorden: ZelftestAntwoorden): ZelftestUitslag 
     }
   }
 
-  // Niveau-suggestie op basis van intensiteit
-  // (alleen voor reguliere route; 60-day is altijd Complete)
+  // Niveau-suggestie:
+  //  - 60-day (trigger='ja') → altijd Complete
+  //  - Sterke herkenning (≥7 van max 8 in winnende categorie) → Complete
+  //  - Anders → Plus (default, ankereffect)
+  // Essential komt nooit als suggestie, maar staat wel zichtbaar voor wie
+  // bewust voor een lichtere instap kiest.
   const niveau: PakketNiveau =
-    antwoorden.trigger60day === "ja"
+    antwoorden.trigger60day === "ja" || besteScore >= 7
       ? "complete"
-      : besteScore >= 15
-        ? "complete"
-        : besteScore >= 9
-          ? "plus"
-          : "essential";
+      : "plus";
 
   // Geslacht-mapping (man + hormoonbalans → mannen-hormoonbalans)
   const finaleCategorie = mapCategorieVoorGeslacht(beste, antwoorden.geslacht);
@@ -306,18 +308,23 @@ export function berekenUitslag(antwoorden: ZelftestAntwoorden): ZelftestUitslag 
 /**
  * Bepaal welke opstart-suggestie past op basis van modifier-scores.
  *
+ * Drempel = 5 van max 6 punten = sterke herkenning vereist (minstens
+ * 2× "Vaak" + 1× "Soms"). Reset-programma's vragen ingrijpende leefstijl-
+ * aanpassingen, dus moet de prospect dit echt willen voordat we het
+ * suggereren.
+ *
  * Regels:
- *  - ≥4 darm-signalen punten → Darmen in Balans
- *  - ≥4 reset-bereidheid punten + winnende cat = afvallen → Holistic Reset
- *  - ≥4 reset-bereidheid (geen afvallen) → Darmen in Balans als alternatief
+ *  - ≥5 darm-signalen punten → Darmen in Balans
+ *  - ≥5 reset-bereidheid punten + winnende cat = afvallen → Holistic Reset
+ *  - ≥5 reset-bereidheid (geen afvallen) → Darmen in Balans als alternatief
  *  - Anders → geen opstart-suggestie
  */
 function bepaalOpstartSuggestie(
   modifierScores: Record<ZelftestModifierCategorie, number>,
   hoofdcategorie: ZelftestHoofdCategorie,
 ): OpstartSuggestie {
-  const darmHoog = modifierScores["darm-signalen"] >= 4;
-  const resetBereidHoog = modifierScores["reset-bereidheid"] >= 4;
+  const darmHoog = modifierScores["darm-signalen"] >= 5;
+  const resetBereidHoog = modifierScores["reset-bereidheid"] >= 5;
 
   if (resetBereidHoog && hoofdcategorie === "afvallen-metabolisme") {
     return "holistic-reset";

@@ -22,7 +22,7 @@ import {
 //   5. Submit
 // ============================================================
 
-type Stap = "trigger" | "geslacht" | "uitspraken" | "submit";
+type Stap = "geslacht" | "uitspraken" | "submit";
 
 export function TestForm({
   token,
@@ -34,8 +34,10 @@ export function TestForm({
   memberNaam: string;
 }) {
   const router = useRouter();
-  const [stap, setStap] = useState<Stap>("trigger");
-  const [trigger, setTrigger] = useState<Trigger60Day | null>(null);
+  const [stap, setStap] = useState<Stap>("geslacht");
+  // trigger60day wordt straks door de member ingesteld bij verzenden van
+  // de test (in dag 3). Voor nu standaard "nee" = vrije keuze niveau.
+  const trigger: Trigger60Day = "nee";
   const [geslacht, setGeslacht] = useState<Geslacht | null>(null);
   const [responses, setResponses] = useState<Record<string, Antwoord>>({});
   const [avgAkkoord, setAvgAkkoord] = useState(false);
@@ -54,7 +56,7 @@ export function TestForm({
   const alleBeantwoord = aantalBeantwoord === totaalUitspraken;
 
   async function submit() {
-    if (!trigger || !geslacht || !alleBeantwoord || !avgAkkoord) return;
+    if (!geslacht || !alleBeantwoord || !avgAkkoord) return;
     setBezig(true);
     setFoutmelding(null);
     try {
@@ -83,55 +85,16 @@ export function TestForm({
   }
 
   // ============================================================
-  // STAP 1 — Commitment-vraag (bepaalt of we Complete adviseren)
-  // ============================================================
-  if (stap === "trigger") {
-    return (
-      <Card>
-        <CardTitel>Stap 1 van 4</CardTitel>
-        <h2 className="text-xl font-semibold text-gray-900 mb-1">
-          Hoe wil je dit aanpakken?
-        </h2>
-        <p className="text-sm text-gray-600 mb-4">
-          Geen verkeerd antwoord. Dit helpt {memberNaam} om het advies op jou
-          af te stemmen.
-        </p>
-        <div className="space-y-2">
-          <KeuzeKnop
-            label="Ik wil vol gaan"
-            beschrijving="Geef me het meest complete advies om in de komende weken écht resultaat te zien."
-            checked={trigger === "ja"}
-            onClick={() => setTrigger("ja")}
-          />
-          <KeuzeKnop
-            label="Ik wil bewust starten"
-            beschrijving="Laat me kiezen tussen een lichte instap, een uitgebreide aanpak of het complete pakket."
-            checked={trigger === "nee"}
-            onClick={() => setTrigger("nee")}
-          />
-          <KeuzeKnop
-            label="Ik wil eerst zien wat past"
-            beschrijving="Toon me de mogelijkheden, ik kies daarna wat bij me past."
-            checked={trigger === "weet_niet"}
-            onClick={() => setTrigger("weet_niet")}
-          />
-        </div>
-        <Volgende enabled={!!trigger} onClick={() => setStap("geslacht")} />
-      </Card>
-    );
-  }
-
-  // ============================================================
-  // STAP 2 — Geslacht (voor productkeuze, geen profilering)
+  // STAP 1 — Geslacht (voor productkeuze, geen profilering)
   // ============================================================
   if (stap === "geslacht") {
     return (
       <Card>
-        <CardTitel>Stap 2 van 4</CardTitel>
+        <CardTitel>Stap 1 van 3</CardTitel>
         <h2 className="text-xl font-semibold text-gray-900 mb-1">
           Ben je een vrouw of een man?
         </h2>
-        <p className="text-sm text-gray-500 mb-4">
+        <p className="text-sm text-gray-600 mb-4">
           We gebruiken dit om de juiste producten voor jou te selecteren. Voor
           vrouwen en mannen zijn er soms andere ondersteuningen.
         </p>
@@ -153,32 +116,18 @@ export function TestForm({
             onClick={() => setGeslacht("zeg-niet")}
           />
         </div>
-        <div className="flex gap-2 mt-4">
-          <button
-            onClick={() => setStap("trigger")}
-            className="flex-1 py-3 rounded-lg border border-gray-200 text-gray-600 font-medium"
-          >
-            Terug
-          </button>
-          <button
-            onClick={() => setStap("uitspraken")}
-            disabled={!geslacht}
-            className="flex-1 py-3 rounded-lg bg-emerald-600 text-white font-semibold disabled:opacity-40"
-          >
-            Verder
-          </button>
-        </div>
+        <Volgende enabled={!!geslacht} onClick={() => setStap("uitspraken")} />
       </Card>
     );
   }
 
   // ============================================================
-  // STAP 3 — Uitspraken op 3-puntsschaal
+  // STAP 2 — Uitspraken op 3-puntsschaal
   // ============================================================
   if (stap === "uitspraken") {
     return (
       <Card>
-        <CardTitel>Stap 3 van 4</CardTitel>
+        <CardTitel>Stap 2 van 3</CardTitel>
         <h2 className="text-xl font-semibold text-gray-900 mb-2">
           Hoe sterk herken je jezelf in elke uitspraak?
         </h2>
@@ -225,11 +174,11 @@ export function TestForm({
   }
 
   // ============================================================
-  // STAP 4 — AVG-akkoord + submit
+  // STAP 3 — AVG-akkoord + submit
   // ============================================================
   return (
     <Card>
-      <CardTitel>Stap 4 van 4</CardTitel>
+      <CardTitel>Stap 3 van 3</CardTitel>
       <h2 className="text-xl font-semibold text-gray-900 mb-1">
         Bijna klaar
       </h2>

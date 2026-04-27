@@ -238,13 +238,16 @@ export default async function ResultaatPage({
           </h2>
           {is60Day ? (
             <p className="text-sm text-gray-600 mb-4">
-              Voor de 60 Day Run werken we vanuit een fundament van ~200 IP. Dat
-              levert gratis verzending op én een complete stack om resultaat in
-              60 dagen mogelijk te maken.
+              Voor jouw aanpak werken we vanuit een fundament van ~200 IP. Dat
+              levert gratis verzending op én een complete stack om in de
+              komende weken resultaat te zien.
             </p>
           ) : (
             <p className="text-sm text-gray-600 mb-4">
-              Op basis van hoe sterk je je herkent past <strong>{niveauLabel(aanbevolenNiveau)}</strong> het beste, maar je kunt zelf kiezen. Een niveau hoger of lager kan altijd, en je kunt later switchen.
+              Drie niveaus om uit te kiezen. <strong>{niveauLabel(aanbevolenNiveau)}</strong>{" "}
+              past het beste bij wat je aangaf, maar je kiest zelf wat past bij
+              jouw situatie. Een niveau hoger of lager kan altijd, en je kunt
+              later switchen.
             </p>
           )}
 
@@ -252,7 +255,12 @@ export default async function ResultaatPage({
             {gesorteerdePakketten.map((p) => {
               const isAanbevolen = p.niveau === aanbevolenNiveau;
               const link = bestellinksMap.get(p.categorie + "-" + p.niveau);
-              const verbergPlusEssential = is60Day && p.niveau !== "complete";
+              // 60-day route: alleen Complete prominent, Plus en Essential klein
+              // Reguliere route: Essential klein (voor wie lichter wil starten),
+              // Plus en Complete groot (Plus is de aanbevolen middenkeuze)
+              const klein = is60Day
+                ? p.niveau !== "complete"
+                : p.niveau === "essential";
               return (
                 <PakketCard
                   key={p.niveau}
@@ -260,7 +268,7 @@ export default async function ResultaatPage({
                   isAanbevolen={isAanbevolen}
                   bestellink={link}
                   memberNaam={memberNaam}
-                  klein={verbergPlusEssential}
+                  klein={klein}
                 />
               );
             })}
@@ -338,22 +346,42 @@ function PakketCard({
   klein?: boolean;
 }) {
   if (klein) {
+    const isEssential = pakket.niveau === "essential";
     return (
-      <div className="bg-white rounded-xl border border-gray-100 p-4 opacity-80">
+      <div className="bg-white rounded-xl border border-gray-200 p-4">
         <div className="flex items-baseline justify-between mb-1">
-          <div className="font-semibold text-gray-700">
+          <div className="font-semibold text-gray-800">
             {niveauLabel(pakket.niveau)}
             <span className="text-gray-500 font-normal text-sm ml-2">
               {pakket.categorieLabel}
             </span>
           </div>
-          <div className="text-sm text-gray-700">
-            €{pakket.totaalPrijs.toFixed(2)} · {pakket.totaalIP} IP
+          <div className="text-sm font-medium text-gray-800">
+            €{pakket.totaalPrijs.toFixed(2)}
+            <span className="text-gray-500 font-normal ml-1">
+              · {pakket.totaalIP} IP
+            </span>
           </div>
         </div>
-        <p className="text-xs text-gray-500">
-          Wil je liever lichter starten? Dit kan ook.
+        <p className="text-xs text-gray-600 mt-1">
+          {isEssential
+            ? "Voor wie lichter wil starten of een budget-vriendelijker instap zoekt."
+            : "Ook beschikbaar als alternatief."}
         </p>
+        {bestellink ? (
+          <a
+            href={bestellink.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 block text-center py-2 rounded-md text-sm font-medium border border-gray-300 text-gray-700 hover:bg-gray-50"
+          >
+            Bestel deze variant via {memberNaam}
+          </a>
+        ) : (
+          <div className="mt-3 text-center text-xs text-gray-500">
+            Vraag {memberNaam} om de bestellink van deze variant
+          </div>
+        )}
       </div>
     );
   }
