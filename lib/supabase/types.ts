@@ -250,21 +250,18 @@ export interface ProductadviesTest {
   prospect_id: string | null;
   /** "ja" / "nee" / "weet_niet" — antwoord op trigger-vraag 60 Day Run. */
   trigger_60day: string | null;
+  /** "vrouw" / "man" / "zeg-niet" — voor productkeuze, geen profilering. */
+  geslacht: string | null;
   /**
-   * Aangevinkte uitspraken: { aangevinkt: { "energie-focus-1": true, ... } }
-   * Plus eventueel andere submitted velden (toekomstig).
-   */
-  antwoorden: { aangevinkt: Record<string, boolean> } | null;
-  /**
-   * Berekende uitslag-snapshot (zodat hij niet verandert als we later
-   * de algoritme aanpassen).
+   * Berekende uitslag (privacy-by-design: GEEN individuele scores per categorie,
+   * alleen het eindadvies + opstart-suggestie).
    */
   uitslag: {
     categorie: string;
     categorieLabel: string;
     niveau: string;
     pakket_key: string;
-    scores: Record<string, number>;
+    opstartSuggestie: "geen" | "darmen-in-balans" | "holistic-reset";
     fallback: boolean;
   } | null;
   avg_akkoord: boolean;

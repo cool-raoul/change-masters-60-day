@@ -1,27 +1,47 @@
 // ============================================================
 // PRODUCTADVIES-ZELFTEST — vragen + uitslag-berekening
 //
-// Flow:
+// FLOW:
 //   1. Trigger-vraag bovenaan: "Wil je meedoen aan de 60 Day Run?"
-//      → ja        = Complete-pakket advies (~200 IP)
-//      → nee       = Essential / Plus / Complete keuze
-//      → weet_niet = Essential / Plus / Complete keuze (+ uitleg-blok)
+//      → ja        = altijd Complete-pakket advies (~200 IP)
+//      → nee       = niveau-suggestie op basis van score-intensiteit
+//      → weet_niet = idem nee, plus uitleg-blok
 //
 //   2. Geslacht-vraag: "Ben je een vrouw / man / zeg ik liever niet?"
 //      Beïnvloedt:
 //       - welke gendered uitspraken zichtbaar zijn
 //       - of mannen die in 'hormoonbalans' uitkomen de Mannen Hormoonbalans-
 //         pakketten krijgen (Men's Formula i.p.v. Mena Plus)
+//      Default bij "zeg-niet" = vrouw-pad volgen.
 //
-//   3. Prospect vinkt aan welke uitspraken voor hem/haar gelden.
-//      Vragen worden gemixt getoond (geen categorie-headers in UI).
+//   3. Prospect beoordeelt elke uitspraak op een 3-puntsschaal:
+//      → Niet (0 punten)
+//      → Soms (1 punt)
+//      → Vaak (2 punten)
+//      Gemixt getoond in UI (geen categorie-headers).
 //
 //   4. Uitslag-berekening:
-//      - Tel vinkjes per categorie
-//      - Categorie met meeste vinkjes = aanbevolen pakket
-//      - Bij gelijkspel: hoogste prioriteit (zie volgorde hieronder)
-//      - 0-1 vinkjes totaal = High Performance als basis-advies
+//      - Tel scores per hoofdcategorie (max 8 per categorie bij 4 vragen × 2)
+//      - Categorie met hoogste totaalscore = aanbevolen pakket
+//      - Bij gelijkspel: prioriteits-volgorde
+//      - 0-2 punten totaal = High Performance als basis-advies
 //      - Geslacht-aware mapping voor hormoonbalans
+//      - Niveau-suggestie op basis van intensiteit van winnende score:
+//          0-8 punten in winnende cat → Essential
+//          9-14 punten → Plus
+//          15+ punten → Complete
+//
+//   5. Modifier-categorieën (geven opstart-suggestie naast pakket):
+//      - reset-bereidheid (3 vragen, max 6 punten)
+//      - darm-signalen (3 vragen, max 6 punten)
+//      Triggers voor opstart-suggestie:
+//        ≥4 punten darm-signalen → Darmen in Balans als opstart
+//        ≥4 punten reset-bereidheid + winnende cat = afvallen → Holistic Reset
+//        ≥4 punten reset-bereidheid (geen afvallen) → Darmen in Balans alternatief
+//
+// PRIVACY-BY-DESIGN:
+// Individuele antwoorden worden NIET opgeslagen. Alleen de uitkomst
+// (categorie + niveau + pakket_key + opstart-suggestie) gaat naar de DB.
 // ============================================================
 
 import type { PakketCategorie, PakketNiveau } from "@/lib/lifeplus/pakketten";
@@ -35,15 +55,23 @@ export type Trigger60Day = "ja" | "nee" | "weet_niet";
 
 export type Geslacht = "vrouw" | "man" | "zeg-niet";
 
-/** Subset van PakketCategorie voor zelftest-tagging (zonder mannen-hormoonbalans
- *  want dat is een uitkomst-mapping, geen vraag-tag). */
-export type ZelftestCategorie = Exclude<PakketCategorie, "mannen-hormoonbalans">;
+/** 3-puntsschaal: 0 = Niet, 1 = Soms, 2 = Vaak. */
+export type Antwoord = 0 | 1 | 2;
+
+/** Hoofdcategorieën die het primaire pakket-advies bepalen. */
+export type ZelftestHoofdCategorie = Exclude<PakketCategorie, "mannen-hormoonbalans">;
+
+/** Modifier-categorieën die de opstart-suggestie sturen (reset-programma's). */
+export type ZelftestModifierCategorie = "reset-bereidheid" | "darm-signalen";
+
+/** Tag voor uitspraken: hoofdcategorie of modifier. */
+export type UitspraakCategorie = ZelftestHoofdCategorie | ZelftestModifierCategorie;
 
 export type ZelftestUitspraak = {
-  /** Stable id voor opslag, bijv. "energie-focus-1" */
+  /** Stable id voor opslag in cliëntside, bijv. "energie-focus-1". */
   id: string;
-  categorie: ZelftestCategorie;
-  /** De zin die de prospect ziet en aanvinkt. */
+  categorie: UitspraakCategorie;
+  /** De zin die de prospect ziet en beoordeelt. */
   tekst: string;
   /** Optioneel: alleen tonen aan dit geslacht. Default = beide. */
   alleenVoor?: Geslacht;
@@ -53,138 +81,29 @@ export type ZelftestAntwoorden = {
   trigger60day: Trigger60Day;
   geslacht: Geslacht;
   avg_akkoord: boolean;
-  /** Map van uitspraak-id → aangevinkt (true / false). */
-  aangevinkt: Record<string, boolean>;
+  /** Map van uitspraak-id → 3-puntsantwoord (0/1/2). */
+  responses: Record<string, Antwoord>;
 };
 
+/** Mogelijke opstart-suggesties. */
+export type OpstartSuggestie =
+  | "geen"
+  | "darmen-in-balans"
+  | "holistic-reset";
+
 export type ZelftestUitslag = {
-  /** De uitkomst-categorie (na geslacht-mapping voor hormoonbalans). */
+  /** De uitkomst-categorie (na geslacht-mapping). */
   categorie: PakketCategorie;
   categorieLabel: string;
-  /** Niveau dat we adviseren: 60 day = altijd 'complete', anders default 'plus'. */
+  /** Niveau-suggestie. 60day = altijd 'complete'; anders op basis van intensiteit. */
   niveau: PakketNiveau;
   /** Stable key naar pakketten.ts voor lookup. */
   pakket_key: string;
-  /** Tellingen per categorie voor transparantie. */
-  scores: Record<ZelftestCategorie, number>;
-  /** True als de gebruiker 0-1 vinkjes had en automatisch naar High Performance ging. */
+  /** Optionele opstart-suggestie (Darmen in Balans of Holistic Reset). */
+  opstartSuggestie: OpstartSuggestie;
+  /** True als de gebruiker erg lage scores had en automatisch naar High Performance ging. */
   fallback: boolean;
 };
-
-// ============================================================
-// DE 18 UITSPRAKEN (3 per categorie, gemixt getoond in UI)
-//
-// LET OP: deze vragen worden in een volgende iteratie herontworpen om
-// minder voorspelbaar te zijn. Voor nu blijft de structuur staan.
-// ============================================================
-
-export const ZELFTEST_UITSPRAKEN: ZelftestUitspraak[] = [
-  // 1. Energie & Focus
-  {
-    id: "energie-focus-1",
-    categorie: "energie-focus",
-    tekst: "Ik val 's middags compleet stil rond een uur of drie",
-  },
-  {
-    id: "energie-focus-2",
-    categorie: "energie-focus",
-    tekst: "Ik kan me steeds slechter concentreren, mijn hoofd voelt mistig",
-  },
-  {
-    id: "energie-focus-3",
-    categorie: "energie-focus",
-    tekst: "Ik sta al moe op, terwijl ik wel heb geslapen",
-  },
-
-  // 2. Stress, Slaap & Veerkracht
-  {
-    id: "stress-slaap-1",
-    categorie: "stress-slaap",
-    tekst: "Ik tob 's nachts en val moeilijk in slaap",
-  },
-  {
-    id: "stress-slaap-2",
-    categorie: "stress-slaap",
-    tekst: "Ik voel me vaak gespannen of overprikkeld",
-  },
-  {
-    id: "stress-slaap-3",
-    categorie: "stress-slaap",
-    tekst: "Ik word vroeg wakker en kom niet meer in slaap",
-  },
-
-  // 3. Afvallen & Metabolisme
-  {
-    id: "afvallen-metabolisme-1",
-    categorie: "afvallen-metabolisme",
-    tekst: "Ik wil afvallen maar het lukt niet meer zoals vroeger",
-  },
-  {
-    id: "afvallen-metabolisme-2",
-    categorie: "afvallen-metabolisme",
-    tekst: "Ik heb steeds zin in zoet of snaai-buien tussendoor",
-  },
-  {
-    id: "afvallen-metabolisme-3",
-    categorie: "afvallen-metabolisme",
-    tekst: "Mijn buikomvang neemt toe terwijl ik niet anders eet dan vroeger",
-  },
-
-  // 4. Hormoonbalans
-  {
-    id: "hormoonbalans-1",
-    categorie: "hormoonbalans",
-    tekst:
-      "Mijn cyclus of overgang speelt me parten (PMS, opvliegers, stemmingsschommelingen)",
-    alleenVoor: "vrouw",
-  },
-  {
-    id: "hormoonbalans-2",
-    categorie: "hormoonbalans",
-    tekst: "Ik voel me vaker prikkelbaar of huilerig zonder duidelijke reden",
-  },
-  {
-    id: "hormoonbalans-3",
-    categorie: "hormoonbalans",
-    tekst: "Mijn slaap of energie zit gekoppeld aan mijn cyclus of overgang",
-    alleenVoor: "vrouw",
-  },
-
-  // 5. Sport & Performance
-  {
-    id: "sport-performance-1",
-    categorie: "sport-performance",
-    tekst: "Ik train regelmatig en wil sneller herstellen tussen sessies",
-  },
-  {
-    id: "sport-performance-2",
-    categorie: "sport-performance",
-    tekst: "Mijn spieren blijven na trainingen lang stijf of pijnlijk",
-  },
-  {
-    id: "sport-performance-3",
-    categorie: "sport-performance",
-    tekst: "Ik wil meer uithouding of kracht halen uit mijn workouts",
-  },
-
-  // 6. High Performance
-  {
-    id: "high-performance-1",
-    categorie: "high-performance",
-    tekst: "Ik voel me oké, maar wil meer uit mezelf halen",
-  },
-  {
-    id: "high-performance-2",
-    categorie: "high-performance",
-    tekst: "Ik wil mijn lichaam goed onderhouden voor de lange termijn",
-  },
-  {
-    id: "high-performance-3",
-    categorie: "high-performance",
-    tekst:
-      "Ik herken mezelf niet sterk in de andere uitspraken, maar wil wel investeren in mijn vitaliteit",
-  },
-];
 
 // ============================================================
 // CATEGORIE-LABELS (voor weergave)
@@ -201,10 +120,76 @@ export const CATEGORIE_LABEL: Record<PakketCategorie, string> = {
 };
 
 // ============================================================
+// DE 32 UITSPRAKEN (gemixt getoond in UI, geen categorie-headers)
+//
+// Verdeling:
+//   - Energie & Focus: 4
+//   - Stress, Slaap & Veerkracht: 4
+//   - Afvallen & Metabolisme: 4
+//   - Hormoonbalans: 6 (2 neutraal + 2 vrouw + 2 man → 4 zichtbaar per geslacht)
+//   - Sport & Performance: 4
+//   - High Performance: 4
+//   - Reset-bereidheid (modifier): 3
+//   - Darm-signalen (modifier): 3
+//
+// Per geslacht zichtbaar: 30 uitspraken.
+// ============================================================
+
+export const ZELFTEST_UITSPRAKEN: ZelftestUitspraak[] = [
+  // 1. Energie & Focus (4)
+  { id: "ef-1", categorie: "energie-focus", tekst: "Mijn middag-energie kalft af terwijl ik nog veel wil." },
+  { id: "ef-2", categorie: "energie-focus", tekst: "Mijn hoofd voelt soms vol of mistig wanneer ik scherp wil zijn." },
+  { id: "ef-3", categorie: "energie-focus", tekst: "Ik sta op met minder energie dan ik bij mijn nachtrust zou verwachten." },
+  { id: "ef-4", categorie: "energie-focus", tekst: "Ik mis die heldere focus waarmee ik vroeger door mijn dag ging." },
+
+  // 2. Stress, Slaap & Veerkracht (4)
+  { id: "ss-1", categorie: "stress-slaap", tekst: "Mijn brein wil 's avonds niet zo makkelijk uit." },
+  { id: "ss-2", categorie: "stress-slaap", tekst: "Ik ben sneller geïrriteerd dan ik zou willen." },
+  { id: "ss-3", categorie: "stress-slaap", tekst: "Ik zou willen dat ik dieper en aaneengesloten sliep." },
+  { id: "ss-4", categorie: "stress-slaap", tekst: "Ik voel meer onrust van binnen dan ik zou willen." },
+
+  // 3. Afvallen & Metabolisme (4)
+  { id: "am-1", categorie: "afvallen-metabolisme", tekst: "Ik wil afvallen, maar mijn lichaam reageert trager dan vroeger." },
+  { id: "am-2", categorie: "afvallen-metabolisme", tekst: "Ik heb vaker zin in iets zoets dan ik zou willen." },
+  { id: "am-3", categorie: "afvallen-metabolisme", tekst: "Mijn middel of buikomvang gedraagt zich anders dan ik gewend was." },
+  { id: "am-4", categorie: "afvallen-metabolisme", tekst: "Ik schommel meer in honger en verzadiging dan vroeger." },
+
+  // 4. Hormoonbalans (6: 2 neutraal + 2 vrouw + 2 man)
+  { id: "hb-1", categorie: "hormoonbalans", tekst: "Mijn humeur schommelt soms zonder dat ik er een reden voor kan plaatsen." },
+  { id: "hb-2", categorie: "hormoonbalans", tekst: "Ik voel me sneller huilerig of prikkelbaar zonder duidelijke aanleiding." },
+  { id: "hb-3", categorie: "hormoonbalans", tekst: "Mijn slaap of energie loopt parallel met mijn cyclus of overgang.", alleenVoor: "vrouw" },
+  { id: "hb-4", categorie: "hormoonbalans", tekst: "Ik herken me in PMS, opvliegers of stemmingsschommelingen rond mijn cyclus.", alleenVoor: "vrouw" },
+  { id: "hb-5", categorie: "hormoonbalans", tekst: "Mijn levenslust of vuur is duidelijk minder dan een paar jaar geleden.", alleenVoor: "man" },
+  { id: "hb-6", categorie: "hormoonbalans", tekst: "Ik merk dat mijn kracht of vitaliteit afneemt op een manier die ik niet kan verklaren.", alleenVoor: "man" },
+
+  // 5. Sport & Performance (4)
+  { id: "sp-1", categorie: "sport-performance", tekst: "Ik wil sneller herstellen tussen trainingen of inspanning." },
+  { id: "sp-2", categorie: "sport-performance", tekst: "Mijn spieren blijven na inspanning langer stijf dan ik zou willen." },
+  { id: "sp-3", categorie: "sport-performance", tekst: "Ik wil meer kracht of uithouding uit mijn workouts halen." },
+  { id: "sp-4", categorie: "sport-performance", tekst: "Ik train regelmatig en wil dat mijn lichaam beter meebeweegt met wat ik vraag." },
+
+  // 6. High Performance (4)
+  { id: "hp-1", categorie: "high-performance", tekst: "Ik voel me oké, maar weet dat er meer uit te halen valt." },
+  { id: "hp-2", categorie: "high-performance", tekst: "Ik wil mijn lichaam goed onderhouden voor de lange termijn." },
+  { id: "hp-3", categorie: "high-performance", tekst: "Ik investeer graag in mezelf, ook zonder dat er een specifiek probleem speelt." },
+  { id: "hp-4", categorie: "high-performance", tekst: "Ik herken me niet sterk in andere uitspraken, maar wil mijn vitaliteit op peil houden." },
+
+  // 7. Reset-bereidheid (modifier, 3)
+  { id: "rb-1", categorie: "reset-bereidheid", tekst: "Ik ben bereid om een aantal weken stevig met mijn voedingspatroon aan de slag te gaan." },
+  { id: "rb-2", categorie: "reset-bereidheid", tekst: "Eerdere pogingen om iets te veranderen liepen vast omdat ik te halfslachtig was." },
+  { id: "rb-3", categorie: "reset-bereidheid", tekst: "Ik ben klaar om eens echt door te pakken, ook als het tijdelijk wat ongemakkelijk voelt." },
+
+  // 8. Darm-signalen (modifier, 3)
+  { id: "ds-1", categorie: "darm-signalen", tekst: "Ik voel dat mijn lichaam wel toe is aan een opfrissing van binnenuit." },
+  { id: "ds-2", categorie: "darm-signalen", tekst: "Ik merk dat mijn spijsvertering niet altijd even soepel verloopt." },
+  { id: "ds-3", categorie: "darm-signalen", tekst: "Ik wil een schone start maken voor mijn vitaliteit." },
+];
+
+// ============================================================
 // PRIORITEITS-VOLGORDE bij gelijkspel
 // ============================================================
 
-const PRIORITEIT: ZelftestCategorie[] = [
+const PRIORITEIT: ZelftestHoofdCategorie[] = [
   "stress-slaap",
   "afvallen-metabolisme",
   "hormoonbalans",
@@ -214,23 +199,33 @@ const PRIORITEIT: ZelftestCategorie[] = [
 ];
 
 // ============================================================
+// HOOFD-CATEGORIE OVER ALLE UITSPRAKEN
+// ============================================================
+
+const HOOFD_CATEGORIEEN: ZelftestHoofdCategorie[] = [
+  "energie-focus",
+  "stress-slaap",
+  "afvallen-metabolisme",
+  "hormoonbalans",
+  "sport-performance",
+  "high-performance",
+];
+
+// ============================================================
 // UITSLAG-BEREKENING
 // ============================================================
 
 /**
- * Bereken op basis van de antwoorden welke categorie + niveau het advies wordt.
+ * Bereken op basis van de antwoorden (0/1/2 per uitspraak):
+ *  - Welke hoofdcategorie het meeste resoneert
+ *  - Welk niveau (Essential/Plus/Complete) past bij de intensiteit
+ *  - Of er een opstart-suggestie nodig is (Darmen in Balans of Holistic Reset)
  *
- * Regels:
- * - Tel vinkjes per categorie
- * - Categorie met meeste vinkjes wint
- * - Bij gelijkspel: prioriteits-volgorde (stress > afvallen > hormoon > energie > sport > high-perf)
- * - 0-1 vinkjes totaal: fallback naar High Performance
- * - Niveau-keuze: trigger_60day = 'ja' → 'complete'; anders → 'plus' (default)
- * - Geslacht-mapping: man + hormoonbalans → mannen-hormoonbalans
+ * Bewust geen scores per categorie in de output (privacy by design).
  */
 export function berekenUitslag(antwoorden: ZelftestAntwoorden): ZelftestUitslag {
-  // Tel vinkjes per categorie
-  const scores: Record<ZelftestCategorie, number> = {
+  // Initialiseer scores
+  const hoofdScores: Record<ZelftestHoofdCategorie, number> = {
     "energie-focus": 0,
     "stress-slaap": 0,
     "afvallen-metabolisme": 0,
@@ -239,41 +234,63 @@ export function berekenUitslag(antwoorden: ZelftestAntwoorden): ZelftestUitslag 
     "high-performance": 0,
   };
 
+  const modifierScores: Record<ZelftestModifierCategorie, number> = {
+    "reset-bereidheid": 0,
+    "darm-signalen": 0,
+  };
+
+  // Tel scores
   for (const uitspraak of ZELFTEST_UITSPRAKEN) {
-    if (antwoorden.aangevinkt[uitspraak.id]) {
-      scores[uitspraak.categorie] += 1;
+    const punt = antwoorden.responses[uitspraak.id] ?? 0;
+    if (uitspraak.categorie === "reset-bereidheid" || uitspraak.categorie === "darm-signalen") {
+      modifierScores[uitspraak.categorie] += punt;
+    } else {
+      hoofdScores[uitspraak.categorie] += punt;
     }
   }
 
-  const totaalVinkjes = Object.values(scores).reduce((s, n) => s + n, 0);
+  // Totaal hoofdscore voor fallback-detectie
+  const totaalHoofdscore = Object.values(hoofdScores).reduce((s, n) => s + n, 0);
 
-  const niveau: PakketNiveau =
-    antwoorden.trigger60day === "ja" ? "complete" : "plus";
+  // Bepaal niveau alvast
+  // 60-day = altijd Complete; anders op basis van intensiteit van winnende score
+  // (komt na de winnaar-bepaling, want niveau hangt af van winnende score)
 
-  // Fallback bij weinig vinkjes
-  if (totaalVinkjes <= 1) {
+  // Fallback bij erg lage scores
+  if (totaalHoofdscore <= 2) {
+    const niveau: PakketNiveau = antwoorden.trigger60day === "ja" ? "complete" : "plus";
     return {
       categorie: "high-performance",
       categorieLabel: CATEGORIE_LABEL["high-performance"],
       niveau,
       pakket_key: `high-performance-${niveau}`,
-      scores,
+      opstartSuggestie: bepaalOpstartSuggestie(modifierScores, "high-performance"),
       fallback: true,
     };
   }
 
-  // Vind de categorie met de hoogste score; bij gelijkspel: prioriteits-volgorde
-  let beste: ZelftestCategorie = "high-performance";
+  // Vind hoofdcategorie met hoogste score (bij gelijkspel: prioriteits-volgorde)
+  let beste: ZelftestHoofdCategorie = "high-performance";
   let besteScore = -1;
-
   for (const cat of PRIORITEIT) {
-    if (scores[cat] > besteScore) {
-      besteScore = scores[cat];
+    if (hoofdScores[cat] > besteScore) {
+      besteScore = hoofdScores[cat];
       beste = cat;
     }
   }
 
-  // Geslacht-mapping voor hormoonbalans (man → mannen-hormoonbalans)
+  // Niveau-suggestie op basis van intensiteit
+  // (alleen voor reguliere route; 60-day is altijd Complete)
+  const niveau: PakketNiveau =
+    antwoorden.trigger60day === "ja"
+      ? "complete"
+      : besteScore >= 15
+        ? "complete"
+        : besteScore >= 9
+          ? "plus"
+          : "essential";
+
+  // Geslacht-mapping (man + hormoonbalans → mannen-hormoonbalans)
   const finaleCategorie = mapCategorieVoorGeslacht(beste, antwoorden.geslacht);
 
   return {
@@ -281,20 +298,48 @@ export function berekenUitslag(antwoorden: ZelftestAntwoorden): ZelftestUitslag 
     categorieLabel: CATEGORIE_LABEL[finaleCategorie],
     niveau,
     pakket_key: `${finaleCategorie}-${niveau}`,
-    scores,
+    opstartSuggestie: bepaalOpstartSuggestie(modifierScores, beste),
     fallback: false,
   };
 }
 
+/**
+ * Bepaal welke opstart-suggestie past op basis van modifier-scores.
+ *
+ * Regels:
+ *  - ≥4 darm-signalen punten → Darmen in Balans
+ *  - ≥4 reset-bereidheid punten + winnende cat = afvallen → Holistic Reset
+ *  - ≥4 reset-bereidheid (geen afvallen) → Darmen in Balans als alternatief
+ *  - Anders → geen opstart-suggestie
+ */
+function bepaalOpstartSuggestie(
+  modifierScores: Record<ZelftestModifierCategorie, number>,
+  hoofdcategorie: ZelftestHoofdCategorie,
+): OpstartSuggestie {
+  const darmHoog = modifierScores["darm-signalen"] >= 4;
+  const resetBereidHoog = modifierScores["reset-bereidheid"] >= 4;
+
+  if (resetBereidHoog && hoofdcategorie === "afvallen-metabolisme") {
+    return "holistic-reset";
+  }
+  if (darmHoog) {
+    return "darmen-in-balans";
+  }
+  if (resetBereidHoog) {
+    return "darmen-in-balans";
+  }
+  return "geen";
+}
+
 // ============================================================
-// HELPERS — uitspraken filteren / groeperen
+// HELPERS — uitspraken filteren / shufflen
 // ============================================================
 
 /**
  * Geeft de uitspraken die getoond moeten worden aan een prospect met
  * dit geslacht. Vrouw-specifieke vragen worden niet aan mannen getoond,
  * en vice versa. Bij "zeg-niet" tonen we de gender-neutrale set + de
- * vrouw-specifieke vragen (statistisch gezien grootste groep).
+ * vrouw-specifieke vragen (default vrouw-pad).
  */
 export function getZichtbareUitspraken(geslacht: Geslacht): ZelftestUitspraak[] {
   return ZELFTEST_UITSPRAKEN.filter((u) => {
@@ -313,7 +358,6 @@ export function shuffleUitspraken(
   uitspraken: ZelftestUitspraak[],
   seed: string,
 ): ZelftestUitspraak[] {
-  // Fisher-Yates shuffle met seeded random
   const result = [...uitspraken];
   let hash = 0;
   for (let i = 0; i < seed.length; i++) {
