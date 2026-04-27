@@ -6,9 +6,11 @@ import {
   ZELFTEST_UITSPRAKEN,
   getZichtbareUitspraken,
   shuffleUitspraken,
+  SCHAAL_LABELS,
   type Trigger60Day,
   type Geslacht,
   type Antwoord,
+  type SchaalType,
 } from "@/lib/zelftest/vragen";
 
 // ============================================================
@@ -133,8 +135,7 @@ export function TestForm({
         </h2>
         <p className="text-sm text-gray-600 mb-1">
           Geen goed of fout. Het gaat om wat voor jou resoneert. Kies bij elke
-          zin: <strong>Niet</strong>, <strong>Soms</strong> of{" "}
-          <strong>Vaak</strong>.
+          zin de optie die het beste past.
         </p>
         <p className="text-xs text-gray-500 mb-6">
           {aantalBeantwoord} van {totaalUitspraken} beantwoord
@@ -146,6 +147,7 @@ export function TestForm({
               key={u.id}
               nummer={idx + 1}
               tekst={u.tekst}
+              schaal={u.schaal ?? "frequentie"}
               waarde={responses[u.id]}
               onChange={(v) => setResponses({ ...responses, [u.id]: v })}
             />
@@ -315,37 +317,40 @@ function Volgende({
 function UitspraakItem({
   nummer,
   tekst,
+  schaal,
   waarde,
   onChange,
 }: {
   nummer: number;
   tekst: string;
+  schaal: SchaalType;
   waarde: Antwoord | undefined;
   onChange: (v: Antwoord) => void;
 }) {
+  const labels = SCHAAL_LABELS[schaal];
   return (
-    <div className="border border-gray-100 rounded-lg p-4 bg-white">
+    <div className="border border-gray-200 rounded-lg p-4 bg-white">
       <div className="flex gap-3 mb-3">
-        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gray-100 text-gray-500 text-xs font-medium flex items-center justify-center">
+        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gray-100 text-gray-600 text-xs font-medium flex items-center justify-center">
           {nummer}
         </span>
-        <p className="text-sm sm:text-base text-gray-800 leading-snug">
+        <p className="text-sm sm:text-base text-gray-900 leading-snug">
           {tekst}
         </p>
       </div>
       <div className="grid grid-cols-3 gap-2">
         <SchaalKnop
-          label="Niet"
+          label={labels.laag}
           actief={waarde === 0}
           onClick={() => onChange(0)}
         />
         <SchaalKnop
-          label="Soms"
+          label={labels.midden}
           actief={waarde === 1}
           onClick={() => onChange(1)}
         />
         <SchaalKnop
-          label="Vaak"
+          label={labels.hoog}
           actief={waarde === 2}
           onClick={() => onChange(2)}
         />

@@ -55,8 +55,28 @@ export type Trigger60Day = "ja" | "nee" | "weet_niet";
 
 export type Geslacht = "vrouw" | "man" | "zeg-niet";
 
-/** 3-puntsschaal: 0 = Niet, 1 = Soms, 2 = Vaak. */
+/** 3-puntsschaal: 0 = laag, 1 = midden, 2 = hoog. Labels variëren per schaal. */
 export type Antwoord = 0 | 1 | 2;
+
+/**
+ * Schaal-type bepaalt welke labels onder de uitspraak worden getoond.
+ *  - frequentie: "Niet / Soms / Vaak" — voor zinnen over hoe vaak iets gebeurt
+ *  - herkenning: "Niet echt / Een beetje / Helemaal" — voor zinnen die je herkent of niet
+ *  - bereidheid: "Nee / Misschien / Zeker" — voor zinnen over wensen of bereidheid
+ */
+export type SchaalType = "frequentie" | "herkenning" | "bereidheid";
+
+export type SchaalLabels = {
+  laag: string;
+  midden: string;
+  hoog: string;
+};
+
+export const SCHAAL_LABELS: Record<SchaalType, SchaalLabels> = {
+  frequentie: { laag: "Niet", midden: "Soms", hoog: "Vaak" },
+  herkenning: { laag: "Niet echt", midden: "Een beetje", hoog: "Helemaal" },
+  bereidheid: { laag: "Nee", midden: "Misschien", hoog: "Zeker" },
+};
 
 /** Hoofdcategorieën die het primaire pakket-advies bepalen. */
 export type ZelftestHoofdCategorie = Exclude<PakketCategorie, "mannen-hormoonbalans">;
@@ -73,6 +93,8 @@ export type ZelftestUitspraak = {
   categorie: UitspraakCategorie;
   /** De zin die de prospect ziet en beoordeelt. */
   tekst: string;
+  /** Welke schaal-labels onder de uitspraak. Default = frequentie. */
+  schaal?: SchaalType;
   /** Optioneel: alleen tonen aan dit geslacht. Default = beide. */
   alleenVoor?: Geslacht;
 };
@@ -137,52 +159,52 @@ export const CATEGORIE_LABEL: Record<PakketCategorie, string> = {
 
 export const ZELFTEST_UITSPRAKEN: ZelftestUitspraak[] = [
   // 1. Energie & Focus (4)
-  { id: "ef-1", categorie: "energie-focus", tekst: "Mijn middag-energie kalft af terwijl ik nog veel wil." },
-  { id: "ef-2", categorie: "energie-focus", tekst: "Mijn hoofd voelt soms vol of mistig wanneer ik scherp wil zijn." },
-  { id: "ef-3", categorie: "energie-focus", tekst: "Ik sta op met minder energie dan ik bij mijn nachtrust zou verwachten." },
-  { id: "ef-4", categorie: "energie-focus", tekst: "Ik mis die heldere focus waarmee ik vroeger door mijn dag ging." },
+  { id: "ef-1", categorie: "energie-focus", schaal: "frequentie", tekst: "Mijn middag-energie kalft af terwijl ik nog veel wil." },
+  { id: "ef-2", categorie: "energie-focus", schaal: "frequentie", tekst: "Mijn hoofd voelt vol of mistig wanneer ik scherp wil zijn." },
+  { id: "ef-3", categorie: "energie-focus", schaal: "frequentie", tekst: "Ik sta op met minder energie dan ik bij mijn nachtrust zou verwachten." },
+  { id: "ef-4", categorie: "energie-focus", schaal: "herkenning", tekst: "Ik mis die heldere focus waarmee ik vroeger door mijn dag ging." },
 
   // 2. Stress, Slaap & Veerkracht (4)
-  { id: "ss-1", categorie: "stress-slaap", tekst: "Mijn brein wil 's avonds niet zo makkelijk uit." },
-  { id: "ss-2", categorie: "stress-slaap", tekst: "Ik ben sneller geïrriteerd dan ik zou willen." },
-  { id: "ss-3", categorie: "stress-slaap", tekst: "Ik zou willen dat ik dieper en aaneengesloten sliep." },
-  { id: "ss-4", categorie: "stress-slaap", tekst: "Ik voel meer onrust van binnen dan ik zou willen." },
+  { id: "ss-1", categorie: "stress-slaap", schaal: "frequentie", tekst: "Mijn brein wil 's avonds niet zo makkelijk uit." },
+  { id: "ss-2", categorie: "stress-slaap", schaal: "frequentie", tekst: "Ik ben sneller geïrriteerd dan ik zou willen." },
+  { id: "ss-3", categorie: "stress-slaap", schaal: "herkenning", tekst: "Ik zou willen dat ik dieper en aaneengesloten sliep." },
+  { id: "ss-4", categorie: "stress-slaap", schaal: "frequentie", tekst: "Ik voel meer onrust van binnen dan ik zou willen." },
 
   // 3. Afvallen & Metabolisme (4)
-  { id: "am-1", categorie: "afvallen-metabolisme", tekst: "Ik wil afvallen, maar mijn lichaam reageert trager dan vroeger." },
-  { id: "am-2", categorie: "afvallen-metabolisme", tekst: "Ik heb vaker zin in iets zoets dan ik zou willen." },
-  { id: "am-3", categorie: "afvallen-metabolisme", tekst: "Mijn middel of buikomvang gedraagt zich anders dan ik gewend was." },
-  { id: "am-4", categorie: "afvallen-metabolisme", tekst: "Ik schommel meer in honger en verzadiging dan vroeger." },
+  { id: "am-1", categorie: "afvallen-metabolisme", schaal: "herkenning", tekst: "Ik wil afvallen, maar mijn lichaam reageert trager dan vroeger." },
+  { id: "am-2", categorie: "afvallen-metabolisme", schaal: "frequentie", tekst: "Ik heb zin in iets zoets vaker dan ik zou willen." },
+  { id: "am-3", categorie: "afvallen-metabolisme", schaal: "herkenning", tekst: "Mijn middel of buikomvang gedraagt zich anders dan ik gewend was." },
+  { id: "am-4", categorie: "afvallen-metabolisme", schaal: "frequentie", tekst: "Ik schommel meer in honger en verzadiging dan vroeger." },
 
   // 4. Hormoonbalans (6: 2 neutraal + 2 vrouw + 2 man)
-  { id: "hb-1", categorie: "hormoonbalans", tekst: "Mijn humeur schommelt soms zonder dat ik er een reden voor kan plaatsen." },
-  { id: "hb-2", categorie: "hormoonbalans", tekst: "Ik voel me sneller huilerig of prikkelbaar zonder duidelijke aanleiding." },
-  { id: "hb-3", categorie: "hormoonbalans", tekst: "Mijn slaap of energie loopt parallel met mijn cyclus of overgang.", alleenVoor: "vrouw" },
-  { id: "hb-4", categorie: "hormoonbalans", tekst: "Ik herken me in PMS, opvliegers of stemmingsschommelingen rond mijn cyclus.", alleenVoor: "vrouw" },
-  { id: "hb-5", categorie: "hormoonbalans", tekst: "Mijn levenslust of vuur is duidelijk minder dan een paar jaar geleden.", alleenVoor: "man" },
-  { id: "hb-6", categorie: "hormoonbalans", tekst: "Ik merk dat mijn kracht of vitaliteit afneemt op een manier die ik niet kan verklaren.", alleenVoor: "man" },
+  { id: "hb-1", categorie: "hormoonbalans", schaal: "frequentie", tekst: "Mijn humeur schommelt zonder dat ik er een reden voor kan plaatsen." },
+  { id: "hb-2", categorie: "hormoonbalans", schaal: "frequentie", tekst: "Ik voel me huilerig of prikkelbaar zonder duidelijke aanleiding." },
+  { id: "hb-3", categorie: "hormoonbalans", schaal: "herkenning", tekst: "Mijn slaap of energie loopt parallel met mijn cyclus of overgang.", alleenVoor: "vrouw" },
+  { id: "hb-4", categorie: "hormoonbalans", schaal: "herkenning", tekst: "Ik herken me in PMS, opvliegers of stemmingsschommelingen rond mijn cyclus.", alleenVoor: "vrouw" },
+  { id: "hb-5", categorie: "hormoonbalans", schaal: "herkenning", tekst: "Mijn levenslust of vuur is duidelijk minder dan een paar jaar geleden.", alleenVoor: "man" },
+  { id: "hb-6", categorie: "hormoonbalans", schaal: "herkenning", tekst: "Ik merk dat mijn kracht of vitaliteit afneemt op een manier die ik niet kan verklaren.", alleenVoor: "man" },
 
   // 5. Sport & Performance (4)
-  { id: "sp-1", categorie: "sport-performance", tekst: "Ik wil sneller herstellen tussen trainingen of inspanning." },
-  { id: "sp-2", categorie: "sport-performance", tekst: "Mijn spieren blijven na inspanning langer stijf dan ik zou willen." },
-  { id: "sp-3", categorie: "sport-performance", tekst: "Ik wil meer kracht of uithouding uit mijn workouts halen." },
-  { id: "sp-4", categorie: "sport-performance", tekst: "Ik train regelmatig en wil dat mijn lichaam beter meebeweegt met wat ik vraag." },
+  { id: "sp-1", categorie: "sport-performance", schaal: "bereidheid", tekst: "Ik wil sneller herstellen tussen trainingen of inspanning." },
+  { id: "sp-2", categorie: "sport-performance", schaal: "frequentie", tekst: "Mijn spieren blijven na inspanning langer stijf dan ik zou willen." },
+  { id: "sp-3", categorie: "sport-performance", schaal: "bereidheid", tekst: "Ik wil meer kracht of uithouding uit mijn workouts halen." },
+  { id: "sp-4", categorie: "sport-performance", schaal: "herkenning", tekst: "Ik train regelmatig en wil dat mijn lichaam beter meebeweegt met wat ik vraag." },
 
   // 6. High Performance (4)
-  { id: "hp-1", categorie: "high-performance", tekst: "Ik voel me oké, maar weet dat er meer uit te halen valt." },
-  { id: "hp-2", categorie: "high-performance", tekst: "Ik wil mijn lichaam goed onderhouden voor de lange termijn." },
-  { id: "hp-3", categorie: "high-performance", tekst: "Ik investeer graag in mezelf, ook zonder dat er een specifiek probleem speelt." },
-  { id: "hp-4", categorie: "high-performance", tekst: "Ik herken me niet sterk in andere uitspraken, maar wil mijn vitaliteit op peil houden." },
+  { id: "hp-1", categorie: "high-performance", schaal: "herkenning", tekst: "Ik voel me oké, maar weet dat er meer uit te halen valt." },
+  { id: "hp-2", categorie: "high-performance", schaal: "bereidheid", tekst: "Ik wil mijn lichaam goed onderhouden voor de lange termijn." },
+  { id: "hp-3", categorie: "high-performance", schaal: "herkenning", tekst: "Ik investeer graag in mezelf, ook zonder dat er een specifiek probleem speelt." },
+  { id: "hp-4", categorie: "high-performance", schaal: "herkenning", tekst: "Ik herken me niet sterk in andere uitspraken, maar wil mijn vitaliteit op peil houden." },
 
   // 7. Reset-bereidheid (modifier, 3)
-  { id: "rb-1", categorie: "reset-bereidheid", tekst: "Ik ben bereid om een aantal weken stevig met mijn voedingspatroon aan de slag te gaan." },
-  { id: "rb-2", categorie: "reset-bereidheid", tekst: "Eerdere pogingen om iets te veranderen liepen vast omdat ik te halfslachtig was." },
-  { id: "rb-3", categorie: "reset-bereidheid", tekst: "Ik ben klaar om eens echt door te pakken, ook als het tijdelijk wat ongemakkelijk voelt." },
+  { id: "rb-1", categorie: "reset-bereidheid", schaal: "bereidheid", tekst: "Ik ben bereid om een aantal weken stevig met mijn voedingspatroon aan de slag te gaan." },
+  { id: "rb-2", categorie: "reset-bereidheid", schaal: "herkenning", tekst: "Eerdere pogingen om iets te veranderen liepen vast omdat ik te halfslachtig was." },
+  { id: "rb-3", categorie: "reset-bereidheid", schaal: "bereidheid", tekst: "Ik ben klaar om eens echt door te pakken, ook als het tijdelijk wat ongemakkelijk voelt." },
 
   // 8. Darm-signalen (modifier, 3)
-  { id: "ds-1", categorie: "darm-signalen", tekst: "Ik voel dat mijn lichaam wel toe is aan een opfrissing van binnenuit." },
-  { id: "ds-2", categorie: "darm-signalen", tekst: "Ik merk dat mijn spijsvertering niet altijd even soepel verloopt." },
-  { id: "ds-3", categorie: "darm-signalen", tekst: "Ik wil een schone start maken voor mijn vitaliteit." },
+  { id: "ds-1", categorie: "darm-signalen", schaal: "herkenning", tekst: "Ik voel dat mijn lichaam wel toe is aan een opfrissing van binnenuit." },
+  { id: "ds-2", categorie: "darm-signalen", schaal: "frequentie", tekst: "Mijn spijsvertering verloopt niet altijd even soepel." },
+  { id: "ds-3", categorie: "darm-signalen", schaal: "bereidheid", tekst: "Ik wil een schone start maken voor mijn vitaliteit." },
 ];
 
 // ============================================================
@@ -308,23 +330,25 @@ export function berekenUitslag(antwoorden: ZelftestAntwoorden): ZelftestUitslag 
 /**
  * Bepaal welke opstart-suggestie past op basis van modifier-scores.
  *
- * Drempel = 5 van max 6 punten = sterke herkenning vereist (minstens
- * 2× "Vaak" + 1× "Soms"). Reset-programma's vragen ingrijpende leefstijl-
- * aanpassingen, dus moet de prospect dit echt willen voordat we het
- * suggereren.
+ * Drempel = 4 van max 6 punten = duidelijke herkenning vereist.
+ * Met de nieuwe schaal-types werkt dit zo:
+ *  - 3× "Misschien" = 3 punten (geen trigger)
+ *  - 2× "Misschien" + 1× "Zeker" = 4 punten (trigger)
+ *  - 2× "Zeker" + 1× "Niet" = 4 punten (trigger)
+ *  - 3× "Zeker" = 6 punten (volle trigger)
  *
  * Regels:
- *  - ≥5 darm-signalen punten → Darmen in Balans
- *  - ≥5 reset-bereidheid punten + winnende cat = afvallen → Holistic Reset
- *  - ≥5 reset-bereidheid (geen afvallen) → Darmen in Balans als alternatief
+ *  - ≥4 darm-signalen punten → Darmen in Balans
+ *  - ≥4 reset-bereidheid punten + winnende cat = afvallen → Holistic Reset
+ *  - ≥4 reset-bereidheid (geen afvallen) → Darmen in Balans als alternatief
  *  - Anders → geen opstart-suggestie
  */
 function bepaalOpstartSuggestie(
   modifierScores: Record<ZelftestModifierCategorie, number>,
   hoofdcategorie: ZelftestHoofdCategorie,
 ): OpstartSuggestie {
-  const darmHoog = modifierScores["darm-signalen"] >= 5;
-  const resetBereidHoog = modifierScores["reset-bereidheid"] >= 5;
+  const darmHoog = modifierScores["darm-signalen"] >= 4;
+  const resetBereidHoog = modifierScores["reset-bereidheid"] >= 4;
 
   if (resetBereidHoog && hoofdcategorie === "afvallen-metabolisme") {
     return "holistic-reset";
