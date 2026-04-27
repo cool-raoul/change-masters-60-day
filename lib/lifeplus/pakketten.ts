@@ -1,14 +1,13 @@
 // ============================================================
-// LIFEPLUS PAKKETTEN — 6 hoofdcategorieën × 3 niveaus + 4 reset-pakketten
+// LIFEPLUS PAKKETTEN — 6 categorieën × 3 niveaus + Mannen Hormoonbalans + 5 reset-pakketten
 //
-// Bron: door Raoul samengestelde pakketten op basis van Lifeplus
-// prijslijst maart 2026 + Holistic Reset boekje + Darmen in Balans boekje.
-// Brainstorm-akkoord: 27-04-2026.
+// Bron: officiële Lifeplus prijslijst NL maart 2026 (foto's + 3191 webshop-bundle).
+// Alle ASAP-prijzen + IP-waarden gevalideerd op 27-04-2026.
 //
 // IP-targets per niveau:
 //   Essential: 40-100 IP   (instap, gerichte kern)
 //   Plus:      100-175 IP  (uitgebreid met basis)
-//   Complete:  ~190-220 IP (optimaal, vaak met M&P 100 Gold Light als fundament)
+//   Complete:  ~190-220 IP (optimaal, met M&P 100 Gold Light als fundament)
 //
 // SMAAK-KEUZES: bewust GEEN smaakkeuze in de UI om het simpel te houden.
 // Defaults zijn vastgelegd in de productnaam:
@@ -19,14 +18,20 @@
 //
 // BE RECHARGED: ALTIJD DE POT, NOOIT DE SACHETS.
 // Sachets worden alleen nog in 30-stuks-verpakking geleverd en zijn
-// daardoor te duur. Pot = €80,25 / 43 IP, sachets niet meer aanbieden.
+// daardoor te duur. Pot = €79,75 / 43 IP, sachets niet meer aanbieden.
 //
-// Gebruik:
-//   - Member kiest hier zijn bestellinks bij (zie member_bestellinks tabel)
-//   - Productadvies-test toont juist pakket op resultaatpagina
-//   - Coach/Mentor mag deze pakketten zien (op verzoek pas later inkoppelen)
+// MAINTAIN & PROTECT 100 GOLD LIGHT (bestelnummer 3191):
+// Dit pakket staat NIET op de officiële PDF prijslijst, maar wel op de
+// Lifeplus webshop. Bevat Daily BioBasics LIGHT + Proanthenols 100 + OmeGold.
+// ASAP €172,00 / 122,75 IP. €9 voordeliger dan losse producten samen.
+// Members verwijzen via bestelnummer 3191 in hun bestellink.
 //
-// Wijziging van een prijs of IP? Update ook STAPPENPLAN_7DAGEN.md "Logboek".
+// HORMOONBALANS GENDER-AWARE:
+// Vrouwen krijgen pakketten met categorie "hormoonbalans" (Mena Plus + EPO).
+// Mannen krijgen pakketten met categorie "mannen-hormoonbalans" (Men's Formula
+// voor prostaat- en hormoon-ondersteuning + Men's Gold + D&K).
+// Het uitslag-algoritme in zelftest/vragen.ts mapt automatisch op basis van
+// het opgegeven geslacht van de prospect.
 // ============================================================
 
 import { PRIJSLIJST_METADATA } from "./prijslijst";
@@ -41,7 +46,8 @@ export type PakketCategorie =
   | "energie-focus"
   | "stress-slaap"
   | "afvallen-metabolisme"
-  | "hormonen"
+  | "hormoonbalans"
+  | "mannen-hormoonbalans"
   | "sport-performance"
   | "high-performance";
 
@@ -49,6 +55,8 @@ export type PakketProduct = {
   naam: string;
   asapPrijs: number;
   ip: number;
+  /** Optioneel Lifeplus bestelnummer (voor bestellinks-flow). */
+  bestelNr?: string;
 };
 
 export type LifeplusPakket = {
@@ -93,128 +101,169 @@ export type LifeplusResetPakket = {
 
 // ============================================================
 // HERBRUIKBARE PRODUCT-DEFINITIES
-// (één plek voor de juiste prijzen en IP-waarden)
+// (één plek voor de juiste prijzen en IP-waarden, maart 2026)
 // ============================================================
 
 // Triple Protein Shake = standaard vanille (geen smaakkeuze in UI).
 // Bestelnummer 3247 (vanille). Chocolade-variant (3246) bestaat ook,
-// maar we tonen 'm bewust niet om de UX simpel te houden. Heroverweeg
-// later of we smaakkeuzes alsnog willen aanbieden.
+// maar we tonen 'm bewust niet om de UX simpel te houden.
 const TRIPLE_PROTEIN: PakketProduct = {
   naam: "Triple Protein Shake (vanille)",
-  asapPrijs: 81.75,
+  asapPrijs: 81.0,
   ip: 38,
+  bestelNr: "3247",
 };
 
+// Maintain & Protect 100 Gold Light (bestelnr 3191, alleen op webshop).
+// Bevat Daily BioBasics Light + Proanthenols 100 + OmeGold.
+// €9 voordeliger dan losse producten samen.
 const MP_100_GOLD_LIGHT: PakketProduct = {
   naam: "Maintain & Protect 100 Gold Light",
-  asapPrijs: 173.5,
+  asapPrijs: 172.0,
   ip: 122.75,
+  bestelNr: "3191",
 };
 
 const DAILY_LIGHT: PakketProduct = {
   naam: "Daily BioBasics Light",
-  asapPrijs: 65.25,
+  asapPrijs: 64.75,
   ip: 44.5,
+  bestelNr: "3168",
 };
 
 const PROANTHENOLS: PakketProduct = {
   naam: "Proanthenols 100",
   asapPrijs: 71.25,
   ip: 48.75,
+  bestelNr: "3101",
 };
 
 const OMEGOLD: PakketProduct = {
   naam: "OmeGold",
-  asapPrijs: 45.5,
+  asapPrijs: 45.0,
   ip: 29.5,
+  bestelNr: "3102",
 };
 
 // Be Focused = standaard bessen-smaak (geen smaakkeuze in UI).
 // Citrus-variant bestaat ook maar tonen we niet om UX simpel te houden.
 const BE_FOCUSED: PakketProduct = {
   naam: "Be Focused (bessen)",
-  asapPrijs: 78.25,
+  asapPrijs: 77.5,
   ip: 47.5,
+  bestelNr: "3178",
 };
 
 // Be Recharged = standaard bessen-smaak (geen smaakkeuze in UI).
-// LET OP: altijd de POT (€80,25 / 43 IP), NOOIT de sachets.
+// LET OP: altijd de POT, NOOIT de sachets.
 // Sachets zijn alleen nog in 30-stuks-verpakking leverbaar en daardoor
 // te duur. Be Recharged Sachets zijn dus uit alle pakketten verwijderd.
 const BE_RECHARGED: PakketProduct = {
   naam: "Be Recharged (bessen)",
-  asapPrijs: 80.25,
+  asapPrijs: 79.75,
   ip: 43,
+  bestelNr: "3182",
 };
 
 const KEY_TONIC: PakketProduct = {
   naam: "Key-Tonic",
-  asapPrijs: 75.25,
+  asapPrijs: 74.5,
   ip: 46,
+  bestelNr: "3222",
 };
 
 const MENA_PLUS: PakketProduct = {
   naam: "Mena Plus",
-  asapPrijs: 83.0,
+  asapPrijs: 82.25,
   ip: 50,
+  bestelNr: "3134",
 };
 
-const SUPPORT_TABS: PakketProduct = {
-  naam: "Support Tabs",
-  asapPrijs: 61.25,
+// Officiële naam = "Support Tabs Plus" (niet "Support Tabs").
+const SUPPORT_TABS_PLUS: PakketProduct = {
+  naam: "Support Tabs Plus",
+  asapPrijs: 60.5,
   ip: 40,
+  bestelNr: "3125",
 };
 
 const GOLDEN_MILK: PakketProduct = {
   naam: "Golden Milk",
-  asapPrijs: 47.5,
+  asapPrijs: 47.0,
   ip: 29,
+  bestelNr: "3241",
 };
 
 const CACAO_BOOST: PakketProduct = {
   naam: "Cacao Boost",
-  asapPrijs: 47.0,
+  asapPrijs: 46.5,
   ip: 26.5,
+  bestelNr: "3226",
 };
 
 const VITAMINS_DK: PakketProduct = {
   naam: "Vitamins D & K",
-  asapPrijs: 20.5,
+  asapPrijs: 20.25,
   ip: 11.5,
+  bestelNr: "3120",
 };
 
 const EVENING_PRIMROSE: PakketProduct = {
   naam: "Evening Primrose Oil",
-  asapPrijs: 14.75,
+  asapPrijs: 14.5,
   ip: 7,
+  bestelNr: "3138",
 };
 
-const ENERXAN: PakketProduct = { naam: "Enerxan", asapPrijs: 27.0, ip: 13 };
+const ENERXAN: PakketProduct = {
+  naam: "Enerxan",
+  asapPrijs: 27.0,
+  ip: 13,
+  bestelNr: "3148",
+};
 
 const MSM_PLUS_TABLETTEN: PakketProduct = {
   naam: "MSM Plus tabletten",
   asapPrijs: 41.5,
   ip: 26,
+  bestelNr: "3103",
 };
 
-const COGELIN: PakketProduct = { naam: "Cogelin", asapPrijs: 49.75, ip: 30.25 };
-const ALOE_VERA: PakketProduct = { naam: "Aloë Vera Caps", asapPrijs: 54.25, ip: 40 };
-const BIOTIC_BLAST: PakketProduct = { naam: "Biotic Blast", asapPrijs: 41.0, ip: 25.75 };
-const PARABALANCE: PakketProduct = { naam: "Parabalance", asapPrijs: 49.75, ip: 27 };
+// Mannen-specifieke producten voor Mannen Hormoonbalans
+const MENS_FORMULA: PakketProduct = {
+  naam: "Men's Formula",
+  asapPrijs: 61.0,
+  ip: 26,
+  bestelNr: "3145",
+};
+
+const MENS_GOLD_FORMULA: PakketProduct = {
+  naam: "Men's Gold Formula",
+  asapPrijs: 32.0,
+  ip: 15.75,
+  bestelNr: "3159",
+};
+
+// Darmprogramma producten
+const COGELIN: PakketProduct = { naam: "Cogelin", asapPrijs: 49.75, ip: 30.25, bestelNr: "3177" };
+const ALOE_VERA: PakketProduct = { naam: "Aloë Vera Caps", asapPrijs: 54.25, ip: 40, bestelNr: "3129" };
+const BIOTIC_BLAST: PakketProduct = { naam: "Biotic Blast", asapPrijs: 41.0, ip: 25.75, bestelNr: "3165" };
+const PARABALANCE: PakketProduct = { naam: "Parabalance", asapPrijs: 49.75, ip: 27, bestelNr: "3254" };
 const DIGESTIVE_FORMULA: PakketProduct = {
   naam: "Digestive Formula",
   asapPrijs: 45.5,
   ip: 21,
+  bestelNr: "3153",
 };
 const PH_PLUS: PakketProduct = {
   naam: "PH Plus tabletten",
   asapPrijs: 38.75,
   ip: 23,
+  bestelNr: "3160",
 };
 
 // ============================================================
-// 18 CATEGORIE-PAKKETTEN (6 categorieën × 3 niveaus)
+// 21 CATEGORIE-PAKKETTEN (6 vrouw/neutraal + 1 mannen-specifiek = 7 cats × 3 niveaus)
 // ============================================================
 
 export const LIFEPLUS_PAKKETTEN: LifeplusPakket[] = [
@@ -224,35 +273,39 @@ export const LIFEPLUS_PAKKETTEN: LifeplusPakket[] = [
     categorieLabel: "Energie & Focus",
     niveau: "essential",
     producten: [DAILY_LIGHT, BE_FOCUSED],
-    totaalPrijs: 143.5,
+    totaalPrijs: 142.25,
     totaalIP: 92,
     gratisVerzending: true,
     waarom: "Basis-voeding gecombineerd met mentale focus.",
-    resultaatTijdlijn: "Helderder hoofd binnen 1-3 dagen, stabielere energie binnen 1-2 weken.",
+    resultaatTijdlijn:
+      "Helderder hoofd binnen 1-3 dagen, stabielere energie binnen 1-2 weken.",
   },
   {
     categorie: "energie-focus",
     categorieLabel: "Energie & Focus",
     niveau: "plus",
     producten: [DAILY_LIGHT, BE_FOCUSED, OMEGOLD],
-    totaalPrijs: 189.0,
+    totaalPrijs: 187.25,
     totaalIP: 121.5,
     gratisVerzending: true,
-    waarom: "Basis-voeding + Be Focused voor scherpte + omega-3 (DHA) als specifieke ondersteuning voor hersenfunctie.",
-    resultaatTijdlijn: "Mentale scherpte binnen 1 week; brein-omega-3 effect bouwt op in 4-8 weken.",
+    waarom:
+      "Basis-voeding + Be Focused voor scherpte + omega-3 (DHA) als specifieke ondersteuning voor hersenfunctie.",
+    resultaatTijdlijn:
+      "Mentale scherpte binnen 1 week; brein-omega-3 effect bouwt op in 4-8 weken.",
   },
   {
     categorie: "energie-focus",
     categorieLabel: "Energie & Focus",
     niveau: "complete",
     producten: [MP_100_GOLD_LIGHT, BE_FOCUSED, CACAO_BOOST],
-    totaalPrijs: 298.75,
+    totaalPrijs: 296.0,
     totaalIP: 196.75,
     gratisVerzending: true,
     waarom: "Complete ondersteuning voor hersenfunctie, doorbloeding én focus.",
-    resultaatTijdlijn: "Focus en stemming binnen 1-3 dagen, energie consistenter binnen 1-2 weken.",
+    resultaatTijdlijn:
+      "Focus en stemming binnen 1-3 dagen, energie consistenter binnen 1-2 weken.",
     notitie:
-      "M&P 100 Gold Light = bundel van Daily BioBasics Light + Proanthenols 100 + OmeGold (voordelig samengesteld).",
+      "M&P 100 Gold Light (bestelnr 3191) = bundel van Daily BioBasics Light + Proanthenols 100 + OmeGold (€9 voordeliger dan los).",
   },
 
   // ============== STRESS · SLAAP · VEERKRACHT ==============
@@ -261,33 +314,38 @@ export const LIFEPLUS_PAKKETTEN: LifeplusPakket[] = [
     categorieLabel: "Stress, Slaap & Veerkracht",
     niveau: "essential",
     producten: [GOLDEN_MILK, CACAO_BOOST],
-    totaalPrijs: 94.5,
+    totaalPrijs: 93.5,
     totaalIP: 55.5,
     gratisVerzending: false,
-    waarom: "Avond-ontspanning (Golden Milk) en stemmings-ondersteuning overdag (Cacao Boost).",
-    resultaatTijdlijn: "Dieper inslapen binnen 3-5 dagen, rustiger gevoel overdag binnen 1-2 weken.",
+    waarom:
+      "Avond-ontspanning (Golden Milk) en stemmings-ondersteuning overdag (Cacao Boost).",
+    resultaatTijdlijn:
+      "Dieper inslapen binnen 3-5 dagen, rustiger gevoel overdag binnen 1-2 weken.",
   },
   {
     categorie: "stress-slaap",
     categorieLabel: "Stress, Slaap & Veerkracht",
     niveau: "plus",
-    producten: [DAILY_LIGHT, SUPPORT_TABS, GOLDEN_MILK, CACAO_BOOST],
-    totaalPrijs: 221.5,
+    producten: [DAILY_LIGHT, SUPPORT_TABS_PLUS, GOLDEN_MILK, CACAO_BOOST],
+    totaalPrijs: 218.75,
     totaalIP: 140,
     gratisVerzending: true,
     waarom: "Volledige stress-stack: basis + zenuwstelsel + slaap + stemming.",
-    resultaatTijdlijn: "Betere slaap binnen 1 week, rustiger zenuwstelsel binnen 2-3 weken.",
+    resultaatTijdlijn:
+      "Betere slaap binnen 1 week, rustiger zenuwstelsel binnen 2-3 weken.",
   },
   {
     categorie: "stress-slaap",
     categorieLabel: "Stress, Slaap & Veerkracht",
     niveau: "complete",
-    producten: [MP_100_GOLD_LIGHT, SUPPORT_TABS, GOLDEN_MILK, CACAO_BOOST],
-    totaalPrijs: 329.25,
+    producten: [MP_100_GOLD_LIGHT, SUPPORT_TABS_PLUS, GOLDEN_MILK, CACAO_BOOST],
+    totaalPrijs: 326.0,
     totaalIP: 218.25,
     gratisVerzending: true,
-    waarom: "Complete stress-stack: basis-bundel + zenuwstelsel-ondersteuning + slaap (Golden Milk) + stemming en anti-inflammatie (Cacao Boost).",
-    resultaatTijdlijn: "Diepere slaap binnen 3-5 dagen, rustiger zenuwstelsel binnen 1-2 weken, stress-resilience binnen 2-3 weken.",
+    waarom:
+      "Complete stress-stack: basis-bundel + zenuwstelsel-ondersteuning + slaap + stemming en anti-inflammatie.",
+    resultaatTijdlijn:
+      "Diepere slaap binnen 3-5 dagen, rustiger zenuwstelsel binnen 1-2 weken, stress-resilience binnen 2-3 weken.",
   },
 
   // ============== AFVALLEN & METABOLISME ==============
@@ -296,68 +354,124 @@ export const LIFEPLUS_PAKKETTEN: LifeplusPakket[] = [
     categorieLabel: "Afvallen & Metabolisme",
     niveau: "essential",
     producten: [DAILY_LIGHT, KEY_TONIC],
-    totaalPrijs: 140.5,
+    totaalPrijs: 139.25,
     totaalIP: 90.5,
     gratisVerzending: true,
     waarom: "Basis-voeding gecombineerd met bloedsuiker-stabilisatie.",
-    resultaatTijdlijn: "Stabielere energie en minder snaai-buien binnen 1 week.",
+    resultaatTijdlijn:
+      "Stabielere energie en minder snaai-buien binnen 1 week.",
   },
   {
     categorie: "afvallen-metabolisme",
     categorieLabel: "Afvallen & Metabolisme",
     niveau: "plus",
     producten: [DAILY_LIGHT, KEY_TONIC, TRIPLE_PROTEIN],
-    totaalPrijs: 222.25,
+    totaalPrijs: 220.25,
     totaalIP: 128.5,
     gratisVerzending: true,
-    waarom: "Klassieke afvallen-stack: basis + bloedsuiker + verzadiging via eiwit.",
-    resultaatTijdlijn: "Verzadiging vanaf dag 1, gewichtsverandering vanaf week 3-4.",
+    waarom:
+      "Klassieke afvallen-stack: basis + bloedsuiker + verzadiging via eiwit.",
+    resultaatTijdlijn:
+      "Verzadiging vanaf dag 1, gewichtsverandering vanaf week 3-4.",
   },
   {
     categorie: "afvallen-metabolisme",
     categorieLabel: "Afvallen & Metabolisme",
     niveau: "complete",
     producten: [MP_100_GOLD_LIGHT, KEY_TONIC, TRIPLE_PROTEIN],
-    totaalPrijs: 330.5,
+    totaalPrijs: 327.5,
     totaalIP: 206.75,
     gratisVerzending: true,
     waarom: "Compleet pakket: darmgezondheid, metabolisme én verzadiging.",
-    resultaatTijdlijn: "Stabielere bloedsuiker binnen 1 week, gewichtsverandering vanaf week 3-4.",
+    resultaatTijdlijn:
+      "Stabielere bloedsuiker binnen 1 week, gewichtsverandering vanaf week 3-4.",
   },
 
-  // ================ HORMONALE BALANS ================
+  // ================ HORMOONBALANS (vrouwen/neutraal) ================
   {
-    categorie: "hormonen",
-    categorieLabel: "Hormonale Balans",
+    categorie: "hormoonbalans",
+    categorieLabel: "Hormoonbalans",
     niveau: "essential",
     producten: [MENA_PLUS, EVENING_PRIMROSE],
-    totaalPrijs: 97.75,
+    totaalPrijs: 96.75,
     totaalIP: 57,
     gratisVerzending: false,
     waarom: "Gerichte hormoon-instap met Mena Plus + EPO als ondersteuning.",
-    resultaatTijdlijn: "Mena Plus heeft minimaal 3 maanden nodig voor vol effect; EPO 4-6 weken.",
+    resultaatTijdlijn:
+      "Mena Plus heeft minimaal 3 maanden nodig voor vol effect; EPO 4-6 weken.",
   },
   {
-    categorie: "hormonen",
-    categorieLabel: "Hormonale Balans",
+    categorie: "hormoonbalans",
+    categorieLabel: "Hormoonbalans",
     niveau: "plus",
     producten: [DAILY_LIGHT, MENA_PLUS, EVENING_PRIMROSE, VITAMINS_DK],
-    totaalPrijs: 183.5,
+    totaalPrijs: 181.75,
     totaalIP: 113,
     gratisVerzending: true,
-    waarom: "Compleet hormoon-pakket met basis, Mena Plus, EPO en D & K.",
-    resultaatTijdlijn: "Stemming en stressbestendigheid binnen 1-2 weken; vol effect na 3+ maanden.",
+    waarom:
+      "Compleet hormoon-pakket met basis, Mena Plus, EPO en Vitamins D & K.",
+    resultaatTijdlijn:
+      "Stemming en stressbestendigheid binnen 1-2 weken; vol effect na 3+ maanden.",
   },
   {
-    categorie: "hormonen",
-    categorieLabel: "Hormonale Balans",
+    categorie: "hormoonbalans",
+    categorieLabel: "Hormoonbalans",
     niveau: "complete",
     producten: [MP_100_GOLD_LIGHT, MENA_PLUS, EVENING_PRIMROSE, VITAMINS_DK],
-    totaalPrijs: 291.75,
+    totaalPrijs: 289.0,
     totaalIP: 191.25,
     gratisVerzending: true,
-    waarom: "Natuurlijke opwaardering van Plus: basis-bundel (M&P) + Mena Plus + EPO + Vitamins D & K als compleet hormoon-fundament.",
-    resultaatTijdlijn: "Stemming en stressbestendigheid binnen 1-2 weken; vol effect Mena Plus / EPO na 3+ maanden.",
+    waarom:
+      "Natuurlijke opwaardering van Plus: basis-bundel (M&P) + Mena Plus + EPO + Vitamins D & K als compleet hormoon-fundament.",
+    resultaatTijdlijn:
+      "Stemming en stressbestendigheid binnen 1-2 weken; vol effect Mena Plus / EPO na 3+ maanden.",
+  },
+
+  // ================ MANNEN HORMOONBALANS ================
+  {
+    categorie: "mannen-hormoonbalans",
+    categorieLabel: "Mannen Hormoonbalans",
+    niveau: "essential",
+    producten: [MENS_FORMULA, CACAO_BOOST],
+    totaalPrijs: 107.5,
+    totaalIP: 52.5,
+    gratisVerzending: false,
+    waarom:
+      "Men's Formula als kern voor prostaat- en mannen-hormoonbalans + Cacao Boost voor stemming en anti-inflammatie.",
+    resultaatTijdlijn:
+      "Stemming binnen 1-2 weken; prostaat-effect Men's Formula bouwt op in 6-12 weken.",
+  },
+  {
+    categorie: "mannen-hormoonbalans",
+    categorieLabel: "Mannen Hormoonbalans",
+    niveau: "plus",
+    producten: [DAILY_LIGHT, MENS_FORMULA, VITAMINS_DK, CACAO_BOOST],
+    totaalPrijs: 192.5,
+    totaalIP: 108.5,
+    gratisVerzending: true,
+    waarom:
+      "Basis + Men's Formula + Vitamins D & K (testosteron-ondersteunend) + Cacao Boost voor stemming.",
+    resultaatTijdlijn:
+      "Energie en stemming binnen 1-2 weken; testosteron-balans en prostaat-effect na 6-12 weken.",
+  },
+  {
+    categorie: "mannen-hormoonbalans",
+    categorieLabel: "Mannen Hormoonbalans",
+    niveau: "complete",
+    producten: [
+      MP_100_GOLD_LIGHT,
+      MENS_FORMULA,
+      MENS_GOLD_FORMULA,
+      VITAMINS_DK,
+      CACAO_BOOST,
+    ],
+    totaalPrijs: 331.75,
+    totaalIP: 202.5,
+    gratisVerzending: true,
+    waarom:
+      "Compleet vitaliteits-fundament voor mannen: basis-bundel + Men's Formula + Men's Gold Formula + D & K + stemmings-ondersteuning.",
+    resultaatTijdlijn:
+      "Energie en stemming binnen 1-2 weken; vol effect prostaat- en hormoon-balans na 6-12 weken.",
   },
 
   // ================ SPORT & PERFORMANCE ================
@@ -366,7 +480,7 @@ export const LIFEPLUS_PAKKETTEN: LifeplusPakket[] = [
     categorieLabel: "Sport & Performance",
     niveau: "essential",
     producten: [BE_RECHARGED, TRIPLE_PROTEIN],
-    totaalPrijs: 162.0,
+    totaalPrijs: 160.75,
     totaalIP: 81,
     gratisVerzending: true,
     waarom: "Klassieke post-workout instap: herstel + spieropbouw via eiwit.",
@@ -377,22 +491,24 @@ export const LIFEPLUS_PAKKETTEN: LifeplusPakket[] = [
     categorieLabel: "Sport & Performance",
     niveau: "plus",
     producten: [DAILY_LIGHT, BE_RECHARGED, TRIPLE_PROTEIN],
-    totaalPrijs: 227.25,
+    totaalPrijs: 225.5,
     totaalIP: 125.5,
     gratisVerzending: true,
     waarom: "Basis + herstel + eiwit voor wie regelmatig traint.",
-    resultaatTijdlijn: "Sneller herstel binnen 1 week, betere uithouding binnen 2-3 weken.",
+    resultaatTijdlijn:
+      "Sneller herstel binnen 1 week, betere uithouding binnen 2-3 weken.",
   },
   {
     categorie: "sport-performance",
     categorieLabel: "Sport & Performance",
     niveau: "complete",
     producten: [MP_100_GOLD_LIGHT, BE_RECHARGED, TRIPLE_PROTEIN],
-    totaalPrijs: 335.5,
+    totaalPrijs: 332.75,
     totaalIP: 203.75,
     gratisVerzending: true,
     waarom: "Complete performance- én herstelondersteuning op stevig fundament.",
-    resultaatTijdlijn: "Sneller herstel binnen 1 week, betere prestaties binnen 2-4 weken.",
+    resultaatTijdlijn:
+      "Sneller herstel binnen 1 week, betere prestaties binnen 2-4 weken.",
   },
 
   // ================ HIGH PERFORMANCE ================
@@ -401,10 +517,11 @@ export const LIFEPLUS_PAKKETTEN: LifeplusPakket[] = [
     categorieLabel: "High Performance",
     niveau: "essential",
     producten: [DAILY_LIGHT, CACAO_BOOST],
-    totaalPrijs: 112.25,
+    totaalPrijs: 111.25,
     totaalIP: 71,
     gratisVerzending: false,
-    waarom: "Vitaliteits-instap met basis + lekker dagelijks ritueel (chocoladeshake).",
+    waarom:
+      "Vitaliteits-instap met basis + lekker dagelijks ritueel (chocoladeshake).",
     resultaatTijdlijn: "Stabielere energie en stemming binnen 1-2 weken.",
   },
   {
@@ -412,29 +529,31 @@ export const LIFEPLUS_PAKKETTEN: LifeplusPakket[] = [
     categorieLabel: "High Performance",
     niveau: "plus",
     producten: [DAILY_LIGHT, OMEGOLD, CACAO_BOOST, TRIPLE_PROTEIN],
-    totaalPrijs: 239.5,
+    totaalPrijs: 237.25,
     totaalIP: 138.5,
     gratisVerzending: true,
-    waarom: "Vitaliteits-stack met basis, omega-3, lekker ritueel en eiwit-bouwsteen.",
-    resultaatTijdlijn: "Verzadiging vanaf dag 1, helderder hoofd binnen 1-2 weken.",
+    waarom:
+      "Vitaliteits-stack met basis, omega-3, lekker ritueel en eiwit-bouwsteen.",
+    resultaatTijdlijn:
+      "Verzadiging vanaf dag 1, helderder hoofd binnen 1-2 weken.",
   },
   {
     categorie: "high-performance",
     categorieLabel: "High Performance",
     niveau: "complete",
     producten: [MP_100_GOLD_LIGHT, TRIPLE_PROTEIN, CACAO_BOOST, VITAMINS_DK],
-    totaalPrijs: 322.75,
+    totaalPrijs: 319.75,
     totaalIP: 198.75,
     gratisVerzending: true,
-    waarom: "Compleet dagelijks vitaliteits-pakket: basis, eiwit, mood-lift en cardiovasculaire long-term ondersteuning.",
-    resultaatTijdlijn: "Verzadiging vanaf dag 1, mentale rust binnen 1-2 weken, long-term cardio-bot via D & K.",
-    notitie:
-      "M&P 100 Gold Light bevat al Daily BioBasics Light, Proanthenols 100 en OmeGold (voordelig samengesteld).",
+    waarom:
+      "Compleet dagelijks vitaliteits-pakket: basis-bundel, eiwit, mood-lift en cardiovasculaire long-term ondersteuning.",
+    resultaatTijdlijn:
+      "Verzadiging vanaf dag 1, mentale rust binnen 1-2 weken, long-term cardio-bot via D & K.",
   },
 ];
 
 // ============================================================
-// 4 RESET-PAKKETTEN
+// 5 RESET-PAKKETTEN
 // ============================================================
 
 export const LIFEPLUS_RESET_PAKKETTEN: LifeplusResetPakket[] = [
@@ -447,7 +566,8 @@ export const LIFEPLUS_RESET_PAKKETTEN: LifeplusResetPakket[] = [
     totaalPrijs: 236.25,
     totaalIP: 149,
     gratisVerzending: true,
-    waarom: "Schone start: opruimen van binnenuit en darmflora-herstel als fundament.",
+    waarom:
+      "Schone start: opruimen van binnenuit en darmflora-herstel als fundament.",
     levensstijlAanpassing:
       "16 dagen pure voeding: geen tarwe, gluten, zuivel, suiker, alcohol, bewerkte producten of geraffineerde oliën. Wel: groenten, vis, mager vlees, eieren, fermented (kimchi, zuurkool), gezonde vetten, plantaardige zuivel.",
   },
@@ -466,7 +586,7 @@ export const LIFEPLUS_RESET_PAKKETTEN: LifeplusResetPakket[] = [
       DIGESTIVE_FORMULA,
       PH_PLUS,
     ],
-    totaalPrijs: 400.75,
+    totaalPrijs: 400.25,
     totaalIP: 236,
     gratisVerzending: true,
     waarom:
@@ -474,7 +594,7 @@ export const LIFEPLUS_RESET_PAKKETTEN: LifeplusResetPakket[] = [
     levensstijlAanpassing:
       "Zelfde voedingsregels als basis-versie: geen tarwe, gluten, zuivel, suiker, alcohol, bewerkte producten. Plus extra inname-frequentie van supplementen (zie inname-schema).",
     notitie:
-      "Be Recharged in dit pakket is bewust de pot-variant (€80,25 / 43 IP), niet de sachets. Sachets zijn alleen nog in 30-stuks-verpakking leverbaar wat ze te duur maakt.",
+      "Be Recharged in dit pakket is bewust de pot-variant (€79,75 / 43 IP), niet de sachets. Sachets zijn alleen nog in 30-stuks-verpakking leverbaar wat ze te duur maakt.",
   },
   {
     key: "reset-60day-opstart",
@@ -489,7 +609,7 @@ export const LIFEPLUS_RESET_PAKKETTEN: LifeplusResetPakket[] = [
       PARABALANCE,
       BE_RECHARGED,
     ],
-    totaalPrijs: 316.5,
+    totaalPrijs: 316.0,
     totaalIP: 192,
     gratisVerzending: true,
     waarom:
@@ -505,30 +625,31 @@ export const LIFEPLUS_RESET_PAKKETTEN: LifeplusResetPakket[] = [
     duurDagen: 30,
     route: "regulier",
     producten: [DAILY_LIGHT, PROANTHENOLS, OMEGOLD, MSM_PLUS_TABLETTEN, ENERXAN],
-    totaalPrijs: 250.5,
+    totaalPrijs: 249.5,
     totaalIP: 161.75,
     gratisVerzending: true,
     waarom:
       "Eerste twee maanden van de Holistic Reset (laaddagen + metabolisme-omschakeling + stabilisatie).",
     levensstijlAanpassing:
       "65 dagen ingrijpend traject in 4 fasen: laaddagen (3500-5000 kcal vooral vetten) → 21d geen koolhydraten/suikers/vetten + vetvrije verzorging → 21d stabilisatie met vetten weer rustig opbouwen → 21d LOGI-leefstijl. Vereist weegschaal, meetlint, calorie-tracking via Fatsecret-app, voor- en na-foto's, voetenbaden met Keltisch zeezout, 2L water per dag.",
-    notitie: "Per maand opnieuw bestellen. Maand 1 en Maand 2 zijn identiek qua inhoud.",
+    notitie:
+      "Per maand opnieuw bestellen. Maand 1 en Maand 2 zijn identiek qua inhoud.",
   },
   {
     key: "reset-holistic-m3",
-    naam: "Holistic Reset — Maand 3 (= M&P 100 Gold Light)",
+    naam: "Holistic Reset — Maand 3 (= M&P 100 Gold Light bundle)",
     duurDagen: 30,
     route: "regulier",
     producten: [MP_100_GOLD_LIGHT],
-    totaalPrijs: 173.5,
+    totaalPrijs: 172.0,
     totaalIP: 122.75,
     gratisVerzending: true,
     waarom:
-      "Maand 3 van de Holistic Reset (LOGI-fase): Enerxan en MSM Plus tabletten kunnen eraf, basis-fundament blijft staan.",
+      "Maand 3 van de Holistic Reset (LOGI-fase): Enerxan en MSM Plus tabletten kunnen eraf, basis-fundament blijft staan via M&P 100 Gold Light bundle.",
     levensstijlAanpassing:
       "Fase 4 van Holistic Reset: overgang naar eigen leefstijl met LOGI-principe en 80/20-regel.",
     notitie:
-      "M&P 100 Gold Light is exact dezelfde combinatie als losse Daily BioBasics Light + Proanthenols 100 + OmeGold, maar als bundel €8,50 voordeliger. Aangeraden om als bundel te bestellen.",
+      "Bestelnummer 3191 (M&P 100 Gold Light) — bevat Daily BioBasics Light + Proanthenols 100 + OmeGold. €9 voordeliger dan losse producten samen.",
   },
 ];
 
@@ -539,7 +660,9 @@ export const LIFEPLUS_RESET_PAKKETTEN: LifeplusResetPakket[] = [
 /**
  * Alle pakketten in een specifieke categorie (3 niveaus).
  */
-export function getPakkettenInCategorie(categorie: PakketCategorie): LifeplusPakket[] {
+export function getPakkettenInCategorie(
+  categorie: PakketCategorie,
+): LifeplusPakket[] {
   return LIFEPLUS_PAKKETTEN.filter((p) => p.categorie === categorie);
 }
 
@@ -559,8 +682,26 @@ export function getPakket(
  * Stable key voor lookup in member_bestellinks tabel.
  * Format: "{categorie}-{niveau}", bijv. "energie-focus-essential".
  */
-export function getPakketKey(categorie: PakketCategorie, niveau: PakketNiveau): string {
+export function getPakketKey(
+  categorie: PakketCategorie,
+  niveau: PakketNiveau,
+): string {
   return `${categorie}-${niveau}`;
+}
+
+/**
+ * Voor de zelftest: als een man uitkomt in "hormoonbalans" categorie,
+ * mappen we automatisch naar "mannen-hormoonbalans". Vrouwen of
+ * "zeg-niet" blijven op "hormoonbalans".
+ */
+export function mapCategorieVoorGeslacht(
+  categorie: PakketCategorie,
+  geslacht: "man" | "vrouw" | "zeg-niet",
+): PakketCategorie {
+  if (categorie === "hormoonbalans" && geslacht === "man") {
+    return "mannen-hormoonbalans";
+  }
+  return categorie;
 }
 
 // ============================================================
@@ -570,7 +711,9 @@ export function getPakketKey(categorie: PakketCategorie, niveau: PakketNiveau): 
 /**
  * Eén specifiek reset-pakket op key.
  */
-export function getResetPakket(key: ResetPakketKey): LifeplusResetPakket | undefined {
+export function getResetPakket(
+  key: ResetPakketKey,
+): LifeplusResetPakket | undefined {
   return LIFEPLUS_RESET_PAKKETTEN.find((p) => p.key === key);
 }
 
@@ -609,7 +752,8 @@ export function bouwPakkettenPromptSectie(): string {
     "energie-focus",
     "stress-slaap",
     "afvallen-metabolisme",
-    "hormonen",
+    "hormoonbalans",
+    "mannen-hormoonbalans",
     "sport-performance",
     "high-performance",
   ];
@@ -632,13 +776,17 @@ export function bouwPakkettenPromptSectie(): string {
   });
 
   const resetBlokken = LIFEPLUS_RESET_PAKKETTEN.map((r) => {
-    const prods = r.producten.map((pr) => `${pr.naam} (€${pr.asapPrijs.toFixed(2)} / ${pr.ip} IP)`).join(" + ");
+    const prods = r.producten
+      .map((pr) => `${pr.naam} (€${pr.asapPrijs.toFixed(2)} / ${pr.ip} IP)`)
+      .join(" + ");
     return `**${r.naam}** (${r.duurDagen} dagen, route: ${r.route})\n  ${prods}\n  Totaal: €${r.totaalPrijs.toFixed(2)} · ${r.totaalIP} IP\n  Waarom: ${r.waarom}\n  Levensstijl: ${r.levensstijlAanpassing}`;
   }).join("\n\n");
 
-  return `## LIFEPLUS PAKKETTEN — 6 categorieën × 3 niveaus + 4 reset-pakketten (gevalideerd 27-04-2026)
+  return `## LIFEPLUS PAKKETTEN — 7 categorieën × 3 niveaus + 5 reset-pakketten (gevalideerd 27-04-2026, prijslijst maart 2026)
 
-Gebruik deze pakketten als kant-en-klare aanbeveling. Elk pakket heeft een Essential (instap, 40-100 IP), Plus (uitgebreid, 100-175 IP) en Complete (volledigste, ~200 IP) niveau. Triple Protein Shake heeft vanille als default en chocolade als smaak-optie. Prijzen zijn ASAP (auto-ship). Verzending: gratis vanaf 80 IP, anders €${PRIJSLIJST_METADATA.verzendkostenEuro.toFixed(2)}.
+Gebruik deze pakketten als kant-en-klare aanbeveling. Elk pakket heeft een Essential (instap, 40-100 IP), Plus (uitgebreid, 100-175 IP) en Complete (volledigste, ~190-220 IP) niveau. Triple Protein Shake heeft vanille als default en chocolade als smaak-optie. Prijzen zijn ASAP (auto-ship). Verzending: gratis vanaf 80 IP, anders €${PRIJSLIJST_METADATA.verzendkostenEuro.toFixed(2)}.
+
+GENDER-AWARE: Hormoonbalans-pakketten zijn voor vrouwen (Mena Plus + EPO). Mannen die in deze categorie uitkomen krijgen automatisch de Mannen Hormoonbalans-pakketten (Men's Formula voor prostaat- en hormoon-ondersteuning).
 
 ${blokken.join("\n\n")}
 
@@ -646,5 +794,5 @@ ${blokken.join("\n\n")}
 
 ${resetBlokken}
 
-**TIP:** Bij Energy Complete, Stress Complete, Hormonen Complete, Sport Complete en High Performance Complete zit Maintain & Protect 100 Gold Light verstopt — dat is dezelfde bundel als Daily BioBasics Light + Proanthenols 100 + OmeGold maar voordeliger als één pakket besteld.`;
+**TIP:** Bij Energy Complete, Stress Complete, Afvallen Complete, Hormoonbalans Complete, Sport Complete, High Performance Complete en Mannen Hormoonbalans Complete zit Maintain & Protect 100 Gold Light (bestelnr 3191) verstopt — €9 voordeliger dan de 3 losse producten (Daily Light + Proanthenols + OmeGold) samen.`;
 }

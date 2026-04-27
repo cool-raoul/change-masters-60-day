@@ -7,17 +7,25 @@
 //      → nee       = Essential / Plus / Complete keuze
 //      → weet_niet = Essential / Plus / Complete keuze (+ uitleg-blok)
 //
-//   2. Prospect vinkt aan welke uitspraken voor hem/haar gelden.
-//      Per categorie 3 uitspraken; in totaal 18 uitspraken.
+//   2. Geslacht-vraag: "Ben je een vrouw / man / zeg ik liever niet?"
+//      Beïnvloedt:
+//       - welke gendered uitspraken zichtbaar zijn
+//       - of mannen die in 'hormoonbalans' uitkomen de Mannen Hormoonbalans-
+//         pakketten krijgen (Men's Formula i.p.v. Mena Plus)
 //
-//   3. Uitslag-berekening:
+//   3. Prospect vinkt aan welke uitspraken voor hem/haar gelden.
+//      Vragen worden gemixt getoond (geen categorie-headers in UI).
+//
+//   4. Uitslag-berekening:
 //      - Tel vinkjes per categorie
 //      - Categorie met meeste vinkjes = aanbevolen pakket
 //      - Bij gelijkspel: hoogste prioriteit (zie volgorde hieronder)
 //      - 0-1 vinkjes totaal = High Performance als basis-advies
+//      - Geslacht-aware mapping voor hormoonbalans
 // ============================================================
 
 import type { PakketCategorie, PakketNiveau } from "@/lib/lifeplus/pakketten";
+import { mapCategorieVoorGeslacht } from "@/lib/lifeplus/pakketten";
 
 // ============================================================
 // TYPES
@@ -25,23 +33,32 @@ import type { PakketCategorie, PakketNiveau } from "@/lib/lifeplus/pakketten";
 
 export type Trigger60Day = "ja" | "nee" | "weet_niet";
 
+export type Geslacht = "vrouw" | "man" | "zeg-niet";
+
+/** Subset van PakketCategorie voor zelftest-tagging (zonder mannen-hormoonbalans
+ *  want dat is een uitkomst-mapping, geen vraag-tag). */
+export type ZelftestCategorie = Exclude<PakketCategorie, "mannen-hormoonbalans">;
+
 export type ZelftestUitspraak = {
   /** Stable id voor opslag, bijv. "energie-focus-1" */
   id: string;
-  categorie: PakketCategorie;
+  categorie: ZelftestCategorie;
   /** De zin die de prospect ziet en aanvinkt. */
   tekst: string;
+  /** Optioneel: alleen tonen aan dit geslacht. Default = beide. */
+  alleenVoor?: Geslacht;
 };
 
 export type ZelftestAntwoorden = {
   trigger60day: Trigger60Day;
+  geslacht: Geslacht;
   avg_akkoord: boolean;
   /** Map van uitspraak-id → aangevinkt (true / false). */
   aangevinkt: Record<string, boolean>;
 };
 
 export type ZelftestUitslag = {
-  /** De uitkomst-categorie waar de meeste vinkjes vielen. */
+  /** De uitkomst-categorie (na geslacht-mapping voor hormoonbalans). */
   categorie: PakketCategorie;
   categorieLabel: string;
   /** Niveau dat we adviseren: 60 day = altijd 'complete', anders default 'plus'. */
@@ -49,13 +66,16 @@ export type ZelftestUitslag = {
   /** Stable key naar pakketten.ts voor lookup. */
   pakket_key: string;
   /** Tellingen per categorie voor transparantie. */
-  scores: Record<PakketCategorie, number>;
+  scores: Record<ZelftestCategorie, number>;
   /** True als de gebruiker 0-1 vinkjes had en automatisch naar High Performance ging. */
   fallback: boolean;
 };
 
 // ============================================================
-// DE 18 UITSPRAKEN (3 per categorie)
+// DE 18 UITSPRAKEN (3 per categorie, gemixt getoond in UI)
+//
+// LET OP: deze vragen worden in een volgende iteratie herontworpen om
+// minder voorspelbaar te zijn. Voor nu blijft de structuur staan.
 // ============================================================
 
 export const ZELFTEST_UITSPRAKEN: ZelftestUitspraak[] = [
@@ -110,22 +130,24 @@ export const ZELFTEST_UITSPRAKEN: ZelftestUitspraak[] = [
     tekst: "Mijn buikomvang neemt toe terwijl ik niet anders eet dan vroeger",
   },
 
-  // 4. Hormonale Balans
+  // 4. Hormoonbalans
   {
-    id: "hormonen-1",
-    categorie: "hormonen",
+    id: "hormoonbalans-1",
+    categorie: "hormoonbalans",
     tekst:
       "Mijn cyclus of overgang speelt me parten (PMS, opvliegers, stemmingsschommelingen)",
+    alleenVoor: "vrouw",
   },
   {
-    id: "hormonen-2",
-    categorie: "hormonen",
+    id: "hormoonbalans-2",
+    categorie: "hormoonbalans",
     tekst: "Ik voel me vaker prikkelbaar of huilerig zonder duidelijke reden",
   },
   {
-    id: "hormonen-3",
-    categorie: "hormonen",
+    id: "hormoonbalans-3",
+    categorie: "hormoonbalans",
     tekst: "Mijn slaap of energie zit gekoppeld aan mijn cyclus of overgang",
+    alleenVoor: "vrouw",
   },
 
   // 5. Sport & Performance
@@ -172,27 +194,23 @@ export const CATEGORIE_LABEL: Record<PakketCategorie, string> = {
   "energie-focus": "Energie & Focus",
   "stress-slaap": "Stress, Slaap & Veerkracht",
   "afvallen-metabolisme": "Afvallen & Metabolisme",
-  hormonen: "Hormonale Balans",
+  hormoonbalans: "Hormoonbalans",
+  "mannen-hormoonbalans": "Mannen Hormoonbalans",
   "sport-performance": "Sport & Performance",
   "high-performance": "High Performance",
 };
 
 // ============================================================
 // PRIORITEITS-VOLGORDE bij gelijkspel
-//
-// Logica: bij gelijke score kiezen we de categorie met de meest urgente
-// klacht. Iemand met evenveel vinkjes bij Stress en High Performance
-// krijgt een Stress-advies, want stress-klachten vragen sneller om
-// concrete actie.
 // ============================================================
 
-const PRIORITEIT: PakketCategorie[] = [
-  "stress-slaap", // urgentste signaal (slaap, burn-out preventie)
+const PRIORITEIT: ZelftestCategorie[] = [
+  "stress-slaap",
   "afvallen-metabolisme",
-  "hormonen",
+  "hormoonbalans",
   "energie-focus",
   "sport-performance",
-  "high-performance", // laatste want = "ik doe het al goed"
+  "high-performance",
 ];
 
 // ============================================================
@@ -205,17 +223,18 @@ const PRIORITEIT: PakketCategorie[] = [
  * Regels:
  * - Tel vinkjes per categorie
  * - Categorie met meeste vinkjes wint
- * - Bij gelijkspel: prioriteits-volgorde (stress > afvallen > hormonen > energie > sport > high-perf)
+ * - Bij gelijkspel: prioriteits-volgorde (stress > afvallen > hormoon > energie > sport > high-perf)
  * - 0-1 vinkjes totaal: fallback naar High Performance
  * - Niveau-keuze: trigger_60day = 'ja' → 'complete'; anders → 'plus' (default)
+ * - Geslacht-mapping: man + hormoonbalans → mannen-hormoonbalans
  */
 export function berekenUitslag(antwoorden: ZelftestAntwoorden): ZelftestUitslag {
   // Tel vinkjes per categorie
-  const scores: Record<PakketCategorie, number> = {
+  const scores: Record<ZelftestCategorie, number> = {
     "energie-focus": 0,
     "stress-slaap": 0,
     "afvallen-metabolisme": 0,
-    hormonen: 0,
+    hormoonbalans: 0,
     "sport-performance": 0,
     "high-performance": 0,
   };
@@ -228,20 +247,23 @@ export function berekenUitslag(antwoorden: ZelftestAntwoorden): ZelftestUitslag 
 
   const totaalVinkjes = Object.values(scores).reduce((s, n) => s + n, 0);
 
+  const niveau: PakketNiveau =
+    antwoorden.trigger60day === "ja" ? "complete" : "plus";
+
   // Fallback bij weinig vinkjes
   if (totaalVinkjes <= 1) {
     return {
       categorie: "high-performance",
       categorieLabel: CATEGORIE_LABEL["high-performance"],
-      niveau: antwoorden.trigger60day === "ja" ? "complete" : "plus",
-      pakket_key: `high-performance-${antwoorden.trigger60day === "ja" ? "complete" : "plus"}`,
+      niveau,
+      pakket_key: `high-performance-${niveau}`,
       scores,
       fallback: true,
     };
   }
 
   // Vind de categorie met de hoogste score; bij gelijkspel: prioriteits-volgorde
-  let beste: PakketCategorie = "high-performance";
+  let beste: ZelftestCategorie = "high-performance";
   let besteScore = -1;
 
   for (const cat of PRIORITEIT) {
@@ -251,44 +273,61 @@ export function berekenUitslag(antwoorden: ZelftestAntwoorden): ZelftestUitslag 
     }
   }
 
-  const niveau: PakketNiveau =
-    antwoorden.trigger60day === "ja" ? "complete" : "plus";
+  // Geslacht-mapping voor hormoonbalans (man → mannen-hormoonbalans)
+  const finaleCategorie = mapCategorieVoorGeslacht(beste, antwoorden.geslacht);
 
   return {
-    categorie: beste,
-    categorieLabel: CATEGORIE_LABEL[beste],
+    categorie: finaleCategorie,
+    categorieLabel: CATEGORIE_LABEL[finaleCategorie],
     niveau,
-    pakket_key: `${beste}-${niveau}`,
+    pakket_key: `${finaleCategorie}-${niveau}`,
     scores,
     fallback: false,
   };
 }
 
 // ============================================================
-// HELPERS — uitspraken groeperen voor weergave
+// HELPERS — uitspraken filteren / groeperen
 // ============================================================
 
 /**
- * Geeft uitspraken gegroepeerd per categorie terug, zodat de UI ze
- * netjes per categorie kan renderen.
+ * Geeft de uitspraken die getoond moeten worden aan een prospect met
+ * dit geslacht. Vrouw-specifieke vragen worden niet aan mannen getoond,
+ * en vice versa. Bij "zeg-niet" tonen we de gender-neutrale set + de
+ * vrouw-specifieke vragen (statistisch gezien grootste groep).
  */
-export function groepeerUitsprakenPerCategorie(): Array<{
-  categorie: PakketCategorie;
-  label: string;
-  uitspraken: ZelftestUitspraak[];
-}> {
-  const categorieën: PakketCategorie[] = [
-    "energie-focus",
-    "stress-slaap",
-    "afvallen-metabolisme",
-    "hormonen",
-    "sport-performance",
-    "high-performance",
-  ];
+export function getZichtbareUitspraken(geslacht: Geslacht): ZelftestUitspraak[] {
+  return ZELFTEST_UITSPRAKEN.filter((u) => {
+    if (!u.alleenVoor) return true;
+    if (geslacht === "zeg-niet") return u.alleenVoor === "vrouw";
+    return u.alleenVoor === geslacht;
+  });
+}
 
-  return categorieën.map((cat) => ({
-    categorie: cat,
-    label: CATEGORIE_LABEL[cat],
-    uitspraken: ZELFTEST_UITSPRAKEN.filter((u) => u.categorie === cat),
-  }));
+/**
+ * Schud de uitspraken in een vaste deterministische volgorde door elkaar
+ * (op basis van token zodat iedere prospect dezelfde volgorde ziet voor
+ * dezelfde test). Vermijdt categorie-headers in de UI.
+ */
+export function shuffleUitspraken(
+  uitspraken: ZelftestUitspraak[],
+  seed: string,
+): ZelftestUitspraak[] {
+  // Fisher-Yates shuffle met seeded random
+  const result = [...uitspraken];
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = (hash << 5) - hash + seed.charCodeAt(i);
+    hash |= 0;
+  }
+  let state = Math.abs(hash) || 1;
+  const random = () => {
+    state = (state * 9301 + 49297) % 233280;
+    return state / 233280;
+  };
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
 }
