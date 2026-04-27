@@ -83,40 +83,40 @@ export function TestForm({
   }
 
   // ============================================================
-  // STAP 1 — Trigger-vraag
+  // STAP 1 — Commitment-vraag (bepaalt of we Complete adviseren)
   // ============================================================
   if (stap === "trigger") {
     return (
       <Card>
         <CardTitel>Stap 1 van 4</CardTitel>
         <h2 className="text-xl font-semibold text-gray-900 mb-1">
-          Wil je meedoen aan de 60 Day Run?
+          Hoe wil je dit aanpakken?
         </h2>
-        <p className="text-sm text-gray-500 mb-4">
-          De 60 Day Run is een 60-dagen vitaliteitsprogramma dat {memberNaam} je
-          aanbiedt. Geen zorgen als je niet weet wat dat is.
+        <p className="text-sm text-gray-600 mb-4">
+          Geen verkeerd antwoord. Dit helpt {memberNaam} om het advies op jou
+          af te stemmen.
         </p>
         <div className="space-y-2">
           <KeuzeKnop
-            label="Ja, ik wil meedoen"
+            label="Ik wil vol gaan"
+            beschrijving="Geef me het meest complete advies om in de komende weken écht resultaat te zien."
             checked={trigger === "ja"}
             onClick={() => setTrigger("ja")}
           />
           <KeuzeKnop
-            label="Nee, ik kijk gewoon naar passend advies"
+            label="Ik wil bewust starten"
+            beschrijving="Laat me kiezen tussen een lichte instap, een uitgebreide aanpak of het complete pakket."
             checked={trigger === "nee"}
             onClick={() => setTrigger("nee")}
           />
           <KeuzeKnop
-            label="Ik weet niet wat dat is"
+            label="Ik wil eerst zien wat past"
+            beschrijving="Toon me de mogelijkheden, ik kies daarna wat bij me past."
             checked={trigger === "weet_niet"}
             onClick={() => setTrigger("weet_niet")}
           />
         </div>
-        <Volgende
-          enabled={!!trigger}
-          onClick={() => setStap("geslacht")}
-        />
+        <Volgende enabled={!!trigger} onClick={() => setStap("geslacht")} />
       </Card>
     );
   }
@@ -148,6 +148,7 @@ export function TestForm({
           />
           <KeuzeKnop
             label="Zeg ik liever niet"
+            beschrijving="Dan volgen we de standaard productselectie."
             checked={geslacht === "zeg-niet"}
             onClick={() => setGeslacht("zeg-niet")}
           />
@@ -179,12 +180,14 @@ export function TestForm({
       <Card>
         <CardTitel>Stap 3 van 4</CardTitel>
         <h2 className="text-xl font-semibold text-gray-900 mb-2">
-          Vink aan in welke mate elke uitspraak voor jou klopt
+          Hoe sterk herken je jezelf in elke uitspraak?
         </h2>
-        <p className="text-sm text-gray-500 mb-1">
-          Geen goed of fout. Het gaat om wat resoneert.
+        <p className="text-sm text-gray-600 mb-1">
+          Geen goed of fout. Het gaat om wat voor jou resoneert. Kies bij elke
+          zin: <strong>Niet</strong>, <strong>Soms</strong> of{" "}
+          <strong>Vaak</strong>.
         </p>
-        <p className="text-xs text-gray-400 mb-6">
+        <p className="text-xs text-gray-500 mb-6">
           {aantalBeantwoord} van {totaalUitspraken} beantwoord
         </p>
 
@@ -297,34 +300,47 @@ function CardTitel({ children }: { children: React.ReactNode }) {
 
 function KeuzeKnop({
   label,
+  beschrijving,
   checked,
   onClick,
 }: {
   label: string;
+  beschrijving?: string;
   checked: boolean;
   onClick: () => void;
 }) {
   return (
     <button
       onClick={onClick}
-      className={`w-full text-left p-4 rounded-lg border transition-all ${
+      className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
         checked
           ? "border-emerald-600 bg-emerald-50 text-emerald-900"
-          : "border-gray-200 bg-white hover:border-gray-300"
+          : "border-gray-200 bg-white text-gray-900 hover:border-emerald-400"
       }`}
     >
-      <span className="flex items-center gap-3">
+      <div className="flex items-start gap-3">
         <span
-          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-            checked ? "border-emerald-600 bg-emerald-600" : "border-gray-300"
+          className={`flex-shrink-0 mt-0.5 w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+            checked ? "border-emerald-600 bg-emerald-600" : "border-gray-400"
           }`}
         >
           {checked && (
             <span className="w-2 h-2 rounded-full bg-white"></span>
           )}
         </span>
-        {label}
-      </span>
+        <div className="flex-1">
+          <div className="font-medium">{label}</div>
+          {beschrijving && (
+            <div
+              className={`text-sm mt-1 ${
+                checked ? "text-emerald-800" : "text-gray-600"
+              }`}
+            >
+              {beschrijving}
+            </div>
+          )}
+        </div>
+      </div>
     </button>
   );
 }
