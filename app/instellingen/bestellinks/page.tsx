@@ -74,29 +74,47 @@ export default async function BestellinksPage() {
         </p>
       </header>
 
-      {/* Uitleg-blok */}
+      {/* Uitleg-blok met YouTube-filmpjes van Lifeplus */}
       <section className="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 mb-6">
         <h2 className="text-base font-semibold text-emerald-900 mb-2">
           Hoe maak je een bestellink?
         </h2>
-        <ol className="space-y-2 text-sm text-emerald-900">
-          <li>
-            <strong>1.</strong> Open je Lifeplus webshop (eigen subdomain).
-          </li>
-          <li>
-            <strong>2.</strong> Voeg de producten van het pakket toe aan je
-            winkelwagen.
-          </li>
-          <li>
-            <strong>3.</strong> Kopieer de URL van je gevulde winkelwagen.
-          </li>
-          <li>
-            <strong>4.</strong> Plak die hier bij het juiste pakket.
-          </li>
-        </ol>
-        <p className="text-xs text-emerald-800 mt-3 italic">
-          Zonder bestellinks ziet de prospect een fallback "Vraag mij voor de
-          bestellink" knop. Met bestellinks: directe bestelknop.
+        <p className="text-sm text-emerald-900 mb-3">
+          Lifeplus heeft <strong>geen kant-en-klare pakketten</strong> in de
+          webshop. Voor elk pakket hieronder maak je zelf een gevuld
+          winkelwagentje. De producten staan per pakket op een rij. Je voegt ze
+          toe aan je winkelwagen, kopieert de link en plakt 'm hier.
+        </p>
+
+        <div className="grid sm:grid-cols-2 gap-3 mt-4">
+          <YouTubeKaart
+            videoId="B5Z7BR1LhXU"
+            titel="1. Activeer je Lifeplus shop"
+            beschrijving="Eerste keer? Begin hier."
+          />
+          <YouTubeKaart
+            videoId="jIvLI6CK5EM"
+            titel="2. Maak een winkelmand-link"
+            beschrijving="Producten toevoegen en link opslaan."
+          />
+          <YouTubeKaart
+            videoId="HOQM8RcEgBA"
+            titel="3. Verstuur via Uw Bedrijf"
+            beschrijving="Dit is de link die je hier plakt."
+            highlight
+          />
+          <YouTubeKaart
+            videoId="va9JIAnC8ME"
+            titel="4. Verstuur winkelmand-link (alternatief)"
+            beschrijving="Alternatieve methode."
+          />
+        </div>
+
+        <p className="text-xs text-emerald-800 mt-4 italic">
+          Het belangrijkste filmpje is <strong>nummer 3 (Uw Bedrijf)</strong>.
+          De link die daar wordt aangemaakt, plak je hier bij het juiste pakket.
+          Zonder bestellinks ziet de prospect een "Vraag mij voor de bestellink"
+          fallback. Met bestellinks: directe bestelknop.
         </p>
       </section>
 
@@ -113,6 +131,7 @@ export default async function BestellinksPage() {
               naam={reset.naam}
               prijs={reset.totaalPrijs}
               ip={reset.totaalIP}
+              producten={reset.producten}
               huidige={linksMap.get(reset.key)}
             />
           ))}
@@ -146,6 +165,7 @@ export default async function BestellinksPage() {
                     naam={`${niveauLabel(p.niveau)} — ${p.categorieLabel}`}
                     prijs={p.totaalPrijs}
                     ip={p.totaalIP}
+                    producten={p.producten}
                     huidige={linksMap.get(key)}
                   />
                 );
@@ -190,4 +210,46 @@ export default async function BestellinksPage() {
 
 function niveauLabel(n: PakketNiveau): string {
   return n === "complete" ? "Complete" : n === "plus" ? "Plus" : "Essential";
+}
+
+function YouTubeKaart({
+  videoId,
+  titel,
+  beschrijving,
+  highlight = false,
+}: {
+  videoId: string;
+  titel: string;
+  beschrijving: string;
+  highlight?: boolean;
+}) {
+  return (
+    <a
+      href={`https://www.youtube.com/watch?v=${videoId}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`block rounded-lg p-3 border transition-all hover:shadow-sm ${
+        highlight
+          ? "bg-amber-50 border-amber-300 hover:border-amber-400"
+          : "bg-white border-gray-200 hover:border-emerald-300"
+      }`}
+    >
+      <div className="flex gap-3 items-start">
+        <div className="flex-shrink-0 w-12 h-12 rounded bg-red-600 flex items-center justify-center">
+          <span className="text-white text-xl">▶</span>
+        </div>
+        <div>
+          <div className="font-semibold text-sm text-gray-900">
+            {titel}
+            {highlight && (
+              <span className="ml-2 text-[10px] uppercase tracking-wider bg-amber-200 text-amber-900 rounded px-1.5 py-0.5">
+                Belangrijk
+              </span>
+            )}
+          </div>
+          <div className="text-xs text-gray-600 mt-0.5">{beschrijving}</div>
+        </div>
+      </div>
+    </a>
+  );
 }

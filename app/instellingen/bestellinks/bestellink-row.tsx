@@ -3,9 +3,18 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
+type ProductRegel = {
+  naam: string;
+  asapPrijs: number;
+  ip: number;
+  bestelNr?: string;
+};
+
 // ============================================================
 // BestellinkRow — één rij in de bestellinks-lijst
 // Lokale state voor edit/save, server-roundtrip via Supabase RLS.
+// Toont uitklapbaar de producten die in dit pakket horen + bestelnummers,
+// zodat member exact weet wat er in de winkelmand moet.
 // ============================================================
 
 export function BestellinkRow({
@@ -14,6 +23,7 @@ export function BestellinkRow({
   prijs,
   ip,
   huidige,
+  producten,
   isCustom = false,
 }: {
   pakketKey: string;
@@ -21,8 +31,10 @@ export function BestellinkRow({
   prijs: number | null;
   ip: number | null;
   huidige?: { id: string; url: string; label: string } | undefined;
+  producten?: ProductRegel[];
   isCustom?: boolean;
 }) {
+  const [openProducten, setOpenProducten] = useState(false);
   const supabase = createClient();
   const [url, setUrl] = useState(huidige?.url ?? "");
   const [bezig, setBezig] = useState(false);
@@ -87,6 +99,46 @@ export function BestellinkRow({
           <span className="text-xs text-emerald-600">✓ Opgeslagen</span>
         )}
       </div>
+
+      {/* Producten-lijst (uitklapbaar) */}
+      {producten && producten.length > 0 && (
+        <div className="mb-3">
+          <button
+            onClick={() => setOpenProducten(!openProducten)}
+            className="text-xs text-emerald-600 hover:text-emerald-700 font-medium flex items-center gap-1"
+          >
+            {openProducten ? "▼" : "▶"} Welke producten in dit pakket
+            ({producten.length})
+          </button>
+          {openProducten && (
+            <div className="mt-2 bg-gray-50 rounded-lg p-3 space-y-1.5">
+              <div className="text-xs text-gray-600 mb-2 italic">
+                Voeg deze producten toe aan je winkelmand op je Lifeplus shop:
+              </div>
+              {producten.map((p, i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-between text-xs gap-2"
+                >
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium text-gray-800 truncate">
+                      {p.naam}
+                    </div>
+                    {p.bestelNr && (
+                      <div className="text-gray-500">
+                        Bestelnr <code className="font-mono">{p.bestelNr}</code>
+                      </div>
+                    )}
+                  </div>
+                  <div className="text-gray-500 whitespace-nowrap">
+                    €{p.asapPrijs.toFixed(2)} · {p.ip} IP
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="flex gap-2">
         <input

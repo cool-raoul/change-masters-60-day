@@ -22,16 +22,10 @@ export default async function TestPage({
   const { token } = await params;
   const supabase = createAdminClient();
 
-  // Test ophalen + prospect-naam + member-naam (voor pre-fill en uitleg)
+  // Test ophalen (zonder joins — joins werken hier niet door cross-schema FK's)
   const { data: test, error } = await supabase
     .from("productadvies_tests")
-    .select(
-      `
-      id, token, status, member_id, prospect_id,
-      prospects ( volledige_naam ),
-      profiles!productadvies_tests_member_id_fkey ( full_name )
-    `,
-    )
+    .select("id, token, status, member_id, prospect_id")
     .eq("token", token)
     .single();
 
@@ -43,13 +37,27 @@ export default async function TestPage({
     redirect(`/test/${token}/resultaat`);
   }
 
-  // Naam-extractie (Supabase joint-syntaxis kan array of object teruggeven)
-  const prospectNaam =
-    (Array.isArray(test.prospects) ? test.prospects[0]?.volledige_naam : (test.prospects as any)?.volledige_naam) ??
-    null;
-  const memberNaam =
-    (Array.isArray(test.profiles) ? test.profiles[0]?.full_name : (test.profiles as any)?.full_name) ??
-    "je member";
+  // Prospect-naam apart ophalen
+  let prospectNaam: string | null = null;
+  if (test.prospect_id) {
+    const { data: prospect } = await supabase
+      .from("prospects")
+      .select("volledige_naam")
+      .eq("id", test.prospect_id)
+      .single();
+    prospectNaam = prospect?.volledige_naam ?? null;
+  }
+
+  // Member-naam apart ophalen via profiles
+  let memberNaam = "je member";
+  if (test.member_id) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", test.member_id)
+      .single();
+    memberNaam = profile?.full_name ?? "je member";
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white">

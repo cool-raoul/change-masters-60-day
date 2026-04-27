@@ -40,11 +40,7 @@ export default async function ResultaatPage({
   const { data: test, error } = await supabase
     .from("productadvies_tests")
     .select(
-      `
-      id, token, status, member_id, prospect_id, trigger_60day, geslacht, uitslag,
-      prospects ( volledige_naam ),
-      profiles!productadvies_tests_member_id_fkey ( full_name )
-    `,
+      "id, token, status, member_id, prospect_id, trigger_60day, geslacht, uitslag",
     )
     .eq("token", token)
     .single();
@@ -65,12 +61,27 @@ export default async function ResultaatPage({
     );
   }
 
-  const prospectNaam =
-    (Array.isArray(test.prospects) ? test.prospects[0]?.volledige_naam : (test.prospects as any)?.volledige_naam) ??
-    null;
-  const memberNaam =
-    (Array.isArray(test.profiles) ? test.profiles[0]?.full_name : (test.profiles as any)?.full_name) ??
-    "je member";
+  // Prospect-naam apart ophalen
+  let prospectNaam: string | null = null;
+  if (test.prospect_id) {
+    const { data: prospect } = await supabase
+      .from("prospects")
+      .select("volledige_naam")
+      .eq("id", test.prospect_id)
+      .single();
+    prospectNaam = prospect?.volledige_naam ?? null;
+  }
+
+  // Member-naam apart ophalen
+  let memberNaam = "je member";
+  if (test.member_id) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", test.member_id)
+      .single();
+    memberNaam = profile?.full_name ?? "je member";
+  }
 
   const uitslag = test.uitslag as {
     categorie: PakketCategorie;
