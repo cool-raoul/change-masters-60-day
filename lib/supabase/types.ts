@@ -220,6 +220,60 @@ export interface OnboardingVoortgang {
   updated_at: string;
 }
 
+export interface MemberBestellink {
+  id: string;
+  user_id: string;
+  /**
+   * Stable key voor pakket-lookup. Pre-defined keys staan in pakketten.ts:
+   *   - {categorie}-{niveau} (18 stuks, bijv. "energie-focus-essential")
+   *   - reset-darmen-basis, reset-darmen-plus, reset-60day-opstart,
+   *     reset-holistic-m12, reset-holistic-m3
+   * Custom keys zijn vrij te kiezen door de member als is_custom = true.
+   */
+  pakket_key: string;
+  /** Korte naam van het pakket zoals member 't onthoudt. */
+  label: string;
+  /** Lifeplus webshop-URL met gevuld winkelwagentje. */
+  url: string;
+  is_custom: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export type ProductadviesTestStatus = "verstuurd" | "ingevuld" | "verlopen";
+
+export interface ProductadviesTest {
+  id: string;
+  /** Geheime token in de URL voor de prospect. */
+  token: string;
+  member_id: string;
+  prospect_id: string | null;
+  /** "ja" / "nee" / "weet_niet" — antwoord op trigger-vraag 60 Day Run. */
+  trigger_60day: string | null;
+  /**
+   * Aangevinkte uitspraken: { aangevinkt: { "energie-focus-1": true, ... } }
+   * Plus eventueel andere submitted velden (toekomstig).
+   */
+  antwoorden: { aangevinkt: Record<string, boolean> } | null;
+  /**
+   * Berekende uitslag-snapshot (zodat hij niet verandert als we later
+   * de algoritme aanpassen).
+   */
+  uitslag: {
+    categorie: string;
+    categorieLabel: string;
+    niveau: string;
+    pakket_key: string;
+    scores: Record<string, number>;
+    fallback: boolean;
+  } | null;
+  avg_akkoord: boolean;
+  status: ProductadviesTestStatus;
+  ingevuld_op: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export const PIPELINE_FASEN: { fase: PipelineFase; label: string; kleur: string; tekstkleur: string }[] = [
   { fase: "prospect", label: "Prospect", kleur: "#3A3A3A", tekstkleur: "#CCCCCC" },
   { fase: "uitgenodigd", label: "Uitgenodigd", kleur: "#1A2A3A", tekstkleur: "#4A9EDB" },

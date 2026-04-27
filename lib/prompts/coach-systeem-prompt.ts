@@ -2,6 +2,7 @@ import { Profile, WhyProfile, Prospect, ContactLog } from "@/lib/supabase/types"
 import { SCRIPTS_DATA } from "@/lib/scripts-data";
 import { VraagType, getKennisbankVoorVraag } from "@/lib/knowledge/coach-boeken";
 import { bouwAdviesgidsPromptSectie } from "@/lib/lifeplus/adviesgids";
+import { bouwPrijslijstPromptSectie } from "@/lib/lifeplus/prijslijst";
 import { differenceInDays } from "date-fns";
 
 function getDagVanRun(runStartdatum?: string | null): number {
@@ -290,6 +291,13 @@ Benadruk dat fase 1 het specifieke probleem aanpakt, maar dat blijvende gezondhe
   // Sectie D2: Productadvies-gids (alleen bij productvraag)
   const adviesgidsSectie = vraagType === "productadvies" ? `\n\n${bouwAdviesgidsPromptSectie()}` : "";
 
+  // Sectie D3: Prijslijst (alleen bij productvraag — voorkomt onnodige
+  // tokens bij niet-product-vragen). De 18 categorie-pakketten worden
+  // bewust nog NIET in de coach geladen; die staan klaar in pakketten.ts
+  // voor later gebruik.
+  const prijslijstSectie =
+    vraagType === "productadvies" ? `\n\n${bouwPrijslijstPromptSectie()}` : "";
+
   // Sectie E: Scripts (SLIM — alleen relevante categorie)
   const scriptSectie = formatScriptsVoorVraag(vraagType);
 
@@ -402,7 +410,7 @@ WERKWIJZE (productvraag):
 5. Zegt de member "ja" op de budgetvariant, of stuurt extra info waarop het advies moet aanpassen? → Geef het HELE bijgestelde advies opnieuw in een NIEUW [STUUR]-blok. Nooit alleen "de wijziging" — altijd opnieuw het complete doorstuurbare bericht.
 6. Bij bezwaar of afwijzing → pivot of doorvragen naar de échte reden. Nooit drammen.`;
 
-  return `${rolSectie}${contextSectie}${prospectSectie}${kennisbankSectie}${adviesgidsSectie}${scriptSectie}${voorbeeldenSectie}${werkwijze}`;
+  return `${rolSectie}${contextSectie}${prospectSectie}${kennisbankSectie}${adviesgidsSectie}${prijslijstSectie}${scriptSectie}${voorbeeldenSectie}${werkwijze}`;
 }
 
 // WHY Coach system prompt (ongewijzigd)
