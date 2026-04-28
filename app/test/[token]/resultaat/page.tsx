@@ -494,7 +494,10 @@ export default async function ResultaatPage({
           </div>
         </section>
 
-        {/* Spar-met-member */}
+        {/* Spar-met-member.
+            Tekst includes darm-uitslag als die is ingevuld, zodat de member
+            niet alleen het pakket-advies maar ook de darm-uitkomst krijgt
+            in één bericht. */}
         <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-6 mb-5">
           <h2 className="text-lg font-semibold text-gray-900 mb-2">
             Wil je hierover sparren met {memberNaam}?
@@ -507,10 +510,25 @@ export default async function ResultaatPage({
             url={typeof process.env.NEXT_PUBLIC_APP_URL === "string" && process.env.NEXT_PUBLIC_APP_URL
               ? `${process.env.NEXT_PUBLIC_APP_URL}/test/${token}/resultaat`
               : `https://change-masters-60-day-q25o.vercel.app/test/${token}/resultaat`}
-            tekst={`Hé ${memberNaam.split(" ")[0]}, ik heb net de productadvies-test gedaan. Mijn uitkomst is "${uitslag.categorieLabel} ${uitslag.niveau}". Kunnen we hier even samen naar kijken?`}
-            onderwerp="Mijn productadvies"
+            tekst={
+              darmUitslag
+                ? `Hé ${memberNaam.split(" ")[0]}, ik heb beide vragenlijsten ingevuld.\n\nMijn pakket-advies: ${uitslag.categorieLabel} ${uitslag.niveau}\nMijn darm-advies: ${darmUitslag.bucket_label}\n\nKunnen we hier samen even naar kijken?`
+                : `Hé ${memberNaam.split(" ")[0]}, ik heb de vragenlijst ingevuld. Mijn uitkomst is "${uitslag.categorieLabel} ${uitslag.niveau}". Kunnen we hier even samen naar kijken?`
+            }
+            onderwerp="Mijn advies"
             variant="licht"
           />
+        </section>
+
+        {/* Vragenlijst opnieuw invullen — staat onderaan zodat het niet vaste
+            actie is, maar wel beschikbaar als de prospect zich bedacht heeft. */}
+        <section className="text-center mb-5">
+          <Link
+            href={`/test/${token}`}
+            className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 underline underline-offset-2"
+          >
+            Toch iets anders aanvinken? Vul de vragenlijst opnieuw in
+          </Link>
         </section>
 
         {/* Disclaimer */}

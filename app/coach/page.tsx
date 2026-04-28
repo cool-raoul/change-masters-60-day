@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { NieuwGesprekKnop } from "@/components/coach/NieuwGesprekKnop";
 import { GesprekkenLijst } from "@/components/coach/GesprekkenLijst";
@@ -5,10 +6,44 @@ import { ProductadviesAlgemeenKnop } from "@/components/coach/ProductadviesAlgem
 import { productadviesBeschikbaar } from "@/lib/features/productadvies";
 import { getServerTaal, v } from "@/lib/i18n/server";
 
-export default async function CoachPagina() {
+export default async function CoachPagina({
+  searchParams,
+}: {
+  searchParams: Promise<{ prospect?: string }>;
+}) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
+
+  // Als ?prospect=ID in de URL staat (klik vanaf prospect-kaart): start
+  // automatisch een nieuw coach-gesprek met die prospect als context. Zo hoeft
+  // de member niet opnieuw te selecteren — de mentor weet direct over wie het
+  // gaat. We checken eerst of de prospect bestaat en van deze member is.
+  const sp = await searchParams;
+  const prospectIdParam = sp.prospect;
+  if (prospectIdParam) {
+    const { data: prospectVoor } = await supabase
+      .from("prospects")
+      .select("id, volledige_naam")
+      .eq("id", prospectIdParam)
+      .eq("user_id", user.id)
+      .maybeSingle();
+    if (prospectVoor) {
+      const { data: nieuw } = await supabase
+        .from("ai_gesprekken")
+        .insert({
+          user_id: user.id,
+          prospect_id: prospectVoor.id,
+          titel: `Over ${prospectVoor.volledige_naam}`,
+          berichten: [],
+        })
+        .select("id")
+        .single();
+      if (nieuw?.id) {
+        redirect(`/coach/${nieuw.id}`);
+      }
+    }
+  }
 
   const taal = await getServerTaal();
 

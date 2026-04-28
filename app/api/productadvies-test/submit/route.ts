@@ -81,12 +81,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (test.status === "ingevuld") {
-      return NextResponse.json(
-        { error: "Deze test is al ingevuld" },
-        { status: 409 },
-      );
-    }
+    // Eerder blokkeerden we hier op status='ingevuld'. Bewust niet meer:
+    // de prospect mag de vragenlijst opnieuw invullen totdat hij/zij hem
+    // definitief naar de member doorstuurt. Bij elke nieuwe submit
+    // overschrijft de uitslag de vorige op DEZELFDE rij — dezelfde token
+    // blijft, member krijgt automatisch de laatste versie te zien op de
+    // prospect-kaart (we sorteren op meest recente test).
+    const wasAlIngevuld = test.status === "ingevuld";
 
     // De trigger_60day wordt door de MEMBER ingesteld bij maak-aan, niet door
     // de prospect. We respecteren de bestaande waarde uit de DB i.p.v. de
@@ -133,6 +134,8 @@ export async function POST(req: NextRequest) {
     // Pipeline auto-update: alle pre-followup-fases verschuiven naar 'followup'
     // wanneer prospect de test heeft ingevuld. Niet harder dan dat — fases
     // ná followup (member, shopper, not_yet) blijven onaangetast.
+    // Bij re-submit (wasAlIngevuld) doen we geen pipeline-update of herinnering
+    // meer — die zijn al eerder afgehandeld.
     const PRE_FOLLOWUP_FASES = [
       "prospect",
       "uitgenodigd",
@@ -140,7 +143,7 @@ export async function POST(req: NextRequest) {
       "presentatie",
     ];
     let bestaandeIngezetTools: string[] = [];
-    if (test.prospect_id) {
+    if (test.prospect_id && !wasAlIngevuld) {
       const { data: prospect } = await supabase
         .from("prospects")
         .select("pipeline_fase, ingezette_tools")
@@ -178,7 +181,8 @@ export async function POST(req: NextRequest) {
 
     // Member-notificatie: maak een herinnering aan zodat member ziet dat
     // er een test ingevuld is en hij/zij contact kan opnemen met de prospect.
-    if (test.member_id && test.prospect_id) {
+    // Niet bij re-submit — anders krijgt member dubbele/triple herinneringen.
+    if (test.member_id && test.prospect_id && !wasAlIngevuld) {
       await supabase.from("herinneringen").insert({
         user_id: test.member_id,
         prospect_id: test.prospect_id,

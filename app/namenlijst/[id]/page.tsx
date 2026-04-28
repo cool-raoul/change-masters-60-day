@@ -12,12 +12,16 @@ import { IngezetteTools } from "@/components/namenlijst/IngezetteTools";
 import { DriewegGesprekInklapbaar } from "@/components/namenlijst/DriewegGesprek";
 import { ProspectVerwijderKnop } from "@/components/namenlijst/ProspectVerwijderKnop";
 import { CoachGesprekkenInklapbaar } from "@/components/namenlijst/CoachGesprekkenInklapbaar";
-import { ProductadviesKnop } from "@/components/namenlijst/ProductadviesKnop";
+// ProductadviesKnop is bewust niet meer in de kaart-header opgenomen om de
+// drukte rechtsboven te verminderen. Triggeren via /coach met prospect-context.
+// import { ProductadviesKnop } from "@/components/namenlijst/ProductadviesKnop";
 import { ProductadviesTestKnop } from "@/components/namenlijst/ProductadviesTestKnop";
 import { ActiefToggle } from "@/components/namenlijst/ActiefToggle";
 import { HerinneringenOpKaart } from "@/components/namenlijst/HerinneringenOpKaart";
 import { ProductBestellingenLijst } from "@/components/namenlijst/ProductBestellingenLijst";
-import { productadviesBeschikbaar } from "@/lib/features/productadvies";
+// productadviesBeschikbaar wordt gebruikt door de Coach (mentor); niet meer
+// nodig op deze pagina sinds de directe knop is verwijderd.
+// import { productadviesBeschikbaar } from "@/lib/features/productadvies";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { Locale } from "date-fns";
 
@@ -131,14 +135,18 @@ export default async function ProspectDetailPagina({
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="flex items-start justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/namenlijst" className="text-cm-white hover:text-cm-white">
+      {/* Header — naam BOVEN, knoppen verspreid daaronder zodat het rechts
+          niet meer een grote stapel wordt op smalle schermen. */}
+      <div className="space-y-3">
+        <div className="flex items-start gap-3">
+          <Link
+            href="/namenlijst"
+            className="text-cm-white hover:text-cm-white text-xl pt-1"
+          >
             ←
           </Link>
-          <div>
-            <h1 className="text-2xl font-display font-bold text-cm-white">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-2xl sm:text-3xl font-display font-bold text-cm-white break-words">
               {prospect.volledige_naam}
             </h1>
             <div className="flex items-center gap-2 mt-1 flex-wrap">
@@ -166,43 +174,44 @@ export default async function ProspectDetailPagina({
             </div>
           </div>
         </div>
-        <div className="flex gap-2 flex-wrap">
-          <Link href={`/coach?prospect=${id}`} className="btn-secondary text-sm">
-            🤖 {v("nav.coach", taal)}
-          </Link>
-          {productadviesBeschikbaar(eigenRol) && (
-            <ProductadviesKnop
+
+        {/* Actie-rij — links: ELEVA Mentor (hoofdactie). Rechts: vragenlijst-
+            chips + verwijder-prospect (secundair). De losse Productadvies-knop
+            is hieruit weggehaald: dat triggeren we voortaan via de Mentor zodat
+            de header rustiger wordt. */}
+        <div className="flex flex-wrap items-center justify-between gap-2 pl-9">
+          <div className="flex flex-wrap items-center gap-2">
+            <Link
+              href={`/coach?prospect=${id}`}
+              className="btn-secondary text-sm"
+            >
+              🤖 {v("nav.coach", taal)}
+            </Link>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <ProductadviesTestKnop
               prospectId={id}
               prospectNaam={prospect.volledige_naam}
-              userId={user.id}
-              notities={prospect.notities}
+              memberNaam={(eigenProfiel as any)?.full_name ?? "je member"}
+              bestaande={
+                productadviesTest
+                  ? {
+                      token: productadviesTest.token,
+                      status: productadviesTest.status as
+                        | "verstuurd"
+                        | "ingevuld"
+                        | "geen",
+                      trigger_60day: productadviesTest.trigger_60day,
+                      uitslag: productadviesTest.uitslag as any,
+                      ingevuld_op: productadviesTest.ingevuld_op,
+                      darmvragenlijst_uitslag:
+                        productadviesTest.darmvragenlijst_uitslag as any,
+                      darmvragenlijst_ingevuld_op:
+                        productadviesTest.darmvragenlijst_ingevuld_op,
+                    }
+                  : null
+              }
             />
-          )}
-          <ProductadviesTestKnop
-            prospectId={id}
-            prospectNaam={prospect.volledige_naam}
-            memberNaam={(eigenProfiel as any)?.full_name ?? "je member"}
-            bestaande={
-              productadviesTest
-                ? {
-                    token: productadviesTest.token,
-                    status: productadviesTest.status as
-                      | "verstuurd"
-                      | "ingevuld"
-                      | "geen",
-                    trigger_60day: productadviesTest.trigger_60day,
-                    uitslag: productadviesTest.uitslag as any,
-                    ingevuld_op: productadviesTest.ingevuld_op,
-                    darmvragenlijst_uitslag:
-                      productadviesTest.darmvragenlijst_uitslag as any,
-                    darmvragenlijst_ingevuld_op:
-                      productadviesTest.darmvragenlijst_ingevuld_op,
-                  }
-                : null
-            }
-          />
-          {/* Verwijder-knop opzij voor visuele scheiding van actie-knoppen */}
-          <div className="ml-2 pl-2 border-l border-cm-border">
             <ProspectVerwijderKnop
               prospectId={id}
               prospectNaam={prospect.volledige_naam}

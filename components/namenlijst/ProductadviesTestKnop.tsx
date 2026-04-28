@@ -134,10 +134,14 @@ export function ProductadviesTestKnop({
     );
   }
 
-  // Knop-tekst: eerste keer "Stuur vragenlijst", daarna "Deel link opnieuw"
-  // (de bestaande verstuurd-test wordt hergebruikt — geen nieuwe rij)
+  // Knop-tekst:
+  //   wilNieuwe (member klikte op refresh-icoon na een ingevulde test) →
+  //     "Vragenlijst opnieuw versturen" (nieuwe link, oude advies wordt
+  //     vervangen door de uitslag van deze nieuwe vragenlijst)
+  //   bestaande verstuurd → "Deel link opnieuw" (bestaande link delen)
+  //   geen test nog → "Stuur vragenlijst"
   const knopTekst = wilNieuwe
-    ? "Nieuwe vragenlijst maken"
+    ? "Vragenlijst opnieuw versturen"
     : bestaande?.status === "verstuurd"
       ? "Deel link opnieuw"
       : "Stuur vragenlijst";
@@ -210,8 +214,19 @@ export function ProductadviesTestKnop({
                     disabled={bezig}
                     className="w-full py-3 rounded-lg bg-cm-gold text-cm-bg font-semibold disabled:opacity-40"
                   >
-                    {bezig ? "Bezig..." : "Genereer vragenlijst-link"}
+                    {bezig
+                      ? "Bezig..."
+                      : wilNieuwe
+                        ? "Genereer nieuwe vragenlijst-link"
+                        : "Genereer vragenlijst-link"}
                   </button>
+                  {wilNieuwe && (
+                    <p className="text-xs text-gray-400 mt-2">
+                      Het oude advies blijft staan tot de prospect deze nieuwe
+                      vragenlijst invult — daarna wordt het overschreven door
+                      de nieuwste uitslag.
+                    </p>
+                  )}
 
                   {fout && (
                     <div className="text-xs text-red-400 bg-red-500/10 p-2 rounded">

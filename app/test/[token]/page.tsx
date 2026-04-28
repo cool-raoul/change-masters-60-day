@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Metadata } from "next";
 import { TestForm } from "./test-form";
@@ -103,11 +103,11 @@ export default async function TestPage({
   // vragenlijst start. We tonen een aparte naam-form.
   const isOpenTemplate = !!test.is_open_template;
 
-  // Status 'ingevuld' alleen redirecten als het GEEN open template is
-  // (template wordt nooit zelf ingevuld, alleen kopieën).
-  if (test.status === "ingevuld" && !isOpenTemplate) {
-    redirect(`/test/${token}/resultaat`);
-  }
+  // Eerder redirecten we 'ingevuld' tests naar /resultaat. Bewust niet meer:
+  // de prospect mag de vragenlijst opnieuw invullen totdat hij/zij hem
+  // definitief naar de member doorstuurt. Bij elke nieuwe submit overschrijft
+  // de uitslag de vorige op DEZELFDE rij. Vanaf de resultaatpagina staat een
+  // 'opnieuw invullen'-knop die hier terugbrengt.
 
   // Prospect-naam apart ophalen
   let prospectNaam: string | null = null;

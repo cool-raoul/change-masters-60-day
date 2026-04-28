@@ -79,14 +79,28 @@ export function PakketAccordionCard({
               {pakket.gratisVerzending ? "gratis verzending" : "+ verzending"}
             </div>
           </div>
-          <span
-            className={`text-gray-400 transition-transform ${
-              open ? "rotate-180" : ""
+          {/* Duidelijk klikbaar uitklap-icoon: rondje met chevron erin, groot
+              genoeg om als affordance te werken. Op brede schermen ook een
+              tekst-hint ('Bekijk' / 'Verberg'). */}
+          <div
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-semibold transition-colors ${
+              isAanbevolen
+                ? "bg-emerald-600 text-white"
+                : "bg-gray-100 text-gray-700"
             }`}
             aria-hidden
           >
-            ▾
-          </span>
+            <span className="hidden sm:inline">
+              {open ? "Verberg" : "Bekijk"}
+            </span>
+            <span
+              className={`transition-transform text-base leading-none ${
+                open ? "rotate-180" : ""
+              }`}
+            >
+              ▾
+            </span>
+          </div>
         </div>
       </button>
 
