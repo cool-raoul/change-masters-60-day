@@ -25,6 +25,11 @@ type Test = {
     niveau: string;
   } | null;
   ingevuld_op?: string | null;
+  darmvragenlijst_uitslag?: {
+    bucket: "geen" | "basis" | "plus";
+    bucket_label: string;
+  } | null;
+  darmvragenlijst_ingevuld_op?: string | null;
 };
 
 export function ProductadviesTestKnop({
@@ -73,7 +78,7 @@ export function ProductadviesTestKnop({
   }
 
   // Als er al een ingevulde vragenlijst is: rij van kleine knoppen
-  // (bekijk uitslag + nieuwe versturen)
+  // (bekijk uitslag + darmvragenlijst-status + nieuwe versturen)
   if (bestaande?.status === "ingevuld" && bestaande.uitslag) {
     return (
       <div className="flex gap-1 flex-wrap">
@@ -86,6 +91,17 @@ export function ProductadviesTestKnop({
         >
           ✓ {bestaande.uitslag.categorieLabel} {bestaande.uitslag.niveau}
         </a>
+        {bestaande.darmvragenlijst_uitslag && (
+          <a
+            href={`/test/${bestaande.token}/darm-keuze`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-secondary text-sm"
+            title={`Darmvragenlijst ingevuld op ${bestaande.darmvragenlijst_ingevuld_op?.split("T")[0]}`}
+          >
+            🌿 {bestaande.darmvragenlijst_uitslag.bucket_label}
+          </a>
+        )}
         <button
           onClick={() => {
             setToken(null);

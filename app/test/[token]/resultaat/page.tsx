@@ -113,6 +113,17 @@ export default async function ResultaatPage({
     fallback: boolean;
   };
 
+  // Darmvragenlijst-uitslag (optioneel) — als de prospect die al ingevuld
+  // heeft, tonen we hier zijn bucket terug zodat hij niet opnieuw klikt.
+  const { data: testFull } = await supabase
+    .from("productadvies_tests")
+    .select("darmvragenlijst_uitslag")
+    .eq("id", test.id)
+    .single();
+  const darmUitslag = (testFull as any)?.darmvragenlijst_uitslag as
+    | { bucket: "geen" | "basis" | "plus"; bucket_label: string }
+    | null;
+
   const trigger60day = test.trigger_60day as "ja" | "nee" | "weet_niet";
   const is60Day = trigger60day === "ja";
 
@@ -319,6 +330,27 @@ export default async function ResultaatPage({
                     {opstartPakket.levensstijlAanpassing.split(".")[0]}.
                   </div>
                 </div>
+                {uitslag.opstartSuggestie === "darmen-in-balans" && (
+                  darmUitslag ? (
+                    <div className="mt-3 bg-amber-100 border border-amber-200 rounded-lg p-3 text-sm text-amber-900">
+                      <strong>Vervolgvragenlijst ingevuld:</strong>{" "}
+                      {darmUitslag.bucket_label}.{" "}
+                      <Link
+                        href={`/test/${token}/darm-keuze`}
+                        className="underline hover:no-underline"
+                      >
+                        Bekijk uitkomst
+                      </Link>
+                    </div>
+                  ) : (
+                    <Link
+                      href={`/test/${token}/darm-keuze`}
+                      className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-amber-300 text-amber-900 text-sm font-semibold hover:bg-amber-50"
+                    >
+                      Bepaal: basis of plus? (3 min) →
+                    </Link>
+                  )
+                )}
               </div>
             </div>
           </section>
@@ -361,10 +393,28 @@ export default async function ResultaatPage({
                     {algemeenDarmPakket.duurDagen} dagen
                   </div>
                 </div>
+                {darmUitslag ? (
+                  <div className="mt-3 bg-emerald-100 border border-emerald-200 rounded-lg p-3 text-sm text-emerald-900">
+                    <strong>Je hebt de vervolgvragenlijst al ingevuld:</strong>{" "}
+                    {darmUitslag.bucket_label}.{" "}
+                    <Link
+                      href={`/test/${token}/darm-keuze`}
+                      className="underline hover:no-underline"
+                    >
+                      Bekijk uitkomst
+                    </Link>
+                  </div>
+                ) : (
+                  <Link
+                    href={`/test/${token}/darm-keuze`}
+                    className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-emerald-300 text-emerald-800 text-sm font-semibold hover:bg-emerald-50"
+                  >
+                    Doe de korte vervolgvragenlijst (3 min) →
+                  </Link>
+                )}
                 <p className="text-xs text-emerald-800 mt-3 italic">
-                  Wil je weten of dit iets voor jou is? Vraag {memberNaam} om
-                  mee te kijken — er is een korte vervolgvragenlijst die helpt
-                  bepalen welk darmprogramma het beste past.
+                  De vervolgvragenlijst (15 vragen) helpt bepalen of een
+                  darmprogramma op dit moment past — en zo ja, basis of plus.
                 </p>
               </div>
             </div>

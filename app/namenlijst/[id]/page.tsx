@@ -87,7 +87,7 @@ export default async function ProspectDetailPagina({
     // Meest recente productadvies-test voor deze prospect
     supabase
       .from("productadvies_tests")
-      .select("token, status, trigger_60day, uitslag, ingevuld_op")
+      .select("token, status, trigger_60day, uitslag, ingevuld_op, darmvragenlijst_uitslag, darmvragenlijst_ingevuld_op")
       .eq("prospect_id", id)
       .eq("member_id", user.id)
       .order("created_at", { ascending: false })
@@ -193,6 +193,10 @@ export default async function ProspectDetailPagina({
                     trigger_60day: productadviesTest.trigger_60day,
                     uitslag: productadviesTest.uitslag as any,
                     ingevuld_op: productadviesTest.ingevuld_op,
+                    darmvragenlijst_uitslag:
+                      productadviesTest.darmvragenlijst_uitslag as any,
+                    darmvragenlijst_ingevuld_op:
+                      productadviesTest.darmvragenlijst_ingevuld_op,
                   }
                 : null
             }

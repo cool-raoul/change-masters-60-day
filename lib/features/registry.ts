@@ -157,6 +157,22 @@ export const FEATURES: Feature[] = [
     inRondleiding: true,
   },
   {
+    id: "productadvies-vragenlijst",
+    emoji: "📋",
+    titel: "Productadvies-vragenlijst — voor je prospect",
+    lead: "Eén link delen. Prospect doet de vragenlijst. Jij krijgt zijn advies op zijn kaart.",
+    bullets: [
+      "Stuur per persoon vanaf de prospect-kaart, of deel je hergebruikbare open link op social media",
+      "Prospect doet 30 uitspraken (~3 minuten) en krijgt een persoonlijk pakket-advies",
+      "Optionele vervolgvragenlijst (15 vragen) bepaalt of een darmprogramma past — basis of plus",
+      "Pipeline schuift automatisch door en je krijgt een herinnering om op te volgen",
+      "Privacy: alleen de uitkomst belandt op de kaart, geen individuele antwoorden",
+    ],
+    wow: "Je prospect ontdekt zelf welk pakket bij 'm past — jij hoeft niet te verkopen, alleen samen kijken.",
+    volgorde: 35,
+    inRondleiding: true,
+  },
+  {
     id: "premium",
     emoji: "🌟",
     titel: "Premium — €2/mnd, onbeperkt alles",
