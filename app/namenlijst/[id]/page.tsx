@@ -16,6 +16,7 @@ import { CoachGesprekkenInklapbaar } from "@/components/namenlijst/CoachGesprekk
 // drukte rechtsboven te verminderen. Triggeren via /coach met prospect-context.
 // import { ProductadviesKnop } from "@/components/namenlijst/ProductadviesKnop";
 import { ProductadviesTestKnop } from "@/components/namenlijst/ProductadviesTestKnop";
+import { RealtimeProspectsRefresh } from "@/components/namenlijst/RealtimeProspectsRefresh";
 import { ActiefToggle } from "@/components/namenlijst/ActiefToggle";
 import { HerinneringenOpKaart } from "@/components/namenlijst/HerinneringenOpKaart";
 import { ProductBestellingenLijst } from "@/components/namenlijst/ProductBestellingenLijst";
@@ -135,6 +136,10 @@ export default async function ProspectDetailPagina({
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
+      {/* Live: zorgt dat wijzigingen vanuit voice/form/etc. direct zichtbaar
+          zijn op deze pagina zonder dat de user moet refreshen. */}
+      <RealtimeProspectsRefresh userId={user.id} />
+
       {/* Header — naam BOVEN, knoppen verspreid daaronder zodat het rechts
           niet meer een grote stapel wordt op smalle schermen. */}
       <div className="space-y-3">

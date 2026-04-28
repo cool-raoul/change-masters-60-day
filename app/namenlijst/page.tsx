@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Prospect } from "@/lib/supabase/types";
 import { NamenlijstToggle } from "@/components/namenlijst/NamenlijstToggle";
 import { OpenTestlinkKnop } from "@/components/namenlijst/OpenTestlinkKnop";
+import { RealtimeProspectsRefresh } from "@/components/namenlijst/RealtimeProspectsRefresh";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import Link from "next/link";
 
@@ -83,6 +84,11 @@ export default async function NamenlijstPagina({
 
   return (
     <div className="space-y-6">
+      {/* Live: abonneer op wijzigingen aan prospects/herinneringen/etc en
+          triggert auto-refresh wanneer er iets verandert (voice, form,
+          drag-drop, productadvies-submit, etc.) */}
+      <RealtimeProspectsRefresh userId={user.id} />
+
       {/* Banner: terug naar setup */}
       {vanuitSetup && (
         <Link

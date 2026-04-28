@@ -655,6 +655,7 @@ export function ChatVenster({
                       prospectNaam={prospect.volledige_naam}
                       userId={userId}
                       notities={prospectNotities ?? null}
+                      huidigGesprekId={gesprekId}
                     />
                   </div>
                   <div className="bg-cm-surface-2 border-2 border-cm-gold/40 rounded-xl p-4 flex flex-col items-center gap-2 text-center">
