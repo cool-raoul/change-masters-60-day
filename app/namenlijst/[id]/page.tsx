@@ -13,6 +13,7 @@ import { DriewegGesprekInklapbaar } from "@/components/namenlijst/DriewegGesprek
 import { ProspectVerwijderKnop } from "@/components/namenlijst/ProspectVerwijderKnop";
 import { CoachGesprekkenInklapbaar } from "@/components/namenlijst/CoachGesprekkenInklapbaar";
 import { ProductadviesKnop } from "@/components/namenlijst/ProductadviesKnop";
+import { ProductadviesTestKnop } from "@/components/namenlijst/ProductadviesTestKnop";
 import { ActiefToggle } from "@/components/namenlijst/ActiefToggle";
 import { HerinneringenOpKaart } from "@/components/namenlijst/HerinneringenOpKaart";
 import { ProductBestellingenLijst } from "@/components/namenlijst/ProductBestellingenLijst";
@@ -45,6 +46,7 @@ export default async function ProspectDetailPagina({
     { data: coachGesprekken },
     { data: eigenProfiel },
     { data: herinneringen },
+    { data: productadviesTest },
   ] = await Promise.all([
     supabase
       .from("prospects")
@@ -70,7 +72,7 @@ export default async function ProspectDetailPagina({
       .order("updated_at", { ascending: false }),
     supabase
       .from("profiles")
-      .select("sponsor_id, role")
+      .select("sponsor_id, role, full_name")
       .eq("id", user.id)
       .single(),
     // Openstaande herinneringen voor deze prospect — toont ze op de kaart
@@ -82,6 +84,15 @@ export default async function ProspectDetailPagina({
       .eq("user_id", user.id)
       .eq("voltooid", false)
       .order("vervaldatum", { ascending: true }),
+    // Meest recente productadvies-test voor deze prospect
+    supabase
+      .from("productadvies_tests")
+      .select("token, status, trigger_60day, uitslag, ingevuld_op")
+      .eq("prospect_id", id)
+      .eq("member_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle(),
   ]);
 
   if (!prospect) notFound();
@@ -167,6 +178,25 @@ export default async function ProspectDetailPagina({
               notities={prospect.notities}
             />
           )}
+          <ProductadviesTestKnop
+            prospectId={id}
+            prospectNaam={prospect.volledige_naam}
+            memberNaam={(eigenProfiel as any)?.full_name ?? "je member"}
+            bestaande={
+              productadviesTest
+                ? {
+                    token: productadviesTest.token,
+                    status: productadviesTest.status as
+                      | "verstuurd"
+                      | "ingevuld"
+                      | "geen",
+                    trigger_60day: productadviesTest.trigger_60day,
+                    uitslag: productadviesTest.uitslag as any,
+                    ingevuld_op: productadviesTest.ingevuld_op,
+                  }
+                : null
+            }
+          />
           <ProspectVerwijderKnop
             prospectId={id}
             prospectNaam={prospect.volledige_naam}

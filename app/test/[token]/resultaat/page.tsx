@@ -31,10 +31,14 @@ export const dynamic = "force-dynamic";
 
 export default async function ResultaatPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ token: string }>;
+  searchParams: Promise<{ debug?: string }>;
 }) {
   const { token } = await params;
+  const sp = await searchParams;
+  const debug = sp.debug === "1";
   const supabase = createAdminClient();
 
   const { data: test, error } = await supabase
@@ -72,7 +76,9 @@ export default async function ResultaatPage({
     prospectNaam = prospect?.volledige_naam ?? null;
   }
 
-  // Member-naam apart ophalen
+  // Member-naam apart ophalen. Telefoon zit (nog) niet op profiles, dus
+  // de WhatsApp-knop opent zonder ingebakken nummer — prospect zoekt zijn
+  // member dan zelf op via zijn eigen telefoon-contacten of inboundkanaal.
   let memberNaam = "je member";
   if (test.member_id) {
     const { data: profile } = await supabase
@@ -339,13 +345,18 @@ export default async function ResultaatPage({
             Soms helpt het om je advies eerst even door te spreken voordat je
             iets bestelt. {memberNaam} kijkt graag persoonlijk met je mee.
           </p>
-          <button
-            type="button"
-            disabled
-            className="w-full py-3 rounded-lg bg-gray-100 text-gray-500 font-medium cursor-not-allowed"
+          {/* WhatsApp share link zonder vooraf-ingebakken telefoonnummer.
+              Prospect kiest zelf de juiste contact uit zijn telefoonboek. */}
+          <a
+            href={`https://wa.me/?text=${encodeURIComponent(
+              `Hé ${memberNaam.split(" ")[0]}, ik heb net de productadvies-test gedaan. Mijn uitkomst is "${uitslag.categorieLabel} ${uitslag.niveau}". Kunnen we hier even samen naar kijken?`,
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full text-center py-3 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700"
           >
-            WhatsApp {memberNaam} (komt in dag 3)
-          </button>
+            💬 Open WhatsApp en deel met {memberNaam}
+          </a>
         </section>
 
         {/* Disclaimer */}

@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
     // Test ophalen op basis van token
     const { data: test, error: fetchErr } = await supabase
       .from("productadvies_tests")
-      .select("id, status")
+      .select("id, status, trigger_60day, member_id, prospect_id")
       .eq("token", token)
       .single();
 
@@ -88,9 +88,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // De trigger_60day wordt door de MEMBER ingesteld bij maak-aan, niet door
+    // de prospect. We respecteren de bestaande waarde uit de DB i.p.v. de
+    // (nu hardcoded) waarde uit de prospect-form.
+    const echteTrigger: Trigger60Day =
+      (test.trigger_60day as Trigger60Day) || trigger60day;
+
     // Bereken uitslag in geheugen — antwoorden gaan NIET naar DB
     const antwoorden: ZelftestAntwoorden = {
-      trigger60day,
+      trigger60day: echteTrigger,
       geslacht,
       avg_akkoord,
       responses,
@@ -101,7 +107,6 @@ export async function POST(req: NextRequest) {
     const { error: updateErr } = await supabase
       .from("productadvies_tests")
       .update({
-        trigger_60day: trigger60day,
         geslacht,
         avg_akkoord: true,
         uitslag: {
@@ -123,6 +128,38 @@ export async function POST(req: NextRequest) {
         { error: "Opslaan van uitslag mislukt" },
         { status: 500 },
       );
+    }
+
+    // Pipeline auto-update: prospect die nog op 'prospect'-fase staat
+    // verschuiven naar 'followup' wanneer ze de test hebben ingevuld.
+    // Niet harder dan dat — laat fase-overgangen voor de rest aan de member.
+    if (test.prospect_id) {
+      const { data: prospect } = await supabase
+        .from("prospects")
+        .select("pipeline_fase")
+        .eq("id", test.prospect_id)
+        .single();
+      if (prospect?.pipeline_fase === "prospect") {
+        await supabase
+          .from("prospects")
+          .update({ pipeline_fase: "followup" })
+          .eq("id", test.prospect_id);
+      }
+    }
+
+    // Member-notificatie: maak een herinnering aan zodat member ziet dat
+    // er een test ingevuld is en hij/zij contact kan opnemen met de prospect.
+    if (test.member_id && test.prospect_id) {
+      await supabase.from("herinneringen").insert({
+        user_id: test.member_id,
+        prospect_id: test.prospect_id,
+        titel: `Productadvies-test ingevuld: ${uitslag.categorieLabel}`,
+        type: "followup",
+        vervaldatum: new Date(Date.now() + 24 * 60 * 60 * 1000)
+          .toISOString()
+          .split("T")[0],
+        voltooid: false,
+      });
     }
 
     return NextResponse.json({ success: true, redirect: `/test/${token}/resultaat` });
