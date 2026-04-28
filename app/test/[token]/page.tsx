@@ -1,18 +1,83 @@
 import { notFound, redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
+import type { Metadata } from "next";
 import { TestForm } from "./test-form";
 
 // ============================================================
-// Publieke productadvies-test pagina (geen auth nodig)
+// Publieke productadvies-vragenlijst pagina (geen auth nodig)
 // URL: /test/[token]
 //
 // Server component:
 //   - laadt test + prospect-naam + member-naam op token
 //   - bij status='ingevuld' redirect naar /resultaat
 //   - rendert client form met uitspraken
+//
+// METADATA: bewust GEEN ELEVA-branding voor de prospect. WhatsApp,
+// Telegram, etc. pakken deze metadata als link-preview en het zou raar
+// voelen voor de prospect om "ELEVA / aanbevelingsmarketing systeem"
+// te zien — die context is voor members, niet voor prospects.
 // ============================================================
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ token: string }>;
+}): Promise<Metadata> {
+  const { token } = await params;
+  const supabase = createAdminClient();
+  const { data: test } = await supabase
+    .from("productadvies_tests")
+    .select("prospect_id, member_id")
+    .eq("token", token)
+    .maybeSingle();
+
+  let prospectVoornaam: string | null = null;
+  let memberVoornaam = "iemand";
+  if (test?.prospect_id) {
+    const { data: prospect } = await supabase
+      .from("prospects")
+      .select("volledige_naam")
+      .eq("id", test.prospect_id)
+      .single();
+    prospectVoornaam = prospect?.volledige_naam?.split(" ")[0] ?? null;
+  }
+  if (test?.member_id) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", test.member_id)
+      .single();
+    memberVoornaam = profile?.full_name?.split(" ")[0] ?? "iemand";
+  }
+
+  const titel = prospectVoornaam
+    ? `Een korte vragenlijst voor ${prospectVoornaam}`
+    : "Een korte vragenlijst voor jou";
+  const beschrijving = `${memberVoornaam} heeft een persoonlijke vragenlijst voor je klaargezet. Duurt zo'n 3 minuten op je telefoon.`;
+
+  return {
+    title: titel,
+    description: beschrijving,
+    // GEEN icons of openGraph image — anders pakt WhatsApp de default
+    // ELEVA-branding van de root-layout.
+    openGraph: {
+      title: titel,
+      description: beschrijving,
+      images: [],
+    },
+    twitter: {
+      card: "summary",
+      title: titel,
+      description: beschrijving,
+    },
+    icons: {
+      icon: undefined,
+      apple: undefined,
+    },
+  };
+}
 
 export default async function TestPage({
   params,

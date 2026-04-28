@@ -98,7 +98,7 @@ export function TestForm({
         </h2>
         <p className="text-sm text-gray-600 mb-4">
           We gebruiken dit om de juiste producten voor jou te selecteren. Voor
-          vrouwen en mannen zijn er soms andere ondersteuningen.
+          vrouwen en mannen zijn er andere ondersteunings-opties.
         </p>
         <div className="space-y-2">
           <KeuzeKnop
@@ -110,12 +110,6 @@ export function TestForm({
             label="Man"
             checked={geslacht === "man"}
             onClick={() => setGeslacht("man")}
-          />
-          <KeuzeKnop
-            label="Zeg ik liever niet"
-            beschrijving="Dan volgen we de standaard productselectie."
-            checked={geslacht === "zeg-niet"}
-            onClick={() => setGeslacht("zeg-niet")}
           />
         </div>
         <Volgende enabled={!!geslacht} onClick={() => setStap("uitspraken")} />
