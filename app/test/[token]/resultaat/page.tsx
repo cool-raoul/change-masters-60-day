@@ -11,6 +11,7 @@ import {
 import { BEWUSTWORDING } from "@/lib/zelftest/bewustwording";
 import { FASEN_UITLEG } from "@/lib/zelftest/fasen-uitleg";
 import { DeelKnoppen } from "@/components/shared/DeelKnoppen";
+import { PakketAccordionCard } from "./PakketAccordionCard";
 
 // ============================================================
 // Resultaatpagina van de productadvies-test
@@ -193,18 +194,19 @@ export default async function ResultaatPage({
           </div>
         )}
 
-        {/* Header */}
+        {/* Header — categorie groot/dominant, intro klein */}
         <header className="mb-6 text-center">
-          <div className="text-emerald-600 text-sm font-medium uppercase tracking-wider">
+          <div className="text-emerald-600 text-xs font-semibold uppercase tracking-wider mb-1">
             Jouw advies
           </div>
-          <h1 className="mt-2 text-3xl sm:text-4xl font-bold text-gray-900">
-            {prospectNaam ? `${prospectNaam.split(" ")[0]}, dit zien we voor jou` : "Dit zien we voor jou"}
-          </h1>
-          <p className="mt-3 text-gray-600">
-            Op basis van wat je aangaf, ligt jouw zwaartepunt bij{" "}
-            <strong>{uitslag.categorieLabel}</strong>.
+          <p className="text-base text-gray-600 mb-2">
+            {prospectNaam
+              ? `${prospectNaam.split(" ")[0]}, op basis van wat je aangaf ligt je zwaartepunt bij:`
+              : "Op basis van wat je aangaf ligt je zwaartepunt bij:"}
           </p>
+          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight">
+            {uitslag.categorieLabel}
+          </h1>
         </header>
 
         {/* Bewustwording */}
@@ -310,9 +312,11 @@ export default async function ResultaatPage({
           <section className="bg-amber-50 border border-amber-200 rounded-2xl p-5 sm:p-6 mb-5">
             <div className="flex items-start gap-3">
               <span className="text-2xl">💡</span>
-              <div>
+              <div className="flex-1">
                 <h2 className="text-lg font-semibold text-amber-900 mb-2">
-                  Bijzonder advies voor jou
+                  {uitslag.opstartSuggestie === "holistic-reset"
+                    ? "Een krachtige eerste stap voor jou"
+                    : "Een goede start voor jouw lichaam"}
                 </h2>
                 <p className="text-sm text-amber-900 mb-3">
                   {uitslag.opstartSuggestie === "holistic-reset"
@@ -324,32 +328,42 @@ export default async function ResultaatPage({
                     {opstartPakket.naam}
                   </div>
                   <div className="text-sm text-gray-600 mt-1">
-                    €{opstartPakket.totaalPrijs.toFixed(2)} ASAP · {opstartPakket.totaalIP} IP · {opstartPakket.duurDagen} dagen
+                    €{opstartPakket.totaalPrijs.toFixed(2)} · {opstartPakket.duurDagen} dagen
                   </div>
                   <div className="text-xs text-gray-500 mt-2 italic">
                     {opstartPakket.levensstijlAanpassing.split(".")[0]}.
                   </div>
                 </div>
                 {uitslag.opstartSuggestie === "darmen-in-balans" && (
-                  darmUitslag ? (
-                    <div className="mt-3 bg-amber-100 border border-amber-200 rounded-lg p-3 text-sm text-amber-900">
-                      <strong>Vervolgvragenlijst ingevuld:</strong>{" "}
-                      {darmUitslag.bucket_label}.{" "}
+                  <div className="mt-4 bg-white rounded-lg border-2 border-amber-300 p-4">
+                    <div className="text-sm font-semibold text-amber-900 mb-1">
+                      Welk programma past bij jou?
+                    </div>
+                    <p className="text-sm text-gray-700 mb-3">
+                      Er zijn twee Darmen in Balans-programma's: <strong>basis</strong>{" "}
+                      (16 dagen) en <strong>plus</strong> (uitgebreider). Doe de
+                      korte vervolg-check om te zien welke voor jou het beste past.
+                    </p>
+                    {darmUitslag ? (
+                      <div className="bg-amber-100 border border-amber-200 rounded-lg p-3 text-sm text-amber-900">
+                        <strong>✓ Check ingevuld:</strong> {darmUitslag.bucket_label}
+                        .{" "}
+                        <Link
+                          href={`/test/${token}/darm-keuze`}
+                          className="underline hover:no-underline font-semibold"
+                        >
+                          Bekijk uitkomst
+                        </Link>
+                      </div>
+                    ) : (
                       <Link
                         href={`/test/${token}/darm-keuze`}
-                        className="underline hover:no-underline"
+                        className="block w-full text-center py-3 rounded-lg bg-amber-600 text-white font-semibold hover:bg-amber-700"
                       >
-                        Bekijk uitkomst
+                        Doe de vervolg-check (15 vragen · 3 min)
                       </Link>
-                    </div>
-                  ) : (
-                    <Link
-                      href={`/test/${token}/darm-keuze`}
-                      className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-amber-300 text-amber-900 text-sm font-semibold hover:bg-amber-50"
-                    >
-                      Bepaal: basis of plus? (3 min) →
-                    </Link>
-                  )
+                    )}
+                  </div>
                 )}
               </div>
             </div>
@@ -383,39 +397,36 @@ export default async function ResultaatPage({
                   {" "}als je het overweegt. Eventueel kan dat ook prima later, een
                   paar maanden na de start van je pakket.
                 </p>
-                <div className="bg-white rounded-lg p-3 border border-emerald-100">
-                  <div className="font-semibold text-gray-900">
-                    {algemeenDarmPakket.naam}
+                <div className="mt-4 bg-white rounded-lg border-2 border-emerald-300 p-4">
+                  <div className="text-sm font-semibold text-emerald-900 mb-1">
+                    Welk programma past bij jou?
                   </div>
-                  <div className="text-sm text-gray-600 mt-1">
-                    €{algemeenDarmPakket.totaalPrijs.toFixed(2)} ASAP ·{" "}
-                    {algemeenDarmPakket.totaalIP} IP ·{" "}
-                    {algemeenDarmPakket.duurDagen} dagen
-                  </div>
-                </div>
-                {darmUitslag ? (
-                  <div className="mt-3 bg-emerald-100 border border-emerald-200 rounded-lg p-3 text-sm text-emerald-900">
-                    <strong>Je hebt de vervolgvragenlijst al ingevuld:</strong>{" "}
-                    {darmUitslag.bucket_label}.{" "}
+                  <p className="text-sm text-gray-700 mb-3">
+                    Er zijn twee Darmen in Balans-programma's:{" "}
+                    <strong>basis</strong> (16 dagen) en <strong>plus</strong>{" "}
+                    (uitgebreider). Doe de korte vervolg-check om te zien welke
+                    voor jou het beste past.
+                  </p>
+                  {darmUitslag ? (
+                    <div className="bg-emerald-100 border border-emerald-200 rounded-lg p-3 text-sm text-emerald-900">
+                      <strong>✓ Check ingevuld:</strong>{" "}
+                      {darmUitslag.bucket_label}.{" "}
+                      <Link
+                        href={`/test/${token}/darm-keuze`}
+                        className="underline hover:no-underline font-semibold"
+                      >
+                        Bekijk uitkomst
+                      </Link>
+                    </div>
+                  ) : (
                     <Link
                       href={`/test/${token}/darm-keuze`}
-                      className="underline hover:no-underline"
+                      className="block w-full text-center py-3 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700"
                     >
-                      Bekijk uitkomst
+                      Doe de vervolg-check (15 vragen · 3 min)
                     </Link>
-                  </div>
-                ) : (
-                  <Link
-                    href={`/test/${token}/darm-keuze`}
-                    className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-emerald-300 text-emerald-800 text-sm font-semibold hover:bg-emerald-50"
-                  >
-                    Doe de korte vervolgvragenlijst (3 min) →
-                  </Link>
-                )}
-                <p className="text-xs text-emerald-800 mt-3 italic">
-                  De vervolgvragenlijst (15 vragen) helpt bepalen of een
-                  darmprogramma op dit moment past — en zo ja, basis of plus.
-                </p>
+                  )}
+                </div>
               </div>
             </div>
           </section>
@@ -432,9 +443,9 @@ export default async function ResultaatPage({
           </h2>
           {is60Day ? (
             <p className="text-sm text-gray-600 mb-4">
-              Voor jouw aanpak werken we vanuit een fundament van ~200 IP. Dat
-              levert gratis verzending op én een complete stack om in de
-              komende weken resultaat te zien.
+              Voor jouw aanpak werken we met een complete stack zodat je in de
+              komende weken resultaat ziet. Tik op een kaart om te zien wat
+              erin zit.
             </p>
           ) : afvallenLeefstijlEerst ? (
             <p className="text-sm text-gray-600 mb-4">
@@ -442,36 +453,41 @@ export default async function ResultaatPage({
               aanpassingen aan de slag? Dan zijn dit drie pakketten die je
               metabolisme én bloedsuiker dagelijks ondersteunen, met{" "}
               <strong>{niveauLabel(aanbevolenNiveau)}</strong> als beste match
-              voor wat je aangaf. Het effect is geleidelijker dan met de
-              Holistic Reset, maar wel zonder grote leefstijl-aanpassing.
+              voor wat je aangaf. Tik op een kaart om te zien wat erin zit.
             </p>
           ) : (
             <p className="text-sm text-gray-600 mb-4">
-              Drie niveaus om uit te kiezen. <strong>{niveauLabel(aanbevolenNiveau)}</strong>{" "}
-              past het beste bij wat je aangaf, maar je kiest zelf wat past bij
-              jouw situatie. Een niveau hoger of lager kan altijd, en je kunt
-              later switchen.
+              Drie niveaus om uit te kiezen.{" "}
+              <strong>{niveauLabel(aanbevolenNiveau)}</strong> past het beste
+              bij wat je aangaf, maar je kiest zelf wat past bij jouw situatie.
+              Tik op een kaart om te zien wat erin zit.
             </p>
           )}
 
-          <div className="space-y-4">
+          <div className="space-y-3">
             {gesorteerdePakketten.map((p) => {
               const isAanbevolen = p.niveau === aanbevolenNiveau;
               const link = bestellinksMap.get(p.categorie + "-" + p.niveau);
-              // 60-day route: alleen Complete prominent, Plus en Essential klein
-              // Reguliere route: Essential klein (voor wie lichter wil starten),
-              // Plus en Complete groot (Plus is de aanbevolen middenkeuze)
-              const klein = is60Day
-                ? p.niveau !== "complete"
-                : p.niveau === "essential";
               return (
-                <PakketCard
+                <PakketAccordionCard
                   key={p.niveau}
-                  pakket={p}
+                  pakket={{
+                    niveau: p.niveau,
+                    niveauLabel: niveauLabel(p.niveau),
+                    categorieLabel: p.categorieLabel,
+                    producten: p.producten.map((pr) => ({
+                      naam: pr.naam,
+                      asapPrijs: pr.asapPrijs,
+                    })),
+                    totaalPrijs: p.totaalPrijs,
+                    gratisVerzending: p.gratisVerzending,
+                    waarom: p.waarom,
+                    notitie: p.notitie,
+                  }}
                   isAanbevolen={isAanbevolen}
-                  bestellink={link}
+                  bestellink={link as { url: string } | undefined}
                   memberNaam={memberNaam}
-                  klein={klein}
+                  defaultOpen={isAanbevolen}
                 />
               );
             })}
@@ -519,169 +535,4 @@ export default async function ResultaatPage({
 
 function niveauLabel(n: PakketNiveau): string {
   return n === "complete" ? "Complete" : n === "plus" ? "Plus" : "Essential";
-}
-
-// ============================================================
-// PakketCard
-// ============================================================
-
-function PakketCard({
-  pakket,
-  isAanbevolen,
-  bestellink,
-  memberNaam,
-  klein,
-}: {
-  pakket: {
-    naam?: string;
-    niveau: PakketNiveau;
-    categorieLabel: string;
-    producten: { naam: string; asapPrijs: number; ip: number }[];
-    totaalPrijs: number;
-    totaalIP: number;
-    gratisVerzending: boolean;
-    waarom: string;
-    resultaatTijdlijn?: string;
-    notitie?: string;
-  };
-  isAanbevolen: boolean;
-  bestellink: any;
-  memberNaam: string;
-  klein?: boolean;
-}) {
-  if (klein) {
-    const isEssential = pakket.niveau === "essential";
-    return (
-      <div className="bg-white rounded-xl border border-gray-200 p-4">
-        <div className="flex items-baseline justify-between mb-2">
-          <div className="font-semibold text-gray-800">
-            {niveauLabel(pakket.niveau)}
-            <span className="text-gray-500 font-normal text-sm ml-2">
-              {pakket.categorieLabel}
-            </span>
-          </div>
-          <div className="text-sm font-medium text-gray-800 whitespace-nowrap ml-2">
-            €{pakket.totaalPrijs.toFixed(2)}
-            <span className="text-gray-500 font-normal ml-1">
-              · {pakket.totaalIP} IP
-            </span>
-          </div>
-        </div>
-
-        {/* Compacte producten-lijst — ook bij klein-variant zichtbaar */}
-        <div className="space-y-0.5 mb-3 mt-2">
-          {pakket.producten.map((pr, i) => (
-            <div
-              key={i}
-              className="flex justify-between text-xs gap-2"
-            >
-              <span className="text-gray-700 truncate">{pr.naam}</span>
-              <span className="text-gray-500 whitespace-nowrap">
-                €{pr.asapPrijs.toFixed(2)} · {pr.ip} IP
-              </span>
-            </div>
-          ))}
-        </div>
-
-        <p className="text-xs text-gray-600 italic">
-          {isEssential
-            ? "Voor wie lichter wil starten of een budget-vriendelijker instap zoekt."
-            : "Ook beschikbaar als alternatief."}
-        </p>
-        {bestellink ? (
-          <a
-            href={bestellink.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-3 block text-center py-2 rounded-md text-sm font-medium border border-gray-300 text-gray-700 hover:bg-gray-50"
-          >
-            Bestel deze variant via {memberNaam}
-          </a>
-        ) : (
-          <div className="mt-3 text-center text-xs text-gray-500">
-            Vraag {memberNaam} om de bestellink van deze variant
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  return (
-    <div
-      className={`rounded-2xl p-5 sm:p-6 border-2 ${
-        isAanbevolen
-          ? "border-emerald-500 bg-emerald-50"
-          : "border-gray-100 bg-white"
-      }`}
-    >
-      <div className="flex items-baseline justify-between mb-2">
-        <div>
-          <div className="text-xs uppercase tracking-wider text-gray-500 font-medium">
-            {niveauLabel(pakket.niveau)}
-            {isAanbevolen && (
-              <span className="ml-2 inline-block px-2 py-0.5 bg-emerald-600 text-white rounded text-[10px]">
-                Aanbevolen voor jou
-              </span>
-            )}
-          </div>
-          <div className="text-lg font-bold text-gray-900">
-            {pakket.categorieLabel}
-          </div>
-        </div>
-      </div>
-
-      <div className="space-y-1 mt-3 mb-4">
-        {pakket.producten.map((pr, i) => (
-          <div key={i} className="flex justify-between text-sm">
-            <span className="text-gray-700">{pr.naam}</span>
-            <span className="text-gray-500">
-              €{pr.asapPrijs.toFixed(2)} · {pr.ip} IP
-            </span>
-          </div>
-        ))}
-      </div>
-
-      <div className="border-t border-gray-200 pt-3 flex justify-between items-center mb-3">
-        <div className="font-bold text-gray-900">Totaal</div>
-        <div className="text-right">
-          <div className="font-bold text-gray-900">
-            €{pakket.totaalPrijs.toFixed(2)}
-          </div>
-          <div className="text-xs text-gray-500">
-            {pakket.totaalIP} IP ·{" "}
-            {pakket.gratisVerzending
-              ? "gratis verzending"
-              : "+ €8,47 verzending"}
-          </div>
-        </div>
-      </div>
-
-      <p className="text-sm text-gray-600 mb-3 italic">{pakket.waarom}</p>
-
-      {pakket.notitie && (
-        <p className="text-xs text-gray-500 mb-3 bg-gray-50 p-2 rounded">
-          {pakket.notitie}
-        </p>
-      )}
-
-      {bestellink ? (
-        <a
-          href={bestellink.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`block w-full text-center py-3 rounded-lg font-semibold ${
-            isAanbevolen
-              ? "bg-emerald-600 text-white hover:bg-emerald-700"
-              : "bg-gray-900 text-white hover:bg-gray-800"
-          }`}
-        >
-          Bestel via {memberNaam}
-        </a>
-      ) : (
-        <div className="text-center py-3 rounded-lg bg-gray-100 text-gray-500 text-sm">
-          Vraag {memberNaam} om je persoonlijke bestellink
-        </div>
-      )}
-    </div>
-  );
 }
