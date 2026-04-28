@@ -185,7 +185,7 @@ export function TestForm({
         Bijna klaar
       </h2>
       <p className="text-sm text-gray-500 mb-4">
-        We bewaren alleen de uitkomst van je test (welk pakket past bij jou),
+        We bewaren alleen de uitkomst van je vragenlijst (welk pakket past bij jou),
         niet je individuele antwoorden. {memberNaam} ziet de uitkomst zodat
         jullie er samen over kunnen praten als je dat wil.
       </p>
@@ -198,7 +198,7 @@ export function TestForm({
           className="mt-1 w-5 h-5 accent-emerald-600"
         />
         <span className="text-sm text-gray-700">
-          Ik geef toestemming dat de uitkomst van deze test wordt opgeslagen en
+          Ik geef toestemming dat de uitkomst van deze vragenlijst wordt opgeslagen en
           gedeeld met {memberNaam}.
         </span>
       </label>

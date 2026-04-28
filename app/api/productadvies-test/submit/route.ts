@@ -154,12 +154,18 @@ export async function POST(req: NextRequest) {
       ) {
         updates.pipeline_fase = "followup";
       }
-      // Voeg "Productadvies-test" toe aan ingezette_tools als die er nog niet
-      // tussen staat. Zo wordt de tool automatisch aangevinkt op de kaart.
-      if (!bestaandeIngezetTools.includes("Productadvies-test")) {
+      // Voeg "Productadvies-vragenlijst" toe aan ingezette_tools als die er
+      // nog niet tussen staat. Zo wordt de tool automatisch aangevinkt op de
+      // kaart. (Oude waarde "Productadvies-test" telt ook mee voor backwards
+      // compatibility met al-aangevinkte items.)
+      const heeftAlOud = bestaandeIngezetTools.includes("Productadvies-test");
+      const heeftAlNieuw = bestaandeIngezetTools.includes(
+        "Productadvies-vragenlijst",
+      );
+      if (!heeftAlOud && !heeftAlNieuw) {
         updates.ingezette_tools = [
           ...bestaandeIngezetTools,
-          "Productadvies-test",
+          "Productadvies-vragenlijst",
         ];
       }
       if (Object.keys(updates).length > 0) {
@@ -176,7 +182,7 @@ export async function POST(req: NextRequest) {
       await supabase.from("herinneringen").insert({
         user_id: test.member_id,
         prospect_id: test.prospect_id,
-        titel: `Productadvies-test ingevuld: ${uitslag.categorieLabel}`,
+        titel: `Productadvies-vragenlijst ingevuld: ${uitslag.categorieLabel}`,
         type: "followup",
         vervaldatum: new Date(Date.now() + 24 * 60 * 60 * 1000)
           .toISOString()

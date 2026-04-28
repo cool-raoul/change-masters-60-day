@@ -65,13 +65,13 @@ export default async function TestPage({
         <header className="mb-6">
           <div className="text-center">
             <div className="text-emerald-600 text-sm font-medium uppercase tracking-wider">
-              Productadvies-test
+              Productadvies-vragenlijst
             </div>
             <h1 className="mt-2 text-3xl sm:text-4xl font-bold text-gray-900">
               {prospectNaam ? `Hé ${prospectNaam.split(" ")[0]}` : "Welkom"}
             </h1>
             <p className="mt-3 text-gray-600">
-              Fijn dat je deze test invult. Dit duurt ongeveer 3 minuten.
+              Fijn dat je deze vragenlijst invult. Dit duurt ongeveer 3 minuten.
               <br />
               Aan het eind krijg je een advies dat past bij wat jij aangeeft.
             </p>

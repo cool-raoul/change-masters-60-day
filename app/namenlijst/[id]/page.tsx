@@ -197,10 +197,13 @@ export default async function ProspectDetailPagina({
                 : null
             }
           />
-          <ProspectVerwijderKnop
-            prospectId={id}
-            prospectNaam={prospect.volledige_naam}
-          />
+          {/* Verwijder-knop opzij voor visuele scheiding van actie-knoppen */}
+          <div className="ml-2 pl-2 border-l border-cm-border">
+            <ProspectVerwijderKnop
+              prospectId={id}
+              prospectNaam={prospect.volledige_naam}
+            />
+          </div>
         </div>
       </div>
 

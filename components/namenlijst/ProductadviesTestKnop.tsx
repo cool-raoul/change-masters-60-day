@@ -72,17 +72,17 @@ export function ProductadviesTestKnop({
     }
   }
 
-  // Als er al een ingevulde test is: rij van kleine knoppen
+  // Als er al een ingevulde vragenlijst is: rij van kleine knoppen
   // (bekijk uitslag + nieuwe versturen)
   if (bestaande?.status === "ingevuld" && bestaande.uitslag) {
     return (
-      <div className="flex gap-1">
+      <div className="flex gap-1 flex-wrap">
         <a
           href={`/test/${bestaande.token}/resultaat`}
           target="_blank"
           rel="noopener noreferrer"
           className="btn-secondary text-sm"
-          title={`Test ingevuld op ${bestaande.ingevuld_op?.split("T")[0]}`}
+          title={`Vragenlijst ingevuld op ${bestaande.ingevuld_op?.split("T")[0]}`}
         >
           ✓ {bestaande.uitslag.categorieLabel} {bestaande.uitslag.niveau}
         </a>
@@ -91,23 +91,23 @@ export function ProductadviesTestKnop({
             setToken(null);
             setOpen(true);
           }}
-          className="btn-secondary text-xs px-2"
-          title="Maak nieuwe test-link"
+          className="btn-secondary text-sm"
+          title="Stuur opnieuw met een nieuwe link"
         >
-          🔄
+          🔄 Nieuwe vragenlijst
         </button>
       </div>
     );
   }
 
-  // Geen of nog-niet-ingevulde test: open dialog
+  // Geen of nog-niet-ingevulde vragenlijst: open dialog
   return (
     <>
       <button
         onClick={() => setOpen(true)}
         className="btn-secondary text-sm"
       >
-        📋 {bestaande?.status === "verstuurd" ? "Test opnieuw delen" : "Stuur test"}
+        📋 {bestaande?.status === "verstuurd" ? "Vragenlijst opnieuw delen" : "Stuur vragenlijst"}
       </button>
 
       {open && (
@@ -123,7 +123,7 @@ export function ProductadviesTestKnop({
               <div className="flex justify-between items-start">
                 <div>
                   <h2 className="text-lg font-bold text-white">
-                    Productadvies-test versturen
+                    Productadvies-vragenlijst versturen
                   </h2>
                   <p className="text-xs text-gray-400 mt-1">
                     Voor {prospectNaam}
@@ -168,7 +168,7 @@ export function ProductadviesTestKnop({
                     disabled={bezig}
                     className="w-full py-3 rounded-lg bg-cm-gold text-cm-bg font-semibold disabled:opacity-40"
                   >
-                    {bezig ? "Bezig..." : "Genereer test-link"}
+                    {bezig ? "Bezig..." : "Genereer vragenlijst-link"}
                   </button>
 
                   {fout && (
@@ -211,7 +211,7 @@ function DeelOpties({
 
   const tekst = `Hé ${voornaam}!
 
-Ik heb een korte test gemaakt waarmee ik kan zien welke ondersteuning het beste bij jou past. Het duurt zo'n 3 minuten op je telefoon.
+Er is een korte vragenlijst die je even kan doen waarmee ik kan zien welke ondersteuning het beste bij jou past. Duurt zo'n 3 minuten op je telefoon.
 
 Klik hier: ${testUrl}
 
@@ -220,13 +220,13 @@ Aan het eind krijg je een advies dat past bij wat jij aangeeft. Ik kijk daarna g
   return (
     <div className="space-y-3">
       <div className="text-sm font-semibold text-white">
-        Test-link voor {prospectNaam}
+        Vragenlijst-link voor {prospectNaam}
       </div>
 
       <DeelKnoppen
         url={testUrl}
         tekst={tekst}
-        onderwerp={`Een korte test voor jou, ${voornaam}`}
+        onderwerp={`Een korte vragenlijst voor jou, ${voornaam}`}
         variant="donker"
       />
 

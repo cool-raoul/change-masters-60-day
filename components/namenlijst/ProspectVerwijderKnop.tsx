@@ -60,7 +60,7 @@ export function ProspectVerwijderKnop({ prospectId, prospectNaam }: Props) {
       onClick={() => setBevestigen(true)}
       className="text-sm px-3 py-1.5 rounded-lg border border-red-600/30 text-red-400 hover:bg-red-900/30 transition-colors"
     >
-      🗑 Verwijder
+      🗑 Verwijder prospect
     </button>
   );
 }
