@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import type { DarmUitslag } from "@/lib/zelftest/darm-vragen";
-import { DeelKnoppen } from "@/components/shared/DeelKnoppen";
 
 // ============================================================
 // Toont de uitslag van de darmvragenlijst nadat de prospect die heeft
@@ -11,9 +10,10 @@ import { DeelKnoppen } from "@/components/shared/DeelKnoppen";
 //  - "plus": Darmen in Balans + (uitgebreid) als aanbevolen reset
 // Iedereen krijgt een advies — er is geen "geen darmprogramma"-uitkomst.
 //
-// Onderaan staat een "Verstuur dit naar member"-blok. Daar staat het
-// volledige advies in: hoofdcategorie + niveau + darmprogramma. Prospect
-// kan met één tik delen via WhatsApp/SMS/email/kopieer.
+// Geen verzend-knop voor de prospect. De member krijgt automatisch een
+// herinnering bij submit (via /api/productadvies-test/darm-submit) — dat
+// verlaagt de drempel voor de prospect en voorkomt dat ze 'in beraad'
+// blijven hangen omdat ze nog moeten delen.
 // ============================================================
 
 export function DarmUitslagWeergave({
@@ -21,29 +21,17 @@ export function DarmUitslagWeergave({
   adviesPakket,
   memberNaam,
   token,
-  hoofdAdviesTekst,
 }: {
   uitslag: DarmUitslag;
   adviesPakket: any;
   memberNaam: string;
   token: string;
-  hoofdAdviesTekst: string;
+  /** hoofdAdviesTekst was nodig voor het oude share-bericht; sinds er geen
+   *  verzend-knop meer is, gebruiken we 'm niet. Prop blijft voor backwards
+   *  compatibility met de aanroep, niet langer nodig. */
+  hoofdAdviesTekst?: string;
 }) {
-  const baseUrl =
-    typeof window !== "undefined" ? window.location.origin : "";
-  const advies_url = `${baseUrl}/test/${token}/resultaat`;
-
-  // Bericht-tekst voor de share-knop. Combineert hoofdadvies + darmuitslag
-  // zodat de member in één bericht alles ziet.
   const memberVoornaam = memberNaam.split(" ")[0];
-  const tekst = `Hé ${memberVoornaam}, ik heb beide vragenlijsten ingevuld.
-
-Mijn pakket-advies: ${hoofdAdviesTekst}
-Mijn darm-advies: ${uitslag.bucket_label}
-
-Kunnen we hier samen even naar kijken?
-
-Mijn advies-pagina: ${advies_url}`;
 
   return (
     <div className="space-y-5">
@@ -86,30 +74,26 @@ Mijn advies-pagina: ${advies_url}`;
         </section>
       )}
 
-      {/* Stuur-naar-member: na invullen darmvragenlijst is dit dé hoofdactie.
-          Beide uitkomsten gaan in één share-bericht naar de member. URL niet
-          in het bericht (member kent prospect toch al via zijn app). */}
-      <section className="bg-white rounded-2xl shadow-sm border-2 border-emerald-400 p-5 sm:p-6">
-        <h2 className="text-lg font-bold text-gray-900 mb-1">
-          Stuur je volledige advies naar {memberVoornaam}
-        </h2>
-        <p className="text-sm text-gray-600 mb-4">
-          Je bent klaar! Stuur in één tik <strong>beide uitkomsten</strong>{" "}
-          (pakket-advies én darm-advies) naar {memberVoornaam}, zodat jullie
-          dit samen kunnen doorspreken.
-        </p>
-        <DeelKnoppen
-          url={advies_url}
-          tekst={tekst}
-          onderwerp={`Mijn advies — graag samen bespreken`}
-          variant="licht"
-          inclusiefUrl={false}
-        />
+      {/* Member krijgt automatisch een herinnering bij submit. Geen
+          verzend-knop voor de prospect — verlaagt de drempel. */}
+      <section className="bg-emerald-50 border border-emerald-100 rounded-2xl p-5 sm:p-6">
+        <div className="flex items-start gap-3">
+          <span className="text-2xl">✓</span>
+          <div>
+            <h2 className="text-base font-semibold text-emerald-900 mb-1">
+              {memberVoornaam} ziet je volledige advies automatisch
+            </h2>
+            <p className="text-sm text-emerald-900">
+              Je hoeft niets meer te doen. {memberVoornaam} krijgt direct een
+              melding van beide uitkomsten (pakket-advies en darm-advies) en
+              neemt zelf contact met je op.
+            </p>
+          </div>
+        </div>
       </section>
 
-      {/* Terug-knop teruggezet als secundaire actie — sommige prospects willen
-          hun pakket-advies nog eens nalezen. De stuur-knop blijft de
-          prominente eerste keuze. */}
+      {/* Terug-knop als secundaire actie — sommige prospects willen
+          hun pakket-advies nog eens nalezen. */}
       <section className="text-center">
         <Link
           href={`/test/${token}/resultaat`}

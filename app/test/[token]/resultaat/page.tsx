@@ -10,7 +10,6 @@ import {
 } from "@/lib/lifeplus/pakketten";
 import { BEWUSTWORDING } from "@/lib/zelftest/bewustwording";
 import { FASEN_UITLEG } from "@/lib/zelftest/fasen-uitleg";
-import { DeelKnoppen } from "@/components/shared/DeelKnoppen";
 import { PakketAccordionCard } from "./PakketAccordionCard";
 
 // ============================================================
@@ -494,31 +493,22 @@ export default async function ResultaatPage({
           </div>
         </section>
 
-        {/* Spar-met-member.
-            Tekst includes darm-uitslag als die is ingevuld, zodat de member
-            niet alleen het pakket-advies maar ook de darm-uitkomst krijgt
-            in één bericht. */}
-        <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-6 mb-5">
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">
-            Wil je hierover sparren met {memberNaam}?
-          </h2>
-          <p className="text-sm text-gray-600 mb-4">
-            Soms helpt het om je advies eerst even door te spreken voordat je
-            iets bestelt. {memberNaam} kijkt graag persoonlijk met je mee.
-          </p>
-          <DeelKnoppen
-            url={typeof process.env.NEXT_PUBLIC_APP_URL === "string" && process.env.NEXT_PUBLIC_APP_URL
-              ? `${process.env.NEXT_PUBLIC_APP_URL}/test/${token}/resultaat`
-              : `https://change-masters-60-day-q25o.vercel.app/test/${token}/resultaat`}
-            tekst={
-              darmUitslag
-                ? `Hé ${memberNaam.split(" ")[0]}, ik heb beide vragenlijsten ingevuld.\n\nMijn pakket-advies: ${uitslag.categorieLabel} ${uitslag.niveau}\nMijn darm-advies: ${darmUitslag.bucket_label}\n\nKunnen we hier samen even naar kijken?`
-                : `Hé ${memberNaam.split(" ")[0]}, ik heb de vragenlijst ingevuld. Mijn uitkomst is "${uitslag.categorieLabel} ${uitslag.niveau}". Kunnen we hier even samen naar kijken?`
-            }
-            onderwerp="Mijn advies"
-            variant="licht"
-            inclusiefUrl={false}
-          />
+        {/* Member krijgt automatisch een herinnering bij submit. Geen
+            verzend-knop voor de prospect — verlaagt de drempel. */}
+        <section className="bg-emerald-50 border border-emerald-100 rounded-2xl p-5 sm:p-6 mb-5">
+          <div className="flex items-start gap-3">
+            <span className="text-2xl">✓</span>
+            <div>
+              <h2 className="text-base font-semibold text-emerald-900 mb-1">
+                {memberNaam} ziet je advies automatisch
+              </h2>
+              <p className="text-sm text-emerald-900">
+                Je hoeft niets meer te doen. {memberNaam} krijgt direct een
+                melding dat je de vragenlijst hebt ingevuld en neemt zelf
+                contact met je op om dit samen door te spreken.
+              </p>
+            </div>
+          </div>
         </section>
 
         {/* Vragenlijst opnieuw invullen — staat onderaan zodat het niet vaste
