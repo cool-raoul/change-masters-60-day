@@ -449,9 +449,24 @@ export function VoiceFab() {
     if (!resultaat) return;
     setFase("opslaan");
     try {
-      const { gemaakt } = await voerActiesUit();
+      const { gemaakt, fouten } = await voerActiesUit();
+      // Eerst eventuele fouten tonen — duidelijker dan een vrolijke
+      // 'Opgeslagen!' toast bovenop een silent fail. Toast persist langer
+      // zodat de user kan lezen wat er mis ging.
+      if (fouten.length > 0) {
+        const samenvatting =
+          fouten.length === 1
+            ? fouten[0]
+            : `${fouten.length} acties faalden:\n• ${fouten.join("\n• ")}`;
+        toast.error(samenvatting, { duration: 10000 });
+      }
+      // Daarna pas de success-toast — alleen als er ÉCHT iets gebeurd is.
       if (acties.length > 0 && gemaakt.length > 0) {
-        toast.success("Opgeslagen!", {
+        const tekst =
+          fouten.length > 0
+            ? `${gemaakt.length} actie(s) wel opgeslagen`
+            : "Opgeslagen!";
+        toast.success(tekst, {
           duration: 4000,
           action: {
             label: "Ongedaan maken",
@@ -462,7 +477,7 @@ export function VoiceFab() {
             },
           },
         });
-      } else {
+      } else if (fouten.length === 0) {
         toast.success(acties.length > 0 ? "Opgeslagen!" : "Klaar");
       }
       // Sluit modal EERST zodat DOM settled is voor de refresh.
@@ -592,12 +607,29 @@ export function VoiceFab() {
     router.push(`/coach/${nieuw.id}?auto=${encodeURIComponent(bericht)}`);
   }
 
-  async function voerActiesUit(): Promise<{ gemaakt: Array<{ tabel: string; id: string }>; naamNaarId: Record<string, string> }> {
+  async function voerActiesUit(): Promise<{
+    gemaakt: Array<{ tabel: string; id: string }>;
+    naamNaarId: Record<string, string>;
+    fouten: string[];
+  }> {
     const gemaakt: Array<{ tabel: string; id: string }> = [];
+    const fouten: string[] = [];
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    if (!user) return { gemaakt, naamNaarId: {} };
+    if (!user) return { gemaakt, naamNaarId: {}, fouten: ["Niet ingelogd"] };
+
+    // Hulp om elke supabase-mutatie consistent te checken zodat een
+    // silent fail (RLS, FK, ontbrekend ID) niet meer ongezien voorbij gaat.
+    function check(label: string, error: any) {
+      if (error) {
+        const boodschap = `${label}: ${error.message ?? error}`;
+        console.error("[voerActiesUit]", boodschap, error);
+        fouten.push(boodschap);
+        return false;
+      }
+      return true;
+    }
 
     const naamNaarId: Record<string, string> = {};
     const { data: bestaand } = await supabase
@@ -616,7 +648,7 @@ export function VoiceFab() {
           a.notities || "",
           a.relatie ? `Relatie: ${a.relatie}` : "",
         ].filter(Boolean).join("\n\n");
-        const { data } = await supabase
+        const { data, error } = await supabase
           .from("prospects")
           .insert({
             user_id: user.id,
@@ -628,6 +660,7 @@ export function VoiceFab() {
           })
           .select()
           .single();
+        if (!check(`Nieuwe prospect "${a.volledige_naam}"`, error)) continue;
         if (data) {
           naamNaarId[a.volledige_naam.toLowerCase()] = data.id;
           gemaakt.push({ tabel: "prospects", id: data.id });
@@ -636,6 +669,10 @@ export function VoiceFab() {
     }
     for (const a of acties) {
       if (a.type === "update_prospect") {
+        if (!a.prospect_id) {
+          fouten.push("Update prospect: geen prospect_id meegegeven");
+          continue;
+        }
         const { data: huidig } = await supabase
           .from("prospects")
           .select("notities, pipeline_fase")
@@ -652,14 +689,15 @@ export function VoiceFab() {
             ? `${bestaandeNotitie}\n\n[${new Date().toLocaleDateString("nl-NL")}] ${a.notities_toevoegen}`
             : a.notities_toevoegen;
         }
-        await supabase
+        const { error: updErr } = await supabase
           .from("prospects")
           .update(updates)
           .eq("id", a.prospect_id)
           .eq("user_id", user.id);
+        if (!check(`Update prospect (${a.prospect_id})`, updErr)) continue;
         // Audit-trail: log fase-wijziging of notitie-toevoeging in contact_logs
         if (a.pipeline_fase || a.notities_toevoegen) {
-          const { data: log } = await supabase
+          const { data: log, error: logErr } = await supabase
             .from("contact_logs")
             .insert({
               prospect_id: a.prospect_id,
@@ -671,6 +709,7 @@ export function VoiceFab() {
             })
             .select("id")
             .single();
+          check("Contact-log bij update_prospect", logErr);
           if (log) gemaakt.push({ tabel: "contact_logs", id: log.id });
         }
       }
@@ -678,7 +717,10 @@ export function VoiceFab() {
     for (const a of acties) {
       if (a.type === "notitie") {
         const id = naamNaarId[a.prospect_naam.toLowerCase()];
-        if (!id) continue;
+        if (!id) {
+          fouten.push(`Notitie voor "${a.prospect_naam}" niet opgeslagen — naam niet gevonden in je namenlijst`);
+          continue;
+        }
         const { data: huidig } = await supabase
           .from("prospects")
           .select("notities, pipeline_fase")
@@ -688,7 +730,7 @@ export function VoiceFab() {
         const nieuweNotitie = bestaandeNotitie
           ? `${bestaandeNotitie}\n\n[${new Date().toLocaleDateString("nl-NL")}] ${a.notitie}`
           : a.notitie;
-        await supabase
+        const { error: updErr } = await supabase
           .from("prospects")
           .update({
             notities: nieuweNotitie,
@@ -697,8 +739,9 @@ export function VoiceFab() {
           })
           .eq("id", id)
           .eq("user_id", user.id);
+        if (!check(`Notitie voor "${a.prospect_naam}"`, updErr)) continue;
         // Audit-trail: elke notitie ook loggen in contact_logs
-        const { data: log } = await supabase
+        const { data: log, error: logErr } = await supabase
           .from("contact_logs")
           .insert({
             prospect_id: id,
@@ -710,6 +753,7 @@ export function VoiceFab() {
           })
           .select("id")
           .single();
+        check(`Contact-log notitie voor "${a.prospect_naam}"`, logErr);
         if (log) gemaakt.push({ tabel: "contact_logs", id: log.id });
       }
     }
@@ -730,38 +774,43 @@ export function VoiceFab() {
           })
           .select("id")
           .single();
-        if (taakFout) {
-          console.error("Taak-insert fout:", taakFout, "actie:", a);
-          toast.error(`Herinnering mislukt: ${taakFout.message}`);
-        }
+        check(`Herinnering "${a.titel}"`, taakFout);
         if (h) gemaakt.push({ tabel: "herinneringen", id: h.id });
       }
     }
     for (const a of acties) {
       if (a.type === "update_details") {
+        if (!a.prospect_id) {
+          fouten.push("Details bijwerken: geen prospect_id");
+          continue;
+        }
         const updates: any = { updated_at: new Date().toISOString() };
         if (a.telefoon) updates.telefoon = a.telefoon;
         if (a.email) updates.email = a.email;
         if (a.instagram) updates.instagram = a.instagram;
         if (a.facebook) updates.facebook = a.facebook;
         if (a.prioriteit) updates.prioriteit = a.prioriteit;
-        await supabase
+        const { error: updErr } = await supabase
           .from("prospects")
           .update(updates)
           .eq("id", a.prospect_id)
           .eq("user_id", user.id);
+        check(`Details bijwerken (${a.prospect_id})`, updErr);
       }
     }
     for (const a of acties) {
       if (a.type === "contact_log") {
         const id = naamNaarId[a.prospect_naam.toLowerCase()];
-        if (!id) continue;
+        if (!id) {
+          fouten.push(`Contact-log voor "${a.prospect_naam}" niet opgeslagen — naam niet gevonden`);
+          continue;
+        }
         const { data: huidig } = await supabase
           .from("prospects")
           .select("pipeline_fase")
           .eq("id", id)
           .single();
-        const { data: log } = await supabase
+        const { data: log, error: logErr } = await supabase
           .from("contact_logs")
           .insert({
             prospect_id: id,
@@ -773,17 +822,19 @@ export function VoiceFab() {
           })
           .select("id")
           .single();
+        check(`Contact-log voor "${a.prospect_naam}"`, logErr);
         if (log) gemaakt.push({ tabel: "contact_logs", id: log.id });
         const prospectUpdate: any = {
           laatste_contact: new Date().toISOString().split("T")[0],
           updated_at: new Date().toISOString(),
         };
         if (a.nieuwe_fase) prospectUpdate.pipeline_fase = a.nieuwe_fase;
-        await supabase
+        const { error: updErr } = await supabase
           .from("prospects")
           .update(prospectUpdate)
           .eq("id", id)
           .eq("user_id", user.id);
+        check(`Prospect-update bij contact-log "${a.prospect_naam}"`, updErr);
       }
     }
     for (const a of acties) {
@@ -813,20 +864,27 @@ export function VoiceFab() {
     }
     for (const a of acties) {
       if (a.type === "voltooi_herinnering") {
-        await supabase
+        if (!a.herinnering_id) {
+          fouten.push("Voltooi herinnering: geen herinnering_id");
+          continue;
+        }
+        const { error } = await supabase
           .from("herinneringen")
           .update({ voltooid: true })
           .eq("id", a.herinnering_id)
           .eq("user_id", user.id);
+        check(`Herinnering ${a.herinnering_id} voltooien`, error);
       }
     }
     for (const a of acties) {
       if (a.type === "product_bestelling") {
         const id = naamNaarId[a.prospect_naam.toLowerCase()];
-        if (!id) continue;
+        if (!id) {
+          fouten.push(`Bestelling voor "${a.prospect_naam}" niet opgeslagen — naam niet gevonden`);
+          continue;
+        }
         const besteldatum = a.besteldatum || new Date().toISOString().split("T")[0];
-        // Postgres trigger maakt automatisch reminders op 21/51/81 dagen
-        const { data: pb } = await supabase
+        const { data: pb, error: pbErr } = await supabase
           .from("product_bestellingen")
           .insert({
             prospect_id: id,
@@ -837,6 +895,7 @@ export function VoiceFab() {
           })
           .select("id")
           .single();
+        if (!check(`Bestelling voor "${a.prospect_naam}"`, pbErr)) continue;
         if (pb) gemaakt.push({ tabel: "product_bestellingen", id: pb.id });
         const { data: huidig } = await supabase
           .from("prospects")
@@ -850,64 +909,82 @@ export function VoiceFab() {
         if (huidig?.pipeline_fase !== "shopper" && huidig?.pipeline_fase !== "member") {
           faseUpdate.pipeline_fase = "shopper";
         }
-        await supabase
+        const { error: updErr } = await supabase
           .from("prospects")
           .update(faseUpdate)
           .eq("id", id)
           .eq("user_id", user.id);
+        check(`Pipeline-fase bij bestelling "${a.prospect_naam}"`, updErr);
       }
     }
     for (const a of acties) {
       if (a.type === "update_herinnering") {
+        if (!a.herinnering_id) {
+          fouten.push("Herinnering bijwerken: geen herinnering_id");
+          continue;
+        }
         const updates: any = {};
         if (a.nieuwe_vervaldatum) updates.vervaldatum = a.nieuwe_vervaldatum;
         if (a.nieuwe_titel) updates.titel = a.nieuwe_titel;
         if (Object.keys(updates).length > 0) {
-          await supabase
+          const { error } = await supabase
             .from("herinneringen")
             .update(updates)
             .eq("id", a.herinnering_id)
             .eq("user_id", user.id);
+          check(`Herinnering ${a.herinnering_id} bijwerken`, error);
         }
       }
     }
-    // Verwijder-acties: we zetten gearchiveerd=true i.p.v. hard-delete, zodat
-    // de prospect uit alle views verdwijnt maar teruggehaald kan worden als
-    // het per ongeluk via spraak ging. Dit matcht het bestaande schema-patroon.
     for (const a of acties) {
       if (a.type === "verwijder_prospect") {
-        if (!a.prospect_id) continue;
-        await supabase
+        if (!a.prospect_id) {
+          fouten.push("Verwijder prospect: geen prospect_id");
+          continue;
+        }
+        const { error } = await supabase
           .from("prospects")
           .update({ gearchiveerd: true, updated_at: new Date().toISOString() })
           .eq("id", a.prospect_id)
           .eq("user_id", user.id);
+        check("Prospect verwijderen", error);
       }
     }
     for (const a of acties) {
       if (a.type === "verwijder_herinnering") {
-        if (!a.herinnering_id) continue;
-        await supabase
+        if (!a.herinnering_id) {
+          fouten.push("Verwijder herinnering: geen herinnering_id");
+          continue;
+        }
+        const { error } = await supabase
           .from("herinneringen")
           .delete()
           .eq("id", a.herinnering_id)
           .eq("user_id", user.id);
+        check("Herinnering verwijderen", error);
       }
     }
     for (const a of acties) {
       if (a.type === "herstel_prospect") {
-        if (!a.prospect_id) continue;
-        await supabase
+        if (!a.prospect_id) {
+          fouten.push("Herstel prospect: geen prospect_id");
+          continue;
+        }
+        const { error } = await supabase
           .from("prospects")
           .update({ gearchiveerd: false, updated_at: new Date().toISOString() })
           .eq("id", a.prospect_id)
           .eq("user_id", user.id);
+        check("Prospect herstellen", error);
       }
     }
     for (const a of acties) {
       if (a.type === "hernoem_prospect") {
-        if (!a.prospect_id || !a.nieuwe_naam) continue;
-        await supabase
+        if (!a.prospect_id || !a.nieuwe_naam) {
+          fouten.push("Hernoemen: prospect_id of nieuwe_naam ontbreekt");
+          continue;
+        }
+        const { error } = await supabase
           .from("prospects")
           .update({
             volledige_naam: a.nieuwe_naam,
@@ -915,6 +992,7 @@ export function VoiceFab() {
           })
           .eq("id", a.prospect_id)
           .eq("user_id", user.id);
+        check("Prospect hernoemen", error);
       }
     }
     for (const a of acties) {
@@ -943,28 +1021,39 @@ export function VoiceFab() {
     }
     for (const a of acties) {
       if (a.type === "prioriteit_set") {
-        if (!a.prospect_id || !a.prioriteit) continue;
-        await supabase
+        if (!a.prospect_id || !a.prioriteit) {
+          fouten.push("Prioriteit: prospect_id of prioriteit ontbreekt");
+          continue;
+        }
+        const { error } = await supabase
           .from("prospects")
           .update({ prioriteit: a.prioriteit, updated_at: new Date().toISOString() })
           .eq("id", a.prospect_id)
           .eq("user_id", user.id);
+        check("Prioriteit zetten", error);
       }
     }
     for (const a of acties) {
       if (a.type === "wis_notities") {
-        if (!a.prospect_id) continue;
-        await supabase
+        if (!a.prospect_id) {
+          fouten.push("Notities wissen: geen prospect_id");
+          continue;
+        }
+        const { error } = await supabase
           .from("prospects")
           .update({ notities: null, updated_at: new Date().toISOString() })
           .eq("id", a.prospect_id)
           .eq("user_id", user.id);
+        check("Notities wissen", error);
       }
     }
     for (const a of acties) {
       if (a.type === "mijn_why_update") {
-        if (!a.nieuwe_why) continue;
-        await supabase
+        if (!a.nieuwe_why) {
+          fouten.push("WHY bijwerken: geen nieuwe waarde");
+          continue;
+        }
+        const { error } = await supabase
           .from("why_profiles")
           .upsert(
             {
@@ -974,13 +1063,17 @@ export function VoiceFab() {
             },
             { onConflict: "user_id" }
           );
+        check("WHY bijwerken", error);
       }
     }
     for (const a of acties) {
       if (a.type === "fase_batch") {
         const ids = (a.prospect_ids || []).filter(Boolean);
-        if (ids.length === 0 || !a.nieuwe_fase) continue;
-        await supabase
+        if (ids.length === 0 || !a.nieuwe_fase) {
+          fouten.push("Batch fase-update: geen ids of fase");
+          continue;
+        }
+        const { error } = await supabase
           .from("prospects")
           .update({
             pipeline_fase: a.nieuwe_fase,
@@ -988,6 +1081,7 @@ export function VoiceFab() {
           })
           .in("id", ids)
           .eq("user_id", user.id);
+        check(`Batch fase-update (${ids.length} prospects)`, error);
       }
     }
     for (const a of acties) {
@@ -1029,7 +1123,7 @@ export function VoiceFab() {
       }
     }
 
-    return { gemaakt, naamNaarId };
+    return { gemaakt, naamNaarId, fouten };
   }
 
   function sluit() {
