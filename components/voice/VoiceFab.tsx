@@ -412,8 +412,19 @@ export function VoiceFab() {
         }
       });
     } else {
+      // Cursor-bepaling voor de invoeg-positie:
+      // - textarea heeft actieve focus EN gebruiker heeft daar zelf de
+      //   cursor geplaatst → respecteer selectionStart (handig bij echt
+      //   ergens midden in willen invoegen).
+      // - anders → einde van bestaande tekst, zodat bij-spreken altijd
+      //   ONDERAAN landt en niet bovenaan (was de standaard waardoor
+      //   nieuwe tekst voor de oude geplakt werd).
       const ta = bewerkTextareaRef.current;
-      bewerkCursorRef.current = ta?.selectionStart ?? bewerkTekst.length;
+      const heeftFocus =
+        typeof document !== "undefined" && document.activeElement === ta;
+      bewerkCursorRef.current = heeftFocus
+        ? ta?.selectionStart ?? bewerkTekst.length
+        : bewerkTekst.length;
       spraak.reset();
       setTimeout(() => spraak.start(), 30);
     }

@@ -17,18 +17,69 @@ export default async function NamenlijstPagina({
   const taal = await getServerTaal();
   const vanuitSetup = searchParams.setup === "true";
 
-  const [{ data: prospects }, { data: eigenProfiel }] = await Promise.all([
-    supabase
-      .from("prospects")
-      .select("*")
-      .eq("user_id", user.id)
-      .eq("gearchiveerd", false)
-      .order("updated_at", { ascending: false }),
-    supabase.from("profiles").select("full_name").eq("id", user.id).single(),
-  ]);
+  const [{ data: prospects }, { data: eigenProfiel }, { data: openHerinneringen }] =
+    await Promise.all([
+      supabase
+        .from("prospects")
+        .select("*")
+        .eq("user_id", user.id)
+        .eq("gearchiveerd", false)
+        .order("updated_at", { ascending: false }),
+      supabase
+        .from("profiles")
+        .select("full_name")
+        .eq("id", user.id)
+        .single(),
+      // Alle openstaande herinneringen die aan een prospect hangen, gesorteerd
+      // op vervaldatum oplopend. Zo kunnen we per prospect de EERSTVOLGENDE
+      // open herinnering bepalen — single source of truth ongeacht of die door
+      // de voice-FAB, het prospect-form of de productadvies-vragenlijst werd
+      // aangemaakt.
+      supabase
+        .from("herinneringen")
+        .select("prospect_id, titel, vervaldatum")
+        .eq("user_id", user.id)
+        .eq("voltooid", false)
+        .not("prospect_id", "is", null)
+        .order("vervaldatum", { ascending: true }),
+    ]);
 
-  const alleProspects = (prospects as Prospect[]) || [];
+  const ruweProspects = (prospects as Prospect[]) || [];
   const memberNaam = (eigenProfiel as any)?.full_name ?? "je member";
+
+  // Map eerstvolgende open herinnering per prospect (eerste hit wint dankzij
+  // ascending sort). Daarna mergen we die in elke prospect zodat de pipeline-
+  // kaart en namenlijst altijd de actuele datum tonen.
+  const eersteHerinneringPerProspect = new Map<
+    string,
+    { titel: string; vervaldatum: string }
+  >();
+  for (const h of (openHerinneringen ?? []) as Array<{
+    prospect_id: string | null;
+    titel: string;
+    vervaldatum: string;
+  }>) {
+    if (!h.prospect_id) continue;
+    if (!eersteHerinneringPerProspect.has(h.prospect_id)) {
+      eersteHerinneringPerProspect.set(h.prospect_id, {
+        titel: h.titel,
+        vervaldatum: h.vervaldatum,
+      });
+    }
+  }
+
+  const alleProspects: Prospect[] = ruweProspects.map((p) => {
+    const eerstvolgende = eersteHerinneringPerProspect.get(p.id);
+    if (!eerstvolgende) return p;
+    // Overschrijf de denormalized velden met de werkelijke eerstvolgende
+    // open herinnering. Zo werkt de PipelineKanban (die deze velden leest)
+    // automatisch met de live data zonder dat we hem hoeven aan te passen.
+    return {
+      ...p,
+      volgende_actie_datum: eerstvolgende.vervaldatum,
+      volgende_actie_notitie: eerstvolgende.titel,
+    };
+  });
 
   return (
     <div className="space-y-6">
