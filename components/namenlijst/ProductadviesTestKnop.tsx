@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { DeelKnoppen } from "@/components/shared/DeelKnoppen";
 
 // ============================================================
 // ProductadviesTestKnop — knop op de prospect-kaart om een
@@ -98,26 +99,26 @@ export function ProductadviesTestKnop({
 
       {open && (
         <div
-          className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
           onClick={() => setOpen(false)}
         >
           <div
-            className="bg-cm-bg-secondary border border-cm-border rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto"
+            className="bg-[#1a1a1a] border border-[#3a3a3a] rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-5 border-b border-cm-border">
+            <div className="p-5 border-b border-[#3a3a3a]">
               <div className="flex justify-between items-start">
                 <div>
-                  <h2 className="text-lg font-bold text-cm-white">
+                  <h2 className="text-lg font-bold text-white">
                     Productadvies-test versturen
                   </h2>
-                  <p className="text-xs text-cm-white opacity-60 mt-1">
+                  <p className="text-xs text-gray-400 mt-1">
                     Voor {prospectNaam}
                   </p>
                 </div>
                 <button
                   onClick={() => setOpen(false)}
-                  className="text-cm-white opacity-60 hover:opacity-100"
+                  className="text-gray-400 hover:text-white text-xl"
                 >
                   ✕
                 </button>
@@ -129,7 +130,7 @@ export function ProductadviesTestKnop({
                 <>
                   {/* 60 Day Run toggle */}
                   <div>
-                    <label className="flex items-start gap-3 p-3 rounded-lg border border-cm-border cursor-pointer hover:border-cm-gold">
+                    <label className="flex items-start gap-3 p-3 rounded-lg border border-[#3a3a3a] bg-[#222] cursor-pointer hover:border-cm-gold">
                       <input
                         type="checkbox"
                         checked={isSixtyDay}
@@ -137,10 +138,10 @@ export function ProductadviesTestKnop({
                         className="mt-1 w-5 h-5 accent-cm-gold"
                       />
                       <div>
-                        <div className="text-sm font-medium text-cm-white">
+                        <div className="text-sm font-medium text-white">
                           60 Day Run aanpak
                         </div>
-                        <div className="text-xs text-cm-white opacity-60 mt-1">
+                        <div className="text-xs text-gray-400 mt-1">
                           Wanneer aangevinkt: prospect krijgt direct het Complete-pakket
                           (~200 IP) als advies. Anders: vrije keuze tussen Essential, Plus
                           of Complete op basis van zijn antwoorden.
@@ -181,8 +182,7 @@ export function ProductadviesTestKnop({
 }
 
 // ============================================================
-// DeelOpties — toont WhatsApp / Email / kopieer / QR opties
-// na het genereren van een test-link
+// DeelOpties — wrapper rond DeelKnoppen voor de productadvies-test context
 // ============================================================
 
 function DeelOpties({
@@ -194,11 +194,9 @@ function DeelOpties({
   prospectNaam: string;
   memberNaam: string;
 }) {
-  const [gekopieerd, setGekopieerd] = useState(false);
-
   const voornaam = prospectNaam.split(" ")[0];
 
-  const whatsappTekst = `Hé ${voornaam}!
+  const tekst = `Hé ${voornaam}!
 
 Ik heb een korte test gemaakt waarmee ik kan zien welke ondersteuning het beste bij jou past. Het duurt zo'n 3 minuten op je telefoon.
 
@@ -206,70 +204,26 @@ Klik hier: ${testUrl}
 
 Aan het eind krijg je een advies dat past bij wat jij aangeeft. Ik kijk daarna graag samen met je naar het resultaat 🥰`;
 
-  const whatsappLink = `https://wa.me/?text=${encodeURIComponent(whatsappTekst)}`;
-  const emailSubject = `Een korte test voor jou, ${voornaam}`;
-  const emailBody = whatsappTekst;
-  const emailLink = `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-
-  async function kopieer() {
-    try {
-      await navigator.clipboard.writeText(testUrl);
-      setGekopieerd(true);
-      setTimeout(() => setGekopieerd(false), 2000);
-    } catch (e) {
-      // ignore
-    }
-  }
-
   return (
     <div className="space-y-3">
-      <div className="text-sm text-cm-white">
-        <strong>Test-link voor {prospectNaam}:</strong>
-      </div>
-      <div className="flex gap-2">
-        <input
-          type="text"
-          value={testUrl}
-          readOnly
-          className="flex-1 px-3 py-2 rounded-lg bg-cm-bg border border-cm-border text-cm-white text-xs font-mono"
-          onClick={(e) => (e.target as HTMLInputElement).select()}
-        />
-        <button
-          onClick={kopieer}
-          className="px-4 py-2 rounded-lg bg-cm-bg border border-cm-border text-cm-white text-sm whitespace-nowrap"
-        >
-          {gekopieerd ? "✓ Gekopieerd" : "Kopieer"}
-        </button>
+      <div className="text-sm font-semibold text-white">
+        Test-link voor {prospectNaam}
       </div>
 
-      <div className="text-xs text-cm-white opacity-60 mt-2">
-        Stuur de test naar {prospectNaam}:
-      </div>
-
-      <div className="grid grid-cols-2 gap-2">
-        <a
-          href={whatsappLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 py-3 rounded-lg bg-green-600 text-white font-medium hover:bg-green-700 text-sm"
-        >
-          💬 WhatsApp
-        </a>
-        <a
-          href={emailLink}
-          className="flex items-center justify-center gap-2 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 text-sm"
-        >
-          ✉️ Email
-        </a>
-      </div>
+      <DeelKnoppen
+        url={testUrl}
+        tekst={tekst}
+        onderwerp={`Een korte test voor jou, ${voornaam}`}
+        variant="donker"
+      />
 
       {/* Voorbeeld bericht-tekst */}
       <details className="text-xs">
-        <summary className="cursor-pointer text-cm-white opacity-70 hover:opacity-100">
+        <summary className="cursor-pointer text-gray-400 hover:text-white">
           Bekijk de tekst die wordt verzonden
         </summary>
-        <div className="mt-2 p-3 bg-cm-bg rounded-lg border border-cm-border whitespace-pre-wrap text-cm-white opacity-80">
-          {whatsappTekst}
+        <div className="mt-2 p-3 bg-[#222] rounded-lg border border-[#3a3a3a] whitespace-pre-wrap text-gray-300">
+          {tekst}
         </div>
       </details>
     </div>

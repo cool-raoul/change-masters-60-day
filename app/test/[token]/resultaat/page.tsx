@@ -9,6 +9,7 @@ import {
 } from "@/lib/lifeplus/pakketten";
 import { BEWUSTWORDING } from "@/lib/zelftest/bewustwording";
 import { FASEN_UITLEG } from "@/lib/zelftest/fasen-uitleg";
+import { DeelKnoppen } from "@/components/shared/DeelKnoppen";
 
 // ============================================================
 // Resultaatpagina van de productadvies-test
@@ -345,18 +346,14 @@ export default async function ResultaatPage({
             Soms helpt het om je advies eerst even door te spreken voordat je
             iets bestelt. {memberNaam} kijkt graag persoonlijk met je mee.
           </p>
-          {/* WhatsApp share link zonder vooraf-ingebakken telefoonnummer.
-              Prospect kiest zelf de juiste contact uit zijn telefoonboek. */}
-          <a
-            href={`https://wa.me/?text=${encodeURIComponent(
-              `Hé ${memberNaam.split(" ")[0]}, ik heb net de productadvies-test gedaan. Mijn uitkomst is "${uitslag.categorieLabel} ${uitslag.niveau}". Kunnen we hier even samen naar kijken?`,
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-full text-center py-3 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700"
-          >
-            💬 Open WhatsApp en deel met {memberNaam}
-          </a>
+          <DeelKnoppen
+            url={typeof process.env.NEXT_PUBLIC_APP_URL === "string" && process.env.NEXT_PUBLIC_APP_URL
+              ? `${process.env.NEXT_PUBLIC_APP_URL}/test/${token}/resultaat`
+              : `/test/${token}/resultaat`}
+            tekst={`Hé ${memberNaam.split(" ")[0]}, ik heb net de productadvies-test gedaan. Mijn uitkomst is "${uitslag.categorieLabel} ${uitslag.niveau}". Kunnen we hier even samen naar kijken?`}
+            onderwerp="Mijn productadvies"
+            variant="licht"
+          />
         </section>
 
         {/* Disclaimer */}
