@@ -121,7 +121,7 @@ export default async function ResultaatPage({
     .eq("id", test.id)
     .single();
   const darmUitslag = (testFull as any)?.darmvragenlijst_uitslag as
-    | { bucket: "geen" | "basis" | "plus"; bucket_label: string }
+    | { bucket: "basis" | "plus"; bucket_label: string }
     | null;
 
   const trigger60day = test.trigger_60day as "ja" | "nee" | "weet_niet";

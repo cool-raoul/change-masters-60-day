@@ -3,10 +3,10 @@ import type { DarmUitslag } from "@/lib/zelftest/darm-vragen";
 
 // ============================================================
 // Toont de uitslag van de darmvragenlijst nadat de prospect die heeft
-// ingevuld. Drie varianten:
-//  - "geen": rustig kaart, geen pakket — verwijs terug naar advies
+// ingevuld. Twee varianten:
 //  - "basis": Darmen in Balans (16 dagen) als aanbevolen reset
 //  - "plus": Darmen in Balans + (uitgebreid) als aanbevolen reset
+// Iedereen krijgt een advies — er is geen "geen darmprogramma"-uitkomst.
 // ============================================================
 
 export function DarmUitslagWeergave({
@@ -20,8 +20,6 @@ export function DarmUitslagWeergave({
   memberNaam: string;
   token: string;
 }) {
-  const isGeen = uitslag.bucket === "geen";
-
   return (
     <div className="space-y-5">
       <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-6">
@@ -37,7 +35,7 @@ export function DarmUitslagWeergave({
         <p className="text-gray-700 leading-relaxed">{uitslag.korte_tekst}</p>
       </section>
 
-      {!isGeen && adviesPakket && (
+      {adviesPakket && (
         <section className="bg-amber-50 border border-amber-200 rounded-2xl p-5 sm:p-6">
           <div className="flex items-start gap-3">
             <span className="text-2xl">💡</span>

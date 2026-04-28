@@ -26,7 +26,7 @@ type Test = {
   } | null;
   ingevuld_op?: string | null;
   darmvragenlijst_uitslag?: {
-    bucket: "geen" | "basis" | "plus";
+    bucket: "basis" | "plus";
     bucket_label: string;
   } | null;
   darmvragenlijst_ingevuld_op?: string | null;

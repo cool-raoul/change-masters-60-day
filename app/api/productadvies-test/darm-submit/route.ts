@@ -74,9 +74,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Member-notificatie alleen als er een prospect bekend is en bucket
-    // niet 'geen' is (anders is de info weinig actiebaar voor de member).
-    if (test.prospect_id && test.member_id && uitslag.bucket !== "geen") {
+    // Member-notificatie als er een prospect bekend is. Iedereen krijgt
+    // een advies (basis of plus), dus elke ingevulde vragenlijst is
+    // actiebaar voor de member.
+    if (test.prospect_id && test.member_id) {
       let prospectNaam = "een prospect";
       const { data: prospect } = await supabase
         .from("prospects")

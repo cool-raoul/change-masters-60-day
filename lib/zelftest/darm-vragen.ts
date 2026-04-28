@@ -24,7 +24,7 @@
 
 export type DarmAntwoord = 0 | 1 | 2 | 3;
 
-export type DarmBucket = "geen" | "basis" | "plus";
+export type DarmBucket = "basis" | "plus";
 
 export const DARM_SCHAAL_LABELS = {
   0: "Niet",
@@ -69,23 +69,22 @@ export const DARM_MAX_SCORE = DARM_VRAGEN.length * 3; // 45
 // ============================================================
 // Drempels voor de bucket-bepaling
 //
-// Bewust ruim genomen zodat mensen die echt iets voelen ook in een
-// bucket terechtkomen, terwijl wie nauwelijks iets ervaart in "geen"
-// blijft. Aangepast op basis van 15 vragen × 0-3 (max 45).
+// Iedereen die de vragenlijst invult krijgt een darmprogramma-advies —
+// de vraag is alleen welke variant. Onder de 20 is "Darmen in Balans"
+// (basis, 16 dagen) altijd passend. Vanaf 20 schuiven we door naar
+// "Darmen in Balans +" omdat de signalen sterker zijn.
 //
-// 0-10  → geen — er zijn weinig signalen die op darm-onbalans wijzen
-// 11-22 → basis — Darmen in Balans (16 dagen, lichte opfrissing)
-// 23+   → plus — Darmen in Balans + (uitgebreider, langere reset)
+// 0-19  → basis — Darmen in Balans (16 dagen, lichte opfrissing)
+// 20+   → plus — Darmen in Balans + (uitgebreider, langere reset)
 // ============================================================
 
-export const DARM_DREMPEL_BASIS = 11;
-export const DARM_DREMPEL_PLUS = 23;
+export const DARM_DREMPEL_PLUS = 20;
 
 export interface DarmUitslag {
   totaal: number;
   max: number;
   bucket: DarmBucket;
-  advies_pakket_key: string | null;
+  advies_pakket_key: string;
   bucket_label: string;
   korte_tekst: string;
 }
@@ -107,7 +106,7 @@ export function berekenDarmUitslag(
   }
 
   let bucket: DarmBucket;
-  let advies_pakket_key: string | null;
+  let advies_pakket_key: string;
   let bucket_label: string;
   let korte_tekst: string;
 
@@ -117,24 +116,17 @@ export function berekenDarmUitslag(
     bucket_label = "Darmen in Balans +";
     korte_tekst =
       "Je geeft duidelijk meerdere signalen aan die met darm-onbalans samenhangen. " +
-      "Een uitgebreider darmprogramma (Darmen in Balans +) is voor jou waarschijnlijk " +
-      "een goede keuze om eerst stevig op te ruimen voordat je met een pakket start.";
-  } else if (totaal >= DARM_DREMPEL_BASIS) {
+      "Een uitgebreider darmprogramma (Darmen in Balans +) past voor jou — eerst " +
+      "stevig opruimen geeft je lichaam de beste basis voordat je verdergaat met " +
+      "een pakket of dagelijkse aanpak.";
+  } else {
     bucket = "basis";
     advies_pakket_key = "reset-darmen-basis";
     bucket_label = "Darmen in Balans (basis)";
     korte_tekst =
-      "Je herkent een aantal signalen die met spijsvertering en darm-balans samenhangen. " +
-      "Een 16-daags basis-programma (Darmen in Balans) kan een fijne opfrissing zijn " +
-      "voordat je met een pakket start of verder gaat met je dagelijkse aanpak.";
-  } else {
-    bucket = "geen";
-    advies_pakket_key = null;
-    bucket_label = "Geen darmprogramma nodig op dit moment";
-    korte_tekst =
-      "Op basis van je antwoorden lijkt een darmprogramma op dit moment niet direct nodig. " +
-      "Je kunt prima starten met het pakket-advies. Mocht je later signalen merken, dan kun " +
-      "je deze vragenlijst altijd opnieuw doen.";
+      "Je herkent een aantal signalen rondom spijsvertering en balans. Een 16-daags " +
+      "basis-programma (Darmen in Balans) is een fijne opfrissing voordat je met een " +
+      "pakket start of verder gaat met je dagelijkse aanpak.";
   }
 
   return {
