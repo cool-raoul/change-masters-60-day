@@ -1,12 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { useTaal } from "@/lib/i18n/TaalContext";
 
+// Next.js 14 vereist een Suspense boundary om useSearchParams in een
+// client component dat niet dynamisch is gerenderd. Zonder de wrapper
+// faalt de productie-build met 'missing-suspense-with-csr-bailout'.
 export default function LoginPagina() {
+  return (
+    <Suspense fallback={null}>
+      <LoginInhoud />
+    </Suspense>
+  );
+}
+
+function LoginInhoud() {
   const [email, setEmail] = useState("");
   const [wachtwoord, setWachtwoord] = useState("");
   const [laden, setLaden] = useState(false);
