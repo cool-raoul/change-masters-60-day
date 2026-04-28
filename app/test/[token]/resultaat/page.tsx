@@ -126,6 +126,14 @@ export default async function ResultaatPage({
   const aanbevolenNiveau = uitslag.niveau;
   const bewustwording = BEWUSTWORDING[uitslag.categorie];
 
+  // Voor afvallen-categorie geldt een speciale narrative: de Holistic Reset
+  // wordt ALTIJD prominent getoond, want de echte verandering komt uit
+  // leefstijl, niet uit pillen alleen. Pakketten worden secundair getoond
+  // ('als je liever niet met intensieve leefstijl-aanpassing aan de slag
+  // wilt'). Geldt niet voor 60-day route — die heeft Complete als advies.
+  const isAfvallen = uitslag.categorie === "afvallen-metabolisme";
+  const afvallenLeefstijlEerst = isAfvallen && !is60Day;
+
   // Sterke opstart-suggestie (uit het algoritme)
   const opstartPakket =
     uitslag.opstartSuggestie === "darmen-in-balans"
@@ -134,10 +142,16 @@ export default async function ResultaatPage({
         ? getResetPakket("reset-holistic-m12")
         : null;
 
+  // Voor afvallen: forceer Holistic Reset als prominente eerste keuze.
+  const afvallenHolisticPakket = afvallenLeefstijlEerst
+    ? getResetPakket("reset-holistic-m12")
+    : null;
+
   // Zachte algemene darm-aanbeveling: tonen als er geen sterke trigger is.
-  // Voor veel mensen is de basis-darm-opfrissing een waardevol vertrekpunt,
-  // ook al kwam er geen sterke darm-signaal uit de test.
-  const toonAlgemeenDarmBlok = uitslag.opstartSuggestie === "geen";
+  // Niet tonen als afvallen-leefstijl-eerst van toepassing is, want dan
+  // krijgen we al de Holistic Reset prominent.
+  const toonAlgemeenDarmBlok =
+    uitslag.opstartSuggestie === "geen" && !afvallenLeefstijlEerst;
   const algemeenDarmPakket = toonAlgemeenDarmBlok
     ? getResetPakket("reset-darmen-basis")
     : null;
@@ -241,6 +255,45 @@ export default async function ResultaatPage({
           </p>
         </section>
 
+        {/* Voor afvallen-categorie: Holistic Reset als prominente eerste keuze.
+            Leefstijl is de kern, afvallen is het gevolg. */}
+        {afvallenHolisticPakket && !opstartPakket && (
+          <section className="bg-gradient-to-br from-emerald-50 to-amber-50 border-2 border-emerald-300 rounded-2xl p-5 sm:p-6 mb-5">
+            <div className="text-emerald-700 text-xs font-semibold uppercase tracking-wider mb-2">
+              Onze eerste aanbeveling voor jou
+            </div>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">
+              Leefstijl is de kern. Afvallen is het cadeautje.
+            </h2>
+            <p className="text-sm text-gray-700 mb-3">
+              Echt en blijvend afvallen lukt zelden met alleen supplementen of
+              een dieet. Het lichaam moet zijn metabolisme weer leren omschakelen
+              van suiker- naar vetverbranding, en daarbij is leefstijl de
+              hoofdfactor. De <strong>Holistic Reset</strong> is een 65-dagen
+              traject in 4 fases dat dit proces ondersteunt. Veel mensen die op
+              andere manieren niet konden afvallen, vinden hier wél hun balans.
+            </p>
+            <div className="bg-white rounded-lg p-3 border border-emerald-200 mb-3">
+              <div className="font-semibold text-gray-900">
+                {afvallenHolisticPakket.naam}
+              </div>
+              <div className="text-sm text-gray-600 mt-1">
+                €{afvallenHolisticPakket.totaalPrijs.toFixed(2)} ASAP per maand
+                · {afvallenHolisticPakket.totaalIP} IP per maand · 65 dagen
+              </div>
+              <div className="text-xs text-gray-500 mt-2 italic">
+                3 maanden in totaal. Vraagt om een leefstijl-aanpassing tijdens
+                het traject (calorie-tracking, vetvrije verzorging, geen suiker
+                of bewerkte producten).
+              </div>
+            </div>
+            <p className="text-xs text-emerald-800 italic">
+              Vraag {memberNaam} om mee te kijken of dit traject bij jouw
+              situatie past.
+            </p>
+          </section>
+        )}
+
         {/* Sterke opstart-suggestie (Holistic Reset of Darmen prominent) */}
         {opstartPakket && (
           <section className="bg-amber-50 border border-amber-200 rounded-2xl p-5 sm:p-6 mb-5">
@@ -323,13 +376,24 @@ export default async function ResultaatPage({
           <h2 className="text-xl font-bold text-gray-900 mb-1">
             {is60Day
               ? `Het 60 Day Run pakket dat bij je past`
-              : `Pakketten die bij je passen`}
+              : afvallenLeefstijlEerst
+                ? `Of, zonder leefstijl-aanpassing: deze pakketten`
+                : `Pakketten die bij je passen`}
           </h2>
           {is60Day ? (
             <p className="text-sm text-gray-600 mb-4">
               Voor jouw aanpak werken we vanuit een fundament van ~200 IP. Dat
               levert gratis verzending op én een complete stack om in de
               komende weken resultaat te zien.
+            </p>
+          ) : afvallenLeefstijlEerst ? (
+            <p className="text-sm text-gray-600 mb-4">
+              Wil je liever niet (of nog niet) met intensieve leefstijl-
+              aanpassingen aan de slag? Dan zijn dit drie pakketten die je
+              metabolisme én bloedsuiker dagelijks ondersteunen, met{" "}
+              <strong>{niveauLabel(aanbevolenNiveau)}</strong> als beste match
+              voor wat je aangaf. Het effect is geleidelijker dan met de
+              Holistic Reset, maar wel zonder grote leefstijl-aanpassing.
             </p>
           ) : (
             <p className="text-sm text-gray-600 mb-4">
@@ -439,21 +503,37 @@ function PakketCard({
     const isEssential = pakket.niveau === "essential";
     return (
       <div className="bg-white rounded-xl border border-gray-200 p-4">
-        <div className="flex items-baseline justify-between mb-1">
+        <div className="flex items-baseline justify-between mb-2">
           <div className="font-semibold text-gray-800">
             {niveauLabel(pakket.niveau)}
             <span className="text-gray-500 font-normal text-sm ml-2">
               {pakket.categorieLabel}
             </span>
           </div>
-          <div className="text-sm font-medium text-gray-800">
+          <div className="text-sm font-medium text-gray-800 whitespace-nowrap ml-2">
             €{pakket.totaalPrijs.toFixed(2)}
             <span className="text-gray-500 font-normal ml-1">
               · {pakket.totaalIP} IP
             </span>
           </div>
         </div>
-        <p className="text-xs text-gray-600 mt-1">
+
+        {/* Compacte producten-lijst — ook bij klein-variant zichtbaar */}
+        <div className="space-y-0.5 mb-3 mt-2">
+          {pakket.producten.map((pr, i) => (
+            <div
+              key={i}
+              className="flex justify-between text-xs gap-2"
+            >
+              <span className="text-gray-700 truncate">{pr.naam}</span>
+              <span className="text-gray-500 whitespace-nowrap">
+                €{pr.asapPrijs.toFixed(2)} · {pr.ip} IP
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <p className="text-xs text-gray-600 italic">
           {isEssential
             ? "Voor wie lichter wil starten of een budget-vriendelijker instap zoekt."
             : "Ook beschikbaar als alternatief."}
