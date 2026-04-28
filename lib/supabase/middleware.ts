@@ -31,8 +31,16 @@ export async function updateSession(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
 
-  // Publieke routes die geen auth vereisen
-  const publicRoutes = ["/login", "/registreer", "/auth/callback"];
+  // Publieke routes die geen auth vereisen.
+  // /test/[token] en /test/[token]/resultaat zijn voor prospects zonder account.
+  // /sandbox is een debug-tool zonder DB-koppeling.
+  const publicRoutes = [
+    "/login",
+    "/registreer",
+    "/auth/callback",
+    "/test/",
+    "/sandbox",
+  ];
   const isPublicRoute = publicRoutes.some((r) => pathname.startsWith(r));
 
   if (!user && !isPublicRoute && !pathname.startsWith("/api/")) {
