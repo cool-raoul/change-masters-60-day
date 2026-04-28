@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Metadata } from "next";
 import { TestForm } from "./test-form";
+import { OpenIntakeForm } from "./open-intake-form";
 
 // ============================================================
 // Publieke productadvies-vragenlijst pagina (geen auth nodig)
@@ -90,7 +91,7 @@ export default async function TestPage({
   // Test ophalen (zonder joins — joins werken hier niet door cross-schema FK's)
   const { data: test, error } = await supabase
     .from("productadvies_tests")
-    .select("id, token, status, member_id, prospect_id")
+    .select("id, token, status, member_id, prospect_id, is_open_template")
     .eq("token", token)
     .single();
 
@@ -98,7 +99,13 @@ export default async function TestPage({
     notFound();
   }
 
-  if (test.status === "ingevuld") {
+  // Open template: prospect moet eerst zijn naam invullen voordat de
+  // vragenlijst start. We tonen een aparte naam-form.
+  const isOpenTemplate = !!test.is_open_template;
+
+  // Status 'ingevuld' alleen redirecten als het GEEN open template is
+  // (template wordt nooit zelf ingevuld, alleen kopieën).
+  if (test.status === "ingevuld" && !isOpenTemplate) {
     redirect(`/test/${token}/resultaat`);
   }
 
@@ -143,11 +150,18 @@ export default async function TestPage({
           </div>
         </header>
 
-        <TestForm
-          token={token}
-          prospectNaam={prospectNaam}
-          memberNaam={memberNaam}
-        />
+        {isOpenTemplate ? (
+          <OpenIntakeForm
+            templateToken={token}
+            memberNaam={memberNaam}
+          />
+        ) : (
+          <TestForm
+            token={token}
+            prospectNaam={prospectNaam}
+            memberNaam={memberNaam}
+          />
+        )}
 
         <footer className="mt-10 text-center text-xs text-gray-400">
           Lifeplus producten zijn voedingssupplementen, geen geneesmiddelen.
