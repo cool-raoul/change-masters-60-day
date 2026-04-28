@@ -44,9 +44,14 @@ export async function updateSession(request: NextRequest) {
   const isPublicRoute = publicRoutes.some((r) => pathname.startsWith(r));
 
   if (!user && !isPublicRoute && !pathname.startsWith("/api/")) {
-    // Niet ingelogd → naar login
+    // Niet ingelogd → naar login. Bewaar de oorspronkelijke URL als
+    // ?next= zodat de login-pagina na succesvol inloggen direct hierheen
+    // kan terugleiden — onmisbaar voor pushmeldingen die op een diepe
+    // link wijzen (bv. /namenlijst/[id]).
     const url = request.nextUrl.clone();
+    const oorspronkelijk = pathname + (request.nextUrl.search || "");
     url.pathname = "/login";
+    url.search = `?next=${encodeURIComponent(oorspronkelijk)}`;
     return NextResponse.redirect(url);
   }
 

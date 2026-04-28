@@ -60,13 +60,30 @@ self.addEventListener('push', (event) => {
       }
     };
 
-    // Voeg goud kleur toe als beschikbaar
     if (data.badge_color) {
       options.badgeColor = data.badge_color;
     }
 
+    // Toon de OS-notificatie + stuur tegelijk een postMessage naar alle open
+    // app-windows. Zo kan een client-component een in-app toast tonen ZONDER
+    // dat de gebruiker eerst de OS-notificatie hoeft aan te tikken — handig
+    // wanneer hij de app al open heeft staan op een andere pagina.
     event.waitUntil(
-      self.registration.showNotification(data.title || 'Change Masters', options)
+      Promise.all([
+        self.registration.showNotification(data.title || 'Change Masters', options),
+        self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+          for (const client of clientList) {
+            client.postMessage({
+              type: 'push-melding',
+              title: data.title || 'Change Masters',
+              body: options.body,
+              url: options.data.url,
+              tag: options.tag,
+              timestamp: options.data.timestamp,
+            });
+          }
+        }),
+      ])
     );
   } catch (error) {
     console.error('Push parsing error:', error);
@@ -74,24 +91,41 @@ self.addEventListener('push', (event) => {
 });
 
 // NOTIFICATION CLICK EVENT
+// Bij tap op een melding: navigeer naar de URL uit de payload. Als er al een
+// app-window open is, focussen we die en navigeren we hem naar de doel-URL
+// (i.p.v. een tweede tab te openen). Niet-ingelogd? Dan vangt de middleware
+// het op met ?next= zodat we na login alsnog op de juiste plek belanden.
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
 
-  const urlToOpen = event.notification.data?.url || '/dashboard';
+  const targetUrl = event.notification.data?.url || '/dashboard';
 
   event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      // Check of het window al open is
-      for (const client of clientList) {
-        if (client.url === urlToOpen && 'focus' in client) {
-          return client.focus();
+    self.clients
+      .matchAll({ type: 'window', includeUncontrolled: true })
+      .then((clientList) => {
+        // Zoek een open window van deze app.
+        for (const client of clientList) {
+          try {
+            const url = new URL(client.url);
+            const targetAbs = new URL(targetUrl, self.location.origin);
+            if (url.origin === self.location.origin) {
+              // Focus + navigeer dat venster naar de doel-URL.
+              return client.focus().then((focused) => {
+                if (focused && 'navigate' in focused) {
+                  return focused.navigate(targetAbs.toString());
+                }
+              });
+            }
+          } catch (e) {
+            // ongeldige URL — sla over
+          }
         }
-      }
-      // Anders, open een nieuwe window
-      if (clients.openWindow) {
-        return clients.openWindow(urlToOpen);
-      }
-    })
+        // Geen open window → maak nieuwe.
+        if (self.clients.openWindow) {
+          return self.clients.openWindow(targetUrl);
+        }
+      })
   );
 });
 

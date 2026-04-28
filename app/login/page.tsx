@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { useTaal } from "@/lib/i18n/TaalContext";
 
@@ -11,8 +11,22 @@ export default function LoginPagina() {
   const [wachtwoord, setWachtwoord] = useState("");
   const [laden, setLaden] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
   const { v } = useTaal();
+
+  // Na login terug naar de oorspronkelijke URL als die bekend is. Dit gebeurt
+  // bv. wanneer een member op een pushmelding klikt terwijl de app niet
+  // ingelogd is — middleware zet dan ?next=/namenlijst/[id] zodat we hier
+  // direct na inloggen op de juiste prospect-kaart belanden i.p.v. /dashboard.
+  // Veiligheid: alleen relatieve paden accepteren, geen open-redirect.
+  function bepaalRedirect(): string {
+    const next = searchParams?.get("next");
+    if (next && next.startsWith("/") && !next.startsWith("//")) {
+      return next;
+    }
+    return "/dashboard";
+  }
 
   async function handleInloggen(e: React.FormEvent) {
     e.preventDefault();
@@ -26,7 +40,7 @@ export default function LoginPagina() {
     if (error) {
       toast.error(v("login.mislukt"));
     } else {
-      router.push("/dashboard");
+      router.push(bepaalRedirect());
       router.refresh();
     }
 
