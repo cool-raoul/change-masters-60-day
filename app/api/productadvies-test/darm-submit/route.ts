@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sendPushToUser } from "@/lib/push/sendPush";
 import { berekenDarmUitslag } from "@/lib/zelftest/darm-vragen";
 
 // ============================================================
@@ -97,6 +98,14 @@ export async function POST(req: NextRequest) {
           .toISOString()
           .split("T")[0],
         voltooid: false,
+      });
+
+      // Live push naar de telefoon van de member.
+      await sendPushToUser(test.member_id, {
+        title: `${prospectNaam} heeft de darmvragenlijst ingevuld`,
+        body: `Uitkomst: ${uitslag.bucket_label}. Tik om de prospect-kaart te openen.`,
+        url: `/namenlijst/${test.prospect_id}`,
+        tag: `darmvragenlijst-${test.prospect_id}`,
       });
     }
 

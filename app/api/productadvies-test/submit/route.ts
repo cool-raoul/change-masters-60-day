@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sendPushToUser } from "@/lib/push/sendPush";
 import {
   berekenUitslag,
   type ZelftestAntwoorden,
@@ -183,6 +184,16 @@ export async function POST(req: NextRequest) {
     // er een test ingevuld is en hij/zij contact kan opnemen met de prospect.
     // Niet bij re-submit — anders krijgt member dubbele/triple herinneringen.
     if (test.member_id && test.prospect_id && !wasAlIngevuld) {
+      // Prospect-naam voor in de pushtitel zodat de member meteen ziet wie
+      // ingevuld heeft, ook met telefoon op slot.
+      let prospectNaam = "Een prospect";
+      const { data: prospect } = await supabase
+        .from("prospects")
+        .select("volledige_naam")
+        .eq("id", test.prospect_id)
+        .single();
+      if (prospect?.volledige_naam) prospectNaam = prospect.volledige_naam;
+
       await supabase.from("herinneringen").insert({
         user_id: test.member_id,
         prospect_id: test.prospect_id,
@@ -192,6 +203,15 @@ export async function POST(req: NextRequest) {
           .toISOString()
           .split("T")[0],
         voltooid: false,
+      });
+
+      // Live push naar de telefoon van de member — telefoon pingt zelfs als
+      // de app dicht is. Stil falen als geen subscription / verlopen.
+      await sendPushToUser(test.member_id, {
+        title: `${prospectNaam} heeft de vragenlijst ingevuld`,
+        body: `Advies: ${uitslag.categorieLabel} ${uitslag.niveau}. Tik om de prospect-kaart te openen.`,
+        url: `/namenlijst/${test.prospect_id}`,
+        tag: `productadvies-${test.prospect_id}`,
       });
     }
 
