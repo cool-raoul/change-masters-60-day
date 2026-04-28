@@ -85,7 +85,7 @@ export default async function DarmKeuzePage({
   const { data: test, error } = await supabase
     .from("productadvies_tests")
     .select(
-      "id, token, status, member_id, prospect_id, darmvragenlijst_uitslag, is_open_template",
+      "id, token, status, member_id, prospect_id, darmvragenlijst_uitslag, is_open_template, uitslag",
     )
     .eq("token", token)
     .single();
@@ -99,6 +99,14 @@ export default async function DarmKeuzePage({
   if (test.is_open_template) {
     notFound();
   }
+
+  // Hoofdadvies-tekst voor de stuur-naar-member knop op de uitslag.
+  const hoofdUitslag = test.uitslag as
+    | { categorieLabel?: string; niveau?: string }
+    | null;
+  const hoofdAdviesTekst = hoofdUitslag?.categorieLabel
+    ? `${hoofdUitslag.categorieLabel}${hoofdUitslag.niveau ? " " + hoofdUitslag.niveau : ""}`
+    : "(nog niet bekend)";
 
   // Member-naam ophalen
   let memberNaam = "je member";
@@ -157,9 +165,14 @@ export default async function DarmKeuzePage({
             adviesPakket={adviesPakket}
             memberNaam={memberNaam}
             token={token}
+            hoofdAdviesTekst={hoofdAdviesTekst}
           />
         ) : (
-          <DarmForm token={token} memberNaam={memberNaam} />
+          <DarmForm
+            token={token}
+            memberNaam={memberNaam}
+            hoofdAdviesTekst={hoofdAdviesTekst}
+          />
         )}
 
         <footer className="mt-10 text-center text-xs text-gray-400">

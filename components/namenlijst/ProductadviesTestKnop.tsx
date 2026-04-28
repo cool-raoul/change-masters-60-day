@@ -49,6 +49,10 @@ export function ProductadviesTestKnop({
   const [bezig, setBezig] = useState(false);
   const [token, setToken] = useState<string | null>(bestaande?.token ?? null);
   const [fout, setFout] = useState<string | null>(null);
+  // wilNieuwe: gebruiker drukte op de refresh-knop nadat er al een ingevulde
+  // vragenlijst was. Dan willen we de dialog tonen om een NIEUWE link te maken
+  // i.p.v. de bestaande uitslag-chips. Reset bij sluiten van dialog.
+  const [wilNieuwe, setWilNieuwe] = useState(false);
 
   const baseUrl =
     typeof window !== "undefined" ? window.location.origin : "";
@@ -77,11 +81,23 @@ export function ProductadviesTestKnop({
     }
   }
 
-  // Als er al een ingevulde vragenlijst is: rij van kleine knoppen
-  // (bekijk uitslag + darmvragenlijst-status + nieuwe versturen)
-  if (bestaande?.status === "ingevuld" && bestaande.uitslag) {
+  // Bij sluiten van de dialog: ook 'wilNieuwe' resetten zodat de
+  // ingevuld-UI weer terugkomt.
+  function sluitDialog() {
+    setOpen(false);
+    setWilNieuwe(false);
+  }
+
+  // Als er een ingevulde vragenlijst is EN we niet bezig zijn met een
+  // nieuwe te versturen: toon compacte advies-rij. Inline-flex zodat de
+  // knoppen niet onder elkaar springen op brede schermen.
+  if (
+    bestaande?.status === "ingevuld" &&
+    bestaande.uitslag &&
+    !wilNieuwe
+  ) {
     return (
-      <div className="flex gap-1 flex-wrap">
+      <div className="inline-flex items-center gap-1 flex-wrap">
         <a
           href={`/test/${bestaande.token}/resultaat`}
           target="_blank"
@@ -104,17 +120,27 @@ export function ProductadviesTestKnop({
         )}
         <button
           onClick={() => {
+            // Reset token en open dialog om een NIEUWE vragenlijst te genereren
             setToken(null);
+            setWilNieuwe(true);
             setOpen(true);
           }}
-          className="btn-secondary text-sm"
-          title="Stuur opnieuw met een nieuwe link"
+          className="btn-secondary text-sm px-2"
+          title="Genereer een nieuwe vragenlijst-link en deel die opnieuw"
         >
-          🔄 Nieuwe vragenlijst
+          🔄
         </button>
       </div>
     );
   }
+
+  // Knop-tekst: eerste keer "Stuur vragenlijst", daarna "Deel link opnieuw"
+  // (de bestaande verstuurd-test wordt hergebruikt — geen nieuwe rij)
+  const knopTekst = wilNieuwe
+    ? "Nieuwe vragenlijst maken"
+    : bestaande?.status === "verstuurd"
+      ? "Deel link opnieuw"
+      : "Stuur vragenlijst";
 
   // Geen of nog-niet-ingevulde vragenlijst: open dialog
   return (
@@ -123,13 +149,13 @@ export function ProductadviesTestKnop({
         onClick={() => setOpen(true)}
         className="btn-secondary text-sm"
       >
-        📋 {bestaande?.status === "verstuurd" ? "Vragenlijst opnieuw delen" : "Stuur vragenlijst"}
+        📋 {knopTekst}
       </button>
 
       {open && (
         <div
           className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
-          onClick={() => setOpen(false)}
+          onClick={sluitDialog}
         >
           <div
             className="bg-[#1a1a1a] border border-[#3a3a3a] rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl"
@@ -146,7 +172,7 @@ export function ProductadviesTestKnop({
                   </p>
                 </div>
                 <button
-                  onClick={() => setOpen(false)}
+                  onClick={sluitDialog}
                   className="text-gray-400 hover:text-white text-xl"
                 >
                   ✕

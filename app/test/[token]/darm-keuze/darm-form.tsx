@@ -1,21 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import {
   DARM_VRAGEN,
   DARM_SCHAAL_LABELS,
   type DarmAntwoord,
+  type DarmUitslag,
 } from "@/lib/zelftest/darm-vragen";
+import { getResetPakket } from "@/lib/lifeplus/pakketten";
+import { DarmUitslagWeergave } from "./darm-uitslag-weergave";
 
 // ============================================================
 // DarmForm — client form voor de 15-vragen darmvragenlijst.
 // 4-puntsschaal per vraag: Niet / Soms / Regelmatig / Vaak
 //
-// We tonen alle 15 vragen op één pagina (geen multi-step). De vragen
-// zijn kort, dat scheelt scrollen tussen stappen en voelt sneller.
-// Submit verzendt naam-loze antwoorden naar de server. Server berekent
-// bucket en slaat alleen die op.
+// Na submit toont dit component direct de uitslag client-side
+// (geen router.refresh — dat hing in de praktijk). De server-side
+// uitslag wordt bij volgende paginabezoek alsnog uit de DB gelezen.
 // ============================================================
 
 const SCHAAL: { waarde: DarmAntwoord; label: string }[] = [
@@ -28,14 +29,16 @@ const SCHAAL: { waarde: DarmAntwoord; label: string }[] = [
 export function DarmForm({
   token,
   memberNaam,
+  hoofdAdviesTekst,
 }: {
   token: string;
   memberNaam: string;
+  hoofdAdviesTekst: string;
 }) {
-  const router = useRouter();
   const [antwoorden, setAntwoorden] = useState<Record<string, DarmAntwoord>>({});
   const [bezig, setBezig] = useState(false);
   const [fout, setFout] = useState<string | null>(null);
+  const [uitslag, setUitslag] = useState<DarmUitslag | null>(null);
 
   const beantwoord = Object.keys(antwoorden).length;
   const totaal = DARM_VRAGEN.length;
@@ -62,12 +65,31 @@ export function DarmForm({
         setBezig(false);
         return;
       }
-      // Refresh server component zodat uitslag-weergave geladen wordt
-      router.refresh();
+      // Toon uitslag direct client-side, geen refresh nodig
+      setUitslag(data.uitslag as DarmUitslag);
+      setBezig(false);
+      // Scroll naar boven zodat uitslag in beeld komt
+      if (typeof window !== "undefined") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
     } catch (e) {
       setFout("Verbindingsfout. Probeer het zo opnieuw.");
       setBezig(false);
     }
+  }
+
+  // Zodra uitslag binnen is: toon uitslag-weergave (client-side rendered)
+  if (uitslag) {
+    const adviesPakket = getResetPakket(uitslag.advies_pakket_key as any);
+    return (
+      <DarmUitslagWeergave
+        uitslag={uitslag}
+        adviesPakket={adviesPakket}
+        memberNaam={memberNaam}
+        token={token}
+        hoofdAdviesTekst={hoofdAdviesTekst}
+      />
+    );
   }
 
   return (
@@ -79,8 +101,8 @@ export function DarmForm({
           op gevoel.
         </p>
         <p className="text-xs text-gray-500 mt-2">
-          {memberNaam} ziet alléén je uitkomst (geen, basis of plus). Je
-          individuele antwoorden worden nooit opgeslagen.
+          {memberNaam} ziet alléén je uitkomst (basis of plus). Je individuele
+          antwoorden worden nooit opgeslagen.
         </p>
       </div>
 
