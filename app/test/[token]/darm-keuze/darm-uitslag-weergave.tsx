@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import type { DarmUitslag } from "@/lib/zelftest/darm-vragen";
 import { DeelKnoppen } from "@/components/shared/DeelKnoppen";
 
@@ -86,14 +85,18 @@ Mijn advies-pagina: ${advies_url}`;
         </section>
       )}
 
-      {/* Stuur-naar-member: alleen op deze pagina (na 2e vragenlijst) */}
-      <section className="bg-white rounded-2xl shadow-sm border-2 border-emerald-300 p-5 sm:p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-1">
-          Verstuur dit advies naar {memberVoornaam}
+      {/* Stuur-naar-member: na invullen darmvragenlijst is dit dé actie.
+          Geen 'terug naar pakket-advies' meer — die zou de prospect alleen
+          maar afleiden van het verzenden. Beide uitkomsten gaan in één share-
+          bericht naar de member. */}
+      <section className="bg-white rounded-2xl shadow-sm border-2 border-emerald-400 p-5 sm:p-6">
+        <h2 className="text-lg font-bold text-gray-900 mb-1">
+          Stuur je volledige advies naar {memberVoornaam}
         </h2>
         <p className="text-sm text-gray-600 mb-4">
-          {memberVoornaam} kijkt graag samen met je naar wat hier uitkomt.
-          Stuur in één tik je beide uitkomsten.
+          Je bent klaar! Stuur in één tik <strong>beide uitkomsten</strong>{" "}
+          (pakket-advies én darm-advies) naar {memberVoornaam}, zodat jullie
+          dit samen kunnen doorspreken.
         </p>
         <DeelKnoppen
           url={advies_url}
@@ -101,15 +104,6 @@ Mijn advies-pagina: ${advies_url}`;
           onderwerp={`Mijn advies — graag samen bespreken`}
           variant="licht"
         />
-      </section>
-
-      <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-        <Link
-          href={`/test/${token}/resultaat`}
-          className="block w-full text-center py-3 rounded-lg bg-gray-900 text-white font-semibold hover:bg-gray-800"
-        >
-          Terug naar mijn pakket-advies
-        </Link>
       </section>
     </div>
   );

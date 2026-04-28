@@ -280,8 +280,39 @@ export function berekenUitslag(antwoorden: ZelftestAntwoorden): ZelftestUitslag 
   // de laagste optie sturen — wij willen dat ze bewust kiezen, en de meeste
   // mensen kiezen psychologisch voor de middelste optie).
 
-  // Fallback bij erg lage scores
-  if (totaalHoofdscore <= 2) {
+  // Vind hoofdcategorie met hoogste score (bij gelijkspel: prioriteits-volgorde)
+  let beste: ZelftestHoofdCategorie = "high-performance";
+  let besteScore = -1;
+  for (const cat of PRIORITEIT) {
+    if (hoofdScores[cat] > besteScore) {
+      besteScore = hoofdScores[cat];
+      beste = cat;
+    }
+  }
+
+  // Diagnostische log voor productie-debugging. Lichtgewicht — alleen
+  // de getallen, geen individuele antwoorden (privacy).
+  console.log("[berekenUitslag]", {
+    totaalHoofdscore,
+    besteScore,
+    beste,
+    hoofdScores,
+    modifierScores,
+    trigger60day: antwoorden.trigger60day,
+    geslacht: antwoorden.geslacht,
+  });
+
+  // Fallback bij lage signal-sterkte:
+  //  - Totaal hoofdscore zegt te weinig (gemiddeld weinig herkenning)
+  //  - OF de winnende categorie heeft te weinig punten (geen duidelijke winnaar)
+  // In beide gevallen: high-performance als veilige default. Voorkomt dat
+  // iemand die alle 'Niet' aanklikt toch een specifiek niche-pakket krijgt.
+  const FALLBACK_TOTAAL_DREMPEL = 4;
+  const WINST_MIN_DREMPEL = 4;
+  if (
+    totaalHoofdscore <= FALLBACK_TOTAAL_DREMPEL ||
+    besteScore < WINST_MIN_DREMPEL
+  ) {
     const niveau: PakketNiveau = antwoorden.trigger60day === "ja" ? "complete" : "plus";
     return {
       categorie: "high-performance",
@@ -293,24 +324,15 @@ export function berekenUitslag(antwoorden: ZelftestAntwoorden): ZelftestUitslag 
     };
   }
 
-  // Vind hoofdcategorie met hoogste score (bij gelijkspel: prioriteits-volgorde)
-  let beste: ZelftestHoofdCategorie = "high-performance";
-  let besteScore = -1;
-  for (const cat of PRIORITEIT) {
-    if (hoofdScores[cat] > besteScore) {
-      besteScore = hoofdScores[cat];
-      beste = cat;
-    }
-  }
-
   // Niveau-suggestie:
   //  - 60-day (trigger='ja') → altijd Complete
-  //  - Sterke herkenning (≥7 van max 8 in winnende categorie) → Complete
+  //  - Heel sterke herkenning (≥8 van max 8 in winnende categorie, dus alle
+  //    vragen op 'Vaak/Helemaal/Zeker') → Complete
   //  - Anders → Plus (default, ankereffect)
   // Essential komt nooit als suggestie, maar staat wel zichtbaar voor wie
   // bewust voor een lichtere instap kiest.
   const niveau: PakketNiveau =
-    antwoorden.trigger60day === "ja" || besteScore >= 7
+    antwoorden.trigger60day === "ja" || besteScore >= 8
       ? "complete"
       : "plus";
 
