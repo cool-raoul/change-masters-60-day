@@ -361,9 +361,16 @@ export function VoiceFab() {
   }
 
   // Inline opname tijdens bewerken: gebruiker spreekt extra in en de nieuwe
-  // tekst wordt op de cursor-positie in bewerkTekst ingevoegd. Daarna kan
-  // de user nog bewerken en klikken op "Verwerk met ELEVA" om acties uit
-  // de volledige tekst (oud + nieuw) te halen.
+  // tekst wordt op de cursor-positie ingevoegd. Belangrijk voor de
+  // betrouwbaarheid:
+  //  1. bewerkTekst lezen via setBewerkTekst-updater (huidige state) i.p.v.
+  //     de closure-waarde — anders verliest een snelle 2e opname die niet
+  //     in dezelfde render zit zijn vorige inhoud.
+  //  2. setSelectionRange in een useEffect-achtige timeout zodat React
+  //     eerst zijn nieuwe value heeft geflusht naar de DOM.
+  //  3. Een state-flag voor het verbergen van de microfoon i.p.v. de
+  //     textarea disabled zetten tijdens opname — sommige iOS-browsers
+  //     verwerken value-updates op een net-disabled element niet correct.
   async function toggleBewerkOpname() {
     if (bewerkenTranscribeert) return;
     if (spraak.actief) {
@@ -378,22 +385,32 @@ export function VoiceFab() {
         toast.info("Niets opgevangen");
         return;
       }
-      const pos = Math.min(bewerkCursorRef.current, bewerkTekst.length);
-      const voor = bewerkTekst.slice(0, pos);
-      const na = bewerkTekst.slice(pos);
-      const spatieVoor = voor.length > 0 && !/\s$/.test(voor) ? " " : "";
-      const spatieNa = na.length > 0 && !/^\s/.test(na) ? " " : "";
-      const invoeging = spatieVoor + tekst + spatieNa;
-      const nieuwe = voor + invoeging + na;
-      setBewerkTekst(nieuwe);
-      const nieuwePos = pos + invoeging.length;
-      setTimeout(() => {
+      // Functional update: pak de NU geldige bewerkTekst, niet de gevangen
+      // closure-waarde. Belangrijk wanneer de user heeft getypt of een
+      // tweede opname doet kort na elkaar.
+      let invoeggrootte = 0;
+      let invoegPos = 0;
+      setBewerkTekst((huidig) => {
+        const pos = Math.min(bewerkCursorRef.current, huidig.length);
+        const voor = huidig.slice(0, pos);
+        const na = huidig.slice(pos);
+        const spatieVoor = voor.length > 0 && !/\s$/.test(voor) ? " " : "";
+        const spatieNa = na.length > 0 && !/^\s/.test(na) ? " " : "";
+        const invoeging = spatieVoor + tekst + spatieNa;
+        invoeggrootte = invoeging.length;
+        invoegPos = pos;
+        return voor + invoeging + na;
+      });
+      const nieuwePos = invoegPos + invoeggrootte;
+      // requestAnimationFrame zodat React eerst de nieuwe value naar de DOM
+      // heeft gepusht voordat we de cursor zetten.
+      requestAnimationFrame(() => {
         const ta = bewerkTextareaRef.current;
         if (ta) {
           ta.focus();
           ta.setSelectionRange(nieuwePos, nieuwePos);
         }
-      }, 30);
+      });
     } else {
       const ta = bewerkTextareaRef.current;
       bewerkCursorRef.current = ta?.selectionStart ?? bewerkTekst.length;
@@ -1179,10 +1196,14 @@ export function VoiceFab() {
                     ref={bewerkTextareaRef}
                     value={bewerkTekst}
                     onChange={(e) => setBewerkTekst(e.target.value)}
-                    className="textarea-cm text-sm w-full pr-14"
+                    className={`textarea-cm text-sm w-full pr-14 ${
+                      spraak.actief || bewerkenTranscribeert
+                        ? "opacity-60"
+                        : ""
+                    }`}
                     rows={8}
                     autoFocus
-                    disabled={spraak.actief || bewerkenTranscribeert}
+                    readOnly={spraak.actief || bewerkenTranscribeert}
                   />
                   {spraak.ondersteund && spraak.toegang && (
                     <button
