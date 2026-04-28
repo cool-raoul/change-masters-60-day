@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
 const TOOL_OPTIES = [
+  "Productadvies-test",
   "One pager",
   "Presentatie",
   "Info link met uitleg",

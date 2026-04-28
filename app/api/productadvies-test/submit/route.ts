@@ -130,19 +130,42 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Pipeline auto-update: prospect die nog op 'prospect'-fase staat
-    // verschuiven naar 'followup' wanneer ze de test hebben ingevuld.
-    // Niet harder dan dat — laat fase-overgangen voor de rest aan de member.
+    // Pipeline auto-update: alle pre-followup-fases verschuiven naar 'followup'
+    // wanneer prospect de test heeft ingevuld. Niet harder dan dat — fases
+    // ná followup (member, shopper, not_yet) blijven onaangetast.
+    const PRE_FOLLOWUP_FASES = [
+      "prospect",
+      "uitgenodigd",
+      "one_pager",
+      "presentatie",
+    ];
+    let bestaandeIngezetTools: string[] = [];
     if (test.prospect_id) {
       const { data: prospect } = await supabase
         .from("prospects")
-        .select("pipeline_fase")
+        .select("pipeline_fase, ingezette_tools")
         .eq("id", test.prospect_id)
         .single();
-      if (prospect?.pipeline_fase === "prospect") {
+      bestaandeIngezetTools = (prospect?.ingezette_tools as string[]) ?? [];
+      const updates: Record<string, unknown> = {};
+      if (
+        prospect?.pipeline_fase &&
+        PRE_FOLLOWUP_FASES.includes(prospect.pipeline_fase as string)
+      ) {
+        updates.pipeline_fase = "followup";
+      }
+      // Voeg "Productadvies-test" toe aan ingezette_tools als die er nog niet
+      // tussen staat. Zo wordt de tool automatisch aangevinkt op de kaart.
+      if (!bestaandeIngezetTools.includes("Productadvies-test")) {
+        updates.ingezette_tools = [
+          ...bestaandeIngezetTools,
+          "Productadvies-test",
+        ];
+      }
+      if (Object.keys(updates).length > 0) {
         await supabase
           .from("prospects")
-          .update({ pipeline_fase: "followup" })
+          .update(updates)
           .eq("id", test.prospect_id);
       }
     }

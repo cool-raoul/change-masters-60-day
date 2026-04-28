@@ -72,18 +72,31 @@ export function ProductadviesTestKnop({
     }
   }
 
-  // Als er al een ingevulde test is: knop toont resultaat-status
+  // Als er al een ingevulde test is: rij van kleine knoppen
+  // (bekijk uitslag + nieuwe versturen)
   if (bestaande?.status === "ingevuld" && bestaande.uitslag) {
     return (
-      <a
-        href={`/test/${bestaande.token}/resultaat`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="btn-secondary text-sm"
-        title={`Test ingevuld op ${bestaande.ingevuld_op?.split("T")[0]}`}
-      >
-        ✓ {bestaande.uitslag.categorieLabel} {bestaande.uitslag.niveau}
-      </a>
+      <div className="flex gap-1">
+        <a
+          href={`/test/${bestaande.token}/resultaat`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-secondary text-sm"
+          title={`Test ingevuld op ${bestaande.ingevuld_op?.split("T")[0]}`}
+        >
+          ✓ {bestaande.uitslag.categorieLabel} {bestaande.uitslag.niveau}
+        </a>
+        <button
+          onClick={() => {
+            setToken(null);
+            setOpen(true);
+          }}
+          className="btn-secondary text-xs px-2"
+          title="Maak nieuwe test-link"
+        >
+          🔄
+        </button>
+      </div>
     );
   }
 

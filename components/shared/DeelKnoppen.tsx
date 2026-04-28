@@ -48,14 +48,15 @@ export function DeelKnoppen({
   const telegramLink = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(tekst)}`;
   const emailLink = `mailto:?subject=${encodeURIComponent(onderwerp ?? "")}&body=${encodeURIComponent(volledigeTekst)}`;
   const smsLink = `sms:?&body=${encodeURIComponent(volledigeTekst)}`;
-  const fbMessengerLink = `https://www.facebook.com/dialog/send?link=${encodeURIComponent(url)}&app_id=&redirect_uri=${encodeURIComponent(url)}`;
 
   async function nativeShare() {
     try {
+      // Stuur ALLEEN volledigeTekst (met URL erin), GEEN aparte url parameter.
+      // Anders plakken sommige apps (iOS Mail, WhatsApp) de URL nog een keer
+      // achter de tekst → dubbele link.
       await navigator.share({
         title: onderwerp ?? "Deel",
-        text: tekst,
-        url,
+        text: volledigeTekst,
       });
     } catch (e) {
       // gebruiker annuleerde — stil
@@ -135,14 +136,6 @@ export function DeelKnoppen({
           ✈️ Telegram
         </a>
         <a
-          href={fbMessengerLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 py-2.5 rounded-lg bg-blue-500 text-white font-medium hover:bg-blue-600 text-sm"
-        >
-          💬 Messenger
-        </a>
-        <a
           href={emailLink}
           className="flex items-center justify-center gap-2 py-2.5 rounded-lg bg-blue-700 text-white font-medium hover:bg-blue-800 text-sm"
         >
@@ -156,16 +149,20 @@ export function DeelKnoppen({
         </a>
         <button
           onClick={kopieer}
-          className={`flex items-center justify-center gap-2 py-2.5 rounded-lg font-medium text-sm ${klasse.kopieerKnop}`}
+          className={`flex items-center justify-center gap-2 py-2.5 rounded-lg font-medium text-sm ${klasse.kopieerKnop} col-span-2 sm:col-span-1`}
         >
-          {gekopieerd ? "✓ Gekopieerd" : "📋 Kopieer"}
+          {gekopieerd ? "✓ Gekopieerd" : "📋 Kopieer link"}
         </button>
       </div>
 
-      {/* Voor Instagram DM / verborgen apps: gebruik kopieer + plak */}
-      <p className={`text-xs ${klasse.sublabel} italic`}>
-        Voor Instagram DM, Signal of andere apps: gebruik <strong>Kopieer</strong> en
-        plak de link in je gesprek.
+      {/* Uitleg: Messenger / Instagram DM / Signal werken niet via web-share-links.
+          Gebruik daar de native share-sheet (mobiel) of kopieer + plak. */}
+      <p className={`text-xs ${klasse.sublabel} italic mt-2`}>
+        💡 <strong>Voor Messenger, Instagram DM, Signal</strong> en andere
+        chat-apps: gebruik op mobiel de groene <strong>"Delen via..."</strong>{" "}
+        knop hierboven (of <strong>Kopieer link</strong> en plak in je gesprek).
+        Een directe Messenger-knop bestaat niet via het web — dat moet via de
+        share-sheet van je telefoon.
       </p>
     </div>
   );

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 import {
   getPakkettenInCategorie,
   getResetPakket,
@@ -90,6 +91,19 @@ export default async function ResultaatPage({
     memberNaam = profile?.full_name ?? "je member";
   }
 
+  // Auth-check: is dit de member die de test heeft verstuurd? Dan tonen we
+  // een terug-knop naar de prospect-kaart. Anders (prospect): geen back-knop.
+  let isMember = false;
+  try {
+    const userClient = await createClient();
+    const {
+      data: { user },
+    } = await userClient.auth.getUser();
+    isMember = !!user && user.id === test.member_id;
+  } catch (e) {
+    isMember = false;
+  }
+
   const uitslag = test.uitslag as {
     categorie: PakketCategorie;
     categorieLabel: string;
@@ -140,7 +154,20 @@ export default async function ResultaatPage({
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white">
-      <div className="mx-auto max-w-2xl px-4 py-8 sm:py-12">
+      <div className="mx-auto max-w-2xl px-4 py-6 sm:py-8">
+        {/* Top-bar met navigatie. Alleen voor member zichtbaar. Prospect
+            gebruikt browser-back. */}
+        {isMember && test.prospect_id && (
+          <div className="mb-4">
+            <Link
+              href={`/namenlijst/${test.prospect_id}`}
+              className="inline-flex items-center gap-2 text-sm text-emerald-700 hover:text-emerald-900 font-medium"
+            >
+              ← Terug naar prospect-kaart
+            </Link>
+          </div>
+        )}
+
         {/* Header */}
         <header className="mb-6 text-center">
           <div className="text-emerald-600 text-sm font-medium uppercase tracking-wider">
@@ -349,7 +376,7 @@ export default async function ResultaatPage({
           <DeelKnoppen
             url={typeof process.env.NEXT_PUBLIC_APP_URL === "string" && process.env.NEXT_PUBLIC_APP_URL
               ? `${process.env.NEXT_PUBLIC_APP_URL}/test/${token}/resultaat`
-              : `/test/${token}/resultaat`}
+              : `https://change-masters-60-day-q25o.vercel.app/test/${token}/resultaat`}
             tekst={`Hé ${memberNaam.split(" ")[0]}, ik heb net de productadvies-test gedaan. Mijn uitkomst is "${uitslag.categorieLabel} ${uitslag.niveau}". Kunnen we hier even samen naar kijken?`}
             onderwerp="Mijn productadvies"
             variant="licht"
