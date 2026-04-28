@@ -24,6 +24,7 @@ export function DeelKnoppen({
   tekst,
   onderwerp,
   variant = "donker",
+  inclusiefUrl = true,
 }: {
   /** URL die gedeeld wordt. Wordt achter de tekst geplakt indien niet aanwezig. */
   url: string;
@@ -33,6 +34,13 @@ export function DeelKnoppen({
   onderwerp?: string;
   /** "donker" voor dark-theme (in app), "licht" voor lichte achtergrond (op resultaatpagina). */
   variant?: "donker" | "licht";
+  /**
+   * Voeg de URL toe aan het bericht? Standaard ja (member-naar-prospect: de
+   * link is dé reden van het bericht). Op false voor prospect-naar-member:
+   * de member kan de prospect toch wel terugvinden in zijn eigen app via
+   * de naam, dus een lange URL toevoegen oogt rommelig.
+   */
+  inclusiefUrl?: boolean;
 }) {
   const [shareSupported, setShareSupported] = useState(false);
   const [gekopieerd, setGekopieerd] = useState(false);
@@ -41,11 +49,21 @@ export function DeelKnoppen({
     setShareSupported(typeof navigator !== "undefined" && "share" in navigator);
   }, []);
 
-  // Volledige tekst inclusief URL (voor platforms die maar 1 veld accepteren)
-  const volledigeTekst = tekst.includes(url) ? tekst : `${tekst}\n\n${url}`;
+  // Volledige tekst — met URL bij member→prospect-flow (link is de reden van
+  // het bericht), zonder URL bij prospect→member-flow (member kent de
+  // prospect toch al via zijn app).
+  const volledigeTekst = !inclusiefUrl
+    ? tekst
+    : tekst.includes(url)
+      ? tekst
+      : `${tekst}\n\n${url}`;
 
   const whatsappLink = `https://wa.me/?text=${encodeURIComponent(volledigeTekst)}`;
-  const telegramLink = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(tekst)}`;
+  // Telegram-share heeft een verplichte URL-parameter — bij geen-url-modus
+  // sturen we een lege string mee zodat alleen tekst getoond wordt.
+  const telegramLink = inclusiefUrl
+    ? `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(tekst)}`
+    : `https://t.me/share/url?url=&text=${encodeURIComponent(volledigeTekst)}`;
   const emailLink = `mailto:?subject=${encodeURIComponent(onderwerp ?? "")}&body=${encodeURIComponent(volledigeTekst)}`;
   const smsLink = `sms:?&body=${encodeURIComponent(volledigeTekst)}`;
 
@@ -87,22 +105,25 @@ export function DeelKnoppen({
 
   return (
     <div className="space-y-3">
-      {/* URL veld + kopieer knop */}
-      <div className="flex gap-2">
-        <input
-          type="text"
-          value={url}
-          readOnly
-          className={`flex-1 px-3 py-2 rounded-lg ${klasse.inputBg} ${klasse.inputBorder} ${klasse.inputText} text-xs font-mono border`}
-          onClick={(e) => (e.target as HTMLInputElement).select()}
-        />
-        <button
-          onClick={kopieer}
-          className={`px-4 py-2 rounded-lg ${klasse.kopieerKnop} text-sm whitespace-nowrap`}
-        >
-          {gekopieerd ? "✓" : "Kopieer"}
-        </button>
-      </div>
+      {/* URL veld + kopieer knop — alleen tonen als de URL daadwerkelijk in
+          het bericht zit. Bij prospect→member is de URL niet relevant. */}
+      {inclusiefUrl && (
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={url}
+            readOnly
+            className={`flex-1 px-3 py-2 rounded-lg ${klasse.inputBg} ${klasse.inputBorder} ${klasse.inputText} text-xs font-mono border`}
+            onClick={(e) => (e.target as HTMLInputElement).select()}
+          />
+          <button
+            onClick={kopieer}
+            className={`px-4 py-2 rounded-lg ${klasse.kopieerKnop} text-sm whitespace-nowrap`}
+          >
+            {gekopieerd ? "✓" : "Kopieer"}
+          </button>
+        </div>
+      )}
 
       {/* Native share knop (mobiel) — toont alle geïnstalleerde apps */}
       {shareSupported && (
@@ -147,12 +168,14 @@ export function DeelKnoppen({
         >
           📱 SMS
         </a>
-        <button
-          onClick={kopieer}
-          className={`flex items-center justify-center gap-2 py-2.5 rounded-lg font-medium text-sm ${klasse.kopieerKnop} col-span-2 sm:col-span-1`}
-        >
-          {gekopieerd ? "✓ Gekopieerd" : "📋 Kopieer link"}
-        </button>
+        {inclusiefUrl && (
+          <button
+            onClick={kopieer}
+            className={`flex items-center justify-center gap-2 py-2.5 rounded-lg font-medium text-sm ${klasse.kopieerKnop} col-span-2 sm:col-span-1`}
+          >
+            {gekopieerd ? "✓ Gekopieerd" : "📋 Kopieer link"}
+          </button>
+        )}
       </div>
 
       {/* Uitleg: Messenger / Instagram DM / Signal werken niet via web-share-links.

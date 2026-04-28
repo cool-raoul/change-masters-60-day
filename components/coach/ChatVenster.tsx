@@ -9,14 +9,27 @@ import { useTaal } from "@/lib/i18n/TaalContext";
 import { UpgradeModal } from "./UpgradeModal";
 import { VoiceInputKnop } from "@/components/voice/VoiceInputKnop";
 import { useSearchParams } from "next/navigation";
+import { ProductadviesKnop } from "@/components/namenlijst/ProductadviesKnop";
+import { ProductadviesTestKnop } from "@/components/namenlijst/ProductadviesTestKnop";
 
 interface Props {
   gesprekId: string;
   gesprekTitel?: string;
   bestaandeBerichten: ChatBericht[];
   prospect: Pick<Prospect, "id" | "volledige_naam" | "pipeline_fase"> | null;
+  prospectNotities?: string | null;
   alleProspects: Pick<Prospect, "id" | "volledige_naam" | "pipeline_fase">[];
   userId: string;
+  memberNaam?: string;
+  productadviesTest?: {
+    token: string;
+    status: "verstuurd" | "ingevuld" | "geen";
+    trigger_60day?: string | null;
+    uitslag?: { categorieLabel: string; niveau: string } | null;
+    ingevuld_op?: string | null;
+    darmvragenlijst_uitslag?: { bucket: "basis" | "plus"; bucket_label: string } | null;
+    darmvragenlijst_ingevuld_op?: string | null;
+  } | null;
 }
 
 interface SnelleOptie {
@@ -287,8 +300,11 @@ export function ChatVenster({
   gesprekTitel,
   bestaandeBerichten,
   prospect,
+  prospectNotities,
   alleProspects,
   userId,
+  memberNaam,
+  productadviesTest,
 }: Props) {
   const [berichten, setBerichten] = useState<ChatBericht[]>(bestaandeBerichten);
   const [invoer, setInvoer] = useState("");
@@ -611,7 +627,62 @@ export function ChatVenster({
             <p className="text-cm-white mb-6">
               {v("coach.stel_vraag")}
             </p>
-            {/* Snelle opties grid */}
+
+            {/* Acties voor deze prospect — alleen als er een prospect-context
+                is. Dit zijn DIRECTE acties (niet AI-prompts) zodat de member
+                snel een vragenlijst kan sturen of een handmatig pakket-advies
+                kan opstellen zonder eerst terug naar de prospect-kaart te
+                hoeven. Visueel onderscheidend (gouden border) van de
+                AI-snelle-opties hieronder. */}
+            {prospect && (
+              <div className="max-w-md mx-auto mb-6">
+                <div className="text-xs font-semibold text-cm-gold uppercase tracking-wider mb-2 flex items-center gap-2">
+                  <span className="h-px flex-1 bg-cm-gold/30" />
+                  Acties voor {prospect.volledige_naam.split(" ")[0]}
+                  <span className="h-px flex-1 bg-cm-gold/30" />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-cm-surface-2 border-2 border-cm-gold/40 rounded-xl p-4 flex flex-col items-center gap-2 text-center">
+                    <span className="text-2xl">📦</span>
+                    <span className="text-xs font-medium text-cm-white">
+                      Pakket-advies
+                    </span>
+                    <span className="text-[10px] text-cm-white opacity-60 -mt-1">
+                      Handmatig samenstellen samen met de coach
+                    </span>
+                    <ProductadviesKnop
+                      prospectId={prospect.id}
+                      prospectNaam={prospect.volledige_naam}
+                      userId={userId}
+                      notities={prospectNotities ?? null}
+                    />
+                  </div>
+                  <div className="bg-cm-surface-2 border-2 border-cm-gold/40 rounded-xl p-4 flex flex-col items-center gap-2 text-center">
+                    <span className="text-2xl">📋</span>
+                    <span className="text-xs font-medium text-cm-white">
+                      Vragenlijst
+                    </span>
+                    <span className="text-[10px] text-cm-white opacity-60 -mt-1">
+                      Prospect zelf laten invullen
+                    </span>
+                    <ProductadviesTestKnop
+                      prospectId={prospect.id}
+                      prospectNaam={prospect.volledige_naam}
+                      memberNaam={memberNaam ?? "je member"}
+                      bestaande={productadviesTest ?? null}
+                    />
+                  </div>
+                </div>
+                <p className="text-[11px] text-cm-white opacity-50 mt-2 italic">
+                  Het verschil: bij <strong>Pakket-advies</strong> kies jij
+                  samen met de coach welk pakket past. Bij{" "}
+                  <strong>Vragenlijst</strong> beantwoordt de prospect zelf 30
+                  korte vragen en krijgt automatisch een advies.
+                </p>
+              </div>
+            )}
+
+            {/* Snelle opties grid (AI-prompts) */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-md mx-auto">
               {SNELLE_OPTIES.map((optie) => (
                 <button

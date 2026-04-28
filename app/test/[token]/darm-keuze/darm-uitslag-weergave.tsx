@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { DarmUitslag } from "@/lib/zelftest/darm-vragen";
 import { DeelKnoppen } from "@/components/shared/DeelKnoppen";
 
@@ -85,10 +86,9 @@ Mijn advies-pagina: ${advies_url}`;
         </section>
       )}
 
-      {/* Stuur-naar-member: na invullen darmvragenlijst is dit dé actie.
-          Geen 'terug naar pakket-advies' meer — die zou de prospect alleen
-          maar afleiden van het verzenden. Beide uitkomsten gaan in één share-
-          bericht naar de member. */}
+      {/* Stuur-naar-member: na invullen darmvragenlijst is dit dé hoofdactie.
+          Beide uitkomsten gaan in één share-bericht naar de member. URL niet
+          in het bericht (member kent prospect toch al via zijn app). */}
       <section className="bg-white rounded-2xl shadow-sm border-2 border-emerald-400 p-5 sm:p-6">
         <h2 className="text-lg font-bold text-gray-900 mb-1">
           Stuur je volledige advies naar {memberVoornaam}
@@ -103,7 +103,20 @@ Mijn advies-pagina: ${advies_url}`;
           tekst={tekst}
           onderwerp={`Mijn advies — graag samen bespreken`}
           variant="licht"
+          inclusiefUrl={false}
         />
+      </section>
+
+      {/* Terug-knop teruggezet als secundaire actie — sommige prospects willen
+          hun pakket-advies nog eens nalezen. De stuur-knop blijft de
+          prominente eerste keuze. */}
+      <section className="text-center">
+        <Link
+          href={`/test/${token}/resultaat`}
+          className="inline-flex items-center gap-1 text-sm text-emerald-700 hover:text-emerald-900 underline underline-offset-2"
+        >
+          ← Terug naar mijn pakket-advies
+        </Link>
       </section>
     </div>
   );

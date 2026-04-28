@@ -517,6 +517,7 @@ export default async function ResultaatPage({
             }
             onderwerp="Mijn advies"
             variant="licht"
+            inclusiefUrl={false}
           />
         </section>
 
