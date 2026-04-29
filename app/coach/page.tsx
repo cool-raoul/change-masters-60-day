@@ -12,6 +12,7 @@ export default async function CoachPagina({
   searchParams: Promise<{
     prospect?: string;
     prefill?: string;
+    submit?: string;
     van?: string;
     dag?: string;
   }>;
@@ -25,10 +26,11 @@ export default async function CoachPagina({
   const prefillParam = sp.prefill;
 
   // Helper: bouw een query-string voor de redirect-target zodat de
-  // ?prefill en ?van=playbook&dag=N intact blijven op /coach/[id].
+  // ?prefill, ?submit, en ?van=playbook&dag=N intact blijven op /coach/[id].
   function bouwDoorgegevenQuery(): string {
     const params = new URLSearchParams();
     if (prefillParam) params.set("prefill", prefillParam);
+    if (sp.submit) params.set("submit", sp.submit);
     if (sp.van) params.set("van", sp.van);
     if (sp.dag) params.set("dag", sp.dag);
     const qs = params.toString();

@@ -227,6 +227,14 @@ export function PlaybookDagTile({
    * Bouwt een href voor een waarInEleva-item, en plakt eventueel een
    * prefill-template op de URL ({slug} → opgeslagen waarde uit
    * inlineWaardes, of "[hier je zin]" als nog niet ingevuld).
+   *
+   * Voor /coach-routes met prefill voegen we ook `submit=1` toe zodat de
+   * mentor de vraag direct als user-bericht verstuurt — de member landt
+   * dan op het juiste chat-scherm met zijn vraag al als gouden bubbel
+   * en de mentor begint meteen te antwoorden. Géén extra klik nodig.
+   *
+   * Als de prefill nog placeholders bevat ([hier je zin]) submitten we
+   * NIET automatisch — de member moet dan eerst zelf invullen.
    */
   function bouwElevaPadHref(p: {
     route?: string;
@@ -237,14 +245,19 @@ export function PlaybookDagTile({
     const sep = p.route.includes("?") ? "&" : "?";
     let qs = `van=playbook&dag=${dag.nummer}`;
     if (p.prefillTemplate) {
+      let bevatPlaceholder = false;
       const ingevuld = p.prefillTemplate.replace(
         /\{([a-z0-9-]+)\}/gi,
         (_m, slug) => {
           const w = (inlineWaardes[slug] || "").trim();
+          if (!w) bevatPlaceholder = true;
           return w || "[hier je zin]";
         },
       );
       qs += `&prefill=${encodeURIComponent(ingevuld)}`;
+      if (p.route.startsWith("/coach") && !bevatPlaceholder) {
+        qs += `&submit=1`;
+      }
     }
     return `${p.route}${sep}${qs}`;
   }

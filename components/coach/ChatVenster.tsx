@@ -37,6 +37,12 @@ interface Props {
    * bestaand gesprek met geschiedenis.
    */
   initialInvoer?: string;
+  /**
+   * Als true (en initialInvoer is gevuld + gesprek is leeg): verstuur de
+   * prefill direct na mount, zodat de mentor meteen begint te antwoorden
+   * en de member niet eerst nog op de pijl hoeft te klikken.
+   */
+  autoVerstuur?: boolean;
 }
 
 interface SnelleOptie {
@@ -313,9 +319,16 @@ export function ChatVenster({
   memberNaam,
   productadviesTest,
   initialInvoer,
+  autoVerstuur,
 }: Props) {
   const [berichten, setBerichten] = useState<ChatBericht[]>(bestaandeBerichten);
-  const [invoer, setInvoer] = useState(initialInvoer ?? "");
+  // Bij autoVerstuur willen we de invoer NIET zichtbaar in het veld zetten
+  // (anders staat de tekst dubbel: in de bubbel + in de invoer). De prefill
+  // wordt dan direct als user-bericht in stuurBericht() meegegeven via een
+  // useEffect verderop in dit component.
+  const [invoer, setInvoer] = useState(
+    initialInvoer && !autoVerstuur ? initialInvoer : "",
+  );
   const [laden, setLaden] = useState(false);
   const [selectedProspect, setSelectedProspect] = useState(
     prospect?.id || ""
@@ -344,41 +357,52 @@ export function ChatVenster({
     }
   }, [berichten]);
 
-  // Bij een prefill (gestart vanuit het playbook): zorg dat de hele zin
-  // zichtbaar is in de textarea (auto-grow trigger), focus de invoer, zet
-  // de cursor aan het einde zodat de member meteen verder kan typen, en
-  // scroll de textarea-inhoud naar het BEGIN — anders zou de member alleen
-  // het einde van de zin zien op smalle schermen.
-  // Alleen 1x bij mount — we willen niet steeds focus stelen.
+  // Auto-grow van de textarea: telkens als de invoer-string wijzigt (door
+  // typen, plakken, voice-input of prefill), passen we de hoogte aan op
+  // basis van scrollHeight. Boven 240px (~10 regels) wordt 't scrollbaar.
   useEffect(() => {
-    if (!initialInvoer) return;
     const el = invoerRef.current;
     if (!el) return;
-    // Auto-grow eerst aanzwengelen zodat de hele tekst past
     el.style.height = "auto";
-    el.style.height = Math.min(el.scrollHeight, 160) + "px";
-    // Focus + cursor aan eind (klaar om aan te vullen of te enteren)
+    el.style.height = Math.min(el.scrollHeight, 240) + "px";
+  }, [invoer]);
+
+  // Bij prefill ZONDER auto-verstuur: focus + cursor aan eind + scroll
+  // tekst naar boven zodat het begin zichtbaar is.
+  useEffect(() => {
+    if (!initialInvoer || autoVerstuur) return;
+    const el = invoerRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = Math.min(el.scrollHeight, 240) + "px";
     const len = el.value.length;
     el.focus();
     try {
       el.setSelectionRange(len, len);
     } catch {
-      // Sommige browsers ondersteunen setSelectionRange niet
+      // sommige browsers ondersteunen dit niet op alle text-inputs
     }
-    // Maar scroll de tekst naar boven zodat het begin zichtbaar is
     el.scrollTop = 0;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Auto-grow ook updaten zodra de invoer-string buitenom wijzigt (bv. via
-  // de VoiceInputKnop die `setInvoer` rechtstreeks aanroept zonder een
-  // synthetisch onChange-event).
+  // Bij prefill + autoVerstuur (= klik vanuit het playbook): de prefill
+  // wordt direct als user-bericht verstuurd zodra het component mount.
+  // Zo komt de member meteen op het juiste scherm met de gouden bubbel
+  // + de mentor begint zelf met antwoorden — geen extra klik nodig.
+  // autoVerstuurdRef voorkomt dubbele submits onder React StrictMode.
   useEffect(() => {
-    const el = invoerRef.current;
-    if (!el) return;
-    el.style.height = "auto";
-    el.style.height = Math.min(el.scrollHeight, 160) + "px";
-  }, [invoer]);
+    if (!autoVerstuur) return;
+    if (!initialInvoer || !initialInvoer.trim()) return;
+    if (bestaandeBerichten.length > 0) return;
+    if (autoVerstuurdRef.current) return;
+    autoVerstuurdRef.current = true;
+    // Microtask zodat alle state-init eerst is afgerond
+    queueMicrotask(() => {
+      stuurBericht(initialInvoer);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     fetch("/api/coach/gebruik")
@@ -818,20 +842,13 @@ export function ChatVenster({
               }
             }}
             placeholder={v("coach.placeholder")}
-            className="input-cm flex-1 resize-none leading-relaxed py-3"
+            className="input-cm flex-1 resize-none leading-relaxed"
             disabled={laden}
             rows={1}
             style={{
-              // Auto-grow: groeit mee met content (max ~6 regels op mobiel)
               minHeight: "3rem",
-              maxHeight: "10rem",
-              overflowY: invoer.split("\n").length > 6 ? "auto" : "hidden",
-              height: "auto",
-            }}
-            onInput={(e) => {
-              const el = e.currentTarget;
-              el.style.height = "auto";
-              el.style.height = Math.min(el.scrollHeight, 160) + "px";
+              maxHeight: "15rem",
+              overflowY: "auto",
             }}
           />
           <VoiceInputKnop

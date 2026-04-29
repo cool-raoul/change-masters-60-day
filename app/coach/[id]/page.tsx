@@ -7,11 +7,12 @@ export default async function CoachGesprekPagina({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ prefill?: string }>;
+  searchParams: Promise<{ prefill?: string; submit?: string }>;
 }) {
   const { id } = await params;
   const sp = await searchParams;
   const prefill = sp.prefill;
+  const autoVerstuur = sp.submit === "1";
   const supabase = await createClient();
   const {
     data: { user },
@@ -71,6 +72,9 @@ export default async function CoachGesprekPagina({
       userId={user.id}
       initialInvoer={
         prefill && (gesprek.berichten || []).length === 0 ? prefill : undefined
+      }
+      autoVerstuur={
+        autoVerstuur && !!prefill && (gesprek.berichten || []).length === 0
       }
     />
   );
