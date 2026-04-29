@@ -51,9 +51,18 @@ export default async function FilmsBeheerPage() {
   // ook als ze nog geen film-rij hebben.
   const standaardSlots = Object.values(ONBOARDING_FILM_SLUGS);
 
+  // Optionele dag-films: per playbook-dag (1-21) één slot waar je
+  // bovenin de dagtegel een korte intro-/inspiratiefilm kan plaatsen.
+  // Niet verplicht — bij lege URL toont de tegel niets bovenaan.
+  const dagFilmSlots: string[] = Array.from(
+    { length: 21 },
+    (_, i) => `playbook-dag-${i + 1}`,
+  );
+
   // Eventuele extra slugs die al in de DB staan (custom toegevoegde films)
   const dbSlugs = (films ?? []).map((f: any) => f.slug);
-  const extraSlugs = dbSlugs.filter((s) => !standaardSlots.includes(s as any));
+  const bekendeSlugs = new Set<string>([...standaardSlots, ...dagFilmSlots]);
+  const extraSlugs = dbSlugs.filter((s) => !bekendeSlugs.has(s));
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -120,6 +129,35 @@ export default async function FilmsBeheerPage() {
                     slug={slug}
                     plekBeschrijving={meta?.plek ?? slug}
                     suggestieTitel={meta?.suggestieTitel ?? ""}
+                    bestaande={film ?? null}
+                    userId={user.id}
+                  />
+                );
+              })}
+            </div>
+          </section>
+
+          {/* Optionele dag-films — bovenaan de dagtegel in het 21-daagse playbook.
+              Niet verplicht: lege slot = geen film boven de dagtegel. */}
+          <section>
+            <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider mb-2">
+              Dag-films (optioneel — 21 dagen)
+            </h2>
+            <p className="text-cm-white opacity-60 text-xs mb-3 leading-relaxed">
+              Per dag kun je hier een korte intro-/inspiratiefilm toevoegen die
+              bovenaan de dagtegel verschijnt. Laat een dag leeg en de tegel
+              toont op die dag automatisch geen film-blok.
+            </p>
+            <div className="space-y-3">
+              {dagFilmSlots.map((slug, i) => {
+                const film = filmsMap.get(slug) as any;
+                const dagNummer = i + 1;
+                return (
+                  <FilmRowEditor
+                    key={slug}
+                    slug={slug}
+                    plekBeschrijving={`Playbook dag ${dagNummer} — bovenaan de dagtegel`}
+                    suggestieTitel={`Dag ${dagNummer} — intro`}
                     bestaande={film ?? null}
                     userId={user.id}
                   />

@@ -79,29 +79,33 @@ export default async function PlaybookDagPagina({
         preview={isPreview}
       />
 
-      {/* Navigatie tussen dagen */}
-      <div className="flex items-center justify-between gap-3">
-        {dagParam > 1 ? (
-          <Link
-            href={`/playbook?dag=${dagParam - 1}${isPreview ? "&preview=true" : ""}`}
-            className="btn-secondary text-sm"
-          >
-            ← Dag {dagParam - 1}
-          </Link>
-        ) : (
-          <span />
-        )}
-        {dagParam < 21 ? (
-          <Link
-            href={`/playbook?dag=${dagParam + 1}${isPreview ? "&preview=true" : ""}`}
-            className="btn-secondary text-sm"
-          >
-            Dag {dagParam + 1} →
-          </Link>
-        ) : (
-          <span />
-        )}
-      </div>
+      {/* Navigatie tussen dagen — ALLEEN in preview-modus voor founder/leider.
+          Members op hun live dagtegel mogen niet vooruit-bladeren door de
+          21 dagen heen; dat haalt de focus van het ritme weg. */}
+      {isPreview && (
+        <div className="flex items-center justify-between gap-3">
+          {dagParam > 1 ? (
+            <Link
+              href={`/playbook?dag=${dagParam - 1}&preview=true`}
+              className="btn-secondary text-sm"
+            >
+              ← Dag {dagParam - 1}
+            </Link>
+          ) : (
+            <span />
+          )}
+          {dagParam < 21 ? (
+            <Link
+              href={`/playbook?dag=${dagParam + 1}&preview=true`}
+              className="btn-secondary text-sm"
+            >
+              Dag {dagParam + 1} →
+            </Link>
+          ) : (
+            <span />
+          )}
+        </div>
+      )}
     </div>
   );
 }

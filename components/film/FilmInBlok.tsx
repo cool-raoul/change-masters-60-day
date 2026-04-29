@@ -36,10 +36,17 @@ export function FilmInBlok({
   slug,
   fallbackTekst = "Film komt hier — wordt binnenkort toegevoegd.",
   fallbackTitel,
+  verbergZonderFilm = false,
 }: {
   slug: string;
   fallbackTekst?: string;
   fallbackTitel?: string;
+  /**
+   * Als true: rendert NIETS wanneer er nog geen film/slot bestaat in
+   * de DB. Handig voor optionele plekken (bv. dagfilm op playbook-tegel)
+   * waar een 'film volgt'-placeholder ongewenst is.
+   */
+  verbergZonderFilm?: boolean;
 }) {
   const supabase = createClient();
   const [film, setFilm] = useState<FilmData | null>(null);
@@ -119,6 +126,9 @@ export function FilmInBlok({
   }
 
   if (laden) {
+    // Optionele plekken (verbergZonderFilm) krijgen GEEN skeleton-flash —
+    // we wachten stilletjes en renderen alsnog niets als er geen film is.
+    if (verbergZonderFilm) return null;
     return (
       <div className="aspect-video bg-cm-surface-2 rounded-lg flex items-center justify-center border border-cm-border">
         <div className="flex space-x-1.5">
@@ -130,8 +140,10 @@ export function FilmInBlok({
     );
   }
 
-  // Geen film of geen URL → fallback-placeholder zoals voorheen
+  // Geen film of geen URL → fallback-placeholder zoals voorheen,
+  // tenzij verbergZonderFilm=true (dan rendert het component NIETS).
   if (!film || !film.video_url) {
+    if (verbergZonderFilm) return null;
     return (
       <div className="space-y-2">
         {fallbackTitel && (

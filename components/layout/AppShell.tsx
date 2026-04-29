@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/layout/Sidebar";
@@ -7,6 +8,7 @@ import { TaalProvider } from "@/lib/i18n/TaalContext";
 import { Taal } from "@/lib/i18n/vertalingen";
 import { VoiceFab } from "@/components/voice/VoiceFab";
 import { Rondleiding } from "@/components/rondleiding/Rondleiding";
+import { TerugNaarPlaybookBanner } from "@/components/playbook/TerugNaarPlaybookBanner";
 
 export async function AppShell({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -34,7 +36,13 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
         <Sidebar isLeider={(profile as any)?.role === "leider"} />
         <div className="flex-1 flex flex-col min-h-0 min-w-0">
           <Topbar gebruikersnaam={profile?.full_name || user.email || "Teamlid"} />
-          <main className="flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain p-6 pb-28 sm:pb-6 mobile-scroll">{children}</main>
+          <main className="flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain p-6 pb-28 sm:pb-6 mobile-scroll">
+            {/* Toont alleen iets bij ?van=playbook&dag=N — anders renders null. */}
+            <Suspense fallback={null}>
+              <TerugNaarPlaybookBanner />
+            </Suspense>
+            {children}
+          </main>
         </div>
         <VoiceFab />
         <Rondleiding />
