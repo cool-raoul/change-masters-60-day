@@ -26,14 +26,17 @@ export default async function FilmsBeheerPage() {
     redirect("/login");
   }
 
-  // Alleen leiders/founders mogen films beheren
+  // Alleen founder (hoofdbeheerder) mag films beheren. Iedereen ziet de
+  // films op hun plek; één persoon onderhoudt de bibliotheek voor het hele
+  // systeem. In fase 2 kunnen we dit verbreden naar 'leider' als leiders
+  // eigen films voor hun team mogen plaatsen.
   const { data: profiel } = await supabase
     .from("profiles")
     .select("role")
     .eq("id", user.id)
     .single();
   const rol = (profiel as { role?: string | null } | null)?.role ?? "";
-  const magBeheren = rol === "leider" || rol === "founder";
+  const magBeheren = rol === "founder";
 
   const { data: films } = await supabase
     .from("films")
@@ -72,9 +75,9 @@ export default async function FilmsBeheerPage() {
       {!magBeheren ? (
         <div className="card border-l-4 border-amber-500">
           <p className="text-cm-white">
-            Alleen <strong>leiders</strong> en <strong>founders</strong> kunnen
-            films beheren. Vraag je sponsor of dit voor jou opengezet kan
-            worden.
+            Films worden centraal beheerd door de hoofdbeheerder. Heb je een
+            specifieke film nodig of moet er iets gewijzigd worden? Stuur het
+            verzoek naar je sponsor.
           </p>
         </div>
       ) : (

@@ -125,37 +125,43 @@ CREATE POLICY "iedereen_select_films"
   ON films FOR SELECT
   USING (true);
 
--- INSERT/UPDATE/DELETE alleen voor users met role IN ('leider','founder')
+-- INSERT/UPDATE/DELETE alleen voor founder (hoofdbeheerder).
+-- In fase 2 kunnen we dit verbreden naar 'leider' zodat leiders eigen
+-- films voor hun team kunnen plaatsen — voor nu: één persoon beheert
+-- de bibliotheek voor iedereen.
 DROP POLICY IF EXISTS "leiders_insert_films" ON films;
-CREATE POLICY "leiders_insert_films"
+DROP POLICY IF EXISTS "founder_insert_films" ON films;
+CREATE POLICY "founder_insert_films"
   ON films FOR INSERT
   WITH CHECK (
     EXISTS (
       SELECT 1 FROM profiles
       WHERE id = auth.uid()
-      AND role IN ('leider', 'founder')
+      AND role = 'founder'
     )
   );
 
 DROP POLICY IF EXISTS "leiders_update_films" ON films;
-CREATE POLICY "leiders_update_films"
+DROP POLICY IF EXISTS "founder_update_films" ON films;
+CREATE POLICY "founder_update_films"
   ON films FOR UPDATE
   USING (
     EXISTS (
       SELECT 1 FROM profiles
       WHERE id = auth.uid()
-      AND role IN ('leider', 'founder')
+      AND role = 'founder'
     )
   );
 
 DROP POLICY IF EXISTS "leiders_delete_films" ON films;
-CREATE POLICY "leiders_delete_films"
+DROP POLICY IF EXISTS "founder_delete_films" ON films;
+CREATE POLICY "founder_delete_films"
   ON films FOR DELETE
   USING (
     EXISTS (
       SELECT 1 FROM profiles
       WHERE id = auth.uid()
-      AND role IN ('leider', 'founder')
+      AND role = 'founder'
     )
   );
 
@@ -176,16 +182,17 @@ CREATE POLICY "eigen_film_views_update"
   ON film_views FOR UPDATE
   USING (auth.uid() = user_id);
 
--- Sponsors mogen film_views van hun direct-sponsorden lezen — nuttig
--- om op de prospect-kaart te tonen welke films afgekeken zijn.
--- (Voor nu: leiders/founders mogen alle film_views lezen.)
+-- Founder mag alle film_views lezen voor analytics/overview.
+-- In fase 2: sponsors mogen views van hun directe downline zien op de
+-- prospect-kaart (welke films heeft de prospect afgekeken).
 DROP POLICY IF EXISTS "leiders_lezen_alle_views" ON film_views;
-CREATE POLICY "leiders_lezen_alle_views"
+DROP POLICY IF EXISTS "founder_lezen_alle_views" ON film_views;
+CREATE POLICY "founder_lezen_alle_views"
   ON film_views FOR SELECT
   USING (
     EXISTS (
       SELECT 1 FROM profiles
       WHERE id = auth.uid()
-      AND role IN ('leider', 'founder')
+      AND role = 'founder'
     )
   );

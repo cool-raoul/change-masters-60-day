@@ -20,7 +20,8 @@ export default async function InstellingenPagina() {
     .single();
 
   const rol = (profile as { role?: string | null } | null)?.role ?? "";
-  const magFilmsBeheren = rol === "leider" || rol === "founder";
+  // Voor nu alleen founder. In fase 2 kunnen we dit verbreden naar 'leider'.
+  const magFilmsBeheren = rol === "founder";
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
