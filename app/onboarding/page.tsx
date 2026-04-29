@@ -5,6 +5,8 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { PushNotificationToggle } from "@/components/pwa/PushNotificationToggle";
+import { FilmInBlok } from "@/components/film/FilmInBlok";
+import { ONBOARDING_FILM_SLUGS } from "@/lib/films/embed";
 
 const SPONSOR_TEL = "https://wa.me/31612345678"; // fallback — wordt dynamisch geladen
 
@@ -674,15 +676,13 @@ export default function OnboardingPagina() {
                 </p>
               </div>
 
-              {/* Film-placeholder */}
+              {/* Film via CMS — leider beheert via /instellingen/films */}
               <div className="card space-y-3">
-                <h3 className="text-cm-gold font-semibold text-sm">📹 Bekijk de video: Lifeplus webshop in 5 minuten</h3>
-                <div className="aspect-video bg-cm-surface-2 rounded-lg flex items-center justify-center border border-cm-border">
-                  <p className="text-cm-white text-sm opacity-50 italic">Film komt hier (dag 5)</p>
-                </div>
-                <p className="text-cm-white text-xs opacity-60 italic">
-                  In de video: hoe je inlogt op Lifeplus back-office, je shop-naam kiest, je profielfoto instelt, en je shop-URL bewaart.
-                </p>
+                <FilmInBlok
+                  slug={ONBOARDING_FILM_SLUGS.STAP_6_WEBSHOP}
+                  fallbackTitel="📹 Bekijk de video: Lifeplus webshop in 5 minuten"
+                  fallbackTekst="Film volgt — vraag je sponsor om mee te kijken bij het opzetten."
+                />
               </div>
 
               {/* Wat je nodig hebt */}
@@ -744,15 +744,13 @@ export default function OnboardingPagina() {
                 </p>
               </div>
 
-              {/* Film-placeholder */}
+              {/* Film via CMS */}
               <div className="card space-y-3">
-                <h3 className="text-cm-gold font-semibold text-sm">📹 Bekijk de video: Teams-administratie stap-voor-stap</h3>
-                <div className="aspect-video bg-cm-surface-2 rounded-lg flex items-center justify-center border border-cm-border">
-                  <p className="text-cm-white text-sm opacity-50 italic">Film komt hier (dag 5)</p>
-                </div>
-                <p className="text-cm-white text-xs opacity-60 italic">
-                  In de video: persoonsgegevens invoeren, identiteitsbewijs uploaden, bankgegevens, Partner-overeenkomst tekenen.
-                </p>
+                <FilmInBlok
+                  slug={ONBOARDING_FILM_SLUGS.STAP_7_TEAMS_ADMIN}
+                  fallbackTitel="📹 Bekijk de video: Teams-administratie stap-voor-stap"
+                  fallbackTekst="Film volgt — neem alvast je BSN, bankgegevens en ID-bewijs erbij."
+                />
               </div>
 
               {/* Wat je bij de hand wilt hebben */}
@@ -802,15 +800,13 @@ export default function OnboardingPagina() {
                 </p>
               </div>
 
-              {/* Film-placeholder */}
+              {/* Film via CMS */}
               <div className="card space-y-3">
-                <h3 className="text-cm-gold font-semibold text-sm">📹 Bekijk de video: kredietformulier in 5 minuten</h3>
-                <div className="aspect-video bg-cm-surface-2 rounded-lg flex items-center justify-center border border-cm-border">
-                  <p className="text-cm-white text-sm opacity-50 italic">Film komt hier (dag 5)</p>
-                </div>
-                <p className="text-cm-white text-xs opacity-60 italic">
-                  In de video: waar je het formulier vindt, wat je invult, en waarom automatische incasso aangeraden is.
-                </p>
+                <FilmInBlok
+                  slug={ONBOARDING_FILM_SLUGS.STAP_8_KREDIETFORMULIER}
+                  fallbackTitel="📹 Bekijk de video: kredietformulier in 5 minuten"
+                  fallbackTekst="Film volgt — directe link naar het formulier komt bij de video."
+                />
               </div>
 
               <div className="card space-y-3">
@@ -855,15 +851,13 @@ export default function OnboardingPagina() {
                 </p>
               </div>
 
-              {/* Film-placeholder */}
+              {/* Film via CMS */}
               <div className="card space-y-3">
-                <h3 className="text-cm-gold font-semibold text-sm">📹 Bekijk de video: bestellinks instellen</h3>
-                <div className="aspect-video bg-cm-surface-2 rounded-lg flex items-center justify-center border border-cm-border">
-                  <p className="text-cm-white text-sm opacity-50 italic">Film komt hier (dag 5)</p>
-                </div>
-                <p className="text-cm-white text-xs opacity-60 italic">
-                  In de video: per pakket (Energie & Focus Plus, Stress Slaap Complete, etc.) plak je de bijbehorende Lifeplus-shop-URL. Je sponsor kan meekijken voor de juiste product-keuzes.
-                </p>
+                <FilmInBlok
+                  slug={ONBOARDING_FILM_SLUGS.STAP_9_BESTELLINKS}
+                  fallbackTitel="📹 Bekijk de video: bestellinks instellen"
+                  fallbackTekst="Film volgt — voor nu kun je via de knop hieronder direct naar de instellingen."
+                />
               </div>
 
               <Link href={isPreview ? "/instellingen?preview=true" : "/instellingen"} className="btn-gold w-full py-3 text-center block font-bold">

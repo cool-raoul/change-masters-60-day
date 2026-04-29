@@ -19,6 +19,9 @@ export default async function InstellingenPagina() {
     .eq("id", user.id)
     .single();
 
+  const rol = (profile as { role?: string | null } | null)?.role ?? "";
+  const magFilmsBeheren = rol === "leider" || rol === "founder";
+
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <Link href="/dashboard" className="text-cm-white opacity-60 hover:opacity-100 text-sm flex items-center gap-1 mb-4">
@@ -43,6 +46,30 @@ export default async function InstellingenPagina() {
           Bekijk onboarding (preview) →
         </Link>
       </div>
+
+      {/* Bestellinks (per pakket) */}
+      <div className="card space-y-3">
+        <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">🛒 Bestellinks</h2>
+        <p className="text-cm-white text-sm opacity-60">
+          Koppel je Lifeplus-webshop URL aan elk pakket. ELEVA gebruikt die links automatisch in productadvies-flows.
+        </p>
+        <Link href="/instellingen/bestellinks" className="btn-secondary text-sm inline-block">
+          Beheer bestellinks →
+        </Link>
+      </div>
+
+      {/* Film-CMS — alleen voor leiders/founders */}
+      {magFilmsBeheren && (
+        <div className="card space-y-3 border-gold-subtle">
+          <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">🎬 Films-CMS</h2>
+          <p className="text-cm-white text-sm opacity-60">
+            Beheer de films die in onboarding en op andere plekken worden getoond. Plak een YouTube/Vimeo URL — de embed gebeurt automatisch.
+          </p>
+          <Link href="/instellingen/films" className="btn-secondary text-sm inline-block">
+            Beheer films →
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
