@@ -84,9 +84,10 @@ export function detecteerProvider(url: string | null | undefined): "youtube" | "
 }
 
 /**
- * Vooraf-gedefinieerde slug-conventie voor onboarding-stappen.
- * Hier staan de slots die wij in code gebruiken — admin kan zelf nog
- * meer toevoegen, maar deze zijn de "verwachte" plekken.
+ * Vooraf-gedefinieerde slugs voor de admin-stappen in het 21-daagse
+ * playbook. We behouden de oude 'onboarding-stap-*' naamgeving zodat
+ * eerder geplakte films niet kapotgaan. De stappen zijn verplaatst
+ * van de onboarding naar het playbook (dag 2/3/4).
  */
 export const ONBOARDING_FILM_SLUGS = {
   STAP_6_WEBSHOP: "onboarding-stap-6-webshop",
@@ -96,24 +97,24 @@ export const ONBOARDING_FILM_SLUGS = {
 } as const;
 
 /**
- * Beschrijvende metadata voor de UI bij het beheren van slots —
- * zo weet de admin welk slot waar gebruikt wordt.
+ * Beschrijvende metadata voor de admin-UI bij het beheren van slots —
+ * zo weet de founder waar elke film terechtkomt in de gebruikersflow.
  */
 export const SLUG_BESCHRIJVINGEN: Record<string, { plek: string; suggestieTitel: string }> = {
   [ONBOARDING_FILM_SLUGS.STAP_6_WEBSHOP]: {
-    plek: "Onboarding stap 6 — Lifeplus webshop aanmaken",
-    suggestieTitel: "Lifeplus webshop in 5 minuten",
-  },
-  [ONBOARDING_FILM_SLUGS.STAP_7_TEAMS_ADMIN]: {
-    plek: "Onboarding stap 7 — Teams-administratie",
-    suggestieTitel: "Teams-administratie stap-voor-stap",
+    plek: "Playbook dag 2 — Lifeplus webshop aanmaken",
+    suggestieTitel: "Lifeplus webshop aanmaken",
   },
   [ONBOARDING_FILM_SLUGS.STAP_8_KREDIETFORMULIER]: {
-    plek: "Onboarding stap 8 — Kredietformulier",
-    suggestieTitel: "Kredietformulier in 5 minuten",
+    plek: "Playbook dag 2 — Kredietformulier invullen",
+    suggestieTitel: "Kredietformulier invullen",
+  },
+  [ONBOARDING_FILM_SLUGS.STAP_7_TEAMS_ADMIN]: {
+    plek: "Playbook dag 3 — Teams-administratiesysteem aanmaken",
+    suggestieTitel: "Teams-administratiesysteem aanmaken",
   },
   [ONBOARDING_FILM_SLUGS.STAP_9_BESTELLINKS]: {
-    plek: "Onboarding stap 9 — Bestellinks instellen",
-    suggestieTitel: "Bestellinks instellen via ELEVA",
+    plek: "Playbook dag 4 — Bestellinks koppelen aan ELEVA",
+    suggestieTitel: "Bestellinks koppelen aan ELEVA",
   },
 };

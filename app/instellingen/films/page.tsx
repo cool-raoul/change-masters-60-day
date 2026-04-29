@@ -105,10 +105,10 @@ export default async function FilmsBeheerPage() {
             </ul>
           </div>
 
-          {/* Onboarding-slots */}
+          {/* Playbook-admin-slots — staan in dag 2/3/4 van het 21-daagse playbook */}
           <section>
             <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider mb-3">
-              Onboarding-films
+              Playbook-films (dag 2-4)
             </h2>
             <div className="space-y-3">
               {standaardSlots.map((slug) => {
