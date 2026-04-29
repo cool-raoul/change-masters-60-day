@@ -40,7 +40,7 @@ export default async function FilmsBeheerPage() {
 
   const { data: films } = await supabase
     .from("films")
-    .select("id, slug, titel, beschrijving, video_url, tonen, duur_seconden, updated_at")
+    .select("id, slug, titel, beschrijving, belangrijk, video_url, tonen, duur_seconden, updated_at")
     .order("slug", { ascending: true });
 
   const filmsMap = new Map(

@@ -18,6 +18,7 @@ type Bestaande = {
   slug: string;
   titel: string;
   beschrijving: string | null;
+  belangrijk: string | null;
   video_url: string | null;
   tonen: boolean;
   duur_seconden: number | null;
@@ -44,6 +45,7 @@ export function FilmRowEditor({
   const [slug, setSlug] = useState(bestaande?.slug ?? initSlug);
   const [titel, setTitel] = useState(bestaande?.titel ?? suggestieTitel ?? "");
   const [beschrijving, setBeschrijving] = useState(bestaande?.beschrijving ?? "");
+  const [belangrijk, setBelangrijk] = useState(bestaande?.belangrijk ?? "");
   const [videoUrl, setVideoUrl] = useState(bestaande?.video_url ?? "");
   const [tonen, setTonen] = useState(bestaande?.tonen ?? true);
   const [bezig, setBezig] = useState(false);
@@ -54,6 +56,7 @@ export function FilmRowEditor({
   const heeftWijziging =
     titel !== (bestaande?.titel ?? "") ||
     beschrijving !== (bestaande?.beschrijving ?? "") ||
+    belangrijk !== (bestaande?.belangrijk ?? "") ||
     videoUrl !== (bestaande?.video_url ?? "") ||
     tonen !== (bestaande?.tonen ?? true) ||
     slug !== (bestaande?.slug ?? initSlug);
@@ -72,6 +75,7 @@ export function FilmRowEditor({
       slug: slug.trim(),
       titel: titel.trim(),
       beschrijving: beschrijving.trim() || null,
+      belangrijk: belangrijk.trim() || null,
       video_url: videoUrl.trim() || null,
       tonen,
       toegevoegd_door: userId,
@@ -189,7 +193,7 @@ export function FilmRowEditor({
 
           <div>
             <label className="block text-xs text-cm-white opacity-70 mb-1">
-              Beschrijving (optioneel — onder de film)
+              Beschrijving (optioneel — rustige onderschrift onder de film)
             </label>
             <textarea
               value={beschrijving}
@@ -197,6 +201,19 @@ export function FilmRowEditor({
               className="textarea-cm w-full"
               rows={2}
               placeholder="Korte uitleg wat de kijker gaat zien"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs text-cm-white opacity-70 mb-1">
+              Belangrijk / LET OP (optioneel — opvallend amber-blok boven de film)
+            </label>
+            <textarea
+              value={belangrijk}
+              onChange={(e) => setBelangrijk(e.target.value)}
+              className="textarea-cm w-full"
+              rows={2}
+              placeholder="LET OP: ... — bv. instructies of waarschuwingen die de kijker NIET mag missen"
             />
           </div>
 

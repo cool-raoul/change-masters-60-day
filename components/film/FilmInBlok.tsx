@@ -26,6 +26,7 @@ type FilmData = {
   slug: string;
   titel: string;
   beschrijving: string | null;
+  belangrijk: string | null;
   video_url: string | null;
   tonen: boolean;
   duur_seconden: number | null;
@@ -52,7 +53,7 @@ export function FilmInBlok({
     async function laad() {
       const { data: filmRow } = await supabase
         .from("films")
-        .select("slug, titel, beschrijving, video_url, tonen, duur_seconden")
+        .select("slug, titel, beschrijving, belangrijk, video_url, tonen, duur_seconden")
         .eq("slug", slug)
         .eq("tonen", true)
         .maybeSingle();
@@ -156,6 +157,18 @@ export function FilmInBlok({
           <span className="text-emerald-400 text-xs font-medium">✓ Afgekeken</span>
         )}
       </div>
+
+      {/* Belangrijk-blok BOVEN de video — opvallend amber, zodat de
+          gebruiker de instructie/waarschuwing zeker leest voordat hij
+          de film start. */}
+      {film.belangrijk && (
+        <div className="bg-amber-900/25 border border-amber-500/40 rounded-lg p-3 mb-2">
+          <p className="text-amber-200 text-sm leading-relaxed whitespace-pre-line">
+            {film.belangrijk}
+          </p>
+        </div>
+      )}
+
       <div className="aspect-video bg-black rounded-lg overflow-hidden border border-cm-border">
         {embedUrl ? (
           <iframe

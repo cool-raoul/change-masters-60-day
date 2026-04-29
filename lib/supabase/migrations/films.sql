@@ -24,8 +24,11 @@ CREATE TABLE IF NOT EXISTS films (
   slug TEXT NOT NULL UNIQUE,
   /** Titel zoals getoond aan member/prospect */
   titel TEXT NOT NULL,
-  /** Optionele beschrijving onder het filmpje */
+  /** Optionele beschrijving onder het filmpje (rustige onderschrift) */
   beschrijving TEXT,
+  /** Belangrijke instructie of waarschuwing — getoond in opvallend
+      amber-blok boven de video. Bv. 'LET OP: ...'. */
+  belangrijk TEXT,
   /** Embed-URL voor YouTube/Vimeo. Bv. 'https://www.youtube.com/embed/ABCDE' */
   video_url TEXT,
   /** Toggle om film tijdelijk uit te schakelen zonder hem te deleten */
@@ -37,6 +40,9 @@ CREATE TABLE IF NOT EXISTS films (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Voeg 'belangrijk' kolom toe als de tabel al bestond zonder die kolom
+ALTER TABLE films ADD COLUMN IF NOT EXISTS belangrijk TEXT;
 
 CREATE INDEX IF NOT EXISTS idx_films_slug ON films (slug);
 
