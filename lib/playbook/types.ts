@@ -82,6 +82,18 @@ export type ElevaPad = {
   spraak?: string;
   /** Naar welke route de member doorverwezen kan worden (voor "open direct"-knop). */
   route?: string;
+  /**
+   * Optioneel: tekst die alvast in het invoerveld op de bestemming-pagina
+   * (bv. ELEVA Mentor) wordt geplakt zodra de member op "Ga →" klikt.
+   *
+   * Mag een `{slug}`-placeholder bevatten — die wordt vervangen door de
+   * waarde uit `eigen_zinnen` voor diezelfde slug. Voorbeeld:
+   *   "Check mijn edification-zin: {edification-zin}"
+   *
+   * Als de slug nog niet ingevuld is, wordt de placeholder vervangen
+   * door "[hier je zin]" zodat het invoerveld wel werkbaar is.
+   */
+  prefillTemplate?: string;
 };
 
 /**

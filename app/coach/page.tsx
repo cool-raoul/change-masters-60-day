@@ -9,18 +9,34 @@ import { getServerTaal, v } from "@/lib/i18n/server";
 export default async function CoachPagina({
   searchParams,
 }: {
-  searchParams: Promise<{ prospect?: string }>;
+  searchParams: Promise<{
+    prospect?: string;
+    prefill?: string;
+    van?: string;
+    dag?: string;
+  }>;
 }) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
 
-  // Als ?prospect=ID in de URL staat (klik vanaf prospect-kaart): start
-  // automatisch een nieuw coach-gesprek met die prospect als context. Zo hoeft
-  // de member niet opnieuw te selecteren — de mentor weet direct over wie het
-  // gaat. We checken eerst of de prospect bestaat en van deze member is.
   const sp = await searchParams;
   const prospectIdParam = sp.prospect;
+  const prefillParam = sp.prefill;
+
+  // Helper: bouw een query-string voor de redirect-target zodat de
+  // ?prefill en ?van=playbook&dag=N intact blijven op /coach/[id].
+  function bouwDoorgegevenQuery(): string {
+    const params = new URLSearchParams();
+    if (prefillParam) params.set("prefill", prefillParam);
+    if (sp.van) params.set("van", sp.van);
+    if (sp.dag) params.set("dag", sp.dag);
+    const qs = params.toString();
+    return qs ? `?${qs}` : "";
+  }
+
+  // Als ?prospect=ID in de URL staat (klik vanaf prospect-kaart): start
+  // automatisch een nieuw coach-gesprek met die prospect als context.
   if (prospectIdParam) {
     const { data: prospectVoor } = await supabase
       .from("prospects")
@@ -40,8 +56,30 @@ export default async function CoachPagina({
         .select("id")
         .single();
       if (nieuw?.id) {
-        redirect(`/coach/${nieuw.id}`);
+        redirect(`/coach/${nieuw.id}${bouwDoorgegevenQuery()}`);
       }
+    }
+  }
+
+  // Als ?prefill=... in de URL staat (klik vanaf playbook-tile): start
+  // automatisch een nieuw gesprek en geef de prefill door naar de chat,
+  // zodat het invoerveld al gevuld is met de vraag van de member.
+  if (prefillParam) {
+    const titel =
+      prefillParam.length > 60
+        ? prefillParam.slice(0, 57) + "..."
+        : prefillParam;
+    const { data: nieuw } = await supabase
+      .from("ai_gesprekken")
+      .insert({
+        user_id: user.id,
+        titel,
+        berichten: [],
+      })
+      .select("id")
+      .single();
+    if (nieuw?.id) {
+      redirect(`/coach/${nieuw.id}${bouwDoorgegevenQuery()}`);
     }
   }
 

@@ -1032,6 +1032,11 @@ export const DAGEN: Dag[] = [
         spraak:
           "Check mijn edification-zin voor sponsor [naam]: ...",
         route: "/coach",
+        // Prefill plakt de zin direct in het mentor-invoerveld. Als de
+        // member 'm al heeft opgeslagen op /mijn-zinnen, wordt {edification-zin}
+        // vervangen door die exacte tekst — anders door "[hier je zin]".
+        prefillTemplate:
+          "Check mijn edification-zin: {edification-zin}",
       },
       {
         actie: "Voorbeeld-edifications in Scripts",

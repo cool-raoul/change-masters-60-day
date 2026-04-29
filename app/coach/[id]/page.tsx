@@ -4,10 +4,14 @@ import { ChatVenster } from "@/components/coach/ChatVenster";
 
 export default async function CoachGesprekPagina({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ prefill?: string }>;
 }) {
   const { id } = await params;
+  const sp = await searchParams;
+  const prefill = sp.prefill;
   const supabase = await createClient();
   const {
     data: { user },
@@ -65,6 +69,9 @@ export default async function CoachGesprekPagina({
       memberNaam={(eigenProfiel as any)?.full_name ?? "je member"}
       alleProspects={prospects || []}
       userId={user.id}
+      initialInvoer={
+        prefill && (gesprek.berichten || []).length === 0 ? prefill : undefined
+      }
     />
   );
 }

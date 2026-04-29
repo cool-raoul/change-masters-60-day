@@ -117,29 +117,43 @@ function ScriptKaart({
 
   const CATEGORIE_BADGE: Record<string, string> = {
     uitnodiging: "bg-[#1A2A3A] text-[#4A9EDB]",
+    edification: "bg-[#2A2438] text-[#C9A84C]",
     bezwaar: "bg-[#2A1A1A] text-[#DB6A4A]",
     followup: "bg-[#2A2A1A] text-[#C9A84C]",
     sluiting: "bg-[#1A2A1A] text-[#4ACB6A]",
     presentatie: "bg-[#2A1A3A] text-[#9A6ADB]",
   };
 
+  // Filter tags die al gedekt zijn door titel of categorie — voorkomt
+  // dat 'edification' twee keer naast elkaar staat als pill.
+  const titelLower = script.titel.toLowerCase();
+  const cat = script.categorie;
+  const zichtbareTags = script.tags
+    .filter((t) => {
+      const tl = t.toLowerCase();
+      if (tl === cat) return false;
+      if (titelLower.includes(tl)) return false;
+      return true;
+    })
+    .slice(0, 2);
+
   return (
     <div className="card">
       <div className="flex items-start justify-between gap-3">
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2 flex-wrap">
             <h3 className="text-cm-white font-semibold text-sm">{script.titel}</h3>
             <span
               className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                CATEGORIE_BADGE[script.categorie]
+                CATEGORIE_BADGE[script.categorie] ?? "bg-cm-surface-2 text-cm-white"
               }`}
             >
               {script.categorie}
             </span>
-            {script.tags.slice(0, 3).map((tag) => (
+            {zichtbareTags.map((tag) => (
               <span
                 key={tag}
-                className="text-xs px-2 py-0.5 rounded-full bg-cm-surface-2 text-cm-white"
+                className="text-xs px-2 py-0.5 rounded-full bg-cm-surface-2 text-cm-white opacity-70"
               >
                 {tag}
               </span>

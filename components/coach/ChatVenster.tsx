@@ -30,6 +30,13 @@ interface Props {
     darmvragenlijst_uitslag?: { bucket: "basis" | "plus"; bucket_label: string } | null;
     darmvragenlijst_ingevuld_op?: string | null;
   } | null;
+  /**
+   * Optionele prefill voor het invoerveld (bv. "Check mijn edification-zin: ...")
+   * komt vanuit het playbook via ?prefill=... in de URL. Wordt alleen
+   * toegepast bij een nieuw, leeg gesprek — niet bij het heropenen van een
+   * bestaand gesprek met geschiedenis.
+   */
+  initialInvoer?: string;
 }
 
 interface SnelleOptie {
@@ -305,9 +312,10 @@ export function ChatVenster({
   userId,
   memberNaam,
   productadviesTest,
+  initialInvoer,
 }: Props) {
   const [berichten, setBerichten] = useState<ChatBericht[]>(bestaandeBerichten);
-  const [invoer, setInvoer] = useState("");
+  const [invoer, setInvoer] = useState(initialInvoer ?? "");
   const [laden, setLaden] = useState(false);
   const [selectedProspect, setSelectedProspect] = useState(
     prospect?.id || ""
@@ -317,6 +325,7 @@ export function ChatVenster({
   const [isPremium, setIsPremium] = useState(false);
   const chatEindRef = useRef<HTMLDivElement>(null);
   const chatScrollRef = useRef<HTMLDivElement>(null);
+  const invoerRef = useRef<HTMLInputElement>(null);
   const supabase = createClient();
   const searchParams = useSearchParams();
   const autoVerstuurdRef = useRef(false);
@@ -334,6 +343,26 @@ export function ChatVenster({
       chatEindRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
     }
   }, [berichten]);
+
+  // Bij een prefill (gestart vanuit het playbook): focus de invoer en zet
+  // de cursor aan het einde, zodat de member meteen verder kan typen of
+  // direct op enter kan om de vraag te versturen. Alleen 1x bij mount —
+  // we willen niet steeds focus stelen tijdens het gesprek.
+  // De ?prefill=... wordt door de server al in `invoer` geplaatst via
+  // `initialInvoer`. Hier gaat het puur om UX: focus + cursor.
+  useEffect(() => {
+    if (!initialInvoer) return;
+    const el = invoerRef.current;
+    if (!el) return;
+    const len = el.value.length;
+    el.focus();
+    try {
+      el.setSelectionRange(len, len);
+    } catch {
+      // Sommige browsers ondersteunen setSelectionRange niet op type=text
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     fetch("/api/coach/gebruik")
@@ -760,6 +789,7 @@ export function ChatVenster({
           className="flex gap-3"
         >
           <input
+            ref={invoerRef}
             type="text"
             value={invoer}
             onChange={(e) => setInvoer(e.target.value)}

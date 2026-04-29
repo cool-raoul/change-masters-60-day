@@ -223,6 +223,32 @@ export function PlaybookDagTile({
     return /^https?:\/\//i.test(route);
   }
 
+  /**
+   * Bouwt een href voor een waarInEleva-item, en plakt eventueel een
+   * prefill-template op de URL ({slug} → opgeslagen waarde uit
+   * inlineWaardes, of "[hier je zin]" als nog niet ingevuld).
+   */
+  function bouwElevaPadHref(p: {
+    route?: string;
+    prefillTemplate?: string;
+  }): string | null {
+    if (!p.route) return null;
+    if (isExtern(p.route)) return p.route;
+    const sep = p.route.includes("?") ? "&" : "?";
+    let qs = `van=playbook&dag=${dag.nummer}`;
+    if (p.prefillTemplate) {
+      const ingevuld = p.prefillTemplate.replace(
+        /\{([a-z0-9-]+)\}/gi,
+        (_m, slug) => {
+          const w = (inlineWaardes[slug] || "").trim();
+          return w || "[hier je zin]";
+        },
+      );
+      qs += `&prefill=${encodeURIComponent(ingevuld)}`;
+    }
+    return `${p.route}${sep}${qs}`;
+  }
+
   return (
     <div className="space-y-4">
       {/* Optionele dag-film bovenaan — alleen zichtbaar als founder
@@ -490,27 +516,18 @@ export function PlaybookDagTile({
                   📍 Waar in ELEVA
                 </h3>
                 <ul className="space-y-2">
-                  {dag.waarInEleva.map((p, i) => (
+                  {dag.waarInEleva.map((p, i) => {
+                    const href = bouwElevaPadHref(p);
+                    const extern = !!p.route && isExtern(p.route);
+                    return (
                     <li key={i} className="text-cm-white text-xs space-y-1">
                       <div className="flex items-start gap-2 flex-wrap">
                         <strong className="font-medium">{p.actie}</strong>
-                        {p.route && (
+                        {href && (
                           <a
-                            href={
-                              /^https?:\/\//i.test(p.route)
-                                ? p.route
-                                : `${p.route}${p.route.includes("?") ? "&" : "?"}van=playbook&dag=${dag.nummer}`
-                            }
-                            target={
-                              /^https?:\/\//i.test(p.route)
-                                ? "_blank"
-                                : undefined
-                            }
-                            rel={
-                              /^https?:\/\//i.test(p.route)
-                                ? "noopener noreferrer"
-                                : undefined
-                            }
+                            href={href}
+                            target={extern ? "_blank" : undefined}
+                            rel={extern ? "noopener noreferrer" : undefined}
                             className="text-cm-gold underline-offset-2 hover:underline"
                           >
                             Ga →
@@ -528,7 +545,8 @@ export function PlaybookDagTile({
                         </p>
                       )}
                     </li>
-                  ))}
+                    );
+                  })}
                 </ul>
               </div>
             )}
