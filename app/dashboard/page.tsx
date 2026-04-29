@@ -4,6 +4,8 @@ import { nl, enUS, fr, es, de, pt } from "date-fns/locale";
 import Link from "next/link";
 import { DagelijkseStat, Herinnering, WhyProfile } from "@/lib/supabase/types";
 import { DagStatForm } from "@/components/dashboard/DagStatForm";
+import { PlaybookDagTile } from "@/components/playbook/PlaybookDagTile";
+import { DAGEN } from "@/lib/playbook/dagen";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { Locale } from "date-fns";
 
@@ -30,12 +32,16 @@ export default async function DashboardPagina() {
     { data: vandaagStats },
     { data: herinneringen },
     { data: pipelineCounts },
+    { data: dagVoltooiingen },
   ] = await Promise.all([
     supabase.from("profiles").select("run_startdatum, role, dagelijkse_push_aan, dagelijkse_push_uur").eq("id", user.id).maybeSingle(),
     supabase.from("why_profiles").select("*").eq("user_id", user.id).maybeSingle(),
     supabase.from("dagelijkse_stats").select("*").eq("user_id", user.id).eq("stat_datum", vandaagStr).maybeSingle(),
     supabase.from("herinneringen").select("*, prospect:prospects(id, volledige_naam)").eq("user_id", user.id).lte("vervaldatum", vandaagStr).eq("voltooid", false).order("vervaldatum", { ascending: true }).limit(5),
     supabase.from("prospects").select("pipeline_fase").eq("user_id", user.id).eq("gearchiveerd", false),
+    // Alle voltooide playbook-taken voor deze user — gebruikt voor de
+    // 'Vandaag is dag X'-tegel én voor de admin-reminders van vorige dagen.
+    supabase.from("dag_voltooiingen").select("dag_nummer, taak_id").eq("user_id", user.id),
   ]);
 
   const dag = berekenDag((profile as any)?.run_startdatum ?? null);
@@ -52,10 +58,56 @@ export default async function DashboardPagina() {
     faseCounts[p.pipeline_fase] = (faseCounts[p.pipeline_fase] || 0) + 1;
   });
 
-  // Admin-stappen (webshop, kredietformulier, Teams-administratiesysteem,
-  // bestellinks) zijn naar het 21-daagse playbook verplaatst. De
-  // 'Vandaag is dag X'-tegel die ze toont (incl. open admin-stappen) komt
-  // in fase B van DAG 5.
+  // Voltooiingen-set voor snelle lookup
+  const voltooidSet = new Set(
+    ((dagVoltooiingen as Array<{ dag_nummer: number; taak_id: string }>) || [])
+      .map((v) => `${v.dag_nummer}|${v.taak_id}`),
+  );
+
+  // Huidige dag-data uit het 21-daagse playbook (alleen relevant voor
+  // dag 1-21 — daarna draait de gebruiker op weekritme).
+  const huidigeDagData = dag <= 21
+    ? DAGEN.find((d) => d.nummer === dag) ?? null
+    : null;
+  const huidigeDagVoltooidIds = huidigeDagData
+    ? huidigeDagData.vandaagDoen
+        .filter((t) => voltooidSet.has(`${dag}|${t.id}`))
+        .map((t) => t.id)
+    : [];
+
+  // Reminders voor onvoltooide ADMIN-taken van vorige dagen — krediet,
+  // webshop, teams-admin, bestellinks. Eric Worre tip is geen reminder
+  // (doorlopend, geen one-shot taak). We tonen ook missed verplichte
+  // taken alleen voor admin-stappen — niet alle gemiste invites etc.
+  // Mapping admin-taak → emoji + 'kale' titel zonder emoji-prefix
+  // (zo voorkomen we een unicode-regex die niet in alle TS-versies werkt).
+  const ADMIN_TAKEN: Record<string, { emoji: string; kort: string }> = {
+    "dag2-webshop": { emoji: "🛒", kort: "Lifeplus webshop aanmaken" },
+    "dag2-krediet": { emoji: "✅", kort: "Kredietformulier invullen" },
+    "dag3-teams-admin": { emoji: "📋", kort: "Teams-administratiesysteem aanmaken" },
+    "dag4-bestellinks": { emoji: "🔗", kort: "Bestellinks koppelen aan ELEVA" },
+  };
+  type OpenReminder = {
+    dagNummer: number;
+    taakId: string;
+    label: string;
+    emoji: string;
+  };
+  const openAdminReminders: OpenReminder[] = [];
+  for (const d of DAGEN) {
+    if (d.nummer >= dag) break; // alleen verleden dagen
+    for (const taak of d.vandaagDoen) {
+      const meta = ADMIN_TAKEN[taak.id];
+      if (!meta) continue;
+      if (voltooidSet.has(`${d.nummer}|${taak.id}`)) continue;
+      openAdminReminders.push({
+        dagNummer: d.nummer,
+        taakId: taak.id,
+        label: meta.kort,
+        emoji: meta.emoji,
+      });
+    }
+  }
 
   const faseKleuren: Record<string, string> = {
     prospect: "text-[#CCCCCC]", uitgenodigd: "text-[#4A9EDB]",
@@ -90,9 +142,50 @@ export default async function DashboardPagina() {
         <p className="text-cm-white text-xs mt-2">{60 - dag} {v("dashboard.dagen_te_gaan", taal)}</p>
       </div>
 
-      {/* 'Vandaag is dag X' + open admin-taken-tegel komen in fase B
-          (DAG 5 fase B) als de playbook live op het dashboard wordt
-          gerenderd uit lib/playbook/dagen.ts. */}
+      {/* Reminder-tegel: open admin-stappen van VORIGE dagen die nog
+          niet zijn afgevinkt. Verschijnt elke dag opnieuw zolang er
+          nog admin-werk te doen is. */}
+      {openAdminReminders.length > 0 && (
+        <div className="card border-l-4 border-amber-500">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold text-amber-300 uppercase tracking-wider flex items-center gap-2">
+              ⚠️ Open setup-stappen
+            </h2>
+            <span className="text-cm-white text-xs opacity-60">{openAdminReminders.length} open</span>
+          </div>
+          <p className="text-cm-white text-xs opacity-70 mb-3 leading-relaxed">
+            Deze stappen heb je nog niet afgevinkt. Tik om naar de juiste dag in het playbook te gaan.
+          </p>
+          <div className="space-y-2">
+            {openAdminReminders.map((r) => (
+              <Link
+                key={`${r.dagNummer}-${r.taakId}`}
+                href={`/playbook?dag=${r.dagNummer}`}
+                className="flex items-center gap-3 p-3 rounded-lg bg-cm-surface-2 border border-cm-border hover:border-cm-gold-dim transition-colors"
+              >
+                <span className="text-xl">{r.emoji}</span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-cm-white text-sm font-medium truncate">
+                    {r.label}
+                  </p>
+                  <p className="text-cm-white text-xs opacity-50">
+                    Dag {r.dagNummer}
+                  </p>
+                </div>
+                <span className="text-cm-white opacity-50 text-xs">→</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Vandaag is dag X — playbook-tegel met checklist + films */}
+      {huidigeDagData && (
+        <PlaybookDagTile
+          dag={huidigeDagData}
+          initialVoltooidIds={huidigeDagVoltooidIds}
+        />
+      )}
 
       {/* Leider banner */}
       {isLeider && (
