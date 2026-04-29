@@ -204,8 +204,18 @@ export default function OnboardingPagina() {
   const supabase = createClient();
 
   useEffect(() => {
-    const preview = new URLSearchParams(window.location.search).get("preview") === "true";
+    const params = new URLSearchParams(window.location.search);
+    const preview = params.get("preview") === "true";
     setIsPreview(preview);
+
+    // ?stap=N — directe deeplink, vooral gebruikt vanuit dashboard-tegel
+    // 'open setup-taken' om iemand die al stap=99 heeft toch terug te
+    // sturen naar een specifieke admin-stap (6/7/8/9). Tussen 1 en 11.
+    const stapParam = Number(params.get("stap"));
+    const directeStap =
+      Number.isFinite(stapParam) && stapParam >= 1 && stapParam <= 11
+        ? stapParam
+        : null;
 
     async function laadGegevens() {
       const { data: { user } } = await supabase.auth.getUser();
@@ -233,9 +243,16 @@ export default function OnboardingPagina() {
       }
 
       const huidigStap = Number(user?.user_metadata?.onboarding_stap || 1);
-      if (huidigStap >= 99 && !preview) { router.push("/dashboard"); return; }
+      // Alleen redirecten naar dashboard als gebruiker al klaar is EN
+      // GEEN expliciete ?stap=N is meegegeven (anders willen we juist
+      // terug naar die specifieke open admin-stap).
+      if (huidigStap >= 99 && !preview && directeStap === null) {
+        router.push("/dashboard");
+        return;
+      }
 
-      setStap(preview ? 1 : huidigStap);
+      // Prioriteit: ?stap (deeplink) > preview-modus (start bij 1) > opgeslagen huidigStap
+      setStap(directeStap ?? (preview ? 1 : huidigStap));
       if (user?.user_metadata?.dagdoel_contacten) setDagdoelContacten(Number(user.user_metadata.dagdoel_contacten));
       if (user?.user_metadata?.dagdoel_uitnodigingen) setDagdoelUitnodigingen(Number(user.user_metadata.dagdoel_uitnodigingen));
       if (user?.user_metadata?.dagdoel_followups) setDagdoelFollowups(Number(user.user_metadata.dagdoel_followups));
@@ -262,33 +279,47 @@ export default function OnboardingPagina() {
     } catch (e) { /* stil falen */ }
   }
 
-  async function gaNaarStap(nieuweStap: number) {
+  /**
+   * Verplaats de gebruiker naar de volgende stap.
+   *
+   * @param nieuweStap  Stap-nummer waar we heen gaan.
+   * @param voltooid    True = de huidige stap is écht voltooid (zet
+   *                    boolean op true, stuurt push naar sponsor).
+   *                    False = stap is overgeslagen ("doe ik later").
+   *                    Boolean blijft false zodat dashboard-tegel hem
+   *                    later als open taak kan tonen.
+   */
+  async function gaNaarStap(nieuweStap: number, voltooid: boolean = true) {
     setBezig(true);
     if (!isPreview) {
       await supabase.auth.updateUser({ data: { onboarding_stap: nieuweStap } });
 
-      // DB + push notificatie per stap
-      // veld is optioneel — alleen gevuld bij stappen waarvoor we al een
-      // boolean kolom hebben in onboarding_voortgang. De nieuwe Lifeplus-
-      // admin-stappen (6 t/m 10) hebben (nog) geen DB-veld; daar volstaat
-      // de onboarding_stap-update + push.
+      // Mapping: WANNEER je naar stap N gaat, dan was stap N-1 (deze actie)
+      // dus zojuist afgerond. Veldnaam = welke kolom in onboarding_voortgang
+      // hoort bij die stap. Push-naam = wat de sponsor in zijn bel ziet.
       const stapActies: Record<number, { veld?: string; pushNaam: string }> = {
-        2:  { veld: "stap_1_welkom", pushNaam: "heeft de app geïnstalleerd 📱" },
-        3:  { veld: "stap_2_run",    pushNaam: "heeft zijn/haar WHY gemaakt 💛" },
-        4:  { veld: "stap_3_namen",  pushNaam: "begrijpt de 60-dagenrun 📖" },
-        5:  { veld: "stap_4_script", pushNaam: "heeft de namenlijst aangemaakt 📝" },
-        6:  { veld: "stap_4_script", pushNaam: "heeft het uitnodigingsscript gelezen 💬" },
-        7:  {                         pushNaam: "heeft de Lifeplus webshop aangemaakt 🛒" },
-        8:  {                         pushNaam: "heeft Teams-administratie ingediend 📋" },
-        9:  {                         pushNaam: "heeft het kredietformulier ingevuld ✅" },
-        10: {                         pushNaam: "heeft bestellinks ingesteld 🔗" },
-        11: {                         pushNaam: "is gestart met Eric Worre's Seven Skills 🎧" },
+        2:  { veld: "stap_1_welkom",      pushNaam: "heeft de app geïnstalleerd 📱" },
+        3:  { veld: "stap_2_run",         pushNaam: "heeft zijn/haar WHY gemaakt 💛" },
+        4:  { veld: "stap_3_namen",       pushNaam: "begrijpt de 60-dagenrun 📖" },
+        5:  { veld: "stap_4_script",      pushNaam: "heeft de namenlijst aangemaakt 📝" },
+        6:  { veld: "stap_4_script",      pushNaam: "heeft het uitnodigingsscript gelezen 💬" },
+        7:  { veld: "stap_6_webshop",     pushNaam: "heeft de Lifeplus webshop aangemaakt 🛒" },
+        8:  { veld: "stap_7_teams_admin", pushNaam: "heeft Teams-administratie ingediend 📋" },
+        9:  { veld: "stap_8_krediet",     pushNaam: "heeft het kredietformulier ingevuld ✅" },
+        10: { veld: "stap_9_bestellinks", pushNaam: "heeft bestellinks ingesteld 🔗" },
+        11: { veld: "stap_10_eric_worre", pushNaam: "is gestart met Eric Worre's Seven Skills 🎧" },
       };
 
       if (stapActies[nieuweStap]) {
         const { veld, pushNaam } = stapActies[nieuweStap];
-        if (veld) await slaVoortgangOp({ [veld]: true });
-        await stuurPushNaarSponsor(pushNaam);
+        if (veld) {
+          // Bij voltooid: true. Bij overgeslagen: false (zodat dashboard
+          // 'm als open taak kan tonen).
+          await slaVoortgangOp({ [veld]: voltooid });
+        }
+        if (voltooid) {
+          await stuurPushNaarSponsor(pushNaam);
+        }
       }
     }
     setStap(nieuweStap);
@@ -694,10 +725,10 @@ export default function OnboardingPagina() {
               )}
 
               <div className="flex gap-2 flex-wrap">
-                <button onClick={() => gaNaarStap(7)} disabled={bezig} className="btn-gold flex-1 py-3 text-base">
+                <button onClick={() => gaNaarStap(7, true)} disabled={bezig} className="btn-gold flex-1 py-3 text-base">
                   Webshop staat — verder →
                 </button>
-                <button onClick={() => gaNaarStap(7)} disabled={bezig} className="btn-secondary py-3 text-sm whitespace-nowrap">
+                <button onClick={() => gaNaarStap(7, false)} disabled={bezig} className="btn-secondary py-3 text-sm whitespace-nowrap" title="Komt op je dashboard als open taak">
                   Doe ik later
                 </button>
               </div>
@@ -721,22 +752,34 @@ export default function OnboardingPagina() {
               </div>
 
               <div className="flex gap-2 flex-wrap">
-                <button onClick={() => gaNaarStap(8)} disabled={bezig} className="btn-gold flex-1 py-3 text-base">
+                <button onClick={() => gaNaarStap(8, true)} disabled={bezig} className="btn-gold flex-1 py-3 text-base">
                   Administratie ingediend — verder →
                 </button>
-                <button onClick={() => gaNaarStap(8)} disabled={bezig} className="btn-secondary py-3 text-sm whitespace-nowrap">
+                <button onClick={() => gaNaarStap(8, false)} disabled={bezig} className="btn-secondary py-3 text-sm whitespace-nowrap" title="Komt op je dashboard als open taak">
                   Doe ik later
                 </button>
               </div>
             </div>
           )}
 
-          {/* ───── STAP 8: KREDIETFORMULIER ─────
-              Inhoud uit films-CMS — beheer via /instellingen/films. */}
+          {/* ───── STAP 8: KREDIETFORMULIER (VERPLICHT) ─────
+              Inhoud uit films-CMS. GEEN 'Doe ik later'-knop — zonder
+              kredietformulier kan de eerste maand geen uitbetaling
+              verwerkt worden, dus deze stap moet voltooid worden voordat
+              de gebruiker doorkan. */}
           {stap === 8 && (
             <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-display font-bold text-cm-white mb-1">✅ Vul het kredietformulier in</h2>
+              </div>
+
+              <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4">
+                <p className="text-amber-300 font-semibold text-sm flex items-center gap-2 mb-1">
+                  ⚡ Verplichte stap
+                </p>
+                <p className="text-cm-white text-sm leading-relaxed opacity-90">
+                  Zonder ingevuld kredietformulier kan je eerste uitbetaling niet verwerkt worden. Deze stap kan dus niet overgeslagen worden — vul 'm direct in.
+                </p>
               </div>
 
               <div className="card space-y-3">
@@ -747,14 +790,9 @@ export default function OnboardingPagina() {
                 />
               </div>
 
-              <div className="flex gap-2 flex-wrap">
-                <button onClick={() => gaNaarStap(9)} disabled={bezig} className="btn-gold flex-1 py-3 text-base">
-                  Formulier ingevuld — verder →
-                </button>
-                <button onClick={() => gaNaarStap(9)} disabled={bezig} className="btn-secondary py-3 text-sm whitespace-nowrap">
-                  Doe ik later
-                </button>
-              </div>
+              <button onClick={() => gaNaarStap(9, true)} disabled={bezig} className="btn-gold w-full py-3 text-base">
+                Formulier ingevuld — verder →
+              </button>
             </div>
           )}
 
@@ -780,10 +818,10 @@ export default function OnboardingPagina() {
               </Link>
 
               <div className="flex gap-2 flex-wrap">
-                <button onClick={() => gaNaarStap(10)} disabled={bezig} className="btn-gold flex-1 py-3 text-base">
+                <button onClick={() => gaNaarStap(10, true)} disabled={bezig} className="btn-gold flex-1 py-3 text-base">
                   Bestellinks ingesteld — verder →
                 </button>
-                <button onClick={() => gaNaarStap(10)} disabled={bezig} className="btn-secondary py-3 text-sm whitespace-nowrap">
+                <button onClick={() => gaNaarStap(10, false)} disabled={bezig} className="btn-secondary py-3 text-sm whitespace-nowrap" title="Komt op je dashboard als open taak">
                   Doe ik later
                 </button>
               </div>

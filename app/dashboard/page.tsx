@@ -30,12 +30,16 @@ export default async function DashboardPagina() {
     { data: vandaagStats },
     { data: herinneringen },
     { data: pipelineCounts },
+    { data: onboardingVoortgang },
   ] = await Promise.all([
     supabase.from("profiles").select("run_startdatum, role, dagelijkse_push_aan, dagelijkse_push_uur").eq("id", user.id).maybeSingle(),
     supabase.from("why_profiles").select("*").eq("user_id", user.id).maybeSingle(),
     supabase.from("dagelijkse_stats").select("*").eq("user_id", user.id).eq("stat_datum", vandaagStr).maybeSingle(),
     supabase.from("herinneringen").select("*, prospect:prospects(id, volledige_naam)").eq("user_id", user.id).lte("vervaldatum", vandaagStr).eq("voltooid", false).order("vervaldatum", { ascending: true }).limit(5),
     supabase.from("prospects").select("pipeline_fase").eq("user_id", user.id).eq("gearchiveerd", false),
+    // Onboarding-stappen die eventueel met "Doe ik later" zijn overgeslagen.
+    // We tonen ze als open taken zodat ze niet uit beeld verdwijnen.
+    supabase.from("onboarding_voortgang").select("stap_6_webshop, stap_7_teams_admin, stap_8_krediet, stap_9_bestellinks").eq("user_id", user.id).maybeSingle(),
   ]);
 
   const dag = berekenDag((profile as any)?.run_startdatum ?? null);
@@ -51,6 +55,23 @@ export default async function DashboardPagina() {
   (pipelineCounts || []).forEach((p: { pipeline_fase: string }) => {
     faseCounts[p.pipeline_fase] = (faseCounts[p.pipeline_fase] || 0) + 1;
   });
+
+  // Open onboarding-stappen (admin-stappen 6/7/8/9) die niet voltooid
+  // zijn. Worden getoond als open taken zodat de gebruiker ze niet
+  // vergeet — vooral kritiek voor stap 8 (kredietformulier) en de admin.
+  type OpenStap = { sleutel: number; titel: string; emoji: string };
+  const openOnboardingStappen: OpenStap[] = [];
+  const ov = (onboardingVoortgang as Record<string, boolean> | null) ?? null;
+  if (ov) {
+    if (!ov.stap_6_webshop)
+      openOnboardingStappen.push({ sleutel: 6, titel: "Lifeplus webshop aanmaken", emoji: "🛒" });
+    if (!ov.stap_7_teams_admin)
+      openOnboardingStappen.push({ sleutel: 7, titel: "Teams-administratie instellen", emoji: "📋" });
+    if (!ov.stap_8_krediet)
+      openOnboardingStappen.push({ sleutel: 8, titel: "Kredietformulier invullen", emoji: "✅" });
+    if (!ov.stap_9_bestellinks)
+      openOnboardingStappen.push({ sleutel: 9, titel: "Bestellinks instellen", emoji: "🔗" });
+  }
 
   const faseKleuren: Record<string, string> = {
     prospect: "text-[#CCCCCC]", uitgenodigd: "text-[#4A9EDB]",
@@ -84,6 +105,52 @@ export default async function DashboardPagina() {
         </div>
         <p className="text-cm-white text-xs mt-2">{60 - dag} {v("dashboard.dagen_te_gaan", taal)}</p>
       </div>
+
+      {/* Open onboarding-stappen — verschijnt alleen als er nog admin-stappen
+          openstaan. Stap 8 (kredietformulier) krijgt extra rode accent want
+          die is verplicht voor de eerste uitbetaling. */}
+      {openOnboardingStappen.length > 0 && (
+        <div className="card border-l-4 border-amber-500">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold text-amber-300 uppercase tracking-wider flex items-center gap-2">
+              ⚠️ Open setup-taken
+            </h2>
+            <span className="text-cm-white text-xs opacity-60">{openOnboardingStappen.length} open</span>
+          </div>
+          <p className="text-cm-white text-xs opacity-70 mb-3 leading-relaxed">
+            Deze stappen zijn nog niet voltooid. Tik om verder te gaan waar je gebleven was.
+          </p>
+          <div className="space-y-2">
+            {openOnboardingStappen.map((s) => {
+              const isVerplicht = s.sleutel === 8;
+              return (
+                <Link
+                  key={s.sleutel}
+                  href={`/onboarding?stap=${s.sleutel}`}
+                  className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${
+                    isVerplicht
+                      ? "bg-red-900/20 border border-red-500/40 hover:border-red-400/70"
+                      : "bg-cm-surface-2 border border-cm-border hover:border-cm-gold-dim"
+                  }`}
+                >
+                  <span className="text-xl">{s.emoji}</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-cm-white text-sm font-medium truncate">
+                      {s.titel}
+                    </p>
+                    {isVerplicht && (
+                      <p className="text-red-400 text-xs">
+                        Verplicht — zonder dit geen uitbetaling
+                      </p>
+                    )}
+                  </div>
+                  <span className="text-cm-white opacity-50 text-xs">→</span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Leider banner */}
       {isLeider && (
