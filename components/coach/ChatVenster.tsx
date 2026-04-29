@@ -325,7 +325,7 @@ export function ChatVenster({
   const [isPremium, setIsPremium] = useState(false);
   const chatEindRef = useRef<HTMLDivElement>(null);
   const chatScrollRef = useRef<HTMLDivElement>(null);
-  const invoerRef = useRef<HTMLInputElement>(null);
+  const invoerRef = useRef<HTMLTextAreaElement>(null);
   const supabase = createClient();
   const searchParams = useSearchParams();
   const autoVerstuurdRef = useRef(false);
@@ -344,25 +344,41 @@ export function ChatVenster({
     }
   }, [berichten]);
 
-  // Bij een prefill (gestart vanuit het playbook): focus de invoer en zet
-  // de cursor aan het einde, zodat de member meteen verder kan typen of
-  // direct op enter kan om de vraag te versturen. Alleen 1x bij mount —
-  // we willen niet steeds focus stelen tijdens het gesprek.
-  // De ?prefill=... wordt door de server al in `invoer` geplaatst via
-  // `initialInvoer`. Hier gaat het puur om UX: focus + cursor.
+  // Bij een prefill (gestart vanuit het playbook): zorg dat de hele zin
+  // zichtbaar is in de textarea (auto-grow trigger), focus de invoer, zet
+  // de cursor aan het einde zodat de member meteen verder kan typen, en
+  // scroll de textarea-inhoud naar het BEGIN — anders zou de member alleen
+  // het einde van de zin zien op smalle schermen.
+  // Alleen 1x bij mount — we willen niet steeds focus stelen.
   useEffect(() => {
     if (!initialInvoer) return;
     const el = invoerRef.current;
     if (!el) return;
+    // Auto-grow eerst aanzwengelen zodat de hele tekst past
+    el.style.height = "auto";
+    el.style.height = Math.min(el.scrollHeight, 160) + "px";
+    // Focus + cursor aan eind (klaar om aan te vullen of te enteren)
     const len = el.value.length;
     el.focus();
     try {
       el.setSelectionRange(len, len);
     } catch {
-      // Sommige browsers ondersteunen setSelectionRange niet op type=text
+      // Sommige browsers ondersteunen setSelectionRange niet
     }
+    // Maar scroll de tekst naar boven zodat het begin zichtbaar is
+    el.scrollTop = 0;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Auto-grow ook updaten zodra de invoer-string buitenom wijzigt (bv. via
+  // de VoiceInputKnop die `setInvoer` rechtstreeks aanroept zonder een
+  // synthetisch onChange-event).
+  useEffect(() => {
+    const el = invoerRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = Math.min(el.scrollHeight, 160) + "px";
+  }, [invoer]);
 
   useEffect(() => {
     fetch("/api/coach/gebruik")
@@ -788,14 +804,35 @@ export function ChatVenster({
           }}
           className="flex gap-3"
         >
-          <input
+          <textarea
             ref={invoerRef}
-            type="text"
             value={invoer}
             onChange={(e) => setInvoer(e.target.value)}
+            onKeyDown={(e) => {
+              // Enter = versturen, Shift+Enter = nieuwe regel
+              if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
+                e.preventDefault();
+                if (invoer.trim() && !laden) {
+                  stuurBericht();
+                }
+              }
+            }}
             placeholder={v("coach.placeholder")}
-            className="input-cm flex-1"
+            className="input-cm flex-1 resize-none leading-relaxed py-3"
             disabled={laden}
+            rows={1}
+            style={{
+              // Auto-grow: groeit mee met content (max ~6 regels op mobiel)
+              minHeight: "3rem",
+              maxHeight: "10rem",
+              overflowY: invoer.split("\n").length > 6 ? "auto" : "hidden",
+              height: "auto",
+            }}
+            onInput={(e) => {
+              const el = e.currentTarget;
+              el.style.height = "auto";
+              el.style.height = Math.min(el.scrollHeight, 160) + "px";
+            }}
           />
           <VoiceInputKnop
             huidigeWaarde={invoer}
