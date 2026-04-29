@@ -18,7 +18,7 @@ export function detecteerVraagType(berichten: { role: string; content: string }[
   // Productadvies: gebruik \w* voor conjugaties (supplement/supplementen, vitamine/vitaminen, etc.)
   // + medische context (chemo, kanker, medicatie) want daar komt vaak een productvraag bovenop.
   if (/\b(productadvies|product ?advies|welk pakket|welke producten|pakket (voor|bij)|lifeplus ?advies|daily (bio)?basics|daily light|proanthenols|omegold|vegan omegold|mena plus|key.?tonic|enerxan|phase.?o.?mine|triple protein|vegan protein|be refueled|be focused|be recharged|be sustained|golden milk|cacao boost|cacao mushroom|support tabs|purple flash|green medley|cogelin|biotic blast|aloe ?vera|parabalance|digestive formula|ph plus|msm plus|fy skin|collodial silver|wondergel|somazyme|mainta(i)?n.?(&| en )?.?protect|women.?s gold|men.?s gold|women.?s special|men.?s special|evening primrose|vitamins d.? ?(&| en )?.? ?k|darmen in balans|stress ?less|get zen|reset (women|men|vega)|combipakket|program c|basispakket|basisproduct|basiset|basis[- ]?stack|supplement\w*|vitamine\w*|mineraal\w*|mineralen|magnesium|calcium|zink|ijzer|vezel\w*|probiotica|prebiotica|omega[- ]?3|omega|afvallen|intermittent fasting|keto|vasten|burn.?out|stress\w*|slaap\w*|slecht slapen|slaapprobleem|menopauze|overgang|pms|menstruatie|hormo\w+|gewricht\w*|stijfheid|artrose|pijn|detox|sappenkuur|darmprogramma|holistic reset|darm\w*|spijsvertering|stoelgang|obstipatie|constipatie|diarree|opgeblazen|winderigheid|naar (het|de) toilet|moeilijk poepen|niet kunnen poepen|buikpijn|maagpijn|brandend maagzuur|reflux|energie|moe|vermoei\w+|brain fog|concentrati\w+|focus|hoofdpijn|migraine|huid|acne|eczeem|psoriasis|haaruitval|nagels|immu\w+|verkoudheid|griep|allergie\w*|hooikoorts|gezondheid\w*|klacht\w*|vitaliteit|holistisch|vitaliteitsprogramma|cholesterol|bloeddruk|bloedsuiker|suiker|diabet\w+|sport|training|performance|herstel|spieren|workout|fitness|cardio|eiwit\w*|protei+ne\w*|ouder worden|veroudering|anti.?aging|libido|seks|vruchtbaarheid|chemo\w*|kanker|oncolog\w+|medicatie|medicij\w+|tablet\w+|pillen|capsule\w*|behandeling|chronisch\w*|ziek(te|tes|tebeeld|enhuis)|bloedverdunner\w*|antidepressiva|schildklier|zwanger\w*|borstvoeding|lactati\w+|arts\w*|apotheek|apotheker|huisarts)\b/.test(recenteUserBerichten)) return "productadvies";
-  if (/\b(3.?weg|drieweg|groepje|aanmaken|sponsor koppel|introduceer|edif|aankondig|presentatie.*groep|groep.*presentatie)\b/.test(recenteUserBerichten)) return "drieweg";
+  if (/\b(3.?weg|drieweg|groepje|aanmaken|sponsor koppel|introduceer|edif\w*|edification|aankondig|presentatie.*groep|groep.*presentatie|sponsor (laten )?(presenteren|introduce|opvoeren))\b/.test(recenteUserBerichten)) return "drieweg";
   if (/\b(dm|bericht|schrij|tekst|uitnodig|whatsapp|instagram|sturen)\b/.test(recenteUserBerichten)) return "dm";
   if (/\b(bezwaar|objection|geen tijd|nadenken|niet van sales|ken te weinig|geen geld|partner overleg|twijfel)\b/.test(recenteUserBerichten)) return "bezwaar";
   if (/\b(follow.?up|opvolg|stilte|geen reactie|niet gereageerd|terugkom)\b/.test(recenteUserBerichten)) return "followup";
@@ -226,7 +226,40 @@ FOUTEN DIE MENSEN MAKEN:
 - Sponsor pitcht meteen → moet eerst rapport bouwen
 - Geen follow-up binnen 24u → momentum verloren
 
-EDITICATIE FORMULE (Worre): Wie ze zijn + Wat ze gedaan hebben + Waarom perfect voor deze persoon`,
+EDIFICATION (Worre + Brookes) — DE ZIN VÓÓRDAT JE SPONSOR PRAAT:
+
+Edification = in 1-2 zinnen WAAROM jouw sponsor de juiste persoon is om deze prospect verder te helpen, vóórdat de sponsor ook maar één woord zegt. Niet erna. Niet improviseren. Eén vaste zin, telkens identiek.
+
+DE FORMULE: "Ik ga je voorstellen aan [naam], die [autoriteit/track-record], en degene die [persoonlijke link met jou]."
+
+DRIE BOUWSTENEN:
+1. WIE — naam + relatie tot jou (mentor / sponsor / coach / vriendin)
+2. AUTORITEIT — hoe lang in dit vak + concreet getal of resultaat (jaren ervaring, mensen geholpen, schaal van impact, eigen transformatie)
+3. PERSOONLIJKE LINK — waarom JIJ deze persoon hebt gekozen (wat zij/hij voor jou heeft betekend, in jouw eigen taal)
+
+REGELS:
+- Max 25 woorden. Onder 20 nóg beter.
+- Geen overdrijving ("de allerbeste!"), geen hype, geen medische/financiële claims.
+- Identiek elke keer. Schrijven, uit je hoofd leren, blijven gebruiken.
+- Geen pitch-gevoel — gewoon de waarheid, scherp opgeschreven.
+
+WANNEER DE MEMBER VRAAGT OM JE EDIFICATION-ZIN TE CHECKEN:
+Loop deze checklist letterlijk af en geef per item ✓ of ✗ met korte uitleg. Daarna: één concrete verbetersuggestie per ✗.
+□ Onder 25 woorden? (Tel ze mee in je feedback.)
+□ Autoriteit-deel concreet? (Jaren / mensen / eigen transformatie meetbaar gemaakt?)
+□ Persoonlijke link duidelijk? (Waarom JIJ deze sponsor hebt gekozen?)
+□ Geen overdrijving, geen claims? (Geen "wereldberoemd", geen "geneest", geen "verdient X per maand".)
+□ Naam + relatie genoemd?
+□ Klinkt het natuurlijk in spreektaal? (Niet AI-formal.)
+
+Sluit altijd af met: een verbeterde versie als de zin nog niet sterk is. Als de zin sterk is: bevestig welke 3 elementen werken en moedig aan om te oefenen door 'm hardop uit te spreken.
+
+VEELGEMAAKTE FOUTEN:
+- "Dit is m'n upline" → 0 autoriteit. Sponsor moet vanaf nul.
+- Improviseren → twijfelt halverwege. Sponsor weet niet wanneer 'ie kan starten.
+- "De allerbeste!" → prospect ruikt hype.
+- Vergeten → geen edification = geen 3-weg, alleen een gesprek.
+- Over jezelf praten in plaats van de sponsor → focus verkeerd.`,
 
   social: `
 ### SOCIAL MEDIA & ATTRACTIE

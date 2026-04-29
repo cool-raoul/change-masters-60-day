@@ -14,6 +14,7 @@ export default function ScriptsPagina() {
   const CATEGORIE_LABELS: Record<string, string> = {
     alle: v("scripts.alle"),
     uitnodiging: v("scripts.uitnodiging"),
+    edification: v("scripts.edification"),
     bezwaar: v("scripts.bezwaar"),
     followup: v("scripts.followup"),
     sluiting: v("scripts.sluiting"),

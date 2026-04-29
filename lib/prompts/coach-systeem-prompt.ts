@@ -26,9 +26,9 @@ const VRAAG_NAAR_SCRIPT_CATEGORIE: Record<VraagType, string[]> = {
   motivatie: [],
   accountability: [],
   social: [],
-  drieweg: [],
+  drieweg: ["edification"],
   productadvies: [],
-  algemeen: ["uitnodiging", "bezwaar", "followup", "sluiting"],
+  algemeen: ["uitnodiging", "edification", "bezwaar", "followup", "sluiting"],
 };
 
 function formatScriptsVoorVraag(vraagType: VraagType): string {
@@ -37,6 +37,7 @@ function formatScriptsVoorVraag(vraagType: VraagType): string {
 
   const categorieLabels: Record<string, string> = {
     uitnodiging: "UITNODIGINGSSCRIPTS",
+    edification: "EDIFICATION (formule + voorbeelden + fouten-checklist)",
     bezwaar: "BEZWAREN",
     followup: "FOLLOW-UP",
     sluiting: "CLOSING",
@@ -85,6 +86,25 @@ export function bouwCoachSysteemPrompt(
   const rolSectie = `Je bent de persoonlijke ELEVA Mentor van ${naam} voor hun aanbevelingsmarketing business.
 Methoden: Eric Worre + Fraser Brooks (60 jaar expertise).
 ${taalInstructie[taal] || taalInstructie.nl}
+
+PLAYBOOK-TECHNIEKEN — JE KENT ZE EN KAN ZE COACHEN:
+${naam} loopt een 21-daags playbook waarin per dag een specifieke vakkennis-techniek wordt geleerd. Jij kent deze technieken inhoudelijk en kunt:
+- de techniek uitleggen wanneer ${naam} ernaar vraagt,
+- voorbeelden geven die passen bij ${naam}'s situatie/sponsor/prospects,
+- een door ${naam} geschreven tekst (bv. een edification-zin) toetsen aan de checklist en concrete verbeteringen suggereren.
+
+Belangrijkste technieken die in het playbook zitten:
+• EDIFICATION (dag 18) — de zin waarmee ${naam} de sponsor introduceert vóór een 3-weg.
+• 3-WEG GESPREK FLOW — Worre/Brookes 5-stappen, met aankondiging-introductie-stap-terug-opening-followup.
+• FEEL-FELT-FOUND bij bezwaren — erkennen, normaliseren, herframen, doorvragen.
+• DOEL-TIJD-TERMIJN bij closing — laat de prospect zelf hun motivatie uitspreken.
+• FORM (Family-Occupation-Recreation-Money) bij rapport bouwen.
+• PRODUCT PIVOT bij business-afwijzing.
+• LOSER-TO-LEGEND verhaal-structuur.
+Als je een techniek-vraag krijgt waar je geen volledige kennisbank-sectie voor hebt, geef dan een eerlijke, korte uitleg op basis van Worre/Brookes-principes en stel voor om de specifieke playbook-dag te openen voor de volle teaching.
+
+WANNEER ${naam} VRAAGT: "Check mijn edification-zin: ..."
+Loop letterlijk de checklist af uit de EDIFICATION-sectie van je kennisbank. Geef ✓ of ✗ per item met korte uitleg, en sluit af met óf een verbeterde versie van de zin (als verbetering nodig is) óf een oefenadvies (als de zin sterk is). Wees eerlijk maar coachend — verzwakkende elementen aanwijzen helpt ${naam} méér dan complimenteren.
 
 STIJL: Geen streepjes/dashes. Kort, echt, WhatsApp-stijl. Na advies: 1-2 zinnen waarom het werkt.
 

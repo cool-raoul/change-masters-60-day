@@ -777,6 +777,7 @@ export const t: Vertalingen = {
   "scripts.followup": { nl: "🔄 Follow-up", en: "🔄 Follow-up", fr: "🔄 Suivi", es: "🔄 Seguimiento", de: "🔄 Follow-up", pt: "🔄 Acompanhamento" },
   "scripts.sluiting": { nl: "🎯 Sluiting", en: "🎯 Closing", fr: "🎯 Conclusion", es: "🎯 Cierre", de: "🎯 Abschluss", pt: "🎯 Fechamento" },
   "scripts.presentatie": { nl: "🎤 Presentatie", en: "🎤 Presentation", fr: "🎤 Présentation", es: "🎤 Presentación", de: "🎤 Präsentation", pt: "🎤 Apresentação" },
+  "scripts.edification": { nl: "✨ Edification", en: "✨ Edification", fr: "✨ Édification", es: "✨ Edificación", de: "✨ Edification", pt: "✨ Edificação" },
   "scripts.meer": { nl: "Volledig tonen ↓", en: "Show full ↓", fr: "Afficher en entier ↓", es: "Mostrar completo ↓", de: "Vollständig anzeigen ↓", pt: "Mostrar completo ↓" },
   "scripts.minder": { nl: "Minder tonen ↑", en: "Show less ↑", fr: "Réduire ↑", es: "Mostrar menos ↑", de: "Weniger anzeigen ↑", pt: "Mostrar menos ↑" },
   "scripts.kopieer": { nl: "📋 Kopieer", en: "📋 Copy", fr: "📋 Copier", es: "📋 Copiar", de: "📋 Kopieren", pt: "📋 Copiar" },
