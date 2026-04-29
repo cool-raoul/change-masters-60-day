@@ -39,3 +39,21 @@ jobs:
             --max-time 60 \
             -H "Authorization: Bearer ${CRON_SECRET}" \
             "$ENDPOINT"
+
+      - name: Ping stilte-reminders endpoint
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          ENDPOINT: https://change-masters-60-day-q25o.vercel.app/api/reminders/stilte
+        run: |
+          set -euo pipefail
+          echo "Calling $ENDPOINT"
+          # Tweede endpoint voor playbook-stilte-nudges. Filtert zelf
+          # per member op lokaal uur+tijdzone (zelfde mechaniek als de
+          # gewone ochtendherinnering). Pusht een vriendelijke nudge
+          # naar de member en — bij 2+ dagen stilte — ook naar zijn
+          # sponsor. Anti-spam zit in de endpoint zelf.
+          curl -fsS \
+            --retry 3 --retry-delay 5 --retry-connrefused \
+            --max-time 60 \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            "$ENDPOINT"

@@ -24,6 +24,36 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
   const initieelPushUur = profile?.dagelijkse_push_uur ?? 7;
   const initieelPushAan = profile?.dagelijkse_push_aan ?? true;
 
+  // Stilte-reminder toggles. Deze zitten op de cron achter de bestaande
+  // dagelijkse-push-flow, dus alleen relevant als push überhaupt aanstaat.
+  const [stilteAan, setStilteAan] = useState(
+    (profile as any)?.stilte_reminder_aan ?? true,
+  );
+  const [sponsorStilteAan, setSponsorStilteAan] = useState(
+    (profile as any)?.sponsor_stilte_push_aan ?? true,
+  );
+  const [stilteLaden, setStilteLaden] = useState(false);
+
+  async function bewaarStilteToggle(
+    veld: "stilte_reminder_aan" | "sponsor_stilte_push_aan",
+    waarde: boolean,
+  ) {
+    setStilteLaden(true);
+    const { error } = await supabase
+      .from("profiles")
+      .update({ [veld]: waarde })
+      .eq("id", profile?.id);
+    if (error) {
+      toast.error("Opslaan mislukt");
+      // Roll back lokale state
+      if (veld === "stilte_reminder_aan") setStilteAan(!waarde);
+      else setSponsorStilteAan(!waarde);
+    } else {
+      toast.success("Voorkeur bewaard");
+    }
+    setStilteLaden(false);
+  }
+
   const router = useRouter();
   const supabase = createClient();
 
@@ -250,6 +280,66 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
         initieelUur={initieelPushUur}
         initieelAan={initieelPushAan}
       />
+
+      {/* Stilte-nudges (vriendelijke reminders bij inactiviteit in playbook) */}
+      <div className="card space-y-4">
+        <div>
+          <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
+            🛎️ Stilte-nudges
+          </h2>
+          <p className="text-cm-white opacity-60 text-sm mt-1">
+            Vriendelijke reminders als er een dag of langer geen activiteit
+            is in je 21-daagse playbook. Komt op je gekozen ochtenduur, max
+            1× per dag.
+          </p>
+        </div>
+
+        <label className="flex items-start gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={stilteAan}
+            disabled={stilteLaden}
+            onChange={(e) => {
+              setStilteAan(e.target.checked);
+              bewaarStilteToggle("stilte_reminder_aan", e.target.checked);
+            }}
+            className="w-5 h-5 mt-0.5 accent-cm-gold flex-shrink-0"
+          />
+          <div>
+            <p className="text-cm-white text-sm font-medium">
+              Stuur mij een nudge bij stilte
+            </p>
+            <p className="text-cm-white opacity-60 text-xs">
+              1 dag stilte = vriendelijke prik. 2+ dagen = warmere prikkel.
+            </p>
+          </div>
+        </label>
+
+        <label className="flex items-start gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={sponsorStilteAan}
+            disabled={stilteLaden}
+            onChange={(e) => {
+              setSponsorStilteAan(e.target.checked);
+              bewaarStilteToggle(
+                "sponsor_stilte_push_aan",
+                e.target.checked,
+              );
+            }}
+            className="w-5 h-5 mt-0.5 accent-cm-gold flex-shrink-0"
+          />
+          <div>
+            <p className="text-cm-white text-sm font-medium">
+              Waarschuw mij als één van mijn members stil valt
+            </p>
+            <p className="text-cm-white opacity-60 text-xs">
+              Bij 2+ dagen geen activiteit krijg je een push (max 1× per
+              3 dagen per member). Alleen relevant als je teamleden hebt.
+            </p>
+          </div>
+        </label>
+      </div>
 
       {/* Wachtwoord */}
       <form onSubmit={wijzigWachtwoord} className="card space-y-4">
