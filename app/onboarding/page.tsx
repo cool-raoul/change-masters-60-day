@@ -660,45 +660,22 @@ export default function OnboardingPagina() {
             </div>
           )}
 
-          {/* ───── STAP 6: LIFEPLUS WEBSHOP AANMAKEN ───── */}
+          {/* ───── STAP 6: LIFEPLUS WEBSHOP AANMAKEN ─────
+              Inhoud (titel, beschrijving, LET OP-blok) komt uit de
+              films-CMS — beheer via /instellingen/films. Hier alleen
+              header + film-embed + sponsor-contact + knoppen. */}
           {stap === 6 && (
             <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-display font-bold text-cm-white mb-1">🛒 Open je Lifeplus webshop</h2>
-                <p className="text-cm-white opacity-60 text-sm">Je eigen gratis shop — waar prospects bestellen en jij de bonus krijgt.</p>
               </div>
 
-              {/* Waarom belangrijk */}
-              <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
-                <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom deze stap belangrijk is</p>
-                <p className="text-cm-white text-sm leading-relaxed opacity-90">
-                  Zonder eigen shop-link kun je geen bestellingen ontvangen die aan jou gekoppeld zijn. Dit is een eenmalige opzet — daarna staat je shop levenslang.
-                </p>
-              </div>
-
-              {/* Film via CMS — leider beheert via /instellingen/films */}
               <div className="card space-y-3">
                 <FilmInBlok
                   slug={ONBOARDING_FILM_SLUGS.STAP_6_WEBSHOP}
-                  fallbackTitel="📹 Bekijk de video: Lifeplus webshop in 5 minuten"
+                  fallbackTitel="📹 Bekijk de video"
                   fallbackTekst="Film volgt — vraag je sponsor om mee te kijken bij het opzetten."
                 />
-              </div>
-
-              {/* Wat je nodig hebt */}
-              <div className="card space-y-3">
-                <h3 className="text-cm-gold font-semibold text-sm">Wat je nodig hebt</h3>
-                <ul className="space-y-2">
-                  {[
-                    "Je Lifeplus inloggegevens",
-                    "Een profielfoto (vierkant, minimaal 500x500px)",
-                    "Een idee voor je shop-naam (bv. je voornaam-achternaam)",
-                  ].map((item, i) => (
-                    <li key={i} className="flex gap-2 text-sm text-cm-white opacity-85">
-                      <span className="text-cm-gold flex-shrink-0">✦</span>{item}
-                    </li>
-                  ))}
-                </ul>
               </div>
 
               {/* Sponsor contact */}
@@ -707,9 +684,8 @@ export default function OnboardingPagina() {
                   <div className="flex gap-3 items-start">
                     <span className="text-2xl flex-shrink-0">💬</span>
                     <div>
-                      <p className="text-blue-300 font-semibold text-sm mb-1">Vraag {toonSponsorNaam} om mee te kijken</p>
-                      <p className="text-cm-white text-sm opacity-80 mb-2">Heb je hulp nodig met je shop-naam of profielfoto? Stuur even een berichtje.</p>
-                      <a href={toonSponsorLink} target="_blank" rel="noopener noreferrer" className="text-xs bg-green-900/40 border border-green-600/30 text-green-400 px-3 py-1.5 rounded-lg inline-flex items-center gap-1">
+                      <p className="text-blue-300 font-semibold text-sm mb-1">Hulp nodig? Stuur {toonSponsorNaam} een berichtje</p>
+                      <a href={toonSponsorLink} target="_blank" rel="noopener noreferrer" className="text-xs bg-green-900/40 border border-green-600/30 text-green-400 px-3 py-1.5 rounded-lg inline-flex items-center gap-1 mt-1">
                         💬 Stuur {toonSponsorNaam} een WhatsApp
                       </a>
                     </div>
@@ -728,49 +704,20 @@ export default function OnboardingPagina() {
             </div>
           )}
 
-          {/* ───── STAP 7: TEAMS-ADMINISTRATIE ───── */}
+          {/* ───── STAP 7: TEAMS-ADMINISTRATIE ─────
+              Inhoud uit films-CMS — beheer via /instellingen/films. */}
           {stap === 7 && (
             <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-display font-bold text-cm-white mb-1">📋 Vul je Teams-administratie in</h2>
-                <p className="text-cm-white opacity-60 text-sm">Eenmalige registratie als zelfstandig Lifeplus Partner.</p>
               </div>
 
-              {/* Waarom belangrijk */}
-              <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
-                <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom deze stap belangrijk is</p>
-                <p className="text-cm-white text-sm leading-relaxed opacity-90">
-                  Zonder voltooide Teams-administratie kun je geen commissie ontvangen. Doe dit zo snel mogelijk — verwerking duurt 1-2 werkdagen.
-                </p>
-              </div>
-
-              {/* Film via CMS */}
               <div className="card space-y-3">
                 <FilmInBlok
                   slug={ONBOARDING_FILM_SLUGS.STAP_7_TEAMS_ADMIN}
-                  fallbackTitel="📹 Bekijk de video: Teams-administratie stap-voor-stap"
-                  fallbackTekst="Film volgt — neem alvast je BSN, bankgegevens en ID-bewijs erbij."
+                  fallbackTitel="📹 Bekijk de video"
+                  fallbackTekst="Film volgt."
                 />
-              </div>
-
-              {/* Wat je bij de hand wilt hebben */}
-              <div className="card space-y-3">
-                <h3 className="text-cm-gold font-semibold text-sm">Wat heb je bij de hand?</h3>
-                <ul className="space-y-2">
-                  {[
-                    "Je BSN (of KvK-nummer als je een eigen onderneming hebt)",
-                    "Bankgegevens voor uitbetaling van commissie",
-                    "Geldig identiteitsbewijs (paspoort of ID-kaart, foto/scan)",
-                    "Een rustig moment van ~15 minuten",
-                  ].map((item, i) => (
-                    <li key={i} className="flex gap-2 text-sm text-cm-white opacity-85">
-                      <span className="text-cm-gold flex-shrink-0">✦</span>{item}
-                    </li>
-                  ))}
-                </ul>
-                <p className="text-cm-white text-xs opacity-60 italic pt-1">
-                  Tip: doe dit ergens privé — je deelt persoonlijke info en uploadt een ID.
-                </p>
               </div>
 
               <div className="flex gap-2 flex-wrap">
@@ -784,44 +731,20 @@ export default function OnboardingPagina() {
             </div>
           )}
 
-          {/* ───── STAP 8: KREDIETFORMULIER ───── */}
+          {/* ───── STAP 8: KREDIETFORMULIER ─────
+              Inhoud uit films-CMS — beheer via /instellingen/films. */}
           {stap === 8 && (
             <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-display font-bold text-cm-white mb-1">✅ Vul het kredietformulier in</h2>
-                <p className="text-cm-white opacity-60 text-sm">Korte verklaring voor betalingsvoorwaarden — duurt ~5 minuten.</p>
               </div>
 
-              {/* Waarom belangrijk */}
-              <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
-                <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom deze stap belangrijk is</p>
-                <p className="text-cm-white text-sm leading-relaxed opacity-90">
-                  Veel mensen vergeten deze stap en lopen tegen problemen aan bij hun eerste bestelling. Doe het direct — dan is het geregeld.
-                </p>
-              </div>
-
-              {/* Film via CMS */}
               <div className="card space-y-3">
                 <FilmInBlok
                   slug={ONBOARDING_FILM_SLUGS.STAP_8_KREDIETFORMULIER}
-                  fallbackTitel="📹 Bekijk de video: kredietformulier in 5 minuten"
+                  fallbackTitel="📹 Bekijk de video"
                   fallbackTekst="Film volgt — directe link naar het formulier komt bij de video."
                 />
-              </div>
-
-              <div className="card space-y-3">
-                <h3 className="text-cm-gold font-semibold text-sm">Wat staat erin?</h3>
-                <ul className="space-y-2">
-                  {[
-                    "Persoonsgegevens (al bekend uit Teams-administratie)",
-                    "Akkoord met betalingsvoorwaarden",
-                    "Voorkeur voor automatische incasso (sterk aangeraden — geen onderbrekingen)",
-                  ].map((item, i) => (
-                    <li key={i} className="flex gap-2 text-sm text-cm-white opacity-85">
-                      <span className="text-cm-gold flex-shrink-0">✦</span>{item}
-                    </li>
-                  ))}
-                </ul>
               </div>
 
               <div className="flex gap-2 flex-wrap">
@@ -835,32 +758,24 @@ export default function OnboardingPagina() {
             </div>
           )}
 
-          {/* ───── STAP 9: BESTELLINKS INSTELLEN ───── */}
+          {/* ───── STAP 9: BESTELLINKS INSTELLEN ─────
+              Inhoud uit films-CMS — beheer via /instellingen/films.
+              Plus directe knop naar /instellingen/bestellinks. */}
           {stap === 9 && (
             <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-display font-bold text-cm-white mb-1">🔗 Koppel je bestellinks aan ELEVA</h2>
-                <p className="text-cm-white opacity-60 text-sm">Niet verplicht — wel sterk aangeraden voor de productadvies-flow.</p>
               </div>
 
-              {/* Waarom belangrijk */}
-              <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
-                <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom deze stap aangeraden is</p>
-                <p className="text-cm-white text-sm leading-relaxed opacity-90">
-                  Met bestellinks kunnen prospects direct vanuit hun productadvies bestellen — via jouw shop, dus jij krijgt de bonus. Zonder bestellinks moet je elke keer handmatig je shop-URL doorsturen.
-                </p>
-              </div>
-
-              {/* Film via CMS */}
               <div className="card space-y-3">
                 <FilmInBlok
                   slug={ONBOARDING_FILM_SLUGS.STAP_9_BESTELLINKS}
-                  fallbackTitel="📹 Bekijk de video: bestellinks instellen"
+                  fallbackTitel="📹 Bekijk de video"
                   fallbackTekst="Film volgt — voor nu kun je via de knop hieronder direct naar de instellingen."
                 />
               </div>
 
-              <Link href={isPreview ? "/instellingen?preview=true" : "/instellingen"} className="btn-gold w-full py-3 text-center block font-bold">
+              <Link href={isPreview ? "/instellingen/bestellinks?preview=true" : "/instellingen/bestellinks"} className="btn-gold w-full py-3 text-center block font-bold">
                 Open instellingen → bestellinks
               </Link>
 
