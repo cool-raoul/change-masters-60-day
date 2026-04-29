@@ -344,18 +344,42 @@ export function ChatVenster({
   const autoVerstuurdRef = useRef(false);
   const { taal, v } = useTaal();
 
-  // Alleen auto-scrollen als user vlak bij de bodem zit. Zo kan hij/zij tijdens
-  // (en na) een lang productadvies rustig naar boven scrollen zonder dat elke
-  // nieuwe streaming-token de scrollpositie weer naar beneden rukt.
+  // Slimme auto-scroll:
+  //  - Bij elk NIEUW bericht (lengte groeit, dus nieuw user-vraag of nieuw
+  //    mentor-antwoord begint): ALTIJD naar onderen springen, ongeacht
+  //    waar de user zat. Zo zie je je net-verstuurde inspraak meteen
+  //    onder in beeld én het moment dat de mentor begint te antwoorden.
+  //  - Tijdens STREAMING (lengte gelijk, laatste bericht content groeit):
+  //    alleen meebewegen als de user nog redelijk dicht bij de bodem zit
+  //    (300px). Zo kan iemand wél tijdens een lang antwoord rustig
+  //    omhoog scrollen om iets terug te lezen, zonder dat elke nieuwe
+  //    token weer naar beneden rukt.
+  //  - Bij stevig omhoog scrollen tijdens streaming: laat de user dáár.
+  //    Zodra een volgend NIEUW bericht komt, springt het systeem
+  //    weer naar de actieve plek.
+  const vorigeAantalBerichten = useRef(berichten.length);
   useEffect(() => {
     const scrollEl = chatScrollRef.current;
     if (!scrollEl) return;
+    const isNieuwBericht = berichten.length > vorigeAantalBerichten.current;
     const afstandTotBodem =
       scrollEl.scrollHeight - scrollEl.scrollTop - scrollEl.clientHeight;
-    if (afstandTotBodem < 120) {
+    if (isNieuwBericht || afstandTotBodem < 300) {
       chatEindRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
     }
+    vorigeAantalBerichten.current = berichten.length;
   }, [berichten]);
+
+  // Als de laad-bolletjes verschijnen (na een user-bericht, vóór mentor
+  // begint te streamen): ook naar onderen scrollen zodat de "antwoord
+  // wordt geschreven"-indicator zichtbaar is.
+  useEffect(() => {
+    if (!laden) return;
+    const laatste = berichten[berichten.length - 1];
+    if (laatste?.role !== "user") return;
+    chatEindRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [laden]);
 
   // Auto-grow van de textarea: telkens als de invoer-string wijzigt (door
   // typen, plakken, voice-input of prefill), passen we de hoogte aan op
