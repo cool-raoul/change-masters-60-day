@@ -75,6 +75,25 @@ export default async function DashboardPagina() {
         .map((t) => t.id)
     : [];
 
+  // Eerder geschreven inline-zinnen voor de huidige dag voorladen,
+  // zodat /mijn-zinnen-content meteen in de tile zichtbaar is.
+  const huidigeInlineSlugs = huidigeDagData
+    ? huidigeDagData.vandaagDoen
+        .map((t) => t.inlineActie?.slug)
+        .filter((s): s is string => !!s)
+    : [];
+  let huidigeInitialZinnen: Record<string, string> = {};
+  if (huidigeInlineSlugs.length > 0) {
+    const { data: zinnen } = await supabase
+      .from("eigen_zinnen")
+      .select("slug, waarde")
+      .eq("user_id", user.id)
+      .in("slug", huidigeInlineSlugs);
+    for (const r of (zinnen as Array<{ slug: string; waarde: string }>) || []) {
+      huidigeInitialZinnen[r.slug] = r.waarde;
+    }
+  }
+
   // Reminders voor onvoltooide ADMIN-taken van vorige dagen — krediet,
   // webshop, teams-admin, bestellinks. Eric Worre tip is geen reminder
   // (doorlopend, geen one-shot taak). We tonen ook missed verplichte
@@ -184,6 +203,7 @@ export default async function DashboardPagina() {
         <PlaybookDagTile
           dag={huidigeDagData}
           initialVoltooidIds={huidigeDagVoltooidIds}
+          initialZinnen={huidigeInitialZinnen}
         />
       )}
 

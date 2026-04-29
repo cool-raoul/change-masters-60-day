@@ -35,6 +35,12 @@ type Props = {
   preview?: boolean;
   /** Optionele dag-film bovenaan tonen (default true). Gebruikt slug "playbook-dag-N". */
   toonDagFilm?: boolean;
+  /**
+   * Map van inlineActie.slug → opgeslagen waarde. Wordt op de server
+   * uit `eigen_zinnen` opgehaald zodat de member bij heropenen z'n
+   * eerder geschreven zin terugziet.
+   */
+  initialZinnen?: Record<string, string>;
 };
 
 type Tab = "leren" | "doen";
@@ -44,12 +50,22 @@ export function PlaybookDagTile({
   initialVoltooidIds,
   preview = false,
   toonDagFilm = true,
+  initialZinnen = {},
 }: Props) {
   const [voltooidIds, setVoltooidIds] = useState<Set<string>>(
     new Set(initialVoltooidIds),
   );
   const [bezigIds, setBezigIds] = useState<Set<string>>(new Set());
   const [openFilms, setOpenFilms] = useState<Set<string>>(new Set());
+  const [openInlines, setOpenInlines] = useState<Set<string>>(new Set());
+  const [inlineWaardes, setInlineWaardes] =
+    useState<Record<string, string>>(initialZinnen);
+  const [opgeslagenSlugs, setOpgeslagenSlugs] = useState<Set<string>>(
+    new Set(Object.keys(initialZinnen).filter((k) => initialZinnen[k])),
+  );
+  const [bezigInlineSlugs, setBezigInlineSlugs] = useState<Set<string>>(
+    new Set(),
+  );
   const [actieveTab, setActieveTab] = useState<Tab>("doen");
   const [teachingUitgeklapt, setTeachingUitgeklapt] = useState(false);
 
@@ -134,6 +150,63 @@ export function PlaybookDagTile({
       else nieuw.add(taakId);
       return nieuw;
     });
+  }
+
+  function toggleInline(taakId: string) {
+    setOpenInlines((prev) => {
+      const nieuw = new Set(prev);
+      if (nieuw.has(taakId)) nieuw.delete(taakId);
+      else nieuw.add(taakId);
+      return nieuw;
+    });
+  }
+
+  async function bewaarInline(taak: { id: string; inlineActie?: { slug: string; label: string } }) {
+    const inline = taak.inlineActie;
+    if (!inline) return;
+    const waarde = (inlineWaardes[inline.slug] || "").trim();
+    if (!waarde) {
+      toast.error("Schrijf eerst iets om te bewaren");
+      return;
+    }
+    if (preview) {
+      // Preview: lokaal markeren als opgeslagen + automatisch afvinken
+      setOpgeslagenSlugs((p) => new Set(p).add(inline.slug));
+      setVoltooidIds((p) => new Set(p).add(taak.id));
+      toast.success("Bewaard (preview — niet opgeslagen)");
+      return;
+    }
+    setBezigInlineSlugs((p) => new Set(p).add(inline.slug));
+    try {
+      const res = await fetch("/api/playbook/zin-bewaar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          slug: inline.slug,
+          label: inline.label,
+          waarde,
+          bronDag: dag.nummer,
+          bronTaak: taak.id,
+          autoVink: true,
+        }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        toast.error(data.error || "Opslaan mislukt");
+        return;
+      }
+      setOpgeslagenSlugs((p) => new Set(p).add(inline.slug));
+      setVoltooidIds((p) => new Set(p).add(taak.id));
+      toast.success("Bewaard — terug te vinden op /mijn-zinnen");
+    } catch (e) {
+      toast.error("Verbindingsfout");
+    } finally {
+      setBezigInlineSlugs((p) => {
+        const n = new Set(p);
+        n.delete(inline.slug);
+        return n;
+      });
+    }
   }
 
   /**
@@ -310,6 +383,19 @@ export function PlaybookDagTile({
                                 : "📹 Bekijk film"}
                             </button>
                           )}
+                          {taak.inlineActie && (
+                            <button
+                              type="button"
+                              onClick={() => toggleInline(taak.id)}
+                              className="text-xs text-cm-gold underline-offset-2 hover:underline"
+                            >
+                              {openInlines.has(taak.id)
+                                ? "▴ Inklappen"
+                                : opgeslagenSlugs.has(taak.inlineActie.slug)
+                                ? "✏️ Bewerken"
+                                : "✏️ Schrijf hier direct"}
+                            </button>
+                          )}
                         </div>
                         {taak.filmSlug && filmOpen && (
                           <div className="mt-3">
@@ -318,6 +404,76 @@ export function PlaybookDagTile({
                               fallbackTitel="📹 Bekijk de video"
                               fallbackTekst="Film volgt — wordt door de hoofdbeheerder toegevoegd."
                             />
+                          </div>
+                        )}
+                        {taak.inlineActie && openInlines.has(taak.id) && (
+                          <div className="mt-3 rounded-lg border border-cm-gold/30 bg-cm-black/40 p-3 space-y-2">
+                            {taak.inlineActie.instructie && (
+                              <p className="text-xs text-cm-white opacity-80 leading-relaxed">
+                                {taak.inlineActie.instructie}
+                              </p>
+                            )}
+                            <textarea
+                              value={
+                                inlineWaardes[taak.inlineActie.slug] ?? ""
+                              }
+                              onChange={(e) => {
+                                const slug = taak.inlineActie!.slug;
+                                const v = e.target.value;
+                                setInlineWaardes((prev) => ({
+                                  ...prev,
+                                  [slug]: v,
+                                }));
+                              }}
+                              maxLength={
+                                taak.inlineActie.maxTekens ?? 500
+                              }
+                              placeholder={taak.inlineActie.placeholder}
+                              className="textarea-cm w-full text-sm"
+                              rows={3}
+                            />
+                            <div className="flex items-center justify-between gap-2 flex-wrap">
+                              <p className="text-xs text-cm-white opacity-50">
+                                {(inlineWaardes[taak.inlineActie.slug] || "")
+                                  .length}{" "}
+                                / {taak.inlineActie.maxTekens ?? 500}
+                              </p>
+                              <button
+                                type="button"
+                                onClick={() => bewaarInline(taak)}
+                                disabled={bezigInlineSlugs.has(
+                                  taak.inlineActie.slug,
+                                )}
+                                className="btn-gold text-xs disabled:opacity-50"
+                              >
+                                {bezigInlineSlugs.has(taak.inlineActie.slug)
+                                  ? "Bewaren..."
+                                  : opgeslagenSlugs.has(
+                                        taak.inlineActie.slug,
+                                      )
+                                    ? "Wijzigingen bewaren"
+                                    : "Bewaar"}
+                              </button>
+                            </div>
+                            {taak.inlineActie.voorbeeld && (
+                              <p className="text-xs text-cm-white opacity-60 italic leading-relaxed border-t border-cm-border pt-2">
+                                <strong className="not-italic text-cm-gold">
+                                  Voorbeeld:
+                                </strong>{" "}
+                                {taak.inlineActie.voorbeeld}
+                              </p>
+                            )}
+                            {opgeslagenSlugs.has(taak.inlineActie.slug) && (
+                              <p className="text-xs text-emerald-400">
+                                ✓ Opgeslagen — terug te vinden op{" "}
+                                <a
+                                  href="/mijn-zinnen"
+                                  className="underline-offset-2 hover:underline"
+                                >
+                                  /mijn-zinnen
+                                </a>
+                              </p>
+                            )}
                           </div>
                         )}
                       </div>

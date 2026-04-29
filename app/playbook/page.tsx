@@ -46,6 +46,7 @@ export default async function PlaybookDagPagina({
   // In preview-modus: voltooidIds altijd leeg (zien hoe het er voor
   // een nieuwe member uitziet). Anders haal echte voltooiingen op.
   let voltooidIds: string[] = [];
+  let initialZinnen: Record<string, string> = {};
   if (!isPreview) {
     const { data: voltooiingen } = await supabase
       .from("dag_voltooiingen")
@@ -55,6 +56,24 @@ export default async function PlaybookDagPagina({
     voltooidIds = ((voltooiingen as Array<{ taak_id: string }>) || []).map(
       (v) => v.taak_id,
     );
+
+    // Haal eerder geschreven inline-zinnen op zodat ze vooraf in het
+    // formulier staan. We pakken alleen de slugs die op deze dag
+    // gebruikt worden — kleinere payload + minder leak.
+    const slugs = dagData.vandaagDoen
+      .map((t) => t.inlineActie?.slug)
+      .filter((s): s is string => !!s);
+    if (slugs.length > 0) {
+      const { data: zinnen } = await supabase
+        .from("eigen_zinnen")
+        .select("slug, waarde")
+        .eq("user_id", user.id)
+        .in("slug", slugs);
+      for (const r of (zinnen as Array<{ slug: string; waarde: string }>) ||
+        []) {
+        initialZinnen[r.slug] = r.waarde;
+      }
+    }
   }
 
   return (
@@ -76,6 +95,7 @@ export default async function PlaybookDagPagina({
       <PlaybookDagTile
         dag={dagData}
         initialVoltooidIds={voltooidIds}
+        initialZinnen={initialZinnen}
         preview={isPreview}
       />
 

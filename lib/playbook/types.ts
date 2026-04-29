@@ -36,6 +36,38 @@ export type ControllableTaak = {
    * heeft toegevoegd.
    */
   filmSlug?: string;
+  /**
+   * Optie B — INLINE ACTIE: schrijf/voer iets direct in de tile in
+   * (geen routenavigatie nodig). De waarde wordt opgeslagen onder een
+   * stabiele slug in de `eigen_zinnen`-tabel zodat de member 'm later
+   * altijd kan terugvinden via /mijn-zinnen of opnieuw deze dag bezoekt.
+   *
+   * Bewaren = automatisch deze taak afvinken.
+   */
+  inlineActie?: {
+    /** Type input-veld. Voor nu: tekst. Later: 'lijst' voor namenlijsten etc. */
+    type: "tekst";
+    /**
+     * Stabiele slug waaronder de waarde wordt opgeslagen — wordt ook gebruikt
+     * als sleutel in /mijn-zinnen. Bijv. "edification-zin", "30-sec-pitch".
+     * NIET hernoemen — de waardes zijn eraan gekoppeld.
+     */
+    slug: string;
+    /** Korte titel zoals getoond op /mijn-zinnen. Bijv. "Mijn edification-zin". */
+    label: string;
+    /** Uitleg/briefing direct boven het invoerveld. */
+    instructie?: string;
+    /** Placeholder in het lege veld. */
+    placeholder?: string;
+    /** Limiet voor lengte (default 500). Boven max kan niet bewaard worden. */
+    maxTekens?: number;
+    /**
+     * Optioneel voorbeeld — wordt onder het veld getoond als hint.
+     * Houd dit kort (1-2 zinnen) zodat het niet als kant-en-klare
+     * copy-paste fungeert.
+     */
+    voorbeeld?: string;
+  };
 };
 
 /**

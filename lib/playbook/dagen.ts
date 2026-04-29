@@ -1000,8 +1000,20 @@ export const DAGEN: Dag[] = [
         id: "dag18-edification-zin",
         label: "Schrijf jouw eigen edification-zin (5 min)",
         uitleg:
-          "Eén zin van max 25 woorden waarmee je je sponsor introduceert in elk 3-weg. Voorbeeld: 'Ik ga je voorstellen aan [Naam], die al X jaar mensen helpt met Y, en degene die mij heeft laten zien hoe dit echt werkt.' Mentor helpt: 'Schrijf een edification-zin voor mijn sponsor [naam] die [achtergrond]'.",
+          "Eén vaste zin van max 25 woorden waarmee je je sponsor introduceert in elk 3-weg of bij elke presentatie. Schrijf 'm hieronder direct in — bewaard onder /mijn-zinnen zodat je hem altijd snel kan oppakken.",
         verplicht: true,
+        inlineActie: {
+          type: "tekst",
+          slug: "edification-zin",
+          label: "Mijn edification-zin",
+          instructie:
+            "Volg de formule: 1) wie introduceer je, 2) wat is hun track-record / autoriteit, 3) waarom heb JIJ ze gekozen. Max 25 woorden. Geen overdrijving — gewoon de waarheid, sterk gebracht.",
+          placeholder:
+            "Bv. Ik ga je voorstellen aan...",
+          maxTekens: 280,
+          voorbeeld:
+            "Ik ga je voorstellen aan Mark, die al 12 jaar mensen helpt om hun energie en ondernemerschap weer terug te vinden — degene die mij heeft laten zien hoe dit echt werkt.",
+        },
       },
       {
         id: "dag18-edification-toepassen",
@@ -1015,17 +1027,47 @@ export const DAGEN: Dag[] = [
       "Fase 3 (dag 15-21): minimaal 2 beslissingen binnen: member, shopper of not-yet.",
     waarInEleva: [
       {
-        actie: "Edification-zin laten genereren",
-        menupad: "ELEVA Mentor",
-        spraak: "Schrijf een edification-zin voor mijn sponsor [naam] die [achtergrond]",
+        actie: "Edification-zin laten checken door ELEVA Mentor",
+        menupad: "Menu → ELEVA Mentor",
+        spraak:
+          "Check mijn edification-zin voor sponsor [naam]: ...",
+        route: "/coach",
       },
       {
-        actie: "Edification-voorbeelden in scripts",
-        menupad: "Menu → Hulpbronnen → Scripts → Edification",
+        actie: "Voorbeeld-edifications in Scripts",
+        menupad: "Menu → Scripts → Edification",
+        route: "/scripts",
+      },
+      {
+        actie: "Eerder geschreven zinnen terugvinden",
+        menupad: "Menu → Mijn zinnen",
+        route: "/mijn-zinnen",
       },
     ],
-    watJeLeert:
-      "Edification is geen overdrijving. Het is de waarheid vertellen waarom de persoon die je introduceert gekwalificeerd is om te helpen. Zonder edification heeft je sponsor géén autoriteit in het 3-weg, en wordt het gesprek slap. Mét edification stap jij terug, klimt sponsor naar voren, en herkent prospect 'oh, deze persoon weet waar het over gaat'. 5 minuten investeren in jouw vaste edification-zin = 30+ 3-wegs sterker maken in de komende weken. Zonde om dit nooit op papier te zetten.",
+    watJeLeert: `Edification is dé reden dat een 3-weg überhaupt werkt. Zonder edification is het gewoon nog een gesprek waar drie mensen praten — mét edification verandert het in een setting waar de prospect denkt: "wow, deze persoon die ik nu hoor, weet écht waar het over gaat".
+
+Wat is het concreet? Edification is in 1-2 zinnen vóórdat je sponsor begint te praten:
+1) wie het is,
+2) wat zijn/haar track-record is (hoe lang, hoeveel mensen geholpen, welke achtergrond),
+3) waarom JIJ deze persoon hebt gekozen om je verder te helpen.
+
+Het is GEEN overdrijving. Het is GEEN reclame. Het is de waarheid vertellen — alleen wel scherp opgeschreven, niet gemompeld. De meeste netwerkers laten dit moment slap voorbijgaan ("dit is m'n upline, vertel jij even") en daar verlies je 80% van het effect.
+
+De formule die altijd werkt:
+"Ik ga je voorstellen aan [naam], die [autoriteit / track-record], en degene die [persoonlijke link met jou]."
+
+Drie voorbeelden van hetzelfde, op verschillende sponsors:
+• Sportcoach-sponsor: "Ik ga je voorstellen aan Mark, die al 12 jaar mensen begeleidt naar meer energie en helderheid — degene die mij heeft laten zien dat dit niet over producten gaat maar over je leven terugpakken."
+• Mama-sponsor: "Ik ga je voorstellen aan Linda, moeder van 3, die al 8 jaar duizenden vrouwen helpt om hun lichaam en gezin weer in balans te brengen — degene die mij in 6 maanden van uitgeput naar uitgerust kreeg."
+• Ondernemer-sponsor: "Ik ga je voorstellen aan Jaap, die al 15 jaar in dit vak zit en vorig jaar 200 mensen direct heeft ondersteund — degene die mij heeft laten zien dat dit serieus business is, geen hobby."
+
+Veelgemaakte fouten:
+✗ Te kort: "dit is m'n upline" — je hebt zojuist 0 autoriteit gegeven.
+✗ Improviseren: elke keer iets anders zeggen — sponsor weet niet wanneer 'ie kan starten.
+✗ Hyped overdrijven: "de allerbeste van Nederland!" — prospect ruikt de pitch en sluit af.
+✗ Vergeten: gewoon stilletjes je sponsor laten beginnen — geen edification, geen 3-weg.
+
+Wat je vandaag doet: 5 minuten investeren in JOUW vaste zin. Schrijf 'm op, bewaar 'm in /mijn-zinnen, en gebruik 'm letterlijk in de komende 30 3-wegs. Eén keer goed schrijven = honderd keer sterker presenteren.`,
     waaromWerktDit: {
       tekst:
         "Edification is wat een 3-weg een 3-weg maakt. Zonder dat is het gewoon nog een gesprek.",

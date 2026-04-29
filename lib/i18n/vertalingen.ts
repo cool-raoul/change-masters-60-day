@@ -212,6 +212,10 @@ export const t: Vertalingen = {
     nl: "Mijn Team", en: "My Team", fr: "Mon \u00c9quipe",
     es: "Mi Equipo", de: "Mein Team", pt: "Minha Equipe",
   },
+  "nav.zinnen": {
+    nl: "Mijn zinnen", en: "My phrases", fr: "Mes phrases",
+    es: "Mis frases", de: "Meine S\u00e4tze", pt: "Minhas frases",
+  },
   "nav.instellingen": {
     nl: "Instellingen", en: "Settings", fr: "Param\u00e8tres",
     es: "Ajustes", de: "Einstellungen", pt: "Configura\u00e7\u00f5es",
