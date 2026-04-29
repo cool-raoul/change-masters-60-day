@@ -28,6 +28,14 @@ export type ControllableTaak = {
    * klikbaar in de tile-UI én in de preview.
    */
   actieRoute?: string;
+  /**
+   * Optioneel: slug naar de films-CMS. Als gezet, rendert de tile-UI
+   * een uitklapbare film-embed onder de taak — zodat admin-stappen
+   * (webshop, kredietformulier, teams-admin, bestellinks) een
+   * uitleg-video kunnen tonen die de founder via /instellingen/films
+   * heeft toegevoegd.
+   */
+  filmSlug?: string;
 };
 
 /**

@@ -115,6 +115,22 @@ export const DAGEN: Dag[] = [
           "Wat is een 3-weg en waarom werkt het? Korte uitleg in ELEVA. Je hoeft 'm nog niet te doen, je hoeft alleen even te weten dát je je contacten kunt koppelen aan je sponsor. Dat is de versneller in week 1.",
         verplicht: true,
       },
+      {
+        id: "dag2-webshop",
+        label: "🛒 Lifeplus webshop aanmaken",
+        uitleg:
+          "Eenmalige opzet — bekijk de korte film (te vinden in deze taak) en je shop staat. Dit moet eerst gebeuren voordat je je kredietformulier kunt invullen.",
+        verplicht: true,
+        filmSlug: "onboarding-stap-6-webshop",
+      },
+      {
+        id: "dag2-krediet",
+        label: "✅ Kredietformulier invullen (verplicht voor uitbetaling)",
+        uitleg:
+          "Korte stap van ~5 minuten, NA het aanmaken van je webshop. Zonder dit formulier kan je eerste maand-uitbetaling niet verwerkt worden — doe het direct.",
+        verplicht: true,
+        filmSlug: "onboarding-stap-8-kredietformulier",
+      },
     ],
     faseDoel:
       "Fase 1 (dag 1-7): deze week 2 one-pager-momenten gepland of bekeken krijgen.",
@@ -186,6 +202,14 @@ export const DAGEN: Dag[] = [
           "30 seconden. Sponsor weet dat je beweegt, jij voelt de lijn naar boven open. Niets uitgebreids, gewoon even een update.",
         verplicht: false,
       },
+      {
+        id: "dag3-teams-admin",
+        label: "📋 Teams-administratiesysteem aanmaken",
+        uitleg:
+          "Lifeplus Partner-aanmelding — eenmalige administratieve registratie. Bekijk de korte film in deze taak voor de exacte stappen.",
+        verplicht: true,
+        filmSlug: "onboarding-stap-7-teams-admin",
+      },
     ],
     faseDoel:
       "Fase 1 (dag 1-7): deze week 2 one-pager-momenten gepland of bekeken krijgen.",
@@ -239,6 +263,15 @@ export const DAGEN: Dag[] = [
         uitleg:
           "Bijvoorbeeld op de persoon uit dag 3 met wie je een losse chat startte. Niet pitchen, gewoon even peilen.",
         verplicht: false,
+      },
+      {
+        id: "dag4-bestellinks",
+        label: "🔗 Bestellinks koppelen aan ELEVA",
+        uitleg:
+          "Plak per pakket je Lifeplus webshop-URL in ELEVA. Daarna gebruikt ELEVA die links automatisch in productadvies-flows. Vraag je sponsor om mee te kijken voor de juiste shop-product-pagina's per pakket.",
+        verplicht: false,
+        actieRoute: "/instellingen/bestellinks",
+        filmSlug: "onboarding-stap-9-bestellinks",
       },
     ],
     faseDoel:
@@ -295,6 +328,13 @@ export const DAGEN: Dag[] = [
           "Vraag je sponsor om 1-2 typische bezwaren te 'spelen' en oefen Feel-Felt-Found. Geen sponsor beschikbaar? Mentor: 'Speel een prospect die zegt: ik heb geen tijd', en dan oefen je met Feel-Felt-Found.",
         verplicht: false,
       },
+      {
+        id: "dag5-eric-worre-start",
+        label: "🎧 Start met Eric Worre's Seven Skills (15 min Spotify)",
+        uitleg:
+          "Vanaf vandaag dagelijks ~15 minuten luisteren — in de auto, tijdens werk of een wandeling. Voor je mindset én om dit vak goed te leren. Eric Worre is wereldwijd de meest gerespecteerde trainer in network marketing. Niet één keer doorkijken, herhalend aanhoren — wat hij vertelt landt na de 4e of 5e keer pas écht.",
+        verplicht: false,
+      },
     ],
     faseDoel:
       "Fase 1 (dag 1-7): deze week 2 one-pager-momenten gepland of bekeken krijgen.",
@@ -307,9 +347,13 @@ export const DAGEN: Dag[] = [
         actie: "Prospect op 'Niet nu' zetten als ze afhouden",
         menupad: "Prospectkaart → Pipeline-fase → Not yet",
       },
+      {
+        actie: "Eric Worre Seven Skills (Spotify)",
+        menupad: "https://open.spotify.com/album/3pX4DrWPVsjW8GCE2XYd7D",
+      },
     ],
     watJeLeert:
-      "Feel-Felt-Found werkt op bijna élk bezwaar: 'Ik snap dat het zo voelt (FEEL). Veel mensen hadden dat gevoel in het begin ook (FELT). Wat zij merkten was dat het simpeler was dan gedacht (FOUND).' Sluit dan ALTIJD af met een vraag naar de échte twijfel: 'Maar vertel eens, waar zit het 'm nu écht in?' De meeste eerste bezwaren ('geen tijd', 'niet van sales') zijn emotionele schilden. De echte twijfel zit daaronder. Jouw werk = die eronder vinden, zonder te drammen.",
+      "Feel-Felt-Found werkt op bijna élk bezwaar: 'Ik snap dat het zo voelt (FEEL). Veel mensen hadden dat gevoel in het begin ook (FELT). Wat zij merkten was dat het simpeler was dan gedacht (FOUND).' Sluit dan ALTIJD af met een vraag naar de échte twijfel: 'Maar vertel eens, waar zit het 'm nu écht in?' De meeste eerste bezwaren ('geen tijd', 'niet van sales') zijn emotionele schilden. De echte twijfel zit daaronder. Jouw werk = die eronder vinden, zonder te drammen.\n\nVandaag start ook je mindset-routine met Eric Worre. Niet als verplicht stuk werk, maar als doorlopende investering: 15 minuten per dag in je oren. Auto, wandeling, koffie — maakt niet uit. Wat hij vertelt over WHY, vision, slight-edge-skills en leiderschap past onder je dagelijkse acties als brandstof. Niet één keer doorhoren, herhalend aanhoren tot het in je systeem zit.",
     waaromWerktDit: {
       tekst:
         "Een bezwaar is geen muur. Het is een vraag die niet weet hoe 'm te stellen.",
