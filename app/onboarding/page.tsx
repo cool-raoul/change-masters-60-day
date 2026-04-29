@@ -266,17 +266,26 @@ export default function OnboardingPagina() {
       await supabase.auth.updateUser({ data: { onboarding_stap: nieuweStap } });
 
       // DB + push notificatie per stap
-      const stapActies: Record<number, { veld: string; pushNaam: string }> = {
-        2: { veld: "stap_1_welkom", pushNaam: "heeft de app geïnstalleerd 📱" },
-        3: { veld: "stap_2_run",    pushNaam: "heeft zijn/haar WHY gemaakt 💛" },
-        4: { veld: "stap_3_namen",  pushNaam: "begrijpt de 60-dagenrun 📖" },
-        5: { veld: "stap_4_script", pushNaam: "heeft de namenlijst aangemaakt 📝" },
-        6: { veld: "stap_4_script", pushNaam: "heeft het uitnodigingsscript gelezen 💬" },
+      // veld is optioneel — alleen gevuld bij stappen waarvoor we al een
+      // boolean kolom hebben in onboarding_voortgang. De nieuwe Lifeplus-
+      // admin-stappen (6 t/m 10) hebben (nog) geen DB-veld; daar volstaat
+      // de onboarding_stap-update + push.
+      const stapActies: Record<number, { veld?: string; pushNaam: string }> = {
+        2:  { veld: "stap_1_welkom", pushNaam: "heeft de app geïnstalleerd 📱" },
+        3:  { veld: "stap_2_run",    pushNaam: "heeft zijn/haar WHY gemaakt 💛" },
+        4:  { veld: "stap_3_namen",  pushNaam: "begrijpt de 60-dagenrun 📖" },
+        5:  { veld: "stap_4_script", pushNaam: "heeft de namenlijst aangemaakt 📝" },
+        6:  { veld: "stap_4_script", pushNaam: "heeft het uitnodigingsscript gelezen 💬" },
+        7:  {                         pushNaam: "heeft de Lifeplus webshop aangemaakt 🛒" },
+        8:  {                         pushNaam: "heeft Teams-administratie ingediend 📋" },
+        9:  {                         pushNaam: "heeft het kredietformulier ingevuld ✅" },
+        10: {                         pushNaam: "heeft bestellinks ingesteld 🔗" },
+        11: {                         pushNaam: "is gestart met Eric Worre's Seven Skills 🎧" },
       };
 
       if (stapActies[nieuweStap]) {
         const { veld, pushNaam } = stapActies[nieuweStap];
-        await slaVoortgangOp({ [veld]: true });
+        if (veld) await slaVoortgangOp({ [veld]: true });
         await stuurPushNaarSponsor(pushNaam);
       }
     }
@@ -373,7 +382,7 @@ export default function OnboardingPagina() {
               <div className="text-center">
                 <div className="text-6xl mb-4">👋</div>
                 <h2 className="text-3xl font-display font-bold text-cm-white mb-2">Welkom, {gebruikersnaam}!</h2>
-                <p className="text-cm-white opacity-60 text-sm">We zetten je in 6 stappen klaar voor de 60-dagenrun.</p>
+                <p className="text-cm-white opacity-60 text-sm">We zetten je in 11 stappen klaar voor de 60-dagenrun.</p>
               </div>
 
               {/* App installeren */}
@@ -419,13 +428,18 @@ export default function OnboardingPagina() {
 
               {/* Wat je gaat doen */}
               <div className="card space-y-3">
-                <h3 className="text-cm-gold font-semibold">Wat doe je in deze 6 stappen?</h3>
+                <h3 className="text-cm-gold font-semibold">Wat doe je in deze 11 stappen?</h3>
                 <ul className="space-y-2">
                   {[
                     { icoon: "💛", tekst: "Je ontdekt jouw persoonlijke WHY" },
                     { icoon: "📖", tekst: "Je leert hoe de 60-dagenrun werkt" },
                     { icoon: "📝", tekst: "Je voegt je eerste namen toe" },
                     { icoon: "💬", tekst: "Je leest je uitnodigingsscript" },
+                    { icoon: "🛒", tekst: "Je opent je Lifeplus webshop" },
+                    { icoon: "📋", tekst: "Je vult je Teams-administratie in" },
+                    { icoon: "✅", tekst: "Je tekent het kredietformulier" },
+                    { icoon: "🔗", tekst: "Je koppelt je bestellinks aan ELEVA" },
+                    { icoon: "🎧", tekst: "Je start met Eric Worre's Seven Skills" },
                     { icoon: "🎯", tekst: "Je stelt je dagdoelen in en opent de ELEVA Mentor" },
                   ].map((item, i) => (
                     <li key={i} className="flex items-center gap-3 text-sm text-cm-white">
@@ -433,7 +447,7 @@ export default function OnboardingPagina() {
                     </li>
                   ))}
                 </ul>
-                <p className="text-cm-white text-xs opacity-50 pt-1">Dit kost je ongeveer 15–20 minuten.</p>
+                <p className="text-cm-white text-xs opacity-50 pt-1">De setup-stappen kosten ~15-20 minuten. De admin-stappen 6-9 doe je idealiter in de eerste week — niet alles hoeft per se vandaag.</p>
               </div>
 
               <button onClick={() => gaNaarStap(2)} disabled={bezig} className="btn-gold w-full py-4 text-base font-bold">
@@ -644,8 +658,288 @@ export default function OnboardingPagina() {
             </div>
           )}
 
-          {/* ───── STAP 6: DAGDOELEN + AI COACH FINALE ───── */}
+          {/* ───── STAP 6: LIFEPLUS WEBSHOP AANMAKEN ───── */}
           {stap === 6 && (
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-2xl font-display font-bold text-cm-white mb-1">🛒 Open je Lifeplus webshop</h2>
+                <p className="text-cm-white opacity-60 text-sm">Je eigen gratis shop — waar prospects bestellen en jij de bonus krijgt.</p>
+              </div>
+
+              {/* Waarom belangrijk */}
+              <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
+                <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom deze stap belangrijk is</p>
+                <p className="text-cm-white text-sm leading-relaxed opacity-90">
+                  Zonder eigen shop-link kun je geen bestellingen ontvangen die aan jou gekoppeld zijn. Dit is een eenmalige opzet — daarna staat je shop levenslang.
+                </p>
+              </div>
+
+              {/* Film-placeholder */}
+              <div className="card space-y-3">
+                <h3 className="text-cm-gold font-semibold text-sm">📹 Bekijk de video: Lifeplus webshop in 5 minuten</h3>
+                <div className="aspect-video bg-cm-surface-2 rounded-lg flex items-center justify-center border border-cm-border">
+                  <p className="text-cm-white text-sm opacity-50 italic">Film komt hier (dag 5)</p>
+                </div>
+                <p className="text-cm-white text-xs opacity-60 italic">
+                  In de video: hoe je inlogt op Lifeplus back-office, je shop-naam kiest, je profielfoto instelt, en je shop-URL bewaart.
+                </p>
+              </div>
+
+              {/* Wat je nodig hebt */}
+              <div className="card space-y-3">
+                <h3 className="text-cm-gold font-semibold text-sm">Wat je nodig hebt</h3>
+                <ul className="space-y-2">
+                  {[
+                    "Je Lifeplus inloggegevens",
+                    "Een profielfoto (vierkant, minimaal 500x500px)",
+                    "Een idee voor je shop-naam (bv. je voornaam-achternaam)",
+                  ].map((item, i) => (
+                    <li key={i} className="flex gap-2 text-sm text-cm-white opacity-85">
+                      <span className="text-cm-gold flex-shrink-0">✦</span>{item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Sponsor contact */}
+              {toonSponsorNaam && (
+                <div className="bg-blue-900/20 border border-blue-600/30 rounded-xl p-4">
+                  <div className="flex gap-3 items-start">
+                    <span className="text-2xl flex-shrink-0">💬</span>
+                    <div>
+                      <p className="text-blue-300 font-semibold text-sm mb-1">Vraag {toonSponsorNaam} om mee te kijken</p>
+                      <p className="text-cm-white text-sm opacity-80 mb-2">Heb je hulp nodig met je shop-naam of profielfoto? Stuur even een berichtje.</p>
+                      <a href={toonSponsorLink} target="_blank" rel="noopener noreferrer" className="text-xs bg-green-900/40 border border-green-600/30 text-green-400 px-3 py-1.5 rounded-lg inline-flex items-center gap-1">
+                        💬 Stuur {toonSponsorNaam} een WhatsApp
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex gap-2 flex-wrap">
+                <button onClick={() => gaNaarStap(7)} disabled={bezig} className="btn-gold flex-1 py-3 text-base">
+                  Webshop staat — verder →
+                </button>
+                <button onClick={() => gaNaarStap(7)} disabled={bezig} className="btn-secondary py-3 text-sm whitespace-nowrap">
+                  Doe ik later
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ───── STAP 7: TEAMS-ADMINISTRATIE ───── */}
+          {stap === 7 && (
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-2xl font-display font-bold text-cm-white mb-1">📋 Vul je Teams-administratie in</h2>
+                <p className="text-cm-white opacity-60 text-sm">Eenmalige registratie als zelfstandig Lifeplus Partner.</p>
+              </div>
+
+              {/* Waarom belangrijk */}
+              <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
+                <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom deze stap belangrijk is</p>
+                <p className="text-cm-white text-sm leading-relaxed opacity-90">
+                  Zonder voltooide Teams-administratie kun je geen commissie ontvangen. Doe dit zo snel mogelijk — verwerking duurt 1-2 werkdagen.
+                </p>
+              </div>
+
+              {/* Film-placeholder */}
+              <div className="card space-y-3">
+                <h3 className="text-cm-gold font-semibold text-sm">📹 Bekijk de video: Teams-administratie stap-voor-stap</h3>
+                <div className="aspect-video bg-cm-surface-2 rounded-lg flex items-center justify-center border border-cm-border">
+                  <p className="text-cm-white text-sm opacity-50 italic">Film komt hier (dag 5)</p>
+                </div>
+                <p className="text-cm-white text-xs opacity-60 italic">
+                  In de video: persoonsgegevens invoeren, identiteitsbewijs uploaden, bankgegevens, Partner-overeenkomst tekenen.
+                </p>
+              </div>
+
+              {/* Wat je bij de hand wilt hebben */}
+              <div className="card space-y-3">
+                <h3 className="text-cm-gold font-semibold text-sm">Wat heb je bij de hand?</h3>
+                <ul className="space-y-2">
+                  {[
+                    "Je BSN (of KvK-nummer als je een eigen onderneming hebt)",
+                    "Bankgegevens voor uitbetaling van commissie",
+                    "Geldig identiteitsbewijs (paspoort of ID-kaart, foto/scan)",
+                    "Een rustig moment van ~15 minuten",
+                  ].map((item, i) => (
+                    <li key={i} className="flex gap-2 text-sm text-cm-white opacity-85">
+                      <span className="text-cm-gold flex-shrink-0">✦</span>{item}
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-cm-white text-xs opacity-60 italic pt-1">
+                  Tip: doe dit ergens privé — je deelt persoonlijke info en uploadt een ID.
+                </p>
+              </div>
+
+              <div className="flex gap-2 flex-wrap">
+                <button onClick={() => gaNaarStap(8)} disabled={bezig} className="btn-gold flex-1 py-3 text-base">
+                  Administratie ingediend — verder →
+                </button>
+                <button onClick={() => gaNaarStap(8)} disabled={bezig} className="btn-secondary py-3 text-sm whitespace-nowrap">
+                  Doe ik later
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ───── STAP 8: KREDIETFORMULIER ───── */}
+          {stap === 8 && (
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-2xl font-display font-bold text-cm-white mb-1">✅ Vul het kredietformulier in</h2>
+                <p className="text-cm-white opacity-60 text-sm">Korte verklaring voor betalingsvoorwaarden — duurt ~5 minuten.</p>
+              </div>
+
+              {/* Waarom belangrijk */}
+              <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
+                <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom deze stap belangrijk is</p>
+                <p className="text-cm-white text-sm leading-relaxed opacity-90">
+                  Veel mensen vergeten deze stap en lopen tegen problemen aan bij hun eerste bestelling. Doe het direct — dan is het geregeld.
+                </p>
+              </div>
+
+              {/* Film-placeholder */}
+              <div className="card space-y-3">
+                <h3 className="text-cm-gold font-semibold text-sm">📹 Bekijk de video: kredietformulier in 5 minuten</h3>
+                <div className="aspect-video bg-cm-surface-2 rounded-lg flex items-center justify-center border border-cm-border">
+                  <p className="text-cm-white text-sm opacity-50 italic">Film komt hier (dag 5)</p>
+                </div>
+                <p className="text-cm-white text-xs opacity-60 italic">
+                  In de video: waar je het formulier vindt, wat je invult, en waarom automatische incasso aangeraden is.
+                </p>
+              </div>
+
+              <div className="card space-y-3">
+                <h3 className="text-cm-gold font-semibold text-sm">Wat staat erin?</h3>
+                <ul className="space-y-2">
+                  {[
+                    "Persoonsgegevens (al bekend uit Teams-administratie)",
+                    "Akkoord met betalingsvoorwaarden",
+                    "Voorkeur voor automatische incasso (sterk aangeraden — geen onderbrekingen)",
+                  ].map((item, i) => (
+                    <li key={i} className="flex gap-2 text-sm text-cm-white opacity-85">
+                      <span className="text-cm-gold flex-shrink-0">✦</span>{item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="flex gap-2 flex-wrap">
+                <button onClick={() => gaNaarStap(9)} disabled={bezig} className="btn-gold flex-1 py-3 text-base">
+                  Formulier ingevuld — verder →
+                </button>
+                <button onClick={() => gaNaarStap(9)} disabled={bezig} className="btn-secondary py-3 text-sm whitespace-nowrap">
+                  Doe ik later
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ───── STAP 9: BESTELLINKS INSTELLEN ───── */}
+          {stap === 9 && (
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-2xl font-display font-bold text-cm-white mb-1">🔗 Koppel je bestellinks aan ELEVA</h2>
+                <p className="text-cm-white opacity-60 text-sm">Niet verplicht — wel sterk aangeraden voor de productadvies-flow.</p>
+              </div>
+
+              {/* Waarom belangrijk */}
+              <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
+                <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom deze stap aangeraden is</p>
+                <p className="text-cm-white text-sm leading-relaxed opacity-90">
+                  Met bestellinks kunnen prospects direct vanuit hun productadvies bestellen — via jouw shop, dus jij krijgt de bonus. Zonder bestellinks moet je elke keer handmatig je shop-URL doorsturen.
+                </p>
+              </div>
+
+              {/* Film-placeholder */}
+              <div className="card space-y-3">
+                <h3 className="text-cm-gold font-semibold text-sm">📹 Bekijk de video: bestellinks instellen</h3>
+                <div className="aspect-video bg-cm-surface-2 rounded-lg flex items-center justify-center border border-cm-border">
+                  <p className="text-cm-white text-sm opacity-50 italic">Film komt hier (dag 5)</p>
+                </div>
+                <p className="text-cm-white text-xs opacity-60 italic">
+                  In de video: per pakket (Energie & Focus Plus, Stress Slaap Complete, etc.) plak je de bijbehorende Lifeplus-shop-URL. Je sponsor kan meekijken voor de juiste product-keuzes.
+                </p>
+              </div>
+
+              <Link href={isPreview ? "/instellingen?preview=true" : "/instellingen"} className="btn-gold w-full py-3 text-center block font-bold">
+                Open instellingen → bestellinks
+              </Link>
+
+              <div className="flex gap-2 flex-wrap">
+                <button onClick={() => gaNaarStap(10)} disabled={bezig} className="btn-gold flex-1 py-3 text-base">
+                  Bestellinks ingesteld — verder →
+                </button>
+                <button onClick={() => gaNaarStap(10)} disabled={bezig} className="btn-secondary py-3 text-sm whitespace-nowrap">
+                  Doe ik later
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ───── STAP 10: ERIC WORRE — SEVEN SKILLS ───── */}
+          {stap === 10 && (
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-2xl font-display font-bold text-cm-white mb-1">🎧 Eric Worre — Seven Skills</h2>
+                <p className="text-cm-white opacity-60 text-sm">Wereldwijd de meest gerespecteerde trainer in network marketing.</p>
+              </div>
+
+              {/* Waarom */}
+              <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
+                <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom luisteren?</p>
+                <p className="text-cm-white text-sm leading-relaxed opacity-90">
+                  De 7 vaardigheden die elke succesvolle netwerker beheerst. Niet één keer doorkijken — <strong className="text-cm-white">herhalend aanhoren</strong>.
+                  Wat Eric vertelt landt na de 4e of 5e keer pas écht. Onze aanbeveling: dagelijks luisteren in de auto, tijdens werk of op een wandeling.
+                </p>
+              </div>
+
+              {/* Spotify embed */}
+              <div className="rounded-xl overflow-hidden border border-cm-border">
+                <iframe
+                  style={{ borderRadius: "12px" }}
+                  src="https://open.spotify.com/embed/album/3pX4DrWPVsjW8GCE2XYd7D?utm_source=generator&theme=0"
+                  width="100%"
+                  height="380"
+                  frameBorder={0}
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                  loading="lazy"
+                  title="Eric Worre — Seven Skills van Network Marketing Pro's"
+                />
+              </div>
+
+              {/* De 7 skills */}
+              <div className="card space-y-3">
+                <h3 className="text-cm-gold font-semibold text-sm">De 7 Skills</h3>
+                <ul className="space-y-2">
+                  {[
+                    "Discover the Possibilities — wat is écht mogelijk in dit vak",
+                    "Develop a Personal Vision — een visie zo helder dat hij je dagelijks trekt",
+                    "Master the 7 Slight Edge Skills — kleine dagelijkse acties die alles veranderen",
+                    "Build the Right Team — wie je sponsort bepaalt je toekomst",
+                    "Develop a Lifestyle of Personal Development — je eigen ontwikkeling staat centraal",
+                    "Create Massive Action — méér actie ondernemen dan je gewend bent",
+                    "Be a Leader Worth Following — leiderschap = het waard zijn om gevolgd te worden",
+                  ].map((item, i) => (
+                    <li key={i} className="flex gap-2 text-sm text-cm-white opacity-85">
+                      <span className="text-cm-gold flex-shrink-0 font-bold">{i + 1}.</span>{item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <button onClick={() => gaNaarStap(11)} disabled={bezig} className="btn-gold w-full py-3 text-base">
+                Ik ga deze week luisteren — verder →
+              </button>
+            </div>
+          )}
+
+          {/* ───── STAP 11: DAGDOELEN + AI COACH FINALE (was stap 6) ───── */}
+          {stap === 11 && (
             <div className="space-y-6">
               <div className="text-center">
                 <div className="text-6xl mb-4">🎯</div>
