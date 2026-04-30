@@ -299,14 +299,14 @@ export default async function DashboardPagina() {
       )}
 
       {/* Auto-redirect bij eerste bezoek per dag → /vandaag (guided
-          flow). Daarna niet meer; dashboard wordt dan de hoofdpagina.
-          Testers zijn uitgesloten — die springen tussen dagen en willen
-          niet steeds gerouteerd worden. */}
+          flow). Daarna niet meer voor die dag; dashboard wordt dan de
+          hoofdpagina. Geldt voor iedereen — testers springen sowieso
+          tussen dagen, dus elke nieuwe dag krijgt een eigen redirect.
+          Member die via push naar /herinneringen wordt geleid, doet
+          daar z'n ding, en wordt pas bij dashboard-bezoek doorgestuurd
+          naar /vandaag (zo niet onderbreken halverwege een actie). */}
       {huidigeDagData && (
-        <AutoNaarVandaag
-          dagNummer={dag}
-          redirectActief={!isTester}
-        />
+        <AutoNaarVandaag dagNummer={dag} redirectActief={true} />
       )}
 
       {/* Prominente CTA naar vandaag-flow — handig voor wanneer je
