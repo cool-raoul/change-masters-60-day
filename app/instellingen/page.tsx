@@ -48,17 +48,6 @@ export default async function InstellingenPagina() {
         </Link>
       </div>
 
-      {/* 21-daagse playbook preview */}
-      <div className="card space-y-3">
-        <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">📅 21-daagse playbook</h2>
-        <p className="text-cm-white text-sm opacity-60">
-          Alle 21 dagen + 3 fasen + weekritme dag 22-60. Read-only inkijk in wat een member dag voor dag ziet — handig als content-review zonder een testaccount.
-        </p>
-        <Link href="/playbook-preview" className="btn-secondary text-sm inline-block">
-          Bekijk 21-daagse playbook (preview) →
-        </Link>
-      </div>
-
       {/* Bestellinks (per pakket) */}
       <div className="card space-y-3">
         <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">🛒 Bestellinks</h2>
