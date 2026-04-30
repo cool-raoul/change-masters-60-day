@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { PushNotificationToggle } from "@/components/pwa/PushNotificationToggle";
+import { EditableTekst } from "@/components/cms/EditableTekst";
 
 const SPONSOR_TEL = "https://wa.me/31612345678"; // fallback — wordt dynamisch geladen
 
@@ -15,6 +16,8 @@ function Stap4NamenlijstInline({
   sponsorNaam,
   sponsorWaLink,
   isPreview,
+  overrides,
+  isFounder,
 }: {
   userId: string | null;
   onVerder: () => void;
@@ -22,6 +25,8 @@ function Stap4NamenlijstInline({
   sponsorNaam: string;
   sponsorWaLink: string;
   isPreview: boolean;
+  overrides: Record<string, string>;
+  isFounder: boolean;
 }) {
   const [naam, setNaam] = useState("");
   const [telefoon, setTelefoon] = useState("");
@@ -60,8 +65,26 @@ function Stap4NamenlijstInline({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-display font-bold text-cm-white mb-1">Bouw je warme markt</h2>
-        <p className="text-cm-white opacity-60 text-sm">Jouw eerste lijst met namen — dit is je startpunt.</p>
+        <EditableTekst
+          namespace="onboarding"
+          sleutel="stap4.titel"
+          standaard="Bouw je warme markt"
+          overrides={overrides}
+          isFounder={isFounder}
+          as="h2"
+          className="text-2xl font-display font-bold text-cm-white mb-1"
+        />
+        <EditableTekst
+          namespace="onboarding"
+          sleutel="stap4.intro"
+          standaard="Jouw eerste lijst met namen — dit is je startpunt."
+          overrides={overrides}
+          isFounder={isFounder}
+          as="p"
+          className="text-cm-white opacity-60 text-sm"
+          multiline
+          rows={2}
+        />
       </div>
 
       <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
@@ -197,9 +220,31 @@ export default function OnboardingPagina() {
   const [userId, setUserId] = useState<string | null>(null);
   const [sponsorNaam, setSponsorNaam] = useState("");
   const [sponsorWaLink, setSponsorWaLink] = useState("");
+  // Founder-edit state: ophalen via /api/cms/overrides bij mount.
+  // Members krijgen lege map + isFounder=false → niets visueel.
+  const [overrides, setOverrides] = useState<Record<string, string>>({});
+  const [isFounder, setIsFounder] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const supabase = createClient();
+
+  // Founder-overrides ophalen bij mount (1× fetch voor alle EditableTekst)
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/cms/overrides?namespace=onboarding")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (cancelled || !data) return;
+        if (data.overrides) setOverrides(data.overrides);
+        if (data.isFounder) setIsFounder(true);
+      })
+      .catch(() => {
+        // tabel ontbreekt of netwerk-fout — gewoon members-mode
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -409,8 +454,29 @@ export default function OnboardingPagina() {
             <div className="space-y-6">
               <div className="text-center">
                 <div className="text-6xl mb-4">👋</div>
-                <h2 className="text-3xl font-display font-bold text-cm-white mb-2">Welkom, {gebruikersnaam}!</h2>
-                <p className="text-cm-white opacity-60 text-sm">We zetten je in 6 stappen klaar voor de 60-dagenrun.</p>
+                <h2 className="text-3xl font-display font-bold text-cm-white mb-2">
+                  <EditableTekst
+                    namespace="onboarding"
+                    sleutel="stap1.welkom"
+                    standaard="Welkom"
+                    overrides={overrides}
+                    isFounder={isFounder}
+                    as="span"
+                    hint="Het 'Welkom'-woord — naam wordt er automatisch achter geplakt"
+                  />
+                  , {gebruikersnaam}!
+                </h2>
+                <EditableTekst
+                  namespace="onboarding"
+                  sleutel="stap1.intro"
+                  standaard="We zetten je in 6 stappen klaar voor de 60-dagenrun."
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="p"
+                  className="text-cm-white opacity-60 text-sm"
+                  multiline
+                  rows={2}
+                />
               </div>
 
               {/* App installeren */}
@@ -484,8 +550,26 @@ export default function OnboardingPagina() {
             <div className="space-y-6">
               <div className="text-center">
                 <div className="text-6xl mb-4">💛</div>
-                <h2 className="text-2xl font-display font-bold text-cm-white mb-2">Ontdek jouw WHY</h2>
-                <p className="text-cm-white opacity-60 text-sm">Het fundament van alles. Sla deze stap niet over.</p>
+                <EditableTekst
+                  namespace="onboarding"
+                  sleutel="stap2.titel"
+                  standaard="Ontdek jouw WHY"
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="h2"
+                  className="text-2xl font-display font-bold text-cm-white mb-2"
+                />
+                <EditableTekst
+                  namespace="onboarding"
+                  sleutel="stap2.intro"
+                  standaard="Het fundament van alles. Sla deze stap niet over."
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="p"
+                  className="text-cm-white opacity-60 text-sm"
+                  multiline
+                  rows={2}
+                />
               </div>
 
               {/* Waarom cruciaal */}
@@ -544,8 +628,26 @@ export default function OnboardingPagina() {
           {stap === 3 && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-2xl font-display font-bold text-cm-white mb-1">Hoe werkt de 60-dagenrun?</h2>
-                <p className="text-cm-white opacity-60 text-sm">Lees dit goed — dit is je speelplan voor de komende 60 dagen.</p>
+                <EditableTekst
+                  namespace="onboarding"
+                  sleutel="stap3.titel"
+                  standaard="Hoe werkt de 60-dagenrun?"
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="h2"
+                  className="text-2xl font-display font-bold text-cm-white mb-1"
+                />
+                <EditableTekst
+                  namespace="onboarding"
+                  sleutel="stap3.intro"
+                  standaard="Lees dit goed — dit is je speelplan voor de komende 60 dagen."
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="p"
+                  className="text-cm-white opacity-60 text-sm"
+                  multiline
+                  rows={2}
+                />
               </div>
 
               {/* Waarom cruciaal */}
@@ -598,15 +700,42 @@ export default function OnboardingPagina() {
 
           {/* ───── STAP 4: WARME MARKT (inline form) ───── */}
           {stap === 4 && (
-            <Stap4NamenlijstInline userId={userId} onVerder={() => gaNaarStap(5)} bezig={bezig} sponsorNaam={toonSponsorNaam} sponsorWaLink={toonSponsorLink} isPreview={isPreview} />
+            <Stap4NamenlijstInline
+              userId={userId}
+              onVerder={() => gaNaarStap(5)}
+              bezig={bezig}
+              sponsorNaam={toonSponsorNaam}
+              sponsorWaLink={toonSponsorLink}
+              isPreview={isPreview}
+              overrides={overrides}
+              isFounder={isFounder}
+            />
           )}
 
           {/* ───── STAP 5: UITNODIGINGSSCRIPT ───── */}
           {stap === 5 && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-2xl font-display font-bold text-cm-white mb-1">Je eerste uitnodigingsscript</h2>
-                <p className="text-cm-white opacity-60 text-sm">Lees dit door, oefen het hardop, gebruik het.</p>
+                <EditableTekst
+                  namespace="onboarding"
+                  sleutel="stap5.titel"
+                  standaard="Je eerste uitnodigingsscript"
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="h2"
+                  className="text-2xl font-display font-bold text-cm-white mb-1"
+                />
+                <EditableTekst
+                  namespace="onboarding"
+                  sleutel="stap5.intro"
+                  standaard="Lees dit door, oefen het hardop, gebruik het."
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="p"
+                  className="text-cm-white opacity-60 text-sm"
+                  multiline
+                  rows={2}
+                />
               </div>
 
               {/* Waarom cruciaal */}
@@ -690,8 +819,26 @@ export default function OnboardingPagina() {
             <div className="space-y-6">
               <div className="text-center">
                 <div className="text-6xl mb-4">🎯</div>
-                <h2 className="text-2xl font-display font-bold text-cm-white mb-2">Stel je dagdoelen in</h2>
-                <p className="text-cm-white opacity-60 text-sm">Wat ga jij elke dag minimaal doen? Wees realistisch.</p>
+                <EditableTekst
+                  namespace="onboarding"
+                  sleutel="stap6.titel"
+                  standaard="Stel je dagdoelen in"
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="h2"
+                  className="text-2xl font-display font-bold text-cm-white mb-2"
+                />
+                <EditableTekst
+                  namespace="onboarding"
+                  sleutel="stap6.intro"
+                  standaard="Wat ga jij elke dag minimaal doen? Wees realistisch."
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="p"
+                  className="text-cm-white opacity-60 text-sm"
+                  multiline
+                  rows={2}
+                />
               </div>
 
               {/* Waarom cruciaal */}
