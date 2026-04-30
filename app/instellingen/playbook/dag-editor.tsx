@@ -7,8 +7,16 @@ import type { Dag } from "@/lib/playbook/types";
 
 // ============================================================
 // DagEditor — een rij voor één dag op /instellingen/playbook.
-// Toont titel + status (override actief / standaard), klap-uit met
-// 4 bewerkbare velden + Bewaar/Reset-knoppen.
+//
+// UX-principe: de velden tonen ALTIJD de huidige tekst (override
+// als die er is, anders de standaard uit dagen.ts). De founder
+// hoeft dus niet eerst de standaard te kopieren — gewoon aanpassen
+// wat hij/zij wil aanpassen, of laten staan.
+//
+// Bij Bewaar: per veld vergelijken we de waarde met de standaard.
+//   - Identiek aan standaard → wordt NULL in DB → fallback blijft
+//   - Anders → wordt opgeslagen als override
+// Zo blijft de override-tabel schoon (alleen écht aangepaste velden).
 // ============================================================
 
 type Override = {
@@ -30,14 +38,28 @@ export function DagEditor({
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [bezig, setBezig] = useState(false);
-  const [titel, setTitel] = useState(override?.titel ?? "");
-  const [watJeLeert, setWatJeLeert] = useState(override?.wat_je_leert ?? "");
-  const [faseDoel, setFaseDoel] = useState(override?.fase_doel ?? "");
+
+  // Standaardwaardes uit code — fallback als geen override
+  const standaardTitel = dag.titel ?? "";
+  const standaardWatJeLeert = dag.watJeLeert ?? "";
+  const standaardFaseDoel = dag.faseDoel ?? "";
+  const standaardWaaromTekst = dag.waaromWerktDit?.tekst ?? "";
+  const standaardWaaromBron = dag.waaromWerktDit?.bron ?? "";
+
+  // Velden voorvullen met override-waarde of standaard. De user ziet
+  // dus DIRECT de huidige tekst en kan gewoon bewerken.
+  const [titel, setTitel] = useState(override?.titel ?? standaardTitel);
+  const [watJeLeert, setWatJeLeert] = useState(
+    override?.wat_je_leert ?? standaardWatJeLeert,
+  );
+  const [faseDoel, setFaseDoel] = useState(
+    override?.fase_doel ?? standaardFaseDoel,
+  );
   const [waaromTekst, setWaaromTekst] = useState(
-    override?.waarom_werkt_dit_tekst ?? "",
+    override?.waarom_werkt_dit_tekst ?? standaardWaaromTekst,
   );
   const [waaromBron, setWaaromBron] = useState(
-    override?.waarom_werkt_dit_bron ?? "",
+    override?.waarom_werkt_dit_bron ?? standaardWaaromBron,
   );
 
   const heeftOverride =
@@ -50,6 +72,16 @@ export function DagEditor({
       override.waarom_werkt_dit_bron
     );
 
+  // Per veld: alleen overslaan naar de DB als de waarde echt afwijkt
+  // van de standaard. Anders sturen we lege string door → backend
+  // slaat NULL op → fallback blijft werken voor members.
+  function alleenAlsAfwijkt(
+    huidig: string,
+    standaard: string,
+  ): string {
+    return huidig.trim() === standaard.trim() ? "" : huidig;
+  }
+
   async function bewaar() {
     setBezig(true);
     try {
@@ -58,11 +90,14 @@ export function DagEditor({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           dagNummer: dag.nummer,
-          titel,
-          watJeLeert,
-          faseDoel,
-          waaromWerktDitTekst: waaromTekst,
-          waaromWerktDitBron: waaromBron,
+          titel: alleenAlsAfwijkt(titel, standaardTitel),
+          watJeLeert: alleenAlsAfwijkt(watJeLeert, standaardWatJeLeert),
+          faseDoel: alleenAlsAfwijkt(faseDoel, standaardFaseDoel),
+          waaromWerktDitTekst: alleenAlsAfwijkt(
+            waaromTekst,
+            standaardWaaromTekst,
+          ),
+          waaromWerktDitBron: alleenAlsAfwijkt(waaromBron, standaardWaaromBron),
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -71,9 +106,9 @@ export function DagEditor({
         return;
       }
       if (data.leeg) {
-        toast.success(`Dag ${dag.nummer} — terug naar standaard`);
+        toast.success(`Dag ${dag.nummer} — geen wijzigingen, standaard hersteld`);
       } else {
-        toast.success(`Dag ${dag.nummer} bijgewerkt`);
+        toast.success(`Dag ${dag.nummer} bijgewerkt — direct live`);
       }
       router.refresh();
     } catch {
@@ -86,7 +121,7 @@ export function DagEditor({
   async function reset() {
     if (
       !confirm(
-        `Weet je zeker dat je de aanpassingen voor dag ${dag.nummer} wil terugzetten naar de standaard?`,
+        `Weet je zeker dat je dag ${dag.nummer} terug wil zetten naar de standaard? Je aanpassingen gaan verloren.`,
       )
     )
       return;
@@ -101,11 +136,12 @@ export function DagEditor({
         toast.error("Reset mislukt");
         return;
       }
-      setTitel("");
-      setWatJeLeert("");
-      setFaseDoel("");
-      setWaaromTekst("");
-      setWaaromBron("");
+      // Velden terugzetten naar de standaard tekst
+      setTitel(standaardTitel);
+      setWatJeLeert(standaardWatJeLeert);
+      setFaseDoel(standaardFaseDoel);
+      setWaaromTekst(standaardWaaromTekst);
+      setWaaromBron(standaardWaaromBron);
       toast.success(`Dag ${dag.nummer} — terug naar standaard`);
       router.refresh();
     } catch {
@@ -115,8 +151,8 @@ export function DagEditor({
     }
   }
 
-  // Toont effectieve titel (met evt. override) in de inklap-header
-  const effectieveTitel = (titel.trim() || dag.titel).trim();
+  // Toon de actuele titel in de inklap-header
+  const effectieveTitel = (titel.trim() || standaardTitel).trim();
 
   return (
     <div className="card space-y-3">
@@ -146,42 +182,30 @@ export function DagEditor({
 
       {open && (
         <div className="space-y-4 pt-2 border-t border-cm-border">
+          <Veld label="Titel" value={titel} setValue={setTitel} />
           <Veld
-            label="Titel"
-            standaard={dag.titel}
-            value={titel}
-            setValue={setTitel}
-          />
-          <Veld
-            label="Wat je leert (de hele teaching, ondersteunt witregels)"
-            standaard={
-              (dag.watJeLeert ?? "").slice(0, 200) +
-              ((dag.watJeLeert ?? "").length > 200 ? "…" : "")
-            }
+            label="Wat je leert (de volledige teaching — ondersteunt witregels)"
             value={watJeLeert}
             setValue={setWatJeLeert}
             multiline
-            rows={14}
+            rows={20}
           />
           <Veld
             label="Fase-doel"
-            standaard={dag.faseDoel ?? ""}
             value={faseDoel}
             setValue={setFaseDoel}
             multiline
             rows={2}
           />
           <Veld
-            label="Waarom dit werkt — tekst (de quote)"
-            standaard={dag.waaromWerktDit?.tekst ?? ""}
+            label="Waarom dit werkt — quote"
             value={waaromTekst}
             setValue={setWaaromTekst}
             multiline
             rows={2}
           />
           <Veld
-            label="Waarom dit werkt — bron"
-            standaard={dag.waaromWerktDit?.bron ?? "(geen)"}
+            label="Waarom dit werkt — bron (bv. 'Eric Worre, Go Pro')"
             value={waaromBron}
             setValue={setWaaromBron}
           />
@@ -194,18 +218,13 @@ export function DagEditor({
             >
               {bezig ? "Bewaren..." : "Bewaar wijzigingen"}
             </button>
-            {heeftOverride && (
-              <button
-                onClick={reset}
-                disabled={bezig}
-                className="text-xs text-red-400 hover:text-red-300 underline-offset-2"
-              >
-                Terug naar standaard
-              </button>
-            )}
-            <span className="text-xs text-cm-white opacity-50 ml-auto">
-              Lege velden = standaard tekst.
-            </span>
+            <button
+              onClick={reset}
+              disabled={bezig}
+              className="text-xs text-red-400 hover:text-red-300 underline-offset-2"
+            >
+              Terug naar standaard
+            </button>
           </div>
         </div>
       )}
@@ -215,26 +234,17 @@ export function DagEditor({
 
 function Veld({
   label,
-  standaard,
   value,
   setValue,
   multiline,
   rows = 1,
 }: {
   label: string;
-  standaard: string;
   value: string;
   setValue: (v: string) => void;
   multiline?: boolean;
   rows?: number;
 }) {
-  // Veilige hint-tekst: max 200 tekens, geen .slice op undefined.
-  const veiligeStandaard = String(standaard ?? "");
-  const hintTekst =
-    veiligeStandaard.length > 200
-      ? veiligeStandaard.slice(0, 200) + "…"
-      : veiligeStandaard || "(leeg)";
-
   return (
     <div>
       <label className="block text-xs text-cm-white opacity-70 mb-1">
@@ -244,9 +254,8 @@ function Veld({
         <textarea
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          className="textarea-cm w-full text-sm leading-relaxed"
+          className="textarea-cm w-full text-sm leading-relaxed font-mono"
           rows={rows}
-          placeholder="Laat leeg om de standaard te gebruiken"
         />
       ) : (
         <input
@@ -254,12 +263,8 @@ function Veld({
           value={value}
           onChange={(e) => setValue(e.target.value)}
           className="input-cm w-full"
-          placeholder="Laat leeg om de standaard te gebruiken"
         />
       )}
-      <p className="text-xs text-cm-white opacity-40 mt-1 italic">
-        Standaard: {hintTekst}
-      </p>
     </div>
   );
 }

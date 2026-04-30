@@ -125,22 +125,21 @@ export default async function PlaybookEditorPagina() {
             <strong> 'Waarom dit werkt'</strong>.
           </li>
           <li>
-            • Lege velden = standaard tekst uit de code blijft zichtbaar voor
-            members.
+            • Velden zijn voorgevuld met de <strong>huidige tekst</strong>.
+            Pas aan wat je wil aanpassen, laat de rest staan.
           </li>
           <li>
             • Wijzigingen zijn ONMIDDELLIJK live, zonder dat ik (de developer)
             iets hoef te doen.
           </li>
           <li>
-            • Per dag staat een 'Terug naar standaard'-knop die jouw override
-            verwijdert en de oorspronkelijke tekst herstelt.
+            • <strong>Terug naar standaard</strong>-knop herstelt de
+            oorspronkelijke tekst voor die dag.
           </li>
           <li>
             • <strong>Niet aanpasbaar via deze pagina:</strong> de checklist
             (taken), Waar-in-ELEVA-paden en inline-acties — die zijn structureel
-            en hangen vast aan de logica. Daarvoor stuur je een wijzigverzoek
-            naar de hoofdbeheerder.
+            en hangen vast aan de logica.
           </li>
         </ul>
       </div>
