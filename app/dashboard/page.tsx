@@ -9,6 +9,7 @@ import { DagelijkseStat, Herinnering, WhyProfile } from "@/lib/supabase/types";
 import { PlaybookDagTile } from "@/components/playbook/PlaybookDagTile";
 import { TesterToolbar } from "@/components/tester/TesterToolbar";
 import { AutoNaarVandaag } from "@/components/dashboard/AutoNaarVandaag";
+import { HerinnerLaterKnop } from "@/components/playbook/HerinnerLaterKnop";
 import { DAGEN } from "@/lib/playbook/dagen";
 import { haalOverrides, pasOverrideToe } from "@/lib/playbook/overrides";
 import { getServerTaal, v } from "@/lib/i18n/server";
@@ -314,27 +315,36 @@ export default async function DashboardPagina() {
           taken hebt gedaan. Verbergt automatisch als alles voltooid. */}
       {huidigeDagData &&
         huidigeDagVoltooidIds.length < huidigeDagData.vandaagDoen.length && (
-          <Link
-            href="/vandaag"
-            className="block rounded-xl bg-gradient-to-br from-cm-gold/20 to-cm-gold/5 border-2 border-cm-gold/40 px-5 py-4 hover:border-cm-gold transition-colors"
-          >
-            <div className="flex items-center justify-between gap-3 flex-wrap">
-              <div>
-                <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
-                  📋 Vandaag is dag {dag}
-                </p>
-                <p className="text-cm-white text-base font-display font-semibold mt-0.5">
-                  {huidigeDagData.titel}
-                </p>
-                <p className="text-cm-white opacity-70 text-xs mt-1">
-                  {huidigeDagVoltooidIds.length} van{" "}
-                  {huidigeDagData.vandaagDoen.length} stappen klaar — pak 'm
-                  stap voor stap →
-                </p>
+          <div className="space-y-2">
+            <Link
+              href="/vandaag"
+              className="block rounded-xl bg-gradient-to-br from-cm-gold/20 to-cm-gold/5 border-2 border-cm-gold/40 px-5 py-4 hover:border-cm-gold transition-colors"
+            >
+              <div className="flex items-center justify-between gap-3 flex-wrap">
+                <div>
+                  <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
+                    📋 Vandaag is dag {dag}
+                  </p>
+                  <p className="text-cm-white text-base font-display font-semibold mt-0.5">
+                    {huidigeDagData.titel}
+                  </p>
+                  <p className="text-cm-white opacity-70 text-xs mt-1">
+                    {huidigeDagVoltooidIds.length} van{" "}
+                    {huidigeDagData.vandaagDoen.length} stappen klaar — pak 'm
+                    stap voor stap →
+                  </p>
+                </div>
+                <span className="text-cm-gold font-bold text-lg">→</span>
               </div>
-              <span className="text-cm-gold font-bold text-lg">→</span>
+            </Link>
+            <div className="flex justify-end">
+              <HerinnerLaterKnop
+                dagNummer={dag}
+                variant="tekstlink"
+                label="Herinner me later vandaag"
+              />
             </div>
-          </Link>
+          </div>
         )}
 
       {/* Streak + mijlpaal-vieringen. Compact, alleen zichtbaar bij

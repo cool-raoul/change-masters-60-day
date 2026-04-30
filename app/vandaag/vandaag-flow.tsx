@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { FilmInBlok } from "@/components/film/FilmInBlok";
+import { HerinnerLaterKnop } from "@/components/playbook/HerinnerLaterKnop";
 import type { Dag, ControllableTaak } from "@/lib/playbook/types";
 
 // ============================================================
@@ -261,6 +262,15 @@ export function VandaagFlow({
                 ? "Door naar je volgende stap →"
                 : "Begin met stap 1 →"}
             </button>
+
+            {/* Snooze: herinner me later vandaag */}
+            <div className="flex justify-center pt-1">
+              <HerinnerLaterKnop
+                dagNummer={dag.nummer}
+                variant="tekstlink"
+                label="Even niet nu — herinner me later vandaag"
+              />
+            </div>
           </div>
         )}
 
@@ -470,6 +480,18 @@ export function VandaagFlow({
             >
               Naar dashboard →
             </Link>
+
+            {/* Niet alles afgerond? Snooze de open stappen naar later vandaag. */}
+            {aantalVoltooid < totaal && (
+              <div className="flex justify-center pt-1">
+                <HerinnerLaterKnop
+                  dagNummer={dag.nummer}
+                  variant="tekstlink"
+                  label="Herinner me later vandaag aan de rest"
+                />
+              </div>
+            )}
+
             <button
               type="button"
               onClick={() => {
