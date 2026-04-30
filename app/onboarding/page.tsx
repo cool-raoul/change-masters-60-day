@@ -901,8 +901,42 @@ export default function OnboardingPagina() {
                 </p>
               </div>
 
+              {/* "Je eerste 24 uur" — concrete acties terwijl het momentum
+                  van de onboarding nog warm is. */}
+              <div className="card border-l-4 border-emerald-500 space-y-2.5">
+                <h3 className="text-emerald-300 font-semibold text-sm flex items-center gap-2">
+                  🎯 Je eerste 24 uur — terwijl het warm is
+                </h3>
+                <p className="text-cm-white text-sm opacity-80 leading-relaxed">
+                  Top dat je dit hebt afgerond! Dit zijn 3 dingen die je
+                  gewoon NU even kunt doen — kost minder dan 10 minuten en
+                  zet je goed neer voor morgen:
+                </p>
+                <ul className="space-y-1.5 text-sm text-cm-white opacity-90">
+                  <li className="flex gap-2">
+                    <span className="text-emerald-400 flex-shrink-0">1.</span>
+                    Stuur je sponsor een korte voicememo of berichtje:
+                    "Ik ben gestart, dankjewel!" 🙌
+                  </li>
+                  <li className="flex gap-2">
+                    <span className="text-emerald-400 flex-shrink-0">2.</span>
+                    Voeg vanavond op je telefoon nog 5 namen toe — wie kwam
+                    spontaan in je hoofd?
+                  </li>
+                  <li className="flex gap-2">
+                    <span className="text-emerald-400 flex-shrink-0">3.</span>
+                    Lees je WHY nog 1 keer rustig terug — die wordt morgen
+                    je kompas.
+                  </li>
+                </ul>
+                <p className="text-cm-white text-xs opacity-60 italic">
+                  Morgenochtend krijg je een vriendelijke push voor dag 1 —
+                  daar gaat het écht beginnen 💪
+                </p>
+              </div>
+
               <button onClick={slaDoelOp} disabled={bezig} className="btn-gold w-full py-4 text-lg font-bold disabled:opacity-50">
-                {bezig ? "Laden..." : "Opslaan en open de ELEVA Mentor →"}
+                {bezig ? "Laden..." : "Te gek — open de ELEVA Mentor →"}
               </button>
             </div>
           )}

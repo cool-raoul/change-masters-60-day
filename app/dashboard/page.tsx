@@ -110,6 +110,37 @@ export default async function DashboardPagina() {
     autoVinken.forEach((t) => voltooidSet.add(`1|${t}`));
   }
 
+  // Streak-berekening — hoeveel dagen op rij heeft de member iets
+  // afgevinkt? Telt vanaf vandaag terug. Géén stilte-dagen tussendoor.
+  // Voor motivatie-tegel "🔥 X dagen op rij".
+  const voltooidPerDag = new Map<number, boolean>();
+  for (const v of (dagVoltooiingen as Array<{
+    dag_nummer: number;
+    taak_id: string;
+  }>) || []) {
+    voltooidPerDag.set(v.dag_nummer, true);
+  }
+  let streak = 0;
+  for (let i = dag; i >= 1; i--) {
+    if (voltooidPerDag.has(i)) streak++;
+    else break;
+  }
+
+  // Mijlpaal-detectie: net vandaag dag 7 / 14 / 21 voltooid?
+  // We checken of ALLE verplichte taken van die mijlpaal-dag gedaan zijn.
+  function mijlpaalVoltooid(mijlpaalDag: number): boolean {
+    if (dag < mijlpaalDag) return false;
+    const mijlpaalData = DAGEN.find((d) => d.nummer === mijlpaalDag);
+    if (!mijlpaalData) return false;
+    const verplichteTaken = mijlpaalData.vandaagDoen.filter((t) => t.verplicht);
+    return verplichteTaken.every((t) =>
+      voltooidSet.has(`${mijlpaalDag}|${t.id}`),
+    );
+  }
+  const week1Klaar = mijlpaalVoltooid(7);
+  const week2Klaar = mijlpaalVoltooid(14);
+  const week3Klaar = mijlpaalVoltooid(21);
+
   // Huidige dag-data uit het 21-daagse playbook (alleen relevant voor
   // dag 1-21 — daarna draait de gebruiker op weekritme).
   let huidigeDagData = dag <= 21
@@ -277,6 +308,53 @@ export default async function DashboardPagina() {
           dag={huidigeDagData}
           voltooidAantal={huidigeDagVoltooidIds.length}
         />
+      )}
+
+      {/* Streak + mijlpaal-vieringen. Compact, alleen zichtbaar bij
+          relevante getallen (geen lege tegels). */}
+      {(streak >= 2 || week1Klaar || week2Klaar || week3Klaar) && (
+        <div className="flex flex-wrap gap-2">
+          {streak >= 2 && (
+            <div className="flex-1 min-w-[160px] rounded-lg border border-orange-500/40 bg-orange-900/20 px-3 py-2.5">
+              <p className="text-orange-300 text-xs font-semibold uppercase tracking-wider">
+                🔥 Streak
+              </p>
+              <p className="text-cm-white text-sm font-medium mt-0.5">
+                <strong className="text-orange-300 text-base">{streak}</strong>{" "}
+                dagen op rij — hou vol!
+              </p>
+            </div>
+          )}
+          {week3Klaar ? (
+            <div className="flex-1 min-w-[200px] rounded-lg border border-cm-gold/60 bg-cm-gold/15 px-3 py-2.5">
+              <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
+                🏆 21 dagen klaar!
+              </p>
+              <p className="text-cm-white text-sm font-medium mt-0.5">
+                Te gek — fase 1 t/m 3 voltooid. Dit is je startlijn voor de
+                volgende 40 dagen.
+              </p>
+            </div>
+          ) : week2Klaar ? (
+            <div className="flex-1 min-w-[200px] rounded-lg border border-cm-gold/60 bg-cm-gold/15 px-3 py-2.5">
+              <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
+                🏁 Halverwege!
+              </p>
+              <p className="text-cm-white text-sm font-medium mt-0.5">
+                Twee weken in — jij hoort bij de 20% die doorzet. Door zo!
+              </p>
+            </div>
+          ) : week1Klaar ? (
+            <div className="flex-1 min-w-[200px] rounded-lg border border-cm-gold/60 bg-cm-gold/15 px-3 py-2.5">
+              <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
+                🎉 Eerste week klaar!
+              </p>
+              <p className="text-cm-white text-sm font-medium mt-0.5">
+                Top — week 1 zit erop. Het ritme zit er nu in. Op naar fase 2!
+              </p>
+            </div>
+          ) : null}
+        </div>
       )}
 
       {/* Tester-toolbar — alleen voor pilot-testers + founders.

@@ -126,7 +126,7 @@ OVERWELDIGD VOELEN IS NORMAAL: je leert iets nieuws, je stapt uit comfort. Eerst
 
   {
     nummer: 2,
-    titel: "NIVEA + eerste 3 invites samen met sponsor",
+    titel: "👋 Open je hoofd: alle namen op de lijst",
     fase: 1,
     vandaagDoen: [
       {
@@ -239,7 +239,7 @@ Vandaag stuur je ook al 3 uitnodigingen — samen met je sponsor in een groepje 
 
   {
     nummer: 3,
-    titel: "Social-challenge + 5 invites doorlopen",
+    titel: "📱 Je socials zijn een goudmijn — 3 namen + 5 invites",
     fase: 1,
     vandaagDoen: [
       {
@@ -326,7 +326,7 @@ NIET GELIJK PITCHEN — wat wel: reageer terug op hun content. Vraag iets. Bouw 
 
   {
     nummer: 4,
-    titel: "De 4-stappen-uitnodiging + (optioneel) eerste 3-weg met sponsor",
+    titel: "💬 Vandaag leer je uitnodigen — 4 stappen die werken",
     fase: 1,
     vandaagDoen: [
       {
@@ -429,7 +429,7 @@ Vandaag stap je actief uit je comfortzone, en dat kriebelt — afwijzingsangst, 
 
   {
     nummer: 5,
-    titel: "Feel-Felt-Found: als ze aarzelen",
+    titel: "🛡️ Bezwaren? Geen probleem — Feel-Felt-Found",
     fase: 1,
     vandaagDoen: [
       {
@@ -534,7 +534,7 @@ EXTRA — VANDAAG START JE MINDSET-ROUTINE:
 
   {
     nummer: 6,
-    titel: "Follow-up: de 24-48u regel",
+    titel: "🔄 De fortuin zit in de follow-up — 24-48u-regel",
     fase: 1,
     vandaagDoen: [
       {
@@ -627,7 +627,7 @@ Een prospect die NU geen ja zegt, kan over 3 maanden alsnog ja zeggen. Of over 1
 
   {
     nummer: 7,
-    titel: "Week 1 review: wat ging goed, wat schuurde?",
+    titel: "🎉 Week 1 zit erop! Tijd voor een rustige reflectie",
     fase: 1,
     vandaagDoen: [
       {
@@ -702,7 +702,7 @@ DEZE REVIEW WORDT GEDEELD MET JE SPONSOR — niet om te beoordelen, om te onders
   // ============================================================
   {
     nummer: 8,
-    titel: "Momentum: lat omhoog naar 10 uitnodigingen",
+    titel: "🚀 Momentum! Vandaag lat omhoog: 10 invites",
     fase: 2,
     vandaagDoen: [
       {
@@ -780,7 +780,7 @@ MIX WARM EN LAUW: 5 mensen die je goed kent + 5 met wie je 6+ maanden niet gespr
 
   {
     nummer: 9,
-    titel: "3-weg verdieping: edification + de 5 stappen",
+    titel: "💪 3-weg-meesterclass: 5 stappen die werken",
     fase: 2,
     vandaagDoen: [
       {
@@ -880,7 +880,7 @@ VANDAAG: lees de scripts in een prospect-kaart door, zodat je voor je eerstvolge
 
   {
     nummer: 10,
-    titel: "3-weg in de praktijk: minstens 1 deze week",
+    titel: "🤝 Vandaag start je je eerstvolgende 3-weg",
     fase: 2,
     vandaagDoen: [
       {
@@ -962,7 +962,7 @@ Doel deze week: minimaal 1 3-weg starten. Heb je 'm op dag 4 al gehad? Top, plan
 
   {
     nummer: 11,
-    titel: "One-pager vs presentatie: wat bied je wanneer aan?",
+    titel: "🎯 One-pager of presentatie? Vandaag leer je kiezen",
     fase: 2,
     vandaagDoen: [
       {
@@ -1059,7 +1059,7 @@ KIJK VANDAAG NAAR JE PIPELINE: hoeveel mensen op "Uitgenodigd"? Hoeveel op "One-
 
   {
     nummer: 12,
-    titel: "Nee tegen business? Dan de product-pivot",
+    titel: "🔄 Nee op business? Maak een product-pivot",
     fase: 2,
     vandaagDoen: [
       {
@@ -1163,7 +1163,7 @@ EXTRA WAARDE: zeg nee tegen drammen, ja tegen warmte. Een Shopper die jou over e
 
   {
     nummer: 13,
-    titel: "FORM: hoe leer je iemand écht kennen in 5 minuten?",
+    titel: "🎙️ FORM: leer iemand écht kennen in 5 minuten",
     fase: 2,
     vandaagDoen: [
       {
@@ -1279,7 +1279,7 @@ VANDAAG: kies 1 specifieke prospect, plan een 5-min check-in (DM of telefoon) en
 
   {
     nummer: 14,
-    titel: "Week 2 review: welk patroon zie je?",
+    titel: "🏁 Halverwege! Week 2 review — welk patroon zie je?",
     fase: 2,
     vandaagDoen: [
       {
@@ -1372,7 +1372,7 @@ VAN HIER UIT IS HET KILOMETER-WERK. Geen nieuwe technieken meer, alleen oefenen 
   // ============================================================
   {
     nummer: 15,
-    titel: "Ritme: follow-up wordt je werk",
+    titel: "⏱️ Ritme-week: follow-up is nu je hoofdwerk",
     fase: 3,
     vandaagDoen: [
       {
@@ -1462,7 +1462,7 @@ Een nee NU is geen nee voor altijd. Iemand op "Not-yet" zetten is geen verlies. 
 
   {
     nummer: 16,
-    titel: "De 5 types prospects: snap wie je voor je hebt",
+    titel: "🎯 5 types prospects — energie waar 't telt",
     fase: 3,
     vandaagDoen: [
       {
@@ -1559,7 +1559,7 @@ VANDAAG — categoriseer je top-20:
 
   {
     nummer: 17,
-    titel: "Closing: Doel-Tijd-Termijn",
+    titel: "🎯 Closing met Doel-Tijd-Termijn — helpen beslissen",
     fase: 3,
     vandaagDoen: [
       {
@@ -1682,7 +1682,7 @@ VANDAAG: probeer Doel-Tijd-Termijn vandaag of morgen bij minstens 1 warme prospe
 
   {
     nummer: 18,
-    titel: "Edification: de zin die je sponsor laat schitteren",
+    titel: "✨ Edification: de zin die je sponsor laat schitteren",
     fase: 3,
     vandaagDoen: [
       {
@@ -1786,7 +1786,7 @@ Wat je vandaag doet: 5 minuten investeren in JOUW vaste zin. Schrijf 'm op, bewa
 
   {
     nummer: 19,
-    titel: "Pipeline-review: waar lekt je funnel?",
+    titel: "🔍 Pipeline-check — waar lekt je trechter?",
     fase: 3,
     vandaagDoen: [
       {
@@ -1887,7 +1887,7 @@ Statistieken zijn je leermeester, niet je rechter. Slechte cijfers betekenen nie
 
   {
     nummer: 20,
-    titel: "Afsluiten: vraag de beslissing",
+    titel: "💪 Vraag de beslissing — de moedigste vraag van je vak",
     fase: 3,
     vandaagDoen: [
       {
@@ -1984,7 +1984,7 @@ VANDAAG: kies 1 prospect die meer dan 3 exposures heeft gehad zonder beslissing.
 
   {
     nummer: 21,
-    titel: "Week 3 review: de 21 dagen zijn het begin",
+    titel: "🏆 21 dagen klaar! Dit is je startlijn — niet de eindstreep",
     fase: 3,
     vandaagDoen: [
       {
