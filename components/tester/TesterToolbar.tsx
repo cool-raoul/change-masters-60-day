@@ -32,6 +32,23 @@ export function TesterToolbar({ huidigeDag }: { huidigeDag: number }) {
         toast.error(data.error || "Springen mislukt");
         return;
       }
+
+      // Wis de 'gesloten'-vlag voor de NIEUWE dag zodat AutoNaarVandaag
+      // 'm opnieuw oppakt en de tester de flow van die dag opnieuw te zien
+      // krijgt. Voor andere dagen laten we de vlag staan — anders krijg je
+      // een loop tussen /dashboard en /vandaag bij dag 1 → 1.
+      try {
+        const datum = new Date().toISOString().split("T")[0];
+        const k = `eleva-vandaag-flow-dag${dag}-${datum}`;
+        window.localStorage.removeItem(k);
+        // En verwijder ook de positie-state zodat we netjes bij de intro
+        // van de nieuwe dag beginnen.
+        const pk = `eleva-vandaag-flow-positie-dag${dag}-${datum}`;
+        window.localStorage.removeItem(pk);
+      } catch {
+        // negeer
+      }
+
       toast.success(`🧪 Nu op dag ${dag}`);
       router.refresh();
     } catch {
