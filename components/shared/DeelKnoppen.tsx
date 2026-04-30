@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
+import { VerzendTimerKnop } from "@/components/shared/VerzendTimerKnop";
 
 // ============================================================
 // DeelKnoppen — herbruikbare deel-component voor overal in ELEVA
@@ -26,6 +27,8 @@ export function DeelKnoppen({
   onderwerp,
   variant = "donker",
   inclusiefUrl = true,
+  prospectId,
+  prospectNaam,
 }: {
   /** URL die gedeeld wordt. Wordt achter de tekst geplakt indien niet aanwezig. */
   url: string;
@@ -42,6 +45,9 @@ export function DeelKnoppen({
    * de naam, dus een lange URL toevoegen oogt rommelig.
    */
   inclusiefUrl?: boolean;
+  /** Optioneel: koppel een geplande verzending aan een prospect */
+  prospectId?: string;
+  prospectNaam?: string;
 }) {
   const [shareSupported, setShareSupported] = useState(false);
   const [gekopieerd, setGekopieerd] = useState(false);
@@ -186,6 +192,15 @@ export function DeelKnoppen({
             📷 QR-code
           </button>
         )}
+      </div>
+
+      {/* Verzend-timer: plan dit bericht in voor verzending later */}
+      <div>
+        <VerzendTimerKnop
+          bericht={volledigeTekst}
+          prospectId={prospectId}
+          prospectNaam={prospectNaam}
+        />
       </div>
 
       {/* Uitleg: Messenger / Instagram DM / Signal werken niet via web-share-links.
