@@ -154,7 +154,10 @@ export function DagEditor({
           />
           <Veld
             label="Wat je leert (de hele teaching, ondersteunt witregels)"
-            standaard={dag.watJeLeert.slice(0, 200) + "…"}
+            standaard={
+              (dag.watJeLeert ?? "").slice(0, 200) +
+              ((dag.watJeLeert ?? "").length > 200 ? "…" : "")
+            }
             value={watJeLeert}
             setValue={setWatJeLeert}
             multiline
@@ -162,7 +165,7 @@ export function DagEditor({
           />
           <Veld
             label="Fase-doel"
-            standaard={dag.faseDoel}
+            standaard={dag.faseDoel ?? ""}
             value={faseDoel}
             setValue={setFaseDoel}
             multiline
@@ -170,7 +173,7 @@ export function DagEditor({
           />
           <Veld
             label="Waarom dit werkt — tekst (de quote)"
-            standaard={dag.waaromWerktDit.tekst}
+            standaard={dag.waaromWerktDit?.tekst ?? ""}
             value={waaromTekst}
             setValue={setWaaromTekst}
             multiline
@@ -178,7 +181,7 @@ export function DagEditor({
           />
           <Veld
             label="Waarom dit werkt — bron"
-            standaard={dag.waaromWerktDit.bron ?? "(geen)"}
+            standaard={dag.waaromWerktDit?.bron ?? "(geen)"}
             value={waaromBron}
             setValue={setWaaromBron}
           />
@@ -225,6 +228,13 @@ function Veld({
   multiline?: boolean;
   rows?: number;
 }) {
+  // Veilige hint-tekst: max 200 tekens, geen .slice op undefined.
+  const veiligeStandaard = String(standaard ?? "");
+  const hintTekst =
+    veiligeStandaard.length > 200
+      ? veiligeStandaard.slice(0, 200) + "…"
+      : veiligeStandaard || "(leeg)";
+
   return (
     <div>
       <label className="block text-xs text-cm-white opacity-70 mb-1">
@@ -247,8 +257,8 @@ function Veld({
           placeholder="Laat leeg om de standaard te gebruiken"
         />
       )}
-      <p className="text-xs text-cm-white opacity-40 mt-1 italic line-clamp-2">
-        Standaard: {standaard}
+      <p className="text-xs text-cm-white opacity-40 mt-1 italic">
+        Standaard: {hintTekst}
       </p>
     </div>
   );
