@@ -43,6 +43,17 @@ export type ControllableTaak = {
    */
   vereistMobiel?: boolean;
   /**
+   * INLINE EMBED — laat de vandaag-flow een specifieke mini-feature
+   * direct in de stap inbouwen, in plaats van weg te navigeren naar
+   * een andere route. Houdt de member in de flow.
+   *
+   * Toegestane waardes mappen 1-op-1 op componenten in
+   * `components/vandaag/inline-embeds/`:
+   *   - 'vcard-upload'    → VCardUploader (.vcf bulk-import)
+   *   - 'sponsor-melding' → SponsorMeldingKnop (wa.me ik-ben-gestart)
+   */
+  inlineEmbed?: "vcard-upload" | "sponsor-melding";
+  /**
    * Optie B — INLINE ACTIE: schrijf/voer iets direct in de tile in
    * (geen routenavigatie nodig). De waarde wordt opgeslagen onder een
    * stabiele slug in de `eigen_zinnen`-tabel zodat de member 'm later

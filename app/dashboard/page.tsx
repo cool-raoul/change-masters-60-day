@@ -6,7 +6,6 @@ import { DagelijkseStat, Herinnering, WhyProfile } from "@/lib/supabase/types";
 // DagStatForm verwijderd van dashboard — handmatig stats invullen
 // hoort op /statistieken (en wordt straks automatisch gevuld door
 // pipeline-veranderingen).
-import { PlaybookDagTile } from "@/components/playbook/PlaybookDagTile";
 import { TesterToolbar } from "@/components/tester/TesterToolbar";
 import { AutoNaarVandaag } from "@/components/dashboard/AutoNaarVandaag";
 import { HerinnerLaterKnop } from "@/components/playbook/HerinnerLaterKnop";
@@ -164,24 +163,8 @@ export default async function DashboardPagina() {
         .map((t) => t.id)
     : [];
 
-  // Eerder geschreven inline-zinnen voor de huidige dag voorladen,
-  // zodat /mijn-zinnen-content meteen in de tile zichtbaar is.
-  const huidigeInlineSlugs = huidigeDagData
-    ? huidigeDagData.vandaagDoen
-        .map((t) => t.inlineActie?.slug)
-        .filter((s): s is string => !!s)
-    : [];
-  let huidigeInitialZinnen: Record<string, string> = {};
-  if (huidigeInlineSlugs.length > 0) {
-    const { data: zinnen } = await supabase
-      .from("eigen_zinnen")
-      .select("slug, waarde")
-      .eq("user_id", user.id)
-      .in("slug", huidigeInlineSlugs);
-    for (const r of (zinnen as Array<{ slug: string; waarde: string }>) || []) {
-      huidigeInitialZinnen[r.slug] = r.waarde;
-    }
-  }
+  // (Inline-zinnen worden voortaan exclusief in /vandaag geladen — niet
+  // meer hier; dashboard toont geen afvinklijst meer.)
 
   // Reminders voor onvoltooide ADMIN-taken van vorige dagen — krediet,
   // webshop, teams-admin, bestellinks. Eric Worre tip is geen reminder
@@ -401,45 +384,9 @@ export default async function DashboardPagina() {
         <TesterToolbar huidigeDag={dag} />
       )}
 
-      {/* Compacte afvinklijst voor de dag — als referentie naast de
-          guided flow op /vandaag. Volledige tegel klapt in als alles
-          voltooid is (anders neemt 'ie veel ruimte op het dashboard). */}
-      {huidigeDagData && (
-        <details
-          open={
-            huidigeDagVoltooidIds.length < huidigeDagData.vandaagDoen.length
-          }
-          className="card group"
-        >
-          <summary className="flex items-center justify-between gap-3 cursor-pointer list-none">
-            <div className="flex-1 min-w-0">
-              <h3 className="text-cm-white font-semibold text-sm uppercase tracking-wider">
-                ✅ Vandaag — afvinklijst
-              </h3>
-              <p className="text-cm-white opacity-60 text-xs mt-0.5">
-                {huidigeDagVoltooidIds.length} van{" "}
-                {huidigeDagData.vandaagDoen.length} klaar
-                {huidigeDagVoltooidIds.length ===
-                huidigeDagData.vandaagDoen.length
-                  ? " — top, je hebt 'm! 🎉"
-                  : ""}
-              </p>
-            </div>
-            <span className="text-cm-gold text-xs transition-transform group-open:rotate-180 flex-shrink-0">
-              ▼
-            </span>
-          </summary>
-          <div className="mt-4 pt-4 border-t border-cm-border">
-            <PlaybookDagTile
-              key={`dag-${dag}`}
-              dag={huidigeDagData}
-              initialVoltooidIds={huidigeDagVoltooidIds}
-              initialZinnen={huidigeInitialZinnen}
-              isFounder={isFounder}
-            />
-          </div>
-        </details>
-      )}
+      {/* Daily tasks staan EXCLUSIEF in /vandaag — niet meer dubbel op
+          het dashboard. De gouden CTA hierboven is de enige entry naar
+          de flow; afvinken doe je daar. Houdt het dashboard rustig. */}
 
       {/* Auto-trigger 3-weg — prospects in pipeline-fase 'one_pager' of
           'presentatie' wachten op een 3-weg-gesprek. Inklapbare details/

@@ -22,10 +22,10 @@ export const DAGEN: Dag[] = [
         id: "dag1-vcard",
         label: "Importeer je telefooncontacten",
         uitleg:
-          "Open je Contacten-app op je telefoon en exporteer je contactenlijst (een .vcf-bestand). Upload dat in ELEVA — we filteren dubbelingen automatisch. In één keer staan al je 100+ contacten klaar. Daar bouw je deze week verder op met losse namen uit je hoofd en uit socials.",
+          "Open je Contacten-app op je telefoon en exporteer je contactenlijst als .vcf-bestand. Upload 'm hieronder — we filteren dubbelingen automatisch en zetten alles op je namenlijst. In één keer staan al je 100+ contacten klaar.",
         verplicht: true,
-        actieRoute: "/namenlijst",
         vereistMobiel: true,
+        inlineEmbed: "vcard-upload",
       },
       {
         id: "dag1-sponsor",
@@ -33,7 +33,7 @@ export const DAGEN: Dag[] = [
         uitleg:
           "Geen lang verhaal nodig, gewoon even laten weten dat je vertrokken bent. Vanaf nu kijkt je sponsor in ELEVA vriendelijk mee of je dagelijks je stappen zet. Niet om te beoordelen. Gewoon om je rugdekking te geven.",
         verplicht: true,
-        actieRoute: "/team",
+        inlineEmbed: "sponsor-melding",
       },
     ],
     faseDoel:

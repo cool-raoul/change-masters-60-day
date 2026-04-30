@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { FilmInBlok } from "@/components/film/FilmInBlok";
 import { HerinnerLaterKnop } from "@/components/playbook/HerinnerLaterKnop";
+import { VCardUploader } from "@/components/vandaag/inline-embeds/VCardUploader";
+import { SponsorMeldingKnop } from "@/components/vandaag/inline-embeds/SponsorMeldingKnop";
 import type { Dag, ControllableTaak } from "@/lib/playbook/types";
 
 // localStorage-key zodat we bij terugkeer (van een actieRoute) op de
@@ -253,7 +255,17 @@ export function VandaagFlow({
               </h2>
             </div>
 
-            {/* Optionele dag-film — alleen zichtbaar als de founder via
+            {/* 1. EERST DE LES — volledig, geen afkapping. */}
+            <div className="card border-l-4 border-cm-gold/60 space-y-2">
+              <h3 className="text-cm-gold font-semibold text-sm uppercase tracking-wider">
+                📖 Les van vandaag
+              </h3>
+              <p className="text-cm-white text-sm leading-relaxed whitespace-pre-line">
+                {dag.watJeLeert}
+              </p>
+            </div>
+
+            {/* 2. DAARNA HET FILMPJE — alleen zichtbaar als de founder via
                 /instellingen/films onder slug 'playbook-dag-N' een film
                 heeft gezet. Anders rendert FilmInBlok niets. */}
             <FilmInBlok
@@ -261,28 +273,10 @@ export function VandaagFlow({
               verbergZonderFilm
             />
 
-            <div className="card border-l-4 border-cm-gold/60 space-y-2">
-              <h3 className="text-cm-gold font-semibold text-sm uppercase tracking-wider">
-                📚 Wat je vandaag leert
-              </h3>
-              <p className="text-cm-white text-sm leading-relaxed whitespace-pre-line">
-                {dag.watJeLeert.length > 600
-                  ? dag.watJeLeert.slice(0, 600) + "…"
-                  : dag.watJeLeert}
-              </p>
-              {dag.watJeLeert.length > 600 && (
-                <Link
-                  href={`/playbook?dag=${dag.nummer}`}
-                  className="text-cm-gold text-xs hover:underline underline-offset-2"
-                >
-                  Lees de volledige uitleg →
-                </Link>
-              )}
-            </div>
-
+            {/* 3. DAN GA JE DOEN — kort overzicht van de stappen. */}
             <div className="card space-y-2">
               <h3 className="text-cm-gold font-semibold text-sm uppercase tracking-wider">
-                ✅ Wat je vandaag doet ({totaal} stap{totaal === 1 ? "" : "pen"})
+                ✅ Nu ga je doen ({totaal} stap{totaal === 1 ? "" : "pen"})
               </h3>
               <ul className="space-y-1.5 text-sm text-cm-white">
                 {taken.map((t, i) => (
@@ -349,22 +343,45 @@ export function VandaagFlow({
               />
             )}
 
-            {/* Mobiel-waarschuwing: deze taak vraagt om je telefoon. */}
-            {huidigeTaak.vereistMobiel && !isMobiel && (
-              <div className="rounded-lg border-2 border-amber-500/60 bg-amber-900/20 px-4 py-3 space-y-2">
-                <p className="text-amber-200 text-sm font-semibold flex items-center gap-2">
-                  📱 Doe deze stap op je telefoon
-                </p>
-                <p className="text-cm-white opacity-90 text-xs leading-relaxed">
-                  Open ELEVA op je telefoon — je hebt 'm nodig om je
-                  contacten te exporteren. Je dag-flow loopt daar gewoon door.
-                  Of sla 'm voor nu over en pak 'm vanavond op je telefoon.
-                </p>
-              </div>
+            {/* Mobiel-waarschuwing: deze taak vraagt om je telefoon.
+                Toon alleen als de taak GEEN inline-embed heeft (als wel:
+                de embed laat zelf z'n .vcf-uploader zien, ook op desktop). */}
+            {huidigeTaak.vereistMobiel &&
+              !isMobiel &&
+              !huidigeTaak.inlineEmbed && (
+                <div className="rounded-lg border-2 border-amber-500/60 bg-amber-900/20 px-4 py-3 space-y-2">
+                  <p className="text-amber-200 text-sm font-semibold flex items-center gap-2">
+                    📱 Doe deze stap op je telefoon
+                  </p>
+                  <p className="text-cm-white opacity-90 text-xs leading-relaxed">
+                    Open ELEVA op je telefoon — je hebt 'm nodig om je
+                    contacten te exporteren. Je dag-flow loopt daar gewoon door.
+                  </p>
+                </div>
+              )}
+
+            {/* INLINE EMBED — voer de actie HIER uit, geen wegnavigeren. */}
+            {huidigeTaak.inlineEmbed === "vcard-upload" && (
+              <VCardUploader
+                alVoltooid={voltooidIds.has(huidigeTaak.id)}
+                opVoltooid={() => {
+                  vinkAf(huidigeTaak.id, true);
+                }}
+              />
+            )}
+            {huidigeTaak.inlineEmbed === "sponsor-melding" && (
+              <SponsorMeldingKnop
+                alVoltooid={voltooidIds.has(huidigeTaak.id)}
+                opVoltooid={() => {
+                  vinkAf(huidigeTaak.id, true);
+                }}
+              />
             )}
 
-            {/* Optionele actie-route — verberg op desktop bij mobiel-only taken. */}
+            {/* Optionele actie-route — alleen als er geen inline-embed is
+                en het geen mobiel-only taak op desktop is. */}
             {huidigeTaak.actieRoute &&
+              !huidigeTaak.inlineEmbed &&
               !(huidigeTaak.vereistMobiel && !isMobiel) && (
                 <a
                   href={
