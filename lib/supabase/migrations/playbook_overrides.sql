@@ -66,5 +66,5 @@ CREATE POLICY "playbook_overrides_modify_founder" ON playbook_overrides
 UPDATE profiles
 SET role = 'founder'
 WHERE id IN (
-  SELECT id FROM auth.users WHERE email = 'gaby5s@gmail.com'
+  SELECT id FROM auth.users WHERE email = 'gabyvijfs@gmail.com'
 );
