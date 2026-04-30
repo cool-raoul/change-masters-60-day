@@ -17,7 +17,7 @@ export const FASEN: Fase[] = [
       "De eerste week is geen race. We leggen samen rustig het fundament. Je WHY staat in ELEVA, je namenlijst is gevuld, je sponsor-ritueel komt op gang, en de eerste uitnodigingen gaan deze week ook al de deur uit. Het is de week waarin je merkt hoe ELEVA jouw beste werkmaat wordt.\n\nEén ding mag wel meteen duidelijk zijn: dit is gewoon een aantallen-verhaal. Met een lijstje van tien of twintig namen ga je het niet redden. Daarom groeit je lijst elke dag, stapje voor stapje. En jouw rol? Niet verkopen, niet overtuigen. Jij laat zien, zíj beslissen. Een flink stuk lichter dan veel mensen denken.\n\nEn je staat er natuurlijk niet alleen voor. Veel doe je samen met je sponsor. Wat niet met je sponsor kan, daar helpt de ELEVA Mentor je mee. Niemand laat je deze week alleen. En dat het soms overweldigend voelt? Helemaal goed. Je leert iets nieuws, je stapt uit je comfortzone, dat hoort er gewoon bij. Eerst even onhandig, dan vaardig... geldt voor iedereen hetzelfde. Niet vechten tegen het ongemak, gewoon doorgaan. Dag voor dag.",
     controllableLat: [
       "WHY ingevuld in ELEVA (dag 1)",
-      "vCard-import: 100+ contacten in je namenlijst (dag 1)",
+      "Telefooncontacten geïmporteerd: 100+ contacten in je namenlijst (dag 1)",
       "Minimaal 20 namen handmatig opgeschreven, ook mensen buiten je telefoon (dag 2)",
       "Eerste 3 invites op dag 2 (samen met sponsor), daarna 5 invites per dag (dag 3 t/m 7)",
       "3 follow-ups per dag vanaf dag 4",

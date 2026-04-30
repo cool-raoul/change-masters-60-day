@@ -26,17 +26,17 @@ export const DAGEN: Dag[] = [
       },
       {
         id: "dag1-why",
-        label: "Vul je WHY in met de ELEVA Mentor",
+        label: "Lees je WHY terug en stem 'm fijn af",
         uitleg:
-          "De Mentor stelt je rustig een paar vragen, jij antwoordt. Hardop praten mag trouwens ook. Aan het eind heb je een WHY die je op moeilijke dagen even kunt teruglezen.",
+          "Je hebt 'm in de onboarding al gemaakt — vandaag een rustig moment om hem terug te lezen en te voelen of het nog klopt. Wil je iets bijschaven? Open Mijn WHY en pas 'm aan in gesprek met de Mentor. Op moeilijke dagen lees je 'm hier terug.",
         verplicht: true,
         actieRoute: "/mijn-why",
       },
       {
         id: "dag1-vcard",
-        label: "Importeer je telefoon-contacten (vCard)",
+        label: "Importeer je telefooncontacten",
         uitleg:
-          "Open je Contacten-app op je telefoon, exporteer een vCard-bestand, en upload 'm in ELEVA. We slaan dubbele contacten automatisch over, dus geen zorg over rommel. In één keer staat je lijst met 100+ namen klaar. Daar bouw je deze week verder op.",
+          "Open je Contacten-app op je telefoon en exporteer je contactenlijst (een .vcf-bestand). Upload dat in ELEVA — we filteren dubbelingen automatisch. In één keer staan al je 100+ contacten klaar. Daar bouw je deze week verder op met losse namen uit je hoofd en uit socials.",
         verplicht: true,
         actieRoute: "/namenlijst",
       },
@@ -59,7 +59,7 @@ export const DAGEN: Dag[] = [
         route: "/mijn-why",
       },
       {
-        actie: "vCard importeren",
+        actie: "Telefooncontacten importeren",
         menupad: "Menu → Namenlijst → Importeer contacten",
         route: "/namenlijst",
       },
@@ -83,7 +83,7 @@ EEN STERKE WHY HERKEN JE AAN:
 De ELEVA Mentor stelt je een paar zachte vragen, jij antwoordt eerlijk, daarna heb je een WHY die past. Hardop praten in voicememo mag prima.
 
 JE NAMENLIJST — JE VOORRAADKAST:
-Hoe voller je voorraadkast, hoe makkelijker je elke dag iets nieuws kunt 'koken'. De vCard-import legt direct 100-500 namen voor je neer (we ontdubbelen automatisch). Dat is geen verkooplijst, dat is een uitgangspunt.
+Hoe voller je voorraadkast, hoe makkelijker je elke dag iets nieuws kunt 'koken'. De import van je telefooncontacten legt direct 100-500 namen voor je neer (we ontdubbelen automatisch). Dat is geen verkooplijst, dat is een uitgangspunt.
 
 EERLIJK OVER VOLUME: dit is een AANTALLEN-VERHAAL. Met 20 namen ga je het niet redden. Niet omdat je faalt, maar omdat een gemiddelde prospect 4-6 contactmomenten nodig heeft voor een echte beslissing. Met te weinig namen draai je vast. Daarom voegen we elke dag namen toe — uit hoofd, uit telefoon, uit socials.
 
@@ -113,7 +113,7 @@ VEELGEMAAKTE FOUTEN OP DAG 1:
 WAT JE TODAY DOET, IN VOLGORDE:
 1. Open ELEVA Mentor → klik op "Mijn WHY" → laat de coach je 5 vragen stellen.
 2. Voltooi je WHY (10-15 min, hardop praten mag).
-3. Open Namenlijst → importeer je vCard → kijk wat er staat (geen filter, niets weggooien).
+3. Open Namenlijst → importeer je telefooncontacten → kijk wat er staat (geen filter, niets weggooien).
 4. Stuur je sponsor 1 kort bericht: "Ik ben gestart 🚀". Geen lang verhaal nodig.
 5. Klaar voor vandaag. Morgen begint het werk pas echt.
 
@@ -297,7 +297,7 @@ Vandaag stuur je ook al 3 uitnodigingen — samen met je sponsor in een groepje 
         spraak: "Nieuwe prospect [naam] uit Instagram",
       },
     ],
-    watJeLeert: `Instagram, Facebook en LinkedIn geven je geen downloadbare contactenlijst — dat is expres zo. Maar ze geven je iets veel waardevollers: ACTIEVE SIGNALEN. Mensen die jouw content bekijken, reageren, delen, in stories duiken. Dat is gedrag dat zegt: "ik volg je, je content raakt me, je bent op mijn radar." Dát zijn je warme contacten van de toekomst — vaak veel beter geschikt dan ouwe vCard-contacten waarmee je 3 jaar geen woord hebt gewisseld.
+    watJeLeert: `Instagram, Facebook en LinkedIn geven je geen downloadbare contactenlijst — dat is expres zo. Maar ze geven je iets veel waardevollers: ACTIEVE SIGNALEN. Mensen die jouw content bekijken, reageren, delen, in stories duiken. Dat is gedrag dat zegt: "ik volg je, je content raakt me, je bent op mijn radar." Dát zijn je warme contacten van de toekomst — vaak veel beter geschikt dan oude telefooncontacten waarmee je al jaren geen woord hebt gewisseld.
 
 3 namen per dag uit socials = 21 nieuwe warme prospects per week, bovenop je telefoonlijst. Dat is serieus voorraadkast-volume zonder dat je rond hoeft te bellen.
 
@@ -709,7 +709,7 @@ DEZE REVIEW WORDT GEDEELD MET JE SPONSOR — niet om te beoordelen, om te onders
         id: "dag8-invites-10",
         label: "10 uitnodigingen vandaag",
         uitleg:
-          "Helft via directe message, helft via scripts uit ELEVA. Mix warm (mensen die je kent) met lauw (mensen uit je vCard met wie je niet vaak praat).",
+          "Helft via directe message, helft via scripts uit ELEVA. Mix warm (mensen die je kent) met lauw (mensen uit je telefoonlijst met wie je niet vaak praat).",
         verplicht: true,
       },
       {
@@ -1192,7 +1192,7 @@ EXTRA WAARDE: zeg nee tegen drammen, ja tegen warmte. Een Shopper die jou over e
         id: "dag13-koud-warm",
         label: "1 koude prospect warm maken vóór de invite",
         uitleg:
-          "Kies iemand uit je vCard met wie je weinig contact hebt. Eerst even een FORM-vraag (zonder pitch), reageer 1-2 dagen op hun socials, dán pas invite. Vraag de Mentor: 'Help me [naam] warm maken vóór ik 'm uitnodig, context: [situatie]'. De Mentor schrijft een opwarm-tekst die geen pitch is.",
+          "Kies iemand uit je telefoonlijst met wie je weinig contact hebt. Eerst even een FORM-vraag (zonder pitch), reageer 1-2 dagen op hun socials, dán pas invite. Vraag de Mentor: 'Help me [naam] warm maken vóór ik 'm uitnodig, context: [situatie]'. De Mentor schrijft een opwarm-tekst die geen pitch is.",
         verplicht: true,
       },
     ],

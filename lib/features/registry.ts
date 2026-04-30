@@ -60,7 +60,7 @@ export const FEATURES: Feature[] = [
   {
     id: "namenlijst",
     emoji: "👥",
-    titel: "Namenlijst — je pijplijn als Kanban",
+    titel: "Namenlijst — je pipeline visueel in beeld",
     lead: "Al je prospects visueel, van eerste contact tot member.",
     bullets: [
       "Sleep prospects tussen fases: prospect → uitgenodigd → presentatie → follow-up → shopper → member",

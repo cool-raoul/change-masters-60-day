@@ -49,7 +49,7 @@ export function WelcomePopup() {
           <div className="flex items-start gap-3 bg-cm-surface-2 rounded-xl p-3">
             <span className="text-xl mt-0.5">👥</span>
             <div>
-              <p className="text-cm-white font-semibold text-sm">Namenlijst (Kanban)</p>
+              <p className="text-cm-white font-semibold text-sm">Namenlijst (Pipeline-weergave)</p>
               <p className="text-cm-white text-xs opacity-70">
                 Voeg prospects toe en sleep ze door de pipeline. Van prospect tot member.
               </p>

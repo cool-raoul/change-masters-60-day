@@ -66,6 +66,33 @@ export default async function DashboardPagina() {
       .map((v) => `${v.dag_nummer}|${v.taak_id}`),
   );
 
+  // Auto-afvinken op dag 1: voorkomt dubbel werk voor dingen die de
+  // member al in de onboarding heeft gedaan.
+  // - dag1-onboarding   → automatisch klaar als profile.onboarding_klaar
+  // - dag1-why          → automatisch klaar als WHY al gemaakt is
+  // Idempotent: alleen INSERT als rij nog niet bestaat. Zo schrijven we
+  // eenmalig naar DB en blijft de bevestiging consistent — handig voor
+  // de stilte-detectie (laatste activiteit baseert op voltooid_op).
+  const autoVinken: string[] = [];
+  if ((profile as any)?.onboarding_klaar && !voltooidSet.has("1|dag1-onboarding")) {
+    autoVinken.push("dag1-onboarding");
+  }
+  if (whyProfile && !voltooidSet.has("1|dag1-why")) {
+    autoVinken.push("dag1-why");
+  }
+  if (autoVinken.length > 0) {
+    await supabase.from("dag_voltooiingen").upsert(
+      autoVinken.map((taakId) => ({
+        user_id: user.id,
+        dag_nummer: 1,
+        taak_id: taakId,
+        voltooid_op: new Date().toISOString(),
+      })),
+      { onConflict: "user_id,dag_nummer,taak_id" },
+    );
+    autoVinken.forEach((t) => voltooidSet.add(`1|${t}`));
+  }
+
   // Huidige dag-data uit het 21-daagse playbook (alleen relevant voor
   // dag 1-21 — daarna draait de gebruiker op weekritme).
   let huidigeDagData = dag <= 21
