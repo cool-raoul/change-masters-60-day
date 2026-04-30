@@ -20,9 +20,9 @@ export const DAGEN: Dag[] = [
     vandaagDoen: [
       {
         id: "dag1-vcard",
-        label: "Importeer je telefooncontacten",
+        label: "Voeg de eerste mensen toe aan je namenlijst",
         uitleg:
-          "Open je Contacten-app op je telefoon en exporteer je contactenlijst als .vcf-bestand. Upload 'm hieronder — we filteren dubbelingen automatisch en zetten alles op je namenlijst. In één keer staan al je 100+ contacten klaar.",
+          "Waarom al op dag 1? Heel simpel: dit is je voorraadkast. Hoe meer namen je hebt staan, hoe rustiger je de komende weken kunt werken — je hoeft niet elke dag te bedenken aan wie je gaat denken. Dit is GEEN belkostlijst en GEEN verkooplijst. Het zijn gewoon mensen die jij kent, mensen die in jouw wereld bestaan. Familie. Oude collega's. Sportmaatjes. Buren. Iedereen mag erop. Filteren komt later, en doe je nooit voor iemand anders. Niet alles hoeft vandaag — kies wat je vandaag aankunt en kom er morgen op terug.",
         verplicht: true,
         vereistMobiel: true,
         inlineEmbed: "vcard-upload",
