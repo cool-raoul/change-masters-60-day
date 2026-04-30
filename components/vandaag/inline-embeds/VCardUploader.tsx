@@ -249,15 +249,59 @@ export function VCardUploader({ opVoltooid, alVoltooid }: Props) {
   // Route 3: vCard upload
   // ----------------------------------------------------------
   async function leesVCardBestand(bestand: File) {
-    if (!bestand.name.toLowerCase().endsWith(".vcf")) {
-      toast.error("Kies een .vcf-bestand");
+    // Strikte extensie-check is eruit: iOS Mail levert soms een bestand
+    // zonder .vcf-extensie aan, en dan wijst de browser 'm af voordat
+    // we ook maar iets kunnen proberen. We parsen liever en laten de
+    // INHOUD de doorslag geven dan de bestandsnaam.
+
+    if (bestand.size === 0) {
+      toast.error("Het bestand is leeg — exporteer 'm opnieuw vanaf je telefoon");
       return;
     }
+    if (bestand.size > 50 * 1024 * 1024) {
+      toast.error("Bestand te groot (boven 50MB) — kies een kleiner bestand");
+      return;
+    }
+
     try {
-      const tekst = await bestand.text();
+      // iOS-vCards komen vaak in UTF-16; Android+desktop in UTF-8.
+      // We detecteren via Byte-Order-Mark zodat speciale tekens (é, ü,
+      // emoji's in namen) goed leesbaar zijn EN de parser de regels
+      // herkent. Zonder deze BOM-detectie zou 'ie van een UTF-16-bestand
+      // niets terughalen — en zou de toast onterecht "geen contacten" zijn.
+      const buffer = await bestand.arrayBuffer();
+      const bytes = new Uint8Array(buffer);
+      let tekst: string;
+      if (bytes.length >= 2 && bytes[0] === 0xff && bytes[1] === 0xfe) {
+        tekst = new TextDecoder("utf-16le").decode(buffer.slice(2));
+      } else if (bytes.length >= 2 && bytes[0] === 0xfe && bytes[1] === 0xff) {
+        tekst = new TextDecoder("utf-16be").decode(buffer.slice(2));
+      } else if (
+        bytes.length >= 3 &&
+        bytes[0] === 0xef &&
+        bytes[1] === 0xbb &&
+        bytes[2] === 0xbf
+      ) {
+        tekst = new TextDecoder("utf-8").decode(buffer.slice(3));
+      } else {
+        tekst = new TextDecoder("utf-8").decode(buffer);
+      }
+
+      // Sanity-check: als BEGIN:VCARD ergens in de tekst voorkomt, dan
+      // is het een vCard. Geen vCard-marker = waarschijnlijk verkeerd
+      // bestand.
+      if (!/BEGIN:VCARD/i.test(tekst)) {
+        toast.error(
+          "Dit lijkt geen vCard-bestand. Heb je 'm uit je Contacten-app geëxporteerd? Soms helpt 't om 'm eerst in Bestanden te bewaren en dáár vandaan te uploaden, in plaats van direct uit Mail.",
+        );
+        return;
+      }
+
       const contacten = parseVCard(tekst);
       if (contacten.length === 0) {
-        toast.error("Geen contacten gevonden in dit bestand");
+        toast.error(
+          "We konden geen contacten herkennen in dit bestand. Probeer 'm opnieuw te exporteren — of bewaar 'm eerst in Bestanden voor je 'm uploadt.",
+        );
         return;
       }
 
@@ -538,7 +582,9 @@ export function VCardUploader({ opVoltooid, alVoltooid }: Props) {
           <input
             ref={vcardInputRef}
             type="file"
-            accept=".vcf,text/vcard,text/x-vcard"
+            // Geen restrictieve `accept`-filter: op iOS Safari verbergt
+            // dat soms .vcf-bestanden uit Mail/Bestanden. Liever alles
+            // accepteren en de inhoud zelf controleren.
             onChange={(e) => {
               const f = e.target.files?.[0];
               if (f) void leesVCardBestand(f);
