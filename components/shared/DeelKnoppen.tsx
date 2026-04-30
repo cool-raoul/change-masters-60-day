@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { QRCodeSVG } from "qrcode.react";
 
 // ============================================================
 // DeelKnoppen — herbruikbare deel-component voor overal in ELEVA
@@ -44,6 +45,7 @@ export function DeelKnoppen({
 }) {
   const [shareSupported, setShareSupported] = useState(false);
   const [gekopieerd, setGekopieerd] = useState(false);
+  const [qrOpen, setQrOpen] = useState(false);
 
   useEffect(() => {
     setShareSupported(typeof navigator !== "undefined" && "share" in navigator);
@@ -171,9 +173,17 @@ export function DeelKnoppen({
         {inclusiefUrl && (
           <button
             onClick={kopieer}
-            className={`flex items-center justify-center gap-2 py-2.5 rounded-lg font-medium text-sm ${klasse.kopieerKnop} col-span-2 sm:col-span-1`}
+            className={`flex items-center justify-center gap-2 py-2.5 rounded-lg font-medium text-sm ${klasse.kopieerKnop}`}
           >
             {gekopieerd ? "✓ Gekopieerd" : "📋 Kopieer link"}
+          </button>
+        )}
+        {inclusiefUrl && (
+          <button
+            onClick={() => setQrOpen(true)}
+            className={`flex items-center justify-center gap-2 py-2.5 rounded-lg font-medium text-sm ${klasse.kopieerKnop}`}
+          >
+            📷 QR-code
           </button>
         )}
       </div>
@@ -187,6 +197,55 @@ export function DeelKnoppen({
         Een directe Messenger-knop bestaat niet via het web — dat moet via de
         share-sheet van je telefoon.
       </p>
+
+      {/* QR-modal: voor face-to-face momenten (event, koffie, ouderavond,
+          beurs). Member toont z'n scherm, prospect scant met de camera-app
+          en zit direct in de testlink/intake. */}
+      {qrOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
+          onClick={() => setQrOpen(false)}
+        >
+          <div
+            className="bg-white rounded-2xl p-6 max-w-sm w-full space-y-4 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between gap-3">
+              <h3 className="text-gray-900 font-display font-bold text-lg">
+                📷 Scan met je camera
+              </h3>
+              <button
+                onClick={() => setQrOpen(false)}
+                className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 text-lg leading-none"
+                aria-label="Sluiten"
+              >
+                ×
+              </button>
+            </div>
+            <p className="text-gray-600 text-sm leading-relaxed">
+              Laat dit scherm zien — de ander opent z'n camera, scant deze
+              code en komt direct op de juiste pagina.
+            </p>
+            <div className="bg-white rounded-xl p-4 flex items-center justify-center border border-gray-200">
+              <QRCodeSVG
+                value={url}
+                size={256}
+                level="M"
+                includeMargin={false}
+              />
+            </div>
+            <p className="text-gray-500 text-xs font-mono break-all text-center">
+              {url}
+            </p>
+            <button
+              onClick={() => setQrOpen(false)}
+              className="w-full py-3 rounded-lg bg-gray-900 text-white font-semibold hover:bg-gray-800"
+            >
+              Sluiten
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
