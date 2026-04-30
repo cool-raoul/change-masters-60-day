@@ -51,13 +51,20 @@ type Props = {
 // vCard-parser (gebruikt door route 3)
 // ------------------------------------------------------------
 function parseVCard(tekst: string): Contact[] {
-  const blokken = tekst.split(/BEGIN:VCARD/i).slice(1);
+  // Normaliseer regel-eindes. iPhone-export schrijft soms `\r\r\n`
+  // (dubbele CR + LF) wat onze split-regex confused. Ook `\r` zonder
+  // `\n` (oude Mac-stijl) komt voor.
+  const genormaliseerd = tekst
+    .replace(/\r\r\n/g, "\n")
+    .replace(/\r\n/g, "\n")
+    .replace(/\r/g, "\n");
+  const blokken = genormaliseerd.split(/BEGIN:VCARD/i).slice(1);
   const contacten: Contact[] = [];
   for (const blok of blokken) {
     const eind = blok.indexOf("END:VCARD");
     const inhoud = eind >= 0 ? blok.slice(0, eind) : blok;
-    const ontvouwen = inhoud.replace(/\r?\n[ \t]/g, "");
-    const regels = ontvouwen.split(/\r?\n/);
+    const ontvouwen = inhoud.replace(/\n[ \t]/g, "");
+    const regels = ontvouwen.split(/\n/);
     let naam = "";
     let telefoon: string | null = null;
     for (const regel of regels) {
@@ -257,7 +264,8 @@ export function VCardUploader({
       return true;
     } catch (e) {
       console.error(e);
-      toast.error("Opslaan mislukt — probeer opnieuw");
+      const msg = e instanceof Error ? e.message : "onbekende fout";
+      toast.error(`Opslaan mislukt: ${msg}`);
       return false;
     } finally {
       setBezig(false);
@@ -379,7 +387,13 @@ export function VCardUploader({
 
       // Schrijf alles silent naar het ELEVA-geheugen (reservoir).
       // Dubbelen worden door slaOpInReservoir gefilterd.
-      await slaOpInReservoir(contacten, "vcard");
+      try {
+        await slaOpInReservoir(contacten, "vcard");
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : "onbekende fout";
+        toast.error(`Geheugen-opslag mislukt: ${msg}`);
+        return;
+      }
 
       // Haal alle niet-geactiveerde reservoir-rows op zodat we ze
       // kunnen tonen voor selectie. Dat omvat zowel deze upload als
@@ -471,7 +485,8 @@ export function VCardUploader({
       setVcardZoek("");
     } catch (e) {
       console.error(e);
-      toast.error("Activeren mislukt — probeer opnieuw");
+      const msg = e instanceof Error ? e.message : "onbekende fout";
+      toast.error(`Activeren mislukt: ${msg}`);
     } finally {
       setBezig(false);
     }

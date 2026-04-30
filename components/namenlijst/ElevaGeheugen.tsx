@@ -32,14 +32,18 @@ export function ElevaGeheugen() {
   const [bezig, setBezig] = useState(false);
   const [zoek, setZoek] = useState("");
   const [geselecteerd, setGeselecteerd] = useState<Set<string>>(new Set());
+  const [laadFout, setLaadFout] = useState<string | null>(null);
 
   async function herlaad() {
     setLaden(true);
+    setLaadFout(null);
     try {
       const rows = await haalNietGeactiveerd();
       setReservoir(rows);
     } catch (e) {
-      console.error(e);
+      console.error("Reservoir laden mislukt:", e);
+      const msg = e instanceof Error ? e.message : "onbekende fout";
+      setLaadFout(msg);
     } finally {
       setLaden(false);
     }
@@ -106,7 +110,8 @@ export function ElevaGeheugen() {
       router.refresh();
     } catch (e) {
       console.error(e);
-      toast.error("Activeren mislukt — probeer opnieuw");
+      const msg = e instanceof Error ? e.message : "onbekende fout";
+      toast.error(`Activeren mislukt: ${msg}`);
     } finally {
       setBezig(false);
     }
@@ -150,6 +155,16 @@ export function ElevaGeheugen() {
             <p className="text-cm-white opacity-50 text-xs italic">
               Geheugen laden…
             </p>
+          ) : laadFout ? (
+            <div className="rounded-md border border-red-500/40 bg-red-900/20 px-3 py-3 text-xs text-red-300 leading-relaxed">
+              <p className="font-semibold mb-1">⚠️ Geheugen kon niet geladen worden</p>
+              <p className="opacity-90">{laadFout}</p>
+              <p className="opacity-70 mt-1.5">
+                Dit kan komen doordat de DB-migratie nog niet gerund is. Vraag
+                de beheerder om <code>contacten_reservoir.sql</code> in
+                Supabase uit te voeren.
+              </p>
+            </div>
           ) : heeftReservoir ? (
             <div className="space-y-3">
               <div className="space-y-1">

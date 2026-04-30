@@ -41,6 +41,7 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const dagNummer: number = Number(body.dagNummer);
+    const wisVoltooiingen: boolean = body.wisVoltooiingen !== false; // default: WEL wissen
     if (!Number.isFinite(dagNummer) || dagNummer < 1 || dagNummer > 60) {
       return NextResponse.json(
         { error: "Ongeldig dagNummer (moet 1-60 zijn)" },
@@ -67,7 +68,32 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    return NextResponse.json({ ok: true, nieuweStartdatum: isoDatum, dagNummer });
+    // Reset voltooiingen voor de nieuwe dag — testers willen die dag opnieuw
+    // beleven. Anders staat de hele flow al als 'gedaan' uit een eerdere
+    // ronde. Default ingeschakeld; alleen uitschakelen via expliciet
+    // wisVoltooiingen:false in de body.
+    let voltooiingenGewist = 0;
+    if (wisVoltooiingen) {
+      const { data: gewist, error: delErr } = await supabase
+        .from("dag_voltooiingen")
+        .delete()
+        .eq("user_id", user.id)
+        .eq("dag_nummer", dagNummer)
+        .select("taak_id");
+      if (delErr) {
+        // Niet fatal — log voor debugging maar laat de spring zelf wel slagen.
+        console.error("dag_voltooiingen wissen mislukt:", delErr);
+      } else {
+        voltooiingenGewist = (gewist as Array<unknown>)?.length ?? 0;
+      }
+    }
+
+    return NextResponse.json({
+      ok: true,
+      nieuweStartdatum: isoDatum,
+      dagNummer,
+      voltooiingenGewist,
+    });
   } catch (e) {
     console.error("tester/spring-naar-dag exception:", e);
     return NextResponse.json({ error: "Onverwachte fout" }, { status: 500 });
