@@ -37,10 +37,12 @@ export function WelcomePopup() {
         <div className="text-center">
           <img src="/eleva-icon.png" alt="ELEVA" className="h-14 w-14 mx-auto mb-3" />
           <h2 className="text-3xl eleva-brand">
-            Welkom bij ELEVA!
+            Te gek dat je er bent! 🎉
           </h2>
           <p className="text-cm-white mt-2">
-            Je persoonlijke systeem voor Project Meer Tijd en Vrijheid is klaar voor gebruik.
+            Welkom in het team! Je persoonlijke systeem voor{" "}
+            <strong className="text-cm-gold">Project Meer Tijd en Vrijheid</strong>{" "}
+            staat klaar — laten we beginnen.
           </p>
         </div>
 

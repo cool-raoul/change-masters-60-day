@@ -133,6 +133,7 @@ export default async function PlaybookDagPagina({
       )}
 
       <PlaybookDagTile
+        key={`dag-${dagParam}`}
         dag={dagData}
         initialVoltooidIds={voltooidIds}
         initialZinnen={initialZinnen}

@@ -7,6 +7,7 @@ import { DagelijkseStat, Herinnering, WhyProfile } from "@/lib/supabase/types";
 // hoort op /statistieken (en wordt straks automatisch gevuld door
 // pipeline-veranderingen).
 import { PlaybookDagTile } from "@/components/playbook/PlaybookDagTile";
+import { DailyFocusModal } from "@/components/playbook/DailyFocusModal";
 import { TesterToolbar } from "@/components/tester/TesterToolbar";
 import { DAGEN } from "@/lib/playbook/dagen";
 import { haalOverrides, pasOverrideToe } from "@/lib/playbook/overrides";
@@ -193,10 +194,22 @@ export default async function DashboardPagina() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
-      {/* Header */}
+      {/* Header — warme groet, dag-nummer prominent */}
       <div>
         <h1 className="text-2xl font-display font-bold text-cm-white">
-          {v("dashboard.dag", taal)} <span className="text-cm-gold">{dag}</span> {v("dashboard.van_60", taal)}
+          {dag === 1 ? (
+            <>Daar gaan we! 🚀 — <span className="text-cm-gold">Dag 1</span></>
+          ) : dag <= 21 ? (
+            <>Goedemorgen! ☀️ — {v("dashboard.dag", taal)}{" "}
+              <span className="text-cm-gold">{dag}</span>{" "}
+              {v("dashboard.van_60", taal)}
+            </>
+          ) : (
+            <>{v("dashboard.dag", taal)}{" "}
+              <span className="text-cm-gold">{dag}</span>{" "}
+              {v("dashboard.van_60", taal)}
+            </>
+          )}
         </h1>
         <p className="text-cm-white mt-1">
           {format(new Date(), "EEEE d MMMM yyyy", { locale: datumLocale })}
@@ -254,6 +267,18 @@ export default async function DashboardPagina() {
         </div>
       )}
 
+      {/* Daily-focus modal — opent bij eerste bezoek van de dag met
+          alleen de essentie (titel + checklist + 'Aan de slag'-knop)
+          om overweldiging te voorkomen. Sluiten = vandaag niet meer
+          tonen (per localStorage flag). */}
+      {huidigeDagData && (
+        <DailyFocusModal
+          key={`focus-${dag}`}
+          dag={huidigeDagData}
+          voltooidAantal={huidigeDagVoltooidIds.length}
+        />
+      )}
+
       {/* Tester-toolbar — alleen voor pilot-testers + founders.
           Verzet run_startdatum zodat je virtueel op een andere dag zit
           en zo door alle 21 dagen kan klikken voor bug-rapporten. */}
@@ -261,9 +286,13 @@ export default async function DashboardPagina() {
         <TesterToolbar huidigeDag={dag} />
       )}
 
-      {/* Vandaag is dag X — playbook-tegel met checklist + films */}
+      {/* Vandaag is dag X — playbook-tegel met checklist + films.
+          key={dag} forceert een remount bij dag-wissel (bv. via tester-
+          toolbar) zodat actueleTekst-state mee-resync't met de nieuwe
+          dag-prop ipv blijft hangen op de oude waarden. */}
       {huidigeDagData && (
         <PlaybookDagTile
+          key={`dag-${dag}`}
           dag={huidigeDagData}
           initialVoltooidIds={huidigeDagVoltooidIds}
           initialZinnen={huidigeInitialZinnen}

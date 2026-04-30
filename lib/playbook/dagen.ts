@@ -15,7 +15,7 @@ export const DAGEN: Dag[] = [
   // ============================================================
   {
     nummer: 1,
-    titel: "Je fundament: WHY + je namenlijst",
+    titel: "🚀 Welkom! Vandaag leg je je fundament",
     fase: 1,
     vandaagDoen: [
       {
@@ -69,7 +69,7 @@ export const DAGEN: Dag[] = [
         route: "/team",
       },
     ],
-    watJeLeert: `Vandaag is GEEN doe-dag, het is een FUNDAMENT-dag. We gaan het rustig opbouwen. Twee dingen die we vandaag echt goed wegzetten: je WHY en je namenlijst. Daar bouw je de komende 60 dagen bovenop.
+    watJeLeert: `Te gek dat je hier bent! 🎉 Vandaag is jouw startdag — en eerlijk: het is geen doe-dag, het is een FUNDAMENT-dag. We gaan het rustig opbouwen, samen. Twee dingen die we vandaag echt goed wegzetten: je WHY en je namenlijst. Daar bouw je de komende 60 dagen bovenop. Geen druk, gewoon één stap tegelijk.
 
 JE WHY — HET KOMPAS, NIET HET RAPPORT:
 Je WHY is geen samenvatting van wie je nu bent. Het is het ANKER van waar je naartoe wilt — en wáárom. Op moeilijke dagen (en die komen) lees je 'm terug en denkt: "oh ja, daarvoor doe ik dit". Zonder WHY ben je een netwerker zonder reden. Met WHY ben je iemand die met richting werkt.
