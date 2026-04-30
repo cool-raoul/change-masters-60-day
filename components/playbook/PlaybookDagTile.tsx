@@ -298,7 +298,7 @@ export function PlaybookDagTile({
       setBewerktVeld(null);
       setBewerkBuffer("");
       setBewerkBronBuffer("");
-      toast.success("Live voor alle members");
+      toast.success("✍️ Bewaard — direct zichtbaar voor alle members");
     } catch {
       toast.error("Verbindingsfout");
     } finally {
@@ -757,8 +757,17 @@ export function PlaybookDagTile({
 
             <div className="border-t border-cm-border pt-3 text-xs text-cm-white opacity-80">
               {bewerktVeld === "waarom" ? (
-                <div className="space-y-2">
-                  <p className="text-cm-gold font-semibold">
+                <div className="rounded-lg border-2 border-cm-gold/60 bg-cm-gold/[0.04] p-3 space-y-2">
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-cm-gold text-cm-black font-bold">
+                      ✍️ Founder-modus
+                    </span>
+                    <span className="text-xs text-cm-white opacity-70">
+                      Wijziging is direct zichtbaar voor{" "}
+                      <strong>alle members</strong>
+                    </span>
+                  </div>
+                  <p className="text-cm-gold font-semibold text-sm">
                     🌱 Waarom dit werkt
                   </p>
                   <textarea
@@ -767,6 +776,7 @@ export function PlaybookDagTile({
                     className="textarea-cm w-full text-sm leading-relaxed"
                     rows={3}
                     placeholder="Quote / inzicht"
+                    autoFocus
                   />
                   <input
                     type="text"
@@ -782,7 +792,9 @@ export function PlaybookDagTile({
                       disabled={bewerkBezig}
                       className="btn-gold text-xs disabled:opacity-50"
                     >
-                      {bewerkBezig ? "Bewaren..." : "Bewaar"}
+                      {bewerkBezig
+                        ? "Bewaren..."
+                        : "Bewaar voor alle members"}
                     </button>
                     <button
                       type="button"
@@ -829,14 +841,17 @@ export function PlaybookDagTile({
 // ============================================================
 
 function FounderEditKnop({ onClick }: { onClick: () => void }) {
+  // Duidelijk gouden pill met ✍️-label zodat de founder altijd ziet:
+  // "dit gaat voor IEDEREEN, niet alleen voor mij". Onderscheidt zich
+  // van persoonlijke 'Schrijf hier direct'-knoppen.
   return (
     <button
       type="button"
       onClick={onClick}
-      title="Bewerk deze tekst (alleen voor founders)"
-      className="text-xs text-cm-gold opacity-60 hover:opacity-100 transition-opacity"
+      title="Founder-bewerken — wijzigingen gaan LIVE voor alle members"
+      className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full border border-cm-gold/60 text-cm-gold bg-cm-gold/5 hover:bg-cm-gold/15 hover:border-cm-gold transition-colors font-semibold whitespace-nowrap"
     >
-      ✏️
+      ✍️ Bewerk voor iedereen
     </button>
   );
 }
@@ -856,8 +871,20 @@ function FounderEdit({
   bezig: boolean;
   rows?: number;
 }) {
+  // Bewerk-veld krijgt een duidelijke gouden rand + 'FOUNDER-MODUS'-tag
+  // zodat het visueel anders is dan persoonlijke invulvelden ('Mijn
+  // zinnen' etc.). De Bewaar-knop heet expliciet 'Bewaar voor alle
+  // members' om geen twijfel te laten over de scope.
   return (
-    <div className="space-y-2">
+    <div className="rounded-lg border-2 border-cm-gold/60 bg-cm-gold/[0.04] p-3 space-y-2">
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+        <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-cm-gold text-cm-black font-bold">
+          ✍️ Founder-modus
+        </span>
+        <span className="text-xs text-cm-white opacity-70">
+          Wijziging is direct zichtbaar voor <strong>alle members</strong>
+        </span>
+      </div>
       <textarea
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -872,7 +899,7 @@ function FounderEdit({
           disabled={bezig}
           className="btn-gold text-xs disabled:opacity-50"
         >
-          {bezig ? "Bewaren..." : "Bewaar"}
+          {bezig ? "Bewaren..." : "Bewaar voor alle members"}
         </button>
         <button
           type="button"
@@ -882,9 +909,6 @@ function FounderEdit({
         >
           Annuleer
         </button>
-        <span className="text-xs text-cm-white opacity-40 ml-auto">
-          Direct live voor alle members
-        </span>
       </div>
     </div>
   );
