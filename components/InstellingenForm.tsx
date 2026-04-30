@@ -24,30 +24,25 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
   const initieelPushUur = profile?.dagelijkse_push_uur ?? 7;
   const initieelPushAan = profile?.dagelijkse_push_aan ?? true;
 
-  // Stilte-reminder toggles. Deze zitten op de cron achter de bestaande
-  // dagelijkse-push-flow, dus alleen relevant als push überhaupt aanstaat.
-  const [stilteAan, setStilteAan] = useState(
-    (profile as any)?.stilte_reminder_aan ?? true,
-  );
+  // Sponsor-stilte-toggle: als jij teamleden hebt en NIET wil weten
+  // wanneer ze stil vallen, kun je dit uitzetten. Voor de eigen
+  // stilte-reminder bestaat geen toggle — die hoort bij ELEVA's
+  // 21-daagse coaching, en is automatisch aan zolang je
+  // dagelijkse pushes aan staan.
   const [sponsorStilteAan, setSponsorStilteAan] = useState(
     (profile as any)?.sponsor_stilte_push_aan ?? true,
   );
   const [stilteLaden, setStilteLaden] = useState(false);
 
-  async function bewaarStilteToggle(
-    veld: "stilte_reminder_aan" | "sponsor_stilte_push_aan",
-    waarde: boolean,
-  ) {
+  async function bewaarSponsorStilteToggle(waarde: boolean) {
     setStilteLaden(true);
     const { error } = await supabase
       .from("profiles")
-      .update({ [veld]: waarde })
+      .update({ sponsor_stilte_push_aan: waarde })
       .eq("id", profile?.id);
     if (error) {
       toast.error("Opslaan mislukt");
-      // Roll back lokale state
-      if (veld === "stilte_reminder_aan") setStilteAan(!waarde);
-      else setSponsorStilteAan(!waarde);
+      setSponsorStilteAan(!waarde);
     } else {
       toast.success("Voorkeur bewaard");
     }
@@ -281,61 +276,39 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
         initieelAan={initieelPushAan}
       />
 
-      {/* Stilte-nudges (vriendelijke reminders bij inactiviteit in playbook) */}
+      {/* Stilte-nudges — uitleg + alleen sponsor-toggle */}
       <div className="card space-y-4">
         <div>
           <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
             🛎️ Stilte-nudges
           </h2>
-          <p className="text-cm-white opacity-60 text-sm mt-1">
-            Vriendelijke reminders als er een dag of langer geen activiteit
-            is in je 21-daagse playbook. Komt op je gekozen ochtenduur, max
-            1× per dag.
+          <p className="text-cm-white opacity-70 text-sm mt-1 leading-relaxed">
+            ELEVA stuurt je automatisch een vriendelijke reminder als je een
+            dag (of langer) geen activiteit hebt in je 21-daagse playbook.
+            Hoort bij het programma — komt op je gekozen ochtenduur, max 1×
+            per dag. Wil je géén pushes meer? Zet je dagelijkse push hierboven
+            uit.
           </p>
         </div>
 
-        <label className="flex items-start gap-3 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={stilteAan}
-            disabled={stilteLaden}
-            onChange={(e) => {
-              setStilteAan(e.target.checked);
-              bewaarStilteToggle("stilte_reminder_aan", e.target.checked);
-            }}
-            className="w-5 h-5 mt-0.5 accent-cm-gold flex-shrink-0"
-          />
-          <div>
-            <p className="text-cm-white text-sm font-medium">
-              Stuur mij een nudge bij stilte
-            </p>
-            <p className="text-cm-white opacity-60 text-xs">
-              1 dag stilte = vriendelijke prik. 2+ dagen = warmere prikkel.
-            </p>
-          </div>
-        </label>
-
-        <label className="flex items-start gap-3 cursor-pointer">
+        <label className="flex items-start gap-3 cursor-pointer pt-2 border-t border-cm-border">
           <input
             type="checkbox"
             checked={sponsorStilteAan}
             disabled={stilteLaden}
             onChange={(e) => {
               setSponsorStilteAan(e.target.checked);
-              bewaarStilteToggle(
-                "sponsor_stilte_push_aan",
-                e.target.checked,
-              );
+              bewaarSponsorStilteToggle(e.target.checked);
             }}
             className="w-5 h-5 mt-0.5 accent-cm-gold flex-shrink-0"
           />
           <div>
             <p className="text-cm-white text-sm font-medium">
-              Waarschuw mij als één van mijn members stil valt
+              Waarschuw mij als één van mijn teamleden stil valt
             </p>
             <p className="text-cm-white opacity-60 text-xs">
               Bij 2+ dagen geen activiteit krijg je een push (max 1× per
-              3 dagen per member). Alleen relevant als je teamleden hebt.
+              3 dagen per teamlid). Alleen relevant als je sponsor bent.
             </p>
           </div>
         </label>

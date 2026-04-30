@@ -124,14 +124,15 @@ export async function GET(request: Request) {
 
     if (stilteDagen < 1) continue; // Vandaag al activiteit gehad
 
-    // 6) Member-nudge — alleen als toggle aan en >24u sinds vorige nudge
-    const memberAan = rij.stilte_reminder_aan ?? true;
+    // 6) Member-nudge — automatisch onderdeel van ELEVA's coaching.
+    //    Geen aparte toggle (master-push-toggle is dagelijkse_push_aan).
+    //    Wel >24u anti-spam tussen pushes.
     const urenSindsVorigeNudge = urenGeleden(
       rij.laatste_stilte_reminder_op
         ? new Date(rij.laatste_stilte_reminder_op)
         : null,
     );
-    if (memberAan && urenSindsVorigeNudge >= 24) {
+    if (urenSindsVorigeNudge >= 24) {
       const voornaam = rij.full_name?.split(" ")[0] || "Hey";
       const titel =
         stilteDagen === 1
