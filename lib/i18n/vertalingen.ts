@@ -233,8 +233,12 @@ export const t: Vertalingen = {
     es: "Cerrar sesi\u00f3n", de: "Abmelden", pt: "Sair",
   },
   "nav.60dagen": {
-    nl: "60 Dagen Run", en: "60 Day Run", fr: "Run de 60 jours",
-    es: "Run de 60 d\u00edas", de: "60 Tage Run", pt: "Run de 60 dias",
+    nl: "Project Meer Tijd en Vrijheid",
+    en: "Project Meer Tijd en Vrijheid",
+    fr: "Projet Plus de Temps et Libert\u00e9",
+    es: "Proyecto M\u00e1s Tiempo y Libertad",
+    de: "Projekt Mehr Zeit und Freiheit",
+    pt: "Projeto Mais Tempo e Liberdade",
   },
 
   // ===== DASHBOARD =====
@@ -539,12 +543,12 @@ export const t: Vertalingen = {
     es: "Tu POR QU\u00c9", de: "Dein WARUM", pt: "Seu PORQU\u00ca",
   },
   "why.subtitel": {
-    nl: "Ontdek wat jou \u00e9cht drijft \u2014 de basis van jouw 60-dagenrun",
-    en: "Discover what truly drives you \u2014 the foundation of your 60-day run",
-    fr: "D\u00e9couvre ce qui te motive vraiment \u2014 la base de ton run de 60 jours",
-    es: "Descubre lo que realmente te impulsa \u2014 la base de tu run de 60 d\u00edas",
-    de: "Entdecke was dich wirklich antreibt \u2014 die Basis deines 60-Tage-Runs",
-    pt: "Descubra o que realmente te motiva \u2014 a base do seu run de 60 dias",
+    nl: "Ontdek wat jou \u00e9cht drijft \u2014 de basis van Project Meer Tijd en Vrijheid",
+    en: "Discover what truly drives you \u2014 the foundation of your project",
+    fr: "D\u00e9couvre ce qui te motive vraiment \u2014 la base de ton projet",
+    es: "Descubre lo que realmente te impulsa \u2014 la base de tu proyecto",
+    de: "Entdecke was dich wirklich antreibt \u2014 die Basis deines Projekts",
+    pt: "Descubra o que realmente te motiva \u2014 a base do seu projeto",
   },
   "why.huidige": {
     nl: "Jouw huidige WHY", en: "Your current WHY", fr: "Ton POURQUOI actuel",
@@ -847,7 +851,7 @@ export const t: Vertalingen = {
   // ===== STATISTIEKEN / KPI =====
   "nav.statistieken": { nl: "Statistieken", en: "Statistics", fr: "Statistiques", es: "Estadísticas", de: "Statistiken", pt: "Estatísticas" },
   "stats.titel": { nl: "Statistieken & KPI's", en: "Statistics & KPIs", fr: "Statistiques & KPI", es: "Estadísticas & KPIs", de: "Statistiken & KPIs", pt: "Estatísticas & KPIs" },
-  "stats.subtitel": { nl: "Jouw voortgang over de hele 60 dagenrun", en: "Your progress across the entire 60-day run", fr: "Votre progression sur l'ensemble des 60 jours", es: "Tu progreso durante los 60 días", de: "Dein Fortschritt über den gesamten 60-Tage-Lauf", pt: "Seu progresso ao longo dos 60 dias" },
+  "stats.subtitel": { nl: "Jouw voortgang in Project Meer Tijd en Vrijheid", en: "Your progress in Project Meer Tijd en Vrijheid", fr: "Votre progression dans le Projet", es: "Tu progreso en el Proyecto", de: "Dein Fortschritt im Projekt", pt: "Seu progresso no Projeto" },
 
   // Totalen kaarten
   "stats.totaal_contacten": { nl: "Totaal contacten", en: "Total contacts", fr: "Total contacts", es: "Total contactos", de: "Kontakte gesamt", pt: "Total contatos" },

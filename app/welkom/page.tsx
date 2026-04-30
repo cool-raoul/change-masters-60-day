@@ -31,7 +31,7 @@ export default async function WelkomPagina({
       <div className="flex flex-col items-center gap-4 mt-8">
         <img src="/eleva-icon.png" alt="ELEVA" className="w-24 h-24 rounded-2xl" />
         <h1 className="text-4xl font-bold text-[#D4AF37] tracking-widest">ELEVA</h1>
-        <p className="text-white/50 text-sm tracking-wider uppercase">60 Dagen Run Systeem</p>
+        <p className="text-white/50 text-sm tracking-wider uppercase">Project Meer Tijd en Vrijheid</p>
       </div>
 
       {/* Welkomst tekst */}
@@ -44,7 +44,7 @@ export default async function WelkomPagina({
               <span className="text-[#D4AF37]">{sponsorNaam}</span>
             </h2>
             <p className="text-white/60 text-sm leading-relaxed">
-              Je bent uitgenodigd voor de 60-dagenrun.
+              Je bent uitgenodigd voor Project Meer Tijd en Vrijheid.
               Maak je account aan en installeer de app op je telefoon.
             </p>
           </>
@@ -55,7 +55,7 @@ export default async function WelkomPagina({
               <span className="text-[#D4AF37]">ELEVA</span>
             </h2>
             <p className="text-white/60 text-sm leading-relaxed">
-              Maak je account aan en start de 60-dagenrun.
+              Maak je account aan en start Project Meer Tijd en Vrijheid.
             </p>
           </>
         )}

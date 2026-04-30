@@ -6,7 +6,7 @@ import { ServiceWorkerRegister } from "@/components/pwa/ServiceWorkerRegister";
 
 export const metadata: Metadata = {
   title: "ELEVA",
-  description: "Jouw persoonlijke aanbevelingsmarketing systeem voor de 60-dagenrun",
+  description: "Jouw persoonlijke aanbevelingsmarketing systeem voor Project Meer Tijd en Vrijheid",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,

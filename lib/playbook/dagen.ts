@@ -2021,7 +2021,7 @@ VANDAAG: kies 1 prospect die meer dan 3 exposures heeft gehad zonder beslissing.
         route: "/dashboard",
       },
       {
-        actie: "60-dagen-statistieken bekijken",
+        actie: "Statistieken-overzicht bekijken",
         menupad: "Menu → Statistieken",
         route: "/statistieken",
       },
@@ -2079,7 +2079,7 @@ VANDAAG: vul de week-3-review in. Schrijf de drie reflectie-vragen uit, eerlijk.
     waaromWerktDit: {
       tekst:
         "Je bouwt geen business in 21 dagen. Je bouwt een fundament. Daar bovenop zetten we in 40 dagen de muren.",
-      bron: "Lifeplus 60-dagenrun-filosofie",
+      bron: "Project Meer Tijd en Vrijheid — kernfilosofie",
     },
   },
 ];

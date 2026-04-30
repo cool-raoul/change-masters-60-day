@@ -40,7 +40,7 @@ export function WelcomePopup() {
             Welkom bij ELEVA!
           </h2>
           <p className="text-cm-white mt-2">
-            Jouw persoonlijke 60-dagenrun systeem is klaar voor gebruik.
+            Je persoonlijke systeem voor Project Meer Tijd en Vrijheid is klaar voor gebruik.
           </p>
         </div>
 
