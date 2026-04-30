@@ -100,17 +100,37 @@ export default async function PlaybookDagPagina({
     <div className="max-w-3xl mx-auto space-y-4">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <Link
-          href="/dashboard"
+          href={isPreview ? "/instellingen" : "/dashboard"}
           className="text-cm-white opacity-60 hover:opacity-100 text-sm flex items-center gap-1"
         >
-          ← Terug naar dashboard
+          ← {isPreview ? "Terug naar instellingen" : "Terug naar dashboard"}
         </Link>
-        {isPreview && (
+        {isPreview && !isFounder && (
           <span className="text-xs px-3 py-1 rounded-full bg-amber-900/30 border border-amber-500/40 text-amber-300">
-            Preview-modus — afvinken slaat niets op
+            Preview — afvinken slaat niets op
           </span>
         )}
       </div>
+
+      {/* Founder-banner in preview-mode: maakt duidelijk dat ✏️-edits
+          OPSLAAN voor alle members (in tegenstelling tot afvinken,
+          dat in preview alleen visueel werkt). */}
+      {isPreview && isFounder && (
+        <div className="rounded-lg border border-cm-gold/40 bg-cm-gold/10 px-4 py-3 space-y-1">
+          <p className="text-sm text-cm-white">
+            <strong className="text-cm-gold">✍️ Founder preview & edit</strong>
+            {" — "}
+            Klik op een <span className="text-cm-gold">✏️</span> naast een
+            tekst om aan te passen. Wijzigingen zijn{" "}
+            <strong>ONMIDDELLIJK live</strong> voor alle members. Met de
+            pijltjes onderaan blader je door alle 21 dagen.
+          </p>
+          <p className="text-xs text-cm-white opacity-60">
+            (Afvinken in preview slaat niets op — dat is alleen om te zien hoe
+            een member het ervaart.)
+          </p>
+        </div>
+      )}
 
       <PlaybookDagTile
         dag={dagData}
