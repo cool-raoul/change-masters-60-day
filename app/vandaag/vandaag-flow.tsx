@@ -367,6 +367,9 @@ export function VandaagFlow({
                 opVoltooid={() => {
                   vinkAf(huidigeTaak.id, true);
                 }}
+                opOpnieuw={() => {
+                  vinkAf(huidigeTaak.id, false);
+                }}
               />
             )}
             {huidigeTaak.inlineEmbed === "sponsor-melding" && (

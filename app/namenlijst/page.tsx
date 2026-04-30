@@ -3,6 +3,7 @@ import { Prospect } from "@/lib/supabase/types";
 import { NamenlijstToggle } from "@/components/namenlijst/NamenlijstToggle";
 import { OpenTestlinkKnop } from "@/components/namenlijst/OpenTestlinkKnop";
 import { RealtimeProspectsRefresh } from "@/components/namenlijst/RealtimeProspectsRefresh";
+import { BulkImportSectie } from "@/components/namenlijst/BulkImportSectie";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import Link from "next/link";
 
@@ -114,6 +115,8 @@ export default async function NamenlijstPagina({
         </div>
         <OpenTestlinkKnop memberNaam={memberNaam} />
       </div>
+
+      <BulkImportSectie />
 
       <NamenlijstToggle prospects={alleProspects} />
     </div>

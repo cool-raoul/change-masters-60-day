@@ -26,10 +26,19 @@ import { toast } from "sonner";
 type Contact = { naam: string; telefoon: string | null };
 
 type Props = {
-  /** Wordt aangeroepen zodra de import succesvol is — vinkt de taak af. */
-  opVoltooid: () => void;
+  /**
+   * Wordt aangeroepen zodra de import succesvol is — vinkt de taak af.
+   * Optioneel: de uploader kan ook los staan op /namenlijst zonder taak-koppeling.
+   */
+  opVoltooid?: () => void;
   /** Of de huidige stap al voltooid was — dan tonen we een geslaagd-status. */
-  alVoltooid: boolean;
+  alVoltooid?: boolean;
+  /**
+   * Wordt aangeroepen als de gebruiker op '↻ Opnieuw' klikt in de
+   * klaar-state. Parent (bv. vandaag-flow) kan dan de taak ontvinken
+   * zodat 'ie weer open staat. Op /namenlijst niet nodig.
+   */
+  opOpnieuw?: () => void;
 };
 
 // ------------------------------------------------------------
@@ -91,7 +100,11 @@ function pakContactsAPI(): NavigatorContacts | null {
 // ------------------------------------------------------------
 // Hoofdcomponent
 // ------------------------------------------------------------
-export function VCardUploader({ opVoltooid, alVoltooid }: Props) {
+export function VCardUploader({
+  opVoltooid,
+  alVoltooid = false,
+  opOpnieuw,
+}: Props) {
   const [klaar, setKlaar] = useState(alVoltooid);
   const [bezig, setBezig] = useState(false);
   const [actieveTab, setActieveTab] = useState<"native" | "handmatig" | "vcard">(
@@ -165,7 +178,7 @@ export function VCardUploader({ opVoltooid, alVoltooid }: Props) {
       if (nieuw.length === 0) {
         toast.success("Deze contacten stonden al op je namenlijst");
         setKlaar(true);
-        opVoltooid();
+        opVoltooid?.();
         return true;
       }
 
@@ -185,7 +198,7 @@ export function VCardUploader({ opVoltooid, alVoltooid }: Props) {
         `🎉 ${toegevoegd} nieuw${toegevoegd === 1 ? " contact" : "e contacten"} toegevoegd aan je namenlijst`,
       );
       setKlaar(true);
-      opVoltooid();
+      opVoltooid?.();
       return true;
     } catch {
       toast.error("Onbekende fout — probeer opnieuw");
@@ -420,13 +433,32 @@ export function VCardUploader({ opVoltooid, alVoltooid }: Props) {
 
   if (klaar) {
     return (
-      <div className="rounded-lg border-2 border-emerald-500/60 bg-emerald-900/20 px-4 py-4 space-y-2">
+      <div className="rounded-lg border-2 border-emerald-500/60 bg-emerald-900/20 px-4 py-4 space-y-3">
         <p className="text-emerald-300 font-semibold text-sm flex items-center gap-2">
           ✓ Contacten staan op je namenlijst
         </p>
-        <p className="text-cm-white opacity-80 text-xs">
-          Top — je voorraadkast is gevuld. Op naar de volgende stap.
+        <p className="text-cm-white opacity-80 text-xs leading-relaxed">
+          Top — je voorraadkast is een laag voller. Tijd voor een rustpauze of
+          door naar de volgende stap. Wil je nóg een batch toevoegen? Klik
+          hieronder.
         </p>
+        <button
+          type="button"
+          onClick={() => {
+            // Reset interne state én meld parent zodat de taak ontvinkt.
+            setKlaar(false);
+            setVcardVoorbeeld([]);
+            setVcardGeselecteerd(new Set());
+            setVcardZoek("");
+            setHandmatig(
+              Array.from({ length: 5 }, () => ({ naam: "", telefoon: "" })),
+            );
+            opOpnieuw?.();
+          }}
+          className="text-cm-gold text-xs hover:underline underline-offset-2 font-semibold"
+        >
+          ↻ Voeg meer contacten toe
+        </button>
       </div>
     );
   }
