@@ -44,14 +44,9 @@ export default async function PlaybookEditorPagina() {
     );
   }
 
-  // Haal alle bestaande overrides op voor de 21 dagen
-  const { data: overrides } = await supabase
-    .from("playbook_overrides")
-    .select(
-      "dag_nummer, titel, wat_je_leert, fase_doel, waarom_werkt_dit_tekst, waarom_werkt_dit_bron, updated_at",
-    )
-    .order("dag_nummer", { ascending: true });
-
+  // Haal alle bestaande overrides op voor de 21 dagen.
+  // Als de tabel nog niet bestaat (SQL niet gedraaid): val terug op
+  // een lege map en toon een waarschuwing, in plaats van crashen.
   type OverrideRij = {
     dag_nummer: number;
     titel: string | null;
@@ -62,8 +57,26 @@ export default async function PlaybookEditorPagina() {
     updated_at: string;
   };
 
+  let overrides: OverrideRij[] | null = null;
+  let tabelOntbreekt = false;
+  try {
+    const { data, error } = await supabase
+      .from("playbook_overrides")
+      .select(
+        "dag_nummer, titel, wat_je_leert, fase_doel, waarom_werkt_dit_tekst, waarom_werkt_dit_bron, updated_at",
+      )
+      .order("dag_nummer", { ascending: true });
+    if (error) {
+      tabelOntbreekt = true;
+    } else {
+      overrides = data as OverrideRij[];
+    }
+  } catch {
+    tabelOntbreekt = true;
+  }
+
   const overrideMap = new Map<number, OverrideRij>();
-  for (const o of (overrides as OverrideRij[]) || []) {
+  for (const o of overrides || []) {
     overrideMap.set(o.dag_nummer, o);
   }
 
@@ -84,6 +97,23 @@ export default async function PlaybookEditorPagina() {
           ← Terug
         </Link>
       </div>
+
+      {tabelOntbreekt && (
+        <div className="card border-l-4 border-amber-500 space-y-2">
+          <h2 className="text-amber-400 font-semibold">
+            ⚠️ Database-tabel ontbreekt
+          </h2>
+          <p className="text-cm-white text-sm leading-relaxed">
+            De tabel <code>playbook_overrides</code> bestaat nog niet. Voer de
+            SQL uit{" "}
+            <code className="text-xs bg-cm-surface-2 px-1.5 py-0.5 rounded">
+              lib/supabase/migrations/playbook_overrides.sql
+            </code>{" "}
+            in de Supabase SQL Editor. Tot die tijd kun je de teksten hier wel
+            bewerken, maar het opslaan zal mislukken.
+          </p>
+        </div>
+      )}
 
       <div className="card border-gold-subtle">
         <h2 className="text-cm-gold font-semibold mb-2">Hoe het werkt</h2>

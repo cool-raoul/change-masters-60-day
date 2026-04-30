@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { DAGEN } from "@/lib/playbook/dagen";
+import { haalOverrides, pasOverrideToe } from "@/lib/playbook/overrides";
 import { PlaybookDagTile } from "@/components/playbook/PlaybookDagTile";
 
 // ============================================================
@@ -46,10 +47,8 @@ export default async function PlaybookDagPagina({
   // Override toepassen — founders kunnen via /instellingen/playbook
   // teksten aanpassen zonder code-deploy. Werkt in zowel preview als
   // live mode (zo ziet de founder zijn aanpassingen meteen terug).
+  // haalOverrides faalt stilletjes als de tabel ontbreekt.
   {
-    const { haalOverrides, pasOverrideToe } = await import(
-      "@/lib/playbook/overrides"
-    );
     const overrideMap = await haalOverrides(supabase as any, [dagParam]);
     dagData = pasOverrideToe(dagData, overrideMap.get(dagParam) ?? null);
   }

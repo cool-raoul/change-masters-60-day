@@ -6,6 +6,7 @@ import { DagelijkseStat, Herinnering, WhyProfile } from "@/lib/supabase/types";
 import { DagStatForm } from "@/components/dashboard/DagStatForm";
 import { PlaybookDagTile } from "@/components/playbook/PlaybookDagTile";
 import { DAGEN } from "@/lib/playbook/dagen";
+import { haalOverrides, pasOverrideToe } from "@/lib/playbook/overrides";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { Locale } from "date-fns";
 
@@ -70,13 +71,15 @@ export default async function DashboardPagina() {
     ? DAGEN.find((d) => d.nummer === dag) ?? null
     : null;
   // Override toepassen — founders kunnen via /instellingen/playbook
-  // teksten aanpassen zonder code-deploy.
+  // teksten aanpassen zonder code-deploy. haalOverrides faalt stilletjes
+  // als de tabel nog niet bestaat (returnt lege map), zodat de tile
+  // gewoon de hardcoded versie blijft tonen.
   if (huidigeDagData) {
-    const { haalOverrides, pasOverrideToe } = await import(
-      "@/lib/playbook/overrides"
-    );
     const overrideMap = await haalOverrides(supabase as any, [dag]);
-    huidigeDagData = pasOverrideToe(huidigeDagData, overrideMap.get(dag) ?? null);
+    huidigeDagData = pasOverrideToe(
+      huidigeDagData,
+      overrideMap.get(dag) ?? null,
+    );
   }
   const huidigeDagVoltooidIds = huidigeDagData
     ? huidigeDagData.vandaagDoen

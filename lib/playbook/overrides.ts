@@ -43,6 +43,10 @@ export function pasOverrideToe(dag: Dag, override: DagOverride | null): Dag {
 /**
  * Haal overrides op voor een specifieke set dagnummers. Gebruikt de
  * RLS-policy die iedereen toelaat om SELECT te doen.
+ *
+ * Belangrijk: faalt STILLETJES (lege map terug) als de tabel niet
+ * bestaat of de query crasht. Zo blijft de playbook werken voor
+ * members ook als de migratie nog niet is gedraaid.
  */
 export async function haalOverrides(
   // Loosely getypeerd zodat zowel server- als admin-clients passen
@@ -60,12 +64,20 @@ export async function haalOverrides(
 ): Promise<Map<number, DagOverride>> {
   const map = new Map<number, DagOverride>();
   if (dagNummers.length === 0) return map;
-  const { data } = await supabase
-    .from("playbook_overrides")
-    .select(
-      "dag_nummer, titel, wat_je_leert, fase_doel, waarom_werkt_dit_tekst, waarom_werkt_dit_bron",
-    )
-    .in("dag_nummer", dagNummers);
-  for (const r of data || []) map.set(r.dag_nummer, r);
+  try {
+    const { data, error } = await supabase
+      .from("playbook_overrides")
+      .select(
+        "dag_nummer, titel, wat_je_leert, fase_doel, waarom_werkt_dit_tekst, waarom_werkt_dit_bron",
+      )
+      .in("dag_nummer", dagNummers);
+    if (error) {
+      // Tabel ontbreekt of RLS blokkeert — geen drama, gebruik fallback.
+      return map;
+    }
+    for (const r of data || []) map.set(r.dag_nummer, r);
+  } catch {
+    // Network/typing/anders — fail silently
+  }
   return map;
 }
