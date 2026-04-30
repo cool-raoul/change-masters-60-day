@@ -106,7 +106,9 @@ export function VCardUploader({ opVoltooid, alVoltooid }: Props) {
   );
   const [vcardZoek, setVcardZoek] = useState("");
   const vcardInputRef = useRef<HTMLInputElement>(null);
-  const [vcardTelefoonHelp, setVcardTelefoonHelp] = useState<"iphone" | "android" | null>(null);
+  const [vcardTelefoonHelp, setVcardTelefoonHelp] = useState<
+    "iphone" | "android" | "google" | null
+  >(null);
 
   // Handmatige invoer state (route 2)
   const [handmatig, setHandmatig] = useState<Contact[]>(
@@ -661,7 +663,7 @@ export function VCardUploader({ opVoltooid, alVoltooid }: Props) {
               Hoe maak je een vCard-bestand?
             </p>
 
-            <div className="flex gap-2">
+            <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
                 onClick={() =>
@@ -669,13 +671,14 @@ export function VCardUploader({ opVoltooid, alVoltooid }: Props) {
                     vcardTelefoonHelp === "iphone" ? null : "iphone",
                   )
                 }
-                className={`flex-1 px-3 py-2 rounded text-xs font-semibold transition-colors ${
+                className={`px-2 py-2.5 rounded text-xs font-semibold transition-colors flex flex-col items-center gap-1 ${
                   vcardTelefoonHelp === "iphone"
                     ? "bg-cm-gold text-cm-black"
                     : "border border-cm-border text-cm-white hover:border-cm-gold-dim"
                 }`}
               >
-                🍎 iPhone
+                <span className="text-base leading-none">🍎</span>
+                <span>Apple iPhone</span>
               </button>
               <button
                 type="button"
@@ -684,77 +687,157 @@ export function VCardUploader({ opVoltooid, alVoltooid }: Props) {
                     vcardTelefoonHelp === "android" ? null : "android",
                   )
                 }
-                className={`flex-1 px-3 py-2 rounded text-xs font-semibold transition-colors ${
+                className={`px-2 py-2.5 rounded text-xs font-semibold transition-colors flex flex-col items-center gap-1 ${
                   vcardTelefoonHelp === "android"
                     ? "bg-cm-gold text-cm-black"
                     : "border border-cm-border text-cm-white hover:border-cm-gold-dim"
                 }`}
               >
-                🤖 Android
+                <span className="text-base leading-none">🤖</span>
+                <span>Android</span>
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  setVcardTelefoonHelp(
+                    vcardTelefoonHelp === "google" ? null : "google",
+                  )
+                }
+                className={`px-2 py-2.5 rounded text-xs font-semibold transition-colors flex flex-col items-center gap-1 ${
+                  vcardTelefoonHelp === "google"
+                    ? "bg-cm-gold text-cm-black"
+                    : "border border-cm-border text-cm-white hover:border-cm-gold-dim"
+                }`}
+              >
+                <span className="text-base leading-none">🟢</span>
+                <span>Google Contacten</span>
               </button>
             </div>
 
             {vcardTelefoonHelp === "iphone" && (
-              <ol className="space-y-2 text-xs text-cm-white leading-relaxed list-decimal pl-5">
-                <li>
-                  Pak je iPhone en open <strong>Safari</strong>. Ga naar{" "}
-                  <strong>iCloud.com</strong> en log in met je Apple ID.
-                </li>
-                <li>
-                  Tik onderin op <strong>Contacten</strong>.
-                </li>
-                <li>
-                  Tik bovenin op <strong>Selecteer</strong> en daarna op{" "}
-                  <strong>Selecteer alles</strong>.
-                </li>
-                <li>
-                  Tik op het deel-icoontje (vierkantje met pijltje omhoog) en
-                  kies <strong>Exporteer vCard</strong>.
-                </li>
-                <li>
-                  Het bestand wordt gedownload — kies <strong>Bewaar in Bestanden</strong>{" "}
-                  of mail het naar jezelf.
-                </li>
-                <li>
-                  Open het bestand op je computer en sleep het in het vakje
-                  hierboven.
-                </li>
-                <li className="text-cm-gold">
-                  💡 <strong>Te omslachtig?</strong> Doe deze stap dan op je
-                  telefoon zelf — open ELEVA op je telefoon, dan kun je het
-                  bestand direct kiezen uit Bestanden.
-                </li>
-              </ol>
+              <div className="space-y-3 text-xs text-cm-white leading-relaxed">
+                <p className="opacity-80">
+                  Vanaf iOS 17 kun je rechtstreeks vanuit de Contacten-app op je
+                  iPhone een vCard-bestand maken. Geen iCloud.com nodig, geen
+                  app erbij — alles in de telefoon zelf.
+                </p>
+                <ol className="list-decimal pl-5 space-y-1.5">
+                  <li>
+                    Open de <strong>Contacten</strong>-app op je iPhone.
+                  </li>
+                  <li>
+                    Tik linksbovenin op het pijltje{" "}
+                    <strong className="text-cm-gold">{"<"}</strong> om naar het
+                    Lijsten-overzicht te gaan.
+                  </li>
+                  <li>
+                    Houd je vinger op een lijst (bijvoorbeeld{" "}
+                    <strong>Alle contacten</strong>) — er verschijnt een menu.
+                  </li>
+                  <li>
+                    Tik in dat menu op <strong>Exporteer</strong>, kies welke
+                    velden mee mogen (naam + telefoon is genoeg) en tik op het
+                    blauwe vinkje <strong className="text-cm-gold">✓</strong>.
+                  </li>
+                  <li>
+                    Kies hoe je 'm wil versturen: <strong>Mail</strong> naar
+                    jezelf, of <strong>Bewaar in Bestanden</strong>.
+                  </li>
+                  <li>
+                    Open op je computer de mail of het bestand, en sleep het{" "}
+                    .vcf-bestand in het vakje hierboven. (Of doe deze stap op je
+                    iPhone in ELEVA — dan kies je 'm direct uit Bestanden.)
+                  </li>
+                </ol>
+                <div className="rounded-md bg-cm-gold/10 border border-cm-gold/40 px-3 py-2">
+                  <p className="text-cm-gold font-semibold mb-1">
+                    💡 Geen zin in dit gedoe?
+                  </p>
+                  <p className="opacity-90">
+                    Klik bovenaan op de tab <strong>"✋ Zelf typen"</strong> en
+                    begin gewoon met 10-15 namen die nu in je opkomen. Morgen
+                    weer 10. In een week zit je op je top-50.
+                  </p>
+                </div>
+              </div>
             )}
 
             {vcardTelefoonHelp === "android" && (
-              <ol className="space-y-2 text-xs text-cm-white leading-relaxed list-decimal pl-5">
-                <li>
-                  Open op je Android-telefoon de <strong>Contacten</strong>-app.
-                </li>
-                <li>
-                  Tik linksboven op de drie streepjes (het menu).
-                </li>
-                <li>
-                  Tik op <strong>Instellingen</strong> en daarna op{" "}
-                  <strong>Exporteren</strong>.
-                </li>
-                <li>
-                  Kies waar het bestand opgeslagen mag worden (bijv. je{" "}
-                  <strong>Downloads</strong>-map).
-                </li>
-                <li>
-                  Stuur het bestand naar jezelf via Gmail, WhatsApp of Drive,
-                  open je computer en download het daar.
-                </li>
-                <li>
-                  Sleep het in het vakje hierboven.
-                </li>
-                <li className="text-cm-gold">
-                  💡 <strong>Sneller:</strong> de optie "📱 Uit mijn telefoon"
-                  bovenaan werkt op Android Chrome zonder bestand. Probeer die!
-                </li>
-              </ol>
+              <div className="space-y-3 text-xs text-cm-white leading-relaxed">
+                <p className="opacity-80">
+                  Op de meeste Android-telefoons (Samsung, Pixel, OnePlus, etc.)
+                  gaat het via de Google Contacten-app:
+                </p>
+                <ol className="list-decimal pl-5 space-y-1.5">
+                  <li>
+                    Open de <strong>Contacten</strong>-app op je Android-telefoon.
+                  </li>
+                  <li>
+                    Tik onderin op <strong>Corrigeren en beheren</strong> en
+                    daarna op <strong>Exporteren naar bestand</strong>.
+                  </li>
+                  <li>
+                    Kies welk account je wilt exporteren (meestal je
+                    Google-account).
+                  </li>
+                  <li>
+                    Tik op <strong>Exporteren naar VCF-bestand</strong> en kies
+                    waar 'ie opgeslagen moet (bijv. <strong>Downloads</strong>).
+                  </li>
+                  <li>
+                    Stuur het naar jezelf via Gmail, WhatsApp of Drive — open op
+                    je computer, sleep in het vakje hierboven. (Of doe deze stap
+                    op je telefoon in ELEVA, dan kies je 'm direct uit je
+                    Downloads-map.)
+                  </li>
+                </ol>
+                <div className="rounded-md bg-cm-gold/10 border border-cm-gold/40 px-3 py-2">
+                  <p className="text-cm-gold font-semibold mb-1">
+                    💡 Nog sneller op Android Chrome
+                  </p>
+                  <p className="opacity-90">
+                    Klik bovenaan op de tab{" "}
+                    <strong>"📱 Uit mijn telefoon"</strong> — die werkt op
+                    Android Chrome zonder bestand. Eén klik en je krijgt je
+                    adresboek direct in beeld.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {vcardTelefoonHelp === "google" && (
+              <div className="space-y-3 text-xs text-cm-white leading-relaxed">
+                <p className="opacity-80">
+                  Heb je je contacten in Google opgeslagen (bijv. via een
+                  Gmail-account dat op meerdere telefoons gebruikt wordt)? Dan
+                  is dit de schoonste route — direct vanaf je computer.
+                </p>
+                <ol className="list-decimal pl-5 space-y-1.5">
+                  <li>
+                    Op je computer: ga naar <strong>contacts.google.com</strong>{" "}
+                    en log in met je Google-account.
+                  </li>
+                  <li>
+                    Klik in het linker-menu op{" "}
+                    <strong>Exporteren</strong>. (Staat 'ie er niet? Klik dan
+                    eerst op <strong>Geavanceerd</strong> of de drie streepjes
+                    linksboven.)
+                  </li>
+                  <li>
+                    Kies welke contacten je wilt exporteren — meestal{" "}
+                    <strong>Contacten</strong> (alles).
+                  </li>
+                  <li>
+                    Selecteer als formaat <strong>vCard (voor iOS)</strong> en
+                    klik op <strong>Exporteren</strong>.
+                  </li>
+                  <li>
+                    Het bestand{" "}
+                    <strong className="text-cm-gold">contacts.vcf</strong> komt
+                    in je Downloads-map. Sleep 'm in het vakje hierboven.
+                  </li>
+                </ol>
+              </div>
             )}
           </div>
         </div>
