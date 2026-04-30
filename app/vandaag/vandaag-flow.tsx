@@ -1,12 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { FilmInBlok } from "@/components/film/FilmInBlok";
 import { HerinnerLaterKnop } from "@/components/playbook/HerinnerLaterKnop";
 import type { Dag, ControllableTaak } from "@/lib/playbook/types";
+
+// localStorage-key zodat we bij terugkeer (van een actieRoute) op de
+// juiste taak landen, niet weer in de intro-stap.
+const flowPositieKey = (dagNummer: number) =>
+  `eleva-vandaag-flow-positie-dag${dagNummer}-${new Date().toISOString().split("T")[0]}`;
+
+function isMobielApparaat(): boolean {
+  if (typeof navigator === "undefined") return false;
+  // Pragmatische check — voor de "doe dit op je telefoon"-waarschuwing
+  // is een UA-sniff goed genoeg (geen security-kritisch beslismoment).
+  return /Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent,
+  );
+}
 
 // ============================================================
 // VandaagFlow — guided full-screen flow voor één playbook-dag.
@@ -51,6 +65,41 @@ export function VandaagFlow({
   const [inlineWaardes, setInlineWaardes] =
     useState<Record<string, string>>(initialZinnen);
   const [bezigInline, setBezigInline] = useState(false);
+  const [isMobiel, setIsMobiel] = useState<boolean>(true); // pessimistisch: behandel als mobiel tot we zekerheid hebben
+
+  // Bij mount: detecteer mobiel/desktop + herstel positie als de member
+  // net terugkomt van een actieRoute (bv. /namenlijst → /vandaag).
+  useEffect(() => {
+    setIsMobiel(isMobielApparaat());
+    try {
+      const opgeslagen = window.localStorage.getItem(flowPositieKey(dag.nummer));
+      if (opgeslagen) {
+        const { stap: opgeslagenStap, taakIndex: opgeslagenIndex } = JSON.parse(
+          opgeslagen,
+        ) as { stap: "intro" | "taak" | "klaar"; taakIndex: number };
+        if (opgeslagenStap === "taak" && opgeslagenIndex >= 0 && opgeslagenIndex < taken.length) {
+          setStap("taak");
+          setTaakIndex(opgeslagenIndex);
+        }
+      }
+    } catch {
+      // negeer
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Bewaar positie elke keer dat 'ie verandert — zodat terugkomst de
+  // juiste taak-stap herstelt.
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(
+        flowPositieKey(dag.nummer),
+        JSON.stringify({ stap, taakIndex }),
+      );
+    } catch {
+      // negeer
+    }
+  }, [stap, taakIndex, dag.nummer]);
 
   const taken = dag.vandaagDoen;
   const totaal = taken.length;
@@ -300,31 +349,46 @@ export function VandaagFlow({
               />
             )}
 
-            {/* Optionele actie-route */}
-            {huidigeTaak.actieRoute && (
-              <a
-                href={
-                  /^https?:\/\//i.test(huidigeTaak.actieRoute)
-                    ? huidigeTaak.actieRoute
-                    : `${huidigeTaak.actieRoute}${huidigeTaak.actieRoute.includes("?") ? "&" : "?"}van=playbook&dag=${dag.nummer}`
-                }
-                target={
-                  /^https?:\/\//i.test(huidigeTaak.actieRoute)
-                    ? "_blank"
-                    : undefined
-                }
-                rel={
-                  /^https?:\/\//i.test(huidigeTaak.actieRoute)
-                    ? "noopener noreferrer"
-                    : undefined
-                }
-                className="btn-secondary w-full py-3 text-center text-sm font-semibold inline-block"
-              >
-                {/^https?:\/\//i.test(huidigeTaak.actieRoute)
-                  ? "Open in nieuwe tab ↗"
-                  : "Open deze plek →"}
-              </a>
+            {/* Mobiel-waarschuwing: deze taak vraagt om je telefoon. */}
+            {huidigeTaak.vereistMobiel && !isMobiel && (
+              <div className="rounded-lg border-2 border-amber-500/60 bg-amber-900/20 px-4 py-3 space-y-2">
+                <p className="text-amber-200 text-sm font-semibold flex items-center gap-2">
+                  📱 Doe deze stap op je telefoon
+                </p>
+                <p className="text-cm-white opacity-90 text-xs leading-relaxed">
+                  Open ELEVA op je telefoon — je hebt 'm nodig om je
+                  contacten te exporteren. Je dag-flow loopt daar gewoon door.
+                  Of sla 'm voor nu over en pak 'm vanavond op je telefoon.
+                </p>
+              </div>
             )}
+
+            {/* Optionele actie-route — verberg op desktop bij mobiel-only taken. */}
+            {huidigeTaak.actieRoute &&
+              !(huidigeTaak.vereistMobiel && !isMobiel) && (
+                <a
+                  href={
+                    /^https?:\/\//i.test(huidigeTaak.actieRoute)
+                      ? huidigeTaak.actieRoute
+                      : `${huidigeTaak.actieRoute}${huidigeTaak.actieRoute.includes("?") ? "&" : "?"}van=vandaag&dag=${dag.nummer}`
+                  }
+                  target={
+                    /^https?:\/\//i.test(huidigeTaak.actieRoute)
+                      ? "_blank"
+                      : undefined
+                  }
+                  rel={
+                    /^https?:\/\//i.test(huidigeTaak.actieRoute)
+                      ? "noopener noreferrer"
+                      : undefined
+                  }
+                  className="btn-secondary w-full py-3 text-center text-sm font-semibold inline-block"
+                >
+                  {/^https?:\/\//i.test(huidigeTaak.actieRoute)
+                    ? "Open in nieuwe tab ↗"
+                    : "Open deze plek →"}
+                </a>
+              )}
 
             {/* Inline-actie (schrijf je zin direct) */}
             {huidigeTaak.inlineActie && (
@@ -469,10 +533,12 @@ export function VandaagFlow({
               className="btn-gold w-full py-4 text-base font-bold inline-block"
               onClick={() => {
                 // Markeer dat de flow gesloten is — niet meer auto-open
-                // bij volgende dashboard-bezoek.
+                // bij volgende dashboard-bezoek. En wis de positie zodat
+                // een volgende keer netjes bij intro begint.
                 try {
                   const k = `eleva-vandaag-flow-dag${dag.nummer}-${new Date().toISOString().split("T")[0]}`;
                   window.localStorage.setItem(k, "gesloten");
+                  window.localStorage.removeItem(flowPositieKey(dag.nummer));
                 } catch {
                   // ignore
                 }

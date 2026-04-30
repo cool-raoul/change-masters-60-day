@@ -19,26 +19,13 @@ export const DAGEN: Dag[] = [
     fase: 1,
     vandaagDoen: [
       {
-        id: "dag1-onboarding",
-        label: "Voltooi de ELEVA-onboarding als je dat nog niet hebt",
-        verplicht: true,
-        actieRoute: "/onboarding",
-      },
-      {
-        id: "dag1-why",
-        label: "Lees je WHY terug en stem 'm fijn af",
-        uitleg:
-          "Je hebt 'm in de onboarding al gemaakt — vandaag een rustig moment om hem terug te lezen en te voelen of het nog klopt. Wil je iets bijschaven? Open Mijn WHY en pas 'm aan in gesprek met de Mentor. Op moeilijke dagen lees je 'm hier terug.",
-        verplicht: true,
-        actieRoute: "/mijn-why",
-      },
-      {
         id: "dag1-vcard",
         label: "Importeer je telefooncontacten",
         uitleg:
           "Open je Contacten-app op je telefoon en exporteer je contactenlijst (een .vcf-bestand). Upload dat in ELEVA — we filteren dubbelingen automatisch. In één keer staan al je 100+ contacten klaar. Daar bouw je deze week verder op met losse namen uit je hoofd en uit socials.",
         verplicht: true,
         actieRoute: "/namenlijst",
+        vereistMobiel: true,
       },
       {
         id: "dag1-sponsor",
@@ -53,12 +40,6 @@ export const DAGEN: Dag[] = [
       "Fase 1 (dag 1-7): deze week 2 one-pager-momenten gepland of bekeken krijgen.",
     waarInEleva: [
       {
-        actie: "WHY invullen",
-        menupad: "Menu → Mijn WHY → Start WHY-gesprek",
-        spraak: "Start mijn WHY",
-        route: "/mijn-why",
-      },
-      {
         actie: "Telefooncontacten importeren",
         menupad: "Menu → Namenlijst → Importeer contacten",
         route: "/namenlijst",
@@ -69,18 +50,7 @@ export const DAGEN: Dag[] = [
         route: "/team",
       },
     ],
-    watJeLeert: `Te gek dat je hier bent! 🎉 Vandaag is jouw startdag — en eerlijk: het is geen doe-dag, het is een FUNDAMENT-dag. We gaan het rustig opbouwen, samen. Twee dingen die we vandaag echt goed wegzetten: je WHY en je namenlijst. Daar bouw je de komende 60 dagen bovenop. Geen druk, gewoon één stap tegelijk.
-
-JE WHY — HET KOMPAS, NIET HET RAPPORT:
-Je WHY is geen samenvatting van wie je nu bent. Het is het ANKER van waar je naartoe wilt — en wáárom. Op moeilijke dagen (en die komen) lees je 'm terug en denkt: "oh ja, daarvoor doe ik dit". Zonder WHY ben je een netwerker zonder reden. Met WHY ben je iemand die met richting werkt.
-
-EEN STERKE WHY HERKEN JE AAN:
-• Je voelt 'm in je lichaam als je 'm hardop zegt — niet alleen in je hoofd
-• Het is concreet ("zodat ik bij mijn kinderen kan zijn als ze thuiskomen") niet vaag ("zodat ik vrijheid heb")
-• Het bevat een PIJN (waar je weg van wilt) én een VISION (waar je heen wilt)
-• Je kunt 'm in 3 zinnen aan 3 verschillende mensen vertellen en het raakt allemaal
-
-De ELEVA Mentor stelt je een paar zachte vragen, jij antwoordt eerlijk, daarna heb je een WHY die past. Hardop praten in voicememo mag prima.
+    watJeLeert: `Te gek dat je hier bent! 🎉 Je onboarding zit erop, dus je WHY staat al — en de eerste 5 namen ook. Mooi werk. Vandaag bouwen we daar één laag bovenop. Geen drukke dag — een rustige fundament-dag. Twee taken, daarna ben je klaar voor morgen.
 
 JE NAMENLIJST — JE VOORRAADKAST:
 Hoe voller je voorraadkast, hoe makkelijker je elke dag iets nieuws kunt 'koken'. De import van je telefooncontacten legt direct 100-500 namen voor je neer (we ontdubbelen automatisch). Dat is geen verkooplijst, dat is een uitgangspunt.
@@ -104,18 +74,13 @@ Niemand filteren — alles op de lijst.
 JIJ LAAT ZIEN, ZIJ BESLISSEN — DE GROOTSTE MENTAL SHIFT:
 Jouw taak is NIÉT overtuigen, NIÉT mensen "binnenpraten", NIÉT iemand laten kiezen voor wat jij wilt. Jouw taak = laten ZIEN wat het is. Zij beslissen wat ze ermee doen. Dat maakt je werk een flink stuk lichter dan veel mensen denken — en het maakt het ook respectvoller. Niemand voelt zich gemanipuleerd, jij voelt je geen verkoper, en de mensen die wel kiezen doen dat omdat het écht bij ze past.
 
+WAAROM JE SPONSOR INLICHTEN BELANGRIJK IS:
+Je sponsor is geen baas — die is je rugdekking. Een kort "ik ben gestart"-berichtje is genoeg. Vanaf nu kijkt 'ie in ELEVA mee, ziet je voortgang, en springt bij waar nodig. Eén berichtje vandaag = vele momenten van support de komende weken.
+
 VEELGEMAAKTE FOUTEN OP DAG 1:
-✗ WHY te perfect willen formuleren — eerste versie is goed genoeg, evolueer 'm later.
 ✗ Namenlijst meteen filteren ("die zou nooit..."): NIVEA komt morgen, voor nu = alles erop.
 ✗ Direct mensen DM'en omdat je "wilt scoren" — vandaag is fundament, niet acquisitie.
 ✗ Sponsor niet inlichten — je rugdekking begint nu.
-
-WAT JE TODAY DOET, IN VOLGORDE:
-1. Open ELEVA Mentor → klik op "Mijn WHY" → laat de coach je 5 vragen stellen.
-2. Voltooi je WHY (10-15 min, hardop praten mag).
-3. Open Namenlijst → importeer je telefooncontacten → kijk wat er staat (geen filter, niets weggooien).
-4. Stuur je sponsor 1 kort bericht: "Ik ben gestart 🚀". Geen lang verhaal nodig.
-5. Klaar voor vandaag. Morgen begint het werk pas echt.
 
 OVERWELDIGD VOELEN IS NORMAAL: je leert iets nieuws, je stapt uit comfort. Eerst onhandig, dan vaardig — geldt voor iedereen hetzelfde. Sponsor staat naast je, ELEVA Mentor ook. Niet alleen.`,
     waaromWerktDit: {

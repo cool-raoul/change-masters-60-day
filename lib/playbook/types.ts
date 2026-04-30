@@ -37,6 +37,12 @@ export type ControllableTaak = {
    */
   filmSlug?: string;
   /**
+   * Als true: deze taak vereist een telefoon om uit te voeren (bijv.
+   * telefoon-contacten exporteren). De vandaag-flow toont op desktop
+   * een vriendelijke "Open op je telefoon"-waarschuwing met sla-over-knop.
+   */
+  vereistMobiel?: boolean;
+  /**
    * Optie B — INLINE ACTIE: schrijf/voer iets direct in de tile in
    * (geen routenavigatie nodig). De waarde wordt opgeslagen onder een
    * stabiele slug in de `eigen_zinnen`-tabel zodat de member 'm later

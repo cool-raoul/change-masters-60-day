@@ -38,6 +38,10 @@ export default async function VandaagPagina() {
     .eq("id", user.id)
     .maybeSingle();
 
+  // NB: middleware vangt onboarding-niet-klaar al af — die redirect
+  // automatisch naar /mijn-why of /onboarding. Hier hoeft geen extra
+  // check, anders krijg je dubbele redirects.
+
   const dag = berekenDag((profile as any)?.run_startdatum ?? null);
 
   // Buiten dag 1-21 → terug naar dashboard (weekritme-modus)
