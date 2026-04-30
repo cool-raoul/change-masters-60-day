@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 interface Props {
   prospectNaam: string;
@@ -296,10 +297,40 @@ const BUSINESS_STAPPEN: StapConfig[] = [
 ];
 
 export function DriewegGesprekInklapbaar({ prospectNaam, prospectSituatie, sponsorNaam }: Props) {
-  const [open, setOpen] = useState(false);
+  const searchParams = useSearchParams();
+  const startMetActie = searchParams.get("actie") === "drieweg";
+  const [open, setOpen] = useState(startMetActie);
+  const [pulseren, setPulseren] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Bij komst vanuit dashboard met ?actie=drieweg: scroll de balk in
+  // beeld + laat 'm 4 seconden pulseren zodat de member onmiddellijk
+  // weet 'hier moet ik klikken'.
+  useEffect(() => {
+    if (!startMetActie) return;
+    const t = window.setTimeout(() => {
+      containerRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      setPulseren(true);
+    }, 200);
+    const tStop = window.setTimeout(() => setPulseren(false), 4500);
+    return () => {
+      window.clearTimeout(t);
+      window.clearTimeout(tStop);
+    };
+  }, [startMetActie]);
 
   return (
-    <div className="card">
+    <div
+      ref={containerRef}
+      className={`card transition-all ${
+        pulseren
+          ? "ring-2 ring-cm-gold/70 animate-pulse shadow-lg shadow-cm-gold/20"
+          : ""
+      }`}
+    >
       <button
         onClick={() => setOpen((v) => !v)}
         className="w-full flex items-center justify-between text-left"

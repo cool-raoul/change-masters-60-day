@@ -3,7 +3,9 @@ import { differenceInDays, format } from "date-fns";
 import { nl, enUS, fr, es, de, pt } from "date-fns/locale";
 import Link from "next/link";
 import { DagelijkseStat, Herinnering, WhyProfile } from "@/lib/supabase/types";
-import { DagStatForm } from "@/components/dashboard/DagStatForm";
+// DagStatForm verwijderd van dashboard — handmatig stats invullen
+// hoort op /statistieken (en wordt straks automatisch gevuld door
+// pipeline-veranderingen).
 import { PlaybookDagTile } from "@/components/playbook/PlaybookDagTile";
 import { TesterToolbar } from "@/components/tester/TesterToolbar";
 import { DAGEN } from "@/lib/playbook/dagen";
@@ -270,25 +272,34 @@ export default async function DashboardPagina() {
       )}
 
       {/* Auto-trigger 3-weg — prospects in pipeline-fase 'one_pager' of
-          'presentatie' wachten op een 3-weg-gesprek. Tegel verschijnt
-          alleen als er échte kandidaten zijn, anders rendert 'ie niets. */}
+          'presentatie' wachten op een 3-weg-gesprek. Inklapbare details/
+          summary zodat het op het dashboard niet gelijk veel ruimte
+          inneemt. Klik op een naam → naar prospect-kaart, waar de
+          3-weg-balk pulseert (zie /namenlijst/[id]/page).
+          Geen kandidaten = tegel verbergt automatisch. */}
       {Array.isArray(klaarVoorDrieweg) && klaarVoorDrieweg.length > 0 && (
-        <div className="card border-l-4 border-cm-gold/60 space-y-3">
-          <div className="flex items-baseline justify-between gap-3 flex-wrap">
-            <div>
+        <details className="card border-l-4 border-cm-gold/60 group">
+          <summary className="flex items-center justify-between gap-3 cursor-pointer list-none">
+            <div className="flex-1 min-w-0">
               <h3 className="text-cm-gold font-semibold flex items-center gap-2">
-                🤝 Klaar voor een 3-weg-gesprek
+                🤝 Wie is klaar voor een 3-weg gesprek?
               </h3>
               <p className="text-cm-white opacity-60 text-xs mt-1">
-                Deze prospects hebben de info gezien. Tijd om je sponsor erbij
-                te halen — open de prospect en klik "💬 3-weg gesprek scripts".
+                {klaarVoorDrieweg.length} prospect
+                {klaarVoorDrieweg.length === 1 ? "" : "s"} — open om te zien wie
               </p>
             </div>
-            <span className="text-cm-white text-xs opacity-60 whitespace-nowrap">
-              {klaarVoorDrieweg.length} klaar
+            <span className="text-cm-gold text-xs transition-transform group-open:rotate-180 flex-shrink-0">
+              ▼
             </span>
-          </div>
-          <div className="space-y-2">
+          </summary>
+          <div className="mt-3 pt-3 border-t border-cm-border space-y-2">
+            <p className="text-cm-white opacity-60 text-xs">
+              Klik op een prospect — op zijn kaart pulseert de 3-weg-balk om
+              je naar de juiste plek te brengen. Eenmaal het 3-weg-gesprek
+              gehad? Verplaats hem in de pipeline (bv. naar "Shopper", "Member"
+              of "Not yet") — dan verdwijnt hij hier automatisch.
+            </p>
             {(klaarVoorDrieweg as Array<{
               id: string;
               volledige_naam: string;
@@ -296,7 +307,7 @@ export default async function DashboardPagina() {
             }>).map((p) => (
               <Link
                 key={p.id}
-                href={`/namenlijst/${p.id}`}
+                href={`/namenlijst/${p.id}?actie=drieweg`}
                 className="flex items-center justify-between gap-3 bg-cm-surface-2 hover:bg-cm-surface-3 rounded-lg px-3 py-2.5 transition-colors"
               >
                 <div className="flex-1 min-w-0">
@@ -315,7 +326,7 @@ export default async function DashboardPagina() {
               </Link>
             ))}
           </div>
-        </div>
+        </details>
       )}
 
       {/* Leider banner */}
@@ -337,68 +348,14 @@ export default async function DashboardPagina() {
       {/* Playbook-preview banner verplaatst naar /instellingen,
           dezelfde plek als de onboarding-preview. */}
 
-      {/* Snelle acties */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <Link href="/namenlijst/nieuw" className="card text-center py-4 hover:border-cm-gold-dim transition-colors group">
-          <div className="text-2xl mb-1">➕</div>
-          <span className="text-cm-white text-sm group-hover:text-cm-gold transition-colors">{v("namenlijst.nieuw", taal)}</span>
-        </Link>
-        <Link href="/coach" className="card text-center py-4 hover:border-cm-gold-dim transition-colors group">
-          <div className="text-2xl mb-1">🤖</div>
-          <span className="text-cm-white text-sm group-hover:text-cm-gold transition-colors">{v("dashboard.coach_raadplegen", taal)}</span>
-        </Link>
-        <Link href="/scripts" className="card text-center py-4 hover:border-cm-gold-dim transition-colors group">
-          <div className="text-2xl mb-1">📋</div>
-          <span className="text-cm-white text-sm group-hover:text-cm-gold transition-colors">{v("dashboard.scripts_bekijken", taal)}</span>
-        </Link>
-        <Link href="/statistieken" className="card text-center py-4 hover:border-cm-gold-dim transition-colors group">
-          <div className="text-2xl mb-1">📊</div>
-          <span className="text-cm-white text-sm group-hover:text-cm-gold transition-colors">{v("nav.statistieken", taal)}</span>
-        </Link>
-      </div>
+      {/* Dashboard-cleanup: snelle acties (Scripts/Statistieken/Mentor/
+          Nieuw) zaten dubbel met het hoofdmenu en zijn weggehaald. De
+          'Vandaag bijhouden'-stat-form en de pipeline-grid zijn ook weg —
+          die data hoort op /statistieken (zit daar al), en wordt straks
+          automatisch gevuld door pipeline-veranderingen ipv handmatig
+          tellen op het dashboard. */}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Dagelijkse stats + pipeline */}
-        <div className="lg:col-span-2 space-y-4">
-          <div className="card">
-            <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider mb-4">
-              {v("dashboard.vandaag", taal)}
-            </h2>
-            <DagStatForm userId={user.id} bestaandeStats={stats} datum={vandaagStr} />
-          </div>
-
-          {/* Pipeline overzicht */}
-          <div className="card">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
-                {v("dashboard.pipeline", taal)}
-              </h2>
-              <Link href="/namenlijst" className="text-cm-gold text-sm hover:text-cm-gold-light">
-                {v("dashboard.bekijk_alles", taal)} →
-              </Link>
-            </div>
-            <div className="grid grid-cols-4 gap-2">
-              {[
-                { fase: "prospect", labelKey: "fase.prospect" },
-                { fase: "uitgenodigd", labelKey: "fase.uitgenodigd" },
-                { fase: "one_pager", labelKey: "fase.one_pager" },
-                { fase: "presentatie", labelKey: "fase.presentatie" },
-                { fase: "followup", labelKey: "fase.followup" },
-                { fase: "not_yet", labelKey: "fase.not_yet" },
-                { fase: "shopper", labelKey: "fase.shopper" },
-                { fase: "member", labelKey: "fase.member" },
-              ].map(({ fase: f, labelKey }) => (
-                <div key={f} className="bg-cm-surface-2 rounded-lg p-2 text-center">
-                  <div className={`text-xl font-bold ${faseKleuren[f]}`}>{faseCounts[f] || 0}</div>
-                  <div className="text-xs text-cm-white mt-0.5">{v(labelKey, taal)}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Rechter kolom */}
-        <div className="space-y-4">
+      <div className="space-y-4">
           {/* WHY kaart — ingeklapt (details/summary), user klapt uit om te lezen */}
           {why?.why_samenvatting && (
             <details className="card border-gold-subtle group">
@@ -483,8 +440,6 @@ export default async function DashboardPagina() {
               </div>
             )}
           </div>
-
-        </div>
       </div>
 
       {/* Instellingen — compacte status-regel. Eén bron van waarheid (/instellingen). */}

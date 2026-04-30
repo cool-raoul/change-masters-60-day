@@ -418,6 +418,9 @@ export function PlaybookDagTile({
           aria-label="Dag-secties"
           className="flex gap-1 border-b border-cm-border"
         >
+          {/* NIET-actieve tab pulseert subtiel om aan te geven 'hier zit
+              ook content'. User-feedback: anders vergeten members om de
+              andere tab te lezen / af te vinken. */}
           <button
             role="tab"
             aria-selected={actieveTab === "doen"}
@@ -425,7 +428,7 @@ export function PlaybookDagTile({
             className={`px-3 py-2 text-sm font-medium transition-colors border-b-2 -mb-px ${
               actieveTab === "doen"
                 ? "border-cm-gold text-cm-gold"
-                : "border-transparent text-cm-white opacity-60 hover:opacity-100"
+                : "border-transparent text-cm-white opacity-60 hover:opacity-100 animate-pulse"
             }`}
           >
             ✅ Doen
@@ -437,7 +440,7 @@ export function PlaybookDagTile({
             className={`px-3 py-2 text-sm font-medium transition-colors border-b-2 -mb-px ${
               actieveTab === "leren"
                 ? "border-cm-gold text-cm-gold"
-                : "border-transparent text-cm-white opacity-60 hover:opacity-100"
+                : "border-transparent text-cm-white opacity-60 hover:opacity-100 animate-pulse"
             }`}
           >
             📚 Leren

@@ -8,7 +8,10 @@ import Link from "next/link";
 // als nette in-app pagina zodat je 'm kan delen via een ELEVA-link.
 // ============================================================
 
-export const dynamic = "force-static";
+// AppShell (parent layout) doet per-request user-auth — we mogen deze
+// pagina dus NIET force-static maken, dat loopt in conflict met de
+// session-cookie en geeft een login-loop.
+export const dynamic = "force-dynamic";
 
 type Feature = {
   emoji: string;

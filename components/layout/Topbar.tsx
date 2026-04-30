@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { differenceInDays } from "date-fns";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useTaal } from "@/lib/i18n/TaalContext";
 
 const RUN_START = new Date("2026-04-12");
@@ -11,11 +12,34 @@ const RUN_START = new Date("2026-04-12");
 export function Topbar({ gebruikersnaam }: { gebruikersnaam: string }) {
   const [aantalHerinneringen, setAantalHerinneringen] = useState(0);
   const [isPremium, setIsPremium] = useState(false);
+  const [profielMenuOpen, setProfielMenuOpen] = useState(false);
+  const profielMenuRef = useRef<HTMLDivElement>(null);
   const dag = Math.max(1, Math.min(60, differenceInDays(new Date(), RUN_START) + 1));
   const fase = dag <= 20 ? 1 : dag <= 40 ? 2 : 3;
   const { v } = useTaal();
+  const router = useRouter();
 
   const supabase = createClient();
+
+  // Klik buiten profiel-menu = sluiten
+  useEffect(() => {
+    if (!profielMenuOpen) return;
+    function buitenKlik(e: MouseEvent) {
+      if (
+        profielMenuRef.current &&
+        !profielMenuRef.current.contains(e.target as Node)
+      ) {
+        setProfielMenuOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", buitenKlik);
+    return () => document.removeEventListener("mousedown", buitenKlik);
+  }, [profielMenuOpen]);
+
+  async function logUit() {
+    await supabase.auth.signOut();
+    router.push("/login");
+  }
 
   useEffect(() => {
     async function laadHerinneringen() {
@@ -102,14 +126,14 @@ export function Topbar({ gebruikersnaam }: { gebruikersnaam: string }) {
           </Link>
         )}
 
-        <button
-          onClick={() => window.dispatchEvent(new CustomEvent("rondleiding:open"))}
+        <Link
+          href="/over-eleva"
           className="p-2 text-cm-white hover:text-cm-gold transition-colors"
-          title="Rondleiding door ELEVA"
-          aria-label="Rondleiding openen"
+          title="Over ELEVA — alle features uitgelegd"
+          aria-label="Over ELEVA"
         >
-          <span className="text-lg">❓</span>
-        </button>
+          <span className="text-lg">💡</span>
+        </Link>
 
         <Link
           href="/herinneringen"
@@ -123,18 +147,79 @@ export function Topbar({ gebruikersnaam }: { gebruikersnaam: string }) {
           )}
         </Link>
 
-        <div className="flex items-center gap-2">
-          <div className={`relative w-8 h-8 rounded-full bg-cm-surface-2 border flex items-center justify-center ${
-            isPremium ? "border-cm-gold ring-2 ring-cm-gold/30" : "border-cm-border"
-          }`}>
-            <span className="text-cm-gold text-sm font-semibold">
-              {gebruikersnaam.charAt(0).toUpperCase()}
+        {/* Profiel-dropdown: voorletter + naam, klik = open menu met
+            Instellingen / Over ELEVA / Uitloggen. */}
+        <div ref={profielMenuRef} className="relative">
+          <button
+            type="button"
+            onClick={() => setProfielMenuOpen((o) => !o)}
+            className="flex items-center gap-2 hover:opacity-90 transition-opacity"
+            aria-haspopup="menu"
+            aria-expanded={profielMenuOpen}
+          >
+            <div
+              className={`relative w-8 h-8 rounded-full bg-cm-surface-2 border flex items-center justify-center ${
+                isPremium
+                  ? "border-cm-gold ring-2 ring-cm-gold/30"
+                  : "border-cm-border"
+              }`}
+            >
+              <span className="text-cm-gold text-sm font-semibold">
+                {gebruikersnaam.charAt(0).toUpperCase()}
+              </span>
+              {isPremium && (
+                <span
+                  className="absolute -top-1 -right-1 text-[10px]"
+                  title="Premium"
+                >
+                  ⭐
+                </span>
+              )}
+            </div>
+            <span className="text-cm-white text-sm hidden md:block">
+              {gebruikersnaam}
             </span>
-            {isPremium && (
-              <span className="absolute -top-1 -right-1 text-[10px]" title="Premium">⭐</span>
-            )}
-          </div>
-          <span className="text-cm-white text-sm hidden md:block">{gebruikersnaam}</span>
+          </button>
+
+          {profielMenuOpen && (
+            <div
+              role="menu"
+              className="absolute right-0 top-full mt-2 w-56 rounded-xl bg-cm-surface border border-cm-border shadow-2xl py-1 z-50"
+            >
+              <div className="px-4 py-2 border-b border-cm-border">
+                <p className="text-cm-white text-sm font-medium truncate">
+                  {gebruikersnaam}
+                </p>
+              </div>
+              <Link
+                href="/instellingen"
+                role="menuitem"
+                onClick={() => setProfielMenuOpen(false)}
+                className="flex items-center gap-3 px-4 py-2.5 text-sm text-cm-white hover:bg-cm-surface-2 transition-colors"
+              >
+                <span>⚙️</span> Instellingen
+              </Link>
+              <Link
+                href="/over-eleva"
+                role="menuitem"
+                onClick={() => setProfielMenuOpen(false)}
+                className="flex items-center gap-3 px-4 py-2.5 text-sm text-cm-white hover:bg-cm-surface-2 transition-colors"
+              >
+                <span>💡</span> Over ELEVA
+              </Link>
+              <button
+                type="button"
+                role="menuitem"
+                onClick={() => {
+                  setProfielMenuOpen(false);
+                  logUit();
+                }}
+                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:bg-cm-surface-2 hover:text-red-300 transition-colors text-left border-t border-cm-border mt-1"
+              >
+                <span>🚪</span> Uitloggen
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>
