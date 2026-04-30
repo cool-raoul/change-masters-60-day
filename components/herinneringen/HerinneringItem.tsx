@@ -50,6 +50,13 @@ export function HerinneringItem({ herinnering, toonProspectLink = true }: Props)
   const heeftBeschrijving = !!(herinnering.beschrijving && herinnering.beschrijving.trim());
   const isLang = heeftBeschrijving && herinnering.beschrijving!.length > 60;
 
+  // Daily-task-herinneringen (gemaakt door HerinnerLaterKnop) hebben een
+  // herkenbare titel-prefix. Voor die herinneringen maken we de hele
+  // tegel klikbaar naar /vandaag — anders ben je vastgekluisterd.
+  const isDailyTaskHerinnering =
+    herinnering.titel.startsWith("📋 Pak je daily tasks") &&
+    !herinnering.prospect_id;
+
   const kleur = isVerlopen
     ? "border-l-red-500 bg-red-500/5"
     : isVandaag
@@ -144,6 +151,16 @@ export function HerinneringItem({ herinnering, toonProspectLink = true }: Props)
               className="text-cm-gold text-xs mt-1 ml-6 hover:text-cm-gold-light transition-colors inline-flex items-center gap-1"
             >
               👤 {herinnering.prospect.volledige_naam} →
+            </Link>
+          )}
+
+          {!bewerken && isDailyTaskHerinnering && (
+            <Link
+              href="/vandaag"
+              onClick={(e) => e.stopPropagation()}
+              className="text-cm-gold text-xs mt-1 ml-6 hover:text-cm-gold-light transition-colors inline-flex items-center gap-1 font-semibold"
+            >
+              📋 Open je dag-flow →
             </Link>
           )}
 

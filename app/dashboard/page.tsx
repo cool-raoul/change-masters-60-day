@@ -290,7 +290,11 @@ export default async function DashboardPagina() {
           daar z'n ding, en wordt pas bij dashboard-bezoek doorgestuurd
           naar /vandaag (zo niet onderbreken halverwege een actie). */}
       {huidigeDagData && (
-        <AutoNaarVandaag dagNummer={dag} redirectActief={true} />
+        <AutoNaarVandaag
+          dagNummer={dag}
+          redirectActief={true}
+          altijdRedirect={isTester || isFounder}
+        />
       )}
 
       {/* Prominente CTA naar vandaag-flow — handig voor wanneer je
