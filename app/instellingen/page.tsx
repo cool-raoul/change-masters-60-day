@@ -82,6 +82,26 @@ export default async function InstellingenPagina() {
           </Link>
         </div>
       )}
+
+      {/* Playbook-editor — alleen voor founders */}
+      {magFilmsBeheren && (
+        <div className="card space-y-3 border-gold-subtle">
+          <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
+            ✍️ 21-daags Playbook bewerken
+          </h2>
+          <p className="text-cm-white text-sm opacity-60">
+            Pas zelf de teksten aan van het 21-daagse playbook (titel,
+            teaching, fase-doel, "waarom dit werkt"). Wijzigingen zijn
+            ONMIDDELLIJK live voor alle members — geen developer nodig.
+          </p>
+          <Link
+            href="/instellingen/playbook"
+            className="btn-secondary text-sm inline-block"
+          >
+            Bewerk playbook-teksten →
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

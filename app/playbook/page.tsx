@@ -38,9 +38,20 @@ export default async function PlaybookDagPagina({
     redirect("/login");
   }
 
-  const dagData = DAGEN.find((d) => d.nummer === dagParam);
+  let dagData = DAGEN.find((d) => d.nummer === dagParam);
   if (!dagData) {
     redirect("/dashboard");
+  }
+
+  // Override toepassen — founders kunnen via /instellingen/playbook
+  // teksten aanpassen zonder code-deploy. Werkt in zowel preview als
+  // live mode (zo ziet de founder zijn aanpassingen meteen terug).
+  {
+    const { haalOverrides, pasOverrideToe } = await import(
+      "@/lib/playbook/overrides"
+    );
+    const overrideMap = await haalOverrides(supabase as any, [dagParam]);
+    dagData = pasOverrideToe(dagData, overrideMap.get(dagParam) ?? null);
   }
 
   // In preview-modus: voltooidIds altijd leeg (zien hoe het er voor

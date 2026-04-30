@@ -66,9 +66,18 @@ export default async function DashboardPagina() {
 
   // Huidige dag-data uit het 21-daagse playbook (alleen relevant voor
   // dag 1-21 — daarna draait de gebruiker op weekritme).
-  const huidigeDagData = dag <= 21
+  let huidigeDagData = dag <= 21
     ? DAGEN.find((d) => d.nummer === dag) ?? null
     : null;
+  // Override toepassen — founders kunnen via /instellingen/playbook
+  // teksten aanpassen zonder code-deploy.
+  if (huidigeDagData) {
+    const { haalOverrides, pasOverrideToe } = await import(
+      "@/lib/playbook/overrides"
+    );
+    const overrideMap = await haalOverrides(supabase as any, [dag]);
+    huidigeDagData = pasOverrideToe(huidigeDagData, overrideMap.get(dag) ?? null);
+  }
   const huidigeDagVoltooidIds = huidigeDagData
     ? huidigeDagData.vandaagDoen
         .filter((t) => voltooidSet.has(`${dag}|${t.id}`))
