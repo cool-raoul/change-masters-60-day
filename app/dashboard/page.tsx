@@ -7,8 +7,8 @@ import { DagelijkseStat, Herinnering, WhyProfile } from "@/lib/supabase/types";
 // hoort op /statistieken (en wordt straks automatisch gevuld door
 // pipeline-veranderingen).
 import { PlaybookDagTile } from "@/components/playbook/PlaybookDagTile";
-import { DailyFocusModal } from "@/components/playbook/DailyFocusModal";
 import { TesterToolbar } from "@/components/tester/TesterToolbar";
+import { AutoNaarVandaag } from "@/components/dashboard/AutoNaarVandaag";
 import { DAGEN } from "@/lib/playbook/dagen";
 import { haalOverrides, pasOverrideToe } from "@/lib/playbook/overrides";
 import { getServerTaal, v } from "@/lib/i18n/server";
@@ -298,17 +298,44 @@ export default async function DashboardPagina() {
         </div>
       )}
 
-      {/* Daily-focus modal — opent bij eerste bezoek van de dag met
-          alleen de essentie (titel + checklist + 'Aan de slag'-knop)
-          om overweldiging te voorkomen. Sluiten = vandaag niet meer
-          tonen (per localStorage flag). */}
+      {/* Auto-redirect bij eerste bezoek per dag → /vandaag (guided
+          flow). Daarna niet meer; dashboard wordt dan de hoofdpagina.
+          Testers zijn uitgesloten — die springen tussen dagen en willen
+          niet steeds gerouteerd worden. */}
       {huidigeDagData && (
-        <DailyFocusModal
-          key={`focus-${dag}`}
-          dag={huidigeDagData}
-          voltooidAantal={huidigeDagVoltooidIds.length}
+        <AutoNaarVandaag
+          dagNummer={dag}
+          redirectActief={!isTester}
         />
       )}
+
+      {/* Prominente CTA naar vandaag-flow — handig voor wanneer je
+          via de browser-knop terugkomt op dashboard maar nog niet alle
+          taken hebt gedaan. Verbergt automatisch als alles voltooid. */}
+      {huidigeDagData &&
+        huidigeDagVoltooidIds.length < huidigeDagData.vandaagDoen.length && (
+          <Link
+            href="/vandaag"
+            className="block rounded-xl bg-gradient-to-br from-cm-gold/20 to-cm-gold/5 border-2 border-cm-gold/40 px-5 py-4 hover:border-cm-gold transition-colors"
+          >
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <div>
+                <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
+                  📋 Vandaag is dag {dag}
+                </p>
+                <p className="text-cm-white text-base font-display font-semibold mt-0.5">
+                  {huidigeDagData.titel}
+                </p>
+                <p className="text-cm-white opacity-70 text-xs mt-1">
+                  {huidigeDagVoltooidIds.length} van{" "}
+                  {huidigeDagData.vandaagDoen.length} stappen klaar — pak 'm
+                  stap voor stap →
+                </p>
+              </div>
+              <span className="text-cm-gold font-bold text-lg">→</span>
+            </div>
+          </Link>
+        )}
 
       {/* Streak + mijlpaal-vieringen. Compact, alleen zichtbaar bij
           relevante getallen (geen lege tegels). */}
@@ -364,18 +391,44 @@ export default async function DashboardPagina() {
         <TesterToolbar huidigeDag={dag} />
       )}
 
-      {/* Vandaag is dag X — playbook-tegel met checklist + films.
-          key={dag} forceert een remount bij dag-wissel (bv. via tester-
-          toolbar) zodat actueleTekst-state mee-resync't met de nieuwe
-          dag-prop ipv blijft hangen op de oude waarden. */}
+      {/* Compacte afvinklijst voor de dag — als referentie naast de
+          guided flow op /vandaag. Volledige tegel klapt in als alles
+          voltooid is (anders neemt 'ie veel ruimte op het dashboard). */}
       {huidigeDagData && (
-        <PlaybookDagTile
-          key={`dag-${dag}`}
-          dag={huidigeDagData}
-          initialVoltooidIds={huidigeDagVoltooidIds}
-          initialZinnen={huidigeInitialZinnen}
-          isFounder={isFounder}
-        />
+        <details
+          open={
+            huidigeDagVoltooidIds.length < huidigeDagData.vandaagDoen.length
+          }
+          className="card group"
+        >
+          <summary className="flex items-center justify-between gap-3 cursor-pointer list-none">
+            <div className="flex-1 min-w-0">
+              <h3 className="text-cm-white font-semibold text-sm uppercase tracking-wider">
+                ✅ Vandaag — afvinklijst
+              </h3>
+              <p className="text-cm-white opacity-60 text-xs mt-0.5">
+                {huidigeDagVoltooidIds.length} van{" "}
+                {huidigeDagData.vandaagDoen.length} klaar
+                {huidigeDagVoltooidIds.length ===
+                huidigeDagData.vandaagDoen.length
+                  ? " — top, je hebt 'm! 🎉"
+                  : ""}
+              </p>
+            </div>
+            <span className="text-cm-gold text-xs transition-transform group-open:rotate-180 flex-shrink-0">
+              ▼
+            </span>
+          </summary>
+          <div className="mt-4 pt-4 border-t border-cm-border">
+            <PlaybookDagTile
+              key={`dag-${dag}`}
+              dag={huidigeDagData}
+              initialVoltooidIds={huidigeDagVoltooidIds}
+              initialZinnen={huidigeInitialZinnen}
+              isFounder={isFounder}
+            />
+          </div>
+        </details>
       )}
 
       {/* Auto-trigger 3-weg — prospects in pipeline-fase 'one_pager' of
