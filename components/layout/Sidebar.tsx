@@ -122,6 +122,12 @@ export function Sidebar({ isLeider = false }: { isLeider?: boolean }) {
           >
             <span>🎙️</span> Spraak-commando's
           </Link>
+          <Link
+            href="/over-eleva"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
+          >
+            <span>💡</span> Over ELEVA
+          </Link>
           <button
             onClick={() => {
               setMobielmenuOpen(false);
