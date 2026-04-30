@@ -5,16 +5,24 @@ import { createClient } from "@/lib/supabase/server";
 // POST /api/playbook/override
 //
 // Body: { dagNummer: 1-21, titel?, watJeLeert?, faseDoel?,
-//         waaromWerktDitTekst?, waaromWerktDitBron? }
+//         waaromWerktDitTekst?, waaromWerktDitBron?, reset?: boolean }
 //
-// Founder-only. Slaat per dag een override op die het hardcoded
-// dagen.ts overrijdt. Lege strings worden NULL → fallback naar de
-// standaardtekst.
+// PARTIAL update: alleen velden die in de body staan worden gewijzigd.
+// Velden die NIET in de body staan behouden hun bestaande waarde in
+// de DB. Lege string ("") in de body betekent: zet veld terug op NULL
+// (= valt terug op de standaardtekst uit dagen.ts).
 //
-// Tweede mode: { dagNummer, reset: true } verwijdert de hele
-// override-rij voor deze dag (handig om alles in 1 klik terug te
-// zetten naar standaard).
+// Reset-mode: { dagNummer, reset: true } verwijdert de hele override-
+// rij voor deze dag in 1 klik.
 // ============================================================
+
+const VELDEN_MAP: Record<string, string> = {
+  titel: "titel",
+  watJeLeert: "wat_je_leert",
+  faseDoel: "fase_doel",
+  waaromWerktDitTekst: "waarom_werkt_dit_tekst",
+  waaromWerktDitBron: "waarom_werkt_dit_bron",
+};
 
 export async function POST(req: NextRequest) {
   try {
@@ -64,29 +72,41 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true, reset: true });
     }
 
+    // Partial update: alleen velden die in de body staan worden gewijzigd.
+    // Lees eerst de bestaande rij zodat we ongewijzigde velden kunnen
+    // behouden (anders zou de upsert ze op NULL zetten).
+    const { data: bestaand } = await supabase
+      .from("playbook_overrides")
+      .select(
+        "titel, wat_je_leert, fase_doel, waarom_werkt_dit_tekst, waarom_werkt_dit_bron",
+      )
+      .eq("dag_nummer", dagNummer)
+      .maybeSingle();
+
     const trim = (v: unknown) =>
       typeof v === "string" && v.trim().length > 0 ? v.trim() : null;
 
-    const payload = {
+    const huidig = (bestaand ?? {}) as Record<string, string | null>;
+
+    const payload: Record<string, unknown> = {
       dag_nummer: dagNummer,
-      titel: trim(body.titel),
-      wat_je_leert: trim(body.watJeLeert),
-      fase_doel: trim(body.faseDoel),
-      waarom_werkt_dit_tekst: trim(body.waaromWerktDitTekst),
-      waarom_werkt_dit_bron: trim(body.waaromWerktDitBron),
       updated_by: user.id,
     };
+    for (const [bodyKey, dbKey] of Object.entries(VELDEN_MAP)) {
+      if (Object.prototype.hasOwnProperty.call(body, bodyKey)) {
+        // Veld zit in de body → trim & overschrijf
+        payload[dbKey] = trim(body[bodyKey]);
+      } else {
+        // Veld zit NIET in de body → behoud bestaande waarde
+        payload[dbKey] = huidig[dbKey] ?? null;
+      }
+    }
 
-    // Als ALLE velden leeg zijn: weg met de rij — dat is hetzelfde
-    // als reset, en houdt de tabel schoon.
-    const ietsGevuld =
-      payload.titel ||
-      payload.wat_je_leert ||
-      payload.fase_doel ||
-      payload.waarom_werkt_dit_tekst ||
-      payload.waarom_werkt_dit_bron;
-
-    if (!ietsGevuld) {
+    // Als ALLE velden NULL zijn na merge: weg met de rij — schoon.
+    const allesLeeg = Object.values(VELDEN_MAP).every(
+      (k) => !payload[k],
+    );
+    if (allesLeeg) {
       const { error: delErr } = await supabase
         .from("playbook_overrides")
         .delete()

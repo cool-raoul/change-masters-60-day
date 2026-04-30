@@ -41,7 +41,15 @@ type Props = {
    * eerder geschreven zin terugziet.
    */
   initialZinnen?: Record<string, string>;
+  /**
+   * Als true: toon ✏️-knoppen naast de teaching-velden zodat de
+   * founder ter plaatse de tekst kan aanpassen. Server bepaalt dit op
+   * basis van profile.role === 'founder'.
+   */
+  isFounder?: boolean;
 };
+
+type BewerktVeld = "titel" | "watJeLeert" | "faseDoel" | "waarom" | null;
 
 type Tab = "leren" | "doen";
 
@@ -51,6 +59,7 @@ export function PlaybookDagTile({
   preview = false,
   toonDagFilm = true,
   initialZinnen = {},
+  isFounder = false,
 }: Props) {
   const [voltooidIds, setVoltooidIds] = useState<Set<string>>(
     new Set(initialVoltooidIds),
@@ -69,6 +78,21 @@ export function PlaybookDagTile({
   const [actieveTab, setActieveTab] = useState<Tab>("doen");
   const [teachingUitgeklapt, setTeachingUitgeklapt] = useState(false);
 
+  // Founder-edit state — de tile houdt lokaal de actuele tekst bij zodat
+  // direct na opslaan de aanpassing in beeld is zonder te wachten op een
+  // page-refresh.
+  const [actueleTekst, setActueleTekst] = useState({
+    titel: dag.titel,
+    watJeLeert: dag.watJeLeert,
+    faseDoel: dag.faseDoel,
+    waaromTekst: dag.waaromWerktDit?.tekst ?? "",
+    waaromBron: dag.waaromWerktDit?.bron ?? "",
+  });
+  const [bewerktVeld, setBewerktVeld] = useState<BewerktVeld>(null);
+  const [bewerkBuffer, setBewerkBuffer] = useState("");
+  const [bewerkBronBuffer, setBewerkBronBuffer] = useState("");
+  const [bewerkBezig, setBewerkBezig] = useState(false);
+
   const totaal = dag.vandaagDoen.length;
   const aantalVoltooid = dag.vandaagDoen.filter((t) => voltooidIds.has(t.id))
     .length;
@@ -78,13 +102,13 @@ export function PlaybookDagTile({
   // Pakt de eerste ~280 tekens van de teaching voor de collapsed-preview.
   // Geen woord afhakken: zoek dichtstbijzijnde spatie.
   const teachingPreview = (() => {
-    const tekst = dag.watJeLeert.trim();
+    const tekst = actueleTekst.watJeLeert.trim();
     if (tekst.length <= 280) return tekst;
     const knip = tekst.slice(0, 280);
     const laatsteSpatie = knip.lastIndexOf(" ");
     return (laatsteSpatie > 200 ? knip.slice(0, laatsteSpatie) : knip) + "…";
   })();
-  const teachingHeeftMeer = dag.watJeLeert.trim().length > 280;
+  const teachingHeeftMeer = actueleTekst.watJeLeert.trim().length > 280;
 
   async function toggleAfvink(taakId: string, nieuwVoltooid: boolean) {
     if (preview) {
@@ -209,6 +233,79 @@ export function PlaybookDagTile({
     }
   }
 
+  // ============================================================
+  // FOUNDER-EDIT — inline tekst bewerken op de tile zelf.
+  // Geen aparte editor-pagina nodig.
+  // ============================================================
+
+  function startBewerken(veld: BewerktVeld) {
+    if (!veld) return;
+    setBewerktVeld(veld);
+    if (veld === "titel") setBewerkBuffer(actueleTekst.titel);
+    else if (veld === "watJeLeert") {
+      setBewerkBuffer(actueleTekst.watJeLeert);
+      setTeachingUitgeklapt(true); // Volledige tekst tijdens bewerken
+    } else if (veld === "faseDoel") setBewerkBuffer(actueleTekst.faseDoel);
+    else if (veld === "waarom") {
+      setBewerkBuffer(actueleTekst.waaromTekst);
+      setBewerkBronBuffer(actueleTekst.waaromBron);
+    }
+  }
+
+  function annuleerBewerken() {
+    setBewerktVeld(null);
+    setBewerkBuffer("");
+    setBewerkBronBuffer("");
+  }
+
+  async function bewaarBewerken() {
+    if (!bewerktVeld) return;
+    setBewerkBezig(true);
+    try {
+      // Body opbouwen: alleen het ene veld dat we updaten
+      const body: Record<string, unknown> = { dagNummer: dag.nummer };
+      const nieuweWaardes = { ...actueleTekst };
+      if (bewerktVeld === "titel") {
+        body.titel = bewerkBuffer;
+        nieuweWaardes.titel = bewerkBuffer.trim() || dag.titel;
+      } else if (bewerktVeld === "watJeLeert") {
+        body.watJeLeert = bewerkBuffer;
+        nieuweWaardes.watJeLeert = bewerkBuffer.trim() || dag.watJeLeert;
+      } else if (bewerktVeld === "faseDoel") {
+        body.faseDoel = bewerkBuffer;
+        nieuweWaardes.faseDoel = bewerkBuffer.trim() || dag.faseDoel;
+      } else if (bewerktVeld === "waarom") {
+        body.waaromWerktDitTekst = bewerkBuffer;
+        body.waaromWerktDitBron = bewerkBronBuffer;
+        nieuweWaardes.waaromTekst =
+          bewerkBuffer.trim() || (dag.waaromWerktDit?.tekst ?? "");
+        nieuweWaardes.waaromBron =
+          bewerkBronBuffer.trim() || (dag.waaromWerktDit?.bron ?? "");
+      }
+
+      const res = await fetch("/api/playbook/override", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        toast.error(data.error || "Opslaan mislukt");
+        return;
+      }
+      // Lokale state updaten zodat UI direct aanpassingen toont
+      setActueleTekst(nieuweWaardes);
+      setBewerktVeld(null);
+      setBewerkBuffer("");
+      setBewerkBronBuffer("");
+      toast.success("Live voor alle members");
+    } catch {
+      toast.error("Verbindingsfout");
+    } finally {
+      setBewerkBezig(false);
+    }
+  }
+
   /**
    * Bouwt een actieRoute met query-params zodat de destination-pagina
    * een TerugNaarPlaybookBanner kan tonen. Externe URL's (http/https)
@@ -274,13 +371,29 @@ export function PlaybookDagTile({
       <div className="card space-y-4">
         {/* Header — altijd zichtbaar, ongeacht actieve tab */}
         <div className="flex items-baseline justify-between gap-3 flex-wrap">
-          <div>
+          <div className="flex-1 min-w-0">
             <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
               Dag {dag.nummer} · Fase {dag.fase}
             </p>
-            <h2 className="text-cm-white font-display font-bold text-lg mt-0.5">
-              {dag.titel}
-            </h2>
+            {bewerktVeld === "titel" ? (
+              <FounderEdit
+                value={bewerkBuffer}
+                onChange={setBewerkBuffer}
+                onBewaar={bewaarBewerken}
+                onAnnuleer={annuleerBewerken}
+                bezig={bewerkBezig}
+                rows={1}
+              />
+            ) : (
+              <h2 className="text-cm-white font-display font-bold text-lg mt-0.5 inline-flex items-baseline gap-2 flex-wrap">
+                {actueleTekst.titel}
+                {isFounder && bewerktVeld === null && (
+                  <FounderEditKnop
+                    onClick={() => startBewerken("titel")}
+                  />
+                )}
+              </h2>
+            )}
           </div>
           <div className="text-right">
             <span className="text-cm-gold text-sm font-semibold">
@@ -565,11 +678,32 @@ export function PlaybookDagTile({
             )}
 
             {/* Fase-doel */}
-            <div className="border-t border-cm-border pt-3 text-xs text-cm-white opacity-70">
-              <p>
-                <strong className="text-cm-gold">🎯 Fase-doel:</strong>{" "}
-                {dag.faseDoel}
-              </p>
+            <div className="border-t border-cm-border pt-3 text-xs text-cm-white opacity-80">
+              {bewerktVeld === "faseDoel" ? (
+                <div>
+                  <p className="text-cm-gold font-semibold mb-1">
+                    🎯 Fase-doel
+                  </p>
+                  <FounderEdit
+                    value={bewerkBuffer}
+                    onChange={setBewerkBuffer}
+                    onBewaar={bewaarBewerken}
+                    onAnnuleer={annuleerBewerken}
+                    bezig={bewerkBezig}
+                    rows={3}
+                  />
+                </div>
+              ) : (
+                <p className="inline-flex items-baseline gap-2 flex-wrap">
+                  <strong className="text-cm-gold">🎯 Fase-doel:</strong>{" "}
+                  <span>{actueleTekst.faseDoel}</span>
+                  {isFounder && bewerktVeld === null && (
+                    <FounderEditKnop
+                      onClick={() => startBewerken("faseDoel")}
+                    />
+                  )}
+                </p>
+              )}
             </div>
           </div>
         )}
@@ -578,43 +712,179 @@ export function PlaybookDagTile({
         {actieveTab === "leren" && (
           <div className="space-y-4">
             <div>
-              <h3 className="text-cm-gold text-xs font-semibold uppercase tracking-wider mb-2">
-                📚 Wat je vandaag leert
-              </h3>
-              <div className="text-cm-white text-sm leading-relaxed whitespace-pre-line">
-                {teachingUitgeklapt || !teachingHeeftMeer
-                  ? dag.watJeLeert
-                  : teachingPreview}
+              <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
+                <h3 className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
+                  📚 Wat je vandaag leert
+                </h3>
+                {isFounder &&
+                  bewerktVeld === null &&
+                  bewerktVeld !== "watJeLeert" && (
+                    <FounderEditKnop
+                      onClick={() => startBewerken("watJeLeert")}
+                    />
+                  )}
               </div>
-              {teachingHeeftMeer && (
-                <button
-                  type="button"
-                  onClick={() => setTeachingUitgeklapt((v) => !v)}
-                  className="mt-2 text-xs text-cm-gold underline-offset-2 hover:underline"
-                >
-                  {teachingUitgeklapt
-                    ? "▴ Minder tonen"
-                    : "Lees verder ↓"}
-                </button>
+              {bewerktVeld === "watJeLeert" ? (
+                <FounderEdit
+                  value={bewerkBuffer}
+                  onChange={setBewerkBuffer}
+                  onBewaar={bewaarBewerken}
+                  onAnnuleer={annuleerBewerken}
+                  bezig={bewerkBezig}
+                  rows={20}
+                />
+              ) : (
+                <>
+                  <div className="text-cm-white text-sm leading-relaxed whitespace-pre-line">
+                    {teachingUitgeklapt || !teachingHeeftMeer
+                      ? actueleTekst.watJeLeert
+                      : teachingPreview}
+                  </div>
+                  {teachingHeeftMeer && (
+                    <button
+                      type="button"
+                      onClick={() => setTeachingUitgeklapt((v) => !v)}
+                      className="mt-2 text-xs text-cm-gold underline-offset-2 hover:underline"
+                    >
+                      {teachingUitgeklapt
+                        ? "▴ Minder tonen"
+                        : "Lees verder ↓"}
+                    </button>
+                  )}
+                </>
               )}
             </div>
 
             <div className="border-t border-cm-border pt-3 text-xs text-cm-white opacity-80">
-              <p className="italic leading-relaxed">
-                <strong className="text-cm-gold not-italic">
-                  🌱 Waarom dit werkt:
-                </strong>{" "}
-                {dag.waaromWerktDit.tekst}
-                {dag.waaromWerktDit.bron && (
-                  <span className="opacity-70">
-                    {" "}
-                    — {dag.waaromWerktDit.bron}
+              {bewerktVeld === "waarom" ? (
+                <div className="space-y-2">
+                  <p className="text-cm-gold font-semibold">
+                    🌱 Waarom dit werkt
+                  </p>
+                  <textarea
+                    value={bewerkBuffer}
+                    onChange={(e) => setBewerkBuffer(e.target.value)}
+                    className="textarea-cm w-full text-sm leading-relaxed"
+                    rows={3}
+                    placeholder="Quote / inzicht"
+                  />
+                  <input
+                    type="text"
+                    value={bewerkBronBuffer}
+                    onChange={(e) => setBewerkBronBuffer(e.target.value)}
+                    className="input-cm w-full text-sm"
+                    placeholder="Bron (bv. Eric Worre, Go Pro) — optioneel"
+                  />
+                  <div className="flex gap-2 flex-wrap">
+                    <button
+                      type="button"
+                      onClick={bewaarBewerken}
+                      disabled={bewerkBezig}
+                      className="btn-gold text-xs disabled:opacity-50"
+                    >
+                      {bewerkBezig ? "Bewaren..." : "Bewaar"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={annuleerBewerken}
+                      disabled={bewerkBezig}
+                      className="text-xs text-cm-white opacity-70 hover:opacity-100"
+                    >
+                      Annuleer
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <p className="italic leading-relaxed inline-flex items-baseline gap-2 flex-wrap">
+                  <strong className="text-cm-gold not-italic">
+                    🌱 Waarom dit werkt:
+                  </strong>{" "}
+                  <span>
+                    {actueleTekst.waaromTekst}
+                    {actueleTekst.waaromBron && (
+                      <span className="opacity-70">
+                        {" "}
+                        — {actueleTekst.waaromBron}
+                      </span>
+                    )}
                   </span>
-                )}
-              </p>
+                  {isFounder && bewerktVeld === null && (
+                    <FounderEditKnop
+                      onClick={() => startBewerken("waarom")}
+                    />
+                  )}
+                </p>
+              )}
             </div>
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+// ============================================================
+// Sub-componenten voor founder-inline-edit. Klein gehouden zodat de
+// hoofdcomponent niet 800 regels lang wordt.
+// ============================================================
+
+function FounderEditKnop({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      title="Bewerk deze tekst (alleen voor founders)"
+      className="text-xs text-cm-gold opacity-60 hover:opacity-100 transition-opacity"
+    >
+      ✏️
+    </button>
+  );
+}
+
+function FounderEdit({
+  value,
+  onChange,
+  onBewaar,
+  onAnnuleer,
+  bezig,
+  rows = 3,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  onBewaar: () => void;
+  onAnnuleer: () => void;
+  bezig: boolean;
+  rows?: number;
+}) {
+  return (
+    <div className="space-y-2">
+      <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="textarea-cm w-full text-sm leading-relaxed"
+        rows={rows}
+        autoFocus
+      />
+      <div className="flex items-center gap-2 flex-wrap">
+        <button
+          type="button"
+          onClick={onBewaar}
+          disabled={bezig}
+          className="btn-gold text-xs disabled:opacity-50"
+        >
+          {bezig ? "Bewaren..." : "Bewaar"}
+        </button>
+        <button
+          type="button"
+          onClick={onAnnuleer}
+          disabled={bezig}
+          className="text-xs text-cm-white opacity-70 hover:opacity-100"
+        >
+          Annuleer
+        </button>
+        <span className="text-xs text-cm-white opacity-40 ml-auto">
+          Direct live voor alle members
+        </span>
       </div>
     </div>
   );

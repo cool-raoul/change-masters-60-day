@@ -83,23 +83,22 @@ export default async function InstellingenPagina() {
         </div>
       )}
 
-      {/* Playbook-editor — alleen voor founders */}
+      {/* Playbook-editor — uitleg waar te bewerken (founder-only) */}
       {magFilmsBeheren && (
-        <div className="card space-y-3 border-gold-subtle">
+        <div className="card space-y-2 border-gold-subtle">
           <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
-            ✍️ 21-daags Playbook bewerken
+            ✍️ Playbook-teksten bewerken
           </h2>
-          <p className="text-cm-white text-sm opacity-60">
-            Pas zelf de teksten aan van het 21-daagse playbook (titel,
-            teaching, fase-doel, "waarom dit werkt"). Wijzigingen zijn
-            ONMIDDELLIJK live voor alle members — geen developer nodig.
+          <p className="text-cm-white text-sm opacity-70 leading-relaxed">
+            Open <strong>elke playbook-dag</strong> (via je dashboard of via{" "}
+            <code className="bg-cm-surface-2 px-1 rounded text-xs">
+              /playbook?dag=N
+            </code>
+            ) en je ziet naast elke tekst een{" "}
+            <span className="text-cm-gold">✏️</span>-knop. Klik, pas aan,
+            bewaar — direct live voor alle members. Geen aparte editor-pagina
+            meer nodig.
           </p>
-          <Link
-            href="/instellingen/playbook"
-            className="btn-secondary text-sm inline-block"
-          >
-            Bewerk playbook-teksten →
-          </Link>
         </div>
       )}
     </div>

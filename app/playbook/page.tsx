@@ -39,6 +39,16 @@ export default async function PlaybookDagPagina({
     redirect("/login");
   }
 
+  // Profile.role uitlezen — bepaalt of de tile inline-edit-knoppen
+  // krijgt voor de founder.
+  const { data: profielRow } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .maybeSingle();
+  const isFounder =
+    (profielRow as { role?: string | null } | null)?.role === "founder";
+
   let dagData = DAGEN.find((d) => d.nummer === dagParam);
   if (!dagData) {
     redirect("/dashboard");
@@ -107,6 +117,7 @@ export default async function PlaybookDagPagina({
         initialVoltooidIds={voltooidIds}
         initialZinnen={initialZinnen}
         preview={isPreview}
+        isFounder={isFounder}
       />
 
       {/* Navigatie tussen dagen — ALLEEN in preview-modus voor founder/leider.

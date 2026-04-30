@@ -47,6 +47,7 @@ export default async function DashboardPagina() {
 
   const dag = berekenDag((profile as any)?.run_startdatum ?? null);
   const isLeider = (profile as any)?.role === "leider";
+  const isFounder = (profile as any)?.role === "founder";
   const pushAan = (profile as any)?.dagelijkse_push_aan ?? false;
   const pushUur = (profile as any)?.dagelijkse_push_uur ?? 7;
 
@@ -216,6 +217,7 @@ export default async function DashboardPagina() {
           dag={huidigeDagData}
           initialVoltooidIds={huidigeDagVoltooidIds}
           initialZinnen={huidigeInitialZinnen}
+          isFounder={isFounder}
         />
       )}
 
