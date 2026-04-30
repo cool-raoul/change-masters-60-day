@@ -3,6 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
+import {
+  slaOpInReservoir,
+  activeerContacten,
+  haalNietGeactiveerd,
+  type ReservoirRow,
+} from "@/lib/contacten-reservoir";
 
 // ============================================================
 // VCardUploader (eigenlijk: ContactenImporteur) — inline-embed voor
@@ -112,9 +118,9 @@ export function VCardUploader({
   );
   const [hasContactsAPI, setHasContactsAPI] = useState(false);
 
-  // VCard preview state (route 3)
-  const [vcardVoorbeeld, setVcardVoorbeeld] = useState<Contact[]>([]);
-  const [vcardGeselecteerd, setVcardGeselecteerd] = useState<Set<number>>(
+  // VCard preview state (route 3) — toont nu reservoir-rows met id ipv index
+  const [vcardVoorbeeld, setVcardVoorbeeld] = useState<ReservoirRow[]>([]);
+  const [vcardGeselecteerd, setVcardGeselecteerd] = useState<Set<string>>(
     new Set(),
   );
   const [vcardZoek, setVcardZoek] = useState("");
@@ -135,9 +141,11 @@ export function VCardUploader({
   }, []);
 
   // ----------------------------------------------------------
-  // Centrale insert-functie (gebruikt door alle drie de routes)
+  // Direct-naar-prospects (route 2 zelf typen): ELEVA gaat ervan uit
+  // dat een handmatig getypte naam meteen actief op de namenlijst hoort.
+  // Geen reservoir-tussenstap — typen = doen.
   // ----------------------------------------------------------
-  async function insertContacten(contacten: Contact[]): Promise<boolean> {
+  async function insertDirectInProspects(contacten: Contact[]): Promise<boolean> {
     if (contacten.length === 0) {
       toast.error("Geen contacten om toe te voegen");
       return false;
@@ -176,26 +184,20 @@ export function VCardUploader({
         }));
 
       if (nieuw.length === 0) {
-        toast.success("Deze contacten stonden al op je namenlijst");
+        toast.success("Deze namen stonden al op je lijst");
         setKlaar(true);
         opVoltooid?.();
         return true;
       }
 
-      const batchGrootte = 100;
-      let toegevoegd = 0;
-      for (let i = 0; i < nieuw.length; i += batchGrootte) {
-        const batch = nieuw.slice(i, i + batchGrootte);
-        const { error } = await supabase.from("prospects").insert(batch);
-        if (error) {
-          toast.error(`Import mislukt bij ${toegevoegd}/${nieuw.length}`);
-          return false;
-        }
-        toegevoegd += batch.length;
+      const { error } = await supabase.from("prospects").insert(nieuw);
+      if (error) {
+        toast.error("Opslaan mislukt — probeer opnieuw");
+        return false;
       }
 
       toast.success(
-        `🎉 ${toegevoegd} nieuw${toegevoegd === 1 ? " contact" : "e contacten"} toegevoegd aan je namenlijst`,
+        `🎉 ${nieuw.length} naam${nieuw.length === 1 ? "" : "en"} op je lijst gezet`,
       );
       setKlaar(true);
       opVoltooid?.();
@@ -209,7 +211,62 @@ export function VCardUploader({
   }
 
   // ----------------------------------------------------------
-  // Route 1: Native Contact Picker
+  // Via-reservoir-flow (vCard + native picker): contacten worden eerst
+  // veilig in het ELEVA-geheugen geplaatst. Geactiveerden landen in
+  // prospects, niet-geactiveerden blijven op de achtergrond voor later.
+  // ----------------------------------------------------------
+  async function uploadEnActiveer(
+    contacten: Contact[],
+    bron: "vcard" | "contact-picker",
+  ): Promise<boolean> {
+    if (contacten.length === 0) {
+      toast.error("Geen contacten om toe te voegen");
+      return false;
+    }
+    setBezig(true);
+    try {
+      // Eerst alles in reservoir (silent — geactiveerd=false).
+      await slaOpInReservoir(
+        contacten.map((c) => ({ naam: c.naam, telefoon: c.telefoon })),
+        bron,
+      );
+      // Daarna meteen alles activeren — bij native picker heeft member
+      // al gekozen in de native UI, dus dubbele selectie zou raar voelen.
+      const niet = await haalNietGeactiveerd();
+      const matchSet = new Set(
+        contacten.map(
+          (c) => `${c.naam.toLowerCase().trim()}|${(c.telefoon ?? "").trim()}`,
+        ),
+      );
+      const teActiveren = niet.filter((r) =>
+        matchSet.has(
+          `${r.volledige_naam.toLowerCase().trim()}|${(r.telefoon ?? "").trim()}`,
+        ),
+      );
+      const result = await activeerContacten(teActiveren.map((r) => r.id));
+      const totaal = result.geactiveerd + result.alActief;
+      if (totaal === 0) {
+        toast.success("Deze contacten stonden al op je namenlijst");
+      } else {
+        toast.success(
+          `🎉 ${result.geactiveerd} naar je namenlijst${result.alActief > 0 ? ` (${result.alActief} stonden er al)` : ""}`,
+        );
+      }
+      setKlaar(true);
+      opVoltooid?.();
+      return true;
+    } catch (e) {
+      console.error(e);
+      toast.error("Opslaan mislukt — probeer opnieuw");
+      return false;
+    } finally {
+      setBezig(false);
+    }
+  }
+
+  // ----------------------------------------------------------
+  // Route 1: Native Contact Picker — naar reservoir + direct activeren
+  // (member heeft al gekozen in de native UI)
   // ----------------------------------------------------------
   async function pakUitTelefoon() {
     const api = pakContactsAPI();
@@ -230,7 +287,7 @@ export function VCardUploader({
         toast.error("Geen contacten geselecteerd");
         return;
       }
-      await insertContacten(contacten);
+      await uploadEnActiveer(contacten, "contact-picker");
     } catch {
       // User cancelled or denied permission — geen toast nodig
     }
@@ -255,7 +312,9 @@ export function VCardUploader({
       toast.error("Vul minimaal 1 naam in");
       return;
     }
-    await insertContacten(ingevuld);
+    // Zelf typen → direct in prospects, geen reservoir-tussenstap
+    // (als je bewust een naam intypt, wil je 'm gelijk op je lijst).
+    await insertDirectInProspects(ingevuld);
   }
 
   // ----------------------------------------------------------
@@ -318,81 +377,57 @@ export function VCardUploader({
         return;
       }
 
-      // Filter al-aanwezige contacten — alleen 'nieuwe' tonen voor
-      // selectie. Zo kun je later gewoon hetzelfde bestand opnieuw
-      // gebruiken om de volgende batch toe te voegen.
-      const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      let bestaandeKeys = new Set<string>();
-      if (user) {
-        const { data: bestaand } = await supabase
-          .from("prospects")
-          .select("volledige_naam, telefoon")
-          .eq("user_id", user.id);
-        bestaandeKeys = new Set(
-          (
-            (bestaand as Array<{ volledige_naam: string; telefoon: string | null }>) ||
-            []
-          ).map((p) => `${p.volledige_naam.toLowerCase()}|${p.telefoon ?? ""}`),
+      // Schrijf alles silent naar het ELEVA-geheugen (reservoir).
+      // Dubbelen worden door slaOpInReservoir gefilterd.
+      await slaOpInReservoir(contacten, "vcard");
+
+      // Haal alle niet-geactiveerde reservoir-rows op zodat we ze
+      // kunnen tonen voor selectie. Dat omvat zowel deze upload als
+      // eventueel eerdere uploads die nog niet zijn geactiveerd —
+      // mooi: niks raakt zoek.
+      const nietGeactiveerd = await haalNietGeactiveerd();
+
+      if (nietGeactiveerd.length === 0) {
+        toast.success(
+          "Al je contacten staan al actief op je namenlijst — niks nieuws toe te voegen",
         );
-      }
-
-      const nieuw = contacten.filter(
-        (c) =>
-          !bestaandeKeys.has(`${c.naam.toLowerCase()}|${c.telefoon ?? ""}`),
-      );
-
-      const alAanwezig = contacten.length - nieuw.length;
-
-      if (nieuw.length === 0) {
-        toast.success("Al je contacten staan al op je lijst — niks nieuws");
         return;
       }
 
-      setVcardVoorbeeld(nieuw);
+      setVcardVoorbeeld(nietGeactiveerd);
       setVcardGeselecteerd(new Set()); // begin met niets aangevinkt
       setVcardZoek("");
 
-      if (alAanwezig > 0) {
-        toast.success(
-          `${nieuw.length} nieuwe contacten gevonden (${alAanwezig} stonden er al). Vink aan wat je vandaag wilt toevoegen.`,
-        );
-      } else {
-        toast.success(
-          `${nieuw.length} contact${nieuw.length === 1 ? "" : "en"} gevonden. Vink aan wat je vandaag wilt toevoegen.`,
-        );
-      }
+      toast.success(
+        `📚 ${nietGeactiveerd.length} contact${nietGeactiveerd.length === 1 ? "" : "en"} in je ELEVA-geheugen — kies wie er nu op je actieve namenlijst komen`,
+      );
     } catch {
       toast.error("Kon het bestand niet lezen");
     }
   }
 
-  // Helper: gefilterde lijst op basis van zoekterm
-  const vcardZichtbaar = vcardVoorbeeld
-    .map((c, idx) => ({ contact: c, idx }))
-    .filter(({ contact }) => {
-      if (!vcardZoek.trim()) return true;
-      const q = vcardZoek.toLowerCase();
-      return (
-        contact.naam.toLowerCase().includes(q) ||
-        (contact.telefoon ?? "").includes(q)
-      );
-    });
+  // Helper: gefilterde lijst op basis van zoekterm. Werkt op ReservoirRows.
+  const vcardZichtbaar = vcardVoorbeeld.filter((row) => {
+    if (!vcardZoek.trim()) return true;
+    const q = vcardZoek.toLowerCase();
+    return (
+      row.volledige_naam.toLowerCase().includes(q) ||
+      (row.telefoon ?? "").includes(q)
+    );
+  });
 
   function selecteerEersteN(n: number) {
-    const nieuwSet = new Set<number>();
+    const nieuwSet = new Set<string>();
     for (let i = 0; i < Math.min(n, vcardVoorbeeld.length); i++) {
-      nieuwSet.add(i);
+      nieuwSet.add(vcardVoorbeeld[i].id);
     }
     setVcardGeselecteerd(nieuwSet);
   }
 
   function selecteerAlleZichtbaar() {
     const nieuwSet = new Set(vcardGeselecteerd);
-    for (const { idx } of vcardZichtbaar) {
-      nieuwSet.add(idx);
+    for (const row of vcardZichtbaar) {
+      nieuwSet.add(row.id);
     }
     setVcardGeselecteerd(nieuwSet);
   }
@@ -401,29 +436,44 @@ export function VCardUploader({
     setVcardGeselecteerd(new Set());
   }
 
-  function toggleSelectie(idx: number) {
+  function toggleSelectie(id: string) {
     setVcardGeselecteerd((prev) => {
       const n = new Set(prev);
-      if (n.has(idx)) n.delete(idx);
-      else n.add(idx);
+      if (n.has(id)) n.delete(id);
+      else n.add(id);
       return n;
     });
   }
 
   async function importeerGeselecteerd() {
-    const lijst = Array.from(vcardGeselecteerd)
-      .map((i) => vcardVoorbeeld[i])
-      .filter((c): c is Contact => !!c);
-    if (lijst.length === 0) {
+    const ids = Array.from(vcardGeselecteerd);
+    if (ids.length === 0) {
       toast.error("Vink eerst de namen aan die je wilt toevoegen");
       return;
     }
-    const ok = await insertContacten(lijst);
-    if (ok) {
-      // Reset preview — als 'ie wil meer toevoegen, kan opnieuw uploaden
+    setBezig(true);
+    try {
+      const result = await activeerContacten(ids);
+      const totaal = result.geactiveerd + result.alActief;
+      if (totaal === 0) {
+        toast.error("Activeren mislukt — probeer opnieuw");
+        return;
+      }
+      toast.success(
+        `🎉 ${result.geactiveerd} naar je namenlijst${result.alActief > 0 ? ` (${result.alActief} stonden er al)` : ""}`,
+      );
+      setKlaar(true);
+      opVoltooid?.();
+      // Reset preview — als 'ie wil meer activeren, opent 'ie de
+      // BulkImport / Reservoir-Kiezer op /namenlijst.
       setVcardVoorbeeld([]);
       setVcardGeselecteerd(new Set());
       setVcardZoek("");
+    } catch (e) {
+      console.error(e);
+      toast.error("Activeren mislukt — probeer opnieuw");
+    } finally {
+      setBezig(false);
     }
   }
 
@@ -628,14 +678,15 @@ export function VCardUploader({
             <div className="space-y-3 pt-3 border-t border-cm-border">
               <div className="space-y-1">
                 <p className="text-cm-white text-sm font-semibold">
-                  {vcardVoorbeeld.length} contact
-                  {vcardVoorbeeld.length === 1 ? "" : "en"} klaar om toe te voegen
+                  📚 {vcardVoorbeeld.length} contact
+                  {vcardVoorbeeld.length === 1 ? "" : "en"} in je ELEVA-geheugen
                 </p>
                 <p className="text-cm-white opacity-70 text-xs leading-relaxed">
                   Heb je veel namen? Geen zorgen — vink alleen aan wie je{" "}
-                  <strong>vandaag</strong> wilt toevoegen. Op een andere dag
-                  kun je dit bestand gewoon opnieuw uploaden, dan zie je de
-                  rest weer.
+                  <strong>vandaag</strong> op je actieve namenlijst wilt zetten.
+                  De rest blijft veilig in je ELEVA-geheugen — kom er later
+                  altijd voor terug via je namenlijst, geen opnieuw uploaden
+                  nodig.
                 </p>
               </div>
 
@@ -696,21 +747,21 @@ export function VCardUploader({
                   </p>
                 ) : (
                   <ul className="divide-y divide-cm-border">
-                    {vcardZichtbaar.map(({ contact, idx }) => (
-                      <li key={idx}>
+                    {vcardZichtbaar.map((row) => (
+                      <li key={row.id}>
                         <label className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-cm-gold/5 transition-colors">
                           <input
                             type="checkbox"
-                            checked={vcardGeselecteerd.has(idx)}
-                            onChange={() => toggleSelectie(idx)}
+                            checked={vcardGeselecteerd.has(row.id)}
+                            onChange={() => toggleSelectie(row.id)}
                             className="flex-shrink-0 accent-cm-gold w-4 h-4"
                           />
                           <span className="flex-1 text-sm text-cm-white truncate">
-                            {contact.naam}
+                            {row.volledige_naam}
                           </span>
-                          {contact.telefoon && (
+                          {row.telefoon && (
                             <span className="text-cm-white opacity-50 text-[10px] whitespace-nowrap">
-                              {contact.telefoon}
+                              {row.telefoon}
                             </span>
                           )}
                         </label>
