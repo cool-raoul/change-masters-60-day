@@ -34,6 +34,7 @@ export default async function DashboardPagina() {
     { data: herinneringen },
     { data: pipelineCounts },
     { data: dagVoltooiingen },
+    { data: klaarVoorDrieweg },
   ] = await Promise.all([
     supabase.from("profiles").select("run_startdatum, role, dagelijkse_push_aan, dagelijkse_push_uur").eq("id", user.id).maybeSingle(),
     supabase.from("why_profiles").select("*").eq("user_id", user.id).maybeSingle(),
@@ -43,6 +44,17 @@ export default async function DashboardPagina() {
     // Alle voltooide playbook-taken voor deze user — gebruikt voor de
     // 'Vandaag is dag X'-tegel én voor de admin-reminders van vorige dagen.
     supabase.from("dag_voltooiingen").select("dag_nummer, taak_id").eq("user_id", user.id),
+    // Auto-trigger 3-weg: prospects die klaar zijn voor een 3-weg-gesprek.
+    // Criteria: pipeline_fase 'presentatie' OF 'one_pager' (= test bekeken
+    // / ingevuld), niet gearchiveerd, gesorteerd op laatste-update.
+    supabase
+      .from("prospects")
+      .select("id, volledige_naam, pipeline_fase, updated_at")
+      .eq("user_id", user.id)
+      .eq("gearchiveerd", false)
+      .in("pipeline_fase", ["presentatie", "one_pager"])
+      .order("updated_at", { ascending: false })
+      .limit(5),
   ]);
 
   const dag = berekenDag((profile as any)?.run_startdatum ?? null);
@@ -246,6 +258,55 @@ export default async function DashboardPagina() {
           initialZinnen={huidigeInitialZinnen}
           isFounder={isFounder}
         />
+      )}
+
+      {/* Auto-trigger 3-weg — prospects in pipeline-fase 'one_pager' of
+          'presentatie' wachten op een 3-weg-gesprek. Tegel verschijnt
+          alleen als er échte kandidaten zijn, anders rendert 'ie niets. */}
+      {Array.isArray(klaarVoorDrieweg) && klaarVoorDrieweg.length > 0 && (
+        <div className="card border-l-4 border-cm-gold/60 space-y-3">
+          <div className="flex items-baseline justify-between gap-3 flex-wrap">
+            <div>
+              <h3 className="text-cm-gold font-semibold flex items-center gap-2">
+                🤝 Klaar voor een 3-weg-gesprek
+              </h3>
+              <p className="text-cm-white opacity-60 text-xs mt-1">
+                Deze prospects hebben de info gezien. Tijd om je sponsor erbij
+                te halen — open de prospect en klik "💬 3-weg gesprek scripts".
+              </p>
+            </div>
+            <span className="text-cm-white text-xs opacity-60 whitespace-nowrap">
+              {klaarVoorDrieweg.length} klaar
+            </span>
+          </div>
+          <div className="space-y-2">
+            {(klaarVoorDrieweg as Array<{
+              id: string;
+              volledige_naam: string;
+              pipeline_fase: string;
+            }>).map((p) => (
+              <Link
+                key={p.id}
+                href={`/namenlijst/${p.id}`}
+                className="flex items-center justify-between gap-3 bg-cm-surface-2 hover:bg-cm-surface-3 rounded-lg px-3 py-2.5 transition-colors"
+              >
+                <div className="flex-1 min-w-0">
+                  <p className="text-cm-white text-sm font-medium truncate">
+                    {p.volledige_naam}
+                  </p>
+                  <p className="text-cm-white text-xs opacity-50 capitalize">
+                    {p.pipeline_fase === "one_pager"
+                      ? "info bekeken"
+                      : "presentatie gehad"}
+                  </p>
+                </div>
+                <span className="text-cm-gold text-xs whitespace-nowrap">
+                  Start 3-weg →
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
       )}
 
       {/* Leider banner */}
