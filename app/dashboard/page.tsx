@@ -5,6 +5,7 @@ import Link from "next/link";
 import { DagelijkseStat, Herinnering, WhyProfile } from "@/lib/supabase/types";
 import { DagStatForm } from "@/components/dashboard/DagStatForm";
 import { PlaybookDagTile } from "@/components/playbook/PlaybookDagTile";
+import { TesterToolbar } from "@/components/tester/TesterToolbar";
 import { DAGEN } from "@/lib/playbook/dagen";
 import { haalOverrides, pasOverrideToe } from "@/lib/playbook/overrides";
 import { getServerTaal, v } from "@/lib/i18n/server";
@@ -36,7 +37,7 @@ export default async function DashboardPagina() {
     { data: dagVoltooiingen },
     { data: klaarVoorDrieweg },
   ] = await Promise.all([
-    supabase.from("profiles").select("run_startdatum, role, dagelijkse_push_aan, dagelijkse_push_uur").eq("id", user.id).maybeSingle(),
+    supabase.from("profiles").select("run_startdatum, role, is_tester, dagelijkse_push_aan, dagelijkse_push_uur").eq("id", user.id).maybeSingle(),
     supabase.from("why_profiles").select("*").eq("user_id", user.id).maybeSingle(),
     supabase.from("dagelijkse_stats").select("*").eq("user_id", user.id).eq("stat_datum", vandaagStr).maybeSingle(),
     supabase.from("herinneringen").select("*, prospect:prospects(id, volledige_naam)").eq("user_id", user.id).lte("vervaldatum", vandaagStr).eq("voltooid", false).order("vervaldatum", { ascending: true }).limit(5),
@@ -60,6 +61,7 @@ export default async function DashboardPagina() {
   const dag = berekenDag((profile as any)?.run_startdatum ?? null);
   const isLeider = (profile as any)?.role === "leider";
   const isFounder = (profile as any)?.role === "founder";
+  const isTester = (profile as any)?.is_tester === true;
   const pushAan = (profile as any)?.dagelijkse_push_aan ?? false;
   const pushUur = (profile as any)?.dagelijkse_push_uur ?? 7;
 
@@ -248,6 +250,13 @@ export default async function DashboardPagina() {
             ))}
           </div>
         </div>
+      )}
+
+      {/* Tester-toolbar — alleen voor pilot-testers + founders.
+          Verzet run_startdatum zodat je virtueel op een andere dag zit
+          en zo door alle 21 dagen kan klikken voor bug-rapporten. */}
+      {(isTester || isFounder) && dag <= 21 && (
+        <TesterToolbar huidigeDag={dag} />
       )}
 
       {/* Vandaag is dag X — playbook-tegel met checklist + films */}
