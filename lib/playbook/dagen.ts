@@ -328,6 +328,8 @@ NIET GELIJK PITCHEN — wat wel: reageer terug op hun content. Vraag iets. Bouw 
         label: "3 namen uit socials",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
       {
         id: "dag4-follow-1",
@@ -419,18 +421,24 @@ Vandaag stap je actief uit je comfortzone, en dat kriebelt — afwijzingsangst, 
         label: "5 uitnodigingen (nieuwe mensen of via follow-up)",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "5 mensen uit je lijst uitnodigen voor een kijkmoment. Open Namenlijst → klik op een prospect → kies 'Uitnodigen' of laat de Mentor er één voor je schrijven. Mix warm (mensen die je goed kent) met lauw (telefoon-contacten waar je weinig mee praat).",
       },
       {
         id: "dag5-followups-3",
         label: "3 follow-ups op mensen van dag 3-4",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "3 mensen die eerder een invite/info hebben gehad — vandaag een korte check-in. Open Namenlijst → kies prospect → 'Follow-up' of vraag de Mentor: 'Help me met een follow-up voor [naam]'. Niet 'heb je al beslist?' maar 'hoe gaat 't?'.",
       },
       {
         id: "dag5-social-3",
         label: "3 namen uit socials",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
       {
         id: "dag5-onboarding-bezwaar",
@@ -531,6 +539,8 @@ EXTRA — VANDAAG START JE MINDSET-ROUTINE:
         label: "5 uitnodigingen",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "5 mensen uit je lijst uitnodigen voor een kijkmoment. Open Namenlijst → klik op een prospect → kies 'Uitnodigen' of laat de Mentor er één voor je schrijven. Mix warm (mensen die je goed kent) met lauw (telefoon-contacten waar je weinig mee praat).",
       },
       {
         id: "dag6-followups-3",
@@ -545,6 +555,8 @@ EXTRA — VANDAAG START JE MINDSET-ROUTINE:
         label: "3 namen uit socials",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
       {
         id: "dag6-sponsor-tip",
@@ -636,12 +648,16 @@ Een prospect die NU geen ja zegt, kan over 3 maanden alsnog ja zeggen. Of over 1
         label: "5 uitnodigingen (iets rustiger, het is review-dag)",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "5 uitnodigingen vandaag — iets rustiger want het is review-dag. Mix warm + lauw zoals je gewend bent. Open Namenlijst → klik op prospect → 'Uitnodigen'.",
       },
       {
         id: "dag7-followups-3",
         label: "3 follow-ups",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "3 mensen die eerder een invite/info hebben gehad — vandaag een korte check-in. Open Namenlijst → kies prospect → 'Follow-up' of vraag de Mentor: 'Help me met een follow-up voor [naam]'. Niet 'heb je al beslist?' maar 'hoe gaat 't?'.",
       },
       {
         id: "dag7-sponsor-call",
@@ -716,12 +732,16 @@ DEZE REVIEW WORDT GEDEELD MET JE SPONSOR — niet om te beoordelen, om te onders
         label: "5 follow-ups",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "5 mensen die eerder gehoord hebben — vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
       },
       {
         id: "dag8-social-3",
         label: "3 namen uit socials",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
     ],
     faseDoel:
@@ -789,18 +809,24 @@ MIX WARM EN LAUW: 5 mensen die je goed kent + 5 met wie je 6+ maanden niet gespr
         label: "10 uitnodigingen",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "10 mensen uit je lijst uitnodigen voor een kijkmoment. Open Namenlijst → klik op een prospect → 'Uitnodigen', of vraag de Mentor: 'Schrijf een uitnodiging voor [naam]'. Mix warm + lauw, halverwege in 5-10 min als je scripts paraat hebt.",
       },
       {
         id: "dag9-followups-5",
         label: "5 follow-ups",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "5 mensen die eerder gehoord hebben — vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
       },
       {
         id: "dag9-social-3",
         label: "3 namen uit socials",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
       {
         id: "dag9-3weg-verdieping",
@@ -901,18 +927,24 @@ VANDAAG: lees de scripts in een prospect-kaart door, zodat je voor je eerstvolge
         label: "10 uitnodigingen",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "10 mensen uit je lijst uitnodigen voor een kijkmoment. Open Namenlijst → klik op een prospect → 'Uitnodigen', of vraag de Mentor: 'Schrijf een uitnodiging voor [naam]'. Mix warm + lauw, halverwege in 5-10 min als je scripts paraat hebt.",
       },
       {
         id: "dag10-followups-5",
         label: "5 follow-ups",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "5 mensen die eerder gehoord hebben — vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
       },
       {
         id: "dag10-social-3",
         label: "3 namen uit socials",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
     ],
     faseDoel:
@@ -979,18 +1011,24 @@ Doel deze week: minimaal 1 3-weg starten. Heb je 'm op dag 4 al gehad? Top, plan
         label: "10 uitnodigingen",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "10 mensen uit je lijst uitnodigen voor een kijkmoment. Open Namenlijst → klik op een prospect → 'Uitnodigen', of vraag de Mentor: 'Schrijf een uitnodiging voor [naam]'. Mix warm + lauw, halverwege in 5-10 min als je scripts paraat hebt.",
       },
       {
         id: "dag11-followups-5",
         label: "5 follow-ups",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "5 mensen die eerder gehoord hebben — vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
       },
       {
         id: "dag11-social-3",
         label: "3 namen uit socials",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
       {
         id: "dag11-lees-flow",
@@ -1081,18 +1119,24 @@ KIJK VANDAAG NAAR JE PIPELINE: hoeveel mensen op "Uitgenodigd"? Hoeveel op "One-
         label: "10 uitnodigingen",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "10 mensen uit je lijst uitnodigen voor een kijkmoment. Open Namenlijst → klik op een prospect → 'Uitnodigen', of vraag de Mentor: 'Schrijf een uitnodiging voor [naam]'. Mix warm + lauw, halverwege in 5-10 min als je scripts paraat hebt.",
       },
       {
         id: "dag12-followups-5",
         label: "5 follow-ups",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "5 mensen die eerder gehoord hebben — vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
       },
       {
         id: "dag12-social-3",
         label: "3 namen uit socials",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
       {
         id: "dag12-pivot-1",
@@ -1189,18 +1233,24 @@ EXTRA WAARDE: zeg nee tegen drammen, ja tegen warmte. Een Shopper die jou over e
         label: "10 uitnodigingen",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "10 mensen uit je lijst uitnodigen voor een kijkmoment. Open Namenlijst → klik op een prospect → 'Uitnodigen', of vraag de Mentor: 'Schrijf een uitnodiging voor [naam]'. Mix warm + lauw, halverwege in 5-10 min als je scripts paraat hebt.",
       },
       {
         id: "dag13-followups-5",
         label: "5 follow-ups",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "5 mensen die eerder gehoord hebben — vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
       },
       {
         id: "dag13-social-3",
         label: "3 namen uit socials",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
       {
         id: "dag13-form-1",
@@ -1310,18 +1360,24 @@ VANDAAG: kies 1 specifieke prospect, plan een 5-min check-in (DM of telefoon) en
         label: "Wekelijkse review invullen",
         verplicht: true,
         actieRoute: "/statistieken",
+        uitleg:
+          "5 minuten reflectie: wat ging goed, wat schuurde, waar focus ik volgende week op? Open /statistieken voor de review-vragenlijst. Je sponsor krijgt automatisch een korte samenvatting.",
       },
       {
         id: "dag14-invites-10",
         label: "10 uitnodigingen",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "10 mensen uit je lijst uitnodigen voor een kijkmoment. Open Namenlijst → klik op een prospect → 'Uitnodigen', of vraag de Mentor: 'Schrijf een uitnodiging voor [naam]'. Mix warm + lauw, halverwege in 5-10 min als je scripts paraat hebt.",
       },
       {
         id: "dag14-followups-5",
         label: "5 follow-ups",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "5 mensen die eerder gehoord hebben — vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
       },
       {
         id: "dag14-pipeline-check",
@@ -1416,12 +1472,16 @@ VAN HIER UIT IS HET KILOMETER-WERK. Geen nieuwe technieken meer, alleen oefenen 
         label: "10 nieuwe uitnodigingen",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "10 mensen uit je lijst uitnodigen voor een kijkmoment. Open Namenlijst → klik op een prospect → 'Uitnodigen', of vraag de Mentor: 'Schrijf een uitnodiging voor [naam]'. Mix warm + lauw, halverwege in 5-10 min als je scripts paraat hebt.",
       },
       {
         id: "dag15-social-3",
         label: "3 namen uit socials",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
     ],
     faseDoel:
@@ -1501,18 +1561,24 @@ Een nee NU is geen nee voor altijd. Iemand op "Not-yet" zetten is geen verlies. 
         label: "10 uitnodigingen",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "10 mensen uit je lijst uitnodigen voor een kijkmoment. Open Namenlijst → klik op een prospect → 'Uitnodigen', of vraag de Mentor: 'Schrijf een uitnodiging voor [naam]'. Mix warm + lauw, halverwege in 5-10 min als je scripts paraat hebt.",
       },
       {
         id: "dag16-followups-10",
         label: "10 follow-ups",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "10 follow-ups vandaag — het is follow-up-week, hier zit de oogst. Loop je pipeline door (Namenlijst → Pipeline) en stuur per persoon een passend bericht. Mentor helpt: 'Schrijf een follow-up voor [naam] die [status]'.",
       },
       {
         id: "dag16-social-3",
         label: "3 namen uit socials",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
       {
         id: "dag16-categoriseer",
@@ -1602,18 +1668,24 @@ VANDAAG — categoriseer je top-20:
         label: "10 uitnodigingen",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "10 mensen uit je lijst uitnodigen voor een kijkmoment. Open Namenlijst → klik op een prospect → 'Uitnodigen', of vraag de Mentor: 'Schrijf een uitnodiging voor [naam]'. Mix warm + lauw, halverwege in 5-10 min als je scripts paraat hebt.",
       },
       {
         id: "dag17-followups-10",
         label: "10 follow-ups",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "10 follow-ups vandaag — het is follow-up-week, hier zit de oogst. Loop je pipeline door (Namenlijst → Pipeline) en stuur per persoon een passend bericht. Mentor helpt: 'Schrijf een follow-up voor [naam] die [status]'.",
       },
       {
         id: "dag17-social-3",
         label: "3 namen uit socials",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
       {
         id: "dag17-closing",
@@ -1729,18 +1801,24 @@ VANDAAG: probeer Doel-Tijd-Termijn vandaag of morgen bij minstens 1 warme prospe
         label: "10 uitnodigingen",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "10 mensen uit je lijst uitnodigen voor een kijkmoment. Open Namenlijst → klik op een prospect → 'Uitnodigen', of vraag de Mentor: 'Schrijf een uitnodiging voor [naam]'. Mix warm + lauw, halverwege in 5-10 min als je scripts paraat hebt.",
       },
       {
         id: "dag18-followups-10",
         label: "10 follow-ups",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "10 follow-ups vandaag — het is follow-up-week, hier zit de oogst. Loop je pipeline door (Namenlijst → Pipeline) en stuur per persoon een passend bericht. Mentor helpt: 'Schrijf een follow-up voor [naam] die [status]'.",
       },
       {
         id: "dag18-social-3",
         label: "3 namen uit socials",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
       {
         id: "dag18-edification-zin",
@@ -1837,18 +1915,24 @@ Wat je vandaag doet: 5 minuten investeren in JOUW vaste zin. Schrijf 'm op, bewa
         label: "10 uitnodigingen",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "10 mensen uit je lijst uitnodigen voor een kijkmoment. Open Namenlijst → klik op een prospect → 'Uitnodigen', of vraag de Mentor: 'Schrijf een uitnodiging voor [naam]'. Mix warm + lauw, halverwege in 5-10 min als je scripts paraat hebt.",
       },
       {
         id: "dag19-followups-10",
         label: "10 follow-ups",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "10 follow-ups vandaag — het is follow-up-week, hier zit de oogst. Loop je pipeline door (Namenlijst → Pipeline) en stuur per persoon een passend bericht. Mentor helpt: 'Schrijf een follow-up voor [naam] die [status]'.",
       },
       {
         id: "dag19-social-3",
         label: "3 namen uit socials",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
       {
         id: "dag19-pipeline",
@@ -1942,18 +2026,24 @@ Statistieken zijn je leermeester, niet je rechter. Slechte cijfers betekenen nie
         label: "10 uitnodigingen",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "10 mensen uit je lijst uitnodigen voor een kijkmoment. Open Namenlijst → klik op een prospect → 'Uitnodigen', of vraag de Mentor: 'Schrijf een uitnodiging voor [naam]'. Mix warm + lauw, halverwege in 5-10 min als je scripts paraat hebt.",
       },
       {
         id: "dag20-followups-10",
         label: "10 follow-ups",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "10 follow-ups vandaag — het is follow-up-week, hier zit de oogst. Loop je pipeline door (Namenlijst → Pipeline) en stuur per persoon een passend bericht. Mentor helpt: 'Schrijf een follow-up voor [naam] die [status]'.",
       },
       {
         id: "dag20-social-3",
         label: "3 namen uit socials",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
       {
         id: "dag20-vraag-1",
