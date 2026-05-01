@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sendPushToUser } from "@/lib/push/sendPush";
+import { PROSPECT_FILM_BESCHRIJVINGEN } from "@/lib/films/embed";
 
 // ============================================================
 // POST /api/prospect-film/markeer
@@ -78,12 +80,14 @@ export async function POST(req: NextRequest) {
     };
 
     if (actie === "gestart") {
-      // Idempotent: alleen zetten als nog niet gezet.
+      // Idempotent: alleen zetten als nog niet gezet, plus push naar member
+      // alleen op de eerste-keer transitie.
       if (!v.gestart_op) {
         await admin
           .from("prospect_film_views")
           .update({ gestart_op: new Date().toISOString() })
           .eq("id", v.id);
+        await stuurFilmPush(admin, v, "gestart");
       }
       return NextResponse.json({ ok: true });
     }
@@ -211,4 +215,54 @@ async function triggerAfgekekenAutomatie(
     herinnering_type: "followup",
     voltooid: false,
   });
+
+  // Push naar member: 'film afgekeken'
+  const prospectNaam = (prospectRow as { volledige_naam: string }).volledige_naam;
+  await stuurFilmPush(admin, v, "afgekeken", prospectNaam);
+}
+
+// ============================================================
+// stuurFilmPush, push-notificatie naar member bij gestart of afgekeken.
+// Klik op melding leidt naar prospect-kaart waar de real-time
+// kijkpercentage-balk staat.
+// ============================================================
+async function stuurFilmPush(
+  admin: AdminClient,
+  v: { prospect_id: string; member_user_id: string; film_slug: string },
+  fase: "gestart" | "afgekeken",
+  prospectNaamOpt?: string,
+) {
+  let prospectNaam = prospectNaamOpt;
+  if (!prospectNaam) {
+    const { data: prospectRow } = await admin
+      .from("prospects")
+      .select("volledige_naam")
+      .eq("id", v.prospect_id)
+      .maybeSingle();
+    prospectNaam =
+      (prospectRow as { volledige_naam?: string } | null)?.volledige_naam ?? "Een prospect";
+  }
+
+  const filmTitel =
+    PROSPECT_FILM_BESCHRIJVINGEN[v.film_slug]?.suggestieTitel ?? v.film_slug;
+
+  const titel =
+    fase === "gestart"
+      ? `▶️ ${prospectNaam} kijkt nu je film`
+      : `🎬 ${prospectNaam} heeft je film afgekeken`;
+  const body =
+    fase === "gestart"
+      ? `Aan het kijken: "${filmTitel}". Klik om real-time mee te kijken hoe ver 'ie is.`
+      : `Klaar gekeken: "${filmTitel}". Tijd voor een follow-up. Klik om de prospect-kaart te openen.`;
+
+  try {
+    await sendPushToUser(v.member_user_id, {
+      title: titel,
+      body,
+      url: `/namenlijst/${v.prospect_id}`,
+      tag: `film-${fase}-${v.prospect_id}-${v.film_slug}`,
+    });
+  } catch (e) {
+    console.error("film-push fout:", e);
+  }
 }
