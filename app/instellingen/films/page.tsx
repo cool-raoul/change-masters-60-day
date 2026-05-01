@@ -1,7 +1,11 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { SLUG_BESCHRIJVINGEN, ONBOARDING_FILM_SLUGS } from "@/lib/films/embed";
+import {
+  SLUG_BESCHRIJVINGEN,
+  ONBOARDING_FILM_SLUGS,
+  WELKOMSTFILM_SLUG,
+} from "@/lib/films/embed";
 import { FilmRowEditor } from "./film-row-editor";
 
 // ============================================================
@@ -61,7 +65,11 @@ export default async function FilmsBeheerPage() {
 
   // Eventuele extra slugs die al in de DB staan (custom toegevoegde films)
   const dbSlugs = (films ?? []).map((f: any) => f.slug);
-  const bekendeSlugs = new Set<string>([...standaardSlots, ...dagFilmSlots]);
+  const bekendeSlugs = new Set<string>([
+    WELKOMSTFILM_SLUG,
+    ...standaardSlots,
+    ...dagFilmSlots,
+  ]);
   const extraSlugs = dbSlugs.filter((s) => !bekendeSlugs.has(s));
 
   return (
@@ -113,6 +121,32 @@ export default async function FilmsBeheerPage() {
               </li>
             </ul>
           </div>
+
+          {/* Welkomstfilm: pop-up bij eerste dashboard-bezoek + Topbar 🎬-knop */}
+          <section>
+            <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider mb-2">
+              🎬 Welkomstfilm
+            </h2>
+            <p className="text-cm-white opacity-60 text-xs mb-3 leading-relaxed">
+              Verschijnt automatisch als pop-up de eerste keer dat een nieuwe
+              member /dashboard opent. Daarna altijd terug op te roepen via
+              de 🎬-knop in de Topbar. Houd 'm kort (2-3 min): wie ben jij,
+              wat is ELEVA, hoe werkt het systeem, en "vertrouw het proces".
+            </p>
+            <div className="space-y-3">
+              <FilmRowEditor
+                slug={WELKOMSTFILM_SLUG}
+                plekBeschrijving={
+                  SLUG_BESCHRIJVINGEN[WELKOMSTFILM_SLUG]?.plek ?? WELKOMSTFILM_SLUG
+                }
+                suggestieTitel={
+                  SLUG_BESCHRIJVINGEN[WELKOMSTFILM_SLUG]?.suggestieTitel ?? ""
+                }
+                bestaande={(filmsMap.get(WELKOMSTFILM_SLUG) as any) ?? null}
+                userId={user.id}
+              />
+            </div>
+          </section>
 
           {/* Playbook-admin-slots, staan in dag 2/3/4 van het 21-daagse playbook */}
           <section>
