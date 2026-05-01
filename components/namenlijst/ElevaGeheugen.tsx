@@ -274,12 +274,16 @@ export function ElevaGeheugen() {
                               onChange={() => toggle(row.id)}
                               className="flex-shrink-0 accent-cm-gold w-4 h-4"
                             />
-                            <span className="flex-1 text-sm text-cm-white truncate">
+                            <span className="flex-1 text-sm text-cm-white break-words leading-snug">
                               {row.volledige_naam}
                             </span>
                             {row.telefoon && (
-                              <span className="text-cm-white opacity-50 text-[10px] whitespace-nowrap">
-                                {row.telefoon}
+                              <span
+                                className="text-cm-gold opacity-60 text-xs flex-shrink-0"
+                                title={row.telefoon}
+                                aria-label={`Heeft telefoonnummer: ${row.telefoon}`}
+                              >
+                                📞
                               </span>
                             )}
                           </label>
