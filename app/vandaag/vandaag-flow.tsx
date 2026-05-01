@@ -492,9 +492,28 @@ export function VandaagFlow({
               </div>
             )}
 
-            {/* Hoofd-actie-knoppen */}
+            {/* Hoofd-actie-knoppen.
+                Voor taken met INLINE-EMBED: de embed-component vinkt
+                zelf af (vCard-import succesvol, sponsor-bericht
+                verstuurd, namen-form bewaard, etc.). De "✓ Klaar"-knop
+                hier zou anders een lege actie afvinken — exact wat we
+                niet willen. Dus we tonen alleen "Sla over" + Vorige
+                voor embed-taken zolang ze nog niet voltooid zijn. */}
             <div className="space-y-3 pt-2">
-              {!voltooidIds.has(huidigeTaak.id) ? (
+              {voltooidIds.has(huidigeTaak.id) ? (
+                <button
+                  type="button"
+                  onClick={gaNaarVolgende}
+                  className="btn-gold w-full py-4 text-base font-bold"
+                >
+                  Door naar
+                  {taakIndex < totaal - 1 ? " volgende stap" : " afronding"} →
+                </button>
+              ) : huidigeTaak.inlineEmbed ? (
+                // Geen "✓ Klaar"-knop — embed bepaalt afvinken zelf.
+                // Alleen subtiele "Sla over" hieronder.
+                null
+              ) : (
                 <button
                   type="button"
                   onClick={() => {
@@ -505,15 +524,6 @@ export function VandaagFlow({
                   className="btn-gold w-full py-4 text-base font-bold disabled:opacity-50"
                 >
                   ✓ Klaar — door naar
-                  {taakIndex < totaal - 1 ? " volgende stap" : " afronding"} →
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={gaNaarVolgende}
-                  className="btn-gold w-full py-4 text-base font-bold"
-                >
-                  Door naar
                   {taakIndex < totaal - 1 ? " volgende stap" : " afronding"} →
                 </button>
               )}
@@ -533,7 +543,9 @@ export function VandaagFlow({
                     onClick={gaNaarVolgende}
                     className="text-cm-white opacity-60 hover:opacity-100 text-sm"
                   >
-                    Sla over →
+                    {huidigeTaak.inlineEmbed
+                      ? "Doe later, ga verder →"
+                      : "Sla over →"}
                   </button>
                 )}
               </div>

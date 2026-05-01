@@ -96,18 +96,19 @@ OVERWELDIGD VOELEN IS NORMAAL: je leert iets nieuws, je stapt uit comfort. Eerst
     vandaagDoen: [
       {
         id: "dag2-20-namen",
-        label: "Voeg 20 namen toe buiten je telefoon-contacten",
+        label: "Voeg 20 namen toe — uit je hoofd, of vanuit je ELEVA-geheugen",
         uitleg:
-          "Uit je hoofd, WhatsApp top-chats, oud-collega's, familie, sport, hobby's, ouders van vriendjes, buurt. Vul ze hieronder direct in — je hoeft niet weg te navigeren.",
+          "TWEE manieren, kies welke past:\n\n1️⃣ Uit je hoofd: vul hieronder direct namen in (familie, oud-collega's, sport, hobby, ouders bij school, buren). Geen filter — alles erop.\n\n2️⃣ Uit je ELEVA-geheugen: heb je gisteren je telefoon-contacten geüpload? Open Namenlijst → '📚 Mijn ELEVA-geheugen' en activeer er 20 in één klik. Géén opnieuw uploaden, je gewoon kiezen wie er vandaag actief mogen.\n\nBeide tellen, je mag mixen. Doel: 20 nieuwe namen op je actieve namenlijst.",
         verplicht: true,
         inlineEmbed: "namen-form",
         inlineEmbedDoel: 20,
       },
       {
         id: "dag2-onboarding-module",
-        label: "Lees de onboarding-module 'NIVEA'",
+        label: "Lees NIVEA — staat hierboven in de Les van vandaag",
+        uitleg:
+          "De volledige NIVEA-uitleg staat in de Les bovenaan deze pagina. Lees die rustig door en vink hier af zodra je 'm hebt gehad. Niet weer wegnavigeren — alles staat al in de flow.",
         verplicht: true,
-        actieRoute: "/onboarding",
       },
       {
         id: "dag2-kennismaak",
@@ -127,11 +128,10 @@ OVERWELDIGD VOELEN IS NORMAAL: je leert iets nieuws, je stapt uit comfort. Eerst
       },
       {
         id: "dag2-3weg-uitleg",
-        label: "Lees kort: '3-weg-gesprek principe' (3 min)",
+        label: "Lees: '3-weg-gesprek principe' — kort blokje hieronder",
         uitleg:
-          "Wat is een 3-weg en waarom werkt het? Korte uitleg in ELEVA. Je hoeft 'm nog niet te doen, je hoeft alleen even te weten dát je je contacten kunt koppelen aan je sponsor. Dat is de versneller in week 1.",
+          "Een 3-weg-gesprek is een gesprekje met drie mensen: jij, je prospect, en je sponsor. Sponsor brengt autoriteit (de 'expert'), jij koppelt (de 'verbinder'), prospect ziet twee mensen die samenwerken. Dit is dé versneller in week 1 — je hoeft niet alles zelf te weten of te kunnen. Je hoeft 'm nog niet te starten vandaag, alleen even weten dát het bestaat. Vink af zodra je deze uitleg hebt gelezen.",
         verplicht: true,
-        actieRoute: "/onboarding",
       },
       {
         id: "dag2-webshop",
@@ -232,6 +232,8 @@ Vandaag stuur je ook al 3 uitnodigingen — samen met je sponsor in een groepje 
       {
         id: "dag3-dagelijks-5",
         label: "5 namen in totaal vandaag (telefoon + socials + hoofd)",
+        uitleg:
+          "Kies waar je ze vandaan haalt: een paar uit je ELEVA-geheugen activeren (je opgeslagen telefoon-contacten), een paar zelf typen, een paar uit socials. Doe wat 't makkelijkst gaat.",
         verplicht: true,
         actieRoute: "/namenlijst",
       },
@@ -432,9 +434,10 @@ Vandaag stap je actief uit je comfortzone, en dat kriebelt — afwijzingsangst, 
       },
       {
         id: "dag5-onboarding-bezwaar",
-        label: "Lees de onboarding-module 'Bezwaren behandelen'",
+        label: "Lees 'Bezwaren behandelen' — staat in de Les van vandaag",
+        uitleg:
+          "De Feel-Felt-Found-uitleg staat volledig in de Les bovenaan deze pagina. Lees rustig door en vink hier af.",
         verplicht: true,
-        actieRoute: "/onboarding",
       },
       {
         id: "dag5-roleplay",
@@ -801,9 +804,9 @@ MIX WARM EN LAUW: 5 mensen die je goed kent + 5 met wie je 6+ maanden niet gespr
       },
       {
         id: "dag9-3weg-verdieping",
-        label: "Lees 3-weg verdieping: 5 stappen + edification-zinnen",
+        label: "Lees: 3-weg verdieping (5 stappen + edification)",
         uitleg:
-          "Het principe ken je al sinds dag 2. Vandaag de scripts: hoe kondig je je sponsor aan, hoe edifieer je 'm vooraf, wat doe je als prospect een vraag stelt aan jou ipv aan sponsor? Open een prospectkaart → '💬 3-weg gesprek scripts'.",
+          "De 5-stappen-uitleg + edification-zinnen voor je 3-weg-gesprek staan volledig in de Les bovenaan deze pagina. Lees rustig door en vink hier af. Op een prospect-kaart vind je later de scripts via '💬 3-weg gesprek scripts'.",
         verplicht: true,
         actieRoute: "/onboarding",
       },
@@ -991,9 +994,10 @@ Doel deze week: minimaal 1 3-weg starten. Heb je 'm op dag 4 al gehad? Top, plan
       },
       {
         id: "dag11-lees-flow",
-        label: "Lees module 'Pipeline-flow' in onboarding",
+        label: "Lees: Pipeline-flow — staat in de Les van vandaag",
+        uitleg:
+          "Hoe schuiven prospects van Prospect → Uitgenodigd → One-Pager → Presentatie → Follow-up → Member of Shopper. De volledige uitleg staat in de Les bovenaan deze pagina. Vink af zodra je 'm hebt gehad.",
         verplicht: true,
-        actieRoute: "/onboarding",
       },
     ],
     faseDoel:
