@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { differenceInDays } from "date-fns";
 import { DAGEN } from "@/lib/playbook/dagen";
 import { haalOverrides, pasOverrideToe } from "@/lib/playbook/overrides";
+import { berekenHuidigeDag } from "@/lib/playbook/bereken-dag";
 import { VandaagFlow } from "./vandaag-flow";
 
 // ============================================================
@@ -19,12 +19,6 @@ import { VandaagFlow } from "./vandaag-flow";
 
 export const dynamic = "force-dynamic";
 
-function berekenDag(runStartdatum: string | null): number {
-  const start = runStartdatum ? new Date(runStartdatum) : new Date();
-  const dagen = differenceInDays(new Date(), start) + 1;
-  return Math.max(1, dagen);
-}
-
 export default async function VandaagPagina() {
   const supabase = await createClient();
   const {
@@ -34,7 +28,7 @@ export default async function VandaagPagina() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("run_startdatum, full_name, role")
+    .select("run_startdatum, full_name, role, is_tester")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -42,7 +36,22 @@ export default async function VandaagPagina() {
   // automatisch naar /mijn-why of /onboarding. Hier hoeft geen extra
   // check, anders krijg je dubbele redirects.
 
-  const dag = berekenDag((profile as any)?.run_startdatum ?? null);
+  // ALLE voltooiingen ophalen (niet alleen voor één dag) zodat we de
+  // voortgang-gebaseerde dag-berekening kunnen doen: eerste dag waar
+  // niet alle verplichte taken voltooid zijn = de huidige dag.
+  const { data: alleVoltooiingen } = await supabase
+    .from("dag_voltooiingen")
+    .select("dag_nummer, taak_id")
+    .eq("user_id", user.id);
+
+  const isFounder = (profile as any)?.role === "founder";
+  const isTester = (profile as any)?.is_tester === true;
+
+  const dag = berekenHuidigeDag(
+    (alleVoltooiingen as Array<{ dag_nummer: number; taak_id: string }>) || [],
+    (profile as any)?.run_startdatum ?? null,
+    { isTester: isTester || isFounder },
+  );
 
   // Buiten dag 1-21 → terug naar dashboard (weekritme-modus)
   if (dag < 1 || dag > 21) {
@@ -57,15 +66,12 @@ export default async function VandaagPagina() {
   const overrideMap = await haalOverrides(supabase as any, [dag]);
   dagData = pasOverrideToe(dagData, overrideMap.get(dag) ?? null);
 
-  // Voltooide taken voor deze dag
-  const { data: voltooiingen } = await supabase
-    .from("dag_voltooiingen")
-    .select("taak_id")
-    .eq("user_id", user.id)
-    .eq("dag_nummer", dag);
+  // Voltooide taken voor deze dag (uit het al opgehaalde set filteren)
   const voltooidIds = (
-    (voltooiingen as Array<{ taak_id: string }>) || []
-  ).map((v) => v.taak_id);
+    (alleVoltooiingen as Array<{ dag_nummer: number; taak_id: string }>) || []
+  )
+    .filter((v) => v.dag_nummer === dag)
+    .map((v) => v.taak_id);
 
   // Eerder geschreven inline-zinnen (edification etc.)
   const slugs = dagData.vandaagDoen
@@ -88,11 +94,7 @@ export default async function VandaagPagina() {
     ((profile as { full_name?: string | null } | null)?.full_name ?? "")
       .split(" ")[0] || user.email?.split("@")[0] || "";
 
-  // Founder-detectie zodat we een 'bewerk-deze-dag'-link kunnen tonen
-  // bovenaan de flow. Wijzigingen via /playbook?dag=N&preview=true zijn
-  // direct live voor alle members.
-  const isFounder =
-    (profile as { role?: string | null } | null)?.role === "founder";
+  // (isFounder is hierboven al gezet voor de dag-berekening)
 
   return (
     <VandaagFlow

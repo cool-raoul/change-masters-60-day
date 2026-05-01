@@ -11,16 +11,11 @@ import { AutoNaarVandaag } from "@/components/dashboard/AutoNaarVandaag";
 import { HerinnerLaterKnop } from "@/components/playbook/HerinnerLaterKnop";
 import { DAGEN } from "@/lib/playbook/dagen";
 import { haalOverrides, pasOverrideToe } from "@/lib/playbook/overrides";
+import { berekenHuidigeDag } from "@/lib/playbook/bereken-dag";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { Locale } from "date-fns";
 
 const DATE_LOCALES: Record<string, Locale> = { nl, en: enUS, fr, es, de, pt };
-
-function berekenDag(runStartdatum: string | null): number {
-  const start = runStartdatum ? new Date(runStartdatum) : new Date();
-  const dag = differenceInDays(new Date(), start) + 1;
-  return Math.max(1, Math.min(60, dag));
-}
 
 export default async function DashboardPagina() {
   const supabase = await createClient();
@@ -61,12 +56,21 @@ export default async function DashboardPagina() {
       .limit(5),
   ]);
 
-  const dag = berekenDag((profile as any)?.run_startdatum ?? null);
   const isLeider = (profile as any)?.role === "leider";
   const isFounder = (profile as any)?.role === "founder";
   const isTester = (profile as any)?.is_tester === true;
   const pushAan = (profile as any)?.dagelijkse_push_aan ?? false;
   const pushUur = (profile as any)?.dagelijkse_push_uur ?? 7;
+
+  // Huidige dag = voortgang-gebaseerd voor members (eerste niet-voltooide
+  // dag), kalender-gebaseerd voor testers/founders zodat de spring-toolbar
+  // blijft werken. Iemand die dag 16 doet en 4 dagen mist, opent ELEVA
+  // opnieuw en staat op dag 17, niet op dag 20.
+  const dag = berekenHuidigeDag(
+    (dagVoltooiingen as Array<{ dag_nummer: number; taak_id: string }>) || [],
+    (profile as any)?.run_startdatum ?? null,
+    { isTester: isTester || isFounder },
+  );
 
   const stats = vandaagStats as DagelijkseStat | null;
   const herinneringenLijst = (herinneringen as (Herinnering & { prospect: { id: string; volledige_naam: string } | null })[]) || [];
@@ -111,8 +115,9 @@ export default async function DashboardPagina() {
   }
 
   // Streak-berekening, hoeveel dagen op rij heeft de member iets
-  // afgevinkt? Telt vanaf vandaag terug. Géén stilte-dagen tussendoor.
-  // Voor motivatie-tegel "🔥 X dagen op rij".
+  // afgevinkt? Telt vanaf de dag VOOR de huidige terug (huidige is per
+  // definitie nog niet-voltooid in voortgang-modus). Géén stilte-dagen
+  // tussendoor. Voor motivatie-tegel "🔥 X dagen op rij".
   const voltooidPerDag = new Map<number, boolean>();
   for (const v of (dagVoltooiingen as Array<{
     dag_nummer: number;
@@ -121,10 +126,17 @@ export default async function DashboardPagina() {
     voltooidPerDag.set(v.dag_nummer, true);
   }
   let streak = 0;
-  for (let i = dag; i >= 1; i--) {
+  // Begin bij dag-1: dag zelf is nog onderweg (voortgang-modus) of
+  // mogelijk net begonnen (kalender-modus voor testers). De vorige
+  // dag is de eerste die volledig 'achter ons' ligt om mee te tellen.
+  for (let i = dag - 1; i >= 1; i--) {
     if (voltooidPerDag.has(i)) streak++;
     else break;
   }
+  // Plus 1 als de huidige dag óók al iets voltooid heeft (telt mee als
+  // 'bezig vandaag'). Dat geeft een fijner cijfer als iemand een dag
+  // halverwege is.
+  if (voltooidPerDag.has(dag)) streak++;
 
   // Mijlpaal-detectie: net vandaag dag 7 / 14 / 21 voltooid?
   // We checken of ALLE verplichte taken van die mijlpaal-dag gedaan zijn.
