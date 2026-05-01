@@ -126,6 +126,19 @@ export function Topbar({ gebruikersnaam }: { gebruikersnaam: string }) {
           </Link>
         )}
 
+        {/* Welkomstfilm: opent de modal die in AppShell zit. */}
+        <button
+          type="button"
+          onClick={() =>
+            window.dispatchEvent(new CustomEvent("open-welkomstfilm"))
+          }
+          className="p-2 text-cm-white hover:text-cm-gold transition-colors"
+          title="Bekijk welkomstfilm"
+          aria-label="Bekijk welkomstfilm"
+        >
+          <span className="text-lg">🎬</span>
+        </button>
+
         <Link
           href="/over-eleva"
           className="p-2 text-cm-white hover:text-cm-gold transition-colors"

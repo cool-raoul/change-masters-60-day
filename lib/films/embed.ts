@@ -97,10 +97,21 @@ export const ONBOARDING_FILM_SLUGS = {
 } as const;
 
 /**
+ * Slug voor de welkomstfilm. Verschijnt automatisch als pop-up bij
+ * eerste bezoek aan /dashboard, en is altijd terug op te roepen via
+ * '💡 Welkomstfilm'-knop in de Topbar.
+ */
+export const WELKOMSTFILM_SLUG = "intro-welkom";
+
+/**
  * Beschrijvende metadata voor de admin-UI bij het beheren van slots.
  * zo weet de founder waar elke film terechtkomt in de gebruikersflow.
  */
 export const SLUG_BESCHRIJVINGEN: Record<string, { plek: string; suggestieTitel: string }> = {
+  [WELKOMSTFILM_SLUG]: {
+    plek: "Welkomstfilm: pop-up bij eerste dashboard-bezoek + Topbar 💡-knop",
+    suggestieTitel: "Welkom bij ELEVA",
+  },
   [ONBOARDING_FILM_SLUGS.STAP_6_WEBSHOP]: {
     plek: "Playbook dag 2, Lifeplus webshop aanmaken",
     suggestieTitel: "Lifeplus webshop aanmaken",

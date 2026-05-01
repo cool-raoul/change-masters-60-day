@@ -9,6 +9,7 @@ import { Taal } from "@/lib/i18n/vertalingen";
 import { VoiceFab } from "@/components/voice/VoiceFab";
 import { Rondleiding } from "@/components/rondleiding/Rondleiding";
 import { TerugNaarPlaybookBanner } from "@/components/playbook/TerugNaarPlaybookBanner";
+import { WelkomstFilm } from "@/components/welkom/WelkomstFilm";
 
 export async function AppShell({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -46,6 +47,9 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
         </div>
         <VoiceFab />
         <Rondleiding />
+        {/* Welkomstfilm: auto-pop-up bij eerste bezoek (localStorage-flag),
+            altijd handmatig terug op te roepen via Topbar 🎬-knop. */}
+        <WelkomstFilm />
       </div>
     </TaalProvider>
   );
