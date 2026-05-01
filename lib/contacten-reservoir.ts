@@ -136,6 +136,33 @@ export async function haalNietGeactiveerd(): Promise<ReservoirRow[]> {
 }
 
 // ============================================================
+// 3a. Verwijder reservoir-rows definitief.
+//
+// Voor wanneer een member per ongeluk verkeerde namen heeft geüpload
+// of die niet (meer) in z'n geheugen wil hebben staan. RLS zorgt dat
+// alleen eigen rows verwijderd kunnen worden.
+// ============================================================
+export async function verwijderReservoirRows(
+  reservoirIds: string[],
+): Promise<{ verwijderd: number }> {
+  if (reservoirIds.length === 0) return { verwijderd: 0 };
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Niet ingelogd");
+
+  const { data, error } = await supabase
+    .from("contacten_reservoir")
+    .delete()
+    .in("id", reservoirIds)
+    .eq("user_id", user.id)
+    .select("id");
+  if (error) throw error;
+  return { verwijderd: ((data as Array<unknown>) || []).length };
+}
+
+// ============================================================
 // 3. Activeer geselecteerde reservoir-rows naar prospects.
 //
 // Maakt nieuwe prospects + zet reservoir.geactiveerd=true + linkt

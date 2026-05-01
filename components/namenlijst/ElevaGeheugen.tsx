@@ -7,6 +7,7 @@ import { VCardUploader } from "@/components/vandaag/inline-embeds/VCardUploader"
 import {
   haalNietGeactiveerd,
   activeerContacten,
+  verwijderReservoirRows,
   type ReservoirRow,
 } from "@/lib/contacten-reservoir";
 
@@ -83,6 +84,36 @@ export function ElevaGeheugen() {
       else n.add(id);
       return n;
     });
+  }
+
+  async function verwijderSelectie() {
+    const ids = Array.from(geselecteerd);
+    if (ids.length === 0) {
+      toast.error("Vink eerst de namen aan die je wilt wissen");
+      return;
+    }
+    if (
+      !window.confirm(
+        `Weet je zeker dat je ${ids.length} contact${ids.length === 1 ? "" : "en"} uit je geheugen wilt wissen? Dit kan niet ongedaan worden gemaakt.`,
+      )
+    ) {
+      return;
+    }
+    setBezig(true);
+    try {
+      const result = await verwijderReservoirRows(ids);
+      toast.success(
+        `🗑️ ${result.verwijderd} contact${result.verwijderd === 1 ? "" : "en"} uit je geheugen gewist`,
+      );
+      setGeselecteerd(new Set());
+      await herlaad();
+    } catch (e) {
+      console.error(e);
+      const msg = e instanceof Error ? e.message : "onbekende fout";
+      toast.error(`Wissen mislukt: ${msg}`);
+    } finally {
+      setBezig(false);
+    }
   }
 
   async function activeerSelectie() {
@@ -234,41 +265,87 @@ export function ElevaGeheugen() {
                 ) : (
                   <ul className="divide-y divide-cm-border">
                     {zichtbaar.map((row) => (
-                      <li key={row.id}>
-                        <label className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-cm-gold/5 transition-colors">
-                          <input
-                            type="checkbox"
-                            checked={geselecteerd.has(row.id)}
-                            onChange={() => toggle(row.id)}
-                            className="flex-shrink-0 accent-cm-gold w-4 h-4"
-                          />
-                          <span className="flex-1 text-sm text-cm-white truncate">
-                            {row.volledige_naam}
-                          </span>
-                          {row.telefoon && (
-                            <span className="text-cm-white opacity-50 text-[10px] whitespace-nowrap">
-                              {row.telefoon}
+                      <li key={row.id} className="group/row">
+                        <div className="flex items-center gap-2 px-3 py-2 hover:bg-cm-gold/5 transition-colors">
+                          <label className="flex items-center gap-2 flex-1 min-w-0 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={geselecteerd.has(row.id)}
+                              onChange={() => toggle(row.id)}
+                              className="flex-shrink-0 accent-cm-gold w-4 h-4"
+                            />
+                            <span className="flex-1 text-sm text-cm-white truncate">
+                              {row.volledige_naam}
                             </span>
-                          )}
-                        </label>
+                            {row.telefoon && (
+                              <span className="text-cm-white opacity-50 text-[10px] whitespace-nowrap">
+                                {row.telefoon}
+                              </span>
+                            )}
+                          </label>
+                          {/* Mini verwijder-knop per row, alleen bij hover/touch zichtbaar */}
+                          <button
+                            type="button"
+                            onClick={async (e) => {
+                              e.stopPropagation();
+                              if (
+                                !window.confirm(
+                                  `Wis "${row.volledige_naam}" uit je geheugen?`,
+                                )
+                              )
+                                return;
+                              try {
+                                await verwijderReservoirRows([row.id]);
+                                setGeselecteerd((prev) => {
+                                  const n = new Set(prev);
+                                  n.delete(row.id);
+                                  return n;
+                                });
+                                await herlaad();
+                                toast.success("Gewist");
+                              } catch (err) {
+                                const msg =
+                                  err instanceof Error ? err.message : "fout";
+                                toast.error(`Wissen mislukt: ${msg}`);
+                              }
+                            }}
+                            className="flex-shrink-0 text-cm-white opacity-30 hover:opacity-100 hover:text-red-400 text-xs px-1.5 py-0.5 transition-all"
+                            title="Wis uit geheugen"
+                          >
+                            🗑️
+                          </button>
+                        </div>
                       </li>
                     ))}
                   </ul>
                 )}
               </div>
 
-              <button
-                type="button"
-                onClick={activeerSelectie}
-                disabled={bezig || geselecteerd.size === 0}
-                className="btn-gold w-full py-3 text-sm font-semibold disabled:opacity-30"
-              >
-                {bezig
-                  ? "Activeren..."
-                  : geselecteerd.size === 0
-                    ? "Vink eerst namen aan"
-                    : `✓ Activeer ${geselecteerd.size} naar mijn namenlijst`}
-              </button>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <button
+                  type="button"
+                  onClick={activeerSelectie}
+                  disabled={bezig || geselecteerd.size === 0}
+                  className="btn-gold flex-1 py-3 text-sm font-semibold disabled:opacity-30"
+                >
+                  {bezig
+                    ? "Activeren..."
+                    : geselecteerd.size === 0
+                      ? "Vink eerst namen aan"
+                      : `✓ Activeer ${geselecteerd.size} naar mijn namenlijst`}
+                </button>
+                {geselecteerd.size > 0 && (
+                  <button
+                    type="button"
+                    onClick={verwijderSelectie}
+                    disabled={bezig}
+                    className="px-4 py-3 rounded-lg border border-red-500/40 text-red-300 text-sm hover:bg-red-900/20 disabled:opacity-30"
+                    title="Wis geselecteerde uit geheugen"
+                  >
+                    🗑️ Wis
+                  </button>
+                )}
+              </div>
             </div>
           ) : (
             <p className="text-cm-white opacity-60 text-xs italic">

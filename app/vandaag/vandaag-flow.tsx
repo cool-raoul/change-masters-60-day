@@ -40,6 +40,8 @@ type Props = {
   voltooidIds: string[];
   initialZinnen: Record<string, string>;
   voornaam: string;
+  /** Toont de founder-bewerk-banner bovenaan de flow als true. */
+  isFounder?: boolean;
 };
 
 const DAG_GROETEN: Record<number, string> = {
@@ -56,6 +58,7 @@ export function VandaagFlow({
   voltooidIds: initialVoltooid,
   initialZinnen,
   voornaam,
+  isFounder = false,
 }: Props) {
   const router = useRouter();
   const [voltooidIds, setVoltooidIds] = useState<Set<string>>(
@@ -237,6 +240,30 @@ export function VandaagFlow({
       </header>
 
       <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
+        {/* FOUNDER-banner: link naar de bewerk-modus van deze dag.
+            Edits in de tile-view zijn direct live in /vandaag (zelfde
+            DAGEN-data + overrides). */}
+        {isFounder && (
+          <div className="rounded-lg border border-cm-gold/40 bg-cm-gold/10 px-4 py-3 flex items-start gap-3 flex-wrap">
+            <div className="flex-1 min-w-0">
+              <p className="text-cm-gold font-semibold text-sm flex items-center gap-2">
+                ✍️ Founder-modus
+              </p>
+              <p className="text-cm-white opacity-80 text-xs mt-0.5 leading-relaxed">
+                Wil je de tekst van een taak, de les of de titel van deze dag
+                aanpassen? Open de bewerk-tile — alle wijzigingen zijn{" "}
+                <strong>direct live</strong> voor alle members.
+              </p>
+            </div>
+            <Link
+              href={`/playbook?dag=${dag.nummer}&preview=true`}
+              className="text-xs px-3 py-1.5 rounded-full bg-cm-gold text-cm-black font-semibold hover:opacity-90 whitespace-nowrap flex-shrink-0"
+            >
+              ✍️ Bewerk dag {dag.nummer} →
+            </Link>
+          </div>
+        )}
+
         {/* INTRO-stap */}
         {stap === "intro" && (
           <div className="space-y-6">
@@ -375,6 +402,7 @@ export function VandaagFlow({
             {huidigeTaak.inlineEmbed === "sponsor-melding" && (
               <SponsorMeldingKnop
                 alVoltooid={voltooidIds.has(huidigeTaak.id)}
+                taakId={huidigeTaak.id}
                 opVoltooid={() => {
                   vinkAf(huidigeTaak.id, true);
                 }}

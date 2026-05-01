@@ -116,7 +116,7 @@ export default async function PlaybookDagPagina({
           OPSLAAN voor alle members (in tegenstelling tot afvinken,
           dat in preview alleen visueel werkt). */}
       {isPreview && isFounder && (
-        <div className="rounded-lg border border-cm-gold/40 bg-cm-gold/10 px-4 py-3 space-y-1">
+        <div className="rounded-lg border border-cm-gold/40 bg-cm-gold/10 px-4 py-3 space-y-2">
           <p className="text-sm text-cm-white">
             <strong className="text-cm-gold">✍️ Founder preview & edit</strong>
             {" — "}
@@ -128,6 +128,20 @@ export default async function PlaybookDagPagina({
           <p className="text-xs text-cm-white opacity-60">
             (Afvinken in preview slaat niets op — dat is alleen om te zien hoe
             een member het ervaart.)
+          </p>
+          <p className="text-xs text-cm-white opacity-80 pt-1 border-t border-cm-gold/20">
+            Wil je zien hoe deze dag eruitziet in de full-screen dag-flow zoals
+            members 'm ervaren?{" "}
+            <Link
+              href="/vandaag"
+              className="text-cm-gold hover:underline underline-offset-2 font-semibold"
+            >
+              Open /vandaag in dag-flow →
+            </Link>
+            <span className="opacity-60">
+              {" "}
+              (NB: dat opent jóuw eigen dag, niet specifiek dag {dagParam}.)
+            </span>
           </p>
         </div>
       )}

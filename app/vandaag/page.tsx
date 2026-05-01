@@ -88,12 +88,19 @@ export default async function VandaagPagina() {
     ((profile as { full_name?: string | null } | null)?.full_name ?? "")
       .split(" ")[0] || user.email?.split("@")[0] || "";
 
+  // Founder-detectie zodat we een 'bewerk-deze-dag'-link kunnen tonen
+  // bovenaan de flow. Wijzigingen via /playbook?dag=N&preview=true zijn
+  // direct live voor alle members.
+  const isFounder =
+    (profile as { role?: string | null } | null)?.role === "founder";
+
   return (
     <VandaagFlow
       dag={dagData}
       voltooidIds={voltooidIds}
       initialZinnen={initialZinnen}
       voornaam={voornaam}
+      isFounder={isFounder}
     />
   );
 }

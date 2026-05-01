@@ -114,7 +114,7 @@ OVERWELDIGD VOELEN IS NORMAAL: je leert iets nieuws, je stapt uit comfort. Eerst
         uitleg:
           "Korte check-in. Jouw WHY laten lezen, sponsor vertelt wat jullie samen gaan doen fase 1. Vraag in deze call meteen om hulp bij je eerste 3 invites vandaag.",
         verplicht: true,
-        actieRoute: "/team",
+        inlineEmbed: "sponsor-melding",
       },
       {
         id: "dag2-3-invites",
@@ -248,7 +248,7 @@ Vandaag stuur je ook al 3 uitnodigingen — samen met je sponsor in een groepje 
         uitleg:
           "30 seconden. Sponsor weet dat je beweegt, jij voelt de lijn naar boven open. Niets uitgebreids, gewoon even een update.",
         verplicht: false,
-        actieRoute: "/team",
+        inlineEmbed: "sponsor-melding",
       },
       {
         id: "dag3-teams-admin",
@@ -548,7 +548,7 @@ EXTRA — VANDAAG START JE MINDSET-ROUTINE:
         uitleg:
           "Heb je 1 contact waar je niet weet wat je moet sturen? Vraag je sponsor: 'Hoe zou jij dit aanpakken?'. Sponsor even druk? Dan de Mentor: 'Help me met een follow-up voor [naam] die [situatie]'. Je hoeft het niet alleen te bedenken.",
         verplicht: false,
-        actieRoute: "/team",
+        inlineEmbed: "sponsor-melding",
       },
     ],
     faseDoel:
@@ -644,7 +644,7 @@ Een prospect die NU geen ja zegt, kan over 3 maanden alsnog ja zeggen. Of over 1
         label: "15 min call met sponsor over week 2",
         uitleg: "Wat werkte? Wat gaan we anders doen? Wat is fase 2?",
         verplicht: false,
-        actieRoute: "/team",
+        inlineEmbed: "sponsor-melding",
       },
     ],
     faseDoel:
@@ -1329,7 +1329,7 @@ VANDAAG: kies 1 specifieke prospect, plan een 5-min check-in (DM of telefoon) en
         id: "dag14-sponsor-call",
         label: "Sponsor-call 15 min: fase 3 voorbereiden",
         verplicht: false,
-        actieRoute: "/team",
+        inlineEmbed: "sponsor-melding",
       },
     ],
     faseDoel:
@@ -2058,7 +2058,7 @@ VANDAAG: kies 1 prospect die meer dan 3 exposures heeft gehad zonder beslissing.
         id: "dag21-sponsor-call",
         label: "40-min call met sponsor: fase 3 naar fase-uitgebreid",
         verplicht: false,
-        actieRoute: "/team",
+        inlineEmbed: "sponsor-melding",
       },
     ],
     faseDoel:

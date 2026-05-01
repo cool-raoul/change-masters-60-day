@@ -21,13 +21,85 @@ type Props = {
   /** Wordt aangeroepen zodra member 'verstuurd'-knop klikt — vinkt taak af. */
   opVoltooid: () => void;
   alVoltooid: boolean;
+  /** Taak-id zodat we het juiste bericht-sjabloon kunnen kiezen per dag. */
+  taakId?: string;
 };
+
+/**
+ * Bericht-sjablonen per taak-id. Sponsor wordt automatisch ingevuld
+ * op de plek van [naam]. Default = "ik ben gestart"-versie van dag 1.
+ */
+function pakBericht(taakId: string | undefined, sponsorVoornaam: string): string {
+  const naamDeel = sponsorVoornaam ? ` ${sponsorVoornaam}` : "";
+  switch (taakId) {
+    case "dag2-kennismaak":
+      return (
+        `Hoi${naamDeel}! Volgens m'n playbook is dit een mooi moment voor een ` +
+        `korte kennismaak-call van zo'n 30 min — even mijn WHY met je delen, ` +
+        `en samen kijken naar mijn eerste 3 invites. Wanneer schikt het bij jou?`
+      );
+    case "dag3-sponsor-checkin":
+      return (
+        `Hoi${naamDeel}! Korte update: heb gisteren mijn eerste 3 invites ` +
+        `verstuurd 🎯 voelt goed dat het rolt. Spreek je later!`
+      );
+    case "dag6-sponsor-tip":
+      return (
+        `Hoi${naamDeel}! Mag ik je advies vragen op één lastige follow-up? ` +
+        `Ik heb een prospect waar ik even niet uitkom — kan jij een tip geven ` +
+        `als je een momentje hebt?`
+      );
+    case "dag7-sponsor-call":
+      return (
+        `Hoi${naamDeel}! Week 1 zit erop 🎉 Tijd voor onze 15-min call over ` +
+        `wat ik in week 2 kan oppakken. Wanneer komt het uit bij jou?`
+      );
+    case "dag14-sponsor-call":
+      return (
+        `Hoi${naamDeel}! Halverwege de 21-daagse 🏁 Tijd voor onze 15-min ` +
+        `call om fase 3 voor te bereiden. Wanneer schikt het?`
+      );
+    case "dag21-sponsor-call":
+      return (
+        `Hoi${naamDeel}! Dag 21 — fase 1 t/m 3 voltooid 🏆 Klaar voor onze ` +
+        `40-min call over hoe ik de volgende 40 dagen ga vormgeven?`
+      );
+    case "dag1-sponsor":
+    default:
+      return (
+        `Hoi${naamDeel}! Ik ben gestart in ELEVA 🚀 Vanaf nu zie je in het ` +
+        `systeem mijn dagelijkse stappen — fijn om je rugdekking te hebben. ` +
+        `Spreek je snel!`
+      );
+  }
+}
+
+/**
+ * Titel-tekst voor de embed boven het bericht — past zich aan op
+ * basis van de taak-context (kennismaak vs check-in vs call etc.).
+ */
+function pakTitel(taakId: string | undefined): string {
+  switch (taakId) {
+    case "dag2-kennismaak":
+      return "📞 Stel een kennismaak-call voor";
+    case "dag3-sponsor-checkin":
+      return "📩 Stuur een korte check-in naar je sponsor";
+    case "dag6-sponsor-tip":
+      return "💬 Vraag je sponsor om een tip";
+    case "dag7-sponsor-call":
+    case "dag14-sponsor-call":
+    case "dag21-sponsor-call":
+      return "📞 Plan je sponsor-call in";
+    default:
+      return "📩 Stuur je sponsor een bericht";
+  }
+}
 
 type Sponsor = {
   naam: string | null;
 };
 
-export function SponsorMeldingKnop({ opVoltooid, alVoltooid }: Props) {
+export function SponsorMeldingKnop({ opVoltooid, alVoltooid, taakId }: Props) {
   const [sponsor, setSponsor] = useState<Sponsor | null>(null);
   const [laden, setLaden] = useState(true);
   const [bevestigd, setBevestigd] = useState(alVoltooid);
@@ -69,10 +141,9 @@ export function SponsorMeldingKnop({ opVoltooid, alVoltooid }: Props) {
     };
   }, []);
 
-  const bericht =
-    `Hoi${sponsor?.naam ? ` ${sponsor.naam.split(" ")[0]}` : ""}! ` +
-    `Ik ben gestart in ELEVA 🚀 Vanaf nu zie je in het systeem mijn dagelijkse stappen — ` +
-    `fijn om je rugdekking te hebben. Spreek je snel!`;
+  const sponsorVoornaam = sponsor?.naam ? sponsor.naam.split(" ")[0] : "";
+  const bericht = pakBericht(taakId, sponsorVoornaam);
+  const titel = pakTitel(taakId);
 
   // WhatsApp zonder nummer → opent een contact-picker. Profiles in
   // ELEVA hebben (nog) geen telefoonkolom, dus dit is de schoonste route.
@@ -103,7 +174,8 @@ export function SponsorMeldingKnop({ opVoltooid, alVoltooid }: Props) {
     <div className="rounded-lg border-2 border-cm-gold/40 bg-cm-gold/5 px-4 py-4 space-y-3">
       <div className="space-y-1">
         <h4 className="text-cm-gold font-semibold text-sm">
-          📩 Stuur je sponsor{sponsor?.naam ? ` (${sponsor.naam.split(" ")[0]})` : ""} een bericht
+          {titel}
+          {sponsor?.naam ? ` — ${sponsor.naam.split(" ")[0]}` : ""}
         </h4>
         <p className="text-cm-white opacity-80 text-xs leading-relaxed">
           We hebben een korte tekst voor je voorgeschreven — pas 'm aan naar
