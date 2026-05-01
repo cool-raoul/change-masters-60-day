@@ -309,8 +309,9 @@ export function ElevaGeheugen() {
                                 toast.error(`Wissen mislukt: ${msg}`);
                               }
                             }}
-                            className="flex-shrink-0 text-cm-white opacity-30 hover:opacity-100 hover:text-red-400 text-xs px-1.5 py-0.5 transition-all"
-                            title="Wis uit geheugen"
+                            className="flex-shrink-0 text-red-400/70 hover:text-red-300 hover:bg-red-900/30 text-sm px-2 py-1 rounded transition-all"
+                            title="Wis deze naam uit je geheugen"
+                            aria-label="Wis uit geheugen"
                           >
                             🗑️
                           </button>
@@ -334,17 +335,16 @@ export function ElevaGeheugen() {
                       ? "Vink eerst namen aan"
                       : `✓ Activeer ${geselecteerd.size} naar mijn namenlijst`}
                 </button>
-                {geselecteerd.size > 0 && (
-                  <button
-                    type="button"
-                    onClick={verwijderSelectie}
-                    disabled={bezig}
-                    className="px-4 py-3 rounded-lg border border-red-500/40 text-red-300 text-sm hover:bg-red-900/20 disabled:opacity-30"
-                    title="Wis geselecteerde uit geheugen"
-                  >
-                    🗑️ Wis
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={verwijderSelectie}
+                  disabled={bezig || geselecteerd.size === 0}
+                  className="flex-1 py-3 px-4 rounded-lg border-2 border-red-500/60 bg-red-900/20 text-red-200 text-sm font-semibold hover:bg-red-900/40 hover:border-red-500 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                >
+                  {geselecteerd.size === 0
+                    ? "🗑️ Wis geselecteerde contacten uit geheugen"
+                    : `🗑️ Wis ${geselecteerd.size} contact${geselecteerd.size === 1 ? "" : "en"} uit geheugen`}
+                </button>
               </div>
             </div>
           ) : (
