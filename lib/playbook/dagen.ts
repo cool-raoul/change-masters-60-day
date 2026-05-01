@@ -309,9 +309,9 @@ NIET GELIJK PITCHEN, wat wel: reageer terug op hun content. Vraag iets. Bouw rap
     vandaagDoen: [
       {
         id: "dag4-uitnodiging-1-5",
-        label: "5 uitnodigingen versturen, 4-stappen toepassen",
+        label: "5 uitnodigingen versturen, structuur toepassen",
         uitleg:
-          "1) wees druk, 2) compliment, 3) uitnodig, 4) plan. Houd het kort. Doel = ja tegen het kijkmoment, niet ja tegen jou.",
+          "Compliment + uitnodigen voor kijkmoment + tijd voorstellen. De 'ik heb haast'-opener is OPTIONEEL, alleen bij business-prospects of zakelijke context. Bij vrienden of familie laat je 'm weg en begin je gewoon warm. Doel: ja tegen het kijkmoment, niet ja tegen jou.",
         verplicht: true,
         actieRoute: "/namenlijst",
       },
@@ -372,14 +372,18 @@ NIET GELIJK PITCHEN, wat wel: reageer terug op hun content. Vraag iets. Bouw rap
     ],
     watJeLeert: `De 4-stappen-uitnodiging (Worre) is dé reden dat netwerkers met dezelfde lijst totaal verschillende resultaten boeken. Het is een vaste opbouw waarbij elk onderdeel een specifieke psychologische functie heeft.
 
-DE FORMULE, vier stappen, in deze volgorde:
-1) WEES DRUK, "Ik heb weinig tijd, maar..." Eén zinnetje, geen breedvoerig verhaal. Hierdoor signaleer je waarde aan je tijd én voorkom je een lang vrijblijvend gesprek waarin de spanning eruit lekt.
-2) COMPLIMENT, "Jij bent iemand die dingen voor elkaar krijgt." Echt, specifiek, geen smeerolie. Maakt dat je prospect zich GEZIEN voelt. Mensen werken niet voor verkoop-praatjes, ze werken voor erkenning.
-3) UITNODIGEN, kies de variant die past bij hoe warm de prospect is:
+DE FORMULE, drie kern-stappen + één optionele opener:
+
+OPTIONEEL (ALLEEN bij business-prospects, ondernemers of duidelijk-zakelijke context):
+0) WEES DRUK, "Ik heb weinig tijd, maar..." Eén zinnetje. Signaleert waarde aan je tijd én voorkomt een lang vrijblijvend gesprek. LET OP: dit is niet de standaard-opener. Bij vrienden, familie of mensen waar je een rustige relatie mee hebt past dit niet, dat klinkt geforceerd. Worre's 'wees druk' is bedoeld voor doelgerichte business-uitnodigingen, niet als universele opener.
+
+DE DRIE KERN-STAPPEN:
+1) COMPLIMENT of ERKENNING, "Jij bent iemand die dingen voor elkaar krijgt", of "ik moest aan jou denken omdat...". Echt, specifiek, geen smeerolie. Maakt dat je prospect zich GEZIEN voelt. Mensen werken niet voor verkoop-praatjes, ze werken voor erkenning.
+2) UITNODIGEN, kies de variant die past bij hoe warm de prospect is:
    • DIRECT (warme prospect, vertrouwen al hoog): "Ik ben gestart met iets nieuws, wil het je laten zien."
    • INDIRECT (mid-warm): "Dit is vast niets voor jou, maar ken jij iemand die extra wil verdienen?"
    • SUPER-INDIRECT (lauw of onbekend): "Ken jij toevallig mensen die openstaan voor bij-inkomen?"
-4) PLAN, "Wanneer schikt het, vanavond of morgen?" Geef twee tijdsblokken, geen open vraag. Open vragen ("wanneer kan jij?") leiden 80% naar uitstel.
+3) PLAN, "Wanneer schikt het, vanavond of morgen?" Geef twee tijdsblokken, geen open vraag. Open vragen ("wanneer kan jij?") leiden 80% naar uitstel.
 
 DE KERN, JE TAAK = UITNODIGEN, NIET OVERTUIGEN:
 Je wilt niet dat ze "ja" zeggen tegen JOU. Je wilt dat ze "ja" zeggen tegen een KIJKMOMENT. Dat is een veel lagere drempel. Een kijkmoment is geen commitment, geen mening, geen koop. Het is alleen "ik kijk even mee, daarna beslis ik". Dat verkoop je 10× makkelijker dan een product.

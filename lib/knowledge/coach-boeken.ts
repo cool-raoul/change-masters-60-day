@@ -59,14 +59,23 @@ const SECTIES: Record<string, string> = {
   dm: `
 ### DM & UITNODIGEN
 
-Worre 4-stappen uitnodiging:
-1. Wees druk: "Ik heb weinig tijd maar wilde dit even delen."
-2. Compliment: "Jij bent iemand die dingen voor elkaar krijgt."
-3. Uitnodigen:
+Worre uitnodiging-formule (drie kern + één optionele opener):
+
+OPTIONEEL — alleen bij business-prospects of zakelijke context:
+0. Wees druk: "Ik heb weinig tijd maar wilde dit even delen."
+   LET OP: dit past NIET bij vrienden, familie of mensen met wie je een rustige
+   relatie hebt. Daar klinkt 'ik heb haast' geforceerd. Gebruik 'm alleen waar
+   de zakelijke toon natuurlijk is.
+
+KERN (altijd):
+1. Compliment of erkenning: "Jij bent iemand die dingen voor elkaar krijgt", of
+   "ik moest aan jou denken omdat...". Specifiek, geen smeerolie.
+2. Uitnodigen voor een KIJKMOMENT (niet voor 'ja zeggen tegen jou'):
    Direct: "Ik ben gestart met iets nieuws, wil het je laten zien."
    Indirect: "Dit is vast niets voor jou, maar ken jij iemand die extra wil verdienen?"
    Super-indirect: "Ken jij mensen die openstaan voor bij-inkomen?"
-4. Plan: "Wanneer schikt het, vanavond of morgen?"
+3. Plan: twee tijdsblokken voorstellen ("vanavond of morgen?"), of een open vraag
+   als de relatie dat beter past.
 JE TAAK = uitnodigen, NIET overtuigen.
 
 Brookes DM strategie:

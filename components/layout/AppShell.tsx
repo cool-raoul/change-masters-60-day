@@ -11,6 +11,7 @@ import { Rondleiding } from "@/components/rondleiding/Rondleiding";
 import { TerugNaarPlaybookBanner } from "@/components/playbook/TerugNaarPlaybookBanner";
 import { WelkomstFilm } from "@/components/welkom/WelkomstFilm";
 import { PresenceHeartbeat } from "@/components/presence/PresenceHeartbeat";
+import { PullToRefresh } from "@/components/layout/PullToRefresh";
 
 export async function AppShell({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -54,6 +55,9 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
         {/* Presence-heartbeat: elke 60s ping naar /api/presence/ping als
             member z'n zichtbaarheid heeft aangezet (default uit). */}
         <PresenceHeartbeat />
+        {/* Pull-to-refresh: trek op mobiel het scherm naar beneden
+            vanuit bovenaan om de pagina te verversen. */}
+        <PullToRefresh />
       </div>
     </TaalProvider>
   );

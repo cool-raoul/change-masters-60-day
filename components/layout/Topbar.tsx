@@ -37,6 +37,14 @@ export function Topbar({ gebruikersnaam }: { gebruikersnaam: string }) {
   }, [profielMenuOpen]);
 
   async function logUit() {
+    // Eerst presence-status oud maken zodat de groene stip direct
+    // verdwijnt bij teamleden. Anders blijft 'last_seen_at' staan op
+    // 'enkele seconden geleden' en zien anderen je nog 2 min als actief.
+    try {
+      await fetch("/api/presence/uitloggen", { method: "POST", keepalive: true });
+    } catch {
+      // negeer, logout moet sowieso door
+    }
     await supabase.auth.signOut();
     router.push("/login");
   }
@@ -139,14 +147,9 @@ export function Topbar({ gebruikersnaam }: { gebruikersnaam: string }) {
           <span className="text-lg">🎬</span>
         </button>
 
-        <Link
-          href="/over-eleva"
-          className="p-2 text-cm-white hover:text-cm-gold transition-colors"
-          title="Over ELEVA, alle features uitgelegd"
-          aria-label="Over ELEVA"
-        >
-          <span className="text-lg">💡</span>
-        </Link>
+        {/* '💡 Over ELEVA'-knop is hier weggehaald: 'Over ELEVA' staat
+            al in de sidebar EN in het profiel-dropdown rechtsboven.
+            Drie keer dezelfde link maakte de Topbar te druk. */}
 
         <Link
           href="/herinneringen"

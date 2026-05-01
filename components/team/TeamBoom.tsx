@@ -25,14 +25,15 @@ interface TeamLid {
 }
 
 /**
- * Is dit teamlid nu actief? Drempel: gepingt binnen de laatste 5 minuten.
- * Members die hun presence-toggle UIT hebben staan: krijgen geen
- * last_seen_at door van de query (is altijd null), dus niet-zichtbaar.
+ * Is dit teamlid nu actief? Drempel: gepingt binnen de laatste 2 minuten.
+ * Heartbeat is elke 60s, dus met 2 min houden we ruimte voor een gemist
+ * tikje + tab-switch. Bij uitloggen wordt last_seen_at via de API op 1u
+ * oud gezet zodat de stip direct verdwijnt.
  */
 function isNuActief(lastSeenAt: string | null | undefined): boolean {
   if (!lastSeenAt) return false;
   const verschilMs = Date.now() - new Date(lastSeenAt).getTime();
-  return verschilMs < 5 * 60 * 1000;
+  return verschilMs < 2 * 60 * 1000;
 }
 
 const STAPPEN = [

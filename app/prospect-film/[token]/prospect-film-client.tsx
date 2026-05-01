@@ -66,6 +66,11 @@ function isYouTubeUrl(url: string | null): boolean {
   return /youtube\.com\/embed\//.test(url);
 }
 
+function isVimeoUrl(url: string | null): boolean {
+  if (!url) return false;
+  return /player\.vimeo\.com\/video\//.test(url);
+}
+
 function metJsApi(url: string): string {
   // Voeg enablejsapi=1 + origin toe zodat YT.Player kan praten.
   if (url.includes("enablejsapi=1")) return url;
@@ -217,6 +222,59 @@ export function ProspectFilmClient({
         pollIntervalRef.current = null;
       }
     };
+  }, [embedUrl, filmBeschikbaar]);
+
+  // Vimeo IFrame API integratie. Vimeo heeft een eigen player-SDK die
+  // we via npm-pakket @vimeo/player kunnen gebruiken, maar voor pilot
+  // doen we dynamische import zodat het bundel-impact minimaal is.
+  useEffect(() => {
+    if (!filmBeschikbaar || !embedUrl || !isVimeoUrl(embedUrl)) return;
+    if (!iframeRef.current) return;
+
+    let cancelled = false;
+    let player: { on: (e: string, cb: (data: unknown) => void) => void; getDuration: () => Promise<number> } | null = null;
+    let duurSec = 0;
+
+    (async () => {
+      try {
+        const mod = await import("@vimeo/player");
+        if (cancelled || !iframeRef.current) return;
+        const Player = (mod as { default?: unknown }).default ?? mod;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        player = new (Player as any)(iframeRef.current);
+        if (!player) return;
+
+        try {
+          duurSec = await player.getDuration();
+        } catch {
+          duurSec = 0;
+        }
+
+        player.on("play", () => markeerGestart());
+        // 'timeupdate' event vuurt elke ~250ms tijdens playback met data.seconds
+        player.on("timeupdate", (data) => {
+          if (!duurSec) return;
+          const sec = (data as { seconds?: number })?.seconds ?? 0;
+          const pct = Math.round((sec / duurSec) * 100);
+          if (pct - laatstePostPctRef.current >= POST_DREMPEL_PCT) {
+            laatstePostPctRef.current = pct;
+            void markeer("percentage", { percentage: pct });
+          }
+        });
+        player.on("ended", () => {
+          void markeer("percentage", { percentage: 100 });
+        });
+      } catch {
+        // @vimeo/player niet geladen of player niet beschikbaar, fallback
+        // is de gewone iframe zonder real-time tracking. 'gestart' wordt
+        // alsnog gepingt via onLoad.
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [embedUrl, filmBeschikbaar]);
 
   async function markeerAfgekeken() {
