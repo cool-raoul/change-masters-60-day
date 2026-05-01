@@ -5,6 +5,8 @@ import {
   SLUG_BESCHRIJVINGEN,
   ONBOARDING_FILM_SLUGS,
   WELKOMSTFILM_SLUG,
+  PROSPECT_FILM_SLUGS,
+  PROSPECT_FILM_BESCHRIJVINGEN,
 } from "@/lib/films/embed";
 import { FilmRowEditor } from "./film-row-editor";
 
@@ -63,10 +65,13 @@ export default async function FilmsBeheerPage() {
     (_, i) => `playbook-dag-${i + 1}`,
   );
 
+  const prospectFilmSlots = Object.values(PROSPECT_FILM_SLUGS);
+
   // Eventuele extra slugs die al in de DB staan (custom toegevoegde films)
   const dbSlugs = (films ?? []).map((f: any) => f.slug);
   const bekendeSlugs = new Set<string>([
     WELKOMSTFILM_SLUG,
+    ...prospectFilmSlots,
     ...standaardSlots,
     ...dagFilmSlots,
   ]);
@@ -162,6 +167,43 @@ export default async function FilmsBeheerPage() {
                     key={slug}
                     slug={slug}
                     plekBeschrijving={meta?.plek ?? slug}
+                    suggestieTitel={meta?.suggestieTitel ?? ""}
+                    bestaande={film ?? null}
+                    userId={user.id}
+                  />
+                );
+              })}
+            </div>
+          </section>
+
+          {/* Prospect-films: members kunnen deze met een unieke share-link
+              naar individuele prospects sturen. Tracking + auto-pipeline-shift
+              naar followup-fase bij afgekeken. */}
+          <section>
+            <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider mb-2">
+              📺 Prospect-films
+            </h2>
+            <p className="text-cm-white opacity-60 text-xs mb-3 leading-relaxed">
+              Members sturen deze films naar individuele prospects via een
+              unieke share-link (knop op elke prospect-kaart). Wanneer de
+              prospect 'm afkijkt: member krijgt een herinnering, en de
+              prospect schuift automatisch naar de followup-fase. Vul de
+              slots die je gebruikt, lege slots verschijnen voor members
+              gewoon niet als optie.
+            </p>
+            <div className="space-y-3">
+              {prospectFilmSlots.map((slug) => {
+                const film = filmsMap.get(slug) as any;
+                const meta = PROSPECT_FILM_BESCHRIJVINGEN[slug];
+                return (
+                  <FilmRowEditor
+                    key={slug}
+                    slug={slug}
+                    plekBeschrijving={
+                      meta
+                        ? `Prospect-film: ${meta.suggestieTitel}`
+                        : `Prospect-film: ${slug}`
+                    }
                     suggestieTitel={meta?.suggestieTitel ?? ""}
                     bestaande={film ?? null}
                     userId={user.id}

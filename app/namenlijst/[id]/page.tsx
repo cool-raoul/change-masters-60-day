@@ -16,6 +16,7 @@ import { CoachGesprekkenInklapbaar } from "@/components/namenlijst/CoachGesprekk
 // drukte rechtsboven te verminderen. Triggeren via /coach met prospect-context.
 // import { ProductadviesKnop } from "@/components/namenlijst/ProductadviesKnop";
 import { ProductadviesTestKnop } from "@/components/namenlijst/ProductadviesTestKnop";
+import { StuurFilmKnop } from "@/components/namenlijst/StuurFilmKnop";
 import { RealtimeProspectsRefresh } from "@/components/namenlijst/RealtimeProspectsRefresh";
 import { ActiefToggle } from "@/components/namenlijst/ActiefToggle";
 import { HerinneringenOpKaart } from "@/components/namenlijst/HerinneringenOpKaart";
@@ -194,6 +195,13 @@ export default async function ProspectDetailPagina({
             </Link>
           </div>
           <div className="flex flex-wrap items-center gap-2">
+            <StuurFilmKnop
+              prospectId={id}
+              prospectNaam={prospect.volledige_naam}
+              memberVoornaam={
+                ((eigenProfiel as any)?.full_name ?? "").split(" ")[0] || ""
+              }
+            />
             <ProductadviesTestKnop
               prospectId={id}
               prospectNaam={prospect.volledige_naam}

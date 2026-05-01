@@ -104,6 +104,68 @@ export const ONBOARDING_FILM_SLUGS = {
 export const WELKOMSTFILM_SLUG = "intro-welkom";
 
 /**
+ * PROSPECT-FILMS, de set films die een member kan delen met een
+ * prospect via een share-link. Founder uploadt ze 1× in
+ * /instellingen/films, alle members hergebruiken dezelfde slugs.
+ *
+ * Per slot (slug) een korte titel + beschrijving + intro-tekst die
+ * de prospect ziet bovenaan de share-pagina. De intro-tekst is
+ * los configureerbaar zodat dezelfde film voor verschillende doelen
+ * gebruikt kan worden met passende leidende tekst.
+ */
+export const PROSPECT_FILM_SLUGS = {
+  INTRODUCTIE: "prospect-1-introductie",
+  PRESENTATIE: "prospect-2-presentatie",
+  TESTIMONIAL: "prospect-3-testimonial",
+  PRODUCT_DEMO: "prospect-4-product-demo",
+  TEAM_SUPPORT: "prospect-5-team-en-support",
+} as const;
+
+/**
+ * Metadata voor prospect-films, gebruikt door de admin-UI én door de
+ * /prospect-film/[token]-pagina om de juiste leidende tekst te tonen.
+ */
+export const PROSPECT_FILM_BESCHRIJVINGEN: Record<
+  string,
+  {
+    suggestieTitel: string;
+    voorbeeldIntro: string;
+    callToAction: string;
+  }
+> = {
+  [PROSPECT_FILM_SLUGS.INTRODUCTIE]: {
+    suggestieTitel: "Wat is dit en waarom kijk je?",
+    voorbeeldIntro:
+      "Hoi! Hieronder een korte film van 3 minuten die uitlegt wat ik aan het opbouwen ben en waarom ik aan jou denk. Geen druk, kijk even mee.",
+    callToAction: "Ik heb 'm bekeken",
+  },
+  [PROSPECT_FILM_SLUGS.PRESENTATIE]: {
+    suggestieTitel: "De volledige presentatie",
+    voorbeeldIntro:
+      "Dit is de hoofdpresentatie. Pak even rust, een kop koffie, en kijk 'm rustig door. Daarna laat ik je weten of je vragen hebt.",
+    callToAction: "Klaar met kijken",
+  },
+  [PROSPECT_FILM_SLUGS.TESTIMONIAL]: {
+    suggestieTitel: "Verhalen van mensen die je vooraf gingen",
+    voorbeeldIntro:
+      "Dit zijn mensen zoals jij, die 6-12 maanden geleden begonnen. Wat hen aantrok, wat ze leerden, wat het hen heeft opgeleverd.",
+    callToAction: "Ik heb 'm bekeken",
+  },
+  [PROSPECT_FILM_SLUGS.PRODUCT_DEMO]: {
+    suggestieTitel: "De producten van Lifeplus",
+    voorbeeldIntro:
+      "Een korte uitleg over wat we precies aanbieden, waarom de kwaliteit zo goed is, en hoe het past in een gezonde routine.",
+    callToAction: "Ik heb 'm gezien",
+  },
+  [PROSPECT_FILM_SLUGS.TEAM_SUPPORT]: {
+    suggestieTitel: "Het team waar je bij terecht zou komen",
+    voorbeeldIntro:
+      "We bouwen dit samen op. Hier laten we zien hoe ons team werkt, welke begeleiding je krijgt, en met wie je dagelijks contact hebt.",
+    callToAction: "Klaar",
+  },
+};
+
+/**
  * Beschrijvende metadata voor de admin-UI bij het beheren van slots.
  * zo weet de founder waar elke film terechtkomt in de gebruikersflow.
  */

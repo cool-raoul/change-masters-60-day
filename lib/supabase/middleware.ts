@@ -40,6 +40,8 @@ export async function updateSession(request: NextRequest) {
     "/auth/callback",
     "/test/",
     "/sandbox",
+    // Prospect ziet hier de film via share-token, geen login nodig.
+    "/prospect-film/",
   ];
   const isPublicRoute = publicRoutes.some((r) => pathname.startsWith(r));
 
