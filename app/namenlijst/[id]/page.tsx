@@ -18,6 +18,7 @@ import { CoachGesprekkenInklapbaar } from "@/components/namenlijst/CoachGesprekk
 import { ProductadviesTestKnop } from "@/components/namenlijst/ProductadviesTestKnop";
 import { StuurFilmKnop } from "@/components/namenlijst/StuurFilmKnop";
 import { VoiceUitnodigingKnop } from "@/components/namenlijst/VoiceUitnodigingKnop";
+import { FilmKijkOverzicht } from "@/components/namenlijst/FilmKijkOverzicht";
 import { RealtimeProspectsRefresh } from "@/components/namenlijst/RealtimeProspectsRefresh";
 import { ActiefToggle } from "@/components/namenlijst/ActiefToggle";
 import { HerinneringenOpKaart } from "@/components/namenlijst/HerinneringenOpKaart";
@@ -54,6 +55,7 @@ export default async function ProspectDetailPagina({
     { data: eigenProfiel },
     { data: herinneringen },
     { data: productadviesTest },
+    { data: filmViews },
   ] = await Promise.all([
     supabase
       .from("prospects")
@@ -100,6 +102,14 @@ export default async function ProspectDetailPagina({
       .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle(),
+    // Verzonden films naar deze prospect, met real-time kijkpercentage.
+    // Faalt stilletjes als de prospect_film_views-tabel nog niet bestaat.
+    supabase
+      .from("prospect_film_views")
+      .select("id, film_slug, created_at, gestart_op, afgekeken_op, kijkpercentage")
+      .eq("prospect_id", id)
+      .eq("member_user_id", user.id)
+      .order("created_at", { ascending: false }),
   ]);
 
   if (!prospect) notFound();
@@ -275,6 +285,20 @@ export default async function ProspectDetailPagina({
         <div className="lg:col-span-2 space-y-4">
           {/* Openstaande herinneringen, bovenaan zodat ze direct zichtbaar zijn */}
           <HerinneringenOpKaart herinneringen={herinneringen || []} />
+          {/* Verzonden films met real-time kijkpercentage. Verbergt zich
+              automatisch als er nog geen films verstuurd zijn. */}
+          <FilmKijkOverzicht
+            views={
+              (filmViews as Array<{
+                id: string;
+                film_slug: string;
+                created_at: string;
+                gestart_op: string | null;
+                afgekeken_op: string | null;
+                kijkpercentage: number;
+              }>) || []
+            }
+          />
           <ProspectActieForm prospect={prospect} userId={user.id} />
           <ContactLogLijst
             contactLogs={contactLogs || []}
