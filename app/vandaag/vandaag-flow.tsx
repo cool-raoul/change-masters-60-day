@@ -8,6 +8,7 @@ import { FilmInBlok } from "@/components/film/FilmInBlok";
 import { HerinnerLaterKnop } from "@/components/playbook/HerinnerLaterKnop";
 import { VCardUploader } from "@/components/vandaag/inline-embeds/VCardUploader";
 import { SponsorMeldingKnop } from "@/components/vandaag/inline-embeds/SponsorMeldingKnop";
+import { NamenForm } from "@/components/vandaag/inline-embeds/NamenForm";
 import type { Dag, ControllableTaak } from "@/lib/playbook/types";
 
 // localStorage-key zodat we bij terugkeer (van een actieRoute) op de
@@ -405,6 +406,18 @@ export function VandaagFlow({
                 taakId={huidigeTaak.id}
                 opVoltooid={() => {
                   vinkAf(huidigeTaak.id, true);
+                }}
+              />
+            )}
+            {huidigeTaak.inlineEmbed === "namen-form" && (
+              <NamenForm
+                doel={huidigeTaak.inlineEmbedDoel ?? 5}
+                alVoltooid={voltooidIds.has(huidigeTaak.id)}
+                opVoltooid={() => {
+                  vinkAf(huidigeTaak.id, true);
+                }}
+                opOpnieuw={() => {
+                  vinkAf(huidigeTaak.id, false);
                 }}
               />
             )}

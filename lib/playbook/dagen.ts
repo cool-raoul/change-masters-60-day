@@ -85,7 +85,7 @@ VEELGEMAAKTE FOUTEN OP DAG 1:
 OVERWELDIGD VOELEN IS NORMAAL: je leert iets nieuws, je stapt uit comfort. Eerst onhandig, dan vaardig — geldt voor iedereen hetzelfde. Sponsor staat naast je, ELEVA Mentor ook. Niet alleen.`,
     waaromWerktDit: {
       tekst:
-        "De mensen die op dag 47 nog doorgaan, zijn vaak dezelfden die op dag 1 hun WHY hebben opgeschreven. Zonder fundament geen gebouw.",
+        "De mensen die op dag 47 nog doorgaan, zijn vaak dezelfden die in week 1 hun namenlijst rustig hebben gevuld. Zonder voorraadkast geen werk, zonder fundament geen gebouw.",
     },
   },
 
@@ -98,9 +98,10 @@ OVERWELDIGD VOELEN IS NORMAAL: je leert iets nieuws, je stapt uit comfort. Eerst
         id: "dag2-20-namen",
         label: "Voeg 20 namen toe buiten je telefoon-contacten",
         uitleg:
-          "Uit je hoofd, WhatsApp top-chats, oud-collega's, familie, sport, hobby's, ouders van vriendjes, buurt. Spraak-FAB: 'Nieuwe prospect [naam] uit [context]'.",
+          "Uit je hoofd, WhatsApp top-chats, oud-collega's, familie, sport, hobby's, ouders van vriendjes, buurt. Vul ze hieronder direct in — je hoeft niet weg te navigeren.",
         verplicht: true,
-        actieRoute: "/namenlijst",
+        inlineEmbed: "namen-form",
+        inlineEmbedDoel: 20,
       },
       {
         id: "dag2-onboarding-module",
@@ -263,9 +264,9 @@ Vandaag stuur je ook al 3 uitnodigingen — samen met je sponsor in een groepje 
       "Fase 1 (dag 1-7): deze week 2 one-pager-momenten gepland of bekeken krijgen.",
     waarInEleva: [
       {
-        actie: "Dagelijkse social-challenge",
-        menupad: "Dashboard → widget '3 namen uit socials'",
-        route: "/dashboard",
+        actie: "Naam handmatig toevoegen",
+        menupad: "Menu → Namenlijst → + Nieuwe prospect",
+        route: "/namenlijst/nieuw",
       },
       {
         actie: "Nieuwe naam via spraak",
@@ -652,12 +653,13 @@ Een prospect die NU geen ja zegt, kan over 3 maanden alsnog ja zeggen. Of over 1
     waarInEleva: [
       {
         actie: "Wekelijkse review",
-        menupad: "Dashboard → widget 'Wekelijkse review'",
-        route: "/dashboard",
+        menupad: "Menu → Statistieken → Wekelijkse review",
+        route: "/statistieken",
       },
       {
         actie: "Fase 1 statistieken",
         menupad: "Menu → Statistieken → Fase 1",
+        route: "/statistieken",
       },
     ],
     watJeLeert: `Een wekelijkse review is geen rapportcijfer, het is een KOMPAS-CHECK. 5 minuten reflectie scheelt je 5 dagen dwaling. Niet voor je sponsor, voor jezelf — om te zien waar je staat versus waar je heen wilt.

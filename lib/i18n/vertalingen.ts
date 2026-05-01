@@ -14,16 +14,16 @@ export const t: Vertalingen = {
     es: "Crear cuenta", de: "Konto erstellen", pt: "Criar conta",
   },
   "registreer.welkom": {
-    nl: "60 Dagen Run Systeem", en: "60 Day Run System", fr: "Syst\u00e8me de 60 jours",
-    es: "Sistema de 60 d\u00edas", de: "60 Tage Run System", pt: "Sistema de 60 dias",
+    nl: "Project Meer Tijd en Vrijheid", en: "Project More Time and Freedom", fr: "Projet Plus de Temps et de Libert\u00e9",
+    es: "Proyecto M\u00e1s Tiempo y Libertad", de: "Projekt Mehr Zeit und Freiheit", pt: "Projeto Mais Tempo e Liberdade",
   },
   "registreer.uitgenodigd": {
-    nl: "Je bent uitgenodigd om deel te nemen aan de 60 Dagen Run!",
-    en: "You have been invited to join the 60 Day Run!",
-    fr: "Vous \u00eates invit\u00e9(e) \u00e0 rejoindre le Run de 60 jours !",
-    es: "\u00a1Has sido invitado/a a unirte al Run de 60 d\u00edas!",
-    de: "Du wurdest eingeladen, am 60 Tage Run teilzunehmen!",
-    pt: "Voc\u00ea foi convidado(a) para participar do Run de 60 dias!",
+    nl: "Je bent uitgenodigd om deel te nemen aan Project Meer Tijd en Vrijheid!",
+    en: "You have been invited to join Project More Time and Freedom!",
+    fr: "Vous \u00eates invit\u00e9(e) \u00e0 rejoindre le Projet Plus de Temps et de Libert\u00e9 !",
+    es: "\u00a1Has sido invitado/a a unirte al Proyecto M\u00e1s Tiempo y Libertad!",
+    de: "Du wurdest eingeladen, am Projekt Mehr Zeit und Freiheit teilzunehmen!",
+    pt: "Voc\u00ea foi convidado(a) para participar do Projeto Mais Tempo e Liberdade!",
   },
   "registreer.naam": {
     nl: "Jouw naam", en: "Your name", fr: "Votre nom",
@@ -171,8 +171,8 @@ export const t: Vertalingen = {
     pt: "Login falhou. Verifique seu e-mail e senha.",
   },
   "login.subtitel": {
-    nl: "60 Dagen Run Systeem", en: "60 Day Run System", fr: "Syst\u00e8me de 60 jours",
-    es: "Sistema de 60 d\u00edas", de: "60 Tage Run System", pt: "Sistema de 60 dias",
+    nl: "Project Meer Tijd en Vrijheid", en: "Project More Time and Freedom", fr: "Projet Plus de Temps et de Libert\u00e9",
+    es: "Proyecto M\u00e1s Tiempo y Libertad", de: "Projekt Mehr Zeit und Freiheit", pt: "Projeto Mais Tempo e Liberdade",
   },
 
   // ===== SIDEBAR NAVIGATIE =====
@@ -251,8 +251,8 @@ export const t: Vertalingen = {
     es: "de 60", de: "von 60", pt: "de 60",
   },
   "dashboard.voortgang": {
-    nl: "60 Dagenrun voortgang", en: "60 Day Run progress", fr: "Progression du Run de 60 jours",
-    es: "Progreso del Run de 60 d\u00edas", de: "60 Tage Run Fortschritt", pt: "Progresso do Run de 60 dias",
+    nl: "Voortgang Project Meer Tijd en Vrijheid", en: "Project More Time and Freedom progress", fr: "Progression du Projet Plus de Temps et de Libert\u00e9",
+    es: "Progreso del Proyecto M\u00e1s Tiempo y Libertad", de: "Fortschritt Projekt Mehr Zeit und Freiheit", pt: "Progresso do Projeto Mais Tempo e Liberdade",
   },
   "dashboard.dagen_te_gaan": {
     nl: "dagen te gaan", en: "days to go", fr: "jours restants",

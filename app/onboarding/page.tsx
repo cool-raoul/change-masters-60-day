@@ -413,7 +413,7 @@ export default function OnboardingPagina() {
           <img src="/eleva-icon.png" alt="ELEVA" className="h-8 w-8" />
           <div>
             <h1 className="text-lg eleva-brand">ELEVA</h1>
-            <p className="text-cm-white text-[10px] opacity-60 -mt-0.5">60 Dagen Run Setup</p>
+            <p className="text-cm-white text-[10px] opacity-60 -mt-0.5">Project Meer Tijd en Vrijheid · Setup</p>
           </div>
         </div>
         <div className="flex items-center gap-3">

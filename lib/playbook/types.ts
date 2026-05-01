@@ -49,10 +49,18 @@ export type ControllableTaak = {
    *
    * Toegestane waardes mappen 1-op-1 op componenten in
    * `components/vandaag/inline-embeds/`:
-   *   - 'vcard-upload'    → VCardUploader (.vcf bulk-import)
-   *   - 'sponsor-melding' → SponsorMeldingKnop (wa.me ik-ben-gestart)
+   *   - 'vcard-upload'    → VCardUploader (.vcf bulk-import + reservoir)
+   *   - 'sponsor-melding' → SponsorMeldingKnop (wa.me bericht naar sponsor)
+   *   - 'namen-form'      → NamenForm (snelle handmatige naam-invoer met
+   *                         doel-aantal, bv. '20 namen toevoegen')
    */
-  inlineEmbed?: "vcard-upload" | "sponsor-melding";
+  inlineEmbed?: "vcard-upload" | "sponsor-melding" | "namen-form";
+  /**
+   * Optioneel doelaantal voor `namen-form`-embed. De form telt actief
+   * mee hoeveel namen de member heeft ingevuld, en bevestigt zodra het
+   * doel gehaald is. Default 5 als niet opgegeven.
+   */
+  inlineEmbedDoel?: number;
   /**
    * Optie B — INLINE ACTIE: schrijf/voer iets direct in de tile in
    * (geen routenavigatie nodig). De waarde wordt opgeslagen onder een
