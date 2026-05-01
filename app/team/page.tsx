@@ -25,6 +25,8 @@ interface TeamLid {
   created_at: string;
   run_startdatum: string | null;
   premium_tot: string | null;
+  /** Alleen gevuld als presence_zichtbaar=true. Anders null. */
+  last_seen_at?: string | null;
   kinderen: TeamLid[];
   onboarding?: OnboardingVoortgang | null;
 }
@@ -34,7 +36,7 @@ async function haalTeamBoomOp(supabase: any, userId: string, diepte: number = 0,
 
   const { data: directeleden } = await supabase
     .from("profiles")
-    .select("id, full_name, email, role, onboarding_klaar, created_at, run_startdatum, premium_tot")
+    .select("id, full_name, email, role, onboarding_klaar, created_at, run_startdatum, premium_tot, last_seen_at")
     .eq("sponsor_id", userId)
     .order("created_at", { ascending: true });
 

@@ -10,6 +10,7 @@ import { VoiceFab } from "@/components/voice/VoiceFab";
 import { Rondleiding } from "@/components/rondleiding/Rondleiding";
 import { TerugNaarPlaybookBanner } from "@/components/playbook/TerugNaarPlaybookBanner";
 import { WelkomstFilm } from "@/components/welkom/WelkomstFilm";
+import { PresenceHeartbeat } from "@/components/presence/PresenceHeartbeat";
 
 export async function AppShell({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -50,6 +51,9 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
         {/* Welkomstfilm: auto-pop-up bij eerste bezoek (localStorage-flag),
             altijd handmatig terug op te roepen via Topbar 🎬-knop. */}
         <WelkomstFilm />
+        {/* Presence-heartbeat: elke 60s ping naar /api/presence/ping als
+            member z'n zichtbaarheid heeft aangezet (default uit). */}
+        <PresenceHeartbeat />
       </div>
     </TaalProvider>
   );

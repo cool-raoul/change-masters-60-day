@@ -18,8 +18,21 @@ interface TeamLid {
   onboarding_klaar: boolean;
   created_at: string;
   run_startdatum: string | null;
+  /** ISO-string van laatste presence-ping. null = niet zichtbaar of nooit. */
+  last_seen_at?: string | null;
   kinderen: TeamLid[];
   onboarding?: OnboardingVoortgang | null;
+}
+
+/**
+ * Is dit teamlid nu actief? Drempel: gepingt binnen de laatste 5 minuten.
+ * Members die hun presence-toggle UIT hebben staan: krijgen geen
+ * last_seen_at door van de query (is altijd null), dus niet-zichtbaar.
+ */
+function isNuActief(lastSeenAt: string | null | undefined): boolean {
+  if (!lastSeenAt) return false;
+  const verschilMs = Date.now() - new Date(lastSeenAt).getTime();
+  return verschilMs < 5 * 60 * 1000;
 }
 
 const STAPPEN = [
@@ -157,17 +170,31 @@ function TeamLidKaart({ lid, level }: { lid: TeamLid; level: number }) {
           className="flex-1 flex items-center gap-2.5 min-w-0 text-left"
           onClick={() => setModalOpen(true)}
         >
-          {/* Avatar */}
-          <div className="w-8 h-8 rounded-full bg-cm-surface-2 border border-cm-border flex items-center justify-center flex-shrink-0">
-            <span className="text-cm-gold text-sm font-semibold">
-              {lid.full_name.charAt(0).toUpperCase()}
-            </span>
+          {/* Avatar met presence-stip rechtsonder */}
+          <div className="relative flex-shrink-0">
+            <div className="w-8 h-8 rounded-full bg-cm-surface-2 border border-cm-border flex items-center justify-center">
+              <span className="text-cm-gold text-sm font-semibold">
+                {lid.full_name.charAt(0).toUpperCase()}
+              </span>
+            </div>
+            {isNuActief(lid.last_seen_at) && (
+              <span
+                className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-cm-bg"
+                title="Nu actief in ELEVA"
+                aria-label="Nu actief"
+              />
+            )}
           </div>
 
           {/* Naam + email */}
           <div className="flex-1 min-w-0">
             <p className="text-cm-white text-sm font-semibold truncate">
               {lid.full_name}
+              {isNuActief(lid.last_seen_at) && (
+                <span className="ml-2 text-[10px] text-emerald-400 font-normal">
+                  • nu actief
+                </span>
+              )}
             </p>
             <p className="text-cm-white text-xs opacity-40 truncate">{lid.email}</p>
           </div>
