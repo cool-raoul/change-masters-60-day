@@ -12,6 +12,8 @@ import { HerinnerLaterKnop } from "@/components/playbook/HerinnerLaterKnop";
 import { DAGEN } from "@/lib/playbook/dagen";
 import { haalOverrides, pasOverrideToe } from "@/lib/playbook/overrides";
 import { berekenHuidigeDag } from "@/lib/playbook/bereken-dag";
+import { pakTopRadar, type ProspectInput } from "@/lib/radar/volgende-beste-actie";
+import { VolgendeBesteActie } from "@/components/radar/VolgendeBesteActie";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { Locale } from "date-fns";
 
@@ -34,12 +36,22 @@ export default async function DashboardPagina() {
     { data: pipelineCounts },
     { data: dagVoltooiingen },
     { data: klaarVoorDrieweg },
+    { data: filmViewsRecent },
+    { data: testsRecent },
+    { data: openHerinneringenAlle },
   ] = await Promise.all([
     supabase.from("profiles").select("run_startdatum, role, is_tester, dagelijkse_push_aan, dagelijkse_push_uur").eq("id", user.id).maybeSingle(),
     supabase.from("why_profiles").select("*").eq("user_id", user.id).maybeSingle(),
     supabase.from("dagelijkse_stats").select("*").eq("user_id", user.id).eq("stat_datum", vandaagStr).maybeSingle(),
     supabase.from("herinneringen").select("*, prospect:prospects(id, volledige_naam)").eq("user_id", user.id).lte("vervaldatum", vandaagStr).eq("voltooid", false).order("vervaldatum", { ascending: true }).limit(5),
-    supabase.from("prospects").select("pipeline_fase").eq("user_id", user.id).eq("gearchiveerd", false),
+    // Twee queries op prospects: lichte (alleen pipeline_fase voor de
+    // funnel-counts) én rijke (voor radar-scoring met laatste_contact,
+    // signalen, etc.). Apart om de pipeline-counts goedkoop te houden.
+    supabase
+      .from("prospects")
+      .select("id, volledige_naam, telefoon, pipeline_fase, laatste_contact")
+      .eq("user_id", user.id)
+      .eq("gearchiveerd", false),
     // Alle voltooide playbook-taken voor deze user, gebruikt voor de
     // 'Vandaag is dag X'-tegel én voor de admin-reminders van vorige dagen.
     supabase.from("dag_voltooiingen").select("dag_nummer, taak_id").eq("user_id", user.id),
@@ -54,6 +66,36 @@ export default async function DashboardPagina() {
       .in("pipeline_fase", ["presentatie", "one_pager"])
       .order("updated_at", { ascending: false })
       .limit(5),
+    // Voor radar: prospect-films afgekeken in de laatste 7 dagen.
+    // Faalt stil als de tabel nog niet bestaat (migratie nog niet gerund).
+    supabase
+      .from("prospect_film_views")
+      .select("prospect_id, afgekeken_op")
+      .eq("member_user_id", user.id)
+      .not("afgekeken_op", "is", null)
+      .gte(
+        "afgekeken_op",
+        new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+      ),
+    // Productadvies-tests die in de laatste 7 dagen zijn ingevuld.
+    supabase
+      .from("productadvies_tests")
+      .select("prospect_id, ingevuld_op")
+      .eq("user_id", user.id)
+      .eq("status", "ingevuld")
+      .not("ingevuld_op", "is", null)
+      .gte(
+        "ingevuld_op",
+        new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+      ),
+    // Alle open herinneringen per prospect (oudste vervaldatum eerst)
+    supabase
+      .from("herinneringen")
+      .select("prospect_id, vervaldatum")
+      .eq("user_id", user.id)
+      .eq("voltooid", false)
+      .not("prospect_id", "is", null)
+      .order("vervaldatum", { ascending: true }),
   ]);
 
   const isLeider = (profile as any)?.role === "leider";
@@ -61,6 +103,72 @@ export default async function DashboardPagina() {
   const isTester = (profile as any)?.is_tester === true;
   const pushAan = (profile as any)?.dagelijkse_push_aan ?? false;
   const pushUur = (profile as any)?.dagelijkse_push_uur ?? 7;
+
+  // ============================================================
+  // RADAR: bouw input voor pakTopRadar() uit de zojuist opgehaalde data.
+  // Per prospect verzamelen we recente signalen + oudste open herinnering.
+  // ============================================================
+  const prospectsRijk =
+    (pipelineCounts as Array<{
+      id: string;
+      volledige_naam: string;
+      telefoon: string | null;
+      pipeline_fase: string;
+      laatste_contact: string | null;
+    }>) || [];
+
+  const filmAfgekekenPerProspect = new Map<string, string>(); // prospectId → ISO date
+  for (const v of (filmViewsRecent as Array<{
+    prospect_id: string;
+    afgekeken_op: string;
+  }>) || []) {
+    const bestaand = filmAfgekekenPerProspect.get(v.prospect_id);
+    if (!bestaand || v.afgekeken_op > bestaand) {
+      filmAfgekekenPerProspect.set(v.prospect_id, v.afgekeken_op);
+    }
+  }
+
+  const testIngevuldPerProspect = new Map<string, string>();
+  for (const t of (testsRecent as Array<{
+    prospect_id: string;
+    ingevuld_op: string;
+  }>) || []) {
+    if (!t.prospect_id) continue;
+    const bestaand = testIngevuldPerProspect.get(t.prospect_id);
+    if (!bestaand || t.ingevuld_op > bestaand) {
+      testIngevuldPerProspect.set(t.prospect_id, t.ingevuld_op);
+    }
+  }
+
+  const oudsteHerinneringPerProspect = new Map<string, string>();
+  for (const h of (openHerinneringenAlle as Array<{
+    prospect_id: string;
+    vervaldatum: string;
+  }>) || []) {
+    if (!h.prospect_id) continue;
+    if (!oudsteHerinneringPerProspect.has(h.prospect_id)) {
+      oudsteHerinneringPerProspect.set(h.prospect_id, h.vervaldatum);
+    }
+  }
+
+  function dagenVanaf(iso: string | undefined): number | null {
+    if (!iso) return null;
+    const ms = Date.now() - new Date(iso).getTime();
+    return Math.floor(ms / (24 * 60 * 60 * 1000));
+  }
+
+  const radarInput: ProspectInput[] = prospectsRijk.map((p) => ({
+    id: p.id,
+    volledige_naam: p.volledige_naam,
+    telefoon: p.telefoon,
+    pipeline_fase: p.pipeline_fase,
+    laatste_contact: p.laatste_contact,
+    oudsteHerinneringDatum: oudsteHerinneringPerProspect.get(p.id) ?? null,
+    dagenSindsFilmAfgekeken: dagenVanaf(filmAfgekekenPerProspect.get(p.id)),
+    dagenSindsTestIngevuld: dagenVanaf(testIngevuldPerProspect.get(p.id)),
+  }));
+
+  const topRadar = pakTopRadar(radarInput, 3);
 
   // Huidige dag = voortgang-gebaseerd voor members (eerste niet-voltooide
   // dag), kalender-gebaseerd voor testers/founders zodat de spring-toolbar
@@ -341,6 +449,11 @@ export default async function DashboardPagina() {
             </div>
           </div>
         )}
+
+      {/* Volgende beste actie-radar: top-3 prospects om vandaag op te
+          volgen op basis van recente signalen + funnel-fase + stilte-tijd.
+          Verbergt zich automatisch als er niets urgents is. */}
+      <VolgendeBesteActie items={topRadar} />
 
       {/* Streak + mijlpaal-vieringen. Compact, alleen zichtbaar bij
           relevante getallen (geen lege tegels). */}

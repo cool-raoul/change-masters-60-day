@@ -16,7 +16,8 @@ export function Sidebar({ isLeider = false }: { isLeider?: boolean }) {
 
   const navigatie = [
     { href: "/dashboard", labelKey: "nav.dashboard", icoon: "⚡" },
-    { href: "/acties", labelKey: "nav.acties", icoon: "🎯" },
+    // /acties is gepensioneerd, vervangen door de Volgende-beste-actie-radar
+    // op het dashboard zelf en /herinneringen voor het volledige overzicht.
     { href: "/namenlijst", labelKey: "nav.namenlijst", icoon: "👥" },
     { href: "/zoeken", labelKey: "nav.zoeken", icoon: "🔍" },
     { href: "/coach", labelKey: "nav.coach", icoon: "🤖" },
