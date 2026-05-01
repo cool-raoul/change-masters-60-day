@@ -17,6 +17,7 @@ import { CoachGesprekkenInklapbaar } from "@/components/namenlijst/CoachGesprekk
 // import { ProductadviesKnop } from "@/components/namenlijst/ProductadviesKnop";
 import { ProductadviesTestKnop } from "@/components/namenlijst/ProductadviesTestKnop";
 import { StuurFilmKnop } from "@/components/namenlijst/StuurFilmKnop";
+import { VoiceUitnodigingKnop } from "@/components/namenlijst/VoiceUitnodigingKnop";
 import { RealtimeProspectsRefresh } from "@/components/namenlijst/RealtimeProspectsRefresh";
 import { ActiefToggle } from "@/components/namenlijst/ActiefToggle";
 import { HerinneringenOpKaart } from "@/components/namenlijst/HerinneringenOpKaart";
@@ -195,6 +196,10 @@ export default async function ProspectDetailPagina({
             </Link>
           </div>
           <div className="flex flex-wrap items-center gap-2">
+            <VoiceUitnodigingKnop
+              prospectId={id}
+              prospectNaam={prospect.volledige_naam}
+            />
             <StuurFilmKnop
               prospectId={id}
               prospectNaam={prospect.volledige_naam}
