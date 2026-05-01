@@ -34,7 +34,7 @@ export default async function NamenlijstPagina({
         .single(),
       // Alle openstaande herinneringen die aan een prospect hangen, gesorteerd
       // op vervaldatum oplopend. Zo kunnen we per prospect de EERSTVOLGENDE
-      // open herinnering bepalen — single source of truth ongeacht of die door
+      // open herinnering bepalen, single source of truth ongeacht of die door
       // de voice-FAB, het prospect-form of de productadvies-vragenlijst werd
       // aangemaakt.
       supabase

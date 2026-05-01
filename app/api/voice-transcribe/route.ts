@@ -5,7 +5,7 @@ export const maxDuration = 30;
 
 // Whisper prompt-seed: maximaal ~224 tokens (1000 chars). Alleen de lastige
 // productnamen + medische termen die Whisper fonetisch verkeerd hoort. De
-// volledige productcatalogus hoort hier NIET in — die is te lang en Whisper
+// volledige productcatalogus hoort hier NIET in, die is te lang en Whisper
 // knipt de prompt aan de voorkant af.
 function bouwWhisperPrompt(taal: string): string {
   if (taal === "nl" || !taal) {

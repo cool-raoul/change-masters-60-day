@@ -42,7 +42,7 @@ export function WelcomePopup() {
           <p className="text-cm-white mt-2">
             Welkom in het team! Je persoonlijke systeem voor{" "}
             <strong className="text-cm-gold">Project Meer Tijd en Vrijheid</strong>{" "}
-            staat klaar — laten we beginnen.
+            staat klaar, laten we beginnen.
           </p>
         </div>
 

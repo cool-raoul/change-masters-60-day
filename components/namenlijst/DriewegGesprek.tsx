@@ -201,7 +201,7 @@ function StapKaart({
 const PRODUCT_STAPPEN: StapConfig[] = [
   {
     nummer: 1,
-    titel: "Stap 1 — Aankondiging",
+    titel: "Stap 1, Aankondiging",
     context: "Stuur dit aan [naam] vóór je het groepje aanmaakt",
     type: "bericht",
     bericht:
@@ -209,29 +209,29 @@ const PRODUCT_STAPPEN: StapConfig[] = [
   },
   {
     nummer: 2,
-    titel: "Stap 2 — Introductie in het groepje",
-    context: "Stuur dit in het nieuwe groepje — edifieer de sponsor eerst",
+    titel: "Stap 2, Introductie in het groepje",
+    context: "Stuur dit in het nieuwe groepje, edifieer de sponsor eerst",
     type: "bericht",
     bericht:
-      "Hi [naam prospect]! 😊 Dit is [naam sponsor] — mijn [vriendin/vriend] en mentor. [Zij/Hij] heeft zelf fantastische resultaten behaald. [Zij/Hij] helpt mij nu ook en heeft al heel veel mensen begeleid met precies wat jij zoekt 🥰\n\n[naam sponsor], dit is [naam prospect]. [Ze/Hij] is op zoek naar [situatie]. Wil jij [haar/hem] even verder helpen? 🙏",
+      "Hi [naam prospect]! 😊 Dit is [naam sponsor], mijn [vriendin/vriend] en mentor. [Zij/Hij] heeft zelf fantastische resultaten behaald. [Zij/Hij] helpt mij nu ook en heeft al heel veel mensen begeleid met precies wat jij zoekt 🥰\n\n[naam sponsor], dit is [naam prospect]. [Ze/Hij] is op zoek naar [situatie]. Wil jij [haar/hem] even verder helpen? 🙏",
   },
   {
     nummer: 3,
-    titel: "Stap 3 — Stap terug ⚠️",
+    titel: "Stap 3, Stap terug ⚠️",
     context: "Nu ben jij klaar. Zeg niets meer tenzij de sponsor je vraagt. Jij = student, sponsor = expert.",
     type: "terug",
   },
   {
     nummer: 4,
-    titel: "Stap 4 — Sponsor opent",
-    context: "Dit bericht stuurt de sponsor als opening — deel dit met je sponsor als tip",
+    titel: "Stap 4, Sponsor opent",
+    context: "Dit bericht stuurt de sponsor als opening, deel dit met je sponsor als tip",
     type: "bericht",
     bericht:
-      "Hey [naam]! Wat leuk dat ik aan je voorgesteld word 🥰 Ik heb even gelezen wat er speelt bij jou — herkenbaar! Vertel eens, hoe lang speelt dit al bij je en wat heb je al geprobeerd? 😊",
+      "Hey [naam]! Wat leuk dat ik aan je voorgesteld word 🥰 Ik heb even gelezen wat er speelt bij jou, herkenbaar! Vertel eens, hoe lang speelt dit al bij je en wat heb je al geprobeerd? 😊",
   },
   {
     nummer: 5,
-    titel: "Stap 5 — Follow-up",
+    titel: "Stap 5, Follow-up",
     context: "Stuur dit apart aan [naam] binnen 24 uur na het gesprek in het groepje",
     type: "follow-up",
     berichten: [
@@ -250,7 +250,7 @@ const PRODUCT_STAPPEN: StapConfig[] = [
 const BUSINESS_STAPPEN: StapConfig[] = [
   {
     nummer: 1,
-    titel: "Stap 1 — Aankondiging",
+    titel: "Stap 1, Aankondiging",
     context: "Stuur dit aan [naam] vóór je het groepje aanmaakt",
     type: "bericht",
     bericht:
@@ -258,29 +258,29 @@ const BUSINESS_STAPPEN: StapConfig[] = [
   },
   {
     nummer: 2,
-    titel: "Stap 2 — Introductie in het groepje",
-    context: "Stuur dit in het nieuwe groepje — edifieer de sponsor eerst",
+    titel: "Stap 2, Introductie in het groepje",
+    context: "Stuur dit in het nieuwe groepje, edifieer de sponsor eerst",
     type: "bericht",
     bericht:
-      "Hi [naam prospect]! 😊 Dit is [naam sponsor] — mijn mentor. [Zij/Hij] heeft zelf een mooie business opgebouwd. [Zij/Hij] helpt mij nu ook en heeft al veel mensen begeleid die precies op zoek waren naar wat jij zoekt 💪🏽\n\n[naam sponsor], dit is [naam prospect]. [Ze/Hij] is op zoek naar [situatie]. Wil jij [haar/hem] even meenemen in hoe dit werkt? 🙏",
+      "Hi [naam prospect]! 😊 Dit is [naam sponsor], mijn mentor. [Zij/Hij] heeft zelf een mooie business opgebouwd. [Zij/Hij] helpt mij nu ook en heeft al veel mensen begeleid die precies op zoek waren naar wat jij zoekt 💪🏽\n\n[naam sponsor], dit is [naam prospect]. [Ze/Hij] is op zoek naar [situatie]. Wil jij [haar/hem] even meenemen in hoe dit werkt? 🙏",
   },
   {
     nummer: 3,
-    titel: "Stap 3 — Stap terug ⚠️",
+    titel: "Stap 3, Stap terug ⚠️",
     context: "Nu ben jij klaar. Zeg niets meer tenzij de sponsor je vraagt. Jij = student, sponsor = expert.",
     type: "terug",
   },
   {
     nummer: 4,
-    titel: "Stap 4 — Sponsor opent",
-    context: "Dit bericht stuurt de sponsor als opening — deel dit met je sponsor als tip",
+    titel: "Stap 4, Sponsor opent",
+    context: "Dit bericht stuurt de sponsor als opening, deel dit met je sponsor als tip",
     type: "bericht",
     bericht:
-      "Hey [naam]! Leuk dat ik aan je voorgesteld word 😊 Ik vertel je graag meer over hoe dit werkt — maar eerst even kennismaken! Vertel, wat doe je nu en wat zou jij willen veranderen als je helemaal eerlijk bent? 🥰",
+      "Hey [naam]! Leuk dat ik aan je voorgesteld word 😊 Ik vertel je graag meer over hoe dit werkt, maar eerst even kennismaken! Vertel, wat doe je nu en wat zou jij willen veranderen als je helemaal eerlijk bent? 🥰",
   },
   {
     nummer: 5,
-    titel: "Stap 5 — Follow-up",
+    titel: "Stap 5, Follow-up",
     context: "Stuur dit apart aan [naam] binnen 24 uur na het gesprek in het groepje",
     type: "follow-up",
     berichten: [

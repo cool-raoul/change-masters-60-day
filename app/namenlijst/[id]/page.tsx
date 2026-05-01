@@ -80,7 +80,7 @@ export default async function ProspectDetailPagina({
       .select("sponsor_id, role, full_name")
       .eq("id", user.id)
       .single(),
-    // Openstaande herinneringen voor deze prospect — toont ze op de kaart
+    // Openstaande herinneringen voor deze prospect, toont ze op de kaart
     // i.p.v. alleen op /herinneringen. Context hoort bij de persoon.
     supabase
       .from("herinneringen")
@@ -140,7 +140,7 @@ export default async function ProspectDetailPagina({
           zijn op deze pagina zonder dat de user moet refreshen. */}
       <RealtimeProspectsRefresh userId={user.id} />
 
-      {/* Header — naam BOVEN, knoppen verspreid daaronder zodat het rechts
+      {/* Header, naam BOVEN, knoppen verspreid daaronder zodat het rechts
           niet meer een grote stapel wordt op smalle schermen. */}
       <div className="space-y-3">
         <div className="flex items-start gap-3">
@@ -180,7 +180,7 @@ export default async function ProspectDetailPagina({
           </div>
         </div>
 
-        {/* Actie-rij — links: ELEVA Mentor (hoofdactie). Rechts: vragenlijst-
+        {/* Actie-rij, links: ELEVA Mentor (hoofdactie). Rechts: vragenlijst-
             chips + verwijder-prospect (secundair). De losse Productadvies-knop
             is hieruit weggehaald: dat triggeren we voortaan via de Mentor zodat
             de header rustiger wordt. */}
@@ -228,7 +228,7 @@ export default async function ProspectDetailPagina({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Contactgegevens */}
         <div className="card space-y-3">
-          {/* Productbestellingen — bovenaan zodat meest relevante data eerst opvalt.
+          {/* Productbestellingen, bovenaan zodat meest relevante data eerst opvalt.
               Client component: bewerken + verwijderen direct hier, zonder modal. */}
           {bestellingen && bestellingen.length > 0 && (
             <ProductBestellingenLijst
@@ -248,19 +248,19 @@ export default async function ProspectDetailPagina({
             </p>
           </div>
 
-          {/* Ingezette tools/media — afvinkbare dropdown */}
+          {/* Ingezette tools/media, afvinkbare dropdown */}
           <IngezetteTools
             prospectId={id}
             ingezet={prospect.ingezette_tools || []}
           />
 
-          {/* Onboarding checklist — helemaal onderaan (alleen zichtbaar bij members) */}
+          {/* Onboarding checklist, helemaal onderaan (alleen zichtbaar bij members) */}
           <OnboardingChecklist prospect={prospect} />
         </div>
 
         {/* Acties + contactlog */}
         <div className="lg:col-span-2 space-y-4">
-          {/* Openstaande herinneringen — bovenaan zodat ze direct zichtbaar zijn */}
+          {/* Openstaande herinneringen, bovenaan zodat ze direct zichtbaar zijn */}
           <HerinneringenOpKaart herinneringen={herinneringen || []} />
           <ProspectActieForm prospect={prospect} userId={user.id} />
           <ContactLogLijst
@@ -269,14 +269,14 @@ export default async function ProspectDetailPagina({
             userId={user.id}
           />
 
-          {/* 3-weg gesprek — inklapbaar */}
+          {/* 3-weg gesprek, inklapbaar */}
           <DriewegGesprekInklapbaar
             prospectNaam={prospect.volledige_naam}
             prospectSituatie={prospect.notities || undefined}
             sponsorNaam={sponsorNaam}
           />
 
-          {/* ELEVA Mentor gesprekken — inklapbaar */}
+          {/* ELEVA Mentor gesprekken, inklapbaar */}
           <CoachGesprekkenInklapbaar
             gesprekken={coachGesprekken || []}
             prospectId={id}

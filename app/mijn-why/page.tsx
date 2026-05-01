@@ -147,7 +147,7 @@ export default function MijnWhyPagina() {
 
       setVolledigeAntwoord(antwoordTekst);
 
-      // Controleer of WHY samenvatting aanwezig is — toon bevestiging
+      // Controleer of WHY samenvatting aanwezig is, toon bevestiging
       // Zoek naar variaties: "MIJN WHY:", "Mijn WHY:", "JOUW WHY:", etc.
       const whyPatterns = [
         /MIJN WHY:\s*([\s\S]+?)$/i,
@@ -188,7 +188,7 @@ export default function MijnWhyPagina() {
       setBestaandeWhy(schoneWhy);
       setOpgeslagen(true);
       setVoorgesteldWhy(null);
-      toast.success("Preview — WHY wordt niet opgeslagen");
+      toast.success("Preview, WHY wordt niet opgeslagen");
       return;
     }
 
@@ -295,7 +295,7 @@ export default function MijnWhyPagina() {
       {isPreview && (
         <div className="bg-amber-900/40 border-b border-amber-600/40 px-4 py-2 text-center">
           <p className="text-amber-300 text-xs font-semibold">
-            ⚠️ Preview-modus — gesprek en WHY worden NIET opgeslagen
+            ⚠️ Preview-modus, gesprek en WHY worden NIET opgeslagen
           </p>
         </div>
       )}
@@ -367,7 +367,7 @@ export default function MijnWhyPagina() {
         )}
 
         {!paginaLaden && !gestartMetCoach && !bestaandeWhy ? (
-          // Start scherm — eerste keer
+          // Start scherm, eerste keer
           <div className="flex flex-col items-center justify-center h-full text-center py-12 max-w-lg mx-auto">
             <div className="text-6xl mb-6">🎯</div>
             <h2 className="text-2xl font-display font-bold text-cm-white mb-4">

@@ -9,7 +9,7 @@ import { PipelineFase, PIPELINE_FASEN } from "@/lib/supabase/types";
 // Inline pipeline-stepper voor een prospect-rij.
 // Toont de 5 progressie-fasen als dots (prospect → followup) en drie
 // eindstations (member/shopper/not_yet) als uitkomst-badge.
-// Klik op de stepper opent een dropdown om de fase direct te wijzigen —
+// Klik op de stepper opent een dropdown om de fase direct te wijzigen.
 // geen detailkaart openen nodig.
 
 interface Props {
@@ -155,7 +155,7 @@ export function PipelineStepper({
 
         {/* 3 uitkomst-dots (M = Member, S = Shopper, N = Not Yet).
             De actieve uitkomst is gevuld met fase-kleur; de andere twee
-            zijn een dunne ring — zo zie je direct WELKE uitkomst geldt. */}
+            zijn een dunne ring, zo zie je direct WELKE uitkomst geldt. */}
         <div className="flex items-center gap-1">
           {EINDSTATIONS.map((f) => {
             const stapInfo = faseInfo(f);
@@ -186,7 +186,7 @@ export function PipelineStepper({
           })}
         </div>
 
-        {/* Tekst-label van huidige fase — blijft voor duidelijkheid */}
+        {/* Tekst-label van huidige fase, blijft voor duidelijkheid */}
         {info && (
           <span
             className="text-[11px] font-medium px-2 py-0.5 rounded-full group-hover:ring-1 group-hover:ring-cm-gold/30 transition-all"

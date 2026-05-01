@@ -136,7 +136,7 @@ const COMMANDOS: Commando[] = [
       { zin: "\"Maria is klant geworden met OmeGold en Daily BioBasics.\"" },
       { zin: "\"Pieter heeft het starterpakket genomen, fase op shopper.\"" },
     ],
-    tip: "Noem altijd welk product — dan matcht ELEVA naar de officiële Lifeplus-naam.",
+    tip: "Noem altijd welk product, dan matcht ELEVA naar de officiële Lifeplus-naam.",
   },
   {
     categorie: "Bestellingen",
@@ -299,13 +299,13 @@ const COMMANDOS: Commando[] = [
     categorie: "Persoonlijk",
     icoon: "🧠",
     titel: "Vraag aan de ELEVA Mentor",
-    wat: "Advies, bezwaar-hulp of productsuggesties vragen — wordt gekoppeld aan prospect als je een naam noemt.",
+    wat: "Advies, bezwaar-hulp of productsuggesties vragen, wordt gekoppeld aan prospect als je een naam noemt.",
     voorbeelden: [
       { zin: "\"Hoe ga ik om met bezwaar 'geen tijd' bij Maria?\"" },
       { zin: "\"Wat is een goed productadvies voor Petra met brain fog?\"" },
       { zin: "\"Help me met een DM naar Pieter.\"" },
     ],
-    tip: "Zonder expliciete vraag worden klachten gewoon als notitie opgeslagen — niet automatisch als mentor-vraag.",
+    tip: "Zonder expliciete vraag worden klachten gewoon als notitie opgeslagen, niet automatisch als mentor-vraag.",
   },
 ];
 
@@ -327,7 +327,7 @@ export default function SpraakCommandosPagina() {
         </h1>
         <p className="text-cm-white mt-1 opacity-80">
           Alles wat je tegen ELEVA kunt zeggen via de goudkleurige microfoon-knop
-          rechtsonder. De zinnen zijn voorbeelden — je mag het zeggen zoals het bij
+          rechtsonder. De zinnen zijn voorbeelden, je mag het zeggen zoals het bij
           jou past.
         </p>
       </div>
@@ -337,10 +337,10 @@ export default function SpraakCommandosPagina() {
         <p className="text-cm-white text-sm">
           1. Druk op de 🎙️ knop rechtsonder. 2. Spreek natuurlijk. 3. ELEVA zet het
           om in tekst, jij controleert het, en na 'Verwerk' ziet je wat er wordt
-          opgeslagen. 4. Klik op opslaan — alles gaat automatisch in de app.
+          opgeslagen. 4. Klik op opslaan, alles gaat automatisch in de app.
         </p>
         <p className="text-cm-white text-xs opacity-70">
-          Combineer gerust meerdere dingen in één opname — ELEVA snapt dat.
+          Combineer gerust meerdere dingen in één opname, ELEVA snapt dat.
         </p>
       </div>
 
@@ -396,7 +396,7 @@ export default function SpraakCommandosPagina() {
         <p className="text-cm-white font-semibold">💬 ELEVA doet iets niet?</p>
         <p className="text-cm-white opacity-80">
           Bij twijfel krijg je altijd uitleg terug (in geel) met wat ELEVA niet kon
-          plaatsen. Pas je tekst aan en probeer het opnieuw — of spreek het helemaal
+          plaatsen. Pas je tekst aan en probeer het opnieuw, of spreek het helemaal
           opnieuw in. De kracht zit in details: volledige namen, duidelijke
           werkwoorden ("voeg toe", "verwijder", "herinner me"), en producten zoals
           ze op de verpakking staan.

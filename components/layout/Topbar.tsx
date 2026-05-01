@@ -129,7 +129,7 @@ export function Topbar({ gebruikersnaam }: { gebruikersnaam: string }) {
         <Link
           href="/over-eleva"
           className="p-2 text-cm-white hover:text-cm-gold transition-colors"
-          title="Over ELEVA — alle features uitgelegd"
+          title="Over ELEVA, alle features uitgelegd"
           aria-label="Over ELEVA"
         >
           <span className="text-lg">💡</span>

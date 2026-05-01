@@ -1,5 +1,5 @@
 // ============================================================
-// LIFEPLUS PRIJSLIJST — bestelnummers, IP-waarden en prijzen
+// LIFEPLUS PRIJSLIJST, bestelnummers, IP-waarden en prijzen
 // Bron: officiële Lifeplus prijslijst NL, datum 03/2026, ITEM #3018
 // © 2026 Lifeplus Europe Ltd.
 //
@@ -45,7 +45,7 @@ export type LifeplusPrijsItem = {
 };
 
 // ============================================================
-// METADATA — algemene info uit prijslijst
+// METADATA, algemene info uit prijslijst
 // ============================================================
 
 export const PRIJSLIJST_METADATA = {
@@ -76,7 +76,7 @@ export const PRIJSLIJST_METADATA = {
 } as const;
 
 // ============================================================
-// PRIJSLIJST — alle producten
+// PRIJSLIJST, alle producten
 // Volgorde volgt de officiële PDF (sectie per sectie).
 //
 // Waar prijs/IP-waarden nog ontbreken (?): de PDF-layout had op die
@@ -229,7 +229,7 @@ export const LIFEPLUS_PRIJSLIJST: LifeplusPrijsItem[] = [
 ];
 
 // ============================================================
-// HELPERS — lookup functies voor gebruik in features
+// HELPERS, lookup functies voor gebruik in features
 // ============================================================
 
 /**
@@ -329,7 +329,7 @@ export function bouwPrijslijstPromptSectie(): string {
       prijsStuk.push(`€${p.normalePrijs.toFixed(2)}`);
     }
     if (p.ip != null) prijsStuk.push(`${p.ip} IP`);
-    const prijsStr = prijsStuk.length > 0 ? ` — ${prijsStuk.join(" · ")}` : "";
+    const prijsStr = prijsStuk.length > 0 ? `, ${prijsStuk.join(" · ")}` : "";
     const beschr = p.beschrijving ? ` (${p.beschrijving})` : "";
     return `${stukjes.join(" ")}${prijsStr}${beschr}`;
   };
@@ -354,11 +354,11 @@ export function bouwPrijslijstPromptSectie(): string {
     blokken.push(blok);
   }
 
-  return `## LIFEPLUS PRIJSLIJST — bestelnummers, IP-waarden en ASAP-prijzen
+  return `## LIFEPLUS PRIJSLIJST, bestelnummers, IP-waarden en ASAP-prijzen
 Bron: officiële Lifeplus prijslijst NL ${PRIJSLIJST_METADATA.bronDatum} (${PRIJSLIJST_METADATA.bronItem}).
 Verzending: gratis vanaf ${PRIJSLIJST_METADATA.gratisVerzendVanafIP} IP, anders €${PRIJSLIJST_METADATA.verzendkostenEuro.toFixed(2)}. Garantie: ${PRIJSLIJST_METADATA.garantieDagen} dagen geld-terug.
 
-Gebruik deze prijzen en IP's als JE een concreet productadvies geeft. Vermeld bij ELK product de exacte ASAP-prijs én de IP-waarde, zodat de prospect direct kan zien (a) wat het kost en (b) of de bestelling boven 80 IP komt voor gratis verzending. Tip de prospect bij bestellingen vlak onder 80 IP om er een klein product bij te bestellen — vaak goedkoper dan €${PRIJSLIJST_METADATA.verzendkostenEuro.toFixed(2)} verzending.
+Gebruik deze prijzen en IP's als JE een concreet productadvies geeft. Vermeld bij ELK product de exacte ASAP-prijs én de IP-waarde, zodat de prospect direct kan zien (a) wat het kost en (b) of de bestelling boven 80 IP komt voor gratis verzending. Tip de prospect bij bestellingen vlak onder 80 IP om er een klein product bij te bestellen, vaak goedkoper dan €${PRIJSLIJST_METADATA.verzendkostenEuro.toFixed(2)} verzending.
 
 ${blokken.join("\n\n")}`;
 }

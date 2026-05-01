@@ -4,7 +4,7 @@ import type Stripe from "stripe";
 import { NextResponse } from "next/server";
 
 export const maxDuration = 30;
-// Stripe stuurt een raw body — we mogen 'm NIET parsen vóór signatuur-check.
+// Stripe stuurt een raw body, we mogen 'm NIET parsen vóór signatuur-check.
 export const dynamic = "force-dynamic";
 
 // Service-role client omdat webhooks geen auth-sessie hebben.

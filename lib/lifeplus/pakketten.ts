@@ -1,5 +1,5 @@
 // ============================================================
-// LIFEPLUS PAKKETTEN — 6 categorieën × 3 niveaus + Mannen Hormoonbalans + 5 reset-pakketten
+// LIFEPLUS PAKKETTEN, 6 categorieën × 3 niveaus + Mannen Hormoonbalans + 5 reset-pakketten
 //
 // Bron: officiële Lifeplus prijslijst NL maart 2026 (foto's + 3191 webshop-bundle).
 // Alle ASAP-prijzen + IP-waarden gevalideerd op 27-04-2026.
@@ -11,9 +11,9 @@
 //
 // SMAAK-KEUZES: bewust GEEN smaakkeuze in de UI om het simpel te houden.
 // Defaults zijn vastgelegd in de productnaam:
-//   - Triple Protein Shake (vanille)   — chocolade-variant bestaat ook
-//   - Be Focused (bessen)              — citrus-variant bestaat ook
-//   - Be Recharged (bessen)            — citrus-variant bestaat ook
+//   - Triple Protein Shake (vanille), chocolade-variant bestaat ook
+//   - Be Focused (bessen), citrus-variant bestaat ook
+//   - Be Recharged (bessen), citrus-variant bestaat ook
 // Heroverweeg in fase 2 of we smaakkeuzes alsnog in de UI willen aanbieden.
 //
 // BE RECHARGED: ALTIJD DE POT, NOOIT DE SACHETS.
@@ -621,7 +621,7 @@ export const LIFEPLUS_RESET_PAKKETTEN: LifeplusResetPakket[] = [
   },
   {
     key: "reset-holistic-m12",
-    naam: "Holistic Reset — Maand 1 + Maand 2",
+    naam: "Holistic Reset, Maand 1 + Maand 2",
     duurDagen: 30,
     route: "regulier",
     producten: [DAILY_LIGHT, PROANTHENOLS, OMEGOLD, MSM_PLUS_TABLETTEN, ENERXAN],
@@ -637,7 +637,7 @@ export const LIFEPLUS_RESET_PAKKETTEN: LifeplusResetPakket[] = [
   },
   {
     key: "reset-holistic-m3",
-    naam: "Holistic Reset — Maand 3 (= M&P 100 Gold Light bundle)",
+    naam: "Holistic Reset, Maand 3 (= M&P 100 Gold Light bundle)",
     duurDagen: 30,
     route: "regulier",
     producten: [MP_100_GOLD_LIGHT],
@@ -649,12 +649,12 @@ export const LIFEPLUS_RESET_PAKKETTEN: LifeplusResetPakket[] = [
     levensstijlAanpassing:
       "Fase 4 van Holistic Reset: overgang naar eigen leefstijl met LOGI-principe en 80/20-regel.",
     notitie:
-      "Bestelnummer 3191 (M&P 100 Gold Light) — bevat Daily BioBasics Light + Proanthenols 100 + OmeGold. €9 voordeliger dan losse producten samen.",
+      "Bestelnummer 3191 (M&P 100 Gold Light), bevat Daily BioBasics Light + Proanthenols 100 + OmeGold. €9 voordeliger dan losse producten samen.",
   },
 ];
 
 // ============================================================
-// HELPERS — categorie-pakketten
+// HELPERS, categorie-pakketten
 // ============================================================
 
 /**
@@ -705,7 +705,7 @@ export function mapCategorieVoorGeslacht(
 }
 
 // ============================================================
-// HELPERS — reset-pakketten
+// HELPERS, reset-pakketten
 // ============================================================
 
 /**
@@ -770,7 +770,7 @@ export function bouwPakkettenPromptSectie(): string {
         ? "gratis verzending"
         : `+ €${PRIJSLIJST_METADATA.verzendkostenEuro.toFixed(2)} verzending`;
       const notitie = p.notitie ? `\n     ℹ ${p.notitie}` : "";
-      return `   • **${niveauLabel[p.niveau]}** — ${prods}\n     Totaal: €${p.totaalPrijs.toFixed(2)} · ${p.totaalIP} IP · ${verz}\n     Waarom: ${p.waarom}\n     Resultaat: ${p.resultaatTijdlijn}${notitie}`;
+      return `   • **${niveauLabel[p.niveau]}**, ${prods}\n     Totaal: €${p.totaalPrijs.toFixed(2)} · ${p.totaalIP} IP · ${verz}\n     Waarom: ${p.waarom}\n     Resultaat: ${p.resultaatTijdlijn}${notitie}`;
     });
     return `**${label}**\n${regels.join("\n")}`;
   });
@@ -782,7 +782,7 @@ export function bouwPakkettenPromptSectie(): string {
     return `**${r.naam}** (${r.duurDagen} dagen, route: ${r.route})\n  ${prods}\n  Totaal: €${r.totaalPrijs.toFixed(2)} · ${r.totaalIP} IP\n  Waarom: ${r.waarom}\n  Levensstijl: ${r.levensstijlAanpassing}`;
   }).join("\n\n");
 
-  return `## LIFEPLUS PAKKETTEN — 7 categorieën × 3 niveaus + 5 reset-pakketten (gevalideerd 27-04-2026, prijslijst maart 2026)
+  return `## LIFEPLUS PAKKETTEN, 7 categorieën × 3 niveaus + 5 reset-pakketten (gevalideerd 27-04-2026, prijslijst maart 2026)
 
 Gebruik deze pakketten als kant-en-klare aanbeveling. Elk pakket heeft een Essential (instap, 40-100 IP), Plus (uitgebreid, 100-175 IP) en Complete (volledigste, ~190-220 IP) niveau. Triple Protein Shake heeft vanille als default en chocolade als smaak-optie. Prijzen zijn ASAP (auto-ship). Verzending: gratis vanaf 80 IP, anders €${PRIJSLIJST_METADATA.verzendkostenEuro.toFixed(2)}.
 
@@ -794,5 +794,5 @@ ${blokken.join("\n\n")}
 
 ${resetBlokken}
 
-**TIP:** Bij Energy Complete, Stress Complete, Afvallen Complete, Hormoonbalans Complete, Sport Complete, High Performance Complete en Mannen Hormoonbalans Complete zit Maintain & Protect 100 Gold Light (bestelnr 3191) verstopt — €9 voordeliger dan de 3 losse producten (Daily Light + Proanthenols + OmeGold) samen.`;
+**TIP:** Bij Energy Complete, Stress Complete, Afvallen Complete, Hormoonbalans Complete, Sport Complete, High Performance Complete en Mannen Hormoonbalans Complete zit Maintain & Protect 100 Gold Light (bestelnr 3191) verstopt, €9 voordeliger dan de 3 losse producten (Daily Light + Proanthenols + OmeGold) samen.`;
 }

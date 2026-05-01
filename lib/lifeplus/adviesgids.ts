@@ -1,5 +1,5 @@
 // ============================================================
-// LIFEPLUS ADVIESGIDS — kennisbasis voor ELEVA productadvies
+// LIFEPLUS ADVIESGIDS, kennisbasis voor ELEVA productadvies
 // Filosofie: altijd beginnen bij de BASIS (1-3 basisproducten),
 // daarna aanvullen met producten voor specifieke klacht/doel.
 // ============================================================
@@ -8,7 +8,7 @@ export const LIFEPLUS_BASIS_FILOSOFIE = `
 LIFEPLUS BASIS-FILOSOFIE (altijd toepassen):
 Elk advies vertrekt vanuit de BASIS. De basis = 1 tot 3 multivitamine-basisproducten.
 De drie basisproducten zijn:
-- Daily Light (meest complete: vitamines, mineralen, pre & probiotica, superfoods — smaak beetje grapefruit-achtig)
+- Daily Light (meest complete: vitamines, mineralen, pre & probiotica, superfoods, smaak beetje grapefruit-achtig)
 - Proanthenols (OPC, krachtige antioxidant / bloedcirculatie)
 - OmeGold (omega-3, hersenen / hart)
 
@@ -315,7 +315,7 @@ export const LIFEPLUS_PROGRAMMA_PAKKETTEN: ProgrammaPakket[] = [
     toelichting: "De basis ('het huis') in shakevariant. Voor wie houdt van de Daily BioBasics-shake.",
   },
   {
-    naam: "Basis — Women's special (pil variant)",
+    naam: "Basis, Women's special (pil variant)",
     categorie: "Basis",
     doelgroep: "vrouw",
     producten: ["Women's special (Women's Gold + Proanthenols + OmeGold)", "Biotic Blast"],
@@ -324,7 +324,7 @@ export const LIFEPLUS_PROGRAMMA_PAKKETTEN: ProgrammaPakket[] = [
     toelichting: "Basis in pilvorm voor vrouwen, met extra darmflora-ondersteuning.",
   },
   {
-    naam: "Basis — Men's special (pil variant)",
+    naam: "Basis, Men's special (pil variant)",
     categorie: "Basis",
     doelgroep: "man",
     producten: ["Men's special (Men's Gold + Proanthenols + OmeGold)", "Biotic Blast"],
@@ -341,7 +341,7 @@ export const LIFEPLUS_PROGRAMMA_PAKKETTEN: ProgrammaPakket[] = [
     toelichting: "Volledige reset met shake als basis. Voor wie zijn systeem echt wil resetten.",
   },
   {
-    naam: "Reset — Women's special (pil variant)",
+    naam: "Reset, Women's special (pil variant)",
     categorie: "Reset",
     doelgroep: "vrouw",
     producten: [
@@ -356,7 +356,7 @@ export const LIFEPLUS_PROGRAMMA_PAKKETTEN: ProgrammaPakket[] = [
     toelichting: "Reset in pilvorm voor vrouwen. Varianten zonder lotion of Biotic Blast voor kleinere budgetten.",
   },
   {
-    naam: "Reset — Men's special (pil variant)",
+    naam: "Reset, Men's special (pil variant)",
     categorie: "Reset",
     doelgroep: "man",
     producten: [
@@ -394,7 +394,7 @@ export const LIFEPLUS_PROGRAMMA_PAKKETTEN: ProgrammaPakket[] = [
     toelichting: "Instap anti-stress. Twee superfood-dranken voor ontspanning en feel-good. Ideaal voor wie wil proeven.",
   },
   {
-    naam: "Anti-stress Stress Less — Women",
+    naam: "Anti-stress Stress Less, Women",
     categorie: "Antistress",
     doelgroep: "vrouw",
     producten: ["Support tabs", "Women's Gold Formula", "Golden Milk", "Cacao Boost"],
@@ -403,7 +403,7 @@ export const LIFEPLUS_PROGRAMMA_PAKKETTEN: ProgrammaPakket[] = [
     toelichting: "Uitgebreide anti-stress voor vrouwen: Get Zen + multivitamine + Support tabs voor zenuwstelsel.",
   },
   {
-    naam: "Anti-stress Stress Less — Men",
+    naam: "Anti-stress Stress Less, Men",
     categorie: "Antistress",
     doelgroep: "man",
     producten: ["Support tabs", "Men's Gold Formula", "Golden Milk", "Cacao Boost"],
@@ -435,7 +435,7 @@ export const LIFEPLUS_CONTRA_INDICATIES = [
   },
 ];
 
-// Superfood-achtergrond (SOLIS-lijn) — beknopte uitleg per product voor inspiratie in het advies.
+// Superfood-achtergrond (SOLIS-lijn), beknopte uitleg per product voor inspiratie in het advies.
 export const LIFEPLUS_SUPERFOOD_ACHTERGROND = [
   {
     product: "Cacao Mushroom (Reishi / Ganoderma)",
@@ -445,7 +445,7 @@ export const LIFEPLUS_SUPERFOOD_ACHTERGROND = [
   {
     product: "Solis Green Medley",
     werking:
-      "Antioxidanten, vitamines, mineralen, fytonutriënten, eiwitten, omega-3. Ondersteunt darmflora en schildklier (jodium), helpt bij ontgiften van zware metalen. Wordt ingezet tijdens darmkuren. LET OP bij schildkliermedicatie — zie contra-indicaties.",
+      "Antioxidanten, vitamines, mineralen, fytonutriënten, eiwitten, omega-3. Ondersteunt darmflora en schildklier (jodium), helpt bij ontgiften van zware metalen. Wordt ingezet tijdens darmkuren. LET OP bij schildkliermedicatie, zie contra-indicaties.",
   },
   {
     product: "Purple Flash",
@@ -491,7 +491,7 @@ export const LIFEPLUS_PRODUCT_DETAILS: ProductDetail[] = [
     dosering: "1 schep per dag in water of plantaardige melk.",
     wanneerInzetten: ["basisvoorziening", "energie-dip", "onregelmatig eten", "darmflora", "afvallen (verzadiging)"],
     budgetTier: "hoog",
-    goedkoperAlternatief: "Women's Gold of Men's Gold (€32) — lichtere multivitamine zonder superfoods/probiotica.",
+    goedkoperAlternatief: "Women's Gold of Men's Gold (€32), lichtere multivitamine zonder superfoods/probiotica.",
   },
   {
     naam: "Women's Gold Formula",
@@ -524,7 +524,7 @@ export const LIFEPLUS_PRODUCT_DETAILS: ProductDetail[] = [
     dosering: "1-2 caps per dag bij maaltijd.",
     wanneerInzetten: ["hersenfunctie", "concentratie", "hart", "gewrichten", "stemming", "droge huid"],
     budgetTier: "laag",
-    goedkoperAlternatief: "Geen — omega-3 is een van de goedkoopste basisproducten; bij veganistisch: Vegan OmeGold.",
+    goedkoperAlternatief: "Geen, omega-3 is een van de goedkoopste basisproducten; bij veganistisch: Vegan OmeGold.",
   },
   {
     naam: "Key-Tonic",
@@ -533,8 +533,8 @@ export const LIFEPLUS_PRODUCT_DETAILS: ProductDetail[] = [
     dosering: "1 schep in water, bij voorkeur 's ochtends of voor training.",
     wanneerInzetten: ["afvallen", "intermittent fasting", "keto", "bloedsuikerstabilisatie", "ochtend-energie"],
     budgetTier: "midden",
-    goedkoperAlternatief: "Enerxan (€27) — eenvoudiger metabolisme-boost zonder MCT/aminozuren.",
-    waarschuwing: "Bevat cafeïne — niet 's avonds nemen; niet bij cafeïne-gevoeligheid.",
+    goedkoperAlternatief: "Enerxan (€27), eenvoudiger metabolisme-boost zonder MCT/aminozuren.",
+    waarschuwing: "Bevat cafeïne, niet 's avonds nemen; niet bij cafeïne-gevoeligheid.",
   },
   {
     naam: "Enerxan",
@@ -562,7 +562,7 @@ export const LIFEPLUS_PRODUCT_DETAILS: ProductDetail[] = [
     wanneerInzetten: ["sport pre-workout", "focus", "mentaal werk", "brain fog"],
     budgetTier: "hoog",
     goedkoperAlternatief: "Be Focused Sachets (€57) in plaats van pot (€77,50).",
-    waarschuwing: "Bevat cafeïne — niet 's avonds.",
+    waarschuwing: "Bevat cafeïne, niet 's avonds.",
   },
   {
     naam: "Be Sustained (during-workout)",
@@ -589,7 +589,7 @@ export const LIFEPLUS_PRODUCT_DETAILS: ProductDetail[] = [
     dosering: "4 tabs 2x per dag.",
     wanneerInzetten: ["stress", "overbelasting", "burn-out herstel", "prikkelbaarheid", "mentale vermoeidheid"],
     budgetTier: "midden",
-    waarschuwing: "Bevat L-phenylalanine — NIET bij PKU. NIET bij MAO-remmers (antidepressiva).",
+    waarschuwing: "Bevat L-phenylalanine, NIET bij PKU. NIET bij MAO-remmers (antidepressiva).",
   },
   {
     naam: "Cacao Boost",
@@ -631,7 +631,7 @@ export const LIFEPLUS_PRODUCT_DETAILS: ProductDetail[] = [
     dosering: "Volgens etiket.",
     wanneerInzetten: ["PMS", "overgang/menopauze", "stemmingswisselingen", "hormonale klachten"],
     budgetTier: "hoog",
-    goedkoperAlternatief: "Evening Primrose Oil (€14,50) — enkele GLA; veel beperkter maar instapmogelijk.",
+    goedkoperAlternatief: "Evening Primrose Oil (€14,50), enkele GLA; veel beperkter maar instapmogelijk.",
   },
   {
     naam: "Evening Primrose Oil",
@@ -671,7 +671,7 @@ export const LIFEPLUS_BUDGET_FALLBACKS = [
   },
   {
     thema: "Anti-stress Stress Less te duur",
-    fallback: "Alleen Get Zen (Golden Milk + Cacao Boost, €93,50) — supergoede instap zonder multivitamine.",
+    fallback: "Alleen Get Zen (Golden Milk + Cacao Boost, €93,50), supergoede instap zonder multivitamine.",
   },
   {
     thema: "Afvallen Complete te duur",
@@ -705,7 +705,7 @@ export const EVIDENCE_BASED_LEEFSTIJL = {
     "Sulforaphane (broccolikiemen, 1x/dag): activeert Nrf2-pathway → fase-2 ontgiftingsenzymen. 100g kiemen = ±30mg sulforaphane, ruim boven werkzame dosis in studies.",
   ],
   beweging: [
-    "VO2max is de sterkste voorspeller van all-cause mortality — sterker dan roken, diabetes of hoge bloeddruk. Hoogste kwartiel = 5x lager sterfterisico dan laagste.",
+    "VO2max is de sterkste voorspeller van all-cause mortality, sterker dan roken, diabetes of hoge bloeddruk. Hoogste kwartiel = 5x lager sterfterisico dan laagste.",
     "Zone 2 cardio (praat-tempo, ±70% maxHF): 180 min/week verbetert mitochondriale dichtheid en vetoxidatie.",
     "Krachttraining 2-3x/week: voorkomt sarcopenie (spierverlies na 40), verbetert insulinegevoeligheid, botdichtheid en cognitieve functie.",
     "Wandelen na maaltijden (10-15 min): verlaagt postprandiale glucose-piek 20-30%.",
@@ -735,7 +735,7 @@ export function bouwEvidenceBasedSectie(): string {
     `**${titel}**\n${items.map((i) => `  • ${i}`).join("\n")}`;
 
   return `
-### WETENSCHAPPELIJKE ONDERBOUWING — LEEFSTIJL (evidence-based)
+### WETENSCHAPPELIJKE ONDERBOUWING, LEEFSTIJL (evidence-based)
 Gebruik deze peer-reviewed kennis om ELK gezondheidsadvies te onderbouwen. Combineer lifestyle-aanbevelingen met het Lifeplus-productadvies: eerst leefstijl-lever (goedkoopste, grootste effect), dán het product dat de lever ondersteunt.
 
 ${blok("Micronutriënten & streefwaardes", EVIDENCE_BASED_LEEFSTIJL.micronutrienten)}
@@ -751,7 +751,7 @@ ${blok("Stress", EVIDENCE_BASED_LEEFSTIJL.stress)}
 ${blok("Voeding", EVIDENCE_BASED_LEEFSTIJL.voeding)}
 
 ### HOE DIT TE GEBRUIKEN
-- Onderbouw adviezen met "onderzoek toont", "cohortstudies wijzen op", "RCT's hebben aangetoond" — NOOIT een specifieke auteur, boek, podcast of naam noemen.
+- Onderbouw adviezen met "onderzoek toont", "cohortstudies wijzen op", "RCT's hebben aangetoond", NOOIT een specifieke auteur, boek, podcast of naam noemen.
 - Geef concrete, meetbare parameters (bv. "7-9u slaap", "omega-3 index >8%", "VO2max in top-kwartiel").
 - Vermijd hype-claims. Als bewijs zwak is: zeg "voorlopig bewijs wijst op ..." i.p.v. stellig.
 - Combineer ALTIJD: gedragsverandering + Lifeplus-ondersteuning. Nooit uitsluitend "neem product X".
@@ -763,7 +763,7 @@ ${blok("Voeding", EVIDENCE_BASED_LEEFSTIJL.voeding)}
 export function bouwAdviesgidsPromptSectie(): string {
   const pakketBlok = (cat: AdviesCategorie) => {
     const regels = cat.pakketten.map(
-      (p) => `  • ${p.niveau}: ${p.producten.join(" + ")} — ${p.asap_prijs} (${p.waarom})`
+      (p) => `  • ${p.niveau}: ${p.producten.join(" + ")}, ${p.asap_prijs} (${p.waarom})`
     );
     const extra = cat.extra ? `\n  ℹ ${cat.extra}` : "";
     return `**${cat.naam}** (trefwoorden: ${cat.doelen.join(", ")})\n${regels.join("\n")}${extra}`;
@@ -776,7 +776,7 @@ export function bouwAdviesgidsPromptSectie(): string {
 
   const programmaBlokken = LIFEPLUS_PROGRAMMA_PAKKETTEN.map(
     (p) =>
-      `  • **${p.naam}** (${p.categorie}${p.doelgroep ? `, ${p.doelgroep}` : ""}) — ${p.prijs} / ${p.ip} IP\n    Producten: ${p.producten.join(", ")}\n    ${p.toelichting}`
+      `  • **${p.naam}** (${p.categorie}${p.doelgroep ? `, ${p.doelgroep}` : ""}), ${p.prijs} / ${p.ip} IP\n    Producten: ${p.producten.join(", ")}\n    ${p.toelichting}`
   ).join("\n");
 
   const contraBlokken = LIFEPLUS_CONTRA_INDICATIES.map(
@@ -784,12 +784,12 @@ export function bouwAdviesgidsPromptSectie(): string {
   ).join("\n");
 
   const superfoodBlokken = LIFEPLUS_SUPERFOOD_ACHTERGROND.map(
-    (s) => `  • **${s.product}** — ${s.werking}`
+    (s) => `  • **${s.product}**, ${s.werking}`
   ).join("\n");
 
   const productDetailBlokken = LIFEPLUS_PRODUCT_DETAILS.map(
     (p) =>
-      `  • **${p.naam}** [${p.budgetTier} budget] — ${p.werking}\n    Ingrediënten: ${p.ingredienten}\n    Dosering: ${p.dosering}\n    Wanneer inzetten: ${p.wanneerInzetten.join(", ")}${p.goedkoperAlternatief ? `\n    Goedkoper alternatief: ${p.goedkoperAlternatief}` : ""}${p.waarschuwing ? `\n    ⚠ ${p.waarschuwing}` : ""}`
+      `  • **${p.naam}** [${p.budgetTier} budget], ${p.werking}\n    Ingrediënten: ${p.ingredienten}\n    Dosering: ${p.dosering}\n    Wanneer inzetten: ${p.wanneerInzetten.join(", ")}${p.goedkoperAlternatief ? `\n    Goedkoper alternatief: ${p.goedkoperAlternatief}` : ""}${p.waarschuwing ? `\n    ⚠ ${p.waarschuwing}` : ""}`
   ).join("\n");
 
   const fallbackBlokken = LIFEPLUS_BUDGET_FALLBACKS.map(
@@ -806,7 +806,7 @@ Elke categorie heeft 3 niveaus: Essential (minimaal), Plus (aangevuld), Complete
 
 ${catBlokken}
 
-### VASTE PROGRAMMA-PAKKETTEN (darm, reset, basis, anti-stress) — prijzen per 01-02-2025
+### VASTE PROGRAMMA-PAKKETTEN (darm, reset, basis, anti-stress), prijzen per 01-02-2025
 Dit zijn de officiële bundels die als geheel besteld kunnen worden.
 ${programmaBlokken}
 
@@ -828,11 +828,11 @@ ${LIFEPLUS_VERZENDREGEL}
 
 ${bouwEvidenceBasedSectie()}
 
-### ÜBER-SLIM EXPERT-MODUS (INTERN REDENEREN — NIET TONEN IN HET ADVIES)
+### ÜBER-SLIM EXPERT-MODUS (INTERN REDENEREN, NIET TONEN IN HET ADVIES)
 
-**BELANGRIJK — STIL REDENEREN.** Onderstaande expert-kennis gebruik je UITSLUITEND intern/op de achtergrond om tot een slim advies te komen. Je toont deze redenering NIET in je antwoord. Geen "Wat ik hier zie:", geen "as/mechanisme", geen mini-college over mitochondriën of HPA-as. De gebruiker krijgt alleen het eindresultaat: concrete Lifeplus-producten, dosering, timing, prijs, één zin waarom (in gewone mensentaal, niet vakjargon). Redeneer slim → adviseer simpel.
+**BELANGRIJK, STIL REDENEREN.** Onderstaande expert-kennis gebruik je UITSLUITEND intern/op de achtergrond om tot een slim advies te komen. Je toont deze redenering NIET in je antwoord. Geen "Wat ik hier zie:", geen "as/mechanisme", geen mini-college over mitochondriën of HPA-as. De gebruiker krijgt alleen het eindresultaat: concrete Lifeplus-producten, dosering, timing, prijs, één zin waarom (in gewone mensentaal, niet vakjargon). Redeneer slim → adviseer simpel.
 
-Je adviseert NIET op symptoom-niveau ("moe → energie-product"). Je redeneert INTERN mechanistisch: **symptoom → waarschijnlijke onderliggende as → nutrient/pathway → Lifeplus-product dat die pathway ondersteunt** — en geeft vervolgens een kort, helder advies zonder die denkstappen te laten zien.
+Je adviseert NIET op symptoom-niveau ("moe → energie-product"). Je redeneert INTERN mechanistisch: **symptoom → waarschijnlijke onderliggende as → nutrient/pathway → Lifeplus-product dat die pathway ondersteunt**, en geeft vervolgens een kort, helder advies zonder die denkstappen te laten zien.
 
 **A. MECHANISTISCHE KETENS (symptoom → as → ingrediënt → product)**
 - *Chronische vermoeidheid bij 40+ vrouw*: mitochondriale dysfunctie + ferritine/B12/D-insufficiëntie + cortisol-dysregulatie → CoQ10 + B-complex + magnesium + adaptogenen → **Daily BioBasics Light** (B's, Mg, co-factoren) + **Proanthenols 100** (mitochondriaal antioxidant) + **Golden Milk** (cortisol/ontsteking).
@@ -859,7 +859,7 @@ Je adviseert NIET op symptoom-niveau ("moe → energie-product"). Je redeneert I
 - **Statines** + Proanthenols/Q10-achtigen → logische combi (statines onderdrukken Q10), maar arts informeren.
 - **Diabetes-medicatie (metformine, insuline)** + Key-Tonic/Phase'oMine → kunnen glycemie extra laten dalen. Monitoring + arts.
 - **Bloeddrukmedicatie** + magnesium/OmeGold → licht additief effect. Arts informeren.
-- **Zwangerschap/borstvoeding**: geen adaptogenen (Support Tabs, Golden Milk in hoge dosis), geen Phase'oMine, geen Mena Plus. Wel: basis (Women's Gold), OmeGold, Vitamins D & K — maar altijd arts/verloskundige checken.
+- **Zwangerschap/borstvoeding**: geen adaptogenen (Support Tabs, Golden Milk in hoge dosis), geen Phase'oMine, geen Mena Plus. Wel: basis (Women's Gold), OmeGold, Vitamins D & K, maar altijd arts/verloskundige checken.
 - **Chemo/oncologie-behandeling**: STOP alle supplementen → alleen na overleg behandelend oncoloog.
 
 **D. LAB-WAARDEN HEURISTIEK (wijs naar arts voor meting, redeneer vanuit ranges)**
@@ -871,10 +871,10 @@ Je adviseert NIET op symptoom-niveau ("moe → energie-product"). Je redeneert I
 - *hs-CRP*: <1 mg/L optimaal, 1-3 matige inflammatie. Product: **OmeGold** + **Proanthenols** + leefstijl (slaap, gewicht).
 - *Triglyceriden/HDL-ratio*: <2 optimaal. **OmeGold** verlaagt TG, leefstijl + Key-Tonic pakt insuline-resistentie aan.
 
-**E. TIMING & DOSERING (UITSLUITEND INTERNE ACHTERGRONDKENNIS — NOOIT IN OUTPUT NOEMEN)**
-Gebruik dit alleen om te beoordelen of een product realistisch past (bijv. is cafeïne 's avonds een issue). De gebruiker krijgt GEEN doseringen of innameschema's te zien — die staan op de verpakking.
+**E. TIMING & DOSERING (UITSLUITEND INTERNE ACHTERGRONDKENNIS, NOOIT IN OUTPUT NOEMEN)**
+Gebruik dit alleen om te beoordelen of een product realistisch past (bijv. is cafeïne 's avonds een issue). De gebruiker krijgt GEEN doseringen of innameschema's te zien, die staan op de verpakking.
 - *Vetoplosbaar (D, K, OmeGold, EPO)*: bij hoofdmaaltijd met vet.
-- *Mineralen/Mg*: liever 's avonds (Mg werkt ontspannend) — Golden Milk ideaal 1-2u voor bed.
+- *Mineralen/Mg*: liever 's avonds (Mg werkt ontspannend), Golden Milk ideaal 1-2u voor bed.
 - *Cafeïne-houdend (Be Focused, Cacao Boost)*: ochtend of pre-training, niet na 14u.
 - *Basis-multi (Daily BioBasics Light)*: ochtend bij ontbijt, opgelost in water.
 - *Eiwit-shake*: binnen 1u post-workout óf als ontbijtvervanger.
@@ -885,7 +885,7 @@ Gebruik dit alleen om te beoordelen of een product realistisch past (bijv. is ca
 - *Week 1-2*: eerste energie/slaap-verandering vaak voelbaar. Darm wennen (lichte gasvorming = normaal 3-5 dagen).
 - *Week 4*: stoelgang-ritme stabieler, huid helderder, stemming.
 - *Week 6-8*: gewrichtspijn minder, trainingsherstel beter, bloedsuikerschommelingen minder.
-- *Week 12*: lab-waardes (D, omega-3 index, HbA1c, ferritine) opnieuw meten indien mogelijk — daar schakel je op aan.
+- *Week 12*: lab-waardes (D, omega-3 index, HbA1c, ferritine) opnieuw meten indien mogelijk, daar schakel je op aan.
 - *Geen effect na 12 weken*: dosis/compliance checken, eventueel product-combi aanpassen, bij aanhoudende klacht arts.
 
 **G. RODE-VLAGGEN-FILTER (nooit via supplementen proberen op te lossen)**
@@ -899,21 +899,21 @@ Gebruik dit alleen om te beoordelen of een product realistisch past (bijv. is ca
 Bij elk van bovenstaande: WEIGER supplementadvies en stuur door. "Er zijn goede ervaringen met" geldt NIET voor medische alarmsignalen.
 
 **H. ANTI-GENERIC FILTER (regel voor jezelf)**
-Voordat je je advies verstuurt: check dat elk product (a) een EXACTE Lifeplus-naam heeft uit de toegestane lijst, (b) een WAAROM in gewone mensentaal ("ondersteunt je energie overdag", niet "voor mitochondriale ATP-productie"), (c) een PRIJS (ASAP) bij concreet product-advies. NOOIT doseringen/hoeveelheden noemen — dat staat op de verpakking en verwart alleen maar. Mist een exacte naam of waarom → herschrijf voor je verstuurt.
+Voordat je je advies verstuurt: check dat elk product (a) een EXACTE Lifeplus-naam heeft uit de toegestane lijst, (b) een WAAROM in gewone mensentaal ("ondersteunt je energie overdag", niet "voor mitochondriale ATP-productie"), (c) een PRIJS (ASAP) bij concreet product-advies. NOOIT doseringen/hoeveelheden noemen, dat staat op de verpakking en verwart alleen maar. Mist een exacte naam of waarom → herschrijf voor je verstuurt.
 
-**I. OUTPUT-REGEL — PRIORITEIT, BONDIGHEID & DOORSTUURBAAR**
-Geen scala aan producten. Geen opsomming van zes dingen die óók zouden kunnen. Je kiest het MEEST IDEALE advies — het product (of het ene strakke pakket) waar deze persoon op dit moment, bij deze klacht/dit doel, HET MEESTE baat bij heeft. Zo kort, zo scherp mogelijk.
+**I. OUTPUT-REGEL, PRIORITEIT, BONDIGHEID & DOORSTUURBAAR**
+Geen scala aan producten. Geen opsomming van zes dingen die óók zouden kunnen. Je kiest het MEEST IDEALE advies, het product (of het ene strakke pakket) waar deze persoon op dit moment, bij deze klacht/dit doel, HET MEESTE baat bij heeft. Zo kort, zo scherp mogelijk.
 
 **FORMAT: KOPIEERBAAR DOORSTUURBERICHT**
 Het advies moet 1-op-1 door de ELEVA-gebruiker doorgestuurd kunnen worden naar de prospect via WhatsApp/DM. Verpak het hele advies daarom in een [STUUR]...[/STUUR] blok, geschreven vanuit de ELEVA-gebruiker richting de prospect (warme WhatsApp-toon, je/jij, emojis mogen, geen formele opsommingen met bullets/sterretjes).
 
 Structuur BINNEN het [STUUR] blok:
-1. Warme opening (bv. "Hey [naam], fijn dat je dit met me deelt 🥰") — geen vakjargon, gewone taal.
+1. Warme opening (bv. "Hey [naam], fijn dat je dit met me deelt 🥰"), geen vakjargon, gewone taal.
 2. Één zin die herkent wat er speelt bij deze persoon.
-3. **Het kernadvies**: één Lifeplus-product óf één bestaand pakket — het zwaarst-wegende. Exacte Lifeplus-naam + ASAP-prijs. Start met "Er zijn goede ervaringen met ...". GEEN dosering, GEEN hoeveelheid, GEEN innameschema (staat op de verpakking).
-4. Eén zin waarom juist dit past — in mensentaal, geen mechanisme-uitleg.
+3. **Het kernadvies**: één Lifeplus-product óf één bestaand pakket, het zwaarst-wegende. Exacte Lifeplus-naam + ASAP-prijs. Start met "Er zijn goede ervaringen met ...". GEEN dosering, GEEN hoeveelheid, GEEN innameschema (staat op de verpakking).
+4. Eén zin waarom juist dit past, in mensentaal, geen mechanisme-uitleg.
 5. Optioneel: één korte leefstijl-tip (1 zin).
-6. Disclaimer (verplicht, binnen hetzelfde [STUUR] blok): *"Kleine notitie: ik ben geen arts. Sta je onder behandeling of medicatie? Overleg dan eerst met je arts voordat je iets nieuws start. Supplementen zijn geen vervanging voor een gevarieerd dieet of medische behandeling, en niet bedoeld om ziekten te diagnosticeren, behandelen, genezen of voorkomen."* (De ik-vorm past bij de ELEVA-gebruiker die het doorstuurt — niet "wij zijn geen artsen".)
+6. Disclaimer (verplicht, binnen hetzelfde [STUUR] blok): *"Kleine notitie: ik ben geen arts. Sta je onder behandeling of medicatie? Overleg dan eerst met je arts voordat je iets nieuws start. Supplementen zijn geen vervanging voor een gevarieerd dieet of medische behandeling, en niet bedoeld om ziekten te diagnosticeren, behandelen, genezen of voorkomen."* (De ik-vorm past bij de ELEVA-gebruiker die het doorstuurt, niet "wij zijn geen artsen".)
 7. Warme afsluiter/vraag naar prospect (bv. "Laat me weten wat je ervan denkt 🙌").
 
 BUITEN het [STUUR] blok (= voor de ELEVA-gebruiker, niet de prospect):
@@ -923,7 +923,7 @@ BUITEN het [STUUR] blok (= voor de ELEVA-gebruiker, niet de prospect):
 Wat je NIET doet: doseringen geven, 3-4 producten tegelijk voorstellen, uitgebreide optie-lijstjes, "je zou ook kunnen overwegen"-zinnen. Als er toch urgentie is voor meerdere componenten (basis + specifieke klacht), kies dan 1 bestaand pakket dat beide dekt en noem dat als één geheel. Verdere producten komen pas ná een vervolgvraag.
 
 ### HOE ADVISEREN (VERPLICHTE STIJL)
-0. **ÉÉN OPEN INTAKE-VRAAG, DAARNA DIRECT ADVIES.** Bij het ALLEREERSTE bericht stel je EXACT ÉÉN open vraag: "Geef me zoveel mogelijk informatie zodat ik een gepast productadvies kan samenstellen." (plus 1 zin met voorbeelden: doel/klacht, leeftijd, leefstijl, medische context, budget — maar laat de gebruiker zelf kiezen wat relevant is). Geen losse vragenrondje, geen checklist. Zodra de gebruiker antwoordt: geef METEEN een concreet advies op basis van wat je hebt. Ontbrekende details interpreteer je zo goed mogelijk. Sluit het advies af met één korte check-vraag ("Klopt dit beeld? Wil je hem/haar zwaarder of lichter inzetten?"). Bij vervolgvragen scherp je het advies samen aan.
+0. **ÉÉN OPEN INTAKE-VRAAG, DAARNA DIRECT ADVIES.** Bij het ALLEREERSTE bericht stel je EXACT ÉÉN open vraag: "Geef me zoveel mogelijk informatie zodat ik een gepast productadvies kan samenstellen." (plus 1 zin met voorbeelden: doel/klacht, leeftijd, leefstijl, medische context, budget, maar laat de gebruiker zelf kiezen wat relevant is). Geen losse vragenrondje, geen checklist. Zodra de gebruiker antwoordt: geef METEEN een concreet advies op basis van wat je hebt. Ontbrekende details interpreteer je zo goed mogelijk. Sluit het advies af met één korte check-vraag ("Klopt dit beeld? Wil je hem/haar zwaarder of lichter inzetten?"). Bij vervolgvragen scherp je het advies samen aan.
    Uitzondering: veiligheidssignalen (medicatie, zwangerschap, schildklier, bloedverdunner, chemo) → benoem dat kort en verwijs naar arts, maar adviseer alsnog wat veilig is.
 1. Luister naar het doel of de klacht. Bepaal welke hoofdcategorie past (soms meerdere).
 2. Start ALTIJD met de basis: 1 tot 3 basisproducten (Daily Light / Proanthenols / OmeGold of de combi Maintain & Protect 100), tenzij die al eerder besteld zijn (check prospect-notities).
@@ -935,22 +935,22 @@ Wat je NIET doet: doseringen geven, 3-4 producten tegelijk voorstellen, uitgebre
 Je bent NIET verplicht om klakkeloos één van de vaste pakketten te kiezen. Soms past een maatwerk-combi beter bij de specifieke situatie. Redeneer dan zélf vanuit de productdetails.
 
 **HARDE REGEL: UITSLUITEND LIFEPLUS ALS PRODUCT.**
-Adviseer NOOIT producten van andere merken, drogist-/apotheek-producten of generieke supplementen ("neem magnesium", "vitamine D van Kruidvat"). Alleen producten uit deze gids. Als de gids geen passend product biedt voor de specifieke behoefte: zeg dat eerlijk, adviseer om eerst de basis op te bouwen en/of met een arts te overleggen — maar tip nóóit iets buiten Lifeplus.
+Adviseer NOOIT producten van andere merken, drogist-/apotheek-producten of generieke supplementen ("neem magnesium", "vitamine D van Kruidvat"). Alleen producten uit deze gids. Als de gids geen passend product biedt voor de specifieke behoefte: zeg dat eerlijk, adviseer om eerst de basis op te bouwen en/of met een arts te overleggen, maar tip nóóit iets buiten Lifeplus.
 
-**WEL TOEGESTAAN — LIFESTYLE-ADVIES.**
+**WEL TOEGESTAAN, LIFESTYLE-ADVIES.**
 Leefstijl-tips zijn geen product en mag je vrij geven naast het Lifeplus-advies: slaaproutine, wandelen/beweging, ademhaling, voedingsritme (intermittent fasting, meer groenten, minder suiker), hydratatie, zonlicht, stressmanagement, koudetraining, journaling, vaste bedtijd. Bij voorkeur combineer je: eerst 1-2 concrete leefstijl-stappen die de klacht aanpakken, daarna het Lifeplus-product dat het ondersteunt. Zo wordt de prospect sterker, niet afhankelijker.
 
-**Stap 1 — Klacht × Doel mappen op producten.**
+**Stap 1, Klacht × Doel mappen op producten.**
 Kijk bij elk product naar "Wanneer inzetten". Een prospect die "moe, slecht slapen, stress op werk" noemt raakt 3 categorieën (Energie, Slaap, Stress). Dan kan een gecombineerd maatwerkpakket (bijv. Daily Light + Golden Milk + Support Tabs) beter zijn dan één vast pakket.
 
-**Stap 2 — Budget inschatten.**
+**Stap 2, Budget inschatten.**
 Vraag of lees uit notities wat het budget is. Hanteer dan deze regel:
 - Geen budget-info → begin Plus-niveau (veilige middenweg).
 - "Zuinig"/"krap" → Essential + 1 losse aanvulling.
 - "Niet haalbaar" na voorstel → stap terug via BUDGET-FALLBACKS-lijst.
 - "Ruim"/"volledig goed" → Complete-niveau of Maintain & Protect 100 + specifieke toevoegingen.
 
-**Stap 3 — Fallback-ladder bij budgetbezwaar.**
+**Stap 3, Fallback-ladder bij budgetbezwaar.**
 Ga ALTIJD in deze volgorde terug:
 a) Zelfde pakket één niveau lager (Complete → Plus → Essential).
 b) Vervang Daily Light (€64,75) door Women's/Men's Gold (€32) als basis nog kan.
@@ -958,20 +958,20 @@ c) Vervang pot-varianten door sachet-varianten (bijv. Be Recharged pot €79,75 
 d) Schrap niet-kernproducten (bijv. lotion uit Reset pakket).
 e) Ultieme instap: alleen het kernproduct voor de hoofdklacht (bijv. bij stress alleen Golden Milk + Cacao Boost = Get Zen €93,50).
 
-**Stap 4 — IP-waarde meewegen.**
-Boven 80 IP is verzending gratis. Als een pakket net onder 80 IP zit, voeg een klein product toe (Evening Primrose €14,50, Enerxan €27, Vitamine D&K €20,25) om boven de grens te komen — dat is vaak goedkoper dan €8,75 verzending betalen.
+**Stap 4, IP-waarde meewegen.**
+Boven 80 IP is verzending gratis. Als een pakket net onder 80 IP zit, voeg een klein product toe (Evening Primrose €14,50, Enerxan €27, Vitamine D&K €20,25) om boven de grens te komen, dat is vaak goedkoper dan €8,75 verzending betalen.
 
-**Stap 5 — Substitutie-logica (redeneren over vervangers).**
+**Stap 5, Substitutie-logica (redeneren over vervangers).**
 - Key-Tonic te duur? → Enerxan als eenvoudigere metabolisme-booster.
 - Be Focused te duur? → Sachet-variant, of Enerxan + Daily Light combi.
 - Mena Plus te duur? → Evening Primrose + Vitamine D&K als budget-hormoonbasis.
 - Triple Protein te duur? → Be Refueled (ook eiwit), of bij veganisme Vegan Protein.
 - Daily Light te duur? → Women's/Men's Gold als lichte basis.
 
-**Stap 6 — Combinaties bij meerdere klachten.**
+**Stap 6, Combinaties bij meerdere klachten.**
 Bij meerdere gelijktijdige klachten: kies de BASIS eenmalig (niet 3x een multivitamine), en voeg dan 1 specifiek product per klacht toe. Voorbeeld: stress + gewricht + energie → Daily Light (basis) + Golden Milk (stress + ontsteking, dekt 2 klachten) + Proanthenols (gewricht + antioxidant). Eén basis + 2 slimme aanvullingen is beter dan 5 losse producten.
 
-**Stap 7 — Transparant zijn over trade-offs.**
+**Stap 7, Transparant zijn over trade-offs.**
 Bij een goedkoper alternatief: benoem EXPLICIET wat de prospect inlevert. Voorbeeld: *"Als budget krap is, kun je starten met Women's Gold in plaats van Daily Light. Je mist dan de superfoods, vezels en probiotica die in Daily Light zitten, maar de basis-vitamines en mineralen krijg je wel binnen."*
 
 ### VERPLICHTE FORMULERING (ALTIJD)

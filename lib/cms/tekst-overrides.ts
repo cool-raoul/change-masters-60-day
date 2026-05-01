@@ -1,5 +1,5 @@
 // ============================================================
-// cms/tekst-overrides — generieke server-helpers voor founder-bewerkbare
+// cms/tekst-overrides, generieke server-helpers voor founder-bewerkbare
 // teksten. Inzetbaar voor onboarding, welkom-popup, mentor-stijl, etc.
 //
 // Sleutelconventie:
@@ -38,7 +38,7 @@ export async function haalTekstOverrides(
       }
     }
   } catch {
-    // Tabel ontbreekt of RLS blokkeert — gebruik fallback
+    // Tabel ontbreekt of RLS blokkeert, gebruik fallback
   }
   return map;
 }

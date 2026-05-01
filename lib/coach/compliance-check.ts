@@ -1,7 +1,7 @@
 // ============================================================
-// COMPLIANCE CHECK — ELEVA coach
+// COMPLIANCE CHECK, ELEVA coach
 // Passieve scan op verboden gezondheidsclaims in coach-antwoorden.
-// NIET bedoeld om de stream te blokkeren of te herschrijven —
+// NIET bedoeld om de stream te blokkeren of te herschrijven.
 // alleen om observability te geven: welke antwoorden glippen er
 // toch doorheen ondanks de strenge system-prompt?
 // Ruwe detectie per regex, geen AI. Bewust ruim: liever één false
@@ -60,7 +60,7 @@ export type ComplianceResultaat = {
 
 /**
  * Scant een coach-antwoord op verboden claims.
- * Geeft een lijst flags terug. Blokkeert niets — de caller beslist
+ * Geeft een lijst flags terug. Blokkeert niets, de caller beslist
  * of er gelogd, gewaarschuwd of herschreven wordt.
  *
  * LET OP: ruwe regex. Een false positive hier is geen ramp (we

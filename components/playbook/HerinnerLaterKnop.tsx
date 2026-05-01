@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 
 // ============================================================
-// HerinnerLaterKnop — "snooze" voor de daily tasks.
+// HerinnerLaterKnop, "snooze" voor de daily tasks.
 //
 // Bij klik:
 //   1. Verwijder de localStorage-flag voor vandaag-flow → bij volgend
@@ -69,7 +69,7 @@ export function HerinnerLaterKnop({
           prospect_id: null,
           titel: `📋 Pak je daily tasks van dag ${dagNummer} op`,
           beschrijving:
-            "Open ELEVA om je dagelijkse stappen af te ronden — we hebben je gevraagd om er later vandaag aan herinnerd te worden.",
+            "Open ELEVA om je dagelijkse stappen af te ronden, we hebben je gevraagd om er later vandaag aan herinnerd te worden.",
           vervaldatum: vandaag,
           herinnering_type: "followup",
           voltooid: false,
@@ -77,7 +77,7 @@ export function HerinnerLaterKnop({
       }
 
       toast.success(
-        "Top — we tonen je dag-flow weer zodra je terug bent op het dashboard 💪",
+        "Top, we tonen je dag-flow weer zodra je terug bent op het dashboard 💪",
       );
       if (onKlaar) {
         onKlaar();
@@ -85,7 +85,7 @@ export function HerinnerLaterKnop({
         router.push("/dashboard");
       }
     } catch {
-      toast.error("Iets ging mis — probeer opnieuw");
+      toast.error("Iets ging mis, probeer opnieuw");
     } finally {
       setBezig(false);
     }

@@ -1,5 +1,5 @@
 // ============================================================
-// KENNISBANK AI COACH — ELEVA 60-Dagenrun
+// KENNISBANK AI COACH, ELEVA 60-Dagenrun
 // SLIM LADEN: alleen relevante secties per vraagtype
 // Bronnen: Eric Worre (Go Pro + 90 Day Run) + Fraser Brookes
 // ============================================================
@@ -182,40 +182,40 @@ Stel harde vragen. Geen zachte aanpak. Feiten vs excuses.
 ### 3-WEG GESPREK (Worre + Brooks + ELEVA stijl)
 
 KERNPRINCIPE: Jij = student, sponsor = expert. Zodra sponsor in het groepje is: stap terug.
-Geen toestemming vragen — aankondiging doen. Sponsor edifyen VOOR introductie, niet erna.
+Geen toestemming vragen, aankondiging doen. Sponsor edifyen VOOR introductie, niet erna.
 
 FLOW PRODUCT/INTERESSE:
-Stap 1 — Aankondiging (jij aan prospect, vóór het groepje):
-"Hey [naam]! Ik maak even een groepje aan met [naam sponsor], want ik kan het zelf nog niet zo goed uitleggen 😄 Zij doet dit al [periode] en heeft zelf ook super mooi resultaat behaald — ze kan met je mee kijken en al je vragen beantwoorden 🥰"
+Stap 1, Aankondiging (jij aan prospect, vóór het groepje):
+"Hey [naam]! Ik maak even een groepje aan met [naam sponsor], want ik kan het zelf nog niet zo goed uitleggen 😄 Zij doet dit al [periode] en heeft zelf ook super mooi resultaat behaald, ze kan met je mee kijken en al je vragen beantwoorden 🥰"
 
-Stap 2 — Introductie in het groepje (jij):
-"Hi [naam prospect]! 😊 Dit is [naam sponsor] — mijn vriendin en mentor. Ze doet dit al [periode] en heeft zelf fantastische resultaten behaald. Ze helpt mij nu ook en heeft al heel veel mensen begeleid met precies wat jij zoekt 🥰
+Stap 2, Introductie in het groepje (jij):
+"Hi [naam prospect]! 😊 Dit is [naam sponsor], mijn vriendin en mentor. Ze doet dit al [periode] en heeft zelf fantastische resultaten behaald. Ze helpt mij nu ook en heeft al heel veel mensen begeleid met precies wat jij zoekt 🥰
 [naam sponsor], dit is [naam prospect]. Ze is op zoek naar [situatie]. Wil jij haar even verder helpen? 🙏"
 
-Stap 3 — STAP TERUG. Zeg niets meer tenzij sponsor vraagt.
+Stap 3, STAP TERUG. Zeg niets meer tenzij sponsor vraagt.
 
-Stap 4 — Sponsor opent:
-"Hey [naam]! Wat leuk dat [teamlid] ons aan elkaar koppelt 🥰 Ik heb even gelezen wat er speelt — herkenbaar! Vertel eens, hoe lang speelt dit al bij je en wat heb je al geprobeerd? 😊"
+Stap 4, Sponsor opent:
+"Hey [naam]! Wat leuk dat [teamlid] ons aan elkaar koppelt 🥰 Ik heb even gelezen wat er speelt, herkenbaar! Vertel eens, hoe lang speelt dit al bij je en wat heb je al geprobeerd? 😊"
 
-Stap 5 — Follow-up (jij aan prospect, apart, binnen 24u):
+Stap 5, Follow-up (jij aan prospect, apart, binnen 24u):
 "Hey [naam] 😊 Wat sprak je het meeste aan van wat je tot nu toe hebt gezien? 🥰"
 OF: "Zie je hoe dit je kan helpen om [hun doel] te creëren? 💛"
-NOOIT: "Wat vond je ervan?" — vraagt naar mening, zet prospect als beoordelaar.
+NOOIT: "Wat vond je ervan?", vraagt naar mening, zet prospect als beoordelaar.
 
 FLOW BUSINESS/OPPORTUNITY:
-Stap 1 — Aankondiging (jij aan prospect, vóór het groepje):
-"Hey [naam]! Ik maak even een groepje aan met [naam sponsor], want ik kan het zelf nog niet zo goed uitleggen 😄 Hij/zij doet dit al [periode] en heeft zelf een mooie business opgebouwd — hij/zij kan met je mee kijken en al je vragen beantwoorden 👍🏽"
+Stap 1, Aankondiging (jij aan prospect, vóór het groepje):
+"Hey [naam]! Ik maak even een groepje aan met [naam sponsor], want ik kan het zelf nog niet zo goed uitleggen 😄 Hij/zij doet dit al [periode] en heeft zelf een mooie business opgebouwd, hij/zij kan met je mee kijken en al je vragen beantwoorden 👍🏽"
 
-Stap 2 — Introductie in het groepje (jij):
-"Hi [naam prospect]! 😊 Dit is [naam sponsor] — hij/zij doet dit al [periode] en heeft zelf een mooie business opgebouwd. Hij/zij helpt mij nu ook en heeft al veel mensen begeleid die precies op zoek waren naar wat jij zoekt 💪🏽
+Stap 2, Introductie in het groepje (jij):
+"Hi [naam prospect]! 😊 Dit is [naam sponsor], hij/zij doet dit al [periode] en heeft zelf een mooie business opgebouwd. Hij/zij helpt mij nu ook en heeft al veel mensen begeleid die precies op zoek waren naar wat jij zoekt 💪🏽
 [naam sponsor], dit is [naam prospect]. Ze is op zoek naar [situatie]. Wil jij haar even meenemen in hoe dit werkt? 🙏"
 
-Stap 3 — STAP TERUG. Zeg niets meer tenzij sponsor vraagt.
+Stap 3, STAP TERUG. Zeg niets meer tenzij sponsor vraagt.
 
-Stap 4 — Sponsor opent:
-"Hey [naam]! Leuk dat [teamlid] ons aan elkaar koppelt 😊 Ik vertel je graag meer — maar eerst even kennismaken! Vertel, wat doe je nu en wat zou jij willen veranderen als je helemaal eerlijk bent? 🥰"
+Stap 4, Sponsor opent:
+"Hey [naam]! Leuk dat [teamlid] ons aan elkaar koppelt 😊 Ik vertel je graag meer, maar eerst even kennismaken! Vertel, wat doe je nu en wat zou jij willen veranderen als je helemaal eerlijk bent? 🥰"
 
-Stap 5 — Follow-up (jij aan prospect, apart, binnen 24u):
+Stap 5, Follow-up (jij aan prospect, apart, binnen 24u):
 "Hey [naam] 😊 Wat sprak je het meeste aan van wat je tot nu toe hebt gezien en gehoord? 🥰"
 OF: "Zie je hoe dit je kan helpen om [hun doel] te bereiken? 💛"
 
@@ -226,22 +226,22 @@ FOUTEN DIE MENSEN MAKEN:
 - Sponsor pitcht meteen → moet eerst rapport bouwen
 - Geen follow-up binnen 24u → momentum verloren
 
-EDIFICATION (Worre + Brookes) — DE ZIN VÓÓRDAT JE SPONSOR PRAAT:
+EDIFICATION (Worre + Brookes), DE ZIN VÓÓRDAT JE SPONSOR PRAAT:
 
 Edification = in 1-2 zinnen WAAROM jouw sponsor de juiste persoon is om deze prospect verder te helpen, vóórdat de sponsor ook maar één woord zegt. Niet erna. Niet improviseren. Eén vaste zin, telkens identiek.
 
 DE FORMULE: "Ik ga je voorstellen aan [naam], die [autoriteit/track-record], en degene die [persoonlijke link met jou]."
 
 DRIE BOUWSTENEN:
-1. WIE — naam + relatie tot jou (mentor / sponsor / coach / vriendin)
-2. AUTORITEIT — hoe lang in dit vak + concreet getal of resultaat (jaren ervaring, mensen geholpen, schaal van impact, eigen transformatie)
-3. PERSOONLIJKE LINK — waarom JIJ deze persoon hebt gekozen (wat zij/hij voor jou heeft betekend, in jouw eigen taal)
+1. WIE, naam + relatie tot jou (mentor / sponsor / coach / vriendin)
+2. AUTORITEIT, hoe lang in dit vak + concreet getal of resultaat (jaren ervaring, mensen geholpen, schaal van impact, eigen transformatie)
+3. PERSOONLIJKE LINK, waarom JIJ deze persoon hebt gekozen (wat zij/hij voor jou heeft betekend, in jouw eigen taal)
 
 REGELS:
 - Max 25 woorden. Onder 20 nóg beter.
 - Geen overdrijving ("de allerbeste!"), geen hype, geen medische/financiële claims.
 - Identiek elke keer. Schrijven, uit je hoofd leren, blijven gebruiken.
-- Geen pitch-gevoel — gewoon de waarheid, scherp opgeschreven.
+- Geen pitch-gevoel, gewoon de waarheid, scherp opgeschreven.
 
 WANNEER DE MEMBER VRAAGT OM JE EDIFICATION-ZIN TE CHECKEN:
 Loop deze checklist letterlijk af en geef per item ✓ of ✗ met korte uitleg. Daarna: één concrete verbetersuggestie per ✗.

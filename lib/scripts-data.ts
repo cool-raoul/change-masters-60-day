@@ -1,4 +1,4 @@
-// Scripts bibliotheek — samengesteld uit de Change Masters PDF's
+// Scripts bibliotheek, samengesteld uit de Change Masters PDF's
 // uitnodigingen.pdf + bezwaren etc.pdf
 
 export const SCRIPTS_DATA = [
@@ -6,7 +6,7 @@ export const SCRIPTS_DATA = [
   // UITNODIGINGEN
   // =============================================
   {
-    titel: "60-Dagen Script — Persoonlijk",
+    titel: "60-Dagen Script, Persoonlijk",
     categorie: "uitnodiging" as const,
     pipeline_fase: "lead" as const,
     tags: ["60-dagen", "persoonlijk", "koffie", "zoom"],
@@ -32,7 +32,7 @@ En dan mag jij zelf voelen: is dit iets voor mij of niet?
 Zullen we even samen zitten? Koffie, lunch of even via Zoom?"`,
   },
   {
-    titel: "60-Dagen Script — Direct & Eerlijk",
+    titel: "60-Dagen Script, Direct & Eerlijk",
     categorie: "uitnodiging" as const,
     pipeline_fase: "lead" as const,
     tags: ["60-dagen", "direct", "eerlijk", "warme-prospect"],
@@ -60,7 +60,7 @@ Stel dat alles klopt, stel dat je voelt: dit past bij mij,
 zou je dan zeggen: hier wil ik bij zijn? Of niet?"`,
   },
   {
-    titel: "Whisper Campaign — Geheime start",
+    titel: "Whisper Campaign, Geheime start",
     categorie: "uitnodiging" as const,
     pipeline_fase: "lead" as const,
     tags: ["whisper", "exclusief", "nieuwsgierigheid"],
@@ -81,7 +81,7 @@ en dan heb ik minder ruimte.
 
 Dus dit is eigenlijk je moment om even mee te kijken aan de voorkant.
 
-Als je voelt: dit zou zomaar eens iets voor mij kunnen zijn —
+Als je voelt: dit zou zomaar eens iets voor mij kunnen zijn.
 laten we even zitten. Dan laat ik je zien wat ik ga doen."`,
   },
   {
@@ -108,7 +108,7 @@ En ondertussen:
 
 Ik ga hier echt iets neerzetten.
 
-En ik zoek geen massa —
+En ik zoek geen massa.
 ik zoek een paar mensen die dit met mij willen doen.
 
 Dus stel… alles klopt, stel dat dit voelt als iets voor jou:
@@ -119,11 +119,11 @@ ben je dan in, of ben je uit?"`,
   // BEZWAREN BEHANDELING
   // =============================================
   {
-    titel: "Feel Felt Found — Standaard aanpak",
+    titel: "Feel Felt Found, Standaard aanpak",
     categorie: "bezwaar" as const,
     pipeline_fase: null,
     tags: ["feel-felt-found", "bezwaar", "techniek"],
-    inhoud: `De Feel-Felt-Found methode — gebruik bij elk bezwaar:
+    inhoud: `De Feel-Felt-Found methode, gebruik bij elk bezwaar:
 
 FEEL: "Ik snap dat dat zo voelt."
 FELT: "Meer mensen voelden dat in het begin ook."
@@ -272,10 +272,10 @@ Om door te pakken:
     tags: ["follow-up", "basis", "volgorde"],
     inhoud: `De basis volgorde van follow up:
 
-1. CHECK IN — Laat merken dat je opvolgt zoals afgesproken
-2. PEIL EERST — Vraag wat iemand het meeste aansprak
-3. VERDIEP — Zoek uit waar energie zit en waar twijfel zit
-4. LEID DOOR — Breng het gesprek naar de volgende logische stap
+1. CHECK IN, Laat merken dat je opvolgt zoals afgesproken
+2. PEIL EERST, Vraag wat iemand het meeste aansprak
+3. VERDIEP, Zoek uit waar energie zit en waar twijfel zit
+4. LEID DOOR, Breng het gesprek naar de volgende logische stap
 
 Onthoud:
 ✗ Niet jagen
@@ -287,7 +287,7 @@ Onthoud:
   // SLUITING (CLOSING)
   // =============================================
   {
-    titel: "Closingsvragen — Reeks",
+    titel: "Closingsvragen, Reeks",
     categorie: "sluiting" as const,
     pipeline_fase: "followup" as const,
     tags: ["closing", "sluiting", "vragen"],
@@ -301,11 +301,11 @@ BESLISSING VOORBEREIDEN: "Wat heb je nog nodig om hier een goede beslissing over
 START VRAGEN: "Als het klopt en goed voelt, zullen we dan gewoon starten?"`,
   },
   {
-    titel: "Doel-Tijd-Termijn Closing — Volledige flow",
+    titel: "Doel-Tijd-Termijn Closing, Volledige flow",
     categorie: "sluiting" as const,
     pipeline_fase: "followup" as const,
     tags: ["closing", "doel-tijd-termijn", "flow", "financieel"],
-    inhoud: `Doel-Tijd-Termijn Closing — gebruik deze volgorde letterlijk:
+    inhoud: `Doel-Tijd-Termijn Closing, gebruik deze volgorde letterlijk:
 
 1. "Even los van alles wat je gezien hebt: stel dat je hiermee zou starten, hoeveel euro per maand zou je dan willen verdienen zodat het voor jou echt de moeite waard is om hier tijd in te stoppen?"
 
@@ -320,7 +320,7 @@ START VRAGEN: "Als het klopt en goed voelt, zullen we dan gewoon starten?"`,
 WHY: De ander spreekt zelf uit wat hij wil. De motivatie komt van hem, niet van jou.`,
   },
   {
-    titel: "Closing — Zachte variant",
+    titel: "Closing, Zachte variant",
     categorie: "sluiting" as const,
     pipeline_fase: "followup" as const,
     tags: ["closing", "zacht", "twijfelaar"],
@@ -329,7 +329,7 @@ WHY: De ander spreekt zelf uit wat hij wil. De motivatie komt van hem, niet van 
 "Stel dat het realistisch en haalbaar is, en ik kan je laten zien hoe dit er voor jou uit zou kunnen zien, sta je er dan voor open om dat samen te bekijken?"`,
   },
   {
-    titel: "Closing — Directe variant voor warme prospects",
+    titel: "Closing, Directe variant voor warme prospects",
     categorie: "sluiting" as const,
     pipeline_fase: "followup" as const,
     tags: ["closing", "direct", "warm", "beslissing"],
@@ -340,18 +340,18 @@ WHY: De ander spreekt zelf uit wat hij wil. De motivatie komt van hem, niet van 
 "En als ik je kan laten zien dat dit realistisch is binnen jouw doelen, jouw tijd en jouw termijn, zullen we dan gewoon de eerste stap zetten?"`,
   },
   {
-    titel: "Korte gespreksflow — Volgorde",
+    titel: "Korte gespreksflow, Volgorde",
     categorie: "sluiting" as const,
     pipeline_fase: null,
     tags: ["volgorde", "gesprek", "flow", "compleet"],
     inhoud: `Gebruik deze volgorde in elk gesprek:
 
-1. NODIG UIT — Laat iemand kijken
-2. FOLLOW UP — Peil wat het meeste aansprak
-3. MAAK TWIJFEL HELDER — Gebruik vragen en Feel-Felt-Found
-4. CLOSINGSVRAGEN — Geef richting
-5. DOEL-TIJD-TERMIJN — Laat de ander zijn eigen motivatie uitspreken
-6. VOLGENDE STAP — Laat een plan zien of zet direct de eerste stap
+1. NODIG UIT, Laat iemand kijken
+2. FOLLOW UP, Peil wat het meeste aansprak
+3. MAAK TWIJFEL HELDER, Gebruik vragen en Feel-Felt-Found
+4. CLOSINGSVRAGEN, Geef richting
+5. DOEL-TIJD-TERMIJN, Laat de ander zijn eigen motivatie uitspreken
+6. VOLGENDE STAP, Laat een plan zien of zet direct de eerste stap
 
 Onthoud:
 ✗ Niet meer praten om iemand over te halen
@@ -360,10 +360,10 @@ Onthoud:
   },
 
   // =============================================
-  // EDIFICATION — sponsor laten schitteren in 3-weg
+  // EDIFICATION, sponsor laten schitteren in 3-weg
   // =============================================
   {
-    titel: "Edification — Formule (Worre)",
+    titel: "Edification, Formule (Worre)",
     categorie: "edification" as const,
     pipeline_fase: null,
     tags: ["edification", "formule", "3-weg", "sponsor", "introductie"],
@@ -372,9 +372,9 @@ Onthoud:
 "Ik ga je voorstellen aan [naam], die [autoriteit / track-record], en degene die [persoonlijke link met jou]."
 
 DRIE BOUWSTENEN:
-1. WIE — naam + relatie (mijn mentor / sponsor / vriendin / coach)
-2. AUTORITEIT — hoe lang in dit vak + concreet getal of resultaat (jaren ervaring, mensen geholpen, eigen transformatie)
-3. PERSOONLIJKE LINK — waarom JIJ deze persoon hebt gekozen (wat zij/hij voor jou heeft betekend)
+1. WIE, naam + relatie (mijn mentor / sponsor / vriendin / coach)
+2. AUTORITEIT, hoe lang in dit vak + concreet getal of resultaat (jaren ervaring, mensen geholpen, eigen transformatie)
+3. PERSOONLIJKE LINK, waarom JIJ deze persoon hebt gekozen (wat zij/hij voor jou heeft betekend)
 
 REGEL: max 25 woorden. Geen overdrijving. Geen "de allerbeste" of "wereldberoemd". Gewoon de waarheid, stevig opgeschreven.
 
@@ -384,11 +384,11 @@ Mét edification stap jij terug, sponsor klimt naar voren, prospect denkt "deze 
 Eén keer goed schrijven = honderd keer sterker presenteren.`,
   },
   {
-    titel: "Edification — Sportcoach-sponsor",
+    titel: "Edification, Sportcoach-sponsor",
     categorie: "edification" as const,
     pipeline_fase: null,
     tags: ["edification", "voorbeeld", "sportcoach", "energie"],
-    inhoud: `"Ik ga je voorstellen aan Mark, die al 12 jaar mensen begeleidt naar meer energie en helderheid — degene die mij heeft laten zien dat dit niet over producten gaat maar over je leven terugpakken."
+    inhoud: `"Ik ga je voorstellen aan Mark, die al 12 jaar mensen begeleidt naar meer energie en helderheid, degene die mij heeft laten zien dat dit niet over producten gaat maar over je leven terugpakken."
 
 WAAROM DEZE WERKT:
 ✓ Concreet getal (12 jaar)
@@ -398,24 +398,24 @@ WAAROM DEZE WERKT:
 ✓ Geen hype, wel scherp`,
   },
   {
-    titel: "Edification — Mama-sponsor",
+    titel: "Edification, Mama-sponsor",
     categorie: "edification" as const,
     pipeline_fase: null,
     tags: ["edification", "voorbeeld", "moeder", "vrouwen", "balans"],
-    inhoud: `"Ik ga je voorstellen aan Linda, moeder van 3, die al 8 jaar duizenden vrouwen helpt om hun lichaam en gezin weer in balans te brengen — degene die mij in 6 maanden van uitgeput naar uitgerust kreeg."
+    inhoud: `"Ik ga je voorstellen aan Linda, moeder van 3, die al 8 jaar duizenden vrouwen helpt om hun lichaam en gezin weer in balans te brengen, degene die mij in 6 maanden van uitgeput naar uitgerust kreeg."
 
 WAAROM DEZE WERKT:
-✓ Identiteits-anker (moeder van 3) — herkenning bij doelgroep
+✓ Identiteits-anker (moeder van 3), herkenning bij doelgroep
 ✓ Concrete schaal (duizenden vrouwen)
 ✓ Specifiek tijdsbestek voor eigen transformatie (6 maanden)
 ✓ Krachtig contrast (uitgeput → uitgerust)`,
   },
   {
-    titel: "Edification — Ondernemer/business-sponsor",
+    titel: "Edification, Ondernemer/business-sponsor",
     categorie: "edification" as const,
     pipeline_fase: null,
     tags: ["edification", "voorbeeld", "ondernemer", "business"],
-    inhoud: `"Ik ga je voorstellen aan Jaap, die al 15 jaar in dit vak zit en vorig jaar 200 mensen direct heeft ondersteund — degene die mij heeft laten zien dat dit serieus business is, geen hobby."
+    inhoud: `"Ik ga je voorstellen aan Jaap, die al 15 jaar in dit vak zit en vorig jaar 200 mensen direct heeft ondersteund, degene die mij heeft laten zien dat dit serieus business is, geen hobby."
 
 WAAROM DEZE WERKT:
 ✓ Tijdsdiepte (15 jaar)
@@ -424,11 +424,11 @@ WAAROM DEZE WERKT:
 ✓ Toont de connector als student met groei-mindset`,
   },
   {
-    titel: "Edification — Zorgprofessional-sponsor",
+    titel: "Edification, Zorgprofessional-sponsor",
     categorie: "edification" as const,
     pipeline_fase: null,
     tags: ["edification", "voorbeeld", "zorg", "verpleegkundige", "vitaliteit"],
-    inhoud: `"Ik ga je voorstellen aan Anouk, jarenlang verpleegkundige geweest, die nu al 6 jaar mensen helpt om hun energie en weerstand op te bouwen — degene die mij liet zien dat preventie veel meer brengt dan symptomen bestrijden."
+    inhoud: `"Ik ga je voorstellen aan Anouk, jarenlang verpleegkundige geweest, die nu al 6 jaar mensen helpt om hun energie en weerstand op te bouwen, degene die mij liet zien dat preventie veel meer brengt dan symptomen bestrijden."
 
 WAAROM DEZE WERKT:
 ✓ Eerdere zorg-achtergrond geeft impliciete medische geloofwaardigheid (zonder claim)
@@ -437,24 +437,24 @@ WAAROM DEZE WERKT:
 ✓ Persoonlijke "ik ben veranderd"-link`,
   },
   {
-    titel: "Edification — Veelgemaakte fouten",
+    titel: "Edification, Veelgemaakte fouten",
     categorie: "edification" as const,
     pipeline_fase: null,
     tags: ["edification", "fouten", "do-niet", "checklist"],
-    inhoud: `WAT JE NIET MOET DOEN — gegarandeerd zwakke 3-weg:
+    inhoud: `WAT JE NIET MOET DOEN, gegarandeerd zwakke 3-weg:
 
-✗ TE KORT: "Dit is m'n upline." — 0 autoriteit gegeven, sponsor moet vanaf nul beginnen.
+✗ TE KORT: "Dit is m'n upline.", 0 autoriteit gegeven, sponsor moet vanaf nul beginnen.
 ✗ IMPROVISEREN: elke keer iets anders zeggen. Sponsor weet niet wanneer 'ie kan starten, jij twijfelt halverwege je zin.
-✗ HYPED OVERDRIJVEN: "de allerbeste van Nederland!", "wereldberoemd!" — prospect ruikt de pitch en sluit af.
+✗ HYPED OVERDRIJVEN: "de allerbeste van Nederland!", "wereldberoemd!", prospect ruikt de pitch en sluit af.
 ✗ VERGETEN: gewoon stilletjes je sponsor laten beginnen. Geen edification = geen 3-weg, alleen een gesprek.
-✗ OVER JEZELF PRATEN: "ik vind het zo fijn dat ik dit doe..." — focus moet op sponsor liggen, niet op jou.
-✗ MEDISCHE/FINANCIËLE CLAIMS: "heeft duizenden mensen genezen" — compliance-risico, ongepast.
+✗ OVER JEZELF PRATEN: "ik vind het zo fijn dat ik dit doe...", focus moet op sponsor liggen, niet op jou.
+✗ MEDISCHE/FINANCIËLE CLAIMS: "heeft duizenden mensen genezen", compliance-risico, ongepast.
 
 CHECK JE EIGEN ZIN:
 □ Onder 25 woorden?
 □ Concreet getal in autoriteit-deel (jaren / mensen / resultaat)?
 □ Persoonlijke link uit JOUW eigen taal?
-□ Geen overdrijving — gewoon waar?
+□ Geen overdrijving, gewoon waar?
 □ Kun je het uit je hoofd zeggen, identiek elke keer?`,
   },
 ];

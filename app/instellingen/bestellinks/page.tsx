@@ -11,14 +11,14 @@ import { CATEGORIE_LABEL } from "@/lib/zelftest/vragen";
 import { BestellinkRow } from "./bestellink-row";
 
 // ============================================================
-// Settings — Mijn bestellinks
+// Settings, Mijn bestellinks
 // URL: /instellingen/bestellinks
 //
 // Member kan per pakket een Lifeplus webshop-link plakken.
 // Resultaatpagina van een test gebruikt deze om de bestelknop
 // te vullen met een gevuld winkelwagentje van de member.
 //
-// Dag 2: fundament — toon lijst van alle pakket-keys + URL-veld per stuk.
+// Dag 2: fundament, toon lijst van alle pakket-keys + URL-veld per stuk.
 // Dag 3: CRUD met save/delete + custom-keys voor maatwerk-adviezen.
 // ============================================================
 
@@ -162,7 +162,7 @@ export default async function BestellinksPage() {
                   <BestellinkRow
                     key={key}
                     pakketKey={key}
-                    naam={`${niveauLabel(p.niveau)} — ${p.categorieLabel}`}
+                    naam={`${niveauLabel(p.niveau)}, ${p.categorieLabel}`}
                     prijs={p.totaalPrijs}
                     ip={p.totaalIP}
                     producten={p.producten}

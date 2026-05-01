@@ -1,5 +1,5 @@
 // ============================================================
-// DARMVRAGENLIJST — vervolgvragenlijst om te bepalen of een
+// DARMVRAGENLIJST, vervolgvragenlijst om te bepalen of een
 // darmprogramma (Darmen in Balans basis vs plus) bij de prospect past.
 //
 // FLOW:
@@ -19,7 +19,7 @@
 // "astma" etc.
 //
 // PRIVACY:
-// Individuele antwoorden worden niet opgeslagen — alleen totaal + bucket.
+// Individuele antwoorden worden niet opgeslagen, alleen totaal + bucket.
 // ============================================================
 
 export type DarmAntwoord = 0 | 1 | 2 | 3;
@@ -40,7 +40,7 @@ export interface DarmVraag {
 
 // 15 vragen over signalen die vaak met darm-/spijsverterings-balans
 // samenhangen. Bewust gegroepeerd in drie thema's, maar in de UI tonen
-// we ze gemixt (geen kopjes — voorkomt dat mensen op het thema mikken).
+// we ze gemixt (geen kopjes, voorkomt dat mensen op het thema mikken).
 export const DARM_VRAGEN: DarmVraag[] = [
   // Spijsvertering & buikgevoel
   { id: "v1", tekst: "Na een maaltijd voel ik me opgeblazen of zwaar." },
@@ -69,13 +69,13 @@ export const DARM_MAX_SCORE = DARM_VRAGEN.length * 3; // 45
 // ============================================================
 // Drempels voor de bucket-bepaling
 //
-// Iedereen die de vragenlijst invult krijgt een darmprogramma-advies —
+// Iedereen die de vragenlijst invult krijgt een darmprogramma-advies.
 // de vraag is alleen welke variant. Onder de 20 is "Darmen in Balans"
 // (basis, 16 dagen) altijd passend. Vanaf 20 schuiven we door naar
 // "Darmen in Balans +" omdat de signalen sterker zijn.
 //
-// 0-19  → basis — Darmen in Balans (16 dagen, lichte opfrissing)
-// 20+   → plus — Darmen in Balans + (uitgebreider, langere reset)
+// 0-19  → basis, Darmen in Balans (16 dagen, lichte opfrissing)
+// 20+   → plus, Darmen in Balans + (uitgebreider, langere reset)
 // ============================================================
 
 export const DARM_DREMPEL_PLUS = 20;
@@ -91,7 +91,7 @@ export interface DarmUitslag {
 
 /**
  * Berekent de bucket op basis van een dictionary van id → antwoord.
- * Antwoorden hoeven niet compleet te zijn — ontbrekende vragen tellen
+ * Antwoorden hoeven niet compleet te zijn, ontbrekende vragen tellen
  * als 0 (Niet). Onbekende antwoord-waardes worden gefilterd.
  */
 export function berekenDarmUitslag(
@@ -116,7 +116,7 @@ export function berekenDarmUitslag(
     bucket_label = "Darmen in Balans +";
     korte_tekst =
       "Je geeft duidelijk meerdere signalen aan die met darm-onbalans samenhangen. " +
-      "Een uitgebreider darmprogramma (Darmen in Balans +) past voor jou — eerst " +
+      "Een uitgebreider darmprogramma (Darmen in Balans +) past voor jou, eerst " +
       "stevig opruimen geeft je lichaam de beste basis voordat je verdergaat met " +
       "een pakket of dagelijkse aanpak.";
   } else {

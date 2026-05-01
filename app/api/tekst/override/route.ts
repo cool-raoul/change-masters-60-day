@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
       .maybeSingle();
     if ((profiel as { role?: string | null } | null)?.role !== "founder") {
       return NextResponse.json(
-        { error: "Geen toegang — alleen voor founders" },
+        { error: "Geen toegang, alleen voor founders" },
         { status: 403 },
       );
     }

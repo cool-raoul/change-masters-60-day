@@ -18,7 +18,7 @@ const flowPositieKey = (dagNummer: number) =>
 
 function isMobielApparaat(): boolean {
   if (typeof navigator === "undefined") return false;
-  // Pragmatische check — voor de "doe dit op je telefoon"-waarschuwing
+  // Pragmatische check, voor de "doe dit op je telefoon"-waarschuwing
   // is een UA-sniff goed genoeg (geen security-kritisch beslismoment).
   return /Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(
     navigator.userAgent,
@@ -26,13 +26,13 @@ function isMobielApparaat(): boolean {
 }
 
 // ============================================================
-// VandaagFlow — guided full-screen flow voor één playbook-dag.
+// VandaagFlow, guided full-screen flow voor één playbook-dag.
 //
 // Net als de onboarding: stap voor stap, één taak per scherm, met
 // duidelijke "Klaar"- en "Sla over"-knoppen. Aan het einde een
 // viering en directe link terug naar het dashboard.
 //
-// Layout: minimal, geen sidebar, geen AppShell — pure focus.
+// Layout: minimal, geen sidebar, geen AppShell, pure focus.
 // Bovenaan een terug-knop + dag-progress.
 // ============================================================
 
@@ -47,11 +47,11 @@ type Props = {
 
 const DAG_GROETEN: Record<number, string> = {
   1: "🚀 Daar ga je! Je eerste dag",
-  7: "🎉 Week 1 zit erop — top dat je doorzet!",
+  7: "🎉 Week 1 zit erop, top dat je doorzet!",
   8: "💪 Fase 2! Tijd om door te pakken",
-  14: "🏁 Halverwege — je hoort bij de 20% die doorzet",
+  14: "🏁 Halverwege, je hoort bij de 20% die doorzet",
   15: "⏱️ Fase 3 begint nu",
-  21: "🏆 Laatste dag van fase 3 — klaar voor de echte run",
+  21: "🏆 Laatste dag van fase 3, klaar voor de echte run",
 };
 
 export function VandaagFlow({
@@ -94,7 +94,7 @@ export function VandaagFlow({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Bewaar positie elke keer dat 'ie verandert — zodat terugkomst de
+  // Bewaar positie elke keer dat 'ie verandert, zodat terugkomst de
   // juiste taak-stap herstelt.
   useEffect(() => {
     try {
@@ -185,7 +185,7 @@ export function VandaagFlow({
         return;
       }
       setVoltooidIds((p) => new Set(p).add(taak.id));
-      toast.success("Bewaard — terug te vinden op /mijn-zinnen");
+      toast.success("Bewaard, terug te vinden op /mijn-zinnen");
       // Door naar volgende stap
       gaNaarVolgende();
     } catch {
@@ -252,7 +252,7 @@ export function VandaagFlow({
               </p>
               <p className="text-cm-white opacity-80 text-xs mt-0.5 leading-relaxed">
                 Wil je de tekst van een taak, de les of de titel van deze dag
-                aanpassen? Open de bewerk-tile — alle wijzigingen zijn{" "}
+                aanpassen? Open de bewerk-tile, alle wijzigingen zijn{" "}
                 <strong>direct live</strong> voor alle members.
               </p>
             </div>
@@ -283,7 +283,7 @@ export function VandaagFlow({
               </h2>
             </div>
 
-            {/* 1. EERST DE LES — volledig, geen afkapping. */}
+            {/* 1. EERST DE LES, volledig, geen afkapping. */}
             <div className="card border-l-4 border-cm-gold/60 space-y-2">
               <h3 className="text-cm-gold font-semibold text-sm uppercase tracking-wider">
                 📖 Les van vandaag
@@ -293,7 +293,7 @@ export function VandaagFlow({
               </p>
             </div>
 
-            {/* 2. DAARNA HET FILMPJE — alleen zichtbaar als de founder via
+            {/* 2. DAARNA HET FILMPJE, alleen zichtbaar als de founder via
                 /instellingen/films onder slug 'playbook-dag-N' een film
                 heeft gezet. Anders rendert FilmInBlok niets. */}
             <FilmInBlok
@@ -301,7 +301,7 @@ export function VandaagFlow({
               verbergZonderFilm
             />
 
-            {/* 3. DAN GA JE DOEN — kort overzicht van de stappen. */}
+            {/* 3. DAN GA JE DOEN, kort overzicht van de stappen. */}
             <div className="card space-y-2">
               <h3 className="text-cm-gold font-semibold text-sm uppercase tracking-wider">
                 ✅ Nu ga je doen ({totaal} stap{totaal === 1 ? "" : "pen"})
@@ -339,7 +339,7 @@ export function VandaagFlow({
               <HerinnerLaterKnop
                 dagNummer={dag.nummer}
                 variant="tekstlink"
-                label="Even niet nu — herinner me later vandaag"
+                label="Even niet nu, herinner me later vandaag"
               />
             </div>
           </div>
@@ -367,7 +367,7 @@ export function VandaagFlow({
               <FilmInBlok
                 slug={huidigeTaak.filmSlug}
                 fallbackTitel="📹 Bekijk de video"
-                fallbackTekst="Film volgt — wordt door de hoofdbeheerder toegevoegd."
+                fallbackTekst="Film volgt, wordt door de hoofdbeheerder toegevoegd."
               />
             )}
 
@@ -382,13 +382,13 @@ export function VandaagFlow({
                     📱 Doe deze stap op je telefoon
                   </p>
                   <p className="text-cm-white opacity-90 text-xs leading-relaxed">
-                    Open ELEVA op je telefoon — je hebt 'm nodig om je
+                    Open ELEVA op je telefoon, je hebt 'm nodig om je
                     contacten te exporteren. Je dag-flow loopt daar gewoon door.
                   </p>
                 </div>
               )}
 
-            {/* INLINE EMBED — voer de actie HIER uit, geen wegnavigeren. */}
+            {/* INLINE EMBED, voer de actie HIER uit, geen wegnavigeren. */}
             {huidigeTaak.inlineEmbed === "vcard-upload" && (
               <VCardUploader
                 alVoltooid={voltooidIds.has(huidigeTaak.id)}
@@ -422,7 +422,7 @@ export function VandaagFlow({
               />
             )}
 
-            {/* Optionele actie-route — alleen als er geen inline-embed is
+            {/* Optionele actie-route, alleen als er geen inline-embed is
                 en het geen mobiel-only taak op desktop is. */}
             {huidigeTaak.actieRoute &&
               !huidigeTaak.inlineEmbed &&
@@ -487,7 +487,7 @@ export function VandaagFlow({
                   disabled={bezigInline}
                   className="btn-gold text-sm disabled:opacity-50"
                 >
-                  {bezigInline ? "Bewaren..." : "Bewaar — door naar volgende"}
+                  {bezigInline ? "Bewaren..." : "Bewaar, door naar volgende"}
                 </button>
               </div>
             )}
@@ -496,7 +496,7 @@ export function VandaagFlow({
                 Voor taken met INLINE-EMBED: de embed-component vinkt
                 zelf af (vCard-import succesvol, sponsor-bericht
                 verstuurd, namen-form bewaard, etc.). De "✓ Klaar"-knop
-                hier zou anders een lege actie afvinken — exact wat we
+                hier zou anders een lege actie afvinken, exact wat we
                 niet willen. Dus we tonen alleen "Sla over" + Vorige
                 voor embed-taken zolang ze nog niet voltooid zijn. */}
             <div className="space-y-3 pt-2">
@@ -510,7 +510,7 @@ export function VandaagFlow({
                   {taakIndex < totaal - 1 ? " volgende stap" : " afronding"} →
                 </button>
               ) : huidigeTaak.inlineEmbed ? (
-                // Geen "✓ Klaar"-knop — embed bepaalt afvinken zelf.
+                // Geen "✓ Klaar"-knop, embed bepaalt afvinken zelf.
                 // Alleen subtiele "Sla over" hieronder.
                 null
               ) : (
@@ -523,7 +523,7 @@ export function VandaagFlow({
                   disabled={bezigIds.has(huidigeTaak.id)}
                   className="btn-gold w-full py-4 text-base font-bold disabled:opacity-50"
                 >
-                  ✓ Klaar — door naar
+                  ✓ Klaar, door naar
                   {taakIndex < totaal - 1 ? " volgende stap" : " afronding"} →
                 </button>
               )}
@@ -565,8 +565,8 @@ export function VandaagFlow({
               </h1>
               <p className="text-cm-white opacity-80 text-base leading-relaxed">
                 {aantalVoltooid === totaal
-                  ? `Alle stappen van dag ${dag.nummer} zijn klaar. Morgen verder met dag ${dag.nummer + 1} — je krijgt een vriendelijke push.`
-                  : `Je hebt ${aantalVoltooid} van de ${totaal} stappen gedaan. Wat niet lukte staat klaar voor morgen — kom gerust later vandaag terug.`}
+                  ? `Alle stappen van dag ${dag.nummer} zijn klaar. Morgen verder met dag ${dag.nummer + 1}, je krijgt een vriendelijke push.`
+                  : `Je hebt ${aantalVoltooid} van de ${totaal} stappen gedaan. Wat niet lukte staat klaar voor morgen, kom gerust later vandaag terug.`}
               </p>
             </div>
 
@@ -605,7 +605,7 @@ export function VandaagFlow({
               href="/dashboard"
               className="btn-gold w-full py-4 text-base font-bold inline-block"
               onClick={() => {
-                // Markeer dat de flow gesloten is — niet meer auto-open
+                // Markeer dat de flow gesloten is, niet meer auto-open
                 // bij volgende dashboard-bezoek. En wis de positie zodat
                 // een volgende keer netjes bij intro begint.
                 try {

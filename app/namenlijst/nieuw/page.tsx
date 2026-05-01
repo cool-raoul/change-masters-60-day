@@ -28,7 +28,7 @@ export default function NieuwProspectPagina() {
 
   // Optioneel eerste herinnering-blok. Leeg = geen herinnering aanmaken.
   // Zo hoef je niet éérst op te slaan en dán naar de kaart om een follow-up
-  // te plannen — kan direct bij het aanmaken van het contact.
+  // te plannen, kan direct bij het aanmaken van het contact.
   const [herinneringDatum, setHerinneringDatum] = useState("");
   const [herinneringTekst, setHerinneringTekst] = useState("");
 

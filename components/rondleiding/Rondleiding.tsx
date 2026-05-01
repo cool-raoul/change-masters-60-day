@@ -5,7 +5,7 @@ import { rondleidingFeatures } from "@/lib/features/registry";
 
 // Stappen komen uit de centrale features-registry (lib/features/registry.ts).
 // Voeg daar een feature toe/verwijder/pas aan om de rondleiding mee te laten
-// veranderen — dit component hoeft niet aangeraakt te worden.
+// veranderen, dit component hoeft niet aangeraakt te worden.
 const STAPPEN = rondleidingFeatures();
 
 export function Rondleiding() {

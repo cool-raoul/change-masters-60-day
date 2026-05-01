@@ -59,12 +59,12 @@ export default async function InstellingenPagina() {
         </Link>
       </div>
 
-      {/* Film-CMS — alleen voor leiders/founders */}
+      {/* Film-CMS, alleen voor leiders/founders */}
       {magFilmsBeheren && (
         <div className="card space-y-3 border-gold-subtle">
           <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">🎬 Films-CMS</h2>
           <p className="text-cm-white text-sm opacity-60">
-            Beheer de films die in onboarding en op andere plekken worden getoond. Plak een YouTube/Vimeo URL — de embed gebeurt automatisch.
+            Beheer de films die in onboarding en op andere plekken worden getoond. Plak een YouTube/Vimeo URL, de embed gebeurt automatisch.
           </p>
           <Link href="/instellingen/films" className="btn-secondary text-sm inline-block">
             Beheer films →
@@ -76,7 +76,7 @@ export default async function InstellingenPagina() {
       {magFilmsBeheren && (
         <div className="card space-y-3 border-gold-subtle">
           <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
-            ✍️ 21-daags Playbook — preview & bewerken
+            ✍️ 21-daags Playbook, preview & bewerken
           </h2>
           <p className="text-cm-white text-sm opacity-70 leading-relaxed">
             Scrol door alle 21 dagen heen, lees rustig de teksten zoals members

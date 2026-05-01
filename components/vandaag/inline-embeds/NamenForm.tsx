@@ -5,11 +5,11 @@ import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 
 // ============================================================
-// NamenForm — inline-embed voor taken als 'voeg 20 namen toe'.
+// NamenForm, inline-embed voor taken als 'voeg 20 namen toe'.
 //
 // Toont een uitklapbare lijst van naam+telefoon-velden met een
 // duidelijke voortgangsbalk: "X / Y namen ingevuld". Bewaart in
-// één keer naar prospects-tabel (geen reservoir-tussenstap — zelf
+// één keer naar prospects-tabel (geen reservoir-tussenstap, zelf
 // typen = bewust toevoegen aan actieve namenlijst).
 //
 // Houdt de member in de dag-flow: geen wegnavigeren naar
@@ -123,7 +123,7 @@ export function NamenForm({ doel, alVoltooid, opVoltooid, opOpnieuw }: Props) {
           ✓ Namen op je namenlijst gezet
         </p>
         <p className="text-cm-white opacity-80 text-xs leading-relaxed">
-          Top — je voorraadkast is een laag voller. Door naar de volgende stap.
+          Top, je voorraadkast is een laag voller. Door naar de volgende stap.
         </p>
         {opOpnieuw && (
           <button
@@ -154,10 +154,10 @@ export function NamenForm({ doel, alVoltooid, opVoltooid, opOpnieuw }: Props) {
           ✋ Vul {doel} namen in
         </h4>
         <p className="text-cm-white opacity-80 text-xs leading-relaxed">
-          Uit je hoofd, niet uit je telefoon — nieuwe namen die nog NIET op je
+          Uit je hoofd, niet uit je telefoon, nieuwe namen die nog NIET op je
           lijst stonden. Familie-partners, oude collega's, sport-maatjes,
           ouders bij school of voetbal, buren, ondernemers in je netwerk. Niet
-          filteren — alles erop.
+          filteren, alles erop.
         </p>
       </div>
 

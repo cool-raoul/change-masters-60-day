@@ -12,11 +12,11 @@ import {
 } from "@/lib/contacten-reservoir";
 
 // ============================================================
-// ElevaGeheugen — uitklap-blok bovenaan /namenlijst.
+// ElevaGeheugen, uitklap-blok bovenaan /namenlijst.
 //
 // Toont 2 dingen in 1 component:
 //   1. NIEUWE CONTACTEN TOEVOEGEN aan je geheugen (VCardUploader,
-//      hergebruikt — kan via vCard, native picker, of zelf typen).
+//      hergebruikt, kan via vCard, native picker, of zelf typen).
 //   2. ACTIVEREN: een lijst van contacten die in je geheugen zitten
 //      maar nog NIET op je actieve namenlijst staan. Vink aan welke
 //      je vandaag activeert.
@@ -127,7 +127,7 @@ export function ElevaGeheugen() {
       const result = await activeerContacten(ids);
       const totaal = result.geactiveerd + result.alActief;
       if (totaal === 0) {
-        toast.error("Activeren mislukt — probeer opnieuw");
+        toast.error("Activeren mislukt, probeer opnieuw");
         return;
       }
       toast.success(
@@ -148,7 +148,7 @@ export function ElevaGeheugen() {
     }
   }
 
-  // Subtiele variant als geheugen leeg is — dan hoeft de hele sectie
+  // Subtiele variant als geheugen leeg is, dan hoeft de hele sectie
   // niet open te knallen op /namenlijst, alleen een 'voeg toe'-knop.
   const heeftReservoir = reservoir.length > 0;
 
@@ -205,7 +205,7 @@ export function ElevaGeheugen() {
                 <p className="text-cm-white opacity-70 text-xs leading-relaxed">
                   {reservoir.length} contact
                   {reservoir.length === 1 ? "" : "en"} klaar om te activeren.
-                  Vink aan wie je vandaag op je actieve namenlijst wilt zetten —
+                  Vink aan wie je vandaag op je actieve namenlijst wilt zetten.
                   de rest blijft beschikbaar voor later.
                 </p>
               </div>

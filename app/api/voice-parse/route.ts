@@ -115,13 +115,13 @@ Het transcript komt uit spraakherkenning. Dat betekent:
 
 Interpreteer het transcript ALTIJD zo:
 
-1. ZELFCORRECTIES — LAATSTE VERSIE WINT
+1. ZELFCORRECTIES, LAATSTE VERSIE WINT
    "Petra... eh nee, Pieter zei dat..." → de naam is Pieter, negeer Petra
    "Morgen... eh, overmorgen bellen" → overmorgen
    "100 euro... nee 150" → 150
    Signaalwoorden voor correctie: "eh nee", "ik bedoel", "sorry", "nee wacht", "eigenlijk"
 
-2. HERHALINGEN / DENKPAUZES — CONSOLIDEER
+2. HERHALINGEN / DENKPAUZES, CONSOLIDEER
    "Pieter... Pieter heeft vandaag..." → "Pieter heeft vandaag..."
    "ik heb ... eeh ... ik heb 3 mensen gesproken" → "ik heb 3 mensen gesproken"
    "Petra de de de Voogd" → "Petra de Voogd"
@@ -149,10 +149,10 @@ Interpreteer het transcript ALTIJD zo:
    - "biotic blast" / "bi otic blast" → Biotic Blast
    - "golden milk" / "goolden melk" → Solis Golden Milk
    - "cacao boost" / "kakao boost" → Solis Cacao Boost
-   Ook als het transcript maar ÉÉN van deze varianten bevat en verder niks — herken het toch als het product. Bij twijfel tussen losse vs product_bestelling, gebruik de productnaam in gecorrigeerd_transcript zodat de gebruiker ziet wat jij begrepen hebt.
+   Ook als het transcript maar ÉÉN van deze varianten bevat en verder niks, herken het toch als het product. Bij twijfel tussen losse vs product_bestelling, gebruik de productnaam in gecorrigeerd_transcript zodat de gebruiker ziet wat jij begrepen hebt.
 
 5a. LIFEPLUS-HERKENNING (VERPLICHT):
-   De bedrijfsnaam "Lifeplus" wordt door spraakherkenning heel vaak verkeerd gehoord. Behandel elke fonetisch gelijkende variant — "life plus", "life-plus", "lijf plus", "lijfplus", "live plus", "leaf plus", "laif plus", "lief plus", "lifeplas" — ALTIJD als "Lifeplus" (één woord, hoofdletter L) in het gecorrigeerd_transcript en in alle notities/berichten. Dit geldt ook als het in combinatie voorkomt ("life plus basis" → "Lifeplus basis", "life plus producten" → "Lifeplus producten").
+   De bedrijfsnaam "Lifeplus" wordt door spraakherkenning heel vaak verkeerd gehoord. Behandel elke fonetisch gelijkende variant, "life plus", "life-plus", "lijf plus", "lijfplus", "live plus", "leaf plus", "laif plus", "lief plus", "lifeplas", ALTIJD als "Lifeplus" (één woord, hoofdletter L) in het gecorrigeerd_transcript en in alle notities/berichten. Dit geldt ook als het in combinatie voorkomt ("life plus basis" → "Lifeplus basis", "life plus producten" → "Lifeplus producten").
 
 6. ALS ONZEKER → NOEM IN "onduidelijk"
    Als de correctie raderwerk wordt (meerdere interpretaties mogelijk, geen fonetische match), schrijf in "onduidelijk" veld: "Ik hoorde 'X', bedoelde je Y of Z?"
@@ -162,12 +162,12 @@ Altijd een "gecorrigeerd_transcript" teruggeven: de schone, logische versie zoal
 JOUW TAAK:
 Lees het transcript en beslis:
 
-A) INTENTIE — wat wil deze persoon?
+A) INTENTIE, wat wil deze persoon?
    - "data": alleen info over prospects/members vastleggen (bijv. "Pieter ingeschreven")
    - "coach": een vraag of reflectie voor de ELEVA mentor/coach (bijv. "Hoe ga ik om met bezwaar tijd?", "Ik voel me onzeker", "Help me met een DM")
-   - "mixed": beide — feiten over een prospect PLUS een vraag om hulp ("Ik sprak Jan, hij zei geen tijd, hoe reageer ik?")
+   - "mixed": beide, feiten over een prospect PLUS een vraag om hulp ("Ik sprak Jan, hij zei geen tijd, hoe reageer ik?")
 
-BELANGRIJKE REGEL — KLACHTEN ZIJN NIET AUTOMATISCH EEN ADVIES-VRAAG:
+BELANGRIJKE REGEL, KLACHTEN ZIJN NIET AUTOMATISCH EEN ADVIES-VRAAG:
 Als het transcript gezondheidsklachten, symptomen of medische context noemt (afvallen, moe, slaap, stress, darmen, hormonen, gewrichten, etc.) is dat ALLEEN ter informatie/notitie bij de prospect. Zet intentie dan = "data" en sla de klachten op als notitie bij de prospect.
 Maak ALLEEN een coach_bericht (intentie = "coach" of "mixed") als de gebruiker EXPLICIET om advies vraagt. Expliciete triggers zijn:
 - "advies", "productadvies", "wat raad je aan", "wat past bij"
@@ -178,11 +178,11 @@ Als geen van deze expliciete triggers in het transcript staat: GEEN coach_berich
 Voorbeeld: "Nieuwe prospect Johan, heeft last van brain fog en hoge bloeddruk, is 52 jaar." → intentie = "data", GEEN coach_bericht. Notities bij de prospect bevatten "brain fog, hoge bloeddruk, 52 jaar".
 Voorbeeld: "Nieuwe prospect Johan met brain fog, welk advies past?" → intentie = "mixed", coach_bericht = "Welk Lifeplus-advies past bij Johan met brain fog?".
 
-B) ACTIES — welke database-acties moeten gebeuren (alleen bij "data" of "mixed")
+B) ACTIES, welke database-acties moeten gebeuren (alleen bij "data" of "mixed")
 
-C) COACH_BERICHT — als intentie "coach" of "mixed": formuleer de vraag voor de mentor-coach in jij-vorm ("Hoe ga ik het beste om met het bezwaar 'geen tijd' van Jan?"). Als "data": null.
+C) COACH_BERICHT, als intentie "coach" of "mixed": formuleer de vraag voor de mentor-coach in jij-vorm ("Hoe ga ik het beste om met het bezwaar 'geen tijd' van Jan?"). Als "data": null.
 
-C2) COACH_PROSPECT_ID + COACH_PROSPECT_NAAM — VERPLICHT invullen als de coach-vraag duidelijk over een persoon gaat.
+C2) COACH_PROSPECT_ID + COACH_PROSPECT_NAAM, VERPLICHT invullen als de coach-vraag duidelijk over een persoon gaat.
    - BESTAANDE prospect in lijst: vul beide velden.
      Voorbeeld: "Wat is een goed productadvies voor Petra de Voogd?" → coach_prospect_id = het id van Petra uit de lijst, coach_prospect_naam = "Petra de Voogd".
    - NIEUWE prospect die in DEZE SPRAAK wordt aangemaakt (er is ook een nieuwe_prospect actie): vul alleen coach_prospect_naam met de volledige naam. Zet coach_prospect_id op null (die bestaat nog niet). De client koppelt later automatisch aan het nieuw-gemaakte id.
@@ -245,7 +245,7 @@ MOGELIJKE ACTIES:
 11. { "type": "verwijder_prospect", "prospect_id": "uuid-uit-lijst", "volledige_naam": "Pieter de Hoogh" }
    - Gebruiker wil een prospect/member kwijt. Gebruik ALTIJD het bestaande prospect_id uit de lijst hierboven; nooit een naam verzinnen.
    - Signaalwoorden: "verwijder", "wis", "haal weg", "delete", "archiveer", "gooi weg", "verwijder alle gegevens van"
-   - De prospect wordt gearchiveerd (reversibel) — dat is veilig genoeg om zonder extra bevestiging uit te voeren.
+   - De prospect wordt gearchiveerd (reversibel), dat is veilig genoeg om zonder extra bevestiging uit te voeren.
    - Als de genoemde naam NIET fonetisch matcht met een bestaande prospect: géén actie, in plaats daarvan in "onduidelijk" vermelden dat er geen match is.
    - Bij twijfel tussen meerdere matches: kies niets en vraag in "onduidelijk".
 
@@ -310,9 +310,9 @@ BESTELLING_BEVESTIGEN (samengesteld, niet als nieuwe actie):
    2. product_bestelling voor de nieuwe order
    Zo blijven audit-trail en trigger-reminders beide kloppen.
 
-⚠️ KRITIEKE REGELS — HIER GAAT HET VAAK FOUT:
+⚠️ KRITIEKE REGELS, HIER GAAT HET VAAK FOUT:
 
-REGEL 0 — BESTELLING = ALTIJD APART product_bestelling ACTIE
+REGEL 0, BESTELLING = ALTIJD APART product_bestelling ACTIE
 Als de gebruiker ook maar IETS zegt over wat iemand besteld heeft, gekocht heeft, ingeschreven heeft als lid, product aangeschaft heeft, of welke producten dan ook gekoppeld aan een persoon:
 → ALTIJD een aparte { "type": "product_bestelling", ... } actie genereren.
 → NOOIT de bestelling alleen in het "notities" veld van een prospect stoppen. De bestelling moet ALTIJD als losse actie komen.
@@ -333,7 +333,7 @@ Signaalwoorden die ALTIJD product_bestelling vereisen:
 
 Datum: als gebruiker zegt "vandaag" → vandaag. "Gisteren" → -1 dag. "Vorige week" → -7 dagen. Geen datum genoemd → vandaag.
 
-REGEL 1 — PIPELINE_FASE VERANDER JE ALLEEN BIJ EXPLICIETE SIGNALEN
+REGEL 1, PIPELINE_FASE VERANDER JE ALLEEN BIJ EXPLICIETE SIGNALEN
 Verander pipeline_fase alleen als de gebruiker expliciet een status-wijziging vertelt. Triggers per fase:
 - → "uitgenodigd": "heb X uitgenodigd", "X komt [op datum] naar [presentatie / event / gesprek / meeting / kennismaking]", "X heeft toegezegd", "X is aangemeld voor ...", "X gaat met me mee naar ...", "X doet mee aan ..."
 - → "presentatie": "presentatie gegeven aan X", "X is bij de presentatie geweest", "presentatie met X gedaan"
@@ -346,32 +346,32 @@ Verander pipeline_fase alleen als de gebruiker expliciet een status-wijziging ve
 Iemand die al "member" of "shopper" is, blijft dat. Ga NOOIT terug naar "prospect", "followup" of "uitgenodigd".
 Bij twijfel: laat pipeline_fase weg uit de actie.
 
-REGEL 2 — "OPVOLGEN" = TAAK, NIET FASE
+REGEL 2, "OPVOLGEN" = TAAK, NIET FASE
 Als gebruiker zegt "ik moet X opvolgen/bellen/spreken/contacten":
 → Maak een taak actie: { "type": "taak", "prospect_naam": "X", "titel": "Opvolgen: ...", "vervaldatum": "..." }
 → NIET: pipeline_fase = "followup". Followup is een aparte pipeline-stage voor mensen die nog niet besteld hebben.
 
-REGEL 3 — BESTELLING VAN BESTAANDE KLANT
+REGEL 3, BESTELLING VAN BESTAANDE KLANT
 Als een bestaande member/shopper een nieuwe bestelling doet:
 → product_bestelling actie (altijd)
 → Laat pipeline_fase ONGEMOEID (hij blijft member/shopper)
 → Eventueel een taak voor opvolging als genoemd
 
-REGEL 4 — NOTITIES KOPPELEN
+REGEL 4, NOTITIES KOPPELEN
 Als gebruiker een notitie wil maken BIJ een bestaande persoon:
 → Gebruik 'notitie' actie (NIET update_prospect met notities_toevoegen tenzij het een status-update is)
 → Bij een taak kun je ook context meenemen in de titel
 
-REGEL 5 — BESTAANDE FASES RESPECTEREN
+REGEL 5, BESTAANDE FASES RESPECTEREN
 Voor elke bestaande prospect in de lijst hierboven staat de HUIDIGE fase tussen haakjes. Ga hier NOOIT vanaf zonder expliciete reden in de tekst.
 
-REGEL 6 — NOOIT STIL TERUGKOMEN ZONDER UITLEG
+REGEL 6, NOOIT STIL TERUGKOMEN ZONDER UITLEG
 Als je GEEN acties kunt genereren én GEEN coach_bericht formuleert (intentie = "data" zonder matches):
 → ALTIJD iets in "onduidelijk" zetten dat uitlegt WAAROM je niets kon doen.
-→ Voorbeelden: "Ik hoorde 'X' maar die naam staat niet in je namenlijst — wil je die als nieuwe prospect toevoegen?", "Ik begreep dat je iets wilde verwijderen maar kon niet bepalen wie — kun je de volledige naam zeggen?", "De opdracht was te kort of onduidelijk om een actie aan te koppelen."
+→ Voorbeelden: "Ik hoorde 'X' maar die naam staat niet in je namenlijst, wil je die als nieuwe prospect toevoegen?", "Ik begreep dat je iets wilde verwijderen maar kon niet bepalen wie, kun je de volledige naam zeggen?", "De opdracht was te kort of onduidelijk om een actie aan te koppelen."
 → NOOIT een lege acties-lijst MET lege onduidelijk-lijst MET lege coach_bericht terugsturen. Dan zou de gebruiker alleen "Annuleren" zien en niet weten waarom.
 
-REGEL 7 — DENK LOGISCH MEE OVER COMMANDO'S
+REGEL 7, DENK LOGISCH MEE OVER COMMANDO'S
 Spraak is vrij en creatief. De gebruiker kan commando's op veel manieren verwoorden:
 - "Verwijder de kaart van X", "X mag weg", "Ik wil X kwijt" → verwijder_prospect
 - "Zet X op hoog", "Geef X prioriteit", "X is belangrijk" → update_details met prioriteit:"hoog"
@@ -383,7 +383,7 @@ Spraak is vrij en creatief. De gebruiker kan commando's op veel manieren verwoor
 - "Verzet X naar vrijdag" (bestaande herinnering) → update_herinnering
 Wees soepel in interpretatie maar wees strikt in identificatie: als de naam niet matcht met de lijst, gebruik dan "onduidelijk" i.p.v. gokken.
 
-REGEL 8 — TAAK-ACTIE ALLEEN BIJ EXPLICIETE HERINNER-TRIGGER
+REGEL 8, TAAK-ACTIE ALLEEN BIJ EXPLICIETE HERINNER-TRIGGER
 Maak ALLEEN een { "type": "taak" } actie als de gebruiker zelf om een reminder/todo vraagt. Expliciete triggers:
 - "herinner me (om) ..."
 - "zet op mijn lijst ..."
@@ -417,7 +417,7 @@ STANDAARD REGELS:
 
 VOORBEELDEN:
 
-Voorbeeld 0 (nieuwe member met bestelling — HEEL BELANGRIJK):
+Voorbeeld 0 (nieuwe member met bestelling, HEEL BELANGRIJK):
 "Ik heb Arno Oerlemans net ingeschreven als member, hij heeft gisteren het basispakket besteld"
 → redenatie: "Arno is nieuw → nieuwe_prospect met fase 'member'. Hij heeft besteld → APARTE product_bestelling actie (de trigger zorgt voor 21/51/81 dagen reminders). Bestelling NIET alleen in notities zetten."
 → acties: [
@@ -427,7 +427,7 @@ Voorbeeld 0 (nieuwe member met bestelling — HEEL BELANGRIJK):
 → FOUT zou zijn: alleen een nieuwe_prospect actie met "basispakket besteld op ..." in notities. Dan worden er GEEN opvolg-herinneringen gemaakt.
 
 Voorbeeld A (goede case): "Petra de Voogd is al member. Ik wil een notitie maken om haar op te volgen om te spreken over haar bestelling van deze maand."
-→ redenatie: "Petra is al member — NIET haar fase veranderen. Gebruiker wil (1) een notitie bij haar dossier, (2) een herinnering om haar op te volgen over haar bestelling."
+→ redenatie: "Petra is al member, NIET haar fase veranderen. Gebruiker wil (1) een notitie bij haar dossier, (2) een herinnering om haar op te volgen over haar bestelling."
 → acties: [
     { "type": "notitie", "prospect_naam": "Petra de Voogd", "notitie": "Opvolgen over bestelling van deze maand" },
     { "type": "taak", "prospect_naam": "Petra de Voogd", "titel": "Petra bellen over bestelling deze maand", "vervaldatum": "<+7 dagen>" }
@@ -676,7 +676,7 @@ BELANGRIJK: Begin altijd met de "redenatie" stap. Dit dwingt je om te denken vó
     const coachBerichtUit = geparsed.coach_bericht || null;
     if (acties.length === 0 && !coachBerichtUit && onduidelijk.length === 0) {
       onduidelijk.push(
-        "ELEVA kon jouw verzoek niet koppelen aan een bekende actie. Probeer het anders te formuleren — noem een volledige naam, of geef aan wat je wilt vastleggen (nieuwe prospect, notitie, bestelling, herinnering, verwijderen)."
+        "ELEVA kon jouw verzoek niet koppelen aan een bekende actie. Probeer het anders te formuleren, noem een volledige naam, of geef aan wat je wilt vastleggen (nieuwe prospect, notitie, bestelling, herinnering, verwijderen)."
       );
     }
 

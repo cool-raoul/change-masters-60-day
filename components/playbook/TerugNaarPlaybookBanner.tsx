@@ -8,7 +8,7 @@ import { useSearchParams } from "next/navigation";
 //
 // Toont een prominente "↩ Terug"-balk bovenaan een pagina wanneer de
 // URL `?van=...&dag=N` bevat. Member kwam dan vanuit een dag-flow
-// hierheen om een actie uit te voeren — na de actie willen we dat
+// hierheen om een actie uit te voeren, na de actie willen we dat
 // hij in één klik terugkeert naar de juiste plek:
 //   - `?van=vandaag` → terug naar /vandaag (de guided flow herstelt
 //     vanuit localStorage de exacte taak waar 'ie was).

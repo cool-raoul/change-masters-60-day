@@ -169,7 +169,7 @@ export function NamenlijstToggle({ prospects }: Props) {
                     )}
                   </div>
 
-                  {/* Rij 3: kanaal-iconen — alleen als er een kanaal is. */}
+                  {/* Rij 3: kanaal-iconen, alleen als er een kanaal is. */}
                   {(prospect.telefoon ||
                     prospect.email ||
                     prospect.instagram ||

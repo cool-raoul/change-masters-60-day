@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
       .maybeSingle();
     if ((profiel as { role?: string | null } | null)?.role !== "founder") {
       return NextResponse.json(
-        { error: "Geen toegang — alleen voor founders" },
+        { error: "Geen toegang, alleen voor founders" },
         { status: 403 },
       );
     }
@@ -102,7 +102,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Als ALLE velden NULL zijn na merge: weg met de rij — schoon.
+    // Als ALLE velden NULL zijn na merge: weg met de rij, schoon.
     const allesLeeg = Object.values(VELDEN_MAP).every(
       (k) => !payload[k],
     );

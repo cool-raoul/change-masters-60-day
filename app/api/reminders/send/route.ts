@@ -125,7 +125,7 @@ export async function GET(request: Request) {
   const fouten: string[] = [];
 
   for (const gebruiker of gebruikers) {
-    // "Vandaag" moet in de tijdzone van de gebruiker bepaald worden —
+    // "Vandaag" moet in de tijdzone van de gebruiker bepaald worden.
     // anders zou een user in Azië zijn vandaag-herinneringen pas de dag
     // erna binnenkrijgen. Zonder tijdzone val je terug op UTC-vandaag.
     const gebruikerTz = gebruiker.tijdzone || "Europe/Amsterdam";
@@ -145,7 +145,7 @@ export async function GET(request: Request) {
     // Bouw de e-mail inhoud op
     const herinneringenRegels = herinneringen.map((h) => {
       const prospect = h.prospect as unknown as { volledige_naam: string } | null;
-      const prospectNaam = prospect?.volledige_naam ? ` — ${prospect.volledige_naam}` : "";
+      const prospectNaam = prospect?.volledige_naam ? `, ${prospect.volledige_naam}` : "";
       const isVerlopen = h.vervaldatum < vandaag;
       const prefix = isVerlopen ? `⚠ VERLOPEN (${h.vervaldatum})` : "• Vandaag";
       return `${prefix}: ${h.titel}${prospectNaam}`;
@@ -189,7 +189,7 @@ export async function GET(request: Request) {
               </a>
 
               <p style="color: #555; font-size: 12px; margin-top: 24px;">
-                ELEVA 60 Dagen Run — Succes vandaag!
+                ELEVA 60 Dagen Run, Succes vandaag!
               </p>
             </div>
           `,
@@ -214,7 +214,7 @@ export async function GET(request: Request) {
       .slice(0, 3)
       .map((h) => {
         const p = h.prospect as unknown as { volledige_naam: string } | null;
-        const naam = p?.volledige_naam ? ` — ${p.volledige_naam}` : "";
+        const naam = p?.volledige_naam ? `, ${p.volledige_naam}` : "";
         return h.vervaldatum < vandaag ? `⚠ ${h.titel}${naam}` : `• ${h.titel}${naam}`;
       })
       .join("\n");

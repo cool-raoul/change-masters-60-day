@@ -5,7 +5,7 @@ import { SLUG_BESCHRIJVINGEN, ONBOARDING_FILM_SLUGS } from "@/lib/films/embed";
 import { FilmRowEditor } from "./film-row-editor";
 
 // ============================================================
-// Settings — Films-CMS (alleen leiders/founders)
+// Settings, Films-CMS (alleen leiders/founders)
 // URL: /instellingen/films
 //
 // Leiders/founders kunnen hier per slug een YouTube/Vimeo URL plakken.
@@ -47,13 +47,13 @@ export default async function FilmsBeheerPage() {
     (films ?? []).map((f: any) => [f.slug, f]),
   );
 
-  // Standaard-slots die we in onboarding gebruiken — altijd zichtbaar
+  // Standaard-slots die we in onboarding gebruiken, altijd zichtbaar
   // ook als ze nog geen film-rij hebben.
   const standaardSlots = Object.values(ONBOARDING_FILM_SLUGS);
 
   // Optionele dag-films: per playbook-dag (1-21) één slot waar je
   // bovenin de dagtegel een korte intro-/inspiratiefilm kan plaatsen.
-  // Niet verplicht — bij lege URL toont de tegel niets bovenaan.
+  // Niet verplicht, bij lege URL toont de tegel niets bovenaan.
   const dagFilmSlots: string[] = Array.from(
     { length: 21 },
     (_, i) => `playbook-dag-${i + 1}`,
@@ -104,7 +104,7 @@ export default async function FilmsBeheerPage() {
                 en al-embed-URLs werken.
               </li>
               <li>
-                • Geef een titel + korte beschrijving — die ziet de gebruiker
+                • Geef een titel + korte beschrijving, die ziet de gebruiker
                 onder/naast de film.
               </li>
               <li>
@@ -114,7 +114,7 @@ export default async function FilmsBeheerPage() {
             </ul>
           </div>
 
-          {/* Playbook-admin-slots — staan in dag 2/3/4 van het 21-daagse playbook */}
+          {/* Playbook-admin-slots, staan in dag 2/3/4 van het 21-daagse playbook */}
           <section>
             <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider mb-3">
               Playbook-films (dag 2-4)
@@ -137,11 +137,11 @@ export default async function FilmsBeheerPage() {
             </div>
           </section>
 
-          {/* Optionele dag-films — bovenaan de dagtegel in het 21-daagse playbook.
+          {/* Optionele dag-films, bovenaan de dagtegel in het 21-daagse playbook.
               Niet verplicht: lege slot = geen film boven de dagtegel. */}
           <section>
             <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider mb-2">
-              Dag-films (optioneel — 21 dagen)
+              Dag-films (optioneel, 21 dagen)
             </h2>
             <p className="text-cm-white opacity-60 text-xs mb-3 leading-relaxed">
               Per dag kun je hier een korte intro-/inspiratiefilm toevoegen die
@@ -156,8 +156,8 @@ export default async function FilmsBeheerPage() {
                   <FilmRowEditor
                     key={slug}
                     slug={slug}
-                    plekBeschrijving={`Playbook dag ${dagNummer} — bovenaan de dagtegel`}
-                    suggestieTitel={`Dag ${dagNummer} — intro`}
+                    plekBeschrijving={`Playbook dag ${dagNummer}, bovenaan de dagtegel`}
+                    suggestieTitel={`Dag ${dagNummer}, intro`}
                     bestaande={film ?? null}
                     userId={user.id}
                   />
@@ -197,7 +197,7 @@ export default async function FilmsBeheerPage() {
             </h2>
             <FilmRowEditor
               slug=""
-              plekBeschrijving="Nieuwe slug — vul zelf in (bv. prospect-intro-1)"
+              plekBeschrijving="Nieuwe slug, vul zelf in (bv. prospect-intro-1)"
               suggestieTitel=""
               bestaande={null}
               userId={user.id}

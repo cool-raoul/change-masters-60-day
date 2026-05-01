@@ -214,7 +214,7 @@ export default async function TeamPagina({ searchParams }: { searchParams: { lid
       {directeLeden.length > 0 && (
         <div className="card">
           <h2 className="text-sm font-semibold text-cm-gold uppercase tracking-wider mb-4">
-            📋 Onboarding voortgang — direct team
+            📋 Onboarding voortgang, direct team
           </h2>
 
           {/* Header rij */}
@@ -409,7 +409,7 @@ export default async function TeamPagina({ searchParams }: { searchParams: { lid
               <div key={stat.id} className="bg-cm-surface-2 rounded-lg px-3 py-2">
                 <div className="hidden md:grid items-center gap-2 text-sm"
                   style={{ gridTemplateColumns: "1fr repeat(6, 48px)" }}>
-                  <span className="text-cm-white font-medium">{(stat.profiel as any)?.full_name || "—"}</span>
+                  <span className="text-cm-white font-medium">{(stat.profiel as any)?.full_name || "-"}</span>
                   <span className="text-center text-cm-white">{stat.contacten_gemaakt}</span>
                   <span className="text-center text-cm-white">{stat.uitnodigingen}</span>
                   <span className="text-center text-cm-white">{stat.followups}</span>
@@ -418,7 +418,7 @@ export default async function TeamPagina({ searchParams }: { searchParams: { lid
                   <span className="text-center text-cm-gold">{stat.nieuwe_klanten}</span>
                 </div>
                 <div className="md:hidden flex items-center justify-between">
-                  <span className="text-cm-white text-sm font-medium">{(stat.profiel as any)?.full_name || "—"}</span>
+                  <span className="text-cm-white text-sm font-medium">{(stat.profiel as any)?.full_name || "-"}</span>
                   <div className="flex gap-3 text-xs text-cm-white opacity-70">
                     <span>👥{stat.contacten_gemaakt}</span>
                     <span>📨{stat.uitnodigingen}</span>

@@ -1,5 +1,5 @@
 // ============================================================
-// contacten-reservoir.ts — helpers voor het ELEVA-geheugen.
+// contacten-reservoir.ts, helpers voor het ELEVA-geheugen.
 //
 // Twee-laags model:
 //   • contacten_reservoir: alle ge-uploade contacten (de voorraadkast)
@@ -11,7 +11,7 @@
 //
 // Dit bestand bundelt alle DB-operaties zodat zowel VCardUploader
 // (in de vandaag-flow) als ReservoirKiezer (op /namenlijst) hetzelfde
-// gedrag delen — en dedup-logica niet 2× wordt geschreven.
+// gedrag delen, en dedup-logica niet 2× wordt geschreven.
 // ============================================================
 
 import { createClient } from "@/lib/supabase/client";
@@ -99,7 +99,7 @@ export async function slaOpInReservoir(
 // ============================================================
 // 2. Haal niet-geactiveerde reservoir-rows op (voor de kiezer-UI).
 //
-// Filtert ook rows die al matchen op een actieve prospect — die
+// Filtert ook rows die al matchen op een actieve prospect, die
 // staan misschien geactiveerd=false in reservoir maar zijn praktisch
 // gezien al op de namenlijst aanwezig (handmatig getypt bv.).
 // ============================================================
@@ -242,7 +242,7 @@ export async function activeerContacten(
       .filter((u): u is { reservoirId: string; prospectId: string } => !!u);
 
     // Bulk update reservoir-rows. Supabase heeft geen native bulk-upsert
-    // op id-level dus we doen 'm in een loop — voor 100 rows acceptabel.
+    // op id-level dus we doen 'm in een loop, voor 100 rows acceptabel.
     for (const u of updates) {
       await supabase
         .from("contacten_reservoir")

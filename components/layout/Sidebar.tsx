@@ -32,7 +32,7 @@ export function Sidebar({ isLeider = false }: { isLeider?: boolean }) {
     setMobielmenuOpen(false);
   }, [pathname]);
 
-  // Drawer is fixed inset-0 z-50 — covert viewport al volledig. Geen body-lock nodig.
+  // Drawer is fixed inset-0 z-50, covert viewport al volledig. Geen body-lock nodig.
   // Body-lock (document.body.style.overflow = "hidden") veroorzaakt op iOS Safari
   // rendering-glitches waarbij de hamburger verdwijnt na een ander modal.
 
@@ -64,7 +64,7 @@ export function Sidebar({ isLeider = false }: { isLeider?: boolean }) {
         </button>
       </div>
 
-      {/* Navigatie — scrollbaar zodat alles bereikbaar is op kleine schermen */}
+      {/* Navigatie, scrollbaar zodat alles bereikbaar is op kleine schermen */}
       <nav className="flex-1 overflow-y-auto p-4 space-y-1">
         {navigatie.map((item) => {
           const actief = pathname.startsWith(item.href);
@@ -150,7 +150,7 @@ export function Sidebar({ isLeider = false }: { isLeider?: boolean }) {
 
   return (
     <>
-      {/* Hamburger knop — alleen op mobiel. z-[60] staat altijd boven modals (z-50)
+      {/* Hamburger knop, alleen op mobiel. z-[60] staat altijd boven modals (z-50)
           zodat de knop niet verdwijnt na sluiten van een modal (iOS repaint-issue). */}
       <button
         onClick={() => setMobielmenuOpen(true)}
@@ -164,7 +164,7 @@ export function Sidebar({ isLeider = false }: { isLeider?: boolean }) {
         </svg>
       </button>
 
-      {/* Tweede hamburger als FAB linksonder — duim-bereikbaar op telefoon en
+      {/* Tweede hamburger als FAB linksonder, duim-bereikbaar op telefoon en
           werkt als fallback wanneer de top-knop onzichtbaar blijkt na modal-sluit. */}
       <button
         onClick={() => setMobielmenuOpen(true)}

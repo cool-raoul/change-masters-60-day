@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 // ============================================================
-// ZinKaart — één bewerkbare zin op /mijn-zinnen.
+// ZinKaart, één bewerkbare zin op /mijn-zinnen.
 // In de inklap-modus: titel + waarde-preview + "← hoort bij dag X" + bewerk.
 // Uitgeklapt: textarea + bewaar/annuleer.
 // ============================================================

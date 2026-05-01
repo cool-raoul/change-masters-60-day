@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 // ============================================================
-// OpenIntakeForm — eerste stap voor open testlinks (Scenario 2).
+// OpenIntakeForm, eerste stap voor open testlinks (Scenario 2).
 //
 // Wanneer een member zijn open testlink deelt op social media of een
 // event en iemand klikt erop, dan komt die persoon hier. We vragen
@@ -67,7 +67,7 @@ export function OpenIntakeForm({
       </h2>
       <p className="text-sm text-gray-600 mb-4">
         {memberNaam} heeft deze vragenlijst voor je klaargezet. Vul kort je
-        naam in en telefoon of email — dan kan {memberNaam} je het advies
+        naam in en telefoon of email, dan kan {memberNaam} je het advies
         persoonlijk doorspreken.
       </p>
 
@@ -109,7 +109,7 @@ export function OpenIntakeForm({
           />
         </div>
         <p className="text-xs text-gray-500">
-          Telefoonnummer óf email is voldoende — we gebruiken één van beide
+          Telefoonnummer óf email is voldoende, we gebruiken één van beide
           om je het advies later te kunnen toesturen.
         </p>
 

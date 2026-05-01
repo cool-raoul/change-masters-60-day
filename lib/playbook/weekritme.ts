@@ -1,5 +1,5 @@
 // ============================================================
-// PLAYBOOK — weekritme voor dag 22-60
+// PLAYBOOK, weekritme voor dag 22-60
 // Na de eerste 21 dagen (Fundament → Momentum → Ritme) zit de
 // member in "ritme-verduurzaming": dezelfde acties, maar nu als
 // vast weekritme. Elke weekdag heeft één hoofdfocus.

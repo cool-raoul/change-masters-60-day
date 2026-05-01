@@ -5,10 +5,10 @@ import Link from "next/link";
 import type { Dag } from "@/lib/playbook/types";
 
 // ============================================================
-// DailyFocusModal — focus-scherm bij eerste bezoek van een dag.
+// DailyFocusModal, focus-scherm bij eerste bezoek van een dag.
 //
 // User-feedback: 'na onboarding hebben mensen een duidelijke pagina-flow.
-// Bij de 21 dagen moet hetzelfde — bij eerste bezoek van de dag eerst een
+// Bij de 21 dagen moet hetzelfde, bij eerste bezoek van de dag eerst een
 // focus-veld met wat er die dag te doen is, voordat de rest opent.'
 //
 // Werkt zo:
@@ -115,7 +115,7 @@ export function DailyFocusModal({ dag, voltooidAantal }: Props) {
           {voltooidAantal > 0 && (
             <div className="bg-emerald-900/20 border border-emerald-600/30 rounded-lg px-3 py-2 text-sm text-emerald-300">
               💪 Je hebt al {voltooidAantal} van de {totaal} stappen gedaan
-              vandaag — top, ga vooral door!
+              vandaag, top, ga vooral door!
             </div>
           )}
 
@@ -147,7 +147,7 @@ export function DailyFocusModal({ dag, voltooidAantal }: Props) {
           onClick={sluit}
           className="w-full text-cm-white opacity-50 hover:opacity-80 text-xs py-2 border-t border-cm-border"
         >
-          Sluiten — niet meer tonen vandaag
+          Sluiten, niet meer tonen vandaag
         </button>
       </div>
     </div>

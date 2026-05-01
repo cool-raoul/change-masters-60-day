@@ -5,13 +5,13 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 // ============================================================
-// RealtimeProspectsRefresh — abonneert op alle wijzigingen aan prospects,
+// RealtimeProspectsRefresh, abonneert op alle wijzigingen aan prospects,
 // herinneringen, contact_logs en productadvies_tests van de huidige user
 // en triggert router.refresh() zodra er iets verandert. Daarmee zien
 // pagina's die deze component mounten (namenlijst, prospect-detail) live
-// updates uit ALLE bronnen — voice-FAB, prospect-form, ProspectActieForm,
+// updates uit ALLE bronnen, voice-FAB, prospect-form, ProspectActieForm,
 // drag-drop, productadvies-vragenlijst-submit, push-getriggerde reminders,
-// auto-cron — zonder dat we elke mutatie-bron afzonderlijk hoeven te
+// auto-cron, zonder dat we elke mutatie-bron afzonderlijk hoeven te
 // koppelen.
 //
 // Debounce ~250ms zodat een stortvloed van wijzigingen (bv. 10 acties

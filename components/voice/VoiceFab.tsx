@@ -277,7 +277,7 @@ export function VoiceFab() {
         setZichtbaar(true);
       }
       laatsteScrollRef.current = nu;
-      // Na 1.5s zonder scroll weer tonen — zo kan de user altijd bij de knop
+      // Na 1.5s zonder scroll weer tonen, zo kan de user altijd bij de knop
       if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
       scrollTimerRef.current = setTimeout(() => setZichtbaar(true), 1500);
     }
@@ -295,7 +295,7 @@ export function VoiceFab() {
     onMaxBereikt: () => verwerkHuidig(),
   });
 
-  // Modal is fixed inset-0 z-50 en main heeft overscroll-y-contain —
+  // Modal is fixed inset-0 z-50 en main heeft overscroll-y-contain.
   // scroll-chaining wordt daardoor al voorkomen. Geen body-lock nodig;
   // die veroorzaakte juist iOS stuck-scroll na sluiten (touchAction="none"
   // werd niet altijd correct herberekend).
@@ -317,7 +317,7 @@ export function VoiceFab() {
   }
 
   async function verwerkHuidig() {
-    // Fallback-pad: browser zonder MediaRecorder — user heeft in de textarea
+    // Fallback-pad: browser zonder MediaRecorder, user heeft in de textarea
     // getypt. Geen Whisper nodig; tekst staat al in spraak.transcript.
     if (!spraak.ondersteund || !spraak.toegang) {
       const getypt = spraak.transcript.trim();
@@ -342,7 +342,7 @@ export function VoiceFab() {
       return;
     }
     if (!tekst || tekst.length < 3) {
-      setSpraakFoutTekst("Geen tekst opgevangen — opname was mogelijk leeg.");
+      setSpraakFoutTekst("Geen tekst opgevangen, opname was mogelijk leeg.");
       setSpraakFoutDebug(debug || "");
       setFase("spraakfout");
       return;
@@ -364,12 +364,12 @@ export function VoiceFab() {
   // tekst wordt op de cursor-positie ingevoegd. Belangrijk voor de
   // betrouwbaarheid:
   //  1. bewerkTekst lezen via setBewerkTekst-updater (huidige state) i.p.v.
-  //     de closure-waarde — anders verliest een snelle 2e opname die niet
+  //     de closure-waarde, anders verliest een snelle 2e opname die niet
   //     in dezelfde render zit zijn vorige inhoud.
   //  2. setSelectionRange in een useEffect-achtige timeout zodat React
   //     eerst zijn nieuwe value heeft geflusht naar de DOM.
   //  3. Een state-flag voor het verbergen van de microfoon i.p.v. de
-  //     textarea disabled zetten tijdens opname — sommige iOS-browsers
+  //     textarea disabled zetten tijdens opname, sommige iOS-browsers
   //     verwerken value-updates op een net-disabled element niet correct.
   async function toggleBewerkOpname() {
     if (bewerkenTranscribeert) return;
@@ -461,7 +461,7 @@ export function VoiceFab() {
     setFase("opslaan");
     try {
       const { gemaakt, fouten } = await voerActiesUit();
-      // Eerst eventuele fouten tonen — duidelijker dan een vrolijke
+      // Eerst eventuele fouten tonen, duidelijker dan een vrolijke
       // 'Opgeslagen!' toast bovenop een silent fail. Toast persist langer
       // zodat de user kan lezen wat er mis ging.
       if (fouten.length > 0) {
@@ -471,7 +471,7 @@ export function VoiceFab() {
             : `${fouten.length} acties faalden:\n• ${fouten.join("\n• ")}`;
         toast.error(samenvatting, { duration: 10000 });
       }
-      // Daarna pas de success-toast — alleen als er ÉCHT iets gebeurd is.
+      // Daarna pas de success-toast, alleen als er ÉCHT iets gebeurd is.
       if (acties.length > 0 && gemaakt.length > 0) {
         const tekst =
           fouten.length > 0
@@ -729,7 +729,7 @@ export function VoiceFab() {
       if (a.type === "notitie") {
         const id = naamNaarId[a.prospect_naam.toLowerCase()];
         if (!id) {
-          fouten.push(`Notitie voor "${a.prospect_naam}" niet opgeslagen — naam niet gevonden in je namenlijst`);
+          fouten.push(`Notitie voor "${a.prospect_naam}" niet opgeslagen, naam niet gevonden in je namenlijst`);
           continue;
         }
         const { data: huidig } = await supabase
@@ -813,7 +813,7 @@ export function VoiceFab() {
       if (a.type === "contact_log") {
         const id = naamNaarId[a.prospect_naam.toLowerCase()];
         if (!id) {
-          fouten.push(`Contact-log voor "${a.prospect_naam}" niet opgeslagen — naam niet gevonden`);
+          fouten.push(`Contact-log voor "${a.prospect_naam}" niet opgeslagen, naam niet gevonden`);
           continue;
         }
         const { data: huidig } = await supabase
@@ -891,7 +891,7 @@ export function VoiceFab() {
       if (a.type === "product_bestelling") {
         const id = naamNaarId[a.prospect_naam.toLowerCase()];
         if (!id) {
-          fouten.push(`Bestelling voor "${a.prospect_naam}" niet opgeslagen — naam niet gevonden`);
+          fouten.push(`Bestelling voor "${a.prospect_naam}" niet opgeslagen, naam niet gevonden`);
           continue;
         }
         const besteldatum = a.besteldatum || new Date().toISOString().split("T")[0];
@@ -1161,12 +1161,12 @@ export function VoiceFab() {
 
   // FAB altijd in de DOM houden; alleen pointer-events/opacity/transform wisselen.
   // iOS Safari heeft repaint-glitches bij position:fixed elementen die via React
-  // conditioneel unmounten/mounten na route-transities — daardoor verdween de knop.
+  // conditioneel unmounten/mounten na route-transities, daardoor verdween de knop.
   const fabVerborgen = fase !== "dicht" || !zichtbaar;
 
   return (
     <>
-      {/* Floating Action Button — altijd gerenderd, visueel verborgen via CSS */}
+      {/* Floating Action Button, altijd gerenderd, visueel verborgen via CSS */}
       <button
         onClick={openen}
         className="fixed bottom-5 right-5 z-40 w-14 h-14 rounded-full bg-cm-gold text-cm-black shadow-gold-lg flex items-center justify-center text-2xl active:scale-95 transition-all duration-200"
@@ -1272,7 +1272,7 @@ export function VoiceFab() {
                   )}
                 </div>
                 <p className="text-cm-white text-xs opacity-70">
-                  Stuur deze melding door als het probleem blijft — dan kan het
+                  Stuur deze melding door als het probleem blijft, dan kan het
                   uitgezocht worden.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-2">
@@ -1475,7 +1475,7 @@ export function VoiceFab() {
                       )}
                       {!isBestaand && !isNieuw && resultaat.intentie !== "data" && (
                         <p className="text-cm-white text-xs opacity-60 pt-1 border-t border-cm-gold/20">
-                          Geen prospect herkend — advies wordt algemeen opgeslagen.
+                          Geen prospect herkend, advies wordt algemeen opgeslagen.
                         </p>
                       )}
                     </div>
@@ -1496,7 +1496,7 @@ export function VoiceFab() {
                     <p className="text-xs text-cm-gold uppercase tracking-wider">💡 Geen actie herkend</p>
                     <p className="text-cm-white text-sm">
                       ELEVA heeft je tekst begrepen, maar kon er geen concrete actie uit afleiden.
-                      Pas de tekst aan en probeer het opnieuw — bijvoorbeeld door een volledige
+                      Pas de tekst aan en probeer het opnieuw, bijvoorbeeld door een volledige
                       naam te noemen of duidelijker te zeggen wat je wilt (toevoegen, verwijderen,
                       notitie, herinnering, bestelling).
                     </p>
@@ -1710,7 +1710,7 @@ function beschrijfActie(actie: any): { icoon: string; titel: string; details: st
         return {
           icoon: "♻️",
           titel: `Herstel: ${actie.volledige_naam || "prospect"}`,
-          details: ["Uit archief terughalen — verschijnt weer in alle lijsten."],
+          details: ["Uit archief terughalen, verschijnt weer in alle lijsten."],
         };
       case "hernoem_prospect":
         return {
@@ -1731,13 +1731,13 @@ function beschrijfActie(actie: any): { icoon: string; titel: string; details: st
         return {
           icoon: "🔢",
           titel: "Dagstats CORRIGEREN" + (actie.datum ? ` (${actie.datum})` : ""),
-          details: [...items, "Vervangt bestaande waarden — niet optellen."],
+          details: [...items, "Vervangt bestaande waarden, niet optellen."],
         };
       }
       case "prioriteit_set":
         return {
           icoon: "⭐",
-          titel: `Prioriteit ${actie.prioriteit || "?"} — ${actie.volledige_naam || "prospect"}`,
+          titel: `Prioriteit ${actie.prioriteit || "?"}, ${actie.volledige_naam || "prospect"}`,
           details: [],
         };
       case "wis_notities":

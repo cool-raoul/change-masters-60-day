@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 // ============================================================
-// EditableTekst — herbruikbaar component voor founder-bewerkbare
+// EditableTekst, herbruikbaar component voor founder-bewerkbare
 // teksten in het ELEVA-systeem.
 //
 // Voor members rendert 'ie gewoon de tekst (met override als die er is,
@@ -108,7 +108,7 @@ export function EditableTekst({
       toast.success(
         isStandaard
           ? "Terug naar standaard"
-          : "✍️ Bewaard — direct zichtbaar voor alle members",
+          : "✍️ Bewaard, direct zichtbaar voor alle members",
       );
     } catch {
       toast.error("Verbindingsfout");
@@ -219,7 +219,7 @@ export function EditableTekst({
         <button
           type="button"
           onClick={startBewerken}
-          title="Founder-bewerken — wijzigingen gaan LIVE voor alle members"
+          title="Founder-bewerken, wijzigingen gaan LIVE voor alle members"
           className="ml-2 align-middle text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full border border-cm-gold/60 text-cm-gold bg-cm-gold/5 hover:bg-cm-gold/15 hover:border-cm-gold transition-colors font-semibold whitespace-nowrap inline-block"
         >
           ✍️ Bewerk
@@ -230,7 +230,7 @@ export function EditableTekst({
 }
 
 /**
- * Variant voor multi-line tekst-blokken — handig wanneer je een paragraaf
+ * Variant voor multi-line tekst-blokken, handig wanneer je een paragraaf
  * wilt bewerken en de ✏️-knop niet inline naast de tekst wil hebben maar
  * eronder. Visueel iets prettiger voor langere blokken.
  */

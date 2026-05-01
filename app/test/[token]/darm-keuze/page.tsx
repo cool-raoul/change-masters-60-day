@@ -94,7 +94,7 @@ export default async function DarmKeuzePage({
     notFound();
   }
 
-  // Templates kunnen geen darmvragenlijst hebben — die volgt op een
+  // Templates kunnen geen darmvragenlijst hebben, die volgt op een
   // ingevulde hoofd-vragenlijst van een prospect.
   if (test.is_open_template) {
     notFound();
@@ -146,7 +146,7 @@ export default async function DarmKeuzePage({
             ← Terug naar je advies
           </Link>
           <div className="text-emerald-600 text-sm font-medium uppercase tracking-wider">
-            Vervolgvragenlijst — darmen & balans
+            Vervolgvragenlijst, darmen & balans
           </div>
           <h1 className="mt-2 text-3xl sm:text-4xl font-bold text-gray-900">
             {prospectVoornaam
@@ -155,7 +155,7 @@ export default async function DarmKeuzePage({
           </h1>
           <p className="mt-3 text-gray-600">
             15 korte vragen, samen ongeveer 3 minuten. Aan het eind weet je of
-            een darmprogramma op dit moment passend is — en zo ja, welke variant.
+            een darmprogramma op dit moment passend is, en zo ja, welke variant.
           </p>
         </header>
 

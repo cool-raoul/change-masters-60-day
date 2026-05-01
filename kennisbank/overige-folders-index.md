@@ -1,4 +1,4 @@
-# Kennisbank — BE THE CHANGE Folders 3-5 en 7-10 (Index)
+# Kennisbank, BE THE CHANGE Folders 3-5 en 7-10 (Index)
 
 **Bron:** BE THE CHANGE board (NL) → folders 3️⃣ t/m 5️⃣ en 7️⃣ t/m 🔟
 **Opgehaald op:** 2026-04-17
@@ -6,7 +6,7 @@
 
 ---
 
-## Folder 3 — PROSPECTS LINKS BUSINESS
+## Folder 3, PROSPECTS LINKS BUSINESS
 
 **Doel:** kant-en-klare teksten om naar prospects te sturen na eerste interesse, met een link naar een prospects-pagina op boards.com.
 
@@ -25,20 +25,20 @@ Script voor prospects die interesse tonen in de *opportunity*:
 → Link meegestuurd naar: Business opportunity boards-pagina
 
 ### Implicaties ELEVA
-- De "Darmen in Balans" vragenlijst is een **kwalificatietool** — score bepaalt gespreksinsteek. ELEVA kan dit als prospect-stap opnemen.
-- Twee aparte flows (product vs. business) — consistent met 3-weg-scripts structuur.
+- De "Darmen in Balans" vragenlijst is een **kwalificatietool**, score bepaalt gespreksinsteek. ELEVA kan dit als prospect-stap opnemen.
+- Twee aparte flows (product vs. business), consistent met 3-weg-scripts structuur.
 
 ---
 
-## Folder 4 — GESTARTE PRODUCT GEBRUIKERS
+## Folder 4, GESTARTE PRODUCT GEBRUIKERS
 
 **Doel:** begeleiding voor mensen die net gestart zijn met een programma (darm of reset).
 
 ### Kaarten
 
-**"Gestart: support programma's"** — navigatiekaart naar begeleiding
+**"Gestart: support programma's"**, navigatiekaart naar begeleiding
 
-**"Teksten om te versturen"** — twee welkomst-scripts:
+**"Teksten om te versturen"**, twee welkomst-scripts:
 
 *Versturen start darmprogramma:*
 > "Gefeliciteerd met je besluit, je gaat starten met het darmprogramma. Lees graag alles door zodat je niks overslaat en precies weet wat je nodig hebt. Je vindt hier de begeleiding: [boards link]. Je opent de link: Reset Code gestart → Lees de tekst → druk op rode knop: darmprogramma > darmen in balans. Je vindt hier: Introductie en opstart video (deel 1), Document: Darmen in balans programma en inname schema, Document: Receptenboekje, Tips & tricks video, Wat te doen vanaf dag 10 (deel 2), Wat te doen na de 16 dagen? Heel veel succes en laat me graag even weten of alles zo duidelijk is?"
@@ -52,13 +52,13 @@ Script voor prospects die interesse tonen in de *opportunity*:
 
 ---
 
-## Folder 5 — VAN SHOPPER NAAR MEMBER
+## Folder 5, VAN SHOPPER NAAR MEMBER
 
 **Doel:** shoppers activeren om hun ervaring te delen en zo door te groeien naar member (met eigen shop + commissie).
 
 ### Kaarten
 
-**"Jouw ervaring delen"** — conversiepagina met storytelling-aanpak:
+**"Jouw ervaring delen"**, conversiepagina met storytelling-aanpak:
 
 Kernboodschap: je hoeft niets te *verkopen*, alleen te *delen*. Eigen ervaring = sterkste argument.
 
@@ -69,28 +69,28 @@ Structuur van de kaart:
 - FAQ: "Moet ik verkopen?" → Nee. "En als iemand nee zegt?" → Dan is dat prima. "Moet ik veel tijd hebben?" → Nee, een appje sturen kost 2 minuten.
 - Financieel: "Soms levert het voordeel op je producten of een extra inkomen. Er worden geen garanties gegeven."
 
-**"TRAINING shopper naar member"** — trainingskaart (vermoedelijk video)
+**"TRAINING shopper naar member"**, trainingskaart (vermoedelijk video)
 
 ### Implicaties ELEVA
 - **Resultaatpost** is een expliciete techniek: na eigen resultaat een post plaatsen → zo conversie van shopper naar member. ELEVA kan dit als milestone triggeren.
-- De "geen verkoopdruk"-framing is systemisch ingezet — consistent met hele board-toon.
+- De "geen verkoopdruk"-framing is systemisch ingezet, consistent met hele board-toon.
 - **Marloes testimonial** is een goed voorbeeld van de beoogde toon: authentiek, kort, herkenbaar.
 
 ---
 
-## Folder 7 — SOCIAL MEDIA TRAINING
+## Folder 7, SOCIAL MEDIA TRAINING
 
-**Status:** Leeg — alleen file-upload placeholder zichtbaar, geen kaarten of content.
+**Status:** Leeg, alleen file-upload placeholder zichtbaar, geen kaarten of content.
 
 ---
 
-## Folder 8 — CAMPAGNES & CHALLENGES
+## Folder 8, CAMPAGNES & CHALLENGES
 
 **Doel:** tools voor het 60-dagenproject.
 
 ### Kaarten
 
-**"60 Days Run Project Tools"** — verzameling van alle werkdocumenten:
+**"60 Days Run Project Tools"**, verzameling van alle werkdocumenten:
 
 | Document | Omschrijving |
 |---|---|
@@ -99,38 +99,38 @@ Structuur van de kaart:
 | One Pager Businessplan | PDF: `onepager_businessplan_rebuilt_final_v11` |
 | Powerpoint Presentatie | Presentatie voor prospect-gesprekken |
 | Bezwaren / Follow-Up / Closingsvragen | Werkdocument: `be_the_change_werkdocument_gesprekken` |
-| Week tracker | PDF: `weektracker.pdf` — activiteiten bijhouden per week |
+| Week tracker | PDF: `weektracker.pdf`, activiteiten bijhouden per week |
 
 ### Implicaties ELEVA
 - De **week tracker** is een fysiek PDF. ELEVA's namenlijst + dashboard vervangen dit digitaal.
-- **Bezwaren/Closingsvragen werkdocument** is waardevolle inhoud voor de DM-coach — indien toegankelijk, inhoud ophalen voor de kennisbank.
-- **One Pager** en **Powerpoint** zijn presentatiematerialen voor driewegsgesprekken — ELEVA verwijst hiernaar (human-first: mensen gebruiken de tools zelf).
+- **Bezwaren/Closingsvragen werkdocument** is waardevolle inhoud voor de DM-coach, indien toegankelijk, inhoud ophalen voor de kennisbank.
+- **One Pager** en **Powerpoint** zijn presentatiematerialen voor driewegsgesprekken, ELEVA verwijst hiernaar (human-first: mensen gebruiken de tools zelf).
 
 ---
 
-## Folder 9 — DOCUMENTEN
+## Folder 9, DOCUMENTEN
 
 **Doel:** opslag van content-assets en testimonials.
 
 ### Kaarten
 
-**"TESTIMONIALS VITALITEIT"** — verzameling van ervaringsverhalen over producten/programma's (energie, rust, darm, reset).
+**"TESTIMONIALS VITALITEIT"**, verzameling van ervaringsverhalen over producten/programma's (energie, rust, darm, reset).
 
-**"FB 30 Dagen Contentplan"** — Facebook content kalender voor 30 dagen. Bevat vermoedelijk dagelijkse post-suggesties voor het opbouwen van een online aanwezigheid.
+**"FB 30 Dagen Contentplan"**, Facebook content kalender voor 30 dagen. Bevat vermoedelijk dagelijkse post-suggesties voor het opbouwen van een online aanwezigheid.
 
 ### Implicaties ELEVA
-- **30 Dagen Contentplan** is een prioriteit om te lezen — bepaalt de social media-ritme die teamleden verwacht worden te volgen. Relevant voor Skill-van-de-dag en reminders.
+- **30 Dagen Contentplan** is een prioriteit om te lezen, bepaalt de social media-ritme die teamleden verwacht worden te volgen. Relevant voor Skill-van-de-dag en reminders.
 - Testimonials kunnen als voorbeeldmateriaal dienen voor de "resultaatpost"-feature.
 
 ---
 
-## Folder 10 — VIDEO'S
+## Folder 10, VIDEO'S
 
 **Doel:** video-testimonials voor business-presentaties.
 
 ### Kaarten
 
-**"Testimonials Business"** — collectie van ~46 video-testimonials van mensen die de business opportunity gevolgd hebben.
+**"Testimonials Business"**, collectie van ~46 video-testimonials van mensen die de business opportunity gevolgd hebben.
 
 ### Implicaties ELEVA
 - Video's zijn niet direct bruikbaar in ELEVA (extern gehost).
@@ -148,7 +148,7 @@ Structuur van de kaart:
 | 4 | GESTARTE PRODUCT GEBRUIKERS | Welkomstscripts darm + reset | Index → dit bestand |
 | 5 | VAN SHOPPER NAAR MEMBER | Ervarings-deel aanpak, FAQ, resultaatpost | Index → dit bestand |
 | 6 | TRAINING TEAM | 4 webinar-scripts, 3 video-kaarten | Volledig → `06-training-team.md` |
-| 7 | SOCIAL MEDIA TRAINING | Leeg | — |
+| 7 | SOCIAL MEDIA TRAINING | Leeg |, |
 | 8 | CAMPAGNES & CHALLENGES | 60-dagentools: WHY, businessplan, tracker | Index → dit bestand |
 | 9 | DOCUMENTEN | Testimonials vitaliteit + 30-dagen contentplan | Index → dit bestand |
 | 10 | VIDEO'S | Business testimonials (~46 video's) | Index → dit bestand |

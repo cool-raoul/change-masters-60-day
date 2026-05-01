@@ -38,7 +38,7 @@ function kiesMimeType(): string | undefined {
     try {
       if (MediaRecorder.isTypeSupported(m)) return m;
     } catch {
-      // oudere Safari gooit op isTypeSupported — negeren
+      // oudere Safari gooit op isTypeSupported, negeren
     }
   }
   return undefined; // laat de browser default kiezen
@@ -89,7 +89,7 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
       }
       await noSleepRef.current.enable();
     } catch {
-      // geen wake lock — opname werkt sowieso door
+      // geen wake lock, opname werkt sowieso door
     }
   }
 
@@ -162,7 +162,7 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
         const resolver = stopResolverRef.current;
         stopResolverRef.current = null;
         resolver?.(blob);
-        // stream na stop opruimen — anders blijft mic-indicator aan
+        // stream na stop opruimen, anders blijft mic-indicator aan
         streamRef.current?.getTracks().forEach((t) => t.stop());
         streamRef.current = null;
       };
@@ -240,11 +240,11 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
     });
 
     try {
-      // Forceer laatste chunk flush voor stop — helpt op Safari om data
+      // Forceer laatste chunk flush voor stop, helpt op Safari om data
       // niet te verliezen in het laatste partial frame.
       (recorder as any)?.requestData?.();
     } catch {
-      // niet alle browsers ondersteunen requestData — stop() werkt alsnog
+      // niet alle browsers ondersteunen requestData, stop() werkt alsnog
     }
 
     try {
@@ -281,7 +281,7 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
     if (!blob) {
       return {
         tekst: "",
-        fout: "Geen audio opgenomen — check microfoon-toegang.",
+        fout: "Geen audio opgenomen, check microfoon-toegang.",
         debug: debugBasis,
       };
     }
@@ -311,7 +311,7 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
           const body = await res.json();
           if (body?.fout) serverFout = String(body.fout);
         } catch {
-          // geen JSON — laat de status-tekst staan
+          // geen JSON, laat de status-tekst staan
         }
         console.warn("voice-transcribe faalde:", serverFout);
         return { tekst: "", fout: serverFout, debug: debugBasis };

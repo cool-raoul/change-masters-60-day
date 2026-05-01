@@ -1,5 +1,5 @@
 // ============================================================
-// FASEN-UITLEG — algemene context voor de resultaatpagina
+// FASEN-UITLEG, algemene context voor de resultaatpagina
 //
 // Doel: laten zien dat aanvulling geen quick-fix is, maar een traject
 // in fases. Voeding van nu bevat minder voedingsstoffen dan jaren
@@ -9,11 +9,11 @@
 //   Maand 0-3:   tekorten aanvullen, eerste signalen verminderen
 //   Maand 3-6:   stabiliseren, fundament wordt zichtbaar in energie + slaap
 //   Maand 6-9:   diepe lab-waardes herstellen (omega-3 index, vit D-spiegel, etc.)
-//   Maand 9+:    onderhoud — lichaam dagelijks voorzien van wat het nodig heeft
+//   Maand 9+:    onderhoud, lichaam dagelijks voorzien van wat het nodig heeft
 //
 // Bron-overweging: aangenomen op basis van algemene lectuur over
 // voedingstekort en aanvullingstrajecten. Niet op één specifieke
-// publicatie gebaseerd — geen medische claim.
+// publicatie gebaseerd, geen medische claim.
 // ============================================================
 
 export const FASEN_UITLEG = {

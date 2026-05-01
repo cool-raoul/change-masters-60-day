@@ -4,21 +4,21 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 // ============================================================
-// SponsorMeldingKnop — inline-embed voor /vandaag dag 1 'sponsor-melding'
+// SponsorMeldingKnop, inline-embed voor /vandaag dag 1 'sponsor-melding'
 //
 // Toont een wa.me-knop met een voorgekauwd 'ik ben gestart'-bericht
-// naar de sponsor van de member. Geen wegnavigeren — klikken opent
+// naar de sponsor van de member. Geen wegnavigeren, klikken opent
 // WhatsApp (web of app), bevestigt = taak afvinken in vandaag-flow.
 //
 // Sponsor wordt opgehaald uit user_metadata.sponsor_id (gezet bij
 // registratie/uitnodiging) en gekoppeld aan profile.full_name +
-// profile.telefoon (kolom in profiles-tabel — kan leeg zijn).
+// profile.telefoon (kolom in profiles-tabel, kan leeg zijn).
 // Geen telefoon? Dan tonen we alleen een tekst-bericht-template
 // die de member zelf via z'n eigen kanaal kan sturen.
 // ============================================================
 
 type Props = {
-  /** Wordt aangeroepen zodra member 'verstuurd'-knop klikt — vinkt taak af. */
+  /** Wordt aangeroepen zodra member 'verstuurd'-knop klikt, vinkt taak af. */
   opVoltooid: () => void;
   alVoltooid: boolean;
   /** Taak-id zodat we het juiste bericht-sjabloon kunnen kiezen per dag. */
@@ -35,7 +35,7 @@ function pakBericht(taakId: string | undefined, sponsorVoornaam: string): string
     case "dag2-kennismaak":
       return (
         `Hoi${naamDeel}! Volgens m'n playbook is dit een mooi moment voor een ` +
-        `korte kennismaak-call van zo'n 30 min — even mijn WHY met je delen, ` +
+        `korte kennismaak-call van zo'n 30 min, even mijn WHY met je delen, ` +
         `en samen kijken naar mijn eerste 3 invites. Wanneer schikt het bij jou?`
       );
     case "dag3-sponsor-checkin":
@@ -46,7 +46,7 @@ function pakBericht(taakId: string | undefined, sponsorVoornaam: string): string
     case "dag6-sponsor-tip":
       return (
         `Hoi${naamDeel}! Mag ik je advies vragen op één lastige follow-up? ` +
-        `Ik heb een prospect waar ik even niet uitkom — kan jij een tip geven ` +
+        `Ik heb een prospect waar ik even niet uitkom, kan jij een tip geven ` +
         `als je een momentje hebt?`
       );
     case "dag7-sponsor-call":
@@ -61,21 +61,21 @@ function pakBericht(taakId: string | undefined, sponsorVoornaam: string): string
       );
     case "dag21-sponsor-call":
       return (
-        `Hoi${naamDeel}! Dag 21 — fase 1 t/m 3 voltooid 🏆 Klaar voor onze ` +
+        `Hoi${naamDeel}! Dag 21, fase 1 t/m 3 voltooid 🏆 Klaar voor onze ` +
         `40-min call over hoe ik de volgende 40 dagen ga vormgeven?`
       );
     case "dag1-sponsor":
     default:
       return (
         `Hoi${naamDeel}! Ik ben gestart in ELEVA 🚀 Vanaf nu zie je in het ` +
-        `systeem mijn dagelijkse stappen — fijn om je rugdekking te hebben. ` +
+        `systeem mijn dagelijkse stappen, fijn om je rugdekking te hebben. ` +
         `Spreek je snel!`
       );
   }
 }
 
 /**
- * Titel-tekst voor de embed boven het bericht — past zich aan op
+ * Titel-tekst voor de embed boven het bericht, past zich aan op
  * basis van de taak-context (kennismaak vs check-in vs call etc.).
  */
 function pakTitel(taakId: string | undefined): string {
@@ -156,7 +156,7 @@ export function SponsorMeldingKnop({ opVoltooid, alVoltooid, taakId }: Props) {
           ✓ Bericht verstuurd
         </p>
         <p className="text-cm-white opacity-80 text-xs">
-          Top — je sponsor weet dat je vertrokken bent. Door naar de volgende stap.
+          Top, je sponsor weet dat je vertrokken bent. Door naar de volgende stap.
         </p>
       </div>
     );
@@ -175,10 +175,10 @@ export function SponsorMeldingKnop({ opVoltooid, alVoltooid, taakId }: Props) {
       <div className="space-y-1">
         <h4 className="text-cm-gold font-semibold text-sm">
           {titel}
-          {sponsor?.naam ? ` — ${sponsor.naam.split(" ")[0]}` : ""}
+          {sponsor?.naam ? `, ${sponsor.naam.split(" ")[0]}` : ""}
         </h4>
         <p className="text-cm-white opacity-80 text-xs leading-relaxed">
-          We hebben een korte tekst voor je voorgeschreven — pas 'm aan naar
+          We hebben een korte tekst voor je voorgeschreven, pas 'm aan naar
           je eigen toon, of stuur 'm zoals 'ie is. Eén klik en WhatsApp opent.
         </p>
       </div>
@@ -188,7 +188,7 @@ export function SponsorMeldingKnop({ opVoltooid, alVoltooid, taakId }: Props) {
       </div>
 
       <p className="text-xs text-cm-white opacity-60">
-        ℹ️ WhatsApp opent een contact-zoeker — kies daar je sponsor of de
+        ℹ️ WhatsApp opent een contact-zoeker, kies daar je sponsor of de
         persoon die jou heeft uitgenodigd.
       </p>
 

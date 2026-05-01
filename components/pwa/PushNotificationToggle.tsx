@@ -77,7 +77,7 @@ export function PushNotificationToggle() {
         });
 
         // Browser-tijdzone meesturen zodat het endpoint 'm direct als default
-        // kan opslaan — anders zou onboarding-user Europe/Amsterdam krijgen.
+        // kan opslaan, anders zou onboarding-user Europe/Amsterdam krijgen.
         let tijdzone = "Europe/Amsterdam";
         try {
           const gedetecteerd = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -133,7 +133,7 @@ export function PushNotificationToggle() {
     }
   }
 
-  // Not in PWA mode — show install instruction
+  // Not in PWA mode, show install instruction
   if (!isStandalone && !isSubscribed) {
     return (
       <div className="space-y-3">
@@ -173,7 +173,7 @@ export function PushNotificationToggle() {
           <p className="text-sm font-semibold text-cm-white">🔔 Push Notifications</p>
           <p className="text-xs text-cm-white opacity-60 mt-0.5">
             {isSubscribed
-              ? "✅ Ingeschakeld — je ontvangt meldingen"
+              ? "✅ Ingeschakeld, je ontvangt meldingen"
               : "Uitgeschakeld"}
           </p>
         </div>

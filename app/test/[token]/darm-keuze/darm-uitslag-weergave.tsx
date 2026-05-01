@@ -8,10 +8,10 @@ import type { DarmUitslag } from "@/lib/zelftest/darm-vragen";
 // ingevuld. Twee varianten:
 //  - "basis": Darmen in Balans (16 dagen) als aanbevolen reset
 //  - "plus": Darmen in Balans + (uitgebreid) als aanbevolen reset
-// Iedereen krijgt een advies — er is geen "geen darmprogramma"-uitkomst.
+// Iedereen krijgt een advies, er is geen "geen darmprogramma"-uitkomst.
 //
 // Geen verzend-knop voor de prospect. De member krijgt automatisch een
-// herinnering bij submit (via /api/productadvies-test/darm-submit) — dat
+// herinnering bij submit (via /api/productadvies-test/darm-submit), dat
 // verlaagt de drempel voor de prospect en voorkomt dat ze 'in beraad'
 // blijven hangen omdat ze nog moeten delen.
 // ============================================================
@@ -75,7 +75,7 @@ export function DarmUitslagWeergave({
       )}
 
       {/* Member krijgt automatisch een herinnering bij submit. Geen
-          verzend-knop voor de prospect — verlaagt de drempel. */}
+          verzend-knop voor de prospect, verlaagt de drempel. */}
       <section className="bg-emerald-50 border border-emerald-100 rounded-2xl p-5 sm:p-6">
         <div className="flex items-start gap-3">
           <span className="text-2xl">✓</span>
@@ -92,7 +92,7 @@ export function DarmUitslagWeergave({
         </div>
       </section>
 
-      {/* Terug-knop als secundaire actie — sommige prospects willen
+      {/* Terug-knop als secundaire actie, sommige prospects willen
           hun pakket-advies nog eens nalezen. */}
       <section className="text-center">
         <Link

@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { DeelKnoppen } from "@/components/shared/DeelKnoppen";
 
 // ============================================================
-// ProductadviesTestKnop — knop op de prospect-kaart om een
+// ProductadviesTestKnop, knop op de prospect-kaart om een
 // productadvies-test te versturen. Toont status indien al verstuurd.
 //
 // Flow:
@@ -223,7 +223,7 @@ export function ProductadviesTestKnop({
                   {wilNieuwe && (
                     <p className="text-xs text-gray-400 mt-2">
                       Het oude advies blijft staan tot de prospect deze nieuwe
-                      vragenlijst invult — daarna wordt het overschreven door
+                      vragenlijst invult, daarna wordt het overschreven door
                       de nieuwste uitslag.
                     </p>
                   )}
@@ -252,7 +252,7 @@ export function ProductadviesTestKnop({
 }
 
 // ============================================================
-// DeelOpties — wrapper rond DeelKnoppen voor de productadvies-test context
+// DeelOpties, wrapper rond DeelKnoppen voor de productadvies-test context
 // ============================================================
 
 function DeelOpties({

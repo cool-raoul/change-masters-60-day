@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 // ============================================================
-// PakketAccordionCard — uitklapbare pakket-kaart op de resultaatpagina
+// PakketAccordionCard, uitklapbare pakket-kaart op de resultaatpagina
 // voor de prospect.
 //
 // - Default ingeklapt: toont alleen niveau + pakket-naam + totaalprijs

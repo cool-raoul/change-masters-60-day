@@ -1,5 +1,5 @@
 // ============================================================
-// Films-CMS — utility helpers
+// Films-CMS, utility helpers
 //
 // Zet "rauwe" YouTube/Vimeo URLs om naar embed-URLs zodat de admin
 // gewoon een gewone share-link kan plakken en wij hem normaliseren.
@@ -46,7 +46,7 @@ export function normaliseerNaarEmbed(url: string | null | undefined): string | n
     return `https://www.youtube.com/embed/${youtubeWatchMatch[1]}`;
   }
 
-  // YouTube: al embed-vorm — laat staan
+  // YouTube: al embed-vorm, laat staan
   if (/youtube\.com\/embed\//.test(ruw)) {
     return ruw;
   }
@@ -63,18 +63,18 @@ export function normaliseerNaarEmbed(url: string | null | undefined): string | n
     return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
   }
 
-  // Vimeo: al embed-vorm — laat staan
+  // Vimeo: al embed-vorm, laat staan
   if (/player\.vimeo\.com\/video\//.test(ruw)) {
     return ruw;
   }
 
-  // Onbekend formaat — return zoals het is, browser kan er soms toch
+  // Onbekend formaat, return zoals het is, browser kan er soms toch
   // mee omgaan (bv. directe MP4-URL).
   return ruw;
 }
 
 /**
- * Detecteert provider — handig voor analytics-config later.
+ * Detecteert provider, handig voor analytics-config later.
  */
 export function detecteerProvider(url: string | null | undefined): "youtube" | "vimeo" | "anders" | null {
   if (!url) return null;
@@ -97,24 +97,24 @@ export const ONBOARDING_FILM_SLUGS = {
 } as const;
 
 /**
- * Beschrijvende metadata voor de admin-UI bij het beheren van slots —
+ * Beschrijvende metadata voor de admin-UI bij het beheren van slots.
  * zo weet de founder waar elke film terechtkomt in de gebruikersflow.
  */
 export const SLUG_BESCHRIJVINGEN: Record<string, { plek: string; suggestieTitel: string }> = {
   [ONBOARDING_FILM_SLUGS.STAP_6_WEBSHOP]: {
-    plek: "Playbook dag 2 — Lifeplus webshop aanmaken",
+    plek: "Playbook dag 2, Lifeplus webshop aanmaken",
     suggestieTitel: "Lifeplus webshop aanmaken",
   },
   [ONBOARDING_FILM_SLUGS.STAP_8_KREDIETFORMULIER]: {
-    plek: "Playbook dag 2 — Kredietformulier invullen",
+    plek: "Playbook dag 2, Kredietformulier invullen",
     suggestieTitel: "Kredietformulier invullen",
   },
   [ONBOARDING_FILM_SLUGS.STAP_7_TEAMS_ADMIN]: {
-    plek: "Playbook dag 3 — Teams-administratiesysteem aanmaken",
+    plek: "Playbook dag 3, Teams-administratiesysteem aanmaken",
     suggestieTitel: "Teams-administratiesysteem aanmaken",
   },
   [ONBOARDING_FILM_SLUGS.STAP_9_BESTELLINKS]: {
-    plek: "Playbook dag 4 — Bestellinks koppelen aan ELEVA",
+    plek: "Playbook dag 4, Bestellinks koppelen aan ELEVA",
     suggestieTitel: "Bestellinks koppelen aan ELEVA",
   },
 };

@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
     // Eerder blokkeerden we hier op status='ingevuld'. Bewust niet meer:
     // de prospect mag de vragenlijst opnieuw invullen totdat hij/zij hem
     // definitief naar de member doorstuurt. Bij elke nieuwe submit
-    // overschrijft de uitslag de vorige op DEZELFDE rij — dezelfde token
+    // overschrijft de uitslag de vorige op DEZELFDE rij, dezelfde token
     // blijft, member krijgt automatisch de laatste versie te zien op de
     // prospect-kaart (we sorteren op meest recente test).
     const wasAlIngevuld = test.status === "ingevuld";
@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
     const echteTrigger: Trigger60Day =
       (test.trigger_60day as Trigger60Day) || trigger60day;
 
-    // Bereken uitslag in geheugen — antwoorden gaan NIET naar DB
+    // Bereken uitslag in geheugen, antwoorden gaan NIET naar DB
     const antwoorden: ZelftestAntwoorden = {
       trigger60day: echteTrigger,
       geslacht,
@@ -133,10 +133,10 @@ export async function POST(req: NextRequest) {
     }
 
     // Pipeline auto-update: alle pre-followup-fases verschuiven naar 'followup'
-    // wanneer prospect de test heeft ingevuld. Niet harder dan dat — fases
+    // wanneer prospect de test heeft ingevuld. Niet harder dan dat, fases
     // ná followup (member, shopper, not_yet) blijven onaangetast.
     // Bij re-submit (wasAlIngevuld) doen we geen pipeline-update of herinnering
-    // meer — die zijn al eerder afgehandeld.
+    // meer, die zijn al eerder afgehandeld.
     const PRE_FOLLOWUP_FASES = [
       "prospect",
       "uitgenodigd",
@@ -182,7 +182,7 @@ export async function POST(req: NextRequest) {
 
     // Member-notificatie: maak een herinnering aan zodat member ziet dat
     // er een test ingevuld is en hij/zij contact kan opnemen met de prospect.
-    // Niet bij re-submit — anders krijgt member dubbele/triple herinneringen.
+    // Niet bij re-submit, anders krijgt member dubbele/triple herinneringen.
     if (test.member_id && test.prospect_id && !wasAlIngevuld) {
       // Prospect-naam voor in de pushtitel zodat de member meteen ziet wie
       // ingevuld heeft, ook met telefoon op slot.
@@ -205,7 +205,7 @@ export async function POST(req: NextRequest) {
         voltooid: false,
       });
 
-      // Live push naar de telefoon van de member — telefoon pingt zelfs als
+      // Live push naar de telefoon van de member, telefoon pingt zelfs als
       // de app dicht is. Stil falen als geen subscription / verlopen.
       await sendPushToUser(test.member_id, {
         title: `${prospectNaam} heeft de vragenlijst ingevuld`,

@@ -55,7 +55,7 @@ export function UpgradeModal({ gebruik, onSluit }: Props) {
         {/* Premium voordelen */}
         <div className="bg-cm-gold/10 border border-cm-gold/30 rounded-xl p-4 space-y-2">
           <p className="text-cm-gold font-semibold text-sm">
-            🌟 ELEVA Mentor Premium — €2 per maand
+            🌟 ELEVA Mentor Premium, €2 per maand
           </p>
           <ul className="space-y-1.5">
             {[

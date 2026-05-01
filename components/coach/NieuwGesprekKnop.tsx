@@ -26,7 +26,7 @@ export function NieuwGesprekKnop({ userId, prospects }: Props) {
       .insert({
         user_id: userId,
         prospect_id: selectedProspect || null,
-        // Geen titel zetten — wordt automatisch ingesteld bij eerste bericht
+        // Geen titel zetten, wordt automatisch ingesteld bij eerste bericht
         titel: geselecteerdProspect ? `Over ${geselecteerdProspect.volledige_naam}` : null,
         berichten: [],
       })
@@ -65,7 +65,7 @@ export function NieuwGesprekKnop({ userId, prospects }: Props) {
             onChange={(e) => setSelectedProspect(e.target.value)}
             className="input-cm"
           >
-            <option value="">— Algemeen gesprek —</option>
+            <option value="">, Algemeen gesprek, </option>
             {prospects.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.volledige_naam} ({p.pipeline_fase})

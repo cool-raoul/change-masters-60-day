@@ -7,7 +7,7 @@ import Link from "next/link";
 import { PushNotificationToggle } from "@/components/pwa/PushNotificationToggle";
 import { EditableTekst } from "@/components/cms/EditableTekst";
 
-const SPONSOR_TEL = "https://wa.me/31612345678"; // fallback — wordt dynamisch geladen
+const SPONSOR_TEL = "https://wa.me/31612345678"; // fallback, wordt dynamisch geladen
 
 function Stap4NamenlijstInline({
   userId,
@@ -77,7 +77,7 @@ function Stap4NamenlijstInline({
         <EditableTekst
           namespace="onboarding"
           sleutel="stap4.intro"
-          standaard="Jouw eerste lijst met namen — dit is je startpunt."
+          standaard="Jouw eerste lijst met namen, dit is je startpunt."
           overrides={overrides}
           isFounder={isFounder}
           as="p"
@@ -90,10 +90,10 @@ function Stap4NamenlijstInline({
       <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
         <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom minimaal 5 namen verplicht zijn</p>
         <p className="text-cm-white text-sm leading-relaxed opacity-90">
-          Geen namen = geen business. Wie met minder dan 5 namen begint, staat na dag 3 stil. De statistieken zijn duidelijk: teamleden die met 20+ namen starten hebben <strong className="text-cm-white">4× meer kans</strong> op succes in de eerste 30 dagen. Begin breed — jij beslist niet voor ze, zij beslissen zelf.
+          Geen namen = geen business. Wie met minder dan 5 namen begint, staat na dag 3 stil. De statistieken zijn duidelijk: teamleden die met 20+ namen starten hebben <strong className="text-cm-white">4× meer kans</strong> op succes in de eerste 30 dagen. Begin breed, jij beslist niet voor ze, zij beslissen zelf.
         </p>
         <p className="text-cm-white text-sm opacity-80">
-          🎯 Doel: zo veel mogelijk namen. Minimaal 5 om verder te gaan — maar 20 is beter.
+          🎯 Doel: zo veel mogelijk namen. Minimaal 5 om verder te gaan, maar 20 is beter.
         </p>
       </div>
 
@@ -198,7 +198,7 @@ function Stap4NamenlijstInline({
         >
           {toegevoegd.length < 5
             ? `Nog ${5 - toegevoegd.length} naam${5 - toegevoegd.length !== 1 ? "en" : ""} nodig`
-            : `${toegevoegd.length} namen toegevoegd — verder →`}
+            : `${toegevoegd.length} namen toegevoegd, verder →`}
         </button>
         {toegevoegd.length >= 5 && toegevoegd.length < 20 && (
           <p className="text-center text-xs text-cm-white opacity-50">💡 Tip: meer namen = meer kans op succes. Je kunt altijd doorgaan via de namenlijst.</p>
@@ -239,7 +239,7 @@ export default function OnboardingPagina() {
         if (data.isFounder) setIsFounder(true);
       })
       .catch(() => {
-        // tabel ontbreekt of netwerk-fout — gewoon members-mode
+        // tabel ontbreekt of netwerk-fout, gewoon members-mode
       });
     return () => {
       cancelled = true;
@@ -251,7 +251,7 @@ export default function OnboardingPagina() {
     const preview = params.get("preview") === "true";
     setIsPreview(preview);
 
-    // ?stap=N — directe deeplink. Range 1-6 (was 1-11 toen admin-stappen
+    // ?stap=N, directe deeplink. Range 1-6 (was 1-11 toen admin-stappen
     // nog in onboarding zaten; die staan nu in het 21-daagse playbook).
     const stapParam = Number(params.get("stap"));
     const directeStap =
@@ -462,7 +462,7 @@ export default function OnboardingPagina() {
                     overrides={overrides}
                     isFounder={isFounder}
                     as="span"
-                    hint="Het 'Welkom'-woord — naam wordt er automatisch achter geplakt"
+                    hint="Het 'Welkom'-woord, naam wordt er automatisch achter geplakt"
                   />
                   , {gebruikersnaam}!
                 </h2>
@@ -485,7 +485,7 @@ export default function OnboardingPagina() {
                   <span className="text-3xl">📱</span>
                   <div>
                     <p className="text-[#D4AF37] font-bold text-base">Installeer de app op je telefoon</p>
-                    <p className="text-cm-white text-xs opacity-60">Doe dit nu — zo ontvang je ook meldingen</p>
+                    <p className="text-cm-white text-xs opacity-60">Doe dit nu, zo ontvang je ook meldingen</p>
                   </div>
                 </div>
                 <div className="bg-black/30 rounded-lg p-4 space-y-2">
@@ -536,11 +536,11 @@ export default function OnboardingPagina() {
                     </li>
                   ))}
                 </ul>
-                <p className="text-cm-white text-xs opacity-50 pt-1">Dit kost je ongeveer 15–20 minuten. Daarna kun je dag 1 starten — de admin-stappen (webshop, kredietformulier, Teams-administratie, bestellinks) doe je verspreid over de eerste week vanuit het playbook.</p>
+                <p className="text-cm-white text-xs opacity-50 pt-1">Dit kost je ongeveer 15–20 minuten. Daarna kun je dag 1 starten, de admin-stappen (webshop, kredietformulier, Teams-administratie, bestellinks) doe je verspreid over de eerste week vanuit het playbook.</p>
               </div>
 
               <button onClick={() => gaNaarStap(2)} disabled={bezig} className="btn-gold w-full py-4 text-base font-bold">
-                App geïnstalleerd — aan de slag →
+                App geïnstalleerd, aan de slag →
               </button>
             </div>
           )}
@@ -577,7 +577,7 @@ export default function OnboardingPagina() {
                 <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom deze stap cruciaal is</p>
                 <p className="text-cm-white text-sm leading-relaxed opacity-90">
                   De cijfers liegen niet: mensen die hun WHY helder hebben gaan <strong className="text-cm-white">3× zo lang door</strong> als het moeilijk wordt.
-                  Je WHY is niet &quot;meer geld verdienen&quot; — maar wat dat geld betekent voor jou en je gezin.
+                  Je WHY is niet &quot;meer geld verdienen&quot;, maar wat dat geld betekent voor jou en je gezin.
                   Als je WHY sterk genoeg is, vind je altijd de weg.
                 </p>
               </div>
@@ -585,7 +585,7 @@ export default function OnboardingPagina() {
               <div className="card space-y-3">
                 <h3 className="text-cm-gold font-semibold">Hoe werkt het WHY-gesprek?</h3>
                 <p className="text-cm-white text-sm leading-relaxed opacity-80">
-                  Een ELEVA Mentor stelt je de juiste vragen om jouw echte motivatie boven water te krijgen — net zoals een echte persoonlijke coach dat zou doen. Geen formulier invullen, maar een echt gesprek. Dit duurt 5–10 minuten.
+                  Een ELEVA Mentor stelt je de juiste vragen om jouw echte motivatie boven water te krijgen, net zoals een echte persoonlijke coach dat zou doen. Geen formulier invullen, maar een echt gesprek. Dit duurt 5–10 minuten.
                 </p>
                 <p className="text-cm-white text-sm leading-relaxed opacity-80">
                   Na afloop wordt er een persoonlijke WHY-samenvatting voor je gemaakt. Die staat daarna altijd op je dashboard als motivatie-anker.
@@ -595,7 +595,7 @@ export default function OnboardingPagina() {
               <div className="bg-[#D4AF37]/10 border-2 border-[#D4AF37]/40 rounded-xl p-5 text-center space-y-3">
                 <p className="text-[#D4AF37] font-bold">Klaar om jouw WHY te ontdekken?</p>
                 <p className="text-cm-white text-sm opacity-70 leading-relaxed">
-                  Het gesprek opent in dit scherm. <strong className="text-cm-white">Kom daarna terug naar deze pagina</strong> — je gaat automatisch verder bij stap 3.
+                  Het gesprek opent in dit scherm. <strong className="text-cm-white">Kom daarna terug naar deze pagina</strong>, je gaat automatisch verder bij stap 3.
                 </p>
                 <Link href={isPreview ? "/mijn-why?preview=true" : "/mijn-why"} className="btn-gold w-full py-3 text-center block font-bold">
                   {isPreview ? "Preview: WHY-gesprek (slaat niets op)" : "Start het WHY-gesprek →"}
@@ -619,7 +619,7 @@ export default function OnboardingPagina() {
               )}
 
               <button onClick={() => gaNaarStap(3)} disabled={bezig} className="btn-gold w-full py-3 text-base">
-                WHY-gesprek gedaan — verder naar stap 3 →
+                WHY-gesprek gedaan, verder naar stap 3 →
               </button>
             </div>
           )}
@@ -640,7 +640,7 @@ export default function OnboardingPagina() {
                 <EditableTekst
                   namespace="onboarding"
                   sleutel="stap3.intro"
-                  standaard="Lees dit goed — dit is je speelplan voor de komende 60 dagen."
+                  standaard="Lees dit goed, dit is je speelplan voor de komende 60 dagen."
                   overrides={overrides}
                   isFounder={isFounder}
                   as="p"
@@ -654,7 +654,7 @@ export default function OnboardingPagina() {
               <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
                 <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom deze stap cruciaal is</p>
                 <p className="text-cm-white text-sm leading-relaxed opacity-90">
-                  Mensen die het systeem begrijpen presteren 5× beter dan mensen die &quot;maar wat doen&quot;. De run heeft een structuur — en die structuur werkt. Je moet hem kennen om hem te kunnen volgen.
+                  Mensen die het systeem begrijpen presteren 5× beter dan mensen die &quot;maar wat doen&quot;. De run heeft een structuur, en die structuur werkt. Je moet hem kennen om hem te kunnen volgen.
                 </p>
               </div>
 
@@ -662,7 +662,7 @@ export default function OnboardingPagina() {
                 <h3 className="text-cm-gold font-semibold text-sm uppercase tracking-wider">De 3 fasen</h3>
                 <div className="card border-l-4 border-[#4A9EDB]">
                   <p className="text-[#4A9EDB] font-semibold text-sm mb-1">Fase 1 · Dag 1–20: Bouwen</p>
-                  <p className="text-cm-white text-sm leading-relaxed opacity-80">Je legt de basis. Elke dag contacten aanspreken, uitnodigingen sturen, namen toevoegen. Focus volledig op je warme markt — mensen die je al kent.</p>
+                  <p className="text-cm-white text-sm leading-relaxed opacity-80">Je legt de basis. Elke dag contacten aanspreken, uitnodigingen sturen, namen toevoegen. Focus volledig op je warme markt, mensen die je al kent.</p>
                 </div>
                 <div className="card border-l-4 border-[#C9A84C]">
                   <p className="text-[#C9A84C] font-semibold text-sm mb-1">Fase 2 · Dag 21–40: Versnellen</p>
@@ -693,7 +693,7 @@ export default function OnboardingPagina() {
               </div>
 
               <button onClick={() => gaNaarStap(4)} disabled={bezig} className="btn-gold w-full py-3 text-base">
-                Begrepen — volgende stap →
+                Begrepen, volgende stap →
               </button>
             </div>
           )}
@@ -742,13 +742,13 @@ export default function OnboardingPagina() {
               <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
                 <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom deze stap cruciaal is</p>
                 <p className="text-cm-white text-sm leading-relaxed opacity-90">
-                  Wat je zegt maakt het verschil. Een goed script neemt de twijfel weg — bij jou én bij de ander. Je hoeft niets te verzinnen, je gebruikt een beproefd bericht dat werkt.
+                  Wat je zegt maakt het verschil. Een goed script neemt de twijfel weg, bij jou én bij de ander. Je hoeft niets te verzinnen, je gebruikt een beproefd bericht dat werkt.
                 </p>
               </div>
 
-              {/* Script 1 — Persoonlijk */}
+              {/* Script 1, Persoonlijk */}
               <div className="bg-cm-surface-2 border border-cm-gold/30 rounded-xl p-5 space-y-3">
-                <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">✦ Script 1 — Persoonlijk (bellen of voice memo)</p>
+                <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">✦ Script 1, Persoonlijk (bellen of voice memo)</p>
                 <div className="space-y-3 text-cm-white text-sm leading-relaxed border-l-2 border-cm-gold/30 pl-4 italic">
                   <p>"Hey [naam], ik moest even aan je denken en daarom bel ik je.</p>
                   <p>Ik ga over twee weken starten met iets waar ik 60 dagen echt vol voor ga. Een soort sprint, maar dan wel eentje waar ik echt impact mee wil maken.</p>
@@ -759,15 +759,15 @@ export default function OnboardingPagina() {
                 </div>
               </div>
 
-              {/* Script 2 — DM / WhatsApp */}
+              {/* Script 2, DM / WhatsApp */}
               <div className="bg-cm-surface-2 border border-cm-gold/30 rounded-xl p-5 space-y-3">
-                <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">✦ Script 2 — Direct & Eerlijk (WhatsApp / DM)</p>
+                <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">✦ Script 2, Direct & Eerlijk (WhatsApp / DM)</p>
                 <div className="space-y-3 text-cm-white text-sm leading-relaxed border-l-2 border-cm-gold/30 pl-4 italic">
                   <p>"Oké, ik ga gewoon eerlijk zijn.</p>
                   <p>Ik ga de komende 60 dagen iets neerzetten waar ik vol voor ga. En toen ik nadacht met wie ik dat zou willen doen… kwam jij meteen in me op.</p>
                   <p>Omdat jij niet iemand bent die een beetje aanklooit. Als jij iets doet, doe je het goed.</p>
-                  <p>Ik ga je alles laten zien — de producten, het plan, hoe het werkt… dat komt allemaal. Maar eerst wil ik eigenlijk één ding weten:</p>
-                  <p className="not-italic text-cm-gold font-medium">Stel dat alles klopt, stel dat je voelt: dit past bij mij — zou je dan zeggen: hier wil ik bij zijn?"</p>
+                  <p>Ik ga je alles laten zien, de producten, het plan, hoe het werkt… dat komt allemaal. Maar eerst wil ik eigenlijk één ding weten:</p>
+                  <p className="not-italic text-cm-gold font-medium">Stel dat alles klopt, stel dat je voelt: dit past bij mij, zou je dan zeggen: hier wil ik bij zijn?"</p>
                 </div>
               </div>
 
@@ -775,9 +775,9 @@ export default function OnboardingPagina() {
                 <h3 className="text-cm-gold font-semibold text-sm">Hoe gebruik je dit?</h3>
                 <ul className="space-y-2">
                   {[
-                    "Vervang [naam] door de echte naam — persoonlijk werkt altijd beter",
+                    "Vervang [naam] door de echte naam, persoonlijk werkt altijd beter",
                     "Bellen of voice memo werkt sterker dan tekst",
-                    "Wacht rustig op reactie — dring nooit aan",
+                    "Wacht rustig op reactie, dring nooit aan",
                     "Zeggen ze ja? Plan het gesprekje samen met je sponsor",
                     "De ELEVA Mentor schrijft een persoonlijk DM voor elk contact op je lijst",
                   ].map((tip, i) => (
@@ -845,7 +845,7 @@ export default function OnboardingPagina() {
               <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
                 <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom deze stap cruciaal is</p>
                 <p className="text-cm-white text-sm leading-relaxed opacity-90">
-                  Doelen zonder getallen zijn wensen. Getallen zonder doelen zijn druk. Stel in wat je <strong className="text-cm-white">realistisch elke dag</strong> kunt halen — dan wordt het een gewoonte, geen last.
+                  Doelen zonder getallen zijn wensen. Getallen zonder doelen zijn druk. Stel in wat je <strong className="text-cm-white">realistisch elke dag</strong> kunt halen, dan wordt het een gewoonte, geen last.
                 </p>
               </div>
 
@@ -878,7 +878,7 @@ export default function OnboardingPagina() {
                   <h3 className="text-cm-gold font-semibold">Jouw ELEVA Mentor staat klaar</h3>
                 </div>
                 <p className="text-cm-white text-sm leading-relaxed opacity-80">
-                  De ELEVA Mentor is gebouwd op basis van 60 jaar gecombineerde ervaring in aanbevelingsmarketing. Na het opslaan van je doelen open je de ELEVA Mentor direct — jouw krachtigste hulpmiddel naast je sponsor.
+                  De ELEVA Mentor is gebouwd op basis van 60 jaar gecombineerde ervaring in aanbevelingsmarketing. Na het opslaan van je doelen open je de ELEVA Mentor direct, jouw krachtigste hulpmiddel naast je sponsor.
                 </p>
                 <ul className="space-y-1.5">
                   {[
@@ -897,19 +897,19 @@ export default function OnboardingPagina() {
               <div className="bg-[#D4AF37]/10 border-2 border-[#D4AF37]/40 rounded-xl p-5 text-center space-y-3">
                 <p className="text-[#D4AF37] font-bold">Jouw setup is compleet 🎉</p>
                 <p className="text-cm-white text-sm opacity-70 leading-relaxed">
-                  Sla je dagdoelen op — de coach opent en je bent klaar om dag 1 te starten.
+                  Sla je dagdoelen op, de coach opent en je bent klaar om dag 1 te starten.
                 </p>
               </div>
 
-              {/* "Je eerste 24 uur" — concrete acties terwijl het momentum
+              {/* "Je eerste 24 uur", concrete acties terwijl het momentum
                   van de onboarding nog warm is. */}
               <div className="card border-l-4 border-emerald-500 space-y-2.5">
                 <h3 className="text-emerald-300 font-semibold text-sm flex items-center gap-2">
-                  🎯 Je eerste 24 uur — terwijl het warm is
+                  🎯 Je eerste 24 uur, terwijl het warm is
                 </h3>
                 <p className="text-cm-white text-sm opacity-80 leading-relaxed">
                   Top dat je dit hebt afgerond! Dit zijn 3 dingen die je
-                  gewoon NU even kunt doen — kost minder dan 10 minuten en
+                  gewoon NU even kunt doen, kost minder dan 10 minuten en
                   zet je goed neer voor morgen:
                 </p>
                 <ul className="space-y-1.5 text-sm text-cm-white opacity-90">
@@ -920,23 +920,23 @@ export default function OnboardingPagina() {
                   </li>
                   <li className="flex gap-2">
                     <span className="text-emerald-400 flex-shrink-0">2.</span>
-                    Voeg vanavond op je telefoon nog 5 namen toe — wie kwam
+                    Voeg vanavond op je telefoon nog 5 namen toe, wie kwam
                     spontaan in je hoofd?
                   </li>
                   <li className="flex gap-2">
                     <span className="text-emerald-400 flex-shrink-0">3.</span>
-                    Lees je WHY nog 1 keer rustig terug — die wordt morgen
+                    Lees je WHY nog 1 keer rustig terug, die wordt morgen
                     je kompas.
                   </li>
                 </ul>
                 <p className="text-cm-white text-xs opacity-60 italic">
-                  Morgenochtend krijg je een vriendelijke push voor dag 1 —
+                  Morgenochtend krijg je een vriendelijke push voor dag 1.
                   daar gaat het écht beginnen 💪
                 </p>
               </div>
 
               <button onClick={slaDoelOp} disabled={bezig} className="btn-gold w-full py-4 text-lg font-bold disabled:opacity-50">
-                {bezig ? "Laden..." : "Te gek — open de ELEVA Mentor →"}
+                {bezig ? "Laden..." : "Te gek, open de ELEVA Mentor →"}
               </button>
             </div>
           )}

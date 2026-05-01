@@ -11,14 +11,14 @@ import {
 } from "@/lib/contacten-reservoir";
 
 // ============================================================
-// VCardUploader (eigenlijk: ContactenImporteur) — inline-embed voor
+// VCardUploader (eigenlijk: ContactenImporteur), inline-embed voor
 // /vandaag dag 1 'telefoon-import'.
 //
 // Drie routes, in volgorde van gemak:
 //   1. ⭐ NATIVE TELEFOON-PICKER (Android Chrome): één knop, je krijgt
 //      het systeem-adresboek, vinkt aan, klaar. Geen bestand, geen export.
 //   2. ✋ HANDMATIG: 5 velden voor naam + telefoon, gewoon typen.
-//      Werkt overal — desktop, iPhone, Android.
+//      Werkt overal, desktop, iPhone, Android.
 //   3. 📂 VCARD-UPLOAD: voor wie de telefoon-export al heeft gedaan,
 //      met stap-voor-stap uitleg per platform (iPhone vs Android).
 //
@@ -26,18 +26,18 @@ import {
 //   - Android Chrome → route 1 prominent, 2 + 3 als alternatief
 //   - iPhone / desktop → route 2 prominent, 3 als alternatief
 //
-// Geen wegnavigeren — alles blijft in de dag-flow.
+// Geen wegnavigeren, alles blijft in de dag-flow.
 // ============================================================
 
 type Contact = { naam: string; telefoon: string | null };
 
 type Props = {
   /**
-   * Wordt aangeroepen zodra de import succesvol is — vinkt de taak af.
+   * Wordt aangeroepen zodra de import succesvol is, vinkt de taak af.
    * Optioneel: de uploader kan ook los staan op /namenlijst zonder taak-koppeling.
    */
   opVoltooid?: () => void;
-  /** Of de huidige stap al voltooid was — dan tonen we een geslaagd-status. */
+  /** Of de huidige stap al voltooid was, dan tonen we een geslaagd-status. */
   alVoltooid?: boolean;
   /**
    * Wordt aangeroepen als de gebruiker op '↻ Opnieuw' klikt in de
@@ -93,7 +93,7 @@ function parseVCard(tekst: string): Contact[] {
 }
 
 // ------------------------------------------------------------
-// Contact Picker API typing — niet in TS lib by default
+// Contact Picker API typing, niet in TS lib by default
 // ------------------------------------------------------------
 type NavigatorContacts = {
   select: (
@@ -125,7 +125,7 @@ export function VCardUploader({
   );
   const [hasContactsAPI, setHasContactsAPI] = useState(false);
 
-  // VCard preview state (route 3) — toont nu reservoir-rows met id ipv index
+  // VCard preview state (route 3), toont nu reservoir-rows met id ipv index
   const [vcardVoorbeeld, setVcardVoorbeeld] = useState<ReservoirRow[]>([]);
   const [vcardGeselecteerd, setVcardGeselecteerd] = useState<Set<string>>(
     new Set(),
@@ -150,7 +150,7 @@ export function VCardUploader({
   // ----------------------------------------------------------
   // Direct-naar-prospects (route 2 zelf typen): ELEVA gaat ervan uit
   // dat een handmatig getypte naam meteen actief op de namenlijst hoort.
-  // Geen reservoir-tussenstap — typen = doen.
+  // Geen reservoir-tussenstap, typen = doen.
   // ----------------------------------------------------------
   async function insertDirectInProspects(contacten: Contact[]): Promise<boolean> {
     if (contacten.length === 0) {
@@ -199,7 +199,7 @@ export function VCardUploader({
 
       const { error } = await supabase.from("prospects").insert(nieuw);
       if (error) {
-        toast.error("Opslaan mislukt — probeer opnieuw");
+        toast.error("Opslaan mislukt, probeer opnieuw");
         return false;
       }
 
@@ -210,7 +210,7 @@ export function VCardUploader({
       opVoltooid?.();
       return true;
     } catch {
-      toast.error("Onbekende fout — probeer opnieuw");
+      toast.error("Onbekende fout, probeer opnieuw");
       return false;
     } finally {
       setBezig(false);
@@ -232,12 +232,12 @@ export function VCardUploader({
     }
     setBezig(true);
     try {
-      // Eerst alles in reservoir (silent — geactiveerd=false).
+      // Eerst alles in reservoir (silent, geactiveerd=false).
       await slaOpInReservoir(
         contacten.map((c) => ({ naam: c.naam, telefoon: c.telefoon })),
         bron,
       );
-      // Daarna meteen alles activeren — bij native picker heeft member
+      // Daarna meteen alles activeren, bij native picker heeft member
       // al gekozen in de native UI, dus dubbele selectie zou raar voelen.
       const niet = await haalNietGeactiveerd();
       const matchSet = new Set(
@@ -273,13 +273,13 @@ export function VCardUploader({
   }
 
   // ----------------------------------------------------------
-  // Route 1: Native Contact Picker — naar reservoir + direct activeren
+  // Route 1: Native Contact Picker, naar reservoir + direct activeren
   // (member heeft al gekozen in de native UI)
   // ----------------------------------------------------------
   async function pakUitTelefoon() {
     const api = pakContactsAPI();
     if (!api) {
-      toast.error("Je browser ondersteunt dit niet — kies een andere route");
+      toast.error("Je browser ondersteunt dit niet, kies een andere route");
       return;
     }
     try {
@@ -297,7 +297,7 @@ export function VCardUploader({
       }
       await uploadEnActiveer(contacten, "contact-picker");
     } catch {
-      // User cancelled or denied permission — geen toast nodig
+      // User cancelled or denied permission, geen toast nodig
     }
   }
 
@@ -335,11 +335,11 @@ export function VCardUploader({
     // INHOUD de doorslag geven dan de bestandsnaam.
 
     if (bestand.size === 0) {
-      toast.error("Het bestand is leeg — exporteer 'm opnieuw vanaf je telefoon");
+      toast.error("Het bestand is leeg, exporteer 'm opnieuw vanaf je telefoon");
       return;
     }
     if (bestand.size > 50 * 1024 * 1024) {
-      toast.error("Bestand te groot (boven 50MB) — kies een kleiner bestand");
+      toast.error("Bestand te groot (boven 50MB), kies een kleiner bestand");
       return;
     }
 
@@ -348,7 +348,7 @@ export function VCardUploader({
       // We detecteren via Byte-Order-Mark zodat speciale tekens (é, ü,
       // emoji's in namen) goed leesbaar zijn EN de parser de regels
       // herkent. Zonder deze BOM-detectie zou 'ie van een UTF-16-bestand
-      // niets terughalen — en zou de toast onterecht "geen contacten" zijn.
+      // niets terughalen, en zou de toast onterecht "geen contacten" zijn.
       const buffer = await bestand.arrayBuffer();
       const bytes = new Uint8Array(buffer);
       let tekst: string;
@@ -380,7 +380,7 @@ export function VCardUploader({
       const contacten = parseVCard(tekst);
       if (contacten.length === 0) {
         toast.error(
-          "We konden geen contacten herkennen in dit bestand. Probeer 'm opnieuw te exporteren — of bewaar 'm eerst in Bestanden voor je 'm uploadt.",
+          "We konden geen contacten herkennen in dit bestand. Probeer 'm opnieuw te exporteren, of bewaar 'm eerst in Bestanden voor je 'm uploadt.",
         );
         return;
       }
@@ -397,13 +397,13 @@ export function VCardUploader({
 
       // Haal alle niet-geactiveerde reservoir-rows op zodat we ze
       // kunnen tonen voor selectie. Dat omvat zowel deze upload als
-      // eventueel eerdere uploads die nog niet zijn geactiveerd —
+      // eventueel eerdere uploads die nog niet zijn geactiveerd.
       // mooi: niks raakt zoek.
       const nietGeactiveerd = await haalNietGeactiveerd();
 
       if (nietGeactiveerd.length === 0) {
         toast.success(
-          "Al je contacten staan al actief op je namenlijst — niks nieuws toe te voegen",
+          "Al je contacten staan al actief op je namenlijst, niks nieuws toe te voegen",
         );
         return;
       }
@@ -413,7 +413,7 @@ export function VCardUploader({
       setVcardZoek("");
 
       toast.success(
-        `📚 ${nietGeactiveerd.length} contact${nietGeactiveerd.length === 1 ? "" : "en"} in je ELEVA-geheugen — kies wie er nu op je actieve namenlijst komen`,
+        `📚 ${nietGeactiveerd.length} contact${nietGeactiveerd.length === 1 ? "" : "en"} in je ELEVA-geheugen, kies wie er nu op je actieve namenlijst komen`,
       );
     } catch {
       toast.error("Kon het bestand niet lezen");
@@ -470,7 +470,7 @@ export function VCardUploader({
       const result = await activeerContacten(ids);
       const totaal = result.geactiveerd + result.alActief;
       if (totaal === 0) {
-        toast.error("Activeren mislukt — probeer opnieuw");
+        toast.error("Activeren mislukt, probeer opnieuw");
         return;
       }
       toast.success(
@@ -478,7 +478,7 @@ export function VCardUploader({
       );
       setKlaar(true);
       opVoltooid?.();
-      // Reset preview — als 'ie wil meer activeren, opent 'ie de
+      // Reset preview, als 'ie wil meer activeren, opent 'ie de
       // BulkImport / Reservoir-Kiezer op /namenlijst.
       setVcardVoorbeeld([]);
       setVcardGeselecteerd(new Set());
@@ -503,7 +503,7 @@ export function VCardUploader({
           ✓ Contacten staan op je namenlijst
         </p>
         <p className="text-cm-white opacity-80 text-xs leading-relaxed">
-          Top — je voorraadkast is een laag voller. Tijd voor een rustpauze of
+          Top, je voorraadkast is een laag voller. Tijd voor een rustpauze of
           door naar de volgende stap. Wil je nóg een batch toevoegen? Klik
           hieronder.
         </p>
@@ -536,7 +536,7 @@ export function VCardUploader({
         </h4>
         <p className="text-cm-white opacity-80 text-xs leading-relaxed">
           Dit is jouw plek om mensen toe te voegen die in je leven voorkomen.
-          Geen belkostlijst, geen verkooplijst — gewoon mensen die jij kent.
+          Geen belkostlijst, geen verkooplijst, gewoon mensen die jij kent.
           Dit doen we vandaag al, omdat het zóveel rust geeft de komende weken
           om niet elke dag te hoeven nadenken: <em>"aan wie zou ik vandaag iets
           kunnen laten zien?"</em>. Je hebt 'n lijst, je kijkt erop, klaar.
@@ -593,7 +593,7 @@ export function VCardUploader({
           <p className="text-cm-white text-xs leading-relaxed">
             Druk op de knop hieronder. Je telefoon laat dan je adresboek zien
             en je tikt simpelweg de mensen aan die je wilt toevoegen. Geen
-            export, geen bestand — gewoon één klik.
+            export, geen bestand, gewoon één klik.
           </p>
           <button
             type="button"
@@ -605,7 +605,7 @@ export function VCardUploader({
           </button>
           <p className="text-cm-white opacity-50 text-[11px]">
             ℹ️ Je telefoon vraagt eerst om toestemming. Wij zien alleen wat jij
-            zelf aanvinkt — niets meer.
+            zelf aanvinkt, niets meer.
           </p>
         </div>
       )}
@@ -614,7 +614,7 @@ export function VCardUploader({
       {actieveTab === "handmatig" && (
         <div className="space-y-3 pt-1">
           <p className="text-cm-white text-xs leading-relaxed">
-            Vul gewoon de namen in van mensen die in je hoofd opkomen — familie,
+            Vul gewoon de namen in van mensen die in je hoofd opkomen, familie,
             vrienden, oud-collega's, sport-maatjes. Telefoonnummer is handig maar
             niet verplicht. Geen filter: alles op de lijst.
           </p>
@@ -697,9 +697,9 @@ export function VCardUploader({
                   {vcardVoorbeeld.length === 1 ? "" : "en"} in je ELEVA-geheugen
                 </p>
                 <p className="text-cm-white opacity-70 text-xs leading-relaxed">
-                  Heb je veel namen? Geen zorgen — vink alleen aan wie je{" "}
+                  Heb je veel namen? Geen zorgen, vink alleen aan wie je{" "}
                   <strong>vandaag</strong> op je actieve namenlijst wilt zetten.
-                  De rest blijft veilig in je ELEVA-geheugen — kom er later
+                  De rest blijft veilig in je ELEVA-geheugen, kom er later
                   altijd voor terug via je namenlijst, geen opnieuw uploaden
                   nodig.
                 </p>
@@ -863,7 +863,7 @@ export function VCardUploader({
                 <p className="opacity-80">
                   Vanaf iOS 17 kun je rechtstreeks vanuit de Contacten-app op je
                   iPhone een vCard-bestand maken. Geen iCloud.com nodig, geen
-                  app erbij — alles in de telefoon zelf.
+                  app erbij, alles in de telefoon zelf.
                 </p>
                 <ol className="list-decimal pl-5 space-y-1.5">
                   <li>
@@ -876,7 +876,7 @@ export function VCardUploader({
                   </li>
                   <li>
                     Houd je vinger op een lijst (bijvoorbeeld{" "}
-                    <strong>Alle contacten</strong>) — er verschijnt een menu.
+                    <strong>Alle contacten</strong>), er verschijnt een menu.
                   </li>
                   <li>
                     Tik in dat menu op <strong>Exporteer</strong>, kies welke
@@ -890,7 +890,7 @@ export function VCardUploader({
                   <li>
                     Open op je computer de mail of het bestand, en sleep het{" "}
                     .vcf-bestand in het vakje hierboven. (Of doe deze stap op je
-                    iPhone in ELEVA — dan kies je 'm direct uit Bestanden.)
+                    iPhone in ELEVA, dan kies je 'm direct uit Bestanden.)
                   </li>
                 </ol>
                 <div className="rounded-md bg-cm-gold/10 border border-cm-gold/40 px-3 py-2">
@@ -929,7 +929,7 @@ export function VCardUploader({
                     waar 'ie opgeslagen moet (bijv. <strong>Downloads</strong>).
                   </li>
                   <li>
-                    Stuur het naar jezelf via Gmail, WhatsApp of Drive — open op
+                    Stuur het naar jezelf via Gmail, WhatsApp of Drive, open op
                     je computer, sleep in het vakje hierboven. (Of doe deze stap
                     op je telefoon in ELEVA, dan kies je 'm direct uit je
                     Downloads-map.)
@@ -941,7 +941,7 @@ export function VCardUploader({
                   </p>
                   <p className="opacity-90">
                     Klik bovenaan op de tab{" "}
-                    <strong>"📱 Uit mijn telefoon"</strong> — die werkt op
+                    <strong>"📱 Uit mijn telefoon"</strong>, die werkt op
                     Android Chrome zonder bestand. Eén klik en je krijgt je
                     adresboek direct in beeld.
                   </p>
@@ -954,7 +954,7 @@ export function VCardUploader({
                 <p className="opacity-80">
                   Heb je je contacten in Google opgeslagen (bijv. via een
                   Gmail-account dat op meerdere telefoons gebruikt wordt)? Dan
-                  is dit de schoonste route — direct vanaf je computer.
+                  is dit de schoonste route, direct vanaf je computer.
                 </p>
                 <ol className="list-decimal pl-5 space-y-1.5">
                   <li>
@@ -968,7 +968,7 @@ export function VCardUploader({
                     linksboven.)
                   </li>
                   <li>
-                    Kies welke contacten je wilt exporteren — meestal{" "}
+                    Kies welke contacten je wilt exporteren, meestal{" "}
                     <strong>Contacten</strong> (alles).
                   </li>
                   <li>

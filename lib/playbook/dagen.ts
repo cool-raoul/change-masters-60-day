@@ -1,5 +1,5 @@
 // ============================================================
-// PLAYBOOK — dag 1 t/m 21 volledig uitgewerkt
+// PLAYBOOK, dag 1 t/m 21 volledig uitgewerkt
 // Fase 1 (dag 1-7): fundament
 // Fase 2 (dag 8-14): momentum
 // Fase 3 (dag 15-21): ritme
@@ -11,7 +11,7 @@ import { Dag } from "./types";
 
 export const DAGEN: Dag[] = [
   // ============================================================
-  // FASE 1 — FUNDAMENT (dag 1-7)
+  // FASE 1, FUNDAMENT (dag 1-7)
   // ============================================================
   {
     nummer: 1,
@@ -22,7 +22,7 @@ export const DAGEN: Dag[] = [
         id: "dag1-vcard",
         label: "Voeg de eerste mensen toe aan je namenlijst",
         uitleg:
-          "Waarom al op dag 1? Heel simpel: dit is je voorraadkast. Hoe meer namen je hebt staan, hoe rustiger je de komende weken kunt werken — je hoeft niet elke dag te bedenken aan wie je gaat denken. Dit is GEEN belkostlijst en GEEN verkooplijst. Het zijn gewoon mensen die jij kent, mensen die in jouw wereld bestaan. Familie. Oude collega's. Sportmaatjes. Buren. Iedereen mag erop. Filteren komt later, en doe je nooit voor iemand anders. Niet alles hoeft vandaag — kies wat je vandaag aankunt en kom er morgen op terug.",
+          "Waarom al op dag 1? Heel simpel: dit is je voorraadkast. Hoe meer namen je hebt staan, hoe rustiger je de komende weken kunt werken, je hoeft niet elke dag te bedenken aan wie je gaat denken. Dit is GEEN belkostlijst en GEEN verkooplijst. Het zijn gewoon mensen die jij kent, mensen die in jouw wereld bestaan. Familie. Oude collega's. Sportmaatjes. Buren. Iedereen mag erop. Filteren komt later, en doe je nooit voor iemand anders. Niet alles hoeft vandaag, kies wat je vandaag aankunt en kom er morgen op terug.",
         verplicht: true,
         vereistMobiel: true,
         inlineEmbed: "vcard-upload",
@@ -50,12 +50,12 @@ export const DAGEN: Dag[] = [
         route: "/team",
       },
     ],
-    watJeLeert: `Te gek dat je hier bent! 🎉 Je onboarding zit erop, dus je WHY staat al — en de eerste 5 namen ook. Mooi werk. Vandaag bouwen we daar één laag bovenop. Geen drukke dag — een rustige fundament-dag. Twee taken, daarna ben je klaar voor morgen.
+    watJeLeert: `Te gek dat je hier bent! 🎉 Je onboarding zit erop, dus je WHY staat al, en de eerste 5 namen ook. Mooi werk. Vandaag bouwen we daar één laag bovenop. Geen drukke dag, een rustige fundament-dag. Twee taken, daarna ben je klaar voor morgen.
 
-JE NAMENLIJST — JE VOORRAADKAST:
+JE NAMENLIJST, JE VOORRAADKAST:
 Hoe voller je voorraadkast, hoe makkelijker je elke dag iets nieuws kunt 'koken'. De import van je telefooncontacten legt direct 100-500 namen voor je neer (we ontdubbelen automatisch). Dat is geen verkooplijst, dat is een uitgangspunt.
 
-EERLIJK OVER VOLUME: dit is een AANTALLEN-VERHAAL. Met 20 namen ga je het niet redden. Niet omdat je faalt, maar omdat een gemiddelde prospect 4-6 contactmomenten nodig heeft voor een echte beslissing. Met te weinig namen draai je vast. Daarom voegen we elke dag namen toe — uit hoofd, uit telefoon, uit socials.
+EERLIJK OVER VOLUME: dit is een AANTALLEN-VERHAAL. Met 20 namen ga je het niet redden. Niet omdat je faalt, maar omdat een gemiddelde prospect 4-6 contactmomenten nodig heeft voor een echte beslissing. Met te weinig namen draai je vast. Daarom voegen we elke dag namen toe, uit hoofd, uit telefoon, uit socials.
 
 CATEGORIEËN OM TE OVERWEGEN VOOR JE LIJST:
 • Familie + partners van familie
@@ -69,20 +69,20 @@ CATEGORIEËN OM TE OVERWEGEN VOOR JE LIJST:
 • Ondernemers in je netwerk
 • Mensen die je via socials volgen
 • Vroegere klanten / opdrachtgevers
-Niemand filteren — alles op de lijst.
+Niemand filteren, alles op de lijst.
 
-JIJ LAAT ZIEN, ZIJ BESLISSEN — DE GROOTSTE MENTAL SHIFT:
-Jouw taak is NIÉT overtuigen, NIÉT mensen "binnenpraten", NIÉT iemand laten kiezen voor wat jij wilt. Jouw taak = laten ZIEN wat het is. Zij beslissen wat ze ermee doen. Dat maakt je werk een flink stuk lichter dan veel mensen denken — en het maakt het ook respectvoller. Niemand voelt zich gemanipuleerd, jij voelt je geen verkoper, en de mensen die wel kiezen doen dat omdat het écht bij ze past.
+JIJ LAAT ZIEN, ZIJ BESLISSEN, DE GROOTSTE MENTAL SHIFT:
+Jouw taak is NIÉT overtuigen, NIÉT mensen "binnenpraten", NIÉT iemand laten kiezen voor wat jij wilt. Jouw taak = laten ZIEN wat het is. Zij beslissen wat ze ermee doen. Dat maakt je werk een flink stuk lichter dan veel mensen denken, en het maakt het ook respectvoller. Niemand voelt zich gemanipuleerd, jij voelt je geen verkoper, en de mensen die wel kiezen doen dat omdat het écht bij ze past.
 
 WAAROM JE SPONSOR INLICHTEN BELANGRIJK IS:
-Je sponsor is geen baas — die is je rugdekking. Een kort "ik ben gestart"-berichtje is genoeg. Vanaf nu kijkt 'ie in ELEVA mee, ziet je voortgang, en springt bij waar nodig. Eén berichtje vandaag = vele momenten van support de komende weken.
+Je sponsor is geen baas, die is je rugdekking. Een kort "ik ben gestart"-berichtje is genoeg. Vanaf nu kijkt 'ie in ELEVA mee, ziet je voortgang, en springt bij waar nodig. Eén berichtje vandaag = vele momenten van support de komende weken.
 
 VEELGEMAAKTE FOUTEN OP DAG 1:
 ✗ Namenlijst meteen filteren ("die zou nooit..."): NIVEA komt morgen, voor nu = alles erop.
-✗ Direct mensen DM'en omdat je "wilt scoren" — vandaag is fundament, niet acquisitie.
-✗ Sponsor niet inlichten — je rugdekking begint nu.
+✗ Direct mensen DM'en omdat je "wilt scoren", vandaag is fundament, niet acquisitie.
+✗ Sponsor niet inlichten, je rugdekking begint nu.
 
-OVERWELDIGD VOELEN IS NORMAAL: je leert iets nieuws, je stapt uit comfort. Eerst onhandig, dan vaardig — geldt voor iedereen hetzelfde. Sponsor staat naast je, ELEVA Mentor ook. Niet alleen.`,
+OVERWELDIGD VOELEN IS NORMAAL: je leert iets nieuws, je stapt uit comfort. Eerst onhandig, dan vaardig, geldt voor iedereen hetzelfde. Sponsor staat naast je, ELEVA Mentor ook. Niet alleen.`,
     waaromWerktDit: {
       tekst:
         "De mensen die op dag 47 nog doorgaan, zijn vaak dezelfden die in week 1 hun namenlijst rustig hebben gevuld. Zonder voorraadkast geen werk, zonder fundament geen gebouw.",
@@ -96,18 +96,18 @@ OVERWELDIGD VOELEN IS NORMAAL: je leert iets nieuws, je stapt uit comfort. Eerst
     vandaagDoen: [
       {
         id: "dag2-20-namen",
-        label: "Voeg 20 namen toe — uit je hoofd, of vanuit je ELEVA-geheugen",
+        label: "Voeg 20 namen toe, uit je hoofd, of vanuit je ELEVA-geheugen",
         uitleg:
-          "TWEE manieren, kies welke past:\n\n1️⃣ Uit je hoofd: vul hieronder direct namen in (familie, oud-collega's, sport, hobby, ouders bij school, buren). Geen filter — alles erop.\n\n2️⃣ Uit je ELEVA-geheugen: heb je gisteren je telefoon-contacten geüpload? Open Namenlijst → '📚 Mijn ELEVA-geheugen' en activeer er 20 in één klik. Géén opnieuw uploaden, je gewoon kiezen wie er vandaag actief mogen.\n\nBeide tellen, je mag mixen. Doel: 20 nieuwe namen op je actieve namenlijst.",
+          "TWEE manieren, kies welke past:\n\n1️⃣ Uit je hoofd: vul hieronder direct namen in (familie, oud-collega's, sport, hobby, ouders bij school, buren). Geen filter, alles erop.\n\n2️⃣ Uit je ELEVA-geheugen: heb je gisteren je telefoon-contacten geüpload? Open Namenlijst → '📚 Mijn ELEVA-geheugen' en activeer er 20 in één klik. Géén opnieuw uploaden, je gewoon kiezen wie er vandaag actief mogen.\n\nBeide tellen, je mag mixen. Doel: 20 nieuwe namen op je actieve namenlijst.",
         verplicht: true,
         inlineEmbed: "namen-form",
         inlineEmbedDoel: 20,
       },
       {
         id: "dag2-onboarding-module",
-        label: "Lees NIVEA — staat hierboven in de Les van vandaag",
+        label: "Lees NIVEA, staat hierboven in de Les van vandaag",
         uitleg:
-          "De volledige NIVEA-uitleg staat in de Les bovenaan deze pagina. Lees die rustig door en vink hier af zodra je 'm hebt gehad. Niet weer wegnavigeren — alles staat al in de flow.",
+          "De volledige NIVEA-uitleg staat in de Les bovenaan deze pagina. Lees die rustig door en vink hier af zodra je 'm hebt gehad. Niet weer wegnavigeren, alles staat al in de flow.",
         verplicht: true,
       },
       {
@@ -128,16 +128,16 @@ OVERWELDIGD VOELEN IS NORMAAL: je leert iets nieuws, je stapt uit comfort. Eerst
       },
       {
         id: "dag2-3weg-uitleg",
-        label: "Lees: '3-weg-gesprek principe' — kort blokje hieronder",
+        label: "Lees: '3-weg-gesprek principe', kort blokje hieronder",
         uitleg:
-          "Een 3-weg-gesprek is een gesprekje met drie mensen: jij, je prospect, en je sponsor. Sponsor brengt autoriteit (de 'expert'), jij koppelt (de 'verbinder'), prospect ziet twee mensen die samenwerken. Dit is dé versneller in week 1 — je hoeft niet alles zelf te weten of te kunnen. Je hoeft 'm nog niet te starten vandaag, alleen even weten dát het bestaat. Vink af zodra je deze uitleg hebt gelezen.",
+          "Een 3-weg-gesprek is een gesprekje met drie mensen: jij, je prospect, en je sponsor. Sponsor brengt autoriteit (de 'expert'), jij koppelt (de 'verbinder'), prospect ziet twee mensen die samenwerken. Dit is dé versneller in week 1, je hoeft niet alles zelf te weten of te kunnen. Je hoeft 'm nog niet te starten vandaag, alleen even weten dát het bestaat. Vink af zodra je deze uitleg hebt gelezen.",
         verplicht: true,
       },
       {
         id: "dag2-webshop",
         label: "🛒 Lifeplus webshop aanmaken",
         uitleg:
-          "Eenmalige opzet — bekijk de korte film (te vinden in deze taak) en je shop staat. Dit moet eerst gebeuren voordat je je kredietformulier kunt invullen.",
+          "Eenmalige opzet, bekijk de korte film (te vinden in deze taak) en je shop staat. Dit moet eerst gebeuren voordat je je kredietformulier kunt invullen.",
         verplicht: true,
         filmSlug: "onboarding-stap-6-webshop",
       },
@@ -145,7 +145,7 @@ OVERWELDIGD VOELEN IS NORMAAL: je leert iets nieuws, je stapt uit comfort. Eerst
         id: "dag2-krediet",
         label: "✅ Kredietformulier invullen (verplicht voor uitbetaling)",
         uitleg:
-          "Korte stap van ~5 minuten, NA het aanmaken van je webshop. Zonder dit formulier kan je eerste maand-uitbetaling niet verwerkt worden — doe het direct.",
+          "Korte stap van ~5 minuten, NA het aanmaken van je webshop. Zonder dit formulier kan je eerste maand-uitbetaling niet verwerkt worden, doe het direct.",
         verplicht: true,
         filmSlug: "onboarding-stap-8-kredietformulier",
       },
@@ -176,14 +176,14 @@ OVERWELDIGD VOELEN IS NORMAAL: je leert iets nieuws, je stapt uit comfort. Eerst
     watJeLeert:
       `NIVEA is dé regel die de meeste starters vergeten en daardoor 80% van hun beste prospects op voorhand uit elimineren. NIVEA staat voor: Niet Invullen Voor Een Ander.
 
-Wat het concreet betekent: jij weet NIET wat er in iemand omgaat. Wat zijn financiële situatie is. Wat zijn relatie doet. Of zijn werk hem nog vult. Of zijn gezondheid 'm uitput. Of die gladde collega thuis stiekem worstelt. Je hebt een momentopname in je hoofd — vaak van jaren geleden — en daarop maak je een oordeel "die zit hier niet op te wachten". Dat is zelden waar.
+Wat het concreet betekent: jij weet NIET wat er in iemand omgaat. Wat zijn financiële situatie is. Wat zijn relatie doet. Of zijn werk hem nog vult. Of zijn gezondheid 'm uitput. Of die gladde collega thuis stiekem worstelt. Je hebt een momentopname in je hoofd, vaak van jaren geleden, en daarop maak je een oordeel "die zit hier niet op te wachten". Dat is zelden waar.
 
-Bovendien: zelfs als die specifieke persoon écht niet voor zichzelf gaat, kent hij/zij wél iemand die wél past. Iedereen heeft een netwerk van 100+ mensen. Een schoonzus die net moeder is geworden, een oud-collega die ontslag heeft gekregen, een buurman die met pensioen twijfelt. Jij weet dat niet. Je kunt het niet weten. Daarom: alle namen op de lijst. Filteren doe je later, als je échte signalen hebt — niet vóóraf in je eigen hoofd.
+Bovendien: zelfs als die specifieke persoon écht niet voor zichzelf gaat, kent hij/zij wél iemand die wél past. Iedereen heeft een netwerk van 100+ mensen. Een schoonzus die net moeder is geworden, een oud-collega die ontslag heeft gekregen, een buurman die met pensioen twijfelt. Jij weet dat niet. Je kunt het niet weten. Daarom: alle namen op de lijst. Filteren doe je later, als je échte signalen hebt, niet vóóraf in je eigen hoofd.
 
 Drie typische "ik filter al"-fouten en wat de waarheid bleek:
-• "Die zwager heeft een goede baan" — bleek 6 maanden later open te staan toen herstructurering doorkwam.
-• "Die moeder bij voetbal is zo druk" — werd de eerste die ja zei, want ze zocht juist iets dat naast haar gezin paste.
-• "Die oud-collega zie ik nooit meer" — bleek een netwerk van 200+ ondernemers te hebben en had de perfecte intro.
+• "Die zwager heeft een goede baan", bleek 6 maanden later open te staan toen herstructurering doorkwam.
+• "Die moeder bij voetbal is zo druk", werd de eerste die ja zei, want ze zocht juist iets dat naast haar gezin paste.
+• "Die oud-collega zie ik nooit meer", bleek een netwerk van 200+ ondernemers te hebben en had de perfecte intro.
 Patroon: jouw oordeel zegt meer over jouw beelden dan over hun werkelijkheid.
 
 Hoe je vandaag NIVEA in praktijk brengt:
@@ -191,16 +191,16 @@ Hoe je vandaag NIVEA in praktijk brengt:
 2. Loop categorieën door: familie • partners van familie • oude vrienden • huidige vrienden • collega's nu • collega's vroeger • sport/hobby • ouders bij school/club • buurt • ondernemers in je netwerk.
 3. Per categorie: schrijf élke naam op die in je hoofd opkomt. Geen filter. Voelt het ongemakkelijk? Dat is precies de plek om door te zetten.
 4. Spraak-FAB werkt het snelst: "Nieuwe prospect [naam] uit [context]" en je hebt 20 namen in 10 minuten.
-5. Stop niet bij 20. Ga door totdat het écht op is — vaak zit je dan op 50-100.
+5. Stop niet bij 20. Ga door totdat het écht op is, vaak zit je dan op 50-100.
 
-Veelgemaakte fouten — herkenbaar?
+Veelgemaakte fouten, herkenbaar?
 ✗ "Hij heeft toch geen geld" → vooroordeel, geen feit.
 ✗ "Die heeft het te druk" → laat hem zelf bepalen of hij tijd heeft.
 ✗ "Die zou nooit naar mij luisteren" → projectie van eigen onzekerheid.
 ✗ Wachten met uitnodigen tot je lijst "perfect" is → de lijst is nooit perfect.
 ✗ Eerst zelf alle bezwaren beantwoorden in je hoofd → dat is hun werk, niet jouw werk.
 
-Vandaag stuur je ook al 3 uitnodigingen — samen met je sponsor in een groepje (3-weg principe). Sponsor brengt autoriteit, jij koppelt, prospect ziet twee mensen die samenwerken. Dat is de hefboom waarmee je niet alles zelf hoeft te weten of te kunnen. Eerste invites voelen onhandig — dat klopt en gaat over. Niet daardoor stoppen, juist daardoor met steun starten.`,
+Vandaag stuur je ook al 3 uitnodigingen, samen met je sponsor in een groepje (3-weg principe). Sponsor brengt autoriteit, jij koppelt, prospect ziet twee mensen die samenwerken. Dat is de hefboom waarmee je niet alles zelf hoeft te weten of te kunnen. Eerste invites voelen onhandig, dat klopt en gaat over. Niet daardoor stoppen, juist daardoor met steun starten.`,
     waaromWerktDit: {
       tekst:
         "De geheugensteunlijst is je voorraadkast. Hoe voller, hoe makkelijker de keuze wat je vanavond kookt. En de eerste invites zijn altijd het zwaarst, gewoon door.",
@@ -210,7 +210,7 @@ Vandaag stuur je ook al 3 uitnodigingen — samen met je sponsor in een groepje 
 
   {
     nummer: 3,
-    titel: "📱 Je socials zijn een goudmijn — 3 namen + 5 invites",
+    titel: "📱 Je socials zijn een goudmijn, 3 namen + 5 invites",
     fase: 1,
     vandaagDoen: [
       {
@@ -257,7 +257,7 @@ Vandaag stuur je ook al 3 uitnodigingen — samen met je sponsor in een groepje 
         id: "dag3-teams-admin",
         label: "📋 Teams-administratiesysteem aanmaken",
         uitleg:
-          "Lifeplus Partner-aanmelding — eenmalige administratieve registratie. Bekijk de korte film in deze taak voor de exacte stappen.",
+          "Lifeplus Partner-aanmelding, eenmalige administratieve registratie. Bekijk de korte film in deze taak voor de exacte stappen.",
         verplicht: true,
         filmSlug: "onboarding-stap-7-teams-admin",
       },
@@ -275,14 +275,14 @@ Vandaag stuur je ook al 3 uitnodigingen — samen met je sponsor in een groepje 
         spraak: "Nieuwe prospect [naam] uit Instagram",
       },
     ],
-    watJeLeert: `Instagram, Facebook en LinkedIn geven je geen downloadbare contactenlijst — dat is expres zo. Maar ze geven je iets veel waardevollers: ACTIEVE SIGNALEN. Mensen die jouw content bekijken, reageren, delen, in stories duiken. Dat is gedrag dat zegt: "ik volg je, je content raakt me, je bent op mijn radar." Dát zijn je warme contacten van de toekomst — vaak veel beter geschikt dan oude telefooncontacten waarmee je al jaren geen woord hebt gewisseld.
+    watJeLeert: `Instagram, Facebook en LinkedIn geven je geen downloadbare contactenlijst, dat is expres zo. Maar ze geven je iets veel waardevollers: ACTIEVE SIGNALEN. Mensen die jouw content bekijken, reageren, delen, in stories duiken. Dat is gedrag dat zegt: "ik volg je, je content raakt me, je bent op mijn radar." Dát zijn je warme contacten van de toekomst, vaak veel beter geschikt dan oude telefooncontacten waarmee je al jaren geen woord hebt gewisseld.
 
 3 namen per dag uit socials = 21 nieuwe warme prospects per week, bovenop je telefoonlijst. Dat is serieus voorraadkast-volume zonder dat je rond hoeft te bellen.
 
-WAT JE VANDAAG DOET — concrete radar-check:
+WAT JE VANDAAG DOET, concrete radar-check:
 1. Open Instagram en kijk: wie reageert al een paar weken op jouw verhalen of posts?
 2. Wie stuurt je af en toe een DM, ook al is het maar een hartje of een snelle vraag?
-3. Wie post zelf dingen over energie, doelen, ondernemen, gezondheid — onderwerpen die raken aan wat jij gaat doen?
+3. Wie post zelf dingen over energie, doelen, ondernemen, gezondheid, onderwerpen die raken aan wat jij gaat doen?
 4. Wie keek je laatste story tot het einde of klikte op een sticker?
 5. LinkedIn: wie heeft recent ge-liked, ge-deeld, of jou direct getagd?
 
@@ -294,7 +294,7 @@ VEELGEMAAKTE FOUTEN:
 ✗ Direct DM-en als "verkooppraatje" → eerst koppelen, peilen, niet pitchen.
 ✗ Tegen jezelf zeggen "ze hebben me lang niet meer geliket dus zal niet meer interesseren" → 3 weken stilte ≠ uit-radar, het is gewoon niet hun moment.
 
-NIET GELIJK PITCHEN — wat wel: reageer terug op hun content. Vraag iets. Bouw rapport. Pas DAARNA, in een tweede of derde gesprek, kom je met een uitnodiging (zie dag 4 voor de 4-stappen-formule).`,
+NIET GELIJK PITCHEN, wat wel: reageer terug op hun content. Vraag iets. Bouw rapport. Pas DAARNA, in een tweede of derde gesprek, kom je met een uitnodiging (zie dag 4 voor de 4-stappen-formule).`,
     waaromWerktDit: {
       tekst:
         "Social media is geen podium, het is een radar. Je kijkt niet wie er klapt. Je kijkt wie er zwaait.",
@@ -304,7 +304,7 @@ NIET GELIJK PITCHEN — wat wel: reageer terug op hun content. Vraag iets. Bouw 
 
   {
     nummer: 4,
-    titel: "💬 Vandaag leer je uitnodigen — 4 stappen die werken",
+    titel: "💬 Vandaag leer je uitnodigen, 4 stappen die werken",
     fase: 1,
     vandaagDoen: [
       {
@@ -372,28 +372,28 @@ NIET GELIJK PITCHEN — wat wel: reageer terug op hun content. Vraag iets. Bouw 
     ],
     watJeLeert: `De 4-stappen-uitnodiging (Worre) is dé reden dat netwerkers met dezelfde lijst totaal verschillende resultaten boeken. Het is een vaste opbouw waarbij elk onderdeel een specifieke psychologische functie heeft.
 
-DE FORMULE — vier stappen, in deze volgorde:
-1) WEES DRUK — "Ik heb weinig tijd, maar..." Eén zinnetje, geen breedvoerig verhaal. Hierdoor signaleer je waarde aan je tijd én voorkom je een lang vrijblijvend gesprek waarin de spanning eruit lekt.
-2) COMPLIMENT — "Jij bent iemand die dingen voor elkaar krijgt." Echt, specifiek, geen smeerolie. Maakt dat je prospect zich GEZIEN voelt. Mensen werken niet voor verkoop-praatjes, ze werken voor erkenning.
-3) UITNODIGEN — kies de variant die past bij hoe warm de prospect is:
+DE FORMULE, vier stappen, in deze volgorde:
+1) WEES DRUK, "Ik heb weinig tijd, maar..." Eén zinnetje, geen breedvoerig verhaal. Hierdoor signaleer je waarde aan je tijd én voorkom je een lang vrijblijvend gesprek waarin de spanning eruit lekt.
+2) COMPLIMENT, "Jij bent iemand die dingen voor elkaar krijgt." Echt, specifiek, geen smeerolie. Maakt dat je prospect zich GEZIEN voelt. Mensen werken niet voor verkoop-praatjes, ze werken voor erkenning.
+3) UITNODIGEN, kies de variant die past bij hoe warm de prospect is:
    • DIRECT (warme prospect, vertrouwen al hoog): "Ik ben gestart met iets nieuws, wil het je laten zien."
    • INDIRECT (mid-warm): "Dit is vast niets voor jou, maar ken jij iemand die extra wil verdienen?"
    • SUPER-INDIRECT (lauw of onbekend): "Ken jij toevallig mensen die openstaan voor bij-inkomen?"
-4) PLAN — "Wanneer schikt het, vanavond of morgen?" Geef twee tijdsblokken, geen open vraag. Open vragen ("wanneer kan jij?") leiden 80% naar uitstel.
+4) PLAN, "Wanneer schikt het, vanavond of morgen?" Geef twee tijdsblokken, geen open vraag. Open vragen ("wanneer kan jij?") leiden 80% naar uitstel.
 
-DE KERN — JE TAAK = UITNODIGEN, NIET OVERTUIGEN:
+DE KERN, JE TAAK = UITNODIGEN, NIET OVERTUIGEN:
 Je wilt niet dat ze "ja" zeggen tegen JOU. Je wilt dat ze "ja" zeggen tegen een KIJKMOMENT. Dat is een veel lagere drempel. Een kijkmoment is geen commitment, geen mening, geen koop. Het is alleen "ik kijk even mee, daarna beslis ik". Dat verkoop je 10× makkelijker dan een product.
 
 DRIE VOORBEELD-UITNODIGINGEN, alle drie in de 4-stappen:
 
 1. WhatsApp aan oud-collega (warm):
-"Hé Mark, ik heb het druk en wilde dit even snel sturen. Jij bent iemand die altijd doorpakt en daarom denk ik aan jou. Ik ben net gestart met iets waar ik 60 dagen vol voor ga — wil je dat ik je kort laat zien wat het inhoudt? Vrijblijvend hoor. Vanavond of morgen aan het eind van de dag?"
+"Hé Mark, ik heb het druk en wilde dit even snel sturen. Jij bent iemand die altijd doorpakt en daarom denk ik aan jou. Ik ben net gestart met iets waar ik 60 dagen vol voor ga, wil je dat ik je kort laat zien wat het inhoudt? Vrijblijvend hoor. Vanavond of morgen aan het eind van de dag?"
 
 2. DM aan iemand die op je posts reageert (mid):
-"Hé Linda, snel berichtje tussendoor. Je reageert al een tijdje op wat ik deel, dat waardeer ik. Ik ben gestart met iets dat past bij wat ik aan het opbouwen ben — wil je dat ik je in 1 minuut laat zien hoe het werkt? Geen verplichting, even meekijken. Donderdag of vrijdag?"
+"Hé Linda, snel berichtje tussendoor. Je reageert al een tijdje op wat ik deel, dat waardeer ik. Ik ben gestart met iets dat past bij wat ik aan het opbouwen ben, wil je dat ik je in 1 minuut laat zien hoe het werkt? Geen verplichting, even meekijken. Donderdag of vrijdag?"
 
 3. Spraak naar oude vriend (super-indirect):
-"Hé broer, snel ding. Even goed te bellen — ben jij niet diegene die altijd weet wie er met wat bezig is? Ik zoek mensen die openstaan voor extra inkomen naast hun werk. Ken jij toevallig iemand? Bel je woensdagavond?"
+"Hé broer, snel ding. Even goed te bellen, ben jij niet diegene die altijd weet wie er met wat bezig is? Ik zoek mensen die openstaan voor extra inkomen naast hun werk. Ken jij toevallig iemand? Bel je woensdagavond?"
 
 VEELGEMAAKTE FOUTEN:
 ✗ Compliment vergeten → klinkt als pitch.
@@ -403,7 +403,7 @@ VEELGEMAAKTE FOUTEN:
 ✗ Antwoord op bezwaren al vooraf in het bericht stoppen ("ik weet dat je geen tijd hebt maar...") → je legt zelf de twijfel op tafel, doe dat niet.
 ✗ "Ja zeggen tegen jou" willen forceren in plaats van "ja tegen het kijkmoment". Verschuif de vraag.
 
-Vandaag stap je actief uit je comfortzone, en dat kriebelt — afwijzingsangst, "wat als ze me raar vinden?". Helemaal normaal. Niemand begint vaardig. Een nee is geen oordeel over jou, het is een momentopname over hen. Volgende uitnodiging gewoon doorgaan.`,
+Vandaag stap je actief uit je comfortzone, en dat kriebelt, afwijzingsangst, "wat als ze me raar vinden?". Helemaal normaal. Niemand begint vaardig. Een nee is geen oordeel over jou, het is een momentopname over hen. Volgende uitnodiging gewoon doorgaan.`,
     waaromWerktDit: {
       tekst:
         "Wees zakelijk. Wees professioneel. Wees kort. Dan neem je mensen serieus genoeg om ze de ruimte te geven zélf nee te zeggen.",
@@ -413,7 +413,7 @@ Vandaag stap je actief uit je comfortzone, en dat kriebelt — afwijzingsangst, 
 
   {
     nummer: 5,
-    titel: "🛡️ Bezwaren? Geen probleem — Feel-Felt-Found",
+    titel: "🛡️ Bezwaren? Geen probleem, Feel-Felt-Found",
     fase: 1,
     vandaagDoen: [
       {
@@ -430,7 +430,7 @@ Vandaag stap je actief uit je comfortzone, en dat kriebelt — afwijzingsangst, 
         verplicht: true,
         actieRoute: "/namenlijst",
         uitleg:
-          "3 mensen die eerder een invite/info hebben gehad — vandaag een korte check-in. Open Namenlijst → kies prospect → 'Follow-up' of vraag de Mentor: 'Help me met een follow-up voor [naam]'. Niet 'heb je al beslist?' maar 'hoe gaat 't?'.",
+          "3 mensen die eerder een invite/info hebben gehad, vandaag een korte check-in. Open Namenlijst → kies prospect → 'Follow-up' of vraag de Mentor: 'Help me met een follow-up voor [naam]'. Niet 'heb je al beslist?' maar 'hoe gaat 't?'.",
       },
       {
         id: "dag5-social-3",
@@ -442,7 +442,7 @@ Vandaag stap je actief uit je comfortzone, en dat kriebelt — afwijzingsangst, 
       },
       {
         id: "dag5-onboarding-bezwaar",
-        label: "Lees 'Bezwaren behandelen' — staat in de Les van vandaag",
+        label: "Lees 'Bezwaren behandelen', staat in de Les van vandaag",
         uitleg:
           "De Feel-Felt-Found-uitleg staat volledig in de Les bovenaan deze pagina. Lees rustig door en vink hier af.",
         verplicht: true,
@@ -459,7 +459,7 @@ Vandaag stap je actief uit je comfortzone, en dat kriebelt — afwijzingsangst, 
         id: "dag5-eric-worre-start",
         label: "🎧 Start met Eric Worre's Seven Skills (15 min Spotify)",
         uitleg:
-          "Vanaf vandaag dagelijks ~15 minuten luisteren — in de auto, tijdens werk of een wandeling. Voor je mindset én om dit vak goed te leren. Eric Worre is wereldwijd de meest gerespecteerde trainer in network marketing. Niet één keer doorkijken, herhalend aanhoren — wat hij vertelt landt na de 4e of 5e keer pas écht.",
+          "Vanaf vandaag dagelijks ~15 minuten luisteren, in de auto, tijdens werk of een wandeling. Voor je mindset én om dit vak goed te leren. Eric Worre is wereldwijd de meest gerespecteerde trainer in network marketing. Niet één keer doorkijken, herhalend aanhoren, wat hij vertelt landt na de 4e of 5e keer pas écht.",
         verplicht: false,
         actieRoute: "https://open.spotify.com/search/eric%20worre%20network%20marketing%20pro",
       },
@@ -493,24 +493,24 @@ Vandaag stap je actief uit je comfortzone, en dat kriebelt — afwijzingsangst, 
     watJeLeert: `Feel-Felt-Found is dé universele bezwaar-techniek. Werkt op zowat élk bezwaar omdat het drie psychologische dingen tegelijk doet: erkennen, normaliseren, herframen. Zonder dat de prospect het gevoel krijgt dat hij wordt 'ompraat'.
 
 DE FORMULE:
-• FEEL — "Ik snap dat het zo voelt." Erken het gevoel. NIET het bezwaar weerleggen, alleen valideren dat het bestaat.
-• FELT — "Veel mensen voelden dat in het begin ook." Normaliseer. De prospect is niet raar, hij is in goed gezelschap.
-• FOUND — "Wat zij merkten was [korte herframing]." Geef de nieuwe lens, in 1 zin, niet als argument maar als observatie.
-• AFSLUITEN MET DOORVRAAG — "Maar vertel eens, waar zit het 'm nu écht in?" Dit is de KEY-stap die de meeste mensen vergeten.
+• FEEL, "Ik snap dat het zo voelt." Erken het gevoel. NIET het bezwaar weerleggen, alleen valideren dat het bestaat.
+• FELT, "Veel mensen voelden dat in het begin ook." Normaliseer. De prospect is niet raar, hij is in goed gezelschap.
+• FOUND, "Wat zij merkten was [korte herframing]." Geef de nieuwe lens, in 1 zin, niet als argument maar als observatie.
+• AFSLUITEN MET DOORVRAAG, "Maar vertel eens, waar zit het 'm nu écht in?" Dit is de KEY-stap die de meeste mensen vergeten.
 
-DE GOUDEN REGEL — DE EERSTE WEERSTAND IS BIJNA NOOIT DE ECHTE:
-"Geen tijd", "ik wil eerst nadenken", "ik ben niet van sales" — dat zijn emotionele schilden. Beleefde manieren om afstand te maken. De échte twijfel zit eronder: angst voor afwijzing door familie, slechte ervaring met netwerkmarketing, schaamte voor financiële situatie, niet weten waar te beginnen. Jouw werk = vriendelijk doorvragen tot de échte zorg op tafel komt. Daar pas kun je écht helpen.
+DE GOUDEN REGEL, DE EERSTE WEERSTAND IS BIJNA NOOIT DE ECHTE:
+"Geen tijd", "ik wil eerst nadenken", "ik ben niet van sales", dat zijn emotionele schilden. Beleefde manieren om afstand te maken. De échte twijfel zit eronder: angst voor afwijzing door familie, slechte ervaring met netwerkmarketing, schaamte voor financiële situatie, niet weten waar te beginnen. Jouw werk = vriendelijk doorvragen tot de échte zorg op tafel komt. Daar pas kun je écht helpen.
 
 DRIE VOORBEELDEN VAN FEEL-FELT-FOUND:
 
 1. Bezwaar: "Ik heb geen tijd."
-"Ik snap dat het zo voelt — iedereen die ik ken heeft het al druk genoeg. Veel mensen die nu starten dachten dat ook in het begin. Wat zij merkten is dat het juist flexibel werkt naast wat ze al deden — een paar avonden in de week, soms minder. Maar vertel eens, waar zit het 'm nu écht in? Is het tijd, of speelt er iets anders mee?"
+"Ik snap dat het zo voelt, iedereen die ik ken heeft het al druk genoeg. Veel mensen die nu starten dachten dat ook in het begin. Wat zij merkten is dat het juist flexibel werkt naast wat ze al deden, een paar avonden in de week, soms minder. Maar vertel eens, waar zit het 'm nu écht in? Is het tijd, of speelt er iets anders mee?"
 
 2. Bezwaar: "Ik wil eerst nadenken."
-"Helemaal logisch dat je daar even mee wilt zitten. Veel mensen voelden dat in het begin ook. Wat zij merkten is dat 'nadenken' meestal betekent dat één specifiek punt nog onduidelijk is — geen totaal nee. Mag ik je iets vragen: waar wil je precies over nadenken? Is het de tijd, het vertrouwen, of het idee zelf?"
+"Helemaal logisch dat je daar even mee wilt zitten. Veel mensen voelden dat in het begin ook. Wat zij merkten is dat 'nadenken' meestal betekent dat één specifiek punt nog onduidelijk is, geen totaal nee. Mag ik je iets vragen: waar wil je precies over nadenken? Is het de tijd, het vertrouwen, of het idee zelf?"
 
 3. Bezwaar: "Ik ben niet van sales."
-"Snap ik 100% — ik dacht dat zelf ook. Wat ik (en velen die starten) merkten is dat dit geen sales is in de traditionele zin: geen koud bellen, geen markten afgaan, geen targets. Het is mensen die jij al kent uitnodigen om iets te bekijken. Maar ik ben benieuwd, waar komt dat 'niet van sales'-gevoel bij jou vandaan?"
+"Snap ik 100%, ik dacht dat zelf ook. Wat ik (en velen die starten) merkten is dat dit geen sales is in de traditionele zin: geen koud bellen, geen markten afgaan, geen targets. Het is mensen die jij al kent uitnodigen om iets te bekijken. Maar ik ben benieuwd, waar komt dat 'niet van sales'-gevoel bij jou vandaan?"
 
 VEELGEMAAKTE FOUTEN:
 ✗ Direct argumenteren ("dat klopt niet, want...") → de prospect sluit af.
@@ -520,8 +520,8 @@ VEELGEMAAKTE FOUTEN:
 ✗ Eigen verhaal lang vertellen ("ik dacht dat ook!") → maakt het over jou.
 ✗ Drammen na een nee → break van vertrouwen, prospect onthoudt het altijd negatief.
 
-EXTRA — VANDAAG START JE MINDSET-ROUTINE:
-15 minuten per dag Eric Worre in je oren — auto, wandeling, koffie. Wat hij vertelt over WHY, vision en leiderschap is brandstof onder je dagelijkse acties. Niet één keer doorluisteren, herhalend aanhoren tot het in je systeem zit.`,
+EXTRA, VANDAAG START JE MINDSET-ROUTINE:
+15 minuten per dag Eric Worre in je oren, auto, wandeling, koffie. Wat hij vertelt over WHY, vision en leiderschap is brandstof onder je dagelijkse acties. Niet één keer doorluisteren, herhalend aanhoren tot het in je systeem zit.`,
     waaromWerktDit: {
       tekst:
         "Een bezwaar is geen muur. Het is een vraag die niet weet hoe 'm te stellen.",
@@ -531,7 +531,7 @@ EXTRA — VANDAAG START JE MINDSET-ROUTINE:
 
   {
     nummer: 6,
-    titel: "🔄 De fortuin zit in de follow-up — 24-48u-regel",
+    titel: "🔄 De fortuin zit in de follow-up, 24-48u-regel",
     fase: 1,
     vandaagDoen: [
       {
@@ -589,19 +589,19 @@ EXTRA — VANDAAG START JE MINDSET-ROUTINE:
         route: "/scripts",
       },
     ],
-    watJeLeert: `Follow-up is geen optie, het is JE WERK. 80% van alle "ja's" komen pas na de derde tot vijfde aanraking. Wie alleen uitnodigt en dan stopt, verliest de meeste deals voordat het gesprek serieus wordt. De goede netwerker volgt OP en blijft warm — zonder te jagen.
+    watJeLeert: `Follow-up is geen optie, het is JE WERK. 80% van alle "ja's" komen pas na de derde tot vijfde aanraking. Wie alleen uitnodigt en dan stopt, verliest de meeste deals voordat het gesprek serieus wordt. De goede netwerker volgt OP en blijft warm, zonder te jagen.
 
 DE 24-48U REGEL:
-Stuur 24-48 uur na een uitnodiging je eerste check-in. Niet eerder (dan voelt het opdringerig), niet later (dan is de psychologische ruimte alweer dicht en is je prospect het kwijt). Gemiddeld zijn 5 contactmomenten nodig voor iemand een echte beslissing maakt — dat is geen drammen, dat is gewoon de statistiek van menselijk gedrag.
+Stuur 24-48 uur na een uitnodiging je eerste check-in. Niet eerder (dan voelt het opdringerig), niet later (dan is de psychologische ruimte alweer dicht en is je prospect het kwijt). Gemiddeld zijn 5 contactmomenten nodig voor iemand een echte beslissing maakt, dat is geen drammen, dat is gewoon de statistiek van menselijk gedrag.
 
 DE 5-FASEN-FOLLOW-UP:
-1) CHECK-IN (24-48u): "Even inchecken — hoe gaat het met je?" GEEN "heb je al nagedacht?". Geen beoordelaar zijn.
+1) CHECK-IN (24-48u): "Even inchecken, hoe gaat het met je?" GEEN "heb je al nagedacht?". Geen beoordelaar zijn.
 2) PEILEN (na 3-5 dagen): "Wat sprak je het meeste aan van wat je gezien hebt?" Open vraag, focus op WAT, niet op JA/NEE.
-3) VERDIEPEN (na 7-10 dagen): "Dit wilde ik je ook nog laten zien..." Tweede waardevol punt — een testimonial, een product-review, een nieuw filmpje.
+3) VERDIEPEN (na 7-10 dagen): "Dit wilde ik je ook nog laten zien..." Tweede waardevol punt, een testimonial, een product-review, een nieuw filmpje.
 4) UITNODIGING NAAR EVENT/3-WEG (na 10-14 dagen): "Er is binnenkort iets dat past, wil je erbij zijn?" Verlaag de drempel naar een nieuwe exposure.
 5) SLUITEN OF NOT-YET (na 14-21 dagen): "Wat is voor jou het belangrijkste punt om helder te krijgen?" Direct, eerlijk, zonder druk.
 
-DE TOON — WAT JE WEL EN NIET DOET:
+DE TOON, WAT JE WEL EN NIET DOET:
 ✓ "Even inchecken" → vriendelijk, niet beoordelend
 ✓ "Wat sprak je aan?" → focus op wat positief is
 ✓ "Mag ik over 3 maanden nog eens vragen?" → nee = nu, niet voor altijd
@@ -610,19 +610,19 @@ DE TOON — WAT JE WEL EN NIET DOET:
 ✗ "Ben je er nu uit?" → druk, sluit gesprek af
 ✗ Stilte na 1 keer geen reactie → fataal, je verliest 80%
 
-DRIE VOORBEELDEN — verschillende fasen:
+DRIE VOORBEELDEN, verschillende fasen:
 
 1. CHECK-IN (24u na uitnodiging, geen reactie):
-"Hé Mark, even inchecken hoor — hoe gaat het bij jou? Geen druk, ik vroeg me gewoon af of het bericht goed was aangekomen 😊"
+"Hé Mark, even inchecken hoor, hoe gaat het bij jou? Geen druk, ik vroeg me gewoon af of het bericht goed was aangekomen 😊"
 
 2. PEILEN (na de info-link):
 "Hé Linda 🥰 wat sprak je het meeste aan van wat je tot nu hebt gezien? Ben benieuwd!"
 
 3. STILLE PROSPECT (5-10 dagen geen reactie):
-"Hé Jaap, geen reactie ontvangen — kan zijn dat het er niet bij past en dat is helemaal goed. Mag ik over een paar maanden nog eens vragen, voor het geval dingen veranderen? 👍🏽"
+"Hé Jaap, geen reactie ontvangen, kan zijn dat het er niet bij past en dat is helemaal goed. Mag ik over een paar maanden nog eens vragen, voor het geval dingen veranderen? 👍🏽"
 
 DE LANGSPEELPLATEN-REGEL:
-Een prospect die NU geen ja zegt, kan over 3 maanden alsnog ja zeggen. Of over 1 jaar. Houd ze warm, hou ze vriendelijk, en blijf in hun leven via je gewone content (geen pitches in de DM). Dan ben je top-of-mind als hun situatie verandert. "Niet jagen, niet smeken, wel richting geven" — Worre.`,
+Een prospect die NU geen ja zegt, kan over 3 maanden alsnog ja zeggen. Of over 1 jaar. Houd ze warm, hou ze vriendelijk, en blijf in hun leven via je gewone content (geen pitches in de DM). Dan ben je top-of-mind als hun situatie verandert. "Niet jagen, niet smeken, wel richting geven", Worre.`,
     waaromWerktDit: {
       tekst:
         "Niet jagen, niet smeken, wel richting geven. Gemiddeld 5 exposures, dat is gewoon de statistiek.",
@@ -649,7 +649,7 @@ Een prospect die NU geen ja zegt, kan over 3 maanden alsnog ja zeggen. Of over 1
         verplicht: true,
         actieRoute: "/namenlijst",
         uitleg:
-          "5 uitnodigingen vandaag — iets rustiger want het is review-dag. Mix warm + lauw zoals je gewend bent. Open Namenlijst → klik op prospect → 'Uitnodigen'.",
+          "5 uitnodigingen vandaag, iets rustiger want het is review-dag. Mix warm + lauw zoals je gewend bent. Open Namenlijst → klik op prospect → 'Uitnodigen'.",
       },
       {
         id: "dag7-followups-3",
@@ -657,7 +657,7 @@ Een prospect die NU geen ja zegt, kan over 3 maanden alsnog ja zeggen. Of over 1
         verplicht: true,
         actieRoute: "/namenlijst",
         uitleg:
-          "3 mensen die eerder een invite/info hebben gehad — vandaag een korte check-in. Open Namenlijst → kies prospect → 'Follow-up' of vraag de Mentor: 'Help me met een follow-up voor [naam]'. Niet 'heb je al beslist?' maar 'hoe gaat 't?'.",
+          "3 mensen die eerder een invite/info hebben gehad, vandaag een korte check-in. Open Namenlijst → kies prospect → 'Follow-up' of vraag de Mentor: 'Help me met een follow-up voor [naam]'. Niet 'heb je al beslist?' maar 'hoe gaat 't?'.",
       },
       {
         id: "dag7-sponsor-call",
@@ -681,29 +681,29 @@ Een prospect die NU geen ja zegt, kan over 3 maanden alsnog ja zeggen. Of over 1
         route: "/statistieken",
       },
     ],
-    watJeLeert: `Een wekelijkse review is geen rapportcijfer, het is een KOMPAS-CHECK. 5 minuten reflectie scheelt je 5 dagen dwaling. Niet voor je sponsor, voor jezelf — om te zien waar je staat versus waar je heen wilt.
+    watJeLeert: `Een wekelijkse review is geen rapportcijfer, het is een KOMPAS-CHECK. 5 minuten reflectie scheelt je 5 dagen dwaling. Niet voor je sponsor, voor jezelf, om te zien waar je staat versus waar je heen wilt.
 
 DRIE VRAGEN DIE WERKEN (en die ELEVA voor je voorlegt):
 1) WAT GING GOED? Eerlijk, klein én groot. "Ik heb 3 invites verstuurd" is een win. "Ik durfde mijn beste vriend uit te nodigen" is óók een win, maar van een andere soort. Beide tellen.
 2) WAT SCHUURDE? Geen oordeel, geen "ik ben gewoon niet goed in dit". Wat IS er onhandig gegaan? Welke uitnodiging stuurde ik niet uit angst? Welk berichtje liet ik 4× herschrijven voor ik op verzenden klikte? Dáár zit volgende week je oefening.
 3) WAAR FOCUS IK VOLGENDE WEEK? Eén ding. Niet drie. EÉN ding waar je in groeit. Kan zijn: doorvragen na een nee. Kan zijn: 1 dag dichterbij komen aan je dagelijkse aantallen. Kan zijn: durven 3-weg starten met een lauwe prospect.
 
-DE INHAAL-REGEL — voor als je een dag over hebt geslagen:
+DE INHAAL-REGEL, voor als je een dag over hebt geslagen:
 • 1 dag stilte = geen drama. Iedereen heeft een dipje. Volgende dag pak je weer op.
-• 2 dagen stilte = actie nodig. Niet schamen, niet "ik begin maandag opnieuw" — vandaag start je weer, met +50% aantallen om de gemiste dag in te halen.
+• 2 dagen stilte = actie nodig. Niet schamen, niet "ik begin maandag opnieuw", vandaag start je weer, met +50% aantallen om de gemiste dag in te halen.
 • Geen schuldgevoel-spiraal. Eén overgeslagen dag = data, geen oordeel.
 
 WAT SCHUURDE = GROEI, GEEN FALEN:
-Als je deze week 7 dagen geleden iets compleet nieuws bent gestart, is onhandigheid op dag 1 logisch. En iets meer vlotheid op dag 7. Dát is het volledige plaatje. De mensen die uiteindelijk doorbreken in dit vak zijn niet degenen die in week 1 alles vlekkeloos deden — die bestaan niet — maar degenen die week 2 bleven oefenen op wat in week 1 schuurde.
+Als je deze week 7 dagen geleden iets compleet nieuws bent gestart, is onhandigheid op dag 1 logisch. En iets meer vlotheid op dag 7. Dát is het volledige plaatje. De mensen die uiteindelijk doorbreken in dit vak zijn niet degenen die in week 1 alles vlekkeloos deden, die bestaan niet, maar degenen die week 2 bleven oefenen op wat in week 1 schuurde.
 
 WAT GA JE VOLGENDE WEEK ZIEN (sneak peek voor dag 8-14):
 • Lat omhoog: 10 invites per dag i.p.v. 5
-• 3-weg gesprekken — je gaat ze ECHT doen, niet alleen kennen
-• One-pager versus presentatie — wanneer wat
+• 3-weg gesprekken, je gaat ze ECHT doen, niet alleen kennen
+• One-pager versus presentatie, wanneer wat
 • Product-pivot bij business-afwijzing
-• FORM — hoe je iemand écht leert kennen in 5 minuten
+• FORM, hoe je iemand écht leert kennen in 5 minuten
 
-DEZE REVIEW WORDT GEDEELD MET JE SPONSOR — niet om te beoordelen, om te ondersteunen. Sponsor ziet wat schuurde, kan jou specifiek helpen waar het schuurt. Niet zwijgen, niet polijsten — eerlijk neerzetten levert je de beste hulp.`,
+DEZE REVIEW WORDT GEDEELD MET JE SPONSOR, niet om te beoordelen, om te ondersteunen. Sponsor ziet wat schuurde, kan jou specifiek helpen waar het schuurt. Niet zwijgen, niet polijsten, eerlijk neerzetten levert je de beste hulp.`,
     waaromWerktDit: {
       tekst:
         "Vergelijk jezelf met gisteren, niet met anderen. De run is jouw verhaal, de review is hoe je het schrijft.",
@@ -712,7 +712,7 @@ DEZE REVIEW WORDT GEDEELD MET JE SPONSOR — niet om te beoordelen, om te onders
   },
 
   // ============================================================
-  // FASE 2 — MOMENTUM (dag 8-14)
+  // FASE 2, MOMENTUM (dag 8-14)
   // ============================================================
   {
     nummer: 8,
@@ -733,7 +733,7 @@ DEZE REVIEW WORDT GEDEELD MET JE SPONSOR — niet om te beoordelen, om te onders
         verplicht: true,
         actieRoute: "/namenlijst",
         uitleg:
-          "5 mensen die eerder gehoord hebben — vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
+          "5 mensen die eerder gehoord hebben, vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
       },
       {
         id: "dag8-social-3",
@@ -765,12 +765,12 @@ DEZE REVIEW WORDT GEDEELD MET JE SPONSOR — niet om te beoordelen, om te onders
           "Help me 10 uitnodigingen versturen vandaag zonder dat het als spam voelt. Ik heb [aantal] warme + [aantal] lauwe prospects op mijn lijst.",
       },
     ],
-    watJeLeert: `In fase 1 leerde je HOE het werkt. In fase 2 gaat het om VOLUME. 10 uitnodigingen per dag voelt veel — maar het is 10-15 minuten werk zodra je scripts paraat hebt en je lijst goed gevuld is. Het draait vandaag niet om het perfecte bericht, het draait om DOORPAKKEN.
+    watJeLeert: `In fase 1 leerde je HOE het werkt. In fase 2 gaat het om VOLUME. 10 uitnodigingen per dag voelt veel, maar het is 10-15 minuten werk zodra je scripts paraat hebt en je lijst goed gevuld is. Het draait vandaag niet om het perfecte bericht, het draait om DOORPAKKEN.
 
-WAAROM 10 EN NIET 5 — DE WET VAN GROTE GETALLEN:
+WAAROM 10 EN NIET 5, DE WET VAN GROTE GETALLEN:
 Met 5 uitnodigingen per dag krijg je gemiddeld 1 ja/nee/misschien per week. Met 10 verdubbelt dat, maar belangrijker: je krijgt sneller patronen. Welke openingszin werkt bij wie? Welke variant uit de 4-stappen-uitnodiging slaat aan? Dat leer je niet uit 5 berichten, dat leer je uit 50.
 
-NL-NETWERK-WERKELIJKHEID — gemiddelden:
+NL-NETWERK-WERKELIJKHEID, gemiddelden:
 • Van 10 uitnodigingen → 4-6 reacties
 • Van 5 reacties → 2-3 kijkmomenten (info / 3-weg)
 • Van 3 kijkmomenten → 1 ja-zegger of 1 shopper of 1 not-yet
@@ -779,7 +779,7 @@ Dat is normaal. Niet teleurstellend, niet rooskleurig. Dat is gewoon wat fase 2 
 DE PERFECTIE-VAL:
 "Perfect is de vijand van verzonden." Stuur EERDER af dan je zin hebt om ze af te sturen. Een onhandige uitnodiging die WEG is presteert oneindig veel beter dan de perfecte die nog op je telefoon staat in concept. Per uitnodiging max 30-60 seconden bedenktijd, dan op verzenden. Als je 5 minuten staart naar één bericht: kopieer een ELEVA-script en pas alleen de naam aan.
 
-CONCRETE WERKWIJZE — 10 invites in 15 minuten:
+CONCRETE WERKWIJZE, 10 invites in 15 minuten:
 1. Open je namenlijst, filter op "lead" of "uitgenodigd nog niet gepeild".
 2. Pak 10 namen tegelijk in beeld.
 3. Per naam: 1 zinnetje persoonlijke openingsregel (waar ken je hem/haar van), dan het script erachter geplakt.
@@ -792,7 +792,7 @@ VEELGEMAAKTE FOUTEN:
 ✗ Wachten tot je "in de stemming" bent → je raakt nooit in stemming, je doet het en de stemming volgt.
 ✗ Direct na geen reactie afschrijven → 24-48u wachten, dan follow-uppen (zie dag 6).
 
-MIX WARM EN LAUW: 5 mensen die je goed kent + 5 met wie je 6+ maanden niet gesproken hebt. De warmen geven snelle reacties (positief én negatief), de lauwen geven verrassingen — vaak juist daar zitten je beste matches.`,
+MIX WARM EN LAUW: 5 mensen die je goed kent + 5 met wie je 6+ maanden niet gesproken hebt. De warmen geven snelle reacties (positief én negatief), de lauwen geven verrassingen, vaak juist daar zitten je beste matches.`,
     waaromWerktDit: {
       tekst: "Snelheid wint. Snel handelen verslaat perfect handelen, altijd.",
       bron: "Eric Worre",
@@ -818,7 +818,7 @@ MIX WARM EN LAUW: 5 mensen die je goed kent + 5 met wie je 6+ maanden niet gespr
         verplicht: true,
         actieRoute: "/namenlijst",
         uitleg:
-          "5 mensen die eerder gehoord hebben — vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
+          "5 mensen die eerder gehoord hebben, vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
       },
       {
         id: "dag9-social-3",
@@ -861,37 +861,37 @@ MIX WARM EN LAUW: 5 mensen die je goed kent + 5 met wie je 6+ maanden niet gespr
     ],
     watJeLeert: `Een 3-weg gesprek is geen truc, het is het krachtigste instrument dat je hebt in dit vak. Het verkort het pad van "iemand twijfelt" naar "iemand beslist" met factor 3 tot 5, simpelweg door autoriteit en sociaal bewijs in 1 gesprek samen te brengen.
 
-DE PSYCHOLOGISCHE HEFBOOM — waarom 3-weg werkt:
+DE PSYCHOLOGISCHE HEFBOOM, waarom 3-weg werkt:
 1) Sponsor brengt AUTORITEIT (langere ervaring, meer mensen geholpen, eigen track-record).
 2) Jij brengt VERTROUWEN (de prospect kent jou, niet de sponsor).
 3) Prospect ziet TWEE mensen die al samenwerken → "blijkbaar werkt dit echt".
 Geen van de drie alléén kan dit. Het is de combinatie.
 
-DE 5 STAPPEN — letterlijk in deze volgorde, ELEVA heeft ze allemaal als script:
+DE 5 STAPPEN, letterlijk in deze volgorde, ELEVA heeft ze allemaal als script:
 
-STAP 1 — AANKONDIGING (jij naar prospect, vóór groepje):
+STAP 1, AANKONDIGING (jij naar prospect, vóór groepje):
 "Hé [naam], ik maak even een groepje aan met mijn mentor [sponsor], want ik kan het zelf nog niet zo goed uitleggen 😄. Zij doet dit al [periode] en kan met je meekijken en je vragen beantwoorden 🥰"
 WAAROM: geen verrassing, prospect verwacht het, sponsor mag binnenkomen.
 
-STAP 2 — INTRODUCTIE IN HET GROEPJE (jij):
-"Hi [prospect]! 😊 Dit is [sponsor] — mijn mentor in dit traject. Ze doet dit al [periode] en heeft fantastische resultaten behaald. [Sponsor], dit is [prospect]. Ze is op zoek naar [situatie]. Wil jij haar even verder helpen? 🙏"
+STAP 2, INTRODUCTIE IN HET GROEPJE (jij):
+"Hi [prospect]! 😊 Dit is [sponsor], mijn mentor in dit traject. Ze doet dit al [periode] en heeft fantastische resultaten behaald. [Sponsor], dit is [prospect]. Ze is op zoek naar [situatie]. Wil jij haar even verder helpen? 🙏"
 WAAROM: edifieert sponsor, geeft prospect-context aan sponsor, vraagt sponsor expliciet om de leiding te nemen.
 
-STAP 3 — JIJ STAPT TERUG ⚠️ DEZE STAP IS DE LASTIGSTE:
+STAP 3, JIJ STAPT TERUG ⚠️ DEZE STAP IS DE LASTIGSTE:
 Zwijg. Niet meepraten. Niet "aanvullen". Sponsor is nu expert, jij bent student. Wachten tot sponsor jou expliciet iets vraagt.
 WAAROM: zodra jij blijft praten, ondermijn je de autoriteit van sponsor en wordt het weer een 1-op-1 gesprek.
 
-STAP 4 — SPONSOR OPENT (sponsor doet dit, geef 'm dit script vooraf):
-"Hé [prospect]! Wat leuk dat [teamlid] ons koppelt 🥰 Ik heb even gelezen wat er speelt — herkenbaar! Vertel eens, hoe lang speelt dit al en wat heb je tot nu toe geprobeerd?"
+STAP 4, SPONSOR OPENT (sponsor doet dit, geef 'm dit script vooraf):
+"Hé [prospect]! Wat leuk dat [teamlid] ons koppelt 🥰 Ik heb even gelezen wat er speelt, herkenbaar! Vertel eens, hoe lang speelt dit al en wat heb je tot nu toe geprobeerd?"
 WAAROM: rapport bouwen vóór pitch, sponsor leert eerst over de prospect.
 
-STAP 5 — FOLLOW-UP (jij naar prospect, apart, binnen 24u):
+STAP 5, FOLLOW-UP (jij naar prospect, apart, binnen 24u):
 "Hé [naam] 😊 Wat sprak je het meeste aan van wat je tot nu toe gehoord hebt? 🥰"
 NOOIT: "Wat vond je ervan?" → vraagt mening, zet prospect als beoordelaar.
 WAAROM: focus op WAT positief was, opent de volgende exposure.
 
-EDIFICATION — VANDAAG OPGEFRIST, DAG 18 GAAT JE EIGEN ZIN PERFECTIONEREN:
-Voor een sterke 3-weg moet stap 2 ALTIJD een edifying zin bevatten over je sponsor. Op dag 18 schrijf je je eigen vaste edification-zin. Voor nu: gebruik een simpele "die al X jaar mensen helpt met Y, en degene die mij heeft geholpen met Z" — zelfs een eerste versie is veel sterker dan geen.
+EDIFICATION, VANDAAG OPGEFRIST, DAG 18 GAAT JE EIGEN ZIN PERFECTIONEREN:
+Voor een sterke 3-weg moet stap 2 ALTIJD een edifying zin bevatten over je sponsor. Op dag 18 schrijf je je eigen vaste edification-zin. Voor nu: gebruik een simpele "die al X jaar mensen helpt met Y, en degene die mij heeft geholpen met Z", zelfs een eerste versie is veel sterker dan geen.
 
 VEELGEMAAKTE FOUTEN:
 ✗ Geen aankondiging vooraf → prospect schrikt van groep met onbekende.
@@ -936,7 +936,7 @@ VANDAAG: lees de scripts in een prospect-kaart door, zodat je voor je eerstvolge
         verplicht: true,
         actieRoute: "/namenlijst",
         uitleg:
-          "5 mensen die eerder gehoord hebben — vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
+          "5 mensen die eerder gehoord hebben, vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
       },
       {
         id: "dag10-social-3",
@@ -970,14 +970,14 @@ VANDAAG: lees de scripts in een prospect-kaart door, zodat je voor je eerstvolge
     ],
     watJeLeert: `Vandaag is GEEN theorie-dag, vandaag is een DOEN-dag. Gisteren leerde je de 5 stappen, vandaag start je je eerstvolgende 3-weg in de praktijk. De eerste 3-weg gaat onhandig voelen. Dat hóórt. De vijfde voelt natuurlijk. Alleen door te doen kom je daar.
 
-DE KRITIEKE STAP — STAP 3, JIJ STAPT TERUG:
-Dit is het stuk waar de meeste netwerkers struikelen. Na je introductie in het groepje (stap 2) moet je STIL ZIJN. Niet meepraten, niet aanvullen, niet "ja precies" sturen. Sponsor is nu expert, jij bent student. Je voelt de drang om te helpen, dat is normaal — maar elke keer dat jij praat, ondermijn je de autoriteit van sponsor.
+DE KRITIEKE STAP, STAP 3, JIJ STAPT TERUG:
+Dit is het stuk waar de meeste netwerkers struikelen. Na je introductie in het groepje (stap 2) moet je STIL ZIJN. Niet meepraten, niet aanvullen, niet "ja precies" sturen. Sponsor is nu expert, jij bent student. Je voelt de drang om te helpen, dat is normaal, maar elke keer dat jij praat, ondermijn je de autoriteit van sponsor.
 
 Vuistregel: schrijf 50% minder berichten in het groepje dan je zin hebt om te schrijven. Vuist regel: alleen reageren als sponsor of prospect JOU expliciet aanspreekt. Anders: emoji's geven mag (👍🥰), tekstantwoorden geven mag NIET.
 
 WAT JE VANDAAG CONCREET DOET:
 1. Open je namenlijst en kies 1 warme prospect die nog geen 3-weg heeft gehad.
-2. Stuur stap 1 (aankondiging) naar de prospect — uit ELEVA, dus geen typewerk.
+2. Stuur stap 1 (aankondiging) naar de prospect, uit ELEVA, dus geen typewerk.
 3. Stuur sponsor het stap-2-introductie-script vooraf zodat hij/zij weet wat eraan komt.
 4. Maak het WhatsApp-groepje aan, vier seconden later stuur je stap 2.
 5. ZWIJG. Sponsor neemt over.
@@ -990,7 +990,7 @@ VEELGEMAAKTE FOUTEN OP DE EERSTE PAAR 3-WEGS:
 ✗ Direct na stap 4 al verwachten dat prospect "ja" zegt → 3-weg is een EXPOSURE, niet een sluitmoment.
 ✗ Geen stap 5 (24u follow-up apart) → momentum verdwijnt, prospect blijft hangen.
 
-NA AFLOOP — 5 MIN MET JE SPONSOR DEBRIEFEN:
+NA AFLOOP, 5 MIN MET JE SPONSOR DEBRIEFEN:
 Wat ging goed? Wat schuurde? Welke vraag van prospect zat sponsor mee? Volgende keer doen we wat anders? Dat is hoe je 3-weg-vaardigheid in 5-10 gesprekken naar tweede natuur bouwt.
 
 Doel deze week: minimaal 1 3-weg starten. Heb je 'm op dag 4 al gehad? Top, plan vandaag een tweede. Nog geen? Vandaag is jouw moment.`,
@@ -1020,7 +1020,7 @@ Doel deze week: minimaal 1 3-weg starten. Heb je 'm op dag 4 al gehad? Top, plan
         verplicht: true,
         actieRoute: "/namenlijst",
         uitleg:
-          "5 mensen die eerder gehoord hebben — vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
+          "5 mensen die eerder gehoord hebben, vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
       },
       {
         id: "dag11-social-3",
@@ -1032,7 +1032,7 @@ Doel deze week: minimaal 1 3-weg starten. Heb je 'm op dag 4 al gehad? Top, plan
       },
       {
         id: "dag11-lees-flow",
-        label: "Lees: Pipeline-flow — staat in de Les van vandaag",
+        label: "Lees: Pipeline-flow, staat in de Les van vandaag",
         uitleg:
           "Hoe schuiven prospects van Prospect → Uitgenodigd → One-Pager → Presentatie → Follow-up → Member of Shopper. De volledige uitleg staat in de Les bovenaan deze pagina. Vink af zodra je 'm hebt gehad.",
         verplicht: true,
@@ -1057,7 +1057,7 @@ Doel deze week: minimaal 1 3-weg starten. Heb je 'm op dag 4 al gehad? Top, plan
     ],
     watJeLeert: `Niet iedere prospect krijgt dezelfde info. Een one-pager geef je aan iemand die nog koud-tot-lauw is. Een presentatie aan iemand die al opgewarmd is. Verkeerde volgorde = 80% afhakers, simpelweg omdat je te veel verlangt voor het vertrouwen er is.
 
-DE TWEE TOOLS — wanneer wat:
+DE TWEE TOOLS, wanneer wat:
 
 ONE-PAGER (laagdrempelig, 5-10 min):
 • Korte PDF, 1-2 minuten filmpje, of een snelle infographic
@@ -1073,14 +1073,14 @@ PRESENTATIE (diepgaand, 20-40 min):
 • Vereist commitment: tijd vrijmaken, sponsor erbij, gesprek aangaan
 • Voor 20% van je prospects, maar daar gebeurt 80% van de echte beweging
 
-DE GOUDEN REGEL — NIEMAND SLAAT EEN STAP OVER:
-Verleiding nr 1: een warme oude vriend meteen een hele presentatie geven, "want hij zal het wel snappen". Resultaat? Hij wordt overspoeld, raakt verward, zegt "geef me een paar dagen om na te denken" — en je hoort 'm nooit meer.
+DE GOUDEN REGEL, NIEMAND SLAAT EEN STAP OVER:
+Verleiding nr 1: een warme oude vriend meteen een hele presentatie geven, "want hij zal het wel snappen". Resultaat? Hij wordt overspoeld, raakt verward, zegt "geef me een paar dagen om na te denken", en je hoort 'm nooit meer.
 
 Verleiding nr 2: aan iemand die al twee weken vol enthousiasme reageert nóg eens "even een one-pager" geven. Resultaat? Frustratie, verlies van momentum.
 
 Wat WEL: pipeline volgen. Iedereen → one-pager → presentatie/3-weg → beslissing. Geen sprongen, geen omleidingen.
 
-CONCREET — HERKENNINGSPATRONEN:
+CONCREET, HERKENNINGSPATRONEN:
 Stuur ONE-PAGER als prospect zegt:
 • "Vertel eens wat het is."
 • "Wat doe je eigenlijk?"
@@ -1092,8 +1092,8 @@ Stuur PRESENTATIE / start 3-weg als prospect zegt:
 • "Wat zou ik dan moeten doen?"
 • "Past dit bij wat ik nu al doe?"
 
-DE TUSSENSTAP-ZIN — als one-pager bekeken is:
-"Top dat je het bekeken hebt 🥰 Wat sprak je het meeste aan? — Daar kan mijn mentor [naam] perfect bij helpen, ze doet dit al [periode] en heeft veel mensen verder geholpen. Zal ik even een groepje aanmaken?"
+DE TUSSENSTAP-ZIN, als one-pager bekeken is:
+"Top dat je het bekeken hebt 🥰 Wat sprak je het meeste aan?, Daar kan mijn mentor [naam] perfect bij helpen, ze doet dit al [periode] en heeft veel mensen verder geholpen. Zal ik even een groepje aanmaken?"
 
 VEELGEMAAKTE FOUTEN:
 ✗ Telefoongesprek met "snelle samenvatting" geven → werkt nooit, je verkoopt jezelf in plaats van het systeem.
@@ -1101,7 +1101,7 @@ VEELGEMAAKTE FOUTEN:
 ✗ Te lang op one-pager-fase blijven hangen → prospect verliest interesse, escalatie nodig.
 ✗ Pipeline niet bijwerken in ELEVA → je vergeet wie waar zit, mensen vallen door de mand.
 
-KIJK VANDAAG NAAR JE PIPELINE: hoeveel mensen op "Uitgenodigd"? Hoeveel op "One-pager"? Hoeveel op "Presentatie"? Waar zit de bottleneck — daar is je werk.`,
+KIJK VANDAAG NAAR JE PIPELINE: hoeveel mensen op "Uitgenodigd"? Hoeveel op "One-pager"? Hoeveel op "Presentatie"? Waar zit de bottleneck, daar is je werk.`,
     waaromWerktDit: {
       tekst:
         "De presentatie bereikt alleen zijn volle kracht als het fundament eronder klopt.",
@@ -1128,7 +1128,7 @@ KIJK VANDAAG NAAR JE PIPELINE: hoeveel mensen op "Uitgenodigd"? Hoeveel op "One-
         verplicht: true,
         actieRoute: "/namenlijst",
         uitleg:
-          "5 mensen die eerder gehoord hebben — vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
+          "5 mensen die eerder gehoord hebben, vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
       },
       {
         id: "dag12-social-3",
@@ -1173,31 +1173,31 @@ KIJK VANDAAG NAAR JE PIPELINE: hoeveel mensen op "Uitgenodigd"? Hoeveel op "One-
     watJeLeert: `Een "nee" op de business-kant is geen einde. Het is een AFSLAG. De prospect zegt niet "ik wil niets met jou", hij/zij zegt "het opbouwen-deel past nu niet bij mij". Dat is een ander gesprek. En vaak is er nog steeds een opening: de PRODUCT-kant.
 
 WAAROM PRODUCT-PIVOT WERKT:
-• Lifeplus-producten zijn op zichzelf staande gezondheidsoplossingen — geen "verkooptrucs voor de bonus".
+• Lifeplus-producten zijn op zichzelf staande gezondheidsoplossingen, geen "verkooptrucs voor de bonus".
 • Een Shopper die de producten 3-6 maanden gebruikt, heeft tijd om resultaten te ervaren ZONDER businessdruk.
-• Veel Shoppers worden 6-12 maanden later alsnog member, niet omdat je ze opnieuw "pitch" maar omdat ze van binnenuit hebben gezien dat het werkt — en dan komen ze meestal zelf terug.
+• Veel Shoppers worden 6-12 maanden later alsnog member, niet omdat je ze opnieuw "pitch" maar omdat ze van binnenuit hebben gezien dat het werkt, en dan komen ze meestal zelf terug.
 • Bonus: Shoppers vertellen vaak vrienden over de producten zonder dat jij iets hoeft te doen → indirecte uitnodigingen.
 
-DE PIVOT-FORMULE — drie stappen, in deze volgorde:
+DE PIVOT-FORMULE, drie stappen, in deze volgorde:
 
 1) ERKEN ZONDER DRUK:
 "Helemaal goed dat dit niet bij je past, geen probleem 🥰. Iedereen heeft z'n eigen pad."
-GEEN "ja maar..." of "weet je wel zeker..." — dat klinkt als drammen.
+GEEN "ja maar..." of "weet je wel zeker...", dat klinkt als drammen.
 
 2) HAAK NAAR GEZONDHEID/ENERGIE:
-"Trouwens, want we hadden het er ooit over — hoe gaat het bij jou met [klacht/wens]?"
-Of als je de klacht niet kent: "Maar wil ik nog wat anders vragen — hoe gaat het bij je qua [energie / slaap / gezondheid / sport]?"
+"Trouwens, want we hadden het er ooit over, hoe gaat het bij jou met [klacht/wens]?"
+Of als je de klacht niet kent: "Maar wil ik nog wat anders vragen, hoe gaat het bij je qua [energie / slaap / gezondheid / sport]?"
 
 3) STEL DE PRODUCT-MOGELIJKHEID VOOR:
 "Er zijn een paar producten die we gebruiken die hier echt verschil mee maken. Wil je het eens een maand proberen, vrijblijvend, en kijken hoe je je voelt? Geen verplichting."
 
-DRIE VOORBEELDEN — VERSCHILLENDE KLACHTEN:
+DRIE VOORBEELDEN, VERSCHILLENDE KLACHTEN:
 
 1. Energie / slaap:
 "Helemaal goed dat de business-kant niet past, dat snap ik. Maar ik wilde nog vragen: hoe gaat het bij jou met energie en slaap? We hebben hier een product (Daily BioBasics + OmeGold) waar mensen super tevreden over zijn. Wil je het 'n maand proberen? Geen druk, gewoon ervaren."
 
 2. Darmen:
-"Top dat je eerlijk bent over de business 👍🏽. Andere vraag: vorig jaar zei je iets over darmen die je laten merken — speelt dat nog? Er is een 'Darmen in Balans'-pakket dat veel mensen hier echt heeft geholpen. Lust je daar wel info over?"
+"Top dat je eerlijk bent over de business 👍🏽. Andere vraag: vorig jaar zei je iets over darmen die je laten merken, speelt dat nog? Er is een 'Darmen in Balans'-pakket dat veel mensen hier echt heeft geholpen. Lust je daar wel info over?"
 
 3. Sport / herstel:
 "Geen probleem dat je nu niet de business-kant ziet 🥰. Je sportte toch nog steeds intensief? Er zijn een paar producten (Be Refueled, MSM Plus) die ik zelf gebruik en die echt verschil maken in herstel. Wil je een keer info?"
@@ -1212,8 +1212,8 @@ VEELGEMAAKTE FOUTEN:
 WAT JE VANDAAG DOET:
 1. Heb je iemand die deze week "nee" zei op business? Stuur een pivot-bericht (Coach helpt).
 2. Pas de pipeline-fase aan in ELEVA: Shopper.
-3. Maak een herinnering aan voor +21 dagen: "[naam] — hoe bevallen de producten?"
-4. Stop de business-vraag voor minstens 3 maanden — laat ze het ervaren.
+3. Maak een herinnering aan voor +21 dagen: "[naam], hoe bevallen de producten?"
+4. Stop de business-vraag voor minstens 3 maanden, laat ze het ervaren.
 
 EXTRA WAARDE: zeg nee tegen drammen, ja tegen warmte. Een Shopper die jou over een jaar terugbelt is zilver. Een Shopper die je nu hebt overlast en wegjaagt is verlies.`,
     waaromWerktDit: {
@@ -1242,7 +1242,7 @@ EXTRA WAARDE: zeg nee tegen drammen, ja tegen warmte. Een Shopper die jou over e
         verplicht: true,
         actieRoute: "/namenlijst",
         uitleg:
-          "5 mensen die eerder gehoord hebben — vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
+          "5 mensen die eerder gehoord hebben, vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
       },
       {
         id: "dag13-social-3",
@@ -1295,31 +1295,31 @@ EXTRA WAARDE: zeg nee tegen drammen, ja tegen warmte. Een Shopper die jou over e
         route: "/namenlijst",
       },
     ],
-    watJeLeert: `FORM is dé manier om in elk gesprek rapport te bouwen zonder dat het een verhoor wordt. Vier categorieën, één voor één gesteld als oprechte interesse — niet als checklist. Brookes-techniek, 60+ jaar bewezen.
+    watJeLeert: `FORM is dé manier om in elk gesprek rapport te bouwen zonder dat het een verhoor wordt. Vier categorieën, één voor één gesteld als oprechte interesse, niet als checklist. Brookes-techniek, 60+ jaar bewezen.
 
 FORM = FAMILY · OCCUPATION · RECREATION · MONEY
 
-F — FAMILY: "Wie hoort er bij jou? Hoe gaat het thuis?"
+F, FAMILY: "Wie hoort er bij jou? Hoe gaat het thuis?"
 Voorbeelden: "Hoe oud zijn de kinderen nu?", "Hoe gaat het met je partner?", "Heb je nog familie in Nederland?"
 WAT JE LUISTERT VOOR: drukke gezinsroutine, zorgen om kinderen, ouders die ouder worden, gezondheidszorgen in familie.
 
-O — OCCUPATION: "Wat doe je nu, en hoe bevalt het?"
+O, OCCUPATION: "Wat doe je nu, en hoe bevalt het?"
 Voorbeelden: "Hoe is het werk de laatste tijd?", "Wat zou je veranderen als je kon?", "Heb je nog plezier in wat je doet?"
 WAT JE LUISTERT VOOR: vermoeidheid, frustratie, verlangen naar iets anders, financiële druk, geen vrijheid.
 
-R — RECREATION: "Wat doe je graag, waar krijg je energie van?"
+R, RECREATION: "Wat doe je graag, waar krijg je energie van?"
 Voorbeelden: "Sport je nog?", "Wat doe je in het weekend?", "Wat doe je voor jezelf?"
 WAT JE LUISTERT VOOR: gezondheidsambitie, gemis van tijd voor zichzelf, verlangen om weer te beginnen met X.
 
-M — MONEY: "Hoe tevreden ben je met de financiële kant?"
+M, MONEY: "Hoe tevreden ben je met de financiële kant?"
 Voorbeelden: "Loopt het financieel zoals je wilt?", "Was er iets dat je extra zou willen kunnen?", "Werkt je salaris/inkomen mee?"
-NB: M is gevoelig — alleen na vertrouwen, never als eerste. Soms helemaal overslaan en vervangen door "hoe ziet je toekomst eruit?"
+NB: M is gevoelig, alleen na vertrouwen, never als eerste. Soms helemaal overslaan en vervangen door "hoe ziet je toekomst eruit?"
 WAT JE LUISTERT VOOR: schulden, geen extra ruimte, kan geen vakantie meer, "als ik meer had..."
 
-DE GOUDEN REGEL — JIJ PRAAT 30%, ZIJ 70%:
+DE GOUDEN REGEL, JIJ PRAAT 30%, ZIJ 70%:
 Mensen praten graag over zichzelf als ze voelen dat je écht luistert. Stel je vraag, wacht het antwoord af, vraag DOOR ("vertel eens meer..."), maak NOTIE. Pas als je echt rapport hebt en iemand een "haak" laat vallen, mag je een tussenstap richting uitnodiging maken.
 
-DE HAKEN — luister actief naar deze zinnen:
+DE HAKEN, luister actief naar deze zinnen:
 • "Ik zou willen dat..."
 • "Ik mis nog..."
 • "Als ik meer tijd/geld had..."
@@ -1328,7 +1328,7 @@ DE HAKEN — luister actief naar deze zinnen:
 • "Ja, weet je, ik ben er klaar mee."
 DAAR zit je opening. Niet eerder.
 
-KOUD NAAR WARM — het echte werk in dit vak:
+KOUD NAAR WARM, het echte werk in dit vak:
 Niet iedereen op je lijst is direct warm genoeg voor een uitnodiging. Koude contacten warm je eerst op:
 1. Reageer 2-3 keer waardevol op hun socials (oprechte reactie, geen "leuk!" maar iets persoonlijks).
 2. Stuur een DM met een FORM-vraag, GEEN pitch. "Wat ben je tegenwoordig allemaal aan het doen?"
@@ -1352,7 +1352,7 @@ VANDAAG: kies 1 specifieke prospect, plan een 5-min check-in (DM of telefoon) en
 
   {
     nummer: 14,
-    titel: "🏁 Halverwege! Week 2 review — welk patroon zie je?",
+    titel: "🏁 Halverwege! Week 2 review, welk patroon zie je?",
     fase: 2,
     vandaagDoen: [
       {
@@ -1377,7 +1377,7 @@ VANDAAG: kies 1 specifieke prospect, plan een 5-min check-in (DM of telefoon) en
         verplicht: true,
         actieRoute: "/namenlijst",
         uitleg:
-          "5 mensen die eerder gehoord hebben — vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
+          "5 mensen die eerder gehoord hebben, vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
       },
       {
         id: "dag14-pipeline-check",
@@ -1417,13 +1417,13 @@ VANDAAG: kies 1 specifieke prospect, plan een 5-min check-in (DM of telefoon) en
     ],
     watJeLeert: `Na 2 weken zie je PATRONEN. Niet alleen "deed ik m'n aantallen?", maar: welke berichten kregen reactie? welke mensen klikten af? waar liep ik vast? De pipeline-weergave is je röntgen-foto: hij toont waar prospects stoppen.
 
-DE BOTTLENECK-REGEL — kijk waar de meeste prospects "vastliggen":
+DE BOTTLENECK-REGEL, kijk waar de meeste prospects "vastliggen":
 
 Veel op UITGENODIGD (ze reageren niet of zeggen direct nee):
-→ Probleem zit in de UITNODIGING zelf. Vandaag 4-stappen herzien (dag 4). Mentor: "schrijf een uitnodiging variant voor [type prospect]" — leer 3 verschillende stijlen.
+→ Probleem zit in de UITNODIGING zelf. Vandaag 4-stappen herzien (dag 4). Mentor: "schrijf een uitnodiging variant voor [type prospect]", leer 3 verschillende stijlen.
 
 Veel op ONE-PAGER (bekeken, geen reactie meer):
-→ Probleem zit in de FOLLOW-UP. Te lang stil, of te direct doorvragen. Vandaag dag 6 reviseren — de 5-fasen follow-up.
+→ Probleem zit in de FOLLOW-UP. Te lang stil, of te direct doorvragen. Vandaag dag 6 reviseren, de 5-fasen follow-up.
 
 Veel op PRESENTATIE / 3-WEG (kijken wel maar nemen geen beslissing):
 → Probleem zit in het CLOSING-werk. Doel-Tijd-Termijn (dag 17) is wat dat oplost.
@@ -1431,10 +1431,10 @@ Veel op PRESENTATIE / 3-WEG (kijken wel maar nemen geen beslissing):
 Stok je nergens en is alles beweging maar geen "ja's"?
 → Volume is OK, conversie is werk. Vraag sponsor om mee te kijken naar 2-3 specifieke gesprekken.
 
-DE 3 GROOTSTE INZICHTEN UIT WEEK 1+2 — schrijf op:
+DE 3 GROOTSTE INZICHTEN UIT WEEK 1+2, schrijf op:
 1. Welk type prospect reageert het beste? (warm/lauw/koud, leeftijd, geslacht, situatie)
 2. Welke openingszin werkt het sterkst voor JOU?
-3. Welke fase van je pipeline is het dunst — daar gaat fase 3 over.
+3. Welke fase van je pipeline is het dunst, daar gaat fase 3 over.
 
 WAT GA JE VOLGENDE WEEK ZIEN (sneak peek voor dag 15-21):
 • Follow-up wordt je hoofdwerk (dag 15)
@@ -1452,7 +1452,7 @@ VAN HIER UIT IS HET KILOMETER-WERK. Geen nieuwe technieken meer, alleen oefenen 
   },
 
   // ============================================================
-  // FASE 3 — RITME (dag 15-21)
+  // FASE 3, RITME (dag 15-21)
   // ============================================================
   {
     nummer: 15,
@@ -1506,26 +1506,26 @@ VAN HIER UIT IS HET KILOMETER-WERK. Geen nieuwe technieken meer, alleen oefenen 
         route: "/scripts",
       },
     ],
-    watJeLeert: `Follow-up is geen aanhangsel van het werk, follow-up IS het werk. 80% van alle "ja's" komen pas op contactmoment 3 t/m 5 — niet op het eerste. Vanaf vandaag schuift je gewicht: minder nieuwe uitnodigingen, meer mensen warm houden die al uitgenodigd zijn.
+    watJeLeert: `Follow-up is geen aanhangsel van het werk, follow-up IS het werk. 80% van alle "ja's" komen pas op contactmoment 3 t/m 5, niet op het eerste. Vanaf vandaag schuift je gewicht: minder nieuwe uitnodigingen, meer mensen warm houden die al uitgenodigd zijn.
 
-DE STATISTIEK — waarom dit klopt:
+DE STATISTIEK, waarom dit klopt:
 • Op contact 1 ("ik heb de info bekeken") nemen weinig mensen al een beslissing.
 • Op contact 2-3 (paar dagen later, kort doorgevraagd) zegt ~30% iets concreets.
 • Op contact 4-5 (na 1-2 weken) komt de meerderheid van de definitieve "ja" of "nee".
 Wie alleen contact 1 heeft, verliest dus 70% van zijn echte beslissingen.
 
-DE GOLD QUESTION — werkt op vrijwel iedereen:
+DE GOLD QUESTION, werkt op vrijwel iedereen:
 "Hoe kijk je er nu naar, na een paar dagen?"
 • Open vraag (geen ja/nee)
 • Geen beoordeling ("vond je het goed?" → opent kritiek)
 • Geen druk ("heb je al beslist?" → forceer)
-• Zacht maar serieus — toont dat je nog meelevend bent zonder te jagen
+• Zacht maar serieus, toont dat je nog meelevend bent zonder te jagen
 
-10 FOLLOW-UPS IN 30 MIN — werkwijze vandaag:
+10 FOLLOW-UPS IN 30 MIN, werkwijze vandaag:
 1. Open je Herinneringen-lijst, sorteer op vervaldatum.
 2. Per persoon: kijk waar ze in de pipeline staan (Uitgenodigd / One-pager / Presentatie / Shopper / Not-yet).
 3. Stuur het juiste fase-bericht (zie dag 6 voor de 5-fasen flow).
-4. Niet langer dan 1-2 minuten per persoon — als je niet weet wat te schrijven, vraag de Coach.
+4. Niet langer dan 1-2 minuten per persoon, als je niet weet wat te schrijven, vraag de Coach.
 5. Update herinnering: nieuwe vervaldatum (3-7 dagen verder) of vink af.
 
 WAT NIET WERKT:
@@ -1538,12 +1538,12 @@ WAT NIET WERKT:
 WAT WEL WERKT:
 ✓ Verschillende exposures: testimonial sturen, een nieuwe video, een persoonlijk verhaal.
 ✓ Korte momenten: "even een berichtje, ik dacht aan je."
-✓ Vragen wat hem WEL aansprak — dan focus op dat.
+✓ Vragen wat hem WEL aansprak, dan focus op dat.
 ✓ Een tussenstap aanbieden: "wil je een keer met mijn mentor in een groepje praten?"
 ✓ Eerlijk zijn over je eigen positie: "ik weet niet of dit voor jou past, ben benieuwd waar jij staat."
 
 DE LANGSPEELPLATEN-REGEL HERHAALD:
-Een nee NU is geen nee voor altijd. Iemand op "Not-yet" zetten is geen verlies. Houd ze warm, blijf zichtbaar in hun leven via gewone content, en ze komen vaak 6-12 maanden later alsnog terug — meestal zelf, met een vraag.`,
+Een nee NU is geen nee voor altijd. Iemand op "Not-yet" zetten is geen verlies. Houd ze warm, blijf zichtbaar in hun leven via gewone content, en ze komen vaak 6-12 maanden later alsnog terug, meestal zelf, met een vraag.`,
     waaromWerktDit: {
       tekst:
         "De fortuin zit in de follow-up. Eerste contact plant het zaadje. Follow-up water geeft.",
@@ -1553,7 +1553,7 @@ Een nee NU is geen nee voor altijd. Iemand op "Not-yet" zetten is geen verlies. 
 
   {
     nummer: 16,
-    titel: "🎯 5 types prospects — energie waar 't telt",
+    titel: "🎯 5 types prospects, energie waar 't telt",
     fase: 3,
     vandaagDoen: [
       {
@@ -1570,7 +1570,7 @@ Een nee NU is geen nee voor altijd. Iemand op "Not-yet" zetten is geen verlies. 
         verplicht: true,
         actieRoute: "/namenlijst",
         uitleg:
-          "10 follow-ups vandaag — het is follow-up-week, hier zit de oogst. Loop je pipeline door (Namenlijst → Pipeline) en stuur per persoon een passend bericht. Mentor helpt: 'Schrijf een follow-up voor [naam] die [status]'.",
+          "10 follow-ups vandaag, het is follow-up-week, hier zit de oogst. Loop je pipeline door (Namenlijst → Pipeline) en stuur per persoon een passend bericht. Mentor helpt: 'Schrijf een follow-up voor [naam] die [status]'.",
       },
       {
         id: "dag16-social-3",
@@ -1606,51 +1606,51 @@ Een nee NU is geen nee voor altijd. Iemand op "Not-yet" zetten is geen verlies. 
           "Welk type prospect is [naam]? Wat ik weet: [hun reactie tot nu toe / interesse-signalen / bezwaren]. Welke van de 5 types past en hoe pak ik dat aan?",
       },
     ],
-    watJeLeert: `Niet elke prospect is gelijk. Wie iedereen op dezelfde manier benadert, raakt uitgeput op de mensen die nooit gaan ja zeggen, en mist de mensen die WEL klaar zijn — omdat hij dezelfde lauwe energie geeft. De 5 types helpen je je energie goed verdelen.
+    watJeLeert: `Niet elke prospect is gelijk. Wie iedereen op dezelfde manier benadert, raakt uitgeput op de mensen die nooit gaan ja zeggen, en mist de mensen die WEL klaar zijn, omdat hij dezelfde lauwe energie geeft. De 5 types helpen je je energie goed verdelen.
 
 DE 5 TYPES (Worre-classificatie):
 
-1) ACTIEF ZOEKEND — DIRECT PRESENTEREN
+1) ACTIEF ZOEKEND, DIRECT PRESENTEREN
 Wie: mensen die NU op zoek zijn naar iets nieuws (verloren werk, scheiding, kind geboren, business gestopt, gezondheidsschrik).
 Signalen: "Ik zoek al een tijdje naar iets...", "Ik wilde net beginnen met...", "Wat doe jij eigenlijk?"
 Aanpak: GEEN tijd verspillen aan rapport-bouwen. Direct presentatie of 3-weg, vandaag liefst. Hun moment is NU.
 Energie: HOOG.
 
-2) OPEN — INVESTEER TIJD
+2) OPEN, INVESTEER TIJD
 Wie: mensen die niet actief zoeken maar wél nieuwsgierig zijn als jij iets brengt.
 Signalen: vragen door, willen meer weten, blijven in contact zonder dat jij stuwt.
 Aanpak: rapport bouwen, FORM-vragen stellen, langzaam exposeren. 3-5 contactmomenten. Ze nemen een echte beslissing als ze klaar zijn.
 Energie: HOOG (groei).
 
-3) PRODUCTKOPER — SHOPPER-FLOW
+3) PRODUCTKOPER, SHOPPER-FLOW
 Wie: geen business-interesse, maar wel openstaan voor product-ervaring.
 Signalen: "De business is niets voor mij, maar dat product klinkt wel interessant."
 Aanpak: pivot naar product (zie dag 12). Zet ze op Shopper, herinnering +21 dagen. Soms worden ze 6-12 maanden later alsnog member.
 Energie: GEMIDDELD (lange termijn).
 
-4) NIET-NU — TIMING KLOPT NIET, WARM HOUDEN
+4) NIET-NU, TIMING KLOPT NIET, WARM HOUDEN
 Wie: interesse aanwezig, maar leven zit nu in iets anders (verhuizing, ziekte familie, vaste baan-wissel).
 Signalen: "Klinkt mooi, maar nu is niet het juiste moment voor mij."
 Aanpak: erkennen, GEEN drang, herinnering +3 maanden. Houd warm contact via gewone communicatie (niet pitchen).
 Energie: LAAG (onderhoud).
 
-5) NOOIT — ERKEN EN LAAT LOS
+5) NOOIT, ERKEN EN LAAT LOS
 Wie: principiële nee. Soms uit ervaring met netwerkmarketing, soms uit waardenkeuze.
 Signalen: stevige nee zonder twijfel, soms agressief, soms beleefd-maar-definitief.
 Aanpak: ERKEN warm ("ik snap dat 100%"), LAAT LOS, hou de relatie als vriend/familie. Stop met dit als business-prospect te zien. Energie nul, warmte 100%.
-Energie: NUL — voor business. WARMTE-RELATIE: 100%.
+Energie: NUL, voor business. WARMTE-RELATIE: 100%.
 
-DE GROOTSTE FOUT — TYPE 5 BEHANDELEN ALS TYPE 2:
+DE GROOTSTE FOUT, TYPE 5 BEHANDELEN ALS TYPE 2:
 Veel starters blijven hopen op die ene oude vriend die "echt ooit ja gaat zeggen". Hij is type 5. Die uren die je in hem stopt, gaan ten koste van je écht-actief-zoekende prospects. Erken het. Hou hem als persoon. Stop hem als prospect.
 
-ANDERE GROTE FOUT — TYPE 1 BEHANDELEN ALS TYPE 4:
-"Ach, hij heeft het druk, ik laat 'm even." Hij is ACTIEF ZOEKEND. Hij gaat starten — bij iemand. Als jij wacht, is dat iemand anders. Reageer SNEL op type 1.
+ANDERE GROTE FOUT, TYPE 1 BEHANDELEN ALS TYPE 4:
+"Ach, hij heeft het druk, ik laat 'm even." Hij is ACTIEF ZOEKEND. Hij gaat starten, bij iemand. Als jij wacht, is dat iemand anders. Reageer SNEL op type 1.
 
-VANDAAG — categoriseer je top-20:
+VANDAAG, categoriseer je top-20:
 1. Open je namenlijst, pak je top-20 actieve prospects.
 2. Per persoon: welk type? Voel het, pas evt. de pipeline-fase aan.
 3. Energie-budget volgende week: 70% naar type 1+2, 20% naar type 3, 10% naar type 4. Type 5 = warmte-onderhoud, geen tijd.
-4. Onthoud: types kunnen verschuiven. Type 4 kan over 3 maanden type 1 worden — daarom warm houden, niet afschrijven.`,
+4. Onthoud: types kunnen verschuiven. Type 4 kan over 3 maanden type 1 worden, daarom warm houden, niet afschrijven.`,
     waaromWerktDit: {
       tekst:
         "Je gaat nooit iemand overtuigen die niet wil. Je gaat mensen vinden die al op zoek zijn.",
@@ -1660,7 +1660,7 @@ VANDAAG — categoriseer je top-20:
 
   {
     nummer: 17,
-    titel: "🎯 Closing met Doel-Tijd-Termijn — helpen beslissen",
+    titel: "🎯 Closing met Doel-Tijd-Termijn, helpen beslissen",
     fase: 3,
     vandaagDoen: [
       {
@@ -1677,7 +1677,7 @@ VANDAAG — categoriseer je top-20:
         verplicht: true,
         actieRoute: "/namenlijst",
         uitleg:
-          "10 follow-ups vandaag — het is follow-up-week, hier zit de oogst. Loop je pipeline door (Namenlijst → Pipeline) en stuur per persoon een passend bericht. Mentor helpt: 'Schrijf een follow-up voor [naam] die [status]'.",
+          "10 follow-ups vandaag, het is follow-up-week, hier zit de oogst. Loop je pipeline door (Namenlijst → Pipeline) en stuur per persoon een passend bericht. Mentor helpt: 'Schrijf een follow-up voor [naam] die [status]'.",
       },
       {
         id: "dag17-social-3",
@@ -1711,7 +1711,7 @@ VANDAAG — categoriseer je top-20:
             "Bv. Mag ik je een paar korte vragen stellen om te kijken of dit voor jou realistisch is?",
           maxTekens: 280,
           voorbeeld:
-            "Mag ik je 5 korte vragen stellen om te kijken of dit voor jou realistisch is qua tijd en doelen? Geen druk — gewoon eerlijk samen kijken.",
+            "Mag ik je 5 korte vragen stellen om te kijken of dit voor jou realistisch is qua tijd en doelen? Geen druk, gewoon eerlijk samen kijken.",
         },
       },
     ],
@@ -1724,7 +1724,7 @@ VANDAAG — categoriseer je top-20:
         spraak: "Help me met closing voor [naam]",
         route: "/coach",
         prefillTemplate:
-          "Help me met closing voor [naam]. Wat ik weet: [hun doel / hun bezwaren / fase in pipeline]. Begeleid me door Doel-Tijd-Termijn — wat zeg ik woord voor woord?",
+          "Help me met closing voor [naam]. Wat ik weet: [hun doel / hun bezwaren / fase in pipeline]. Begeleid me door Doel-Tijd-Termijn, wat zeg ik woord voor woord?",
       },
       {
         actie: "Closing-scripts",
@@ -1737,44 +1737,44 @@ VANDAAG — categoriseer je top-20:
         route: "/mijn-zinnen",
       },
     ],
-    watJeLeert: `Closing is GEEN overtuigen. Closing is HELPEN BESLISSEN. Een prospect heeft vaak alle info al, maar zit vast in twijfel. Goede closing tilt 'm uit de twijfel zonder druk — door zijn eigen motivatie te laten uitspreken in plaats van die van jou.
+    watJeLeert: `Closing is GEEN overtuigen. Closing is HELPEN BESLISSEN. Een prospect heeft vaak alle info al, maar zit vast in twijfel. Goede closing tilt 'm uit de twijfel zonder druk, door zijn eigen motivatie te laten uitspreken in plaats van die van jou.
 
-DE METHODE — DOEL-TIJD-TERMIJN, 5 VRAGEN IN DEZE VOLGORDE:
+DE METHODE, DOEL-TIJD-TERMIJN, 5 VRAGEN IN DEZE VOLGORDE:
 
-VRAAG 1 — DOEL:
+VRAAG 1, DOEL:
 "Hoeveel euro per maand extra zou dit de moeite waard maken voor jou?"
-Hier komen ze met een bedrag — 500, 1000, 2500. Dat is HUN motivatie, niet de jouwe.
+Hier komen ze met een bedrag, 500, 1000, 2500. Dat is HUN motivatie, niet de jouwe.
 Niet: "Wat zou je willen verdienen?" → te abstract, krijg je vaak "weet ik niet".
 
-VRAAG 2 — TIJD:
+VRAAG 2, TIJD:
 "Hoeveel uur per week heb je daar realistisch voor?"
-Realistisch is hier het sleutelwoord. Niet "ideaal". Iemand met 3 kinderen en een baan kan niet 20u inzetten — dat moet hij/zij zelf benoemen.
+Realistisch is hier het sleutelwoord. Niet "ideaal". Iemand met 3 kinderen en een baan kan niet 20u inzetten, dat moet hij/zij zelf benoemen.
 
-VRAAG 3 — TERMIJN:
+VRAAG 3, TERMIJN:
 "Na hoeveel maanden moet dat bedrag er staan?"
 Dit creëert urgentie en realisme tegelijk. 3 maanden is meestal te kort, 24 maanden te lang. Reactie van prospect zelf vertelt je waar 'ie zit.
 
-VRAAG 4 — VERBINDING:
+VRAAG 4, VERBINDING:
 "Als ik je kan laten zien dat dat realistisch is binnen die uren en termijn, wil je dat dan serieus bekijken?"
 Met deze vraag commiteer je hem aan een vervolgstap, NIET aan een aankoop. "Serieus bekijken" is laagdrempelig.
 
-VRAAG 5 — START:
+VRAAG 5, START:
 "Als dat klopt en goed voelt, starten we dan gewoon?"
 "Gewoon" is hier cruciaal. Het maakt het beginnen kleiner dan het in zijn hoofd voelt.
 
-DE KRACHT — MOTIVATIE KOMT VAN HEN, NIET VAN JOU:
-Je bent geen drammer, je bent een SPIEGEL. Hun antwoorden op vraag 1-3 zijn een blauwdruk van wat ZIJ willen. Bij vraag 4-5 hoef je niet te overtuigen — je toont alleen een pad terug naar wat ze net zelf zeiden te willen.
+DE KRACHT, MOTIVATIE KOMT VAN HEN, NIET VAN JOU:
+Je bent geen drammer, je bent een SPIEGEL. Hun antwoorden op vraag 1-3 zijn een blauwdruk van wat ZIJ willen. Bij vraag 4-5 hoef je niet te overtuigen, je toont alleen een pad terug naar wat ze net zelf zeiden te willen.
 
-DRIE VOORBEELDEN — VERSCHILLENDE PROSPECTS:
+DRIE VOORBEELDEN, VERSCHILLENDE PROSPECTS:
 
 1. Drukke moeder die uitgeput werk heeft:
-"Mag ik je 5 korte vragen stellen? — Hoeveel extra per maand zou dit voor jou de moeite waard maken? — Hoeveel uur naast je werk en gezin heb je realistisch? — Na hoeveel maanden moet dit er financieel staan zodat het voelt dat het werkt? — Als ik je een plan kan laten zien dat past binnen jouw 5 uur per week en jouw 12-maanden-horizon, wil je daar serieus naar kijken? — Als dat klopt en goed voelt: starten we dan?"
+"Mag ik je 5 korte vragen stellen?, Hoeveel extra per maand zou dit voor jou de moeite waard maken?, Hoeveel uur naast je werk en gezin heb je realistisch?, Na hoeveel maanden moet dit er financieel staan zodat het voelt dat het werkt?, Als ik je een plan kan laten zien dat past binnen jouw 5 uur per week en jouw 12-maanden-horizon, wil je daar serieus naar kijken?, Als dat klopt en goed voelt: starten we dan?"
 
 2. Ondernemer die naar diversificatie zoekt:
-"Mag ik kort een paar vragen stellen om te kijken of dit past? — Wat zou een nieuw inkomstenpad jou per maand moeten opleveren om het de moeite waard te maken? — Hoeveel uur kun je daar realistisch insteken naast wat je nu doet? — In hoeveel maanden moet dat staan? — Als ik je iets concreets kan laten zien dat past binnen die uren en termijn, wil je dat doornemen? — En als dat klopt: starten we?"
+"Mag ik kort een paar vragen stellen om te kijken of dit past?, Wat zou een nieuw inkomstenpad jou per maand moeten opleveren om het de moeite waard te maken?, Hoeveel uur kun je daar realistisch insteken naast wat je nu doet?, In hoeveel maanden moet dat staan?, Als ik je iets concreets kan laten zien dat past binnen die uren en termijn, wil je dat doornemen?, En als dat klopt: starten we?"
 
 3. Lauwe prospect die nog niets heeft beslist:
-"Voor we verder gaan: mag ik 5 vragen stellen om dit goed in jouw situatie te plaatsen? Geen druk — gewoon kijken of het past. — Welk maandbedrag zou dit de moeite waard maken? — Hoeveel uur is realistisch? — Welke termijn? — Als wat ik laat zien past binnen die drie, wil je het serieus bekijken? — Als het goed voelt: starten?"
+"Voor we verder gaan: mag ik 5 vragen stellen om dit goed in jouw situatie te plaatsen? Geen druk, gewoon kijken of het past., Welk maandbedrag zou dit de moeite waard maken?, Hoeveel uur is realistisch?, Welke termijn?, Als wat ik laat zien past binnen die drie, wil je het serieus bekijken?, Als het goed voelt: starten?"
 
 VEELGEMAAKTE FOUTEN:
 ✗ Direct vraag 4-5 stellen zonder eerst 1-3 → er is geen motivatie van hen om naar terug te grijpen.
@@ -1810,7 +1810,7 @@ VANDAAG: probeer Doel-Tijd-Termijn vandaag of morgen bij minstens 1 warme prospe
         verplicht: true,
         actieRoute: "/namenlijst",
         uitleg:
-          "10 follow-ups vandaag — het is follow-up-week, hier zit de oogst. Loop je pipeline door (Namenlijst → Pipeline) en stuur per persoon een passend bericht. Mentor helpt: 'Schrijf een follow-up voor [naam] die [status]'.",
+          "10 follow-ups vandaag, het is follow-up-week, hier zit de oogst. Loop je pipeline door (Namenlijst → Pipeline) en stuur per persoon een passend bericht. Mentor helpt: 'Schrijf een follow-up voor [naam] die [status]'.",
       },
       {
         id: "dag18-social-3",
@@ -1824,19 +1824,19 @@ VANDAAG: probeer Doel-Tijd-Termijn vandaag of morgen bij minstens 1 warme prospe
         id: "dag18-edification-zin",
         label: "Schrijf jouw eigen edification-zin (5 min)",
         uitleg:
-          "Eén vaste zin van max 25 woorden waarmee je je sponsor introduceert in elk 3-weg of bij elke presentatie. Schrijf 'm hieronder direct in — bewaard onder /mijn-zinnen zodat je hem altijd snel kan oppakken.",
+          "Eén vaste zin van max 25 woorden waarmee je je sponsor introduceert in elk 3-weg of bij elke presentatie. Schrijf 'm hieronder direct in, bewaard onder /mijn-zinnen zodat je hem altijd snel kan oppakken.",
         verplicht: true,
         inlineActie: {
           type: "tekst",
           slug: "edification-zin",
           label: "Mijn edification-zin",
           instructie:
-            "Volg de formule: 1) wie introduceer je, 2) wat is hun track-record / autoriteit, 3) waarom heb JIJ ze gekozen. Max 25 woorden. Geen overdrijving — gewoon de waarheid, sterk gebracht.",
+            "Volg de formule: 1) wie introduceer je, 2) wat is hun track-record / autoriteit, 3) waarom heb JIJ ze gekozen. Max 25 woorden. Geen overdrijving, gewoon de waarheid, sterk gebracht.",
           placeholder:
             "Bv. Ik ga je voorstellen aan...",
           maxTekens: 280,
           voorbeeld:
-            "Ik ga je voorstellen aan Mark, die al 12 jaar mensen helpt om hun energie en ondernemerschap weer terug te vinden — degene die mij heeft laten zien hoe dit echt werkt.",
+            "Ik ga je voorstellen aan Mark, die al 12 jaar mensen helpt om hun energie en ondernemerschap weer terug te vinden, degene die mij heeft laten zien hoe dit echt werkt.",
         },
       },
       {
@@ -1859,7 +1859,7 @@ VANDAAG: probeer Doel-Tijd-Termijn vandaag of morgen bij minstens 1 warme prospe
         route: "/coach",
         // Prefill plakt de zin direct in het mentor-invoerveld. Als de
         // member 'm al heeft opgeslagen op /mijn-zinnen, wordt {edification-zin}
-        // vervangen door die exacte tekst — anders door "[hier je zin]".
+        // vervangen door die exacte tekst, anders door "[hier je zin]".
         prefillTemplate:
           "Check mijn edification-zin: {edification-zin}",
       },
@@ -1874,28 +1874,28 @@ VANDAAG: probeer Doel-Tijd-Termijn vandaag of morgen bij minstens 1 warme prospe
         route: "/mijn-zinnen",
       },
     ],
-    watJeLeert: `Edification is dé reden dat een 3-weg überhaupt werkt. Zonder edification is het gewoon nog een gesprek waar drie mensen praten — mét edification verandert het in een setting waar de prospect denkt: "wow, deze persoon die ik nu hoor, weet écht waar het over gaat".
+    watJeLeert: `Edification is dé reden dat een 3-weg überhaupt werkt. Zonder edification is het gewoon nog een gesprek waar drie mensen praten, mét edification verandert het in een setting waar de prospect denkt: "wow, deze persoon die ik nu hoor, weet écht waar het over gaat".
 
 Wat is het concreet? Edification is in 1-2 zinnen vóórdat je sponsor begint te praten:
 1) wie het is,
 2) wat zijn/haar track-record is (hoe lang, hoeveel mensen geholpen, welke achtergrond),
 3) waarom JIJ deze persoon hebt gekozen om je verder te helpen.
 
-Het is GEEN overdrijving. Het is GEEN reclame. Het is de waarheid vertellen — alleen wel scherp opgeschreven, niet gemompeld. De meeste netwerkers laten dit moment slap voorbijgaan ("dit is m'n upline, vertel jij even") en daar verlies je 80% van het effect.
+Het is GEEN overdrijving. Het is GEEN reclame. Het is de waarheid vertellen, alleen wel scherp opgeschreven, niet gemompeld. De meeste netwerkers laten dit moment slap voorbijgaan ("dit is m'n upline, vertel jij even") en daar verlies je 80% van het effect.
 
 De formule die altijd werkt:
 "Ik ga je voorstellen aan [naam], die [autoriteit / track-record], en degene die [persoonlijke link met jou]."
 
 Drie voorbeelden van hetzelfde, op verschillende sponsors:
-• Sportcoach-sponsor: "Ik ga je voorstellen aan Mark, die al 12 jaar mensen begeleidt naar meer energie en helderheid — degene die mij heeft laten zien dat dit niet over producten gaat maar over je leven terugpakken."
-• Mama-sponsor: "Ik ga je voorstellen aan Linda, moeder van 3, die al 8 jaar duizenden vrouwen helpt om hun lichaam en gezin weer in balans te brengen — degene die mij in 6 maanden van uitgeput naar uitgerust kreeg."
-• Ondernemer-sponsor: "Ik ga je voorstellen aan Jaap, die al 15 jaar in dit vak zit en vorig jaar 200 mensen direct heeft ondersteund — degene die mij heeft laten zien dat dit serieus business is, geen hobby."
+• Sportcoach-sponsor: "Ik ga je voorstellen aan Mark, die al 12 jaar mensen begeleidt naar meer energie en helderheid, degene die mij heeft laten zien dat dit niet over producten gaat maar over je leven terugpakken."
+• Mama-sponsor: "Ik ga je voorstellen aan Linda, moeder van 3, die al 8 jaar duizenden vrouwen helpt om hun lichaam en gezin weer in balans te brengen, degene die mij in 6 maanden van uitgeput naar uitgerust kreeg."
+• Ondernemer-sponsor: "Ik ga je voorstellen aan Jaap, die al 15 jaar in dit vak zit en vorig jaar 200 mensen direct heeft ondersteund, degene die mij heeft laten zien dat dit serieus business is, geen hobby."
 
 Veelgemaakte fouten:
-✗ Te kort: "dit is m'n upline" — je hebt zojuist 0 autoriteit gegeven.
-✗ Improviseren: elke keer iets anders zeggen — sponsor weet niet wanneer 'ie kan starten.
-✗ Hyped overdrijven: "de allerbeste van Nederland!" — prospect ruikt de pitch en sluit af.
-✗ Vergeten: gewoon stilletjes je sponsor laten beginnen — geen edification, geen 3-weg.
+✗ Te kort: "dit is m'n upline", je hebt zojuist 0 autoriteit gegeven.
+✗ Improviseren: elke keer iets anders zeggen, sponsor weet niet wanneer 'ie kan starten.
+✗ Hyped overdrijven: "de allerbeste van Nederland!", prospect ruikt de pitch en sluit af.
+✗ Vergeten: gewoon stilletjes je sponsor laten beginnen, geen edification, geen 3-weg.
 
 Wat je vandaag doet: 5 minuten investeren in JOUW vaste zin. Schrijf 'm op, bewaar 'm in /mijn-zinnen, en gebruik 'm letterlijk in de komende 30 3-wegs. Eén keer goed schrijven = honderd keer sterker presenteren.`,
     waaromWerktDit: {
@@ -1907,7 +1907,7 @@ Wat je vandaag doet: 5 minuten investeren in JOUW vaste zin. Schrijf 'm op, bewa
 
   {
     nummer: 19,
-    titel: "🔍 Pipeline-check — waar lekt je trechter?",
+    titel: "🔍 Pipeline-check, waar lekt je trechter?",
     fase: 3,
     vandaagDoen: [
       {
@@ -1924,7 +1924,7 @@ Wat je vandaag doet: 5 minuten investeren in JOUW vaste zin. Schrijf 'm op, bewa
         verplicht: true,
         actieRoute: "/namenlijst",
         uitleg:
-          "10 follow-ups vandaag — het is follow-up-week, hier zit de oogst. Loop je pipeline door (Namenlijst → Pipeline) en stuur per persoon een passend bericht. Mentor helpt: 'Schrijf een follow-up voor [naam] die [status]'.",
+          "10 follow-ups vandaag, het is follow-up-week, hier zit de oogst. Loop je pipeline door (Namenlijst → Pipeline) en stuur per persoon een passend bericht. Mentor helpt: 'Schrijf een follow-up voor [naam] die [status]'.",
       },
       {
         id: "dag19-social-3",
@@ -1964,7 +1964,7 @@ Wat je vandaag doet: 5 minuten investeren in JOUW vaste zin. Schrijf 'm op, bewa
           "Help me mijn pipeline analyseren. Aantallen: Uitgenodigd: [X] / One-pager: [Y] / Presentatie: [Z] / Beslist: [W]. Waar lekt mijn funnel en wat moet ik komende 40 dagen oefenen?",
       },
     ],
-    watJeLeert: `Een goede pipeline lijkt op een trechter: bovenaan veel mensen, naar onderen toe steeds minder. Daar is niets mis mee — dat is het natuurlijke patroon. Wat WEL zegt waar je werk zit: WAAR is de grootste drop-off?
+    watJeLeert: `Een goede pipeline lijkt op een trechter: bovenaan veel mensen, naar onderen toe steeds minder. Daar is niets mis mee, dat is het natuurlijke patroon. Wat WEL zegt waar je werk zit: WAAR is de grootste drop-off?
 
 VERWACHTE GEZONDE TRECHTER (na 21 dagen):
 • 100 uitnodigingen → 50-70 reacties (50-70%)
@@ -1975,27 +1975,27 @@ VERWACHTE GEZONDE TRECHTER (na 21 dagen):
 
 Zit jij ergens veel onder die conversie? Daar is je werk.
 
-DE 4 BOTTLENECKS — herken je patroon:
+DE 4 BOTTLENECKS, herken je patroon:
 
-BOTTLENECK 1 — VEEL "UITGENODIGD", WEINIG REACTIE
+BOTTLENECK 1, VEEL "UITGENODIGD", WEINIG REACTIE
 Symptoom: 60+% reageert niet op je uitnodiging.
 Oorzaak: uitnodiging is niet warm/persoonlijk genoeg, of voelt als pitch.
 Oefening: dag 4 herzien. 4-stappen-formule. Mentor: "schrijf 3 varianten van mijn standaard-uitnodiging."
 40-dagen-fix: 1 week alleen op uitnodigingen oefenen, mix variant 1/2/3.
 
-BOTTLENECK 2 — VEEL "ONE-PAGER", WEINIG PRESENTATIE
+BOTTLENECK 2, VEEL "ONE-PAGER", WEINIG PRESENTATIE
 Symptoom: prospects bekijken de info maar haken daarna af.
 Oorzaak: follow-up is te direct of mist focus op WAT ze raakte.
 Oefening: dag 6 + dag 15 herzien. 5-fasen follow-up + Gold Question.
 40-dagen-fix: tussenstap "wil je eens met mijn mentor in een groepje?" inzetten.
 
-BOTTLENECK 3 — VEEL "PRESENTATIE", WEINIG BESLISSING
+BOTTLENECK 3, VEEL "PRESENTATIE", WEINIG BESLISSING
 Symptoom: ze kijken de hele presentatie/3-weg, maar nemen geen beslissing.
 Oorzaak: closing is niet gevraagd, je blijft hangen in "exposure".
 Oefening: dag 17 (Doel-Tijd-Termijn) + dag 20 (vraag de beslissing).
 40-dagen-fix: bij elke 3-weg standaard binnen 24-48u Doel-Tijd-Termijn proberen.
 
-BOTTLENECK 4 — TE WEINIG VOLUME ALTIJD
+BOTTLENECK 4, TE WEINIG VOLUME ALTIJD
 Symptoom: trechter is in proportie OK, maar absolute aantallen te laag.
 Oorzaak: je doet niet je dagelijkse aantallen.
 Oefening: stap 1 = volume opvoeren. Geen techniek-fix.
@@ -2007,7 +2007,7 @@ WAT JE VANDAAG DOET:
 3. Vraag de Coach om analyse + concrete oefening voor de komende 40 dagen.
 4. Schrijf op: 1 specifieke oefening voor 40-dagen-blok.
 
-EERLIJKHEID — DIT IS HET LEER-MOMENT VAN DE 21 DAGEN:
+EERLIJKHEID, DIT IS HET LEER-MOMENT VAN DE 21 DAGEN:
 Statistieken zijn je leermeester, niet je rechter. Slechte cijfers betekenen niet "ik ben slecht". Ze betekenen "hier zit nog werk." Iemand die zijn cijfers eerlijk leest, fixt zijn bottleneck binnen 2-3 weken. Iemand die ze ontwijkt, blijft 6 maanden in dezelfde drop-off zitten. Eerlijke pipeline = snelle groei.`,
     waaromWerktDit: {
       tekst:
@@ -2018,7 +2018,7 @@ Statistieken zijn je leermeester, niet je rechter. Slechte cijfers betekenen nie
 
   {
     nummer: 20,
-    titel: "💪 Vraag de beslissing — de moedigste vraag van je vak",
+    titel: "💪 Vraag de beslissing, de moedigste vraag van je vak",
     fase: 3,
     vandaagDoen: [
       {
@@ -2035,7 +2035,7 @@ Statistieken zijn je leermeester, niet je rechter. Slechte cijfers betekenen nie
         verplicht: true,
         actieRoute: "/namenlijst",
         uitleg:
-          "10 follow-ups vandaag — het is follow-up-week, hier zit de oogst. Loop je pipeline door (Namenlijst → Pipeline) en stuur per persoon een passend bericht. Mentor helpt: 'Schrijf een follow-up voor [naam] die [status]'.",
+          "10 follow-ups vandaag, het is follow-up-week, hier zit de oogst. Loop je pipeline door (Namenlijst → Pipeline) en stuur per persoon een passend bericht. Mentor helpt: 'Schrijf een follow-up voor [naam] die [status]'.",
       },
       {
         id: "dag20-social-3",
@@ -2076,24 +2076,24 @@ Statistieken zijn je leermeester, niet je rechter. Slechte cijfers betekenen nie
         route: "/namenlijst",
       },
     ],
-    watJeLeert: `De grootste fout van starters is NIET vragen naar de beslissing. Ze blijven volgen, blijven delen, blijven hopen — soms maandenlang. Het resultaat: prospect raakt overspoeld of vergeet, jij raakt uitgeput, en niemand wordt iets wijzer. Na 3-5 exposures is het tijd om DUIDELIJKHEID te krijgen.
+    watJeLeert: `De grootste fout van starters is NIET vragen naar de beslissing. Ze blijven volgen, blijven delen, blijven hopen, soms maandenlang. Het resultaat: prospect raakt overspoeld of vergeet, jij raakt uitgeput, en niemand wordt iets wijzer. Na 3-5 exposures is het tijd om DUIDELIJKHEID te krijgen.
 
 WAAROM "VRAGEN" GEEN DRAMMEN IS:
 Drammen = blijven pushen ondanks duidelijk nee.
 Vragen om beslissing = de prospect helpen de twijfel om te zetten in iets concreets.
-Een prospect die nog hangt heeft last van twijfel — niet van enthousiasme. Door te vragen geef je 'm een uitweg uit zijn twijfel: ja, nee, of "ik heb nog X nodig". Alle drie zijn winst — alleen blijven hangen niet.
+Een prospect die nog hangt heeft last van twijfel, niet van enthousiasme. Door te vragen geef je 'm een uitweg uit zijn twijfel: ja, nee, of "ik heb nog X nodig". Alle drie zijn winst, alleen blijven hangen niet.
 
 DE 3 GOEDE VRAAG-VARIANTEN:
 
-1. ZACHTE VARIANT — VEEL TWIJFEL ZICHTBAAR:
+1. ZACHTE VARIANT, VEEL TWIJFEL ZICHTBAAR:
 "Wat heb je nog nodig om een goede beslissing te kunnen nemen?"
-Open vraag, geen druk. Prospect noemt zelf wat onduidelijk is. Jij vult specifiek in. Als hij niks noemt: "Dan is er niets meer nodig — wil je er nu een knoop over doorhakken?"
+Open vraag, geen druk. Prospect noemt zelf wat onduidelijk is. Jij vult specifiek in. Als hij niks noemt: "Dan is er niets meer nodig, wil je er nu een knoop over doorhakken?"
 
-2. DIRECTE VARIANT — JE VOELT DAT HIJ ER KLAAR VOOR IS:
+2. DIRECTE VARIANT, JE VOELT DAT HIJ ER KLAAR VOOR IS:
 "De echte vraag is niet of je iets wilt veranderen, maar of dit het juiste voertuig is. Klopt dat?"
 Reframt de keuze van "doe ik dit?" naar "is dit MIJN pad?". Prospect voelt het verschil.
 
-3. PRAGMATISCHE VARIANT — IEMAND DIE GEWOON BESLUITELIG WIL ZIJN:
+3. PRAGMATISCHE VARIANT, IEMAND DIE GEWOON BESLUITELIG WIL ZIJN:
 "Op basis van wat je hebt gezien: zie je jezelf als klant, als opbouwer, of nog niet?"
 Drie opties, eerlijk gepresenteerd. Prospect kan niet meer ontwijken. Klant = Shopper. Opbouwer = Member. "Nog niet" = Not-yet, herinnering +3 maanden.
 
@@ -2113,9 +2113,9 @@ VEELGEMAAKTE FOUTEN:
 ✗ "Wat denk je?" als closing-vraag → te open, prospect ontwijkt.
 ✗ Direct na nee de business heropenen → break van vertrouwen.
 ✗ Bij ja vergeten dat de begeleiding NU start → nieuwe member voelt zich alleen, haakt af.
-✗ Nooit beslissing vragen — eindeloos volgen → 6 maanden vertraging zonder progressie.
+✗ Nooit beslissing vragen, eindeloos volgen → 6 maanden vertraging zonder progressie.
 
-VANDAAG: kies 1 prospect die meer dan 3 exposures heeft gehad zonder beslissing. Vraag VANDAAG of MORGEN voor de beslissing met variant 1 of 3. Whatever de uitkomst — werk de pipeline in ELEVA bij. Beslissing krijgen is winst, ongeacht de richting.`,
+VANDAAG: kies 1 prospect die meer dan 3 exposures heeft gehad zonder beslissing. Vraag VANDAAG of MORGEN voor de beslissing met variant 1 of 3. Whatever de uitkomst, werk de pipeline in ELEVA bij. Beslissing krijgen is winst, ongeacht de richting.`,
     waaromWerktDit: {
       tekst:
         "De enige manier om 'nee' te krijgen is door te vragen. De enige manier om 'ja' te krijgen is door te vragen. Vraag.",
@@ -2125,7 +2125,7 @@ VANDAAG: kies 1 prospect die meer dan 3 exposures heeft gehad zonder beslissing.
 
   {
     nummer: 21,
-    titel: "🏆 21 dagen klaar! Dit is je startlijn — niet de eindstreep",
+    titel: "🏆 21 dagen klaar! Dit is je startlijn, niet de eindstreep",
     fase: 3,
     vandaagDoen: [
       {
@@ -2178,9 +2178,9 @@ VANDAAG: kies 1 prospect die meer dan 3 exposures heeft gehad zonder beslissing.
           "Help me 1 concreet doel formuleren voor de volgende 40 dagen. Wat ik in 21 dagen behaalde: [aantal members / shoppers / not-yets]. Mijn bottleneck: [waar zat de drop-off]. Wat is mijn slimste 40-dagen-doel?",
       },
     ],
-    watJeLeert: `Dag 21 is GEEN eindstreep. Het is je STARTLIJN. Je hebt 21 dagen geïnvesteerd in iets nieuws — een vakgebied geleerd, een systeem opgezet, gewoonten ingebouwd, eerste resultaten geboekt. Dat is een fundament. Het echte gebouw zet je in de komende 40 dagen.
+    watJeLeert: `Dag 21 is GEEN eindstreep. Het is je STARTLIJN. Je hebt 21 dagen geïnvesteerd in iets nieuws, een vakgebied geleerd, een systeem opgezet, gewoonten ingebouwd, eerste resultaten geboekt. Dat is een fundament. Het echte gebouw zet je in de komende 40 dagen.
 
-WAT JE IN 21 DAGEN HEBT GEDAAN — ERKEN HET:
+WAT JE IN 21 DAGEN HEBT GEDAAN, ERKEN HET:
 • Een namenlijst van 100+ mensen aangelegd (was 0)
 • Tussen de 100 en 200 uitnodigingen verstuurd
 • Bezwaren leren behandelen met Feel-Felt-Found
@@ -2189,28 +2189,28 @@ WAT JE IN 21 DAGEN HEBT GEDAAN — ERKEN HET:
 • 1-3 beslissingen binnen (member, shopper of not-yet)
 Dat is fors meer dan 90% van wie ooit in dit vak begint, in zo'n korte tijd.
 
-WAT NU KOMT — WEEKRITME (DAG 22-60):
-Vanaf morgen zet je het systeem in ONDERHOUDS-MODUS. Geen nieuwe technieken meer leren — alleen doen wat je hebt geleerd, dag in dag uit. Vast weekritme:
-• MAANDAG — plannen, herinneringen voor de week opnemen, mindset
-• DINSDAG — uitnodigen-dag, 10+ invites
-• WOENSDAG — 3-weg-dag, minimaal 1 koppelen aan sponsor
-• DONDERDAG — follow-up-dag, alle openstaande prospects warm houden
-• VRIJDAG — socials-dag, 3 namen erbij, content posten
-• ZATERDAG — events / face-to-face / ondernemers-bijeenkomsten / zelf events
-• ZONDAG — review + zelfreflectie + sponsor-call
+WAT NU KOMT, WEEKRITME (DAG 22-60):
+Vanaf morgen zet je het systeem in ONDERHOUDS-MODUS. Geen nieuwe technieken meer leren, alleen doen wat je hebt geleerd, dag in dag uit. Vast weekritme:
+• MAANDAG, plannen, herinneringen voor de week opnemen, mindset
+• DINSDAG, uitnodigen-dag, 10+ invites
+• WOENSDAG, 3-weg-dag, minimaal 1 koppelen aan sponsor
+• DONDERDAG, follow-up-dag, alle openstaande prospects warm houden
+• VRIJDAG, socials-dag, 3 namen erbij, content posten
+• ZATERDAG, events / face-to-face / ondernemers-bijeenkomsten / zelf events
+• ZONDAG, review + zelfreflectie + sponsor-call
 
-Je hoeft niets nieuws meer te leren. Je hoeft het alleen te BLIJVEN DOEN. Dat is waar 80% afhaakt. De 20% die wel doorgaat — daar zit de werkelijke groei.
+Je hoeft niets nieuws meer te leren. Je hoeft het alleen te BLIJVEN DOEN. Dat is waar 80% afhaakt. De 20% die wel doorgaat, daar zit de werkelijke groei.
 
 WAT JE VANDAAG REFLECTEERT (3 vragen):
 1. Wat leerde je over JEZELF in deze 21 dagen? (Niet over het vak, over jou. Wanneer was je sterk? Wanneer was je weak?)
 2. Welk patroon zie je in je werk dat je 40 dagen lang wilt versterken?
 3. Welk patroon herken je in je werk dat je 40 dagen lang wilt afleren?
 
-DOEL VOOR DE VOLGENDE 40 DAGEN — STEL HET ZO:
+DOEL VOOR DE VOLGENDE 40 DAGEN, STEL HET ZO:
 • NIET: "ik wil veel members." (te vaag)
 • WEL: "ik wil aan eind van dag 60: 5 members + 3 shoppers + minimaal 30 not-yets in m'n pipeline."
 • Of: "ik wil consistent 10-10-3 ritme draaien, zonder uitval."
-• Of: "ik wil mijn closing-vaardigheid verdubbelen — 1 op 5 i.p.v. 1 op 10 presentaties."
+• Of: "ik wil mijn closing-vaardigheid verdubbelen, 1 op 5 i.p.v. 1 op 10 presentaties."
 Eén concreet doel. Schrijf het op. Bewaar het. Dag 60 controleer je.
 
 VEELGEMAAKTE FOUTEN VANAF NU:
@@ -2224,7 +2224,7 @@ VANDAAG: vul de week-3-review in. Schrijf de drie reflectie-vragen uit, eerlijk.
     waaromWerktDit: {
       tekst:
         "Je bouwt geen business in 21 dagen. Je bouwt een fundament. Daar bovenop zetten we in 40 dagen de muren.",
-      bron: "Project Meer Tijd en Vrijheid — kernfilosofie",
+      bron: "Project Meer Tijd en Vrijheid, kernfilosofie",
     },
   },
 ];

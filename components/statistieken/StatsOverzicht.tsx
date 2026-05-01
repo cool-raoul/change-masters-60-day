@@ -430,7 +430,7 @@ export function StatsOverzicht({ alleStats, pipelineCounts, dag }: Props) {
           {v("stats.prognose")}
         </h2>
         <p className="text-cm-white text-xs mb-4 opacity-60">
-          {v("stats.huidig_tempo")} — {v("stats.verwacht_einde")}:
+          {v("stats.huidig_tempo")}, {v("stats.verwacht_einde")}:
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <PrognoseKaart label={v("stats.totaal_contacten")} huidig={kpis.totaalContacten} verwacht={kpis.prognoseContacten} />

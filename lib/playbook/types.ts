@@ -1,5 +1,5 @@
 // ============================================================
-// PLAYBOOK — types voor dag-tiles, fasen en weekritme
+// PLAYBOOK, types voor dag-tiles, fasen en weekritme
 // De 60-dagenrun heeft:
 //  • 3 fasen (fundament / momentum / ritme)
 //  • Dag 1-21: individueel uitgewerkt (actie + teaching + waar-in-ELEVA)
@@ -18,7 +18,7 @@ export type ControllableTaak = {
   id: string;
   /** Korte actie-tekst (max ~80 tekens). */
   label: string;
-  /** Langere uitleg — alleen zichtbaar in accordion-uitklap. */
+  /** Langere uitleg, alleen zichtbaar in accordion-uitklap. */
   uitleg?: string;
   /** Als true: telt mee voor "dag voltooid"-status. Optionele taken niet. */
   verplicht: boolean;
@@ -30,7 +30,7 @@ export type ControllableTaak = {
   actieRoute?: string;
   /**
    * Optioneel: slug naar de films-CMS. Als gezet, rendert de tile-UI
-   * een uitklapbare film-embed onder de taak — zodat admin-stappen
+   * een uitklapbare film-embed onder de taak, zodat admin-stappen
    * (webshop, kredietformulier, teams-admin, bestellinks) een
    * uitleg-video kunnen tonen die de founder via /instellingen/films
    * heeft toegevoegd.
@@ -43,7 +43,7 @@ export type ControllableTaak = {
    */
   vereistMobiel?: boolean;
   /**
-   * INLINE EMBED — laat de vandaag-flow een specifieke mini-feature
+   * INLINE EMBED, laat de vandaag-flow een specifieke mini-feature
    * direct in de stap inbouwen, in plaats van weg te navigeren naar
    * een andere route. Houdt de member in de flow.
    *
@@ -62,7 +62,7 @@ export type ControllableTaak = {
    */
   inlineEmbedDoel?: number;
   /**
-   * Optie B — INLINE ACTIE: schrijf/voer iets direct in de tile in
+   * Optie B, INLINE ACTIE: schrijf/voer iets direct in de tile in
    * (geen routenavigatie nodig). De waarde wordt opgeslagen onder een
    * stabiele slug in de `eigen_zinnen`-tabel zodat de member 'm later
    * altijd kan terugvinden via /mijn-zinnen of opnieuw deze dag bezoekt.
@@ -73,9 +73,9 @@ export type ControllableTaak = {
     /** Type input-veld. Voor nu: tekst. Later: 'lijst' voor namenlijsten etc. */
     type: "tekst";
     /**
-     * Stabiele slug waaronder de waarde wordt opgeslagen — wordt ook gebruikt
+     * Stabiele slug waaronder de waarde wordt opgeslagen, wordt ook gebruikt
      * als sleutel in /mijn-zinnen. Bijv. "edification-zin", "30-sec-pitch".
-     * NIET hernoemen — de waardes zijn eraan gekoppeld.
+     * NIET hernoemen, de waardes zijn eraan gekoppeld.
      */
     slug: string;
     /** Korte titel zoals getoond op /mijn-zinnen. Bijv. "Mijn edification-zin". */
@@ -87,7 +87,7 @@ export type ControllableTaak = {
     /** Limiet voor lengte (default 500). Boven max kan niet bewaard worden. */
     maxTekens?: number;
     /**
-     * Optioneel voorbeeld — wordt onder het veld getoond als hint.
+     * Optioneel voorbeeld, wordt onder het veld getoond als hint.
      * Houd dit kort (1-2 zinnen) zodat het niet als kant-en-klare
      * copy-paste fungeert.
      */
@@ -111,7 +111,7 @@ export type ElevaPad = {
    * Optioneel: tekst die alvast in het invoerveld op de bestemming-pagina
    * (bv. ELEVA Mentor) wordt geplakt zodra de member op "Ga →" klikt.
    *
-   * Mag een `{slug}`-placeholder bevatten — die wordt vervangen door de
+   * Mag een `{slug}`-placeholder bevatten, die wordt vervangen door de
    * waarde uit `eigen_zinnen` voor diezelfde slug. Voorbeeld:
    *   "Check mijn edification-zin: {edification-zin}"
    *
@@ -162,7 +162,7 @@ export type Fase = {
   titel: string;
   /** [startdag, einddag] inclusief. */
   dagen: [number, number];
-  /** Korte fase-omschrijving — staat bovenaan fase-overzicht. */
+  /** Korte fase-omschrijving, staat bovenaan fase-overzicht. */
   samenvatting: string;
   /** Controllable-lat voor deze fase. Wat moet je ritme zijn? */
   controllableLat: string[];

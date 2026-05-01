@@ -4,12 +4,12 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 // ============================================================
-// AutoNaarVandaag — bij eerste bezoek per dag stuur de member naar
+// AutoNaarVandaag, bij eerste bezoek per dag stuur de member naar
 // /vandaag (de guided full-screen flow). Daarna niet meer redirecten;
 // het dashboard wordt dan de hoofdpagina.
 //
 // Detectie via localStorage met key per (dag, datum). Eenmaal afgerond
-// of gesloten → niet meer auto-redirect — TENZIJ de gebruiker een
+// of gesloten → niet meer auto-redirect, TENZIJ de gebruiker een
 // tester of founder is, want die willen door alle 21 dagen kunnen
 // klikken zonder dat de flag dwarsligt.
 // ============================================================
@@ -19,7 +19,7 @@ type Props = {
   /** Skip-redirect als false (bv. dag > 21 of bewust uitgezet) */
   redirectActief: boolean;
   /**
-   * Testers en founders krijgen ALTIJD de redirect — ook als ze
+   * Testers en founders krijgen ALTIJD de redirect, ook als ze
    * dag X eerder al hadden gezien. Anders kunnen ze tijdens een
    * test-ronde niet teruggaan om dezelfde dag opnieuw te bekijken.
    */
@@ -45,7 +45,7 @@ export function AutoNaarVandaag({
         window.localStorage.removeItem(k);
       }
       if (window.localStorage.getItem(k) === "gesloten") return;
-      // Markeer ALVAST als gesloten — anders blijven we redirecten als
+      // Markeer ALVAST als gesloten, anders blijven we redirecten als
       // de user terugkomt op het dashboard via de browser-knop.
       window.localStorage.setItem(k, "gesloten");
       router.replace("/vandaag");

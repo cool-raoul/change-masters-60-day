@@ -1,14 +1,14 @@
 import Link from "next/link";
 
 // ============================================================
-// /over-eleva — features-overzicht in jip-en-janneketaal.
+// /over-eleva, features-overzicht in jip-en-janneketaal.
 //
 // Voor pilot-testers en nieuwe members: wat zit er in ELEVA en wat
 // heb je eraan? Zelfde inhoud als docs/ELEVA-features-uitleg.md, hier
 // als nette in-app pagina zodat je 'm kan delen via een ELEVA-link.
 // ============================================================
 
-// AppShell (parent layout) doet per-request user-auth — we mogen deze
+// AppShell (parent layout) doet per-request user-auth, we mogen deze
 // pagina dus NIET force-static maken, dat loopt in conflict met de
 // session-cookie en geeft een login-loop.
 export const dynamic = "force-dynamic";
@@ -30,7 +30,7 @@ const FEATURES: Feature[] = [
       "Een dagelijkse tegel op je dashboard die je 21 dagen lang door het hele vak meeneemt. Per dag een korte teaching, afvinklijst en links naar de juiste plek.",
     watHebJeEraan:
       "Je hoeft niet te bedenken wat je moet doen. Open ELEVA, zie wat dag het is, en je hebt direct je dag-acties in beeld.",
-    waar: "Dashboard — gouden tegel 'Vandaag is dag X'",
+    waar: "Dashboard, gouden tegel 'Vandaag is dag X'",
   },
   {
     emoji: "🎬",
@@ -45,9 +45,9 @@ const FEATURES: Feature[] = [
     emoji: "✍️",
     titel: "Founder-bewerkbaar (jij bent de redacteur)",
     watIsHet:
-      "Op vrijwel elke tekst in ELEVA staat voor founders een ✍️-knop. Klik, pas aan, bewaar — direct live voor alle members. Werkt op de 21 playbook-dagen, alle scripts en de onboarding-titels.",
+      "Op vrijwel elke tekst in ELEVA staat voor founders een ✍️-knop. Klik, pas aan, bewaar, direct live voor alle members. Werkt op de 21 playbook-dagen, alle scripts en de onboarding-titels.",
     watHebJeEraan:
-      "Tijdens de pilot komt feedback over woorden, toon, voorbeelden. Jij past het direct zelf aan — geen developer-loop nodig.",
+      "Tijdens de pilot komt feedback over woorden, toon, voorbeelden. Jij past het direct zelf aan, geen developer-loop nodig.",
     waar: "Op de pagina zelf, naast de tekst die je wilt aanpassen",
   },
   {
@@ -65,7 +65,7 @@ const FEATURES: Feature[] = [
     watIsHet:
       "Eén plek waar al je eigen geschreven teksten bij elkaar staan: edification-zin, closing-zin, why-stuk. Je schrijft ze in het playbook (op dag 18 bv.) en vindt ze hier altijd terug.",
     watHebJeEraan:
-      "Je hoeft niets te onthouden. Je edification-zin schrijf je één keer goed op dag 18 — daarna gebruik je 'm bij elke 3-weg.",
+      "Je hoeft niets te onthouden. Je edification-zin schrijf je één keer goed op dag 18, daarna gebruik je 'm bij elke 3-weg.",
     waar: "Menu → Mijn zinnen",
   },
   {
@@ -111,7 +111,7 @@ const FEATURES: Feature[] = [
       "Een bericht NU schrijven en kiezen wanneer je het wil versturen: morgen 9u, over 2 dagen, over een week. Je krijgt op die dag een herinnering met de tekst klaar om te kopiëren.",
     watHebJeEraan:
       "Geen losse to-do's bijhouden. Je hebt een follow-up-bericht klaar in je hoofd → klik 'verzend later' → klaar.",
-    waar: "Bij elke deel-knop — '⏱️ Verzend later'",
+    waar: "Bij elke deel-knop, '⏱️ Verzend later'",
     nieuw: true,
   },
   {
@@ -146,9 +146,9 @@ const FEATURES: Feature[] = [
     emoji: "🔔",
     titel: "Sponsor-pushes bij activiteit",
     watIsHet:
-      "Zodra een teamlid een playbook-stap voltooit, krijg jij als sponsor een push: '[Naam] — dag 5 stap voltooid'.",
+      "Zodra een teamlid een playbook-stap voltooit, krijg jij als sponsor een push: '[Naam], dag 5 stap voltooid'.",
     watHebJeEraan:
-      "Realtime zicht op je teamleden. Gebruik die info om gericht te steunen — geen lange Zoom-checks.",
+      "Realtime zicht op je teamleden. Gebruik die info om gericht te steunen, geen lange Zoom-checks.",
     waar: "Automatisch op je telefoon",
   },
   {
@@ -165,16 +165,16 @@ const FEATURES: Feature[] = [
     emoji: "⚡",
     titel: "Voltooi-tracking + reminders",
     watIsHet:
-      "Het systeem onthoudt wat je hebt afgevinkt. Belangrijke admin-stappen blijven zichtbaar als reminder bovenaan tot je ze hebt gedaan — ook al is die dag voorbij.",
+      "Het systeem onthoudt wat je hebt afgevinkt. Belangrijke admin-stappen blijven zichtbaar als reminder bovenaan tot je ze hebt gedaan, ook al is die dag voorbij.",
     watHebJeEraan:
-      "Niets glipt onder het tafelkleed. Een dag overslaan? Geen ramp — wat belangrijk is, blijft zichtbaar.",
+      "Niets glipt onder het tafelkleed. Een dag overslaan? Geen ramp, wat belangrijk is, blijft zichtbaar.",
     waar: "Dashboard, tegel '⚠️ Open setup-stappen'",
   },
   {
     emoji: "📅",
     titel: "Wekelijkse review",
     watIsHet:
-      "Op dag 7, 14 en 21 een korte 5-min reflectie: wat ging goed, wat schuurde, waar focus ik volgende week. Sponsor leest mee — om te ondersteunen, niet beoordelen.",
+      "Op dag 7, 14 en 21 een korte 5-min reflectie: wat ging goed, wat schuurde, waar focus ik volgende week. Sponsor leest mee, om te ondersteunen, niet beoordelen.",
     watHebJeEraan:
       "Patronen zien in plaats van blind doorlopen. Schurend stuk = volgende-week-oefening.",
     waar: "Dashboard → 'Wekelijkse review' op de review-dagen",
@@ -203,7 +203,7 @@ const FEATURES: Feature[] = [
     watIsHet:
       "ELEVA is volledig vertaald in NL, EN, FR, ES, DE en PT. Member kiest zijn voorkeurstaal in instellingen.",
     watHebJeEraan:
-      "Klaar voor internationale uitrol — niet eerst herbouwen voor Belgisch/Duits/Frans team.",
+      "Klaar voor internationale uitrol, niet eerst herbouwen voor Belgisch/Duits/Frans team.",
     waar: "/instellingen → taalvoorkeur",
   },
   {
@@ -231,11 +231,11 @@ export default function OverElevaPagina() {
     <div className="max-w-3xl mx-auto space-y-6">
       <div>
         <h1 className="text-3xl font-display font-bold text-cm-white">
-          ELEVA — wat zit erin en wat heb je eraan?
+          ELEVA, wat zit erin en wat heb je eraan?
         </h1>
         <p className="text-cm-white opacity-70 mt-2 leading-relaxed">
           Alle functies van ELEVA op een rij, in normale taal. Zodat je weet
-          wat het systeem voor je doet en waar je wat kunt vinden — handig
+          wat het systeem voor je doet en waar je wat kunt vinden, handig
           voor de pilot.
         </p>
       </div>
@@ -261,7 +261,7 @@ export default function OverElevaPagina() {
             productadvies-test"
           </li>
           <li>
-            <strong>Voor jou als founder:</strong> ✍️ knoppen overal — pas aan
+            <strong>Voor jou als founder:</strong> ✍️ knoppen overal, pas aan
             wat schuurt, direct live
           </li>
           <li>
@@ -309,7 +309,7 @@ export default function OverElevaPagina() {
           Vragen, bug-rapporten, of woordkeus die schuurt?
         </p>
         <p className="text-cm-white text-sm opacity-70">
-          Geef het door in de pilot-WhatsApp-groep — founders houden het
+          Geef het door in de pilot-WhatsApp-groep, founders houden het
           systeem live up-to-date.
         </p>
       </div>

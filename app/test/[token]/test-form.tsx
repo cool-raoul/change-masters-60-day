@@ -87,7 +87,7 @@ export function TestForm({
   }
 
   // ============================================================
-  // STAP 1 — Geslacht (voor productkeuze, geen profilering)
+  // STAP 1, Geslacht (voor productkeuze, geen profilering)
   // ============================================================
   if (stap === "geslacht") {
     return (
@@ -118,7 +118,7 @@ export function TestForm({
   }
 
   // ============================================================
-  // STAP 2 — Uitspraken op 3-puntsschaal
+  // STAP 2, Uitspraken op 3-puntsschaal
   // ============================================================
   if (stap === "uitspraken") {
     return (
@@ -170,7 +170,7 @@ export function TestForm({
   }
 
   // ============================================================
-  // STAP 3 — AVG-akkoord + submit
+  // STAP 3, AVG-akkoord + submit
   // ============================================================
   return (
     <Card>

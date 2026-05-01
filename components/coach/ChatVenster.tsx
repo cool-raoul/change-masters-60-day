@@ -33,7 +33,7 @@ interface Props {
   /**
    * Optionele prefill voor het invoerveld (bv. "Check mijn edification-zin: ...")
    * komt vanuit het playbook via ?prefill=... in de URL. Wordt alleen
-   * toegepast bij een nieuw, leeg gesprek — niet bij het heropenen van een
+   * toegepast bij een nieuw, leeg gesprek, niet bij het heropenen van een
    * bestaand gesprek met geschiedenis.
    */
   initialInvoer?: string;
@@ -62,16 +62,16 @@ const SNELLE_OPTIES: SnelleOptie[] = [
   { icoon: "🧭", labelKey: "coach.snel.mentor", berichtKey: "coach.snel.mentor.bericht" },
 ];
 
-// Gratis eerste antwoorden — geen API call nodig!
+// Gratis eerste antwoorden, geen API call nodig!
 // De coach vraagt door zodat het 2e bericht (met context) wél naar de API gaat
 const GRATIS_ANTWOORDEN: Record<string, Record<string, string>> = {
   "coach.snel.mentor.bericht": {
-    nl: "Fijn dat je even wilt bijpraten 🧭\n\nVertel me eerlijk:\n\n1. Hoe voel je je op dit moment — in de business én als mens?\n2. Waar ben je trots op deze week, hoe klein ook?\n3. Waar loop je tegenaan of waar zit je mee?",
-    en: "Good to talk 🧭\n\nTell me honestly:\n\n1. How are you feeling right now — in the business and as a person?\n2. What are you proud of this week, however small?\n3. What are you struggling with or thinking about?",
+    nl: "Fijn dat je even wilt bijpraten 🧭\n\nVertel me eerlijk:\n\n1. Hoe voel je je op dit moment, in de business én als mens?\n2. Waar ben je trots op deze week, hoe klein ook?\n3. Waar loop je tegenaan of waar zit je mee?",
+    en: "Good to talk 🧭\n\nTell me honestly:\n\n1. How are you feeling right now, in the business and as a person?\n2. What are you proud of this week, however small?\n3. What are you struggling with or thinking about?",
   },
   "coach.snel.drieweg.bericht": {
-    nl: "De 3-weg gesprek scripts staan klaar in ELEVA! 🤝\n\nGa naar het profiel van je prospect in de namenlijst → klik op '💬 3-weg gesprek scripts'. Daar kies je:\n\n1. Product (vitaliteit) of Business flow\n2. Naam + geslacht van je sponsor (vrouw/man)\n3. Geslacht van je prospect (vrouw/man)\n\nAlle stap-voor-stap berichten worden automatisch op naam en geslacht ingevuld — klaar om te kopiëren of direct via WhatsApp te sturen.\n\nWil je ook hulp bij de voorbereiding? Vertel me:\n- Is het product of business?\n- Wie is je prospect en hoe kennen jullie elkaar?\n- Wie is je sponsor?",
-    en: "The 3-way conversation scripts are ready in ELEVA! 🤝\n\nGo to your prospect's profile in the name list → click '💬 3-way conversation scripts'. There you choose:\n\n1. Product (vitality) or Business flow\n2. Sponsor name + gender (female/male)\n3. Prospect gender (female/male)\n\nAll step-by-step messages are automatically filled in with name and gender — ready to copy or send via WhatsApp.\n\nWant help with preparation? Tell me:\n- Product or business?\n- Who is your prospect and how do you know them?\n- Who is your sponsor?",
+    nl: "De 3-weg gesprek scripts staan klaar in ELEVA! 🤝\n\nGa naar het profiel van je prospect in de namenlijst → klik op '💬 3-weg gesprek scripts'. Daar kies je:\n\n1. Product (vitaliteit) of Business flow\n2. Naam + geslacht van je sponsor (vrouw/man)\n3. Geslacht van je prospect (vrouw/man)\n\nAlle stap-voor-stap berichten worden automatisch op naam en geslacht ingevuld, klaar om te kopiëren of direct via WhatsApp te sturen.\n\nWil je ook hulp bij de voorbereiding? Vertel me:\n- Is het product of business?\n- Wie is je prospect en hoe kennen jullie elkaar?\n- Wie is je sponsor?",
+    en: "The 3-way conversation scripts are ready in ELEVA! 🤝\n\nGo to your prospect's profile in the name list → click '💬 3-way conversation scripts'. There you choose:\n\n1. Product (vitality) or Business flow\n2. Sponsor name + gender (female/male)\n3. Prospect gender (female/male)\n\nAll step-by-step messages are automatically filled in with name and gender, ready to copy or send via WhatsApp.\n\nWant help with preparation? Tell me:\n- Product or business?\n- Who is your prospect and how do you know them?\n- Who is your sponsor?",
   },
   "coach.snel.dm.bericht": {
     nl: "Top! Voor wie wil je een DM schrijven? Vertel me even:\n\n1. Hoe heet diegene?\n2. Hoe kennen jullie elkaar?\n3. Heb je al eerder over de business gepraat?",
@@ -413,7 +413,7 @@ export function ChatVenster({
   // Bij prefill + autoVerstuur (= klik vanuit het playbook): de prefill
   // wordt direct als user-bericht verstuurd zodra het component mount.
   // Zo komt de member meteen op het juiste scherm met de gouden bubbel
-  // + de mentor begint zelf met antwoorden — geen extra klik nodig.
+  // + de mentor begint zelf met antwoorden, geen extra klik nodig.
   // autoVerstuurdRef voorkomt dubbele submits onder React StrictMode.
   useEffect(() => {
     if (!autoVerstuur) return;
@@ -691,7 +691,7 @@ export function ChatVenster({
             </div>
           </div>
 
-          {/* Prospect selector — koppelt gesprek aan prospect, ook achteraf */}
+          {/* Prospect selector, koppelt gesprek aan prospect, ook achteraf */}
           <select
             value={selectedProspect}
             onChange={(e) => wijzigProspect(e.target.value)}
@@ -721,7 +721,7 @@ export function ChatVenster({
               {v("coach.stel_vraag")}
             </p>
 
-            {/* Acties voor deze prospect — alleen als er een prospect-context
+            {/* Acties voor deze prospect, alleen als er een prospect-context
                 is. Dit zijn DIRECTE acties (niet AI-prompts) zodat de member
                 snel een vragenlijst kan sturen of een handmatig pakket-advies
                 kan opstellen zonder eerst terug naar de prospect-kaart te

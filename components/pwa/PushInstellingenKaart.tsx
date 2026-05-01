@@ -65,7 +65,7 @@ export function PushInstellingenKaart({ initieelUur, initieelAan }: Props) {
           const sub = await registration.pushManager.getSubscription();
           setIsSubscribed(!!sub);
         } catch {
-          // Geen fatal — tonen als uit
+          // Geen fatal, tonen als uit
         }
         setInitialLoaded(true);
       })();
@@ -287,7 +287,7 @@ export function PushInstellingenKaart({ initieelUur, initieelAan }: Props) {
         </div>
       )}
 
-      {/* Uur + test — alleen als master aan staat */}
+      {/* Uur + test, alleen als master aan staat */}
       {effectiefAan && (
         <>
           <div>

@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Optioneel: vink de bijhorende playbook-taak af. Member hoeft dan
-    // niet apart op de checkbox te klikken — bewaren = klaar.
+    // niet apart op de checkbox te klikken, bewaren = klaar.
     if (autoVink && typeof bronDag === "number" && bronTaak) {
       const { error: vinkErr } = await supabase.from("dag_voltooiingen").upsert(
         {
@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
         { onConflict: "user_id,dag_nummer,taak_id" },
       );
       if (vinkErr) {
-        // Niet fataal — de zin is wel bewaard. Member kan handmatig vinken.
+        // Niet fataal, de zin is wel bewaard. Member kan handmatig vinken.
         console.error("auto-vink mislukt (niet fataal):", vinkErr);
       }
     }

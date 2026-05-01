@@ -11,7 +11,7 @@ type ProductRegel = {
 };
 
 // ============================================================
-// BestellinkRow — één rij in de bestellinks-lijst
+// BestellinkRow, één rij in de bestellinks-lijst
 // Lokale state voor edit/save, server-roundtrip via Supabase RLS.
 // Toont uitklapbaar de producten die in dit pakket horen + bestelnummers,
 // zodat member exact weet wat er in de winkelmand moet.

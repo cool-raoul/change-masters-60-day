@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 // ============================================================
-// TesterToolbar — kleine toolbar bovenaan dashboard voor pilot-testers.
+// TesterToolbar, kleine toolbar bovenaan dashboard voor pilot-testers.
 //
 // Verschijnt alleen als profile.is_tester=true of role='founder'.
 // Verzet run_startdatum zodat de berekende huidige dag = de gekozen dag.
@@ -35,7 +35,7 @@ export function TesterToolbar({ huidigeDag }: { huidigeDag: number }) {
 
       // Wis de 'gesloten'-vlag voor de NIEUWE dag zodat AutoNaarVandaag
       // 'm opnieuw oppakt en de tester de flow van die dag opnieuw te zien
-      // krijgt. Voor andere dagen laten we de vlag staan — anders krijg je
+      // krijgt. Voor andere dagen laten we de vlag staan, anders krijg je
       // een loop tussen /dashboard en /vandaag bij dag 1 → 1.
       try {
         const datum = new Date().toISOString().split("T")[0];
@@ -126,7 +126,7 @@ export function TesterToolbar({ huidigeDag }: { huidigeDag: number }) {
               Spring
             </button>
             <span className="text-xs text-purple-200 opacity-70">
-              (verzet je startdatum — testers + founders only)
+              (verzet je startdatum, testers + founders only)
             </span>
           </div>
         </div>

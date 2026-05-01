@@ -79,7 +79,7 @@ export default async function ResultaatPage({
   }
 
   // Member-naam apart ophalen. Telefoon zit (nog) niet op profiles, dus
-  // de WhatsApp-knop opent zonder ingebakken nummer — prospect zoekt zijn
+  // de WhatsApp-knop opent zonder ingebakken nummer, prospect zoekt zijn
   // member dan zelf op via zijn eigen telefoon-contacten of inboundkanaal.
   let memberNaam = "je member";
   if (test.member_id) {
@@ -113,7 +113,7 @@ export default async function ResultaatPage({
     fallback: boolean;
   };
 
-  // Darmvragenlijst-uitslag (optioneel) — als de prospect die al ingevuld
+  // Darmvragenlijst-uitslag (optioneel), als de prospect die al ingevuld
   // heeft, tonen we hier zijn bucket terug zodat hij niet opnieuw klikt.
   const { data: testFull } = await supabase
     .from("productadvies_tests")
@@ -141,7 +141,7 @@ export default async function ResultaatPage({
   // wordt ALTIJD prominent getoond, want de echte verandering komt uit
   // leefstijl, niet uit pillen alleen. Pakketten worden secundair getoond
   // ('als je liever niet met intensieve leefstijl-aanpassing aan de slag
-  // wilt'). Geldt niet voor 60-day route — die heeft Complete als advies.
+  // wilt'). Geldt niet voor 60-day route, die heeft Complete als advies.
   const isAfvallen = uitslag.categorie === "afvallen-metabolisme";
   const afvallenLeefstijlEerst = isAfvallen && !is60Day;
 
@@ -193,7 +193,7 @@ export default async function ResultaatPage({
           </div>
         )}
 
-        {/* Header — categorie groot/dominant, intro klein */}
+        {/* Header, categorie groot/dominant, intro klein */}
         <header className="mb-6 text-center">
           <div className="text-emerald-600 text-xs font-semibold uppercase tracking-wider mb-1">
             Jouw advies
@@ -494,7 +494,7 @@ export default async function ResultaatPage({
         </section>
 
         {/* Member krijgt automatisch een herinnering bij submit. Geen
-            verzend-knop voor de prospect — verlaagt de drempel. */}
+            verzend-knop voor de prospect, verlaagt de drempel. */}
         <section className="bg-emerald-50 border border-emerald-100 rounded-2xl p-5 sm:p-6 mb-5">
           <div className="flex items-start gap-3">
             <span className="text-2xl">✓</span>
@@ -511,7 +511,7 @@ export default async function ResultaatPage({
           </div>
         </section>
 
-        {/* Vragenlijst opnieuw invullen — staat onderaan zodat het niet vaste
+        {/* Vragenlijst opnieuw invullen, staat onderaan zodat het niet vaste
             actie is, maar wel beschikbaar als de prospect zich bedacht heeft. */}
         <section className="text-center mb-5">
           <Link

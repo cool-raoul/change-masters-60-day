@@ -26,7 +26,7 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
 
   // Sponsor-stilte-toggle: als jij teamleden hebt en NIET wil weten
   // wanneer ze stil vallen, kun je dit uitzetten. Voor de eigen
-  // stilte-reminder bestaat geen toggle — die hoort bij ELEVA's
+  // stilte-reminder bestaat geen toggle, die hoort bij ELEVA's
   // 21-daagse coaching, en is automatisch aan zolang je
   // dagelijkse pushes aan staan.
   const [sponsorStilteAan, setSponsorStilteAan] = useState(
@@ -270,13 +270,13 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
         )}
       </div>
 
-      {/* Pushnotificaties — één master-kaart: browser-subscribe + dagelijkse bundel */}
+      {/* Pushnotificaties, één master-kaart: browser-subscribe + dagelijkse bundel */}
       <PushInstellingenKaart
         initieelUur={initieelPushUur}
         initieelAan={initieelPushAan}
       />
 
-      {/* Stilte-nudges — uitleg + alleen sponsor-toggle */}
+      {/* Stilte-nudges, uitleg + alleen sponsor-toggle */}
       <div className="card space-y-4">
         <div>
           <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
@@ -285,7 +285,7 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
           <p className="text-cm-white opacity-70 text-sm mt-1 leading-relaxed">
             ELEVA stuurt je automatisch een vriendelijke reminder als je een
             dag (of langer) geen activiteit hebt in je 21-daagse playbook.
-            Hoort bij het programma — komt op je gekozen ochtenduur, max 1×
+            Hoort bij het programma, komt op je gekozen ochtenduur, max 1×
             per dag. Wil je géén pushes meer? Zet je dagelijkse push hierboven
             uit.
           </p>

@@ -1,5 +1,5 @@
 /**
- * ELEVA features registry — SINGLE SOURCE OF TRUTH
+ * ELEVA features registry, SINGLE SOURCE OF TRUTH
  * -------------------------------------------------
  * Dit bestand is de enige plek waar user-facing features worden beschreven.
  * De rondleiding (components/rondleiding/Rondleiding.tsx) leest hieruit.
@@ -14,16 +14,16 @@
  * kan, en dat is het enige wat dit systeem stuk maakt.
  *
  * Velden:
- *   id          — unieke key (stabiel, zelfs als de titel verandert)
- *   emoji       — icoon dat bovenaan groot wordt getoond
- *   titel       — korte kop (5-8 woorden)
- *   lead        — 1 zin die de scene zet
- *   bullets     — 3-5 concrete dingen die je met de feature kan doen
- *   wow         — "waarom dit telt" quote (< 40 woorden, uit-je-stoel-tekst)
- *   route       — optionele link naar de betreffende pagina
- *   premiumOnly — true als de feature alleen voor premium-users is
- *   volgorde    — lager nummer = eerder in de rondleiding
- *   inRondleiding — zet op false om te verbergen in de tour (maar wel
+ *   id, unieke key (stabiel, zelfs als de titel verandert)
+ *   emoji, icoon dat bovenaan groot wordt getoond
+ *   titel, korte kop (5-8 woorden)
+ *   lead, 1 zin die de scene zet
+ *   bullets, 3-5 concrete dingen die je met de feature kan doen
+ *   wow, "waarom dit telt" quote (< 40 woorden, uit-je-stoel-tekst)
+ *   route, optionele link naar de betreffende pagina
+ *   premiumOnly, true als de feature alleen voor premium-users is
+ *   volgorde, lager nummer = eerder in de rondleiding
+ *   inRondleiding, zet op false om te verbergen in de tour (maar wel
  *                   een geregistreerde feature te blijven voor /functies)
  */
 
@@ -44,7 +44,7 @@ export const FEATURES: Feature[] = [
   {
     id: "dashboard",
     emoji: "🏠",
-    titel: "Dashboard — jouw command center",
+    titel: "Dashboard, jouw command center",
     lead: "Elke dag begint hier. In 30 seconden weet je wat vandaag telt.",
     bullets: [
       "Dag-teller (dag X van 60) en voortgangsbalk",
@@ -60,13 +60,13 @@ export const FEATURES: Feature[] = [
   {
     id: "namenlijst",
     emoji: "👥",
-    titel: "Namenlijst — je pipeline visueel in beeld",
+    titel: "Namenlijst, je pipeline visueel in beeld",
     lead: "Al je prospects visueel, van eerste contact tot member.",
     bullets: [
       "Sleep prospects tussen fases: prospect → uitgenodigd → presentatie → follow-up → shopper → member",
       "Elke kaart toont prioriteit, laatste contact, volgende stap",
       "Klik op een naam voor alle details, notities en contact-historie",
-      "Sorteer zelf binnen een fase — belangrijkste bovenaan",
+      "Sorteer zelf binnen een fase, belangrijkste bovenaan",
     ],
     wow: "Nooit meer iemand vergeten die aan het rijpen is.",
     route: "/namenlijst",
@@ -76,7 +76,7 @@ export const FEATURES: Feature[] = [
   {
     id: "spraak-fab",
     emoji: "🎙️",
-    titel: "Spraak-knop — DE killer-feature",
+    titel: "Spraak-knop, DE killer-feature",
     lead: "De ronde goudknop rechtsonder. Dit is waar ELEVA magisch wordt.",
     bullets: [
       "Druk in, spreek natuurlijk wat je net hebt gedaan",
@@ -93,15 +93,15 @@ export const FEATURES: Feature[] = [
   {
     id: "spraak-commandos",
     emoji: "📖",
-    titel: "Spraak-commando's — naslagwerk",
+    titel: "Spraak-commando's, naslagwerk",
     lead: "De volledige lijst met alles wat je kunt inspreken, gesorteerd per categorie.",
     bullets: [
       "Prospects, activiteit, bestellingen, herinneringen, correcties, verwijderen, navigatie, mentor",
-      "Voorbeeldzinnen per commando — je hoeft niet letterlijk te kopiëren",
+      "Voorbeeldzinnen per commando, je hoeft niet letterlijk te kopiëren",
       "Tips per categorie om het snel onder de knie te krijgen",
       "Altijd bereikbaar via Sidebar → 🎙️ Spraak-commando's",
     ],
-    wow: "Geen gedoe met onthouden wat ELEVA snapt — één pagina met alles. Zie een commando, spreek het in, klaar.",
+    wow: "Geen gedoe met onthouden wat ELEVA snapt, één pagina met alles. Zie een commando, spreek het in, klaar.",
     route: "/spraak-commandos",
     volgorde: 35,
     inRondleiding: true,
@@ -109,16 +109,16 @@ export const FEATURES: Feature[] = [
   {
     id: "coach",
     emoji: "🤖",
-    titel: "ELEVA Mentor — 24/7 coach in je broekzak",
+    titel: "ELEVA Mentor, 24/7 coach in je broekzak",
     lead: "Een AI-mentor die jouw methodiek kent en altijd tijd heeft.",
     bullets: [
       "Vraag alles: bezwaren pareren, uitnodigings-tekst, 3-wegen gesprek voorbereiden, closing, mindset",
-      "Stel je vraag over een specifieke prospect — de mentor kent de context",
+      "Stel je vraag over een specifieke prospect, de mentor kent de context",
       "Premium: productadvies met medische disclaimer, onbeperkte gesprekken, voorrang",
       "Eerdere gesprekken terug te vinden, zodat je nooit iets kwijt bent",
     ],
     wow:
-      "\"Maria zegt: ik heb er geen geld voor — wat zeg ik?\" → binnen 3 seconden een antwoord op maat, getraind op jouw aanpak.",
+      "\"Maria zegt: ik heb er geen geld voor, wat zeg ik?\" → binnen 3 seconden een antwoord op maat, getraind op jouw aanpak.",
     route: "/coach",
     volgorde: 40,
     inRondleiding: true,
@@ -126,7 +126,7 @@ export const FEATURES: Feature[] = [
   {
     id: "herinneringen",
     emoji: "🔔",
-    titel: "Herinneringen — je brein hoeft niks te onthouden",
+    titel: "Herinneringen, je brein hoeft niks te onthouden",
     lead: "Alle follow-ups automatisch op de juiste stapel.",
     bullets: [
       "Verlopen (rood), vandaag (goud), komende 7 dagen (blauw), later (grijs)",
@@ -142,12 +142,12 @@ export const FEATURES: Feature[] = [
   {
     id: "acties",
     emoji: "🎯",
-    titel: "Volgende acties — je DMO-outbox",
+    titel: "Volgende acties, je DMO-outbox",
     lead: "Eén pagina. Vandaag + verlopen. Klik op het juiste icoon en doen.",
     bullets: [
-      "Alleen wat NU telt — geen \"later\" ruis, geen beheer-modus",
-      "Direct-klik iconen: WhatsApp, bellen, e-mail, Instagram, Facebook — zonder prospect-kaart te openen",
-      "Volledige herinnerings-tekst al zichtbaar — je ziet meteen waar het over ging",
+      "Alleen wat NU telt, geen \"later\" ruis, geen beheer-modus",
+      "Direct-klik iconen: WhatsApp, bellen, e-mail, Instagram, Facebook, zonder prospect-kaart te openen",
+      "Volledige herinnerings-tekst al zichtbaar, je ziet meteen waar het over ging",
       "Afvinken met één klik als je hem gedaan hebt",
       "Via spraak: \"Wat moet ik vandaag doen?\" / \"Wie staat op me te wachten?\"",
     ],
@@ -159,30 +159,30 @@ export const FEATURES: Feature[] = [
   {
     id: "productadvies-vragenlijst",
     emoji: "📋",
-    titel: "Productadvies-vragenlijst — voor je prospect",
+    titel: "Productadvies-vragenlijst, voor je prospect",
     lead: "Eén link delen. Prospect doet de vragenlijst. Jij krijgt zijn advies op zijn kaart.",
     bullets: [
       "Stuur per persoon vanaf de prospect-kaart, of deel je hergebruikbare open link op social media",
       "Prospect doet 30 uitspraken (~3 minuten) en krijgt een persoonlijk pakket-advies",
-      "Optionele vervolgvragenlijst (15 vragen) bepaalt of een darmprogramma past — basis of plus",
+      "Optionele vervolgvragenlijst (15 vragen) bepaalt of een darmprogramma past, basis of plus",
       "Pipeline schuift automatisch door en je krijgt een herinnering om op te volgen",
       "Privacy: alleen de uitkomst belandt op de kaart, geen individuele antwoorden",
     ],
-    wow: "Je prospect ontdekt zelf welk pakket bij 'm past — jij hoeft niet te verkopen, alleen samen kijken.",
+    wow: "Je prospect ontdekt zelf welk pakket bij 'm past, jij hoeft niet te verkopen, alleen samen kijken.",
     volgorde: 35,
     inRondleiding: true,
   },
   {
     id: "premium",
     emoji: "🌟",
-    titel: "Premium — €2/mnd, onbeperkt alles",
+    titel: "Premium, €2/mnd, onbeperkt alles",
     lead: "De kracht van ELEVA volledig ontketend voor de prijs van een koffie.",
     bullets: [
       "Onbeperkt chatten met de ELEVA Mentor",
       "Onbeperkte spraak-opnames (geen limieten)",
       "Voorrang bij drukte + early-access nieuwe features",
       "Een deel van je bijdrage gaat naar de Lifeplus Foundation",
-      "Betaal met iDEAL, kaart of Apple/Google Pay — maandelijks opzegbaar",
+      "Betaal met iDEAL, kaart of Apple/Google Pay, maandelijks opzegbaar",
     ],
     wow: "Als je serieus bent met je 60-day run, is €2/mnd het snelste rendement dat je kan boeken.",
     route: "/premium",

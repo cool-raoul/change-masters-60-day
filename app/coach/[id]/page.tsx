@@ -42,7 +42,7 @@ export default async function CoachGesprekPagina({
   if (!gesprek) notFound();
 
   // Bestaande productadvies-test van de prospect (voor de Vragenlijst-actie
-  // in de mentor — laat bestaande chip + refresh-knop werken net als op de
+  // in de mentor, laat bestaande chip + refresh-knop werken net als op de
   // prospect-kaart).
   let productadviesTest: any = null;
   if (gesprek.prospect?.id) {

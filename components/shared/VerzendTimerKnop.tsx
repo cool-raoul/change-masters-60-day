@@ -5,15 +5,15 @@ import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 
 // ============================================================
-// VerzendTimerKnop — plan een bericht in voor latere verzending.
+// VerzendTimerKnop, plan een bericht in voor latere verzending.
 //
 // Gebruikt het bestaande 'herinneringen'-systeem als planner: er wordt
 // een herinnering aangemaakt met de te versturen tekst als beschrijving
 // + een titel-prefix '📤 Stuur naar [naam]'. Op de vervaldatum krijgt de
-// member z'n gewone ochtendpush met deze herinnering erbij — open ELEVA,
+// member z'n gewone ochtendpush met deze herinnering erbij, open ELEVA,
 // kopieer de tekst, plak in WhatsApp.
 //
-// Geen nieuwe cron, geen nieuwe tabel — alleen UI bovenop bestaande infra.
+// Geen nieuwe cron, geen nieuwe tabel, alleen UI bovenop bestaande infra.
 // ============================================================
 
 type Props = {
@@ -21,7 +21,7 @@ type Props = {
   bericht: string;
   /** Optionele koppeling aan een prospect (voor de prospect_id-relatie). */
   prospectId?: string;
-  /** Optionele naam — gebruikt in de titel van de herinnering. */
+  /** Optionele naam, gebruikt in de titel van de herinnering. */
   prospectNaam?: string;
   /** Optioneel: kleinere knop-stijl voor inbedding in andere flows. */
   compact?: boolean;
@@ -201,7 +201,7 @@ export function VerzendTimerKnop({
         </div>
 
         <p className="text-cm-white opacity-70 text-sm">
-          Je krijgt op de gekozen dag een herinnering met deze tekst —
+          Je krijgt op de gekozen dag een herinnering met deze tekst.
           klaar om te kopiëren en versturen.
         </p>
 
@@ -261,7 +261,7 @@ export function VerzendTimerKnop({
 
         <p className="text-xs text-cm-white opacity-50 italic">
           Op de gekozen dag krijg je de herinnering in je dagelijkse push +
-          op /herinneringen — kopieer en stuur 'm dan in WhatsApp.
+          op /herinneringen, kopieer en stuur 'm dan in WhatsApp.
         </p>
       </div>
     </div>

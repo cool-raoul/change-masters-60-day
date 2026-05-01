@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { normaliseerNaarEmbed } from "@/lib/films/embed";
 
 // ============================================================
-// FilmRowEditor — een rij om één film te beheren in /instellingen/films.
+// FilmRowEditor, een rij om één film te beheren in /instellingen/films.
 //
 // Toont per slug: titel, video_url, beschrijving, tonen-toggle.
 // Met preview rechts zodra er een (geldige) URL staat.
@@ -193,7 +193,7 @@ export function FilmRowEditor({
 
           <div>
             <label className="block text-xs text-cm-white opacity-70 mb-1">
-              Beschrijving (optioneel — rustige onderschrift onder de film)
+              Beschrijving (optioneel, rustige onderschrift onder de film)
             </label>
             <textarea
               value={beschrijving}
@@ -206,14 +206,14 @@ export function FilmRowEditor({
 
           <div>
             <label className="block text-xs text-cm-white opacity-70 mb-1">
-              Belangrijk / LET OP (optioneel — opvallend amber-blok boven de film)
+              Belangrijk / LET OP (optioneel, opvallend amber-blok boven de film)
             </label>
             <textarea
               value={belangrijk}
               onChange={(e) => setBelangrijk(e.target.value)}
               className="textarea-cm w-full"
               rows={2}
-              placeholder="LET OP: ... — bv. instructies of waarschuwingen die de kijker NIET mag missen"
+              placeholder="LET OP: ..., bv. instructies of waarschuwingen die de kijker NIET mag missen"
             />
           </div>
 

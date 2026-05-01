@@ -14,7 +14,7 @@ import {
 } from "@/lib/zelftest/vragen";
 
 // ============================================================
-// Sandbox — debug-tool voor de zelftest scoring
+// Sandbox, debug-tool voor de zelftest scoring
 // URL: /sandbox
 //
 // Niet aan een token gekoppeld, geen DB-interactie.

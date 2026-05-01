@@ -6,16 +6,16 @@ import { FilmInBlok } from "@/components/film/FilmInBlok";
 import type { Dag } from "@/lib/playbook/types";
 
 // ============================================================
-// PlaybookDagTile — toont één dag uit het 21-daagse playbook.
+// PlaybookDagTile, toont één dag uit het 21-daagse playbook.
 //
-// Doel: de member 21 dagen bij de hand nemen — dus NIET alleen een
+// Doel: de member 21 dagen bij de hand nemen, dus NIET alleen een
 // afvinklijst, maar ook: wat leer je vandaag, waarom werkt dit, waar
 // in ELEVA vind je het, en wat moet je doen.
 //
 // Layout:
 //   [optionele dag-film bovenaan: slug = "playbook-dag-N"]
-//   [header — altijd zichtbaar: dag/fase, titel, voortgang/balk]
-//   [tabs — default 'Doen']
+//   [header, altijd zichtbaar: dag/fase, titel, voortgang/balk]
+//   [tabs, default 'Doen']
 //      📚 Leren:  teaching (collapsed) → uitklapbaar volledig
 //                 + "waarom werkt dit" als afsluiter
 //      ✅ Doen:   checklist + "waar in ELEVA" + fase-doel
@@ -78,7 +78,7 @@ export function PlaybookDagTile({
   const [actieveTab, setActieveTab] = useState<Tab>("doen");
   const [teachingUitgeklapt, setTeachingUitgeklapt] = useState(false);
 
-  // Founder-edit state — de tile houdt lokaal de actuele tekst bij zodat
+  // Founder-edit state, de tile houdt lokaal de actuele tekst bij zodat
   // direct na opslaan de aanpassing in beeld is zonder te wachten op een
   // page-refresh.
   const [actueleTekst, setActueleTekst] = useState({
@@ -197,7 +197,7 @@ export function PlaybookDagTile({
       // Preview: lokaal markeren als opgeslagen + automatisch afvinken
       setOpgeslagenSlugs((p) => new Set(p).add(inline.slug));
       setVoltooidIds((p) => new Set(p).add(taak.id));
-      toast.success("Bewaard (preview — niet opgeslagen)");
+      toast.success("Bewaard (preview, niet opgeslagen)");
       return;
     }
     setBezigInlineSlugs((p) => new Set(p).add(inline.slug));
@@ -221,7 +221,7 @@ export function PlaybookDagTile({
       }
       setOpgeslagenSlugs((p) => new Set(p).add(inline.slug));
       setVoltooidIds((p) => new Set(p).add(taak.id));
-      toast.success("Bewaard — terug te vinden op /mijn-zinnen");
+      toast.success("Bewaard, terug te vinden op /mijn-zinnen");
     } catch (e) {
       toast.error("Verbindingsfout");
     } finally {
@@ -234,7 +234,7 @@ export function PlaybookDagTile({
   }
 
   // ============================================================
-  // FOUNDER-EDIT — inline tekst bewerken op de tile zelf.
+  // FOUNDER-EDIT, inline tekst bewerken op de tile zelf.
   // Geen aparte editor-pagina nodig.
   // ============================================================
 
@@ -298,7 +298,7 @@ export function PlaybookDagTile({
       setBewerktVeld(null);
       setBewerkBuffer("");
       setBewerkBronBuffer("");
-      toast.success("✍️ Bewaard — direct zichtbaar voor alle members");
+      toast.success("✍️ Bewaard, direct zichtbaar voor alle members");
     } catch {
       toast.error("Verbindingsfout");
     } finally {
@@ -326,12 +326,12 @@ export function PlaybookDagTile({
    * inlineWaardes, of "[hier je zin]" als nog niet ingevuld).
    *
    * Voor /coach-routes met prefill voegen we ook `submit=1` toe zodat de
-   * mentor de vraag direct als user-bericht verstuurt — de member landt
+   * mentor de vraag direct als user-bericht verstuurt, de member landt
    * dan op het juiste chat-scherm met zijn vraag al als gouden bubbel
    * en de mentor begint meteen te antwoorden. Géén extra klik nodig.
    *
    * Als de prefill nog placeholders bevat ([hier je zin]) submitten we
-   * NIET automatisch — de member moet dan eerst zelf invullen.
+   * NIET automatisch, de member moet dan eerst zelf invullen.
    */
   function bouwElevaPadHref(p: {
     route?: string;
@@ -361,7 +361,7 @@ export function PlaybookDagTile({
 
   return (
     <div className="space-y-4">
-      {/* Optionele dag-film bovenaan — alleen zichtbaar als founder
+      {/* Optionele dag-film bovenaan, alleen zichtbaar als founder
           'm in /instellingen/films onder slug `playbook-dag-N` heeft
           ingevuld. Anders rendert het component niets. */}
       {toonDagFilm && (
@@ -369,7 +369,7 @@ export function PlaybookDagTile({
       )}
 
       <div className="card space-y-4">
-        {/* Header — altijd zichtbaar, ongeacht actieve tab */}
+        {/* Header, altijd zichtbaar, ongeacht actieve tab */}
         <div className="flex items-baseline justify-between gap-3 flex-wrap">
           <div className="flex-1 min-w-0">
             <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
@@ -557,7 +557,7 @@ export function PlaybookDagTile({
                             <FilmInBlok
                               slug={taak.filmSlug}
                               fallbackTitel="📹 Bekijk de video"
-                              fallbackTekst="Film volgt — wordt door de hoofdbeheerder toegevoegd."
+                              fallbackTekst="Film volgt, wordt door de hoofdbeheerder toegevoegd."
                             />
                           </div>
                         )}
@@ -620,7 +620,7 @@ export function PlaybookDagTile({
                             )}
                             {opgeslagenSlugs.has(taak.inlineActie.slug) && (
                               <p className="text-xs text-emerald-400">
-                                ✓ Opgeslagen — terug te vinden op{" "}
+                                ✓ Opgeslagen, terug te vinden op{" "}
                                 <a
                                   href="/mijn-zinnen"
                                   className="underline-offset-2 hover:underline"
@@ -638,7 +638,7 @@ export function PlaybookDagTile({
               })}
             </div>
 
-            {/* Waar in ELEVA — direct klikbaar naar de juiste plek */}
+            {/* Waar in ELEVA, direct klikbaar naar de juiste plek */}
             {dag.waarInEleva.length > 0 && (
               <div className="rounded-lg bg-cm-surface-2 border border-cm-border p-3 space-y-2">
                 <h3 className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
@@ -786,7 +786,7 @@ export function PlaybookDagTile({
                     value={bewerkBronBuffer}
                     onChange={(e) => setBewerkBronBuffer(e.target.value)}
                     className="input-cm w-full text-sm"
-                    placeholder="Bron (bv. Eric Worre, Go Pro) — optioneel"
+                    placeholder="Bron (bv. Eric Worre, Go Pro), optioneel"
                   />
                   <div className="flex gap-2 flex-wrap">
                     <button
@@ -819,7 +819,7 @@ export function PlaybookDagTile({
                     {actueleTekst.waaromBron && (
                       <span className="opacity-70">
                         {" "}
-                        — {actueleTekst.waaromBron}
+, {actueleTekst.waaromBron}
                       </span>
                     )}
                   </span>
@@ -851,7 +851,7 @@ function FounderEditKnop({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      title="Founder-bewerken — wijzigingen gaan LIVE voor alle members"
+      title="Founder-bewerken, wijzigingen gaan LIVE voor alle members"
       className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full border border-cm-gold/60 text-cm-gold bg-cm-gold/5 hover:bg-cm-gold/15 hover:border-cm-gold transition-colors font-semibold whitespace-nowrap"
     >
       ✍️ Bewerk voor iedereen

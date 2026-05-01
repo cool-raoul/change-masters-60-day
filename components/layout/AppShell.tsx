@@ -26,7 +26,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 
   if (!profile?.onboarding_klaar) redirect("/mijn-why");
 
-  // Lees taal uit user metadata — direct beschikbaar voor alle client componenten
+  // Lees taal uit user metadata, direct beschikbaar voor alle client componenten
   const taal = (user.user_metadata?.taal as Taal) || "nl";
 
   return (
@@ -37,7 +37,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
         <div className="flex-1 flex flex-col min-h-0 min-w-0">
           <Topbar gebruikersnaam={profile?.full_name || user.email || "Teamlid"} />
           <main className="flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain p-6 pb-28 sm:pb-6 mobile-scroll">
-            {/* Toont alleen iets bij ?van=playbook&dag=N — anders renders null. */}
+            {/* Toont alleen iets bij ?van=playbook&dag=N, anders renders null. */}
             <Suspense fallback={null}>
               <TerugNaarPlaybookBanner />
             </Suspense>

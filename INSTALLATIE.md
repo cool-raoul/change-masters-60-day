@@ -1,4 +1,4 @@
-# Change Masters — 60 Dagen Run Systeem
+# Change Masters, 60 Dagen Run Systeem
 ## Installatie instructies voor Raoul & Gaby
 
 ---

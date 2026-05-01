@@ -1,7 +1,7 @@
 import type { Dag } from "@/lib/playbook/types";
 
 // ============================================================
-// playbook overrides — server-side helpers
+// playbook overrides, server-side helpers
 //
 // Founders kunnen via /instellingen/playbook teksten aanpassen
 // zonder code-deploy. Deze helpers laden de overrides uit de DB
@@ -72,12 +72,12 @@ export async function haalOverrides(
       )
       .in("dag_nummer", dagNummers);
     if (error) {
-      // Tabel ontbreekt of RLS blokkeert — geen drama, gebruik fallback.
+      // Tabel ontbreekt of RLS blokkeert, geen drama, gebruik fallback.
       return map;
     }
     for (const r of data || []) map.set(r.dag_nummer, r);
   } catch {
-    // Network/typing/anders — fail silently
+    // Network/typing/anders, fail silently
   }
   return map;
 }

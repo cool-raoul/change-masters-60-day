@@ -16,7 +16,7 @@ import { OpenIntakeForm } from "./open-intake-form";
 // METADATA: bewust GEEN ELEVA-branding voor de prospect. WhatsApp,
 // Telegram, etc. pakken deze metadata als link-preview en het zou raar
 // voelen voor de prospect om "ELEVA / aanbevelingsmarketing systeem"
-// te zien — die context is voor members, niet voor prospects.
+// te zien, die context is voor members, niet voor prospects.
 // ============================================================
 
 export const dynamic = "force-dynamic";
@@ -61,7 +61,7 @@ export async function generateMetadata({
   return {
     title: titel,
     description: beschrijving,
-    // GEEN icons of openGraph image — anders pakt WhatsApp de default
+    // GEEN icons of openGraph image, anders pakt WhatsApp de default
     // ELEVA-branding van de root-layout.
     openGraph: {
       title: titel,
@@ -88,7 +88,7 @@ export default async function TestPage({
   const { token } = await params;
   const supabase = createAdminClient();
 
-  // Test ophalen (zonder joins — joins werken hier niet door cross-schema FK's)
+  // Test ophalen (zonder joins, joins werken hier niet door cross-schema FK's)
   const { data: test, error } = await supabase
     .from("productadvies_tests")
     .select("id, token, status, member_id, prospect_id, is_open_template")

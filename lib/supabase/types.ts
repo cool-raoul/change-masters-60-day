@@ -34,7 +34,7 @@ export interface Profile {
   invited_by: string | null;
   taal: Taal;
   created_at: string;
-  // Gebundelde dagelijkse herinneringspush — live-pushes staan hier los van.
+  // Gebundelde dagelijkse herinneringspush, live-pushes staan hier los van.
   dagelijkse_push_uur?: number; // 0-23, default 7
   tijdzone?: string; // IANA tz, default "Europe/Amsterdam"
   dagelijkse_push_aan?: boolean; // default true
@@ -248,9 +248,9 @@ export interface ProductadviesTest {
   token: string;
   member_id: string;
   prospect_id: string | null;
-  /** "ja" / "nee" / "weet_niet" — antwoord op trigger-vraag 60 Day Run. */
+  /** "ja" / "nee" / "weet_niet", antwoord op trigger-vraag 60 Day Run. */
   trigger_60day: string | null;
-  /** "vrouw" / "man" / "zeg-niet" — voor productkeuze, geen profilering. */
+  /** "vrouw" / "man" / "zeg-niet", voor productkeuze, geen profilering. */
   geslacht: string | null;
   /**
    * Berekende uitslag (privacy-by-design: GEEN individuele scores per categorie,

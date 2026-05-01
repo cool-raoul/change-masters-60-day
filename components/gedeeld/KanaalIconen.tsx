@@ -43,7 +43,7 @@ function normaliseerWaNummer(tel: string): string {
   // Stap 1: alleen digits overhouden (ook + en spaties weg)
   let digits = tel.replace(/\D/g, "");
   if (!digits) return "";
-  // Stap 2: 00-prefix is een oude internationale notatie — halen we weg
+  // Stap 2: 00-prefix is een oude internationale notatie, halen we weg
   if (digits.startsWith("00")) {
     digits = digits.slice(2);
   } else if (digits.startsWith("0")) {
@@ -68,7 +68,7 @@ function naarInstagramLink(handle: string): string {
 }
 
 // Facebook kan een volledige URL zijn, een profielnaam met punten
-// ("raoul.zeewijk"), of een numeriek ID. Gebruik altijd `www.` — de bare
+// ("raoul.zeewijk"), of een numeriek ID. Gebruik altijd `www.`, de bare
 // `facebook.com/...` variant wordt door de FB-app op iOS soms gekaapt en
 // toont dan "Niet beschikbaar" in plaats van het profiel.
 function naarFacebookLink(waarde: string): string {

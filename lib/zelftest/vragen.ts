@@ -1,5 +1,5 @@
 // ============================================================
-// PRODUCTADVIES-ZELFTEST — vragen + uitslag-berekening
+// PRODUCTADVIES-ZELFTEST, vragen + uitslag-berekening
 //
 // FLOW:
 //   1. Trigger-vraag bovenaan: "Wil je meedoen aan de 60 Day Run?"
@@ -60,9 +60,9 @@ export type Antwoord = 0 | 1 | 2;
 
 /**
  * Schaal-type bepaalt welke labels onder de uitspraak worden getoond.
- *  - frequentie: "Niet / Soms / Vaak" — voor zinnen over hoe vaak iets gebeurt
- *  - herkenning: "Niet echt / Een beetje / Helemaal" — voor zinnen die je herkent of niet
- *  - bereidheid: "Nee / Misschien / Zeker" — voor zinnen over wensen of bereidheid
+ *  - frequentie: "Niet / Soms / Vaak", voor zinnen over hoe vaak iets gebeurt
+ *  - herkenning: "Niet echt / Een beetje / Helemaal", voor zinnen die je herkent of niet
+ *  - bereidheid: "Nee / Misschien / Zeker", voor zinnen over wensen of bereidheid
  */
 export type SchaalType = "frequentie" | "herkenning" | "bereidheid";
 
@@ -277,7 +277,7 @@ export function berekenUitslag(antwoorden: ZelftestAntwoorden): ZelftestUitslag 
   // Bepaal niveau alvast
   // 60-day = altijd Complete; anders Plus als default, Complete bij sterke
   // herkenning. Essential is NOOIT de standaard-suggestie (zou prospects naar
-  // de laagste optie sturen — wij willen dat ze bewust kiezen, en de meeste
+  // de laagste optie sturen, wij willen dat ze bewust kiezen, en de meeste
   // mensen kiezen psychologisch voor de middelste optie).
 
   // Vind hoofdcategorie met hoogste score (bij gelijkspel: prioriteits-volgorde)
@@ -290,7 +290,7 @@ export function berekenUitslag(antwoorden: ZelftestAntwoorden): ZelftestUitslag 
     }
   }
 
-  // Diagnostische log voor productie-debugging. Lichtgewicht — alleen
+  // Diagnostische log voor productie-debugging. Lichtgewicht, alleen
   // de getallen, geen individuele antwoorden (privacy).
   console.log("[berekenUitslag]", {
     totaalHoofdscore,
@@ -385,7 +385,7 @@ function bepaalOpstartSuggestie(
 }
 
 // ============================================================
-// HELPERS — uitspraken filteren / shufflen
+// HELPERS, uitspraken filteren / shufflen
 // ============================================================
 
 /**

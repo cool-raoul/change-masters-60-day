@@ -29,7 +29,7 @@ export function ProspectActieForm({ prospect, userId }: Props) {
   const [nieuweFase, setNieuweFase] = useState<PipelineFase>(prospect.pipeline_fase);
   const [contactType, setContactType] = useState("followup");
   const [contactNotitie, setContactNotitie] = useState("");
-  // Datum van de aantekening zelf — default vandaag, user kan terug in de tijd
+  // Datum van de aantekening zelf, default vandaag, user kan terug in de tijd
   const [aantekeningDatum, setAantekeningDatum] = useState(
     new Date().toISOString().split("T")[0]
   );
@@ -44,7 +44,7 @@ export function ProspectActieForm({ prospect, userId }: Props) {
     e.preventDefault();
     setLaden(true);
 
-    // Log het contact — override created_at als user een eerdere datum koos
+    // Log het contact, override created_at als user een eerdere datum koos
     const vandaag = new Date().toISOString().split("T")[0];
     const contactLogData: any = {
       prospect_id: prospect.id,
@@ -60,7 +60,7 @@ export function ProspectActieForm({ prospect, userId }: Props) {
     }
     await supabase.from("contact_logs").insert(contactLogData);
 
-    // Update prospect — laatste_contact = gekozen datum (niet per se vandaag)
+    // Update prospect, laatste_contact = gekozen datum (niet per se vandaag)
     const updates: Partial<Prospect> = {
       pipeline_fase: nieuweFase,
       laatste_contact: aantekeningDatum || vandaag,

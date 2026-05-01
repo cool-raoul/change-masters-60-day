@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     const magSpringen = rij?.is_tester === true || rij?.role === "founder";
     if (!magSpringen) {
       return NextResponse.json(
-        { error: "Geen toegang — alleen voor testers en founders" },
+        { error: "Geen toegang, alleen voor testers en founders" },
         { status: 403 },
       );
     }
@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Reset voltooiingen voor de nieuwe dag — testers willen die dag opnieuw
+    // Reset voltooiingen voor de nieuwe dag, testers willen die dag opnieuw
     // beleven. Anders staat de hele flow al als 'gedaan' uit een eerdere
     // ronde. Default ingeschakeld; alleen uitschakelen via expliciet
     // wisVoltooiingen:false in de body.
@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
         .eq("dag_nummer", dagNummer)
         .select("taak_id");
       if (delErr) {
-        // Niet fatal — log voor debugging maar laat de spring zelf wel slagen.
+        // Niet fatal, log voor debugging maar laat de spring zelf wel slagen.
         console.error("dag_voltooiingen wissen mislukt:", delErr);
       } else {
         voltooiingenGewist = (gewist as Array<unknown>)?.length ?? 0;

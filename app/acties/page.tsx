@@ -9,10 +9,10 @@ import { getServerTaal, v } from "@/lib/i18n/server";
 
 const DATE_LOCALES: Record<string, Locale> = { nl, en: enUS, fr, es, de, pt };
 
-// "Volgende acties" outbox — één pagina waar alle openstaande follow-ups staan
+// "Volgende acties" outbox, één pagina waar alle openstaande follow-ups staan
 // met direct-klik kanaal-iconen per prospect. Verschil met /herinneringen:
 //  - hier gaat het om actie-uitvoering (appen/bellen NU), niet om beheren
-//  - kanaal-iconen zitten in elke rij — geen detailkaart openen nodig
+//  - kanaal-iconen zitten in elke rij, geen detailkaart openen nodig
 //  - focus op vandaag/verlopen eerst
 export default async function ActiesPagina() {
   const supabase = await createClient();
@@ -46,7 +46,7 @@ export default async function ActiesPagina() {
     (h) => h.vervaldatum > vandaag && h.vervaldatum <= over7Dagen
   );
 
-  // "Later" bewust weggelaten — dit is een DOE-pagina, niet een beheer-pagina.
+  // "Later" bewust weggelaten, dit is een DOE-pagina, niet een beheer-pagina.
   // Voor het volle overzicht: /herinneringen.
 
   const totaalVandaag = verlopen.length + vandaagLijst.length;
@@ -82,7 +82,7 @@ export default async function ActiesPagina() {
             Je lijst is leeg.
           </p>
           <p className="text-cm-white opacity-70">
-            Geen openstaande acties. Veel mensen hebben dit niet — jij nu wel.
+            Geen openstaande acties. Veel mensen hebben dit niet, jij nu wel.
           </p>
           <Link
             href="/namenlijst"
@@ -216,7 +216,7 @@ function ActieRij({
               </p>
             )}
 
-          {/* Volledige beschrijving — altijd zichtbaar op actie-pagina,
+          {/* Volledige beschrijving, altijd zichtbaar op actie-pagina,
               want dit is het ding dat je NU moet doen */}
           {heeftBeschrijving && (
             <p className="text-cm-white text-xs mt-1 opacity-80 whitespace-pre-wrap leading-relaxed">

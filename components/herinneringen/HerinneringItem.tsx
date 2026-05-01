@@ -52,7 +52,7 @@ export function HerinneringItem({ herinnering, toonProspectLink = true }: Props)
 
   // Daily-task-herinneringen (gemaakt door HerinnerLaterKnop) hebben een
   // herkenbare titel-prefix. Voor die herinneringen maken we de hele
-  // tegel klikbaar naar /vandaag — anders ben je vastgekluisterd.
+  // tegel klikbaar naar /vandaag, anders ben je vastgekluisterd.
   const isDailyTaskHerinnering =
     herinnering.titel.startsWith("📋 Pak je daily tasks") &&
     !herinnering.prospect_id;

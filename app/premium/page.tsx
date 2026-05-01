@@ -35,7 +35,7 @@ export default async function PremiumPagina() {
     {
       icoon: "🎙️",
       titel: "Onbeperkt spraakfunctie (Whisper)",
-      uitleg: "Neem klantenkaarten, notities en advies-vragen in via spraak — de slimste transcriptie voor Lifeplus-producten en medische termen.",
+      uitleg: "Neem klantenkaarten, notities en advies-vragen in via spraak, de slimste transcriptie voor Lifeplus-producten en medische termen.",
     },
     {
       icoon: "🆕",
@@ -66,7 +66,7 @@ export default async function PremiumPagina() {
         </h1>
         <p className="text-cm-white opacity-80 max-w-xl mx-auto text-sm">
           Haal alles uit ELEVA: onbeperkt chatten met je mentor, voorrang bij
-          drukte, nieuwe functies als eerste — én een bijdrage aan de Lifeplus
+          drukte, nieuwe functies als eerste, én een bijdrage aan de Lifeplus
           Foundation.
         </p>
         <div className="pt-2">
@@ -99,7 +99,7 @@ export default async function PremiumPagina() {
         <div className="card border-cm-gold/30 bg-cm-gold/5 space-y-3">
           <UpgradeKnop label="Upgrade nu voor €2/maand →" />
           <p className="text-cm-white text-xs opacity-60 text-center">
-            Je wordt doorgestuurd naar Stripe — de beveiligde betaalomgeving.
+            Je wordt doorgestuurd naar Stripe, de beveiligde betaalomgeving.
             Betaal met iDEAL, creditcard of Apple/Google Pay.
           </p>
         </div>
@@ -130,7 +130,7 @@ export default async function PremiumPagina() {
           Het draaien van ELEVA kost geld: servers, AI-modellen (OpenAI Whisper
           + GPT-4o), Supabase-database, Stripe-kosten. €2/maand is het
           kostendekkende minimum. Alles wat daarna overblijft gaat naar de{" "}
-          <span className="text-cm-gold">Lifeplus Foundation</span> — dus je
+          <span className="text-cm-gold">Lifeplus Foundation</span>, dus je
           betaalt niet voor winst, maar voor continuïteit + goed doel.
         </p>
       </div>
@@ -181,7 +181,7 @@ export default async function PremiumPagina() {
           </summary>
           <p className="text-cm-white text-xs opacity-70 mt-2 leading-relaxed">
             iDEAL, creditcard (Visa/Mastercard/Amex), Apple Pay, Google Pay,
-            Bancontact en SEPA-automatische incasso. Alles via Stripe — je
+            Bancontact en SEPA-automatische incasso. Alles via Stripe, je
             bankgegevens komen nooit bij ELEVA of Change Masters terecht.
           </p>
         </details>

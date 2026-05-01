@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (vink) {
-      // Insert — gebruik upsert voor idempotentie. Onconflict op de
+      // Insert, gebruik upsert voor idempotentie. Onconflict op de
       // unieke (user_id, dag_nummer, taak_id) constraint.
       const { error: insertErr } = await supabase
         .from("dag_voltooiingen")
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      // Sponsor-push — best-effort. We sturen één push per voltooide taak.
+      // Sponsor-push, best-effort. We sturen één push per voltooide taak.
       // De sponsor ziet zo realtime hoe de eerste 21 dagen verlopen.
       try {
         const { data: profile } = await supabase
@@ -83,7 +83,7 @@ export async function POST(req: NextRequest) {
           // dag voor deze user is voltooid. We checken op count = 1
           // (eigenlijk net na de upsert is het 1; bij her-vinken stopt de
           // upsert via onconflict en is count nog steeds 1, maar dan
-          // is voltooid_op niet net nu — dus checken we daarop).
+          // is voltooid_op niet net nu, dus checken we daarop).
           const tienSecondenGeleden = new Date(
             Date.now() - 10_000,
           ).toISOString();
@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
             .maybeSingle();
           if (rij) {
             await sendPushToUser(sponsorId, {
-              title: `${memberNaam} — dag ${dagNummer} stap voltooid`,
+              title: `${memberNaam}, dag ${dagNummer} stap voltooid`,
               body: taakLabel,
               url: "/team",
               tag: `playbook-${user.id}-dag${dagNummer}`,
@@ -105,13 +105,13 @@ export async function POST(req: NextRequest) {
           }
         }
       } catch (pushErr) {
-        // Push-fouten zijn niet fataal — checkbox is wel gewoon opgeslagen
+        // Push-fouten zijn niet fataal, checkbox is wel gewoon opgeslagen
         console.error("Sponsor-push mislukt (niet fataal):", pushErr);
       }
 
       return NextResponse.json({ ok: true, voltooid: true });
     } else {
-      // Uitvinken — delete de rij
+      // Uitvinken, delete de rij
       const { error: deleteErr } = await supabase
         .from("dag_voltooiingen")
         .delete()

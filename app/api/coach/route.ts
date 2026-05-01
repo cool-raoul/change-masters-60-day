@@ -187,7 +187,7 @@ export async function POST(request: Request) {
 
     // OpenAI streaming
     // gpt-4o voor productadvies (uitgebreid redeneren, fase-plan, basis-stack),
-    // gpt-4o-mini voor de rest (DMs/bezwaren/scripts — kort en snel).
+    // gpt-4o-mini voor de rest (DMs/bezwaren/scripts, kort en snel).
     const isProductAdvies = vraagType === "productadvies";
     const stream = await openai.chat.completions.create({
       model: isProductAdvies ? "gpt-4o" : "gpt-4o-mini",
@@ -211,7 +211,7 @@ export async function POST(request: Request) {
           }
           controller.close();
 
-          // Compliance-scan op het volledige antwoord. PASSIEF — we
+          // Compliance-scan op het volledige antwoord. PASSIEF, we
           // blokkeren niets, we loggen alleen. Als de prompt goed werkt
           // blijft dit stil; als er toch iets doorheen glipt zien we
           // dat hier en kunnen we de prompt aanscherpen.

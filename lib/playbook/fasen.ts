@@ -1,9 +1,9 @@
 // ============================================================
-// PLAYBOOK — de 3 fasen van de 60-dagenrun
+// PLAYBOOK, de 3 fasen van de 60-dagenrun
 // Elke fase heeft een eigen focus + controllable-lat + doel.
 // De controllables zijn wat de member zelf 100% in de hand heeft.
 // Het doel is het resultaat waar we naartoe WERKEN, maar dat we
-// niet kunnen forceren (afhankelijk van anderen — prospects, timing).
+// niet kunnen forceren (afhankelijk van anderen, prospects, timing).
 // ============================================================
 
 import { Fase } from "./types";

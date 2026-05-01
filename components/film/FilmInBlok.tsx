@@ -5,11 +5,11 @@ import { createClient } from "@/lib/supabase/client";
 import { normaliseerNaarEmbed, detecteerProvider } from "@/lib/films/embed";
 
 // ============================================================
-// FilmInBlok — embed een film op slug uit de films-tabel.
+// FilmInBlok, embed een film op slug uit de films-tabel.
 //
 // Gebruik:
 //   <FilmInBlok slug="onboarding-stap-6-webshop"
-//               fallbackTekst="Film volgt — vraag je sponsor om mee te kijken." />
+//               fallbackTekst="Film volgt, vraag je sponsor om mee te kijken." />
 //
 // Werking:
 // - Haalt de film op via slug uit de films-tabel
@@ -34,7 +34,7 @@ type FilmData = {
 
 export function FilmInBlok({
   slug,
-  fallbackTekst = "Film komt hier — wordt binnenkort toegevoegd.",
+  fallbackTekst = "Film komt hier, wordt binnenkort toegevoegd.",
   fallbackTitel,
   verbergZonderFilm = false,
 }: {
@@ -126,7 +126,7 @@ export function FilmInBlok({
   }
 
   if (laden) {
-    // Optionele plekken (verbergZonderFilm) krijgen GEEN skeleton-flash —
+    // Optionele plekken (verbergZonderFilm) krijgen GEEN skeleton-flash.
     // we wachten stilletjes en renderen alsnog niets als er geen film is.
     if (verbergZonderFilm) return null;
     return (
@@ -170,7 +170,7 @@ export function FilmInBlok({
         )}
       </div>
 
-      {/* Belangrijk-blok BOVEN de video — opvallend amber, zodat de
+      {/* Belangrijk-blok BOVEN de video, opvallend amber, zodat de
           gebruiker de instructie/waarschuwing zeker leest voordat hij
           de film start. */}
       {film.belangrijk && (
@@ -195,7 +195,7 @@ export function FilmInBlok({
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <p className="text-cm-white text-sm opacity-50 italic px-6 text-center">
-              Video kan niet geladen worden — controleer de URL ({provider}).
+              Video kan niet geladen worden, controleer de URL ({provider}).
             </p>
           </div>
         )}

@@ -28,7 +28,7 @@ function LoginInhoud() {
 
   // Na login terug naar de oorspronkelijke URL als die bekend is. Dit gebeurt
   // bv. wanneer een member op een pushmelding klikt terwijl de app niet
-  // ingelogd is — middleware zet dan ?next=/namenlijst/[id] zodat we hier
+  // ingelogd is, middleware zet dan ?next=/namenlijst/[id] zodat we hier
   // direct na inloggen op de juiste prospect-kaart belanden i.p.v. /dashboard.
   // Veiligheid: alleen relatieve paden accepteren, geen open-redirect.
   function bepaalRedirect(): string {

@@ -5,7 +5,7 @@ import { buildSlugContextMap, type SlugContext } from "@/lib/playbook/zinSlugs";
 import { ZinKaart } from "./zin-kaart";
 
 // ============================================================
-// /mijn-zinnen — overzicht van alle eigen zinnen die de member
+// /mijn-zinnen, overzicht van alle eigen zinnen die de member
 // vanuit het 21-daagse playbook heeft opgeslagen (edification,
 // 30-sec-pitch, why-introductie, etc.).
 //
@@ -44,7 +44,7 @@ export default async function MijnZinnenPagina() {
   const lijst = (zinnen as EigenZin[]) || [];
   const slugContextMap = buildSlugContextMap();
 
-  // Slugs die in het playbook bestaan maar nog niet opgeslagen zijn —
+  // Slugs die in het playbook bestaan maar nog niet opgeslagen zijn.
   // tonen we als "Nog niet ingevuld" zodat de member ziet wat er nog
   // aan zit te komen.
   const opgeslagenSet = new Set(lijst.map((z) => z.slug));
@@ -62,7 +62,7 @@ export default async function MijnZinnenPagina() {
             📝 Mijn zinnen
           </h1>
           <p className="text-cm-white opacity-60 mt-1">
-            Alles wat je vanuit het 21-daagse playbook hebt geschreven —
+            Alles wat je vanuit het 21-daagse playbook hebt geschreven.
             edification, pitches, intro's. Eén plek waar je ze terugvindt en
             bewerkt.
           </p>
@@ -82,7 +82,7 @@ export default async function MijnZinnenPagina() {
         </div>
       )}
 
-      {/* Opgeslagen zinnen — bewerkbaar */}
+      {/* Opgeslagen zinnen, bewerkbaar */}
       {lijst.length > 0 && (
         <div className="space-y-3">
           {lijst.map((zin) => {

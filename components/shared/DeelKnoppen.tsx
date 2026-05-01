@@ -5,7 +5,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { VerzendTimerKnop } from "@/components/shared/VerzendTimerKnop";
 
 // ============================================================
-// DeelKnoppen — herbruikbare deel-component voor overal in ELEVA
+// DeelKnoppen, herbruikbare deel-component voor overal in ELEVA
 //
 // Strategie:
 //   1. Op mobiel (Web Share API beschikbaar): "Delen via..." knop die
@@ -57,7 +57,7 @@ export function DeelKnoppen({
     setShareSupported(typeof navigator !== "undefined" && "share" in navigator);
   }, []);
 
-  // Volledige tekst — met URL bij member→prospect-flow (link is de reden van
+  // Volledige tekst, met URL bij member→prospect-flow (link is de reden van
   // het bericht), zonder URL bij prospect→member-flow (member kent de
   // prospect toch al via zijn app).
   const volledigeTekst = !inclusiefUrl
@@ -67,7 +67,7 @@ export function DeelKnoppen({
       : `${tekst}\n\n${url}`;
 
   const whatsappLink = `https://wa.me/?text=${encodeURIComponent(volledigeTekst)}`;
-  // Telegram-share heeft een verplichte URL-parameter — bij geen-url-modus
+  // Telegram-share heeft een verplichte URL-parameter, bij geen-url-modus
   // sturen we een lege string mee zodat alleen tekst getoond wordt.
   const telegramLink = inclusiefUrl
     ? `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(tekst)}`
@@ -85,7 +85,7 @@ export function DeelKnoppen({
         text: volledigeTekst,
       });
     } catch (e) {
-      // gebruiker annuleerde — stil
+      // gebruiker annuleerde, stil
     }
   }
 
@@ -113,7 +113,7 @@ export function DeelKnoppen({
 
   return (
     <div className="space-y-3">
-      {/* URL veld + kopieer knop — alleen tonen als de URL daadwerkelijk in
+      {/* URL veld + kopieer knop, alleen tonen als de URL daadwerkelijk in
           het bericht zit. Bij prospect→member is de URL niet relevant. */}
       {inclusiefUrl && (
         <div className="flex gap-2">
@@ -133,7 +133,7 @@ export function DeelKnoppen({
         </div>
       )}
 
-      {/* Native share knop (mobiel) — toont alle geïnstalleerde apps */}
+      {/* Native share knop (mobiel), toont alle geïnstalleerde apps */}
       {shareSupported && (
         <button
           onClick={nativeShare}
@@ -209,7 +209,7 @@ export function DeelKnoppen({
         💡 <strong>Voor Messenger, Instagram DM, Signal</strong> en andere
         chat-apps: gebruik op mobiel de groene <strong>"Delen via..."</strong>{" "}
         knop hierboven (of <strong>Kopieer link</strong> en plak in je gesprek).
-        Een directe Messenger-knop bestaat niet via het web — dat moet via de
+        Een directe Messenger-knop bestaat niet via het web, dat moet via de
         share-sheet van je telefoon.
       </p>
 
@@ -238,7 +238,7 @@ export function DeelKnoppen({
               </button>
             </div>
             <p className="text-gray-600 text-sm leading-relaxed">
-              Laat dit scherm zien — de ander opent z'n camera, scant deze
+              Laat dit scherm zien, de ander opent z'n camera, scant deze
               code en komt direct op de juiste pagina.
             </p>
             <div className="bg-white rounded-xl p-4 flex items-center justify-center border border-gray-200">

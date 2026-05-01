@@ -99,7 +99,7 @@ function LidDetailModal({ lid, level, onSluit }: { lid: TeamLid; level: number; 
         {/* Onboarding stappen */}
         <div>
           <p className="text-cm-white text-xs opacity-50 uppercase tracking-wider mb-2">
-            Onboarding — {aantalKlaar}/{STAPPEN.length} stappen
+            Onboarding, {aantalKlaar}/{STAPPEN.length} stappen
           </p>
           <div className="space-y-1.5">
             {STAPPEN.map((s) => {
@@ -137,7 +137,7 @@ function TeamLidKaart({ lid, level }: { lid: TeamLid; level: number }) {
     <div>
       <div className="flex items-center gap-2 p-2.5 rounded-lg hover:bg-cm-surface-2/50 transition-colors">
 
-        {/* Expand/collapse knop — alleen de pijl */}
+        {/* Expand/collapse knop, alleen de pijl */}
         <button
           className="w-6 h-6 flex-shrink-0 flex items-center justify-center"
           onClick={() => heeftKinderen && setOpen(!open)}

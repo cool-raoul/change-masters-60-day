@@ -48,7 +48,7 @@ export function AantekeningenInklapbaar({ prospectId, notities }: Props) {
             📝 Aantekeningen
           </h2>
           {!heeftNotities && (
-            <span className="text-xs text-cm-white opacity-30">— leeg</span>
+            <span className="text-xs text-cm-white opacity-30">, leeg</span>
           )}
         </div>
         <span className={`text-cm-gold text-lg transition-transform duration-200 ${open ? "rotate-180" : ""}`}>

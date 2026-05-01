@@ -1,8 +1,8 @@
-# Kennisbank — Folder 6. TRAINING TEAM
+# Kennisbank, Folder 6. TRAINING TEAM
 
 **Bron:** BE THE CHANGE board (NL) → folder `6️⃣ TRAINING TEAM`
 **Opgehaald op:** 2026-04-17
-**Status:** Volledig — 4 kaarten, 3 zijn YouTube-video's
+**Status:** Volledig, 4 kaarten, 3 zijn YouTube-video's
 
 ---
 
@@ -21,14 +21,14 @@
 
 ### Context
 
-De folder is gericht op het **uitnodigen van contacten voor online training-events** — webinars met drie vaste experts:
+De folder is gericht op het **uitnodigen van contacten voor online training-events**, webinars met drie vaste experts:
 - **Voedingsdeskundige**
 - **Psychotherapeut**
 - **Hypno-therapeut / Hypnotherapeute**
 
 Zij presenteren samen het holistische vitaliteitsprogramma (Reset / Darmkuur / Anti-Stress). De webinars starten om **12:00** en zijn gratis / vrijblijvend voor genodigden.
 
-Het team gebruikt de **schaarste-trigger**: "Ik mag maar 3 plekjes weggeven" — teamleden nodigen 3 contacten persoonlijk uit via WhatsApp.
+Het team gebruikt de **schaarste-trigger**: "Ik mag maar 3 plekjes weggeven", teamleden nodigen 3 contacten persoonlijk uit via WhatsApp.
 
 ---
 
@@ -40,9 +40,9 @@ Vier varianten, oplopend van kort naar diep-emotioneel.
 
 ### Opening-script (langst, spontaan & emotioneel)
 
-> Hey lieve [naam], Ik stuur je dit even heel spontaan… over een uur is er een hele mooie sessie met drie vrouwen die écht waanzinnig zijn — een voedingsdeskundige, een psychotherapeut en een hypno-therapeut. Zij hebben duizenden mensen geholpen om fitter te worden, rust te vinden in hun hoofd en weer te voelen wie ze zijn.
+> Hey lieve [naam], Ik stuur je dit even heel spontaan… over een uur is er een hele mooie sessie met drie vrouwen die écht waanzinnig zijn, een voedingsdeskundige, een psychotherapeut en een hypno-therapeut. Zij hebben duizenden mensen geholpen om fitter te worden, rust te vinden in hun hoofd en weer te voelen wie ze zijn.
 >
-> En jij weet wat ik de afgelopen tijd heb gedaan — die holistische reis waar ik zó veel fitter, helderder en rustiger van ben geworden… dat is hetzelfde programma waar zij zometeen over delen.
+> En jij weet wat ik de afgelopen tijd heb gedaan, die holistische reis waar ik zó veel fitter, helderder en rustiger van ben geworden… dat is hetzelfde programma waar zij zometeen over delen.
 >
 > Ik mag maar drie plekken weggeven. Letterlijk drie. En ik voel gewoon: jij zou dit zó inspirerend vinden. Niet omdat je "moet veranderen". Maar omdat zoveel vrouwen zich nu een beetje losgekoppeld voelen van zichzelf… vol hoofd, hormonen die schommelen, weinig energie, verlangen naar zelfliefde, verlangen naar rust. En dit programma raakt ál die dingen.
 >
@@ -64,11 +64,11 @@ Vier varianten, oplopend van kort naar diep-emotioneel.
 
 ### 2️⃣ MIDDELLANGE VARIANT (warm, authentiek, verbindend)
 
-> Hey [naam], Ik stuur je dit even heel spontaan… over een uur is er een supermooie sessie met drie vrouwen waar ik zó veel respect voor heb — een voedingsdeskundige, een psychotherapeut en een hypnotherapeute. Ze begeleiden al jaren vrouwen naar meer energie, meer rust en meer verbinding met zichzelf.
+> Hey [naam], Ik stuur je dit even heel spontaan… over een uur is er een supermooie sessie met drie vrouwen waar ik zó veel respect voor heb, een voedingsdeskundige, een psychotherapeut en een hypnotherapeute. Ze begeleiden al jaren vrouwen naar meer energie, meer rust en meer verbinding met zichzelf.
 >
 > Je weet wat voor reis ik zelf heb gemaakt de afgelopen tijd… fitter, helderder en echt veel meer mezelf. En dat komt voor een groot deel door hetzelfde programma waar zij zometeen over gaan delen.
 >
-> Ik heb letterlijk maar 3 plekjes die ik zelf mag invullen. En ik dacht meteen aan jou — omdat ik je het gun én omdat ik geloof dat dit je op meerdere vlakken heel veel kan brengen.
+> Ik heb letterlijk maar 3 plekjes die ik zelf mag invullen. En ik dacht meteen aan jou, omdat ik je het gun én omdat ik geloof dat dit je op meerdere vlakken heel veel kan brengen.
 >
 > Sessie is om 12:00. Wil je dat ik je op mijn lijstje zet?
 
@@ -78,13 +78,13 @@ Vier varianten, oplopend van kort naar diep-emotioneel.
 
 > Hey [naam], Ik stuur je dit even heel vanuit m'n hart…
 >
-> Over een uur is er een prachtige sessie van drie vrouwen die ik enorm respecteer — experts die duizenden vrouwen hebben geholpen met fysieke energie, hormonale balans, mentale rust en vooral: opnieuw verbinding voelen met zichzelf.
+> Over een uur is er een prachtige sessie van drie vrouwen die ik enorm respecteer, experts die duizenden vrouwen hebben geholpen met fysieke energie, hormonale balans, mentale rust en vooral: opnieuw verbinding voelen met zichzelf.
 >
 > En jij weet hoe mijn eigen reis was… Hoeveel rust ik heb teruggekregen, hoeveel helderder mijn hoofd is, hoe anders mijn energie nu voelt. Dit programma heeft zó veel voor me gedaan. Daarom moest ik aan jou denken.
 >
-> Ik mag maar 3 vrouwen meenemen, en jij bent iemand waarvan ik oprecht geloof dat dit je iets moois kan brengen — niet vanuit "je moet dit doen", maar vanuit: dit gun ik jou echt.
+> Ik mag maar 3 vrouwen meenemen, en jij bent iemand waarvan ik oprecht geloof dat dit je iets moois kan brengen, niet vanuit "je moet dit doen", maar vanuit: dit gun ik jou echt.
 >
-> En heel eerlijk… wat ik zelf mooi vind is dat je hiermee — als je dat zou willen — het ook gewoon met anderen kunt delen en daar zelfs iets extra's mee kunt verdienen. Zonder risico, zonder investering. Gewoon iets goeds doorgeven.
+> En heel eerlijk… wat ik zelf mooi vind is dat je hiermee, als je dat zou willen, het ook gewoon met anderen kunt delen en daar zelfs iets extra's mee kunt verdienen. Zonder risico, zonder investering. Gewoon iets goeds doorgeven.
 >
 > De sessie start om 12:00. Zal ik jouw naam invullen op m'n lijstje?
 
@@ -102,8 +102,8 @@ Vier varianten, oplopend van kort naar diep-emotioneel.
 
 ## Implicaties voor ELEVA
 
-- **Training-uitnodigingen als DM-flow**: ELEVA kan een dedicated flow bieden voor "ik ga iemand uitnodigen voor een training-event" — teamlid kiest variant (kort/middel/persoonlijk), ELEVA personaliseert op naam en relatie.
-- **Schaarste-trigger is systeem-breed**: "Ik mag maar 3 plekjes" is een vaste techniek — ELEVA coach kan dit als framing bevestigen maar nooit als manipulatie-script presenteren.
+- **Training-uitnodigingen als DM-flow**: ELEVA kan een dedicated flow bieden voor "ik ga iemand uitnodigen voor een training-event", teamlid kiest variant (kort/middel/persoonlijk), ELEVA personaliseert op naam en relatie.
+- **Schaarste-trigger is systeem-breed**: "Ik mag maar 3 plekjes" is een vaste techniek, ELEVA coach kan dit als framing bevestigen maar nooit als manipulatie-script presenteren.
 - **De 3 experts zijn het "gezicht" van de training**: voedingsdeskundige + psychotherapeut + hypnotherapeute. ELEVA-scripts kunnen hierop voortbouwen als geloofwaardigheidsbasis.
 - **Business-inkomen zit in variant 3**: de langste variant weeft de verdiencomponent subtiel in ("je kunt dit ook met anderen delen en iets verdienen"). ELEVA coach kan uitleggen wanneer dit past (warm contact vs. prospect met oog op business).
 - **Video-leadership content**: Omgaan met Bezwaren + Power of Stories + Erkenningsdiner zijn trainingen die teamleden kijken. ELEVA kan hiernaar verwijzen als leermateriaal (Skill-van-de-dag), maar niet de inhoud reproduceren (video-only).

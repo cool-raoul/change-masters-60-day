@@ -1,7 +1,7 @@
 "use client";
 
 // Lijst van productbestellingen op de prospect-detail kaart.
-// Elke bestelling kan inline bewerkt of verwijderd worden — zonder modal.
+// Elke bestelling kan inline bewerkt of verwijderd worden, zonder modal.
 // De reminder-datum wordt NIET automatisch meeverschoven als je de
 // besteldatum aanpast, omdat die twee los van elkaar gezet kunnen worden
 // (de herinnering kan handmatig zijn uitgesteld). Je ziet dus beide velden.
@@ -204,7 +204,7 @@ export function ProductBestellingenLijst({
                   })}
                 </p>
               </div>
-              {/* Actieknoppen — compact, rechts. Niet verborgen bij hover want
+              {/* Actieknoppen, compact, rechts. Niet verborgen bij hover want
                   op mobiel bestaat hover niet; user moet altijd kunnen ingrijpen. */}
               <div className="flex items-center gap-1 flex-shrink-0">
                 {inBevestigen ? (

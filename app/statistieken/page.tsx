@@ -52,7 +52,7 @@ export default async function StatistiekenPagina() {
           {v("stats.titel", taal)}
         </h1>
         <p className="text-cm-white mt-1 opacity-70">
-          {v("stats.subtitel", taal)} — {v("dashboard.dag", taal)} {dag} {v("dashboard.van_60", taal)}
+          {v("stats.subtitel", taal)}, {v("dashboard.dag", taal)} {dag} {v("dashboard.van_60", taal)}
         </p>
       </div>
 

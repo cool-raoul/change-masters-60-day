@@ -96,7 +96,7 @@ function ProspectKaart({
             ? dagSindsContact === 0
               ? "✓"
               : `${dagSindsContact}d`
-            : "—"}
+            : "-"}
         </span>
         {prospect.volgende_actie_datum && (
           <span className={`text-xs font-medium ${
@@ -109,7 +109,7 @@ function ProspectKaart({
         )}
       </div>
 
-      {/* Kanaal-iconen — direct bellen/appen/mailen zonder kaart te openen.
+      {/* Kanaal-iconen, direct bellen/appen/mailen zonder kaart te openen.
           onMouseDown stopPropagation zodat drag niet start bij klik op icoon. */}
       {(prospect.telefoon || prospect.email || prospect.instagram || prospect.facebook) && (
         <div onMouseDown={(e) => e.stopPropagation()} draggable={false}>

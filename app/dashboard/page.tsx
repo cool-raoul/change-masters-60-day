@@ -3,7 +3,7 @@ import { differenceInDays, format } from "date-fns";
 import { nl, enUS, fr, es, de, pt } from "date-fns/locale";
 import Link from "next/link";
 import { DagelijkseStat, Herinnering, WhyProfile } from "@/lib/supabase/types";
-// DagStatForm verwijderd van dashboard — handmatig stats invullen
+// DagStatForm verwijderd van dashboard, handmatig stats invullen
 // hoort op /statistieken (en wordt straks automatisch gevuld door
 // pipeline-veranderingen).
 import { TesterToolbar } from "@/components/tester/TesterToolbar";
@@ -45,7 +45,7 @@ export default async function DashboardPagina() {
     supabase.from("dagelijkse_stats").select("*").eq("user_id", user.id).eq("stat_datum", vandaagStr).maybeSingle(),
     supabase.from("herinneringen").select("*, prospect:prospects(id, volledige_naam)").eq("user_id", user.id).lte("vervaldatum", vandaagStr).eq("voltooid", false).order("vervaldatum", { ascending: true }).limit(5),
     supabase.from("prospects").select("pipeline_fase").eq("user_id", user.id).eq("gearchiveerd", false),
-    // Alle voltooide playbook-taken voor deze user — gebruikt voor de
+    // Alle voltooide playbook-taken voor deze user, gebruikt voor de
     // 'Vandaag is dag X'-tegel én voor de admin-reminders van vorige dagen.
     supabase.from("dag_voltooiingen").select("dag_nummer, taak_id").eq("user_id", user.id),
     // Auto-trigger 3-weg: prospects die klaar zijn voor een 3-weg-gesprek.
@@ -88,7 +88,7 @@ export default async function DashboardPagina() {
   // - dag1-onboarding   → automatisch klaar als profile.onboarding_klaar
   // - dag1-why          → automatisch klaar als WHY al gemaakt is
   // Idempotent: alleen INSERT als rij nog niet bestaat. Zo schrijven we
-  // eenmalig naar DB en blijft de bevestiging consistent — handig voor
+  // eenmalig naar DB en blijft de bevestiging consistent, handig voor
   // de stilte-detectie (laatste activiteit baseert op voltooid_op).
   const autoVinken: string[] = [];
   if ((profile as any)?.onboarding_klaar && !voltooidSet.has("1|dag1-onboarding")) {
@@ -110,7 +110,7 @@ export default async function DashboardPagina() {
     autoVinken.forEach((t) => voltooidSet.add(`1|${t}`));
   }
 
-  // Streak-berekening — hoeveel dagen op rij heeft de member iets
+  // Streak-berekening, hoeveel dagen op rij heeft de member iets
   // afgevinkt? Telt vanaf vandaag terug. Géén stilte-dagen tussendoor.
   // Voor motivatie-tegel "🔥 X dagen op rij".
   const voltooidPerDag = new Map<number, boolean>();
@@ -142,11 +142,11 @@ export default async function DashboardPagina() {
   const week3Klaar = mijlpaalVoltooid(21);
 
   // Huidige dag-data uit het 21-daagse playbook (alleen relevant voor
-  // dag 1-21 — daarna draait de gebruiker op weekritme).
+  // dag 1-21, daarna draait de gebruiker op weekritme).
   let huidigeDagData = dag <= 21
     ? DAGEN.find((d) => d.nummer === dag) ?? null
     : null;
-  // Override toepassen — founders kunnen via /instellingen/playbook
+  // Override toepassen, founders kunnen via /instellingen/playbook
   // teksten aanpassen zonder code-deploy. haalOverrides faalt stilletjes
   // als de tabel nog niet bestaat (returnt lege map), zodat de tile
   // gewoon de hardcoded versie blijft tonen.
@@ -163,13 +163,13 @@ export default async function DashboardPagina() {
         .map((t) => t.id)
     : [];
 
-  // (Inline-zinnen worden voortaan exclusief in /vandaag geladen — niet
+  // (Inline-zinnen worden voortaan exclusief in /vandaag geladen, niet
   // meer hier; dashboard toont geen afvinklijst meer.)
 
-  // Reminders voor onvoltooide ADMIN-taken van vorige dagen — krediet,
+  // Reminders voor onvoltooide ADMIN-taken van vorige dagen, krediet,
   // webshop, teams-admin, bestellinks. Eric Worre tip is geen reminder
   // (doorlopend, geen one-shot taak). We tonen ook missed verplichte
-  // taken alleen voor admin-stappen — niet alle gemiste invites etc.
+  // taken alleen voor admin-stappen, niet alle gemiste invites etc.
   // Mapping admin-taak → emoji + 'kale' titel zonder emoji-prefix
   // (zo voorkomen we een unicode-regex die niet in alle TS-versies werkt).
   const ADMIN_TAKEN: Record<string, { emoji: string; kort: string }> = {
@@ -209,13 +209,13 @@ export default async function DashboardPagina() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
-      {/* Header — warme groet, dag-nummer prominent */}
+      {/* Header, warme groet, dag-nummer prominent */}
       <div>
         <h1 className="text-2xl font-display font-bold text-cm-white">
           {dag === 1 ? (
-            <>Daar gaan we! 🚀 — <span className="text-cm-gold">Dag 1</span></>
+            <>Daar gaan we! 🚀, <span className="text-cm-gold">Dag 1</span></>
           ) : dag <= 21 ? (
-            <>Goedemorgen! ☀️ — {v("dashboard.dag", taal)}{" "}
+            <>Goedemorgen! ☀️, {v("dashboard.dag", taal)}{" "}
               <span className="text-cm-gold">{dag}</span>{" "}
               {v("dashboard.van_60", taal)}
             </>
@@ -284,7 +284,7 @@ export default async function DashboardPagina() {
 
       {/* Auto-redirect bij eerste bezoek per dag → /vandaag (guided
           flow). Daarna niet meer voor die dag; dashboard wordt dan de
-          hoofdpagina. Geldt voor iedereen — testers springen sowieso
+          hoofdpagina. Geldt voor iedereen, testers springen sowieso
           tussen dagen, dus elke nieuwe dag krijgt een eigen redirect.
           Member die via push naar /herinneringen wordt geleid, doet
           daar z'n ding, en wordt pas bij dashboard-bezoek doorgestuurd
@@ -293,7 +293,7 @@ export default async function DashboardPagina() {
         <AutoNaarVandaag dagNummer={dag} redirectActief={true} />
       )}
 
-      {/* Prominente CTA naar vandaag-flow — handig voor wanneer je
+      {/* Prominente CTA naar vandaag-flow, handig voor wanneer je
           via de browser-knop terugkomt op dashboard maar nog niet alle
           taken hebt gedaan. Verbergt automatisch als alles voltooid. */}
       {huidigeDagData &&
@@ -313,7 +313,7 @@ export default async function DashboardPagina() {
                   </p>
                   <p className="text-cm-white opacity-70 text-xs mt-1">
                     {huidigeDagVoltooidIds.length} van{" "}
-                    {huidigeDagData.vandaagDoen.length} stappen klaar — pak 'm
+                    {huidigeDagData.vandaagDoen.length} stappen klaar, pak 'm
                     stap voor stap →
                   </p>
                 </div>
@@ -341,7 +341,7 @@ export default async function DashboardPagina() {
               </p>
               <p className="text-cm-white text-sm font-medium mt-0.5">
                 <strong className="text-orange-300 text-base">{streak}</strong>{" "}
-                dagen op rij — hou vol!
+                dagen op rij, hou vol!
               </p>
             </div>
           )}
@@ -351,7 +351,7 @@ export default async function DashboardPagina() {
                 🏆 21 dagen klaar!
               </p>
               <p className="text-cm-white text-sm font-medium mt-0.5">
-                Te gek — fase 1 t/m 3 voltooid. Dit is je startlijn voor de
+                Te gek, fase 1 t/m 3 voltooid. Dit is je startlijn voor de
                 volgende 40 dagen.
               </p>
             </div>
@@ -361,7 +361,7 @@ export default async function DashboardPagina() {
                 🏁 Halverwege!
               </p>
               <p className="text-cm-white text-sm font-medium mt-0.5">
-                Twee weken in — jij hoort bij de 20% die doorzet. Door zo!
+                Twee weken in, jij hoort bij de 20% die doorzet. Door zo!
               </p>
             </div>
           ) : week1Klaar ? (
@@ -370,25 +370,25 @@ export default async function DashboardPagina() {
                 🎉 Eerste week klaar!
               </p>
               <p className="text-cm-white text-sm font-medium mt-0.5">
-                Top — week 1 zit erop. Het ritme zit er nu in. Op naar fase 2!
+                Top, week 1 zit erop. Het ritme zit er nu in. Op naar fase 2!
               </p>
             </div>
           ) : null}
         </div>
       )}
 
-      {/* Tester-toolbar — alleen voor pilot-testers + founders.
+      {/* Tester-toolbar, alleen voor pilot-testers + founders.
           Verzet run_startdatum zodat je virtueel op een andere dag zit
           en zo door alle 21 dagen kan klikken voor bug-rapporten. */}
       {(isTester || isFounder) && dag <= 21 && (
         <TesterToolbar huidigeDag={dag} />
       )}
 
-      {/* Daily tasks staan EXCLUSIEF in /vandaag — niet meer dubbel op
+      {/* Daily tasks staan EXCLUSIEF in /vandaag, niet meer dubbel op
           het dashboard. De gouden CTA hierboven is de enige entry naar
           de flow; afvinken doe je daar. Houdt het dashboard rustig. */}
 
-      {/* Auto-trigger 3-weg — prospects in pipeline-fase 'one_pager' of
+      {/* Auto-trigger 3-weg, prospects in pipeline-fase 'one_pager' of
           'presentatie' wachten op een 3-weg-gesprek. Inklapbare details/
           summary zodat het op het dashboard niet gelijk veel ruimte
           inneemt. Klik op een naam → naar prospect-kaart, waar de
@@ -403,7 +403,7 @@ export default async function DashboardPagina() {
               </h3>
               <p className="text-cm-white opacity-60 text-xs mt-1">
                 {klaarVoorDrieweg.length} prospect
-                {klaarVoorDrieweg.length === 1 ? "" : "s"} — open om te zien wie
+                {klaarVoorDrieweg.length === 1 ? "" : "s"}, open om te zien wie
               </p>
             </div>
             <span className="text-cm-gold text-xs transition-transform group-open:rotate-180 flex-shrink-0">
@@ -412,10 +412,10 @@ export default async function DashboardPagina() {
           </summary>
           <div className="mt-3 pt-3 border-t border-cm-border space-y-2">
             <p className="text-cm-white opacity-60 text-xs">
-              Klik op een prospect — op zijn kaart pulseert de 3-weg-balk om
+              Klik op een prospect, op zijn kaart pulseert de 3-weg-balk om
               je naar de juiste plek te brengen. Eenmaal het 3-weg-gesprek
               gehad? Verplaats hem in de pipeline (bv. naar "Shopper", "Member"
-              of "Not yet") — dan verdwijnt hij hier automatisch.
+              of "Not yet"), dan verdwijnt hij hier automatisch.
             </p>
             {(klaarVoorDrieweg as Array<{
               id: string;
@@ -467,13 +467,13 @@ export default async function DashboardPagina() {
 
       {/* Dashboard-cleanup: snelle acties (Scripts/Statistieken/Mentor/
           Nieuw) zaten dubbel met het hoofdmenu en zijn weggehaald. De
-          'Vandaag bijhouden'-stat-form en de pipeline-grid zijn ook weg —
+          'Vandaag bijhouden'-stat-form en de pipeline-grid zijn ook weg.
           die data hoort op /statistieken (zit daar al), en wordt straks
           automatisch gevuld door pipeline-veranderingen ipv handmatig
           tellen op het dashboard. */}
 
       <div className="space-y-4">
-          {/* WHY kaart — ingeklapt (details/summary), user klapt uit om te lezen */}
+          {/* WHY kaart, ingeklapt (details/summary), user klapt uit om te lezen */}
           {why?.why_samenvatting && (
             <details className="card border-gold-subtle group">
               <summary className="flex items-center justify-between cursor-pointer list-none">
@@ -484,7 +484,7 @@ export default async function DashboardPagina() {
                       {v("dashboard.jouw_why", taal)}
                     </h2>
                     <p className="text-cm-white text-[11px] opacity-60 mt-0.5">
-                      Jouw opgeslagen why — bekijk &lsquo;m regelmatig
+                      Jouw opgeslagen why, bekijk &lsquo;m regelmatig
                     </p>
                   </div>
                 </div>
@@ -559,7 +559,7 @@ export default async function DashboardPagina() {
           </div>
       </div>
 
-      {/* Instellingen — compacte status-regel. Eén bron van waarheid (/instellingen). */}
+      {/* Instellingen, compacte status-regel. Eén bron van waarheid (/instellingen). */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 opacity-60 hover:opacity-100 transition-opacity">
         <Link
           href="/instellingen"

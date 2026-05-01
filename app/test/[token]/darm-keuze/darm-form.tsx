@@ -11,11 +11,11 @@ import { getResetPakket } from "@/lib/lifeplus/pakketten";
 import { DarmUitslagWeergave } from "./darm-uitslag-weergave";
 
 // ============================================================
-// DarmForm — client form voor de 15-vragen darmvragenlijst.
+// DarmForm, client form voor de 15-vragen darmvragenlijst.
 // 4-puntsschaal per vraag: Niet / Soms / Regelmatig / Vaak
 //
 // Na submit toont dit component direct de uitslag client-side
-// (geen router.refresh — dat hing in de praktijk). De server-side
+// (geen router.refresh, dat hing in de praktijk). De server-side
 // uitslag wordt bij volgende paginabezoek alsnog uit de DB gelezen.
 // ============================================================
 
@@ -97,7 +97,7 @@ export function DarmForm({
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-6">
         <p className="text-sm text-gray-700">
           <strong>Hoe vul je dit in?</strong> Per zin kies je hoe vaak het op
-          jou van toepassing is in een gemiddelde week. Niet bij twijfel — kies
+          jou van toepassing is in een gemiddelde week. Niet bij twijfel, kies
           op gevoel.
         </p>
         <p className="text-xs text-gray-500 mt-2">

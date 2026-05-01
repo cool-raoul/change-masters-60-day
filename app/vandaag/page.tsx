@@ -6,9 +6,9 @@ import { haalOverrides, pasOverrideToe } from "@/lib/playbook/overrides";
 import { VandaagFlow } from "./vandaag-flow";
 
 // ============================================================
-// /vandaag — guided full-screen flow voor de huidige playbook-dag.
+// /vandaag, guided full-screen flow voor de huidige playbook-dag.
 //
-// Werkt als de onboarding: geen AppShell, geen sidebar — focus alleen
+// Werkt als de onboarding: geen AppShell, geen sidebar, focus alleen
 // op wat de member vandaag moet doen. Stap voor stap door alle taken
 // + uitleg, met afvink-knoppen. Aan eind een viering en knop terug
 // naar dashboard.
@@ -38,7 +38,7 @@ export default async function VandaagPagina() {
     .eq("id", user.id)
     .maybeSingle();
 
-  // NB: middleware vangt onboarding-niet-klaar al af — die redirect
+  // NB: middleware vangt onboarding-niet-klaar al af, die redirect
   // automatisch naar /mijn-why of /onboarding. Hier hoeft geen extra
   // check, anders krijg je dubbele redirects.
 
@@ -52,7 +52,7 @@ export default async function VandaagPagina() {
   let dagData = DAGEN.find((d) => d.nummer === dag);
   if (!dagData) redirect("/dashboard");
 
-  // Founder-overrides toepassen — zelfde patroon als dashboard.
+  // Founder-overrides toepassen, zelfde patroon als dashboard.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const overrideMap = await haalOverrides(supabase as any, [dag]);
   dagData = pasOverrideToe(dagData, overrideMap.get(dag) ?? null);

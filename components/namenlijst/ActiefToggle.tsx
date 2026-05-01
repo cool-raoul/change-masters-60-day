@@ -11,7 +11,7 @@ interface Props {
   actief: boolean;
 }
 
-// Actief-toggle — alleen zichtbaar op de klantenkaart van member/shopper.
+// Actief-toggle, alleen zichtbaar op de klantenkaart van member/shopper.
 // Niet-actief zet de prospect onderaan de namenlijst + pipeline-kolom.
 export function ActiefToggle({ prospectId, prospectNaam, actief }: Props) {
   const [bezig, setBezig] = useState(false);
@@ -32,7 +32,7 @@ export function ActiefToggle({ prospectId, prospectNaam, actief }: Props) {
       const isKolomFout = /column .* does not exist|actief/i.test(error.message);
       toast.error(
         isKolomFout
-          ? "Database mist 'actief' kolom — SQL-migratie prospect_actief.sql nog uitvoeren"
+          ? "Database mist 'actief' kolom, SQL-migratie prospect_actief.sql nog uitvoeren"
           : `Status wijzigen mislukt: ${error.message}`
       );
       console.error("ActiefToggle update fout:", error);
@@ -44,7 +44,7 @@ export function ActiefToggle({ prospectId, prospectNaam, actief }: Props) {
     toast.success(
       nieuweWaarde
         ? `${prospectNaam} weer op actief`
-        : `${prospectNaam} op niet-actief — komt onderaan de lijst`
+        : `${prospectNaam} op niet-actief, komt onderaan de lijst`
     );
     router.refresh();
   }
@@ -64,7 +64,7 @@ export function ActiefToggle({ prospectId, prospectNaam, actief }: Props) {
           : "Zet weer op actief"
       }
     >
-      {bezig ? "…" : huidig ? "💤 Niet-actief zetten" : "💤 Niet actief — klik om te heractiveren"}
+      {bezig ? "…" : huidig ? "💤 Niet-actief zetten" : "💤 Niet actief, klik om te heractiveren"}
     </button>
   );
 }

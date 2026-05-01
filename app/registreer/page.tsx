@@ -65,7 +65,7 @@ function RegistreerFormulier() {
       toast.error(v("registreer.mislukt") + error.message);
       setLaden(false);
     } else {
-      // Geen e-mailbevestiging nodig — direct doorsturen naar onboarding
+      // Geen e-mailbevestiging nodig, direct doorsturen naar onboarding
       router.push("/onboarding");
       router.refresh();
     }

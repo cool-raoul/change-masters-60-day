@@ -26,7 +26,7 @@ export function ServiceWorkerRegister() {
     // binnenkomt terwijl de app open is, krijgt de OS-notificatie minder
     // aandacht (op desktop staat-ie soms in een hoekje, op iOS verschijnt
     // hij niet eens). Met deze toast krijgt de gebruiker IN de app meteen
-    // een klikbaar prompt — tap → router.push naar de doel-URL.
+    // een klikbaar prompt, tap → router.push naar de doel-URL.
     function handleMessage(event: MessageEvent) {
       const data = event.data;
       if (!data || data.type !== "push-melding") return;

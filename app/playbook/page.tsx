@@ -6,14 +6,14 @@ import { haalOverrides, pasOverrideToe } from "@/lib/playbook/overrides";
 import { PlaybookDagTile } from "@/components/playbook/PlaybookDagTile";
 
 // ============================================================
-// /playbook — gerichte inzage van één playbook-dag.
+// /playbook, gerichte inzage van één playbook-dag.
 //
 // Gebruikt vanuit dashboard-reminders en deeplinks. Toont:
 // - één dag uit DAGEN (?dag=N)
 // - met checklist + film-embed + voltooi-tracking
 //
 // Preview-modus (?preview=true): checkboxes werken visueel maar
-// slaan niets op — handig voor founder/leider om dag te bekijken
+// slaan niets op, handig voor founder/leider om dag te bekijken
 // zonder voortgang te beïnvloeden. Geen testaccount nodig.
 // ============================================================
 
@@ -39,7 +39,7 @@ export default async function PlaybookDagPagina({
     redirect("/login");
   }
 
-  // Profile.role uitlezen — bepaalt of de tile inline-edit-knoppen
+  // Profile.role uitlezen, bepaalt of de tile inline-edit-knoppen
   // krijgt voor de founder.
   const { data: profielRow } = await supabase
     .from("profiles")
@@ -54,7 +54,7 @@ export default async function PlaybookDagPagina({
     redirect("/dashboard");
   }
 
-  // Override toepassen — founders kunnen via /instellingen/playbook
+  // Override toepassen, founders kunnen via /instellingen/playbook
   // teksten aanpassen zonder code-deploy. Werkt in zowel preview als
   // live mode (zo ziet de founder zijn aanpassingen meteen terug).
   // haalOverrides faalt stilletjes als de tabel ontbreekt.
@@ -79,7 +79,7 @@ export default async function PlaybookDagPagina({
 
     // Haal eerder geschreven inline-zinnen op zodat ze vooraf in het
     // formulier staan. We pakken alleen de slugs die op deze dag
-    // gebruikt worden — kleinere payload + minder leak.
+    // gebruikt worden, kleinere payload + minder leak.
     const slugs = dagData.vandaagDoen
       .map((t) => t.inlineActie?.slug)
       .filter((s): s is string => !!s);
@@ -107,7 +107,7 @@ export default async function PlaybookDagPagina({
         </Link>
         {isPreview && !isFounder && (
           <span className="text-xs px-3 py-1 rounded-full bg-amber-900/30 border border-amber-500/40 text-amber-300">
-            Preview — afvinken slaat niets op
+            Preview, afvinken slaat niets op
           </span>
         )}
       </div>
@@ -119,14 +119,14 @@ export default async function PlaybookDagPagina({
         <div className="rounded-lg border border-cm-gold/40 bg-cm-gold/10 px-4 py-3 space-y-2">
           <p className="text-sm text-cm-white">
             <strong className="text-cm-gold">✍️ Founder preview & edit</strong>
-            {" — "}
+            {", "}
             Klik op een <span className="text-cm-gold">✏️</span> naast een
             tekst om aan te passen. Wijzigingen zijn{" "}
             <strong>ONMIDDELLIJK live</strong> voor alle members. Met de
             pijltjes onderaan blader je door alle 21 dagen.
           </p>
           <p className="text-xs text-cm-white opacity-60">
-            (Afvinken in preview slaat niets op — dat is alleen om te zien hoe
+            (Afvinken in preview slaat niets op, dat is alleen om te zien hoe
             een member het ervaart.)
           </p>
           <p className="text-xs text-cm-white opacity-80 pt-1 border-t border-cm-gold/20">
@@ -155,7 +155,7 @@ export default async function PlaybookDagPagina({
         isFounder={isFounder}
       />
 
-      {/* Navigatie tussen dagen — ALLEEN in preview-modus voor founder/leider.
+      {/* Navigatie tussen dagen, ALLEEN in preview-modus voor founder/leider.
           Members op hun live dagtegel mogen niet vooruit-bladeren door de
           21 dagen heen; dat haalt de focus van het ritme weg. */}
       {isPreview && (

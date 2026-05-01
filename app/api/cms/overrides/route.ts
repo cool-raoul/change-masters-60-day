@@ -10,7 +10,7 @@ import { createClient } from "@/lib/supabase/server";
 //
 // Wordt gebruikt door client-pages (zoals /onboarding) die geen
 // server-prefetch hebben. Een server-rendered page kan haalTekstOverrides()
-// rechtstreeks aanroepen — geen API-call nodig.
+// rechtstreeks aanroepen, geen API-call nodig.
 // ============================================================
 
 export async function GET(req: NextRequest) {

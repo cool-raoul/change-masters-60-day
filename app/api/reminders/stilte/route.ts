@@ -113,7 +113,7 @@ export async function GET(request: Request) {
         ?.voltooid_op ?? null;
 
     // 5) Bereken stilte-dagen (afgerond naar boven, in tijdzone-onafhankelijke
-    //    24-uurs blokken — fijnere granulariteit niet nodig).
+    //    24-uurs blokken, fijnere granulariteit niet nodig).
     let stilteDagen: number;
     if (!laatsteActiviteit) {
       // Nooit afgevinkt → stilte vanaf dag 1 van de run
@@ -124,7 +124,7 @@ export async function GET(request: Request) {
 
     if (stilteDagen < 1) continue; // Vandaag al activiteit gehad
 
-    // 6) Member-nudge — automatisch onderdeel van ELEVA's coaching.
+    // 6) Member-nudge, automatisch onderdeel van ELEVA's coaching.
     //    Geen aparte toggle (master-push-toggle is dagelijkse_push_aan).
     //    Wel >24u anti-spam tussen pushes.
     const urenSindsVorigeNudge = urenGeleden(
@@ -140,7 +140,7 @@ export async function GET(request: Request) {
           : `${voornaam}, ${stilteDagen} dagen geen activiteit`;
       const body =
         stilteDagen === 1
-          ? `Eén kleine stap is al een win — pak dag ${dagNummer} erbij.`
+          ? `Eén kleine stap is al een win, pak dag ${dagNummer} erbij.`
           : `We missen je. Je bent op dag ${dagNummer}. Eén kleine stap is genoeg om weer te starten.`;
       const res = await sendPushToUser(rij.id, {
         title: titel,
@@ -159,7 +159,7 @@ export async function GET(request: Request) {
       }
     }
 
-    // 7) Sponsor-push — alleen bij 2+ dagen stilte, sponsor-toggle aan,
+    // 7) Sponsor-push, alleen bij 2+ dagen stilte, sponsor-toggle aan,
     //    en >72u sinds vorige sponsor-push voor dezelfde member.
     if (stilteDagen >= 2 && rij.sponsor_id) {
       // Sponsor-toggle ophalen (apart, want sponsor is een ándere user)
@@ -191,7 +191,7 @@ export async function GET(request: Request) {
 
       const memberNaam = rij.full_name || "Een teamlid";
       const sponsorRes = await sendPushToUser(rij.sponsor_id, {
-        title: `${memberNaam} — ${stilteDagen} dagen stil`,
+        title: `${memberNaam}, ${stilteDagen} dagen stil`,
         body: `Een belletje of berichtje kan helpen om weer in beweging te komen.`,
         url: `/team`,
         tag: `sponsor-stilte-${rij.id}`,

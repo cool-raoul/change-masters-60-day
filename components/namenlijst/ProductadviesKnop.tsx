@@ -12,7 +12,7 @@ interface Props {
   notities?: string | null;
   /**
    * Als gezet: voeg het opening-bericht toe aan dit BESTAANDE gesprek
-   * i.p.v. een nieuw gesprek aan te maken. Voor gebruik in de Mentor —
+   * i.p.v. een nieuw gesprek aan te maken. Voor gebruik in de Mentor.
    * de user zit al in een gesprek over deze prospect, dus een tweede
    * gesprek aanmaken zou onnodig versplinteren.
    */
