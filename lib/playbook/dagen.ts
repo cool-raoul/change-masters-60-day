@@ -100,11 +100,13 @@ OVERWELDIGD VOELEN IS NORMAAL: je leert iets nieuws, je stapt uit comfort. Eerst
         uitleg:
           "Uit je hoofd, WhatsApp top-chats, oud-collega's, familie, sport, hobby's, ouders van vriendjes, buurt. Spraak-FAB: 'Nieuwe prospect [naam] uit [context]'.",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag2-onboarding-module",
         label: "Lees de onboarding-module 'NIVEA'",
         verplicht: true,
+        actieRoute: "/onboarding",
       },
       {
         id: "dag2-kennismaak",
@@ -112,6 +114,7 @@ OVERWELDIGD VOELEN IS NORMAAL: je leert iets nieuws, je stapt uit comfort. Eerst
         uitleg:
           "Korte check-in. Jouw WHY laten lezen, sponsor vertelt wat jullie samen gaan doen fase 1. Vraag in deze call meteen om hulp bij je eerste 3 invites vandaag.",
         verplicht: true,
+        actieRoute: "/team",
       },
       {
         id: "dag2-3-invites",
@@ -119,6 +122,7 @@ OVERWELDIGD VOELEN IS NORMAAL: je leert iets nieuws, je stapt uit comfort. Eerst
         uitleg:
           "Kies 3 warmere mensen uit je lijst. Stel ze samen met je sponsor op (in jullie call), of vraag de Mentor: 'Schrijf een uitnodiging voor [naam] die [context]'. Drempel laag houden, gewoon doen, niet perfect.",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag2-3weg-uitleg",
@@ -126,6 +130,7 @@ OVERWELDIGD VOELEN IS NORMAAL: je leert iets nieuws, je stapt uit comfort. Eerst
         uitleg:
           "Wat is een 3-weg en waarom werkt het? Korte uitleg in ELEVA. Je hoeft 'm nog niet te doen, je hoeft alleen even te weten dát je je contacten kunt koppelen aan je sponsor. Dat is de versneller in week 1.",
         verplicht: true,
+        actieRoute: "/onboarding",
       },
       {
         id: "dag2-webshop",
@@ -213,6 +218,7 @@ Vandaag stuur je ook al 3 uitnodigingen — samen met je sponsor in een groepje 
         uitleg:
           "Scroll 5 minuten. Wie reageert op je posts? Wie stuurt DMs? Wie post dingen over energie, doelen, gezondheid, ondernemen? 3 namen met 1 woord context ('fitness', 'oud-collega').",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag3-invites-5",
@@ -220,11 +226,13 @@ Vandaag stuur je ook al 3 uitnodigingen — samen met je sponsor in een groepje 
         uitleg:
           "Bouw door op gisteren. Vandaag mag je het zelfstandig doen. Loop je vast? Vraag de Mentor: 'Schrijf een uitnodiging voor [naam] die [context]'.",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag3-dagelijks-5",
         label: "5 namen in totaal vandaag (telefoon + socials + hoofd)",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag3-eerste-gesprek",
@@ -232,6 +240,7 @@ Vandaag stuur je ook al 3 uitnodigingen — samen met je sponsor in een groepje 
         uitleg:
           "Reageer op hun laatste post of story. Vraag hoe het gaat. Niets verkopen. Nog geen uitnodiging. Gewoon even contact, koude mensen warm maken vóór de invite later komt.",
         verplicht: false,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag3-sponsor-checkin",
@@ -239,6 +248,7 @@ Vandaag stuur je ook al 3 uitnodigingen — samen met je sponsor in een groepje 
         uitleg:
           "30 seconden. Sponsor weet dat je beweegt, jij voelt de lijn naar boven open. Niets uitgebreids, gewoon even een update.",
         verplicht: false,
+        actieRoute: "/team",
       },
       {
         id: "dag3-teams-admin",
@@ -300,6 +310,7 @@ NIET GELIJK PITCHEN — wat wel: reageer terug op hun content. Vraag iets. Bouw 
         uitleg:
           "1) wees druk, 2) compliment, 3) uitnodig, 4) plan. Houd het kort. Doel = ja tegen het kijkmoment, niet ja tegen jou.",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag4-3weg-optioneel",
@@ -307,11 +318,13 @@ NIET GELIJK PITCHEN — wat wel: reageer terug op hun content. Vraag iets. Bouw 
         uitleg:
           "Heb je al iemand die warm is uit dag 2-3? Koppel die aan je sponsor in een WhatsApp-groepje. Sponsor = expert, jij = student. Dit oefen je nu, niet over een week.",
         verplicht: false,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag4-social-3",
         label: "3 namen uit socials",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag4-follow-1",
@@ -319,6 +332,7 @@ NIET GELIJK PITCHEN — wat wel: reageer terug op hun content. Vraag iets. Bouw 
         uitleg:
           "Bijvoorbeeld op de persoon uit dag 3 met wie je een losse chat startte. Niet pitchen, gewoon even peilen.",
         verplicht: false,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag4-bestellinks",
@@ -401,21 +415,25 @@ Vandaag stap je actief uit je comfortzone, en dat kriebelt — afwijzingsangst, 
         id: "dag5-invites-5",
         label: "5 uitnodigingen (nieuwe mensen of via follow-up)",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag5-followups-3",
         label: "3 follow-ups op mensen van dag 3-4",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag5-social-3",
         label: "3 namen uit socials",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag5-onboarding-bezwaar",
         label: "Lees de onboarding-module 'Bezwaren behandelen'",
         verplicht: true,
+        actieRoute: "/onboarding",
       },
       {
         id: "dag5-roleplay",
@@ -423,6 +441,7 @@ Vandaag stap je actief uit je comfortzone, en dat kriebelt — afwijzingsangst, 
         uitleg:
           "Vraag je sponsor om 1-2 typische bezwaren te 'spelen' en oefen Feel-Felt-Found. Geen sponsor beschikbaar? Mentor: 'Speel een prospect die zegt: ik heb geen tijd', en dan oefen je met Feel-Felt-Found.",
         verplicht: false,
+        actieRoute: "/coach",
       },
       {
         id: "dag5-eric-worre-start",
@@ -430,6 +449,7 @@ Vandaag stap je actief uit je comfortzone, en dat kriebelt — afwijzingsangst, 
         uitleg:
           "Vanaf vandaag dagelijks ~15 minuten luisteren — in de auto, tijdens werk of een wandeling. Voor je mindset én om dit vak goed te leren. Eric Worre is wereldwijd de meest gerespecteerde trainer in network marketing. Niet één keer doorkijken, herhalend aanhoren — wat hij vertelt landt na de 4e of 5e keer pas écht.",
         verplicht: false,
+        actieRoute: "https://open.spotify.com/search/eric%20worre%20network%20marketing%20pro",
       },
     ],
     faseDoel:
@@ -506,6 +526,7 @@ EXTRA — VANDAAG START JE MINDSET-ROUTINE:
         id: "dag6-invites-5",
         label: "5 uitnodigingen",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag6-followups-3",
@@ -513,11 +534,13 @@ EXTRA — VANDAAG START JE MINDSET-ROUTINE:
         uitleg:
           "Iedereen die je dag 4-5 hebt uitgenodigd en niet meer gereageerd heeft? Vandaag is follow-up-dag. Een niet-antwoord is géén nee, het is meestal gewoon stilte.",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag6-social-3",
         label: "3 namen uit socials",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag6-sponsor-tip",
@@ -525,6 +548,7 @@ EXTRA — VANDAAG START JE MINDSET-ROUTINE:
         uitleg:
           "Heb je 1 contact waar je niet weet wat je moet sturen? Vraag je sponsor: 'Hoe zou jij dit aanpakken?'. Sponsor even druk? Dan de Mentor: 'Help me met een follow-up voor [naam] die [situatie]'. Je hoeft het niet alleen te bedenken.",
         verplicht: false,
+        actieRoute: "/team",
       },
     ],
     faseDoel:
@@ -601,22 +625,26 @@ Een prospect die NU geen ja zegt, kan over 3 maanden alsnog ja zeggen. Of over 1
         uitleg:
           "3 vragen: wat ging goed deze week? wat schuurde? waar focus ik volgende week? Je sponsor krijgt automatisch een samenvatting.",
         verplicht: true,
+        actieRoute: "/statistieken",
       },
       {
         id: "dag7-rust-5",
         label: "5 uitnodigingen (iets rustiger, het is review-dag)",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag7-followups-3",
         label: "3 follow-ups",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag7-sponsor-call",
         label: "15 min call met sponsor over week 2",
         uitleg: "Wat werkte? Wat gaan we anders doen? Wat is fase 2?",
         verplicht: false,
+        actieRoute: "/team",
       },
     ],
     faseDoel:
@@ -676,16 +704,19 @@ DEZE REVIEW WORDT GEDEELD MET JE SPONSOR — niet om te beoordelen, om te onders
         uitleg:
           "Helft via directe message, helft via scripts uit ELEVA. Mix warm (mensen die je kent) met lauw (mensen uit je telefoonlijst met wie je niet vaak praat).",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag8-followups-5",
         label: "5 follow-ups",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag8-social-3",
         label: "3 namen uit socials",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
     ],
     faseDoel:
@@ -752,16 +783,19 @@ MIX WARM EN LAUW: 5 mensen die je goed kent + 5 met wie je 6+ maanden niet gespr
         id: "dag9-invites-10",
         label: "10 uitnodigingen",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag9-followups-5",
         label: "5 follow-ups",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag9-social-3",
         label: "3 namen uit socials",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag9-3weg-verdieping",
@@ -769,6 +803,7 @@ MIX WARM EN LAUW: 5 mensen die je goed kent + 5 met wie je 6+ maanden niet gespr
         uitleg:
           "Het principe ken je al sinds dag 2. Vandaag de scripts: hoe kondig je je sponsor aan, hoe edifieer je 'm vooraf, wat doe je als prospect een vraag stelt aan jou ipv aan sponsor? Open een prospectkaart → '💬 3-weg gesprek scripts'.",
         verplicht: true,
+        actieRoute: "/onboarding",
       },
     ],
     faseDoel:
@@ -854,21 +889,25 @@ VANDAAG: lees de scripts in een prospect-kaart door, zodat je voor je eerstvolge
         uitleg:
           "Heb je al 1 op dag 4 gedaan? Top, vandaag een tweede plannen. Nog niet? Start nu. Kies 1 warme prospect, stuur de aankondiging (stap 1 script), maak groepje met sponsor. Volg de 5 stappen.",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag10-invites-10",
         label: "10 uitnodigingen",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag10-followups-5",
         label: "5 follow-ups",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag10-social-3",
         label: "3 namen uit socials",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
     ],
     faseDoel:
@@ -934,21 +973,25 @@ Doel deze week: minimaal 1 3-weg starten. Heb je 'm op dag 4 al gehad? Top, plan
         id: "dag11-invites-10",
         label: "10 uitnodigingen",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag11-followups-5",
         label: "5 follow-ups",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag11-social-3",
         label: "3 namen uit socials",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag11-lees-flow",
         label: "Lees module 'Pipeline-flow' in onboarding",
         verplicht: true,
+        actieRoute: "/onboarding",
       },
     ],
     faseDoel:
@@ -1031,16 +1074,19 @@ KIJK VANDAAG NAAR JE PIPELINE: hoeveel mensen op "Uitgenodigd"? Hoeveel op "One-
         id: "dag12-invites-10",
         label: "10 uitnodigingen",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag12-followups-5",
         label: "5 follow-ups",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag12-social-3",
         label: "3 namen uit socials",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag12-pivot-1",
@@ -1049,6 +1095,7 @@ KIJK VANDAAG NAAR JE PIPELINE: hoeveel mensen op "Uitgenodigd"? Hoeveel op "One-
         uitleg:
           "Maak via de coach een pivot-bericht: 'Helemaal goed, geen probleem. Ken je iemand die last heeft van X? Of wil je het zelf eens een maand proberen?' Zet ze dan op pipeline-fase Shopper.",
         verplicht: false,
+        actieRoute: "/namenlijst",
       },
     ],
     faseDoel:
@@ -1135,16 +1182,19 @@ EXTRA WAARDE: zeg nee tegen drammen, ja tegen warmte. Een Shopper die jou over e
         id: "dag13-invites-10",
         label: "10 uitnodigingen",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag13-followups-5",
         label: "5 follow-ups",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag13-social-3",
         label: "3 namen uit socials",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag13-form-1",
@@ -1152,6 +1202,7 @@ EXTRA WAARDE: zeg nee tegen drammen, ja tegen warmte. Een Shopper die jou over e
         uitleg:
           "Family, Occupation, Recreation, Money. Stel in elk gesprek 1 vraag uit elke categorie en luister naar 'haken' (pijnpunten, wensen).",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag13-koud-warm",
@@ -1159,6 +1210,7 @@ EXTRA WAARDE: zeg nee tegen drammen, ja tegen warmte. Een Shopper die jou over e
         uitleg:
           "Kies iemand uit je telefoonlijst met wie je weinig contact hebt. Eerst even een FORM-vraag (zonder pitch), reageer 1-2 dagen op hun socials, dán pas invite. Vraag de Mentor: 'Help me [naam] warm maken vóór ik 'm uitnodig, context: [situatie]'. De Mentor schrijft een opwarm-tekst die geen pitch is.",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
     ],
     faseDoel:
@@ -1251,16 +1303,19 @@ VANDAAG: kies 1 specifieke prospect, plan een 5-min check-in (DM of telefoon) en
         id: "dag14-review",
         label: "Wekelijkse review invullen",
         verplicht: true,
+        actieRoute: "/statistieken",
       },
       {
         id: "dag14-invites-10",
         label: "10 uitnodigingen",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag14-followups-5",
         label: "5 follow-ups",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag14-pipeline-check",
@@ -1268,11 +1323,13 @@ VANDAAG: kies 1 specifieke prospect, plan een 5-min check-in (DM of telefoon) en
         uitleg:
           "Open namenlijst in pipeline-weergave. Hoeveel in 'Uitgenodigd', 'One-pager', 'Presentatie'? Waar stokt het?",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag14-sponsor-call",
         label: "Sponsor-call 15 min: fase 3 voorbereiden",
         verplicht: false,
+        actieRoute: "/team",
       },
     ],
     faseDoel:
@@ -1346,16 +1403,19 @@ VAN HIER UIT IS HET KILOMETER-WERK. Geen nieuwe technieken meer, alleen oefenen 
         uitleg:
           "Iedereen die je in week 1-2 hebt uitgenodigd maar nog geen beslissing heeft genomen = follow-up. Niet drammen, wel aanwezig zijn.",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag15-invites-10",
         label: "10 nieuwe uitnodigingen",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag15-social-3",
         label: "3 namen uit socials",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
     ],
     faseDoel:
@@ -1434,16 +1494,19 @@ Een nee NU is geen nee voor altijd. Iemand op "Not-yet" zetten is geen verlies. 
         id: "dag16-invites-10",
         label: "10 uitnodigingen",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag16-followups-10",
         label: "10 follow-ups",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag16-social-3",
         label: "3 namen uit socials",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag16-categoriseer",
@@ -1451,6 +1514,7 @@ Een nee NU is geen nee voor altijd. Iemand op "Not-yet" zetten is geen verlies. 
         uitleg:
           "Actief zoekend, open, productkoper, niet-nu, nooit. Dit bepaalt hoeveel energie je ergens aan besteedt.",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
     ],
     faseDoel:
@@ -1531,16 +1595,19 @@ VANDAAG — categoriseer je top-20:
         id: "dag17-invites-10",
         label: "10 uitnodigingen",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag17-followups-10",
         label: "10 follow-ups",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag17-social-3",
         label: "3 namen uit socials",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag17-closing",
@@ -1548,6 +1615,7 @@ VANDAAG — categoriseer je top-20:
         uitleg:
           "Bij iemand die een presentatie heeft gezien en twijfelt: stel de 5 closing-vragen. Dit is niet drammen, dit is helpen beslissen.",
         verplicht: false,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag17-eigen-closing-zin",
@@ -1654,16 +1722,19 @@ VANDAAG: probeer Doel-Tijd-Termijn vandaag of morgen bij minstens 1 warme prospe
         id: "dag18-invites-10",
         label: "10 uitnodigingen",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag18-followups-10",
         label: "10 follow-ups",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag18-social-3",
         label: "3 namen uit socials",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag18-edification-zin",
@@ -1690,6 +1761,7 @@ VANDAAG: probeer Doel-Tijd-Termijn vandaag of morgen bij minstens 1 warme prospe
         uitleg:
           "Bij je eerstvolgende 3-weg of presentatie: gebruik de zin letterlijk vóór je sponsor introduceert. Niet improviseren, gewoon zeggen.",
         verplicht: false,
+        actieRoute: "/namenlijst",
       },
     ],
     faseDoel:
@@ -1758,16 +1830,19 @@ Wat je vandaag doet: 5 minuten investeren in JOUW vaste zin. Schrijf 'm op, bewa
         id: "dag19-invites-10",
         label: "10 uitnodigingen",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag19-followups-10",
         label: "10 follow-ups",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag19-social-3",
         label: "3 namen uit socials",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag19-pipeline",
@@ -1775,6 +1850,7 @@ Wat je vandaag doet: 5 minuten investeren in JOUW vaste zin. Schrijf 'm op, bewa
         uitleg:
           "Uitgenodigd: X / One-pager: Y / Presentatie: Z / Beslist: W. Waar is de grootste drop-off? Dat is je oefenpunt voor de laatste 40 dagen.",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
     ],
     faseDoel:
@@ -1859,16 +1935,19 @@ Statistieken zijn je leermeester, niet je rechter. Slechte cijfers betekenen nie
         id: "dag20-invites-10",
         label: "10 uitnodigingen",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag20-followups-10",
         label: "10 follow-ups",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag20-social-3",
         label: "3 namen uit socials",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
       {
         id: "dag20-vraag-1",
@@ -1876,6 +1955,7 @@ Statistieken zijn je leermeester, niet je rechter. Slechte cijfers betekenen nie
         uitleg:
           "Directe, zachte variant. Niet 'wat vind je?' maar 'wat heb je nog nodig?'. Dit opent de echte twijfel of brengt ze naar beslissing.",
         verplicht: true,
+        actieRoute: "/namenlijst",
       },
     ],
     faseDoel:
@@ -1956,6 +2036,7 @@ VANDAAG: kies 1 prospect die meer dan 3 exposures heeft gehad zonder beslissing.
         id: "dag21-review-3",
         label: "Week 3 review invullen",
         verplicht: true,
+        actieRoute: "/statistieken",
       },
       {
         id: "dag21-review-21",
@@ -1963,6 +2044,7 @@ VANDAAG: kies 1 prospect die meer dan 3 exposures heeft gehad zonder beslissing.
         uitleg:
           "Wat leerde je over jezelf? Waar groeide je? Wat was moeilijker dan gedacht? Wat bleek makkelijker? Deze reflectie gaat naar je sponsor.",
         verplicht: true,
+        actieRoute: "/statistieken",
       },
       {
         id: "dag21-doel-40",
@@ -1970,11 +2052,13 @@ VANDAAG: kies 1 prospect die meer dan 3 exposures heeft gehad zonder beslissing.
         uitleg:
           "Geen vaag doel. Iets concreets. 'Ik wil 5 members meer' of 'Ik wil consistent 10-10-3 blijven draaien'.",
         verplicht: true,
+        actieRoute: "/mijn-why",
       },
       {
         id: "dag21-sponsor-call",
         label: "40-min call met sponsor: fase 3 naar fase-uitgebreid",
         verplicht: false,
+        actieRoute: "/team",
       },
     ],
     faseDoel:
