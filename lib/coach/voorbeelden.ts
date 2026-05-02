@@ -58,11 +58,14 @@ export async function pakRelevanteVoorbeelden(
   max: number = 5,
   doelgroep: string = "member",
 ): Promise<CoachVoorbeeld[]> {
+  // Filter: voorbeelden die voor 'beide' zijn OF specifiek voor de
+  // gevraagde doelgroep. Zo zien beide coaches de gedeelde kennis
+  // (productadvies, Lifeplus, mindset) plus hun eigen specifieke set.
   const { data, error } = await supabase
     .from("coach_voorbeelden")
     .select("id, doelgroep, categorie, vraag, goed_antwoord, tags")
     .eq("actief", true)
-    .eq("doelgroep", doelgroep);
+    .in("doelgroep", ["beide", doelgroep]);
   if (error || !data) return [];
 
   const alle = data as CoachVoorbeeld[];

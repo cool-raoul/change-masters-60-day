@@ -15,12 +15,14 @@ CREATE TABLE IF NOT EXISTS coach_voorbeelden (
   /** Wie heeft 't toegevoegd. Beperkt tot founders via RLS. */
   created_by uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   /** Voor wie is dit voorbeeld bedoeld?
-      'member' = ELEVA Mentor (huidige coach voor members)
-      'prospect' = programma-coach (post-pilot, voor prospect-zijde)
-      'darmprogramma' / etc = specifieke programma's later
-      Default 'member' zodat bestaande pilot-voorbeelden hun doelgroep
-      hebben zonder migratie achteraf. */
-  doelgroep text NOT NULL DEFAULT 'member',
+      'beide'    = werkt voor zowel Mentor als programma-coach (default,
+                   bv. productvragen, Lifeplus-uitleg, mindset, gezondheid)
+      'member'   = alleen ELEVA Mentor (bv. uitnodigingsteksten,
+                   sponsor-scripts, recruitment-stuff)
+      'prospect' = alleen programma-coach (bv. programma-uitleg,
+                   'welkom in het darmprogramma')
+      Filter-strategie in code: doelgroep IN ('beide', gewenste). */
+  doelgroep text NOT NULL DEFAULT 'beide',
   /** Categorie maps op coach VraagType: dm | bezwaar | followup | closing
       | drieweg | productadvies | motivatie | accountability | algemeen. */
   categorie text NOT NULL,

@@ -55,6 +55,7 @@ export default async function MentorTrainenPagina() {
 
   type VoorbeeldRij = {
     id: string;
+    doelgroep: string;
     categorie: string;
     vraag: string;
     goed_antwoord: string;
@@ -62,6 +63,13 @@ export default async function MentorTrainenPagina() {
     actief: boolean;
     created_at: string;
   };
+
+  function doelgroepLabel(d: string): string {
+    if (d === "beide") return "✅ Beide";
+    if (d === "member") return "👤 Member";
+    if (d === "prospect") return "🎯 Prospect";
+    return d;
+  }
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -104,6 +112,9 @@ export default async function MentorTrainenPagina() {
             <summary className="cursor-pointer list-none flex items-start gap-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-cm-surface-2 text-cm-white">
+                    {doelgroepLabel(v.doelgroep)}
+                  </span>
                   <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-cm-gold/20 text-cm-gold font-bold">
                     {v.categorie}
                   </span>

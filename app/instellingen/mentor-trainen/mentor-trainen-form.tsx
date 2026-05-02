@@ -19,7 +19,7 @@ import { gebruikSpraak } from "@/components/voice/gebruikSpraak";
 // Whisper en plakt resultaat in het veld.
 // ============================================================
 
-type Doelgroep = "member" | "prospect";
+type Doelgroep = "beide" | "member" | "prospect";
 type Categorie =
   | "algemeen"
   | "dm"
@@ -47,7 +47,7 @@ const CATEGORIE_LABELS: Record<Categorie, string> = {
 
 export function MentorTrainenForm() {
   const router = useRouter();
-  const [doelgroep, setDoelgroep] = useState<Doelgroep>("member");
+  const [doelgroep, setDoelgroep] = useState<Doelgroep>("beide");
   const [categorie, setCategorie] = useState<Categorie>("algemeen");
   const [vraag, setVraag] = useState("");
   const [antwoord, setAntwoord] = useState("");
@@ -153,16 +153,24 @@ export function MentorTrainenForm() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label className="text-cm-white text-xs opacity-70 mb-1 block">
-            Doelgroep
+            Voor wie?
           </label>
           <select
             value={doelgroep}
             onChange={(e) => setDoelgroep(e.target.value as Doelgroep)}
             className="input-cm w-full text-sm"
           >
-            <option value="member">Member (ELEVA Mentor)</option>
-            <option value="prospect">Prospect (programma-coach, later)</option>
+            <option value="beide">
+              ✅ Beide (Mentor + programma-coach)
+            </option>
+            <option value="member">👤 Alleen member-Mentor</option>
+            <option value="prospect">🎯 Alleen prospect-coach</option>
           </select>
+          <p className="text-cm-white opacity-50 text-[11px] mt-1 leading-snug">
+            'Beide' is meestal goed (productvragen, Lifeplus, mindset).
+            Alleen-member voor uitnodigingen/scripts; alleen-prospect voor
+            programma-uitleg.
+          </p>
         </div>
         <div>
           <label className="text-cm-white text-xs opacity-70 mb-1 block">
