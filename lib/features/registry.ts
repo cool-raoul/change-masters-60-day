@@ -74,6 +74,41 @@ export const FEATURES: Feature[] = [
     inRondleiding: true,
   },
   {
+    id: "radar",
+    emoji: "🎯",
+    titel: "Volgende-beste-actie radar",
+    lead:
+      "Een dashboard-tegel met je top-3 prospects van vandaag. Niet alfabetisch, niet alle 47.",
+    bullets: [
+      "ELEVA weegt timing (hoe lang geleden contact) en pipeline-fase",
+      "Signalen tellen mee: heeft prospect een film bekeken? Een testlink ingevuld?",
+      "Drie namen, drie acties: dag opent zonder 'waar begin ik?'",
+      "Schuift mee naarmate de dag voortgaat, bovenaan blijft wat NU rendement geeft",
+    ],
+    wow: "Verlost je van 'waar begin ik?'. ELEVA bekijkt je hele lijst en zegt: hier ligt vandaag je beste gesprek.",
+    route: "/dashboard",
+    volgorde: 25,
+    inRondleiding: true,
+  },
+  {
+    id: "prospect-films",
+    emoji: "📺",
+    titel: "Prospect-films sturen + tracken",
+    lead:
+      "Stuur een film, krijg te horen wanneer 'ie wordt afgekeken. Films werken voor je terwijl je slaapt.",
+    bullets: [
+      "Op een prospect-kaart: 'Stuur film' → kies → krijg unieke share-link",
+      "Realtime kijk-percentage (YouTube + Vimeo)",
+      "Bij ~80% gekeken: pipeline schuift naar follow-up + push naar member",
+      "De juiste opvolg-tekst staat klaar op de kaart, klaar om te kopiëren",
+      "Geen 'heb je 'm bekeken?'-appjes meer",
+    ],
+    wow:
+      "Je telefoon trilt 's avonds: \"Maria heeft 73% van [film] bekeken.\" Pipeline staat al goed, opvolg-tekst klaar. Je hebt nog niets hoeven typen.",
+    volgorde: 27,
+    inRondleiding: true,
+  },
+  {
     id: "spraak-fab",
     emoji: "🎙️",
     titel: "Spraak-knop, DE killer-feature",
@@ -114,6 +149,7 @@ export const FEATURES: Feature[] = [
     bullets: [
       "Vraag alles: bezwaren pareren, uitnodigings-tekst, 3-wegen gesprek voorbereiden, closing, mindset",
       "Stel je vraag over een specifieke prospect, de mentor kent de context",
+      "Founders trainen 'm continu met echte WhatsApp-voorbeelden (zie Train-de-Mentor)",
       "Premium: productadvies met medische disclaimer, onbeperkte gesprekken, voorrang",
       "Eerdere gesprekken terug te vinden, zodat je nooit iets kwijt bent",
     ],
@@ -121,6 +157,43 @@ export const FEATURES: Feature[] = [
       "\"Maria zegt: ik heb er geen geld voor, wat zeg ik?\" → binnen 3 seconden een antwoord op maat, getraind op jouw aanpak.",
     route: "/coach",
     volgorde: 40,
+    inRondleiding: true,
+  },
+  {
+    id: "voice-uitnodiging",
+    emoji: "🎙️",
+    titel: "Spraak-naar-uitnodiging",
+    lead:
+      "Microfoon-knop op de prospect-kaart. Spreek de context, krijg de DM in jouw stijl.",
+    bullets: [
+      "Spreek context in: 'ken Maria van sportschool, business-getypt, druk leven'",
+      "ELEVA bouwt Worre's 4-stappen-uitnodiging in jouw stijl",
+      "'Haast'-stap als optionele toevoeging voor business-prospects",
+      "Kopieer de DM, plak in WhatsApp, klaar",
+      "De drempel naar 'eerste bericht' wordt minimaal",
+    ],
+    wow:
+      "Geen perfectie-val, geen 'wat schrijf ik nou'. Spreken in plaats van staren naar een leeg WhatsApp-vlak.",
+    volgorde: 42,
+    inRondleiding: true,
+  },
+  {
+    id: "team-presence",
+    emoji: "🟢",
+    titel: "Online-stip + privacy-toggle",
+    lead:
+      "Zie wie van je team NU bezig is. En één toggle voor wie liever niet zichtbaar is.",
+    bullets: [
+      "Groen bolletje op teamleden die binnen 2 minuten activiteit hadden",
+      "Sponsor weet wanneer een opmerking direct landt, jij weet wanneer iemand bereikbaar is",
+      "Werkt twee kanten op: jouw stip is óók zichtbaar voor je sponsor",
+      "Niet prettig? Eén toggle in /instellingen → bolletje uit",
+      "Aparte transparantie-pagina: 'Wat ziet mijn sponsor van mij?'",
+    ],
+    wow:
+      "Niemand staat alleen, niemand staat onder een microscoop. Privacy is jouw keuze, niet een vinkje verstopt in een terms-of-service.",
+    route: "/instellingen/wat-ziet-mijn-sponsor",
+    volgorde: 55,
     inRondleiding: true,
   },
   {

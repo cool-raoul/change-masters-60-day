@@ -1,7 +1,9 @@
 # ELEVA, wat zit erin en wat heb je eraan?
 
-> **Voor de pilot, april 2026**
+> **Voor de pilot, mei 2026**
 > Een overzicht in normale taal van alle functies in ELEVA, zodat je weet wat het systeem voor je doet en waar je wat kunt vinden.
+>
+> Voor de korte versie ("waarom zou ik 'm gebruiken?"): zie `docs/ELEVA-pitch-onepager.md`.
 
 ---
 
@@ -14,6 +16,47 @@ Een dagelijkse tegel op je dashboard die je 21 dagen lang door het hele vak meen
 Je hoeft niet te bedenken wat je moet doen. Je opent ELEVA, ziet wat dag het is, en hebt direct je dag-acties in beeld. Geen overload, geen verloren ritme.
 
 **Waar?** `/dashboard`, de gouden tegel "Vandaag is dag X".
+
+---
+
+## 📊 Voortgang-modus, niet kalender (NIEUW)
+
+**Wat is het?**
+Members staan op de eerste dag waar nog niet alles is afgevinkt, niet op kalenderdag. Sla je 5 dagen over door drukte? Morgen ben je nog steeds op dezelfde dag, niet 5 dagen verder. Founders en testers werken wel kalender-gebaseerd, zodat de tester-toolbar (sprint door de 21 dagen) blijft werken.
+
+**Wat heb je eraan?**
+Niemand verliest content of motivatie door een drukke periode. Je raakt niet 'achter', je gaat gewoon door waar je was. De 60-dagen-run is voortgang, niet een kalender-aftellertje.
+
+**Waar?** Automatisch in het dashboard. Vandaag-flow gebruikt dezelfde berekening.
+
+---
+
+## 🎬 Welkomstfilm (NIEUW)
+
+**Wat is het?**
+De eerste keer dat een member z'n dashboard opent, krijgt 'ie automatisch een korte (~2 min) welkomstfilm te zien: wie zijn Raoul + Gaby, wat is ELEVA, hoe werkt het systeem, en "vertrouw het proces". Daarna altijd terug op te roepen via de 🎬-knop in de Topbar.
+
+**Wat heb je eraan?**
+Een nieuwe member voelt direct dat-ie binnen is bij iets met ziel, niet bij een tool die uit de fabriek komt. Sponsor hoeft niet alles zelf uit te leggen, het systeem doet het.
+
+**Waar?** Automatisch op /dashboard bij eerste bezoek. Daarna 🎬-knop rechtsboven.
+
+---
+
+## 📺 Prospect-films sturen + tracken (NIEUW, killer-feature)
+
+**Wat is het?**
+Op een prospect-kaart staat de knop "Stuur film". Member kiest één van de prospect-films die founders hebben geüpload, krijgt een **unieke share-link**, en plakt die in WhatsApp. De prospect klikt en kijkt. ELEVA volgt **realtime** hoeveel procent is afgekeken.
+
+Bij een drempel (bv. 80% gekeken):
+- ELEVA schuift de prospect automatisch naar fase 'follow-up'
+- Member krijgt een push: *"[Naam] heeft 73% van [film-titel] bekeken"*
+- De juiste opvolg-tekst staat klaar op de prospect-kaart
+
+**Wat heb je eraan?**
+Geen "heb je 'm bekeken?"-appjes meer. Films werken voor je terwijl je slaapt of een bedrijf draait. Het wordt een actief verkoop-instrument in plaats van een passieve link in een WhatsApp-thread. Werkt voor YouTube én Vimeo.
+
+**Waar?** Prospect-kaart → "Stuur film". Founder uploadt films via `/instellingen/films` (sectie "Prospect-films").
 
 ---
 
@@ -35,7 +78,7 @@ Members krijgen visuele uitleg op de juiste dag, in plaats van losse links die z
 Op vrijwel elke tekst in ELEVA staat voor founders (jij + Gaby) een "✍️ Bewerk voor iedereen"-knop. Klik, pas aan, bewaar, direct live voor alle members.
 
 **Werkt op:**
-- Alle 21 playbook-dag-teksten (titel, teaching, fase-doel, "waarom dit werkt")
+- Alle 21 playbook-dag-teksten (titel, teaching, dag-doel, "waarom dit werkt")
 - Alle scripts (uitnodigingen, bezwaar, follow-up, sluiting, edification)
 - De kerntitels en intro's van alle 6 onboarding-stappen
 
@@ -55,6 +98,20 @@ Een AI-coach die je kent. Hij weet welke dag je zit, kent je WHY, kent je sponso
 Je hoeft niet te bedenken wát je moet zeggen. Je vraagt de mentor en krijgt een antwoord in jouw stijl, klaar om te kopiëren of door te sturen. Werkt 24/7.
 
 **Waar?** Menu → ELEVA Mentor.
+
+---
+
+## 🧠 Train-de-Mentor (NIEUW, founder-only)
+
+**Wat is het?**
+Founders kunnen vraag-antwoord-voorbeelden uit echte WhatsApp-gesprekken toevoegen aan de Mentor. Een prospect stelt een vraag, de member-of-founder antwoordt, founder kopieert beide en plakt het in `/instellingen/mentor-trainen`. De Mentor gebruikt die voorbeelden vanaf dat moment als context bij vergelijkbare vragen.
+
+Voorbeeldvragen worden getagd voor doelgroep `member`, `prospect` of `beide` (default), zodat het ene voorbeeld zowel de huidige Mentor als de toekomstige programma-coach voor prospects voedt.
+
+**Wat heb je eraan?**
+De Mentor wordt scherper met elke pilot-week, zonder developer-loop, zonder herstart. Members in Maastricht leren van gesprekken die in Dordrecht hebben gewerkt. Het hele systeem leert uit jouw praktijk.
+
+**Waar?** `/instellingen/mentor-trainen` (alleen founder).
 
 ---
 
@@ -82,6 +139,18 @@ Je ziet in 1 oogopslag waar je staat. Hoeveel mensen zitten in welke fase? Waar 
 
 ---
 
+## 🎯 Volgende-beste-actie radar (NIEUW)
+
+**Wat is het?**
+Op je dashboard staat een tegel met je top-3 prospects van **vandaag**. Niet alfabetisch, niet alle 47, maar de drie waar nu het meeste rendement zit. ELEVA weegt timing (hoe lang geleden contact), pipeline-fase (welke is rijp), en signalen (heeft prospect bv. een film gekeken).
+
+**Wat heb je eraan?**
+Verlost je van "waar begin ik?" Drie namen, drie acties, dag opent. De radar haalt voorrang weg bij wie geen aandacht hoeft, en zet voorrang op wie staat te wachten.
+
+**Waar?** Dashboard, tegel "🎯 Volgende beste actie".
+
+---
+
 ## 📋 Scripts (uitnodigen, bezwaren, follow-up, sluiting, edification)
 
 **Wat is het?**
@@ -91,6 +160,18 @@ Een bibliotheek met kant-en-klare scripts voor elk gespreksmoment: 60-dagen-uitn
 Geen vrees voor "wat zeg ik?". Open scripts, kies de juiste, kopieer, vul de naam in en stuur.
 
 **Waar?** Menu → Scripts.
+
+---
+
+## 🎙️ Spraak-naar-uitnodiging (NIEUW)
+
+**Wat is het?**
+Op een prospect-kaart staat een microfoon-knop. Je drukt 'm in en spreekt context in: *"Ken Maria van de sportschool, business-getypt, druk leven, twee kinderen."* ELEVA zet dat door naar Worre's 4-stappen-uitnodiging in jouw stijl, met de "haast"-stap als optionele toevoeging voor business-prospects.
+
+**Wat heb je eraan?**
+De drempel naar 'eerste bericht sturen' wordt minimaal. Geen typen, geen perfectie-val, geen 'wat schrijf ik nou'. Spreek context, kopieer DM, plak in WhatsApp.
+
+**Waar?** Prospect-kaart, microfoon-knop. Sluit aan op het algemene voice-everywhere principe.
 
 ---
 
@@ -120,7 +201,7 @@ Geen handmatig analyseren wat iemand nodig heeft. Test invullen → resultaat �
 
 ---
 
-## 📤 Verzendtimer (NIEUW)
+## 📤 Verzendtimer
 
 **Wat is het?**
 Een bericht NU schrijven en kiezen wanneer je het wil versturen: morgen 9u, over 2 dagen, over een week. Je krijgt op die dag een herinnering met de tekst klaar om te kopiëren.
@@ -132,7 +213,7 @@ Geen losse to-do's bijhouden. Je hebt een follow-up-bericht klaar in je hoofd �
 
 ---
 
-## 📷 QR-code (NIEUW)
+## 📷 QR-code
 
 **Wat is het?**
 Bij elke deelbare link verschijnt nu een QR-knop. Tikt iemand erop tijdens een face-to-face moment (event, koffie, ouderavond, beurs), dan toont je scherm een grote QR. Andere persoon scant met camera-app → zit direct in de juiste pagina.
@@ -153,6 +234,30 @@ Onderin elk scherm staat een gouden microfoon-knop. Klik en spreek: *"Nieuwe pro
 Onderweg, op de fiets, na een gesprek bij de school: niets typen, gewoon inspreken. Een minuut werk wordt 5 seconden.
 
 **Waar?** Overal, gouden microfoon-knop rechtsonder.
+
+---
+
+## 🟢 Online-stip op teamleden (NIEUW)
+
+**Wat is het?**
+In je teamoverzicht zie je een groen bolletje bij teamleden die NU in ELEVA actief zijn (laatste activiteit < 2 minuten). Werkt twee kanten op: je sponsor ziet 'm bij jou, jij ziet 'm bij je downline.
+
+**Wat heb je eraan?**
+Je weet wanneer iemand bereikbaar is voor een snelle vraag, in plaats van in 't blinde te bellen. Sponsor weet wanneer een schouderklop of opmerking direct landt, in plaats van in een lege chat verdwijnt.
+
+**Waar?** Mijn Team / TeamBoom-overzicht.
+
+---
+
+## 🔍 Wat ziet mijn sponsor van mij? (NIEUW)
+
+**Wat is het?**
+Een aparte transparantie-pagina onder /instellingen die eerlijk uitlegt welke data wordt gedeeld met je sponsor (activiteit, voltooide stappen, online-stip) en wat privé blijft (chat-inhoud met de Mentor, persoonlijke notities, prospect-namen). Plus een **toggle om je online-stip uit te zetten** voor wie liever niet zichtbaar is.
+
+**Wat heb je eraan?**
+Het privacy-bezwaar wordt nooit een muur. Je weet precies wat sponsor ziet, en je hebt de regie. Net zo open als wat het ELEVA-systeem zelf belooft te doen.
+
+**Waar?** /instellingen → "Wat ziet mijn sponsor van mij?".
 
 ---
 
@@ -180,7 +285,7 @@ Je weet realtime hoe je teamleden lopen. Die info gebruik je om gericht te steun
 
 ---
 
-## 🧪 Test-modus (NIEUW, voor pilot-testers)
+## 🧪 Test-modus (voor pilot-testers)
 
 **Wat is het?**
 Voor jullie 6-7 testers: een paarse toolbar bovenaan dashboard met "Spring naar dag X". Verzet je virtuele dag zodat je in een halve dag door alle 21 dagen kunt klikken voor bug-rapporten.
@@ -240,6 +345,30 @@ Niemand staat alleen. De lijn naar boven (mentor, vraagbaak) is altijd open.
 
 ---
 
+## ☀️ Tijd-bewuste groet (NIEUW)
+
+**Wat is het?**
+Het dashboard begroet je met "Goedemorgen", "Goedemiddag", "Goedenavond" of "Goedenacht" afhankelijk van het moment. Werkt server-side in Europe/Amsterdam-tijdzone, dus geen rare flikker tussen server en browser.
+
+**Wat heb je eraan?**
+Klein detail, voelt menselijk. ELEVA praat tegen jou alsof er iemand achter zit, niet een server in een datacenter.
+
+**Waar?** Dashboard, dagtegel-header, en het 'eerste bezoek vandaag'-modal.
+
+---
+
+## 📲 Pull-to-refresh op mobiel (NIEUW)
+
+**Wat is het?**
+Trek het scherm naar beneden vanuit bovenaan, ELEVA ververst de pagina. Spinner verschijnt, data komt opnieuw binnen. Werkt op iOS en Android.
+
+**Wat heb je eraan?**
+Het mobiele gevoel zoals je gewend bent van Instagram of Mail. Niet de hele app afsluiten als je een nieuwe push hebt gehad en wilt zien wat er is.
+
+**Waar?** Op alle pagina's, mobiel.
+
+---
+
 ## 🌐 Meertalig
 
 **Wat is het?**
@@ -280,6 +409,7 @@ Je hoeft niet bang te zijn dat je per ongeluk iets fout zegt. Het systeem houdt 
 - **Bij twijfel:** ELEVA Mentor (AI-coach)
 - **Voor 3-wegs:** prospect-kaart → "💬 3-weg gesprek scripts"
 - **Voor productadvies:** prospect-kaart → "Stuur productadvies-test"
+- **Voor films naar prospects:** prospect-kaart → "Stuur film"
 - **Voor jou als founder:** ✍️ knoppen overal, pas aan wat schuurt, direct live
 - **Voor de testgroep:** 🧪 toolbar om snel door alle 21 dagen te klikken
 

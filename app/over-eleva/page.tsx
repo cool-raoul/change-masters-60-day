@@ -33,6 +33,36 @@ const FEATURES: Feature[] = [
     waar: "Dashboard, gouden tegel 'Vandaag is dag X'",
   },
   {
+    emoji: "📊",
+    titel: "Voortgang-modus (geen kalender-druk)",
+    watIsHet:
+      "Members staan op de eerste dag waar nog niet alles is afgevinkt, niet op kalenderdag. Sla je 5 dagen over door drukte? Morgen ben je nog steeds op dezelfde dag, niet 5 dagen verder.",
+    watHebJeEraan:
+      "Niemand verliest content of motivatie door een drukke periode. Je raakt niet 'achter', je gaat gewoon door waar je was.",
+    waar: "Automatisch in dashboard. Founders/testers blijven kalender-gebaseerd voor de tester-toolbar.",
+    nieuw: true,
+  },
+  {
+    emoji: "🎬",
+    titel: "Welkomstfilm",
+    watIsHet:
+      "De eerste keer dat een member z'n dashboard opent, krijgt 'ie automatisch een korte welkomstfilm te zien. Daarna altijd terug op te roepen via de 🎬-knop in de Topbar.",
+    watHebJeEraan:
+      "Een nieuwe member voelt direct dat-ie binnen is bij iets met ziel. Sponsor hoeft niet alles zelf uit te leggen.",
+    waar: "Automatisch op /dashboard bij eerste bezoek. Daarna 🎬-knop rechtsboven.",
+    nieuw: true,
+  },
+  {
+    emoji: "📺",
+    titel: "Prospect-films sturen + tracken",
+    watIsHet:
+      "Op een prospect-kaart staat 'Stuur film'. Member kiest een prospect-film, krijgt een unieke share-link, plakt 'm in WhatsApp. ELEVA volgt realtime hoeveel procent is afgekeken (YouTube + Vimeo). Bij ~80% gekeken: pipeline schuift naar follow-up, member krijgt push, opvolg-tekst staat klaar.",
+    watHebJeEraan:
+      "Geen 'heb je 'm bekeken?'-appjes meer. Films werken voor je terwijl je slaapt. Ze worden actief verkoop-instrument in plaats van passieve link.",
+    waar: "Prospect-kaart → 'Stuur film'. Founder uploadt films via /instellingen/films.",
+    nieuw: true,
+  },
+  {
     emoji: "🎬",
     titel: "Films per dag (founder-CMS)",
     watIsHet:
@@ -60,6 +90,16 @@ const FEATURES: Feature[] = [
     waar: "Menu → ELEVA Mentor",
   },
   {
+    emoji: "🧠",
+    titel: "Train-de-Mentor (founder-only)",
+    watIsHet:
+      "Founders voegen vraag-antwoord-voorbeelden uit echte WhatsApp-gesprekken toe. De Mentor gebruikt ze als context bij vergelijkbare vragen. Voorbeelden zijn taggable voor doelgroep 'member', 'prospect' of 'beide' (default), zodat één voorbeeld de huidige Mentor en de toekomstige programma-coach voedt.",
+    watHebJeEraan:
+      "De Mentor wordt scherper met elke pilot-week, zonder developer-loop. Members in Maastricht leren van gesprekken die in Dordrecht hebben gewerkt.",
+    waar: "/instellingen/mentor-trainen (alleen founder)",
+    nieuw: true,
+  },
+  {
     emoji: "📝",
     titel: "Mijn zinnen",
     watIsHet:
@@ -78,6 +118,16 @@ const FEATURES: Feature[] = [
     waar: "Menu → Namenlijst",
   },
   {
+    emoji: "🎯",
+    titel: "Volgende-beste-actie radar",
+    watIsHet:
+      "Een dashboard-tegel met je top-3 prospects van vandaag. Niet alfabetisch, niet alle 47, maar de drie waar nu het meeste rendement zit. ELEVA weegt timing, pipeline-fase en signalen (bv. 'film bekeken').",
+    watHebJeEraan:
+      "Verlost je van 'waar begin ik?'. Drie namen, drie acties, dag opent. Voorrang waar 't moet, niet waar 't toevallig in de lijst staat.",
+    waar: "Dashboard, tegel '🎯 Volgende beste actie'",
+    nieuw: true,
+  },
+  {
     emoji: "📋",
     titel: "Scripts (uitnodigen, bezwaren, follow-up, sluiting, edification)",
     watIsHet:
@@ -85,6 +135,16 @@ const FEATURES: Feature[] = [
     watHebJeEraan:
       "Geen vrees voor 'wat zeg ik?'. Open scripts, kies de juiste, kopieer, vul de naam in en stuur.",
     waar: "Menu → Scripts",
+  },
+  {
+    emoji: "🎙️",
+    titel: "Spraak-naar-uitnodiging",
+    watIsHet:
+      "Op een prospect-kaart staat een microfoon-knop. Spreek context in (bv. 'ken Maria van sportschool, business-getypt, druk leven'). ELEVA zet 'm om naar Worre's 4-stappen-uitnodiging in jouw stijl, met de 'haast'-stap als optionele toevoeging voor business-prospects.",
+    watHebJeEraan:
+      "De drempel naar 'eerste bericht sturen' wordt minimaal. Geen perfectie-val, geen 'wat schrijf ik nou'. Spreek context, kopieer DM, plak in WhatsApp.",
+    waar: "Prospect-kaart, microfoon-knop. Voice-everywhere principe.",
+    nieuw: true,
   },
   {
     emoji: "💬",
@@ -132,6 +192,26 @@ const FEATURES: Feature[] = [
     watHebJeEraan:
       "Onderweg, op de fiets, na een gesprek: niets typen, gewoon inspreken. Een minuut werk wordt 5 seconden.",
     waar: "Overal, gouden microfoon rechtsonder",
+  },
+  {
+    emoji: "🟢",
+    titel: "Online-stip op teamleden",
+    watIsHet:
+      "In je teamoverzicht zie je een groen bolletje bij teamleden die NU in ELEVA actief zijn (laatste activiteit < 2 minuten). Werkt twee kanten op: sponsor ziet 'm bij jou, jij ziet 'm bij je downline.",
+    watHebJeEraan:
+      "Je weet wanneer iemand bereikbaar is voor een snelle vraag. Sponsor weet wanneer een opmerking direct landt, in plaats van in een lege chat verdwijnt.",
+    waar: "Mijn Team / TeamBoom-overzicht",
+    nieuw: true,
+  },
+  {
+    emoji: "🔍",
+    titel: "Wat ziet mijn sponsor van mij?",
+    watIsHet:
+      "Een aparte transparantie-pagina die eerlijk uitlegt welke data wordt gedeeld (activiteit, voltooide stappen, online-stip) en wat privé blijft (Mentor-chat, notities, prospect-namen). Plus een toggle om de online-stip uit te zetten voor wie liever niet zichtbaar is.",
+    watHebJeEraan:
+      "Het privacy-bezwaar wordt nooit een muur. Je weet precies wat sponsor ziet, en je hebt de regie.",
+    waar: "/instellingen → 'Wat ziet mijn sponsor van mij?'",
+    nieuw: true,
   },
   {
     emoji: "🛎️",
@@ -198,6 +278,26 @@ const FEATURES: Feature[] = [
     waar: "Menu → Mijn Team",
   },
   {
+    emoji: "☀️",
+    titel: "Tijd-bewuste groet",
+    watIsHet:
+      "Het dashboard begroet je met 'Goedemorgen', 'Goedemiddag', 'Goedenavond' of 'Goedenacht' afhankelijk van het moment. Werkt server-side in Europe/Amsterdam-tijdzone.",
+    watHebJeEraan:
+      "Klein detail, voelt menselijk. ELEVA praat tegen jou alsof er iemand achter zit.",
+    waar: "Dashboard, dag-tegel-header en 'eerste bezoek vandaag'-modal",
+    nieuw: true,
+  },
+  {
+    emoji: "📲",
+    titel: "Pull-to-refresh op mobiel",
+    watIsHet:
+      "Trek het scherm naar beneden vanuit bovenaan, ELEVA ververst de pagina. Spinner verschijnt, data komt opnieuw binnen.",
+    watHebJeEraan:
+      "Het mobiele gevoel zoals je gewend bent van Instagram of Mail. Niet de hele app afsluiten als je een nieuwe push hebt gehad.",
+    waar: "Op alle pagina's, mobiel",
+    nieuw: true,
+  },
+  {
     emoji: "🌐",
     titel: "Meertalig",
     watIsHet:
@@ -261,8 +361,16 @@ export default function OverElevaPagina() {
             productadvies-test"
           </li>
           <li>
+            <strong>Voor films naar prospects:</strong> prospect-kaart →
+            "Stuur film" (krijg push bij afgekeken + pipeline schuift door)
+          </li>
+          <li>
+            <strong>Voor focus 's ochtends:</strong> dashboard-tegel
+            "🎯 Volgende beste actie" met je top-3 prospects
+          </li>
+          <li>
             <strong>Voor jou als founder:</strong> ✍️ knoppen overal, pas aan
-            wat schuurt, direct live
+            wat schuurt, direct live. Plus 🧠 Train-de-Mentor.
           </li>
           <li>
             <strong>Voor de testgroep:</strong> 🧪 toolbar bovenaan dashboard
