@@ -97,15 +97,16 @@ export function Topbar({ gebruikersnaam }: { gebruikersnaam: string }) {
 
   return (
     <header className="h-16 border-b border-cm-border bg-cm-surface flex items-center justify-between px-4 lg:px-6">
-      {/* Dag teller */}
+      {/* Dag teller, op mobiel alleen het ronde cijfer (de tekst-info
+          staat al op het dashboard zelf, dubbel op de topbar voelt druk).
+          Op desktop tonen we de volledige tekst voor context. */}
       <div className="flex items-center gap-4 ml-10 lg:ml-0">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-cm-gold flex items-center justify-center">
             <span className="text-cm-black text-xs font-bold">{dag}</span>
           </div>
-          <div>
+          <div className="hidden md:block">
             <p className="text-cm-white text-sm font-semibold">{v("dashboard.dag")} {dag} {v("dashboard.van_60")}</p>
-            <p className="text-cm-white text-xs">{v("topbar.fase")} {fase}</p>
           </div>
         </div>
 

@@ -48,11 +48,26 @@ type Props = {
 const DAG_GROETEN: Record<number, string> = {
   1: "🚀 Daar ga je! Je eerste dag",
   7: "🎉 Week 1 zit erop, top dat je doorzet!",
-  8: "💪 Fase 2! Tijd om door te pakken",
+  8: "💪 Week 2! Tijd om door te pakken",
   14: "🏁 Halverwege, je hoort bij de 20% die doorzet",
-  15: "⏱️ Fase 3 begint nu",
-  21: "🏆 Laatste dag van fase 3, klaar voor de echte run",
+  15: "⏱️ Week 3 begint nu",
+  21: "🏆 Laatste dag van week 3, klaar voor de echte run",
 };
+
+/**
+ * Tijd-afhankelijke begroeting op basis van het uur in de browser.
+ * 5-12 = morgen, 12-18 = middag, 18-23 = avond, anders = nacht.
+ * Past zich aan tijdens het gebruik (re-render bij navigatie/refresh).
+ */
+function pakDagdeelGroet(voornaam: string): string {
+  const uur = new Date().getHours();
+  let groet = "☀️ Goedemorgen";
+  if (uur >= 18 && uur < 23) groet = "🌙 Goedenavond";
+  else if (uur >= 12 && uur < 18) groet = "☀️ Goedemiddag";
+  else if (uur >= 23 || uur < 5) groet = "🌃 Goedenacht";
+  // 5-12 blijft 'Goedemorgen' (default)
+  return `${groet}${voornaam ? ` ${voornaam}` : ""}!`;
+}
 
 export function VandaagFlow({
   dag,
@@ -114,8 +129,7 @@ export function VandaagFlow({
   const procent = totaal === 0 ? 0 : Math.round((aantalVoltooid / totaal) * 100);
 
   const groet =
-    DAG_GROETEN[dag.nummer] ||
-    `☀️ Goedemorgen${voornaam ? ` ${voornaam}` : ""}!`;
+    DAG_GROETEN[dag.nummer] || pakDagdeelGroet(voornaam);
 
   async function vinkAf(taakId: string, nieuwVoltooid: boolean) {
     if (bezigIds.has(taakId)) return;
