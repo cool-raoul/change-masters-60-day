@@ -36,7 +36,7 @@ async function haalTeamBoomOp(supabase: any, userId: string, diepte: number = 0,
 
   const { data: directeleden } = await supabase
     .from("profiles")
-    .select("id, full_name, email, role, onboarding_klaar, created_at, run_startdatum, premium_tot, last_seen_at")
+    .select("id, full_name, email, role, onboarding_klaar, created_at, run_startdatum, premium_tot, last_seen_at, presence_zichtbaar")
     .eq("sponsor_id", userId)
     .order("created_at", { ascending: true });
 
@@ -57,8 +57,16 @@ async function haalTeamBoomOp(supabase: any, userId: string, diepte: number = 0,
   const boom: TeamLid[] = [];
   for (const lid of directeleden) {
     const kinderen = await haalTeamBoomOp(supabase, lid.id, diepte + 1, maxDiepte);
+    // Privacy: alleen last_seen_at doorgeven als de member zelf z'n
+    // presence-zichtbaarheid AAN heeft staan (default true). Anders null.
+    const presenceZichtbaar =
+      (lid as { presence_zichtbaar?: boolean }).presence_zichtbaar !== false;
+    const lastSeen = presenceZichtbaar
+      ? ((lid as { last_seen_at?: string | null }).last_seen_at ?? null)
+      : null;
     boom.push({
       ...lid,
+      last_seen_at: lastSeen,
       kinderen,
       onboarding: voortgangMap[lid.id] || null,
     });

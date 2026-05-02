@@ -6,8 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 //
 // Heartbeat-endpoint. ELEVA-client roept dit elke 60s aan zolang de
 // app open is. Update profiles.last_seen_at = now() voor de huidige
-// member. Geen opt-in: members in een sponsor-team-relatie hebben
-// baat bij verbinding, status zichtbaar binnen sponsor-lijn.
+// member. Schrijft niet als presence_zichtbaar=false (privacy-toggle).
 // ============================================================
 
 export async function POST() {
@@ -18,6 +17,22 @@ export async function POST() {
     } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json({ error: "Niet ingelogd" }, { status: 401 });
+    }
+
+    // Privacy-toggle check: als member zichtbaarheid heeft uitgezet,
+    // schrijven we niets. Anders blijft last_seen_at op een oude waarde
+    // staan (of null als nooit gezet) en is de groene stip dus niet
+    // zichtbaar voor teamleden.
+    const { data: profielRow } = await supabase
+      .from("profiles")
+      .select("presence_zichtbaar")
+      .eq("id", user.id)
+      .maybeSingle();
+    const zichtbaar =
+      (profielRow as { presence_zichtbaar?: boolean } | null)
+        ?.presence_zichtbaar !== false;
+    if (!zichtbaar) {
+      return NextResponse.json({ ok: true, geschreven: false });
     }
 
     await supabase
