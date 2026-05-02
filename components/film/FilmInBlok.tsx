@@ -18,8 +18,8 @@ import { normaliseerNaarEmbed, detecteerProvider } from "@/lib/films/embed";
 // - Tracked dat de gebruiker de film GEZIEN heeft (gestart) en biedt
 //   een knop om af te kruisen ("ik heb 'm afgekeken")
 //
-// Voor diepere tracking (realtime % afgekeken) staat dat geplant in
-// fase 2 met YouTube IFrame API postMessage.
+// Voor diepere tracking (realtime % afgekeken) staat dat later
+// gepland met YouTube IFrame API postMessage.
 // ============================================================
 
 type FilmData = {

@@ -7,7 +7,7 @@
 --
 -- 'founder' onderscheidt zich van 'leider' doordat alleen de founder
 -- film-content beheert die voor IEDEREEN in het systeem zichtbaar wordt
--- (via /instellingen/films). Leiders kunnen later in fase 2 ook film-
+-- (via /instellingen/films). Leiders kunnen later ook film-
 -- rechten krijgen voor hun eigen team — voor nu één centrale beheerder.
 --
 -- Idempotent — veilig opnieuw te runnen.

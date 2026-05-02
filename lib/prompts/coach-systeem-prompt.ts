@@ -12,9 +12,9 @@ function getDagVanRun(runStartdatum?: string | null): number {
 }
 
 function getFaseVanRun(dag: number): string {
-  if (dag <= 20) return "Fase 1: Team bouwen (dag 1-20)";
-  if (dag <= 40) return "Fase 2: Team helpen bouwen (dag 21-40)";
-  return "Fase 3: Opschalen en borgen (dag 41-60)";
+  if (dag <= 20) return "Blok 1: Team bouwen (dag 1-20)";
+  if (dag <= 40) return "Blok 2: Team helpen bouwen (dag 21-40)";
+  return "Blok 3: Opschalen en borgen (dag 41-60)";
 }
 
 // Laad alleen scripts die relevant zijn voor het vraagtype

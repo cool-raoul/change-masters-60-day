@@ -20,7 +20,7 @@ import { FilmRowEditor } from "./film-row-editor";
 //
 // Voor de eerste rondes is dit een eenvoudige UI: per slot een rij met
 // titel/url/beschrijving/aan-uit. Geen massa-import, geen versies. Dat
-// kan in fase 2 als de feature-set groeit.
+// kan later als de feature-set groeit.
 // ============================================================
 
 export const dynamic = "force-dynamic";
@@ -34,7 +34,7 @@ export default async function FilmsBeheerPage() {
 
   // Alleen founder (hoofdbeheerder) mag films beheren. Iedereen ziet de
   // films op hun plek; één persoon onderhoudt de bibliotheek voor het hele
-  // systeem. In fase 2 kunnen we dit verbreden naar 'leider' als leiders
+  // systeem. Later kunnen we dit verbreden naar 'leider' als leiders
   // eigen films voor hun team mogen plaatsen.
   const { data: profiel } = await supabase
     .from("profiles")

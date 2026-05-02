@@ -96,7 +96,7 @@ export async function GET(request: Request) {
 
     // 3) Bepaal welke run-dag de member nu zit. Buiten dag 2-21 → skip:
     //    - dag 1 (vandaag is startdag, nog niets verwacht)
-    //    - dag > 21 (run zit in fase 2/3 zonder dagtegels)
+    //    - dag > 21 (run zit in blok 2/3 zonder dagtegels)
     const start = new Date(rij.run_startdatum + "T00:00:00Z");
     const dagNummer = dagenTussen(start, new Date()) + 1;
     if (dagNummer < 2 || dagNummer > 21) continue;

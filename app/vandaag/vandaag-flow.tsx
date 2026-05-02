@@ -9,6 +9,7 @@ import { HerinnerLaterKnop } from "@/components/playbook/HerinnerLaterKnop";
 import { VCardUploader } from "@/components/vandaag/inline-embeds/VCardUploader";
 import { SponsorMeldingKnop } from "@/components/vandaag/inline-embeds/SponsorMeldingKnop";
 import { NamenForm } from "@/components/vandaag/inline-embeds/NamenForm";
+import { pakDagdeelGroetMetNaam } from "@/lib/util/dagdeel-groet";
 import type { Dag, ControllableTaak } from "@/lib/playbook/types";
 
 // localStorage-key zodat we bij terugkeer (van een actieRoute) op de
@@ -54,20 +55,8 @@ const DAG_GROETEN: Record<number, string> = {
   21: "🏆 Laatste dag van week 3, klaar voor de echte run",
 };
 
-/**
- * Tijd-afhankelijke begroeting op basis van het uur in de browser.
- * 5-12 = morgen, 12-18 = middag, 18-23 = avond, anders = nacht.
- * Past zich aan tijdens het gebruik (re-render bij navigatie/refresh).
- */
-function pakDagdeelGroet(voornaam: string): string {
-  const uur = new Date().getHours();
-  let groet = "☀️ Goedemorgen";
-  if (uur >= 18 && uur < 23) groet = "🌙 Goedenavond";
-  else if (uur >= 12 && uur < 18) groet = "☀️ Goedemiddag";
-  else if (uur >= 23 || uur < 5) groet = "🌃 Goedenacht";
-  // 5-12 blijft 'Goedemorgen' (default)
-  return `${groet}${voornaam ? ` ${voornaam}` : ""}!`;
-}
+// Tijd-afhankelijke begroeting komt uit lib/util/dagdeel-groet.ts
+// (zelfde logica voor server- en client-rendering).
 
 export function VandaagFlow({
   dag,
@@ -129,7 +118,7 @@ export function VandaagFlow({
   const procent = totaal === 0 ? 0 : Math.round((aantalVoltooid / totaal) * 100);
 
   const groet =
-    DAG_GROETEN[dag.nummer] || pakDagdeelGroet(voornaam);
+    DAG_GROETEN[dag.nummer] || pakDagdeelGroetMetNaam(voornaam);
 
   async function vinkAf(taakId: string, nieuwVoltooid: boolean) {
     if (bezigIds.has(taakId)) return;

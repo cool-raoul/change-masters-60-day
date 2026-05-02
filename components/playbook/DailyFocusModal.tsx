@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Dag } from "@/lib/playbook/types";
+import { pakDagdeelGroet } from "@/lib/util/dagdeel-groet";
 
 // ============================================================
 // DailyFocusModal, focus-scherm bij eerste bezoek van een dag.
@@ -74,7 +75,7 @@ export function DailyFocusModal({ dag, voltooidAantal }: Props) {
             Dag {dag.nummer} · Fase {dag.fase}
           </p>
           <h2 className="text-cm-white font-display font-bold text-2xl mt-1">
-            Goedemorgen! 🌅
+            {pakDagdeelGroet()}!
           </h2>
           <p className="text-cm-white opacity-80 text-sm mt-2 leading-relaxed">
             Klaar voor vandaag? Hier is je focus voor{" "}

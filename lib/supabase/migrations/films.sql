@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS film_views (
   /** Wanneer afgekeken (NULL als nog niet klaar) */
   afgekeken_op TIMESTAMPTZ,
   /** Optioneel: tot welke seconde de gebruiker is gekomen.
-      Voor fase 2 realtime-percentage. */
+      Voor later: realtime-percentage. */
   positie_seconden INTEGER,
   /** Voor prospect-films die via een test-token horen i.p.v. via
       ingelogde user (voor de niet-ingelogde prospect-flow). */
@@ -132,7 +132,7 @@ CREATE POLICY "iedereen_select_films"
   USING (true);
 
 -- INSERT/UPDATE/DELETE alleen voor founder (hoofdbeheerder).
--- In fase 2 kunnen we dit verbreden naar 'leider' zodat leiders eigen
+-- Later kunnen we dit verbreden naar 'leider' zodat leiders eigen
 -- films voor hun team kunnen plaatsen — voor nu: één persoon beheert
 -- de bibliotheek voor iedereen.
 DROP POLICY IF EXISTS "leiders_insert_films" ON films;
@@ -189,7 +189,7 @@ CREATE POLICY "eigen_film_views_update"
   USING (auth.uid() = user_id);
 
 -- Founder mag alle film_views lezen voor analytics/overview.
--- In fase 2: sponsors mogen views van hun directe downline zien op de
+-- Later: sponsors mogen views van hun directe downline zien op de
 -- prospect-kaart (welke films heeft de prospect afgekeken).
 DROP POLICY IF EXISTS "leiders_lezen_alle_views" ON film_views;
 DROP POLICY IF EXISTS "founder_lezen_alle_views" ON film_views;

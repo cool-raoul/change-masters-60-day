@@ -57,11 +57,11 @@ function pakBericht(taakId: string | undefined, sponsorVoornaam: string): string
     case "dag14-sponsor-call":
       return (
         `Hoi${naamDeel}! Halverwege de 21-daagse 🏁 Tijd voor onze 15-min ` +
-        `call om fase 3 voor te bereiden. Wanneer schikt het?`
+        `call om week 3 voor te bereiden. Wanneer schikt het?`
       );
     case "dag21-sponsor-call":
       return (
-        `Hoi${naamDeel}! Dag 21, fase 1 t/m 3 voltooid 🏆 Klaar voor onze ` +
+        `Hoi${naamDeel}! Dag 21, week 1 t/m 3 voltooid 🏆 Klaar voor onze ` +
         `40-min call over hoe ik de volgende 40 dagen ga vormgeven?`
       );
     case "dag1-sponsor":

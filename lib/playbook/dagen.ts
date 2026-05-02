@@ -1,8 +1,8 @@
 // ============================================================
 // PLAYBOOK, dag 1 t/m 21 volledig uitgewerkt
-// Fase 1 (dag 1-7): fundament
-// Fase 2 (dag 8-14): momentum
-// Fase 3 (dag 15-21): ritme
+// Week 1 (dag 1-7): fundament
+// Week 2 (dag 8-14): momentum
+// Week 3 (dag 15-21): ritme
 // Elke dag: ✅ controllables · 🎯 fase-doel · 📍 waar in ELEVA ·
 // 💡 wat je leert · 🌱 waarom dit werkt.
 // ============================================================
@@ -11,7 +11,7 @@ import { Dag } from "./types";
 
 export const DAGEN: Dag[] = [
   // ============================================================
-  // FASE 1, FUNDAMENT (dag 1-7)
+  // WEEK 1, FUNDAMENT (dag 1-7)
   // ============================================================
   {
     nummer: 1,
@@ -37,7 +37,7 @@ export const DAGEN: Dag[] = [
       },
     ],
     faseDoel:
-      "Fase 1 (dag 1-7): deze week 2 one-pager-momenten gepland of bekeken krijgen.",
+      "Week 1 (dag 1-7): deze week 2 one-pager-momenten gepland of bekeken krijgen.",
     waarInEleva: [
       {
         actie: "Telefooncontacten importeren",
@@ -114,7 +114,7 @@ OVERWELDIGD VOELEN IS NORMAAL: je leert iets nieuws, je stapt uit comfort. Eerst
         id: "dag2-kennismaak",
         label: "Kennismakings-call of -app met je sponsor (30 min)",
         uitleg:
-          "Korte check-in. Jouw WHY laten lezen, sponsor vertelt wat jullie samen gaan doen fase 1. Vraag in deze call meteen om hulp bij je eerste 3 invites vandaag.",
+          "Korte check-in. Jouw WHY laten lezen, sponsor vertelt wat jullie samen gaan doen in week 1. Vraag in deze call meteen om hulp bij je eerste 3 invites vandaag.",
         verplicht: true,
         inlineEmbed: "sponsor-melding",
       },
@@ -151,7 +151,7 @@ OVERWELDIGD VOELEN IS NORMAAL: je leert iets nieuws, je stapt uit comfort. Eerst
       },
     ],
     faseDoel:
-      "Fase 1 (dag 1-7): deze week 2 one-pager-momenten gepland of bekeken krijgen.",
+      "Week 1 (dag 1-7): deze week 2 one-pager-momenten gepland of bekeken krijgen.",
     waarInEleva: [
       {
         actie: "Nieuwe naam handmatig",
@@ -263,7 +263,7 @@ Vandaag stuur je ook al 3 uitnodigingen, samen met je sponsor in een groepje (3-
       },
     ],
     faseDoel:
-      "Fase 1 (dag 1-7): deze week 2 one-pager-momenten gepland of bekeken krijgen.",
+      "Week 1 (dag 1-7): deze week 2 one-pager-momenten gepland of bekeken krijgen.",
     waarInEleva: [
       {
         actie: "Naam handmatig toevoegen",
@@ -350,7 +350,7 @@ NIET GELIJK PITCHEN, wat wel: reageer terug op hun content. Vraag iets. Bouw rap
       },
     ],
     faseDoel:
-      "Fase 1 (dag 1-7): deze week 2 one-pager-momenten gepland of bekeken krijgen.",
+      "Week 1 (dag 1-7): deze week 2 one-pager-momenten gepland of bekeken krijgen.",
     waarInEleva: [
       {
         actie: "Scripts openen",
@@ -469,7 +469,7 @@ Vandaag stap je actief uit je comfortzone, en dat kriebelt, afwijzingsangst, "wa
       },
     ],
     faseDoel:
-      "Fase 1 (dag 1-7): deze week 2 one-pager-momenten gepland of bekeken krijgen.",
+      "Week 1 (dag 1-7): deze week 2 one-pager-momenten gepland of bekeken krijgen.",
     waarInEleva: [
       {
         actie: "Coach helpt bij een specifiek bezwaar",
@@ -572,7 +572,7 @@ EXTRA, VANDAAG START JE MINDSET-ROUTINE:
       },
     ],
     faseDoel:
-      "Fase 1 (dag 1-7): deze week 2 one-pager-momenten gepland of bekeken krijgen.",
+      "Week 1 (dag 1-7): deze week 2 one-pager-momenten gepland of bekeken krijgen.",
     waarInEleva: [
       {
         actie: "Follow-up herinneringen",
@@ -666,13 +666,13 @@ Een prospect die NU geen ja zegt, kan over 3 maanden alsnog ja zeggen. Of over 1
       {
         id: "dag7-sponsor-call",
         label: "15 min call met sponsor over week 2",
-        uitleg: "Wat werkte? Wat gaan we anders doen? Wat is fase 2?",
+        uitleg: "Wat werkte? Wat gaan we anders doen? Wat is week 2?",
         verplicht: false,
         inlineEmbed: "sponsor-melding",
       },
     ],
     faseDoel:
-      "Fase 1 afgerond. Heb je je 2 one-pager-momenten? Mooi. Zo niet: ze schuiven door. Focus blijft hetzelfde.",
+      "Week 1 afgerond. Heb je je 2 one-pager-momenten? Mooi. Zo niet: ze schuiven door. Focus blijft hetzelfde.",
     waarInEleva: [
       {
         actie: "Wekelijkse review",
@@ -680,8 +680,8 @@ Een prospect die NU geen ja zegt, kan over 3 maanden alsnog ja zeggen. Of over 1
         route: "/statistieken",
       },
       {
-        actie: "Fase 1 statistieken",
-        menupad: "Menu → Statistieken → Fase 1",
+        actie: "Week 1 statistieken",
+        menupad: "Menu → Statistieken → Week 1",
         route: "/statistieken",
       },
     ],
@@ -716,7 +716,7 @@ DEZE REVIEW WORDT GEDEELD MET JE SPONSOR, niet om te beoordelen, om te ondersteu
   },
 
   // ============================================================
-  // FASE 2, MOMENTUM (dag 8-14)
+  // WEEK 2, MOMENTUM (dag 8-14)
   // ============================================================
   {
     nummer: 8,
@@ -749,7 +749,7 @@ DEZE REVIEW WORDT GEDEELD MET JE SPONSOR, niet om te beoordelen, om te ondersteu
       },
     ],
     faseDoel:
-      "Fase 2 (dag 8-14): 3 tot 5 presentatie-momenten in de agenda deze week.",
+      "Week 2 (dag 8-14): 3 tot 5 presentatie-momenten in de agenda deze week.",
     waarInEleva: [
       {
         actie: "Pipeline-view (wie zit waar)",
@@ -769,7 +769,7 @@ DEZE REVIEW WORDT GEDEELD MET JE SPONSOR, niet om te beoordelen, om te ondersteu
           "Help me 10 uitnodigingen versturen vandaag zonder dat het als spam voelt. Ik heb [aantal] warme + [aantal] lauwe prospects op mijn lijst.",
       },
     ],
-    watJeLeert: `In fase 1 leerde je HOE het werkt. In fase 2 gaat het om VOLUME. 10 uitnodigingen per dag voelt veel, maar het is 10-15 minuten werk zodra je scripts paraat hebt en je lijst goed gevuld is. Het draait vandaag niet om het perfecte bericht, het draait om DOORPAKKEN.
+    watJeLeert: `In week 1 leerde je HOE het werkt. In week 2 gaat het om VOLUME. 10 uitnodigingen per dag voelt veel, maar het is 10-15 minuten werk zodra je scripts paraat hebt en je lijst goed gevuld is. Het draait vandaag niet om het perfecte bericht, het draait om DOORPAKKEN.
 
 WAAROM 10 EN NIET 5, DE WET VAN GROTE GETALLEN:
 Met 5 uitnodigingen per dag krijg je gemiddeld 1 ja/nee/misschien per week. Met 10 verdubbelt dat, maar belangrijker: je krijgt sneller patronen. Welke openingszin werkt bij wie? Welke variant uit de 4-stappen-uitnodiging slaat aan? Dat leer je niet uit 5 berichten, dat leer je uit 50.
@@ -778,7 +778,7 @@ NL-NETWERK-WERKELIJKHEID, gemiddelden:
 • Van 10 uitnodigingen → 4-6 reacties
 • Van 5 reacties → 2-3 kijkmomenten (info / 3-weg)
 • Van 3 kijkmomenten → 1 ja-zegger of 1 shopper of 1 not-yet
-Dat is normaal. Niet teleurstellend, niet rooskleurig. Dat is gewoon wat fase 2 doet als je consistent blijft.
+Dat is normaal. Niet teleurstellend, niet rooskleurig. Dat is gewoon wat week 2 doet als je consistent blijft.
 
 DE PERFECTIE-VAL:
 "Perfect is de vijand van verzonden." Stuur EERDER af dan je zin hebt om ze af te sturen. Een onhandige uitnodiging die WEG is presteert oneindig veel beter dan de perfecte die nog op je telefoon staat in concept. Per uitnodiging max 30-60 seconden bedenktijd, dan op verzenden. Als je 5 minuten staart naar één bericht: kopieer een ELEVA-script en pas alleen de naam aan.
@@ -842,7 +842,7 @@ MIX WARM EN LAUW: 5 mensen die je goed kent + 5 met wie je 6+ maanden niet gespr
       },
     ],
     faseDoel:
-      "Fase 2 (dag 8-14): 3 tot 5 presentatie-momenten in de agenda deze week.",
+      "Week 2 (dag 8-14): 3 tot 5 presentatie-momenten in de agenda deze week.",
     waarInEleva: [
       {
         actie: "3-weg-scripts per prospect (alle 5 stappen voorgevuld)",
@@ -952,7 +952,7 @@ VANDAAG: lees de scripts in een prospect-kaart door, zodat je voor je eerstvolge
       },
     ],
     faseDoel:
-      "Fase 2 (dag 8-14): 3 tot 5 presentatie-momenten in de agenda deze week.",
+      "Week 2 (dag 8-14): 3 tot 5 presentatie-momenten in de agenda deze week.",
     waarInEleva: [
       {
         actie: "3-weg scripts (alle 5 stappen klaar voor verzending)",
@@ -1043,7 +1043,7 @@ Doel deze week: minimaal 1 3-weg starten. Heb je 'm op dag 4 al gehad? Top, plan
       },
     ],
     faseDoel:
-      "Fase 2 (dag 8-14): 3 tot 5 presentatie-momenten in de agenda deze week.",
+      "Week 2 (dag 8-14): 3 tot 5 presentatie-momenten in de agenda deze week.",
     waarInEleva: [
       {
         actie: "Pipeline-weergave: zie wie waar zit",
@@ -1153,7 +1153,7 @@ KIJK VANDAAG NAAR JE PIPELINE: hoeveel mensen op "Uitgenodigd"? Hoeveel op "One-
       },
     ],
     faseDoel:
-      "Fase 2 (dag 8-14): 3 tot 5 presentatie-momenten in de agenda deze week.",
+      "Week 2 (dag 8-14): 3 tot 5 presentatie-momenten in de agenda deze week.",
     waarInEleva: [
       {
         actie: "Coach schrijft een product-pivot bericht",
@@ -1274,7 +1274,7 @@ EXTRA WAARDE: zeg nee tegen drammen, ja tegen warmte. Een Shopper die jou over e
       },
     ],
     faseDoel:
-      "Fase 2 (dag 8-14): 3 tot 5 presentatie-momenten in de agenda deze week.",
+      "Week 2 (dag 8-14): 3 tot 5 presentatie-momenten in de agenda deze week.",
     waarInEleva: [
       {
         actie: "Coach helpt met FORM-vragen voor jouw situatie",
@@ -1393,13 +1393,13 @@ VANDAAG: kies 1 specifieke prospect, plan een 5-min check-in (DM of telefoon) en
       },
       {
         id: "dag14-sponsor-call",
-        label: "Sponsor-call 15 min: fase 3 voorbereiden",
+        label: "Sponsor-call 15 min: week 3 voorbereiden",
         verplicht: false,
         inlineEmbed: "sponsor-melding",
       },
     ],
     faseDoel:
-      "Fase 2 afgerond. Hoeveel presentatie-momenten staan er in je agenda? Pakken we in fase 3 door, follow-up wordt leidend.",
+      "Week 2 afgerond. Hoeveel presentatie-momenten staan er in je agenda? Pakken we in week 3 door, follow-up wordt leidend.",
     waarInEleva: [
       {
         actie: "Wekelijkse review",
@@ -1438,7 +1438,7 @@ Stok je nergens en is alles beweging maar geen "ja's"?
 DE 3 GROOTSTE INZICHTEN UIT WEEK 1+2, schrijf op:
 1. Welk type prospect reageert het beste? (warm/lauw/koud, leeftijd, geslacht, situatie)
 2. Welke openingszin werkt het sterkst voor JOU?
-3. Welke fase van je pipeline is het dunst, daar gaat fase 3 over.
+3. Welke fase van je pipeline is het dunst, daar gaat week 3 over.
 
 WAT GA JE VOLGENDE WEEK ZIEN (sneak peek voor dag 15-21):
 • Follow-up wordt je hoofdwerk (dag 15)
@@ -1456,7 +1456,7 @@ VAN HIER UIT IS HET KILOMETER-WERK. Geen nieuwe technieken meer, alleen oefenen 
   },
 
   // ============================================================
-  // FASE 3, RITME (dag 15-21)
+  // WEEK 3, RITME (dag 15-21)
   // ============================================================
   {
     nummer: 15,
@@ -1489,7 +1489,7 @@ VAN HIER UIT IS HET KILOMETER-WERK. Geen nieuwe technieken meer, alleen oefenen 
       },
     ],
     faseDoel:
-      "Fase 3 (dag 15-21): minimaal 2 beslissingen binnen: member, shopper of not-yet.",
+      "Week 3 (dag 15-21): minimaal 2 beslissingen binnen: member, shopper of not-yet.",
     waarInEleva: [
       {
         actie: "Follow-up lijst (alle open herinneringen)",
@@ -1594,7 +1594,7 @@ Een nee NU is geen nee voor altijd. Iemand op "Not-yet" zetten is geen verlies. 
       },
     ],
     faseDoel:
-      "Fase 3 (dag 15-21): minimaal 2 beslissingen binnen: member, shopper of not-yet.",
+      "Week 3 (dag 15-21): minimaal 2 beslissingen binnen: member, shopper of not-yet.",
     waarInEleva: [
       {
         actie: "Pipeline labels aanpassen per prospect",
@@ -1720,7 +1720,7 @@ VANDAAG, categoriseer je top-20:
       },
     ],
     faseDoel:
-      "Fase 3 (dag 15-21): minimaal 2 beslissingen binnen: member, shopper of not-yet.",
+      "Week 3 (dag 15-21): minimaal 2 beslissingen binnen: member, shopper of not-yet.",
     waarInEleva: [
       {
         actie: "Coach helpt met closing voor specifieke prospect",
@@ -1853,7 +1853,7 @@ VANDAAG: probeer Doel-Tijd-Termijn vandaag of morgen bij minstens 1 warme prospe
       },
     ],
     faseDoel:
-      "Fase 3 (dag 15-21): minimaal 2 beslissingen binnen: member, shopper of not-yet.",
+      "Week 3 (dag 15-21): minimaal 2 beslissingen binnen: member, shopper of not-yet.",
     waarInEleva: [
       {
         actie: "Edification-zin laten checken door ELEVA Mentor",
@@ -1948,7 +1948,7 @@ Wat je vandaag doet: 5 minuten investeren in JOUW vaste zin. Schrijf 'm op, bewa
       },
     ],
     faseDoel:
-      "Fase 3 (dag 15-21): minimaal 2 beslissingen binnen: member, shopper of not-yet.",
+      "Week 3 (dag 15-21): minimaal 2 beslissingen binnen: member, shopper of not-yet.",
     waarInEleva: [
       {
         actie: "Pipeline-weergave: zie waar prospects vastlopen",
@@ -2059,7 +2059,7 @@ Statistieken zijn je leermeester, niet je rechter. Slechte cijfers betekenen nie
       },
     ],
     faseDoel:
-      "Fase 3 (dag 15-21): minimaal 2 beslissingen binnen: member, shopper of not-yet.",
+      "Week 3 (dag 15-21): minimaal 2 beslissingen binnen: member, shopper of not-yet.",
     waarInEleva: [
       {
         actie: "Coach helpt jou de beslissing vragen",
@@ -2156,13 +2156,13 @@ VANDAAG: kies 1 prospect die meer dan 3 exposures heeft gehad zonder beslissing.
       },
       {
         id: "dag21-sponsor-call",
-        label: "40-min call met sponsor: fase 3 naar fase-uitgebreid",
+        label: "40-min call met sponsor: week 3 afsluiten en blok 2 voorbereiden",
         verplicht: false,
         inlineEmbed: "sponsor-melding",
       },
     ],
     faseDoel:
-      "Fase 3 afgerond. Hoeveel beslissingen zijn binnen? Hoeveel pipeline-momentum ligt er? Dag 22 wordt het consolidatie-ritme.",
+      "Week 3 afgerond. Hoeveel beslissingen zijn binnen? Hoeveel pipeline-momentum ligt er? Dag 22 wordt het consolidatie-ritme.",
     waarInEleva: [
       {
         actie: "Week 3 review",

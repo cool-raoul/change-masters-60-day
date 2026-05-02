@@ -15,6 +15,7 @@ import { berekenHuidigeDag } from "@/lib/playbook/bereken-dag";
 import { pakTopRadar, type ProspectInput } from "@/lib/radar/volgende-beste-actie";
 import { VolgendeBesteActie } from "@/components/radar/VolgendeBesteActie";
 import { getServerTaal, v } from "@/lib/i18n/server";
+import { pakDagdeelGroet } from "@/lib/util/dagdeel-groet";
 import { Locale } from "date-fns";
 
 const DATE_LOCALES: Record<string, Locale> = { nl, en: enUS, fr, es, de, pt };
@@ -335,7 +336,7 @@ export default async function DashboardPagina() {
           {dag === 1 ? (
             <>Daar gaan we! 🚀, <span className="text-cm-gold">Dag 1</span></>
           ) : dag <= 21 ? (
-            <>Goedemorgen! ☀️, {v("dashboard.dag", taal)}{" "}
+            <>{pakDagdeelGroet()}!, {v("dashboard.dag", taal)}{" "}
               <span className="text-cm-gold">{dag}</span>{" "}
               {v("dashboard.van_60", taal)}
             </>
@@ -476,7 +477,7 @@ export default async function DashboardPagina() {
                 🏆 21 dagen klaar!
               </p>
               <p className="text-cm-white text-sm font-medium mt-0.5">
-                Te gek, fase 1 t/m 3 voltooid. Dit is je startlijn voor de
+                Te gek, week 1 t/m 3 voltooid. Dit is je startlijn voor de
                 volgende 40 dagen.
               </p>
             </div>
@@ -495,7 +496,7 @@ export default async function DashboardPagina() {
                 🎉 Eerste week klaar!
               </p>
               <p className="text-cm-white text-sm font-medium mt-0.5">
-                Top, week 1 zit erop. Het ritme zit er nu in. Op naar fase 2!
+                Top, week 1 zit erop. Het ritme zit er nu in. Op naar week 2!
               </p>
             </div>
           ) : null}

@@ -2,19 +2,35 @@
 
 import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { differenceInDays } from "date-fns";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTaal } from "@/lib/i18n/TaalContext";
 
-const RUN_START = new Date("2026-04-12");
-
-export function Topbar({ gebruikersnaam }: { gebruikersnaam: string }) {
+export function Topbar({
+  gebruikersnaam,
+  huidigeDag,
+}: {
+  gebruikersnaam: string;
+  /** Server-side berekende huidige dag (zelfde logica als dashboard).
+   *  Topbar overschrijft deze alleen wanneer de URL een ?dag=N
+   *  parameter heeft op /playbook (founder-preview-modus). */
+  huidigeDag: number;
+}) {
   const [aantalHerinneringen, setAantalHerinneringen] = useState(0);
   const [isPremium, setIsPremium] = useState(false);
   const [profielMenuOpen, setProfielMenuOpen] = useState(false);
   const profielMenuRef = useRef<HTMLDivElement>(null);
-  const dag = Math.max(1, Math.min(60, differenceInDays(new Date(), RUN_START) + 1));
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  // Founder-preview: als de pathname /playbook is en er staat ?dag=N
+  // in de URL, volg die. Zo blijft de Topbar-cirkel altijd congruent
+  // met de dag die de founder op dit moment in het playbook bekijkt.
+  const dagFromUrl =
+    pathname === "/playbook" ? Number(searchParams.get("dag")) : NaN;
+  const dag =
+    Number.isFinite(dagFromUrl) && dagFromUrl >= 1 && dagFromUrl <= 60
+      ? dagFromUrl
+      : huidigeDag;
   const fase = dag <= 20 ? 1 : dag <= 40 ? 2 : 3;
   const { v } = useTaal();
   const router = useRouter();

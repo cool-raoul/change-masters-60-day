@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Topbar } from "@/components/layout/Topbar";
+import { berekenHuidigeDag } from "@/lib/playbook/bereken-dag";
 import { WelcomePopup } from "@/components/layout/WelcomePopup";
 import { TaalProvider } from "@/lib/i18n/TaalContext";
 import { Taal } from "@/lib/i18n/vertalingen";
@@ -23,7 +24,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, onboarding_klaar, role")
+    .select("full_name, onboarding_klaar, role, run_startdatum, is_tester")
     .eq("id", user.id)
     .single();
 
@@ -32,13 +33,36 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
   // Lees taal uit user metadata, direct beschikbaar voor alle client componenten
   const taal = (user.user_metadata?.taal as Taal) || "nl";
 
+  // Bereken huidige dag op zelfde manier als dashboard, zodat de Topbar-cirkel
+  // altijd hetzelfde getal toont als de header op het dashboard. Members
+  // krijgen voortgang-modus, founders/testers krijgen kalender.
+  const profielData = profile as {
+    role?: string | null;
+    run_startdatum?: string | null;
+    is_tester?: boolean | null;
+  };
+  const isFounderOfTester =
+    profielData.role === "founder" || profielData.is_tester === true;
+  const { data: voltooiingen } = await supabase
+    .from("dag_voltooiingen")
+    .select("dag_nummer, taak_id")
+    .eq("user_id", user.id);
+  const huidigeDag = berekenHuidigeDag(
+    (voltooiingen ?? []) as { dag_nummer: number; taak_id: string }[],
+    profielData.run_startdatum ?? null,
+    { isTester: isFounderOfTester },
+  );
+
   return (
     <TaalProvider initialTaal={taal}>
       <div className="flex h-dvh bg-cm-black overflow-hidden">
         <WelcomePopup />
         <Sidebar isLeider={(profile as any)?.role === "leider"} />
         <div className="flex-1 flex flex-col min-h-0 min-w-0">
-          <Topbar gebruikersnaam={profile?.full_name || user.email || "Teamlid"} />
+          <Topbar
+            gebruikersnaam={profile?.full_name || user.email || "Teamlid"}
+            huidigeDag={huidigeDag}
+          />
           <main className="flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain p-6 pb-28 sm:pb-6 mobile-scroll">
             {/* Toont alleen iets bij ?van=playbook&dag=N, anders renders null. */}
             <Suspense fallback={null}>

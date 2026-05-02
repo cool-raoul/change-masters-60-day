@@ -34,7 +34,7 @@ export const FASEN: Fase[] = [
     titel: "Momentum",
     dagen: [8, 14],
     samenvatting:
-      "Nu draait je machine. Je hebt je lijst, je hebt je WHY, je weet waar alles in ELEVA staat. Deze week is volume-week: meer uitnodigingen, meer follow-ups, meer gesprekken. En fase 2 gaat vooral over ritme houden als het niet meteen rendeert. Want dat is normaal. Bouwen kost tijd.",
+      "Nu draait je machine. Je hebt je lijst, je hebt je WHY, je weet waar alles in ELEVA staat. Deze week is volume-week: meer uitnodigingen, meer follow-ups, meer gesprekken. En week 2 gaat vooral over ritme houden als het niet meteen rendeert. Want dat is normaal. Bouwen kost tijd.",
     controllableLat: [
       "10 uitnodigingen per dag",
       "5 follow-ups per dag",

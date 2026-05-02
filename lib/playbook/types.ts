@@ -154,8 +154,8 @@ export type Dag = {
 };
 
 /**
- * Eén van de drie fasen (1-7 / 8-14 / 15-21).
- * Dag 22-60 valt onder "fase 3 uitgebreid" via weekritme.
+ * Eén van de drie weken van het 21-daagse playbook (1-7 / 8-14 / 15-21).
+ * Dag 22-60 valt onder blok 2 + 3 (zie lib/knowledge/coach-boeken.ts).
  */
 export type Fase = {
   nummer: 1 | 2 | 3;

@@ -42,10 +42,10 @@ WORRE 7 VAARDIGHEDEN (samenvatting):
 6. Opstarten: eerste 48u cruciaal, samen namenlijst, eerste 3 uitnodigingen
 7. Evenementen: derden-validatie
 
-60-DAGENRUN FASEN:
-Fase 1 (dag 1-20): 3 namen/dag, 2 uitnodigingen, 1 follow-up. Breed bouwen.
-Fase 2 (dag 21-40): eigen acties + team helpen. 3-weg gesprekken. Max 2 niveaus diep.
-Fase 3 (dag 41-60): social media attractie, leiderschap, duplicatie borgen.
+60-DAGENRUN BLOKKEN:
+Blok 1 (dag 1-20): 3 namen/dag, 2 uitnodigingen, 1 follow-up. Breed bouwen.
+Blok 2 (dag 21-40): eigen acties + team helpen. 3-weg gesprekken. Max 2 niveaus diep.
+Blok 3 (dag 41-60): social media attractie, leiderschap, duplicatie borgen.
 
 UNTIL-principe: niet stoppen totdat het lukt.
 5 soorten prospects: actief zoekend, open, productkoper, niet-nu, nooit.

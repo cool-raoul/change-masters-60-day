@@ -63,7 +63,7 @@ Script voor prospects die interesse tonen in de *opportunity*:
 Kernboodschap: je hoeft niets te *verkopen*, alleen te *delen*. Eigen ervaring = sterkste argument.
 
 Structuur van de kaart:
-- Intro: "Na dag 10 of fase 2 gebeurt er iets. Je hoofd voelt lichter..."
+- Intro: "Na dag 10 of week 2 gebeurt er iets. Je hoofd voelt lichter..."
 - Testimonial Marloes (37): "Na 21 dagen lichter en rustiger. Ik dacht: dit gun ik ook mijn zus. Ik stuurde gewoon een linkje door. Nu doen we het samen."
 - Wat je kunt doen: vraag naar de succesformule voor jouw resultaatpost → laat ons de rest doen
 - FAQ: "Moet ik verkopen?" → Nee. "En als iemand nee zegt?" → Dan is dat prima. "Moet ik veel tijd hebben?" → Nee, een appje sturen kost 2 minuten.

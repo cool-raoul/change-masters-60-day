@@ -14,7 +14,7 @@
 //   - Triple Protein Shake (vanille), chocolade-variant bestaat ook
 //   - Be Focused (bessen), citrus-variant bestaat ook
 //   - Be Recharged (bessen), citrus-variant bestaat ook
-// Heroverweeg in fase 2 of we smaakkeuzes alsnog in de UI willen aanbieden.
+// Heroverweeg later of we smaakkeuzes alsnog in de UI willen aanbieden.
 //
 // BE RECHARGED: ALTIJD DE POT, NOOIT DE SACHETS.
 // Sachets worden alleen nog in 30-stuks-verpakking geleverd en zijn

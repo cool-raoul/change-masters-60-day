@@ -659,17 +659,17 @@ export default function OnboardingPagina() {
               </div>
 
               <div className="space-y-3">
-                <h3 className="text-cm-gold font-semibold text-sm uppercase tracking-wider">De 3 fasen</h3>
+                <h3 className="text-cm-gold font-semibold text-sm uppercase tracking-wider">De 3 blokken</h3>
                 <div className="card border-l-4 border-[#4A9EDB]">
-                  <p className="text-[#4A9EDB] font-semibold text-sm mb-1">Fase 1 · Dag 1–20: Bouwen</p>
+                  <p className="text-[#4A9EDB] font-semibold text-sm mb-1">Blok 1 · Dag 1–20: Bouwen</p>
                   <p className="text-cm-white text-sm leading-relaxed opacity-80">Je legt de basis. Elke dag contacten aanspreken, uitnodigingen sturen, namen toevoegen. Focus volledig op je warme markt, mensen die je al kent.</p>
                 </div>
                 <div className="card border-l-4 border-[#C9A84C]">
-                  <p className="text-[#C9A84C] font-semibold text-sm mb-1">Fase 2 · Dag 21–40: Versnellen</p>
+                  <p className="text-[#C9A84C] font-semibold text-sm mb-1">Blok 2 · Dag 21–40: Versnellen</p>
                   <p className="text-cm-white text-sm leading-relaxed opacity-80">Je eerste resultaten komen binnen. Je verdubbelt je activiteit. Follow-ups worden crucialer. Je leert van de eerste gesprekken en scherpt je aanpak aan.</p>
                 </div>
                 <div className="card border-l-4 border-[#4ACB6A]">
-                  <p className="text-[#4ACB6A] font-semibold text-sm mb-1">Fase 3 · Dag 41–60: Oogsten</p>
+                  <p className="text-[#4ACB6A] font-semibold text-sm mb-1">Blok 3 · Dag 41–60: Oogsten</p>
                   <p className="text-cm-white text-sm leading-relaxed opacity-80">Je pipeline staat vol. Je sluit deals, begeleidt je eerste partners en bouwt een team. De gewoontes die je hebt opgebouwd dragen nu vruchten.</p>
                 </div>
               </div>
