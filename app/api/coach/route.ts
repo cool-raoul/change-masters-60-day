@@ -4,6 +4,10 @@ import { bouwCoachSysteemPrompt } from "@/lib/prompts/coach-systeem-prompt";
 import { detecteerVraagType } from "@/lib/knowledge/coach-boeken";
 import { productadviesBeschikbaar } from "@/lib/features/productadvies";
 import { checkCompliance, vatFlagsSamen } from "@/lib/coach/compliance-check";
+import {
+  pakRelevanteVoorbeelden,
+  bouwVoorbeeldenPromptSectie,
+} from "@/lib/coach/voorbeelden";
 import { ChatBericht } from "@/lib/supabase/types";
 
 // Verleng Vercel timeout
@@ -168,9 +172,29 @@ export async function POST(request: Request) {
     }
 
     // Bouw system prompt (alleen relevante secties)
-    const systeemPrompt = bouwCoachSysteemPrompt(
+    let systeemPrompt = bouwCoachSysteemPrompt(
       profile, whyProfile, prospect, taal || "nl", vraagType, niveau
     );
+
+    // Train-de-Mentor: voeg relevante founder-voorbeelden toe als
+    // few-shot context. Faalt stilletjes als de tabel nog niet bestaat
+    // (migratie nog niet gerund) zodat coach gewoon blijft werken.
+    try {
+      const laatsteUserBericht =
+        [...berichten].reverse().find((b) => b.role === "user")?.content ?? "";
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const voorbeelden = await pakRelevanteVoorbeelden(
+        supabase as any,
+        vraagType,
+        laatsteUserBericht,
+        5,
+      );
+      if (voorbeelden.length > 0) {
+        systeemPrompt += bouwVoorbeeldenPromptSectie(voorbeelden);
+      }
+    } catch (e) {
+      console.warn("coach-voorbeelden ophalen mislukt:", e);
+    }
 
     // History trimming: max 8 berichten meesturen
     const getrimdeBerichten = berichten.length > 8

@@ -96,6 +96,19 @@ export default async function InstellingenPagina() {
         </div>
       )}
 
+      {/* Mentor-training (founder-only) */}
+      {magFilmsBeheren && (
+        <div className="card space-y-3 border-gold-subtle">
+          <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">🧠 Train de Mentor</h2>
+          <p className="text-cm-white text-sm opacity-60">
+            Voeg vraag-antwoord-voorbeelden toe uit echte WhatsApp-gesprekken. De Mentor leert direct van jouw aanpak en gebruikt ze bij vergelijkbare vragen van members. Werkt voor de huidige Mentor en straks ook voor de programma-coach (prospect-zijde).
+          </p>
+          <Link href="/instellingen/mentor-trainen" className="btn-secondary text-sm inline-block">
+            Train de Mentor →
+          </Link>
+        </div>
+      )}
+
       {/* Playbook preview & bewerken (founder-only) */}
       {magFilmsBeheren && (
         <div className="card space-y-3 border-gold-subtle">
