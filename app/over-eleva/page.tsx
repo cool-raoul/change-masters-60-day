@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
 
 // ============================================================
 // /over-eleva, features-overzicht in jip-en-janneketaal.
@@ -6,12 +7,20 @@ import Link from "next/link";
 // Voor pilot-testers en nieuwe members: wat zit er in ELEVA en wat
 // heb je eraan? Zelfde inhoud als docs/ELEVA-features-uitleg.md, hier
 // als nette in-app pagina zodat je 'm kan delen via een ELEVA-link.
+//
+// ROL-AWARE: een member ziet ALLEEN features die voor hem/haar zijn.
+// Founder-only features (Films-CMS, Train-de-Mentor, Founder-bewerkbaar,
+// Bestellinks) zijn voor een member onzichtbaar. Een founder ziet
+// alles. Zo voorkomen we dat een gewone gebruiker per ongeluk weet van
+// het bestaan van CMS-werk waar 'ie geen rechten op heeft.
 // ============================================================
 
 // AppShell (parent layout) doet per-request user-auth, we mogen deze
 // pagina dus NIET force-static maken, dat loopt in conflict met de
 // session-cookie en geeft een login-loop.
 export const dynamic = "force-dynamic";
+
+type Rol = "member" | "leider" | "founder";
 
 type Feature = {
   emoji: string;
@@ -20,6 +29,8 @@ type Feature = {
   watHebJeEraan: string;
   waar: string;
   nieuw?: boolean;
+  /** Welke rollen mogen deze feature zien? Default = alle. */
+  rollen?: Rol[];
 };
 
 const FEATURES: Feature[] = [
@@ -70,6 +81,7 @@ const FEATURES: Feature[] = [
     watHebJeEraan:
       "Members krijgen visuele uitleg op de juiste dag, in plaats van losse links. Geen film? Dan ook geen lege placeholder.",
     waar: "/instellingen/films (alleen founder)",
+    rollen: ["founder"],
   },
   {
     emoji: "✍️",
@@ -79,6 +91,7 @@ const FEATURES: Feature[] = [
     watHebJeEraan:
       "Tijdens de pilot komt feedback over woorden, toon, voorbeelden. Jij past het direct zelf aan, geen developer-loop nodig.",
     waar: "Op de pagina zelf, naast de tekst die je wilt aanpassen",
+    rollen: ["founder"],
   },
   {
     emoji: "🤖",
@@ -91,13 +104,14 @@ const FEATURES: Feature[] = [
   },
   {
     emoji: "🧠",
-    titel: "Train-de-Mentor (founder-only)",
+    titel: "Train-de-Mentor",
     watIsHet:
-      "Founders voegen vraag-antwoord-voorbeelden uit echte WhatsApp-gesprekken toe. De Mentor gebruikt ze als context bij vergelijkbare vragen. Voorbeelden zijn taggable voor doelgroep 'member', 'prospect' of 'beide' (default), zodat één voorbeeld de huidige Mentor en de toekomstige programma-coach voedt.",
+      "Voeg vraag-antwoord-voorbeelden uit echte WhatsApp-gesprekken toe. De Mentor gebruikt ze als context bij vergelijkbare vragen. Voorbeelden zijn taggable voor doelgroep 'member', 'prospect' of 'beide' (default), zodat één voorbeeld de huidige Mentor en de toekomstige programma-coach voedt.",
     watHebJeEraan:
       "De Mentor wordt scherper met elke pilot-week, zonder developer-loop. Members in Maastricht leren van gesprekken die in Dordrecht hebben gewerkt.",
-    waar: "/instellingen/mentor-trainen (alleen founder)",
+    waar: "/instellingen/mentor-trainen",
     nieuw: true,
+    rollen: ["founder"],
   },
   {
     emoji: "📝",
@@ -240,6 +254,7 @@ const FEATURES: Feature[] = [
       "Niet 21 dagen wachten om alles te testen. Springen, kijken, terugspringen.",
     waar: "Alleen voor users met is_tester=true of role='founder'",
     nieuw: true,
+    rollen: ["founder"],
   },
   {
     emoji: "⚡",
@@ -314,6 +329,7 @@ const FEATURES: Feature[] = [
     watHebJeEraan:
       "Iedere member heeft zijn eigen verkooplink, geen handmatig knip-werk.",
     waar: "/instellingen/bestellinks",
+    rollen: ["founder"],
   },
   {
     emoji: "⚖️",
@@ -326,7 +342,40 @@ const FEATURES: Feature[] = [
   },
 ];
 
-export default function OverElevaPagina() {
+export default async function OverElevaPagina() {
+  // Lees rol uit profiel zodat we kunnen filteren op wat deze gebruiker
+  // mag zien. Een member ziet GEEN founder-only features (Films-CMS,
+  // Train-de-Mentor, Founder-bewerkbaar, Bestellinks, Test-modus).
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let rol: Rol = "member";
+  let isTester = false;
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role, is_tester")
+      .eq("id", user.id)
+      .single();
+    const profielRol = (profile as { role?: string | null } | null)?.role ?? "";
+    if (profielRol === "founder") rol = "founder";
+    else if (profielRol === "leider") rol = "leider";
+    isTester =
+      (profile as { is_tester?: boolean | null } | null)?.is_tester === true;
+  }
+
+  // Test-modus is voor founders + testers. We tonen 'm dus expliciet aan
+  // beide groepen, ook al is de feature in de registry op 'founder' gezet.
+  const zichtbareFeatures = FEATURES.filter((f) => {
+    if (!f.rollen) return true;
+    if (f.rollen.includes(rol)) return true;
+    // Speciale uitzondering: test-modus mag ook voor testers
+    if (f.titel === "Test-modus" && isTester) return true;
+    return false;
+  });
+  const isFounder = rol === "founder";
+
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <div>
@@ -368,19 +417,23 @@ export default function OverElevaPagina() {
             <strong>Voor focus 's ochtends:</strong> dashboard-tegel
             "🎯 Volgende beste actie" met je top-3 prospects
           </li>
-          <li>
-            <strong>Voor jou als founder:</strong> ✍️ knoppen overal, pas aan
-            wat schuurt, direct live. Plus 🧠 Train-de-Mentor.
-          </li>
-          <li>
-            <strong>Voor de testgroep:</strong> 🧪 toolbar bovenaan dashboard
-            om snel door alle 21 dagen te klikken
-          </li>
+          {isFounder && (
+            <li>
+              <strong>Voor jou als founder:</strong> ✍️ knoppen overal, pas
+              aan wat schuurt, direct live. Plus 🧠 Train-de-Mentor.
+            </li>
+          )}
+          {(isFounder || isTester) && (
+            <li>
+              <strong>Voor de testgroep:</strong> 🧪 toolbar bovenaan
+              dashboard om snel door alle 21 dagen te klikken
+            </li>
+          )}
         </ul>
       </div>
 
       <div className="space-y-3">
-        {FEATURES.map((f, i) => (
+        {zichtbareFeatures.map((f, i) => (
           <div key={i} className="card space-y-2">
             <div className="flex items-baseline gap-3 flex-wrap">
               <h3 className="text-cm-white font-display font-semibold text-base">

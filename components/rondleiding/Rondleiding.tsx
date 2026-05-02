@@ -1,16 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { rondleidingFeatures } from "@/lib/features/registry";
+import { useEffect, useMemo, useState } from "react";
+import { rondleidingFeatures, type Rol } from "@/lib/features/registry";
 
 // Stappen komen uit de centrale features-registry (lib/features/registry.ts).
 // Voeg daar een feature toe/verwijder/pas aan om de rondleiding mee te laten
 // veranderen, dit component hoeft niet aangeraakt te worden.
-const STAPPEN = rondleidingFeatures();
+//
+// De rondleiding is rol-aware: een member ziet GEEN founder-only features
+// (Films-CMS, Train-de-Mentor, etc.). Founders zien alles. Zo voorkomen we
+// dat een gewone gebruiker zelfs maar wéét van het bestaan van CMS-werk.
 
-export function Rondleiding() {
+export function Rondleiding({ rol }: { rol: Rol }) {
   const [open, setOpen] = useState(false);
   const [stap, setStap] = useState(0);
+  const stappen = useMemo(() => rondleidingFeatures(rol), [rol]);
 
   useEffect(() => {
     function handler() {
@@ -23,8 +27,8 @@ export function Rondleiding() {
 
   if (!open) return null;
 
-  const huidig = STAPPEN[stap];
-  const isLaatste = stap === STAPPEN.length - 1;
+  const huidig = stappen[stap];
+  const isLaatste = stap === stappen.length - 1;
   const isEerste = stap === 0;
 
   function sluit() {
@@ -55,7 +59,7 @@ export function Rondleiding() {
         {/* Stap-indicator */}
         <div className="px-6 pt-6">
           <div className="flex gap-1.5 mb-6">
-            {STAPPEN.map((_, i) => (
+            {stappen.map((_, i) => (
               <div
                 key={i}
                 className={`h-1 flex-1 rounded-full transition-colors ${
@@ -96,7 +100,7 @@ export function Rondleiding() {
         {/* Footer */}
         <div className="px-6 pb-6 pt-2 flex items-center justify-between gap-3 border-t border-cm-border">
           <span className="text-cm-white text-xs opacity-60">
-            {stap + 1} / {STAPPEN.length}
+            {stap + 1} / {stappen.length}
           </span>
           <div className="flex gap-2">
             {!isEerste && (
@@ -109,7 +113,7 @@ export function Rondleiding() {
             )}
             {!isLaatste ? (
               <button
-                onClick={() => setStap((s) => Math.min(STAPPEN.length - 1, s + 1))}
+                onClick={() => setStap((s) => Math.min(stappen.length - 1, s + 1))}
                 className="btn-gold text-sm"
               >
                 Volgende →

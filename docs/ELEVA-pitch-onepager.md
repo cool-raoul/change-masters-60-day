@@ -105,7 +105,9 @@ We zijn streng geweest in wat we wel en niet bouwen. Een paar dingen die ELEVA b
 | Spraak-FAB (gouden mic), overal | 4-stappen-uitnodiging via spraak | Wekelijkse review (dag 7-14-21) |
 | Verzendtimer + herinneringen | 3-weg gesprek-tool stap-voor-stap | Stilte-nudge naar sponsor bij 2+ dagen stilte |
 | Pull-to-refresh, mobile-first | Productadvies-test naar prospect | Privacy-toggle, jouw keuze wat zichtbaar is |
-| | Prospect-films met realtime kijk-tracking | Train-de-Mentor (founder, voor scherpere AI) |
+| | Prospect-films met realtime kijk-tracking | |
+
+> **Rol-aware:** je ziet in ELEVA alleen wat bij jouw rol past. Een member ziet de dagelijkse-werk-features. Een founder ziet daarnaast het CMS voor films, scripts, mentor-training en bestellinks. Geen overhead voor wie 'm niet hoeft te zien.
 
 Volledige feature-lijst: zie `/over-eleva` in de app of `docs/ELEVA-features-uitleg.md`.
 

@@ -22,10 +22,15 @@
  *   wow, "waarom dit telt" quote (< 40 woorden, uit-je-stoel-tekst)
  *   route, optionele link naar de betreffende pagina
  *   premiumOnly, true als de feature alleen voor premium-users is
+ *   rollen, welke rollen deze feature mogen zien (default: alle).
+ *           Een member hoort niet eens te weten dat een founder-CMS bestaat,
+ *           dus filter ALTIJD op rol bij het tonen aan een gebruiker.
  *   volgorde, lager nummer = eerder in de rondleiding
  *   inRondleiding, zet op false om te verbergen in de tour (maar wel
  *                   een geregistreerde feature te blijven voor /functies)
  */
+
+export type Rol = "member" | "leider" | "founder";
 
 export type Feature = {
   id: string;
@@ -36,9 +41,20 @@ export type Feature = {
   wow: string;
   route?: string;
   premiumOnly?: boolean;
+  /** Welke rollen mogen deze feature zien? Default = ['member', 'leider', 'founder']. */
+  rollen?: Rol[];
   volgorde: number;
   inRondleiding?: boolean;
 };
+
+/** Default-rollen als een feature geen `rollen`-veld heeft: zichtbaar voor iedereen. */
+const ALLE_ROLLEN: Rol[] = ["member", "leider", "founder"];
+
+/** Bepaalt of een feature zichtbaar is voor een gegeven rol. */
+export function featureZichtbaarVoor(feature: Feature, rol: Rol): boolean {
+  const rollen = feature.rollen ?? ALLE_ROLLEN;
+  return rollen.includes(rol);
+}
 
 export const FEATURES: Feature[] = [
   {
@@ -262,10 +278,101 @@ export const FEATURES: Feature[] = [
     volgorde: 60,
     inRondleiding: true,
   },
+  // ============================================================
+  // FOUNDER-ONLY features. Members en leiders zien deze NIET, ook niet
+  // in de rondleiding of in /over-eleva. Bewust verborgen, want het
+  // CMS-werk hoort bij de hoofdbeheerder, niet bij de gewone gebruiker.
+  // ============================================================
+  {
+    id: "founder-films-cms",
+    emoji: "🎬",
+    titel: "Films-CMS",
+    lead:
+      "Beheer alle films die in onboarding, dag-tegels en prospect-flow worden gebruikt.",
+    bullets: [
+      "YouTube of Vimeo URL plakken, embed gebeurt automatisch",
+      "Per slot: welkomstfilm, prospect-films, dag-films (1 t/m 21)",
+      "Tonen-toggle om een film tijdelijk te verbergen zonder verwijderen",
+      "Iedereen ziet ze direct op de juiste plek, geen deploy nodig",
+    ],
+    wow: "Eén centrale bibliotheek voor het hele systeem. Plakken, opslaan, live.",
+    route: "/instellingen/films",
+    rollen: ["founder"],
+    volgorde: 70,
+    inRondleiding: true,
+  },
+  {
+    id: "founder-mentor-trainen",
+    emoji: "🧠",
+    titel: "Train-de-Mentor",
+    lead:
+      "Voeg vraag-antwoord-voorbeelden uit echte WhatsApp-gesprekken toe. De Mentor leert direct van jouw aanpak.",
+    bullets: [
+      "Plak een prospect-vraag en het antwoord dat werkte",
+      "Tag op doelgroep (member / prospect / beide)",
+      "Mentor gebruikt voorbeelden vanaf direct als context",
+      "Zonder developer-loop, zonder herstart, scherper per pilot-week",
+    ],
+    wow:
+      "Members in Maastricht leren van gesprekken die in Dordrecht hebben gewerkt. Het hele systeem leert uit jouw praktijk.",
+    route: "/instellingen/mentor-trainen",
+    rollen: ["founder"],
+    volgorde: 72,
+    inRondleiding: true,
+  },
+  {
+    id: "founder-bewerkbaar",
+    emoji: "✍️",
+    titel: "Founder-bewerkbaar (jij bent de redacteur)",
+    lead:
+      "Op vrijwel elke tekst in ELEVA staat een ✍️-knop. Klik, pas aan, direct live voor alle members.",
+    bullets: [
+      "Werkt op alle 21 playbook-dag-teksten",
+      "Werkt op alle scripts (uitnodiging, bezwaar, follow-up, sluiting, edification)",
+      "Werkt op de kerntitels van alle onboarding-stappen",
+      "Wijzigingen zijn meteen live, geen deploy nodig",
+    ],
+    wow: "Pilot-feedback over woordkeus binnen? Pas aan, klaar. Geen developer-loop.",
+    rollen: ["founder"],
+    volgorde: 74,
+    inRondleiding: true,
+  },
+  {
+    id: "founder-bestellinks",
+    emoji: "🛒",
+    titel: "Bestellinks per pakket",
+    lead:
+      "Koppel je Lifeplus-webshop URL aan elk pakket. ELEVA gebruikt die links automatisch in productadvies-flows.",
+    bullets: [
+      "Per pakket één URL invullen",
+      "Members zien jouw eigen verkooplink in alle delen-acties",
+      "Eén keer instellen, rest gaat automatisch",
+    ],
+    wow: "Geen handmatig knip-werk meer met links per advies.",
+    route: "/instellingen/bestellinks",
+    rollen: ["founder"],
+    volgorde: 76,
+    inRondleiding: true,
+  },
 ];
 
-export function rondleidingFeatures(): Feature[] {
-  return FEATURES.filter((f) => f.inRondleiding !== false).sort(
-    (a, b) => a.volgorde - b.volgorde
+/**
+ * Geeft alle features in volgorde, gefilterd op rol als opgegeven.
+ * Zonder rol = alle features (handig voor /functies admin-overzicht).
+ */
+export function featuresVoorRol(rol?: Rol): Feature[] {
+  return FEATURES.filter((f) => (rol ? featureZichtbaarVoor(f, rol) : true)).sort(
+    (a, b) => a.volgorde - b.volgorde,
   );
+}
+
+/**
+ * Stappen voor de in-app rondleiding, gefilterd op rol als opgegeven.
+ * Geen rol = toon alle in-rondleiding features (alleen voor admin/preview).
+ */
+export function rondleidingFeatures(rol?: Rol): Feature[] {
+  return FEATURES.filter(
+    (f) =>
+      f.inRondleiding !== false && (rol ? featureZichtbaarVoor(f, rol) : true),
+  ).sort((a, b) => a.volgorde - b.volgorde);
 }

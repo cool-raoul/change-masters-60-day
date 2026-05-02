@@ -7,6 +7,20 @@
 
 ---
 
+## Rol-aware: je ziet alleen wat bij jouw rol past
+
+Niet elke feature is voor iedereen. ELEVA filtert wat je ziet op basis van je rol in het systeem:
+
+- **Member** (de gewone gebruiker, default voor iedereen): ziet alle dagelijkse-werk-features. Geen CMS-werk, geen instellingen voor de hele bibliotheek.
+- **Leider** (sponsor met team): ziet hetzelfde als member, plus team-relevante zaken zoals stilte-nudges naar downline.
+- **Founder** (hoofdbeheerder, voor nu Raoul): ziet alles, inclusief het CMS voor films, scripts, mentor-training en bestellinks.
+
+Founder-only features zijn in dit document gemarkeerd met **🔒 Alleen voor founders**. Een member ziet ze niet in `/over-eleva`, niet in de rondleiding, en niet in de sidebar. Op die manier voorkomen we dat een gebruiker zelfs maar wéét dat er CMS-werk bestaat waar 'ie geen rechten op heeft.
+
+**Verandering van rol:** als een member een sponsor wordt met team, of als de founder een tweede beheerder aanwijst, krijgt die persoon automatisch de extra features te zien zodra de rol in de database wijzigt. Geen herinstallatie, geen nieuwe app.
+
+---
+
 ## 🏁 Het 21-daagse playbook
 
 **Wat is het?**
@@ -60,7 +74,9 @@ Geen "heb je 'm bekeken?"-appjes meer. Films werken voor je terwijl je slaapt of
 
 ---
 
-## 🎬 Films per dag (founder-CMS)
+## 🎬 Films per dag (founder-CMS) 🔒
+
+> **Alleen voor founders.**
 
 **Wat is het?**
 Een plek waar de founder per playbook-dag een YouTube/Vimeo-link kan plakken. Die film verschijnt automatisch boven de dagtegel.
@@ -72,7 +88,9 @@ Members krijgen visuele uitleg op de juiste dag, in plaats van losse links die z
 
 ---
 
-## ✍️ Founder-bewerkbaar (jij bent de redacteur)
+## ✍️ Founder-bewerkbaar (jij bent de redacteur) 🔒
+
+> **Alleen voor founders.**
 
 **Wat is het?**
 Op vrijwel elke tekst in ELEVA staat voor founders (jij + Gaby) een "✍️ Bewerk voor iedereen"-knop. Klik, pas aan, bewaar, direct live voor alle members.
@@ -101,7 +119,9 @@ Je hoeft niet te bedenken wát je moet zeggen. Je vraagt de mentor en krijgt een
 
 ---
 
-## 🧠 Train-de-Mentor (NIEUW, founder-only)
+## 🧠 Train-de-Mentor (NIEUW) 🔒
+
+> **Alleen voor founders.**
 
 **Wat is het?**
 Founders kunnen vraag-antwoord-voorbeelden uit echte WhatsApp-gesprekken toevoegen aan de Mentor. Een prospect stelt een vraag, de member-of-founder antwoordt, founder kopieert beide en plakt het in `/instellingen/mentor-trainen`. De Mentor gebruikt die voorbeelden vanaf dat moment als context bij vergelijkbare vragen.
@@ -285,7 +305,9 @@ Je weet realtime hoe je teamleden lopen. Die info gebruik je om gericht te steun
 
 ---
 
-## 🧪 Test-modus (voor pilot-testers)
+## 🧪 Test-modus (voor pilot-testers) 🔒
+
+> **Alleen voor founders + users met `is_tester=true`.**
 
 **Wat is het?**
 Voor jullie 6-7 testers: een paarse toolbar bovenaan dashboard met "Spring naar dag X". Verzet je virtuele dag zodat je in een halve dag door alle 21 dagen kunt klikken voor bug-rapporten.
@@ -381,7 +403,9 @@ Klaar voor internationale uitrol, niet eerst herbouwen voor Belgisch/Duits/Frans
 
 ---
 
-## 🛒 Bestellinks (founder)
+## 🛒 Bestellinks 🔒
+
+> **Alleen voor founders.**
 
 **Wat is het?**
 Per Lifeplus-pakket plak je je eigen webshop-URL. ELEVA gebruikt die links automatisch in productadvies-flows.

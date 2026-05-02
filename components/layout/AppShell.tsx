@@ -9,6 +9,7 @@ import { TaalProvider } from "@/lib/i18n/TaalContext";
 import { Taal } from "@/lib/i18n/vertalingen";
 import { VoiceFab } from "@/components/voice/VoiceFab";
 import { Rondleiding } from "@/components/rondleiding/Rondleiding";
+import { type Rol } from "@/lib/features/registry";
 import { TerugNaarPlaybookBanner } from "@/components/playbook/TerugNaarPlaybookBanner";
 import { WelkomstFilm } from "@/components/welkom/WelkomstFilm";
 import { PresenceHeartbeat } from "@/components/presence/PresenceHeartbeat";
@@ -43,6 +44,15 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
   };
   const isFounderOfTester =
     profielData.role === "founder" || profielData.is_tester === true;
+  // Rol voor de features-registry. Members en lege/onbekende rollen krijgen
+  // 'member' (standaard, restrictiefste view). Zo ziet niemand per ongeluk
+  // founder-features waar 'ie geen rechten op heeft.
+  const rolVoorFeatures: Rol =
+    profielData.role === "founder"
+      ? "founder"
+      : profielData.role === "leider"
+        ? "leider"
+        : "member";
   const { data: voltooiingen } = await supabase
     .from("dag_voltooiingen")
     .select("dag_nummer, taak_id")
@@ -72,7 +82,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
           </main>
         </div>
         <VoiceFab />
-        <Rondleiding />
+        <Rondleiding rol={rolVoorFeatures} />
         {/* Welkomstfilm: auto-pop-up bij eerste bezoek (localStorage-flag),
             altijd handmatig terug op te roepen via Topbar 🎬-knop. */}
         <WelkomstFilm />
