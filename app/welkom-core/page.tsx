@@ -1,17 +1,14 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { StappenDashboard } from "@/components/leerpaden/StappenDashboard";
-import { haalTekstOverrides } from "@/lib/cms/tekst-overrides";
-import { MODUS_WELKOMSTFILM_SLUGS } from "@/lib/films/embed";
 import { CORE_LEERPAD } from "@/lib/leerpaden/core-stappen";
 
 // ============================================================
-// /welkom-core, dashboard voor de Core-flow (21 stappen webshop-strategie)
+// /welkom-core, dashboard voor de Core-flow (21 stappen)
 //
-// Toont een stap-voor-stap dashboard met dezelfde structuur als de
-// Sprint-flow heeft, maar dan voor de 21 Core-stappen. De gebruiker
-// blijft op deze pagina elke dag terugkomen, ziet z'n huidige stap
-// + voortgang + volgende paar stappen + snelle toegang tot tools.
+// Toont een simpel overzicht: huidige stap-tegel + voortgang +
+// voorvertoning komende stappen. Klik op een stap = naar
+// /welkom-core/stap/[nummer] voor de volle content.
 // ============================================================
 
 export const dynamic = "force-dynamic";
@@ -60,18 +57,12 @@ export default async function WelkomCorePagina() {
     ? 1
     : Math.min(CORE_LEERPAD.totaal, Math.max(1, dagenSindsStart + 1));
 
-  const overrides = await haalTekstOverrides(supabase, "welkom-core");
-
   return (
     <StappenDashboard
       leerpad={CORE_LEERPAD}
       huidigeStap={huidigeStap}
       naam={naam}
-      isFounder={isFounder}
-      welkomstFilmSlug={MODUS_WELKOMSTFILM_SLUGS.CORE}
-      stapFilmSlugPrefix="core-stap"
-      tekstNamespace="welkom-core"
-      overrides={overrides}
+      stapBasisRoute="/welkom-core/stap"
     />
   );
 }
