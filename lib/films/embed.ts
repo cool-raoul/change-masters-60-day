@@ -104,6 +104,17 @@ export const ONBOARDING_FILM_SLUGS = {
 export const WELKOMSTFILM_SLUG = "intro-welkom";
 
 /**
+ * Welkomstfilms per modus, getoond bovenaan de welkomstpagina van
+ * Pro en Core. Founder kan ze in /instellingen/films vullen, lege
+ * URL = geen film boven de pagina (gebruiker ziet alleen de tools).
+ */
+export const MODUS_WELKOMSTFILM_SLUGS = {
+  PRO: "modus-welkom-pro",
+  CORE: "modus-welkom-core",
+  KEUZE: "modus-welkom-keuze",
+} as const;
+
+/**
  * PROSPECT-FILMS, de set films die een member kan delen met een
  * prospect via een share-link. Founder uploadt ze 1× in
  * /instellingen/films, alle members hergebruiken dezelfde slugs.
@@ -173,6 +184,18 @@ export const SLUG_BESCHRIJVINGEN: Record<string, { plek: string; suggestieTitel:
   [WELKOMSTFILM_SLUG]: {
     plek: "Welkomstfilm: pop-up bij eerste dashboard-bezoek + Topbar 💡-knop",
     suggestieTitel: "Welkom bij ELEVA",
+  },
+  [MODUS_WELKOMSTFILM_SLUGS.KEUZE]: {
+    plek: "Boven de Core/Pro keuzepagina, kort filmpje dat het verschil uitlegt",
+    suggestieTitel: "Welke route past bij jou?",
+  },
+  [MODUS_WELKOMSTFILM_SLUGS.CORE]: {
+    plek: "Boven de Core-welkomstpagina, voor de webshop-strategie instromer",
+    suggestieTitel: "Welkom op de webshop-route",
+  },
+  [MODUS_WELKOMSTFILM_SLUGS.PRO]: {
+    plek: "Boven de Pro-welkomstpagina, voor de professional met cliënten",
+    suggestieTitel: "Welkom op de professional-route",
   },
   [ONBOARDING_FILM_SLUGS.STAP_6_WEBSHOP]: {
     plek: "Playbook dag 2, Lifeplus webshop aanmaken",

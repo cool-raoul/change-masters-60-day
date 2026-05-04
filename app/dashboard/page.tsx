@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 import { differenceInDays, format } from "date-fns";
 import { nl, enUS, fr, es, de, pt } from "date-fns/locale";
 import Link from "next/link";
@@ -24,6 +25,28 @@ export default async function DashboardPagina() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
+
+  // Modus-check: het dashboard is voor 60-day Run (sprint) gebruikers.
+  // Core-gebruikers gaan naar /welkom-core, Pro naar /welkom-pro, en
+  // wie nog geen modus heeft gekozen naar /welkom-keuze.
+  //
+  // Als de kolom 'modus' nog niet bestaat (migratie niet gerund), geeft
+  // de query een error en blijft modus undefined, dan door naar dashboard.
+  const { data: modusProfiel, error: modusError } = await supabase
+    .from("profiles")
+    .select("modus")
+    .eq("id", user.id)
+    .maybeSingle();
+  if (!modusError) {
+    const modus = (modusProfiel as { modus?: string | null } | null)?.modus;
+    if (modus === "core") redirect("/welkom-core");
+    if (modus === "pro") redirect("/welkom-pro");
+    if (modus === null || modus === undefined) {
+      // null/onbekend = nog geen keuze gemaakt, naar keuzepagina
+      redirect("/welkom-keuze");
+    }
+    // modus === "sprint" (of fallback): door naar het normale dashboard
+  }
 
   const taal = await getServerTaal();
   const datumLocale = DATE_LOCALES[taal] || nl;

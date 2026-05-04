@@ -1,0 +1,153 @@
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
+import { FilmInBlok } from "@/components/film/FilmInBlok";
+import { EditableTekst } from "@/components/cms/EditableTekst";
+import { haalTekstOverrides } from "@/lib/cms/tekst-overrides";
+import { MODUS_WELKOMSTFILM_SLUGS } from "@/lib/films/embed";
+import { ModusKiesKnoppen } from "./modus-kies-knoppen";
+
+// ============================================================
+// /welkom-keuze, eenmalige route-keuze voor nieuwe gebruikers
+//
+// Verschijnt zodra een nieuwe member is aangemaakt en zijn modus nog
+// op NULL staat. Twee tegels: Core (webshop-strategie) en Pro
+// (professional met cliënten). Member kiest één van twee, dan wordt
+// de modus opgeslagen in profiles en redirect ELEVA naar de juiste
+// welkomstpagina.
+//
+// Sprint is hier bewust geen instap-keuze: dat is een opt-in op
+// uitnodiging via een bestaand sprint-team-leider, niet een eerste-
+// dag-keuze.
+// ============================================================
+
+export const dynamic = "force-dynamic";
+
+export default async function WelkomKeuzePagina() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  // Als modus al gekozen, redirect naar juiste plek
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("modus, full_name, role")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  const profielData =
+    (profile as {
+      modus?: string | null;
+      full_name?: string | null;
+      role?: string | null;
+    } | null) ?? {};
+  const modus = profielData.modus;
+
+  if (modus === "sprint") redirect("/dashboard");
+  if (modus === "core") redirect("/welkom-core");
+  if (modus === "pro") redirect("/welkom-pro");
+
+  const naam = profielData.full_name?.split(" ")[0] || "";
+  const isFounder = profielData.role === "founder";
+
+  const overrides = await haalTekstOverrides(supabase, "welkom-keuze");
+
+  return (
+    <div className="max-w-3xl mx-auto space-y-6">
+      <FilmInBlok slug={MODUS_WELKOMSTFILM_SLUGS.KEUZE} verbergZonderFilm />
+
+      <div>
+        <h1 className="text-3xl font-display font-bold text-cm-white">
+          <EditableTekst
+            namespace="welkom-keuze"
+            sleutel="titel"
+            standaard={`Welkom${naam ? `, ${naam}` : ""} 👋`}
+            overrides={overrides}
+            isFounder={isFounder}
+            as="span"
+            hint="Hoofdtitel van de keuzepagina. {naam} wordt automatisch ingevuld."
+          />
+        </h1>
+        <EditableTekst
+          namespace="welkom-keuze"
+          sleutel="intro"
+          standaard="Welke route past het beste bij wat jij wilt? Kies hieronder, je kunt altijd later switchen via je instellingen."
+          overrides={overrides}
+          isFounder={isFounder}
+          as="p"
+          className="text-cm-white opacity-80 mt-2 leading-relaxed"
+          multiline
+          rows={3}
+          hint="Korte introductie boven de twee keuze-tegels."
+        />
+      </div>
+
+      <ModusKiesKnoppen userId={user.id}>
+        <div data-slot="core-titel">
+          <EditableTekst
+            namespace="welkom-keuze"
+            sleutel="core-titel"
+            standaard="Webshop-strategie"
+            overrides={overrides}
+            isFounder={isFounder}
+            as="span"
+            hint="Titel van de Core-tegel."
+          />
+        </div>
+        <div data-slot="core-uitleg">
+          <EditableTekst
+            namespace="welkom-keuze"
+            sleutel="core-uitleg"
+            standaard="Bouw je eigen webshop op je eigen tempo. Via social media, content en gratis weggevers (freebies) breng je nieuwe klanten binnen. Geschikt voor ondernemende mensen die rustig willen opbouwen."
+            overrides={overrides}
+            isFounder={isFounder}
+            as="span"
+            multiline
+            rows={4}
+            hint="Beschrijving van wat de Core-route inhoudt."
+          />
+        </div>
+        <div data-slot="pro-titel">
+          <EditableTekst
+            namespace="welkom-keuze"
+            sleutel="pro-titel"
+            standaard="Professional met cliënten"
+            overrides={overrides}
+            isFounder={isFounder}
+            as="span"
+            hint="Titel van de Pro-tegel."
+          />
+        </div>
+        <div data-slot="pro-uitleg">
+          <EditableTekst
+            namespace="welkom-keuze"
+            sleutel="pro-uitleg"
+            standaard="Voor professionals (coaches, diëtisten, fitness-trainers, masseurs, etc.) die producten via een eigen webshop aan hun cliënten willen aanbieden. Pakketten samenstellen, productadvies-test als kerninstrument."
+            overrides={overrides}
+            isFounder={isFounder}
+            as="span"
+            multiline
+            rows={4}
+            hint="Beschrijving van wat de Pro-route inhoudt."
+          />
+        </div>
+      </ModusKiesKnoppen>
+
+      <div className="card border-gold-subtle text-center">
+        <EditableTekst
+          namespace="welkom-keuze"
+          sleutel="onderkant"
+          standaard="Twijfel je welke route past? Kies wat het meest klinkt als jij. Alle tools zijn voor beide routes beschikbaar, alleen de begeleidende stappen zijn anders. Je sponsor of de ELEVA Mentor kan je helpen als je twijfelt."
+          overrides={overrides}
+          isFounder={isFounder}
+          as="p"
+          className="text-cm-white text-sm opacity-80 leading-relaxed"
+          multiline
+          rows={3}
+          hint="Geruststellende tekst onderaan voor wie twijfelt."
+        />
+      </div>
+    </div>
+  );
+}
