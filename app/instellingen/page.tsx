@@ -96,6 +96,19 @@ export default async function InstellingenPagina() {
         </div>
       )}
 
+      {/* Modus-test, founder-only proefaccount-switcher */}
+      {magFilmsBeheren && (
+        <div className="card space-y-3 border-gold-subtle">
+          <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">🧪 Modus-test (proefaccount-switcher)</h2>
+          <p className="text-cm-white text-sm opacity-60">
+            Switch je eigen account tussen Sprint, Core, Pro of &quot;nieuwe gebruiker&quot; om steeds vanaf het begin te zien hoe een instromer ELEVA ervaart. Geen tweede account nodig.
+          </p>
+          <Link href="/instellingen/modus-test" className="btn-secondary text-sm inline-block">
+            Open modus-test →
+          </Link>
+        </div>
+      )}
+
       {/* Mentor-training (founder-only) */}
       {magFilmsBeheren && (
         <div className="card space-y-3 border-gold-subtle">
