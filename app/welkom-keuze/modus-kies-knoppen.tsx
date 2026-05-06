@@ -62,16 +62,16 @@ export function ModusKiesKnoppen({ userId, children }: Props) {
         type="button"
         onClick={() => kies("core")}
         disabled={!!bezig}
-        className="card text-left hover:border-cm-gold transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
+        className="card text-left border-cm-border hover:border-cm-gold-dim hover:glow-gold-soft transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <div className="text-4xl mb-2">🚶</div>
-        <h2 className="text-cm-gold font-display font-bold text-xl mb-2">
+        <div className="text-4xl mb-3">🚶</div>
+        <h2 className="font-serif-warm text-cm-gold text-xl mb-2 leading-snug">
           {slots["core-titel"]}
         </h2>
-        <div className="text-cm-white text-sm opacity-85 leading-relaxed mb-4">
+        <div className="text-cm-white/80 text-sm leading-relaxed mb-4">
           {slots["core-uitleg"]}
         </div>
-        <span className="text-cm-gold text-sm font-semibold group-hover:translate-x-1 inline-block transition-transform">
+        <span className="text-cm-gold text-sm font-medium group-hover:translate-x-1 inline-block transition-transform">
           {bezig === "core" ? "Bezig..." : "Kies deze route →"}
         </span>
       </button>
@@ -80,16 +80,16 @@ export function ModusKiesKnoppen({ userId, children }: Props) {
         type="button"
         onClick={() => kies("pro")}
         disabled={!!bezig}
-        className="card text-left hover:border-cm-gold transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
+        className="card text-left border-cm-border hover:border-cm-gold-dim hover:glow-gold-soft transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <div className="text-4xl mb-2">💼</div>
-        <h2 className="text-cm-gold font-display font-bold text-xl mb-2">
+        <div className="text-4xl mb-3">💼</div>
+        <h2 className="font-serif-warm text-cm-gold text-xl mb-2 leading-snug">
           {slots["pro-titel"]}
         </h2>
-        <div className="text-cm-white text-sm opacity-85 leading-relaxed mb-4">
+        <div className="text-cm-white/80 text-sm leading-relaxed mb-4">
           {slots["pro-uitleg"]}
         </div>
-        <span className="text-cm-gold text-sm font-semibold group-hover:translate-x-1 inline-block transition-transform">
+        <span className="text-cm-gold text-sm font-medium group-hover:translate-x-1 inline-block transition-transform">
           {bezig === "pro" ? "Bezig..." : "Kies deze route →"}
         </span>
       </button>
