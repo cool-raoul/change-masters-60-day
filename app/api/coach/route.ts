@@ -209,13 +209,17 @@ export async function POST(request: Request) {
       })),
     ];
 
-    // OpenAI streaming
-    // gpt-4o voor productadvies (uitgebreid redeneren, fase-plan, basis-stack),
-    // gpt-4o-mini voor de rest (DMs/bezwaren/scripts, kort en snel).
-    const isProductAdvies = vraagType === "productadvies";
+    // OpenAI streaming, model-router op basis van vraagtype:
+    // - productadvies: gpt-4o (uitgebreid redeneren, fase-plan, basis-stack)
+    // - dm + drieweg : gpt-4o (samenhangende NL-output, geen Engelse mengelmoes
+    //                  die mini-versie maakt, edification-formule beter aangehouden)
+    // - rest         : gpt-4o-mini (bezwaar/followup/closing/algemeen, kort + snel)
+    const zwaarModel = vraagType === "productadvies"
+      || vraagType === "dm"
+      || vraagType === "drieweg";
     const stream = await openai.chat.completions.create({
-      model: isProductAdvies ? "gpt-4o" : "gpt-4o-mini",
-      max_tokens: isProductAdvies ? 2000 : 800,
+      model: zwaarModel ? "gpt-4o" : "gpt-4o-mini",
+      max_tokens: vraagType === "productadvies" ? 2000 : zwaarModel ? 1200 : 800,
       messages: apiMessages,
       stream: true,
     });

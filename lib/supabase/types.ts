@@ -71,6 +71,7 @@ export interface Prospect {
   beroep: string | null;
   ingezette_tools: string[];
   notities: string | null;
+  situatie_kort: string | null;
   pipeline_fase: PipelineFase;
   pipeline_volgorde: number;
   bron: string | null;

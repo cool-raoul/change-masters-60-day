@@ -423,12 +423,27 @@ Wijs ALTIJD eerst op de ELEVA-tool in de namenlijst. Geef daarna advies over voo
   // Sectie G: Werkwijze
   const werkwijze = `
 WERKWIJZE (productvraag):
+0. INTENT-CHECK (DOE DIT EERST, ALTIJD): vraagt de member duidelijk OM productadvies? Tekenen daarvan: woorden als "welk product", "geef me advies", "wat zou je aanraden", "productadvies", expliciete productnaam in vraagvorm.
+   - JA: ga door met stap 1.
+   - NEE, de member noemt alleen een SITUATIE of KLACHT van een prospect ("Fatima wil afvallen", "ze heeft slaapproblemen") zonder advies-vraag → vraag EERST aan de member: "Wil je een productsuggestie voor [naam], of wil je hulp bij hoe je het gesprek met haar voert (bezwaar, DM, drieweg)?" Wacht op antwoord voor je verder gaat. Geef in deze fase nog GEEN [STUUR]-blok.
 1. Lees de vraag goed. Is er genoeg context voor een gericht advies? → Zo nee: stel EERST 2-4 verhelderingsvragen (regel 9). Deze vragen staan BUITEN [STUUR]-tags, ze zijn voor de member zelf.
 2. Is er genoeg context? → Bouw een VOLLEDIG advies: basis (regel 5a) + specifieke producten + fase-planning (regel 6) + leefstijl-context. Leg het WAAROM uit in leken-taal. Uitgebreidheid mag (regel 10).
 3. Dit VOLLEDIGE advies zet je ALTIJD tussen [STUUR] en [/STUUR] tags (regel 11), de member moet het in één klik kunnen kopiëren en doorsturen. Schrijf in warme "hé [naam]"-stijl, niet als AI-rapport. Binnen het [STUUR]-blok: het fase-plan, de "er zijn goede ervaringen met"-zinnen, leefstijl, arts-overleg-block indien nodig (regel 3), en de disclaimer (regel 2).
 4. BUITEN de [STUUR]-tags: een korte vervolgvraag aan de member, bijv. "Wil je ook een budgetvariant zien, 1 of 2 kernproducten?" (regel 5).
 5. Zegt de member "ja" op de budgetvariant, of stuurt extra info waarop het advies moet aanpassen? → Geef het HELE bijgestelde advies opnieuw in een NIEUW [STUUR]-blok. Nooit alleen "de wijziging", altijd opnieuw het complete doorstuurbare bericht.
-6. Bij bezwaar of afwijzing → pivot of doorvragen naar de échte reden. Nooit drammen.`;
+6. Bij bezwaar of afwijzing → pivot of doorvragen naar de échte reden. Nooit drammen.
+
+WERKWIJZE (DM-vraag, een doorstuurbaar uitnodigingsbericht voor een prospect):
+Schrijf de DM ALTIJD in deze drie bouwstenen, zonder uitzondering:
+1. COMPLIMENT of ERKENNING: specifiek, geen smeerolie. ("Jij bent iemand die ...", "Ik moest aan jou denken omdat ...")
+2. UITNODIGING VOOR EEN KIJKMOMENT: nooit "laten we bijpraten" of "zullen we even kletsen" zonder kijkmoment. Wel: "mag ik je iets láten zien?", "ik wil je iets laten zien wat ik denk dat bij jou past", "kijk je 10 min met me mee?".
+3. CONCRETE TIJDSUGGESTIE: twee tijdsblokken voorstellen ("vanavond of morgen?", "wat past beter, donderdag of vrijdag?"). Bij een rustige vriend mag een open vraag richting tijd ook ("wanneer kan je even zitten?").
+VERBODEN in een DM:
+- "Ik zat net aan je te denken" zonder duidelijke aanleiding
+- "Zullen we bijpraten" zonder kijkmoment
+- Engelse zinnen door de Nederlandse tekst ("Let's create something dat ..." → fout, helemaal NL of helemaal EN)
+- Lange uitleg over wat het IS, dat is voor het gesprek erna, niet voor de DM
+Het hele DM-bericht zit ALTIJD tussen [STUUR] en [/STUUR] tags.`;
 
   return `${rolSectie}${contextSectie}${prospectSectie}${kennisbankSectie}${adviesgidsSectie}${prijslijstSectie}${scriptSectie}${voorbeeldenSectie}${werkwijze}`;
 }

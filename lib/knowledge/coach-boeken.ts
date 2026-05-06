@@ -6,26 +6,78 @@
 
 export type VraagType = "dm" | "bezwaar" | "followup" | "closing" | "motivatie" | "accountability" | "social" | "drieweg" | "productadvies" | "algemeen";
 
-// Detecteer het type vraag op basis van keywords
-export function detecteerVraagType(berichten: { role: string; content: string }[]): VraagType {
-  // Pak de laatste user-berichten (max 2)
-  const recenteUserBerichten = berichten
-    .filter((b) => b.role === "user")
-    .slice(-2)
-    .map((b) => b.content.toLowerCase())
-    .join(" ");
+// Patronen voor specifieke (niet-productadvies) vraagtypen. Apart geplaatst
+// zodat ze hergebruikt kunnen worden voor de "eerste-vraag-sticky"-logica
+// hieronder. Volgorde van checks blijft belangrijk: drieweg vóór dm
+// (anders pakt "stuur dit groepje-bericht" verkeerd dm ipv drieweg).
+const SPECIFIEKE_PATRONEN: Array<{ type: VraagType; regex: RegExp }> = [
+  { type: "drieweg",        regex: /\b(3.?weg|drieweg|groepje|aanmaken|sponsor koppel|introduceer|edif\w*|edification|aankondig|presentatie.*groep|groep.*presentatie|sponsor (laten )?(presenteren|introduce|opvoeren))\b/ },
+  { type: "dm",             regex: /\b(dm|bericht|schrij|tekst|uitnodig|whatsapp|instagram|sturen)\b/ },
+  { type: "bezwaar",        regex: /\b(bezwaar|objection|geen tijd|nadenken|niet van sales|ken te weinig|geen geld|partner overleg|twijfel)\b/ },
+  { type: "followup",       regex: /\b(follow.?up|opvolg|stilte|geen reactie|niet gereageerd|terugkom)\b/ },
+  { type: "closing",        regex: /\b(clos|afsluit|besliss|doel.?tijd|starten|commitment)\b/ },
+  { type: "motivatie",      regex: /\b(motivat|opgev|moeilijk|geen zin|moe|gefrustreerd|why|waarom)\b/ },
+  { type: "accountability", regex: /\b(accountab|resultaat|activiteit|stats|nummers|gedaan|actie)\b/ },
+  { type: "social",         regex: /\b(social|post|story|stories|content|attract|online|tiktok|facebook|linkedin)\b/ },
+];
 
-  // Productadvies: gebruik \w* voor conjugaties (supplement/supplementen, vitamine/vitaminen, etc.)
-  // + medische context (chemo, kanker, medicatie) want daar komt vaak een productvraag bovenop.
-  if (/\b(productadvies|product ?advies|welk pakket|welke producten|pakket (voor|bij)|lifeplus ?advies|daily (bio)?basics|daily light|proanthenols|omegold|vegan omegold|mena plus|key.?tonic|enerxan|phase.?o.?mine|triple protein|vegan protein|be refueled|be focused|be recharged|be sustained|golden milk|cacao boost|cacao mushroom|support tabs|purple flash|green medley|cogelin|biotic blast|aloe ?vera|parabalance|digestive formula|ph plus|msm plus|fy skin|collodial silver|wondergel|somazyme|mainta(i)?n.?(&| en )?.?protect|women.?s gold|men.?s gold|women.?s special|men.?s special|evening primrose|vitamins d.? ?(&| en )?.? ?k|darmen in balans|stress ?less|get zen|reset (women|men|vega)|combipakket|program c|basispakket|basisproduct|basiset|basis[- ]?stack|supplement\w*|vitamine\w*|mineraal\w*|mineralen|magnesium|calcium|zink|ijzer|vezel\w*|probiotica|prebiotica|omega[- ]?3|omega|afvallen|intermittent fasting|keto|vasten|burn.?out|stress\w*|slaap\w*|slecht slapen|slaapprobleem|menopauze|overgang|pms|menstruatie|hormo\w+|gewricht\w*|stijfheid|artrose|pijn|detox|sappenkuur|darmprogramma|holistic reset|darm\w*|spijsvertering|stoelgang|obstipatie|constipatie|diarree|opgeblazen|winderigheid|naar (het|de) toilet|moeilijk poepen|niet kunnen poepen|buikpijn|maagpijn|brandend maagzuur|reflux|energie|moe|vermoei\w+|brain fog|concentrati\w+|focus|hoofdpijn|migraine|huid|acne|eczeem|psoriasis|haaruitval|nagels|immu\w+|verkoudheid|griep|allergie\w*|hooikoorts|gezondheid\w*|klacht\w*|vitaliteit|holistisch|vitaliteitsprogramma|cholesterol|bloeddruk|bloedsuiker|suiker|diabet\w+|sport|training|performance|herstel|spieren|workout|fitness|cardio|eiwit\w*|protei+ne\w*|ouder worden|veroudering|anti.?aging|libido|seks|vruchtbaarheid|chemo\w*|kanker|oncolog\w+|medicatie|medicij\w+|tablet\w+|pillen|capsule\w*|behandeling|chronisch\w*|ziek(te|tes|tebeeld|enhuis)|bloedverdunner\w*|antidepressiva|schildklier|zwanger\w*|borstvoeding|lactati\w+|arts\w*|apotheek|apotheker|huisarts)\b/.test(recenteUserBerichten)) return "productadvies";
-  if (/\b(3.?weg|drieweg|groepje|aanmaken|sponsor koppel|introduceer|edif\w*|edification|aankondig|presentatie.*groep|groep.*presentatie|sponsor (laten )?(presenteren|introduce|opvoeren))\b/.test(recenteUserBerichten)) return "drieweg";
-  if (/\b(dm|bericht|schrij|tekst|uitnodig|whatsapp|instagram|sturen)\b/.test(recenteUserBerichten)) return "dm";
-  if (/\b(bezwaar|objection|geen tijd|nadenken|niet van sales|ken te weinig|geen geld|partner overleg|twijfel)\b/.test(recenteUserBerichten)) return "bezwaar";
-  if (/\b(follow.?up|opvolg|stilte|geen reactie|niet gereageerd|terugkom)\b/.test(recenteUserBerichten)) return "followup";
-  if (/\b(clos|afsluit|besliss|doel.?tijd|starten|commitment)\b/.test(recenteUserBerichten)) return "closing";
-  if (/\b(motivat|opgev|moeilijk|geen zin|moe|gefrustreerd|why|waarom)\b/.test(recenteUserBerichten)) return "motivatie";
-  if (/\b(accountab|resultaat|activiteit|stats|nummers|gedaan|actie)\b/.test(recenteUserBerichten)) return "accountability";
-  if (/\b(social|post|story|stories|content|attract|online|tiktok|facebook|linkedin)\b/.test(recenteUserBerichten)) return "social";
+function detectSpecifiek(tekst: string): VraagType | null {
+  for (const { type, regex } of SPECIFIEKE_PATRONEN) {
+    if (regex.test(tekst)) return type;
+  }
+  return null;
+}
+
+// Productadvies-regex (volledig, inclusief impliciete gezondheidstriggers).
+// Dit is de "ruime net" die alles vangt waar potentieel productadvies
+// relevant kan zijn. Gebruikt als fallback wanneer er geen sticky vraag-
+// type uit het eerste user-bericht komt, of bij een expliciete advies-
+// vraag in een vervolgbericht.
+const PRODUCTADVIES_REGEX = /\b(productadvies|product ?advies|welk pakket|welke producten|pakket (voor|bij)|lifeplus ?advies|daily (bio)?basics|daily light|proanthenols|omegold|vegan omegold|mena plus|key.?tonic|enerxan|phase.?o.?mine|triple protein|vegan protein|be refueled|be focused|be recharged|be sustained|golden milk|cacao boost|cacao mushroom|support tabs|purple flash|green medley|cogelin|biotic blast|aloe ?vera|parabalance|digestive formula|ph plus|msm plus|fy skin|collodial silver|wondergel|somazyme|mainta(i)?n.?(&| en )?.?protect|women.?s gold|men.?s gold|women.?s special|men.?s special|evening primrose|vitamins d.? ?(&| en )?.? ?k|darmen in balans|stress ?less|get zen|reset (women|men|vega)|combipakket|program c|basispakket|basisproduct|basiset|basis[- ]?stack|supplement\w*|vitamine\w*|mineraal\w*|mineralen|magnesium|calcium|zink|ijzer|vezel\w*|probiotica|prebiotica|omega[- ]?3|omega|afvallen|intermittent fasting|keto|vasten|burn.?out|stress\w*|slaap\w*|slecht slapen|slaapprobleem|menopauze|overgang|pms|menstruatie|hormo\w+|gewricht\w*|stijfheid|artrose|pijn|detox|sappenkuur|darmprogramma|holistic reset|darm\w*|spijsvertering|stoelgang|obstipatie|constipatie|diarree|opgeblazen|winderigheid|naar (het|de) toilet|moeilijk poepen|niet kunnen poepen|buikpijn|maagpijn|brandend maagzuur|reflux|energie|moe|vermoei\w+|brain fog|concentrati\w+|focus|hoofdpijn|migraine|huid|acne|eczeem|psoriasis|haaruitval|nagels|immu\w+|verkoudheid|griep|allergie\w*|hooikoorts|gezondheid\w*|klacht\w*|vitaliteit|holistisch|vitaliteitsprogramma|cholesterol|bloeddruk|bloedsuiker|suiker|diabet\w+|sport|training|performance|herstel|spieren|workout|fitness|cardio|eiwit\w*|protei+ne\w*|ouder worden|veroudering|anti.?aging|libido|seks|vruchtbaarheid|chemo\w*|kanker|oncolog\w+|medicatie|medicij\w+|tablet\w+|pillen|capsule\w*|behandeling|chronisch\w*|ziek(te|tes|tebeeld|enhuis)|bloedverdunner\w*|antidepressiva|schildklier|zwanger\w*|borstvoeding|lactati\w+|arts\w*|apotheek|apotheker|huisarts)\b/;
+
+// EXPLICIETE productadvies-vraag (nauwe set). Wordt gebruikt om een
+// sticky bezwaar/dm/etc. type te kunnen overrulen, alleen als de
+// gebruiker daadwerkelijk om productadvies VRAAGT, niet als hij in
+// een vervolgbericht alleen een gezondheidswoord laat vallen
+// (zoals "afvallen" in een bezwaar-context).
+const PRODUCTADVIES_EXPLICIET = /\b(productadvies|product ?advies|welk product|welke producten|welk pakket|welke pakket|pakket (voor|bij)|lifeplus ?advies|geef.{0,15}(advies|productadvies|suggestie)|advies (voor|bij|over) (een|wat|welk)|product[- ]?suggestie|product[- ]?aanbeveling)\b/;
+
+// Detecteer het type vraag op basis van keywords.
+//
+// LOGICA (volgorde belangrijk, voorkomt regressie zoals Bug 7):
+// 1. Pak het EERSTE user-bericht en kijk of dat een specifiek vraagtype
+//    aangeeft (bezwaar, dm, drieweg, followup, closing, motivatie,
+//    accountability, social). Zo ja → STICKY: dat blijft het type, ook
+//    als de gebruiker in een vervolgbericht een gezondheidswoord laat
+//    vallen ("ze wil afvallen") dat anders productadvies zou triggeren.
+// 2. UITZONDERING: als de gebruiker LATER expliciet om productadvies
+//    vraagt ("welk product past bij ...", "geef me productadvies"),
+//    dan overrulet dat de sticky waarde.
+// 3. Geen sticky type uit eerste bericht → gebruik de oude logica:
+//    productadvies-regex met impliciete gezondheidstriggers, daarna
+//    de specifieke patronen op de recente berichten samen.
+export function detecteerVraagType(berichten: { role: string; content: string }[]): VraagType {
+  const userBerichten = berichten
+    .filter((b) => b.role === "user")
+    .map((b) => b.content.toLowerCase());
+
+  if (userBerichten.length === 0) return "algemeen";
+
+  const eersteVraag = userBerichten[0];
+  const recenteVraag = userBerichten.slice(-2).join(" ");
+
+  // 1+2. Eerste-vraag-sticky met expliciete-productadvies-uitzondering
+  const eersteSpec = detectSpecifiek(eersteVraag);
+  if (eersteSpec) {
+    if (PRODUCTADVIES_EXPLICIET.test(recenteVraag)) return "productadvies";
+    return eersteSpec;
+  }
+
+  // 3. Geen sticky type → originele detectie op de recente berichten
+  if (PRODUCTADVIES_REGEX.test(recenteVraag)) return "productadvies";
+  const recenteSpec = detectSpecifiek(recenteVraag);
+  if (recenteSpec) return recenteSpec;
+
   return "algemeen";
 }
 
@@ -59,7 +111,9 @@ const SECTIES: Record<string, string> = {
   dm: `
 ### DM & UITNODIGEN
 
-Worre uitnodiging-formule (drie kern + één optionele opener):
+Worre uitnodiging-formule (drie kern + één optionele opener).
+ELKE DM die je tussen [STUUR]-tags zet MOET deze drie bouwstenen bevatten,
+in deze volgorde. Niet improviseren, niet "bijpraten" zonder kijkmoment.
 
 OPTIONEEL — alleen bij business-prospects of zakelijke context:
 0. Wees druk: "Ik heb weinig tijd maar wilde dit even delen."
@@ -68,15 +122,24 @@ OPTIONEEL — alleen bij business-prospects of zakelijke context:
    de zakelijke toon natuurlijk is.
 
 KERN (altijd):
-1. Compliment of erkenning: "Jij bent iemand die dingen voor elkaar krijgt", of
+1. COMPLIMENT of erkenning: "Jij bent iemand die dingen voor elkaar krijgt", of
    "ik moest aan jou denken omdat...". Specifiek, geen smeerolie.
-2. Uitnodigen voor een KIJKMOMENT (niet voor 'ja zeggen tegen jou'):
+2. UITNODIGING VOOR EEN KIJKMOMENT (niet voor 'ja zeggen tegen jou'):
    Direct: "Ik ben gestart met iets nieuws, wil het je laten zien."
    Indirect: "Dit is vast niets voor jou, maar ken jij iemand die extra wil verdienen?"
    Super-indirect: "Ken jij mensen die openstaan voor bij-inkomen?"
-3. Plan: twee tijdsblokken voorstellen ("vanavond of morgen?"), of een open vraag
-   als de relatie dat beter past.
+3. PLAN met tijdsuggestie: twee tijdsblokken voorstellen ("vanavond of morgen?"),
+   of een open vraag richting tijd als de relatie dat beter past
+   ("wanneer kan jij even 10 min zitten?").
 JE TAAK = uitnodigen, NIET overtuigen.
+
+VERBODEN in een DM (deze patronen veroorzaakten eerder rare output):
+- "Laten we binnenkort bijpraten" zonder kijkmoment → fout, geen Worre-uitnodiging
+- "Ik zat net aan je te denken" zonder concrete aanleiding → klinkt loos
+- "Zullen we even kletsen" zonder doel → leeg
+- Engelse zinnen door de Nederlandse tekst ("Let's create something dat ...") → ALTIJD volledig in één taal
+- Lange uitleg WAT het is (dat is voor het gesprek erna, niet de DM)
+- Een vraag stellen naar HUN ervaring/mening zonder eerst een kijkmoment voor te stellen
 
 Brookes DM strategie:
 1. Reageer oprecht op hun content

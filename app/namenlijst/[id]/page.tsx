@@ -306,10 +306,14 @@ export default async function ProspectDetailPagina({
             userId={user.id}
           />
 
-          {/* 3-weg gesprek, inklapbaar */}
+          {/* 3-weg gesprek, inklapbaar.
+              prospectSituatie komt uit het korte situatie_kort-veld
+              (member-bewerkbaar via Contactgegevens), niet uit het
+              vrije notities-veld, anders krijg je rare invul-zinnen
+              als "Ze is op zoek naar 45 jaar, zoekt meer energie...". */}
           <DriewegGesprekInklapbaar
             prospectNaam={prospect.volledige_naam}
-            prospectSituatie={prospect.notities || undefined}
+            prospectSituatie={prospect.situatie_kort || undefined}
             sponsorNaam={sponsorNaam}
           />
 

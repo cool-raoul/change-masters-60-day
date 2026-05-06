@@ -26,9 +26,38 @@ export function ContactgegevensForm({ prospect }: Props) {
   const [facebook, setFacebook] = useState(prospect.facebook || "");
   const [beroep, setBeroep] = useState(prospect.beroep || "");
   const [notities, setNotities] = useState(prospect.notities || "");
+  const [situatieKort, setSituatieKort] = useState(prospect.situatie_kort || "");
+  const [aiBezig, setAiBezig] = useState(false);
   const [prioriteit, setPrioriteit] = useState<"hoog" | "normaal" | "laag">(
     prospect.prioriteit
   );
+
+  // Roept de AI-samenvat-API aan om uit de aantekeningen één korte
+  // situatie-zin te maken (5-10 woorden) die in het 3-weg-script
+  // gebruikt wordt op de [situatie]-plek. Werkt alleen als er
+  // aantekeningen zijn.
+  async function vatSamen() {
+    if (!notities.trim()) {
+      toast.error("Vul eerst aantekeningen in");
+      return;
+    }
+    setAiBezig(true);
+    try {
+      const res = await fetch("/api/situatie-samenvatting", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ notities }),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      const data = await res.json();
+      if (data.situatie) setSituatieKort(data.situatie);
+    } catch (err) {
+      toast.error("Samenvatten niet gelukt, probeer opnieuw");
+      console.error(err);
+    } finally {
+      setAiBezig(false);
+    }
+  }
 
   async function slaOp(e: React.FormEvent) {
     e.preventDefault();
@@ -44,6 +73,7 @@ export function ContactgegevensForm({ prospect }: Props) {
         facebook: facebook || null,
         beroep: beroep || null,
         notities: notities || null,
+        situatie_kort: situatieKort || null,
         prioriteit,
         updated_at: new Date().toISOString(),
       })
@@ -68,6 +98,7 @@ export function ContactgegevensForm({ prospect }: Props) {
     setFacebook(prospect.facebook || "");
     setBeroep(prospect.beroep || "");
     setNotities(prospect.notities || "");
+    setSituatieKort(prospect.situatie_kort || "");
     setPrioriteit(prospect.prioriteit);
     setBewerkModus(false);
   }
@@ -151,6 +182,12 @@ export function ContactgegevensForm({ prospect }: Props) {
           <div>
             <p className="text-xs text-cm-white opacity-60">{v("namenlijst.aantekeningen")}</p>
             <p className="text-cm-white text-sm">{prospect.notities}</p>
+          </div>
+        )}
+        {prospect.situatie_kort && (
+          <div>
+            <p className="text-xs text-cm-white opacity-60">Situatie (kort, voor 3-weg)</p>
+            <p className="text-cm-white text-sm">{prospect.situatie_kort}</p>
           </div>
         )}
         <div>
@@ -276,6 +313,41 @@ export function ContactgegevensForm({ prospect }: Props) {
           className="textarea-cm text-sm"
           rows={3}
         />
+      </div>
+
+      {/* Korte situatie-zin voor 3-weg-script. Apart van de aantekeningen,
+          want de [situatie]-placeholder in stap 2 leest dit letterlijk
+          terug ("Ze is op zoek naar [situatie]"). Daar wil je geen vrije-
+          tekst-aantekeningen, wel een korte natuurlijke zin. */}
+      <div>
+        <div className="flex items-center justify-between mb-1">
+          <label className="block text-xs text-cm-white opacity-60">
+            Situatie (kort, voor 3-weg)
+          </label>
+          <button
+            type="button"
+            onClick={vatSamen}
+            disabled={aiBezig || !notities.trim()}
+            className="text-xs text-cm-gold hover:text-cm-gold-light disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            title={
+              notities.trim()
+                ? "Laat AI een korte zin maken uit je aantekeningen"
+                : "Vul eerst aantekeningen in om te kunnen samenvatten"
+            }
+          >
+            {aiBezig ? "✨ bezig..." : "✨ samenvatten uit aantekeningen"}
+          </button>
+        </div>
+        <input
+          type="text"
+          value={situatieKort}
+          onChange={(e) => setSituatieKort(e.target.value)}
+          placeholder="bv. meer energie en financiële vrijheid"
+          className="input-cm text-sm"
+        />
+        <p className="text-xs text-cm-white opacity-40 mt-1">
+          Wordt gebruikt in 3-weg-script: &quot;Ze/Hij is op zoek naar ...&quot;
+        </p>
       </div>
 
       <div>
