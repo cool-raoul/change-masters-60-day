@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Topbar } from "@/components/layout/Topbar";
+import { BottomNav } from "@/components/layout/BottomNav";
 import { berekenHuidigeDag } from "@/lib/playbook/bereken-dag";
 import { WelcomePopup } from "@/components/layout/WelcomePopup";
 import { TaalProvider } from "@/lib/i18n/TaalContext";
@@ -85,7 +86,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
             gebruikersnaam={profile?.full_name || user.email || "Teamlid"}
             huidigeDag={huidigeDag}
           />
-          <main className="flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain p-6 pb-28 sm:pb-6 mobile-scroll">
+          <main className="flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain p-6 pb-28 lg:pb-6 mobile-scroll">
             {/* Toont alleen iets bij ?van=playbook&dag=N, anders renders null. */}
             <Suspense fallback={null}>
               <TerugNaarPlaybookBanner />
@@ -93,6 +94,10 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
             {children}
           </main>
         </div>
+        {/* Mobile bottom-nav (lg:hidden), naast de continu-zichtbare
+            desktop-Sidebar. Op mobile zijn ze allebei beschikbaar:
+            BottomNav voor de top-4-acties + 'Meer' opent de sidebar-drawer. */}
+        <BottomNav />
         <VoiceFab />
         <Rondleiding rol={rolVoorFeatures} />
         {/* Welkomstfilm: auto-pop-up bij eerste bezoek (localStorage-flag),

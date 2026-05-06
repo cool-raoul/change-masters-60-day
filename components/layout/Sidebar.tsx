@@ -39,6 +39,18 @@ export function Sidebar({
     setMobielmenuOpen(false);
   }, [pathname]);
 
+  // Luister naar het 'open'-event vanuit de BottomNav 'Meer'-knop.
+  // Custom event-pattern is bewust gekozen: zo hoeven we geen Context
+  // op te zetten voor één-richtings-trigger over twee componenten.
+  useEffect(() => {
+    function openVanuitBottomNav() {
+      setMobielmenuOpen(true);
+    }
+    window.addEventListener("eleva-menu:open", openVanuitBottomNav);
+    return () =>
+      window.removeEventListener("eleva-menu:open", openVanuitBottomNav);
+  }, []);
+
   // Drawer is fixed inset-0 z-50, covert viewport al volledig. Geen body-lock nodig.
   // Body-lock (document.body.style.overflow = "hidden") veroorzaakt op iOS Safari
   // rendering-glitches waarbij de hamburger verdwijnt na een ander modal.
@@ -197,20 +209,9 @@ export function Sidebar({
         </svg>
       </button>
 
-      {/* Tweede hamburger als FAB linksonder, duim-bereikbaar op telefoon en
-          werkt als fallback wanneer de top-knop onzichtbaar blijkt na modal-sluit. */}
-      <button
-        onClick={() => setMobielmenuOpen(true)}
-        className="lg:hidden fixed bottom-5 left-5 z-40 w-14 h-14 rounded-full bg-cm-surface border border-cm-border shadow-lg flex items-center justify-center text-cm-gold active:scale-95 transition-transform duration-200"
-        aria-label="Menu openen"
-        style={{ WebkitTapHighlightColor: "transparent" }}
-      >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <line x1="3" y1="6" x2="21" y2="6" />
-          <line x1="3" y1="12" x2="21" y2="12" />
-          <line x1="3" y1="18" x2="21" y2="18" />
-        </svg>
-      </button>
+      {/* FAB-hamburger linksonder is verwijderd: BottomNav 'Meer' opent
+          nu de drawer (via custom event), top-hamburger linksboven
+          blijft als directe shortcut. Zo geen dubbele knoppen op mobile. */}
 
       {/* Desktop sidebar */}
       <aside className="hidden lg:flex w-64 bg-cm-surface border-r border-cm-border flex-col h-screen sticky top-0">
