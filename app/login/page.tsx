@@ -64,15 +64,15 @@ function LoginInhoud() {
         {/* Logo */}
         <div className="text-center mb-8">
           <img src="/eleva-icon.png" alt="ELEVA" className="h-16 w-16 mx-auto mb-3" />
-          <h1 className="text-4xl eleva-brand mb-2">
+          <h1 className="text-4xl eleva-brand mb-3">
             ELEVA
           </h1>
-          <p className="text-cm-white">{v("login.subtitel")}</p>
+          <p className="text-cm-white/75 italic text-sm">{v("login.subtitel")}</p>
         </div>
 
         {/* Login kaart */}
-        <div className="card border-gold-subtle">
-          <h2 className="text-xl font-semibold text-cm-white mb-6">
+        <div className="card border-gold-subtle glow-gold-soft">
+          <h2 className="font-serif-warm text-xl text-cm-white mb-6">
             {v("login.titel")}
           </h2>
 

@@ -7,7 +7,13 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useTaal } from "@/lib/i18n/TaalContext";
 
-export function Sidebar({ isLeider = false }: { isLeider?: boolean }) {
+export function Sidebar({
+  isLeider = false,
+  sponsorNaam = "",
+}: {
+  isLeider?: boolean;
+  sponsorNaam?: string;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
@@ -64,6 +70,32 @@ export function Sidebar({ isLeider = false }: { isLeider?: boolean }) {
           ✕
         </button>
       </div>
+
+      {/* Sponsor-strip onder het logo (mens-eerst, mockup-4 element).
+          Toont een kleine cirkel met sponsor-initialen en korte tekst,
+          zodat de gebruiker op elke pagina een 'Je staat niet alleen'-
+          gevoel heeft. Verbergt zich als geen sponsor bekend. */}
+      {sponsorNaam && (
+        <div className="px-4 py-3 border-b border-cm-border bg-cm-surface-2/40">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-full border-2 border-cm-gold-dim bg-cm-surface flex items-center justify-center text-cm-gold text-[11px] font-semibold flex-shrink-0">
+              {sponsorNaam
+                .split(/\s|\//)
+                .filter(Boolean)
+                .map((s) => s[0])
+                .join("")
+                .slice(0, 2)
+                .toUpperCase()}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[10px] text-cm-white/50 uppercase tracking-wider">
+                Je sponsor
+              </p>
+              <p className="text-cm-white text-xs truncate">{sponsorNaam}</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Navigatie, scrollbaar zodat alles bereikbaar is op kleine schermen */}
       <nav className="flex-1 overflow-y-auto p-4 space-y-1">

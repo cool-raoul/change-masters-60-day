@@ -14,6 +14,7 @@ import { TerugNaarPlaybookBanner } from "@/components/playbook/TerugNaarPlaybook
 import { WelkomstFilm } from "@/components/welkom/WelkomstFilm";
 import { PresenceHeartbeat } from "@/components/presence/PresenceHeartbeat";
 import { PullToRefresh } from "@/components/layout/PullToRefresh";
+import { haalSponsorNaam } from "@/lib/sponsors/haal-sponsor-naam";
 
 export async function AppShell({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -25,7 +26,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, onboarding_klaar, role, run_startdatum, is_tester")
+    .select("full_name, onboarding_klaar, role, run_startdatum, is_tester, sponsor_id")
     .eq("id", user.id)
     .single();
 
@@ -63,11 +64,22 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
     { isTester: isFounderOfTester },
   );
 
+  // Sponsor-naam voor de mens-eerst-strip onderin de sidebar.
+  // Drie-traps fallback (zelfde patroon als prospect-detail/dashboards).
+  const sponsorNaamSidebar = await haalSponsorNaam(
+    supabase,
+    (profile as { sponsor_id?: string | null } | null)?.sponsor_id ?? null,
+    profielData.role ?? null,
+  );
+
   return (
     <TaalProvider initialTaal={taal}>
       <div className="flex h-dvh bg-cm-black overflow-hidden">
         <WelcomePopup />
-        <Sidebar isLeider={(profile as any)?.role === "leider"} />
+        <Sidebar
+          isLeider={(profile as any)?.role === "leider"}
+          sponsorNaam={sponsorNaamSidebar}
+        />
         <div className="flex-1 flex flex-col min-h-0 min-w-0">
           <Topbar
             gebruikersnaam={profile?.full_name || user.email || "Teamlid"}
