@@ -18,6 +18,7 @@ import { VolgendeBesteActie } from "@/components/radar/VolgendeBesteActie";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { pakDagdeelGroet } from "@/lib/util/dagdeel-groet";
 import { Locale } from "date-fns";
+import { TijdslijnStrip } from "@/components/layout/TijdslijnStrip";
 
 const DATE_LOCALES: Record<string, Locale> = { nl, en: enUS, fr, es, de, pt };
 
@@ -64,7 +65,7 @@ export default async function DashboardPagina() {
     { data: testsRecent },
     { data: openHerinneringenAlle },
   ] = await Promise.all([
-    supabase.from("profiles").select("run_startdatum, role, is_tester, dagelijkse_push_aan, dagelijkse_push_uur").eq("id", user.id).maybeSingle(),
+    supabase.from("profiles").select("full_name, run_startdatum, role, is_tester, dagelijkse_push_aan, dagelijkse_push_uur").eq("id", user.id).maybeSingle(),
     supabase.from("why_profiles").select("*").eq("user_id", user.id).maybeSingle(),
     supabase.from("dagelijkse_stats").select("*").eq("user_id", user.id).eq("stat_datum", vandaagStr).maybeSingle(),
     supabase.from("herinneringen").select("*, prospect:prospects(id, volledige_naam)").eq("user_id", user.id).lte("vervaldatum", vandaagStr).eq("voltooid", false).order("vervaldatum", { ascending: true }).limit(5),
@@ -351,42 +352,49 @@ export default async function DashboardPagina() {
     shopper: "text-[#4ACB6A]", member: "text-[#E8C96B]",
   };
 
+  const voornaam = ((profile as any)?.full_name ?? "").split(" ")[0] ?? "";
+
   return (
     <div className="max-w-5xl mx-auto space-y-6">
-      {/* Header, warme groet, dag-nummer prominent */}
+      {/* Persoonlijke welkom in mockup-4 stijl: italic groet + serif heading
+          met dag-nummer. Daaronder de datum, dempler. */}
       <div>
-        <h1 className="text-2xl font-display font-bold text-cm-white">
+        <p className="text-cm-white/60 text-sm italic">
+          {dag === 1
+            ? "Daar gaan we, "
+            : "Mooi dat je er bent vandaag, "}
+          {voornaam ? `${voornaam},` : ""}
+        </p>
+        <h1 className="font-serif-warm text-2xl sm:text-3xl text-cm-white mt-1 leading-tight">
           {dag === 1 ? (
-            <>Daar gaan we! 🚀, <span className="text-cm-gold">Dag 1</span></>
-          ) : dag <= 21 ? (
-            <>{pakDagdeelGroet()}!, {v("dashboard.dag", taal)}{" "}
-              <span className="text-cm-gold">{dag}</span>{" "}
-              {v("dashboard.van_60", taal)}
+            <>
+              <span className="text-cm-gold">Dag 1</span> van je 60-dagen reis. 🚀
             </>
           ) : (
-            <>{v("dashboard.dag", taal)}{" "}
+            <>
+              {v("dashboard.dag", taal)}{" "}
               <span className="text-cm-gold">{dag}</span>{" "}
-              {v("dashboard.van_60", taal)}
+              {v("dashboard.van_60", taal)}.
             </>
           )}
         </h1>
-        <p className="text-cm-white mt-1">
+        <p className="text-cm-white/50 text-xs mt-2">
           {format(new Date(), "EEEE d MMMM yyyy", { locale: datumLocale })}
         </p>
       </div>
 
-      {/* Voortgang */}
-      <div className="card">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
-            {v("dashboard.voortgang", taal)}
-          </h2>
-          <span className="text-cm-gold text-sm font-semibold">{Math.round((dag / 60) * 100)}%</span>
+      {/* Voortgang als subtiele tijdslijn-strip met cirkels (mockup-4 stijl).
+          60 cirkels passen op alle viewport-breedtes door grid-min-0. */}
+      <div>
+        <TijdslijnStrip
+          totaal={60}
+          huidig={dag}
+          label="Voortgang door je 60 dagen"
+        />
+        <div className="flex items-center justify-between text-xs text-cm-white/50 mt-2">
+          <span>{Math.round((dag / 60) * 100)}% voltooid</span>
+          <span>{60 - dag} {v("dashboard.dagen_te_gaan", taal)}</span>
         </div>
-        <div className="h-3 bg-cm-surface-2 rounded-full overflow-hidden">
-          <div className="h-full bg-gradient-gold rounded-full transition-all duration-1000" style={{ width: `${(dag / 60) * 100}%` }} />
-        </div>
-        <p className="text-cm-white text-xs mt-2">{60 - dag} {v("dashboard.dagen_te_gaan", taal)}</p>
       </div>
 
       {/* Reminder-tegel: open admin-stappen van VORIGE dagen die nog

@@ -9,17 +9,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Change Masters brand kleuren
-        "cm-black": "#0A0A0A",
-        "cm-surface": "#111111",
-        "cm-surface-2": "#1A1A1A",
-        "cm-border": "#2A2A2A",
-        "cm-gold": "#C9A84C",
-        "cm-gold-light": "#E8C96B",
-        "cm-gold-dim": "#8A6E28",
-        "cm-white": "#F5F5F0",
-        "cm-muted": "#888888",
-        // Pipeline fase kleuren
+        // ELEVA "Stiller met glow" palet (mockup 4, akkoord 7 mei 2026).
+        // Gedempte tonen, gebroken cream tekst, gedempt goud-accent.
+        // Behoudt de subtiele goud-glow als diepte-effect.
+        "cm-black": "#0d0e10",       // neutraal-donker (was #0A0A0A pure black)
+        "cm-surface": "#16181c",     // licht neutraler dan #111
+        "cm-surface-2": "#1a1d22",   // neutrale blauw-grijs ondertoon
+        "cm-border": "#2a2e36",      // subtiele blauw-grijs border
+        "cm-gold": "#b89a52",        // gedempt goud, niet knal (was #C9A84C)
+        "cm-gold-light": "#d4af52",  // iets dimmer dan oorspronkelijk light
+        "cm-gold-dim": "#6e5a30",    // donker goud voor borders/lijnen
+        "cm-white": "#e8e6e0",       // gebroken cream, zachter dan puur wit
+        "cm-muted": "#8a8b8e",       // neutraal grijs
+        // Pipeline fase kleuren, functioneel behouden
         "fase-lead": "#3A3A3A",
         "fase-uitgenodigd": "#1A2A3A",
         "fase-presentatie": "#2A1A3A",
@@ -33,13 +35,13 @@ const config: Config = {
       },
       backgroundImage: {
         "gradient-gold":
-          "linear-gradient(135deg, #C9A84C 0%, #E8C96B 50%, #C9A84C 100%)",
+          "linear-gradient(135deg, #b89a52 0%, #d4af52 50%, #b89a52 100%)",
         "gradient-dark":
-          "linear-gradient(135deg, #111111 0%, #1A1A1A 100%)",
+          "linear-gradient(135deg, #16181c 0%, #1a1d22 100%)",
       },
       boxShadow: {
-        gold: "0 0 20px rgba(201, 168, 76, 0.15)",
-        "gold-lg": "0 0 40px rgba(201, 168, 76, 0.2)",
+        gold: "0 0 20px rgba(184, 154, 82, 0.15)",
+        "gold-lg": "0 0 40px rgba(184, 154, 82, 0.2)",
       },
       animation: {
         "fade-in": "fadeIn 0.3s ease-in-out",
@@ -56,8 +58,8 @@ const config: Config = {
           "100%": { transform: "translateY(0)", opacity: "1" },
         },
         pulseGold: {
-          "0%, 100%": { boxShadow: "0 0 5px rgba(201, 168, 76, 0.3)" },
-          "50%": { boxShadow: "0 0 20px rgba(201, 168, 76, 0.6)" },
+          "0%, 100%": { boxShadow: "0 0 5px rgba(184, 154, 82, 0.25)" },
+          "50%": { boxShadow: "0 0 20px rgba(184, 154, 82, 0.5)" },
         },
       },
     },

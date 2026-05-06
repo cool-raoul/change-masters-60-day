@@ -2,18 +2,16 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
 import type { Leerpad } from "@/lib/leerpaden/types";
+import { TijdslijnStrip } from "@/components/layout/TijdslijnStrip";
 
 // ============================================================
 // StappenDashboard, simpel overzicht voor Core en Pro.
 //
-// Toont alleen:
-// - Hero met huidige stap-nummer + datum
-// - Voortgang-balk (stap X van totaal)
-// - Eén grote tegel met de huidige stap, klikt door naar /welkom-X/stap/N
-// - Voorvertoning komende 3 stappen (klikbaar)
-// - Niet meer alle content op één pagina, dat staat op de stap-detail
-//
-// Sidebar werkt via /welkom-X/layout.tsx (AppShell).
+// Mockup-4-stijl (akkoord 7 mei 2026):
+// - Persoonlijke welkomstoon (serif heading + italic groet)
+// - TijdslijnStrip met cirkels (groen voltooid, goud vandaag, leeg toekomst)
+// - Focus-card met label "Vandaag jouw focus" + glow
+// - Voorvertoning komende 3 stappen, kalmer en lichter
 // ============================================================
 
 type Props = {
@@ -36,63 +34,63 @@ export function StappenDashboard({
   );
   const procent = Math.min(100, Math.round((huidigeStap / leerpad.totaal) * 100));
   const vandaag = format(new Date(), "EEEE d MMMM yyyy", { locale: nl });
+  const voornaam = naam ? naam.split(" ")[0] : "";
 
   if (!stap) return null;
 
   return (
     <div className="max-w-3xl mx-auto space-y-5">
-      {/* Header */}
+      {/* Persoonlijke welkom in mens-eerst-stijl */}
       <div>
-        <h1 className="text-2xl font-display font-bold text-cm-white">
-          {naam ? `Welkom, ${naam}!` : "Welkom!"} Stap{" "}
-          <span className="text-cm-gold">{huidigeStap}</span> van {leerpad.totaal}
+        <p className="text-cm-white/60 text-sm italic">
+          {voornaam ? `Mooi dat je er bent vandaag, ${voornaam},` : "Mooi dat je er bent vandaag,"}
+        </p>
+        <h1 className="font-serif-warm text-2xl sm:text-3xl text-cm-white mt-1 leading-tight">
+          stap <span className="text-cm-gold">{huidigeStap}</span> van je{" "}
+          <span className="text-cm-gold">{leerpad.naam.toLowerCase()}</span>.
         </h1>
-        <p className="text-cm-white opacity-70 mt-1 text-sm">{vandaag}</p>
+        <p className="text-cm-white/50 text-xs mt-2">{vandaag}</p>
       </div>
 
-      {/* Voortgang */}
-      <div className="card">
-        <div className="flex items-center justify-between mb-2">
-          <h2 className="text-xs font-semibold text-cm-white uppercase tracking-wider opacity-80">
-            Voortgang {leerpad.naam}
-          </h2>
-          <span className="text-cm-gold text-xs font-semibold">{procent}%</span>
-        </div>
-        <div className="h-2 bg-cm-surface-2 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-gradient-gold rounded-full transition-all duration-1000"
-            style={{ width: `${procent}%` }}
-          />
-        </div>
-        <p className="text-cm-white text-xs mt-2 opacity-60">
+      {/* Tijdslijn-strip met cirkels */}
+      <TijdslijnStrip
+        totaal={leerpad.totaal}
+        huidig={huidigeStap}
+        label={`Voortgang door je ${leerpad.totaal} stappen`}
+      />
+
+      {/* Voortgang als compacte regel */}
+      <div className="flex items-center justify-between text-xs text-cm-white/50">
+        <span>{procent}% voltooid</span>
+        <span>
           {leerpad.totaal - huidigeStap} stap
           {leerpad.totaal - huidigeStap === 1 ? "" : "pen"} te gaan
-        </p>
+        </span>
       </div>
 
-      {/* Huidige stap, gouden tegel die doorklikt */}
+      {/* Focus-card, één hoofdactie van vandaag */}
       <Link
         href={`${stapBasisRoute}/${stap.nummer}`}
-        className="block card border-gold-subtle hover:border-cm-gold transition-colors group"
+        className="block card border-cm-gold/40 hover:border-cm-gold transition-colors group glow-gold-soft"
       >
-        <div className="text-cm-gold text-xs font-semibold uppercase tracking-wider mb-2">
-          Vandaag, stap {stap.nummer}
+        <div className="text-cm-gold text-[11px] font-semibold uppercase tracking-wider mb-2">
+          Vandaag jouw focus
         </div>
-        <h2 className="text-cm-white font-display font-bold text-xl mb-2">
+        <h2 className="font-serif-warm text-cm-white text-xl mb-2 leading-snug">
           {stap.titel}
         </h2>
-        <p className="text-cm-white text-sm opacity-80 leading-relaxed">
+        <p className="text-cm-white/75 text-sm leading-relaxed">
           {stap.doel}
         </p>
-        <div className="mt-4 text-cm-gold text-sm font-semibold group-hover:translate-x-1 inline-block transition-transform">
-          Open deze stap →
+        <div className="mt-4 text-cm-gold text-sm font-medium group-hover:translate-x-1 inline-block transition-transform">
+          Hier ga ik mee aan de slag →
         </div>
       </Link>
 
-      {/* Komende stappen, voorvertoning, klikbaar maar lichter */}
+      {/* Komende stappen, voorvertoning */}
       {volgende.length > 0 && (
         <div className="space-y-2">
-          <h3 className="text-xs font-semibold text-cm-white uppercase tracking-wider opacity-80 mt-2">
+          <h3 className="text-[11px] font-semibold text-cm-white/50 uppercase tracking-wider mt-2">
             Volgende stappen
           </h3>
           {volgende.map((s) => (
@@ -102,14 +100,14 @@ export function StappenDashboard({
               className="block card opacity-70 hover:opacity-100 transition-opacity"
             >
               <div className="flex items-start gap-3">
-                <div className="text-cm-gold font-bold text-lg flex-shrink-0">
+                <div className="text-cm-gold/80 font-semibold text-base flex-shrink-0 w-6 text-center">
                   {s.nummer}
                 </div>
                 <div className="flex-1">
                   <div className="text-cm-white text-sm font-medium">
                     {s.titel}
                   </div>
-                  <p className="text-cm-white text-xs opacity-70 mt-0.5">
+                  <p className="text-cm-white/60 text-xs mt-0.5">
                     {s.doel}
                   </p>
                 </div>

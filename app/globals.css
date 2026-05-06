@@ -81,7 +81,7 @@
 
 @layer utilities {
   .text-gold-gradient {
-    background: linear-gradient(135deg, #C9A84C, #E8C96B);
+    background: linear-gradient(135deg, #b89a52, #d4af52);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -91,18 +91,32 @@
     font-family: 'Outfit', system-ui, sans-serif;
     font-weight: 700;
     letter-spacing: 0.25em;
-    background: linear-gradient(135deg, #C9A84C 0%, #E8C96B 40%, #C9A84C 100%);
+    background: linear-gradient(135deg, #b89a52 0%, #d4af52 40%, #b89a52 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .bg-gold-subtle {
-    background: rgba(201, 168, 76, 0.08);
+    background: rgba(184, 154, 82, 0.08);
   }
 
   .border-gold-subtle {
-    border-color: rgba(201, 168, 76, 0.3);
+    border-color: rgba(184, 154, 82, 0.3);
+  }
+
+  /* Subtiele goud-glow rond cards/elementen, voor mockup-4-stijl diepte */
+  .glow-gold-soft {
+    box-shadow: 0 0 24px rgba(184, 154, 82, 0.12);
+  }
+  .glow-gold-medium {
+    box-shadow: 0 0 32px rgba(184, 154, 82, 0.18);
+  }
+
+  /* Serif voor headings/welkomsttekst, geeft warm-mens-eerst gevoel */
+  .font-serif-warm {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 400;
   }
 }
 

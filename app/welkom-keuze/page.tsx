@@ -58,15 +58,18 @@ export default async function WelkomKeuzePagina() {
       <FilmInBlok slug={MODUS_WELKOMSTFILM_SLUGS.KEUZE} verbergZonderFilm />
 
       <div>
-        <h1 className="text-3xl font-display font-bold text-cm-white">
+        <p className="text-cm-white/60 text-sm italic">
+          {naam ? `Mooi dat je er bent, ${naam},` : "Mooi dat je er bent,"}
+        </p>
+        <h1 className="font-serif-warm text-2xl sm:text-3xl text-cm-white mt-1 leading-tight">
           <EditableTekst
             namespace="welkom-keuze"
             sleutel="titel"
-            standaard={`Welkom${naam ? `, ${naam}` : ""} 👋`}
+            standaard={`welke kant ga je op? 👋`}
             overrides={overrides}
             isFounder={isFounder}
             as="span"
-            hint="Hoofdtitel van de keuzepagina. {naam} wordt automatisch ingevuld."
+            hint="Hoofdtitel van de keuzepagina. {naam} wordt automatisch ingevuld via de groet erboven."
           />
         </h1>
         <EditableTekst
@@ -76,7 +79,7 @@ export default async function WelkomKeuzePagina() {
           overrides={overrides}
           isFounder={isFounder}
           as="p"
-          className="text-cm-white opacity-80 mt-2 leading-relaxed"
+          className="text-cm-white/75 mt-3 leading-relaxed text-sm"
           multiline
           rows={3}
           hint="Korte introductie boven de twee keuze-tegels."
