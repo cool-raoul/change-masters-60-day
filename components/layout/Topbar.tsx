@@ -112,29 +112,29 @@ export function Topbar({
   }, []);
 
   return (
-    <header className="h-16 border-b border-cm-border bg-cm-surface flex items-center justify-between px-4 lg:px-6">
+    <header className="h-16 border-b border-cm-border bg-gradient-to-b from-cm-surface to-cm-surface/60 flex items-center justify-between px-4 lg:px-6 backdrop-blur-sm">
       {/* Dag teller, op mobiel alleen het ronde cijfer (de tekst-info
           staat al op het dashboard zelf, dubbel op de topbar voelt druk).
           Op desktop tonen we de volledige tekst voor context. */}
       <div className="flex items-center gap-4 ml-10 lg:ml-0">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-cm-gold flex items-center justify-center">
-            <span className="text-cm-black text-xs font-bold">{dag}</span>
+          <div className="w-8 h-8 rounded-full bg-cm-gold/15 border border-cm-gold/50 flex items-center justify-center">
+            <span className="text-cm-gold text-xs font-bold">{dag}</span>
           </div>
           <div className="hidden md:block">
-            <p className="text-cm-white text-sm font-semibold">{v("dashboard.dag")} {dag} {v("dashboard.van_60")}</p>
+            <p className="text-cm-white text-sm font-medium">{v("dashboard.dag")} {dag} <span className="text-cm-white/50">{v("dashboard.van_60")}</span></p>
           </div>
         </div>
 
-        {/* Voortgangsbalk */}
+        {/* Voortgangsbalk, dunner voor subtieler gevoel */}
         <div className="hidden md:flex items-center gap-2">
-          <div className="w-32 h-1.5 bg-cm-surface-2 rounded-full overflow-hidden">
+          <div className="w-32 h-1 bg-cm-surface-2 rounded-full overflow-hidden">
             <div
               className="h-full bg-gradient-gold rounded-full transition-all duration-500"
               style={{ width: `${(dag / 60) * 100}%` }}
             />
           </div>
-          <span className="text-cm-white text-xs">{Math.round((dag / 60) * 100)}%</span>
+          <span className="text-cm-white/60 text-xs">{Math.round((dag / 60) * 100)}%</span>
         </div>
       </div>
 

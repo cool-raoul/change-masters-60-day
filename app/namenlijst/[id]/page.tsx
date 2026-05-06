@@ -158,15 +158,15 @@ export default async function ProspectDetailPagina({
         <div className="flex items-start gap-3">
           <Link
             href="/namenlijst"
-            className="text-cm-white hover:text-cm-white text-xl pt-1"
+            className="text-cm-white/60 hover:text-cm-white text-xl pt-1 transition-colors"
           >
             ←
           </Link>
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl sm:text-3xl font-display font-bold text-cm-white break-words">
+            <h1 className="font-serif-warm text-2xl sm:text-3xl text-cm-white break-words leading-tight">
               {prospect.volledige_naam}
             </h1>
-            <div className="flex items-center gap-2 mt-1 flex-wrap">
+            <div className="flex items-center gap-2 mt-2 flex-wrap">
               <span
                 className="text-xs font-medium px-2 py-0.5 rounded-full"
                 style={{ color: faseInfo?.tekstkleur, background: `${faseInfo?.kleur}` }}
@@ -191,6 +191,21 @@ export default async function ProspectDetailPagina({
             </div>
           </div>
         </div>
+
+        {/* Helpers-strip, mens-eerst-element (mockup-4 stijl). Toont
+            een 'Je staat hier niet alleen'-regel met de sponsor-naam,
+            zodat de member voelt dat hij ondersteund wordt bij elke
+            prospect, ook al werkt 'ie alleen op het scherm. */}
+        {sponsorNaam && (
+          <div className="ml-9 flex items-center gap-3 px-4 py-2.5 rounded-xl border border-cm-border bg-cm-surface-2/40 glow-gold-soft">
+            <div className="w-8 h-8 rounded-full border-2 border-cm-gold-dim bg-cm-surface-2 flex items-center justify-center text-cm-gold text-xs font-semibold flex-shrink-0">
+              {sponsorNaam.split(" ").map((s) => s[0]).join("").slice(0, 2).toUpperCase()}
+            </div>
+            <div className="flex-1 min-w-0 text-cm-white/70 text-xs italic leading-snug">
+              Je staat hier niet alleen. <span className="not-italic text-cm-white/85">{sponsorNaam}</span> kijkt mee als je dat wilt.
+            </div>
+          </div>
+        )}
 
         {/* Actie-rij, links: ELEVA Mentor (hoofdactie). Rechts: vragenlijst-
             chips + verwijder-prospect (secundair). De losse Productadvies-knop
