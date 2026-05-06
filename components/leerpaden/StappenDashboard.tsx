@@ -20,6 +20,8 @@ type Props = {
   naam: string;
   /** Basis-URL voor stap-detail-pagina's, bijv. "/welkom-pro/stap" of "/welkom-core/stap". */
   stapBasisRoute: string;
+  /** Optioneel: naam van de sponsor voor de mens-eerst-strip. Verbergt zich als leeg. */
+  sponsorNaam?: string;
 };
 
 export function StappenDashboard({
@@ -27,6 +29,7 @@ export function StappenDashboard({
   huidigeStap,
   naam,
   stapBasisRoute,
+  sponsorNaam,
 }: Props) {
   const stap = leerpad.stappen.find((s) => s.nummer === huidigeStap);
   const volgende = leerpad.stappen.filter(
@@ -51,6 +54,26 @@ export function StappenDashboard({
         </h1>
         <p className="text-cm-white/50 text-xs mt-2">{vandaag}</p>
       </div>
+
+      {/* Sponsor-aanwezigheids-strip, mens-eerst element */}
+      {sponsorNaam && (
+        <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-cm-border bg-cm-surface-2/40 glow-gold-soft">
+          <div className="w-9 h-9 rounded-full border-2 border-cm-gold-dim bg-cm-surface-2 flex items-center justify-center text-cm-gold text-sm font-semibold flex-shrink-0">
+            {sponsorNaam
+              .split(/\s|\//)
+              .filter(Boolean)
+              .map((s) => s[0])
+              .join("")
+              .slice(0, 2)
+              .toUpperCase()}
+          </div>
+          <div className="flex-1 min-w-0 text-cm-white/75 text-sm italic leading-snug">
+            Je staat hier niet alleen.{" "}
+            <span className="not-italic text-cm-white">{sponsorNaam}</span>{" "}
+            kijkt mee als je dat wilt.
+          </div>
+        </div>
+      )}
 
       {/* Tijdslijn-strip met cirkels */}
       <TijdslijnStrip

@@ -65,7 +65,7 @@ export default async function DashboardPagina() {
     { data: testsRecent },
     { data: openHerinneringenAlle },
   ] = await Promise.all([
-    supabase.from("profiles").select("full_name, run_startdatum, role, is_tester, dagelijkse_push_aan, dagelijkse_push_uur").eq("id", user.id).maybeSingle(),
+    supabase.from("profiles").select("full_name, run_startdatum, role, is_tester, dagelijkse_push_aan, dagelijkse_push_uur, sponsor_id").eq("id", user.id).maybeSingle(),
     supabase.from("why_profiles").select("*").eq("user_id", user.id).maybeSingle(),
     supabase.from("dagelijkse_stats").select("*").eq("user_id", user.id).eq("stat_datum", vandaagStr).maybeSingle(),
     supabase.from("herinneringen").select("*, prospect:prospects(id, volledige_naam)").eq("user_id", user.id).lte("vervaldatum", vandaagStr).eq("voltooid", false).order("vervaldatum", { ascending: true }).limit(5),
@@ -354,6 +354,37 @@ export default async function DashboardPagina() {
 
   const voornaam = ((profile as any)?.full_name ?? "").split(" ")[0] ?? "";
 
+  // Sponsor-naam voor de mens-eerst-strip onder de welkom-header.
+  // Zelfde patroon als op prospect-detail-pagina: probeer eerst de
+  // gekoppelde sponsor, anders fallback op leiders, anders "Ramon Sant".
+  const sponsorIdDash = (profile as any)?.sponsor_id ?? null;
+  const eigenRolDash = (profile as any)?.role ?? null;
+  let sponsorNaamDash = "";
+  if (sponsorIdDash) {
+    const { data: sp } = await supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", sponsorIdDash)
+      .single();
+    sponsorNaamDash = (sp as { full_name?: string } | null)?.full_name ?? "";
+  } else if (eigenRolDash === "leider") {
+    sponsorNaamDash = "Ramon Sant";
+  } else {
+    const { data: leiders } = await supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("role", "leider")
+      .order("created_at", { ascending: true })
+      .limit(2);
+    if (leiders && leiders.length > 0) {
+      sponsorNaamDash = (leiders as Array<{ full_name: string }>)
+        .map((l) => l.full_name)
+        .join(" / ");
+    } else {
+      sponsorNaamDash = "Ramon Sant";
+    }
+  }
+
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Persoonlijke welkom in mockup-4 stijl: italic groet + serif heading
@@ -382,6 +413,27 @@ export default async function DashboardPagina() {
           {format(new Date(), "EEEE d MMMM yyyy", { locale: datumLocale })}
         </p>
       </div>
+
+      {/* Sponsor-aanwezigheids-strip (mens-eerst, mockup-4 element).
+          Toont dat je niet alleen werkt, met je sponsor in beeld. */}
+      {sponsorNaamDash && (
+        <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-cm-border bg-cm-surface-2/40 glow-gold-soft">
+          <div className="w-9 h-9 rounded-full border-2 border-cm-gold-dim bg-cm-surface-2 flex items-center justify-center text-cm-gold text-sm font-semibold flex-shrink-0">
+            {sponsorNaamDash
+              .split(/\s|\//)
+              .filter(Boolean)
+              .map((s) => s[0])
+              .join("")
+              .slice(0, 2)
+              .toUpperCase()}
+          </div>
+          <div className="flex-1 min-w-0 text-cm-white/75 text-sm italic leading-snug">
+            Je staat hier niet alleen.{" "}
+            <span className="not-italic text-cm-white">{sponsorNaamDash}</span>{" "}
+            kijkt mee als je dat wilt.
+          </div>
+        </div>
+      )}
 
       {/* Voortgang als subtiele tijdslijn-strip met cirkels (mockup-4 stijl).
           60 cirkels passen op alle viewport-breedtes door grid-min-0. */}

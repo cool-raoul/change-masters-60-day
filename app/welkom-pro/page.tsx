@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { StappenDashboard } from "@/components/leerpaden/StappenDashboard";
 import { PRO_LEERPAD } from "@/lib/leerpaden/pro-stappen";
+import { haalSponsorNaam } from "@/lib/sponsors/haal-sponsor-naam";
 
 // ============================================================
 // /welkom-pro, dashboard voor de Professional-flow (14 stappen)
@@ -24,7 +25,7 @@ export default async function WelkomProPagina() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("modus, full_name, role, run_startdatum, created_at")
+    .select("modus, full_name, role, run_startdatum, created_at, sponsor_id")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -35,6 +36,7 @@ export default async function WelkomProPagina() {
       role?: string | null;
       run_startdatum?: string | null;
       created_at?: string | null;
+      sponsor_id?: string | null;
     } | null) ?? {};
   const modus = profielData.modus;
   if (modus !== "pro") {
@@ -59,12 +61,19 @@ export default async function WelkomProPagina() {
     ? 1
     : Math.min(PRO_LEERPAD.totaal, Math.max(1, dagenSindsStart + 1));
 
+  const sponsorNaam = await haalSponsorNaam(
+    supabase,
+    profielData.sponsor_id ?? null,
+    profielData.role ?? null,
+  );
+
   return (
     <StappenDashboard
       leerpad={PRO_LEERPAD}
       huidigeStap={huidigeStap}
       naam={naam}
       stapBasisRoute="/welkom-pro/stap"
+      sponsorNaam={sponsorNaam}
     />
   );
 }

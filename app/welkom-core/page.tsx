@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { StappenDashboard } from "@/components/leerpaden/StappenDashboard";
 import { CORE_LEERPAD } from "@/lib/leerpaden/core-stappen";
+import { haalSponsorNaam } from "@/lib/sponsors/haal-sponsor-naam";
 
 // ============================================================
 // /welkom-core, dashboard voor de Core-flow (21 stappen)
@@ -22,7 +23,7 @@ export default async function WelkomCorePagina() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("modus, full_name, role, run_startdatum, created_at")
+    .select("modus, full_name, role, run_startdatum, created_at, sponsor_id")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -33,6 +34,7 @@ export default async function WelkomCorePagina() {
       role?: string | null;
       run_startdatum?: string | null;
       created_at?: string | null;
+      sponsor_id?: string | null;
     } | null) ?? {};
   const modus = profielData.modus;
   if (modus !== "core") {
@@ -57,12 +59,19 @@ export default async function WelkomCorePagina() {
     ? 1
     : Math.min(CORE_LEERPAD.totaal, Math.max(1, dagenSindsStart + 1));
 
+  const sponsorNaam = await haalSponsorNaam(
+    supabase,
+    profielData.sponsor_id ?? null,
+    profielData.role ?? null,
+  );
+
   return (
     <StappenDashboard
       leerpad={CORE_LEERPAD}
       huidigeStap={huidigeStap}
       naam={naam}
       stapBasisRoute="/welkom-core/stap"
+      sponsorNaam={sponsorNaam}
     />
   );
 }
