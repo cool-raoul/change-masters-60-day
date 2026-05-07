@@ -275,13 +275,13 @@ export function VandaagFlow({
               <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
                 Dag {dag.nummer} · Fase {dag.fase}
               </p>
-              <h1 className="text-3xl font-display font-bold text-cm-white leading-tight">
+              <h1 className="font-serif-warm text-3xl text-cm-white leading-tight">
                 {groet}
               </h1>
-              <p className="text-cm-white opacity-80 text-base mt-3 leading-relaxed">
+              <p className="text-cm-white/80 text-base mt-3 leading-relaxed">
                 Vandaag staat in het teken van:
               </p>
-              <h2 className="text-cm-gold font-display font-semibold text-xl">
+              <h2 className="font-serif-warm text-cm-gold text-xl">
                 {dag.titel}
               </h2>
             </div>
@@ -355,7 +355,7 @@ export function VandaagFlow({
               <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
                 Stap {taakIndex + 1} van {totaal}
               </p>
-              <h2 className="text-2xl font-display font-bold text-cm-white mt-1 leading-tight">
+              <h2 className="font-serif-warm text-2xl text-cm-white mt-1 leading-tight">
                 {huidigeTaak.label}
               </h2>
               {huidigeTaak.uitleg && (
@@ -561,7 +561,7 @@ export function VandaagFlow({
           <div className="space-y-6 pt-8 text-center">
             <div className="text-7xl">{aantalVoltooid === totaal ? "🎉" : "💪"}</div>
             <div className="space-y-2">
-              <h1 className="text-3xl font-display font-bold text-cm-white leading-tight">
+              <h1 className="font-serif-warm text-3xl text-cm-white leading-tight">
                 {aantalVoltooid === totaal
                   ? `Top, je hebt het! 🚀`
                   : `Goed bezig${voornaam ? `, ${voornaam}` : ""}!`}

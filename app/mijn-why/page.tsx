@@ -370,7 +370,7 @@ export default function MijnWhyPagina() {
           // Start scherm, eerste keer
           <div className="flex flex-col items-center justify-center h-full text-center py-12 max-w-lg mx-auto">
             <div className="text-6xl mb-6">🎯</div>
-            <h2 className="text-2xl font-display font-bold text-cm-white mb-4">
+            <h2 className="font-serif-warm text-2xl text-cm-white mb-4">
               {v("why.welkom")} {gebruikersnaam || "teamlid"}!
             </h2>
 

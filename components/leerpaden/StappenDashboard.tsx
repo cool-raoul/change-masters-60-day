@@ -39,20 +39,44 @@ export function StappenDashboard({
   const vandaag = format(new Date(), "EEEE d MMMM yyyy", { locale: nl });
   const voornaam = naam ? naam.split(" ")[0] : "";
 
+  // Pro = stap-georiënteerd leerpad zonder tijdsdruk (Raoul akkoord
+  // 7 mei 2026). Core = dag-georiënteerd met 'vandaag'-framing.
+  const isPro = leerpad.modus === "pro";
+
   if (!stap) return null;
 
   return (
     <div className="max-w-3xl mx-auto space-y-5">
-      {/* Persoonlijke welkom in mens-eerst-stijl */}
+      {/* Persoonlijke welkom in mens-eerst-stijl. Voor Pro zonder
+          'vandaag'-framing want professionals werken op eigen tempo. */}
       <div>
         <p className="text-cm-white/60 text-sm italic">
-          {voornaam ? `Mooi dat je er bent vandaag, ${voornaam},` : "Mooi dat je er bent vandaag,"}
+          {voornaam
+            ? `Mooi dat je er bent${isPro ? "" : " vandaag"}, ${voornaam},`
+            : `Mooi dat je er bent${isPro ? "" : " vandaag"},`}
         </p>
         <h1 className="font-serif-warm text-2xl sm:text-3xl text-cm-white mt-1 leading-tight">
-          stap <span className="text-cm-gold">{huidigeStap}</span> van je{" "}
-          <span className="text-cm-gold">{leerpad.naam.toLowerCase()}</span>.
+          stap <span className="text-cm-gold">{huidigeStap}</span>
+          {isPro ? (
+            <>
+              {" "}van <span className="text-cm-gold">{leerpad.totaal}</span>,{" "}
+              <span className="text-cm-white/85">{leerpad.naam.toLowerCase()}</span>.
+            </>
+          ) : (
+            <>
+              {" "}van je{" "}
+              <span className="text-cm-gold">{leerpad.naam.toLowerCase()}</span>.
+            </>
+          )}
         </h1>
-        <p className="text-cm-white/50 text-xs mt-2">{vandaag}</p>
+        {!isPro && (
+          <p className="text-cm-white/50 text-xs mt-2">{vandaag}</p>
+        )}
+        {isPro && (
+          <p className="text-cm-white/50 text-xs mt-2 italic">
+            Op je eigen tempo, geen tijdsdruk.
+          </p>
+        )}
       </div>
 
       {/* Sponsor-info-strip, neutraal */}
@@ -90,13 +114,14 @@ export function StappenDashboard({
         </span>
       </div>
 
-      {/* Focus-card, één hoofdactie van vandaag */}
+      {/* Focus-card, één hoofdactie. Voor Pro is dit 'Volgende stap'
+          ipv 'Vandaag jouw focus' — geen tijdsdruk, eigen tempo. */}
       <Link
         href={`${stapBasisRoute}/${stap.nummer}`}
         className="block card border-cm-gold/40 hover:border-cm-gold transition-colors group glow-gold-soft"
       >
         <div className="text-cm-gold text-[11px] font-semibold uppercase tracking-wider mb-2">
-          Vandaag jouw focus
+          {isPro ? "Volgende stap" : "Vandaag jouw focus"}
         </div>
         <h2 className="font-serif-warm text-cm-white text-xl mb-2 leading-snug">
           {stap.titel}
@@ -105,7 +130,7 @@ export function StappenDashboard({
           {stap.doel}
         </p>
         <div className="mt-4 text-cm-gold text-sm font-medium group-hover:translate-x-1 inline-block transition-transform">
-          Hier ga ik mee aan de slag →
+          {isPro ? "Open deze stap" : "Hier ga ik mee aan de slag"} →
         </div>
       </Link>
 
@@ -113,7 +138,7 @@ export function StappenDashboard({
       {volgende.length > 0 && (
         <div className="space-y-2">
           <h3 className="text-[11px] font-semibold text-cm-white/50 uppercase tracking-wider mt-2">
-            Volgende stappen
+            {isPro ? "Verderop in je leerpad" : "Volgende stappen"}
           </h3>
           {volgende.map((s) => (
             <Link
