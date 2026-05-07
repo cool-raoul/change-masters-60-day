@@ -10,12 +10,13 @@ const config: Config = {
     extend: {
       colors: {
         // ELEVA "Stiller met glow" palet (mockup 4, akkoord 7 mei 2026).
-        // Gedempte tonen, gebroken cream tekst, gedempt goud-accent.
-        // Behoudt de subtiele goud-glow als diepte-effect.
-        "cm-black": "#0d0e10",       // neutraal-donker (was #0A0A0A pure black)
-        "cm-surface": "#16181c",     // licht neutraler dan #111
-        "cm-surface-2": "#1a1d22",   // neutrale blauw-grijs ondertoon
-        "cm-border": "#2a2e36",      // subtiele blauw-grijs border
+        // Aangepast 7 mei 2026 ochtend: minder zwart, meer donkergrijs.
+        // De waarden komen nu dichter bij wat in de HTML-mockup als
+        // 'frame-binnenin' werd getoond, niet de zwarte rand eromheen.
+        "cm-black": "#181b21",       // donkergrijs (was #0d0e10 te donker, was vroeger #0A0A0A pure black)
+        "cm-surface": "#21252d",     // lichter grijs voor cards en topbar
+        "cm-surface-2": "#2a2f38",   // nog iets lichter voor sub-cards / accents
+        "cm-border": "#363c47",      // border subtiel mee opgehoogd voor contrast
         "cm-gold": "#b89a52",        // gedempt goud, niet knal (was #C9A84C)
         "cm-gold-light": "#d4af52",  // iets dimmer dan oorspronkelijk light
         "cm-gold-dim": "#6e5a30",    // donker goud voor borders/lijnen
