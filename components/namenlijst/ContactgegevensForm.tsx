@@ -119,11 +119,42 @@ export function ContactgegevensForm({ prospect }: Props) {
           </button>
         </div>
 
+        {/* Aantekeningen + situatie-kort BOVEN klantgegevens (op verzoek
+            Raoul: aantekeningen direct zichtbaar bovenaan, niet ver
+            naar beneden scrollen). Default INGEKLAPT zodat de pagina
+            rustig opent, klik op het kopje om uit te klappen. Sectie
+            verbergt zich helemaal als beide velden leeg zijn. */}
+        {(prospect.notities || prospect.situatie_kort) && (
+          <details className="group rounded-lg bg-cm-surface-2/40 border border-cm-border overflow-hidden">
+            <summary className="cursor-pointer list-none flex items-center justify-between px-3 py-2 hover:bg-cm-surface-2/60 transition-colors">
+              <span className="text-xs font-semibold text-cm-white/70 uppercase tracking-wider">
+                Aantekeningen
+              </span>
+              <span className="text-cm-gold/60 text-xs transition-transform group-open:rotate-180">
+                ▼
+              </span>
+            </summary>
+            <div className="px-3 pb-3 pt-1 space-y-3">
+              {prospect.notities && (
+                <div>
+                  <p className="text-xs text-cm-white opacity-60">{v("namenlijst.aantekeningen")}</p>
+                  <p className="text-cm-white text-sm whitespace-pre-line">{prospect.notities}</p>
+                </div>
+              )}
+              {prospect.situatie_kort && (
+                <div>
+                  <p className="text-xs text-cm-white opacity-60">Situatie (kort, voor 3-weg)</p>
+                  <p className="text-cm-white text-sm">{prospect.situatie_kort}</p>
+                </div>
+              )}
+            </div>
+          </details>
+        )}
+
         {/* Klantgegevens: telefoon, email, socials, beroep, bron, prioriteit.
-            Uitklapbaar via native <details>, default open zodat user direct
-            ziet wat er is. Chevron in de summary geeft duidelijk aan dat
-            het in te klappen is. */}
-        <details open className="group rounded-lg bg-cm-surface-2/40 border border-cm-border overflow-hidden">
+            Default INGEKLAPT (rustiger oogbeeld), klik op kopje om uit te
+            klappen. Chevron rechts geeft visueel teken voor uitklap. */}
+        <details className="group rounded-lg bg-cm-surface-2/40 border border-cm-border overflow-hidden">
           <summary className="cursor-pointer list-none flex items-center justify-between px-3 py-2 hover:bg-cm-surface-2/60 transition-colors">
             <span className="text-xs font-semibold text-cm-white/70 uppercase tracking-wider">
               Klantgegevens
@@ -199,36 +230,6 @@ export function ContactgegevensForm({ prospect }: Props) {
             </div>
           </div>
         </details>
-
-        {/* Aantekeningen + situatie-kort: separate uitklapbare sectie zodat
-            user de soms-lange aantekeningen kan inklappen als ze niet
-            direct nodig zijn. Verbergt zich helemaal als beide leeg zijn. */}
-        {(prospect.notities || prospect.situatie_kort) && (
-          <details open className="group rounded-lg bg-cm-surface-2/40 border border-cm-border overflow-hidden">
-            <summary className="cursor-pointer list-none flex items-center justify-between px-3 py-2 hover:bg-cm-surface-2/60 transition-colors">
-              <span className="text-xs font-semibold text-cm-white/70 uppercase tracking-wider">
-                Aantekeningen
-              </span>
-              <span className="text-cm-gold/60 text-xs transition-transform group-open:rotate-180">
-                ▼
-              </span>
-            </summary>
-            <div className="px-3 pb-3 pt-1 space-y-3">
-              {prospect.notities && (
-                <div>
-                  <p className="text-xs text-cm-white opacity-60">{v("namenlijst.aantekeningen")}</p>
-                  <p className="text-cm-white text-sm whitespace-pre-line">{prospect.notities}</p>
-                </div>
-              )}
-              {prospect.situatie_kort && (
-                <div>
-                  <p className="text-xs text-cm-white opacity-60">Situatie (kort, voor 3-weg)</p>
-                  <p className="text-cm-white text-sm">{prospect.situatie_kort}</p>
-                </div>
-              )}
-            </div>
-          </details>
-        )}
       </div>
     );
   }

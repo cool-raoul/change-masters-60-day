@@ -102,6 +102,20 @@ export function ProspectActieForm({ prospect, userId }: Props) {
     e.preventDefault();
     setLaden(true);
 
+    // VOOR de insert: pak open product-herbestelling-herinneringen
+    // die NU al bestaan voor deze prospect. De DB-trigger maakt na
+    // de insert automatisch een nieuwe herinnering aan (besteldatum
+    // + 21 dagen). Zonder cleanup zou de gebruiker dubbele open
+    // herinneringen krijgen voor dezelfde prospect, wat in de praktijk
+    // overweldigend is. We vragen daarom of de oude opgeschoond
+    // mogen worden, met een "Verwijder oude"-actie in de toast.
+    const { data: oudeHerinneringen } = await supabase
+      .from("herinneringen")
+      .select("id")
+      .eq("prospect_id", prospect.id)
+      .eq("herinnering_type", "product_herbestelling")
+      .eq("voltooid", false);
+
     const { error } = await supabase.from("product_bestellingen").insert({
       prospect_id: prospect.id,
       user_id: userId,
@@ -111,12 +125,46 @@ export function ProspectActieForm({ prospect, userId }: Props) {
 
     if (error) {
       toast.error(v("actie.bestelling_fout"));
-    } else {
-      toast.success(v("actie.bestelling_opgeslagen"));
-      setActief(null);
-      router.refresh();
+      setLaden(false);
+      return;
     }
 
+    const oudIds =
+      (oudeHerinneringen as Array<{ id: string }> | null)?.map((h) => h.id) ??
+      [];
+
+    if (oudIds.length > 0) {
+      toast.success(v("actie.bestelling_opgeslagen"), {
+        description: `Er ${
+          oudIds.length === 1
+            ? "was 1 oude herinnering"
+            : `waren ${oudIds.length} oude herinneringen`
+        } voor deze prospect. Verwijderen om de nieuwe cyclus schoon te starten?`,
+        duration: 12000,
+        action: {
+          label: "Verwijder oude",
+          onClick: async () => {
+            const { error: delErr } = await supabase
+              .from("herinneringen")
+              .delete()
+              .in("id", oudIds);
+            if (delErr) {
+              toast.error("Verwijderen mislukt: " + delErr.message);
+            } else {
+              toast.success(
+                `${oudIds.length} oude herinnering${oudIds.length === 1 ? "" : "en"} verwijderd`,
+              );
+              router.refresh();
+            }
+          },
+        },
+      });
+    } else {
+      toast.success(v("actie.bestelling_opgeslagen"));
+    }
+
+    setActief(null);
+    router.refresh();
     setLaden(false);
   }
 
