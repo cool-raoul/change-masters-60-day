@@ -186,7 +186,11 @@ export function HerinneringItem({ herinnering, toonProspectLink = true }: Props)
               prospectId={herinnering.prospect_id}
               herinneringType={herinnering.herinnering_type}
             />
-            <HerinneringActies herinneringId={herinnering.id} />
+            <HerinneringActies
+              herinneringId={herinnering.id}
+              prospectId={herinnering.prospect_id ?? null}
+              herinneringType={herinnering.herinnering_type}
+            />
           </div>
         )}
       </div>

@@ -8,7 +8,26 @@ import { useRouter } from "next/navigation";
 // Afvink-knop met bevestiging. Voordat de herinnering definitief als voltooid
 // wordt gemarkeerd (en dus uit de lijst verdwijnt) vragen we eerst een Ja/Nee,
 // zodat één per ongeluk op het vinkje getikt niet meteen je werk opeet.
-export function HerinneringActies({ herinneringId }: { herinneringId: string }) {
+//
+// SPECIAL voor product_herbestelling-herinneringen:
+//   Na afvinken checken we of dit de LAATSTE openstaande herinnering
+//   van dat type was voor deze prospect. Zo ja, toont een toast met
+//   actie 'Ja, +30 dagen' om maandelijkse opvolging voort te zetten.
+//   Klik op de actie -> nieuwe herinnering aangemaakt over 30 dagen.
+//   Geen klik -> reeks stopt netjes (gebruiker bepaalt).
+
+export function HerinneringActies({
+  herinneringId,
+  prospectId = null,
+  herinneringType = "custom",
+}: {
+  herinneringId: string;
+  /** Optioneel, alleen relevant voor product-herbestelling-flow. */
+  prospectId?: string | null;
+  /** Optioneel, default 'custom'. Activeert maandelijkse-opvolging-prompt
+   *  als 'product_herbestelling' en geen openstaande meer over zijn. */
+  herinneringType?: string;
+}) {
   const [laden, setLaden] = useState(false);
   const [voltooid, setVoltooid] = useState(false);
   const [bevestigen, setBevestigen] = useState(false);
@@ -32,6 +51,80 @@ export function HerinneringActies({ herinneringId }: { herinneringId: string }) 
     return () => document.removeEventListener("mousedown", buitenKlik);
   }, [bevestigen]);
 
+  /**
+   * Na het afvinken van een product_herbestelling-herinnering: check of dit
+   * de laatste openstaande was. Zo ja, prompt voor maandelijkse opvolging.
+   */
+  async function checkLaatsteEnPrompt() {
+    if (herinneringType !== "product_herbestelling" || !prospectId) return;
+
+    const { data: nogOpen } = await supabase
+      .from("herinneringen")
+      .select("id")
+      .eq("prospect_id", prospectId)
+      .eq("herinnering_type", "product_herbestelling")
+      .eq("voltooid", false);
+
+    // Nog open? Dan was deze niet de laatste, geen prompt nodig.
+    if (nogOpen && nogOpen.length > 0) return;
+
+    // Pak prospectnaam voor in de tekst.
+    const { data: prospect } = await supabase
+      .from("prospects")
+      .select("volledige_naam")
+      .eq("id", prospectId)
+      .single();
+    const naam =
+      (prospect as { volledige_naam?: string } | null)?.volledige_naam ??
+      "deze persoon";
+
+    toast.success(`Afgevinkt, dit was de laatste voor ${naam}.`, {
+      description:
+        "Wil je de maandelijkse productherinneringen voor deze persoon voortzetten? Of nu stoppen?",
+      duration: 15000,
+      action: {
+        label: "Ja, +30 dagen",
+        onClick: () => verlengMaandelijks(prospectId, naam),
+      },
+    });
+  }
+
+  async function verlengMaandelijks(pid: string, naam: string) {
+    const overEenMaand = new Date();
+    overEenMaand.setHours(0, 0, 0, 0);
+    overEenMaand.setDate(overEenMaand.getDate() + 30);
+    const isoDatum = overEenMaand.toISOString().split("T")[0];
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      toast.error("Niet ingelogd");
+      return;
+    }
+
+    const { error } = await supabase.from("herinneringen").insert({
+      user_id: user.id,
+      prospect_id: pid,
+      herinnering_type: "product_herbestelling",
+      titel: `Maandelijkse opvolging — ${naam}`,
+      beschrijving: "Maandelijkse opvolging voor herhaalbestelling.",
+      vervaldatum: isoDatum,
+    });
+
+    if (error) {
+      toast.error("Aanmaken mislukt: " + error.message);
+    } else {
+      toast.success(
+        `Nieuwe herinnering staat op ${overEenMaand.toLocaleDateString(
+          "nl-NL",
+          { weekday: "long", day: "numeric", month: "long" },
+        )}`,
+      );
+      router.refresh();
+    }
+  }
+
   async function markeerVoltooid() {
     setLaden(true);
     setVoltooid(true);
@@ -44,10 +137,21 @@ export function HerinneringActies({ herinneringId }: { herinneringId: string }) 
     if (error) {
       toast.error("Kon herinnering niet markeren");
       setVoltooid(false);
+      setLaden(false);
+      return;
+    }
+
+    // Voor product-herbestelling: check of dit de laatste was, zo ja
+    // prompt voor maandelijkse voortzetting. De gewone 'Afgevinkt' toast
+    // wordt overgeslagen omdat checkLaatsteEnPrompt 'm zelf met meer
+    // context al toont.
+    if (herinneringType === "product_herbestelling" && prospectId) {
+      await checkLaatsteEnPrompt();
     } else {
       toast.success("Afgevinkt!");
-      router.refresh();
     }
+
+    router.refresh();
     setLaden(false);
   }
 
