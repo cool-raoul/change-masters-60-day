@@ -19,6 +19,7 @@ import { getServerTaal, v } from "@/lib/i18n/server";
 import { pakDagdeelGroet } from "@/lib/util/dagdeel-groet";
 import { Locale } from "date-fns";
 import { TijdslijnStrip } from "@/components/layout/TijdslijnStrip";
+import { MijlpaalDetector } from "@/components/celebrations/MijlpaalDetector";
 
 const DATE_LOCALES: Record<string, Locale> = { nl, en: enUS, fr, es, de, pt };
 
@@ -387,6 +388,14 @@ export default async function DashboardPagina() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
+      {/* Onzichtbare detector: triggert bij eerste keer een week-mijlpaal
+          of streak-mijlpaal wordt bereikt een confetti-celebration. */}
+      <MijlpaalDetector
+        week1Klaar={week1Klaar}
+        week2Klaar={week2Klaar}
+        week3Klaar={week3Klaar}
+        streak={streak}
+      />
       {/* Persoonlijke welkom in mockup-4 stijl: italic groet + serif heading
           met dag-nummer. Daaronder de datum, dempler. */}
       <div>

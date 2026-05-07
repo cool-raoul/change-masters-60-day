@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useTaal } from "@/lib/i18n/TaalContext";
+import { celebrate } from "@/lib/celebrate";
+import { celebrateMilestone } from "@/lib/celebrate-milestone";
 
 export default function NieuwProspectPagina() {
   const { v } = useTaal();
@@ -96,6 +98,19 @@ export default function NieuwProspectPagina() {
     }
 
     toast.success(`${formData.volledige_naam} ${v("nieuw.toegevoegd")}`);
+
+    // Celebrate: bigger als dit de aller-eerste prospect ooit is
+    // (mijlpaal, slechts 1x per gebruiker), anders mini-confetti.
+    const { count: aantalProspects } = await supabase
+      .from("prospects")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id);
+    if (aantalProspects === 1) {
+      celebrateMilestone("first-prospect", "groot");
+    } else {
+      celebrate("klein");
+    }
+
     router.push(`/namenlijst/${data.id}`);
     setLaden(false);
   }
