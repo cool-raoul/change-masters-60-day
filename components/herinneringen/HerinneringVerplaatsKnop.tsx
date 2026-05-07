@@ -16,6 +16,15 @@ import { useRouter } from "next/navigation";
 // supabase realtime channels. Zo geen duplicate-rij, herinnering
 // verschuift gewoon mee. Lost het 'oude blijft staan'-probleem op.
 //
+// SMART-SHIFT voor product-herbestelling-herinneringen:
+//   Als 'herinneringType' === 'product_herbestelling' EN er is een
+//   prospectId, schuiven we de OPVOLGENDE openstaande
+//   product-herbestelling-herinneringen voor dezelfde prospect met
+//   dezelfde dag-delta automatisch mee. Voorbeeld: gebruiker
+//   verplaatst herinnering #1 (21d na bestel), dan schuiven #2 (51d)
+//   en #3 (81d) ook met dezelfde delta op. Bij andere types
+//   ('followup', 'custom') verschuift alleen deze ene.
+//
 // Presets en custom datum-input. Clamp op vandaag of later (geen
 // herinneringen in het verleden plannen).
 // ============================================================
@@ -33,9 +42,17 @@ const PRESETS: Preset[] = [
 export function HerinneringVerplaatsKnop({
   herinneringId,
   huidigeDatum,
+  prospectId = null,
+  herinneringType = "custom",
 }: {
   herinneringId: string;
   huidigeDatum: string;
+  /** Optioneel, alleen nodig voor smart-shift bij product-herbestelling. */
+  prospectId?: string | null;
+  /** Optioneel, default 'custom'. Als 'product_herbestelling', dan
+   *  schuiven opvolgende herinneringen van dit type voor dezelfde
+   *  prospect automatisch mee met dezelfde dag-delta. */
+  herinneringType?: string;
 }) {
   const [open, setOpen] = useState(false);
   const [eigenDatum, setEigenDatum] = useState("");
@@ -64,6 +81,8 @@ export function HerinneringVerplaatsKnop({
       return;
     }
     setLaden(true);
+
+    // 1) Update deze ene herinnering
     const { error } = await supabase
       .from("herinneringen")
       .update({ vervaldatum: datumIso })
@@ -71,22 +90,71 @@ export function HerinneringVerplaatsKnop({
 
     if (error) {
       toast.error("Verplaatsen mislukt: " + error.message);
-    } else {
-      const datum = new Date(datumIso);
-      toast.success(
-        `Verplaatst naar ${datum.toLocaleDateString("nl-NL", {
-          weekday: "long",
-          day: "numeric",
-          month: "long",
-        })}`,
-      );
-      setOpen(false);
-      setEigenDatum("");
-      // Herrender forceren zodat server-rendered pagina's (prospect-detail,
-      // /herinneringen) direct de nieuwe datum tonen. Realtime-channels op
-      // dashboard/topbar updaten via supabase-postgres-changes vanzelf.
-      router.refresh();
+      setLaden(false);
+      return;
     }
+
+    // 2) SMART-SHIFT: alleen voor product-herbestelling-herinneringen.
+    //    Schuif opvolgende openstaande herinneringen van zelfde type
+    //    voor zelfde prospect met dezelfde delta mee.
+    let aantalMeeVerschoven = 0;
+    if (herinneringType === "product_herbestelling" && prospectId) {
+      const oude = new Date(huidigeDatum);
+      const nieuwe = new Date(datumIso);
+      const deltaDagen = Math.round(
+        (nieuwe.getTime() - oude.getTime()) / (1000 * 60 * 60 * 24),
+      );
+      if (deltaDagen !== 0) {
+        // Pak alle openstaande product-herbestelling-herinneringen voor
+        // deze prospect die LATER liggen dan deze. Niet de huidige
+        // (id != herinneringId), niet eerder dan deze (vervaldatum > huidigeDatum)
+        // zodat herinneringen die al zijn gepasseerd niet meer bewegen.
+        const { data: opvolgende } = await supabase
+          .from("herinneringen")
+          .select("id, vervaldatum")
+          .eq("prospect_id", prospectId)
+          .eq("herinnering_type", "product_herbestelling")
+          .eq("voltooid", false)
+          .gt("vervaldatum", huidigeDatum)
+          .neq("id", herinneringId);
+
+        if (opvolgende && opvolgende.length > 0) {
+          for (const h of opvolgende as Array<{
+            id: string;
+            vervaldatum: string;
+          }>) {
+            const verschoven = new Date(h.vervaldatum);
+            verschoven.setDate(verschoven.getDate() + deltaDagen);
+            const nieuweIso = verschoven.toISOString().split("T")[0];
+            await supabase
+              .from("herinneringen")
+              .update({ vervaldatum: nieuweIso })
+              .eq("id", h.id);
+            aantalMeeVerschoven += 1;
+          }
+        }
+      }
+    }
+
+    const datum = new Date(datumIso);
+    const dateLabel = datum.toLocaleDateString("nl-NL", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+    });
+    if (aantalMeeVerschoven > 0) {
+      toast.success(
+        `Verplaatst naar ${dateLabel}, ${aantalMeeVerschoven} opvolgende mee verschoven`,
+      );
+    } else {
+      toast.success(`Verplaatst naar ${dateLabel}`);
+    }
+    setOpen(false);
+    setEigenDatum("");
+    // Herrender forceren zodat server-rendered pagina's (prospect-detail,
+    // /herinneringen) direct de nieuwe datum tonen. Realtime-channels op
+    // dashboard/topbar updaten via supabase-postgres-changes vanzelf.
+    router.refresh();
     setLaden(false);
   }
 

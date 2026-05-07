@@ -183,6 +183,8 @@ export function HerinneringItem({ herinnering, toonProspectLink = true }: Props)
             <HerinneringVerplaatsKnop
               herinneringId={herinnering.id}
               huidigeDatum={herinnering.vervaldatum}
+              prospectId={herinnering.prospect_id}
+              herinneringType={herinnering.herinnering_type}
             />
             <HerinneringActies herinneringId={herinnering.id} />
           </div>
