@@ -106,6 +106,7 @@ export function ContactgegevensForm({ prospect }: Props) {
   if (!bewerkModus) {
     return (
       <div className="space-y-3">
+        {/* Header met Bewerken-knop, altijd zichtbaar */}
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
             {v("contact.gegevens")}
@@ -118,82 +119,116 @@ export function ContactgegevensForm({ prospect }: Props) {
           </button>
         </div>
 
-        {prospect.telefoon && (
-          <div>
-            <p className="text-xs text-cm-white opacity-60">Telefoon</p>
-            <div className="flex items-center gap-2">
-              <p className="text-cm-white text-sm flex-1 min-w-0 truncate">{prospect.telefoon}</p>
-              <KanaalIconen
-                prospect={{ telefoon: prospect.telefoon }}
-                grootte="compact"
-              />
+        {/* Klantgegevens: telefoon, email, socials, beroep, bron, prioriteit.
+            Uitklapbaar via native <details>, default open zodat user direct
+            ziet wat er is. Chevron in de summary geeft duidelijk aan dat
+            het in te klappen is. */}
+        <details open className="group rounded-lg bg-cm-surface-2/40 border border-cm-border overflow-hidden">
+          <summary className="cursor-pointer list-none flex items-center justify-between px-3 py-2 hover:bg-cm-surface-2/60 transition-colors">
+            <span className="text-xs font-semibold text-cm-white/70 uppercase tracking-wider">
+              Klantgegevens
+            </span>
+            <span className="text-cm-gold/60 text-xs transition-transform group-open:rotate-180">
+              ▼
+            </span>
+          </summary>
+          <div className="px-3 pb-3 pt-1 space-y-3">
+            {prospect.telefoon && (
+              <div>
+                <p className="text-xs text-cm-white opacity-60">Telefoon</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-cm-white text-sm flex-1 min-w-0 truncate">{prospect.telefoon}</p>
+                  <KanaalIconen
+                    prospect={{ telefoon: prospect.telefoon }}
+                    grootte="compact"
+                  />
+                </div>
+              </div>
+            )}
+            {prospect.email && (
+              <div>
+                <p className="text-xs text-cm-white opacity-60">{v("registreer.email")}</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-cm-white text-sm flex-1 min-w-0 truncate">{prospect.email}</p>
+                  <KanaalIconen
+                    prospect={{ email: prospect.email }}
+                    grootte="compact"
+                  />
+                </div>
+              </div>
+            )}
+            {prospect.instagram && (
+              <div>
+                <p className="text-xs text-cm-white opacity-60">Instagram</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-cm-white text-sm flex-1 min-w-0 truncate">{prospect.instagram}</p>
+                  <KanaalIconen
+                    prospect={{ instagram: prospect.instagram }}
+                    grootte="compact"
+                  />
+                </div>
+              </div>
+            )}
+            {prospect.facebook && (
+              <div>
+                <p className="text-xs text-cm-white opacity-60">Facebook</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-cm-white text-sm flex-1 min-w-0 truncate">{prospect.facebook}</p>
+                  <KanaalIconen
+                    prospect={{ facebook: prospect.facebook }}
+                    grootte="compact"
+                  />
+                </div>
+              </div>
+            )}
+            {prospect.beroep && (
+              <div>
+                <p className="text-xs text-cm-white opacity-60">Beroep</p>
+                <p className="text-cm-white text-sm">{prospect.beroep}</p>
+              </div>
+            )}
+            {prospect.bron && (
+              <div>
+                <p className="text-xs text-cm-white opacity-60">{v("contact.bron")}</p>
+                <p className="text-cm-white text-sm capitalize">{prospect.bron}</p>
+              </div>
+            )}
+            <div>
+              <p className="text-xs text-cm-white opacity-60">{v("contact.prioriteit")}</p>
+              <p className="text-cm-white text-sm capitalize">{prospect.prioriteit}</p>
             </div>
           </div>
-        )}
-        {prospect.email && (
-          <div>
-            <p className="text-xs text-cm-white opacity-60">{v("registreer.email")}</p>
-            <div className="flex items-center gap-2">
-              <p className="text-cm-white text-sm flex-1 min-w-0 truncate">{prospect.email}</p>
-              <KanaalIconen
-                prospect={{ email: prospect.email }}
-                grootte="compact"
-              />
+        </details>
+
+        {/* Aantekeningen + situatie-kort: separate uitklapbare sectie zodat
+            user de soms-lange aantekeningen kan inklappen als ze niet
+            direct nodig zijn. Verbergt zich helemaal als beide leeg zijn. */}
+        {(prospect.notities || prospect.situatie_kort) && (
+          <details open className="group rounded-lg bg-cm-surface-2/40 border border-cm-border overflow-hidden">
+            <summary className="cursor-pointer list-none flex items-center justify-between px-3 py-2 hover:bg-cm-surface-2/60 transition-colors">
+              <span className="text-xs font-semibold text-cm-white/70 uppercase tracking-wider">
+                Aantekeningen
+              </span>
+              <span className="text-cm-gold/60 text-xs transition-transform group-open:rotate-180">
+                ▼
+              </span>
+            </summary>
+            <div className="px-3 pb-3 pt-1 space-y-3">
+              {prospect.notities && (
+                <div>
+                  <p className="text-xs text-cm-white opacity-60">{v("namenlijst.aantekeningen")}</p>
+                  <p className="text-cm-white text-sm whitespace-pre-line">{prospect.notities}</p>
+                </div>
+              )}
+              {prospect.situatie_kort && (
+                <div>
+                  <p className="text-xs text-cm-white opacity-60">Situatie (kort, voor 3-weg)</p>
+                  <p className="text-cm-white text-sm">{prospect.situatie_kort}</p>
+                </div>
+              )}
             </div>
-          </div>
+          </details>
         )}
-        {prospect.instagram && (
-          <div>
-            <p className="text-xs text-cm-white opacity-60">Instagram</p>
-            <div className="flex items-center gap-2">
-              <p className="text-cm-white text-sm flex-1 min-w-0 truncate">{prospect.instagram}</p>
-              <KanaalIconen
-                prospect={{ instagram: prospect.instagram }}
-                grootte="compact"
-              />
-            </div>
-          </div>
-        )}
-        {prospect.facebook && (
-          <div>
-            <p className="text-xs text-cm-white opacity-60">Facebook</p>
-            <div className="flex items-center gap-2">
-              <p className="text-cm-white text-sm flex-1 min-w-0 truncate">{prospect.facebook}</p>
-              <KanaalIconen
-                prospect={{ facebook: prospect.facebook }}
-                grootte="compact"
-              />
-            </div>
-          </div>
-        )}
-        {prospect.beroep && (
-          <div>
-            <p className="text-xs text-cm-white opacity-60">Beroep</p>
-            <p className="text-cm-white text-sm">{prospect.beroep}</p>
-          </div>
-        )}
-        {prospect.bron && (
-          <div>
-            <p className="text-xs text-cm-white opacity-60">{v("contact.bron")}</p>
-            <p className="text-cm-white text-sm capitalize">{prospect.bron}</p>
-          </div>
-        )}
-        {prospect.notities && (
-          <div>
-            <p className="text-xs text-cm-white opacity-60">{v("namenlijst.aantekeningen")}</p>
-            <p className="text-cm-white text-sm">{prospect.notities}</p>
-          </div>
-        )}
-        {prospect.situatie_kort && (
-          <div>
-            <p className="text-xs text-cm-white opacity-60">Situatie (kort, voor 3-weg)</p>
-            <p className="text-cm-white text-sm">{prospect.situatie_kort}</p>
-          </div>
-        )}
-        <div>
-          <p className="text-xs text-cm-white opacity-60">{v("contact.prioriteit")}</p>
-          <p className="text-cm-white text-sm capitalize">{prospect.prioriteit}</p>
-        </div>
       </div>
     );
   }

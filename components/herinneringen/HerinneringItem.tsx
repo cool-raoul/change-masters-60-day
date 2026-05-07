@@ -5,6 +5,7 @@ import { differenceInDays, format } from "date-fns";
 import { nl, enUS, fr, es, de, pt, Locale } from "date-fns/locale";
 import { Herinnering } from "@/lib/supabase/types";
 import { HerinneringActies } from "@/components/herinneringen/HerinneringActies";
+import { HerinneringVerplaatsKnop } from "@/components/herinneringen/HerinneringVerplaatsKnop";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -177,7 +178,15 @@ export function HerinneringItem({ herinnering, toonProspectLink = true }: Props)
           )}
         </button>
 
-        {!bewerken && <HerinneringActies herinneringId={herinnering.id} />}
+        {!bewerken && (
+          <div className="flex items-center gap-1.5">
+            <HerinneringVerplaatsKnop
+              herinneringId={herinnering.id}
+              huidigeDatum={herinnering.vervaldatum}
+            />
+            <HerinneringActies herinneringId={herinnering.id} />
+          </div>
+        )}
       </div>
 
       {/* Uitgevouwen: toon bewerk-knop onderaan */}

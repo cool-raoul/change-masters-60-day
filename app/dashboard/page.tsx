@@ -414,8 +414,9 @@ export default async function DashboardPagina() {
         </p>
       </div>
 
-      {/* Sponsor-aanwezigheids-strip (mens-eerst, mockup-4 element).
-          Toont dat je niet alleen werkt, met je sponsor in beeld. */}
+      {/* Sponsor-info-strip (neutraal, mockup-4 element). Toont met avatar
+          + naam wie jouw sponsor is. Geen 'kijkt mee'-tekst, dat voelde als
+          surveillance. Klik = naar team-pagina. */}
       {sponsorNaamDash && (
         <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-cm-border bg-cm-surface-2/40 glow-gold-soft">
           <div className="w-9 h-9 rounded-full border-2 border-cm-gold-dim bg-cm-surface-2 flex items-center justify-center text-cm-gold text-sm font-semibold flex-shrink-0">
@@ -427,10 +428,9 @@ export default async function DashboardPagina() {
               .slice(0, 2)
               .toUpperCase()}
           </div>
-          <div className="flex-1 min-w-0 text-cm-white/75 text-sm italic leading-snug">
-            Je staat hier niet alleen.{" "}
-            <span className="not-italic text-cm-white">{sponsorNaamDash}</span>{" "}
-            kijkt mee als je dat wilt.
+          <div className="flex-1 min-w-0 text-cm-white/80 text-sm leading-snug">
+            <span className="text-cm-white font-medium">{sponsorNaamDash}</span>{" "}
+            <span className="text-cm-white/60">is je sponsor.</span>
           </div>
         </div>
       )}
