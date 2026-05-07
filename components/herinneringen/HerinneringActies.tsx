@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { celebrate } from "@/lib/celebrate";
 
 // Afvink-knop met bevestiging. Voordat de herinnering definitief als voltooid
 // wordt gemarkeerd (en dus uit de lijst verdwijnt) vragen we eerst een Ja/Nee,
@@ -54,8 +53,9 @@ export function HerinneringActies({
 
   /**
    * Na het afvinken van een product_herbestelling-herinnering: check of dit
-   * de laatste openstaande was. Zo ja, prompt voor maandelijkse opvolging
-   * en een GROTE celebration. Anders een mini-confetti.
+   * de laatste openstaande was. Zo ja, prompt voor maandelijkse opvolging.
+   * Geen confetti hier (op verzoek Raoul: gewoon afvinken zonder visuele
+   * viering, dat voelde te druk).
    */
   async function checkLaatsteEnPrompt() {
     if (herinneringType !== "product_herbestelling" || !prospectId) return;
@@ -67,15 +67,13 @@ export function HerinneringActies({
       .eq("herinnering_type", "product_herbestelling")
       .eq("voltooid", false);
 
-    // Nog open? Dan was deze niet de laatste, alleen mini-confetti voor de
-    // afgeronde tussenstap.
+    // Nog open? Dan was deze niet de laatste, gewone toast.
     if (nogOpen && nogOpen.length > 0) {
       toast.success("Afgevinkt!");
-      celebrate("klein");
       return;
     }
 
-    // Was de laatste in de reeks. Pak prospectnaam en vier het uit.
+    // Was de laatste in de reeks. Pak prospectnaam, toon prompt-toast.
     const { data: prospect } = await supabase
       .from("prospects")
       .select("volledige_naam")
@@ -94,8 +92,6 @@ export function HerinneringActies({
         onClick: () => verlengMaandelijks(prospectId, naam),
       },
     });
-    // Bigger celebration voor het afronden van de hele 21/51/81-cyclus.
-    celebrate("groot");
   }
 
   async function verlengMaandelijks(pid: string, naam: string) {
@@ -151,13 +147,12 @@ export function HerinneringActies({
     }
 
     // Voor product-herbestelling: check of dit de laatste was, zo ja
-    // prompt voor maandelijkse voortzetting + groot vuurwerk. Anders
-    // mini-confetti binnen checkLaatsteEnPrompt zelf.
+    // prompt voor maandelijkse voortzetting (toast met actie). Andere
+    // herinnering-types: alleen 'Afgevinkt!'-toast, geen confetti.
     if (herinneringType === "product_herbestelling" && prospectId) {
       await checkLaatsteEnPrompt();
     } else {
       toast.success("Afgevinkt!");
-      celebrate("klein");
     }
 
     router.refresh();

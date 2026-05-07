@@ -5,8 +5,6 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { PipelineFase, PIPELINE_FASEN } from "@/lib/supabase/types";
-import { celebrate } from "@/lib/celebrate";
-import { celebrateMilestone } from "@/lib/celebrate-milestone";
 
 // Inline pipeline-stepper voor een prospect-rij.
 // Toont de 5 progressie-fasen als dots (prospect → followup) en drie
@@ -94,18 +92,6 @@ export function PipelineStepper({
     } else {
       const nieuweInfo = faseInfo(nieuwe);
       toast.success(`Fase → ${nieuweInfo?.label ?? nieuwe}`);
-
-      // Celebrations bij conversie-fasen (prospect wordt klant of partner):
-      // - Eerste klant ooit (shopper of member) -> mijlpaal, groot vuurwerk.
-      // - Daarna elke shopper/member -> mini-confetti voor het moment zelf.
-      if (nieuwe === "shopper" || nieuwe === "member") {
-        // Probeer eerst-klant-mijlpaal (1x per gebruiker via localStorage).
-        // Als dit niet de eerste was, valt het terug op een mini-confetti.
-        const wasFirst = celebrateMilestone("first-klant", "groot");
-        if (!wasFirst) {
-          celebrate("klein");
-        }
-      }
       router.refresh();
     }
     setBezig(false);

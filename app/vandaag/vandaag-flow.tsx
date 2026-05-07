@@ -208,14 +208,13 @@ export function VandaagFlow({
     }
   }
 
-  // Bij overgang naar 'klaar': bigger celebration als ALLE taken voltooid,
-  // anders mini-confetti voor de moeite die wel is gedaan.
+  // Bij overgang naar 'klaar' EN alle taken voltooid: groot vuurwerk.
+  // Geen mini-confetti meer bij deels-voltooid (op verzoek Raoul:
+  // celebrations alleen op echte mijlpalen, niet op halve dagen).
   useEffect(() => {
     if (stap !== "klaar") return;
     if (aantalVoltooid === totaal) {
       celebrate("groot");
-    } else if (aantalVoltooid > 0) {
-      celebrate("klein");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stap]);

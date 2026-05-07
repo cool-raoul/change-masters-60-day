@@ -388,13 +388,12 @@ export default async function DashboardPagina() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
-      {/* Onzichtbare detector: triggert bij eerste keer een week-mijlpaal
-          of streak-mijlpaal wordt bereikt een confetti-celebration. */}
+      {/* Onzichtbare detector: triggert bij eerste keer een Sprint week-
+          mijlpaal (dag 7/14/21) wordt bereikt een groot vuurwerk. */}
       <MijlpaalDetector
         week1Klaar={week1Klaar}
         week2Klaar={week2Klaar}
         week3Klaar={week3Klaar}
-        streak={streak}
       />
       {/* Persoonlijke welkom in mockup-4 stijl: italic groet + serif heading
           met dag-nummer. Daaronder de datum, dempler. */}
