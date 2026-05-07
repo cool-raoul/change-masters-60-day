@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { TaalProvider } from "@/lib/i18n/TaalContext";
@@ -19,6 +19,21 @@ export const metadata: Metadata = {
   },
 };
 
+// Viewport-configuratie: viewportFit 'cover' zodat de app onder de
+// safe-area-randen van iPhone X+ kan tekenen (notch, home-indicator).
+// initialScale: 1 zorgt dat de app niet voor-ingezoomd opent. We
+// blokkeren NIET de pinch-to-zoom (geen maximumScale of userScalable),
+// die wordt door iOS sowieso genegeerd op moderne versies en kan
+// accessibility schaden. iOS-auto-zoom op inputs is gefixt via een
+// CSS-regel die form-velden op mobiel forceert op 16px (zie
+// globals.css onderaan).
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#D4AF37",
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -27,7 +42,8 @@ export default function RootLayout({
   return (
     <html lang="nl">
       <head>
-        <meta name="theme-color" content="#D4AF37" />
+        {/* theme-color zit nu in de viewport-export. Mobile-web-app + apple-
+            web-app + iconen blijven hier, want die horen niet bij viewport. */}
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-capable" content="yes" />

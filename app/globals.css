@@ -135,3 +135,22 @@
 .animate-slide-in {
   animation: slide-in 0.2s ease-out;
 }
+
+/* ============================================================
+   iOS auto-zoom voorkomen op input focus.
+   Bug: Safari op iPhone zoomt automatisch in zodra een input een
+   font-size kleiner dan 16px heeft. Na het verlaten van die input
+   blijft het scherm soms ingezoomd staan, vaak met menubalk en
+   terug-knop buiten beeld. Pinch-to-zoom werkt dan niet meer
+   betrouwbaar om terug te krijgen.
+   Oplossing: forceer ALLE form-velden op mobiel minimaal 16px,
+   zo zoomt iOS niet meer in. Alleen op mobile (<= 768px) zodat
+   desktop-vormgeving niet verandert.
+   ============================================================ */
+@media screen and (max-width: 768px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
