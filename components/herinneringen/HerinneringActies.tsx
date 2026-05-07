@@ -107,8 +107,8 @@ export function HerinneringActies({
       user_id: user.id,
       prospect_id: pid,
       herinnering_type: "product_herbestelling",
-      titel: `Maandelijkse opvolging — ${naam}`,
-      beschrijving: "Maandelijkse opvolging voor herhaalbestelling.",
+      titel: `Maandelijkse bestelling check — ${naam}`,
+      beschrijving: "Maandelijkse bestelling check voor herhaalbestelling.",
       vervaldatum: isoDatum,
     });
 
