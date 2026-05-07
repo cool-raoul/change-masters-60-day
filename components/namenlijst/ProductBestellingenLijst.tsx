@@ -2,9 +2,18 @@
 
 // Lijst van productbestellingen op de prospect-detail kaart.
 // Elke bestelling kan inline bewerkt of verwijderd worden, zonder modal.
-// De reminder-datum wordt NIET automatisch meeverschoven als je de
-// besteldatum aanpast, omdat die twee los van elkaar gezet kunnen worden
-// (de herinnering kan handmatig zijn uitgesteld). Je ziet dus beide velden.
+//
+// BELANGRIJK over de reminder-datum:
+//   tweede_bestelling_reminder_datum is een GENERATED column in de DB
+//   (= besteldatum + 21 days). Die kan de UI dus NIET direct updaten,
+//   Postgres weigert dat met "can only be updated to DEFAULT".
+//
+// Bij het wijzigen van besteldatum:
+//   1) DB-kolom tweede_bestelling_reminder_datum schuift automatisch mee.
+//   2) Bestaande herinneringen voor deze prospect met type
+//      'product_herbestelling' verschuiven we expliciet mee met de
+//      dag-delta tussen oude en nieuwe besteldatum, zodat eventueel al
+//      handmatig verschoven herinneringen netjes evenredig meebewegen.
 
 import { useState } from "react";
 import { format } from "date-fns";
@@ -47,7 +56,11 @@ export function ProductBestellingenLijst({
   // Bewerk-formulier state (per moment maar één bestelling in bewerkmodus).
   const [besteldatum, setBesteldatum] = useState("");
   const [omschrijving, setOmschrijving] = useState("");
-  const [reminderDatum, setReminderDatum] = useState("");
+  // Bewaar de oude besteldatum-prop bij bewerk-start, nodig om de delta
+  // te berekenen wanneer user de besteldatum wijzigt en gekoppelde
+  // herinneringen mee moeten verschuiven.
+  const [oudeBesteldatum, setOudeBesteldatum] = useState("");
+  const [oudProspectId, setOudProspectId] = useState("");
 
   const supabase = createClient();
   const router = useRouter();
@@ -59,38 +72,87 @@ export function ProductBestellingenLijst({
     setBevestigenId(null);
     setBesteldatum(naarInputDatum(b.besteldatum));
     setOmschrijving(b.product_omschrijving ?? "");
-    setReminderDatum(naarInputDatum(b.tweede_bestelling_reminder_datum));
+    setOudeBesteldatum(naarInputDatum(b.besteldatum));
+    setOudProspectId(b.prospect_id);
   }
 
   function annuleerBewerken() {
     setBewerkId(null);
     setBesteldatum("");
     setOmschrijving("");
-    setReminderDatum("");
+    setOudeBesteldatum("");
+    setOudProspectId("");
   }
 
   async function slaOp(id: string) {
-    if (!besteldatum || !reminderDatum) {
-      toast.error("Vul beide datums in");
+    if (!besteldatum) {
+      toast.error("Vul de besteldatum in");
       return;
     }
     setBezig(true);
-    const { error } = await supabase
+
+    // 1) Update de bestelling. tweede_bestelling_reminder_datum laten we
+    //    UIT de update want het is een GENERATED column (DB rekent zelf).
+    const { error: bestelErr } = await supabase
       .from("product_bestellingen")
       .update({
         besteldatum,
         product_omschrijving: omschrijving || null,
-        tweede_bestelling_reminder_datum: reminderDatum,
       })
       .eq("id", id);
 
-    if (error) {
-      toast.error("Opslaan mislukt: " + error.message);
+    if (bestelErr) {
+      toast.error("Opslaan mislukt: " + bestelErr.message);
+      setBezig(false);
+      return;
+    }
+
+    // 2) Verschuif open product-herbestelling-herinneringen voor deze
+    //    prospect met dezelfde delta mee, zodat alle vervolgherinneringen
+    //    netjes opschuiven naar de nieuwe besteldatum-context.
+    let aantalVerschoven = 0;
+    if (besteldatum !== oudeBesteldatum && oudProspectId) {
+      const oude = new Date(oudeBesteldatum);
+      const nieuwe = new Date(besteldatum);
+      const deltaDagen = Math.round(
+        (nieuwe.getTime() - oude.getTime()) / (1000 * 60 * 60 * 24),
+      );
+
+      if (deltaDagen !== 0) {
+        const { data: openHerinneringen, error: hErr } = await supabase
+          .from("herinneringen")
+          .select("id, vervaldatum")
+          .eq("prospect_id", oudProspectId)
+          .eq("herinnering_type", "product_herbestelling")
+          .eq("voltooid", false);
+
+        if (!hErr && openHerinneringen && openHerinneringen.length > 0) {
+          for (const h of openHerinneringen as Array<{
+            id: string;
+            vervaldatum: string;
+          }>) {
+            const verschoven = new Date(h.vervaldatum);
+            verschoven.setDate(verschoven.getDate() + deltaDagen);
+            const nieuweIso = verschoven.toISOString().split("T")[0];
+            await supabase
+              .from("herinneringen")
+              .update({ vervaldatum: nieuweIso })
+              .eq("id", h.id);
+            aantalVerschoven += 1;
+          }
+        }
+      }
+    }
+
+    if (aantalVerschoven > 0) {
+      toast.success(
+        `Bestelling bijgewerkt, ${aantalVerschoven} herinnering${aantalVerschoven === 1 ? "" : "en"} mee verschoven`,
+      );
     } else {
       toast.success("Bestelling bijgewerkt");
-      annuleerBewerken();
-      router.refresh();
     }
+    annuleerBewerken();
+    router.refresh();
     setBezig(false);
   }
 
@@ -147,16 +209,11 @@ export function ProductBestellingenLijst({
                   className="input-cm text-xs w-full"
                 />
               </div>
-              <div>
-                <label className="block text-[10px] text-cm-white opacity-60 mb-1">
-                  Herinnering volgende bestelling
-                </label>
-                <input
-                  type="date"
-                  value={reminderDatum}
-                  onChange={(e) => setReminderDatum(e.target.value)}
-                  className="input-cm text-xs w-full"
-                />
+              <div className="rounded-lg bg-cm-surface/60 border border-cm-border px-3 py-2 text-[11px] text-cm-white/65 leading-relaxed">
+                💡 De herinnering voor de volgende bestelling schuift
+                automatisch mee, 21 dagen na de besteldatum. Eventuele eerder
+                handmatig verschoven vervolg-herinneringen schuiven evenredig
+                mee zodra je de besteldatum wijzigt.
               </div>
               <div className="flex gap-2 pt-1">
                 <button

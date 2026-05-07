@@ -19,18 +19,19 @@ export const metadata: Metadata = {
   },
 };
 
-// Viewport-configuratie: viewportFit 'cover' zodat de app onder de
-// safe-area-randen van iPhone X+ kan tekenen (notch, home-indicator).
-// initialScale: 1 zorgt dat de app niet voor-ingezoomd opent. We
-// blokkeren NIET de pinch-to-zoom (geen maximumScale of userScalable),
-// die wordt door iOS sowieso genegeerd op moderne versies en kan
-// accessibility schaden. iOS-auto-zoom op inputs is gefixt via een
-// CSS-regel die form-velden op mobiel forceert op 16px (zie
-// globals.css onderaan).
+// Viewport-configuratie. Bewust GEEN viewportFit: 'cover' want dat
+// liet content onder de iPhone-notch tekenen zonder safe-area-padding,
+// wat Raoul gemeld heeft als 'bovenaan valt alles buiten beeld'. Default
+// (contain) laat de browser de notch/home-indicator zelf afhandelen,
+// content blijft binnen de safe area.
+//
+// iOS auto-zoom op inputs is los gefixt via een CSS-regel in
+// globals.css die form-velden op mobiel forceert op 16px font-size.
+// Pinch-to-zoom blokkeren we NIET, iOS negeert dat sowieso en het
+// kan accessibility-zoom kapot maken.
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  viewportFit: "cover",
   themeColor: "#D4AF37",
 };
 
