@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Prospect, PipelineFase, PIPELINE_FASEN } from "@/lib/supabase/types";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { celebrate } from "@/lib/celebrate";
 import { useTaal } from "@/lib/i18n/TaalContext";
 
 interface Props {
@@ -132,6 +133,10 @@ export function ProspectActieForm({ prospect, userId }: Props) {
     const oudIds =
       (oudeHerinneringen as Array<{ id: string }> | null)?.map((h) => h.id) ??
       [];
+
+    // Bigger celebration: een nieuwe bestelling = mooie mijlpaal,
+    // ongeacht of er oude herinneringen waren of niet.
+    celebrate("groot");
 
     if (oudIds.length > 0) {
       toast.success(v("actie.bestelling_opgeslagen"), {

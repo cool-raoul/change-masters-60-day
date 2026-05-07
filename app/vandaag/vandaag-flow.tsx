@@ -1,5 +1,7 @@
 "use client";
 
+import { celebrate } from "@/lib/celebrate";
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -205,6 +207,18 @@ export function VandaagFlow({
       setStap("klaar");
     }
   }
+
+  // Bij overgang naar 'klaar': bigger celebration als ALLE taken voltooid,
+  // anders mini-confetti voor de moeite die wel is gedaan.
+  useEffect(() => {
+    if (stap !== "klaar") return;
+    if (aantalVoltooid === totaal) {
+      celebrate("groot");
+    } else if (aantalVoltooid > 0) {
+      celebrate("klein");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stap]);
 
   function gaNaarVorige() {
     if (taakIndex > 0) {

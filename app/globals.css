@@ -136,6 +136,31 @@
   animation: slide-in 0.2s ease-out;
 }
 
+/* Confetti-val-animatie voor celebrations (zie components/celebrations).
+   Partikels vallen vanaf bovenkant viewport naar onderen, met rotatie en
+   horizontale wiebel via translateX-functie in keyframes. */
+@keyframes confetti-fall {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 1;
+  }
+  20% {
+    transform: translate3d(8px, 20vh, 0) rotate(180deg);
+  }
+  50% {
+    transform: translate3d(-6px, 50vh, 0) rotate(360deg);
+    opacity: 1;
+  }
+  80% {
+    transform: translate3d(10px, 80vh, 0) rotate(540deg);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate3d(0, 110vh, 0) rotate(720deg);
+    opacity: 0;
+  }
+}
+
 /* ============================================================
    iOS auto-zoom voorkomen op input focus.
    Bug: Safari op iPhone zoomt automatisch in zodra een input een

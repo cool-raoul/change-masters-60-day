@@ -16,6 +16,7 @@ import { WelkomstFilm } from "@/components/welkom/WelkomstFilm";
 import { PresenceHeartbeat } from "@/components/presence/PresenceHeartbeat";
 import { PullToRefresh } from "@/components/layout/PullToRefresh";
 import { haalSponsorNaam } from "@/lib/sponsors/haal-sponsor-naam";
+import { CelebrationLayer } from "@/components/celebrations/CelebrationLayer";
 
 export async function AppShell({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -109,6 +110,10 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
         {/* Pull-to-refresh: trek op mobiel het scherm naar beneden
             vanuit bovenaan om de pagina te verversen. */}
         <PullToRefresh />
+        {/* Globale confetti-laag, luistert naar 'eleva-celebrate'-events
+            en speelt mini- of bigger-celebrations af. Trigger via
+            celebrate() uit lib/celebrate.ts. */}
+        <CelebrationLayer />
       </div>
     </TaalProvider>
   );

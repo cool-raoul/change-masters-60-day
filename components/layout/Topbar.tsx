@@ -217,7 +217,14 @@ export function Topbar({
           {profielMenuOpen && (
             <div
               role="menu"
-              className="absolute right-0 top-full mt-2 w-56 rounded-xl bg-cm-surface border border-cm-border shadow-2xl py-1 z-50"
+              className="absolute right-0 top-full mt-2 w-56 rounded-xl border border-cm-border shadow-2xl py-1 z-[60]"
+              style={{
+                // Hardcoded solid bg, voorkomt doorschemeren van de
+                // backdrop-blur-header eronder. Op iOS kan een Tailwind
+                // bg-* class door blur-context per ongeluk transparant
+                // gerenderd worden. Inline style omzeilt dat.
+                backgroundColor: "#1a1d22",
+              }}
             >
               <div className="px-4 py-2 border-b border-cm-border">
                 <p className="text-cm-white text-sm font-medium truncate">
