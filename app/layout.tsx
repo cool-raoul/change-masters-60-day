@@ -14,7 +14,11 @@ export const metadata: Metadata = {
     title: "ELEVA",
   },
   icons: {
-    icon: "/eleva-icon.png",
+    icon: "/eleva-icon.svg",
+    // apple-touch-icon vereist nog steeds een PNG voor de iOS PWA-thuisscreen.
+    // Tot Raoul de SVG converteert naar 512x512 PNG en op /eleva-icon.png
+    // plaatst, blijft het oude icoon op iOS-thuisscreens. Browser-favicon
+    // en de in-app weergave (sidebar/login) gebruiken al de nieuwe SVG.
     apple: "/eleva-icon.png",
   },
 };
@@ -51,7 +55,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="ELEVA" />
         <link rel="apple-touch-icon" href="/eleva-icon.png" />
-        <link rel="icon" type="image/svg+xml" href="/eleva-icon.png" />
+        <link rel="icon" type="image/svg+xml" href="/eleva-icon.svg" />
       </head>
       <body>
         <TaalProvider>

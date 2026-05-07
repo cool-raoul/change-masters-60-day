@@ -1169,8 +1169,10 @@ export function VoiceFab() {
       {/* Floating Action Button, altijd gerenderd, visueel verborgen via CSS */}
       <button
         onClick={openen}
-        className="fixed bottom-20 lg:bottom-5 right-5 z-40 w-14 h-14 rounded-full bg-cm-gold text-cm-black shadow-gold-lg flex items-center justify-center text-2xl active:scale-95 transition-all duration-200"
+        className="fixed bottom-20 lg:bottom-5 right-5 z-40 w-14 h-14 rounded-full bg-gradient-to-br from-cm-gold-light to-cm-gold text-cm-black ring-2 ring-cm-gold/30 flex items-center justify-center text-2xl active:scale-95 hover:scale-105 transition-all duration-200 animate-pulse-gold"
         style={{
+          boxShadow:
+            "0 0 32px rgba(184,154,82,0.45), 0 8px 20px rgba(0,0,0,0.45)",
           opacity: fabVerborgen ? 0 : 1,
           transform: fabVerborgen ? "translate3d(0, 96px, 0)" : "translate3d(0, 0, 0)",
           pointerEvents: fabVerborgen ? "none" : "auto",

@@ -1,0 +1,49 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ELEVA">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#262b35" />
+      <stop offset="1" stop-color="#181b21" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#d4af52" />
+      <stop offset="0.55" stop-color="#b89a52" />
+      <stop offset="1" stop-color="#8a7340" />
+    </linearGradient>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="0.7" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Donkergrijs gradient achtergrond met afgeronde hoeken -->
+  <rect width="64" height="64" rx="14" fill="url(#bgGrad)" />
+
+  <!-- Subtiele goud-lijn-rand voor accent -->
+  <rect
+    x="0.75"
+    y="0.75"
+    width="62.5"
+    height="62.5"
+    rx="13.25"
+    fill="none"
+    stroke="#b89a52"
+    stroke-opacity="0.32"
+    stroke-width="0.75"
+  />
+
+  <!-- Letter E in serif, goud-gradient, met zachte glow -->
+  <text
+    x="32"
+    y="46"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="40"
+    font-weight="500"
+    fill="url(#goldGrad)"
+    text-anchor="middle"
+    letter-spacing="1"
+    filter="url(#softGlow)"
+  >E</text>
+</svg>

@@ -123,16 +123,26 @@ export function BottomNav() {
 
         const inhoud = (
           <div className="flex flex-col items-center gap-0.5 relative pt-1">
+            {/* Achtergrond-gloed onder het actieve icoon, geeft een
+                'oplichtend' gevoel zoals in mockup-4. */}
+            {actief && (
+              <span
+                aria-hidden
+                className="absolute -top-1 left-1/2 -translate-x-1/2 w-11 h-11 rounded-full bg-cm-gold/25 blur-md pointer-events-none animate-pulse-gold"
+              />
+            )}
             <span
-              className={`text-xl leading-none ${
-                actief ? "drop-shadow-[0_0_5px_rgba(184,154,82,0.55)]" : ""
+              className={`text-xl leading-none relative ${
+                actief
+                  ? "drop-shadow-[0_0_10px_rgba(184,154,82,0.85)]"
+                  : ""
               }`}
             >
               {item.ico}
             </span>
             <span
-              className={`text-[10px] font-semibold tracking-wide leading-none ${
-                actief ? "text-cm-gold" : "text-cm-white/55"
+              className={`text-[10px] font-semibold tracking-wide leading-none relative ${
+                actief ? "text-cm-gold drop-shadow-[0_0_4px_rgba(184,154,82,0.6)]" : "text-cm-white/55"
               }`}
             >
               {item.label}
