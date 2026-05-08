@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { DAGEN } from "@/lib/playbook/dagen";
 import { haalOverrides, pasOverrideToe } from "@/lib/playbook/overrides";
 import { PlaybookDagTile } from "@/components/playbook/PlaybookDagTile";
+import { ResetDagButton } from "@/components/playbook/ResetDagButton";
 
 // ============================================================
 // /playbook, gerichte inzage van één playbook-dag.
@@ -154,6 +155,17 @@ export default async function PlaybookDagPagina({
         preview={isPreview}
         isFounder={isFounder}
       />
+
+      {/* Reset-knop, alleen voor founders. Verwijdert de override-rij in
+          playbook_overrides voor deze dag, zodat de pagina terugvalt op
+          de hardcoded tekst in lib/playbook/dagen.ts. Handig voor als
+          eerder via founder-modus aangepaste tekst is verouderd en je
+          terug wilt naar de actuele code-versie. */}
+      {isFounder && (
+        <div className="flex justify-end pt-2">
+          <ResetDagButton dagNummer={dagParam} />
+        </div>
+      )}
 
       {/* Navigatie tussen dagen, ALLEEN in preview-modus voor founder/leider.
           Members op hun live dagtegel mogen niet vooruit-bladeren door de
