@@ -596,8 +596,10 @@ export default async function DashboardPagina() {
 
       {/* Tester-toolbar, alleen voor pilot-testers + founders.
           Verzet run_startdatum zodat je virtueel op een andere dag zit
-          en zo door alle 21 dagen kan klikken voor bug-rapporten. */}
-      {(isTester || isFounder) && dag <= 21 && (
+          en zo door alle 60 dagen kan klikken voor bug-rapporten.
+          Voorheen verborg de toolbar zich vanaf dag 22, waardoor founders
+          niet meer konden terugspringen naar week 1-3 om content te reviewen. */}
+      {(isTester || isFounder) && (
         <TesterToolbar huidigeDag={dag} />
       )}
 

@@ -90,22 +90,47 @@ export function TesterToolbar({ huidigeDag }: { huidigeDag: number }) {
 
       {open && (
         <div className="mt-3 pt-3 border-t border-purple-500/30 space-y-3">
-          <div className="flex items-center gap-2 flex-wrap">
-            {[1, 5, 10, 15, 18, 21].map((d) => (
-              <button
-                key={d}
-                type="button"
-                onClick={() => springNaar(d)}
-                disabled={bezig || d === huidigeDag}
-                className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
-                  d === huidigeDag
-                    ? "border-purple-400 bg-purple-500 text-white font-semibold"
-                    : "border-purple-500/40 text-purple-200 hover:bg-purple-500/20"
-                } disabled:opacity-50`}
-              >
-                Dag {d}
-              </button>
-            ))}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-[10px] uppercase tracking-wider text-purple-300 mr-1">
+                Week 1-3
+              </span>
+              {[1, 5, 10, 15, 18, 21].map((d) => (
+                <button
+                  key={d}
+                  type="button"
+                  onClick={() => springNaar(d)}
+                  disabled={bezig || d === huidigeDag}
+                  className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
+                    d === huidigeDag
+                      ? "border-purple-400 bg-purple-500 text-white font-semibold"
+                      : "border-purple-500/40 text-purple-200 hover:bg-purple-500/20"
+                  } disabled:opacity-50`}
+                >
+                  Dag {d}
+                </button>
+              ))}
+            </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-[10px] uppercase tracking-wider text-purple-300 mr-1">
+                Weekritme
+              </span>
+              {[22, 30, 40, 50, 60].map((d) => (
+                <button
+                  key={d}
+                  type="button"
+                  onClick={() => springNaar(d)}
+                  disabled={bezig || d === huidigeDag}
+                  className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
+                    d === huidigeDag
+                      ? "border-purple-400 bg-purple-500 text-white font-semibold"
+                      : "border-purple-500/40 text-purple-200 hover:bg-purple-500/20"
+                  } disabled:opacity-50`}
+                >
+                  Dag {d}
+                </button>
+              ))}
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <input
