@@ -22,7 +22,7 @@ export const DAGEN: Dag[] = [
         id: "dag1-vcard",
         label: "Voeg de eerste mensen toe aan je namenlijst",
         uitleg:
-          "Waarom al op dag 1? Heel simpel: dit is je voorraadkast. Hoe meer namen je hebt staan, hoe rustiger je de komende weken kunt werken, je hoeft niet elke dag te bedenken aan wie je gaat denken. Dit is GEEN belkostlijst en GEEN verkooplijst. Het zijn gewoon mensen die jij kent, mensen die in jouw wereld bestaan. Familie. Oude collega's. Sportmaatjes. Buren. Iedereen mag erop. Filteren komt later, en doe je nooit voor iemand anders. Niet alles hoeft vandaag, kies wat je vandaag aankunt en kom er morgen op terug.",
+          "Waarom al op dag 1? Omdat dit jouw netwerk-overzicht wordt. Hoe meer namen je hier hebt staan, hoe rustiger je de komende weken kunt werken. Je hoeft niet elke dag opnieuw te bedenken aan wie je gaat denken. Dit is geen belkostlijst, geen verkooplijst. Het zijn gewoon mensen die jij kent, mensen die in jouw wereld bestaan. Familie, oude collega's, sportmaatjes, buren. Iedereen mag erop. Filteren komt later, en doe je nooit voor iemand anders. Niet alles hoeft vandaag, kies wat je vandaag aankunt en pak het morgen weer op.",
         verplicht: true,
         vereistMobiel: true,
         inlineEmbed: "vcard-upload",
@@ -49,13 +49,19 @@ export const DAGEN: Dag[] = [
         menupad: "Menu → Team → Mijn sponsor",
         route: "/team",
       },
+      {
+        actie: "Je WHY bekijken of bijschaven",
+        menupad: "Menu → Mijn WHY",
+        route: "/mijn-why",
+      },
     ],
-    watJeLeert: `Te gek dat je hier bent! 🎉 Je onboarding zit erop, dus je WHY staat al, en de eerste 5 namen ook. Mooi werk. Vandaag bouwen we daar één laag bovenop. Geen drukke dag, een rustige fundament-dag. Twee taken, daarna ben je klaar voor morgen.
+    watJeLeert: `Te gek dat je hier bent! 🎉 Je onboarding zit erop, dus je WHY staat al, en de eerste 5 namen ook. Mooi werk. Vandaag bouwen we daar één laag bovenop. Geen drukke dag, een rustige fundamentdag. Twee taken, daarna ben je klaar voor morgen.
 
-JE NAMENLIJST, JE VOORRAADKAST:
-Hoe voller je voorraadkast, hoe makkelijker je elke dag iets nieuws kunt 'koken'. De import van je telefooncontacten legt direct 100-500 namen voor je neer (we ontdubbelen automatisch). Dat is geen verkooplijst, dat is een uitgangspunt.
+JE NAMENLIJST, JE NETWERK-OVERZICHT:
+Het belangrijkste wat je vandaag doet is je telefooncontacten importeren. Eén keer drukken, en je hebt direct 100 tot 500 namen in je overzicht staan. Dubbele namen worden niet apart geteld, dus je hoeft niets te schonen vooraf. Dit is geen verkooplijst, dit is je netwerk in beeld. Een rustig vertrekpunt.
 
-EERLIJK OVER VOLUME: dit is een AANTALLEN-VERHAAL. Met 20 namen ga je het niet redden. Niet omdat je faalt, maar omdat een gemiddelde prospect 4-6 contactmomenten nodig heeft voor een echte beslissing. Met te weinig namen draai je vast. Daarom voegen we elke dag namen toe, uit hoofd, uit telefoon, uit socials.
+EERLIJK OVER VOLUME, dit is een aantallen-verhaal:
+Met 20 namen ga je het niet redden. Niet omdat je faalt, maar omdat een gemiddelde prospect 4 tot 6 contactmomenten nodig heeft voor een echte beslissing. Met te weinig namen draai je vast. Daarom voegen we elke dag namen toe, uit je hoofd, uit je telefoon, uit socials.
 
 CATEGORIEËN OM TE OVERWEGEN VOOR JE LIJST:
 • Familie + partners van familie
@@ -63,29 +69,29 @@ CATEGORIEËN OM TE OVERWEGEN VOOR JE LIJST:
 • Oude vrienden (school, studie, vorige stad)
 • Huidige collega's
 • Vorige collega's
-• Sport / hobby / club
+• Sport, hobby, club
 • Ouders bij school of voetbal
 • Buurt
 • Ondernemers in je netwerk
-• Mensen die je via socials volgen
-• Vroegere klanten / opdrachtgevers
-Niemand filteren, alles op de lijst.
+• Mensen die je via socials volgt
+• Vroegere klanten of opdrachtgevers
+Niemand filteren. Alles op de lijst.
 
-JIJ LAAT ZIEN, ZIJ BESLISSEN, DE GROOTSTE MENTAL SHIFT:
-Jouw taak is NIÉT overtuigen, NIÉT mensen "binnenpraten", NIÉT iemand laten kiezen voor wat jij wilt. Jouw taak = laten ZIEN wat het is. Zij beslissen wat ze ermee doen. Dat maakt je werk een flink stuk lichter dan veel mensen denken, en het maakt het ook respectvoller. Niemand voelt zich gemanipuleerd, jij voelt je geen verkoper, en de mensen die wel kiezen doen dat omdat het écht bij ze past.
+JIJ LAAT ZIEN, ZIJ BESLISSEN, de grootste mental shift:
+Jouw taak is NIÉT overtuigen, NIÉT mensen "binnenpraten", NIÉT iemand laten kiezen voor wat jij wilt. Jouw taak = laten ZIEN wat het is. Zij beslissen wat ze ermee doen. Dat maakt je werk lichter dan veel mensen denken, en respectvoller. Niemand voelt zich gemanipuleerd, jij voelt je geen verkoper, en de mensen die wel kiezen doen dat omdat het écht bij ze past.
 
-WAAROM JE SPONSOR INLICHTEN BELANGRIJK IS:
-Je sponsor is geen baas, die is je rugdekking. Een kort "ik ben gestart"-berichtje is genoeg. Vanaf nu kijkt 'ie in ELEVA mee, ziet je voortgang, en springt bij waar nodig. Eén berichtje vandaag = vele momenten van support de komende weken.
+Waarom je sponsor inlichten belangrijk is:
+Je sponsor is geen baas, die is je rugdekking. Een kort "ik ben gestart"-berichtje is genoeg. Vanaf nu kijkt 'ie in ELEVA mee, ziet je voortgang, en springt bij waar nodig. Eén berichtje vandaag betekent vele momenten van steun in de komende weken.
 
 VEELGEMAAKTE FOUTEN OP DAG 1:
-✗ Namenlijst meteen filteren ("die zou nooit..."): NIVEA komt morgen, voor nu = alles erop.
-✗ Direct mensen DM'en omdat je "wilt scoren", vandaag is fundament, niet acquisitie.
+✗ Namenlijst meteen filteren ("die zou nooit..."), NIVEA komt morgen, voor nu alles erop.
+✗ Direct mensen DM-en omdat je "wilt scoren", vandaag is fundament, niet acquisitie.
 ✗ Sponsor niet inlichten, je rugdekking begint nu.
 
-OVERWELDIGD VOELEN IS NORMAAL: je leert iets nieuws, je stapt uit comfort. Eerst onhandig, dan vaardig, geldt voor iedereen hetzelfde. Sponsor staat naast je, ELEVA Mentor ook. Niet alleen.`,
+Overweldigd voelen is normaal. Je leert iets nieuws, je stapt uit comfort. Eerst onhandig, dan vaardig. Sponsor staat naast je, ELEVA Mentor ook. Niet alleen.`,
     waaromWerktDit: {
       tekst:
-        "De mensen die op dag 47 nog doorgaan, zijn vaak dezelfden die in week 1 hun namenlijst rustig hebben gevuld. Zonder voorraadkast geen werk, zonder fundament geen gebouw.",
+        "De mensen die op dag 47 nog doorgaan, zijn vaak dezelfden die in week 1 hun netwerk-overzicht rustig hebben gevuld. Zonder mensen op je lijst geen werk, zonder fundament geen gebouw.",
     },
   },
 
