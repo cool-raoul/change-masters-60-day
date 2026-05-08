@@ -1,7 +1,7 @@
 // Service Worker voor Change Masters PWA
 // Dit bestand handelt push notifications en offline support af
 
-const CACHE_VERSION = 'cm-v1';
+const CACHE_VERSION = 'cm-v2-2026-05-08';
 const CACHE_URLS = [
   '/',
   '/dashboard',
