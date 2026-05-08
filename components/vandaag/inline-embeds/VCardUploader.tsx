@@ -532,14 +532,15 @@ export function VCardUploader({
     <div className="rounded-lg border-2 border-cm-gold/40 bg-cm-gold/5 px-4 py-4 space-y-4">
       <div className="space-y-1.5">
         <h4 className="text-cm-gold font-semibold text-sm">
-          📇 Welkom in je voorraadkast
+          📇 Bouw je netwerk-overzicht op
         </h4>
         <p className="text-cm-white opacity-80 text-xs leading-relaxed">
           Dit is jouw plek om mensen toe te voegen die in je leven voorkomen.
           Geen belkostlijst, geen verkooplijst, gewoon mensen die jij kent.
           Dit doen we vandaag al, omdat het zóveel rust geeft de komende weken
-          om niet elke dag te hoeven nadenken: <em>"aan wie zou ik vandaag iets
-          kunnen laten zien?"</em>. Je hebt 'n lijst, je kijkt erop, klaar.
+          om niet elke dag opnieuw te hoeven bedenken: <em>"aan wie zou ik
+          vandaag iets kunnen laten zien?"</em>. Je hebt 'n lijst, je kijkt
+          erop, klaar.
         </p>
         <p className="text-cm-white opacity-60 text-[11px] leading-relaxed pt-1">
           Geen druk om alles vandaag te doen. Kies de manier die je het lekkerst
