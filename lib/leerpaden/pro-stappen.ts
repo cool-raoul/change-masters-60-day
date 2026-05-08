@@ -269,7 +269,7 @@ export const PRO_LEERPAD: Leerpad = {
       titel: "🏆 14 stappen klaar! Dit is je startlijn, niet de eindstreep",
       doel: "Reflecteren op de afgelopen 14 stappen en een doel zetten voor de volgende periode.",
       watJeLeert:
-        "Je hebt nu het fundament: een werkende webshop, ervaring met de productadvies-test, een routine voor cliëntcontact en hercontact, en de eerste cliënten die producten gebruiken. Dit is geen einde, dit is je startpunt. Reflecteer eerlijk: wat werkte, wat schuurde, wat ga je de volgende periode anders doen?",
+        "Je hebt nu het fundament: een werkende webshop, ervaring met de productadvies-test, een routine voor cliëntcontact en hercontact, en de eerste cliënten die producten gebruiken. Dit is geen einde, dit is je startpunt. Reflecteer eerlijk: wat werkte, wat liep niet soepel, wat ga je de volgende periode anders doen?",
       vandaagDoen: [
         {
           id: "pro14-reflectie",

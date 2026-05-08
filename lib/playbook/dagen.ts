@@ -102,41 +102,34 @@ Overweldigd voelen is normaal. Je leert iets nieuws, je stapt uit comfort. Eerst
     vandaagDoen: [
       {
         id: "dag2-20-namen",
-        label: "Voeg 20 namen toe, uit je hoofd, of vanuit je ELEVA-geheugen",
+        label: "Voeg 20 namen toe (uit je telefoon of zelf typen)",
         uitleg:
-          "TWEE manieren, kies welke past:\n\n1️⃣ Uit je hoofd: vul hieronder direct namen in (familie, oud-collega's, sport, hobby, ouders bij school, buren). Geen filter, alles erop.\n\n2️⃣ Uit je ELEVA-geheugen: heb je gisteren je telefoon-contacten geüpload? Open Namenlijst → '📚 Mijn ELEVA-geheugen' en activeer er 20 in één klik. Géén opnieuw uploaden, je gewoon kiezen wie er vandaag actief mogen.\n\nBeide tellen, je mag mixen. Doel: 20 nieuwe namen op je actieve namenlijst.",
+          "TWEE manieren, kies welke past:\n\n1️⃣ Vanuit je telefoon (vCard): heb je gisteren je telefoon-contacten geüpload? Open Namenlijst → '📚 Mijn ELEVA-geheugen' en activeer er 20 in één klik uit de namen die je telefoon al kent. Snelst, want je hoeft niets te bedenken, je kiest wie je herkent.\n\n2️⃣ Zelf typen: vul hieronder direct namen in (familie, oud-collega's, sport, hobby, ouders bij school, buren). Geen filter, alles erop.\n\nBeide tellen, je mag mixen. Tip: begin met je telefoonlijst, dan komen er namen voorbij waar je niet aan had gedacht. Daarna eventueel zelf aanvullen.",
         verplicht: true,
         inlineEmbed: "namen-form",
         inlineEmbedDoel: 20,
       },
       {
-        id: "dag2-onboarding-module",
-        label: "Lees NIVEA, staat hierboven in de Les van vandaag",
-        uitleg:
-          "De volledige NIVEA-uitleg staat in de Les bovenaan deze pagina. Lees die rustig door en vink hier af zodra je 'm hebt gehad. Niet weer wegnavigeren, alles staat al in de flow.",
-        verplicht: true,
-      },
-      {
         id: "dag2-kennismaak",
-        label: "Kennismakings-call of -app met je sponsor (30 min)",
+        label: "Plan een korte call met je sponsor",
         uitleg:
-          "Korte check-in. Jouw WHY laten lezen, sponsor vertelt wat jullie samen gaan doen in week 1. Vraag in deze call meteen om hulp bij je eerste 3 invites vandaag.",
+          "Stuur je sponsor een appje: 'Hé [naam], ik ben begonnen, kunnen we deze week ergens 30 minuten bellen om door m'n eerste stappen te gaan?'. In die call: jouw WHY laten lezen, samen door je eerste 3 uitnodigingen, en samen afspreken wat jullie ritme wordt voor week 1.",
         verplicht: true,
         inlineEmbed: "sponsor-melding",
       },
       {
         id: "dag2-3-invites",
-        label: "Stuur je eerste 3 uitnodigingen, samen met sponsor of via Mentor",
+        label: "Stuur je eerste 3 uitnodigingen (samen met sponsor of via Mentor)",
         uitleg:
-          "Kies 3 warmere mensen uit je lijst. Stel ze samen met je sponsor op (in jullie call), of vraag de Mentor: 'Schrijf een uitnodiging voor [naam] die [context]'. Drempel laag houden, gewoon doen, niet perfect.",
+          "Kies 3 warmere mensen uit je lijst. Stel ze samen met je sponsor op (in jullie call), of vraag de Mentor: 'Schrijf een uitnodiging voor [naam] die [context]'. Drempel laag houden, gewoon doen, niet perfect. Eerste uitnodigingen voelen altijd onhandig, dat hoort.",
         verplicht: true,
         actieRoute: "/namenlijst",
       },
       {
         id: "dag2-3weg-uitleg",
-        label: "Lees: '3-weg-gesprek principe', kort blokje hieronder",
+        label: "Begrijp het 3-weg-gesprek-principe",
         uitleg:
-          "Een 3-weg-gesprek is een gesprekje met drie mensen: jij, je prospect, en je sponsor. Sponsor brengt autoriteit (de 'expert'), jij koppelt (de 'verbinder'), prospect ziet twee mensen die samenwerken. Dit is dé versneller in week 1, je hoeft niet alles zelf te weten of te kunnen. Je hoeft 'm nog niet te starten vandaag, alleen even weten dát het bestaat. Vink af zodra je deze uitleg hebt gelezen.",
+          "Een 3-weg-gesprek is een gesprekje met drie mensen: jij, je prospect, en je sponsor (of een ervaren teamlid). Het werkt om drie redenen tegelijk:\n\n• SPONSOR brengt autoriteit (heeft track-record, ervaring, weet de antwoorden op vragen die jij nog niet hebt).\n• JIJ brengt vertrouwen (de prospect kent jou, niet de sponsor).\n• PROSPECT ziet twee mensen die al samenwerken, dat geeft sociaal bewijs: 'blijkbaar werkt dit echt'.\n\nGeen van de drie kan dit alléén. Het is de combinatie. Vandaar 3-weg.\n\nVoorbeeld waarop het werkt: warme prospect heeft een vraag waar jij geen antwoord op hebt. Niet zelf gokken, je opent een groepje met sponsor erbij, sponsor pakt het op. Jij leert mee, prospect krijgt een goed antwoord, vertrouwen blijft.\n\nJe hoeft 'm vandaag nog niet te starten, alleen even snappen dát het bestaat en wanneer 'ie nuttig is. Op dag 4 ga je 'm voor het eerst toepassen.",
         verplicht: true,
       },
       {
@@ -237,18 +230,18 @@ Vandaag stuur je ook al 3 uitnodigingen, samen met je sponsor in een groepje (3-
       },
       {
         id: "dag3-dagelijks-5",
-        label: "5 namen in totaal vandaag (telefoon + socials + hoofd)",
+        label: "5 nieuwe namen toevoegen vandaag",
         uitleg:
-          "Kies waar je ze vandaan haalt: een paar uit je ELEVA-geheugen activeren (je opgeslagen telefoon-contacten), een paar zelf typen, een paar uit socials. Doe wat 't makkelijkst gaat.",
+          "5 nieuwe namen erbij in je lijst. Snelste route: telefoon-import (vCard) als je daar nog onbenutte namen in hebt staan. Anders: zelf typen, of uit socials. Je pipeline blijft elke dag groeien, dat is de basis. Hoe meer namen erin, hoe rustiger je werkt.",
         verplicht: true,
         actieRoute: "/namenlijst",
       },
       {
         id: "dag3-eerste-gesprek",
-        label: "Start 1 losse chat met een warme prospect (geen pitch)",
+        label: "Start 3 losse chats op socials (geen pitch, gewoon contact)",
         uitleg:
-          "Reageer op hun laatste post of story. Vraag hoe het gaat. Niets verkopen. Nog geen uitnodiging. Gewoon even contact, koude mensen warm maken vóór de invite later komt.",
-        verplicht: false,
+          "Open Instagram of Facebook (of LinkedIn). Pak 3 mensen die je een tijd niet hebt gesproken maar wel volgt of door wie je gevolgd wordt. Per persoon: reageer op hun laatste post of story, of stuur een DM met een gewone vraag ('hé, hoe is het bij jou?'). Niets verkopen, geen uitnodiging. Gewoon even contact, koude mensen warm maken zodat een uitnodiging later natuurlijk voelt.\n\nBelangrijk: je sociale-account moet gekoppeld zijn voor de directe doorklik vanuit ELEVA. Als die nog niet staat, regel het in /instellingen.",
+        verplicht: true,
         actieRoute: "/namenlijst",
       },
       {
@@ -325,7 +318,7 @@ NIET GELIJK PITCHEN, wat wel: reageer terug op hun content. Vraag iets. Bouw rap
         id: "dag4-3weg-optioneel",
         label: "Optioneel: 1 3-weg-gesprek met sponsor starten",
         uitleg:
-          "Heb je al iemand die warm is uit dag 2-3? Koppel die aan je sponsor in een WhatsApp-groepje. Sponsor = expert, jij = student. Dit oefen je nu, niet over een week.",
+          "Heb je al iemand die warm is uit dag 2-3? Koppel die aan je sponsor in een WhatsApp-groepje.\n\nSTAPSGEWIJS HOE OP TE ZETTEN:\n1) Stuur prospect eerst een korte aankondiging: 'Hé [naam], ik maak even een groepje aan met mijn mentor [sponsor], zij doet dit al [periode] en kan met je meekijken.'\n2) Stuur sponsor vooraf de context van je prospect: hoe ken je 'm, wat speelt er, waar is hij/zij benieuwd naar.\n3) Maak het WhatsApp-groepje aan met jullie drie.\n4) Jij introduceert: 'Hi [prospect]! Dit is [sponsor], mijn mentor. Ze heeft mij geholpen met [iets]. [Sponsor], dit is [prospect], die op zoek is naar [situatie]. Wil jij even verder helpen?'\n5) Daarna: ZWIJG. Niet meepraten, sponsor neemt het over. Dit is de moeilijkste stap, maar het cruciaalst. Op dag 9 leer je de volledige 5-stappen-flow.",
         verplicht: false,
         actieRoute: "/namenlijst",
       },
@@ -339,9 +332,9 @@ NIET GELIJK PITCHEN, wat wel: reageer terug op hun content. Vraag iets. Bouw rap
       },
       {
         id: "dag4-follow-1",
-        label: "2 follow-ups op eerdere contacten",
+        label: "Minimaal 2 herinneringen sturen aan eerdere prospects",
         uitleg:
-          "Bijvoorbeeld op de persoon uit dag 3 met wie je een losse chat startte. Niet pitchen, gewoon even peilen.",
+          "Aan eerdere prospects waarmee je gesproken hebt of die je hebt uitgenodigd, een korte herinnering sturen. Niet 'follow-up' in de strikte zin (die heeft al info gehad), gewoon even contact. Bijvoorbeeld de persoon uit dag 3 met wie je een losse chat startte. Niet pitchen, gewoon even peilen hoe het is.",
         verplicht: false,
         actieRoute: "/namenlijst",
       },
@@ -451,18 +444,11 @@ Vandaag stap je actief uit je comfortzone, en dat kriebelt, afwijzingsangst, "wa
           "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
       {
-        id: "dag5-onboarding-bezwaar",
-        label: "Lees 'Bezwaren behandelen', staat in de Les van vandaag",
-        uitleg:
-          "De Feel-Felt-Found-uitleg staat volledig in de Les bovenaan deze pagina. Lees rustig door en vink hier af.",
-        verplicht: true,
-      },
-      {
         id: "dag5-roleplay",
-        label: "5 min roleplay bezwaren, met sponsor of Mentor",
+        label: "Korte roleplay met bezwaren, met sponsor of Mentor",
         uitleg:
-          "Vraag je sponsor om 1-2 typische bezwaren te 'spelen' en oefen Feel-Felt-Found. Geen sponsor beschikbaar? Mentor: 'Speel een prospect die zegt: ik heb geen tijd', en dan oefen je met Feel-Felt-Found.",
-        verplicht: false,
+          "Waarom oefenen met bezwaren belangrijk is: in een echt gesprek krijg je geen tweede kans om iets te formuleren. Als jij staat te zoeken naar woorden, voelt de prospect onzekerheid en verliest hij vertrouwen. Door vooraf een paar keer te oefenen, weet je in grote lijnen hoe je elk bezwaar kunt aanvliegen, zelfs als je niet de exacte woorden paraat hebt.\n\nVraag je sponsor om 1-2 typische bezwaren te 'spelen' en oefen Feel-Felt-Found. Geen sponsor beschikbaar? Vraag de Mentor: 'Speel een prospect die zegt: ik heb geen tijd', en oefen je antwoord. Daarna een nieuwe ronde met een ander bezwaar. Vier of vijf rondes is genoeg om het ritme te pakken.",
+        verplicht: true,
         actieRoute: "/coach",
       },
       {
@@ -556,9 +542,9 @@ EXTRA, VANDAAG START JE MINDSET-ROUTINE:
       },
       {
         id: "dag6-followups-3",
-        label: "3 follow-ups (eerste aanknopingspunt!)",
+        label: "3 follow-ups (stilgevallen gesprekken weer aanwakkeren)",
         uitleg:
-          "Iedereen die je dag 4-5 hebt uitgenodigd en niet meer gereageerd heeft? Vandaag is follow-up-dag. Een niet-antwoord is géén nee, het is meestal gewoon stilte.",
+          "Iedereen die je dag 4-5 hebt uitgenodigd of info gestuurd hebt en niet meer gereageerd heeft. Een niet-antwoord is géén nee, meestal gewoon stilte: druk leven, vergeten, of even geen prioriteit.\n\nDE STILGEVALLEN-GESPREKKEN-ZIN (werkt vrijwel altijd):\n\"Hé, ik zag dat je niet meer had gereageerd op mijn laatste berichtje. Is dat omdat je druk was of omdat je geen interesse hebt op dit moment? Allebei prima hoor, ik dacht: ik vraag het even!\"\n\nWaarom dit werkt:\n• Geen verwijt, geen druk: 'allebei prima hoor' geeft de uitweg.\n• Eerlijk antwoord: mensen die druk waren ('sorry, vergeten!') komen terug. Mensen die geen interesse hebben, geven dat aan zonder ongemak.\n• Helderheid voor jou: je weet waar je staat, kunt verder.\n\nGebruik 'm letterlijk of in jouw eigen woorden, beide werkt.",
         verplicht: true,
         actieRoute: "/namenlijst",
       },
@@ -651,7 +637,7 @@ Een prospect die NU geen ja zegt, kan over 3 maanden alsnog ja zeggen. Of over 1
         id: "dag7-review",
         label: "Vul de wekelijkse review in (5 min reflectie)",
         uitleg:
-          "3 vragen: wat ging goed deze week? wat schuurde? waar focus ik volgende week? Je sponsor krijgt automatisch een samenvatting.",
+          "Drie vragen: wat ging goed deze week, wat liep niet soepel, waar focus ik volgende week op? Aan het eind kun je kiezen of je de review met je sponsor wilt delen, zodat hij of zij weet hoe je ervoor staat en waar je in kan groeien.",
         verplicht: true,
         actieRoute: "/statistieken",
       },
@@ -706,7 +692,7 @@ DE INHAAL-REGEL, voor als je een dag over hebt geslagen:
 • Geen schuldgevoel-spiraal. Eén overgeslagen dag = data, geen oordeel.
 
 WAT SCHUURDE = GROEI, GEEN FALEN:
-Als je deze week 7 dagen geleden iets compleet nieuws bent gestart, is onhandigheid op dag 1 logisch. En iets meer vlotheid op dag 7. Dát is het volledige plaatje. De mensen die uiteindelijk doorbreken in dit vak zijn niet degenen die in week 1 alles vlekkeloos deden, die bestaan niet, maar degenen die week 2 bleven oefenen op wat in week 1 schuurde.
+Als je deze week 7 dagen geleden iets compleet nieuws bent gestart, is onhandigheid op dag 1 logisch. En iets meer vlotheid op dag 7. Dát is het volledige plaatje. De mensen die uiteindelijk doorbreken in dit vak zijn niet degenen die in week 1 alles vlekkeloos deden, die bestaan niet, maar degenen die week 2 bleven oefenen op wat in week 1 niet soepel ging.
 
 WAT GA JE VOLGENDE WEEK ZIEN (sneak peek voor dag 8-14):
 • Lat omhoog: 10 uitnodigingen per dag in plaats van 5
@@ -715,7 +701,7 @@ WAT GA JE VOLGENDE WEEK ZIEN (sneak peek voor dag 8-14):
 • Tweede laag aanbieden als de business-laag niet past (een gratis webshop met productgebruik kan ook)
 • FORM, hoe je iemand écht leert kennen in een kort gesprek
 
-DEZE REVIEW WORDT GEDEELD MET JE SPONSOR, niet om te beoordelen, om te ondersteunen. Sponsor ziet wat schuurde, kan jou specifiek helpen waar het schuurt. Niet zwijgen, niet polijsten, eerlijk neerzetten levert je de beste hulp.`,
+DEZE REVIEW KAN JE DELEN MET JE SPONSOR (zelfde keuze maak je aan het eind van het invul-formulier). Niet om te beoordelen, om te ondersteunen. Sponsor ziet wat niet soepel ging, kan jou specifiek helpen waar het niet soepel loopt. Niet zwijgen, niet polijsten, eerlijk neerzetten levert je de beste hulp.`,
     waaromWerktDit: {
       tekst:
         "Vergelijk jezelf met gisteren, niet met anderen. De run is jouw verhaal, de review is hoe je het schrijft.",
@@ -1003,7 +989,7 @@ VEELGEMAAKTE FOUTEN OP DE EERSTE PAAR 3-WEGS:
 ✗ Geen stap 5 (24u follow-up apart) → momentum verdwijnt, prospect blijft hangen.
 
 NA AFLOOP, 5 MIN MET JE SPONSOR DEBRIEFEN:
-Wat ging goed? Wat schuurde? Welke vraag van prospect zat sponsor mee? Volgende keer doen we wat anders? Dat is hoe je 3-weg-vaardigheid in 5-10 gesprekken naar tweede natuur bouwt.
+Wat ging goed? Wat liep niet soepel? Welke prospect-vraag bracht je sponsor in moeilijkheden? Volgende keer doen we wat anders? Dat is hoe je 3-weg-vaardigheid in 5-10 gesprekken naar tweede natuur bouwt.
 
 Doel deze week: minimaal 1 3-weg starten. Heb je 'm op dag 4 al gehad? Top, plan vandaag een tweede. Nog geen? Vandaag is jouw moment.`,
     waaromWerktDit: {
@@ -1377,7 +1363,7 @@ VANDAAG: kies 1 specifieke prospect, plan een 5-min check-in (DM of telefoon) en
         verplicht: true,
         actieRoute: "/statistieken",
         uitleg:
-          "5 minuten reflectie: wat ging goed, wat schuurde, waar focus ik volgende week op? Open /statistieken voor de review-vragenlijst. Je sponsor krijgt automatisch een korte samenvatting.",
+          "5 minuten reflectie: wat ging goed, wat liep niet soepel, waar focus ik volgende week op? Open /statistieken voor de review-vragenlijst. Je sponsor krijgt automatisch een korte samenvatting.",
       },
       {
         id: "dag14-invites-10",

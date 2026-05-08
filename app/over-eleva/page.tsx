@@ -269,7 +269,7 @@ const FEATURES: Feature[] = [
     emoji: "📅",
     titel: "Wekelijkse review",
     watIsHet:
-      "Op dag 7, 14 en 21 een korte 5-min reflectie: wat ging goed, wat schuurde, waar focus ik volgende week. Sponsor leest mee, om te ondersteunen, niet beoordelen.",
+      "Op dag 7, 14 en 21 een korte 5-min reflectie: wat ging goed, wat liep niet soepel, waar focus ik volgende week. Sponsor leest mee, om te ondersteunen, niet beoordelen.",
     watHebJeEraan:
       "Patronen zien in plaats van blind doorlopen. Schurend stuk = volgende-week-oefening.",
     waar: "Dashboard → 'Wekelijkse review' op de review-dagen",
@@ -420,7 +420,7 @@ export default async function OverElevaPagina() {
           {isFounder && (
             <li>
               <strong>Voor jou als founder:</strong> ✍️ knoppen overal, pas
-              aan wat schuurt, direct live. Plus 🧠 Train-de-Mentor.
+              aan wat niet lekker loopt, direct live. Plus 🧠 Train-de-Mentor.
             </li>
           )}
           {(isFounder || isTester) && (
@@ -467,7 +467,7 @@ export default async function OverElevaPagina() {
 
       <div className="card border-gold-subtle text-center space-y-2">
         <p className="text-cm-white text-sm">
-          Vragen, bug-rapporten, of woordkeus die schuurt?
+          Vragen, bug-rapporten, of woordkeus die niet lekker voelt?
         </p>
         <p className="text-cm-white text-sm opacity-70">
           Geef het door in de pilot-WhatsApp-groep, founders houden het

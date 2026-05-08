@@ -405,9 +405,9 @@ export const WEEKRITME: Weekdag[] = [
       },
       {
         id: "zo-overwelhm-check",
-        label: "Overwelhm-check: wat schuurde, wat gaf energie?",
+        label: "Overwelhm-check: wat liep niet soepel, wat gaf energie?",
         uitleg:
-          "Wat voelde te veel? Wat ging makkelijker dan vorige week? Schrijf 1 zin op. Wat schuurt is meestal precies wat groei geeft. Daar zit volgende week je oefening, niet je probleem.",
+          "Wat voelde te veel? Wat ging makkelijker dan vorige week? Schrijf 1 zin op. Wat ongemakkelijk voelt is meestal precies wat groei geeft. Daar zit volgende week je oefening, niet je probleem.",
         verplicht: true,
       },
       {

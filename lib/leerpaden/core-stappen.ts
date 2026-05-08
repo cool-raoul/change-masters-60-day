@@ -398,7 +398,7 @@ export const CORE_LEERPAD: Leerpad = {
       titel: "🏆 21 stappen klaar! Dit is je startlijn, niet de eindstreep",
       doel: "Reflecteren op de afgelopen 21 stappen en een doel zetten voor de volgende periode.",
       watJeLeert:
-        "Je hebt nu het fundament: een werkende webshop, een eigen ritme van content delen, een lijst klanten in opbouw, en de skills om mensen door je flow te leiden. Dit is geen einde, dit is je startpunt. Vanaf hier wordt je eigen ritme leidend. Reflecteer eerlijk: wat werkte, wat schuurde, wat ga je de volgende periode anders doen?",
+        "Je hebt nu het fundament: een werkende webshop, een eigen ritme van content delen, een lijst klanten in opbouw, en de skills om mensen door je flow te leiden. Dit is geen einde, dit is je startpunt. Vanaf hier wordt je eigen ritme leidend. Reflecteer eerlijk: wat werkte, wat liep niet soepel, wat ga je de volgende periode anders doen?",
       vandaagDoen: [
         {
           id: "core21-reflectie",

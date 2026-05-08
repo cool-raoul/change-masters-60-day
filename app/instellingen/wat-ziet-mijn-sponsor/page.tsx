@@ -16,7 +16,7 @@ const ZICHTBAAR = [
     icoon: "📊",
     label: "Voortgang door de 21-daagse",
     uitleg:
-      "Welke dag je op zit, welke stappen je hebt afgerond. Sponsor ziet of je in beweging bent en waar het schuurt, zodat 'ie precies daar kan helpen.",
+      "Welke dag je op zit, welke stappen je hebt afgerond. Sponsor ziet of je in beweging bent en waar het niet soepel loopt, zodat 'ie precies daar kan helpen.",
   },
   {
     icoon: "👥",
@@ -82,7 +82,7 @@ export default function WatZietMijnSponsorPagina() {
         <p className="text-cm-white opacity-80 text-sm mt-2 leading-relaxed">
           Eerlijke uitleg, geen kleine lettertjes. Hieronder staat exact wat
           gedeeld wordt en wat privé blijft. Doel van wat-wel: jouw sponsor
-          kan je helpen op de plek waar het schuurt. Doel van wat-niet:
+          kan je helpen op de plek waar het niet soepel loopt. Doel van wat-niet:
           jouw werk en gedachten blijven van jou.
         </p>
       </div>
