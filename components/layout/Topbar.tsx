@@ -112,7 +112,7 @@ export function Topbar({
   }, []);
 
   return (
-    <header className="h-16 border-b border-cm-border bg-gradient-to-b from-cm-surface to-cm-surface/60 flex items-center justify-between px-4 lg:px-6 backdrop-blur-sm">
+    <header className="h-16 border-b border-cm-border bg-cm-surface flex items-center justify-between px-4 lg:px-6">
       {/* Dag teller, op mobiel alleen het ronde cijfer (de tekst-info
           staat al op het dashboard zelf, dubbel op de topbar voelt druk).
           Op desktop tonen we de volledige tekst voor context. */}
@@ -219,11 +219,16 @@ export function Topbar({
               role="menu"
               className="absolute right-0 top-full mt-2 w-56 rounded-xl border border-cm-border shadow-2xl py-1 z-[60]"
               style={{
-                // Hardcoded solid bg, voorkomt doorschemeren van de
-                // backdrop-blur-header eronder. Op iOS kan een Tailwind
-                // bg-* class door blur-context per ongeluk transparant
-                // gerenderd worden. Inline style omzeilt dat.
+                // Drie-laagse fix tegen doorzichtigheid:
+                // 1) Hardcoded solid hex-bg (geen Tailwind alpha-class).
+                // 2) isolation: isolate creëert nieuwe stacking-context,
+                //    zodat eventuele backdrop-filter van een ouder geen
+                //    invloed meer heeft op deze container.
+                // 3) translateZ(0) forceert een eigen compositing-layer,
+                //    helpt op iOS Safari waar render-bugs voorkomen.
                 backgroundColor: "#1a1d22",
+                isolation: "isolate",
+                transform: "translateZ(0)",
               }}
             >
               <div className="px-4 py-2 border-b border-cm-border">
