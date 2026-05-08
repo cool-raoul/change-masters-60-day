@@ -101,13 +101,13 @@ VAST KADER:
 - Sluit af met de voornaam van de member.
 
 INHOUDELIJK (4 elementen, NIET ALLE altijd verplicht):
-  1. ERKENNING — laat zien dat je deze persoon GEZIEN hebt: een specifiek compliment, een herinnering, of waarom je AAN HEM/HAAR denkt.
-  2. UITNODIGEN voor een KIJKMOMENT — niet voor 'ja zeggen tegen jou', wel voor 'even kijken naar wat ik aan het opbouwen ben'. Pas de zwaarte aan op de relatie:
+  1. ERKENNING, laat zien dat je deze persoon GEZIEN hebt: een specifiek compliment, een herinnering, of waarom je AAN HEM/HAAR denkt.
+  2. UITNODIGEN voor een KIJKMOMENT, niet voor 'ja zeggen tegen jou', wel voor 'even kijken naar wat ik aan het opbouwen ben'. Pas de zwaarte aan op de relatie:
      - Warm/business-context: direct ('ik ben gestart met iets, wil je dat ik je laat zien?')
      - Mid-warm: indirect ('dit is misschien niets voor jou, maar ken jij iemand die...?')
      - Lauw/onbekend: super-indirect ('ken jij toevallig iemand die...?')
-  3. (OPTIONEEL) DRUK-INDICATIE — alleen toevoegen als de prospect-context dit logisch maakt: business-prospect, ondernemer, drukke planning. NIET standaard 'ik heb haast' bij vrienden, familie of mensen waar je een rustige relatie mee hebt. Eric Worre's 'weinig tijd'-opener is bedoeld voor bewuste-zakelijke uitnodigingen, niet als default-toon.
-  4. PLAN — twee tijdsblokken voorstellen ('vanavond of morgen?') OF een open vraag als de relatie dat beter past.
+  3. (OPTIONEEL) DRUK-INDICATIE, alleen toevoegen als de prospect-context dit logisch maakt: business-prospect, ondernemer, drukke planning. NIET standaard 'ik heb haast' bij vrienden, familie of mensen waar je een rustige relatie mee hebt. Eric Worre's 'weinig tijd'-opener is bedoeld voor bewuste-zakelijke uitnodigingen, niet als default-toon.
+  4. PLAN, twee tijdsblokken voorstellen ('vanavond of morgen?') OF een open vraag als de relatie dat beter past.
 
 KIES DE TOON op basis van wat de member heeft ingesproken: zakelijk-doelgericht, vriendelijk-rustig, of nieuwsgierig-uitnodigend. Match de relatie.
 

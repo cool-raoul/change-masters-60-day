@@ -248,7 +248,7 @@ export function StuurFilmKnop({
                   </div>
                   <DeelKnoppen
                     url={shareUrl}
-                    tekst={`Hé ${prospectNaam}! Ik heb iets voor je dat ik denk dat je interessant gaat vinden${memberVoornaam ? ` — gewoon even kijken` : ""}. Hieronder de link.`}
+                    tekst={`Hé ${prospectNaam}! Ik heb iets voor je dat ik denk dat je interessant gaat vinden${memberVoornaam ? `, gewoon even kijken` : ""}. Hieronder de link.`}
                     onderwerp={`Een korte film van ${memberVoornaam || "ELEVA"}`}
                     variant="donker"
                   />

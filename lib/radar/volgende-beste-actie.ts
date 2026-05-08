@@ -125,7 +125,7 @@ export function scoorProspect(p: ProspectInput): RadarItem {
   const stil = dagenStil(p.laatste_contact);
   if (stil >= 10 && stil <= 20) {
     score += 10;
-    redenen.push(`${stil} dagen stil — re-engagement-tijd`);
+    redenen.push(`${stil} dagen stil, re-engagement-tijd`);
   } else if (stil >= 5 && stil <= 9) {
     score += 5;
   } else if (stil >= 21 && stil < 60) {

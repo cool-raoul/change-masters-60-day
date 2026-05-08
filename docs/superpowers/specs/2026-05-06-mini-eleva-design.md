@@ -1,4 +1,4 @@
-# Mini-ELEVA — Concept + Design Memo
+# Mini-ELEVA, Concept + Design Memo
 
 | | |
 |---|---|
@@ -136,7 +136,7 @@ Implementatie: aparte system-prompt-builder. Zelfde kennisbank-fundament. Eigen 
 **🟡 Mag, maar met disclaimer of in EU-veilige formuleringen:**
 - Wat doet product X (ondersteunt, draagt bij aan, niet "geneest")
 - Welk product past bij mijn klacht (met arts-disclaimer + geen dosering)
-- Persoonlijke twijfel ("ik denk niet dat ik dit kan") — empathisch + doorvragen, niet drukkend
+- Persoonlijke twijfel ("ik denk niet dat ik dit kan"), empathisch + doorvragen, niet drukkend
 - Wat ga IK persoonlijk verdienen (uitleg met disclaimer "afhankelijk van inzet en netwerk", geen beloftes)
 
 **🔴 Niet beantwoorden, doorverwijzen naar mens:**

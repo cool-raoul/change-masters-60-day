@@ -307,11 +307,11 @@ export function HerinneringVerplaatsKnop({
                   </p>
                   <ul className="space-y-1.5">
                     {opvolgendeData.map((h) => {
-                      // Titel kort: "Herbestelling check #1 — naam" → "check #1"
+                      // Titel kort: "Herbestelling check #1, naam" → "check #1"
                       const kortTitel =
                         h.titel
                           .replace(/Herbestelling /i, "")
-                          .split(" — ")[0] || h.titel;
+                          .split(", ")[0] || h.titel;
                       return (
                         <li
                           key={h.id}

@@ -107,7 +107,7 @@ export async function POST(req: NextRequest) {
           .update({ kijkpercentage: nieuwPct })
           .eq("id", v.id);
         // Doorvallen naar afgekeken-flow door v.kijkpercentage te updaten
-        // en het verdere blok beneden te laten draaien — simpeler: hier
+        // en het verdere blok beneden te laten draaien, simpeler: hier
         // direct de logica dupliceren.
         const nu = new Date().toISOString();
         await admin

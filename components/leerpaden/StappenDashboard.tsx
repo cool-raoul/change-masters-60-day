@@ -115,7 +115,7 @@ export function StappenDashboard({
       </div>
 
       {/* Focus-card, één hoofdactie. Voor Pro is dit 'Volgende stap'
-          ipv 'Vandaag jouw focus' — geen tijdsdruk, eigen tempo. */}
+          ipv 'Vandaag jouw focus', geen tijdsdruk, eigen tempo. */}
       <Link
         href={`${stapBasisRoute}/${stap.nummer}`}
         className="block card border-cm-gold/40 hover:border-cm-gold transition-colors group glow-gold-soft"

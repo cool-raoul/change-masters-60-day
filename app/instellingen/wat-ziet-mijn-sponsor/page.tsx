@@ -22,19 +22,19 @@ const ZICHTBAAR = [
     icoon: "👥",
     label: "Pipeline-fases van je prospects",
     uitleg:
-      "Sponsor ziet hoeveel mensen je in 'prospect', 'uitgenodigd', 'one-pager', 'presentatie', 'follow-up' hebt staan. Niet de namen of details, wel de getallen — om te coachen waar je vastloopt.",
+      "Sponsor ziet hoeveel mensen je in 'prospect', 'uitgenodigd', 'one-pager', 'presentatie', 'follow-up' hebt staan. Niet de namen of details, wel de getallen, om te coachen waar je vastloopt.",
   },
   {
     icoon: "🟢",
     label: "Online-status (als jij dat aanstaat)",
     uitleg:
-      "Een groene stip naast je naam in /team als je nu in ELEVA werkt. Default aan. Uit te zetten via 'Online-status zichtbaar voor team'-toggle in /instellingen — dan verdwijn je uit alle overzichten.",
+      "Een groene stip naast je naam in /team als je nu in ELEVA werkt. Default aan. Uit te zetten via 'Online-status zichtbaar voor team'-toggle in /instellingen, dan verdwijn je uit alle overzichten.",
   },
   {
     icoon: "🎬",
     label: "Verzonden films naar prospects",
     uitleg:
-      "Welke films je hebt gestuurd, of de prospect ze heeft afgekeken. Niet om je te beoordelen — om sponsor te helpen jouw funnel te begrijpen als je een vraag stelt.",
+      "Welke films je hebt gestuurd, of de prospect ze heeft afgekeken. Niet om je te beoordelen, om sponsor te helpen jouw funnel te begrijpen als je een vraag stelt.",
   },
 ];
 
@@ -61,7 +61,7 @@ const PRIVE = [
     icoon: "📋",
     label: "Aantekeningen op prospect-kaarten",
     uitleg:
-      "Wat je over een prospect noteert blijft op jouw kaart. Sponsor kan dat niet inzien — alleen als jij 'm expliciet de prospect-kaart deelt.",
+      "Wat je over een prospect noteert blijft op jouw kaart. Sponsor kan dat niet inzien, alleen als jij 'm expliciet de prospect-kaart deelt.",
   },
 ];
 

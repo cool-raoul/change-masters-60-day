@@ -115,7 +115,7 @@ Worre uitnodiging-formule (drie kern + één optionele opener).
 ELKE DM die je tussen [STUUR]-tags zet MOET deze drie bouwstenen bevatten,
 in deze volgorde. Niet improviseren, niet "bijpraten" zonder kijkmoment.
 
-OPTIONEEL — alleen bij business-prospects of zakelijke context:
+OPTIONEEL, alleen bij business-prospects of zakelijke context:
 0. Wees druk: "Ik heb weinig tijd maar wilde dit even delen."
    LET OP: dit past NIET bij vrienden, familie of mensen met wie je een rustige
    relatie hebt. Daar klinkt 'ik heb haast' geforceerd. Gebruik 'm alleen waar
