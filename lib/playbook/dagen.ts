@@ -180,24 +180,24 @@ Overweldigd voelen is normaal. Je leert iets nieuws, je stapt uit comfort. Eerst
       },
     ],
     watJeLeert:
-      `NIVEA is dé regel die de meeste starters vergeten en daardoor 80% van hun beste prospects op voorhand uit elimineren. NIVEA staat voor: Niet Invullen Voor Een Ander.
+      `NIVEA is dé regel die de meeste starters vergeten en daardoor 80% van hun beste prospects op voorhand wegfilteren. NIVEA staat voor: Niet Invullen Voor Een Ander.
 
-Wat het concreet betekent: jij weet NIET wat er in iemand omgaat. Wat zijn financiële situatie is. Wat zijn relatie doet. Of zijn werk hem nog vult. Of zijn gezondheid 'm uitput. Of die gladde collega thuis stiekem worstelt. Je hebt een momentopname in je hoofd, vaak van jaren geleden, en daarop maak je een oordeel "die zit hier niet op te wachten". Dat is zelden waar.
+Wat het concreet betekent: jij weet niet wat er in iemand omgaat. Wat zijn financiële situatie is. Wat zijn relatie doet. Of zijn werk hem nog vult. Of zijn gezondheid 'm uitput. Of die gladde collega thuis stiekem worstelt. Je hebt een momentopname in je hoofd, vaak van jaren geleden, en daarop maak je een oordeel "die zit hier niet op te wachten". Dat is zelden waar.
 
-Bovendien: zelfs als die specifieke persoon écht niet voor zichzelf gaat, kent hij/zij wél iemand die wél past. Iedereen heeft een netwerk van 100+ mensen. Een schoonzus die net moeder is geworden, een oud-collega die ontslag heeft gekregen, een buurman die met pensioen twijfelt. Jij weet dat niet. Je kunt het niet weten. Daarom: alle namen op de lijst. Filteren doe je later, als je échte signalen hebt, niet vóóraf in je eigen hoofd.
+Bovendien: zelfs als die specifieke persoon écht niet voor zichzelf gaat, kent hij of zij wél iemand die wél past. Iedereen heeft een netwerk van 100+ mensen. Een schoonzus die net moeder is geworden, een oud-collega die ontslag heeft gekregen, een buurman die met pensioen twijfelt. Jij weet dat niet. Je kunt het niet weten. Daarom: alle namen op de lijst. Filteren doe je later, als je échte signalen hebt, niet vooraf in je eigen hoofd.
 
 Drie typische "ik filter al"-fouten en wat de waarheid bleek:
-• "Die zwager heeft een goede baan", bleek 6 maanden later open te staan toen herstructurering doorkwam.
+• "Die zwager heeft een goede baan", bleek 6 maanden later open te staan toen er herstructurering kwam.
 • "Die moeder bij voetbal is zo druk", werd de eerste die ja zei, want ze zocht juist iets dat naast haar gezin paste.
 • "Die oud-collega zie ik nooit meer", bleek een netwerk van 200+ ondernemers te hebben en had de perfecte intro.
-Patroon: jouw oordeel zegt meer over jouw beelden dan over hun werkelijkheid.
+Patroon: jouw oordeel zegt meer over jouw beeld dan over hun werkelijkheid.
 
 Hoe je vandaag NIVEA in praktijk brengt:
-1. Pak 30 minuten, geen telefoon, geen afleiding.
-2. Loop categorieën door: familie • partners van familie • oude vrienden • huidige vrienden • collega's nu • collega's vroeger • sport/hobby • ouders bij school/club • buurt • ondernemers in je netwerk.
+1. Pak een rustig moment, geen telefoon, geen afleiding.
+2. Loop categorieën door: familie, partners van familie, oude vrienden, huidige vrienden, collega's nu, collega's vroeger, sport/hobby, ouders bij school/club, buurt, ondernemers in je netwerk.
 3. Per categorie: schrijf élke naam op die in je hoofd opkomt. Geen filter. Voelt het ongemakkelijk? Dat is precies de plek om door te zetten.
-4. Spraak-FAB werkt het snelst: "Nieuwe prospect [naam] uit [context]" en je hebt 20 namen in 10 minuten.
-5. Stop niet bij 20. Ga door totdat het écht op is, vaak zit je dan op 50-100.
+4. Spraak-FAB werkt het snelst: "Nieuwe prospect [naam] uit [context]" en je hebt in een korte sessie 20 namen.
+5. Stop niet bij 20. Ga door totdat het écht op is, vaak zit je dan op 50 tot 100.
 
 Veelgemaakte fouten, herkenbaar?
 ✗ "Hij heeft toch geen geld" → vooroordeel, geen feit.
@@ -206,7 +206,7 @@ Veelgemaakte fouten, herkenbaar?
 ✗ Wachten met uitnodigen tot je lijst "perfect" is → de lijst is nooit perfect.
 ✗ Eerst zelf alle bezwaren beantwoorden in je hoofd → dat is hun werk, niet jouw werk.
 
-Vandaag stuur je ook al 3 uitnodigingen, samen met je sponsor in een groepje (3-weg principe). Sponsor brengt autoriteit, jij koppelt, prospect ziet twee mensen die samenwerken. Dat is de hefboom waarmee je niet alles zelf hoeft te weten of te kunnen. Eerste invites voelen onhandig, dat klopt en gaat over. Niet daardoor stoppen, juist daardoor met steun starten.`,
+Vandaag stuur je ook al 3 uitnodigingen, samen met je sponsor in een groepje (3-weg-principe). Sponsor brengt autoriteit, jij koppelt, prospect ziet twee mensen die samenwerken. Dat is de hefboom waarmee je niet alles zelf hoeft te weten of te kunnen. Eerste uitnodigingen voelen onhandig, dat klopt en gaat over. Niet daardoor stoppen, juist daardoor met steun starten.`,
     waaromWerktDit: {
       tekst:
         "De geheugensteunlijst is je voorraadkast. Hoe voller, hoe makkelijker de keuze wat je vanavond kookt. En de eerste invites zijn altijd het zwaarst, gewoon door.",
@@ -283,7 +283,7 @@ Vandaag stuur je ook al 3 uitnodigingen, samen met je sponsor in een groepje (3-
     ],
     watJeLeert: `Instagram, Facebook en LinkedIn geven je geen downloadbare contactenlijst, dat is expres zo. Maar ze geven je iets veel waardevollers: ACTIEVE SIGNALEN. Mensen die jouw content bekijken, reageren, delen, in stories duiken. Dat is gedrag dat zegt: "ik volg je, je content raakt me, je bent op mijn radar." Dát zijn je warme contacten van de toekomst, vaak veel beter geschikt dan oude telefooncontacten waarmee je al jaren geen woord hebt gewisseld.
 
-3 namen per dag uit socials = 21 nieuwe warme prospects per week, bovenop je telefoonlijst. Dat is serieus voorraadkast-volume zonder dat je rond hoeft te bellen.
+3 namen per dag uit socials = 21 nieuwe warme prospects per week, bovenop je telefoonlijst. Dat is een serieuze aanvulling op je netwerk-overzicht zonder dat je rond hoeft te bellen.
 
 WAT JE VANDAAG DOET, concrete radar-check:
 1. Open Instagram en kijk: wie reageert al een paar weken op jouw verhalen of posts?
@@ -397,13 +397,13 @@ Je wilt niet dat ze "ja" zeggen tegen JOU. Je wilt dat ze "ja" zeggen tegen een 
 DRIE VOORBEELD-UITNODIGINGEN, alle drie in de 4-stappen:
 
 1. WhatsApp aan oud-collega (warm):
-"Hé Mark, ik heb het druk en wilde dit even snel sturen. Jij bent iemand die altijd doorpakt en daarom denk ik aan jou. Ik ben net gestart met iets waar ik 60 dagen vol voor ga, wil je dat ik je kort laat zien wat het inhoudt? Vrijblijvend hoor. Vanavond of morgen aan het eind van de dag?"
+"Hé Mark, ik heb het druk en wilde dit even snel sturen. Jij bent iemand die altijd doorpakt en daarom denk ik aan jou. Ik ben net gestart met Project Meer Tijd en Vrijheid, wil je dat ik je kort laat zien wat het inhoudt? Vrijblijvend hoor. Vanavond of morgen aan het eind van de dag?"
 
 2. DM aan iemand die op je posts reageert (mid):
-"Hé Linda, snel berichtje tussendoor. Je reageert al een tijdje op wat ik deel, dat waardeer ik. Ik ben gestart met iets dat past bij wat ik aan het opbouwen ben, wil je dat ik je in 1 minuut laat zien hoe het werkt? Geen verplichting, even meekijken. Donderdag of vrijdag?"
+"Hé Linda, snel berichtje tussendoor. Je reageert al een tijdje op wat ik deel, dat waardeer ik. Ik ben gestart met iets dat past bij wat ik aan het opbouwen ben. Wil je dat ik je in een kort moment laat zien hoe het werkt? Geen verplichting, even meekijken. Donderdag of vrijdag?"
 
 3. Spraak naar oude vriend (super-indirect):
-"Hé broer, snel ding. Even goed te bellen, ben jij niet diegene die altijd weet wie er met wat bezig is? Ik zoek mensen die openstaan voor extra inkomen naast hun werk. Ken jij toevallig iemand? Bel je woensdagavond?"
+"Hé broer, snel ding. Even goed te bellen, jij bent toch diegene die altijd weet wie er met wat bezig is? Ik zoek mensen die openstaan voor een gratis webshop met gezondheidsproducten waarmee je een extra inkomen kunt opbouwen. Ken jij toevallig iemand? Bel je woensdagavond?"
 
 VEELGEMAAKTE FOUTEN:
 ✗ Compliment vergeten → klinkt als pitch.
@@ -486,9 +486,9 @@ Vandaag stap je actief uit je comfortzone, en dat kriebelt, afwijzingsangst, "wa
           "Help me met het bezwaar: [bv. 'ik heb geen tijd' / 'ik wil eerst nadenken' / 'ik ken te weinig mensen']. Geef me een Feel-Felt-Found-respons en de doorvraag-zin.",
       },
       {
-        actie: "Bezwaar-scripts in Scripts",
+        actie: "Bezwaren-bibliotheek (21 bezwaren met scripts)",
         menupad: "Menu → Scripts → Bezwaren",
-        route: "/scripts",
+        route: "/scripts#bezwaren",
       },
       {
         actie: "Prospect op 'Niet nu' zetten als ze afhouden",
@@ -500,7 +500,9 @@ Vandaag stap je actief uit je comfortzone, en dat kriebelt, afwijzingsangst, "wa
         menupad: "https://open.spotify.com/album/3pX4DrWPVsjW8GCE2XYd7D",
       },
     ],
-    watJeLeert: `Feel-Felt-Found is dé universele bezwaar-techniek. Werkt op zowat élk bezwaar omdat het drie psychologische dingen tegelijk doet: erkennen, normaliseren, herframen. Zonder dat de prospect het gevoel krijgt dat hij wordt 'ompraat'.
+    watJeLeert: `Feel-Felt-Found is dé universele bezwaar-techniek en werkt op zowat élk bezwaar. Drie psychologische dingen tegelijk: erkennen, normaliseren, herframen. Zonder dat de prospect het gevoel krijgt dat hij wordt 'ompraat'.
+
+Naast Feel-Felt-Found heeft de Mentor de volledige bezwaren-bibliotheek (21 meest voorkomende bezwaren in netwerkmarketing) als kennis. Als jij vastloopt bij een specifiek bezwaar, vraag de Mentor: "geef me alternatieve antwoorden op het bezwaar [bezwaar]". Hij kent meer benaderingen dan alleen Feel-Felt-Found.
 
 DE FORMULE:
 • FEEL, "Ik snap dat het zo voelt." Erken het gevoel. NIET het bezwaar weerleggen, alleen valideren dat het bestaat.
@@ -707,11 +709,11 @@ WAT SCHUURDE = GROEI, GEEN FALEN:
 Als je deze week 7 dagen geleden iets compleet nieuws bent gestart, is onhandigheid op dag 1 logisch. En iets meer vlotheid op dag 7. Dát is het volledige plaatje. De mensen die uiteindelijk doorbreken in dit vak zijn niet degenen die in week 1 alles vlekkeloos deden, die bestaan niet, maar degenen die week 2 bleven oefenen op wat in week 1 schuurde.
 
 WAT GA JE VOLGENDE WEEK ZIEN (sneak peek voor dag 8-14):
-• Lat omhoog: 10 invites per dag i.p.v. 5
-• 3-weg gesprekken, je gaat ze ECHT doen, niet alleen kennen
+• Lat omhoog: 10 uitnodigingen per dag in plaats van 5
+• 3-weg-gesprekken, je gaat ze ECHT doen, niet alleen kennen
 • One-pager versus presentatie, wanneer wat
-• Product-pivot bij business-afwijzing
-• FORM, hoe je iemand écht leert kennen in 5 minuten
+• Tweede laag aanbieden als de business-laag niet past (een gratis webshop met productgebruik kan ook)
+• FORM, hoe je iemand écht leert kennen in een kort gesprek
 
 DEZE REVIEW WORDT GEDEELD MET JE SPONSOR, niet om te beoordelen, om te ondersteunen. Sponsor ziet wat schuurde, kan jou specifiek helpen waar het schuurt. Niet zwijgen, niet polijsten, eerlijk neerzetten levert je de beste hulp.`,
     waaromWerktDit: {
