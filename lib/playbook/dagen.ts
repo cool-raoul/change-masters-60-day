@@ -1123,7 +1123,7 @@ KIJK VANDAAG NAAR JE PIPELINE: hoeveel mensen op "Uitgenodigd"? Hoeveel op "One-
 
   {
     nummer: 12,
-    titel: "🔄 Nee op business? Maak een product-pivot",
+    titel: "🔄 Nee op business? Bied de webshop of producten aan",
     fase: 2,
     vandaagDoen: [
       {
@@ -1203,16 +1203,20 @@ Of als je de klacht niet kent: "Maar wil ik nog wat anders vragen, hoe gaat het 
 3) STEL DE PRODUCT-MOGELIJKHEID VOOR:
 "Er zijn een paar producten die we gebruiken die hier echt verschil mee maken. Wil je het eens een maand proberen, vrijblijvend, en kijken hoe je je voelt? Geen verplichting."
 
-DRIE VOORBEELDEN, VERSCHILLENDE KLACHTEN:
+DRIE VOORBEELDEN, VERSCHILLENDE INVALSHOEKEN. Let op: spreek vanuit je eigen ervaring, niet als productclaim. Dat houdt het integer en juridisch veilig (EU-regelgeving voor voedingsclaims).
 
-1. Energie / slaap:
-"Helemaal goed dat de business-kant niet past, dat snap ik. Maar ik wilde nog vragen: hoe gaat het bij jou met energie en slaap? We hebben hier een product (Daily BioBasics + OmeGold) waar mensen super tevreden over zijn. Wil je het 'n maand proberen? Geen druk, gewoon ervaren."
+1. Energie / slaap (eigen ervaring):
+"Helemaal goed dat de business-kant niet past, dat snap ik. Maar ik wilde nog vragen: hoe gaat het bij jou met energie en slaap? Ik gebruik zelf een paar dingen die voor mij echt verschil hebben gemaakt. Wil je dat ik je laat zien wat ik gebruik en hoe ik 't ervaar? Geen druk, gewoon delen."
 
-2. Darmen:
-"Top dat je eerlijk bent over de business 👍🏽. Andere vraag: vorig jaar zei je iets over darmen die je laten merken, speelt dat nog? Er is een 'Darmen in Balans'-pakket dat veel mensen hier echt heeft geholpen. Lust je daar wel info over?"
+2. Darmen (eigen ervaring):
+"Top dat je eerlijk bent over de business 👍🏽. Andere vraag: vorig jaar zei je iets over darmen die je laten merken, speelt dat nog? Ik volgde zelf een programma waar ik veel baat bij had. Lust je daar wel info over?"
 
-3. Sport / herstel:
-"Geen probleem dat je nu niet de business-kant ziet 🥰. Je sportte toch nog steeds intensief? Er zijn een paar producten (Be Refueled, MSM Plus) die ik zelf gebruik en die echt verschil maken in herstel. Wil je een keer info?"
+3. Sport / herstel (eigen ervaring):
+"Geen probleem dat je nu niet de business-kant ziet 🥰. Je sportte toch nog steeds intensief? Er zijn een paar dingen die ik zelf gebruik die mij echt helpen met herstel. Wil je een keer dat ik je laat zien wat ik gebruik?"
+
+WEBSHOP-LAAG ALS EXTRA OPENING:
+Naast de product-pivot kun je ook de webshop-laag noemen. Iemand die wel producten wil maar niet de business-kant, kan zelfs zijn eigen gratis webshop krijgen door zelf te bestellen, zonder zich met opbouwen bezig te houden. Dat is een lichtere instap dan "member worden" en geeft de prospect ruimte:
+"Mocht je toch wel productgebruiker willen worden, je kan zelfs een eigen gratis webshop krijgen door je eigen producten te bestellen. Geen verplichting tot meer, gewoon de manier waarop ik m'n eigen spullen ook bestel."
 
 VEELGEMAAKTE FOUTEN:
 ✗ Direct na "nee op business" pitchen op product → te abrupt, voelt manipulatief.
