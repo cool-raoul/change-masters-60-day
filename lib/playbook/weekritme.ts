@@ -69,19 +69,19 @@ export const WEEKRITME: Weekdag[] = [
     ],
     waarInEleva: [
       {
-        actie: "Pipeline-review",
-        menupad: "Menu → Pipeline → Alle fases",
-        route: "/pipeline",
+        actie: "Pipeline-review (alle fases)",
+        menupad: "Menu → Namenlijst → Weergave: Pipeline",
+        route: "/namenlijst",
       },
       {
-        actie: "Week-plan noteren",
-        menupad: "Menu → Weekritme → Deze week",
+        actie: "Top-3 prospects markeren",
+        menupad: "Menu → Namenlijst → klik prospect → Prioriteit",
         spraak: '"Deze week focus op Jan, Marieke en Peter"',
-        route: "/week",
+        route: "/namenlijst",
       },
     ],
     teaching:
-      "Een week die je niet plant, plant jou. Maandag 20 minuten vooruit-denken spaart je 5 dagen drijven. Pak pen en papier als ELEVA even te klein voelt. Het resultaat hoort in ELEVA, het denken mag overal.",
+      "Een week die je niet plant, plant jou. Maandag rustig vooruit-denken spaart je dagen drijven. Pak pen en papier als ELEVA even te klein voelt. Het resultaat hoort in ELEVA, het denken mag overal.",
   },
 
   // ──────────────────────────────────────────────────────────
@@ -120,14 +120,14 @@ export const WEEKRITME: Weekdag[] = [
     ],
     waarInEleva: [
       {
-        actie: "Uitnodigingen versturen",
-        menupad: "Menu → Uitnodigen → Kies prospect",
+        actie: "Uitnodiging versturen vanaf prospect-kaart",
+        menupad: "Menu → Namenlijst → klik prospect → Uitnodigen",
         spraak: '"Stuur uitnodiging naar Jan"',
-        route: "/uitnodigen",
+        route: "/namenlijst",
       },
       {
         actie: "Uitnodig-scripts openen",
-        menupad: "Menu → Hulpbronnen → Scripts → Uitnodiging",
+        menupad: "Menu → Scripts → Uitnodiging",
         route: "/scripts",
       },
     ],
@@ -176,15 +176,15 @@ export const WEEKRITME: Weekdag[] = [
     ],
     waarInEleva: [
       {
-        actie: "3-weg-gesprek plannen",
-        menupad: "Menu → Sponsor → 3-weg plannen",
+        actie: "3-weg-scripts vanaf prospect-kaart",
+        menupad: "Menu → Namenlijst → klik prospect → 💬 3-weg gesprek scripts",
         spraak: '"Plan 3-weg met sponsor en Marieke voor donderdag 20u"',
-        route: "/sponsor/3-weg",
+        route: "/namenlijst",
       },
       {
         actie: "Edification-zinnen ophalen",
-        menupad: "Menu → Hulpbronnen → Scripts → Edification",
-        route: "/scripts#edification",
+        menupad: "Menu → Scripts → Edification",
+        route: "/scripts",
       },
     ],
     teaching:
@@ -228,13 +228,18 @@ export const WEEKRITME: Weekdag[] = [
     waarInEleva: [
       {
         actie: "Follow-up-lijst per fase",
-        menupad: "Menu → Pipeline → Follow-up nodig",
-        route: "/pipeline?filter=followup",
+        menupad: "Menu → Namenlijst → Weergave: Pipeline",
+        route: "/namenlijst",
       },
       {
         actie: "Follow-up-scripts (open vragen)",
-        menupad: "Menu → Hulpbronnen → Scripts → Follow-up",
-        route: "/scripts#followup",
+        menupad: "Menu → Scripts → Follow-up",
+        route: "/scripts",
+      },
+      {
+        actie: "Open herinneringen voor follow-up-bel-lijst",
+        menupad: "Menu → Herinneringen → Vandaag",
+        route: "/herinneringen",
       },
     ],
     teaching:
@@ -259,9 +264,9 @@ export const WEEKRITME: Weekdag[] = [
       },
       {
         id: "vr-social-post",
-        label: "1 waarde-post plaatsen (product OF lifestyle)",
+        label: "1 waarde-post plaatsen (lifestyle of resultaat-deel)",
         uitleg:
-          "Niet verkopen op socials, gewoon delen. Je workout, je ontbijt met Daily BioBasics, je ochtendritueel. Laat zien wie je bent, niet wat je verkoopt.",
+          "Niet verkopen op socials, gewoon delen. Je workout, je ochtendritueel, een moment uit je dag. Laat zien wie je bent, niet wat je verkoopt. Als je producten in beeld brengt: vermeld 'uit mijn webshop' zonder specifieke effect-claims (EU-richtlijnen voor voedingsclaims).",
         verplicht: true,
       },
       {
@@ -282,15 +287,16 @@ export const WEEKRITME: Weekdag[] = [
     ],
     waarInEleva: [
       {
-        actie: "Social-challenge widget",
-        menupad: "Dashboard → Social-challenge",
+        actie: "Namen toevoegen via spraak",
+        menupad: "Menu → Namenlijst → + Nieuwe prospect",
         spraak: '"Voeg 3 namen toe uit Instagram"',
-        route: "/dashboard#social",
+        route: "/namenlijst",
       },
       {
-        actie: "Post-ideeën",
-        menupad: "Menu → Hulpbronnen → Content → Post-ideeën",
-        route: "/content",
+        actie: "Post-ideeën via Mentor",
+        menupad: "Menu → ELEVA Mentor",
+        spraak: '"Geef me 3 post-ideeën voor vandaag"',
+        route: "/coach",
       },
     ],
     teaching:
@@ -333,19 +339,20 @@ export const WEEKRITME: Weekdag[] = [
     ],
     waarInEleva: [
       {
-        actie: "Team-events bekijken",
-        menupad: "Menu → Team → Agenda",
-        route: "/team/agenda",
+        actie: "Team-pagina + sponsor-contact",
+        menupad: "Menu → Team",
+        route: "/team",
       },
       {
-        actie: "Training-bibliotheek",
-        menupad: "Menu → Leren → Bibliotheek",
-        route: "/leren",
+        actie: "Mentor: vraag een training-onderwerp uit",
+        menupad: "Menu → ELEVA Mentor",
+        spraak: '"Leer me iets over edification"',
+        route: "/coach",
       },
       {
-        actie: "Welkom-flow nieuw lid",
-        menupad: "Menu → Leden → [nieuw lid] → Welkom-flow",
-        route: "/leden",
+        actie: "Nieuwe leden zien in je namenlijst",
+        menupad: "Menu → Namenlijst → filter Member",
+        route: "/namenlijst",
       },
     ],
     teaching:
@@ -413,20 +420,21 @@ export const WEEKRITME: Weekdag[] = [
     ],
     waarInEleva: [
       {
-        actie: "Week-review",
-        menupad: "Menu → Weekritme → Review",
+        actie: "Week-review (cijfers + reflectie)",
+        menupad: "Menu → Statistieken",
         spraak: '"Start mijn week-review"',
-        route: "/week/review",
+        route: "/statistieken",
       },
       {
-        actie: "Cijfer-dashboard",
-        menupad: "Dashboard → Mijn week",
-        route: "/dashboard#week",
+        actie: "Dashboard cijfer-overzicht",
+        menupad: "Menu → Dashboard",
+        route: "/dashboard",
       },
       {
-        actie: "Wins loggen",
-        menupad: "Menu → Weekritme → Wins",
-        route: "/wins",
+        actie: "Wins met Mentor delen",
+        menupad: "Menu → ELEVA Mentor",
+        spraak: '"Hier zijn mijn wins van deze week"',
+        route: "/coach",
       },
     ],
     teaching:
