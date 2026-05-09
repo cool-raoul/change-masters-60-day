@@ -13,6 +13,7 @@ import { DriewegGesprekInklapbaar } from "@/components/namenlijst/DriewegGesprek
 import { MiniElevaUitnodigKnop } from "@/components/namenlijst/MiniElevaUitnodigKnop";
 import { MiniElevaActieveSessies } from "@/components/namenlijst/MiniElevaActieveSessies";
 import { MiniElevaChatInklapbaar } from "@/components/namenlijst/MiniElevaChatInklapbaar";
+import { AanpakKeuze } from "@/components/namenlijst/AanpakKeuze";
 import { ProspectVerwijderKnop } from "@/components/namenlijst/ProspectVerwijderKnop";
 import { CoachGesprekkenInklapbaar } from "@/components/namenlijst/CoachGesprekkenInklapbaar";
 // ProductadviesKnop is bewust niet meer in de kaart-header opgenomen om de
@@ -322,24 +323,39 @@ export default async function ProspectDetailPagina({
             userId={user.id}
           />
 
-          {/* 3-weg gesprek, inklapbaar.
-              prospectSituatie komt uit het korte situatie_kort-veld
-              (member-bewerkbaar via Contactgegevens), niet uit het
-              vrije notities-veld, anders krijg je rare invul-zinnen
-              als "Ze is op zoek naar 45 jaar, zoekt meer energie...". */}
-          <DriewegGesprekInklapbaar
-            prospectNaam={prospect.volledige_naam}
-            prospectSituatie={prospect.situatie_kort || undefined}
-            sponsorNaam={sponsorNaam}
+          {/* Aanpak-keuze: 3-weg-gesprek vs Mini-ELEVA. De keuze stuurt
+              welke optie hieronder prominent staat (de andere blijft
+              beschikbaar maar minder benadrukt). */}
+          <AanpakKeuze
+            prospectId={id}
+            prospectVoornaam={prospect.volledige_naam.split(" ")[0]}
+            huidigeAanpak={
+              (prospect as { gekozen_aanpak?: "drieweg" | "mini_eleva" | null })
+                .gekozen_aanpak ?? null
+            }
           />
 
-          {/* Mini-ELEVA, alternatief voor 3-weg-gesprek waar de prospect
-              72u eigen toegang krijgt tot een prospect-vriendelijke
-              omgeving. Zie docs/superpowers/specs/2026-05-06-mini-eleva-design.md */}
-          <MiniElevaUitnodigKnop
-            prospectId={id}
-            prospectNaam={prospect.volledige_naam}
-          />
+          {/* 3-weg gesprek, inklapbaar. Prominenter wanneer member 'drieweg'
+              heeft gekozen, anders compact en collapsed-by-default.
+              prospectSituatie komt uit het korte situatie_kort-veld. */}
+          {(prospect as { gekozen_aanpak?: string | null }).gekozen_aanpak !==
+            "mini_eleva" && (
+            <DriewegGesprekInklapbaar
+              prospectNaam={prospect.volledige_naam}
+              prospectSituatie={prospect.situatie_kort || undefined}
+              sponsorNaam={sponsorNaam}
+            />
+          )}
+
+          {/* Mini-ELEVA. Prominent wanneer member 'mini_eleva' heeft gekozen,
+              anders verborgen. Bij geen keuze beide tonen. */}
+          {(prospect as { gekozen_aanpak?: string | null }).gekozen_aanpak !==
+            "drieweg" && (
+            <MiniElevaUitnodigKnop
+              prospectId={id}
+              prospectNaam={prospect.volledige_naam}
+            />
+          )}
 
           {/* Read-only zicht op actieve mini-ELEVA-sessies van deze
               prospect. Toont activiteit, mentor-vragen en haal-erbij-

@@ -315,10 +315,26 @@ NIET GELIJK PITCHEN, wat wel: reageer terug op hun content. Vraag iets. Bouw rap
         actieRoute: "/namenlijst",
       },
       {
+        id: "dag4-aanpak-kiezen",
+        label: "🧭 Per prospect: kies aanpak (3-weg of Mini-ELEVA)",
+        uitleg:
+          "Op de prospect-kaart staat nu een keuzeblok: 3-WEG-GESPREK of MINI-ELEVA. Beide zijn goed, het hangt af van WIE je voor je hebt.\n\n• 3-WEG-GESPREK kies je voor: warme prospects, mensen die snel willen schakelen, persoonlijk contact zoeken, en jij + sponsor er live bij willen zijn. Klassieke aanpak, sterk in autoriteit en sociaal bewijs.\n\n• MINI-ELEVA kies je voor: nieuwsgierige twijfelaars, mensen met een druk leven, prospects die eerst rustig zelf willen kijken, of als jij geen 3-weg op korte termijn kunt regelen. Ze krijgen 14 dagen eigen toegang tot welkomstvideo's, ELEVA-mentor (AI), en kunnen via chat met jou en de sponsor.\n\nJe hoeft niet voor IEDEREEN te kiezen, alleen voor mensen die je deze week serieus opvolgt. De andere optie blijft beschikbaar.",
+        verplicht: false,
+        actieRoute: "/namenlijst",
+      },
+      {
         id: "dag4-3weg-optioneel",
         label: "Optioneel: 1 3-weg-gesprek met sponsor starten",
         uitleg:
-          "Heb je al iemand die warm is uit dag 2-3? Koppel die aan je sponsor in een WhatsApp-groepje.\n\nSTAPSGEWIJS HOE OP TE ZETTEN:\n1) Stuur prospect eerst een korte aankondiging: 'Hé [naam], ik maak even een groepje aan met mijn mentor [sponsor], zij doet dit al [periode] en kan met je meekijken.'\n2) Stuur sponsor vooraf de context van je prospect: hoe ken je 'm, wat speelt er, waar is hij/zij benieuwd naar.\n3) Maak het WhatsApp-groepje aan met jullie drie.\n4) Jij introduceert: 'Hi [prospect]! Dit is [sponsor], mijn mentor. Ze heeft mij geholpen met [iets]. [Sponsor], dit is [prospect], die op zoek is naar [situatie]. Wil jij even verder helpen?'\n5) Daarna: ZWIJG. Niet meepraten, sponsor neemt het over. Dit is de moeilijkste stap, maar het cruciaalst. Op dag 9 leer je de volledige 5-stappen-flow.",
+          "Heb je al iemand die warm is uit dag 2-3? Koppel die aan je sponsor in een WhatsApp-groepje.\n\nSTAPSGEWIJS HOE OP TE ZETTEN:\n1) Stuur prospect eerst een korte aankondiging: 'Hé [naam], ik maak even een groepje aan met mijn mentor [sponsor], zij doet dit al [periode] en kan met je meekijken.'\n2) Stuur sponsor vooraf de context van je prospect: hoe ken je 'm, wat speelt er, waar is hij/zij benieuwd naar.\n3) Maak het WhatsApp-groepje aan met jullie drie.\n4) Jij introduceert: 'Hi [prospect]! Dit is [sponsor], mijn mentor. Ze heeft mij geholpen met [iets]. [Sponsor], dit is [prospect], die op zoek is naar [situatie]. Wil jij even verder helpen?'\n5) Daarna: ZWIJG. Niet meepraten, sponsor neemt het over. Dit is de moeilijkste stap, maar het cruciaalst. Op dag 7 leer je de volledige 5-stappen-flow.",
+        verplicht: false,
+        actieRoute: "/namenlijst",
+      },
+      {
+        id: "dag4-mini-eleva-optioneel",
+        label: "Optioneel: 1 Mini-ELEVA-uitnodiging versturen",
+        uitleg:
+          "Voor een prospect die liever zelf wil kijken: open de prospect-kaart → 'Mini-ELEVA-uitnodiging maken'. Je krijgt een deelbare link (14 dagen geldig) die je via WhatsApp doorstuurt. Je prospect krijgt z'n eigen omgeving met welkomstvideo's, een AI-mentor voor 24/7 vragen, en een chat met jou en je sponsor. Je krijgt push-meldingen bij elke beweging zonder dat je in de app hoeft te zitten. Ideaal voor twijfelaars en mensen met een druk leven.",
         verplicht: false,
         actieRoute: "/namenlijst",
       },
@@ -406,7 +422,31 @@ VEELGEMAAKTE FOUTEN:
 ✗ Antwoord op bezwaren al vooraf in het bericht stoppen ("ik weet dat je geen tijd hebt maar...") → je legt zelf de twijfel op tafel, doe dat niet.
 ✗ "Ja zeggen tegen jou" willen forceren in plaats van "ja tegen het kijkmoment". Verschuif de vraag.
 
-Vandaag stap je actief uit je comfortzone, en dat kriebelt, afwijzingsangst, "wat als ze me raar vinden?". Helemaal normaal. Niemand begint vaardig. Een nee is geen oordeel over jou, het is een momentopname over hen. Volgende uitnodiging gewoon doorgaan.`,
+Vandaag stap je actief uit je comfortzone, en dat kriebelt, afwijzingsangst, "wat als ze me raar vinden?". Helemaal normaal. Niemand begint vaardig. Een nee is geen oordeel over jou, het is een momentopname over hen. Volgende uitnodiging gewoon doorgaan.
+
+──────────────────────────────────────────
+
+NÁ DE UITNODIGING, TWEE PADEN VOOR ELKE PROSPECT:
+
+Zodra iemand "ja, ik kijk mee" heeft gezegd, kies je per prospect HOE je 'm verder begeleidt. Op de prospect-kaart staat een keuze-blok met deze twee opties:
+
+🤝 3-WEG-GESPREK (klassiek, dag 7 verdiep je dit)
+- Jij + sponsor + prospect samen in een WhatsApp-groep of live-call
+- Sponsor brengt autoriteit en ervaring, jij bent de verbinder
+- Prospect ziet twee mensen die samenwerken, dat geeft vertrouwen
+- Snel pad: van "ja kijken" naar beslissing in 1 gesprek
+- PAST BIJ: warme prospects, mensen die persoonlijk contact zoeken, kort traject mogelijk
+
+✨ MINI-ELEVA (nieuw, vanaf vandaag beschikbaar)
+- Prospect krijgt 14 dagen eigen toegang tot een persoonlijke omgeving
+- Daar staan welkomstvideo's, een ELEVA-mentor (AI, 24/7), en een chat met jou en de sponsor
+- Prospect kijkt op eigen tempo, jij krijgt push-meldingen bij elke actie
+- AVG-veilig: jij ziet WANNEER ze actief zijn en HOEVEEL vragen ze stellen, niet WAT ze vragen aan de mentor (alleen via chat-tegel deelt 'ie expliciet)
+- PAST BIJ: nieuwsgierige twijfelaars, prospects met druk leven, mensen die eerst rustig zelf willen kijken
+
+Beide paden hebben hun moment. 3-weg blijft het krachtigste voor wie warm en beschikbaar is. Mini-ELEVA opent een deur voor mensen die anders zouden zeggen "stuur me wat info, ik kijk later" en dan nooit kijken. Met mini-ELEVA hebben ze een veilige plek om wel te kijken, op hun eigen tempo, met menselijk contact bereikbaar.
+
+Op je prospect-kaart kun je de keuze maken via de knop "🧭 Welke aanpak past bij...?". De andere optie blijft beschikbaar als je wisselt.`,
     waaromWerktDit: {
       tekst:
         "Wees zakelijk. Wees professioneel. Wees kort. Dan neem je mensen serieus genoeg om ze de ruimte te geven zélf nee te zeggen.",
