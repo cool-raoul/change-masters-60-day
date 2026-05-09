@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { FilmInBlok } from "@/components/film/FilmInBlok";
+import { UitnodigHelpKnoppen } from "@/components/vandaag/UitnodigHelpKnoppen";
 import { HerinnerLaterKnop } from "@/components/playbook/HerinnerLaterKnop";
 import { VCardUploader } from "@/components/vandaag/inline-embeds/VCardUploader";
 import { SponsorMeldingKnop } from "@/components/vandaag/inline-embeds/SponsorMeldingKnop";
@@ -299,7 +300,18 @@ export function VandaagFlow({
               </h2>
             </div>
 
-            {/* 1. EERST DE LES, volledig, geen afkapping. */}
+            {/* 1. EERST HET FILMPJE (boven de tekst), alleen als founder
+                via /instellingen/films onder slug 'playbook-dag-N' een
+                film heeft gezet. Anders rendert FilmInBlok niets, en
+                begint de pagina direct met de Les. Volgorde-besluit
+                Raoul: filmpje altijd boven uitgebreide tekst zodat de
+                visuele uitleg eerst is. */}
+            <FilmInBlok
+              slug={`playbook-dag-${dag.nummer}`}
+              verbergZonderFilm
+            />
+
+            {/* 2. DAN DE LES, volledig, geen afkapping. */}
             <div className="card border-l-4 border-cm-gold/60 space-y-2">
               <h3 className="text-cm-gold font-semibold text-sm uppercase tracking-wider">
                 📖 Les van vandaag
@@ -308,14 +320,6 @@ export function VandaagFlow({
                 {dag.watJeLeert}
               </p>
             </div>
-
-            {/* 2. DAARNA HET FILMPJE, alleen zichtbaar als de founder via
-                /instellingen/films onder slug 'playbook-dag-N' een film
-                heeft gezet. Anders rendert FilmInBlok niets. */}
-            <FilmInBlok
-              slug={`playbook-dag-${dag.nummer}`}
-              verbergZonderFilm
-            />
 
             {/* 3. DAN GA JE DOEN, kort overzicht van de stappen. */}
             <div className="card space-y-2">
@@ -364,6 +368,9 @@ export function VandaagFlow({
         {/* TAAK-stap */}
         {stap === "taak" && huidigeTaak && (
           <div className="space-y-6">
+            {/* Label staat bovenaan, dan filmpje (als aanwezig), dan
+                uitleg. Volgorde-besluit Raoul: filmpje altijd boven de
+                uitgebreide tekst zodat de visuele uitleg eerst is. */}
             <div>
               <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
                 Stap {taakIndex + 1} van {totaal}
@@ -371,20 +378,31 @@ export function VandaagFlow({
               <h2 className="font-serif-warm text-2xl text-cm-white mt-1 leading-tight">
                 {huidigeTaak.label}
               </h2>
-              {huidigeTaak.uitleg && (
-                <p className="text-cm-white opacity-80 text-sm mt-3 leading-relaxed">
-                  {huidigeTaak.uitleg}
-                </p>
-              )}
             </div>
 
-            {/* Optionele film */}
+            {/* Optionele film, BOVEN de uitleg */}
             {huidigeTaak.filmSlug && (
               <FilmInBlok
                 slug={huidigeTaak.filmSlug}
                 fallbackTitel="📹 Bekijk de video"
                 fallbackTekst="Film volgt, wordt door de hoofdbeheerder toegevoegd."
               />
+            )}
+
+            {/* Uitleg, ONDER het filmpje */}
+            {huidigeTaak.uitleg && (
+              <p className="text-cm-white opacity-80 text-sm leading-relaxed whitespace-pre-line">
+                {huidigeTaak.uitleg}
+              </p>
+            )}
+
+            {/* Hulp-knoppen voor uitnodig-taken: voorbeelden, sponsor,
+                Mentor. Trigger op uitnodigHelpKnoppen=true OF automatisch
+                als de taak-id of label naar uitnodigen verwijst. */}
+            {(huidigeTaak.uitnodigHelpKnoppen ||
+              /invite|uitnodig/i.test(huidigeTaak.id) ||
+              /uitnodig/i.test(huidigeTaak.label)) && (
+              <UitnodigHelpKnoppen />
             )}
 
             {/* Mobiel-waarschuwing: deze taak vraagt om je telefoon.

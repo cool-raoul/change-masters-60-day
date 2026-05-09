@@ -43,6 +43,18 @@ export type ControllableTaak = {
    */
   vereistMobiel?: boolean;
   /**
+   * Als true: render onder de taak-uitleg een knoppenrij met drie hulp-
+   * acties die specifiek voor uitnodig-taken nuttig zijn:
+   *   - Voorbeelden bekijken (naar /scripts uitnodiging-sectie)
+   *   - Maak met sponsor (open WhatsApp/bel-bericht via SponsorMeldingKnop)
+   *   - Maak met Mentor (naar /coach met prefill voor uitnodiging-hulp)
+   *
+   * Vooral nuttig voor starters in week 1-2 die elke dag opnieuw moeten
+   * bedenken hoe een uitnodiging eruitziet. Drie laagdrempelige paden,
+   * altijd zichtbaar, geen menu-zoekwerk.
+   */
+  uitnodigHelpKnoppen?: boolean;
+  /**
    * INLINE EMBED, laat de vandaag-flow een specifieke mini-feature
    * direct in de stap inbouwen, in plaats van weg te navigeren naar
    * een andere route. Houdt de member in de flow.
