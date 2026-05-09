@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { FilmInBlok } from "@/components/film/FilmInBlok";
 import { UitnodigHelpKnoppen } from "@/components/vandaag/UitnodigHelpKnoppen";
+import { SocialPlatformKnoppen } from "@/components/vandaag/SocialPlatformKnoppen";
 import { HerinnerLaterKnop } from "@/components/playbook/HerinnerLaterKnop";
 import { VCardUploader } from "@/components/vandaag/inline-embeds/VCardUploader";
 import { SponsorMeldingKnop } from "@/components/vandaag/inline-embeds/SponsorMeldingKnop";
@@ -403,6 +404,17 @@ export function VandaagFlow({
               /invite|uitnodig/i.test(huidigeTaak.id) ||
               /uitnodig/i.test(huidigeTaak.label)) && (
               <UitnodigHelpKnoppen />
+            )}
+
+            {/* Social-platform-knoppen voor taken die naar Facebook /
+                Instagram / LinkedIn verwijzen. Trigger op id-detectie
+                (social, chat, dm) of label-detectie. */}
+            {(/social|-chat|-dm|losse.chat/i.test(huidigeTaak.id) ||
+              /Instagram|Facebook|LinkedIn|socials/.test(
+                huidigeTaak.label,
+              ) ||
+              /Instagram|Facebook|LinkedIn/.test(huidigeTaak.uitleg ?? "")) && (
+              <SocialPlatformKnoppen />
             )}
 
             {/* Mobiel-waarschuwing: deze taak vraagt om je telefoon.

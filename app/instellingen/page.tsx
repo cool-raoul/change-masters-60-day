@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { InstellingenForm } from "@/components/InstellingenForm";
 import { PresenceToggle } from "@/components/presence/PresenceToggle";
+import { SocialAccountsForm } from "@/components/instellingen/SocialAccountsForm";
 import Link from "next/link";
 import { getServerTaal, v } from "@/lib/i18n/server";
 
@@ -37,6 +38,22 @@ export default async function InstellingenPagina() {
       </div>
 
       <InstellingenForm profile={profile} email={user.email || ""} />
+
+      {/* Social-profielen, gebruikt door /vandaag taken die naar
+          Facebook / Instagram / LinkedIn verwijzen. */}
+      <SocialAccountsForm
+        initieel={{
+          facebook_url:
+            (profile as { facebook_url?: string | null } | null)
+              ?.facebook_url ?? null,
+          instagram_url:
+            (profile as { instagram_url?: string | null } | null)
+              ?.instagram_url ?? null,
+          linkedin_url:
+            (profile as { linkedin_url?: string | null } | null)
+              ?.linkedin_url ?? null,
+        }}
+      />
 
       <PresenceToggle
         initieelAan={

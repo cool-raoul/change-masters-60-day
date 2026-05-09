@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useTaal } from "@/lib/i18n/TaalContext";
@@ -23,8 +23,19 @@ export function ScriptsOverview({
   isFounder: boolean;
 }) {
   const { v } = useTaal();
-  const [actieveCategorie, setActieveCategorie] = useState("alle");
+  const searchParams = useSearchParams();
+  // Kan ingezet worden via ?cat=uitnodiging in de URL, zodat een
+  // doorklik vanuit een andere pagina (bv. UitnodigHelpKnoppen op
+  // /vandaag) direct het juiste filter-tabblad opent.
+  const initialCategorie = searchParams?.get("cat") || "alle";
+  const [actieveCategorie, setActieveCategorie] = useState(initialCategorie);
   const [zoekterm, setZoekterm] = useState("");
+
+  // Update categorie als URL verandert (bv. terug-knop)
+  useEffect(() => {
+    const cat = searchParams?.get("cat") || "alle";
+    setActieveCategorie(cat);
+  }, [searchParams]);
 
   const CATEGORIE_LABELS: Record<string, string> = {
     alle: v("scripts.alle"),

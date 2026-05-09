@@ -616,8 +616,8 @@ DRIE VOORBEELDEN, verschillende fasen:
 2. PEILEN (na de info-link):
 "Hé Linda 🥰 wat sprak je het meeste aan van wat je tot nu hebt gezien? Ben benieuwd!"
 
-3. STILLE PROSPECT (5-10 dagen geen reactie):
-"Hé Jaap, geen reactie ontvangen, kan zijn dat het er niet bij past en dat is helemaal goed. Mag ik over een paar maanden nog eens vragen, voor het geval dingen veranderen? 👍🏽"
+3. STILLE PROSPECT (gesprek dat is stilgevallen):
+"Hé Jaap, ik zag dat je niet meer had gereageerd op mijn laatste berichtje. Is dat omdat je druk was of omdat je geen interesse hebt op dit moment? Allebei prima hoor, ik dacht: ik vraag het even! 🙂"
 
 DE LANGSPEELPLATEN-REGEL:
 Een prospect die NU geen ja zegt, kan over 3 maanden alsnog ja zeggen. Of over 1 jaar. Houd ze warm, hou ze vriendelijk, en blijf in hun leven via je gewone content (geen pitches in de DM). Dan ben je top-of-mind als hun situatie verandert. "Niet jagen, niet smeken, wel richting geven", Worre.`,
