@@ -372,7 +372,7 @@ export function VCardUploader({
       // bestand.
       if (!/BEGIN:VCARD/i.test(tekst)) {
         toast.error(
-          "Dit lijkt geen vCard-bestand. Heb je 'm uit je Contacten-app geëxporteerd? Soms helpt 't om 'm eerst in Bestanden te bewaren en dáár vandaan te uploaden, in plaats van direct uit Mail.",
+          "Dit lijkt geen geldig adresboek-bestand. Heb je 'm uit je Contacten-app geëxporteerd? Soms helpt 't om 'm eerst in Bestanden te bewaren en dáár vandaan te uploaden, in plaats van direct uit Mail.",
         );
         return;
       }
@@ -584,7 +584,7 @@ export function VCardUploader({
               : "text-cm-white opacity-60 hover:opacity-100"
           }`}
         >
-          📂 vCard-bestand
+          📂 Adresboek-bestand
         </button>
       </div>
 
@@ -672,7 +672,7 @@ export function VCardUploader({
       {actieveTab === "vcard" && (
         <div className="space-y-3 pt-1">
           <p className="text-cm-white text-xs leading-relaxed">
-            Heb je al een vCard-bestand (.vcf) op je computer staan? Sleep 'm
+            Heb je al een adresboek-bestand (.vcf) op je computer staan? Sleep 'm
             hierin of klik op kies. Nog niet? Lees onderaan hoe je 'm op je
             telefoon maakt.
           </p>
@@ -809,7 +809,7 @@ export function VCardUploader({
           {/* Stap-voor-stap-uitleg per platform */}
           <div className="pt-3 border-t border-cm-border space-y-2">
             <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
-              Hoe maak je een vCard-bestand?
+              Hoe exporteer je je adresboek?
             </p>
 
             <div className="grid grid-cols-3 gap-2">
@@ -867,7 +867,7 @@ export function VCardUploader({
               <div className="space-y-3 text-xs text-cm-white leading-relaxed">
                 <p className="opacity-80">
                   Vanaf iOS 17 kun je rechtstreeks vanuit de Contacten-app op je
-                  iPhone een vCard-bestand maken. Geen iCloud.com nodig, geen
+                  iPhone een adresboek-bestand maken. Geen iCloud.com nodig, geen
                   app erbij, alles in de telefoon zelf.
                 </p>
                 <ol className="list-decimal pl-5 space-y-1.5">

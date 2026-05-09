@@ -104,7 +104,7 @@ Overweldigd voelen is normaal. Je leert iets nieuws, je stapt uit comfort. Eerst
         id: "dag2-20-namen",
         label: "Voeg 20 namen toe (uit je telefoon of zelf typen)",
         uitleg:
-          "TWEE manieren, kies welke past:\n\n1️⃣ Vanuit je telefoon (vCard): heb je gisteren je telefoon-contacten geüpload? Open Namenlijst → '📚 Mijn ELEVA-geheugen' en activeer er 20 in één klik uit de namen die je telefoon al kent. Snelst, want je hoeft niets te bedenken, je kiest wie je herkent.\n\n2️⃣ Zelf typen: vul hieronder direct namen in (familie, oud-collega's, sport, hobby, ouders bij school, buren). Geen filter, alles erop.\n\nBeide tellen, je mag mixen. Tip: begin met je telefoonlijst, dan komen er namen voorbij waar je niet aan had gedacht. Daarna eventueel zelf aanvullen.",
+          "TWEE manieren, kies welke past:\n\n1️⃣ Vanuit je telefoon: heb je gisteren je telefoon-contacten geüpload? Open Namenlijst → '📚 Mijn ELEVA-geheugen' en activeer er 20 in één klik uit de namen die je telefoon al kent. Snelst, want je hoeft niets te bedenken, je kiest wie je herkent.\n\n2️⃣ Zelf typen: vul hieronder direct namen in (familie, oud-collega's, sport, hobby, ouders bij school, buren). Geen filter, alles erop.\n\nBeide tellen, je mag mixen. Tip: begin met je telefoonlijst, dan komen er namen voorbij waar je niet aan had gedacht. Daarna eventueel zelf aanvullen.",
         verplicht: true,
         inlineEmbed: "namen-form",
         inlineEmbedDoel: 20,
