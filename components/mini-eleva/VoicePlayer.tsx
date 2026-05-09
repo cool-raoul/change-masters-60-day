@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 // ============================================================
@@ -45,6 +45,9 @@ export function VoicePlayer({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [speelt, setSpeelt] = useState(false);
   const [huidigeTijd, setHuidigeTijd] = useState(0);
+  const [werkelijkeDuur, setWerkelijkeDuur] = useState<number>(
+    duurSeconden ?? 0,
+  );
   const [tekstZichtbaar, setTekstZichtbaar] = useState(false);
   const [bewerken, setBewerken] = useState(false);
   const [concept, setConcept] = useState(transcriptie ?? "");
@@ -52,6 +55,58 @@ export function VoicePlayer({
   const [lokaleTranscriptie, setLokaleTranscriptie] = useState(
     transcriptie ?? "",
   );
+
+  // FIX voor MediaRecorder-webm: streaming-opnames hebben geen duration
+  // in de header, browser leest 'm dan als Infinity en stopt 't afspelen
+  // bij wat 'ie eerst denkt dat 't einde is (vaak 4 sec).
+  // Truc: zodra metadata is geladen, force seek naar het einde, daarna
+  // terug naar 0. Browser scant zo de hele blob en weet de echte duur.
+  useEffect(() => {
+    const a = audioRef.current;
+    if (!a) return;
+
+    let geseekt = false;
+
+    function metadataGeladen() {
+      if (!a) return;
+      // Als browser geen geldige duration weet, force scan
+      if (
+        !geseekt &&
+        (a.duration === Infinity ||
+          isNaN(a.duration) ||
+          a.duration === 0)
+      ) {
+        geseekt = true;
+        try {
+          a.currentTime = 1e101;
+        } catch {
+          // negeer, sommige browsers blokkeren absurde seeks
+        }
+      } else if (a.duration > 0 && isFinite(a.duration)) {
+        setWerkelijkeDuur(a.duration);
+      }
+    }
+
+    function tijdSeekFix() {
+      if (!a) return;
+      // Na de fake seek hebben we de echte duration
+      if (a.duration > 0 && isFinite(a.duration)) {
+        setWerkelijkeDuur(a.duration);
+        a.currentTime = 0;
+        a.removeEventListener("timeupdate", tijdSeekFix);
+      }
+    }
+
+    a.addEventListener("loadedmetadata", metadataGeladen);
+    a.addEventListener("durationchange", metadataGeladen);
+    a.addEventListener("timeupdate", tijdSeekFix);
+
+    return () => {
+      a.removeEventListener("loadedmetadata", metadataGeladen);
+      a.removeEventListener("durationchange", metadataGeladen);
+      a.removeEventListener("timeupdate", tijdSeekFix);
+    };
+  }, [audioUrl]);
 
   function togglePlay() {
     const a = audioRef.current;
@@ -111,7 +166,9 @@ export function VoicePlayer({
     setBewerken(false);
   }
 
-  const totaleDuur = duurSeconden ?? 0;
+  // Gebruik werkelijke duur uit de audio-element (na seek-fix), valt
+  // terug op de duur die we tijdens opname hebben gemeten
+  const totaleDuur = werkelijkeDuur || (duurSeconden ?? 0);
   const kanBewerken = isEigen && berichtId;
   const heeftTranscriptie = !!lokaleTranscriptie;
 

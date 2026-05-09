@@ -316,25 +316,9 @@ NIET GELIJK PITCHEN, wat wel: reageer terug op hun content. Vraag iets. Bouw rap
       },
       {
         id: "dag4-aanpak-kiezen",
-        label: "🧭 Per prospect: kies aanpak (3-weg of Mini-ELEVA)",
+        label: "🧭 Voor wie 'ja' zei: kies aanpak per prospect",
         uitleg:
-          "Op de prospect-kaart staat nu een keuzeblok: 3-WEG-GESPREK of MINI-ELEVA. Beide zijn goed, het hangt af van WIE je voor je hebt.\n\n• 3-WEG-GESPREK kies je voor: warme prospects, mensen die snel willen schakelen, persoonlijk contact zoeken, en jij + sponsor er live bij willen zijn. Klassieke aanpak, sterk in autoriteit en sociaal bewijs.\n\n• MINI-ELEVA kies je voor: nieuwsgierige twijfelaars, mensen met een druk leven, prospects die eerst rustig zelf willen kijken, of als jij geen 3-weg op korte termijn kunt regelen. Ze krijgen 14 dagen eigen toegang tot welkomstvideo's, ELEVA-mentor (AI), en kunnen via chat met jou en de sponsor.\n\nJe hoeft niet voor IEDEREEN te kiezen, alleen voor mensen die je deze week serieus opvolgt. De andere optie blijft beschikbaar.",
-        verplicht: false,
-        actieRoute: "/namenlijst",
-      },
-      {
-        id: "dag4-3weg-optioneel",
-        label: "Optioneel: 1 3-weg-gesprek met sponsor starten",
-        uitleg:
-          "Heb je al iemand die warm is uit dag 2-3? Koppel die aan je sponsor in een WhatsApp-groepje.\n\nSTAPSGEWIJS HOE OP TE ZETTEN:\n1) Stuur prospect eerst een korte aankondiging: 'Hé [naam], ik maak even een groepje aan met mijn mentor [sponsor], zij doet dit al [periode] en kan met je meekijken.'\n2) Stuur sponsor vooraf de context van je prospect: hoe ken je 'm, wat speelt er, waar is hij/zij benieuwd naar.\n3) Maak het WhatsApp-groepje aan met jullie drie.\n4) Jij introduceert: 'Hi [prospect]! Dit is [sponsor], mijn mentor. Ze heeft mij geholpen met [iets]. [Sponsor], dit is [prospect], die op zoek is naar [situatie]. Wil jij even verder helpen?'\n5) Daarna: ZWIJG. Niet meepraten, sponsor neemt het over. Dit is de moeilijkste stap, maar het cruciaalst. Op dag 7 leer je de volledige 5-stappen-flow.",
-        verplicht: false,
-        actieRoute: "/namenlijst",
-      },
-      {
-        id: "dag4-mini-eleva-optioneel",
-        label: "Optioneel: 1 Mini-ELEVA-uitnodiging versturen",
-        uitleg:
-          "Voor een prospect die liever zelf wil kijken: open de prospect-kaart → 'Mini-ELEVA-uitnodiging maken'. Je krijgt een deelbare link (14 dagen geldig) die je via WhatsApp doorstuurt. Je prospect krijgt z'n eigen omgeving met welkomstvideo's, een AI-mentor voor 24/7 vragen, en een chat met jou en je sponsor. Je krijgt push-meldingen bij elke beweging zonder dat je in de app hoeft te zitten. Ideaal voor twijfelaars en mensen met een druk leven.",
+          "Voor elke prospect die ja zei tegen een kijkmoment: open z'n kaart en kies één van twee paden via het keuzeblok bovenaan.\n\n🤝 3-WEG-GESPREK voor: warme prospects, mensen die snel willen schakelen, kort traject mogelijk, persoonlijk contact passend. Stappenplan staat klaar achter de '3-weg'-knop op de kaart, dag 7 verdiep je dit.\n\n✨ MINI-ELEVA voor: twijfelaars, prospects met druk leven, mensen die eerst zelf willen kijken. 14 dagen eigen toegang, welkomstvideo's, AI-mentor, chat met jou en je sponsor. Klik 'Mini-ELEVA-uitnodiging maken' op de kaart en stuur de link via WhatsApp.\n\nNiet zeker? Druk op 'Overleg met sponsor' in het keuzeblok, dan opent een vooringevulde WhatsApp aan je sponsor met de prospect-context.\n\nJe hoeft niet voor iedereen vandaag te kiezen, alleen voor de mensen die je deze week serieus opvolgt.",
         verplicht: false,
         actieRoute: "/namenlijst",
       },

@@ -12,7 +12,7 @@ import { IngezetteTools } from "@/components/namenlijst/IngezetteTools";
 import { DriewegGesprekInklapbaar } from "@/components/namenlijst/DriewegGesprek";
 import { MiniElevaUitnodigKnop } from "@/components/namenlijst/MiniElevaUitnodigKnop";
 import { MiniElevaActieveSessies } from "@/components/namenlijst/MiniElevaActieveSessies";
-import { MiniElevaChatInklapbaar } from "@/components/namenlijst/MiniElevaChatInklapbaar";
+import { MiniElevaProspectChat } from "@/components/namenlijst/MiniElevaProspectChat";
 import { AanpakKeuze } from "@/components/namenlijst/AanpakKeuze";
 import { ProspectVerwijderKnop } from "@/components/namenlijst/ProspectVerwijderKnop";
 import { CoachGesprekkenInklapbaar } from "@/components/namenlijst/CoachGesprekkenInklapbaar";
@@ -363,11 +363,14 @@ export default async function ProspectDetailPagina({
           <MiniElevaActieveSessies prospectId={id} />
 
           {/* Drie-persoonschat tussen member, sponsor en prospect.
-              Inklapbaar per uitnodiging, met ongelezen-teller en
-              ondersteuning voor tekst en spraak. */}
-          <MiniElevaChatInklapbaar
+              EEN doorlopende thread per prospect (over alle uitnodigingen
+              heen, WhatsApp-stijl), met ongelezen-teller en spraak. */}
+          <MiniElevaProspectChat
             prospectId={id}
             prospectVoornaam={prospect.volledige_naam.split(" ")[0]}
+            sponsorVoornaam={
+              sponsorNaam ? sponsorNaam.split(" ")[0] : null
+            }
           />
 
           {/* ELEVA Mentor gesprekken, inklapbaar */}

@@ -355,7 +355,8 @@ export async function GET(req: NextRequest) {
     const admin = createAdminClient();
     // Alleen mens-kanaal: drie-persoonschat. Mentor-vragen worden niet
     // getoond in deze view (AVG-Keuze A: blijven privé tussen prospect
-    // en AI).
+    // en AI). Plus: oude haal-erbij-systeemberichten filteren want de
+    // knop is weg en die rijen vervuilen de chat.
     const { data: berichten } = await admin
       .from("mini_eleva_chats")
       .select(
@@ -364,6 +365,7 @@ export async function GET(req: NextRequest) {
       .eq("invitation_id", auth.invitationId)
       .eq("kanaal", "mens")
       .in("rol", ["prospect", "member", "sponsor"])
+      .not("content", "like", "🤝 [haal-erbij]%")
       .order("created_at", { ascending: true });
 
     // Voor elk spraakbericht: signed URL voor audio-afspelen genereren

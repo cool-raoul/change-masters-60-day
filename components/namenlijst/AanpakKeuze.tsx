@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { createClient } from "@/lib/supabase/client";
 
 // ============================================================
 // AanpakKeuze, op de prospect-detail-pagina onder de status.
@@ -35,7 +36,79 @@ export function AanpakKeuze({
 }: Props) {
   const [aanpak, setAanpak] = useState<Aanpak>(huidigeAanpak);
   const [bezig, setBezig] = useState(false);
+  const [sponsor, setSponsor] = useState<{
+    naam: string;
+    telefoon: string | null;
+  } | null>(null);
   const router = useRouter();
+
+  // Sponsor-info ophalen voor 'Overleg met sponsor'-knop
+  useEffect(() => {
+    let levend = true;
+    (async () => {
+      try {
+        const supabase = createClient();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) return;
+        const { data: profiel } = await supabase
+          .from("profiles")
+          .select("sponsor_id")
+          .eq("id", user.id)
+          .maybeSingle();
+        const sponsorId = (profiel as { sponsor_id?: string } | null)
+          ?.sponsor_id;
+        if (!sponsorId) return;
+        const { data: sp } = await supabase
+          .from("profiles")
+          .select("full_name, telefoon")
+          .eq("id", sponsorId)
+          .maybeSingle();
+        if (!levend) return;
+        const spRow = sp as
+          | { full_name?: string; telefoon?: string | null }
+          | null;
+        if (spRow?.full_name) {
+          setSponsor({
+            naam: spRow.full_name,
+            telefoon: spRow.telefoon ?? null,
+          });
+        }
+      } catch {
+        // negeer
+      }
+    })();
+    return () => {
+      levend = false;
+    };
+  }, []);
+
+  function overlegMetSponsor() {
+    if (!sponsor) return;
+    const aanpakLabel =
+      aanpak === "drieweg"
+        ? "een 3-weg-gesprek"
+        : aanpak === "mini_eleva"
+          ? "Mini-ELEVA"
+          : null;
+    const tekst = aanpakLabel
+      ? `Hé ${sponsor.naam.split(" ")[0]}, ik denk eraan om ${prospectVoornaam} via ${aanpakLabel} te benaderen. Heb je tijd om er even naar te kijken? Wat zou jij doen?`
+      : `Hé ${sponsor.naam.split(" ")[0]}, ik twijfel over ${prospectVoornaam}. Zou je een 3-weg-gesprek of een Mini-ELEVA aanraden? Wil je even meedenken?`;
+
+    if (sponsor.telefoon) {
+      // wa.me met internationaal-nummer (verwijder + en spaties)
+      const tel = sponsor.telefoon.replace(/[^0-9]/g, "");
+      const url = `https://wa.me/${tel}?text=${encodeURIComponent(tekst)}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+    } else {
+      // Geen nummer bekend, kopieer tekst en geef instructie
+      navigator.clipboard.writeText(tekst).catch(() => {});
+      toast.info(
+        `Bericht naar klembord gekopieerd. Geen WhatsApp-nummer bekend voor ${sponsor.naam.split(" ")[0]}, plak 'm zelf in je gesprek.`,
+      );
+    }
+  }
 
   async function kies(nieuw: Aanpak) {
     if (bezig) return;
@@ -152,16 +225,28 @@ export function AanpakKeuze({
         </button>
       </div>
 
-      {aanpak && (
-        <button
-          type="button"
-          onClick={() => kies(null)}
-          disabled={bezig}
-          className="text-cm-white/40 hover:text-cm-white/70 text-[11px] underline"
-        >
-          Keuze wissen
-        </button>
-      )}
+      <div className="flex flex-wrap items-center gap-3 pt-1">
+        {sponsor && (
+          <button
+            type="button"
+            onClick={overlegMetSponsor}
+            className="text-cm-gold hover:text-cm-white text-xs flex items-center gap-1.5"
+            title={`Stuur een vooringevuld WhatsApp-bericht aan ${sponsor.naam.split(" ")[0]}`}
+          >
+            💬 Overleg met {sponsor.naam.split(" ")[0]}
+          </button>
+        )}
+        {aanpak && (
+          <button
+            type="button"
+            onClick={() => kies(null)}
+            disabled={bezig}
+            className="text-cm-white/40 hover:text-cm-white/70 text-[11px] underline"
+          >
+            Keuze wissen
+          </button>
+        )}
+      </div>
     </div>
   );
 }
