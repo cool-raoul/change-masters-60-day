@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { sendPushToUser } from "@/lib/push/sendPush";
 
 // ============================================================
 // PATCH /api/mini-eleva/uitnodiging/sponsor
@@ -42,10 +44,10 @@ export async function PATCH(req: NextRequest) {
       );
     }
 
-    // Verifieer ownership
+    // Verifieer ownership + haal context op voor de notificatie
     const { data: inv } = await supabase
       .from("prospect_invitations")
-      .select("id, member_user_id")
+      .select("id, member_user_id, prospect_id, sponsor_user_id")
       .eq("id", invitationId)
       .maybeSingle();
     if (!inv) {
@@ -54,12 +56,20 @@ export async function PATCH(req: NextRequest) {
         { status: 404 },
       );
     }
-    if ((inv as { member_user_id: string }).member_user_id !== user.id) {
+    type InvRow = {
+      id: string;
+      member_user_id: string;
+      prospect_id: string;
+      sponsor_user_id: string | null;
+    };
+    const invRow = inv as InvRow;
+    if (invRow.member_user_id !== user.id) {
       return NextResponse.json(
         { error: "Geen toegang tot deze uitnodiging" },
         { status: 403 },
       );
     }
+    const oudeSponsorId = invRow.sponsor_user_id;
 
     // Verifieer dat sponsorUserId in jouw upline-keten zit (of null)
     let nieuweSponsorId: string | null = null;
@@ -100,6 +110,61 @@ export async function PATCH(req: NextRequest) {
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    // Notificeer de NIEUWE sponsor (in-app + push) als er een nieuwe is
+    // toegevoegd of er gewisseld is naar een andere sponsor. Niet bij
+    // verwijderen of bij hetzelfde laten.
+    if (nieuweSponsorId && nieuweSponsorId !== oudeSponsorId) {
+      try {
+        const admin = createAdminClient();
+
+        // Member-naam + prospect-naam ophalen voor de tekst
+        const [{ data: memberProfile }, { data: prospectRow }] =
+          await Promise.all([
+            admin
+              .from("profiles")
+              .select("full_name")
+              .eq("id", user.id)
+              .maybeSingle(),
+            admin
+              .from("prospects")
+              .select("volledige_naam")
+              .eq("id", invRow.prospect_id)
+              .maybeSingle(),
+          ]);
+        const memberNaam =
+          (memberProfile as { full_name?: string } | null)?.full_name ??
+          "een member";
+        const prospectNaam =
+          (prospectRow as { volledige_naam?: string } | null)
+            ?.volledige_naam ?? "een prospect";
+        const memberVoornaam = memberNaam.split(" ")[0] || memberNaam;
+        const prospectVoornaam =
+          prospectNaam.split(" ")[0] || prospectNaam;
+
+        // In-app notificatie (verschijnt op /mijn-chats banner + sidebar)
+        await admin.from("mini_eleva_notificaties").insert({
+          invitation_id: invitationId,
+          ontvanger_user_id: nieuweSponsorId,
+          type: "haal-erbij",
+          titel: `${memberVoornaam} heeft je toegevoegd aan een chat met ${prospectVoornaam}`,
+          detail: "Open de chat om mee te lezen en te reageren",
+        });
+
+        // Push naar de nieuwe sponsor (faalt stilletjes als geen push aan)
+        await sendPushToUser(nieuweSponsorId, {
+          title: `${memberVoornaam} haalt je erbij`,
+          body: `Toegevoegd aan een Mini-ELEVA-chat met ${prospectVoornaam}`,
+          url: `/sponsor/mini-eleva/${invitationId}`,
+          tag: `mini-eleva-sponsor-toegevoegd-${invitationId}`,
+        }).catch((e) => {
+          console.warn("[wissel-sponsor] push faalde:", e?.message ?? e);
+        });
+      } catch (e) {
+        console.warn("[wissel-sponsor] notificatie-fout:", e);
+        // Niet falen op de hoofdactie, sponsor is succesvol gekoppeld
+      }
     }
 
     return NextResponse.json({

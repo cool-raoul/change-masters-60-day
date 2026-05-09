@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { MensChatVenster } from "@/components/mini-eleva/MensChatVenster";
@@ -57,14 +58,18 @@ export default async function SponsorMiniElevaDetail({
     );
   }
 
-  // Member- en prospect-naam
+  // Member- en prospect-naam via admin-client. Sponsor heeft via RLS
+  // geen leestoegang op prospects van een andere member, maar mag de
+  // naam zien want ze is sponsor van de invitation (al gecheckt
+  // hierboven met sponsor_user_id-match).
+  const admin = createAdminClient();
   const [{ data: member }, { data: prospect }] = await Promise.all([
-    supabase
+    admin
       .from("profiles")
       .select("full_name")
       .eq("id", inv.member_user_id)
       .maybeSingle(),
-    supabase
+    admin
       .from("prospects")
       .select("volledige_naam")
       .eq("id", inv.prospect_id)

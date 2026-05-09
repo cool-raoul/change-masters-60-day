@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { format, parseISO, formatDistanceToNow } from "date-fns";
@@ -63,12 +64,18 @@ export default async function SponsorMiniElevaOverzicht() {
   const memberIds = Array.from(new Set(lijst.map((i) => i.member_user_id)));
   const prospectIds = Array.from(new Set(lijst.map((i) => i.prospect_id)));
 
+  // Admin-client voor de prospect-namen: sponsor heeft via RLS geen
+  // toegang tot prospects van member-X (die zijn user_id-locked), maar
+  // mag de naam wel zien want ze is sponsor van de invitation. Dus
+  // server-side admin met handmatige authorization (sponsor_user_id
+  // matcht in invitations is al gecheckt hierboven).
+  const admin = createAdminClient();
   const [{ data: members }, { data: prospects }] = await Promise.all([
     memberIds.length
-      ? supabase.from("profiles").select("id, full_name").in("id", memberIds)
+      ? admin.from("profiles").select("id, full_name").in("id", memberIds)
       : Promise.resolve({ data: [] }),
     prospectIds.length
-      ? supabase
+      ? admin
           .from("prospects")
           .select("id, volledige_naam")
           .in("id", prospectIds)
