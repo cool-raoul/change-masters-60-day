@@ -36,18 +36,20 @@ export default async function MentorPagina({
 
   await logActiviteit(ctx.invitationId, "mentor", "mentor-pagina geopend");
 
-  // Bestaande berichten laden
+  // Bestaande berichten laden — alleen mentor-kanaal, niet de mens-chat
   const admin = createAdminClient();
   const { data: berichtenRaw } = await admin
     .from("mini_eleva_chats")
     .select("id, rol, content, created_at")
     .eq("invitation_id", ctx.invitationId)
+    .eq("kanaal", "mentor")
     .order("created_at", { ascending: true });
 
   const { count: aiCount } = await admin
     .from("mini_eleva_chats")
     .select("id", { count: "exact", head: true })
     .eq("invitation_id", ctx.invitationId)
+    .eq("kanaal", "mentor")
     .eq("rol", "ai_mentor");
 
   type DbBericht = {

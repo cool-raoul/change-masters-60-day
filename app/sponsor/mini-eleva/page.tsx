@@ -105,6 +105,7 @@ export default async function SponsorMiniElevaOverzicht() {
         .from("mini_eleva_chats")
         .select("id", { count: "exact", head: true })
         .eq("invitation_id", inv.id)
+        .eq("kanaal", "mens")
         .in("rol", ["prospect", "member"])
         .gt("created_at", sinds);
       const verlopen =

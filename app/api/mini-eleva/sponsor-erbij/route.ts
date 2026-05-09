@@ -52,7 +52,9 @@ export async function POST(req: NextRequest) {
     );
 
     // Sla ook als chat-bericht op zodat member en sponsor het terugzien
-    // in de chat-thread bij hun zicht in /vandaag of /namenlijst
+    // in de chat-thread bij hun zicht in /vandaag of /namenlijst.
+    // Kanaal 'mens' want het is consent-gegeven info richting de mens-
+    // chat (niet privé tussen prospect en AI).
     await admin.from("mini_eleva_chats").insert({
       invitation_id: ctx.invitationId,
       rol: "prospect",
@@ -60,6 +62,7 @@ export async function POST(req: NextRequest) {
       content: vraag
         ? `🤝 [haal-erbij] ${vraag}`
         : "🤝 [haal-erbij] Prospect vraagt of jij of de sponsor erbij wil komen.",
+      kanaal: "mens",
     });
 
     // Notificeer member + sponsor (in-app + push). De prospect heeft

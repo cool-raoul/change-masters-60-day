@@ -116,7 +116,8 @@ export async function POST(req: NextRequest) {
 
     const admin = createAdminClient();
 
-    // Sla bericht op
+    // Sla bericht op met kanaal='mens' zodat 't NIET in de mentor-chat
+    // verschijnt. Mentor-kanaal wordt alleen door de chat-API beheerd.
     const insertRow: Record<string, unknown> = {
       invitation_id: auth.invitationId,
       rol: auth.rol,
@@ -125,6 +126,7 @@ export async function POST(req: NextRequest) {
       duur_seconden: duurSeconden ?? null,
       audio_path: audioPath,
       transcriptie,
+      kanaal: "mens",
     };
 
     const { data: nieuwBericht, error: insertErr } = await admin
@@ -351,12 +353,16 @@ export async function GET(req: NextRequest) {
     }
 
     const admin = createAdminClient();
+    // Alleen mens-kanaal: drie-persoonschat. Mentor-vragen worden niet
+    // getoond in deze view (AVG-Keuze A: blijven privé tussen prospect
+    // en AI).
     const { data: berichten } = await admin
       .from("mini_eleva_chats")
       .select(
         "id, rol, type, content, transcriptie, audio_path, duur_seconden, created_at",
       )
       .eq("invitation_id", auth.invitationId)
+      .eq("kanaal", "mens")
       .in("rol", ["prospect", "member", "sponsor"])
       .order("created_at", { ascending: true });
 

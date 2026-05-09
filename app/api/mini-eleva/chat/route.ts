@@ -65,11 +65,12 @@ export async function POST(req: NextRequest) {
 
     const admin = createAdminClient();
 
-    // Mitigatie 1: HARD QUOTUM check
+    // Mitigatie 1: HARD QUOTUM check (alleen mentor-kanaal tellen)
     const { count: aiCount } = await admin
       .from("mini_eleva_chats")
       .select("id", { count: "exact", head: true })
       .eq("invitation_id", ctx.invitationId)
+      .eq("kanaal", "mentor")
       .eq("rol", "ai_mentor");
 
     if ((aiCount ?? 0) >= HARD_QUOTUM) {
@@ -78,18 +79,21 @@ export async function POST(req: NextRequest) {
           quotumBereikt: true,
           gebruikt: aiCount ?? 0,
           limiet: HARD_QUOTUM,
-          bericht: `Je hebt al ${HARD_QUOTUM} vragen gesteld aan de mentor. Voor verdere vragen kun je beter ${ctx.memberNaam ?? "de member"}${ctx.sponsorNaam ? ` of ${ctx.sponsorNaam}` : ""} via de "haal sponsor erbij"-knop er even bij halen.`,
+          bericht: `Je hebt al ${HARD_QUOTUM} vragen gesteld aan de mentor. Voor verdere vragen kun je beter ${ctx.memberNaam ?? "de member"}${ctx.sponsorNaam ? ` of ${ctx.sponsorNaam}` : ""} even via de chat-tegel benaderen.`,
         }),
         { status: 429, headers: { "Content-Type": "application/json" } },
       );
     }
 
     // Geschiedenis ophalen voor conversatie-context (laatste N berichten,
-    // ouder → nieuwer voor OpenAI-volgorde)
+    // ouder → nieuwer voor OpenAI-volgorde). Alleen mentor-kanaal,
+    // mens-chat-berichten zijn niet relevant voor de AI-mentor en horen
+    // niet in haar context.
     const { data: geschiedenisRaw } = await admin
       .from("mini_eleva_chats")
       .select("rol, content, created_at")
       .eq("invitation_id", ctx.invitationId)
+      .eq("kanaal", "mentor")
       .in("rol", ["prospect", "ai_mentor"])
       .order("created_at", { ascending: false })
       .limit(HISTORY_TRIM);
@@ -100,12 +104,14 @@ export async function POST(req: NextRequest) {
       .reverse();
 
     // Schrijf de vraag van de prospect direct weg, zodat 'm staat
-    // ongeacht of de AI-call slaagt
+    // ongeacht of de AI-call slaagt. Kanaal 'mentor' zodat 'ie niet
+    // lekt naar de mens-chat.
     await admin.from("mini_eleva_chats").insert({
       invitation_id: ctx.invitationId,
       rol: "prospect",
       type: "tekst",
       content: vraag,
+      kanaal: "mentor",
     });
 
     // Mitigatie 3: PROMPT-CACHING, stabiele system-prompt vooraan.
@@ -165,6 +171,7 @@ export async function POST(req: NextRequest) {
                 rol: "ai_mentor",
                 type: "tekst",
                 content: volledigAntwoord,
+                kanaal: "mentor",
               });
               await logActiviteit(
                 ctx.invitationId,
@@ -251,16 +258,19 @@ export async function GET(req: NextRequest) {
     }
 
     const admin = createAdminClient();
+    // Alleen mentor-kanaal: vragen van prospect aan AI + AI-antwoorden
     const { data: berichten } = await admin
       .from("mini_eleva_chats")
       .select("id, rol, type, content, created_at")
       .eq("invitation_id", ctx.invitationId)
+      .eq("kanaal", "mentor")
       .order("created_at", { ascending: true });
 
     const { count: aiCount } = await admin
       .from("mini_eleva_chats")
       .select("id", { count: "exact", head: true })
       .eq("invitation_id", ctx.invitationId)
+      .eq("kanaal", "mentor")
       .eq("rol", "ai_mentor");
 
     return new Response(
