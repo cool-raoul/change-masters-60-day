@@ -26,12 +26,36 @@ type NavItem = {
   isActive: (pathname: string) => boolean;
   isMore?: boolean;
   toonHerinneringenBadge?: boolean;
+  toonChatsBadge?: boolean;
 };
 
 export function BottomNav() {
   const pathname = usePathname();
   const [aantalHerinneringen, setAantalHerinneringen] = useState(0);
+  const [aantalChatsOngelezen, setAantalChatsOngelezen] = useState(0);
   const supabase = createClient();
+
+  // Mini-ELEVA chats teller, polling elke 30 sec
+  useEffect(() => {
+    let levend = true;
+    async function haal() {
+      try {
+        const res = await fetch("/api/mini-eleva/mijn-chats");
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!levend) return;
+        setAantalChatsOngelezen(data.totaalOngelezen ?? 0);
+      } catch {
+        // negeer
+      }
+    }
+    haal();
+    const t = setInterval(haal, 30_000);
+    return () => {
+      levend = false;
+      clearInterval(t);
+    };
+  }, [pathname]);
 
   // Real-time aantal openstaande herinneringen voor de badge op
   // 'Vandaag'. Zelfde patroon als de bel-icoon in de Topbar.
@@ -84,16 +108,17 @@ export function BottomNav() {
       isActive: (p) => p.startsWith("/namenlijst"),
     },
     {
+      href: "/mijn-chats",
+      label: "Chats",
+      ico: "💬",
+      isActive: (p) => p.startsWith("/mijn-chats"),
+      toonChatsBadge: true,
+    },
+    {
       href: "/coach",
       label: "Mentor",
       ico: "🤖",
       isActive: (p) => p.startsWith("/coach"),
-    },
-    {
-      href: "/scripts",
-      label: "Scripts",
-      ico: "📋",
-      isActive: (p) => p.startsWith("/scripts"),
     },
     {
       href: "#meer",
@@ -120,6 +145,7 @@ export function BottomNav() {
       {items.map((item) => {
         const actief = item.isActive(pathname);
         const showBadge = item.toonHerinneringenBadge && aantalHerinneringen > 0;
+        const showChatsBadge = item.toonChatsBadge && aantalChatsOngelezen > 0;
 
         const inhoud = (
           <div className="flex flex-col items-center gap-0.5 relative pt-1">
@@ -150,6 +176,11 @@ export function BottomNav() {
             {showBadge && (
               <span className="absolute -top-1 right-1 min-w-[16px] h-4 rounded-full bg-red-500/85 text-white text-[9px] font-bold flex items-center justify-center px-1 border-2 border-cm-surface">
                 {aantalHerinneringen > 9 ? "9+" : aantalHerinneringen}
+              </span>
+            )}
+            {showChatsBadge && (
+              <span className="absolute -top-1 right-1 min-w-[16px] h-4 rounded-full bg-cm-gold text-black text-[9px] font-bold flex items-center justify-center px-1 border-2 border-cm-surface">
+                {aantalChatsOngelezen > 9 ? "9+" : aantalChatsOngelezen}
               </span>
             )}
           </div>

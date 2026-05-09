@@ -47,23 +47,23 @@ export function Sidebar({
 
   const navigatie = [
     { href: "/dashboard", labelKey: "nav.dashboard", icoon: "⚡" },
+    // Chat-functies hoog in het menu: 'Mijn chats' (mens-gesprekken
+    // met prospects via mini-ELEVA) en 'ELEVA Mentor' (eigen AI-coach)
+    // staan samen direct onder dashboard, want dat zijn de meest
+    // gebruikte interactie-features per dag.
+    { href: "/mijn-chats", labelKey: "nav.mijn_chats", icoon: "💬" },
+    { href: "/coach", labelKey: "nav.coach", icoon: "🤖" },
     // /acties is gepensioneerd, vervangen door de Volgende-beste-actie-radar
     // op het dashboard zelf en /herinneringen voor het volledige overzicht.
     { href: "/namenlijst", labelKey: "nav.namenlijst", icoon: "👥" },
     { href: "/zoeken", labelKey: "nav.zoeken", icoon: "🔍" },
-    { href: "/coach", labelKey: "nav.coach", icoon: "🤖" },
     { href: "/scripts", labelKey: "nav.scripts", icoon: "📋" },
     { href: "/mijn-zinnen", labelKey: "nav.zinnen", icoon: "📝" },
     { href: "/statistieken", labelKey: "nav.statistieken", icoon: "📊" },
     { href: "/herinneringen", labelKey: "nav.herinneringen", icoon: "🔔" },
     { href: "/team", labelKey: "nav.team", icoon: "🏆" },
-    // Mini-ELEVA chat-overzicht voor de member. Lijst van alle chats
-    // met al haar prospects, WhatsApp-stijl. Toont lege staat als er
-    // nog geen uitnodigingen zijn.
-    { href: "/mijn-chats", labelKey: "nav.mijn_chats", icoon: "💬" },
-    // Mini-ELEVA sponsor-overzicht. Alleen zichtbaar/relevant voor wie
-    // sponsor is van minstens één mini-ELEVA-uitnodiging. De page zelf
-    // toont een lege staat als er niets is.
+    // Sponsor-zicht onderaan: secundair, alleen relevant als je
+    // sponsor van iemand anders' mini-ELEVA bent.
     { href: "/sponsor/mini-eleva", labelKey: "nav.sponsor_mini_eleva", icoon: "✨" },
   ];
 
