@@ -146,7 +146,8 @@ export function ProspectMentorChat({
       <div className="card border-l-4 border-cm-gold/60 mb-4 flex items-center justify-between gap-3 flex-wrap">
         <div className="text-xs text-cm-white/70 leading-relaxed flex-1 min-w-[180px]">
           Vraag me wat je wilt over Lifeplus, ELEVA of het verdienmodel. Ik ben
-          een AI-mentor, geen mens. Voor diepere vragen kun je{" "}
+          de ELEVA-mentor, een AI. Wat we hier bespreken blijft tussen ons. Voor
+          diepere vragen kun je{" "}
           <span className="text-cm-gold font-semibold">{memberNaam ?? "de member"}</span>
           {sponsorNaam ? ` of ${sponsorNaam}` : ""} erbij halen.
         </div>
@@ -188,8 +189,8 @@ export function ProspectMentorChat({
         {berichten.length === 0 && !streamendAntwoord && (
           <div className="card bg-cm-surface-2/50 text-sm leading-relaxed">
             <p className="text-cm-white/90">
-              Hoi {prospectVoornaam}! Ik ben de Mini-ELEVA-mentor. Stel me
-              gerust een vraag, hoe simpel of kritisch ook. Bijvoorbeeld:
+              Hoi {prospectVoornaam}! Ik ben de ELEVA-mentor. Stel me gerust
+              een vraag, hoe simpel of kritisch ook. Bijvoorbeeld:
             </p>
             <ul className="text-cm-white/60 text-xs mt-2 space-y-1 list-disc list-inside">
               <li>Wat is Lifeplus eigenlijk?</li>
@@ -279,7 +280,7 @@ function BerichtBubbel({ bericht }: { bericht: Bericht }) {
       <div className="flex justify-start">
         <div className="bg-cm-surface-2 border border-cm-white/10 rounded-lg px-3 py-2 max-w-[85%] text-sm text-cm-white whitespace-pre-wrap">
           <p className="text-[10px] text-cm-gold/80 uppercase tracking-wider mb-1">
-            Mentor
+            ELEVA-mentor
           </p>
           {bericht.content}
         </div>

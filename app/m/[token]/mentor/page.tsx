@@ -69,7 +69,7 @@ export default async function MentorPagina({
 
       <div className="mb-3">
         <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
-          AI-Mentor
+          ELEVA-mentor
         </p>
         <h1 className="font-serif-warm text-2xl text-cm-white leading-tight">
           Stel je vragen

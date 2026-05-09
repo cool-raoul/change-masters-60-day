@@ -4,18 +4,22 @@ import { nl } from "date-fns/locale";
 
 // ============================================================
 // MiniElevaActieveSessies, server-component die laat zien wat er
-// gebeurt in mini-ELEVA's voor één prospect. Komt onder de
-// uitnodig-knop te staan op de prospect-detail-pagina.
+// gebeurt in mini-ELEVA's voor één prospect.
 //
-// Toont per actieve of recente uitnodiging:
-//   - status (actief / verlopen)
-//   - aantal activiteiten (welke pagina's geopend, hoeveel mentor-vragen)
-//   - eventuele haal-erbij-meldingen
-//   - laatste 6 chatberichten van de prospect (read-only, member ziet
-//     waar de prospect mee bezig is)
+// AVG-keuze A: ALLEEN GEAGGREGEERDE SIGNALEN, GEEN LETTERLIJKE
+// CHATBERICHTEN. De prospect heeft niet expliciet ingestemd met
+// member-leeszicht op gesprekken met de ELEVA-mentor. Wat we WEL
+// tonen:
+//   - Status (actief / verlopen) + verloop-timer
+//   - Aantal acties + aantal mentor-vragen + tijd-sinds-laatste
+//   - "Haal sponsor erbij"-meldingen, want daar drukt de prospect
+//     EXPLICIET op = consent voor doorgifte van die ene specifieke
+//     vraag/oproep
 //
-// Volgt de RLS-policies: member ziet eigen uitnodigingen, sponsor
-// ziet die waar 'ie aan gekoppeld is.
+// Wat we NIET tonen:
+//   - De inhoud van prospect-vragen aan de mentor
+//   - De inhoud van mentor-antwoorden
+//   - Themas, keywords, of samenvattingen (zou alsnog gevoelig zijn)
 // ============================================================
 
 type Props = {
@@ -37,12 +41,6 @@ type Activiteit = {
   created_at: string;
 };
 
-type ChatBericht = {
-  rol: string;
-  content: string;
-  created_at: string;
-};
-
 export async function MiniElevaActieveSessies({ prospectId }: Props) {
   const supabase = await createClient();
 
@@ -61,28 +59,37 @@ export async function MiniElevaActieveSessies({ prospectId }: Props) {
   }
 
   const lijst = invitations as Invitation[];
-
-  // Activiteit + chats voor alle uitnodigingen tegelijk ophalen
   const ids = lijst.map((i) => i.id);
-  const [activiteitRes, chatsRes] = await Promise.all([
-    supabase
-      .from("mini_eleva_activiteit")
-      .select("invitation_id, module, detail, created_at")
-      .in("invitation_id", ids)
-      .order("created_at", { ascending: false }),
-    supabase
-      .from("mini_eleva_chats")
-      .select("invitation_id, rol, content, created_at")
-      .in("invitation_id", ids)
-      .order("created_at", { ascending: false })
-      .limit(50),
-  ]);
+
+  // Activiteit ophalen, dat is het enige inhoudelijke dat we nu nog
+  // tonen. Chat-berichten laden we BEWUST NIET, ook al zou dat met
+  // RLS technisch wel mogen, omdat de prospect niet heeft ingestemd
+  // met member-leeszicht op AI-gesprekken.
+  const { data: activiteitData } = await supabase
+    .from("mini_eleva_activiteit")
+    .select("invitation_id, module, detail, created_at")
+    .in("invitation_id", ids)
+    .order("created_at", { ascending: false });
+
+  // Voor "haal sponsor erbij"-knop ophalen we WEL de tekst, want daar
+  // heeft de prospect bewust op gedrukt = consent voor delen van die
+  // specifieke vraag.
+  const { data: haalErbijChats } = await supabase
+    .from("mini_eleva_chats")
+    .select("invitation_id, content, created_at")
+    .in("invitation_id", ids)
+    .like("content", "🤝 [haal-erbij]%")
+    .order("created_at", { ascending: false });
 
   type ActiviteitMetId = Activiteit & { invitation_id: string };
-  type ChatMetId = ChatBericht & { invitation_id: string };
+  type HaalErbijMetId = {
+    invitation_id: string;
+    content: string;
+    created_at: string;
+  };
   const alleActiviteit =
-    (activiteitRes.data as ActiviteitMetId[] | null) ?? [];
-  const alleChats = (chatsRes.data as ChatMetId[] | null) ?? [];
+    (activiteitData as ActiviteitMetId[] | null) ?? [];
+  const alleHaalErbij = (haalErbijChats as HaalErbijMetId[] | null) ?? [];
 
   return (
     <div className="card border-l-4 border-cm-gold/30 space-y-4">
@@ -91,8 +98,9 @@ export async function MiniElevaActieveSessies({ prospectId }: Props) {
           ✨ Mini-ELEVA-sessies
         </h3>
         <p className="text-cm-white/60 text-xs leading-relaxed mt-1">
-          Wat de prospect doet binnen z'n mini-omgeving. Werkt in real-time, je
-          kunt 'm even pingen of stilletjes meekijken.
+          Momentum-overzicht per uitnodiging. De inhoud van vragen aan de
+          ELEVA-mentor blijft privé, je ziet alleen of er activiteit is en
+          wanneer de prospect je erbij wil halen.
         </p>
       </div>
 
@@ -103,12 +111,11 @@ export async function MiniElevaActieveSessies({ prospectId }: Props) {
         const activiteit = alleActiviteit.filter(
           (a) => a.invitation_id === inv.id,
         );
-        const chats = alleChats.filter((c) => c.invitation_id === inv.id);
         const aantalMentorVragen = activiteit.filter(
           (a) => a.module === "mentor-chat",
         ).length;
-        const haalErbij = activiteit.filter(
-          (a) => a.module === "sponsor-erbij",
+        const haalErbij = alleHaalErbij.filter(
+          (h) => h.invitation_id === inv.id,
         );
         const laatste = inv.laatste_activiteit_op ?? inv.created_at;
 
@@ -148,24 +155,37 @@ export async function MiniElevaActieveSessies({ prospectId }: Props) {
               </div>
             </div>
 
-            {/* Haal-erbij notificatie */}
+            {/* Haal-erbij notificatie. WEL inhoudelijk zichtbaar omdat
+                de prospect daar expliciet op heeft gedrukt = consent. */}
             {haalErbij.length > 0 && (
-              <div className="bg-cm-gold/10 border border-cm-gold/30 rounded-lg p-2 text-xs">
+              <div className="bg-cm-gold/10 border border-cm-gold/30 rounded-lg p-3 text-xs space-y-2">
                 <p className="text-cm-gold font-semibold">
                   🤝 Prospect vroeg om hulp ({haalErbij.length}x)
                 </p>
-                <p className="text-cm-white/60 mt-0.5">
-                  Laatste keer{" "}
-                  {formatDistanceToNow(parseISO(haalErbij[0].created_at), {
-                    locale: nl,
-                    addSuffix: true,
-                  })}
-                  . Stuur 'm even een bericht.
+                <div className="space-y-1.5">
+                  {haalErbij.slice(0, 3).map((h, i) => (
+                    <div key={i} className="text-cm-white/80 leading-snug">
+                      <span className="text-cm-white/40 text-[10px]">
+                        {formatDistanceToNow(parseISO(h.created_at), {
+                          locale: nl,
+                          addSuffix: true,
+                        })}
+                        {" · "}
+                      </span>
+                      {h.content
+                        .replace("🤝 [haal-erbij]", "")
+                        .trim()
+                        .substring(0, 240)}
+                    </div>
+                  ))}
+                </div>
+                <p className="text-cm-white/50 text-[10px] italic pt-1">
+                  Stuur 'm even een bericht of bel.
                 </p>
               </div>
             )}
 
-            {/* Activiteit-samenvatting */}
+            {/* Geaggregeerde stats — geen inhoudelijke gegevens */}
             <div className="grid grid-cols-3 gap-2 text-center">
               <div className="bg-cm-surface rounded p-2">
                 <div className="text-cm-white text-lg font-bold">
@@ -195,32 +215,28 @@ export async function MiniElevaActieveSessies({ prospectId }: Props) {
               </div>
             </div>
 
-            {/* Recente prospect-vragen */}
-            {chats.length > 0 && (
+            {/* Welke modules de prospect heeft geopend (welkom, mentor),
+                geen inhoud, alleen gedrag-signalen */}
+            {activiteit.length > 0 && (
               <details className="text-xs">
-                <summary className="text-cm-gold/80 cursor-pointer hover:text-cm-gold">
-                  👀 Bekijk recente vragen ({chats.length})
+                <summary className="text-cm-white/50 cursor-pointer hover:text-cm-white/70">
+                  Welke modules zijn bezocht
                 </summary>
-                <div className="space-y-1.5 mt-2 max-h-64 overflow-y-auto">
-                  {chats.slice(0, 12).map((c, i) => (
+                <div className="space-y-1 mt-2 max-h-40 overflow-y-auto">
+                  {Array.from(
+                    new Map(
+                      activiteit.map((a) => [
+                        a.module,
+                        activiteit.filter((b) => b.module === a.module).length,
+                      ]),
+                    ).entries(),
+                  ).map(([module, count]) => (
                     <div
-                      key={i}
-                      className={`p-2 rounded ${
-                        c.rol === "prospect"
-                          ? "bg-cm-gold/10 border border-cm-gold/20"
-                          : c.rol === "ai_mentor"
-                            ? "bg-cm-surface border border-cm-white/10"
-                            : "bg-cm-surface border border-cm-white/10"
-                      }`}
+                      key={module}
+                      className="flex justify-between text-cm-white/70 px-2 py-1 bg-cm-surface rounded"
                     >
-                      <div className="text-[10px] text-cm-white/40 uppercase tracking-wider mb-0.5">
-                        {c.rol === "ai_mentor" ? "Mentor" : c.rol}
-                      </div>
-                      <div className="text-cm-white/80 whitespace-pre-wrap leading-snug">
-                        {c.content.length > 280
-                          ? c.content.substring(0, 280) + "..."
-                          : c.content}
-                      </div>
+                      <span>{module}</span>
+                      <span className="text-cm-white/40">{count}x</span>
                     </div>
                   ))}
                 </div>

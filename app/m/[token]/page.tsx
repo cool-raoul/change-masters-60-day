@@ -147,11 +147,11 @@ export default async function MiniElevaLandingPagina({
           <span className="text-2xl">🤖</span>
           <div className="flex-1">
             <h3 className="text-cm-white font-semibold text-sm">
-              Mentor (AI)
+              ELEVA-mentor
             </h3>
             <p className="text-cm-white/60 text-xs leading-relaxed mt-0.5">
-              Stel je vragen aan een mentor, 24/7 beschikbaar. Eerlijk over
-              wat 'ie wel en niet weet.
+              Stel je vragen, 24/7 beschikbaar. Eerlijk over wat 'ie wel en
+              niet weet, en wat blijft tussen jullie.
             </p>
           </div>
           <span className="text-cm-gold">→</span>
@@ -172,9 +172,26 @@ export default async function MiniElevaLandingPagina({
         </div>
       </div>
 
-      <p className="text-cm-white/40 text-[11px] text-center pt-4">
-        ELEVA, je hebt geen account nodig. Je toegang werkt via deze link.
-      </p>
+      {/* Privacy-strook, AVG-transparantie. Prospect moet weten wat
+          er gedeeld wordt en wat niet. */}
+      <div className="bg-cm-surface-2/40 rounded-lg p-3 text-xs text-cm-white/60 leading-relaxed space-y-1.5 mt-2">
+        <p className="text-cm-white/80 font-semibold">🔒 Wat blijft privé?</p>
+        <p>
+          {ctx.memberNaam ?? "De member"} ziet wanneer je actief bent en
+          hoeveel vragen je stelt, maar niet wát je aan de ELEVA-mentor
+          vraagt of welk antwoord je krijgt.
+        </p>
+        <p>
+          Als je iets wilt delen of een mens erbij wilt halen, druk dan op de{" "}
+          <span className="text-cm-gold font-semibold">"haal sponsor erbij"</span>
+          -knop in de chat. Pas dan ziet {ctx.memberNaam ?? "de member"}
+          {ctx.sponsorNaam ? ` of ${ctx.sponsorNaam}` : ""} jouw oproep.
+        </p>
+        <p className="text-cm-white/40 text-[10px] pt-1">
+          Je hebt geen account nodig. Je toegang werkt via deze persoonlijke
+          link en wordt na 30 dagen automatisch gewist.
+        </p>
+      </div>
     </div>
   );
 }
