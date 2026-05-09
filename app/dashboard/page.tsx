@@ -61,7 +61,6 @@ export default async function DashboardPagina() {
     { data: herinneringen },
     { data: pipelineCounts },
     { data: dagVoltooiingen },
-    { data: klaarVoorDrieweg },
     { data: filmViewsRecent },
     { data: testsRecent },
     { data: openHerinneringenAlle },
@@ -70,28 +69,20 @@ export default async function DashboardPagina() {
     supabase.from("why_profiles").select("*").eq("user_id", user.id).maybeSingle(),
     supabase.from("dagelijkse_stats").select("*").eq("user_id", user.id).eq("stat_datum", vandaagStr).maybeSingle(),
     supabase.from("herinneringen").select("*, prospect:prospects(id, volledige_naam)").eq("user_id", user.id).lte("vervaldatum", vandaagStr).eq("voltooid", false).order("vervaldatum", { ascending: true }).limit(5),
-    // Twee queries op prospects: lichte (alleen pipeline_fase voor de
-    // funnel-counts) én rijke (voor radar-scoring met laatste_contact,
-    // signalen, etc.). Apart om de pipeline-counts goedkoop te houden.
+    // Prospects-query incl. gekozen_aanpak voor mini-ELEVA/3-weg-routing
+    // in de radar-scoring. Het aparte 'klaar voor 3-weg'-blok is verwijderd
+    // (8 mei 2026), die info loopt nu mee in de Volgende Beste Actie-radar
+    // hieronder met expliciete reden.
     supabase
       .from("prospects")
-      .select("id, volledige_naam, telefoon, pipeline_fase, laatste_contact")
+      .select(
+        "id, volledige_naam, telefoon, pipeline_fase, laatste_contact, gekozen_aanpak",
+      )
       .eq("user_id", user.id)
       .eq("gearchiveerd", false),
     // Alle voltooide playbook-taken voor deze user, gebruikt voor de
     // 'Vandaag is dag X'-tegel én voor de admin-reminders van vorige dagen.
     supabase.from("dag_voltooiingen").select("dag_nummer, taak_id").eq("user_id", user.id),
-    // Auto-trigger 3-weg: prospects die klaar zijn voor een 3-weg-gesprek.
-    // Criteria: pipeline_fase 'presentatie' OF 'one_pager' (= test bekeken
-    // / ingevuld), niet gearchiveerd, gesorteerd op laatste-update.
-    supabase
-      .from("prospects")
-      .select("id, volledige_naam, pipeline_fase, updated_at")
-      .eq("user_id", user.id)
-      .eq("gearchiveerd", false)
-      .in("pipeline_fase", ["presentatie", "one_pager"])
-      .order("updated_at", { ascending: false })
-      .limit(5),
     // Voor radar: prospect-films afgekeken in de laatste 7 dagen.
     // Faalt stil als de tabel nog niet bestaat (migratie nog niet gerund).
     supabase
@@ -141,6 +132,7 @@ export default async function DashboardPagina() {
       telefoon: string | null;
       pipeline_fase: string;
       laatste_contact: string | null;
+      gekozen_aanpak: "drieweg" | "mini_eleva" | null;
     }>) || [];
 
   const filmAfgekekenPerProspect = new Map<string, string>(); // prospectId → ISO date
@@ -192,9 +184,14 @@ export default async function DashboardPagina() {
     oudsteHerinneringDatum: oudsteHerinneringPerProspect.get(p.id) ?? null,
     dagenSindsFilmAfgekeken: dagenVanaf(filmAfgekekenPerProspect.get(p.id)),
     dagenSindsTestIngevuld: dagenVanaf(testIngevuldPerProspect.get(p.id)),
+    gekozenAanpak: p.gekozen_aanpak ?? null,
   }));
 
-  const topRadar = pakTopRadar(radarInput, 3);
+  // Top-5 (was 3) sinds 8 mei: het aparte 3-weg-blok is verwijderd, dus
+  // de radar is nu de single-source-of-truth voor 'wie pak ik vandaag op'.
+  // Wat ruimer zodat 3-weg- én mini-ELEVA-rijpe prospects allebei zichtbaar
+  // worden. Bij geen of weinig signalen blijft 'ie automatisch korter.
+  const topRadar = pakTopRadar(radarInput, 5);
 
   // Huidige dag = voortgang-gebaseerd voor members (eerste niet-voltooide
   // dag), kalender-gebaseerd voor testers/founders zodat de spring-toolbar
@@ -607,63 +604,10 @@ export default async function DashboardPagina() {
           het dashboard. De gouden CTA hierboven is de enige entry naar
           de flow; afvinken doe je daar. Houdt het dashboard rustig. */}
 
-      {/* Auto-trigger 3-weg, prospects in pipeline-fase 'one_pager' of
-          'presentatie' wachten op een 3-weg-gesprek. Inklapbare details/
-          summary zodat het op het dashboard niet gelijk veel ruimte
-          inneemt. Klik op een naam → naar prospect-kaart, waar de
-          3-weg-balk pulseert (zie /namenlijst/[id]/page).
-          Geen kandidaten = tegel verbergt automatisch. */}
-      {Array.isArray(klaarVoorDrieweg) && klaarVoorDrieweg.length > 0 && (
-        <details className="card border-l-4 border-cm-gold/60 group">
-          <summary className="flex items-center justify-between gap-3 cursor-pointer list-none">
-            <div className="flex-1 min-w-0">
-              <h3 className="text-cm-gold font-semibold flex items-center gap-2">
-                🤝 Wie is klaar voor een 3-weg gesprek?
-              </h3>
-              <p className="text-cm-white opacity-60 text-xs mt-1">
-                {klaarVoorDrieweg.length} prospect
-                {klaarVoorDrieweg.length === 1 ? "" : "s"}, open om te zien wie
-              </p>
-            </div>
-            <span className="text-cm-gold text-xs transition-transform group-open:rotate-180 flex-shrink-0">
-              ▼
-            </span>
-          </summary>
-          <div className="mt-3 pt-3 border-t border-cm-border space-y-2">
-            <p className="text-cm-white opacity-60 text-xs">
-              Klik op een prospect, op zijn kaart pulseert de 3-weg-balk om
-              je naar de juiste plek te brengen. Eenmaal het 3-weg-gesprek
-              gehad? Verplaats hem in de pipeline (bv. naar "Shopper", "Member"
-              of "Not yet"), dan verdwijnt hij hier automatisch.
-            </p>
-            {(klaarVoorDrieweg as Array<{
-              id: string;
-              volledige_naam: string;
-              pipeline_fase: string;
-            }>).map((p) => (
-              <Link
-                key={p.id}
-                href={`/namenlijst/${p.id}?actie=drieweg`}
-                className="flex items-center justify-between gap-3 bg-cm-surface-2 hover:bg-cm-surface-3 rounded-lg px-3 py-2.5 transition-colors"
-              >
-                <div className="flex-1 min-w-0">
-                  <p className="text-cm-white text-sm font-medium truncate">
-                    {p.volledige_naam}
-                  </p>
-                  <p className="text-cm-white text-xs opacity-50 capitalize">
-                    {p.pipeline_fase === "one_pager"
-                      ? "info bekeken"
-                      : "presentatie gehad"}
-                  </p>
-                </div>
-                <span className="text-cm-gold text-xs whitespace-nowrap">
-                  Start 3-weg →
-                </span>
-              </Link>
-            ))}
-          </div>
-        </details>
-      )}
+      {/* Het aparte 'Wie is klaar voor 3-weg?'-blok is op 8 mei 2026
+          verwijderd. Die signalen lopen nu mee in 'Volgende beste acties'
+          hierboven, met expliciete reden 'Klaar voor 3-weg of Mini-ELEVA'.
+          Geeft één geconsolideerd overzicht ipv twee versnipperde lijstjes. */}
 
       {/* Leider banner */}
       {isLeider && (

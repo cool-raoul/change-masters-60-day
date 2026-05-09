@@ -46,6 +46,8 @@ export type ProspectInput = {
   dagenSindsFilmAfgekeken: number | null;
   /** Aantal dagen sinds productadvies-test ingevuld (null = nooit). */
   dagenSindsTestIngevuld: number | null;
+  /** Door member gekozen aanpak ('drieweg' of 'mini_eleva'), null = nog niet besloten. */
+  gekozenAanpak?: "drieweg" | "mini_eleva" | null;
 };
 
 export type RadarItem = {
@@ -82,7 +84,24 @@ export function scoorProspect(p: ProspectInput): RadarItem {
   // 1. Fase-gewicht
   const faseScore = FASE_GEWICHT[p.pipeline_fase] ?? 0;
   score += faseScore;
-  if (faseScore >= 30) {
+
+  // Voor warm-funnel-fases (one_pager / presentatie / followup) is deze
+  // prospect klaar voor het echte gesprek: 3-weg of Mini-ELEVA. Reden
+  // expliciet zo formuleren zodat 't aparte 3-weg-blok niet meer nodig
+  // is — alles loopt nu mee in deze radar.
+  const isKlaarVoorGesprek =
+    p.pipeline_fase === "one_pager" ||
+    p.pipeline_fase === "presentatie" ||
+    p.pipeline_fase === "followup";
+  if (isKlaarVoorGesprek) {
+    if (p.gekozenAanpak === "drieweg") {
+      redenen.push("🤝 Klaar voor 3-weg-gesprek met sponsor");
+    } else if (p.gekozenAanpak === "mini_eleva") {
+      redenen.push("✨ Klaar voor Mini-ELEVA-uitnodiging");
+    } else {
+      redenen.push("🤝 Klaar voor 3-weg of Mini-ELEVA — kies aanpak");
+    }
+  } else if (faseScore >= 30) {
     redenen.push(`In fase: ${p.pipeline_fase.replace("_", " ")}`);
   }
 
