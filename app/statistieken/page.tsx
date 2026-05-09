@@ -3,6 +3,7 @@ import { differenceInDays } from "date-fns";
 import Link from "next/link";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { StatsOverzicht } from "@/components/statistieken/StatsOverzicht";
+import { WekelijkseReviewFormulier } from "@/components/statistieken/WekelijkseReviewFormulier";
 
 export default async function StatistiekenPagina() {
   const supabase = await createClient();
@@ -55,6 +56,12 @@ export default async function StatistiekenPagina() {
           {v("stats.subtitel", taal)}, {v("dashboard.dag", taal)} {dag} {v("dashboard.van_60", taal)}
         </p>
       </div>
+
+      {/* Wekelijkse review-formulier, drie vragen + sponsor-deel-keuze.
+          Week-nummer berekend op basis van de huidige run-dag (dag 7,
+          14, 21 zijn de natuurlijke review-momenten in Sprint, en ook
+          op andere dagen mag de member 'm gebruiken). */}
+      <WekelijkseReviewFormulier weekNummer={Math.max(1, Math.ceil(dag / 7))} />
 
       <StatsOverzicht
         alleStats={alleStats || []}
