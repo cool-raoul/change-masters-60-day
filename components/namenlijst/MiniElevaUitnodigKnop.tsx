@@ -7,7 +7,7 @@ import { toast } from "sonner";
 // MiniElevaUitnodigKnop, op de prospect-kaart in /namenlijst/[id].
 //
 // Maakt via POST /api/mini-eleva/uitnodiging een nieuwe magic-link
-// (72u geldig) en toont de deelbare URL aan de member, zodat 'ie
+// (14 dagen geldig) en toont de deelbare URL aan de member, zodat 'ie
 // 'm kan kopieren en doorsturen via WhatsApp/SMS/email.
 //
 // Vervangt op termijn het klassieke 3-weg-gesprek voor business-prospects.
@@ -59,7 +59,7 @@ export function MiniElevaUitnodigKnop({ prospectId, prospectNaam }: Props) {
 
   function deelViaWhatsApp() {
     if (!resultaat) return;
-    const bericht = `Hé ${prospectNaam.split(" ")[0]}! Ik heb een eigen omgeving voor je klaargezet waar je rustig kunt kijken wat ik aan het doen ben. Geen pitch, gewoon kijken. Klik hier: ${resultaat.deelLink}\n\nDe link werkt 72 uur, dan verloopt 'ie weer. Geen account nodig.`;
+    const bericht = `Hé ${prospectNaam.split(" ")[0]}! Ik heb een eigen kijk-omgeving voor je klaargezet binnen ELEVA. Daar staan welkomstvideo's van mij, een AI-mentor die 24/7 al je vragen beantwoordt over Lifeplus, en een chat-lijntje met mij + mijn sponsor voor als je iemand wilt spreken. Geen pitch, geen druk, op je eigen tempo. 14 dagen geldig, geen account nodig.\n\n${resultaat.deelLink}`;
     const url = `https://wa.me/?text=${encodeURIComponent(bericht)}`;
     window.open(url, "_blank", "noopener,noreferrer");
   }
@@ -73,8 +73,8 @@ export function MiniElevaUitnodigKnop({ prospectId, prospectNaam }: Props) {
           </h3>
           <p className="text-cm-white/70 text-xs leading-relaxed mt-1">
             Stuur de link via WhatsApp of kopieer 'm. {prospectNaam.split(" ")[0]}{" "}
-            heeft 72 uur om door de pagina's te kijken. Daarna kun je een nieuwe
-            uitnodiging maken als nodig.
+            heeft 14 dagen om door de pagina's te kijken. Daarna kun je 'm
+            verlengen op deze pagina als nodig, of een nieuwe maken.
           </p>
         </div>
         <div className="bg-cm-surface-2 rounded-lg p-3 break-all text-xs text-cm-white font-mono">
@@ -122,7 +122,7 @@ export function MiniElevaUitnodigKnop({ prospectId, prospectNaam }: Props) {
             : `Mini-ELEVA-uitnodiging maken voor ${prospectNaam.split(" ")[0]}`}
         </h3>
         <p className="text-cm-white/60 text-xs leading-relaxed mt-0.5">
-          Geeft {prospectNaam.split(" ")[0]} 72 uur eigen toegang tot een
+          Geeft {prospectNaam.split(" ")[0]} 14 dagen eigen toegang tot een
           mini-versie van ELEVA. Vervangt het 3-weg-gesprek voor wie eerst
           rustig zelf wil kijken.
         </p>

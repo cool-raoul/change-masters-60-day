@@ -4,6 +4,7 @@ import {
   isEersteBezoek,
 } from "@/lib/mini-eleva/notificaties";
 import { PWAInstallPrompt } from "@/components/mini-eleva/PWAInstallPrompt";
+import { MiniElevaIntroTour } from "@/components/mini-eleva/MiniElevaIntroTour";
 import { format, parseISO, formatDistanceToNow } from "date-fns";
 import { nl } from "date-fns/locale";
 import Link from "next/link";
@@ -55,7 +56,7 @@ export default async function MiniElevaLandingPagina({
           Je toegang is voorbij
         </h1>
         <p className="text-cm-white/70 max-w-md mx-auto leading-relaxed">
-          Mini-ELEVA-uitnodigingen zijn 72 uur geldig. Wil je nog spreken met{" "}
+          Mini-ELEVA-uitnodigingen zijn 14 dagen geldig. Wil je nog spreken met{" "}
           <strong className="text-cm-white">{ctx.memberNaam ?? "de member"}</strong>?
           Vraag of ze je opnieuw uitnodigen, dan krijg je een verse link.
         </p>
@@ -113,6 +114,16 @@ export default async function MiniElevaLandingPagina({
           druk, gewoon kijken wat erbij past.
         </p>
       </div>
+
+      {/* Intro-tour: bij eerste bezoek prominent open, daarna ingeklapt
+          met een 'Wat is mini-ELEVA?'-knopje. Legt uit wat er in zit,
+          hoe 't werkt, en wat privé blijft. */}
+      <MiniElevaIntroTour
+        token={ctx.token}
+        prospectVoornaam={ctx.prospectNaam.split(" ")[0]}
+        memberNaam={ctx.memberNaam}
+        sponsorNaam={ctx.sponsorNaam}
+      />
 
       {/* Status-balk: verlooptijd */}
       <div className="card border-l-4 border-cm-gold/60 text-sm">
