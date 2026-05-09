@@ -133,24 +133,38 @@ function PushSectie() {
       }
     }
 
-    // Browser-side subscription
+    // Browser-side subscription. iOS Safari (browser-tab) heeft geen
+    // pushManager — daar moet ELEVA als PWA op het home screen staan.
     try {
       const reg = await navigator.serviceWorker.ready;
-      const sub = await reg.pushManager.getSubscription();
-      nieuw.push({
-        label: "Browser heeft push-subscription",
-        waarde: sub
-          ? `ja, endpoint: ${sub.endpoint.substring(0, 50)}...`
-          : "NEE",
-        ok: !!sub,
-      });
-      if (sub) {
-        const json = sub.toJSON();
+      if (!reg.pushManager) {
         nieuw.push({
-          label: "Browser-endpoint",
-          waarde: json.endpoint?.substring(0, 80) + "..." || "?",
+          label: "PushManager op service worker",
+          waarde: "NIET BESCHIKBAAR (waarschijnlijk iOS Safari browser-tab)",
+          ok: false,
+        });
+        nieuw.push({
+          label: "→ Oplossing voor iOS",
+          waarde: "Zet ELEVA als PWA op je beginscherm via Safari deel-icoon",
           ok: "info",
         });
+      } else {
+        const sub = await reg.pushManager.getSubscription();
+        nieuw.push({
+          label: "Browser heeft push-subscription",
+          waarde: sub
+            ? `ja, endpoint: ${sub.endpoint.substring(0, 50)}...`
+            : "NEE",
+          ok: !!sub,
+        });
+        if (sub) {
+          const json = sub.toJSON();
+          nieuw.push({
+            label: "Browser-endpoint",
+            waarde: json.endpoint?.substring(0, 80) + "..." || "?",
+            ok: "info",
+          });
+        }
       }
     } catch (e) {
       nieuw.push({
@@ -211,6 +225,17 @@ function PushSectie() {
     try {
       const reg = await navigator.serviceWorker.ready;
       log("Service worker ready ✓");
+
+      // iOS Safari (browser-tab) heeft geen pushManager. Vroeg detecteren
+      // zodat we 'n duidelijke uitleg kunnen geven i.p.v. een TypeError.
+      if (!reg.pushManager) {
+        log("❌ pushManager NIET beschikbaar op deze service worker.");
+        log("   Op iOS werkt push ALLEEN binnen een PWA op het home screen,");
+        log("   niet in een gewone Safari-tab. Voeg ELEVA toe aan je begin-");
+        log("   scherm via Safari → deel-icoon → 'Zet op beginscherm', en");
+        log("   open daarna de app vanaf het home screen.");
+        return;
+      }
 
       const oude = await reg.pushManager.getSubscription();
       if (oude) {
