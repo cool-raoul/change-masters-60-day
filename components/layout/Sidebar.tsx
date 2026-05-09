@@ -47,12 +47,13 @@ export function Sidebar({
 
   const navigatie = [
     { href: "/dashboard", labelKey: "nav.dashboard", icoon: "⚡" },
-    // Chat-functies hoog in het menu: 'Mijn chats' (mens-gesprekken
-    // met prospects via mini-ELEVA) en 'ELEVA Mentor' (eigen AI-coach)
-    // staan samen direct onder dashboard, want dat zijn de meest
-    // gebruikte interactie-features per dag.
-    { href: "/mijn-chats", labelKey: "nav.mijn_chats", icoon: "💬" },
+    // ELEVA Mentor direct onder Dashboard: dagelijks startpunt voor
+    // sparren, scripts laten genereren, etc.
     { href: "/coach", labelKey: "nav.coach", icoon: "🤖" },
+    // Chat-cluster: eigen prospect-chats én sponsor-zicht op chats
+    // van members onder mij. Beide hoog want dagelijkse interactie.
+    { href: "/mijn-chats", labelKey: "nav.mijn_chats", icoon: "💬" },
+    { href: "/sponsor/mini-eleva", labelKey: "nav.sponsor_mini_eleva", icoon: "✨" },
     // /acties is gepensioneerd, vervangen door de Volgende-beste-actie-radar
     // op het dashboard zelf en /herinneringen voor het volledige overzicht.
     { href: "/namenlijst", labelKey: "nav.namenlijst", icoon: "👥" },
@@ -62,9 +63,6 @@ export function Sidebar({
     { href: "/statistieken", labelKey: "nav.statistieken", icoon: "📊" },
     { href: "/herinneringen", labelKey: "nav.herinneringen", icoon: "🔔" },
     { href: "/team", labelKey: "nav.team", icoon: "🏆" },
-    // Sponsor-zicht onderaan: secundair, alleen relevant als je
-    // sponsor van iemand anders' mini-ELEVA bent.
-    { href: "/sponsor/mini-eleva", labelKey: "nav.sponsor_mini_eleva", icoon: "✨" },
   ];
 
   // Sluit menu bij navigatie
