@@ -4,18 +4,17 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 
 // ============================================================
-// VoicePlayer, audio + transcriptie voor spraakberichten in mini-
-// ELEVA.
+// VoicePlayer, audio + optionele transcriptie voor spraakberichten.
 //
-// Gedrag:
-//   - Audio-speler (play/pause + tijd)
-//   - Transcriptie STANDAARD zichtbaar onder de speler (was eerst
-//     inklap, maar Raoul wil 'm direct lezen, vergelijkbaar met
-//     hoe WhatsApp 'm na transcriberen toont)
-//   - Voor eigen berichten (isEigen + berichtId): "Pas tekst aan"-
-//     knop die textarea opent voor correctie. PATCH naar
-//     /api/mini-eleva/bericht voor opslaan. Whisper is goed maar
-//     niet perfect (productnamen, mompels, dialect), dit poetst dat.
+// Gedrag (WhatsApp-stijl):
+//   - Compact: audio-speler bovenaan, knopje 'Tekst' rechts ernaast
+//   - Klik op 'Tekst' → transcriptie verschijnt onder de speler
+//   - Voor eigen berichten (isEigen + berichtId): zichtbare 'aanpassen'-
+//     knop alleen wanneer transcriptie open is. PATCH naar
+//     /api/mini-eleva/bericht voor opslaan
+//
+// Reden voor compact-default: anders wordt elke chat met meerdere
+// spraakberichten een flinke lap tekst en verlies je overzicht.
 // ============================================================
 
 type Props = {
@@ -46,6 +45,7 @@ export function VoicePlayer({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [speelt, setSpeelt] = useState(false);
   const [huidigeTijd, setHuidigeTijd] = useState(0);
+  const [tekstZichtbaar, setTekstZichtbaar] = useState(false);
   const [bewerken, setBewerken] = useState(false);
   const [concept, setConcept] = useState(transcriptie ?? "");
   const [bezig, setBezig] = useState(false);
@@ -113,6 +113,7 @@ export function VoicePlayer({
 
   const totaleDuur = duurSeconden ?? 0;
   const kanBewerken = isEigen && berichtId;
+  const heeftTranscriptie = !!lokaleTranscriptie;
 
   return (
     <div className="space-y-2">
@@ -128,7 +129,7 @@ export function VoicePlayer({
         }
       />
 
-      {/* Audio-speler */}
+      {/* Compacte rij: speler + tijd + Tekst-knop */}
       <div className="flex items-center gap-2">
         <button
           type="button"
@@ -141,57 +142,64 @@ export function VoicePlayer({
           {formatTijd(huidigeTijd)}
           {totaleDuur ? ` / ${formatTijd(totaleDuur)}` : ""}
         </div>
+        {heeftTranscriptie && (
+          <button
+            type="button"
+            onClick={() => setTekstZichtbaar((v) => !v)}
+            className="text-cm-white/50 hover:text-cm-white text-[10px] uppercase tracking-wider px-2 py-1 rounded bg-cm-surface/40 hover:bg-cm-surface"
+          >
+            {tekstZichtbaar ? "Verberg tekst" : "Tekst"}
+          </button>
+        )}
       </div>
 
-      {/* Transcriptie, standaard zichtbaar */}
-      {bewerken ? (
-        <div className="space-y-2">
-          <textarea
-            value={concept}
-            onChange={(e) => setConcept(e.target.value)}
-            disabled={bezig}
-            rows={3}
-            maxLength={4000}
-            className="w-full bg-cm-surface border border-cm-gold/40 rounded p-2 text-xs text-cm-white resize-y focus:outline-none focus:border-cm-gold disabled:opacity-50"
-            placeholder="Pas de transcriptie aan..."
-          />
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={slaOp}
-              disabled={bezig}
-              className="bg-cm-gold/20 hover:bg-cm-gold/30 text-cm-gold text-[11px] px-2 py-1 rounded disabled:opacity-50"
-            >
-              {bezig ? "Bezig..." : "Opslaan"}
-            </button>
-            <button
-              type="button"
-              onClick={annuleer}
-              disabled={bezig}
-              className="text-cm-white/60 hover:text-cm-white text-[11px] px-2 py-1"
-            >
-              Annuleer
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className="text-xs text-cm-white/80 leading-snug bg-cm-surface/60 rounded p-2 group relative">
-          {lokaleTranscriptie ? (
-            <p className="whitespace-pre-wrap">{lokaleTranscriptie}</p>
+      {/* Transcriptie, alleen tonen na klik */}
+      {tekstZichtbaar && heeftTranscriptie && (
+        <div>
+          {bewerken ? (
+            <div className="space-y-2">
+              <textarea
+                value={concept}
+                onChange={(e) => setConcept(e.target.value)}
+                disabled={bezig}
+                rows={3}
+                maxLength={4000}
+                className="w-full bg-cm-surface border border-cm-gold/40 rounded p-2 text-xs text-cm-white resize-y focus:outline-none focus:border-cm-gold disabled:opacity-50"
+                placeholder="Pas de transcriptie aan..."
+              />
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={slaOp}
+                  disabled={bezig}
+                  className="bg-cm-gold/20 hover:bg-cm-gold/30 text-cm-gold text-[11px] px-2 py-1 rounded disabled:opacity-50"
+                >
+                  {bezig ? "Bezig..." : "Opslaan"}
+                </button>
+                <button
+                  type="button"
+                  onClick={annuleer}
+                  disabled={bezig}
+                  className="text-cm-white/60 hover:text-cm-white text-[11px] px-2 py-1"
+                >
+                  Annuleer
+                </button>
+              </div>
+            </div>
           ) : (
-            <p className="italic text-cm-white/40">
-              Geen transcriptie beschikbaar
-            </p>
-          )}
-          {kanBewerken && (
-            <button
-              type="button"
-              onClick={() => setBewerken(true)}
-              title="Pas tekst aan als de transcriptie niet klopt"
-              className="absolute top-1 right-1 text-cm-white/30 hover:text-cm-gold text-[10px] uppercase tracking-wider px-1.5 py-0.5"
-            >
-              ✎ aanpassen
-            </button>
+            <div className="text-xs text-cm-white/80 leading-snug bg-cm-surface/60 rounded p-2 relative">
+              <p className="whitespace-pre-wrap">{lokaleTranscriptie}</p>
+              {kanBewerken && (
+                <button
+                  type="button"
+                  onClick={() => setBewerken(true)}
+                  title="Pas tekst aan als de transcriptie niet klopt"
+                  className="mt-1 text-cm-white/40 hover:text-cm-gold text-[10px] uppercase tracking-wider"
+                >
+                  ✎ aanpassen
+                </button>
+              )}
+            </div>
           )}
         </div>
       )}
