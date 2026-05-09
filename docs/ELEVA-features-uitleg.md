@@ -334,7 +334,7 @@ Niets glipt onder het tafelkleed. De ene dag overslaan? Geen ramp, wat belangrij
 ## 📅 Wekelijkse review
 
 **Wat is het?**
-Op dag 7, 14 en 21 een korte 5-min reflectie: wat ging goed, wat schuurde, waar focus ik volgende week. Sponsor leest mee, niet om te beoordelen, om te ondersteunen.
+Op dag 7, 14 en 21 een korte 5-min reflectie: wat ging goed, wat liep niet soepel, waar focus ik volgende week. Sponsor leest mee, niet om te beoordelen, om te ondersteunen.
 
 **Wat heb je eraan?**
 Patronen gaan zien in plaats van blind doorlopen. Jouw schurende stuk = volgende-week-oefening.
@@ -434,7 +434,7 @@ Je hoeft niet bang te zijn dat je per ongeluk iets fout zegt. Het systeem houdt 
 - **Voor 3-wegs:** prospect-kaart → "💬 3-weg gesprek scripts"
 - **Voor productadvies:** prospect-kaart → "Stuur productadvies-test"
 - **Voor films naar prospects:** prospect-kaart → "Stuur film"
-- **Voor jou als founder:** ✍️ knoppen overal, pas aan wat schuurt, direct live
+- **Voor jou als founder:** ✍️ knoppen overal, pas aan wat niet lekker loopt, direct live
 - **Voor de testgroep:** 🧪 toolbar om snel door alle 21 dagen te klikken
 
 **Vragen, bug-rapporten, woordkeus-feedback** kunnen via de pilot-WhatsApp-groep. Founders houden het systeem live up-to-date.

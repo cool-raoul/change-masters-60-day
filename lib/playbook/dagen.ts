@@ -683,7 +683,7 @@ Een prospect die NU geen ja zegt, kan over 3 maanden alsnog ja zeggen. Of over 1
 
 DRIE VRAGEN DIE WERKEN (en die ELEVA voor je voorlegt):
 1) WAT GING GOED? Eerlijk, klein én groot. "Ik heb 3 invites verstuurd" is een win. "Ik durfde mijn beste vriend uit te nodigen" is óók een win, maar van een andere soort. Beide tellen.
-2) WAT SCHUURDE? Geen oordeel, geen "ik ben gewoon niet goed in dit". Wat IS er onhandig gegaan? Welke uitnodiging stuurde ik niet uit angst? Welk berichtje liet ik 4× herschrijven voor ik op verzenden klikte? Dáár zit volgende week je oefening.
+2) WAT LIEP NIET SOEPEL? Geen oordeel, geen "ik ben gewoon niet goed in dit". Wat ging er onhandig? Welke uitnodiging stuurde ik niet uit angst? Welk berichtje liet ik 4× herschrijven voor ik op verzenden klikte? Daar zit volgende week je oefening.
 3) WAAR FOCUS IK VOLGENDE WEEK? Eén ding. Niet drie. EÉN ding waar je in groeit. Kan zijn: doorvragen na een nee. Kan zijn: 1 dag dichterbij komen aan je dagelijkse aantallen. Kan zijn: durven 3-weg starten met een lauwe prospect.
 
 DE INHAAL-REGEL, voor als je een dag over hebt geslagen:
@@ -691,7 +691,7 @@ DE INHAAL-REGEL, voor als je een dag over hebt geslagen:
 • 2 dagen stilte = actie nodig. Niet schamen, niet "ik begin maandag opnieuw", vandaag start je weer, met +50% aantallen om de gemiste dag in te halen.
 • Geen schuldgevoel-spiraal. Eén overgeslagen dag = data, geen oordeel.
 
-WAT SCHUURDE = GROEI, GEEN FALEN:
+WAT NIET SOEPEL LIEP = GROEI, GEEN FALEN:
 Als je deze week 7 dagen geleden iets compleet nieuws bent gestart, is onhandigheid op dag 1 logisch. En iets meer vlotheid op dag 7. Dát is het volledige plaatje. De mensen die uiteindelijk doorbreken in dit vak zijn niet degenen die in week 1 alles vlekkeloos deden, die bestaan niet, maar degenen die week 2 bleven oefenen op wat in week 1 niet soepel ging.
 
 WAT GA JE VOLGENDE WEEK ZIEN (sneak peek voor dag 8-14):
