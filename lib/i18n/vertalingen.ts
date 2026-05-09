@@ -212,6 +212,14 @@ export const t: Vertalingen = {
     nl: "Mijn Team", en: "My Team", fr: "Mon \u00c9quipe",
     es: "Mi Equipo", de: "Mein Team", pt: "Minha Equipe",
   },
+  "nav.mijn_chats": {
+    nl: "Mijn chats", en: "My chats", fr: "Mes discussions",
+    es: "Mis chats", de: "Meine Chats", pt: "Meus chats",
+  },
+  "nav.sponsor_mini_eleva": {
+    nl: "Sponsor: Mini-ELEVA", en: "Sponsor: Mini-ELEVA", fr: "Sponsor: Mini-ELEVA",
+    es: "Sponsor: Mini-ELEVA", de: "Sponsor: Mini-ELEVA", pt: "Sponsor: Mini-ELEVA",
+  },
   "nav.zinnen": {
     nl: "Mijn zinnen", en: "My phrases", fr: "Mes phrases",
     es: "Mis frases", de: "Meine S\u00e4tze", pt: "Minhas frases",

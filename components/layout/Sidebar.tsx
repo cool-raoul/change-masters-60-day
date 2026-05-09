@@ -18,7 +18,32 @@ export function Sidebar({
   const router = useRouter();
   const supabase = createClient();
   const [mobielmenuOpen, setMobielmenuOpen] = useState(false);
+  const [aantalChatsOngelezen, setAantalChatsOngelezen] = useState(0);
   const { v } = useTaal();
+
+  // Poll mini-ELEVA-chats teller elke 30 sec zodat de sidebar-badge
+  // bijgewerkt blijft. Faalt stilletjes als endpoint nog niet bestaat
+  // (bijv. lokaal zonder migratie).
+  useEffect(() => {
+    let levend = true;
+    async function haalTeller() {
+      try {
+        const res = await fetch("/api/mini-eleva/mijn-chats");
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!levend) return;
+        setAantalChatsOngelezen(data.totaalOngelezen ?? 0);
+      } catch {
+        // negeer
+      }
+    }
+    haalTeller();
+    const t = setInterval(haalTeller, 30_000);
+    return () => {
+      levend = false;
+      clearInterval(t);
+    };
+  }, [pathname]);
 
   const navigatie = [
     { href: "/dashboard", labelKey: "nav.dashboard", icoon: "⚡" },
@@ -32,6 +57,10 @@ export function Sidebar({
     { href: "/statistieken", labelKey: "nav.statistieken", icoon: "📊" },
     { href: "/herinneringen", labelKey: "nav.herinneringen", icoon: "🔔" },
     { href: "/team", labelKey: "nav.team", icoon: "🏆" },
+    // Mini-ELEVA chat-overzicht voor de member. Lijst van alle chats
+    // met al haar prospects, WhatsApp-stijl. Toont lege staat als er
+    // nog geen uitnodigingen zijn.
+    { href: "/mijn-chats", labelKey: "nav.mijn_chats", icoon: "💬" },
     // Mini-ELEVA sponsor-overzicht. Alleen zichtbaar/relevant voor wie
     // sponsor is van minstens één mini-ELEVA-uitnodiging. De page zelf
     // toont een lege staat als er niets is.
@@ -117,6 +146,10 @@ export function Sidebar({
       <nav className="flex-1 overflow-y-auto p-4 space-y-1">
         {navigatie.map((item) => {
           const actief = pathname.startsWith(item.href);
+          const badge =
+            item.href === "/mijn-chats" && aantalChatsOngelezen > 0
+              ? aantalChatsOngelezen
+              : null;
           return (
             <Link
               key={item.href}
@@ -128,7 +161,12 @@ export function Sidebar({
               }`}
             >
               <span className="text-base">{item.icoon}</span>
-              {v(item.labelKey)}
+              <span className="flex-1">{v(item.labelKey)}</span>
+              {badge !== null && (
+                <span className="bg-cm-gold text-black text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
+                  {badge > 9 ? "9+" : badge}
+                </span>
+              )}
             </Link>
           );
         })}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { VoiceOpnameKnop } from "@/components/mini-eleva/VoiceOpnameKnop";
 import { VoicePlayer } from "@/components/mini-eleva/VoicePlayer";
@@ -42,7 +43,9 @@ export function MiniElevaProspectChat({
   prospectVoornaam,
   sponsorVoornaam,
 }: Props) {
-  const [open, setOpen] = useState(false);
+  const searchParams = useSearchParams();
+  const startOpen = searchParams.get("chat") === "open";
+  const [open, setOpen] = useState(startOpen);
   const [berichten, setBerichten] = useState<Bericht[]>([]);
   const [actieveInvitationId, setActieveInvitationId] = useState<
     string | null
@@ -102,7 +105,8 @@ export function MiniElevaProspectChat({
     setAantalUitnodigingen(ids.size);
   }, [berichten]);
 
-  // Bij openen: ongelezen reset + scroll naar onderen
+  // Bij openen: ongelezen reset + scroll naar onderen + leeskenmerk
+  // bijwerken zodat de teller op /mijn-chats reset
   useEffect(() => {
     if (open) {
       setOngelezen(0);
@@ -110,8 +114,16 @@ export function MiniElevaProspectChat({
         () => eindRef.current?.scrollIntoView({ behavior: "smooth" }),
         50,
       );
+      // Leeskenmerk-update via API (fire-and-forget)
+      fetch("/api/mini-eleva/markeer-gelezen", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prospectId }),
+      }).catch(() => {
+        // negeer transient errors
+      });
     }
-  }, [open, berichten.length]);
+  }, [open, berichten.length, prospectId]);
 
   async function stuurTekst() {
     const tekst = invoer.trim();
@@ -184,7 +196,7 @@ export function MiniElevaProspectChat({
   }
 
   return (
-    <div className="card border-l-4 border-cm-gold/30">
+    <div id="mini-eleva-chat" className="card border-l-4 border-cm-gold/30">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
