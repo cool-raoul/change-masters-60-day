@@ -87,10 +87,39 @@ export function VoiceOpnameKnop({
       recorder.onstop = async () => {
         // Stream sluiten zodat het mic-icoon van de browser uitgaat
         stream.getTracks().forEach((t) => t.stop());
-        const blob = new Blob(chunksRef.current, {
-          type: recorder.mimeType || "audio/webm",
-        });
-        const duur = Math.round((Date.now() - startRef.current) / 1000);
+        const ruweMime = recorder.mimeType || "audio/webm";
+        const ruweBlob = new Blob(chunksRef.current, { type: ruweMime });
+        const duurMs = Date.now() - startRef.current;
+        const duur = Math.round(duurMs / 1000);
+
+        // FIX: MediaRecorder maakt webm-blobs zonder duration in de
+        // EBML-header, browsers stoppen daardoor met afspelen na een
+        // paar seconden. fix-webm-duration injecteert de echte duur
+        // (in ms) in de header zodat afspelen volledig werkt. Voor
+        // mp4 (Safari/iOS) is dit niet nodig, daar zit duration al in.
+        let blob = ruweBlob;
+        if (ruweMime.includes("webm")) {
+          try {
+            // fix-webm-duration is UMD, dynamic import geeft ofwel de
+            // functie direct ofwel als .default. Cast via unknown
+            // omdat de TS-types van het pakket niet stabiel zijn.
+            type FixFn = (blob: Blob, durMs: number) => Promise<Blob>;
+            const mod = await import("fix-webm-duration");
+            const modAny = mod as unknown as Record<string, unknown>;
+            const candidate =
+              typeof modAny === "function"
+                ? (modAny as unknown as FixFn)
+                : (modAny.default as FixFn | undefined);
+            if (typeof candidate === "function") {
+              blob = await candidate(ruweBlob, duurMs);
+            }
+          } catch (err) {
+            console.warn("[voice-opname] webm-duration fix mislukt:", err);
+            // Val terug op de ruwe blob, transcriptie werkt wel,
+            // alleen afspelen kan vroegtijdig stoppen
+          }
+        }
+
         await uploadAudio(blob, duur);
       };
 
