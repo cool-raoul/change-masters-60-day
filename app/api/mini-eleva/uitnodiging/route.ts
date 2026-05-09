@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json().catch(() => ({}));
     const prospectId = body.prospectId as string | undefined;
+    const gekozenSponsorId = body.sponsorUserId as string | undefined;
     if (!prospectId) {
       return NextResponse.json({ error: "prospectId vereist" }, { status: 400 });
     }
@@ -54,14 +55,43 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Sponsor van de huidige member ophalen, zodat hij in de chat kan komen
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("sponsor_id")
-      .eq("id", user.id)
-      .maybeSingle();
-    const sponsorId = (profile as { sponsor_id?: string | null } | null)
-      ?.sponsor_id ?? null;
+    // Sponsor bepalen: ofwel de meegestuurde gekozen upline-persoon
+    // (die member kan kiezen uit upline-keten via /api/mini-eleva/upline),
+    // ofwel de directe sponsor uit profiles.sponsor_id als fallback.
+    let sponsorId: string | null = null;
+    if (gekozenSponsorId) {
+      // Verifieer dat de gekozen persoon écht in de upline van deze member
+      // zit (anti-misbruik: voorkomt dat iemand een willekeurige user als
+      // sponsor toewijst).
+      const gezien = new Set<string>([user.id]);
+      let huidigeId = user.id;
+      let bevestigd = false;
+      for (let n = 0; n < 5; n++) {
+        const { data: stap } = await supabase
+          .from("profiles")
+          .select("sponsor_id")
+          .eq("id", huidigeId)
+          .maybeSingle();
+        const next = (stap as { sponsor_id?: string | null } | null)?.sponsor_id;
+        if (!next || gezien.has(next)) break;
+        gezien.add(next);
+        if (next === gekozenSponsorId) {
+          bevestigd = true;
+          break;
+        }
+        huidigeId = next;
+      }
+      if (bevestigd) sponsorId = gekozenSponsorId;
+    }
+    if (!sponsorId) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("sponsor_id")
+        .eq("id", user.id)
+        .maybeSingle();
+      sponsorId =
+        (profile as { sponsor_id?: string | null } | null)?.sponsor_id ?? null;
+    }
 
     const token = genereerToken();
     const nu = new Date();

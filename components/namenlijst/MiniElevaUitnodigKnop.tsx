@@ -1,7 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+
+type UplineLid = {
+  id: string;
+  naam: string;
+  niveau: number;
+  isDirect: boolean;
+};
 
 // ============================================================
 // MiniElevaUitnodigKnop, op de prospect-kaart in /namenlijst/[id].
@@ -25,6 +32,33 @@ export function MiniElevaUitnodigKnop({ prospectId, prospectNaam }: Props) {
     deelLink: string;
     expiresAt: string;
   } | null>(null);
+  const [upline, setUpline] = useState<UplineLid[]>([]);
+  const [gekozenSponsorId, setGekozenSponsorId] = useState<string | null>(
+    null,
+  );
+
+  // Upline-keten ophalen voor sponsor-keuze
+  useEffect(() => {
+    let levend = true;
+    (async () => {
+      try {
+        const res = await fetch("/api/mini-eleva/upline");
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!levend) return;
+        const lijst = (data.upline ?? []) as UplineLid[];
+        setUpline(lijst);
+        // Default: directe sponsor
+        const direct = lijst.find((u) => u.isDirect);
+        if (direct) setGekozenSponsorId(direct.id);
+      } catch {
+        // Stilletjes negeren als endpoint nog niet bestaat
+      }
+    })();
+    return () => {
+      levend = false;
+    };
+  }, []);
 
   async function maakUitnodiging() {
     setBezig(true);
@@ -32,7 +66,10 @@ export function MiniElevaUitnodigKnop({ prospectId, prospectNaam }: Props) {
       const res = await fetch("/api/mini-eleva/uitnodiging", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prospectId }),
+        body: JSON.stringify({
+          prospectId,
+          sponsorUserId: gekozenSponsorId ?? undefined,
+        }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
@@ -108,26 +145,59 @@ export function MiniElevaUitnodigKnop({ prospectId, prospectNaam }: Props) {
   }
 
   return (
-    <button
-      type="button"
-      onClick={maakUitnodiging}
-      disabled={bezig}
-      className="card flex items-center gap-3 hover:border-cm-gold-dim transition-colors w-full text-left disabled:opacity-50"
-    >
-      <span className="text-2xl">✨</span>
-      <div className="flex-1">
-        <h3 className="text-cm-white font-semibold text-sm">
-          {bezig
-            ? "Bezig..."
-            : `Mini-ELEVA-uitnodiging maken voor ${prospectNaam.split(" ")[0]}`}
-        </h3>
-        <p className="text-cm-white/60 text-xs leading-relaxed mt-0.5">
-          Geeft {prospectNaam.split(" ")[0]} 14 dagen eigen toegang tot een
-          mini-versie van ELEVA. Vervangt het 3-weg-gesprek voor wie eerst
-          rustig zelf wil kijken.
-        </p>
+    <div className="card space-y-3">
+      <div className="flex items-start gap-3">
+        <span className="text-2xl">✨</span>
+        <div className="flex-1">
+          <h3 className="text-cm-white font-semibold text-sm">
+            Mini-ELEVA-uitnodiging maken voor{" "}
+            {prospectNaam.split(" ")[0]}
+          </h3>
+          <p className="text-cm-white/60 text-xs leading-relaxed mt-0.5">
+            Geeft {prospectNaam.split(" ")[0]} 14 dagen eigen toegang tot een
+            mini-versie van ELEVA. Welkomstvideo's, AI-mentor en chat met jou
+            en je sponsor.
+          </p>
+        </div>
       </div>
-      <span className="text-cm-gold">→</span>
-    </button>
+
+      {/* Sponsor-keuze: kies wie er 'erbij' komt in de chat. Default
+          directe sponsor, maar member kan ook hoger in de upline gaan
+          als er meer ervaring nodig is. */}
+      {upline.length > 0 && (
+        <div className="bg-cm-surface-2 rounded-lg p-3 space-y-2">
+          <label className="text-cm-white/70 text-xs font-semibold block">
+            Wie haal je erbij voor de chat?
+          </label>
+          <select
+            value={gekozenSponsorId ?? ""}
+            onChange={(e) => setGekozenSponsorId(e.target.value || null)}
+            disabled={bezig}
+            className="w-full bg-cm-surface border border-cm-white/10 rounded px-2 py-1.5 text-sm text-cm-white focus:outline-none focus:border-cm-gold/40 disabled:opacity-50"
+          >
+            {upline.map((u) => (
+              <option key={u.id} value={u.id}>
+                {u.naam}
+                {u.isDirect ? " (directe sponsor)" : ` — ${u.niveau} niveaus omhoog`}
+              </option>
+            ))}
+            <option value="">Niemand erbij, alleen ik</option>
+          </select>
+          <p className="text-cm-white/40 text-[10px] leading-relaxed">
+            Voor een ervaren ondersteuner kun je iemand hoger in de upline
+            kiezen, bijvoorbeeld als je directe sponsor zelf nog leert.
+          </p>
+        </div>
+      )}
+
+      <button
+        type="button"
+        onClick={maakUitnodiging}
+        disabled={bezig}
+        className="btn-gold w-full text-sm disabled:opacity-50"
+      >
+        {bezig ? "Bezig..." : `Maak uitnodiging aan →`}
+      </button>
+    </div>
   );
 }
