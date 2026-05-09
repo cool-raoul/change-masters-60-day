@@ -32,6 +32,10 @@ export function Sidebar({
     { href: "/statistieken", labelKey: "nav.statistieken", icoon: "📊" },
     { href: "/herinneringen", labelKey: "nav.herinneringen", icoon: "🔔" },
     { href: "/team", labelKey: "nav.team", icoon: "🏆" },
+    // Mini-ELEVA sponsor-overzicht. Alleen zichtbaar/relevant voor wie
+    // sponsor is van minstens één mini-ELEVA-uitnodiging. De page zelf
+    // toont een lege staat als er niets is.
+    { href: "/sponsor/mini-eleva", labelKey: "nav.sponsor_mini_eleva", icoon: "✨" },
   ];
 
   // Sluit menu bij navigatie

@@ -182,7 +182,10 @@ export default async function MiniElevaLandingPagina({
           <span className="text-cm-gold">→</span>
         </Link>
 
-        <div className="card flex items-center gap-3 opacity-50 cursor-not-allowed">
+        <Link
+          href={`/m/${ctx.token}/chat`}
+          className="card flex items-center gap-3 hover:border-cm-gold-dim transition-colors"
+        >
           <span className="text-2xl">💬</span>
           <div className="flex-1">
             <h3 className="text-cm-white font-semibold text-sm">
@@ -190,11 +193,12 @@ export default async function MiniElevaLandingPagina({
               {ctx.sponsorNaam ? ` + ${ctx.sponsorNaam}` : ""}
             </h3>
             <p className="text-cm-white/60 text-xs leading-relaxed mt-0.5">
-              Stuur tekst- of spraakberichten. Komt binnenkort.
+              Echt gesprek met mensen. Tekst- en spraakberichten. Reactie komt
+              wanneer ze tijd hebben — je krijgt een seintje op je telefoon.
             </p>
           </div>
-          <span className="text-cm-white/40">later</span>
-        </div>
+          <span className="text-cm-gold">→</span>
+        </Link>
       </div>
 
       {/* Privacy-strook, AVG-transparantie. Prospect moet weten wat

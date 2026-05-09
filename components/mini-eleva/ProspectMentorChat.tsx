@@ -132,55 +132,22 @@ export function ProspectMentorChat({
     }
   }
 
-  const resterend = Math.max(0, limiet - gebruikt);
-  const sponsorErbijTekst =
-    memberNaam && sponsorNaam
-      ? `Haal ${memberNaam.split(" ")[0]} of ${sponsorNaam.split(" ")[0]} erbij`
-      : memberNaam
-        ? `Haal ${memberNaam.split(" ")[0]} erbij`
-        : "Haal sponsor erbij";
-
   return (
     <div className="flex flex-col h-full">
-      {/* Top-balk met haal-erbij-knop en quotum */}
+      {/* Top-balk met uitleg en quotum-teller. De aparte 'haal sponsor
+          erbij'-knop is vervangen door de aparte chat-tegel: prospect
+          stuurt daar gewoon een bericht naar member en sponsor. */}
       <div className="card border-l-4 border-cm-gold/60 mb-4 flex items-center justify-between gap-3 flex-wrap">
         <div className="text-xs text-cm-white/70 leading-relaxed flex-1 min-w-[180px]">
           Vraag me wat je wilt over Lifeplus, ELEVA of het verdienmodel. Ik ben
-          de ELEVA-mentor, een AI. Wat we hier bespreken blijft tussen ons. Voor
-          diepere vragen kun je{" "}
+          de ELEVA-mentor, een AI. Wat we hier bespreken blijft tussen ons. Wil
+          je een echt gesprek met{" "}
           <span className="text-cm-gold font-semibold">{memberNaam ?? "de member"}</span>
-          {sponsorNaam ? ` of ${sponsorNaam}` : ""} erbij halen.
+          {sponsorNaam ? ` of ${sponsorNaam}` : ""}? Open dan de chat-tegel op
+          het overzicht.
         </div>
-        <div className="flex flex-col items-end gap-1">
-          <button
-            type="button"
-            onClick={() => {
-              // Drie-persoonschat krijgen we in een latere stap. Voor nu
-              // vertellen we de prospect dat de hint is doorgegeven aan de
-              // member, via een activiteit-log.
-              fetch("/api/mini-eleva/sponsor-erbij", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ token }),
-              })
-                .then((r) => {
-                  if (r.ok) {
-                    toast.success(
-                      `${memberNaam ?? "De member"} krijgt een seintje dat je hulp wilt`,
-                    );
-                  } else {
-                    toast.error("Niet gelukt om door te geven");
-                  }
-                })
-                .catch(() => toast.error("Verbindingsfout"));
-            }}
-            className="btn-gold text-xs whitespace-nowrap"
-          >
-            🤝 {sponsorErbijTekst}
-          </button>
-          <span className="text-[10px] text-cm-white/40">
-            Vragen: {gebruikt}/{limiet}
-          </span>
+        <div className="text-[10px] text-cm-white/40">
+          Vragen: {gebruikt}/{limiet}
         </div>
       </div>
 
