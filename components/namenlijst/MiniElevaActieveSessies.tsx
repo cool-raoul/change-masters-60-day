@@ -141,60 +141,113 @@ export async function MiniElevaActieveSessies({ prospectId }: Props) {
           vaak vragen worden gesteld, niet WAT er gevraagd wordt aan de mentor.
         </p>
 
-        {/* Actieve sessies */}
-        {actieveSessies.length > 0 && (
-          <div className="space-y-2">
-            <h4 className="text-cm-white/70 text-[11px] uppercase tracking-wider font-semibold">
-              Actief
-            </h4>
-            {actieveSessies.map((inv) => {
-              const activiteit = alleActiviteit.filter(
-                (a) => a.invitation_id === inv.id,
-              );
-              const aantalMentor = activiteit.filter(
-                (a) => a.module === "mentor-chat",
-              ).length;
-              const laatste = inv.laatste_activiteit_op ?? inv.created_at;
-              return (
-                <div
-                  key={inv.id}
-                  className="bg-cm-surface-2 rounded p-2 text-xs flex items-center justify-between gap-2 flex-wrap"
-                >
-                  <div className="flex-1 min-w-[140px]">
-                    <div className="text-cm-white">
-                      Aangemaakt{" "}
-                      {format(parseISO(inv.created_at), "d MMM HH:mm", {
-                        locale: nl,
-                      })}
-                    </div>
-                    <div className="text-cm-white/60 text-[11px]">
-                      {activiteit.length} actie
-                      {activiteit.length === 1 ? "" : "s"}
-                      {aantalMentor > 0
-                        ? ` · ${aantalMentor} vraag${aantalMentor === 1 ? "" : "en"}`
-                        : ""}{" "}
-                      · laatst{" "}
-                      {formatDistanceToNow(parseISO(laatste), {
-                        locale: nl,
-                        addSuffix: true,
-                      })}
-                    </div>
-                    <div className="text-cm-white/40 text-[10px] mt-0.5">
-                      Verloopt over{" "}
-                      {formatDistanceToNow(parseISO(inv.expires_at), {
-                        locale: nl,
-                      })}
-                    </div>
+        {/* Actieve sessies: meest recente staat prominent met de
+            Verleng-knop. Andere actieve uitnodigingen (komen zelden
+            voor in een normale flow) staan samengevouwen onder een
+            'meer sessies'-toggle, zonder eigen Verleng-knop — de
+            primaire is genoeg. */}
+        {actieveSessies.length > 0 && (() => {
+          // Sorteer op nieuwste expires_at, eerste = primair
+          const gesorteerd = [...actieveSessies].sort(
+            (a, b) =>
+              new Date(b.expires_at).getTime() -
+              new Date(a.expires_at).getTime(),
+          );
+          const primair = gesorteerd[0];
+          const overig = gesorteerd.slice(1);
+
+          const primairActiviteit = alleActiviteit.filter(
+            (a) => a.invitation_id === primair.id,
+          );
+          const primairMentor = primairActiviteit.filter(
+            (a) => a.module === "mentor-chat",
+          ).length;
+          const primairLaatste =
+            primair.laatste_activiteit_op ?? primair.created_at;
+
+          return (
+            <div className="space-y-2">
+              <h4 className="text-cm-white/70 text-[11px] uppercase tracking-wider font-semibold">
+                Actief
+              </h4>
+
+              {/* Primaire sessie: prominent met Verleng-knop */}
+              <div className="bg-cm-surface-2 rounded p-3 text-xs flex items-start justify-between gap-2 flex-wrap">
+                <div className="flex-1 min-w-[160px] space-y-1">
+                  <div className="text-cm-white font-semibold">
+                    {primairActiviteit.length} actie
+                    {primairActiviteit.length === 1 ? "" : "s"}
+                    {primairMentor > 0
+                      ? ` · ${primairMentor} vraag${primairMentor === 1 ? "" : "en"} aan mentor`
+                      : ""}
                   </div>
-                  <VerlengKnop
-                    invitationId={inv.id}
-                    aantalVerlengd={inv.aantal_verlengd ?? 0}
-                  />
+                  <div className="text-cm-white/70 text-[11px]">
+                    Laatst actief{" "}
+                    {formatDistanceToNow(parseISO(primairLaatste), {
+                      locale: nl,
+                      addSuffix: true,
+                    })}
+                  </div>
+                  <div className="text-cm-white/40 text-[10px]">
+                    Verloopt over{" "}
+                    {formatDistanceToNow(parseISO(primair.expires_at), {
+                      locale: nl,
+                    })}
+                    {" · aangemaakt "}
+                    {format(parseISO(primair.created_at), "d MMM", {
+                      locale: nl,
+                    })}
+                  </div>
                 </div>
-              );
-            })}
-          </div>
-        )}
+                <VerlengKnop
+                  invitationId={primair.id}
+                  aantalVerlengd={primair.aantal_verlengd ?? 0}
+                />
+              </div>
+
+              {/* Overige actieve sessies (zelden meer dan 1 in praktijk):
+                  ingeklapt, geen Verleng-knop per stuk om de UI rustig
+                  te houden. */}
+              {overig.length > 0 && (
+                <details className="text-[11px]">
+                  <summary className="text-cm-white/50 hover:text-cm-white/70 cursor-pointer">
+                    {overig.length} extra actieve sessie
+                    {overig.length === 1 ? "" : "s"} (klik om te tonen)
+                  </summary>
+                  <div className="space-y-1 mt-2">
+                    {overig.map((inv) => {
+                      const activiteit = alleActiviteit.filter(
+                        (a) => a.invitation_id === inv.id,
+                      );
+                      const laatste =
+                        inv.laatste_activiteit_op ?? inv.created_at;
+                      return (
+                        <div
+                          key={inv.id}
+                          className="text-cm-white/60 px-2 py-1 bg-cm-surface rounded"
+                        >
+                          {activiteit.length} actie
+                          {activiteit.length === 1 ? "" : "s"} · laatst{" "}
+                          {formatDistanceToNow(parseISO(laatste), {
+                            locale: nl,
+                            addSuffix: true,
+                          })}{" "}
+                          <span className="text-cm-white/30">
+                            (aangemaakt{" "}
+                            {format(parseISO(inv.created_at), "d MMM HH:mm", {
+                              locale: nl,
+                            })}
+                            )
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </details>
+              )}
+            </div>
+          );
+        })()}
 
         {/* Verlopen sessies samengevouwen */}
         {verlopenSessies.length > 0 && (
