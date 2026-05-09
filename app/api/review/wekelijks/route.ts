@@ -55,7 +55,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { error } = await supabase.from("wekelijkse_reviews").insert(payload);
+    const { data: rij, error } = await supabase
+      .from("wekelijkse_reviews")
+      .insert(payload)
+      .select("id")
+      .maybeSingle();
     if (error) {
       // Tabel bestaat mogelijk nog niet (migratie nog te draaien)
       if (error.code === "42P01" || error.message?.includes("does not exist")) {
@@ -73,7 +77,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, id: (rij as { id?: string } | null)?.id ?? null });
   } catch (e) {
     console.error("review/wekelijks exception:", e);
     return NextResponse.json({ error: "Onverwachte fout" }, { status: 500 });

@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 
 // ============================================================
@@ -22,14 +24,71 @@ type Props = {
   weekNummer: number;
 };
 
+type SponsorInfo = {
+  voornaam: string;
+  telefoon: string | null;
+};
+
+function bouwWhatsAppLink(
+  telefoon: string | null,
+  bericht: string,
+): string | null {
+  if (!telefoon) return null;
+  let nummer = telefoon.replace(/[^\d+]/g, "");
+  if (nummer.startsWith("+")) nummer = nummer.substring(1);
+  if (nummer.startsWith("0")) nummer = "31" + nummer.substring(1);
+  return `https://wa.me/${nummer}?text=${encodeURIComponent(bericht)}`;
+}
+
 export function WekelijkseReviewFormulier({ weekNummer }: Props) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [bezig, setBezig] = useState(false);
+  const [bewaardId, setBewaardId] = useState<string | null>(null);
   const [gingGoed, setGingGoed] = useState("");
   const [nietSoepel, setNietSoepel] = useState("");
   const [focus, setFocus] = useState("");
   const [delenMetSponsor, setDelenMetSponsor] = useState(false);
+  const [sponsor, setSponsor] = useState<SponsorInfo | null>(null);
+
+  // Sponsor-data ophalen voor de WhatsApp-share-knop ná opslaan
+  useEffect(() => {
+    let actief = true;
+    (async () => {
+      try {
+        const supabase = createClient();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) return;
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("sponsor_id")
+          .eq("id", user.id)
+          .maybeSingle();
+        const sponsorId = (profile as { sponsor_id?: string | null } | null)
+          ?.sponsor_id;
+        if (!sponsorId || !actief) return;
+        const { data: sponsorProfile } = await supabase
+          .from("profiles")
+          .select("full_name, telefoon")
+          .eq("id", sponsorId)
+          .maybeSingle();
+        if (!sponsorProfile || !actief) return;
+        const fullName = (sponsorProfile as { full_name?: string }).full_name ?? "";
+        const tel = (sponsorProfile as { telefoon?: string | null }).telefoon ?? null;
+        setSponsor({
+          voornaam: fullName.split(" ")[0] ?? "",
+          telefoon: tel,
+        });
+      } catch {
+        // negeer
+      }
+    })();
+    return () => {
+      actief = false;
+    };
+  }, []);
 
   async function bewaar() {
     if (!gingGoed.trim() && !nietSoepel.trim() && !focus.trim()) {
@@ -59,11 +118,8 @@ export function WekelijkseReviewFormulier({ weekNummer }: Props) {
           ? "Review bewaard en gedeeld met je sponsor"
           : "Review bewaard",
       );
-      setGingGoed("");
-      setNietSoepel("");
-      setFocus("");
-      setDelenMetSponsor(false);
-      setOpen(false);
+      // Bewaar de id voor de share-knop ná opslaan
+      setBewaardId(data?.id ?? "ok");
       router.refresh();
     } catch {
       toast.error("Verbindingsfout");
@@ -72,18 +128,118 @@ export function WekelijkseReviewFormulier({ weekNummer }: Props) {
     }
   }
 
-  if (!open) {
+  function bouwShareTekst(): string {
+    const regels = [
+      `📝 Mijn wekelijkse review (week ${weekNummer})`,
+      "",
+    ];
+    if (gingGoed.trim()) {
+      regels.push(`✅ Wat ging goed:`);
+      regels.push(gingGoed.trim());
+      regels.push("");
+    }
+    if (nietSoepel.trim()) {
+      regels.push(`⚠️ Wat liep niet soepel:`);
+      regels.push(nietSoepel.trim());
+      regels.push("");
+    }
+    if (focus.trim()) {
+      regels.push(`🎯 Mijn focus voor volgende week:`);
+      regels.push(focus.trim());
+    }
+    return regels.join("\n");
+  }
+
+  function reset() {
+    setGingGoed("");
+    setNietSoepel("");
+    setFocus("");
+    setDelenMetSponsor(false);
+    setBewaardId(null);
+    setOpen(false);
+  }
+
+  // Na bewaren: toon bevestiging + WhatsApp-share-knop + link naar
+  // mijn-reviews-archief
+  if (bewaardId) {
+    const shareText = bouwShareTekst();
+    const sponsorWhats = sponsor
+      ? bouwWhatsAppLink(
+          sponsor.telefoon,
+          `Hoi${sponsor.voornaam ? " " + sponsor.voornaam : ""}!\n\n${shareText}`,
+        )
+      : null;
     return (
       <div className="card border-l-4 border-cm-gold/60 space-y-3">
         <div>
           <h3 className="text-cm-gold font-semibold text-base flex items-center gap-2">
-            📝 Wekelijkse review
+            ✅ Review bewaard, week {weekNummer}
           </h3>
           <p className="text-cm-white/80 text-sm mt-1 leading-relaxed">
-            Drie korte vragen om terug te kijken op week {weekNummer}. Je kiest
-            zelf of je 'm met je sponsor wilt delen.
+            Je review staat op je eigen overzicht. Je kunt 'm nu naar je
+            sponsor sturen via WhatsApp, of later terugkijken op{" "}
+            <Link href="/mijn-reviews" className="text-cm-gold underline">
+              Mijn reviews
+            </Link>
+            .
           </p>
         </div>
+        <div className="flex flex-wrap gap-2">
+          {sponsorWhats ? (
+            <a
+              href={sponsorWhats}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-gold text-sm"
+            >
+              💬 Stuur naar sponsor (WhatsApp)
+            </a>
+          ) : (
+            <button
+              type="button"
+              disabled
+              className="btn-gold text-sm opacity-50 cursor-not-allowed"
+              title="Sponsor heeft geen telefoonnummer ingevuld"
+            >
+              💬 WhatsApp niet beschikbaar
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => {
+              navigator.clipboard.writeText(shareText);
+              toast.success("Review gekopieerd naar klembord");
+            }}
+            className="btn-secondary text-sm"
+          >
+            📋 Kopieer tekst
+          </button>
+          <button type="button" onClick={reset} className="btn-secondary text-sm">
+            Klaar
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!open) {
+    return (
+      <div className="card border-l-4 border-cm-gold/60 space-y-3">
+        <div className="flex items-baseline justify-between gap-3 flex-wrap">
+          <h3 className="text-cm-gold font-semibold text-base flex items-center gap-2">
+            📝 Wekelijkse review
+          </h3>
+          <Link
+            href="/mijn-reviews"
+            className="text-cm-white/60 hover:text-cm-white text-xs underline-offset-2 hover:underline"
+          >
+            Mijn eerdere reviews →
+          </Link>
+        </div>
+        <p className="text-cm-white/80 text-sm leading-relaxed">
+          Drie korte vragen om terug te kijken op week {weekNummer}. Je kiest
+          zelf of je 'm met je sponsor wilt delen.
+        </p>
         <button
           type="button"
           onClick={() => setOpen(true)}
