@@ -50,14 +50,26 @@ export async function sendPushToUser(userId: string, payload: PushPayload) {
 
     return { success: true };
   } catch (error: any) {
-    // Deactiveer verlopen subscriptions
-    if (error.statusCode === 410 || error.statusCode === 404) {
+    // Deactiveer subscriptions die door browser/push-service zijn afgewezen.
+    // Naast 410/404 (Gone/NotFound) ook 401/403 (verlopen VAPID, mismatch
+    // keys) en de 'Received unexpected response code'-tekst van web-push.
+    // Bij deactivering pikt de UI 'm op via /api/push/status en biedt 'r
+    // een 'Synchroniseer push opnieuw'-knop aan zodat 't zichzelf herstelt.
+    const statusCode = error.statusCode;
+    const msg = String(error.message ?? "");
+    const moetDeactiveren =
+      statusCode === 410 ||
+      statusCode === 404 ||
+      statusCode === 401 ||
+      statusCode === 403 ||
+      msg.includes("Received unexpected response code");
+    if (moetDeactiveren) {
       await supabase
         .from("push_subscriptions")
         .update({ is_active: false })
         .eq("user_id", userId);
     }
-    return { success: false, reason: error.message };
+    return { success: false, reason: msg || `HTTP ${statusCode}` };
   }
 }
 

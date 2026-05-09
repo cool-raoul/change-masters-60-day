@@ -10,6 +10,10 @@ export function PushNotificationToggle() {
   const [isLoading, setIsLoading] = useState(false);
   const [isTesting, setIsTesting] = useState(false);
   const [permission, setPermission] = useState<"default" | "granted" | "denied">("default");
+  // Mismatch-staat: browser denkt subscribed maar server heeft 'm niet
+  // (of een andere endpoint). Wordt gezet door de status-check, en de
+  // UI biedt dan een 'Synchroniseer'-knop aan om 't recht te trekken.
+  const [needsResync, setNeedsResync] = useState(false);
 
   useEffect(() => {
     const supported =
@@ -36,9 +40,104 @@ export function PushNotificationToggle() {
     try {
       const registration = await navigator.serviceWorker.ready;
       const subscription = await registration.pushManager.getSubscription();
-      setIsSubscribed(!!subscription);
+      const browserSub = !!subscription;
+      setIsSubscribed(browserSub);
+
+      // Mismatch-detectie: vergelijk browser-state met server-state
+      // zodat we weten of 'r een resync nodig is. Dit lost op wanneer
+      // we VAPID-keys hebben verwisseld of een DB-reset is gedaan
+      // terwijl de browser nog 'n oude subscription gecached heeft.
+      try {
+        const res = await fetch("/api/push/status");
+        if (res.ok) {
+          const data = await res.json();
+          const serverEndpoint = data.endpoint as string | null;
+          const browserEndpoint = subscription?.endpoint ?? null;
+          // Mismatch als browser zegt 'subscribed' maar:
+          //  - server heeft géén actieve, OF
+          //  - server-endpoint matcht niet met browser-endpoint
+          const mismatch =
+            (browserSub && !data.hasActive) ||
+            (browserSub &&
+              serverEndpoint &&
+              browserEndpoint &&
+              serverEndpoint !== browserEndpoint);
+          setNeedsResync(!!mismatch);
+        }
+      } catch {
+        // negeer transient errors
+      }
     } catch (error) {
       console.error("Error checking subscription:", error);
+    }
+  }
+
+  async function synchroniseer() {
+    if (isLoading) return;
+    setIsLoading(true);
+    try {
+      const registration = await navigator.serviceWorker.ready;
+      // Stap 1: oude subscription weghalen (browser + server)
+      const oude = await registration.pushManager.getSubscription();
+      if (oude) {
+        try {
+          await oude.unsubscribe();
+        } catch {
+          // negeer
+        }
+      }
+      try {
+        await fetch("/api/push/subscribe", { method: "DELETE" });
+      } catch {
+        // negeer
+      }
+
+      // Stap 2: vraag opnieuw permission als nodig
+      if (Notification.permission !== "granted") {
+        const perm = await Notification.requestPermission();
+        setPermission(perm as typeof permission);
+        if (perm !== "granted") {
+          toast.error("Toestemming geweigerd");
+          setIsSubscribed(false);
+          setNeedsResync(false);
+          return;
+        }
+      }
+
+      // Stap 3: nieuwe subscription maken met huidige VAPID-key
+      const vapidPublicKey =
+        process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY?.trim();
+      if (!vapidPublicKey) {
+        toast.error("Push-key niet ingesteld");
+        return;
+      }
+      const subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
+      });
+
+      let tijdzone = "Europe/Amsterdam";
+      try {
+        const gedetecteerd = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (gedetecteerd) tijdzone = gedetecteerd;
+      } catch {}
+
+      const res = await fetch("/api/push/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ subscription: subscription.toJSON(), tijdzone }),
+      });
+      if (!res.ok) throw new Error("Subscribe naar server mislukt");
+
+      setIsSubscribed(true);
+      setNeedsResync(false);
+      toast.success("Push-meldingen opnieuw gesynchroniseerd ✓");
+    } catch (error) {
+      const msg =
+        error instanceof Error ? error.message : "onbekend";
+      toast.error("Sync mislukt: " + msg);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -198,6 +297,25 @@ export function PushNotificationToggle() {
         </div>
       )}
 
+      {isSubscribed && needsResync && (
+        <div className="p-3 bg-amber-900/20 border border-amber-600/30 rounded-xl space-y-2">
+          <p className="text-amber-300 text-sm font-semibold">
+            ⚠ Push-meldingen niet gesynchroniseerd
+          </p>
+          <p className="text-cm-white/80 text-xs leading-relaxed">
+            Je browser denkt dat push aan staat, maar onze server kent
+            jouw apparaat (nog) niet. Klik hieronder om opnieuw aan te
+            melden, dan werkt 't weer.
+          </p>
+          <button
+            onClick={synchroniseer}
+            disabled={isLoading}
+            className="w-full px-4 py-2 rounded-lg text-sm font-semibold bg-amber-600/30 border border-amber-500 text-amber-100 hover:bg-amber-600/40 transition-colors disabled:opacity-50"
+          >
+            {isLoading ? "Bezig..." : "🔄 Synchroniseer push opnieuw"}
+          </button>
+        </div>
+      )}
       {isSubscribed && (
         <button
           onClick={stuurTestPush}
