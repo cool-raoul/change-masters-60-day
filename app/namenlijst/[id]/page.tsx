@@ -11,6 +11,7 @@ import { OnboardingChecklist } from "@/components/namenlijst/OnboardingChecklist
 import { IngezetteTools } from "@/components/namenlijst/IngezetteTools";
 import { DriewegGesprekInklapbaar } from "@/components/namenlijst/DriewegGesprek";
 import { MiniElevaUitnodigKnop } from "@/components/namenlijst/MiniElevaUitnodigKnop";
+import { MiniElevaActieveSessies } from "@/components/namenlijst/MiniElevaActieveSessies";
 import { ProspectVerwijderKnop } from "@/components/namenlijst/ProspectVerwijderKnop";
 import { CoachGesprekkenInklapbaar } from "@/components/namenlijst/CoachGesprekkenInklapbaar";
 // ProductadviesKnop is bewust niet meer in de kaart-header opgenomen om de
@@ -338,6 +339,11 @@ export default async function ProspectDetailPagina({
             prospectId={id}
             prospectNaam={prospect.volledige_naam}
           />
+
+          {/* Read-only zicht op actieve mini-ELEVA-sessies van deze
+              prospect. Toont activiteit, mentor-vragen en haal-erbij-
+              meldingen zodat de member ziet of er momentum is. */}
+          <MiniElevaActieveSessies prospectId={id} />
 
           {/* ELEVA Mentor gesprekken, inklapbaar */}
           <CoachGesprekkenInklapbaar

@@ -140,18 +140,22 @@ export default async function MiniElevaLandingPagina({
           <span className="text-cm-white/40">later</span>
         </div>
 
-        <div className="card flex items-center gap-3 opacity-50 cursor-not-allowed">
+        <Link
+          href={`/m/${ctx.token}/mentor`}
+          className="card flex items-center gap-3 hover:border-cm-gold-dim transition-colors"
+        >
           <span className="text-2xl">🤖</span>
           <div className="flex-1">
             <h3 className="text-cm-white font-semibold text-sm">
               Mentor (AI)
             </h3>
             <p className="text-cm-white/60 text-xs leading-relaxed mt-0.5">
-              Stel je vragen aan een mentor, 24/7 beschikbaar. Komt binnenkort.
+              Stel je vragen aan een mentor, 24/7 beschikbaar. Eerlijk over
+              wat 'ie wel en niet weet.
             </p>
           </div>
-          <span className="text-cm-white/40">later</span>
-        </div>
+          <span className="text-cm-gold">→</span>
+        </Link>
 
         <div className="card flex items-center gap-3 opacity-50 cursor-not-allowed">
           <span className="text-2xl">💬</span>
