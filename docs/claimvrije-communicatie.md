@@ -2,10 +2,64 @@
 
 Bron-document voor het hele ELEVA-team en alle AI-assistenten (ELEVA Mentor + prospect-mentor).
 Deze handleiding bepaalt **hoe iedereen** binnen ELEVA mag praten over producten, gezondheid en
-inkomen. Geldt voor: posts, scripts, AI-antwoorden, playbook-uitleg, Mini-ELEVA-content.
+inkomen.
 
 **Vuistregel boven alles:**
-> Zeg nooit wat iets DOET. Zeg altijd wat het jou BRENGT of laat VOELEN.
+> Zeg nooit wat een PRODUCT doet. Zeg altijd wat het jou BRENGT of laat VOELEN.
+
+---
+
+## 0. Wanneer geldt deze handleiding precies?
+
+Hier het onderscheid dat boven alles staat:
+
+### 🔴 STRIKT CLAIMVRIJ (publieke uitingen — alle regels gelden onverkort)
+
+Dit is content waar duizenden mensen mee in aanraking komen, waar je niet kunt nuanceren, en
+waar EFSA/ACM actief op toezien. Hier mag GEEN medische taal, GEEN cijfers gekoppeld aan
+beloften, GEEN garantie-taal — gebruik altijd de vertaaltabel.
+
+- Social media posts (Instagram, Facebook, LinkedIn, TikTok)
+- Reels, stories, video-captions
+- Pre-posts en 21-dagen-resultaatposts
+- Openbare blog- of websitecontent
+- Reclame, advertenties, banners
+- Mini-ELEVA-welkom-content (publiek toegankelijk via link)
+- Scripts die anderen in jouw team weer publiek gebruiken
+
+### 🟢 NATUURLIJK GESPREK (1-op-1 conversatie — basisregels gelden, gespreksvoering mag)
+
+Dit is wanneer een prospect een directe vraag aan jou stelt en jij persoonlijk antwoordt.
+Dan mag je gewoon natuurlijk praten over haar/zijn doelen of vragen ("wil je afvallen?
+helder, ik kijk even hoe ik je kan helpen"). De wereld is niet aan het meelezen, dus de
+risico's zijn anders.
+
+Wat hier WEL mag in 1-op-1 gesprek:
+- Het doel van de prospect benoemen zoals zij het zelf zegt ("je wil meer energie", "je wil
+  afvallen")
+- Concreet meedenken over wat zou kunnen helpen
+- Persoonlijke ervaringen delen
+- Productadvies aanvragen of de productadvies-test uitleggen
+
+Wat hier NOG STEEDS NIET mag, ook in 1-op-1:
+- Een PRODUCT iets laten beloven ("dit product zorgt dat je afvalt", "Daily geneest je
+  hormonale schommelingen")
+- Specifieke ROI-beloftes ("je verdient €X in Y maanden")
+- Garanties geven ("dit werkt zeker", "iedereen die dit doet lukt het")
+- Medisch advies geven (doorverwijzen naar arts blijft verplicht bij medicatie/zwangerschap)
+
+### Het echte verschil
+
+Een prospect die zegt "ik wil afvallen" → mag je helpen. Wat je NIET doet is een product
+zo'n belofte laten dragen. Dus:
+
+✓ Wel: "Helder dat afvallen je doel is. Veel mensen die met de Reset starten merken dat hun
+kleding losser zit en hun lichaam lichter voelt. Wil je dat ik samen met jou kijk wat past?"
+
+✗ Niet: "Dit product helpt je afvallen, je verliest in 3 weken 5 kilo gegarandeerd."
+
+Het is dus geen taboe op woorden in 1-op-1, het is een taboe op **product-beloften** en
+**garantie-taal**. Dat blijft altijd hetzelfde.
 
 ---
 
