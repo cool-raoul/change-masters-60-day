@@ -2,25 +2,25 @@
 
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { WavRecorder } from "@/lib/voice/wav-recorder";
 
 // ============================================================
 // VoiceOpnameKnop, gedeelde component voor prospect/member/sponsor.
 //
-// MediaRecorder-API neemt audio op (webm/ogg afhankelijk van browser).
-// Bij stop: blob naar /api/mini-eleva/voice-upload, krijgt audio_path
-// + transcriptie terug, geeft die door aan de onUploaded-callback
-// zodat de bovenliggende chat-UI er een bericht van kan maken.
+// Gebruikt WavRecorder (PCM via Web Audio API + handgemaakte WAV-
+// encoder) i.p.v. MediaRecorder. Reden: MediaRecorder produceert
+// webm-blobs zonder duration in de header, browsers stoppen daardoor
+// met afspelen na ~4 sec. WAV heeft duration in de RIFF-header en
+// werkt cross-browser zonder fixes.
 //
-// Werkt voor zowel ingelogde users (member/sponsor, geef invitationId)
-// als voor niet-ingelogde prospects (geef token).
+// Limiet: WAV is groot. Onze 5MB-cap betekent ~60 sec. Daarom
+// MAX_DUUR_MS verlaagd van 3 min naar 60 sec.
 // ============================================================
 
-const MAX_DUUR_MS = 180_000; // 3 minuten
+const MAX_DUUR_MS = 60_000;
 
 type Props = {
-  /** Voor member/sponsor */
   invitationId?: string;
-  /** Voor prospect */
   token?: string;
   onUploaded: (data: {
     audio_path: string;
@@ -39,21 +39,17 @@ export function VoiceOpnameKnop({
   const [opnemen, setOpnemen] = useState(false);
   const [bezig, setBezig] = useState(false);
   const [tijd, setTijd] = useState(0);
-  const recorderRef = useRef<MediaRecorder | null>(null);
-  const chunksRef = useRef<Blob[]>([]);
+  const recorderRef = useRef<WavRecorder | null>(null);
   const startRef = useRef<number>(0);
   const tijdInterval = useRef<ReturnType<typeof setInterval> | null>(null);
   const autoStopTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     return () => {
-      // cleanup
-      if (recorderRef.current && recorderRef.current.state !== "inactive") {
-        try {
-          recorderRef.current.stop();
-        } catch {
-          // negeer
-        }
+      try {
+        recorderRef.current?.annuleer();
+      } catch {
+        // negeer
       }
       if (tijdInterval.current) clearInterval(tijdInterval.current);
       if (autoStopTimeout.current) clearTimeout(autoStopTimeout.current);
@@ -68,64 +64,10 @@ export function VoiceOpnameKnop({
     }
 
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mime = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
-        ? "audio/webm;codecs=opus"
-        : MediaRecorder.isTypeSupported("audio/webm")
-          ? "audio/webm"
-          : MediaRecorder.isTypeSupported("audio/mp4")
-            ? "audio/mp4"
-            : "";
-      const recorder = mime
-        ? new MediaRecorder(stream, { mimeType: mime })
-        : new MediaRecorder(stream);
-
-      chunksRef.current = [];
-      recorder.ondataavailable = (e) => {
-        if (e.data.size > 0) chunksRef.current.push(e.data);
-      };
-      recorder.onstop = async () => {
-        // Stream sluiten zodat het mic-icoon van de browser uitgaat
-        stream.getTracks().forEach((t) => t.stop());
-        const ruweMime = recorder.mimeType || "audio/webm";
-        const ruweBlob = new Blob(chunksRef.current, { type: ruweMime });
-        const duurMs = Date.now() - startRef.current;
-        const duur = Math.round(duurMs / 1000);
-
-        // FIX: MediaRecorder maakt webm-blobs zonder duration in de
-        // EBML-header, browsers stoppen daardoor met afspelen na een
-        // paar seconden. fix-webm-duration injecteert de echte duur
-        // (in ms) in de header zodat afspelen volledig werkt. Voor
-        // mp4 (Safari/iOS) is dit niet nodig, daar zit duration al in.
-        let blob = ruweBlob;
-        if (ruweMime.includes("webm")) {
-          try {
-            // fix-webm-duration is UMD, dynamic import geeft ofwel de
-            // functie direct ofwel als .default. Cast via unknown
-            // omdat de TS-types van het pakket niet stabiel zijn.
-            type FixFn = (blob: Blob, durMs: number) => Promise<Blob>;
-            const mod = await import("fix-webm-duration");
-            const modAny = mod as unknown as Record<string, unknown>;
-            const candidate =
-              typeof modAny === "function"
-                ? (modAny as unknown as FixFn)
-                : (modAny.default as FixFn | undefined);
-            if (typeof candidate === "function") {
-              blob = await candidate(ruweBlob, duurMs);
-            }
-          } catch (err) {
-            console.warn("[voice-opname] webm-duration fix mislukt:", err);
-            // Val terug op de ruwe blob, transcriptie werkt wel,
-            // alleen afspelen kan vroegtijdig stoppen
-          }
-        }
-
-        await uploadAudio(blob, duur);
-      };
-
+      const recorder = new WavRecorder();
+      await recorder.start();
       recorderRef.current = recorder;
       startRef.current = Date.now();
-      recorder.start();
       setOpnemen(true);
       setTijd(0);
 
@@ -144,21 +86,34 @@ export function VoiceOpnameKnop({
     }
   }
 
-  function stopOpname() {
+  async function stopOpname() {
     if (!opnemen) return;
-    if (recorderRef.current && recorderRef.current.state !== "inactive") {
-      recorderRef.current.stop();
-    }
     if (tijdInterval.current) clearInterval(tijdInterval.current);
     if (autoStopTimeout.current) clearTimeout(autoStopTimeout.current);
     setOpnemen(false);
+
+    const recorder = recorderRef.current;
+    if (!recorder) return;
+
+    try {
+      const { blob, duurSeconden } = await recorder.stop();
+      recorderRef.current = null;
+      if (blob.size === 0) {
+        toast.error("Geen audio opgenomen, probeer opnieuw");
+        return;
+      }
+      await uploadAudio(blob, duurSeconden);
+    } catch (err) {
+      console.error("[voice-opname] stop-fout:", err);
+      toast.error("Opname-fout, probeer opnieuw");
+    }
   }
 
   async function uploadAudio(blob: Blob, duur: number) {
     setBezig(true);
     try {
       const formData = new FormData();
-      formData.append("audio", blob);
+      formData.append("audio", blob, "opname.wav");
       formData.append("duurSeconden", String(duur));
       if (token) formData.append("token", token);
       if (invitationId) formData.append("invitationId", invitationId);
@@ -216,7 +171,7 @@ export function VoiceOpnameKnop({
       type="button"
       onClick={startOpname}
       disabled={disabled}
-      title="Spraakbericht opnemen (max 3 min)"
+      title="Spraakbericht opnemen (max 60 sec)"
       className="bg-cm-surface-2 hover:bg-cm-surface text-cm-gold text-base px-3 py-2 rounded-lg disabled:opacity-50"
     >
       🎤

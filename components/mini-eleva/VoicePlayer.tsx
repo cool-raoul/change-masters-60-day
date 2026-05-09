@@ -1,20 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 
 // ============================================================
 // VoicePlayer, audio + optionele transcriptie voor spraakberichten.
 //
-// AudioContext-aanpak (geen <audio>-element):
-//   MediaRecorder maakt webm-blobs zonder duration in de EBML-header.
-//   <audio>-elementen stoppen daardoor met afspelen na ~4 sec.
-//   Web Audio API decodeert de HELE blob naar PCM, dan weten we de
-//   echte duration en kunnen we 't fragment volledig afspelen via
-//   een AudioBufferSourceNode. Werkt voor alle browsers.
+// Spraakberichten worden nu als WAV opgenomen (zie WavRecorder), wat
+// duration in de RIFF-header heeft. Standaard <audio>-element kan
+// daardoor weer correct afspelen tot het einde, zonder seek-trucs of
+// AudioContext-aanpak.
 //
-// Transcriptie: standaard verborgen, knop 'Tekst' opent 'm. Voor
-// eigen berichten verschijnt een 'aanpassen'-knop.
+// Transcriptie staat standaard verborgen, knop 'Tekst' toont 'm.
+// Eigen berichten kunnen ge-edit worden via de 'aanpassen'-knop.
 // ============================================================
 
 type Props = {
@@ -38,23 +36,12 @@ export function VoicePlayer({
   invitationId,
   onTranscriptieGeupdate,
 }: Props) {
-  // Audio-state
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const bufferRef = useRef<AudioBuffer | null>(null);
-  const sourceRef = useRef<AudioBufferSourceNode | null>(null);
-  const startTijdRef = useRef<number>(0); // wall-clock bij play-start
-  const offsetRef = useRef<number>(0); // huidige positie in audio (seconden)
-  const tickRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const [laden, setLaden] = useState(true);
-  const [laadFout, setLaadFout] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [speelt, setSpeelt] = useState(false);
   const [huidigeTijd, setHuidigeTijd] = useState(0);
   const [werkelijkeDuur, setWerkelijkeDuur] = useState<number>(
     duurSeconden ?? 0,
   );
-
-  // Transcriptie-state
   const [tekstZichtbaar, setTekstZichtbaar] = useState(false);
   const [bewerken, setBewerken] = useState(false);
   const [concept, setConcept] = useState(transcriptie ?? "");
@@ -63,140 +50,16 @@ export function VoicePlayer({
     transcriptie ?? "",
   );
 
-  // Cleanup bij unmount
-  useEffect(() => {
-    return () => {
-      stopTick();
-      try {
-        sourceRef.current?.stop();
-      } catch {
-        // negeer
-      }
-      try {
-        audioContextRef.current?.close();
-      } catch {
-        // negeer
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  function stopTick() {
-    if (tickRef.current) {
-      clearInterval(tickRef.current);
-      tickRef.current = null;
-    }
-  }
-
-  async function laadAudio(): Promise<AudioBuffer | null> {
-    if (bufferRef.current) return bufferRef.current;
-    try {
-      // AudioContext lazy-init: pas bij eerste play (i.v.m. iOS gesture-vereiste)
-      if (!audioContextRef.current) {
-        type CtxCtor = typeof AudioContext;
-        const Ctor =
-          (window as unknown as { AudioContext?: CtxCtor }).AudioContext ??
-          (window as unknown as { webkitAudioContext?: CtxCtor })
-            .webkitAudioContext;
-        if (!Ctor) throw new Error("Geen AudioContext beschikbaar");
-        audioContextRef.current = new Ctor();
-      }
-      const ctx = audioContextRef.current;
-      const res = await fetch(audioUrl);
-      const buf = await res.arrayBuffer();
-      const decoded = await ctx.decodeAudioData(buf.slice(0));
-      bufferRef.current = decoded;
-      setWerkelijkeDuur(decoded.duration);
-      setLaden(false);
-      return decoded;
-    } catch (e) {
-      console.error("[voiceplayer] decode-fout:", e);
-      setLaadFout(true);
-      setLaden(false);
-      return null;
-    }
-  }
-
-  async function speelAf() {
-    const ctx = audioContextRef.current;
-    const buffer = bufferRef.current ?? (await laadAudio());
-    if (!buffer || !audioContextRef.current) return;
-
-    // Resume context (Chrome/iOS auto-suspend bij eerste interactie)
-    if (audioContextRef.current.state === "suspended") {
-      await audioContextRef.current.resume();
-    }
-
-    const ctxNu = audioContextRef.current;
-
-    // Maak nieuwe source vanuit buffer
-    const source = ctxNu.createBufferSource();
-    source.buffer = buffer;
-    source.connect(ctxNu.destination);
-    source.onended = () => {
-      // Natuurlijk einde of stop()-aanroep
-      const eindReached = offsetRef.current >= buffer.duration - 0.05;
-      sourceRef.current = null;
-      setSpeelt(false);
-      stopTick();
-      if (eindReached) {
-        offsetRef.current = 0;
-        setHuidigeTijd(0);
-      }
-    };
-
-    // Start vanaf de huidige offset
-    const offset = Math.max(0, Math.min(offsetRef.current, buffer.duration));
-    source.start(0, offset);
-    sourceRef.current = source;
-    startTijdRef.current = ctxNu.currentTime - offset;
-
-    // Tick voor UI-update (10x per seconde)
-    setSpeelt(true);
-    stopTick();
-    tickRef.current = setInterval(() => {
-      const elapsed =
-        (audioContextRef.current?.currentTime ?? 0) - startTijdRef.current;
-      offsetRef.current = elapsed;
-      setHuidigeTijd(elapsed);
-      if (elapsed >= buffer.duration) {
-        // Klaar
-        offsetRef.current = 0;
-        setHuidigeTijd(0);
-        setSpeelt(false);
-        stopTick();
-        try {
-          source.stop();
-        } catch {
-          // negeer (mogelijk al gestopt)
-        }
-      }
-    }, 100);
-
-    void ctx;
-  }
-
-  function pauzeer() {
-    if (!sourceRef.current || !audioContextRef.current) return;
-    // Onthoud waar we zijn, stop de bron
-    const elapsed =
-      audioContextRef.current.currentTime - startTijdRef.current;
-    offsetRef.current = Math.max(0, elapsed);
-    try {
-      sourceRef.current.stop();
-    } catch {
-      // negeer
-    }
-    sourceRef.current = null;
-    setSpeelt(false);
-    stopTick();
-  }
-
   function togglePlay() {
+    const a = audioRef.current;
+    if (!a) return;
     if (speelt) {
-      pauzeer();
+      a.pause();
     } else {
-      void speelAf();
+      a.play().catch((e) => {
+        // Autoplay-policy of broken file
+        console.warn("[voiceplayer] play-fout:", e);
+      });
     }
   }
 
@@ -253,16 +116,30 @@ export function VoicePlayer({
 
   return (
     <div className="space-y-2">
+      <audio
+        ref={audioRef}
+        src={audioUrl}
+        preload="metadata"
+        onPlay={() => setSpeelt(true)}
+        onPause={() => setSpeelt(false)}
+        onEnded={() => setSpeelt(false)}
+        onLoadedMetadata={(e) => {
+          const d = (e.target as HTMLAudioElement).duration;
+          if (isFinite(d) && d > 0) setWerkelijkeDuur(d);
+        }}
+        onTimeUpdate={(e) =>
+          setHuidigeTijd((e.target as HTMLAudioElement).currentTime)
+        }
+      />
+
       {/* Compacte rij: speler + tijd + Tekst-knop */}
       <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={togglePlay}
-          disabled={laadFout}
-          className="bg-cm-gold/20 hover:bg-cm-gold/30 text-cm-gold rounded-full w-9 h-9 flex items-center justify-center text-sm shrink-0 disabled:opacity-50"
-          title={laadFout ? "Audio kan niet geladen worden" : undefined}
+          className="bg-cm-gold/20 hover:bg-cm-gold/30 text-cm-gold rounded-full w-9 h-9 flex items-center justify-center text-sm shrink-0"
         >
-          {laadFout ? "✕" : speelt ? "⏸" : laden ? "..." : "▶"}
+          {speelt ? "⏸" : "▶"}
         </button>
         <div className="flex-1 text-xs text-cm-white/70 font-mono">
           {formatTijd(huidigeTijd)}

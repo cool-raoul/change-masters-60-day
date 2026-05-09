@@ -123,20 +123,22 @@ export async function POST(req: NextRequest) {
 
     // Upload naar Supabase Storage
     const admin = createAdminClient();
-    const ext = audio.type.includes("webm")
-      ? "webm"
-      : audio.type.includes("ogg")
-        ? "ogg"
-        : audio.type.includes("mp4")
-          ? "m4a"
-          : "audio";
+    const ext = audio.type.includes("wav")
+      ? "wav"
+      : audio.type.includes("webm")
+        ? "webm"
+        : audio.type.includes("ogg")
+          ? "ogg"
+          : audio.type.includes("mp4")
+            ? "m4a"
+            : "audio";
     const path = `${resolvedInvitationId}/${rol}/${Date.now()}.${ext}`;
 
     const audioBuffer = Buffer.from(await audio.arrayBuffer());
     const { error: uploadErr } = await admin.storage
       .from("mini-eleva-voice")
       .upload(path, audioBuffer, {
-        contentType: audio.type || "audio/webm",
+        contentType: audio.type || "audio/wav",
         upsert: false,
       });
     if (uploadErr) {
@@ -153,7 +155,7 @@ export async function POST(req: NextRequest) {
     try {
       const openai = new OpenAI({ apiKey });
       const file = new File([audioBuffer], `voice.${ext}`, {
-        type: audio.type || "audio/webm",
+        type: audio.type || "audio/wav",
       });
       const result = await openai.audio.transcriptions.create({
         file,
