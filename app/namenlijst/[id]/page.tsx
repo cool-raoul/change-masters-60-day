@@ -10,6 +10,7 @@ import { ContactgegevensForm } from "@/components/namenlijst/ContactgegevensForm
 import { OnboardingChecklist } from "@/components/namenlijst/OnboardingChecklist";
 import { IngezetteTools } from "@/components/namenlijst/IngezetteTools";
 import { DriewegGesprekInklapbaar } from "@/components/namenlijst/DriewegGesprek";
+import { MiniElevaUitnodigKnop } from "@/components/namenlijst/MiniElevaUitnodigKnop";
 import { ProspectVerwijderKnop } from "@/components/namenlijst/ProspectVerwijderKnop";
 import { CoachGesprekkenInklapbaar } from "@/components/namenlijst/CoachGesprekkenInklapbaar";
 // ProductadviesKnop is bewust niet meer in de kaart-header opgenomen om de
@@ -328,6 +329,14 @@ export default async function ProspectDetailPagina({
             prospectNaam={prospect.volledige_naam}
             prospectSituatie={prospect.situatie_kort || undefined}
             sponsorNaam={sponsorNaam}
+          />
+
+          {/* Mini-ELEVA, alternatief voor 3-weg-gesprek waar de prospect
+              72u eigen toegang krijgt tot een prospect-vriendelijke
+              omgeving. Zie docs/superpowers/specs/2026-05-06-mini-eleva-design.md */}
+          <MiniElevaUitnodigKnop
+            prospectId={id}
+            prospectNaam={prospect.volledige_naam}
           />
 
           {/* ELEVA Mentor gesprekken, inklapbaar */}
