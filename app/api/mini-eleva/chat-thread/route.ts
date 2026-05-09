@@ -42,11 +42,16 @@ export async function GET(req: NextRequest) {
     // Alle uitnodigingen ophalen van deze member voor deze prospect
     const { data: invitations } = await supabase
       .from("prospect_invitations")
-      .select("id, expires_at, status")
+      .select("id, expires_at, status, sponsor_user_id")
       .eq("prospect_id", prospectId)
       .eq("member_user_id", user.id);
 
-    type InvRow = { id: string; expires_at: string; status: string };
+    type InvRow = {
+      id: string;
+      expires_at: string;
+      status: string;
+      sponsor_user_id: string | null;
+    };
     const lijst = (invitations as InvRow[] | null) ?? [];
     if (lijst.length === 0) {
       return NextResponse.json({
@@ -54,6 +59,7 @@ export async function GET(req: NextRequest) {
         berichten: [],
         actieveInvitationId: null,
         kanLezenSchrijven: false,
+        actieveSponsor: null,
       });
     }
 
@@ -110,12 +116,29 @@ export async function GET(req: NextRequest) {
       }),
     );
 
+    // Sponsor-info voor de actieve uitnodiging (voor titel-tonen +
+    // wissel-knop in de chat-UI)
+    let actieveSponsor: { id: string; naam: string } | null = null;
+    if (actieve?.sponsor_user_id) {
+      const { data: sp } = await supabase
+        .from("profiles")
+        .select("full_name")
+        .eq("id", actieve.sponsor_user_id)
+        .maybeSingle();
+      const spRow = sp as { full_name?: string } | null;
+      actieveSponsor = {
+        id: actieve.sponsor_user_id,
+        naam: spRow?.full_name ?? "Sponsor",
+      };
+    }
+
     return NextResponse.json({
       ok: true,
       berichten: verrijkt,
       actieveInvitationId: actieve?.id ?? null,
       kanLezenSchrijven: !!actieve,
       eigen_rol: "member",
+      actieveSponsor,
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : "onbekend";

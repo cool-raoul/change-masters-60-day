@@ -37,7 +37,9 @@ export function MiniElevaUitnodigKnop({ prospectId, prospectNaam }: Props) {
     null,
   );
 
-  // Upline-keten ophalen voor sponsor-keuze
+  // Upline-keten ophalen voor sponsor-keuze. Default = niemand erbij;
+  // member kan later in de chat zelf alsnog iemand toevoegen via de
+  // 'voeg sponsor toe'-knop. Bij maken hoeft de keuze niet vooraf.
   useEffect(() => {
     let levend = true;
     (async () => {
@@ -48,9 +50,7 @@ export function MiniElevaUitnodigKnop({ prospectId, prospectNaam }: Props) {
         if (!levend) return;
         const lijst = (data.upline ?? []) as UplineLid[];
         setUpline(lijst);
-        // Default: directe sponsor
-        const direct = lijst.find((u) => u.isDirect);
-        if (direct) setGekozenSponsorId(direct.id);
+        // GEEN auto-selectie: default blijft null = niemand erbij
       } catch {
         // Stilletjes negeren als endpoint nog niet bestaat
       }
@@ -161,33 +161,35 @@ export function MiniElevaUitnodigKnop({ prospectId, prospectNaam }: Props) {
         </div>
       </div>
 
-      {/* Sponsor-keuze: kies wie er 'erbij' komt in de chat. Default
-          directe sponsor, maar member kan ook hoger in de upline gaan
-          als er meer ervaring nodig is. */}
+      {/* Optionele sponsor-keuze BIJ AANMAKEN. Default = niemand, member
+          kan later in de chat zelf via '+ Voeg sponsor toe' alsnog iemand
+          toevoegen. Hier alleen voor wie 't direct vooraf wil regelen. */}
       {upline.length > 0 && (
-        <div className="bg-cm-surface-2 rounded-lg p-3 space-y-2">
-          <label className="text-cm-white/70 text-xs font-semibold block">
-            Wie haal je erbij voor de chat?
-          </label>
-          <select
-            value={gekozenSponsorId ?? ""}
-            onChange={(e) => setGekozenSponsorId(e.target.value || null)}
-            disabled={bezig}
-            className="w-full bg-cm-surface border border-cm-white/10 rounded px-2 py-1.5 text-sm text-cm-white focus:outline-none focus:border-cm-gold/40 disabled:opacity-50"
-          >
-            {upline.map((u) => (
-              <option key={u.id} value={u.id}>
-                {u.naam}
-                {u.isDirect ? " (directe sponsor)" : ` — ${u.niveau} niveaus omhoog`}
-              </option>
-            ))}
-            <option value="">Niemand erbij, alleen ik</option>
-          </select>
-          <p className="text-cm-white/40 text-[10px] leading-relaxed">
-            Voor een ervaren ondersteuner kun je iemand hoger in de upline
-            kiezen, bijvoorbeeld als je directe sponsor zelf nog leert.
-          </p>
-        </div>
+        <details className="bg-cm-surface-2 rounded-lg p-3 text-xs">
+          <summary className="cursor-pointer text-cm-white/60 hover:text-cm-white">
+            Sponsor direct toevoegen aan dit gesprek?{" "}
+            <span className="text-cm-white/40">(optioneel)</span>
+          </summary>
+          <div className="mt-2 space-y-2">
+            <select
+              value={gekozenSponsorId ?? ""}
+              onChange={(e) => setGekozenSponsorId(e.target.value || null)}
+              disabled={bezig}
+              className="w-full bg-cm-surface border border-cm-white/10 rounded px-2 py-1.5 text-sm text-cm-white focus:outline-none focus:border-cm-gold/40 disabled:opacity-50"
+            >
+              <option value="">Niemand erbij, alleen ik</option>
+              {upline.map((u) => (
+                <option key={u.id} value={u.id}>
+                  {u.naam}
+                  {u.isDirect ? " (jouw directe sponsor)" : ` — ${u.niveau} niveaus omhoog`}
+                </option>
+              ))}
+            </select>
+            <p className="text-cm-white/40 text-[10px] leading-relaxed">
+              Je kunt 'm later ook altijd nog toevoegen via de chat zelf.
+            </p>
+          </div>
+        </details>
       )}
 
       <button

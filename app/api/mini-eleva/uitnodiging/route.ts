@@ -55,14 +55,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Sponsor bepalen: ofwel de meegestuurde gekozen upline-persoon
-    // (die member kan kiezen uit upline-keten via /api/mini-eleva/upline),
-    // ofwel de directe sponsor uit profiles.sponsor_id als fallback.
+    // Sponsor bepalen: alleen als member EXPLICIET een upline-persoon kiest.
+    // Default = NULL (geen sponsor in chat). Member kan later via de wissel-
+    // knop in de chat zelf alsnog iemand toevoegen.
+    //
+    // Geen automatische fallback naar profiles.sponsor_id meer (= eerder
+    // gedrag). Reden: Raoul wil dat een nieuwe chat default 'Chat met
+    // [prospect]' is, niet 'Chat met [prospect] + [sponsor]'. Kwestie van
+    // bewuste keuze ipv automatisch koppelen.
     let sponsorId: string | null = null;
     if (gekozenSponsorId) {
-      // Verifieer dat de gekozen persoon écht in de upline van deze member
-      // zit (anti-misbruik: voorkomt dat iemand een willekeurige user als
-      // sponsor toewijst).
+      // Verifieer dat de gekozen persoon écht in de upline zit (anti-misbruik)
       const gezien = new Set<string>([user.id]);
       let huidigeId = user.id;
       let bevestigd = false;
@@ -82,15 +85,6 @@ export async function POST(req: NextRequest) {
         huidigeId = next;
       }
       if (bevestigd) sponsorId = gekozenSponsorId;
-    }
-    if (!sponsorId) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("sponsor_id")
-        .eq("id", user.id)
-        .maybeSingle();
-      sponsorId =
-        (profile as { sponsor_id?: string | null } | null)?.sponsor_id ?? null;
     }
 
     const token = genereerToken();

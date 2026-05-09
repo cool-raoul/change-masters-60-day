@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { VoiceOpnameKnop } from "@/components/mini-eleva/VoiceOpnameKnop";
 import { VoicePlayer } from "@/components/mini-eleva/VoicePlayer";
+import { WisselSponsorKnop } from "@/components/mini-eleva/WisselSponsorKnop";
 
 // ============================================================
 // MiniElevaProspectChat, EEN doorlopende chat-omgeving per prospect.
@@ -33,8 +34,13 @@ type Bericht = {
 type Props = {
   prospectId: string;
   prospectVoornaam: string;
+  /** Default-sponsor naam voor render vóór data is geladen. De échte
+   *  actieve sponsor komt uit de chat-thread API en kan afwijken
+   *  (bv. lege chat, andere upline-keuze, na wisselen). */
   sponsorVoornaam?: string | null;
 };
+
+type ActieveSponsor = { id: string; naam: string } | null;
 
 const POLL_INTERVAL_MS = 8000;
 
@@ -50,6 +56,7 @@ export function MiniElevaProspectChat({
   const [actieveInvitationId, setActieveInvitationId] = useState<
     string | null
   >(null);
+  const [actieveSponsor, setActieveSponsor] = useState<ActieveSponsor>(null);
   const [kanSchrijven, setKanSchrijven] = useState(false);
   const [invoer, setInvoer] = useState("");
   const [bezig, setBezig] = useState(false);
@@ -84,6 +91,7 @@ export function MiniElevaProspectChat({
       }
       setBerichten(nieuwBerichten);
       setActieveInvitationId(data.actieveInvitationId);
+      setActieveSponsor(data.actieveSponsor ?? null);
       setKanSchrijven(data.kanLezenSchrijven);
     } catch {
       // negeer transient errors
@@ -195,17 +203,24 @@ export function MiniElevaProspectChat({
     return null;
   }
 
+  // Sponsor in titel komt UITSLUITEND uit de actieve uitnodiging,
+  // niet uit de algemene member-sponsor (sponsorVoornaam-prop). Pas
+  // ná data-load weten we 't echte plaatje. Vóór load: alleen prospect.
+  const sponsorNaamInChat = actieveSponsor?.naam.split(" ")[0] ?? null;
+  const titel = sponsorNaamInChat
+    ? `Chat met ${prospectVoornaam} en ${sponsorNaamInChat}`
+    : `Chat met ${prospectVoornaam}`;
+
   return (
     <div id="mini-eleva-chat" className="card border-l-4 border-cm-gold/30">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between gap-2 text-left"
-      >
-        <div className="flex items-center gap-2 flex-wrap">
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          className="flex-1 flex items-center gap-2 flex-wrap text-left min-w-0"
+        >
           <h3 className="text-cm-gold text-sm font-semibold flex items-center gap-2">
-            💬 Chat met {prospectVoornaam}
-            {sponsorVoornaam ? ` + ${sponsorVoornaam}` : ""}
+            💬 {titel}
           </h3>
           {ongelezen > 0 && !open && (
             <span className="bg-cm-gold text-black text-[10px] font-bold px-2 py-0.5 rounded-full">
@@ -217,9 +232,28 @@ export function MiniElevaProspectChat({
               {berichten.length} bericht{berichten.length === 1 ? "" : "en"}
             </span>
           )}
-        </div>
-        <span className="text-cm-gold text-sm">{open ? "−" : "+"}</span>
-      </button>
+        </button>
+        {/* Sponsor-knop verschijnt alleen als de chat open is, voorkomt
+            dat de inklapbare header te druk wordt bij dichtgeklapt zicht.
+            Wanneer 'r géén actieve uitnodiging is wordt 'ie ook niet
+            getoond want wisselen heeft dan geen zin. */}
+        {open && actieveInvitationId && (
+          <WisselSponsorKnop
+            invitationId={actieveInvitationId}
+            huidigeSponsorId={actieveSponsor?.id ?? null}
+            huidigeSponsorNaam={actieveSponsor?.naam ?? null}
+            onGewijzigd={() => haal()}
+          />
+        )}
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          className="text-cm-gold text-sm shrink-0"
+          aria-label={open ? "Sluit chat" : "Open chat"}
+        >
+          {open ? "−" : "+"}
+        </button>
+      </div>
 
       {!open && !kanSchrijven && berichten.length > 0 && (
         <p className="text-cm-white/40 text-xs mt-1">
@@ -248,7 +282,7 @@ export function MiniElevaProspectChat({
             ) : (
               <>
                 Berichten worden direct als push-melding aan {prospectVoornaam}
-                {sponsorVoornaam ? ` en ${sponsorVoornaam}` : ""} gestuurd.
+                {sponsorNaamInChat ? ` en ${sponsorNaamInChat}` : ""} gestuurd.
               </>
             )}
           </div>
@@ -265,7 +299,7 @@ export function MiniElevaProspectChat({
                 bericht={b}
                 isEigen={b.rol === "member"}
                 prospectVoornaam={prospectVoornaam}
-                sponsorVoornaam={sponsorVoornaam ?? undefined}
+                sponsorVoornaam={sponsorNaamInChat ?? undefined}
                 invitationId={b.invitation_id}
                 onTranscriptieGeupdate={haal}
               />
