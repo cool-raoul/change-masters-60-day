@@ -50,10 +50,10 @@ export function Sidebar({
     // ELEVA Mentor direct onder Dashboard: dagelijks startpunt voor
     // sparren, scripts laten genereren, etc.
     { href: "/coach", labelKey: "nav.coach", icoon: "🤖" },
-    // Chat-cluster: eigen prospect-chats én sponsor-zicht op chats
-    // van members onder mij. Beide hoog want dagelijkse interactie.
+    // Mijn chats: eigen prospect-chats én 3-weg-groepschats waar je
+    // sponsor bent. Geïntegreerd in één lijst zodat je niet hoeft te
+    // schakelen tussen aparte secties.
     { href: "/mijn-chats", labelKey: "nav.mijn_chats", icoon: "💬" },
-    { href: "/sponsor/mini-eleva", labelKey: "nav.sponsor_mini_eleva", icoon: "✨" },
     // /acties is gepensioneerd, vervangen door de Volgende-beste-actie-radar
     // op het dashboard zelf en /herinneringen voor het volledige overzicht.
     { href: "/namenlijst", labelKey: "nav.namenlijst", icoon: "👥" },

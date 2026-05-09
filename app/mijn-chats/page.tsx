@@ -1,218 +1,81 @@
-import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
-import { createAdminClient } from "@/lib/supabase/admin";
 
 // ============================================================
 // /mijn-chats
 //
-// WhatsApp-stijl overzicht voor de member van alle mini-ELEVA-chats
-// met al haar prospects. Eén tegel per prospect, met:
-//   - Voornaam, ongelezen-badge, status
-//   - Preview van laatste bericht (tekst of "🎤 spraak")
-//   - Tijd-geleden
-//   - Klik → opent prospect-detail-pagina met chat auto-open
+// WhatsApp-stijl chat-overzicht met TWEE soorten gesprekken in één
+// lijst:
+//   - 'eigen'   = chats met je eigen prospects (mini-ELEVA)
+//   - 'sponsor' = 3-weg-groepschats waarbij jij sponsor bent van een
+//                 member-prospect-paar onder jou
 //
-// Server-component die de admin-client gebruikt voor de aggregatie
-// (zelfde data als /api/mini-eleva/mijn-chats GET).
+// Visueel onderscheid:
+//   - Eigen chats: standaard avatar van prospect
+//   - Sponsor-chats: 3-weg-icoon + label "3-weg met [member] + [prospect]"
+//
+// Client-component (was server) zodat we polling kunnen doen voor
+// live updates van ongelezen-tellers.
 // ============================================================
 
-export const dynamic = "force-dynamic";
-
-type InvRow = {
-  id: string;
-  prospect_id: string;
-  expires_at: string;
-  status: string;
+type ChatItem = {
+  prospectId: string;
+  prospectNaam: string;
+  prospectVoornaam: string;
+  rol: "eigen" | "sponsor";
+  memberNaam: string | null;
+  memberVoornaam: string | null;
+  ongelezenAantal: number;
+  laatsteBericht: string | null;
+  laatsteBerichtRol: string | null;
+  laatsteBerichtType: string | null;
+  laatsteBerichtTijd: string | null;
+  heeftActieveInvitatie: boolean;
+  klikUrl: string;
 };
 
-export default async function MijnChatsPagina() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+const POLL_INTERVAL_MS = 15000;
 
-  const { data: invitations, error } = await supabase
-    .from("prospect_invitations")
-    .select("id, prospect_id, expires_at, status")
-    .eq("member_user_id", user.id);
+export default function MijnChatsPagina() {
+  const [items, setItems] = useState<ChatItem[]>([]);
+  const [totaalOngelezen, setTotaalOngelezen] = useState(0);
+  const [laden, setLaden] = useState(true);
+  const [foutTekst, setFoutTekst] = useState<string | null>(null);
 
-  if (error) {
-    return (
-      <div className="space-y-6 pt-6">
-        <h1 className="font-serif-warm text-3xl text-cm-white">Mijn chats</h1>
-        <p className="text-cm-white/60">
-          Mini-ELEVA-tabellen zijn nog niet geïnstalleerd. Vraag de founder om
-          de SQL-migraties te draaien.
-        </p>
-      </div>
-    );
-  }
-
-  const lijst = (invitations as InvRow[] | null) ?? [];
-  if (lijst.length === 0) {
-    return (
-      <div className="space-y-6 pt-6">
-        <div>
-          <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
-            Mini-ELEVA
-          </p>
-          <h1 className="font-serif-warm text-3xl text-cm-white leading-tight">
-            Mijn chats
-          </h1>
-        </div>
-        <div className="card text-center text-cm-white/60 text-sm">
-          Nog geen mini-ELEVA-chats. Maak een uitnodiging aan vanaf een
-          prospect-kaart, dan verschijnt 't gesprek hier.
-        </div>
-      </div>
-    );
-  }
-
-  const allInvIds = lijst.map((i) => i.id);
-  const prospectIds = Array.from(new Set(lijst.map((i) => i.prospect_id)));
-
-  // Haal prospects + lees-stempels + berichten in parallel op
-  const admin = createAdminClient();
-  const [
-    { data: prospects },
-    { data: leesData },
-    { data: berichten },
-  ] = await Promise.all([
-    supabase
-      .from("prospects")
-      .select("id, volledige_naam")
-      .in("id", prospectIds),
-    supabase
-      .from("mini_eleva_leeskenmerk")
-      .select("invitation_id, laatst_gelezen_op")
-      .eq("user_id", user.id)
-      .in("invitation_id", allInvIds),
-    admin
-      .from("mini_eleva_chats")
-      .select("invitation_id, rol, type, content, transcriptie, created_at")
-      .in("invitation_id", allInvIds)
-      .eq("kanaal", "mens")
-      .in("rol", ["prospect", "member", "sponsor"])
-      .not("content", "like", "🤝 [haal-erbij]%")
-      .order("created_at", { ascending: false }),
-  ]);
-
-  const prospectMap = new Map<string, string>();
-  for (const p of (prospects as { id: string; volledige_naam: string }[] | null) ??
-    []) {
-    prospectMap.set(p.id, p.volledige_naam ?? "");
-  }
-
-  const leesMap = new Map<string, string>();
-  for (const l of (leesData as
-    | { invitation_id: string; laatst_gelezen_op: string }[]
-    | null) ?? []) {
-    leesMap.set(l.invitation_id, l.laatst_gelezen_op);
-  }
-
-  type Bericht = {
-    invitation_id: string;
-    rol: string;
-    type: string;
-    content: string;
-    transcriptie: string | null;
-    created_at: string;
-  };
-  const alleBerichten = (berichten as Bericht[] | null) ?? [];
-
-  // Groeperen per prospect
-  const nu = Date.now();
-  const perProspect = new Map<
-    string,
-    {
-      prospectId: string;
-      prospectNaam: string;
-      prospectVoornaam: string;
-      invIds: string[];
-      heeftActieveInvitatie: boolean;
-      laatsteBericht: string | null;
-      laatsteBerichtRol: string | null;
-      laatsteBerichtType: string | null;
-      laatsteBerichtTijd: string | null;
-      ongelezenAantal: number;
-    }
-  >();
-
-  for (const inv of lijst) {
-    const naam = prospectMap.get(inv.prospect_id) ?? "Onbekende prospect";
-    const verlopen =
-      inv.status === "verlopen" || new Date(inv.expires_at).getTime() < nu;
-    const bestaand = perProspect.get(inv.prospect_id);
-    if (bestaand) {
-      bestaand.invIds.push(inv.id);
-      if (!verlopen) bestaand.heeftActieveInvitatie = true;
-    } else {
-      perProspect.set(inv.prospect_id, {
-        prospectId: inv.prospect_id,
-        prospectNaam: naam,
-        prospectVoornaam: naam.split(" ")[0] || naam,
-        invIds: [inv.id],
-        heeftActieveInvitatie: !verlopen,
-        laatsteBericht: null,
-        laatsteBerichtRol: null,
-        laatsteBerichtType: null,
-        laatsteBerichtTijd: null,
-        ongelezenAantal: 0,
-      });
-    }
-  }
-
-  for (const groep of Array.from(perProspect.values())) {
-    const eersteHit = alleBerichten.find((b) =>
-      groep.invIds.includes(b.invitation_id),
-    );
-    if (eersteHit) {
-      const preview =
-        eersteHit.type === "spraak"
-          ? eersteHit.transcriptie
-            ? `🎤 ${eersteHit.transcriptie.substring(0, 60)}${eersteHit.transcriptie.length > 60 ? "..." : ""}`
-            : "🎤 Spraakbericht"
-          : eersteHit.content.substring(0, 80) +
-            (eersteHit.content.length > 80 ? "..." : "");
-      groep.laatsteBericht = preview;
-      groep.laatsteBerichtRol = eersteHit.rol;
-      groep.laatsteBerichtType = eersteHit.type;
-      groep.laatsteBerichtTijd = eersteHit.created_at;
-    }
-
-    let ongelezen = 0;
-    for (const invId of groep.invIds) {
-      const sinds = leesMap.get(invId) ?? "1970-01-01T00:00:00Z";
-      ongelezen += alleBerichten.filter(
-        (b) =>
-          b.invitation_id === invId &&
-          b.rol !== "member" &&
-          b.created_at > sinds,
-      ).length;
-    }
-    groep.ongelezenAantal = Math.min(ongelezen, 99);
-  }
-
-  const items = Array.from(perProspect.values())
-    .filter((g) => g.laatsteBerichtTijd !== null || g.heeftActieveInvitatie)
-    .sort((a, b) => {
-      if (a.ongelezenAantal !== b.ongelezenAantal) {
-        return b.ongelezenAantal - a.ongelezenAantal;
+  useEffect(() => {
+    let levend = true;
+    async function haal() {
+      try {
+        const res = await fetch("/api/mini-eleva/mijn-chats");
+        if (!res.ok) {
+          if (levend) {
+            setFoutTekst("Kon chats niet laden");
+            setLaden(false);
+          }
+          return;
+        }
+        const data = await res.json();
+        if (!levend) return;
+        setItems(data.items ?? []);
+        setTotaalOngelezen(data.totaalOngelezen ?? 0);
+        setFoutTekst(null);
+      } catch {
+        if (levend) setFoutTekst("Verbindingsfout");
+      } finally {
+        if (levend) setLaden(false);
       }
-      const at = a.laatsteBerichtTijd
-        ? new Date(a.laatsteBerichtTijd).getTime()
-        : 0;
-      const bt = b.laatsteBerichtTijd
-        ? new Date(b.laatsteBerichtTijd).getTime()
-        : 0;
-      return bt - at;
-    });
-
-  const totaalOngelezen = items.reduce((s, i) => s + i.ongelezenAantal, 0);
+    }
+    haal();
+    const t = setInterval(haal, POLL_INTERVAL_MS);
+    return () => {
+      levend = false;
+      clearInterval(t);
+    };
+  }, []);
 
   return (
     <div className="space-y-5 pt-6">
@@ -224,8 +87,8 @@ export default async function MijnChatsPagina() {
           Mijn chats
         </h1>
         <p className="text-cm-white/60 text-sm mt-1">
-          Alle gesprekken met je prospects op één plek. Nieuwe berichten
-          bovenaan.
+          Eigen prospect-chats en 3-weg-groepschats waar je sponsor bent op
+          één plek. Nieuwe berichten staan bovenaan en lichten goud op.
         </p>
       </div>
 
@@ -239,107 +102,154 @@ export default async function MijnChatsPagina() {
         </div>
       )}
 
-      {items.length === 0 && (
+      {foutTekst && (
         <div className="card text-center text-cm-white/60 text-sm">
-          Nog geen actieve chats. Berichten verschijnen hier zodra prospects
-          reageren of jij iets stuurt.
+          {foutTekst}. Vraag de founder om de SQL-migraties (mini_eleva.sql,
+          fase6c, fase6d, fase6e, fase6f) te draaien als 't aan ontbrekende
+          tabellen ligt.
+        </div>
+      )}
+
+      {laden && !foutTekst && items.length === 0 && (
+        <div className="card text-center text-cm-white/40 text-sm italic">
+          Laden...
+        </div>
+      )}
+
+      {!laden && items.length === 0 && !foutTekst && (
+        <div className="card text-center text-cm-white/60 text-sm">
+          Nog geen mini-ELEVA-chats. Maak een uitnodiging aan vanaf een
+          prospect-kaart, of word sponsor van een chat van een member onder
+          je.
         </div>
       )}
 
       <div className="space-y-2">
-        {items.map((c) => {
-          const ongelezen = c.ongelezenAantal > 0;
-          const laatsteRolLabel =
-            c.laatsteBerichtRol === "member"
-              ? "Jij"
-              : c.laatsteBerichtRol === "sponsor"
-                ? "Sponsor"
-                : c.prospectVoornaam;
-          return (
-            <Link
-              key={c.prospectId}
-              href={`/namenlijst/${c.prospectId}?chat=open#mini-eleva-chat`}
-              className={`card flex items-center gap-3 hover:border-cm-gold-dim transition-colors ${
-                !c.heeftActieveInvitatie ? "opacity-70" : ""
-              }`}
-            >
-              {/* Avatar / initialen */}
-              <div
-                className={`w-11 h-11 rounded-full flex items-center justify-center font-semibold text-sm shrink-0 ${
-                  ongelezen
-                    ? "bg-cm-gold text-black"
-                    : "bg-cm-surface-2 text-cm-white"
-                }`}
-              >
-                {c.prospectVoornaam
-                  .split(" ")
-                  .map((s) => s[0])
-                  .join("")
-                  .slice(0, 2)
-                  .toUpperCase()}
-              </div>
-
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-2">
-                  <h3
-                    className={`font-semibold text-sm truncate ${
-                      ongelezen ? "text-cm-gold" : "text-cm-white"
-                    }`}
-                  >
-                    {c.prospectNaam}
-                  </h3>
-                  {c.laatsteBerichtTijd && (
-                    <span
-                      className={`text-[10px] shrink-0 ${
-                        ongelezen ? "text-cm-gold" : "text-cm-white/50"
-                      }`}
-                    >
-                      {formatDistanceToNow(parseISO(c.laatsteBerichtTijd), {
-                        locale: nl,
-                        addSuffix: false,
-                      })}
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-center justify-between gap-2 mt-0.5">
-                  <p
-                    className={`text-xs leading-snug truncate ${
-                      ongelezen
-                        ? "text-cm-white font-medium"
-                        : "text-cm-white/60"
-                    }`}
-                  >
-                    {c.laatsteBericht ? (
-                      <>
-                        <span className="text-cm-white/40">
-                          {laatsteRolLabel}:
-                        </span>{" "}
-                        {c.laatsteBericht}
-                      </>
-                    ) : (
-                      <span className="italic text-cm-white/40">
-                        Nog geen berichten
-                      </span>
-                    )}
-                  </p>
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    {!c.heeftActieveInvitatie && (
-                      <span className="text-[9px] uppercase tracking-wider text-cm-white/40">
-                        verlopen
-                      </span>
-                    )}
-                    {ongelezen && (
-                      <span className="bg-cm-gold text-black text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
-                        {c.ongelezenAantal > 9 ? "9+" : c.ongelezenAantal}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </Link>
-          );
-        })}
+        {items.map((c) => (
+          <ChatTegel key={`${c.rol}-${c.prospectId}`} chat={c} />
+        ))}
       </div>
     </div>
+  );
+}
+
+function ChatTegel({ chat }: { chat: ChatItem }) {
+  const ongelezen = chat.ongelezenAantal > 0;
+  const isSponsor = chat.rol === "sponsor";
+  const eigenRolNaam = isSponsor ? "sponsor" : "member";
+  const laatsteRolLabel =
+    chat.laatsteBerichtRol === eigenRolNaam
+      ? "Jij"
+      : chat.laatsteBerichtRol === "prospect"
+        ? chat.prospectVoornaam
+        : chat.laatsteBerichtRol === "member"
+          ? (chat.memberVoornaam ?? "Member")
+          : chat.laatsteBerichtRol === "sponsor"
+            ? "Sponsor"
+            : "";
+
+  return (
+    <Link
+      href={chat.klikUrl}
+      className={`card flex items-center gap-3 hover:border-cm-gold-dim transition-colors ${
+        !chat.heeftActieveInvitatie ? "opacity-70" : ""
+      }`}
+    >
+      {/* Avatar */}
+      <div
+        className={`relative w-11 h-11 rounded-full flex items-center justify-center font-semibold text-sm shrink-0 ${
+          ongelezen
+            ? "bg-cm-gold text-black"
+            : "bg-cm-surface-2 text-cm-white"
+        }`}
+      >
+        {chat.prospectVoornaam
+          .split(" ")
+          .map((s) => s[0])
+          .join("")
+          .slice(0, 2)
+          .toUpperCase()}
+        {/* Sponsor-badge rechtsonder bij avatar zodat je in één
+            oogopslag ziet dat het 3-weg is */}
+        {isSponsor && (
+          <span
+            className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-cm-surface flex items-center justify-center text-[10px] border border-cm-gold/40"
+            title="3-weg-groepschat"
+          >
+            🤝
+          </span>
+        )}
+      </div>
+
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            <h3
+              className={`font-semibold text-sm truncate ${
+                ongelezen ? "text-cm-gold" : "text-cm-white"
+              }`}
+            >
+              {chat.prospectNaam}
+            </h3>
+            {isSponsor && (
+              <span
+                className="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-cm-gold/15 text-cm-gold/90 shrink-0"
+                title={
+                  chat.memberVoornaam
+                    ? `Member: ${chat.memberVoornaam}`
+                    : "3-weg-groep"
+                }
+              >
+                3-weg
+              </span>
+            )}
+          </div>
+          {chat.laatsteBerichtTijd && (
+            <span
+              className={`text-[10px] shrink-0 ${
+                ongelezen ? "text-cm-gold" : "text-cm-white/50"
+              }`}
+            >
+              {formatDistanceToNow(parseISO(chat.laatsteBerichtTijd), {
+                locale: nl,
+                addSuffix: false,
+              })}
+            </span>
+          )}
+        </div>
+        <div className="flex items-center justify-between gap-2 mt-0.5">
+          <p
+            className={`text-xs leading-snug truncate ${
+              ongelezen ? "text-cm-white font-medium" : "text-cm-white/60"
+            }`}
+          >
+            {chat.laatsteBericht ? (
+              <>
+                <span className="text-cm-white/40">{laatsteRolLabel}:</span>{" "}
+                {chat.laatsteBericht}
+              </>
+            ) : (
+              <span className="italic text-cm-white/40">
+                {isSponsor
+                  ? `3-weg-groep met ${chat.memberVoornaam ?? "member"}, nog geen berichten`
+                  : "Nog geen berichten"}
+              </span>
+            )}
+          </p>
+          <div className="flex items-center gap-1.5 shrink-0">
+            {!chat.heeftActieveInvitatie && (
+              <span className="text-[9px] uppercase tracking-wider text-cm-white/40">
+                verlopen
+              </span>
+            )}
+            {ongelezen && (
+              <span className="bg-cm-gold text-black text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                {chat.ongelezenAantal > 9 ? "9+" : chat.ongelezenAantal}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    </Link>
   );
 }

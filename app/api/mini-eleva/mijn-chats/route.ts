@@ -5,20 +5,20 @@ import { createAdminClient } from "@/lib/supabase/admin";
 // ============================================================
 // GET /api/mini-eleva/mijn-chats
 //
-// Geeft alle mini-ELEVA-mens-chats van de huidige member terug,
-// gegroepeerd per prospect, gesorteerd op laatste activiteit.
+// Geeft alle mini-ELEVA-mens-chats terug waar de huidige user bij
+// betrokken is, in twee categorieën:
+//   - 'eigen'    : member-chats met je eigen prospects
+//   - 'sponsor'  : 3-weg-groepschats met members onder jou + hun
+//                  prospects (je bent uitgenodigd als sponsor)
 //
-// Per chat:
+// Per item:
 //   - prospectId, prospectNaam
-//   - ongelezenAantal (berichten van prospect/sponsor sinds laatst-
-//     gelezen-stempel)
-//   - laatsteBericht (preview-tekst, max 80 tekens)
-//   - laatsteBerichtRol (prospect/member/sponsor)
-//   - laatsteBerichtType ('tekst' of 'spraak')
-//   - laatsteBerichtTijd
-//   - heeftActieveInvitatie (kan member nog reageren?)
-//
-// WhatsApp-stijl: lijst van gesprekken om het overzicht te houden.
+//   - rol: 'eigen' | 'sponsor'
+//   - memberNaam (alleen bij sponsor-chats relevant)
+//   - ongelezenAantal
+//   - laatsteBericht, laatsteBerichtRol, laatsteBerichtType, tijd
+//   - heeftActieveInvitatie
+//   - klikUrl (waar de user heen moet bij klik)
 // ============================================================
 
 export const dynamic = "force-dynamic";
@@ -33,38 +33,59 @@ export async function GET() {
       return NextResponse.json({ error: "Niet ingelogd" }, { status: 401 });
     }
 
-    // Alle uitnodigingen van deze member
+    // Alle uitnodigingen waar user member OF sponsor is
     const { data: invitations } = await supabase
       .from("prospect_invitations")
-      .select("id, prospect_id, expires_at, status")
-      .eq("member_user_id", user.id);
+      .select(
+        "id, prospect_id, member_user_id, sponsor_user_id, expires_at, status",
+      )
+      .or(`member_user_id.eq.${user.id},sponsor_user_id.eq.${user.id}`);
 
     type InvRow = {
       id: string;
       prospect_id: string;
+      member_user_id: string;
+      sponsor_user_id: string | null;
       expires_at: string;
       status: string;
     };
     const lijst = (invitations as InvRow[] | null) ?? [];
     if (lijst.length === 0) {
-      return NextResponse.json({ ok: true, items: [] });
+      return NextResponse.json({ ok: true, items: [], totaalOngelezen: 0 });
     }
 
     const allInvIds = lijst.map((i) => i.id);
     const prospectIds = Array.from(new Set(lijst.map((i) => i.prospect_id)));
+    const memberIds = Array.from(
+      new Set(lijst.map((i) => i.member_user_id)),
+    );
 
-    // Prospect-namen ophalen
-    const { data: prospects } = await supabase
-      .from("prospects")
-      .select("id, volledige_naam")
-      .in("id", prospectIds);
+    // Prospect- + member-namen ophalen
+    const [{ data: prospects }, { data: profielen }] = await Promise.all([
+      supabase
+        .from("prospects")
+        .select("id, volledige_naam")
+        .in("id", prospectIds),
+      memberIds.length
+        ? supabase
+            .from("profiles")
+            .select("id, full_name")
+            .in("id", memberIds)
+        : Promise.resolve({ data: [] }),
+    ]);
+
     const prospectMap = new Map<string, string>();
     for (const p of (prospects as { id: string; volledige_naam: string }[] | null) ??
       []) {
       prospectMap.set(p.id, p.volledige_naam ?? "");
     }
+    const memberMap = new Map<string, string>();
+    for (const m of (profielen as { id: string; full_name: string }[] | null) ??
+      []) {
+      memberMap.set(m.id, m.full_name ?? "");
+    }
 
-    // Lees-stempel per uitnodiging
+    // Lees-stempel per uitnodiging voor deze user
     const { data: leesData } = await supabase
       .from("mini_eleva_leeskenmerk")
       .select("invitation_id, laatst_gelezen_op")
@@ -77,10 +98,6 @@ export async function GET() {
       leesMap.set(l.invitation_id, l.laatst_gelezen_op);
     }
 
-    // Alle mens-berichten over deze uitnodigingen, gesorteerd op tijd.
-    // Admin-client want we joinen over meerdere invitations + we
-    // hebben de RLS-bypass niet strikt nodig (de invitations zijn van
-    // deze member, dus toegang is sowieso terecht).
     const admin = createAdminClient();
     const { data: berichten } = await admin
       .from("mini_eleva_chats")
@@ -103,38 +120,70 @@ export async function GET() {
     };
     const alleBerichten = (berichten as Bericht[] | null) ?? [];
 
-    // Groeperen per prospect
+    // Groeperen per (rol, prospect) — sponsor-chat van prospect X is
+    // logisch een ander gesprek dan eigen chat met prospect X (kan
+    // zelfs niet bestaan tegelijk, maar voor de zekerheid splitsen).
+    type Groep = {
+      key: string;
+      prospectId: string;
+      prospectNaam: string;
+      prospectVoornaam: string;
+      rol: "eigen" | "sponsor";
+      memberNaam: string | null;
+      memberVoornaam: string | null;
+      invIds: string[];
+      heeftActieveInvitatie: boolean;
+      laatsteBericht: string | null;
+      laatsteBerichtRol: string | null;
+      laatsteBerichtType: string | null;
+      laatsteBerichtTijd: string | null;
+      ongelezenAantal: number;
+      klikUrl: string;
+    };
+
     const nu = Date.now();
-    const perProspect = new Map<
-      string,
-      {
-        prospectId: string;
-        prospectNaam: string;
-        prospectVoornaam: string;
-        invIds: string[];
-        heeftActieveInvitatie: boolean;
-        laatsteBericht: string | null;
-        laatsteBerichtRol: string | null;
-        laatsteBerichtType: string | null;
-        laatsteBerichtTijd: string | null;
-        ongelezenAantal: number;
-      }
-    >();
+    const groepen = new Map<string, Groep>();
 
     for (const inv of lijst) {
       const naam = prospectMap.get(inv.prospect_id) ?? "Onbekende prospect";
       const verlopen =
         inv.status === "verlopen" ||
         new Date(inv.expires_at).getTime() < nu;
-      const bestaand = perProspect.get(inv.prospect_id);
+      const isEigen = inv.member_user_id === user.id;
+      const rol: "eigen" | "sponsor" = isEigen ? "eigen" : "sponsor";
+      const key = `${rol}:${inv.prospect_id}`;
+
+      // Bij sponsor-chat: link naar /sponsor/mini-eleva/[invId]
+      // Bij eigen: link naar prospect-detail met chat auto-open
+      const klikUrl = isEigen
+        ? `/namenlijst/${inv.prospect_id}?chat=open#mini-eleva-chat`
+        : `/sponsor/mini-eleva/${inv.id}`;
+
+      const memberNaam = !isEigen
+        ? (memberMap.get(inv.member_user_id) ?? null)
+        : null;
+      const memberVoornaam = memberNaam
+        ? memberNaam.split(" ")[0] || memberNaam
+        : null;
+
+      const bestaand = groepen.get(key);
       if (bestaand) {
         bestaand.invIds.push(inv.id);
         if (!verlopen) bestaand.heeftActieveInvitatie = true;
+        // Behoud meest recente klikUrl voor sponsor-chats (anders altijd
+        // dezelfde uitnodiging openen)
+        if (!isEigen && !verlopen) {
+          bestaand.klikUrl = klikUrl;
+        }
       } else {
-        perProspect.set(inv.prospect_id, {
+        groepen.set(key, {
+          key,
           prospectId: inv.prospect_id,
           prospectNaam: naam,
           prospectVoornaam: naam.split(" ")[0] || naam,
+          rol,
+          memberNaam,
+          memberVoornaam,
           invIds: [inv.id],
           heeftActieveInvitatie: !verlopen,
           laatsteBericht: null,
@@ -142,13 +191,12 @@ export async function GET() {
           laatsteBerichtType: null,
           laatsteBerichtTijd: null,
           ongelezenAantal: 0,
+          klikUrl,
         });
       }
     }
 
-    // Per prospect: laatste bericht + ongelezen telling
-    for (const groep of Array.from(perProspect.values())) {
-      // Laatste bericht binnen deze prospect's invitations
+    for (const groep of Array.from(groepen.values())) {
       const eersteHit = alleBerichten.find((b) =>
         groep.invIds.includes(b.invitation_id),
       );
@@ -166,27 +214,27 @@ export async function GET() {
         groep.laatsteBerichtTijd = eersteHit.created_at;
       }
 
-      // Ongelezen: niet-eigen berichten na lees-stempel
       let ongelezen = 0;
       for (const invId of groep.invIds) {
         const sinds = leesMap.get(invId) ?? "1970-01-01T00:00:00Z";
+        // Voor 'eigen': ongelezen = berichten van NIET-member rol
+        // Voor 'sponsor': ongelezen = berichten van NIET-sponsor rol
+        const eigenRolNaam = groep.rol === "eigen" ? "member" : "sponsor";
         ongelezen += alleBerichten.filter(
           (b) =>
             b.invitation_id === invId &&
-            b.rol !== "member" &&
+            b.rol !== eigenRolNaam &&
             b.created_at > sinds,
         ).length;
       }
       groep.ongelezenAantal = Math.min(ongelezen, 99);
     }
 
-    // Filter: alleen prospects met minstens 1 bericht óf actieve invitatie
-    const items = Array.from(perProspect.values())
+    const items = Array.from(groepen.values())
       .filter(
         (g) => g.laatsteBerichtTijd !== null || g.heeftActieveInvitatie,
       )
       .sort((a, b) => {
-        // Eerst ongelezen bovenaan, dan op laatste-bericht-tijd
         if (a.ongelezenAantal !== b.ongelezenAantal) {
           return b.ongelezenAantal - a.ongelezenAantal;
         }
