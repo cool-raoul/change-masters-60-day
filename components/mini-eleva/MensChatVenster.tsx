@@ -182,6 +182,9 @@ export function MensChatVenster({
             bericht={b}
             isEigen={b.rol === eigenRol}
             label={rolLabels?.[b.rol]}
+            token={token}
+            invitationId={invitationId}
+            onTranscriptieGeupdate={haal}
           />
         ))}
         <div ref={eindRef} />
@@ -221,10 +224,16 @@ function BerichtBubbel({
   bericht,
   isEigen,
   label,
+  token,
+  invitationId,
+  onTranscriptieGeupdate,
 }: {
   bericht: Bericht;
   isEigen: boolean;
   label?: string;
+  token?: string;
+  invitationId?: string;
+  onTranscriptieGeupdate?: () => void;
 }) {
   const positie = isEigen ? "justify-end" : "justify-start";
   const kleur = isEigen
@@ -251,6 +260,11 @@ function BerichtBubbel({
             audioUrl={bericht.audio_url}
             duurSeconden={bericht.duur_seconden}
             transcriptie={bericht.transcriptie}
+            berichtId={bericht.id}
+            isEigen={isEigen}
+            token={token}
+            invitationId={invitationId}
+            onTranscriptieGeupdate={() => onTranscriptieGeupdate?.()}
           />
         ) : (
           <div className="whitespace-pre-wrap leading-relaxed">

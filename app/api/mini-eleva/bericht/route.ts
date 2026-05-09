@@ -236,6 +236,110 @@ export async function POST(req: NextRequest) {
   }
 }
 
+// ============================================================
+// PATCH /api/mini-eleva/bericht
+//
+// Transcriptie van een eigen spraakbericht corrigeren. De afzender
+// (zichtbaar via auth-rol) mag z'n EIGEN spraakbericht-transcriptie
+// bijwerken. Andere partijen niet, ook niet de inhoud van tekst-
+// berichten (die zijn final).
+//
+// Body: { berichtId: string, transcriptie: string, token?, invitationId? }
+// ============================================================
+
+export async function PATCH(req: NextRequest) {
+  try {
+    const body = await req.json().catch(() => ({}));
+    const auth = await authenticeer(req, body);
+    if (!auth.ok) {
+      return NextResponse.json(
+        { error: auth.error },
+        { status: auth.status },
+      );
+    }
+
+    const berichtId = body.berichtId as string | undefined;
+    const transcriptie = (body.transcriptie as string | undefined)?.trim();
+
+    if (!berichtId || transcriptie === undefined) {
+      return NextResponse.json(
+        { error: "berichtId en transcriptie vereist" },
+        { status: 400 },
+      );
+    }
+    if (transcriptie.length > 4000) {
+      return NextResponse.json(
+        { error: "Tekst te lang (max 4000 tekens)" },
+        { status: 400 },
+      );
+    }
+
+    const admin = createAdminClient();
+
+    // Haal bericht op + check dat 't bij dezelfde uitnodiging hoort,
+    // EN dat de auth-rol matcht met de bericht-rol (alleen je eigen
+    // spraak bewerken).
+    const { data: huidig } = await admin
+      .from("mini_eleva_chats")
+      .select("id, invitation_id, rol, type, audio_path")
+      .eq("id", berichtId)
+      .maybeSingle();
+
+    if (!huidig) {
+      return NextResponse.json(
+        { error: "Bericht niet gevonden" },
+        { status: 404 },
+      );
+    }
+    type ChatRow = {
+      id: string;
+      invitation_id: string;
+      rol: string;
+      type: string;
+      audio_path: string | null;
+    };
+    const b = huidig as ChatRow;
+
+    if (b.invitation_id !== auth.invitationId) {
+      return NextResponse.json(
+        { error: "Geen toegang tot dit bericht" },
+        { status: 403 },
+      );
+    }
+    if (b.rol !== auth.rol) {
+      return NextResponse.json(
+        { error: "Je kunt alleen je eigen berichten aanpassen" },
+        { status: 403 },
+      );
+    }
+    if (b.type !== "spraak") {
+      return NextResponse.json(
+        { error: "Alleen transcriptie van spraakberichten is aanpasbaar" },
+        { status: 400 },
+      );
+    }
+
+    // Update transcriptie + content (content is gelijk aan transcriptie
+    // voor spraakberichten zodat het notificatie-detail klopt)
+    const { error } = await admin
+      .from("mini_eleva_chats")
+      .update({
+        transcriptie,
+        content: transcriptie || "(spraakbericht)",
+      })
+      .eq("id", berichtId);
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ ok: true, transcriptie });
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : "onbekend";
+    return NextResponse.json({ error: msg }, { status: 500 });
+  }
+}
+
 export async function GET(req: NextRequest) {
   try {
     const auth = await authenticeer(req);
