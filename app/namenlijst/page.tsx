@@ -4,6 +4,8 @@ import { NamenlijstToggle } from "@/components/namenlijst/NamenlijstToggle";
 import { OpenTestlinkKnop } from "@/components/namenlijst/OpenTestlinkKnop";
 import { RealtimeProspectsRefresh } from "@/components/namenlijst/RealtimeProspectsRefresh";
 import { ElevaGeheugen } from "@/components/namenlijst/ElevaGeheugen";
+import { MiniElevaNotificatieBanner } from "@/components/namenlijst/MiniElevaNotificatieBanner";
+import { MiniElevaPushReminder } from "@/components/mini-eleva/MiniElevaPushReminder";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import Link from "next/link";
 
@@ -19,8 +21,12 @@ export default async function NamenlijstPagina({
   const taal = await getServerTaal();
   const vanuitSetup = searchParams.setup === "true";
 
-  const [{ data: prospects }, { data: eigenProfiel }, { data: openHerinneringen }] =
-    await Promise.all([
+  const [
+    { data: prospects },
+    { data: eigenProfiel },
+    { data: openHerinneringen },
+    { count: aantalUitnodigingen },
+  ] = await Promise.all([
       supabase
         .from("prospects")
         .select("*")
@@ -44,6 +50,13 @@ export default async function NamenlijstPagina({
         .eq("voltooid", false)
         .not("prospect_id", "is", null)
         .order("vervaldatum", { ascending: true }),
+      // Telt of deze member ooit een mini-ELEVA-uitnodiging heeft
+      // aangemaakt. Bepaalt of we de push-reminder-banner tonen.
+      // count-only query, head:true scheelt data-overdracht.
+      supabase
+        .from("prospect_invitations")
+        .select("id", { count: "exact", head: true })
+        .eq("member_user_id", user.id),
     ]);
 
   const ruweProspects = (prospects as Prospect[]) || [];
@@ -117,6 +130,17 @@ export default async function NamenlijstPagina({
       </div>
 
       <ElevaGeheugen />
+
+      {/* Mini-ELEVA-notificaties: rendert alleen als er ongelezen meldingen
+          zijn voor deze member. Klikbare links per melding gaan direct
+          naar de bijbehorende prospect-detail-pagina. */}
+      <MiniElevaNotificatieBanner />
+
+      {/* Push-reminder voor members die mini-ELEVA gebruiken maar nog
+          geen browser-permission hebben gegeven. Eenmalig per 7 dagen. */}
+      <MiniElevaPushReminder
+        heeftUitnodigingen={(aantalUitnodigingen ?? 0) > 0}
+      />
 
       <NamenlijstToggle prospects={alleProspects} />
     </div>

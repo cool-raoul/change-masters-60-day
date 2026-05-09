@@ -65,7 +65,10 @@ export async function POST(req: NextRequest) {
 
     const token = genereerToken();
     const nu = new Date();
-    const expires = new Date(nu.getTime() + 72 * 60 * 60 * 1000);
+    // 14 dagen geldigheid. Beslissingsmoment forceren, niet eindeloos
+    // kauwen. Member kan via /api/mini-eleva/verleng later met 14 dagen
+    // erbij verlengen als prospect tijd nodig had.
+    const expires = new Date(nu.getTime() + 14 * 24 * 60 * 60 * 1000);
 
     const { data: nieuw, error } = await supabase
       .from("prospect_invitations")

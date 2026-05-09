@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { pakMiniElevaContext, logActiviteit } from "@/lib/mini-eleva/helpers";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { notifeerVoorUitnodiging } from "@/lib/mini-eleva/notificaties";
 
 // ============================================================
 // POST /api/mini-eleva/sponsor-erbij
@@ -59,6 +60,19 @@ export async function POST(req: NextRequest) {
       content: vraag
         ? `🤝 [haal-erbij] ${vraag}`
         : "🤝 [haal-erbij] Prospect vraagt of jij of de sponsor erbij wil komen.",
+    });
+
+    // Notificeer member + sponsor (in-app + push). De prospect heeft
+    // expliciet op de knop gedrukt, dus we mogen z'n vraag-tekst (kort)
+    // meesturen als detail.
+    await notifeerVoorUitnodiging({
+      invitationId: ctx.invitationId,
+      type: "haal-erbij",
+      titel: `${ctx.prospectNaam.split(" ")[0]} heeft je nodig`,
+      detail: vraag
+        ? vraag.substring(0, 120) + (vraag.length > 120 ? "..." : "")
+        : "Wil graag dat jij of de sponsor erbij komt",
+      url: `/namenlijst/${ctx.prospectId}#mini-eleva`,
     });
 
     return NextResponse.json({

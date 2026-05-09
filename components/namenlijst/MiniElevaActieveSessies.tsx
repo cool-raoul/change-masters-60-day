@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { format, parseISO, formatDistanceToNow } from "date-fns";
 import { nl } from "date-fns/locale";
+import { VerlengKnop } from "@/components/mini-eleva/VerlengKnop";
 
 // ============================================================
 // MiniElevaActieveSessies, server-component die laat zien wat er
@@ -33,6 +34,7 @@ type Invitation = {
   created_at: string;
   expires_at: string;
   laatste_activiteit_op: string | null;
+  aantal_verlengd: number | null;
 };
 
 type Activiteit = {
@@ -48,7 +50,7 @@ export async function MiniElevaActieveSessies({ prospectId }: Props) {
   const { data: invitations, error: invErr } = await supabase
     .from("prospect_invitations")
     .select(
-      "id, token, status, created_at, expires_at, laatste_activiteit_op",
+      "id, token, status, created_at, expires_at, laatste_activiteit_op, aantal_verlengd",
     )
     .eq("prospect_id", prospectId)
     .order("created_at", { ascending: false })
@@ -60,6 +62,21 @@ export async function MiniElevaActieveSessies({ prospectId }: Props) {
 
   const lijst = invitations as Invitation[];
   const ids = lijst.map((i) => i.id);
+
+  // Markeer alle ongelezen mini-ELEVA-notificaties van deze prospect
+  // als gelezen, zodra de member de detail-pagina opent. Natuurlijk
+  // moment om de teller op de namenlijst-banner te resetten.
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (user) {
+    await supabase
+      .from("mini_eleva_notificaties")
+      .update({ gelezen: true })
+      .eq("ontvanger_user_id", user.id)
+      .eq("gelezen", false)
+      .in("invitation_id", ids);
+  }
 
   // Activiteit ophalen, dat is het enige inhoudelijke dat we nu nog
   // tonen. Chat-berichten laden we BEWUST NIET, ook al zou dat met
@@ -153,6 +170,10 @@ export async function MiniElevaActieveSessies({ prospectId }: Props) {
                   </span>
                 )}
               </div>
+              <VerlengKnop
+                invitationId={inv.id}
+                aantalVerlengd={inv.aantal_verlengd ?? 0}
+              />
             </div>
 
             {/* Haal-erbij notificatie. WEL inhoudelijk zichtbaar omdat

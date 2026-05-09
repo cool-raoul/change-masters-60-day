@@ -1,4 +1,9 @@
 import { pakMiniElevaContext, logActiviteit } from "@/lib/mini-eleva/helpers";
+import {
+  notifeerVoorUitnodiging,
+  isEersteBezoek,
+} from "@/lib/mini-eleva/notificaties";
+import { PWAInstallPrompt } from "@/components/mini-eleva/PWAInstallPrompt";
 import { format, parseISO, formatDistanceToNow } from "date-fns";
 import { nl } from "date-fns/locale";
 import Link from "next/link";
@@ -64,8 +69,23 @@ export default async function MiniElevaLandingPagina({
     );
   }
 
+  // Detecteer eerste-bezoek VOORDAT we activiteit loggen, anders telt
+  // ie 'm dubbel
+  const eersteKeer = await isEersteBezoek(ctx.invitationId);
+
   // Log dat de prospect het welkomscherm heeft geopend
   await logActiviteit(ctx.invitationId, "welkom", "landing geopend");
+
+  // Bij eerste bezoek: notificeer member + sponsor (push + in-app)
+  if (eersteKeer) {
+    await notifeerVoorUitnodiging({
+      invitationId: ctx.invitationId,
+      type: "eerste-bezoek",
+      titel: `${ctx.prospectNaam.split(" ")[0]} kijkt rond in mini-ELEVA`,
+      detail: "Net het welkomscherm geopend",
+      url: `/namenlijst/${ctx.prospectId}#mini-eleva`,
+    });
+  }
 
   const verlooptOver = formatDistanceToNow(parseISO(ctx.expiresAt), {
     locale: nl,
@@ -74,6 +94,11 @@ export default async function MiniElevaLandingPagina({
 
   return (
     <div className="space-y-6 pt-6">
+      {/* PWA-install-prompt: vriendelijke uitnodiging om ELEVA op
+          beginscherm te zetten. Toont alleen als app niet al als PWA
+          draait, en niet als prospect 'm onlangs heeft weggeklikt. */}
+      <PWAInstallPrompt memberNaam={ctx.memberNaam} />
+
       {/* Hero / welkom */}
       <div className="text-center space-y-2">
         <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">

@@ -3,6 +3,7 @@ import OpenAI from "openai";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { pakMiniElevaContext, logActiviteit } from "@/lib/mini-eleva/helpers";
 import { bouwProspectMentorPrompt } from "@/lib/mini-eleva/prospect-mentor-prompt";
+import { notifeerVoorUitnodiging } from "@/lib/mini-eleva/notificaties";
 
 // ============================================================
 // POST /api/mini-eleva/chat
@@ -170,6 +171,21 @@ export async function POST(req: NextRequest) {
                 "mentor-chat",
                 `vraag (${vraag.length}t) → ${model}, antwoord ${volledigAntwoord.length}t`,
               );
+
+              // Mijlpaal-notificatie aan member + sponsor: elke 5 vragen
+              // een seintje dat de prospect actief aan het leren is.
+              // Niet bij elke vraag (te spammy), niet alleen bij 1 (mist
+              // momentum-signaal). 5/10/15/20 voelt gepast.
+              const nieuwTotaal = (aiCount ?? 0) + 1;
+              if (nieuwTotaal > 0 && nieuwTotaal % 5 === 0) {
+                await notifeerVoorUitnodiging({
+                  invitationId: ctx.invitationId,
+                  type: "mijlpaal-vragen",
+                  titel: `${ctx.prospectNaam.split(" ")[0]} is goed bezig in mini-ELEVA`,
+                  detail: `Heeft ondertussen ${nieuwTotaal} vragen gesteld aan de ELEVA-mentor`,
+                  url: `/namenlijst/${ctx.prospectId}#mini-eleva`,
+                });
+              }
             } catch (e) {
               console.error("mini-eleva chat opslaan mislukt:", e);
             }
