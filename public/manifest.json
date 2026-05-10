@@ -1,7 +1,7 @@
 {
   "name": "ELEVA",
   "short_name": "ELEVA",
-  "description": "Network marketing systeem met AI coach, CRM en video trainings",
+  "description": "Project Meer Tijd en Vrijheid — persoonlijk aanbevelingsmarketing-systeem met AI Mentor, namenlijst en stap-voor-stap begeleiding",
   "start_url": "/dashboard",
   "scope": "/",
   "display": "standalone",
