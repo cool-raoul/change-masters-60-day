@@ -1,15 +1,23 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 // ============================================================
 // VoicePlayer, audio + optionele transcriptie voor spraakberichten.
 //
-// Spraakberichten worden nu als WAV opgenomen (zie WavRecorder), wat
-// duration in de RIFF-header heeft. Standaard <audio>-element kan
-// daardoor weer correct afspelen tot het einde, zonder seek-trucs of
-// AudioContext-aanpak.
+// Spraakberichten worden als WAV opgenomen (zie WavRecorder), wat
+// duration in de RIFF-header heeft.
+//
+// Playback-strategie: we fetchen de signed-URL eerst volledig als
+// Blob en geven 'm aan <audio> via een blob:-URL. Reden: iOS Safari
+// heeft bekende issues met range-requests op grote WAV-files via
+// Supabase Storage signed URLs — playback kapt dan af op ~5 sec
+// omdat Safari na het laden van de eerste chunk niet betrouwbaar
+// een Range-vervolg-fetch doet. Met een blob:-URL is de hele audio
+// klaar in geheugen vóór play, dus geen range-protocol nodig.
+// Tradeoff: ~1 sec extra laad-tijd voor een 2MB-bestand, maar
+// volledige duur weer afspeelbaar op iOS + Android + desktop.
 //
 // Transcriptie staat standaard verborgen, knop 'Tekst' toont 'm.
 // Eigen berichten kunnen ge-edit worden via de 'aanpassen'-knop.
@@ -49,6 +57,46 @@ export function VoicePlayer({
   const [lokaleTranscriptie, setLokaleTranscriptie] = useState(
     transcriptie ?? "",
   );
+
+  // Pre-fetch de hele audio als Blob → blob:-URL → <audio>. Bypasst
+  // de iOS Safari range-request bug die playback bij ~5 sec afkapt op
+  // WAV-files via Supabase signed URLs.
+  const [blobUrl, setBlobUrl] = useState<string | null>(null);
+  const [blobLaden, setBlobLaden] = useState(true);
+  const [blobFout, setBlobFout] = useState(false);
+
+  useEffect(() => {
+    let levend = true;
+    let lokaalBlobUrl: string | null = null;
+    setBlobLaden(true);
+    setBlobFout(false);
+    setBlobUrl(null);
+
+    fetch(audioUrl)
+      .then((res) => {
+        if (!res.ok) throw new Error("download faalde: " + res.status);
+        return res.blob();
+      })
+      .then((blob) => {
+        if (!levend) return;
+        lokaalBlobUrl = URL.createObjectURL(blob);
+        setBlobUrl(lokaalBlobUrl);
+        setBlobLaden(false);
+      })
+      .catch(() => {
+        if (!levend) return;
+        // Fallback: gebruik de directe signed URL — werkt op desktop/
+        // Android, faalt mogelijk op iOS, maar beter iets dan niets.
+        setBlobUrl(audioUrl);
+        setBlobLaden(false);
+        setBlobFout(true);
+      });
+
+    return () => {
+      levend = false;
+      if (lokaalBlobUrl) URL.revokeObjectURL(lokaalBlobUrl);
+    };
+  }, [audioUrl]);
 
   function togglePlay() {
     const a = audioRef.current;
@@ -116,30 +164,43 @@ export function VoicePlayer({
 
   return (
     <div className="space-y-2">
-      <audio
-        ref={audioRef}
-        src={audioUrl}
-        preload="metadata"
-        onPlay={() => setSpeelt(true)}
-        onPause={() => setSpeelt(false)}
-        onEnded={() => setSpeelt(false)}
-        onLoadedMetadata={(e) => {
-          const d = (e.target as HTMLAudioElement).duration;
-          if (isFinite(d) && d > 0) setWerkelijkeDuur(d);
-        }}
-        onTimeUpdate={(e) =>
-          setHuidigeTijd((e.target as HTMLAudioElement).currentTime)
-        }
-      />
+      {/* Pas src zetten als blob klaar is. Voor we de blob hebben staat
+          de play-knop op disabled. Auto-play/play() werkt sowieso pas
+          ná user-gesture, dus geen race-condition-risico. */}
+      {blobUrl && (
+        <audio
+          ref={audioRef}
+          src={blobUrl}
+          preload="auto"
+          onPlay={() => setSpeelt(true)}
+          onPause={() => setSpeelt(false)}
+          onEnded={() => setSpeelt(false)}
+          onLoadedMetadata={(e) => {
+            const d = (e.target as HTMLAudioElement).duration;
+            if (isFinite(d) && d > 0) setWerkelijkeDuur(d);
+          }}
+          onTimeUpdate={(e) =>
+            setHuidigeTijd((e.target as HTMLAudioElement).currentTime)
+          }
+        />
+      )}
 
       {/* Compacte rij: speler + tijd + Tekst-knop */}
       <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={togglePlay}
-          className="bg-cm-gold/20 hover:bg-cm-gold/30 text-cm-gold rounded-full w-9 h-9 flex items-center justify-center text-sm shrink-0"
+          disabled={blobLaden}
+          title={blobLaden ? "Audio laden..." : speelt ? "Pauzeer" : "Speel af"}
+          className="bg-cm-gold/20 hover:bg-cm-gold/30 text-cm-gold rounded-full w-9 h-9 flex items-center justify-center text-sm shrink-0 disabled:opacity-50"
         >
-          {speelt ? "⏸" : "▶"}
+          {blobLaden ? (
+            <span className="animate-pulse text-xs">⏳</span>
+          ) : speelt ? (
+            "⏸"
+          ) : (
+            "▶"
+          )}
         </button>
         <div className="flex-1 text-xs text-cm-white/70 font-mono">
           {formatTijd(huidigeTijd)}

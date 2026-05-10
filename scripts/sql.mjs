@@ -18,8 +18,16 @@
 
 import { config } from "dotenv";
 import pg from "pg";
+import dns from "dns";
 import { readFileSync } from "fs";
 import { resolve } from "path";
+
+// Forceer IPv4 bij DNS-lookup. Supabase's db.<ref>.supabase.co lost
+// op sommige netwerken (Windows + provider-mix) eerst naar IPv6 op,
+// wat dan time-out met ETIMEDOUT. Door 'ipv4first' te zetten kiest
+// Node de IPv4-route en verbindt 'ie betrouwbaar zonder dat je naar
+// een aparte pooler-URL hoeft te switchen.
+dns.setDefaultResultOrder("ipv4first");
 
 config({ path: resolve(process.cwd(), ".env.local") });
 
@@ -110,12 +118,26 @@ if (!skipBevestiging && VERBORGEN_VAARGEVAARLIJK.test(query)) {
   }
 }
 
-// ----- uitvoeren -----
+// ----- IPv4-resolutie (Windows-fix) -----
+// Op sommige Windows-netwerken pakt Node IPv6 voor Supabase's
+// db.<ref>.supabase.co, en dat IPv6-adres is niet bereikbaar buiten
+// Supabase. Resolve hostname expliciet naar IPv4 en geef pg de IP +
+// originele hostname (voor SSL SNI/cert-verificatie).
+const url = new URL(dbUrl);
+const origHost = url.hostname;
+const { promises: dnsP } = await import("dns");
+const ipv4 = (await dnsP.lookup(origHost, { family: 4 })).address;
+
 const client = new Client({
-  connectionString: dbUrl,
-  // Supabase vereist SSL. Self-signed certs worden door Supabase geaccepteerd
-  // dus rejectUnauthorized=false; safe omdat de host zelf in de URL zit.
-  ssl: { rejectUnauthorized: false },
+  host: ipv4,
+  port: Number(url.port || 5432),
+  user: decodeURIComponent(url.username),
+  password: decodeURIComponent(url.password),
+  database: url.pathname.replace(/^\//, "") || "postgres",
+  // SSL: rejectUnauthorized=false omdat Supabase certs gebruikt die op de
+  // hostname matchen, niet op IP. servername zorgt dat SNI nog steeds de
+  // juiste cert opvraagt voor de bedoelde host.
+  ssl: { rejectUnauthorized: false, servername: origHost },
 });
 
 try {

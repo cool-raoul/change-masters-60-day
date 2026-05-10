@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "sql": "node scripts/sql.mjs"
+    "sql": "node --dns-result-order=ipv4first scripts/sql.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.36.3",
