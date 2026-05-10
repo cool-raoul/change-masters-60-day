@@ -176,6 +176,22 @@ export async function POST(request: Request) {
       profile, whyProfile, prospect, taal || "nl", vraagType, niveau
     );
 
+    // Gevalideerde product-ervarings-kennis (Dr. McKee + jarenlange
+    // teamervaring, validated by founder). Faalt stil bij fout zodat
+    // coach blijft werken. Voor performance: alleen ophalen wanneer
+    // er gevalideerde rijen zijn.
+    try {
+      const { haalGevalideerdeKennis, formatKennisVoorPrompt } = await import(
+        "@/lib/cms/mentor-kennis"
+      );
+      const kennisRijen = await haalGevalideerdeKennis();
+      if (kennisRijen.length > 0) {
+        systeemPrompt += formatKennisVoorPrompt(kennisRijen);
+      }
+    } catch (e) {
+      console.warn("mentor-kennis ophalen mislukt:", e);
+    }
+
     // Train-de-Mentor: voeg relevante founder-voorbeelden toe als
     // few-shot context. Faalt stilletjes als de tabel nog niet bestaat
     // (migratie nog niet gerund) zodat coach gewoon blijft werken.
