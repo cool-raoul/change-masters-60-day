@@ -33,6 +33,11 @@ type Toestand =
 
 const RAOUL_HULP_EMAIL = "raoulzeewijk@hotmail.com";
 
+// localStorage-key voor "laat me met rust"-onderdrukking. Bevat unix-timestamp
+// tot wanneer de banner niet getoond mag worden voor deze browser.
+const SUPPRESS_KEY = "eleva-push-banner-suppress-tot";
+const SUPPRESS_DAGEN = 30;
+
 export function PushResyncBanner() {
   const [toestand, setToestand] = useState<Toestand>("checking");
   const [foutMelding, setFoutMelding] = useState<string | null>(null);
@@ -51,6 +56,18 @@ export function PushResyncBanner() {
 
   async function detecteer() {
     try {
+      // Onderdrukkings-check: heeft de gebruiker de banner gedismist?
+      // Dan tot de timestamp niet tonen.
+      try {
+        const tot = window.localStorage.getItem(SUPPRESS_KEY);
+        if (tot && Date.now() < Number(tot)) {
+          setToestand("ok");
+          return;
+        }
+      } catch {
+        // negeer
+      }
+
       // Browser-support check. Op heel oude browsers gewoon stil zijn.
       if (
         !("serviceWorker" in navigator) ||
@@ -77,7 +94,6 @@ export function PushResyncBanner() {
         return;
       }
 
-      const browserSub = await reg.pushManager.getSubscription();
       const statusRes = await fetch("/api/push/status").catch(() => null);
       if (!statusRes || !statusRes.ok) {
         setToestand("ok");
@@ -88,24 +104,28 @@ export function PushResyncBanner() {
         endpoint: string | null;
       };
 
-      const browserHeeft = !!browserSub;
-      const serverHeeft = status.hasActive === true;
-      const endpointsMismatch =
-        browserHeeft &&
-        serverHeeft &&
-        typeof status.endpoint === "string" &&
-        status.endpoint !== browserSub!.endpoint;
-
-      const moetResync =
-        (browserHeeft && !serverHeeft) ||
-        (!browserHeeft && serverHeeft) ||
-        endpointsMismatch;
+      // Versoepelde detectie: ALLEEN tonen wanneer de server geen active
+      // subscription kent voor deze user. Endpoint-mismatch tussen browser-
+      // sub en server-sub is GEEN trigger meer — die kan ontstaan door
+      // token-rotation, PWA-reinstall, andere device. Push werkt dan
+      // gewoon via één van de bestaande server-records.
+      const moetResync = !status.hasActive;
 
       setToestand(moetResync ? "needs-resync" : "ok");
     } catch {
       // Bij twijfel: niet tonen. Liever stil dan vals alarm.
       setToestand("ok");
     }
+  }
+
+  function onderdruk30Dagen() {
+    try {
+      const tot = Date.now() + SUPPRESS_DAGEN * 24 * 60 * 60 * 1000;
+      window.localStorage.setItem(SUPPRESS_KEY, String(tot));
+    } catch {
+      // negeer
+    }
+    setToestand("ok");
   }
 
   async function activeerOpnieuw() {
@@ -221,13 +241,21 @@ export function PushResyncBanner() {
               </p>
             </div>
           </div>
-          <div className="mt-3 flex flex-wrap gap-2">
+          <div className="mt-3 flex flex-wrap gap-2 items-center">
             <button
               type="button"
               onClick={() => void activeerOpnieuw()}
               className="btn-gold text-sm"
             >
               ✓ Activeer meldingen opnieuw
+            </button>
+            <button
+              type="button"
+              onClick={onderdruk30Dagen}
+              className="text-cm-white/60 hover:text-cm-white text-xs underline-offset-2 hover:underline"
+              title="Banner 30 dagen verbergen"
+            >
+              Mijn meldingen werken al, niet meer tonen
             </button>
           </div>
         </>
