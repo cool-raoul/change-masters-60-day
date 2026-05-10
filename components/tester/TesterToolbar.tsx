@@ -5,14 +5,27 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 // ============================================================
-// TesterToolbar, kleine toolbar bovenaan dashboard voor pilot-testers.
+// TesterToolbar, kleine toolbar bovenaan dashboard / vandaag voor
+// pilot-testers + founders.
 //
-// Verschijnt alleen als profile.is_tester=true of role='founder'.
-// Verzet run_startdatum zodat de berekende huidige dag = de gekozen dag.
-// Zo kunnen testers snel door alle 21 dagen klikken voor bug-rapporten.
+// urlModus="startdatum" (default): klikken POST naar
+//   /api/tester/spring-naar-dag, verzet run_startdatum (oud gedrag,
+//   gebruikt op dashboard). Refresh-driven.
+//
+// urlModus="queryparam": klikken navigeert naar /vandaag?dag=N. Geen
+//   server-call, geen verzet startdatum. Founder kan zo elke dag
+//   bekijken zonder voortgang aan te raken (gebruikt op /vandaag).
 // ============================================================
 
-export function TesterToolbar({ huidigeDag }: { huidigeDag: number }) {
+type Props = {
+  huidigeDag: number;
+  urlModus?: "startdatum" | "queryparam";
+};
+
+export function TesterToolbar({
+  huidigeDag,
+  urlModus = "startdatum",
+}: Props) {
   const router = useRouter();
   const [bezig, setBezig] = useState(false);
   const [open, setOpen] = useState(false);
@@ -20,6 +33,12 @@ export function TesterToolbar({ huidigeDag }: { huidigeDag: number }) {
 
   async function springNaar(dag: number) {
     if (bezig) return;
+    if (urlModus === "queryparam") {
+      // Pure URL-navigatie, geen server-call. /vandaag/page.tsx leest
+      // ?dag=N voor founders en toont die dag.
+      router.push(`/vandaag?dag=${dag}`);
+      return;
+    }
     setBezig(true);
     try {
       const res = await fetch("/api/tester/spring-naar-dag", {
@@ -151,7 +170,9 @@ export function TesterToolbar({ huidigeDag }: { huidigeDag: number }) {
               Spring
             </button>
             <span className="text-xs text-purple-200 opacity-70">
-              (verzet je startdatum, testers + founders only)
+              {urlModus === "queryparam"
+                ? "(alleen view, je voortgang blijft staan)"
+                : "(verzet je startdatum, testers + founders only)"}
             </span>
           </div>
         </div>
