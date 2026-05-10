@@ -1,7 +1,15 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { DAGEN } from "@/lib/playbook/dagen";
-import { haalOverrides, pasOverrideToe } from "@/lib/playbook/overrides";
+import {
+  haalOverrides,
+  pasOverrideToe,
+  pasSprintDagOverridesToe,
+} from "@/lib/playbook/overrides";
+import {
+  haalTekstOverridesMulti,
+  namespaceAlsRecord,
+} from "@/lib/cms/tekst-overrides";
 import { berekenHuidigeDag } from "@/lib/playbook/bereken-dag";
 import { VandaagFlow } from "./vandaag-flow";
 
@@ -15,11 +23,20 @@ import { VandaagFlow } from "./vandaag-flow";
 //
 // Bedoeld om bij eerste bezoek per dag de overweldiging weg te halen:
 // niet alle dashboard-tegels in beeld, maar één duidelijke flow.
+//
+// Founders kunnen ?dag=N gebruiken om naar elke dag te springen
+// zonder hun eigen voortgang aan te raken (rechtstreeks aangeroepen
+// vanuit TesterToolbar in queryparam-mode).
 // ============================================================
 
 export const dynamic = "force-dynamic";
 
-export default async function VandaagPagina() {
+export default async function VandaagPagina({
+  searchParams,
+}: {
+  searchParams: Promise<{ dag?: string }>;
+}) {
+  const sp = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -47,11 +64,23 @@ export default async function VandaagPagina() {
   const isFounder = (profile as any)?.role === "founder";
   const isTester = (profile as any)?.is_tester === true;
 
-  const dag = berekenHuidigeDag(
-    (alleVoltooiingen as Array<{ dag_nummer: number; taak_id: string }>) || [],
-    (profile as any)?.run_startdatum ?? null,
-    { isTester: isTester || isFounder },
-  );
+  // Founder mag via ?dag=N elke dag bekijken zonder z'n eigen voortgang
+  // aan te raken. Member negeert de query-param (security).
+  const dagParam =
+    isFounder && sp.dag ? Number.parseInt(sp.dag, 10) : NaN;
+  const dagOverride =
+    Number.isFinite(dagParam) && dagParam >= 1 && dagParam <= 60
+      ? dagParam
+      : null;
+
+  const dag =
+    dagOverride ??
+    berekenHuidigeDag(
+      (alleVoltooiingen as Array<{ dag_nummer: number; taak_id: string }>) ||
+        [],
+      (profile as any)?.run_startdatum ?? null,
+      { isTester: isTester || isFounder },
+    );
 
   // Buiten dag 1-21 → terug naar dashboard (weekritme-modus)
   if (dag < 1 || dag > 21) {
@@ -65,6 +94,25 @@ export default async function VandaagPagina() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const overrideMap = await haalOverrides(supabase as any, [dag]);
   dagData = pasOverrideToe(dagData, overrideMap.get(dag) ?? null);
+
+  // Nieuwe namespace-style overrides laden (sprint-dag, sprint-ui,
+  // sprint-groet) en per-dag-content toepassen op dagData. Dit werkt
+  // NAAST de oude playbook_overrides-tabel — bestaande edits in die
+  // tabel blijven werken.
+  const tekstOverrides = await haalTekstOverridesMulti(supabase, [
+    "sprint-dag",
+    "sprint-ui",
+    "sprint-groet",
+  ]);
+  dagData = pasSprintDagOverridesToe(
+    dagData,
+    tekstOverrides.get("sprint-dag"),
+  );
+  const uiOverrides = namespaceAlsRecord(tekstOverrides, "sprint-ui");
+  const groetOverrides = namespaceAlsRecord(
+    tekstOverrides,
+    "sprint-groet",
+  );
 
   // Voltooide taken voor deze dag (uit het al opgehaalde set filteren)
   const voltooidIds = (
@@ -103,6 +151,8 @@ export default async function VandaagPagina() {
       initialZinnen={initialZinnen}
       voornaam={voornaam}
       isFounder={isFounder}
+      uiOverrides={uiOverrides}
+      groetOverrides={groetOverrides}
     />
   );
 }
