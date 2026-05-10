@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ChatBericht } from "@/lib/supabase/types";
 import { toast } from "sonner";
 import { useTaal } from "@/lib/i18n/TaalContext";
+import { VoiceInputKnop } from "@/components/voice/VoiceInputKnop";
 
 export default function MijnWhyPagina() {
   const { v, taal } = useTaal();
@@ -507,7 +508,14 @@ export default function MijnWhyPagina() {
 
       {/* Invoer */}
       {gestartMetCoach && !opgeslagen && !voorgesteldWhy && (
-        <div className="border-t border-cm-border p-4 max-w-2xl mx-auto w-full">
+        <div className="border-t border-cm-border p-4 max-w-2xl mx-auto w-full space-y-2">
+          <p className="text-cm-white/60 text-xs italic flex items-center gap-1">
+            <span>💡</span>
+            <span>
+              Liever inspreken? Tik op het 🎙-icoontje en spreek je antwoord in.
+              ELEVA zet 't om naar tekst die je nog kunt aanpassen.
+            </span>
+          </p>
           <form onSubmit={handleInvoer} className="flex gap-3">
             <input
               type="text"
@@ -516,6 +524,11 @@ export default function MijnWhyPagina() {
               placeholder={v("why.antwoord")}
               className="input-cm flex-1"
               disabled={laden}
+            />
+            <VoiceInputKnop
+              huidigeWaarde={invoer}
+              onTekst={setInvoer}
+              maxSeconden={90}
             />
             <button
               type="submit"

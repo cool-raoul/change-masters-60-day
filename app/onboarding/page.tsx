@@ -6,6 +6,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { PushNotificationToggle } from "@/components/pwa/PushNotificationToggle";
 import { EditableTekst } from "@/components/cms/EditableTekst";
+import { MediaBlokkenClient } from "@/components/cms/MediaBlokkenClient";
+import { EditModeProvider } from "@/components/cms/EditModeContext";
+import { EditModeToggle } from "@/components/cms/EditModeToggle";
 
 const SPONSOR_TEL = "https://wa.me/31612345678"; // fallback, wordt dynamisch geladen
 
@@ -406,6 +409,7 @@ export default function OnboardingPagina() {
   const voortgang = stap <= totaalStappen ? ((stap - 1) / totaalStappen) * 100 : 100;
 
   return (
+    <EditModeProvider>
     <div className="min-h-screen bg-cm-black flex flex-col">
       {/* Header */}
       <div className="border-b border-cm-border p-4 flex items-center justify-between sticky top-0 bg-cm-black z-10">
@@ -425,6 +429,13 @@ export default function OnboardingPagina() {
           )}
         </div>
       </div>
+
+      {/* Founder edit-modus toggle */}
+      {isFounder && (
+        <div className="px-4 pt-3 max-w-2xl mx-auto w-full">
+          <EditModeToggle isFounder={isFounder} />
+        </div>
+      )}
 
       {/* Progress bar */}
       {stap <= totaalStappen && (
@@ -452,6 +463,12 @@ export default function OnboardingPagina() {
           {/* ───── STAP 1: WELKOM + APP + PUSH ───── */}
           {stap === 1 && (
             <div className="space-y-6">
+              <MediaBlokkenClient
+                paginaNamespace="onboarding-stap"
+                paginaId="stap-1"
+                positie="boven-titel"
+                isFounder={isFounder}
+              />
               <div className="text-center">
                 <div className="text-6xl mb-4">👋</div>
                 <h2 className="text-3xl font-display font-bold text-cm-white mb-2">
@@ -548,6 +565,12 @@ export default function OnboardingPagina() {
           {/* ───── STAP 2: JOUW WHY ───── */}
           {stap === 2 && (
             <div className="space-y-6">
+              <MediaBlokkenClient
+                paginaNamespace="onboarding-stap"
+                paginaId="stap-2"
+                positie="boven-titel"
+                isFounder={isFounder}
+              />
               <div className="text-center">
                 <div className="text-6xl mb-4">💛</div>
                 <EditableTekst
@@ -627,6 +650,12 @@ export default function OnboardingPagina() {
           {/* ───── STAP 3: HOE WERKT DE RUN ───── */}
           {stap === 3 && (
             <div className="space-y-6">
+              <MediaBlokkenClient
+                paginaNamespace="onboarding-stap"
+                paginaId="stap-3"
+                positie="boven-titel"
+                isFounder={isFounder}
+              />
               <div>
                 <EditableTekst
                   namespace="onboarding"
@@ -700,6 +729,13 @@ export default function OnboardingPagina() {
 
           {/* ───── STAP 4: WARME MARKT (inline form) ───── */}
           {stap === 4 && (
+            <>
+            <MediaBlokkenClient
+              paginaNamespace="onboarding-stap"
+              paginaId="stap-4"
+              positie="boven-titel"
+              isFounder={isFounder}
+            />
             <Stap4NamenlijstInline
               userId={userId}
               onVerder={() => gaNaarStap(5)}
@@ -710,11 +746,18 @@ export default function OnboardingPagina() {
               overrides={overrides}
               isFounder={isFounder}
             />
+            </>
           )}
 
           {/* ───── STAP 5: UITNODIGINGSSCRIPT ───── */}
           {stap === 5 && (
             <div className="space-y-6">
+              <MediaBlokkenClient
+                paginaNamespace="onboarding-stap"
+                paginaId="stap-5"
+                positie="boven-titel"
+                isFounder={isFounder}
+              />
               <div>
                 <EditableTekst
                   namespace="onboarding"
@@ -817,6 +860,12 @@ export default function OnboardingPagina() {
               playbook dag 5. */}
           {stap === 6 && (
             <div className="space-y-6">
+              <MediaBlokkenClient
+                paginaNamespace="onboarding-stap"
+                paginaId="stap-6"
+                positie="boven-titel"
+                isFounder={isFounder}
+              />
               <div className="text-center">
                 <div className="text-6xl mb-4">🎯</div>
                 <EditableTekst
@@ -944,5 +993,6 @@ export default function OnboardingPagina() {
         </div>
       </div>
     </div>
+    </EditModeProvider>
   );
 }

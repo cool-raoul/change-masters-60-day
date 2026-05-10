@@ -1,5 +1,50 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { haalPaginaBlokken, blokkenAlsRecord } from "@/lib/cms/pagina-blokken";
+
+// ============================================================
+// GET /api/pagina-blokken?namespace=X&id=Y
+//
+// Haalt alle blokken voor een pagina op (gegroepeerd per positie),
+// inclusief signed URLs voor afbeelding/pdf. Voor client-side fetch
+// vanuit pagina's die niet als server-component werken (zoals
+// onboarding/page.tsx, een client-state-machine).
+//
+// Auth: alleen ingelogde users.
+// ============================================================
+
+export async function GET(req: NextRequest) {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: "Niet ingelogd" }, { status: 401 });
+    }
+
+    const namespace = req.nextUrl.searchParams.get("namespace");
+    const id = req.nextUrl.searchParams.get("id");
+    if (!namespace || !id) {
+      return NextResponse.json(
+        { error: "namespace en id vereist" },
+        { status: 400 },
+      );
+    }
+
+    // Admin-client voor signed-URL-generatie (bucket privé)
+    const admin = createAdminClient();
+    const map = await haalPaginaBlokken(admin, namespace, id);
+    return NextResponse.json({
+      ok: true,
+      blokken: blokkenAlsRecord(map),
+    });
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : "Onbekende fout";
+    return NextResponse.json({ error: msg }, { status: 500 });
+  }
+}
 
 // ============================================================
 // POST /api/pagina-blokken
