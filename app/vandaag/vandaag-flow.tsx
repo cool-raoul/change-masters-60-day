@@ -15,6 +15,13 @@ import { SponsorMeldingKnop } from "@/components/vandaag/inline-embeds/SponsorMe
 import { NamenForm } from "@/components/vandaag/inline-embeds/NamenForm";
 import { pakDagdeelGroetMetNaam } from "@/lib/util/dagdeel-groet";
 import type { Dag, ControllableTaak } from "@/lib/playbook/types";
+import {
+  EditModeProvider,
+  useEditModus,
+} from "@/components/cms/EditModeContext";
+import { EditModeToggle } from "@/components/cms/EditModeToggle";
+import { EditableTekst, EditableBlok } from "@/components/cms/EditableTekst";
+import { TesterToolbar } from "@/components/tester/TesterToolbar";
 
 // localStorage-key zodat we bij terugkeer (van een actieRoute) op de
 // juiste taak landen, niet weer in de intro-stap.
@@ -48,6 +55,9 @@ type Props = {
   voornaam: string;
   /** Toont de founder-bewerk-banner bovenaan de flow als true. */
   isFounder?: boolean;
+  /** Per-namespace tekst-overrides geladen op de server. */
+  uiOverrides?: Record<string, string>;
+  groetOverrides?: Record<string, string>;
 };
 
 const DAG_GROETEN: Record<number, string> = {
@@ -62,13 +72,26 @@ const DAG_GROETEN: Record<number, string> = {
 // Tijd-afhankelijke begroeting komt uit lib/util/dagdeel-groet.ts
 // (zelfde logica voor server- en client-rendering).
 
-export function VandaagFlow({
+export function VandaagFlow(props: Props) {
+  // EditModeProvider om de hele flow zodat <EditableTekst editModusAan>
+  // (via useEditModus()) reageert op de toggle bovenin.
+  return (
+    <EditModeProvider>
+      <VandaagFlowInner {...props} />
+    </EditModeProvider>
+  );
+}
+
+function VandaagFlowInner({
   dag,
   voltooidIds: initialVoltooid,
   initialZinnen,
   voornaam,
   isFounder = false,
+  uiOverrides = {},
+  groetOverrides = {},
 }: Props) {
+  const { editModusAan } = useEditModus();
   const router = useRouter();
   const [voltooidIds, setVoltooidIds] = useState<Set<string>>(
     new Set(initialVoltooid),
@@ -259,27 +282,12 @@ export function VandaagFlow({
       </header>
 
       <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
-        {/* FOUNDER-banner: link naar de bewerk-modus van deze dag.
-            Edits in de tile-view zijn direct live in /vandaag (zelfde
-            DAGEN-data + overrides). */}
+        {/* Founder-toolbar: dag-spring + edit-modus toggle. Geen aparte
+            /playbook?preview-link meer nodig — bewerken kan direct hier. */}
         {isFounder && (
-          <div className="rounded-lg border border-cm-gold/40 bg-cm-gold/10 px-4 py-3 flex items-start gap-3 flex-wrap">
-            <div className="flex-1 min-w-0">
-              <p className="text-cm-gold font-semibold text-sm flex items-center gap-2">
-                ✍️ Founder-modus
-              </p>
-              <p className="text-cm-white opacity-80 text-xs mt-0.5 leading-relaxed">
-                Wil je de tekst van een taak, de les of de titel van deze dag
-                aanpassen? Open de bewerk-tile, alle wijzigingen zijn{" "}
-                <strong>direct live</strong> voor alle members.
-              </p>
-            </div>
-            <Link
-              href={`/playbook?dag=${dag.nummer}&preview=true`}
-              className="text-xs px-3 py-1.5 rounded-full bg-cm-gold text-cm-black font-semibold hover:opacity-90 whitespace-nowrap flex-shrink-0"
-            >
-              ✍️ Bewerk dag {dag.nummer} →
-            </Link>
+          <div className="space-y-2">
+            <TesterToolbar huidigeDag={dag.nummer} urlModus="queryparam" />
+            <EditModeToggle isFounder={isFounder} />
           </div>
         )}
 
@@ -290,15 +298,45 @@ export function VandaagFlow({
               <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
                 Dag {dag.nummer} · Fase {dag.fase}
               </p>
-              <h1 className="font-serif-warm text-3xl text-cm-white leading-tight">
-                {groet}
-              </h1>
-              <p className="text-cm-white/80 text-base mt-3 leading-relaxed">
-                Vandaag staat in het teken van:
-              </p>
-              <h2 className="font-serif-warm text-cm-gold text-xl">
-                {dag.titel}
-              </h2>
+              {DAG_GROETEN[dag.nummer] ? (
+                <EditableTekst
+                  namespace="sprint-groet"
+                  sleutel={`dag${dag.nummer}`}
+                  standaard={DAG_GROETEN[dag.nummer]}
+                  overrides={groetOverrides}
+                  isFounder={isFounder}
+                  editModusAan={editModusAan}
+                  as="h1"
+                  className="font-serif-warm text-3xl text-cm-white leading-tight"
+                  hint="Speciale groet alleen op deze dag-nummer"
+                />
+              ) : (
+                <h1 className="font-serif-warm text-3xl text-cm-white leading-tight">
+                  {groet}
+                </h1>
+              )}
+              <EditableTekst
+                namespace="sprint-ui"
+                sleutel="intro.in-het-teken-van"
+                standaard="Vandaag staat in het teken van:"
+                overrides={uiOverrides}
+                isFounder={isFounder}
+                editModusAan={editModusAan}
+                as="p"
+                className="text-cm-white/80 text-base mt-3 leading-relaxed"
+                hint="Tekst boven de dag-titel, geldt voor ALLE 60 dagen"
+              />
+              <EditableTekst
+                namespace="sprint-dag"
+                sleutel={`dag${dag.nummer}.titel`}
+                standaard={dag.titel}
+                overrides={{}}
+                isFounder={isFounder}
+                editModusAan={editModusAan}
+                as="h2"
+                className="font-serif-warm text-cm-gold text-xl"
+                hint={`Titel alleen voor dag ${dag.nummer}`}
+              />
             </div>
 
             {/* 1. EERST HET FILMPJE (boven de tekst), alleen als founder
@@ -314,19 +352,44 @@ export function VandaagFlow({
 
             {/* 2. DAN DE LES, volledig, geen afkapping. */}
             <div className="card border-l-4 border-cm-gold/60 space-y-2">
-              <h3 className="text-cm-gold font-semibold text-sm uppercase tracking-wider">
-                📖 Les van vandaag
-              </h3>
-              <p className="text-cm-white text-sm leading-relaxed whitespace-pre-line">
-                {dag.watJeLeert}
-              </p>
+              <EditableTekst
+                namespace="sprint-ui"
+                sleutel="intro.les-header"
+                standaard="📖 Les van vandaag"
+                overrides={uiOverrides}
+                isFounder={isFounder}
+                editModusAan={editModusAan}
+                as="h3"
+                className="text-cm-gold font-semibold text-sm uppercase tracking-wider"
+                hint="Header boven de les, geldt voor ALLE 60 dagen"
+              />
+              <EditableBlok
+                namespace="sprint-dag"
+                sleutel={`dag${dag.nummer}.watJeLeert`}
+                standaard={dag.watJeLeert}
+                overrides={{}}
+                isFounder={isFounder}
+                editModusAan={editModusAan}
+                as="div"
+                className="text-cm-white text-sm leading-relaxed whitespace-pre-line"
+                rows={10}
+                hint={`Les voor dag ${dag.nummer}`}
+              />
             </div>
 
             {/* 3. DAN GA JE DOEN, kort overzicht van de stappen. */}
             <div className="card space-y-2">
-              <h3 className="text-cm-gold font-semibold text-sm uppercase tracking-wider">
-                ✅ Nu ga je doen ({totaal} stap{totaal === 1 ? "" : "pen"})
-              </h3>
+              <EditableTekst
+                namespace="sprint-ui"
+                sleutel="intro.taken-header"
+                standaard={`✅ Nu ga je doen (${totaal} stap${totaal === 1 ? "" : "pen"})`}
+                overrides={uiOverrides}
+                isFounder={isFounder}
+                editModusAan={editModusAan}
+                as="h3"
+                className="text-cm-gold font-semibold text-sm uppercase tracking-wider"
+                hint="Header boven de takenlijst, gedeeld over alle dagen"
+              />
               <ul className="space-y-1.5 text-sm text-cm-white">
                 {taken.map((t, i) => (
                   <li key={t.id} className="flex items-start gap-2">
@@ -338,6 +401,10 @@ export function VandaagFlow({
                           : ""
                       }
                     >
+                      {/* Taak-label is in de overzichtslijst alleen lezen.
+                          De échte EditableTekst voor het label staat in de
+                          TAAK-stap zodat één edit-flow voor zowel overview
+                          als taak-detail dezelfde sleutel gebruikt. */}
                       {t.label}
                     </span>
                   </li>
@@ -376,9 +443,17 @@ export function VandaagFlow({
               <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
                 Stap {taakIndex + 1} van {totaal}
               </p>
-              <h2 className="font-serif-warm text-2xl text-cm-white mt-1 leading-tight">
-                {huidigeTaak.label}
-              </h2>
+              <EditableTekst
+                namespace="sprint-dag"
+                sleutel={`dag${dag.nummer}.taak.${huidigeTaak.id}.label`}
+                standaard={huidigeTaak.label}
+                overrides={{}}
+                isFounder={isFounder}
+                editModusAan={editModusAan}
+                as="h2"
+                className="font-serif-warm text-2xl text-cm-white mt-1 leading-tight"
+                hint={`Taak-label, dag ${dag.nummer}, taak ${huidigeTaak.id}`}
+              />
             </div>
 
             {/* Optionele film, BOVEN de uitleg */}
@@ -392,9 +467,18 @@ export function VandaagFlow({
 
             {/* Uitleg, ONDER het filmpje */}
             {huidigeTaak.uitleg && (
-              <p className="text-cm-white opacity-80 text-sm leading-relaxed whitespace-pre-line">
-                {huidigeTaak.uitleg}
-              </p>
+              <EditableBlok
+                namespace="sprint-dag"
+                sleutel={`dag${dag.nummer}.taak.${huidigeTaak.id}.uitleg`}
+                standaard={huidigeTaak.uitleg}
+                overrides={{}}
+                isFounder={isFounder}
+                editModusAan={editModusAan}
+                as="div"
+                className="text-cm-white opacity-80 text-sm leading-relaxed whitespace-pre-line"
+                rows={6}
+                hint={`Taak-uitleg, dag ${dag.nummer}, taak ${huidigeTaak.id}`}
+              />
             )}
 
             {/* Hulp-knoppen voor uitnodig-taken: voorbeelden, sponsor,
