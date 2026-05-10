@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELEVA — Flow-overzicht</title>
+<style>
+  :root {
+    --gold: #B89A52;
+    --gold-light: #D4AF37;
+    --gold-soft: #E8DCB8;
+    --ink: #1F1B14;
+    --ink-soft: #4A4438;
+    --paper: #FAF7F1;
+    --paper-soft: #F0EBDF;
+    --paper-card: #FFFCF5;
+    --border: #D8CFB8;
+    --line: #B8AC8A;
+    --green: #6B9D6B;
+    --green-soft: #DDEED9;
+    --blue: #6B85B8;
+    --purple: #8E6BB8;
+    --orange: #D08B5C;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    margin: 0;
+    padding: 2rem 1rem 4rem;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1000px; margin: 0 auto; }
+  header.top {
+    border-bottom: 3px solid var(--gold);
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+  }
+  .brand {
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 600;
+    font-size: 2.25rem;
+    margin: 0.4rem 0 0.5rem;
+  }
+  .lead {
+    color: var(--ink-soft);
+    font-size: 1.05rem;
+    max-width: 70ch;
+  }
+
+  .pilot-disclaimer {
+    background: rgba(208, 139, 92, 0.1);
+    border: 1px solid var(--orange);
+    border-left: 4px solid var(--orange);
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    margin-top: 1.5rem;
+    font-size: 0.92rem;
+  }
+  .pilot-disclaimer strong { color: var(--orange); }
+
+  h2.sectie {
+    font-family: Georgia, serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: var(--gold);
+    margin: 3rem 0 1rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--gold);
+  }
+
+  /* === DIAGRAM === */
+  .diagram {
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem 1rem;
+    margin: 2rem 0 3rem;
+    overflow-x: auto;
+  }
+  .niveau {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+  }
+  .blok {
+    background: white;
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    padding: 0.85rem 1.25rem;
+    text-align: center;
+    min-width: 170px;
+    max-width: 240px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: block;
+    color: var(--ink);
+  }
+  .blok:hover { background: var(--gold-soft); transform: translateY(-1px); }
+  .blok.sprint { border-color: var(--gold-light); background: rgba(212,175,55,0.1); }
+  .blok.core { border-color: var(--blue); }
+  .blok.pro { border-color: var(--purple); }
+  .blok.shopper { border-color: var(--orange); background: rgba(208,139,92,0.08); }
+  .blok.member { border-color: var(--green); background: var(--green-soft); }
+  .blok.tool { border-color: var(--ink-soft); border-style: dashed; }
+  .blok-titel {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--ink);
+    margin-bottom: 0.2rem;
+  }
+  .blok-sub {
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+  }
+  .pijl {
+    text-align: center;
+    color: var(--gold);
+    font-size: 1.5rem;
+    line-height: 1;
+    margin: 0.4rem 0;
+    font-weight: 700;
+  }
+  .pijl-label {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin: 0.2rem 0 0.5rem;
+  }
+  .splits {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 0.5rem 0;
+    flex-wrap: wrap;
+  }
+  .splits .tak {
+    flex: 0 0 auto;
+    text-align: center;
+  }
+
+  /* === DETAIL-KAART === */
+  .kaart {
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0;
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  details.kaart > summary {
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  details.kaart > summary::-webkit-details-marker { display: none; }
+  details.kaart > summary:hover { background: var(--paper-soft); }
+  details.kaart[open] > summary {
+    border-bottom: 1px solid var(--border);
+    background: var(--paper-soft);
+  }
+  details.kaart > summary::after {
+    content: "+";
+    color: var(--gold);
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  details.kaart[open] > summary::after { content: "−"; }
+  .kaart-body { padding: 1rem 1.25rem; }
+  .kaart-body p { margin: 0 0 0.75rem; }
+  .kaart-body p:last-child { margin-bottom: 0; }
+
+  .label-rij {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 8px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  .badge.sprint { background: var(--gold); color: white; }
+  .badge.core { background: var(--blue); color: white; }
+  .badge.pro { background: var(--purple); color: white; }
+  .badge.shopper { background: var(--orange); color: white; }
+  .badge.member { background: var(--green); color: white; }
+  .badge.tool { background: var(--ink-soft); color: white; }
+  .badge.tijd { background: var(--paper-soft); color: var(--ink-soft); border: 1px solid var(--border); }
+  .badge.todo { background: rgba(208, 139, 92, 0.2); color: var(--orange); border: 1px solid var(--orange); }
+
+  /* === STAP-LIJST === */
+  .stappen {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 0;
+    counter-reset: stap;
+  }
+  .stappen li {
+    counter-increment: stap;
+    padding: 0.5rem 0 0.5rem 2.4rem;
+    position: relative;
+    color: var(--ink);
+    font-size: 0.92rem;
+    border-bottom: 1px dashed var(--border);
+  }
+  .stappen li:last-child { border-bottom: none; }
+  .stappen li::before {
+    content: counter(stap);
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    width: 1.8rem;
+    height: 1.8rem;
+    background: var(--gold-soft);
+    color: var(--ink);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.78rem;
+  }
+  .stappen li.mijlpaal::before {
+    background: var(--gold);
+    color: white;
+  }
+
+  .week-header {
+    background: var(--gold-soft);
+    color: var(--ink);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin: 1rem 0 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* === TABEL === */
+  table.tabel {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+    margin: 1rem 0;
+  }
+  table.tabel th, table.tabel td {
+    padding: 0.6rem 0.85rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  table.tabel th {
+    background: var(--paper-soft);
+    font-weight: 700;
+    color: var(--gold);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  table.tabel tr:last-child td { border-bottom: none; }
+
+  .legenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.8rem;
+  }
+  .leg-item { display: flex; align-items: center; gap: 0.4rem; }
+  .leg-stip {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 2px solid;
+  }
+
+  .summary-blok {
+    background: var(--gold-soft);
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    padding: 1.5rem 1.75rem;
+    font-size: 1.05rem;
+  }
+
+  .open-vragen {
+    background: rgba(208, 139, 92, 0.08);
+    border: 1px solid var(--orange);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin: 2rem 0;
+  }
+  .open-vragen h3 {
+    margin: 0 0 0.5rem;
+    color: var(--orange);
+    font-size: 1rem;
+  }
+  .open-vragen ul { margin: 0; padding-left: 1.2rem; }
+  .open-vragen li { margin-bottom: 0.4rem; font-size: 0.9rem; }
+
+  .print-btn {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    background: var(--gold);
+    color: white;
+    padding: 0.6rem 1.1rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    z-index: 100;
+  }
+  .print-btn:hover { background: var(--ink); }
+
+  footer.bottom {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+    text-align: center;
+  }
+
+  @media print {
+    body { padding: 0; background: white; }
+    .print-btn { display: none; }
+    details.kaart { page-break-inside: avoid; border: 1px solid #ccc; }
+    .diagram { background: none; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+<button class="print-btn" onclick="window.print()">🖨️ Print of Save als PDF</button>
+
+<div class="wrap">
+
+<header class="top">
+  <div class="brand">ELEVA · Project Meer Tijd en Vrijheid</div>
+  <h1>Hoe loopt iemand door ELEVA?</h1>
+  <p class="lead">
+    Visueel overzicht van wat ELEVA is en hoe iemand erin beweegt: van
+    eerste contact, via Core- of Pro-route, tot Shopper of Member. Klik
+    op een blok of een fase voor de uitleg eronder.
+  </p>
+
+  <div class="pilot-disclaimer">
+    <strong>📌 Let op, pilot vs. echte flow:</strong> Raoul, Gaby, Jaimie
+    en een paar andere bouwers draaien nu een 30-daagse <em>pilot</em> om
+    te testen of alles klopt voor we breder uitrollen. Die pilot is geen
+    onderdeel van de echte flow hieronder, het is een test-track met
+    feedback-momenten. Alles op deze pagina is <strong>de echte flow</strong>
+    voor wie ELEVA gewoon gaat gebruiken.
+  </div>
+</header>
+
+<!-- ============================================================
+     SECTIE 1, het grote plaatje
+============================================================ -->
+<h2 class="sectie">1. Het grote plaatje</h2>
+
+<p style="color: var(--ink-soft); max-width: 70ch;">
+  ELEVA kent twee modi waarin iemand in de business werkt. De <strong>normale
+  business-modus</strong> (de meeste tijd) waarin iemand bouwt aan zijn
+  eigen netwerk via Core (21 dagen opstart) of Pro (14 dagen opstart).
+  Plus een <strong>Sprint-modus</strong> die je op elk moment kunt aanzetten:
+  de 60-Day Run waarin je samen met 5 builders 60 dagen lang in groepsritme
+  werkt.
+</p>
+
+<div class="diagram">
+
+  <!-- Niveau 1: keuze van modus -->
+  <div class="niveau">
+    <a href="#det-normaal" class="blok">
+      <div class="blok-titel">📈 Normale modus</div>
+      <div class="blok-sub">Bouwen aan eigen netwerk via Core of Pro</div>
+    </a>
+    <a href="#det-sprint" class="blok sprint">
+      <div class="blok-titel">🏁 Sprint-modus</div>
+      <div class="blok-sub">60-Day Run met builders (nieuwe + bestaande teamleden), op elk moment in te zetten</div>
+    </a>
+  </div>
+  <p class="pijl-label">Beide modi voeden dezelfde routes:</p>
+
+  <div class="pijl">↓</div>
+
+  <!-- Niveau 2: opstart-routes -->
+  <div class="splits">
+    <div class="tak">
+      <a href="#det-core" class="blok core">
+        <div class="blok-titel">📚 Core-route</div>
+        <div class="blok-sub">21 dagen opstart + vervolg-fase</div>
+      </a>
+    </div>
+    <div class="tak">
+      <a href="#det-pro" class="blok pro">
+        <div class="blok-titel">🎓 Pro-route</div>
+        <div class="blok-sub">14 dagen opstart + vervolg-fase</div>
+      </a>
+    </div>
+  </div>
+
+  <p class="pijl-label" style="margin-top: 1rem;">Tijdens hun opstart bouwen members aan hun netwerk, ondersteund door:</p>
+
+  <div class="splits">
+    <a href="#det-tools" class="blok tool">
+      <div class="blok-titel">🛠️ ELEVA-tools</div>
+      <div class="blok-sub">Mini-ELEVA · 3-weg-gesprek · Vragenlijst · Mentor</div>
+    </a>
+  </div>
+
+  <div class="pijl">↓</div>
+
+  <p class="pijl-label">Een prospect wordt uiteindelijk één van drie eindpunten:</p>
+
+  <div class="splits">
+    <div class="tak">
+      <a href="#det-shopper" class="blok shopper">
+        <div class="blok-titel">🛒 Shopper</div>
+        <div class="blok-sub">Geen webshop, gebruikt alleen producten</div>
+      </a>
+    </div>
+    <div class="tak">
+      <a href="#det-member-core" class="blok member">
+        <div class="blok-titel">🚀 Member Core</div>
+        <div class="blok-sub">Gratis webshop, bouwt eigen netwerk</div>
+      </a>
+    </div>
+    <div class="tak">
+      <a href="#det-member-pro" class="blok member">
+        <div class="blok-titel">🎯 Member Pro</div>
+        <div class="blok-sub">Gratis webshop voor cliënten</div>
+      </a>
+    </div>
+  </div>
+
+  <p class="pijl-label" style="margin-top: 1rem;">⤴ <strong>Upgrade-pad:</strong> Shopper kan na verloop van tijd uitgenodigd worden voor een gratis webshop → wordt Member Core. (Zie sectie 5.)</p>
+
+  <div class="legenda">
+    <div class="leg-item"><span class="leg-stip" style="border-color: var(--gold-light);"></span>Sprint-modus (60-Day Run)</div>
+    <div class="leg-item"><span class="leg-stip" style="border-color: var(--blue);"></span>Core (21 dagen)</div>
+    <div class="leg-item"><span class="leg-stip" style="border-color: var(--purple);"></span>Pro (14 dagen)</div>
+    <div class="leg-item"><span class="leg-stip" style="border-color: var(--orange);"></span>Shopper</div>
+    <div class="leg-item"><span class="leg-stip" style="border-color: var(--green);"></span>Member</div>
+    <div class="leg-item"><span class="leg-stip" style="border-color: var(--ink-soft); border-style: dashed;"></span>Tool</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SECTIE 2, de twee modi
+============================================================ -->
+<h2 class="sectie">2. De twee modi waarin een member werkt</h2>
+
+<details class="kaart" id="det-normaal">
+  <summary>
+    <span class="label-rij">
+      <span class="badge core">Core/Pro</span>
+      📈 Normale modus, dagelijks bouwen
+    </span>
+  </summary>
+  <div class="kaart-body">
+    <p>De <strong>standaard-modus</strong> waarin een member meestal werkt.
+    Geen sprint-druk, gewoon dagelijks zijn opstart-stappen volgen en
+    daarna in het ritme van zijn fase blijven.</p>
+    <p><strong>Wat er gebeurt:</strong></p>
+    <ul class="stappen">
+      <li>Member volgt zijn Core- of Pro-opstart (21 of 14 dagen)</li>
+      <li>Daarna een vervolg-fase: warme markt afgewerkt → social-media-strategie ontwikkelen</li>
+      <li>Continue prospect-werving via tools (Mini-ELEVA, 3-weg-gesprek, vragenlijst)</li>
+      <li>Voortdurend zoeken naar mensen die ook Core- of Pro-member willen worden</li>
+      <li>Sponsor begeleidt vanaf de zijlijn, ELEVA stuurt dagelijkse focus aan</li>
+    </ul>
+  </div>
+</details>
+
+<details class="kaart" id="det-sprint">
+  <summary>
+    <span class="label-rij">
+      <span class="badge sprint">Sprint</span>
+      <span class="badge tijd">60 dagen</span>
+      🏁 Sprint-modus, de 60-Day Run
+    </span>
+  </summary>
+  <div class="kaart-body">
+    <p>Een <strong>keuze die elke member op elk moment kan inzetten</strong>:
+    een 60-daagse periode waarin je samen met (idealiter) 5 builders aan
+    de startlijn staat. Geeft groepsdruk, ritme en momentum. Niet de
+    hoofdroute, wel een krachtige sprint-stand.</p>
+
+    <p><strong>Stap 1, vóór de start: WhisperCampaign (optioneel, ~2 weken)</strong></p>
+    <p>Niet verplicht — wie al voldoende mensen klaar heeft staan kan
+    deze fase overslaan en direct naar de startlijn. Wie nog moet werven,
+    pakt twee weken om mensen warm te maken.</p>
+    <ul class="stappen">
+      <li>Member kondigt aan dat hij een 60-Day Run gaat doen</li>
+      <li>Zoekt mensen die mee willen rennen. Dat kunnen <strong>nieuwe prospects</strong> zijn (die nu starten met de business) <strong>én bestaande teamleden</strong> uit zijn eigen team die graag een sprint meedraaien</li>
+      <li>Werft via WhatsApp, gesprekken, persoonlijke uitnodigingen</li>
+      <li>Helpt elk van de builders om Core of Pro te kiezen op basis van hun situatie</li>
+    </ul>
+
+    <p><strong>Stap 2, aan de startlijn:</strong></p>
+    <ul class="stappen">
+      <li>Member + builders staan klaar op dag 0 (idealiter ~5 builders, kan ook minder of meer)</li>
+      <li>Elke builder kiest hoeveel uur per dag hij beschikbaar is (zie tabel hieronder)</li>
+      <li>Op basis daarvan worden de dagelijkse aantallen aangepast</li>
+      <li>Day 1 begint, het systeem zoals 't is opgebouwd in Core of Pro</li>
+    </ul>
+
+    <p><strong>Stap 3, tijdens de 60 dagen:</strong></p>
+    <ul class="stappen">
+      <li>Builders zoeken mensen voor de <strong>business</strong>, NIET voor een nieuwe 60-Day Run (anders eindeloze loop)</li>
+      <li>Member volgt voortgang van alle 5 in een gedeelde view</li>
+      <li>Wekelijkse review-momenten + sponsor-calls</li>
+      <li>Mini-ELEVA + 3-weg-gesprekken worden volop ingezet</li>
+    </ul>
+
+    <p><strong>Uren-keuze tabel</strong> (de aantallen worden geschaald op basis van wat de builder kan):</p>
+    <table class="tabel">
+      <thead>
+        <tr><th>Beschikbare tijd per dag</th><th>Uitnodigingen per dag</th><th>Doelgroep</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>2 uur</td><td>5 uitnodigingen</td><td>Naast druk werk of gezin</td></tr>
+        <tr><td>4 uur</td><td>10 uitnodigingen</td><td>Halve dag focus</td></tr>
+        <tr><td>6 uur+</td><td>Hoger (te bepalen)</td><td>Hele dag focus</td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<!-- ============================================================
+     SECTIE 3, de routes
+============================================================ -->
+<h2 class="sectie">3. De twee routes: Core en Pro</h2>
+
+<details class="kaart" id="det-core">
+  <summary>
+    <span class="label-rij">
+      <span class="badge core">Core</span>
+      <span class="badge tijd">21 dagen opstart + vervolg</span>
+      📚 Core-route, webshop + warme markt
+    </span>
+  </summary>
+  <div class="kaart-body">
+    <p>Voor wie zijn netwerk wil opbouwen via een <strong>eigen gratis
+    webshop</strong> + warme markt + later social-media. Webshop is
+    leidend in het hele verhaal: gratis, makkelijk te delen, en het
+    instapmoment voor zowel Shoppers als nieuwe Members.</p>
+
+    <div class="week-header">Opstart, dag 1-21</div>
+    <p>De eerste 21 dagen. Volledig uitgewerkt; week 1 staat in een
+    aparte review-versie (<em>EERSTE-7-DAGEN-OVERZICHT.html</em>).</p>
+
+    <p><strong>Week 1, fundament (dag 1-7):</strong></p>
+    <ul class="stappen">
+      <li>Welkom + WHY samen met sponsor formuleren</li>
+      <li>Lijst opbouwen: telefooncontacten, NIVEA-regel</li>
+      <li>Webshop opzetten + kredietformulier</li>
+      <li>Bestellinks koppelen + productadvies-test verkennen</li>
+      <li>Productkennis + 4-stappen-uitnodiging leren</li>
+      <li>Bezwaren behandelen, Feel-Felt-Found</li>
+      <li>Wekelijkse review + sponsor-checkin</li>
+    </ul>
+
+    <p><strong>Week 2, momentum (dag 8-14):</strong> 10 uitnodigingen/dag,
+    eerste 3-weg-gesprekken, social-posts beginnen, FORM-techniek.</p>
+    <p><strong>Week 3, ritme (dag 15-21):</strong> Hercontact, herhaalbestellingen,
+    duplicatie ("open ook een webshop"-scripts), closingsvragen, pipeline-onderhoud.</p>
+
+    <div class="week-header">Vervolg-fase, dag 22-60+</div>
+    <p>Na de 21 dagen opstart komt 'r een vervolg-fase, waarin de
+    warme markt grotendeels is afgewerkt en de focus verschuift naar:</p>
+    <ul class="stappen">
+      <li>Social-media-strategieën (Brookes 3-stappen-formule)</li>
+      <li>Lifestyle delen + Stories-ritme</li>
+      <li>Reels-strategie + trigger-woorden</li>
+      <li>Freebies inzetten</li>
+      <li>Testimonial-content</li>
+      <li>Webshop-houders herkennen + duplicatie</li>
+    </ul>
+    <p style="margin-top: 0.5rem;"><span class="badge todo">Nog uitwerken</span>
+    De vervolg-fase is uitgedacht maar nog niet volledig vastgemaakt qua
+    dag-voor-dag-content.</p>
+  </div>
+</details>
+
+<details class="kaart" id="det-pro">
+  <summary>
+    <span class="label-rij">
+      <span class="badge pro">Pro</span>
+      <span class="badge tijd">14 dagen opstart + vervolg</span>
+      🎓 Pro-route, cliëntbediening
+    </span>
+  </summary>
+  <div class="kaart-body">
+    <p>Voor coaches, diëtisten, fitness-trainers en andere professionals
+    die <strong>al een eigen cliëntenkring hebben</strong>. Geen
+    sprint-druk, geen social-media-strategie, geen warme-markt-werving:
+    14 stappen die focussen op cliëntbediening, standaardpakketten en de
+    productadvies-test.</p>
+
+    <div class="week-header">Pro-opstart, 14 stappen</div>
+    <ul class="stappen">
+      <li>Welkom + WHY + sponsor-call</li>
+      <li>Cliëntenlijst opzetten</li>
+      <li>Webshop opzetten</li>
+      <li>Bestellinks + productadvies-test verkennen</li>
+      <li>Productkennis</li>
+      <li>Standaardpakketten verkennen</li>
+      <li>Productadvies-test als kerninstrument</li>
+      <li>Eerste 3 cliënten een advies sturen</li>
+      <li>Cliëntcontact en opvolging</li>
+      <li>Hercontact en herhaalbestellingen</li>
+      <li>Bezwaren behandelen</li>
+      <li>Andere professionals herkennen in netwerk</li>
+      <li>Voorstel doen aan een collega-professional</li>
+      <li class="mijlpaal">14 stappen klaar! Dit is je startlijn, niet de eindstreep</li>
+    </ul>
+
+    <div class="week-header">Vervolg-fase</div>
+    <p><span class="badge todo">Nog uitwerken</span>
+    Pro heeft minder vervolg-fase nodig dan Core (eigen cliëntenkring is
+    al de werving). Wel: hoe verdiept een Pro zich verder, hoe schaalt
+    'ie naar meer cliënten en hoe duplicaten ze richting collega-pros?</p>
+  </div>
+</details>
+
+<!-- ============================================================
+     SECTIE 4, tools
+============================================================ -->
+<h2 class="sectie">4. Tools die overal worden ingezet</h2>
+
+<details class="kaart" id="det-tools">
+  <summary>
+    <span class="label-rij">
+      <span class="badge tool">Tool</span>
+      🛠️ Mini-ELEVA, 3-weg-gesprek, Vragenlijst, Mentor
+    </span>
+  </summary>
+  <div class="kaart-body">
+    <p>ELEVA-tools worden door <strong>elke route</strong> ingezet, alleen
+    de mate verschilt: Sprint-modus en Core gebruiken Mini-ELEVA en
+    3-weg-gesprek volop, Pro gebruikt vooral de productadvies-test.</p>
+  </div>
+</details>
+
+<details class="kaart">
+  <summary>
+    <span class="label-rij">
+      <span class="badge tool">Tool</span>
+      ✨ Mini-ELEVA, drie smaken
+    </span>
+  </summary>
+  <div class="kaart-body">
+    <p>Mini-ELEVA geeft een prospect 14 dagen eigen toegang tot een
+    persoonlijke kijk-omgeving zonder account aan te hoeven maken. De
+    inhoud past zich aan op <strong>waarvoor de prospect uitgenodigd is</strong>.
+    Iemand die geïnteresseerd is in afvallen krijgt geen webshop-pitch
+    in haar gezicht, maar product-info die past bij haar vraag.</p>
+
+    <p><strong>1. Sprint / 60-Day Run-Mini-ELEVA</strong> <span class="badge sprint">Sprint</span></p>
+    <p>Voor prospects die uitgenodigd zijn om mee te doen aan de
+    business: business-focus, wat is netwerkmarketing, wat zit erin
+    financieel, hoe werkt het ritme. Standaard ingericht.</p>
+
+    <p><strong>2. Core webshop-Mini-ELEVA</strong> <span class="badge core">Core</span> <span class="badge todo">Nog uitwerken</span></p>
+    <p>Voor prospects die uitgenodigd zijn vanuit een productinteresse
+    (zoals afvallen, energie, slaap): <strong>productfocus</strong> met
+    kuren, productinzicht, gezondheid. Geen webshop-praat tot de prospect
+    daar specifiek voor is uitgenodigd. Voorbeeld: iemand met afval-vraag
+    krijgt afval-kuren, geen webshop-aanbieding. Webshop-info verschijnt
+    pas wanneer de member daar specifiek toe nodigt.</p>
+
+    <p><strong>3. Pro cliënt-Mini-ELEVA</strong> <span class="badge pro">Pro</span> <span class="badge todo">Nog uitwerken</span></p>
+    <p>Veel minder gebruikt, want Pro-members hebben al persoonlijk
+    contact met hun cliënten. Wel inzetbaar voor cliënten die meer
+    info willen over een specifieke kuur of product, met de
+    productadvies-test als hoofd-tool.</p>
+
+    <p><strong>Wat altijd hetzelfde blijft</strong> in alle smaken:
+    AVG-veilig (member ziet WANNEER prospect actief is, niet WAT 'r
+    gevraagd wordt aan de mentor), 14 dagen geldig (verlengbaar door
+    member), en altijd een chat-tegel voor mens-tot-mens contact.</p>
+  </div>
+</details>
+
+<details class="kaart">
+  <summary>
+    <span class="label-rij">
+      <span class="badge tool">Tool</span>
+      🤝 3-weg-gesprek
+    </span>
+  </summary>
+  <div class="kaart-body">
+    <p>Klassiek: <strong>jij + sponsor + prospect</strong> in een
+    WhatsApp-groep of live-call. Sponsor brengt autoriteit en ervaring,
+    jij brengt de persoonlijke band, prospect ziet sociaal bewijs.</p>
+    <p>5 stappen: prospect waarschuwen → sponsor briefen → groepje
+    aanmaken + edification → jij zwijgt, sponsor neemt over → softclose.
+    Past bij warme prospects waar persoonlijk contact en autoriteit het
+    snelste werken.</p>
+  </div>
+</details>
+
+<details class="kaart">
+  <summary>
+    <span class="label-rij">
+      <span class="badge tool">Tool</span>
+      🎯 Productadvies-test (vragenlijst)
+    </span>
+  </summary>
+  <div class="kaart-body">
+    <p><strong>Overal inzetbaar</strong>, maar met name voor Pro het
+    hart van de werkwijze. Korte vragenlijst die per prospect
+    automatisch advies oplevert, met productadvies + standaardpakket.</p>
+    <p>Pro stuurt 'm naar elke nieuwe cliënt voor een persoonlijk advies.
+    Core kan 'm gebruiken om prospects te kwalificeren of om de
+    productinteresse boven tafel te krijgen voor de juiste Mini-ELEVA-
+    route.</p>
+  </div>
+</details>
+
+<details class="kaart">
+  <summary>
+    <span class="label-rij">
+      <span class="badge tool">Tool</span>
+      🤖 ELEVA Mentor (AI-coach voor de member)
+    </span>
+  </summary>
+  <div class="kaart-body">
+    <p>De AI-coach voor de member zelf, niet voor prospects. Helpt met
+    scripts schrijven, bezwaren behandelen, follow-ups formuleren,
+    productadvies geven. Beschikbaar 24/7 onder <em>ELEVA Mentor</em>
+    in het hoofdmenu.</p>
+  </div>
+</details>
+
+<!-- ============================================================
+     SECTIE 5, eindpunten + upgrade-pad
+============================================================ -->
+<h2 class="sectie">5. De drie eindpunten + Shopper-upgrade-pad</h2>
+
+<details class="kaart" id="det-shopper">
+  <summary>
+    <span class="label-rij">
+      <span class="badge shopper">Shopper</span>
+      🛒 Shopper, gebruikt alleen producten
+    </span>
+  </summary>
+  <div class="kaart-body">
+    <p>Lichtste vorm van instappen. Prospect kiest om de producten te
+    gebruiken (zelf bestellen of via member-hulp), <strong>zonder eigen
+    webshop</strong>. Geen activiteit-verplichting.</p>
+    <p><strong>Shopper-upgrade-pad:</strong></p>
+    <ul class="stappen">
+      <li>Eerste paar maanden: gewoon product gebruiken, ervaring opdoen</li>
+      <li>Op een tijdlijn krijgt Shopper kleine info-nuggets via member of ELEVA</li>
+      <li>Onthuld: <strong>Shopper heeft recht op een gratis webshop zonder extra moeite</strong></li>
+      <li>Wanneer 'ie ja zegt → wordt Member Core, krijgt opstart-pad van 21 dagen</li>
+    </ul>
+    <p>Op die manier is een Shopper een natuurlijke voorbereiding op een
+    eventueel Member-traject, zonder druk vooraf.</p>
+  </div>
+</details>
+
+<details class="kaart" id="det-member-core">
+  <summary>
+    <span class="label-rij">
+      <span class="badge member">Member Core</span>
+      🚀 Member Core, gratis webshop + bouwen
+    </span>
+  </summary>
+  <div class="kaart-body">
+    <p>Volwaardige member met eigen <strong>gratis webshop</strong>.
+    Verkoopt producten aan eigen netwerk, leert dat via de 21-daagse
+    opstart en de vervolg-fase met social-media-strategie.</p>
+    <p>Een Member Core kan zelf:</p>
+    <ul class="stappen">
+      <li>Andere Shoppers werven (lichte instap)</li>
+      <li>Andere Member Cores werven (duplicatie via "open ook een webshop"-scripts)</li>
+      <li>Op enig moment zelf een 60-Day Run-Sprint starten als 'r 5 nieuwe builders te werven zijn</li>
+    </ul>
+  </div>
+</details>
+
+<details class="kaart" id="det-member-pro">
+  <summary>
+    <span class="label-rij">
+      <span class="badge member">Member Pro</span>
+      🎯 Member Pro, gratis webshop voor cliënten
+    </span>
+  </summary>
+  <div class="kaart-body">
+    <p>Volwaardige member met eigen <strong>gratis webshop</strong>,
+    maar gericht op <strong>eigen cliënten</strong> in plaats van een
+    breed netwerk. Adviseert producten via de productadvies-test, levert
+    standaardpakketten aan zijn cliënten.</p>
+    <p>Een Member Pro kan zelf:</p>
+    <ul class="stappen">
+      <li>Andere Member Pros werven uit het collega-professionals-netwerk</li>
+      <li>(Zelden) een 60-Day Run-Sprint starten — past niet altijd bij hun praktijk</li>
+    </ul>
+  </div>
+</details>
+
+<!-- ============================================================
+     SECTIE 6, samenvatting
+============================================================ -->
+<h2 class="sectie">6. In één zin samengevat</h2>
+
+<div class="summary-blok">
+  <p style="margin: 0;">
+    Een member werkt meestal in <strong>normale modus</strong> (Core of
+    Pro), en kan op elk moment een <strong>60-Day Run-Sprint</strong>
+    starten met builders — nieuwe prospects én bestaande teamleden. De
+    optionele <strong>WhisperCampaign</strong> (2 weken vooraf) helpt bij
+    het werven; wie al genoeg mensen heeft kan direct naar de startlijn.
+    Builders zoeken prospects voor de business — niet voor een nieuwe
+    Sprint. Tools (<strong>Mini-ELEVA</strong> in drie smaken,
+    <strong>3-weg-gesprek</strong>, <strong>productadvies-test</strong>,
+    <strong>ELEVA Mentor</strong>) ondersteunen het proces. Een prospect
+    wordt uiteindelijk <strong>Shopper</strong> (alleen product),
+    <strong>Member Core</strong> (gratis webshop + bouwen) of
+    <strong>Member Pro</strong> (gratis webshop voor cliënten). Een
+    Shopper kan later upgraden naar Member Core via de gratis-webshop-
+    uitnodiging.
+  </p>
+</div>
+
+<!-- ============================================================
+     SECTIE 7, open vragen
+============================================================ -->
+<h2 class="sectie">7. Wat nog open / nog uitwerken</h2>
+
+<div class="open-vragen">
+  <h3>📝 Nog niet definitief vastgelegd</h3>
+  <ul>
+    <li><strong>Uren-keuze 6 uur:</strong> exacte aantallen (uitnodigingen,
+    follow-ups, social-namen) per dag voor de 6-uur-builder</li>
+    <li><strong>Core vervolg-fase (dag 22-60):</strong> uitgedacht maar
+    nog niet volledig uitgewerkt qua dag-voor-dag-content</li>
+    <li><strong>Pro vervolg-fase:</strong> hoe verdiept Pro na de 14
+    stappen? Hoe schaalt Pro naar meer cliënten of naar een collega-
+    professionals-netwerk?</li>
+    <li><strong>Mini-ELEVA Core webshop-smaak:</strong> productfocus
+    versus webshop-pitch op het juiste moment, contextueel inrichten
+    van de welkom-content</li>
+    <li><strong>Mini-ELEVA Pro-smaak:</strong> hoe ziet 't 'r voor een
+    Pro-cliënt uit, met de vragenlijst als rode draad</li>
+    <li><strong>Shopper-nuggets-tijdlijn:</strong> wanneer welk bericht
+    naar een Shopper, en hoe genereert ELEVA die automatisch?</li>
+    <li><strong>WhisperCampaign-tooling:</strong> hoe vat ELEVA in dat
+    een member een Sprint gaat starten en helpt 'r de 5 builders te
+    werven?</li>
+  </ul>
+</div>
+
+<footer class="bottom">
+  <p>
+    <strong>ELEVA</strong> · Project Meer Tijd en Vrijheid<br>
+    Flow-overzicht voor pilot-team en toekomstige nieuwe leden<br>
+    Versie ter review · 9 mei 2026 (v2)
+  </p>
+</footer>
+
+</div>
+</body>
+</html>

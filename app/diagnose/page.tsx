@@ -207,6 +207,27 @@ function PushSectie() {
       log(`Response body: ${JSON.stringify(data, null, 2)}`);
       if (!res.ok || data?.success === false) {
         log(`❌ FAALDE. Reden: ${data?.reason || data?.error || "onbekend"}`);
+        // Vertaal de FCM-statuscode naar mensentaal zodat we direct weten
+        // welke kant op te lopen. 403 = config-issue (VAPID-pair klopt niet),
+        // 410 = endpoint dood (resync nodig), enz.
+        const code = data?.statusCode;
+        if (code === 403 || code === 401) {
+          log(
+            `🔑 FCM-code ${code} betekent: VAPID-keys (public + private) in de server-env vormen geen kloppend paar, of de subject klopt niet. Fix in Vercel env-vars.`
+          );
+        } else if (code === 410 || code === 404) {
+          log(
+            `🪦 FCM-code ${code} betekent: deze subscription is dood. Klik Force resync om 'm te vervangen.`
+          );
+        } else if (code === 400) {
+          log(
+            `📦 FCM-code 400 betekent: payload of headers kloppen niet. Server-bug, geen config-issue.`
+          );
+        } else if (code === 429) {
+          log(`🚦 FCM-code 429: rate limit. Wacht even en probeer opnieuw.`);
+        } else if (typeof code === "number") {
+          log(`ℹ FCM-code ${code} — niet eerder gezien, kijk naar body voor details.`);
+        }
       } else {
         log("✅ Server zegt: gelukt. Check nu je telefoon voor de melding.");
       }

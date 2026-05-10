@@ -1,0 +1,893 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sprint 60 Day Run — Audit voor Raoul + Gaby</title>
+  <style>
+    :root {
+      --bg: #181b21;
+      --surf: #21252d;
+      --surf2: #2a2f38;
+      --border: #363c47;
+      --text: #ece7df;
+      --muted: #9aa0a8;
+      --gold: #b89a52;
+      --gold-soft: #8e7637;
+      --accent: #5d8a8b;
+      --warn: #b76b3b;
+      --good: #6f8b56;
+      --fix: #c4734a;
+      --nee: #6f8b56;
+      --twijfel: #c2a14b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 16px/1.55 -apple-system, "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 24px 16px 100px;
+    }
+    main { max-width: 920px; margin: 0 auto; }
+    h1 {
+      font-family: Georgia, serif;
+      font-weight: 600;
+      font-size: 30px;
+      margin: 0 0 4px;
+    }
+    h1 .sub {
+      display: block;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    h2 {
+      font-family: Georgia, serif;
+      font-size: 22px;
+      font-weight: 600;
+      margin: 32px 0 12px;
+      color: var(--gold);
+    }
+    h3 {
+      font-size: 13px;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 18px 0 10px;
+      font-weight: 600;
+    }
+    p { margin: 0 0 10px; }
+    .lead { color: var(--muted); font-size: 14px; }
+
+    .uitleg-blok {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 14px 0;
+      font-size: 14px;
+    }
+    .uitleg-blok strong { color: var(--gold); }
+
+    details.dag {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin: 10px 0;
+      overflow: hidden;
+    }
+    details.dag[open] { border-color: var(--gold-soft); }
+    details.dag > summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      user-select: none;
+      background: var(--surf2);
+    }
+    details.dag > summary::-webkit-details-marker { display: none; }
+    details.dag > summary::after {
+      content: "▸";
+      margin-left: auto;
+      color: var(--muted);
+      transition: transform 0.15s;
+    }
+    details.dag[open] > summary::after { transform: rotate(90deg); }
+    details.dag > summary .dagtitel { font-weight: 500; font-size: 16px; }
+    details.dag > summary .markeringen-tel {
+      font-size: 11px;
+      padding: 2px 8px;
+      background: var(--bg);
+      border-radius: 999px;
+      color: var(--muted);
+      margin-left: auto;
+      margin-right: 12px;
+    }
+    .dag-body { padding: 16px 22px 20px; }
+
+    .wat-staat-er {
+      background: var(--surf2);
+      border-left: 3px solid var(--accent);
+      padding: 10px 14px;
+      border-radius: 0 6px 6px 0;
+      font-size: 14px;
+      color: var(--text);
+      margin: 0 0 16px;
+    }
+
+    .bevinding {
+      background: var(--surf2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin: 8px 0;
+    }
+    .bevinding p.tekst {
+      margin: 0 0 10px;
+      font-size: 14px;
+    }
+    .bevinding p.tekst em {
+      color: var(--gold);
+      font-style: italic;
+    }
+    .bevinding-categorie {
+      display: inline-block;
+      font-size: 10px;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .markering-rij {
+      display: flex;
+      gap: 8px;
+      margin: 8px 0;
+      flex-wrap: wrap;
+    }
+    .markering-knop {
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--muted);
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .markering-knop:hover { border-color: var(--gold-soft); color: var(--text); }
+    .markering-knop.actief.fix {
+      background: var(--fix);
+      color: #fff;
+      border-color: var(--fix);
+    }
+    .markering-knop.actief.nee {
+      background: var(--nee);
+      color: #fff;
+      border-color: var(--nee);
+    }
+    .markering-knop.actief.twijfel {
+      background: var(--twijfel);
+      color: #1c1c1c;
+      border-color: var(--twijfel);
+    }
+
+    textarea.opmerking {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      color: var(--text);
+      font: inherit;
+      font-size: 14px;
+      resize: vertical;
+      min-height: 50px;
+      margin-top: 6px;
+    }
+    textarea.opmerking:focus {
+      outline: none;
+      border-color: var(--gold-soft);
+    }
+    textarea.opmerking::placeholder { color: var(--muted); }
+
+    .geen-bevindingen {
+      color: var(--muted);
+      font-style: italic;
+      font-size: 13px;
+      padding: 6px 0;
+    }
+
+    .actie-balk {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--surf);
+      border-top: 1px solid var(--border);
+      padding: 12px 16px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      z-index: 50;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+    }
+    .actie-balk button {
+      padding: 10px 18px;
+      border-radius: 6px;
+      border: 1px solid var(--gold-soft);
+      background: var(--gold);
+      color: #1c1c1c;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .actie-balk button.secundair {
+      background: transparent;
+      color: var(--muted);
+      border-color: var(--border);
+    }
+    .actie-balk button:hover { opacity: 0.9; }
+
+    dialog.export-modal {
+      max-width: 90%;
+      width: 700px;
+      background: var(--surf);
+      border: 1px solid var(--gold-soft);
+      border-radius: 10px;
+      padding: 0;
+      color: var(--text);
+    }
+    dialog.export-modal::backdrop { background: rgba(0,0,0,0.6); }
+    dialog.export-modal .modal-body { padding: 20px 24px; }
+    dialog.export-modal h3 {
+      margin: 0 0 12px;
+      color: var(--gold);
+      font-size: 16px;
+    }
+    dialog.export-modal textarea {
+      width: 100%;
+      min-height: 350px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font: 13px/1.5 Consolas, Menlo, monospace;
+      padding: 12px;
+      border-radius: 6px;
+      resize: vertical;
+    }
+    dialog.export-modal .modal-acties {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-top: 12px;
+    }
+    dialog.export-modal button {
+      padding: 8px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--gold-soft);
+      background: var(--gold);
+      color: #1c1c1c;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    dialog.export-modal button.secundair {
+      background: transparent;
+      color: var(--muted);
+      border-color: var(--border);
+    }
+
+    .opslag-status {
+      position: fixed;
+      top: 12px;
+      right: 16px;
+      font-size: 12px;
+      color: var(--muted);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .opslag-status.zichtbaar { opacity: 1; }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 24px; }
+      .actie-balk { flex-direction: column; }
+      .actie-balk button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+<main>
+
+<h1>Sprint 60 Day Run — Audit
+  <span class="sub">Voor Raoul + Gaby · markeer per bevinding wat aangepakt moet worden, dan voer ik uit</span>
+</h1>
+
+<div class="uitleg-blok">
+  <p><strong>Hoe dit werkt:</strong></p>
+  <ol style="margin: 6px 0 0; padding-left: 18px;">
+    <li>Klap een dag open en lees per bevinding wat ik schreef.</li>
+    <li>Klik op één van de drie knoppen: <strong style="color:var(--fix)">FIX</strong> (graag aanpakken), <strong style="color:var(--nee)">LATEN</strong> (laten staan zoals het is), <strong style="color:var(--twijfel)">TWIJFEL</strong> (hier komen we op terug).</li>
+    <li>Eventueel een opmerking erbij in het tekstveld.</li>
+    <li>Onderaan klik je <strong>Aantekeningen exporteren</strong> — dat geeft je tekst die je in een nieuw bericht aan mij kunt plakken.</li>
+  </ol>
+  <p style="margin-top: 10px;"><strong>Wordt automatisch opgeslagen</strong> in je browser, dus je kunt tussendoor sluiten en later verder.</p>
+</div>
+
+<div class="uitleg-blok" style="border-color: var(--warn);">
+  <p style="margin:0;"><strong style="color:var(--warn);">Status:</strong> Dag 1 + maandag-weekritme zijn als sample uitgewerkt. Als deze stijl klopt voor jou, werk ik de andere 20 dagen + 6 weekdagen op dezelfde manier uit.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>Dag 1 — 🚀 Welkom! Vandaag leg je je fundament</h2>
+
+<details class="dag" open data-prefix="dag1" data-groep="Dag 1 - Welkom">
+  <summary>
+    <span class="dagtitel">Dag 1 audit-bevindingen</span>
+    <span class="markeringen-tel" data-prefix-tel="dag1">0 markeringen</span>
+  </summary>
+  <div class="dag-body">
+
+    <div class="wat-staat-er">
+      <strong>Wat staat er nu:</strong> Twee verplichte taken — telefooncontacten importeren (vcard-upload, vereistMobiel) + sponsor-melding ('ik ben gestart'). Lange "watJeLeert"-tekst over voorraadkast, aantallen-verhaal, "jij laat zien, zij beslissen", en "overweldigd voelen is normaal".
+    </div>
+
+    <h3>Lijkt goed (mag blijven)</h3>
+
+    <div class="bevinding">
+      <span class="bevinding-categorie">Toon</span>
+      <p class="tekst">Toon is warm en eerlijk, geen pushy verkooptaal.</p>
+      <div class="markering-rij" data-bevinding="dag1-goed-1">
+        <button type="button" class="markering-knop fix" data-waarde="fix">FIX</button>
+        <button type="button" class="markering-knop nee" data-waarde="nee">LATEN</button>
+        <button type="button" class="markering-knop twijfel" data-waarde="twijfel">TWIJFEL</button>
+      </div>
+      <textarea class="opmerking" data-bevinding="dag1-goed-1" placeholder="Opmerking..."></textarea>
+    </div>
+
+    <div class="bevinding">
+      <span class="bevinding-categorie">Mental shift</span>
+      <p class="tekst">"Jij laat zien, zij beslissen" als kern-shift is sterk.</p>
+      <div class="markering-rij" data-bevinding="dag1-goed-2">
+        <button type="button" class="markering-knop fix" data-waarde="fix">FIX</button>
+        <button type="button" class="markering-knop nee" data-waarde="nee">LATEN</button>
+        <button type="button" class="markering-knop twijfel" data-waarde="twijfel">TWIJFEL</button>
+      </div>
+      <textarea class="opmerking" data-bevinding="dag1-goed-2" placeholder="Opmerking..."></textarea>
+    </div>
+
+    <div class="bevinding">
+      <span class="bevinding-categorie">Afsluiter</span>
+      <p class="tekst">"Niet alleen"-boodschap aan het eind voelt juist voor dag 1.</p>
+      <div class="markering-rij" data-bevinding="dag1-goed-3">
+        <button type="button" class="markering-knop fix" data-waarde="fix">FIX</button>
+        <button type="button" class="markering-knop nee" data-waarde="nee">LATEN</button>
+        <button type="button" class="markering-knop twijfel" data-waarde="twijfel">TWIJFEL</button>
+      </div>
+      <textarea class="opmerking" data-bevinding="dag1-goed-3" placeholder="Opmerking..."></textarea>
+    </div>
+
+    <h3>Schurende taal</h3>
+
+    <div class="bevinding">
+      <span class="bevinding-categorie">Technisch jargon</span>
+      <p class="tekst"><em>"We ontdubbelen automatisch"</em> (regel 56) — voelt technisch.<br>Voorstel: <em>"Dubbele namen worden niet apart geteld."</em></p>
+      <div class="markering-rij" data-bevinding="dag1-schurend-1">
+        <button type="button" class="markering-knop fix" data-waarde="fix">FIX</button>
+        <button type="button" class="markering-knop nee" data-waarde="nee">LATEN</button>
+        <button type="button" class="markering-knop twijfel" data-waarde="twijfel">TWIJFEL</button>
+      </div>
+      <textarea class="opmerking" data-bevinding="dag1-schurend-1" placeholder="Opmerking..."></textarea>
+    </div>
+
+    <div class="bevinding">
+      <span class="bevinding-categorie">Koppelteken</span>
+      <p class="tekst"><em>"fundament-dag"</em> (regel 53) — koppelteken voelt los.<br>Voorstel: <em>"fundamentdag"</em> aan elkaar, of <em>"rustige fundament-dag"</em> voluit met meer ruimte.</p>
+      <div class="markering-rij" data-bevinding="dag1-schurend-2">
+        <button type="button" class="markering-knop fix" data-waarde="fix">FIX</button>
+        <button type="button" class="markering-knop nee" data-waarde="nee">LATEN</button>
+        <button type="button" class="markering-knop twijfel" data-waarde="twijfel">TWIJFEL</button>
+      </div>
+      <textarea class="opmerking" data-bevinding="dag1-schurend-2" placeholder="Opmerking..."></textarea>
+    </div>
+
+    <div class="bevinding">
+      <span class="bevinding-categorie">Caps in afsluiter</span>
+      <p class="tekst"><em>"OVERWELDIGD VOELEN IS NORMAAL"</em> (regel 85) — caps voelt geforceerd in een afsluiter.<br>Voorstel: kleine letters, zachte zin: <em>"Overweldigd voelen is normaal."</em></p>
+      <div class="markering-rij" data-bevinding="dag1-schurend-3">
+        <button type="button" class="markering-knop fix" data-waarde="fix">FIX</button>
+        <button type="button" class="markering-knop nee" data-waarde="nee">LATEN</button>
+        <button type="button" class="markering-knop twijfel" data-waarde="twijfel">TWIJFEL</button>
+      </div>
+      <textarea class="opmerking" data-bevinding="dag1-schurend-3" placeholder="Opmerking..."></textarea>
+    </div>
+
+    <div class="bevinding">
+      <span class="bevinding-categorie">Herhaling</span>
+      <p class="tekst"><em>"geldt voor iedereen hetzelfde"</em> komt zowel in fasen.ts als in dag 1 voor — herhaling tussen fase-intro en dag voelt redundant.<br>Voorstel: in één van beide weghalen.</p>
+      <div class="markering-rij" data-bevinding="dag1-schurend-4">
+        <button type="button" class="markering-knop fix" data-waarde="fix">FIX</button>
+        <button type="button" class="markering-knop nee" data-waarde="nee">LATEN</button>
+        <button type="button" class="markering-knop twijfel" data-waarde="twijfel">TWIJFEL</button>
+      </div>
+      <textarea class="opmerking" data-bevinding="dag1-schurend-4" placeholder="Opmerking..."></textarea>
+    </div>
+
+    <h3>Onlogica in opdrachten</h3>
+    <p class="geen-bevindingen">Geen onlogica gevonden op dag 1.</p>
+
+    <h3>Hiaten</h3>
+
+    <div class="bevinding">
+      <span class="bevinding-categorie">Webshop-frame</span>
+      <p class="tekst">Geen verbinding met het webshop-frame uit V5-besluiten. Sprint dag 1 noemt webshop nog niet als kernframe.<br>Vraag: past dat hier wel bij Sprint, of komt het pas dag 2 met de webshop-aanmaak-taak?</p>
+      <div class="markering-rij" data-bevinding="dag1-hiaat-1">
+        <button type="button" class="markering-knop fix" data-waarde="fix">FIX</button>
+        <button type="button" class="markering-knop nee" data-waarde="nee">LATEN</button>
+        <button type="button" class="markering-knop twijfel" data-waarde="twijfel">TWIJFEL</button>
+      </div>
+      <textarea class="opmerking" data-bevinding="dag1-hiaat-1" placeholder="Opmerking..."></textarea>
+    </div>
+
+    <div class="bevinding">
+      <span class="bevinding-categorie">WHY-fallback</span>
+      <p class="tekst">Tekst veronderstelt dat WHY al ingevuld is ("Je onboarding zit erop, dus je WHY staat al"). Wat als die niet af is? Geen fallback-instructie, geen verwijzing naar /mijn-why als terug-link.</p>
+      <div class="markering-rij" data-bevinding="dag1-hiaat-2">
+        <button type="button" class="markering-knop fix" data-waarde="fix">FIX</button>
+        <button type="button" class="markering-knop nee" data-waarde="nee">LATEN</button>
+        <button type="button" class="markering-knop twijfel" data-waarde="twijfel">TWIJFEL</button>
+      </div>
+      <textarea class="opmerking" data-bevinding="dag1-hiaat-2" placeholder="Opmerking..."></textarea>
+    </div>
+
+    <h3>IP-vermeldingen</h3>
+    <p class="geen-bevindingen">Geen IP-vermeldingen op dag 1.</p>
+
+    <h3>Pakket-vermeldingen</h3>
+    <p class="geen-bevindingen">Geen pakket-vermeldingen op dag 1.</p>
+
+    <h3>Filmpjes</h3>
+    <p class="geen-bevindingen">Geen filmSlug op dag 1. Vcard-upload + sponsor-melding embeds doen het werk. Welkomstfilm zit elders. Niet nodig hier.</p>
+
+  </div>
+</details>
+
+<!-- ============================================================ -->
+<h2>Maandag — Plannen (weekritme dag 22-60)</h2>
+
+<details class="dag" open>
+  <summary>
+    <span class="dagtitel">Maandag-weekritme audit-bevindingen</span>
+    <span class="markeringen-tel" id="tel-maandag">0 markeringen</span>
+  </summary>
+  <div class="dag-body">
+
+    <div class="wat-staat-er">
+      <strong>Wat staat er nu:</strong> 7 taken (5 verplicht), focus = pipeline-review + week-planning + dagelijkse aantallen (10 invites, 10 follow-ups, 3 namen). Optioneel inhaaldag inbouwen + week-plan delen met sponsor.
+    </div>
+
+    <h3>Lijkt goed (mag blijven)</h3>
+
+    <div class="bevinding">
+      <span class="bevinding-categorie">Teaching-zin</span>
+      <p class="tekst"><em>"Een week die je niet plant, plant jou"</em> in teaching is sterk en geheugenwaardig.</p>
+      <div class="markering-rij" data-bevinding="maandag-goed-1">
+        <button type="button" class="markering-knop fix" data-waarde="fix">FIX</button>
+        <button type="button" class="markering-knop nee" data-waarde="nee">LATEN</button>
+        <button type="button" class="markering-knop twijfel" data-waarde="twijfel">TWIJFEL</button>
+      </div>
+      <textarea class="opmerking" data-bevinding="maandag-goed-1" placeholder="Opmerking..."></textarea>
+    </div>
+
+    <div class="bevinding">
+      <span class="bevinding-categorie">Combinatie-keuze</span>
+      <p class="tekst">Combinatie planning + dagelijkse aantallen op maandag voorkomt dat planning een vlucht-activiteit wordt.</p>
+      <div class="markering-rij" data-bevinding="maandag-goed-2">
+        <button type="button" class="markering-knop fix" data-waarde="fix">FIX</button>
+        <button type="button" class="markering-knop nee" data-waarde="nee">LATEN</button>
+        <button type="button" class="markering-knop twijfel" data-waarde="twijfel">TWIJFEL</button>
+      </div>
+      <textarea class="opmerking" data-bevinding="maandag-goed-2" placeholder="Opmerking..."></textarea>
+    </div>
+
+    <div class="bevinding">
+      <span class="bevinding-categorie">Inhaal-systematiek</span>
+      <p class="tekst">Inhaaldag-systematiek + 50% verhoging is helder en niet-veroordelend.</p>
+      <div class="markering-rij" data-bevinding="maandag-goed-3">
+        <button type="button" class="markering-knop fix" data-waarde="fix">FIX</button>
+        <button type="button" class="markering-knop nee" data-waarde="nee">LATEN</button>
+        <button type="button" class="markering-knop twijfel" data-waarde="twijfel">TWIJFEL</button>
+      </div>
+      <textarea class="opmerking" data-bevinding="maandag-goed-3" placeholder="Opmerking..."></textarea>
+    </div>
+
+    <h3>Schurende taal</h3>
+
+    <div class="bevinding">
+      <span class="bevinding-categorie">Jargon in label</span>
+      <p class="tekst"><em>"3 prioriteit-prospects kiezen"</em> (label van ma-week-plan) — "prioriteit-prospects" is jargon.<br>Voorstel: <em>"3 prospects waar je deze week echt op gaat focussen"</em>.</p>
+      <div class="markering-rij" data-bevinding="maandag-schurend-1">
+        <button type="button" class="markering-knop fix" data-waarde="fix">FIX</button>
+        <button type="button" class="markering-knop nee" data-waarde="nee">LATEN</button>
+        <button type="button" class="markering-knop twijfel" data-waarde="twijfel">TWIJFEL</button>
+      </div>
+      <textarea class="opmerking" data-bevinding="maandag-schurend-1" placeholder="Opmerking..."></textarea>
+    </div>
+
+    <div class="bevinding">
+      <span class="bevinding-categorie">Hard taalgebruik</span>
+      <p class="tekst"><em>"+50% aantallen draait"</em> — "aantallen draait" is hard.<br>Voorstel: <em>"Plan deze week 1-2 dagen met +50% (15 invites in plaats van 10)"</em>.</p>
+      <div class="markering-rij" data-bevinding="maandag-schurend-2">
+        <button type="button" class="markering-knop fix" data-waarde="fix">FIX</button>
+        <button type="button" class="markering-knop nee" data-waarde="nee">LATEN</button>
+        <button type="button" class="markering-knop twijfel" data-waarde="twijfel">TWIJFEL</button>
+      </div>
+      <textarea class="opmerking" data-bevinding="maandag-schurend-2" placeholder="Opmerking..."></textarea>
+    </div>
+
+    <div class="bevinding">
+      <span class="bevinding-categorie">Dubbele optioneel</span>
+      <p class="tekst">Label <em>"Deel je week-plan met je sponsor (optioneel)"</em> — "(optioneel)" binnen het label is dubbel met verplicht=false.<br>Voorstel: weghalen uit label, het verplicht-veld doet het werk.</p>
+      <div class="markering-rij" data-bevinding="maandag-schurend-3">
+        <button type="button" class="markering-knop fix" data-waarde="fix">FIX</button>
+        <button type="button" class="markering-knop nee" data-waarde="nee">LATEN</button>
+        <button type="button" class="markering-knop twijfel" data-waarde="twijfel">TWIJFEL</button>
+      </div>
+      <textarea class="opmerking" data-bevinding="maandag-schurend-3" placeholder="Opmerking..."></textarea>
+    </div>
+
+    <h3>Onlogica in opdrachten</h3>
+
+    <div class="bevinding">
+      <span class="bevinding-categorie">Willekeurige drempel</span>
+      <p class="tekst">ma-pipeline-review zegt <em>"Wie is langer dan 5 dagen niet bewogen?"</em> — 5 dagen is willekeurig en kan voor verschillende fases anders zijn.<br>Voorstel: drempel weg of laat de Mentor 'm geven op basis van fase.</p>
+      <div class="markering-rij" data-bevinding="maandag-onlogica-1">
+        <button type="button" class="markering-knop fix" data-waarde="fix">FIX</button>
+        <button type="button" class="markering-knop nee" data-waarde="nee">LATEN</button>
+        <button type="button" class="markering-knop twijfel" data-waarde="twijfel">TWIJFEL</button>
+      </div>
+      <textarea class="opmerking" data-bevinding="maandag-onlogica-1" placeholder="Opmerking..."></textarea>
+    </div>
+
+    <h3>Hiaten</h3>
+
+    <div class="bevinding">
+      <span class="bevinding-categorie">Doel-stelling</span>
+      <p class="tekst">Geen verwijzing naar 30-dagen-doel (V5-besluit). Maandag is een natuurlijk moment om kort terug te kijken op je doel. Past in V6, voor nu noteren.</p>
+      <div class="markering-rij" data-bevinding="maandag-hiaat-1">
+        <button type="button" class="markering-knop fix" data-waarde="fix">FIX</button>
+        <button type="button" class="markering-knop nee" data-waarde="nee">LATEN</button>
+        <button type="button" class="markering-knop twijfel" data-waarde="twijfel">TWIJFEL</button>
+      </div>
+      <textarea class="opmerking" data-bevinding="maandag-hiaat-1" placeholder="Opmerking..."></textarea>
+    </div>
+
+    <div class="bevinding">
+      <span class="bevinding-categorie">Tijdlijn-pulsmoment</span>
+      <p class="tekst">Geen Tijdlijn-pulsmoment-trigger. Maandag is een ideaal moment om te checken of er Shoppers zijn waarvoor pulsmoment 1/2/3 nu relevant is.</p>
+      <div class="markering-rij" data-bevinding="maandag-hiaat-2">
+        <button type="button" class="markering-knop fix" data-waarde="fix">FIX</button>
+        <button type="button" class="markering-knop nee" data-waarde="nee">LATEN</button>
+        <button type="button" class="markering-knop twijfel" data-waarde="twijfel">TWIJFEL</button>
+      </div>
+      <textarea class="opmerking" data-bevinding="maandag-hiaat-2" placeholder="Opmerking..."></textarea>
+    </div>
+
+    <h3>IP-vermeldingen</h3>
+    <p class="geen-bevindingen">Geen IP-vermeldingen op maandag.</p>
+
+    <h3>Pakket-vermeldingen</h3>
+    <p class="geen-bevindingen">Geen pakket-vermeldingen op maandag.</p>
+
+    <h3>Filmpjes</h3>
+    <p class="geen-bevindingen">Geen filmSlug nodig op maandag — pure ritme-dag.</p>
+
+  </div>
+</details>
+
+<!-- ============================================================ -->
+<h2>Algemene observaties (te valideren na hele audit)</h2>
+
+<div class="bevinding">
+  <span class="bevinding-categorie">Webshop-frame in Sprint</span>
+  <p class="tekst">Sprint praat over uitnodigingen, presentaties, 3-weg, pipeline-fases — maar niet over de webshop als ankerpunt. Past dit bewust niet bij Sprint (snelheid-focus, geen webshop-fillers), of moet het waarvan-het-bestaat ergens worden ingebouwd?</p>
+  <div class="markering-rij" data-bevinding="alg-webshop-frame">
+    <button type="button" class="markering-knop fix" data-waarde="fix">FIX</button>
+    <button type="button" class="markering-knop nee" data-waarde="nee">LATEN</button>
+    <button type="button" class="markering-knop twijfel" data-waarde="twijfel">TWIJFEL</button>
+  </div>
+  <textarea class="opmerking" data-bevinding="alg-webshop-frame" placeholder="Opmerking..."></textarea>
+</div>
+
+<div class="bevinding">
+  <span class="bevinding-categorie">Tijdlijn-pulsmomenten</span>
+  <p class="tekst">Tijdlijn-pulsmomenten 1-3 uit V5-besluit zitten nog niet in dag 1-21. Past Tijdlijn beter in Core, of moet Sprint óók de pulsmomenten gebruiken?</p>
+  <div class="markering-rij" data-bevinding="alg-tijdlijn">
+    <button type="button" class="markering-knop fix" data-waarde="fix">FIX</button>
+    <button type="button" class="markering-knop nee" data-waarde="nee">LATEN</button>
+    <button type="button" class="markering-knop twijfel" data-waarde="twijfel">TWIJFEL</button>
+  </div>
+  <textarea class="opmerking" data-bevinding="alg-tijdlijn" placeholder="Opmerking..."></textarea>
+</div>
+
+<div class="bevinding">
+  <span class="bevinding-categorie">Bezwaren-bibliotheek</span>
+  <p class="tekst">Worre's 21 bezwaren nog niet geïntegreerd in Sprint. Bezwaren-stap zit in dag 5 maar verwijst naar /scripts-pagina, niet naar de Worre-bibliotheek.</p>
+  <div class="markering-rij" data-bevinding="alg-bezwaren">
+    <button type="button" class="markering-knop fix" data-waarde="fix">FIX</button>
+    <button type="button" class="markering-knop nee" data-waarde="nee">LATEN</button>
+    <button type="button" class="markering-knop twijfel" data-waarde="twijfel">TWIJFEL</button>
+  </div>
+  <textarea class="opmerking" data-bevinding="alg-bezwaren" placeholder="Opmerking..."></textarea>
+</div>
+
+<div class="bevinding">
+  <span class="bevinding-categorie">IP-waarden in Sprint</span>
+  <p class="tekst">IP-waarden zitten in pakketten.ts en prijslijst.ts, niet in dagen.ts zelf — Sprint blijft ongetroffen door de 150-vs-200-beslissing. Klopt dat met jouw beeld?</p>
+  <div class="markering-rij" data-bevinding="alg-ip">
+    <button type="button" class="markering-knop fix" data-waarde="fix">FIX</button>
+    <button type="button" class="markering-knop nee" data-waarde="nee">LATEN</button>
+    <button type="button" class="markering-knop twijfel" data-waarde="twijfel">TWIJFEL</button>
+  </div>
+  <textarea class="opmerking" data-bevinding="alg-ip" placeholder="Opmerking..."></textarea>
+</div>
+
+<div class="bevinding">
+  <span class="bevinding-categorie">Pakket-vermeldingen</span>
+  <p class="tekst">In Sprint wordt minimaal naar pakketten verwezen. Dag 13 noemt "Daily BioBasics + OmeGold" en "Darmen in Balans" in voorbeeld-script-tekst — dat zijn de plekken die geraakt worden door de pakket-herziening.</p>
+  <div class="markering-rij" data-bevinding="alg-pakketten">
+    <button type="button" class="markering-knop fix" data-waarde="fix">FIX</button>
+    <button type="button" class="markering-knop nee" data-waarde="nee">LATEN</button>
+    <button type="button" class="markering-knop twijfel" data-waarde="twijfel">TWIJFEL</button>
+  </div>
+  <textarea class="opmerking" data-bevinding="alg-pakketten" placeholder="Opmerking..."></textarea>
+</div>
+
+</main>
+
+<!-- Actie-balk onderaan -->
+<div class="actie-balk">
+  <button type="button" id="exporteer-btn">📋 Aantekeningen exporteren</button>
+  <button type="button" class="secundair" id="reset-btn">🗑️ Alles wissen</button>
+</div>
+
+<!-- Export modal -->
+<dialog class="export-modal" id="export-modal">
+  <div class="modal-body">
+    <h3>📋 Jouw aantekeningen — kopieer en plak naar Raoul (of in een nieuw bericht aan Claude)</h3>
+    <textarea id="export-tekst" readonly></textarea>
+    <div class="modal-acties">
+      <button type="button" class="secundair" id="modal-sluit">Sluiten</button>
+      <button type="button" id="modal-kopieer">📋 Kopieer naar klembord</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Opslag-status indicator -->
+<div class="opslag-status" id="opslag-status">✓ opgeslagen</div>
+
+<script>
+// ============================================================
+// SPRINT-AUDIT interactiviteit
+// localStorage opslag per bevinding-id
+// Export naar plain text
+// ============================================================
+
+const STORAGE_KEY = 'sprint-audit-v1';
+
+function laadOpslag() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  } catch {
+    return {};
+  }
+}
+
+function bewaarOpslag(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  toonOpslagStatus();
+}
+
+function toonOpslagStatus() {
+  const el = document.getElementById('opslag-status');
+  el.classList.add('zichtbaar');
+  clearTimeout(toonOpslagStatus._t);
+  toonOpslagStatus._t = setTimeout(() => el.classList.remove('zichtbaar'), 1200);
+}
+
+function herstelStatus() {
+  const data = laadOpslag();
+
+  // Markeringen herstellen
+  document.querySelectorAll('.markering-rij').forEach(rij => {
+    const id = rij.dataset.bevinding;
+    const waarde = data[id]?.markering;
+    if (waarde) {
+      const btn = rij.querySelector(`button[data-waarde="${waarde}"]`);
+      if (btn) btn.classList.add('actief');
+    }
+  });
+
+  // Opmerkingen herstellen
+  document.querySelectorAll('textarea.opmerking').forEach(txt => {
+    const id = txt.dataset.bevinding;
+    if (data[id]?.opmerking) txt.value = data[id].opmerking;
+  });
+
+  updateTellers();
+}
+
+function bewaarMarkering(bevindingId, waarde) {
+  const data = laadOpslag();
+  if (!data[bevindingId]) data[bevindingId] = {};
+  data[bevindingId].markering = waarde;
+  bewaarOpslag(data);
+  updateTellers();
+}
+
+function bewaarOpmerking(bevindingId, opmerking) {
+  const data = laadOpslag();
+  if (!data[bevindingId]) data[bevindingId] = {};
+  data[bevindingId].opmerking = opmerking.trim();
+  bewaarOpslag(data);
+}
+
+function updateTellers() {
+  const data = laadOpslag();
+  // Per dag tellen
+  const tellers = { dag1: 0, maandag: 0 };
+  Object.keys(data).forEach(id => {
+    if (data[id].markering) {
+      if (id.startsWith('dag1-')) tellers.dag1++;
+      if (id.startsWith('maandag-')) tellers.maandag++;
+    }
+  });
+  Object.keys(tellers).forEach(k => {
+    const el = document.getElementById('tel-' + k);
+    if (el) el.textContent = tellers[k] + ' markering' + (tellers[k] === 1 ? '' : 'en');
+  });
+}
+
+// Event listeners voor markering-knoppen
+document.querySelectorAll('.markering-rij').forEach(rij => {
+  rij.querySelectorAll('button.markering-knop').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const waarde = btn.dataset.waarde;
+      const bevindingId = rij.dataset.bevinding;
+      const wasActief = btn.classList.contains('actief');
+
+      // Reset alle knoppen in deze rij
+      rij.querySelectorAll('button.markering-knop').forEach(b => b.classList.remove('actief'));
+
+      if (wasActief) {
+        // Was al actief, nu deselecteren
+        const data = laadOpslag();
+        if (data[bevindingId]) delete data[bevindingId].markering;
+        bewaarOpslag(data);
+      } else {
+        // Activeren
+        btn.classList.add('actief');
+        bewaarMarkering(bevindingId, waarde);
+      }
+      updateTellers();
+    });
+  });
+});
+
+// Event listeners voor opmerking-textareas
+document.querySelectorAll('textarea.opmerking').forEach(txt => {
+  let timeout;
+  txt.addEventListener('input', () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      bewaarOpmerking(txt.dataset.bevinding, txt.value);
+    }, 400);
+  });
+});
+
+// Export-functie
+function bouwExportTekst() {
+  const data = laadOpslag();
+  const labels = { fix: 'FIX', nee: 'LATEN', twijfel: 'TWIJFEL' };
+  const lines = [];
+
+  lines.push('SPRINT AUDIT - Aantekeningen Raoul + Gaby');
+  lines.push('Geëxporteerd op: ' + new Date().toLocaleString('nl-NL'));
+  lines.push('');
+
+  // Verzamel per dag
+  const groepen = {
+    'Dag 1 - Welkom': [],
+    'Maandag - Plannen': [],
+    'Algemeen (te valideren na hele audit)': [],
+  };
+
+  document.querySelectorAll('.bevinding').forEach(bevinding => {
+    const txtEl = bevinding.querySelector('textarea.opmerking');
+    const rij = bevinding.querySelector('.markering-rij');
+    if (!txtEl || !rij) return;
+
+    const id = txtEl.dataset.bevinding;
+    const entry = data[id];
+    if (!entry || (!entry.markering && !entry.opmerking)) return;
+
+    const categorie = bevinding.querySelector('.bevinding-categorie')?.textContent || '';
+    const tekst = bevinding.querySelector('p.tekst')?.textContent.trim() || '';
+    const markering = entry.markering ? labels[entry.markering] : '(geen markering)';
+    const opmerking = entry.opmerking || '';
+
+    let groep = 'Algemeen (te valideren na hele audit)';
+    if (id.startsWith('dag1-')) groep = 'Dag 1 - Welkom';
+    if (id.startsWith('maandag-')) groep = 'Maandag - Plannen';
+
+    groepen[groep].push({ categorie, tekst, markering, opmerking });
+  });
+
+  // Schrijf per groep
+  Object.keys(groepen).forEach(groep => {
+    if (groepen[groep].length === 0) return;
+    lines.push('## ' + groep);
+    lines.push('');
+    groepen[groep].forEach(item => {
+      lines.push('- [' + item.markering + '] ' + item.categorie);
+      lines.push('  Bevinding: ' + item.tekst);
+      if (item.opmerking) lines.push('  Opmerking: ' + item.opmerking);
+      lines.push('');
+    });
+  });
+
+  if (lines.length <= 3) {
+    lines.push('(nog geen aantekeningen gemaakt)');
+  }
+
+  return lines.join('\n');
+}
+
+document.getElementById('exporteer-btn').addEventListener('click', () => {
+  const tekst = bouwExportTekst();
+  document.getElementById('export-tekst').value = tekst;
+  document.getElementById('export-modal').showModal();
+});
+
+document.getElementById('modal-sluit').addEventListener('click', () => {
+  document.getElementById('export-modal').close();
+});
+
+document.getElementById('modal-kopieer').addEventListener('click', async () => {
+  const tekst = document.getElementById('export-tekst').value;
+  try {
+    await navigator.clipboard.writeText(tekst);
+    const btn = document.getElementById('modal-kopieer');
+    const oud = btn.textContent;
+    btn.textContent = '✓ Gekopieerd';
+    setTimeout(() => { btn.textContent = oud; }, 1400);
+  } catch {
+    document.getElementById('export-tekst').select();
+    document.execCommand('copy');
+  }
+});
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  if (!confirm('Weet je zeker dat je alle markeringen en opmerkingen wilt wissen?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  document.querySelectorAll('button.markering-knop').forEach(b => b.classList.remove('actief'));
+  document.querySelectorAll('textarea.opmerking').forEach(t => t.value = '');
+  updateTellers();
+});
+
+// Bij laden: herstel state
+herstelStatus();
+</script>
+
+</body>
+</html>

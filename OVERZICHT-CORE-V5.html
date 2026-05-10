@@ -1,0 +1,902 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Core 21 stappen — V5 (Mentor leert jou kennen + doel-roadmap)</title>
+  <style>
+    :root {
+      --bg: #181b21;
+      --surf: #21252d;
+      --surf2: #2a2f38;
+      --border: #363c47;
+      --text: #ece7df;
+      --muted: #9aa0a8;
+      --gold: #b89a52;
+      --gold-soft: #8e7637;
+      --accent: #5d8a8b;
+      --warn: #b76b3b;
+      --new: #6f8b56;
+      --mentor: #a87ec4;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 16px/1.55 -apple-system, "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 32px 16px 80px;
+    }
+    main { max-width: 920px; margin: 0 auto; }
+    h1 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      font-size: 32px;
+      margin: 0 0 4px;
+    }
+    h1 .sub {
+      display: block;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--muted);
+      letter-spacing: 0.3px;
+      margin-top: 6px;
+    }
+    h2 {
+      font-family: Georgia, serif;
+      font-size: 22px;
+      font-weight: 600;
+      margin: 36px 0 12px;
+      color: var(--gold);
+    }
+    h3 {
+      font-size: 14px;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 22px 0 8px;
+      font-weight: 600;
+    }
+    p { margin: 0 0 12px; }
+    .lead { color: var(--muted); font-size: 15px; max-width: 720px; }
+    .key-block {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin: 14px 0;
+    }
+    .key-block h4 {
+      margin: 0 0 8px;
+      color: var(--gold);
+      font-size: 15px;
+      letter-spacing: 0.4px;
+    }
+    .mentor-block {
+      background: linear-gradient(135deg, rgba(168,126,196,0.10), rgba(168,126,196,0.03));
+      border: 1px solid rgba(168,126,196,0.4);
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin: 14px 0;
+      position: relative;
+    }
+    .mentor-block::before {
+      content: "🧠";
+      position: absolute;
+      top: -10px;
+      left: 16px;
+      background: var(--bg);
+      padding: 0 8px;
+      font-size: 18px;
+    }
+    .mentor-block h4 {
+      margin: 0 0 8px;
+      color: var(--mentor);
+      font-size: 15px;
+      letter-spacing: 0.4px;
+    }
+    .pillar {
+      border-left: 3px solid var(--gold-soft);
+      padding-left: 14px;
+      margin: 14px 0;
+    }
+    .pillar h4 { color: var(--gold); margin: 0 0 4px; font-size: 15px; }
+    .pillar p { margin: 0; font-size: 14px; color: var(--text); }
+    details {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin: 8px 0;
+      overflow: hidden;
+    }
+    details[open] { border-color: var(--gold-soft); }
+    summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      user-select: none;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::after {
+      content: "▸";
+      margin-left: auto;
+      color: var(--muted);
+      transition: transform 0.15s;
+    }
+    details[open] summary::after { transform: rotate(90deg); }
+    summary .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--gold);
+      color: #1c1c1c;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .titel { font-weight: 500; }
+    .body { padding: 4px 22px 18px; border-top: 1px solid var(--border); }
+    .doel {
+      font-style: italic;
+      color: var(--gold);
+      font-family: Georgia, serif;
+      margin: 14px 0 10px;
+      padding-left: 12px;
+      border-left: 2px solid var(--gold-soft);
+    }
+    ul.todo { list-style: none; padding: 0; margin: 8px 0 12px; }
+    ul.todo li {
+      padding: 8px 0 8px 28px;
+      position: relative;
+      border-bottom: 1px solid var(--surf2);
+      font-size: 15px;
+    }
+    ul.todo li:last-child { border-bottom: none; }
+    ul.todo li::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 14px;
+      width: 14px; height: 14px;
+      border: 1.5px solid var(--gold-soft);
+      border-radius: 3px;
+    }
+    ul.todo li.verplicht::before { background: var(--gold-soft); }
+    ul.todo li small { display: block; color: var(--muted); margin-top: 3px; font-size: 13px; }
+    .scenario-blok {
+      background: rgba(93,138,139,0.08);
+      border: 1px dashed var(--accent);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin: 12px 0;
+    }
+    .scenario-blok h5 {
+      margin: 0 0 6px;
+      color: var(--accent);
+      font-size: 13px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+    code.script {
+      display: block;
+      background: var(--surf2);
+      padding: 12px 14px;
+      border-radius: 6px;
+      font-family: Georgia, serif;
+      font-style: italic;
+      white-space: pre-wrap;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 8px 0;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 10px;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      margin-left: 6px;
+    }
+    .badge-a { background: rgba(184,154,82,0.18); color: var(--gold); }
+    .badge-b { background: rgba(93,138,139,0.18); color: var(--accent); }
+    .badge-mentor { background: rgba(168,126,196,0.18); color: var(--mentor); }
+    .footer {
+      margin-top: 48px;
+      padding: 24px;
+      background: var(--surf);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .pulse {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(184,154,82,0.12);
+      border: 1px solid var(--gold-soft);
+      color: var(--gold);
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      margin-left: 6px;
+    }
+    .leert {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(168,126,196,0.12);
+      border: 1px solid rgba(168,126,196,0.5);
+      color: var(--mentor);
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      margin-left: 6px;
+    }
+    .leert::before { content: "🧠"; font-size: 11px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 14px;
+    }
+    th, td {
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px; }
+    .open-vraag {
+      background: rgba(183,107,59,0.08);
+      border-left: 3px solid var(--warn);
+      padding: 12px 16px;
+      border-radius: 0 6px 6px 0;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+    .open-vraag strong { color: var(--warn); }
+    .voorbeeld-zin {
+      background: var(--surf2);
+      padding: 10px 14px;
+      border-radius: 6px;
+      margin: 6px 0;
+      font-style: italic;
+      font-family: Georgia, serif;
+      font-size: 14px;
+      color: var(--text);
+    }
+    .voorbeeld-zin .label {
+      display: block;
+      font-style: normal;
+      font-family: inherit;
+      font-size: 11px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .roadmap {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 6px 14px;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+    .roadmap .stap-label {
+      color: var(--mentor);
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding-top: 2px;
+    }
+    .roadmap .stap-content {
+      color: var(--text);
+      border-bottom: 1px dashed var(--surf2);
+      padding-bottom: 6px;
+    }
+    .roadmap .stap-content small { color: var(--muted); display: block; }
+  </style>
+</head>
+<body>
+<main>
+
+<h1>Core leerpad — V5
+  <span class="sub">21 stappen, eenvoudig + dupliceerbaar, met een Mentor die jou leert kennen</span>
+</h1>
+
+<p class="lead">
+  V5 voegt aan V4 één centrale gedachte toe: de ELEVA-Mentor is geen vraagbaak meer, maar een
+  groeiend persoonlijk profiel. Vanaf Stap 1 leert hij jouw WHY, situatie, ideale klant, niche,
+  passies en talenten kennen — zodat hij in de Uitbreiding-module content op maat kan voorstellen
+  en, als je een doel instelt ("ik wil 500 euro per maand verdienen"), een 30-dagen-roadmap
+  voor jou bouwt. Nog steeds één hoofdverhaal (de webshop), nog steeds dupliceerbaar — maar nu
+  óók persoonlijk.
+</p>
+
+<!-- ============================================================ -->
+<h2>Strategische uitgangspunten</h2>
+
+<div class="key-block">
+  <h4>1 · Eén hoofdverhaal: de webshop als frame</h4>
+  <p>De webshop is het ankerpunt — niet het product. Resultaten worden gedeeld vanuit "uit mijn webshop". Mensen die reageren krijgen óf producten óf een eigen webshop. Dezelfde framing werkt voor Core én Pro:</p>
+  <div class="pillar">
+    <h4>Core</h4>
+    <p>Warm netwerk + webshop-frame + duplicatie. "Ik heb een webshop, jij kan ook zo'n webshop hebben."</p>
+  </div>
+  <div class="pillar">
+    <h4>Pro / Professional</h4>
+    <p>Professional krijgt gratis webshop, bedient klanten ermee. "Ik heb een gratis webshop voor mijn praktijk, jij kan dat ook hebben — voor jouw klanten of voor jezelf."</p>
+  </div>
+</div>
+
+<div class="mentor-block">
+  <h4>2 · De Mentor leert jou kennen — personalisatie als kern</h4>
+  <p>De Mentor is geen anonieme chatbot. Vanaf Stap 1 bouwt hij een persoonlijk profiel van jou op, en
+    elke stap verrijkt dat profiel. Naarmate je verder komt in Core, kan hij steeds preciezer met jou
+    meedenken. In de Uitbreiding-module wordt dat profiel zijn werkmateriaal:
+    <em>"Voor jou — gezien jouw niche, jouw situatie en jouw ideale klant — zou ik deze post voorstellen."</em>
+  </p>
+  <p style="margin-top:10px;"><strong>Het profiel bevat (groeit gedurende Core):</strong></p>
+  <table>
+    <tr><th style="width:30%;">Profielblok</th><th>Gevuld in</th></tr>
+    <tr><td>WHY — waarom doe je dit?</td><td>Stap 1</td></tr>
+    <tr><td>Situatie — gezin, werk, tijd, energie</td><td>Stap 1 + 2</td></tr>
+    <tr><td>Netwerk-context (FORM)</td><td>Stap 2</td></tr>
+    <tr><td>Producten die je gebruikt + eigen resultaten</td><td>Stap 5 + 8 (resultaat-post)</td></tr>
+    <tr><td>Webshop-uitnodigingstaal in jouw stem</td><td>Stap 6</td></tr>
+    <tr><td>Drie verhalen (persoonlijk / product / business)</td><td>Stap 10</td></tr>
+    <tr><td>Niche-bewustzijn — wie was je, wat veranderde, wie heeft daar iets aan</td><td>Stap 10 + 21</td></tr>
+    <tr><td>Passies / onderwerpen waar je graag over praat</td><td>Stap 10 + 21</td></tr>
+    <tr><td>Ideale klant — voor wie kan ik het meest betekenen</td><td>Stap 18 + 20</td></tr>
+    <tr><td>Voorkeurs-kanaal / talent (schrijver, spreker, filmer, DM-er)</td><td>Stap 21 (overgang naar Uitbreiding)</td></tr>
+    <tr><td>Doel — wat wil je verdienen / bereiken</td><td>Stap 21 (eerste 30-dagen-doel)</td></tr>
+  </table>
+  <p style="margin-top:10px; font-size:13px;">Dit profiel is jouw eigendom. De Mentor gebruikt het. Sponsors zien het niet (privacy-keuze, aanpasbaar).</p>
+</div>
+
+<div class="key-block">
+  <h4>3 · De Tijdlijn van Shopper naar Webshophouder als ruggengraat</h4>
+  <p>Vijf vaste pulsmomenten waarop je peilt of een productgebruiker openstaat voor een eigen webshop. Drie ervan vallen in deze 21 stappen, twee komen ná Core.</p>
+  <table>
+    <tr><th>#</th><th>Moment</th><th>Waar in Core</th></tr>
+    <tr><td>1</td><td>Bij bestelling / inschrijving</td><td>Stap 11</td></tr>
+    <tr><td>2</td><td>Tijdens gesprek 'supplementen binnen'</td><td>Stap 13</td></tr>
+    <tr><td>3</td><td>Dag 10–18 bij enthousiasme</td><td>Stap 17</td></tr>
+    <tr><td>4</td><td>Einde fase 3 / na 3 weken productgebruik</td><td>Uitbreiding</td></tr>
+    <tr><td>5</td><td>Einde 2 maanden productgebruik</td><td>Uitbreiding</td></tr>
+  </table>
+</div>
+
+<div class="key-block">
+  <h4>4 · Twee scenario's bij start</h4>
+  <table>
+    <tr><th>Scenario</th><th>Wie</th><th>Verschil in flow</th></tr>
+    <tr>
+      <td><span class="badge badge-a">A</span> Al resultaat</td>
+      <td>Producten al een tijd gebruikt</td>
+      <td>Direct 21-dagen-resultaat-post (Stap 8)</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-b">B</span> Nog geen resultaat</td>
+      <td>Begint met de producten samen met Core</td>
+      <td>Pre-post in Stap 8, resultaat-post in Stap 17</td>
+    </tr>
+  </table>
+  <p style="margin-top:10px; font-size:14px; color:var(--muted);">
+    Beide scenario's volgen dezelfde 21 stappen — alleen Stap 8 en Stap 17 verschillen qua inhoud.
+  </p>
+</div>
+
+<div class="key-block">
+  <h4>5 · Onder de motorkap (de starter ziet het niet, de Mentor wel)</h4>
+  <ul style="margin: 6px 0 0; padding-left: 18px;">
+    <li><strong>4 nuances van uitnodigen</strong> — Mentor stelt de juiste taal voor per prospect</li>
+    <li><strong>FORM</strong> — gesprekken voorbereiden en notities ordenen</li>
+    <li><strong>Bezwaren-bibliotheek</strong> (Worre's 21 in 2 categorieën, 4-stappen-methode)</li>
+    <li><strong>Engagement-protocol</strong> — iedere reactie binnen 1 uur menselijk beantwoorden</li>
+  </ul>
+</div>
+
+<div class="key-block">
+  <h4>6 · Warm-netwerk-skip mogelijk, afgeraden</h4>
+  <p style="font-style:italic; color:var(--text);">
+    Bij warm netwerk is het vertrouwen er al. Mensen kennen je, zien je eigen verandering.
+    Dat is de snelste opstart die er is. Bij social-media-strategie moet je eerst invloed
+    opbouwen — dat heeft tijd nodig om te gaan werken. Daarom liever deze stappen niet overslaan.
+  </p>
+  <p style="font-size:14px; margin-top:10px;">
+    <strong>Uitzondering:</strong> influencers met substantiële social-media-invloed mogen
+    direct door naar de Uitbreiding-module.
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<h2>Hoe de Mentor jou leert kennen tijdens Core</h2>
+
+<p style="font-size:14px; color:var(--muted); margin-bottom:14px;">
+  In één oogopslag: welke stap vult welk profielblok. Dit hoeft de starter niet te zien — voor jou
+  en Gaby is dit het ontwerp-overzicht zodat je weet wat de Mentor straks tot zijn beschikking heeft.
+</p>
+
+<div class="mentor-block">
+  <div class="roadmap">
+    <div class="stap-label">Stap 1</div>
+    <div class="stap-content"><strong>WHY · Situatie</strong><small>Wat de Mentor leert: waarom je dit doet, hoeveel tijd / energie je hebt, je gezinscontext</small></div>
+
+    <div class="stap-label">Stap 2</div>
+    <div class="stap-content"><strong>Netwerk · FORM-context</strong><small>Wat de Mentor leert: wie er om je heen staan, wat hen bezighoudt, eerste signalen van waar jij energie van krijgt</small></div>
+
+    <div class="stap-label">Stap 5</div>
+    <div class="stap-content"><strong>Producten die je gebruikt</strong><small>Wat de Mentor leert: jouw eigen pakket, welke producten passen bij jouw lichaam</small></div>
+
+    <div class="stap-label">Stap 6</div>
+    <div class="stap-content"><strong>Webshop-uitnodiging in jouw stem</strong><small>Wat de Mentor leert: jouw stijl, woordkeuze, wat wel/niet bij je past</small></div>
+
+    <div class="stap-label">Stap 8</div>
+    <div class="stap-content"><strong>Eerste resultaat-post / pre-post</strong><small>Wat de Mentor leert: jouw eerste publieke verhaal, hoe je over jezelf schrijft</small></div>
+
+    <div class="stap-label">Stap 10</div>
+    <div class="stap-content"><strong>Drie verhalen + niche-zaadje</strong><small>Wat de Mentor leert: jouw persoonlijke verhaal, productrelatie, business-motief — hier komt jouw niche-richting al naar boven</small></div>
+
+    <div class="stap-label">Stap 11</div>
+    <div class="stap-content"><strong>Eerste reacties / type contacten</strong><small>Wat de Mentor leert: wie reageert op jou, welke "soort" mensen aangetrokken worden</small></div>
+
+    <div class="stap-label">Stap 18 + 20</div>
+    <div class="stap-content"><strong>Ideale klant + 5 typen prospects</strong><small>Wat de Mentor leert: wie zegt makkelijker ja bij jou, voor wie je het meest kan betekenen</small></div>
+
+    <div class="stap-label">Stap 21</div>
+    <div class="stap-content"><strong>Talent-keuze + eerste doel</strong><small>Wat de Mentor leert: ben je schrijver / spreker / filmer / DM-er, en wat wil je verdienen of bereiken in de volgende 30 dagen</small></div>
+  </div>
+</div>
+
+<p style="font-size:14px; color:var(--muted);">
+  Aan het einde van Core kent de Mentor je goed genoeg om in de Uitbreiding-module gepersonaliseerde
+  content-suggesties + een doel-roadmap te maken. Niet "hier is een algemeen Reels-trucje" — wel
+  "voor jou, met jouw niche, met jouw doel, voor de komende 30 dagen, deze 12 hooks en dit ritme".
+</p>
+
+<!-- ============================================================ -->
+<h2>Voorbeeldzinnen — webshop + resultaat</h2>
+
+<p style="font-size:14px; color:var(--muted);">Tien startzinnen om in Stap 6 uit te kiezen. Niet woordelijk overnemen — eigen maken.</p>
+
+<div class="voorbeeld-zin">
+  <span class="label">1 · Energie / middag-dip</span>
+  Ik kan 's middags weer doorpakken in plaats van die enorme dip om 3 uur. Allemaal door producten uit mijn eigen webshop — en het mooie: zo'n webshop kost je niets, ik bestel er gewoon zelf mijn producten in en daarmee staat-ie. Iedereen kan dat hebben. Wil je weten hoe?
+</div>
+<div class="voorbeeld-zin">
+  <span class="label">2 · Hond / huisdier</span>
+  Onze hond is letterlijk 5 jaar jonger. Loopt weer mee, springt weer in de auto. Ik gebruik supplementen voor hem uit mijn eigen webshop — die ik gratis kreeg door zelf te bestellen. Echt iedereen kan zo'n webshop hebben. Sta je open om te zien hoe?
+</div>
+<div class="voorbeeld-zin">
+  <span class="label">3 · Huid / rimpels</span>
+  Ik heb laatst eens iets op één wang gesmeerd, niet op de andere — gewoon om te kijken. Verschil binnen een paar minuten zichtbaar. Komt uit mijn eigen webshop. Ik krijg die webshop gratis omdat ik er zelf bestel. Wil je dat ik je laat zien wat ik gebruik?
+</div>
+<div class="voorbeeld-zin">
+  <span class="label">4 · Slaap / stress</span>
+  Ik sliep al jaren matig. Sinds een paar weken val ik binnen 10 minuten in slaap en word ik fris wakker. Door producten uit mijn eigen webshop. Die webshop heb ik gratis gekregen — ik bestel er gewoon mijn eigen spullen. Mooi systeem eigenlijk hè.
+</div>
+<div class="voorbeeld-zin">
+  <span class="label">5 · Darmen / buik</span>
+  Mijn buik was jarenlang dat ene ding waar ik niks aan kon veranderen. Drie weken op een programma uit mijn webshop, en ik voel mezelf weer. Webshop kreeg ik gratis door zelf te bestellen — en het bijzondere: ik kan anderen laten zien hoe ze precies hetzelfde kunnen doen.
+</div>
+<div class="voorbeeld-zin">
+  <span class="label">6 · Sport / herstel</span>
+  Hardlopen na de 40 voelt anders — totdat ik supplementen ging gebruiken uit mijn eigen webshop. Hersteltijd halveerde. Webshop kostte me niets, ik bestel er zelf in. Geen abonnement, geen verplichting, niks.
+</div>
+<div class="voorbeeld-zin">
+  <span class="label">7 · Algemeen / "ik voelde me niet ik"</span>
+  Ik voelde me een tijd lang niet helemaal mezelf. Na een paar weken met producten uit mijn eigen webshop kwam dat terug. De webshop heb ik er gratis bij — ik bestel er gewoon mijn eigen producten in. Heel breed wat erin zit, dus voor van alles iets.
+</div>
+<div class="voorbeeld-zin">
+  <span class="label">8 · Hormonen / leeftijd</span>
+  Een paar dingen die rond die jaren gewoon niet meer werkten — die zijn echt veranderd. Met spullen uit mijn eigen webshop. Webshop heb ik gratis. Best leuk hoe dat werkt eigenlijk.
+</div>
+<div class="voorbeeld-zin">
+  <span class="label">9 · Pre-post variant — Scenario B</span>
+  Vandaag begin ik aan iets waar ik benieuwd naar ben — een 3-weken-programma met producten uit mijn eigen webshop. Die webshop heb ik gratis gekregen, ik gebruik 'm zelf. Over 21 dagen vertel ik wat het deed. Wie wil meekijken?
+</div>
+<div class="voorbeeld-zin">
+  <span class="label">10 · Business-flavor (voor ondernemende contacten)</span>
+  Ik heb iets ontdekt wat ik niet wist: je kunt een webshop hebben zonder dat je producten hoeft te maken, op te slaan, te versturen of klantenservice voor hoeft te draaien. Alles is geregeld. Wat ik doe: zelf mijn producten erin bestellen — en als anderen ook bestellen, krijg ik daar wat over. Plus over webshops van mensen die het via mij ontdekken. Wil je weten hoe?
+</div>
+
+<!-- ============================================================ -->
+<h2>Week 1 — Fundament (dag 1–7)</h2>
+
+<details>
+  <summary><span class="num">1</span><span class="titel">🚀 Welkom — WHY, sponsor, scenario-keuze <span class="leert">profielstart</span></span></summary>
+  <div class="body">
+    <p class="doel">Helder krijgen waarom jij dit doet, kennismaken met je sponsor, en kiezen welk scenario op jou past.</p>
+    <ul class="todo">
+      <li class="verplicht">Maak je WHY samen met de Mentor <small>De Mentor slaat de WHY op als startpunt van jouw profiel</small></li>
+      <li class="verplicht">Vertel de Mentor in 3-5 zinnen je situatie <small>Werk, gezin, tijd per dag, wat je nu zoekt</small></li>
+      <li class="verplicht">Stuur je sponsor een berichtje: 'ik ben gestart'</li>
+      <li class="verplicht">Kies je scenario: <span class="badge badge-a">A</span> al resultaat / <span class="badge badge-b">B</span> begin samen met Core</li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary><span class="num">2</span><span class="titel">👥 Lijst opbouwen + sponsor-call <span class="leert">netwerk + FORM</span></span></summary>
+  <div class="body">
+    <p class="doel">Een werkende lijst opzetten en samen met je sponsor de eerste oefen-uitnodiging versturen.</p>
+    <ul class="todo">
+      <li class="verplicht">Upload je telefoonboek of voeg minimaal 30 namen toe</li>
+      <li class="verplicht">Loop met de Mentor de FORM-vragen door <small>De Mentor slaat per top-5-naam jouw FORM-context op zodat hij je later kan helpen op specifieke contacten</small></li>
+      <li class="verplicht">Plan kennismakings-call met sponsor (~30 min) — verstuur sámen 1 oefen-uitnodiging</li>
+      <li>Markeer je top-5</li>
+    </ul>
+    <p style="font-size:13px; color:var(--muted);">Optie: <strong>Snelstart-spoor</strong> opt-in vanaf hier.</p>
+  </div>
+</details>
+
+<details>
+  <summary><span class="num">3</span><span class="titel">🛒 Webshop-admin: drie fundamenten</span></summary>
+  <div class="body">
+    <p class="doel">Webshop, kredietformulier, teams-administratie — in één ochtend rond.</p>
+    <ul class="todo">
+      <li class="verplicht">Lifeplus webshop aanmaken</li>
+      <li class="verplicht">Kredietformulier invullen</li>
+      <li class="verplicht">Teams-administratiesysteem aanmaken</li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary><span class="num">4</span><span class="titel">🔗 Bestellinks + productadvies-test</span></summary>
+  <div class="body">
+    <p class="doel">Webshop-links koppelen aan ELEVA en de productadvies-test zelf doorlopen.</p>
+    <ul class="todo">
+      <li class="verplicht">Koppel je webshop-links aan ELEVA</li>
+      <li>Doe zelf de productadvies-test (~3 min)</li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary><span class="num">5</span><span class="titel">📦 Productkennis basis <span class="leert">jouw eigen pakket</span></span></summary>
+  <div class="body">
+    <p class="doel">Een gevoel hebben van de hoofdcategorieën én dat de Mentor weet welke producten jij gebruikt.</p>
+    <ul class="todo">
+      <li>Vraag de Mentor: welke 5 producten verkoop ik het meest?</li>
+      <li>Bestel je eigen pakket als je dat nog niet hebt</li>
+      <li>Vertel de Mentor welke producten jij persoonlijk gebruikt <small>Zo kan hij later inhoudelijk meedenken over jouw resultaat-posts</small></li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary><span class="num">6</span><span class="titel">🎯 De webshop-pivot — leer de uitnodigingstaal <span class="leert">jouw stem</span></span></summary>
+  <div class="body">
+    <p class="doel">Begrijpen waarom de webshop het frame is, en je eigen versie van de zin schrijven met de Mentor.</p>
+    <ul class="todo">
+      <li class="verplicht">Open de tien voorbeeldzinnen samen met de Mentor</li>
+      <li class="verplicht">Schrijf je eigen webshop-uitnodigingszin (3-4 regels) <small>De Mentor leert hiermee jouw stijl, jouw woordkeuze, wat bij je past</small></li>
+      <li class="verplicht">Bewaar de zin in <code style="background:var(--surf2);padding:1px 5px;border-radius:3px;">/mijn-zinnen</code></li>
+      <li>Markeer in je namenlijst 5 mensen waar je gevoel zegt: deze zou hierop reageren</li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary><span class="num">7</span><span class="titel">💡 Verdienmodel-basis (basis-inzicht)</span></summary>
+  <div class="body">
+    <p class="doel">Zelf snappen hoe je geld verdient — niet zodat je het kunt uitleggen, wel zodat je niet onzeker wordt.</p>
+    <ul class="todo">
+      <li class="verplicht">Bekijk de prospect-film over het verdienmodel (~10 min)</li>
+      <li class="verplicht">Doe de 3-vragen-quiz met de Mentor</li>
+    </ul>
+  </div>
+</details>
+
+<!-- ============================================================ -->
+<h2>Week 2 — In beweging (dag 8–14)</h2>
+
+<details>
+  <summary><span class="num">8</span><span class="titel">📅 Aanloop-stap (per scenario) <span class="leert">jouw verhaal</span></span></summary>
+  <div class="body">
+    <p class="doel">De eerste social-aanwezigheid neerzetten — afhankelijk van je scenario.</p>
+
+    <div class="scenario-blok">
+      <h5><span class="badge badge-a">Scenario A</span> Voorbereiding 21-dagen-resultaat-post</h5>
+      <ul class="todo">
+        <li class="verplicht">Kies de 1-2 belangrijkste veranderingen die je voelt</li>
+        <li class="verplicht">Schrijf met de Mentor je 21-dagen-resultaat-post</li>
+        <li class="verplicht">Plaats de post (Facebook + Instagram)</li>
+      </ul>
+    </div>
+
+    <div class="scenario-blok">
+      <h5><span class="badge badge-b">Scenario B</span> Pre-post plaatsen</h5>
+      <ul class="todo">
+        <li class="verplicht">Schrijf met de Mentor je pre-post (2-3 regels)</li>
+        <li class="verplicht">Plaats de pre-post</li>
+        <li class="verplicht">Begin met je eigen 21-dagen-programma — resultaat-post komt in Stap 17</li>
+      </ul>
+    </div>
+
+    <p style="font-size:13px; color:var(--muted);">
+      <strong>Wat de Mentor leert:</strong> hoe jij over jezelf schrijft op een publiek moment. Dit
+      profielblok is goud waard voor latere content-suggesties.
+    </p>
+  </div>
+</details>
+
+<details>
+  <summary><span class="num">9</span><span class="titel">📱 Brookes 3-stappen + engagement-principe</span></summary>
+  <div class="body">
+    <p class="doel">Eén post leren maken volgens Waarde + Verhaal + Zachte uitnodiging.</p>
+    <ul class="todo">
+      <li class="verplicht">Schrijf één post (Brookes-formule), Mentor geeft feedback</li>
+      <li class="verplicht">Plaats de post</li>
+      <li class="verplicht">Reageer binnen 1 uur op iedere reactie</li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary><span class="num">10</span><span class="titel">✨ Drie verhalen + eerste niche-zaadje <span class="leert">niche + passies</span></span></summary>
+  <div class="body">
+    <p class="doel">Drie korte verhalen op papier — én een eerste idee van wie je vroeger was, wat veranderde, en welke onderwerpen je raken.</p>
+    <ul class="todo">
+      <li class="verplicht">Schrijf je persoonlijke verhaal</li>
+      <li class="verplicht">Schrijf je product-verhaal (vanuit webshop-frame)</li>
+      <li class="verplicht">Schrijf je business-verhaal</li>
+      <li class="verplicht">Praat 5 minuten met de Mentor over de vraag: "wie was ik vroeger, wat veranderde, en welke onderwerpen raken mij persoonlijk?" <small>De Mentor noteert dit als niche-zaadje + passies</small></li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary><span class="num">11</span><span class="titel">💬 Eerste warme-markt uitnodigingen <span class="pulse">Tijdlijn 1</span> <span class="leert">wie reageert</span></span></summary>
+  <div class="body">
+    <p class="doel">Drie mensen uit je warme markt benaderen met je eigen webshop-zin.</p>
+    <ul class="todo">
+      <li class="verplicht">Bericht 1, 2, 3 — gebruik je zin uit Stap 6</li>
+      <li>Reageer op alle reacties binnen 1 uur</li>
+    </ul>
+    <p style="font-size:13px; color:var(--muted);">
+      <strong>Tijdlijn-moment 1 (bij bestelling):</strong> <em>"Je krijgt straks mooie resultaten. Je kunt dan drie dingen: ze aan mij geven, leren hoe je via je eigen gratis webshop je producten gratis krijgt, of leren hoe je hiermee een online inkomen opbouwt. Wil je daar vrijblijvend meer over weten?"</em>
+    </p>
+    <p style="font-size:13px; color:var(--muted);">
+      <strong>Wat de Mentor leert:</strong> welke type mensen op jou reageren — eerste hint voor "ideale klant".
+    </p>
+  </div>
+</details>
+
+<details>
+  <summary><span class="num">12</span><span class="titel">📸 Stories-ritme starten (lichte versie)</span></summary>
+  <div class="body">
+    <p class="doel">Een dagelijks ritme oppakken met Stories. Géén volledige Reels-strategie — dat komt in de Uitbreiding-module.</p>
+    <ul class="todo">
+      <li>Plaats vandaag minimaal één Story</li>
+      <li>Plan een vast moment voor je dagelijkse Story</li>
+      <li>Reageer op DM's en stickers binnen 1 uur</li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary><span class="num">13</span><span class="titel">📦 Eerste Shoppers — supplementen-binnen <span class="pulse">Tijdlijn 2</span></span></summary>
+  <div class="body">
+    <p class="doel">Tweede pulsmoment toepassen op je eerste Shoppers.</p>
+    <ul class="todo">
+      <li class="verplicht">Stuur elke Shopper een bericht: "spullen binnen?" + open vraag</li>
+      <li class="verplicht">Nodig ze uit voor de eerstvolgende product-info-avond / webinar</li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary><span class="num">14</span><span class="titel">🛡️ Bezwaren-skills — 4-stappen + bibliotheek</span></summary>
+  <div class="body">
+    <p class="doel">De 4-stappen-methode leren én oefenen met de bezwaren-bibliotheek.</p>
+    <ul class="todo">
+      <li class="verplicht">Doe 10 minuten roleplay met de Mentor — kies 3 bezwaren uit de top-21</li>
+      <li>Bekijk de bezwaren-bibliotheek in <code style="background:var(--surf2);padding:1px 5px;border-radius:3px;">/scripts/bezwaren</code></li>
+      <li>Oefen Feel-Felt-Found op 1 bezwaar, een alternatieve benadering op een ander</li>
+    </ul>
+  </div>
+</details>
+
+<!-- ============================================================ -->
+<h2>Week 3 — Business-ritme (dag 15–21)</h2>
+
+<details>
+  <summary><span class="num">15</span><span class="titel">🔁 Hercontact + herhaalbestellingen</span></summary>
+  <div class="body">
+    <p class="doel">Bestaande klanten op een prettige manier benaderen voor hercontact.</p>
+    <ul class="todo">
+      <li class="verplicht">Stuur 3 bestaande klanten een persoonlijk hercontact-bericht</li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary><span class="num">16</span><span class="titel">👋 Klantcontact + opvolg-routine</span></summary>
+  <div class="body">
+    <p class="doel">Een routine bouwen voor follow-up.</p>
+    <ul class="todo">
+      <li class="verplicht">Plan voor 3 prospects een opvolg-herinnering in</li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary><span class="num">17</span><span class="titel">🌟 Resultaat-post + dag-10-18-pulse <span class="pulse">Tijdlijn 3</span></span></summary>
+  <div class="body">
+    <p class="doel">Tijdlijn-moment 3: bij enthousiasme over het programma, peilen of mensen zelf openstaan.</p>
+
+    <div class="scenario-blok">
+      <h5><span class="badge badge-a">Scenario A</span> Nieuwe iteratie van je resultaat-post</h5>
+      <p>Tweede versie — andere invalshoek of aanvullend resultaat. Houd je verhaal vers.</p>
+    </div>
+
+    <div class="scenario-blok">
+      <h5><span class="badge badge-b">Scenario B</span> Je eerste 21-dagen-resultaat-post</h5>
+      <ul class="todo">
+        <li class="verplicht">Schrijf je 21-dagen-resultaat-post met de Mentor</li>
+        <li class="verplicht">Plaats de post</li>
+      </ul>
+    </div>
+
+    <code class="script">"Heb je al leuke reacties in je omgeving?
+Gun je anderen ook zo'n mooi resultaat?
+Want weet je nog wat ik in het begin zei? Dat je hiermee ook minimaal je producten kan terugverdienen of een online inkomen kan opbouwen door je gratis webshop?
+Sta je open om te kijken hoe dat voor jou kan werken?"</code>
+    <ul class="todo">
+      <li class="verplicht">Pas Tijdlijn-moment 3 toe op minimaal 1 enthousiaste Shopper</li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary><span class="num">18</span><span class="titel">👀 Builder-energie + ideale klant <span class="leert">ideale klant</span></span></summary>
+  <div class="body">
+    <p class="doel">Onder je klanten herkennen wie zélf een gratis webshop zou willen — en bewust beginnen te benoemen voor wie jij het meest kan betekenen.</p>
+    <ul class="todo">
+      <li class="verplicht">Markeer in je namenlijst 2-3 klanten met builder-energie</li>
+      <li class="verplicht">Praat 5 minuten met de Mentor: "voor wie kan ik het meest betekenen?" <small>Dit wordt het profielblok 'ideale klant' — basis voor latere content-suggesties</small></li>
+      <li>Bereid voor 1 klant een webshop-versie van de uitnodiging voor</li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary><span class="num">19</span><span class="titel">🎯 Closingsvraag</span></summary>
+  <div class="body">
+    <p class="doel">"Wat heb je nog nodig om te beslissen?"</p>
+    <ul class="todo">
+      <li class="verplicht">Stel deze vraag aan minstens één warme prospect</li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary><span class="num">20</span><span class="titel">📊 5 typen prospects + funnel continu vullen <span class="leert">ideale klant verfijnen</span></span></summary>
+  <div class="body">
+    <p class="doel">Je top-20 categoriseren én afspreken dat de lijst nooit "klaar" is.</p>
+    <ul class="todo">
+      <li class="verplicht">Categoriseer je top-20 in 5 typen <small>De Mentor gebruikt dit om jouw "ideale klant"-profiel verder aan te scherpen</small></li>
+      <li class="verplicht">Spreek met jezelf af: minimaal 5 nieuwe namen per week erbij</li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary><span class="num">21</span><span class="titel">🏆 Reflectie + talent-keuze + eerste 30-dagen-doel <span class="leert">talent + doel</span></span></summary>
+  <div class="body">
+    <p class="doel">Reflecteren op de 21 dagen, je creator-talent benoemen, en je eerste concrete 30-dagen-doel inschieten zodat de Mentor straks een roadmap kan bouwen.</p>
+    <ul class="todo">
+      <li class="verplicht">Vul de eindreflectie in (10 min)</li>
+      <li class="verplicht">Beantwoord de talent-vraag met de Mentor: "ben je het sterkst als schrijver, spreker, filmer, of in 1-op-1-gesprekken?"</li>
+      <li class="verplicht">Stel je eerste 30-dagen-doel in <small>Bijv. "ik wil 500 euro extra verdienen", of "ik wil 3 nieuwe Shoppers", of "ik wil 1 nieuwe Webshophouder onder me" — concreet en meetbaar</small></li>
+      <li class="verplicht">Plan een call met je sponsor om je voortgang te bespreken</li>
+      <li>Bekijk de schets van de Uitbreiding-module — start zodra je voelt dat je warme netwerk uitgemolken raakt</li>
+    </ul>
+    <p style="font-size:13px; color:var(--muted);">
+      <strong>Wat de Mentor nu over jou weet:</strong> WHY · situatie · netwerk + FORM · jouw producten ·
+      jouw stem · jouw publieke verhaal · niche-zaadje + passies · type mensen die op jou reageren ·
+      ideale klant · creator-talent · eerste 30-dagen-doel. Genoeg om in de Uitbreiding-module
+      gepersonaliseerde content + roadmap te maken.
+    </p>
+  </div>
+</details>
+
+<!-- ============================================================ -->
+<h2>Wat ná Core komt — Uitbreiding-module met persoonlijke roadmap</h2>
+
+<div class="mentor-block">
+  <h4>De 30-dagen-roadmap — kerncomponent van de Uitbreiding</h4>
+  <p>Je stelt je doel in (bijv. <em>"500 euro per maand verdienen"</em> of <em>"3 nieuwe Webshophouders in mijn team"</em>).
+    De Mentor combineert dit met alles wat hij tijdens Core over jou heeft geleerd, en bouwt een
+    <strong>persoonlijke 30-dagen-roadmap</strong>:</p>
+  <ul style="margin: 6px 0 12px; padding-left: 20px;">
+    <li>Welke 12 hooks passen bij jouw niche</li>
+    <li>Welk content-ritme past bij jouw talent (schrijver / spreker / filmer / DM-er)</li>
+    <li>Welke 2-3 freebies in jouw niche slim zijn om in te zetten</li>
+    <li>Hoeveel nieuwe gesprekken je per week nodig hebt om je doel realistisch te halen</li>
+    <li>Wekelijkse check-in waarin de Mentor zijn voorstel bijschaaft op basis van wat werkte</li>
+  </ul>
+  <p style="font-size:14px; color:var(--muted);">
+    Geen algemeen Reels-trucje — wel een plan dat alleen voor jou klopt, omdat de Mentor jouw
+    profiel kent. ELEVA Next Level: <strong>AI doet 80% van het maakwerk en de planning, jij doet 100%
+    van de mensen.</strong>
+  </p>
+</div>
+
+<div class="pillar">
+  <h4>Fase 2 — Social media motor (jouw kanaal, jouw stem)</h4>
+  <p>De Mentor stelt op basis van jouw talent + niche dagelijks 3 hooks voor. AI helpt bij thumbnails, ondertitels, planning, conceptkapingen — jouw gezicht / stem ervoor. Engagement (de reacties) blijft 100% menselijk, binnen 1 uur.</p>
+</div>
+<div class="pillar">
+  <h4>Fase 3 — Niche aanscherpen + freebies</h4>
+  <p>Wat in Stap 10 een zaadje was, wordt hier scherp gesteld. Hoe scherper de niche, hoe duidelijker welke freebies / "ja-links" werken. De Mentor stelt freebies voor die passen bij jouw niche.</p>
+</div>
+<div class="pillar">
+  <h4>Tijdlijn-momenten 4 en 5</h4>
+  <p>Pulsmoment 4: einde fase 3 / 3 weken productgebruik — referral-vraag + social-media-stappenplan. Pulsmoment 5: einde 2 maanden — overleg blijvende producten + on-de-hoogte-houden-routine.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>Open design-vragen (voor later)</h2>
+
+<div class="open-vraag">
+  <strong>Hoe slaan we het Mentor-profiel op?</strong>
+  Per Core-volger één rijke profielrecord (Supabase): WHY, situatie, FORM-context per top-5,
+  producten, stem-voorbeelden, drie verhalen, niche-zaadje, ideale klant, talent, doel.
+  Wie ziet wat? Sponsor ziet beperkt (privacy-keuze van gebruiker). Mentor heeft volledige toegang.
+  Migratie: profiel groeit per stap, niet allemaal in één keer.
+</div>
+
+<div class="open-vraag">
+  <strong>Welke doel-types kunnen worden ingesteld?</strong>
+  <em>"500 euro per maand"</em> is concreet — maar is het wel de juiste meeteenheid voor iedereen?
+  Andere opties: aantal nieuwe Shoppers, aantal Webshophouders onder je, freebie-leads, opvolggesprekken.
+  Misschien een mix: "1 hoofddoel + 1 ondersteunend doel". Hoe complex maken we dit aan de start?
+</div>
+
+<div class="open-vraag">
+  <strong>AI-laag in de Uitbreiding — waar en hoe</strong>
+  Welke AI-tools integreren we expliciet? Eigen content-planner in ELEVA, of verwijzen naar bestaande
+  tools (Buffer, Later, etc.)? Eigen hook-generator in de Mentor (gebruikt jouw profiel), of
+  generieke prompt-bibliotheek? Wat blijft 100% menselijk: engagement (reacties), DM's, calls.
+</div>
+
+<div class="open-vraag">
+  <strong>Pre-post + 21-dagen-post ombouwen voor ELEVA</strong>
+  Vervangen door een vragenlijst / mini-flow / Mini-ELEVA-omgeving zodat prospects op een eigen
+  manier door het verhaal lopen, in plaats van three-way calls + Messenger-overdracht.
+</div>
+
+<div class="open-vraag">
+  <strong>De exacte zinnen verfijnen (Yip-en-Yannicka-toon)</strong>
+  Tien voorbeeldzinnen staan; een korte schrijfsessie samen om ze écht in jullie stem te zetten.
+</div>
+
+<!-- ============================================================ -->
+<div class="footer">
+  <strong>Status V5:</strong> klaar voor review door Raoul + Gaby. V4-skelet behouden, Mentor-laag
+  toegevoegd: een groeiend persoonlijk profiel dat tijdens Core wordt opgebouwd, en in de Uitbreiding-module
+  een 30-dagen-doel-roadmap voor je maakt. Eén hoofdverhaal blijft de webshop, dupliceerbaarheid blijft,
+  maar nu óók persoonlijk dankzij de Mentor.
+  <br><br>
+  Zodra V5 is goedgekeurd: (1) korte sessie om de tien voorbeeldzinnen te verfijnen,
+  (2) datamodel voor het Mentor-profiel ontwerpen (Supabase),
+  (3) Mentor-prompt vullen met Worre's bezwaren-bibliotheek + 4-nuances + Tijdlijn-pulsmomenten + profiel-velden,
+  (4) <code>lib/leerpaden/core-stappen.ts</code> herschrijven naar deze 21 stappen,
+  (5) Uitbreiding-module + doel-roadmap als Fase 2 ELEVA-bouw inplannen.
+</div>
+
+</main>
+</body>
+</html>

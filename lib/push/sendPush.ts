@@ -50,26 +50,41 @@ export async function sendPushToUser(userId: string, payload: PushPayload) {
 
     return { success: true };
   } catch (error: any) {
-    // Deactiveer subscriptions die door browser/push-service zijn afgewezen.
-    // Naast 410/404 (Gone/NotFound) ook 401/403 (verlopen VAPID, mismatch
-    // keys) en de 'Received unexpected response code'-tekst van web-push.
-    // Bij deactivering pikt de UI 'm op via /api/push/status en biedt 'r
-    // een 'Synchroniseer push opnieuw'-knop aan zodat 't zichzelf herstelt.
-    const statusCode = error.statusCode;
+    // Deactiveer alleen subscriptions die door de push-service als ECHT DOOD
+    // zijn gemarkeerd. 410 = Gone (browser unsubscribed of permission
+    // ingetrokken), 404 = Not Found (endpoint bestaat niet meer). Daar wil je
+    // 'm uit zetten, want elke nieuwe poging is verspilling.
+    //
+    // 401/403 NIET deactiveren: dat zijn server-config fouten (VAPID
+    // public/private mismatch, verkeerde subject, etc). Subscriptions zijn
+    // dan prima, maar onze server tekent verkeerd. Auto-deactivatie zou alle
+    // gezonde subs killen na één foute deploy.
+    //
+    // 'Received unexpected response code' (zonder statusCode) is een generic
+    // web-push error — meestal óók een config-issue (network, malformed
+    // payload), dus laten we 'm staan.
+    const statusCode = error.statusCode as number | undefined;
+    const body =
+      typeof error.body === "string"
+        ? error.body
+        : error.body
+          ? JSON.stringify(error.body)
+          : null;
     const msg = String(error.message ?? "");
-    const moetDeactiveren =
-      statusCode === 410 ||
-      statusCode === 404 ||
-      statusCode === 401 ||
-      statusCode === 403 ||
-      msg.includes("Received unexpected response code");
+    const moetDeactiveren = statusCode === 410 || statusCode === 404;
     if (moetDeactiveren) {
       await supabase
         .from("push_subscriptions")
         .update({ is_active: false })
         .eq("user_id", userId);
     }
-    return { success: false, reason: msg || `HTTP ${statusCode}` };
+    return {
+      success: false,
+      reason: msg || `HTTP ${statusCode ?? "onbekend"}`,
+      statusCode: statusCode ?? null,
+      body,
+      deactivated: moetDeactiveren,
+    };
   }
 }
 

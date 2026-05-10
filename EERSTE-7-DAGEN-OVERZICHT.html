@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELEVA — Week 1 Overzicht (Dag 1-7)</title>
+<style>
+  :root {
+    --gold: #B89A52;
+    --gold-light: #D4AF37;
+    --ink: #1F1B14;
+    --ink-soft: #4A4438;
+    --paper: #FAF7F1;
+    --paper-soft: #F0EBDF;
+    --border: #D8CFB8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    margin: 0;
+    padding: 2.5rem 1rem 4rem;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 820px; margin: 0 auto; }
+  header.top {
+    border-bottom: 3px solid var(--gold);
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+  }
+  .brand {
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 600;
+    font-size: 2.25rem;
+    margin: 0.4rem 0 0.5rem;
+    color: var(--ink);
+  }
+  .lead {
+    color: var(--ink-soft);
+    font-size: 1.05rem;
+    max-width: 60ch;
+  }
+  .toc {
+    background: var(--paper-soft);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin: 2rem 0 3rem;
+  }
+  .toc h2 {
+    font-size: 0.8rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin: 0 0 0.75rem;
+    font-weight: 700;
+  }
+  .toc ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem 1.5rem;
+  }
+  .toc a {
+    color: var(--ink);
+    text-decoration: none;
+    display: block;
+    padding: 0.3rem 0;
+  }
+  .toc a:hover { color: var(--gold); }
+  .toc .nr {
+    color: var(--gold);
+    font-weight: 700;
+    margin-right: 0.4rem;
+  }
+
+  .dag {
+    page-break-before: always;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .dag:first-of-type { page-break-before: auto; margin-top: 0; }
+  .dag-nr {
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .dag h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 600;
+    font-size: 1.7rem;
+    margin: 0.25rem 0 1.5rem;
+    line-height: 1.25;
+  }
+
+  h3 {
+    color: var(--gold);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin: 2rem 0 0.6rem;
+    font-weight: 700;
+  }
+
+  .taken {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+  }
+  .taken > li {
+    padding: 0.85rem 1rem;
+    background: var(--paper-soft);
+    border-left: 3px solid var(--gold);
+    margin-bottom: 0.6rem;
+    border-radius: 0 6px 6px 0;
+  }
+  .taken-label {
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.35rem;
+  }
+  .taken-label .verpl {
+    background: var(--gold);
+    color: var(--paper);
+    font-size: 0.65rem;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-left: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .taken-label .opt {
+    background: transparent;
+    color: var(--ink-soft);
+    border: 1px solid var(--border);
+    font-size: 0.65rem;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-left: 0.5rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .taken-uitleg {
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    white-space: pre-wrap;
+  }
+
+  .les {
+    color: var(--ink);
+    font-size: 0.95rem;
+    white-space: pre-wrap;
+    background: #FFFCF5;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .waarom {
+    border-left: 3px solid var(--gold);
+    padding: 0.5rem 1.25rem;
+    color: var(--ink);
+    font-style: italic;
+    margin-top: 1rem;
+  }
+  .waarom .bron {
+    display: block;
+    font-style: normal;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    margin-top: 0.5rem;
+  }
+
+  .fase-doel {
+    background: var(--paper-soft);
+    border-radius: 4px;
+    padding: 0.5rem 0.85rem;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    margin: 0 0 1.5rem;
+  }
+  .fase-doel strong { color: var(--gold); }
+
+  footer.bottom {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+    text-align: center;
+  }
+
+  .print-btn {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    background: var(--gold);
+    color: white;
+    padding: 0.6rem 1.1rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .print-btn:hover { background: var(--ink); }
+
+  @media print {
+    body { padding: 0; background: white; }
+    .print-btn { display: none; }
+    .toc { background: none; border: 1px solid #ccc; }
+    .dag { padding-top: 1rem; }
+    h1 { font-size: 1.8rem; }
+    .dag h2 { font-size: 1.3rem; }
+    a { color: var(--ink) !important; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+<button class="print-btn" onclick="window.print()">🖨️ Print of Save als PDF</button>
+
+<div class="wrap">
+
+<header class="top">
+  <div class="brand">ELEVA · Project Meer Tijd en Vrijheid</div>
+  <h1>Week 1 — Fundament</h1>
+  <p class="lead">
+    Dit zijn de eerste 7 dagen van het 21-daagse Core-playbook in ELEVA.
+    Per dag: wat je doet, wat je leert, en waarom het werkt. Bedoeld voor
+    teamleden die de eerste week willen voorkijken of meelezen, en voor
+    review door Gaby. Geprint of als PDF te delen via de knop rechtsboven.
+  </p>
+</header>
+
+<nav class="toc">
+  <h2>Inhoud</h2>
+  <ol>
+    <li><a href="#dag1"><span class="nr">DAG 1</span> Welkom, fundament leggen</a></li>
+    <li><a href="#dag2"><span class="nr">DAG 2</span> Open je hoofd, NIVEA</a></li>
+    <li><a href="#dag3"><span class="nr">DAG 3</span> Socials zijn een goudmijn</a></li>
+    <li><a href="#dag4"><span class="nr">DAG 4</span> Uitnodigen, 4 stappen</a></li>
+    <li><a href="#dag5"><span class="nr">DAG 5</span> Bezwaren, Feel-Felt-Found</a></li>
+    <li><a href="#dag6"><span class="nr">DAG 6</span> Follow-up, 24-48u-regel</a></li>
+    <li><a href="#dag7"><span class="nr">DAG 7</span> Wekelijkse review</a></li>
+  </ol>
+</nav>
+
+<!-- ============= DAG 1 ============= -->
+<section class="dag" id="dag1">
+  <div class="dag-nr">Dag 1</div>
+  <h2>🚀 Welkom! Vandaag leg je je fundament</h2>
+  <p class="fase-doel"><strong>Fase-doel week 1:</strong> deze week 2 one-pager-momenten gepland of bekeken krijgen.</p>
+
+  <h3>Vandaag doen</h3>
+  <ul class="taken">
+    <li>
+      <div class="taken-label">Voeg de eerste mensen toe aan je namenlijst <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">Waarom al op dag 1? Omdat dit jouw netwerk-overzicht wordt. Hoe meer namen je hier hebt staan, hoe rustiger je de komende weken kunt werken. Je hoeft niet elke dag opnieuw te bedenken aan wie je gaat denken. Dit is geen belkostlijst, geen verkooplijst. Het zijn gewoon mensen die jij kent, mensen die in jouw wereld bestaan. Familie, oude collega's, sportmaatjes, buren. Iedereen mag erop. Filteren komt later, en doe je nooit voor iemand anders. Niet alles hoeft vandaag, kies wat je vandaag aankunt en pak het morgen weer op.</div>
+    </li>
+    <li>
+      <div class="taken-label">Stuur je sponsor een kort bericht: 'Ik ben gestart' <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">Geen lang verhaal nodig, gewoon even laten weten dat je vertrokken bent. Vanaf nu kijkt je sponsor in ELEVA vriendelijk mee of je dagelijks je stappen zet. Niet om te beoordelen. Gewoon om je rugdekking te geven.</div>
+    </li>
+  </ul>
+
+  <h3>Wat je vandaag leert</h3>
+  <div class="les">Te gek dat je hier bent! 🎉 Je onboarding zit erop, dus je WHY staat al, en de eerste 5 namen ook. Mooi werk. Vandaag bouwen we daar één laag bovenop. Geen drukke dag, een rustige fundamentdag. Twee taken, daarna ben je klaar voor morgen.
+
+JE NAMENLIJST, JE NETWERK-OVERZICHT:
+Het belangrijkste wat je vandaag doet is je telefooncontacten importeren. Eén keer drukken, en je hebt direct 100 tot 500 namen in je overzicht staan. Dubbele namen worden niet apart geteld, dus je hoeft niets te schonen vooraf. Dit is geen verkooplijst, dit is je netwerk in beeld. Een rustig vertrekpunt.
+
+EERLIJK OVER VOLUME, dit is een aantallen-verhaal:
+Met 20 namen ga je het niet redden. Niet omdat je faalt, maar omdat een gemiddelde prospect 4 tot 6 contactmomenten nodig heeft voor een echte beslissing. Met te weinig namen draai je vast. Daarom voegen we elke dag namen toe, uit je hoofd, uit je telefoon, uit socials.
+
+CATEGORIEËN OM TE OVERWEGEN VOOR JE LIJST:
+• Familie + partners van familie
+• Beste vrienden + hun partners
+• Oude vrienden (school, studie, vorige stad)
+• Huidige collega's
+• Vorige collega's
+• Sport, hobby, club
+• Ouders bij school of voetbal
+• Buurt
+• Ondernemers in je netwerk
+• Mensen die je via socials volgt
+• Vroegere klanten of opdrachtgevers
+Niemand filteren. Alles op de lijst.
+
+JIJ LAAT ZIEN, ZIJ BESLISSEN, de grootste mental shift:
+Jouw taak is NIÉT overtuigen, NIÉT mensen "binnenpraten", NIÉT iemand laten kiezen voor wat jij wilt. Jouw taak = laten ZIEN wat het is. Zij beslissen wat ze ermee doen. Dat maakt je werk lichter dan veel mensen denken, en respectvoller. Niemand voelt zich gemanipuleerd, jij voelt je geen verkoper, en de mensen die wel kiezen doen dat omdat het écht bij ze past.
+
+Waarom je sponsor inlichten belangrijk is:
+Je sponsor is geen baas, die is je rugdekking. Een kort "ik ben gestart"-berichtje is genoeg. Vanaf nu kijkt 'ie in ELEVA mee, ziet je voortgang, en springt bij waar nodig. Eén berichtje vandaag betekent vele momenten van steun in de komende weken.
+
+VEELGEMAAKTE FOUTEN OP DAG 1:
+✗ Namenlijst meteen filteren ("die zou nooit..."), NIVEA komt morgen, voor nu alles erop.
+✗ Direct mensen DM-en omdat je "wilt scoren", vandaag is fundament, niet acquisitie.
+✗ Sponsor niet inlichten, je rugdekking begint nu.
+
+Overweldigd voelen is normaal. Je leert iets nieuws, je stapt uit comfort. Eerst onhandig, dan vaardig. Sponsor staat naast je, ELEVA Mentor ook. Niet alleen.</div>
+
+  <h3>Waarom dit werkt</h3>
+  <p class="waarom">"De mensen die op dag 47 nog doorgaan, zijn vaak dezelfden die in week 1 hun netwerk-overzicht rustig hebben gevuld. Zonder mensen op je lijst geen werk, zonder fundament geen gebouw."</p>
+</section>
+
+<!-- ============= DAG 2 ============= -->
+<section class="dag" id="dag2">
+  <div class="dag-nr">Dag 2</div>
+  <h2>👋 Open je hoofd: alle namen op de lijst</h2>
+  <p class="fase-doel"><strong>Fase-doel week 1:</strong> deze week 2 one-pager-momenten gepland of bekeken krijgen.</p>
+
+  <h3>Vandaag doen</h3>
+  <ul class="taken">
+    <li>
+      <div class="taken-label">Voeg 20 namen toe (uit je telefoon of zelf typen) <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">TWEE manieren, kies welke past:
+
+1. Vanuit je telefoon: heb je gisteren je telefoon-contacten geüpload? Open Namenlijst → '📚 Mijn ELEVA-geheugen' en activeer er 20 in één klik uit de namen die je telefoon al kent. Snelst, want je hoeft niets te bedenken, je kiest wie je herkent.
+
+2. Zelf typen: vul direct namen in (familie, oud-collega's, sport, hobby, ouders bij school, buren). Geen filter, alles erop.
+
+Beide tellen, je mag mixen. Tip: begin met je telefoonlijst, dan komen er namen voorbij waar je niet aan had gedacht. Daarna eventueel zelf aanvullen.</div>
+    </li>
+    <li>
+      <div class="taken-label">Plan een korte call met je sponsor <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">Stuur je sponsor een appje: 'Hé [naam], ik ben begonnen, kunnen we deze week ergens 30 minuten bellen om door m'n eerste stappen te gaan?'. In die call: jouw WHY laten lezen, samen door je eerste 3 uitnodigingen, en samen afspreken wat jullie ritme wordt voor week 1.</div>
+    </li>
+    <li>
+      <div class="taken-label">Stuur je eerste 3 uitnodigingen (samen met sponsor of via Mentor) <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">Kies 3 warmere mensen uit je lijst. Stel ze samen met je sponsor op (in jullie call), of vraag de Mentor: 'Schrijf een uitnodiging voor [naam] die [context]'. Drempel laag houden, gewoon doen, niet perfect. Eerste uitnodigingen voelen altijd onhandig, dat hoort.</div>
+    </li>
+    <li>
+      <div class="taken-label">Begrijp het 3-weg-gesprek-principe <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">Een 3-weg-gesprek is een gesprekje met drie mensen: jij, je prospect, en je sponsor (of een ervaren teamlid). Het werkt om drie redenen tegelijk:
+
+• SPONSOR brengt autoriteit (heeft track-record, ervaring, weet de antwoorden op vragen die jij nog niet hebt).
+• JIJ brengt vertrouwen (de prospect kent jou, niet de sponsor).
+• PROSPECT ziet twee mensen die al samenwerken, dat geeft sociaal bewijs: 'blijkbaar werkt dit echt'.
+
+Geen van de drie kan dit alléén. Het is de combinatie. Vandaar 3-weg.
+
+Voorbeeld waarop het werkt: warme prospect heeft een vraag waar jij geen antwoord op hebt. Niet zelf gokken, je opent een groepje met sponsor erbij, sponsor pakt het op. Jij leert mee, prospect krijgt een goed antwoord, vertrouwen blijft.
+
+Je hoeft 'm vandaag nog niet te starten, alleen even snappen dát het bestaat en wanneer 'ie nuttig is.</div>
+    </li>
+    <li>
+      <div class="taken-label">🛒 Lifeplus webshop aanmaken <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">Eenmalige opzet. Bekijk de korte film en je shop staat. Dit moet eerst gebeuren voordat je je kredietformulier kunt invullen.</div>
+    </li>
+    <li>
+      <div class="taken-label">✅ Kredietformulier invullen (verplicht voor uitbetaling) <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">Korte stap van ~5 minuten, NA het aanmaken van je webshop. Zonder dit formulier kan je eerste maand-uitbetaling niet verwerkt worden, doe het direct.</div>
+    </li>
+  </ul>
+
+  <h3>Wat je vandaag leert</h3>
+  <div class="les">NIVEA is dé regel die de meeste starters vergeten en daardoor 80% van hun beste prospects op voorhand wegfilteren. NIVEA staat voor: Niet Invullen Voor Een Ander.
+
+Wat het concreet betekent: jij weet niet wat er in iemand omgaat. Wat zijn financiële situatie is. Wat zijn relatie doet. Of zijn werk hem nog vult. Of zijn gezondheid 'm uitput. Of die gladde collega thuis stiekem worstelt. Je hebt een momentopname in je hoofd, vaak van jaren geleden, en daarop maak je een oordeel "die zit hier niet op te wachten". Dat is zelden waar.
+
+Bovendien: zelfs als die specifieke persoon écht niet voor zichzelf gaat, kent hij of zij wél iemand die wél past. Iedereen heeft een netwerk van 100+ mensen. Een schoonzus die net moeder is geworden, een oud-collega die ontslag heeft gekregen, een buurman die met pensioen twijfelt. Jij weet dat niet. Je kunt het niet weten. Daarom: alle namen op de lijst. Filteren doe je later, als je échte signalen hebt, niet vooraf in je eigen hoofd.
+
+Drie typische "ik filter al"-fouten en wat de waarheid bleek:
+• "Die zwager heeft een goede baan", bleek 6 maanden later open te staan toen er herstructurering kwam.
+• "Die moeder bij voetbal is zo druk", werd de eerste die ja zei, want ze zocht juist iets dat naast haar gezin paste.
+• "Die oud-collega zie ik nooit meer", bleek een netwerk van 200+ ondernemers te hebben en had de perfecte intro.
+Patroon: jouw oordeel zegt meer over jouw beeld dan over hun werkelijkheid.
+
+Hoe je vandaag NIVEA in praktijk brengt:
+1. Pak een rustig moment, geen telefoon, geen afleiding.
+2. Loop categorieën door: familie, partners van familie, oude vrienden, huidige vrienden, collega's nu, collega's vroeger, sport/hobby, ouders bij school/club, buurt, ondernemers in je netwerk.
+3. Per categorie: schrijf élke naam op die in je hoofd opkomt. Geen filter. Voelt het ongemakkelijk? Dat is precies de plek om door te zetten.
+4. Spraak-FAB werkt het snelst: "Nieuwe prospect [naam] uit [context]" en je hebt in een korte sessie 20 namen.
+5. Stop niet bij 20. Ga door totdat het écht op is, vaak zit je dan op 50 tot 100.
+
+Veelgemaakte fouten, herkenbaar?
+✗ "Hij heeft toch geen geld" → vooroordeel, geen feit.
+✗ "Die heeft het te druk" → laat hem zelf bepalen of hij tijd heeft.
+✗ "Die zou nooit naar mij luisteren" → projectie van eigen onzekerheid.
+✗ Wachten met uitnodigen tot je lijst "perfect" is → de lijst is nooit perfect.
+✗ Eerst zelf alle bezwaren beantwoorden in je hoofd → dat is hun werk, niet jouw werk.
+
+Vandaag stuur je ook al 3 uitnodigingen, samen met je sponsor in een groepje (3-weg-principe). Sponsor brengt autoriteit, jij koppelt, prospect ziet twee mensen die samenwerken. Dat is de hefboom waarmee je niet alles zelf hoeft te weten of te kunnen. Eerste uitnodigingen voelen onhandig, dat klopt en gaat over. Niet daardoor stoppen, juist daardoor met steun starten.</div>
+
+  <h3>Waarom dit werkt</h3>
+  <p class="waarom">"De geheugensteunlijst is je voorraadkast. Hoe voller, hoe makkelijker de keuze wat je vanavond kookt. En de eerste invites zijn altijd het zwaarst, gewoon door."<span class="bron">— Eric Worre, Go Pro</span></p>
+</section>
+
+<!-- ============= DAG 3 ============= -->
+<section class="dag" id="dag3">
+  <div class="dag-nr">Dag 3</div>
+  <h2>📱 Je socials zijn een goudmijn, 3 namen + 5 invites</h2>
+  <p class="fase-doel"><strong>Fase-doel week 1:</strong> deze week 2 one-pager-momenten gepland of bekeken krijgen.</p>
+
+  <h3>Vandaag doen</h3>
+  <ul class="taken">
+    <li>
+      <div class="taken-label">Open Instagram of LinkedIn, zet 3 namen in je lijst <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">Scroll 5 minuten. Wie reageert op je posts? Wie stuurt DMs? Wie post dingen over energie, doelen, gezondheid, ondernemen? 3 namen met 1 woord context ('fitness', 'oud-collega').</div>
+    </li>
+    <li>
+      <div class="taken-label">5 uitnodigingen versturen <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">Bouw door op gisteren. Vandaag mag je het zelfstandig doen. Loop je vast? Vraag de Mentor: 'Schrijf een uitnodiging voor [naam] die [context]'.</div>
+    </li>
+    <li>
+      <div class="taken-label">5 nieuwe namen toevoegen vandaag <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">5 nieuwe namen erbij in je lijst. Snelste route: telefoon-import (vCard) als je daar nog onbenutte namen in hebt staan. Anders: zelf typen, of uit socials. Je pipeline blijft elke dag groeien, dat is de basis. Hoe meer namen erin, hoe rustiger je werkt.</div>
+    </li>
+    <li>
+      <div class="taken-label">Start 3 losse chats op socials (geen pitch, gewoon contact) <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">Open Instagram of Facebook (of LinkedIn). Pak 3 mensen die je een tijd niet hebt gesproken maar wel volgt of door wie je gevolgd wordt. Per persoon: reageer op hun laatste post of story, of stuur een DM met een gewone vraag ('hé, hoe is het bij jou?'). Niets verkopen, geen uitnodiging. Gewoon even contact, koude mensen warm maken zodat een uitnodiging later natuurlijk voelt.</div>
+    </li>
+    <li>
+      <div class="taken-label">Korte sponsor-checkin (1 bericht) <span class="opt">optioneel</span></div>
+      <div class="taken-uitleg">"Heb gister 3 invites gestuurd". 30 seconden. Sponsor weet dat je beweegt, jij voelt de lijn naar boven open. Niets uitgebreids, gewoon even een update.</div>
+    </li>
+    <li>
+      <div class="taken-label">📋 Teams-administratiesysteem aanmaken <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">Lifeplus Partner-aanmelding, eenmalige administratieve registratie. Bekijk de korte film in deze taak voor de exacte stappen.</div>
+    </li>
+  </ul>
+
+  <h3>Wat je vandaag leert</h3>
+  <div class="les">Instagram, Facebook en LinkedIn geven je geen downloadbare contactenlijst, dat is expres zo. Maar ze geven je iets veel waardevollers: ACTIEVE SIGNALEN. Mensen die jouw content bekijken, reageren, delen, in stories duiken. Dat is gedrag dat zegt: "ik volg je, je content raakt me, je bent op mijn radar." Dát zijn je warme contacten van de toekomst, vaak veel beter geschikt dan oude telefooncontacten waarmee je al jaren geen woord hebt gewisseld.
+
+3 namen per dag uit socials = 21 nieuwe warme prospects per week, bovenop je telefoonlijst. Dat is een serieuze aanvulling op je netwerk-overzicht zonder dat je rond hoeft te bellen.
+
+WAT JE VANDAAG DOET, concrete radar-check:
+1. Open Instagram en kijk: wie reageert al een paar weken op jouw verhalen of posts?
+2. Wie stuurt je af en toe een DM, ook al is het maar een hartje of een snelle vraag?
+3. Wie post zelf dingen over energie, doelen, ondernemen, gezondheid, onderwerpen die raken aan wat jij gaat doen?
+4. Wie keek je laatste story tot het einde of klikte op een sticker?
+5. LinkedIn: wie heeft recent ge-liked, ge-deeld, of jou direct getagd?
+
+ALLE DRIE de namen krijgen ÉÉN WOORD context op de lijst (bv. "fitness", "oud-collega", "Linkedin-coach"). Niet meer, geen biografie. Het label is genoeg om te onthouden waar je zat toen je 'm noteerde.
+
+VEELGEMAAKTE FOUTEN:
+✗ "Ik kén niemand op Instagram" → je hoeft ze niet te kennen, ze hoeven jou alleen al te volgen.
+✗ Wachten tot iemand "duidelijk een match" is → je weet de match niet, je weet alleen het signaal.
+✗ Direct DM-en als "verkooppraatje" → eerst koppelen, peilen, niet pitchen.
+✗ Tegen jezelf zeggen "ze hebben me lang niet meer geliket dus zal niet meer interesseren" → 3 weken stilte ≠ uit-radar, het is gewoon niet hun moment.
+
+NIET GELIJK PITCHEN, wat wel: reageer terug op hun content. Vraag iets. Bouw rapport. Pas DAARNA, in een tweede of derde gesprek, kom je met een uitnodiging (zie dag 4 voor de 4-stappen-formule).</div>
+
+  <h3>Waarom dit werkt</h3>
+  <p class="waarom">"Social media is geen podium, het is een radar. Je kijkt niet wie er klapt. Je kijkt wie er zwaait."<span class="bron">— Fraser Brookes, 3 minutes on social</span></p>
+</section>
+
+<!-- ============= DAG 4 ============= -->
+<section class="dag" id="dag4">
+  <div class="dag-nr">Dag 4</div>
+  <h2>💬 Vandaag leer je uitnodigen, 4 stappen die werken</h2>
+  <p class="fase-doel"><strong>Fase-doel week 1:</strong> deze week 2 one-pager-momenten gepland of bekeken krijgen.</p>
+
+  <h3>Vandaag doen</h3>
+  <ul class="taken">
+    <li>
+      <div class="taken-label">5 uitnodigingen versturen, structuur toepassen <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">Compliment + uitnodigen voor kijkmoment + tijd voorstellen. De 'ik heb haast'-opener is OPTIONEEL, alleen bij business-prospects of zakelijke context. Bij vrienden of familie laat je 'm weg en begin je gewoon warm. Doel: ja tegen het kijkmoment, niet ja tegen jou.</div>
+    </li>
+    <li>
+      <div class="taken-label">🧭 Voor wie 'ja' zei: kies aanpak per prospect <span class="opt">optioneel</span></div>
+      <div class="taken-uitleg">Voor elke prospect die ja zei tegen een kijkmoment: open z'n kaart en kies één van twee paden via het keuzeblok bovenaan.
+
+🤝 3-WEG-GESPREK voor: warme prospects, mensen die snel willen schakelen, kort traject mogelijk, persoonlijk contact passend.
+
+✨ MINI-ELEVA voor: twijfelaars, prospects met druk leven, mensen die eerst zelf willen kijken. 14 dagen eigen toegang, welkomstvideo's, AI-mentor, chat met jou en je sponsor.
+
+Niet zeker? Druk op 'Overleg met sponsor' in het keuzeblok, dan opent een vooringevulde WhatsApp aan je sponsor met de prospect-context.</div>
+    </li>
+    <li>
+      <div class="taken-label">3 namen uit socials <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen?</div>
+    </li>
+    <li>
+      <div class="taken-label">Minimaal 2 herinneringen sturen aan eerdere prospects <span class="opt">optioneel</span></div>
+      <div class="taken-uitleg">Aan eerdere prospects waarmee je gesproken hebt of die je hebt uitgenodigd, een korte herinnering sturen. Niet 'follow-up' in de strikte zin, gewoon even contact. Niet pitchen, gewoon even peilen hoe het is.</div>
+    </li>
+    <li>
+      <div class="taken-label">🔗 Bestellinks koppelen aan ELEVA <span class="opt">optioneel</span></div>
+      <div class="taken-uitleg">Plak per pakket je Lifeplus webshop-URL in ELEVA. Daarna gebruikt ELEVA die links automatisch in productadvies-flows. Vraag je sponsor om mee te kijken voor de juiste shop-product-pagina's per pakket.</div>
+    </li>
+  </ul>
+
+  <h3>Wat je vandaag leert</h3>
+  <div class="les">De 4-stappen-uitnodiging (Worre) is dé reden dat netwerkers met dezelfde lijst totaal verschillende resultaten boeken. Het is een vaste opbouw waarbij elk onderdeel een specifieke psychologische functie heeft.
+
+DE FORMULE, drie kern-stappen + één optionele opener:
+
+OPTIONEEL (ALLEEN bij business-prospects, ondernemers of duidelijk-zakelijke context):
+0) WEES DRUK, "Ik heb weinig tijd, maar..." Eén zinnetje. Signaleert waarde aan je tijd én voorkomt een lang vrijblijvend gesprek. LET OP: dit is niet de standaard-opener. Bij vrienden, familie of mensen waar je een rustige relatie mee hebt past dit niet, dat klinkt geforceerd.
+
+DE DRIE KERN-STAPPEN:
+1) COMPLIMENT of ERKENNING, "Jij bent iemand die dingen voor elkaar krijgt", of "ik moest aan jou denken omdat...". Echt, specifiek, geen smeerolie. Maakt dat je prospect zich GEZIEN voelt.
+2) UITNODIGEN, kies de variant die past bij hoe warm de prospect is:
+   • DIRECT (warme prospect, vertrouwen al hoog): "Ik ben gestart met iets nieuws, wil het je laten zien."
+   • INDIRECT (mid-warm): "Dit is vast niets voor jou, maar ken jij iemand die extra wil verdienen?"
+   • SUPER-INDIRECT (lauw of onbekend): "Ken jij toevallig mensen die openstaan voor bij-inkomen?"
+3) PLAN, "Wanneer schikt het, vanavond of morgen?" Geef twee tijdsblokken, geen open vraag. Open vragen ("wanneer kan jij?") leiden 80% naar uitstel.
+
+DE KERN, JE TAAK = UITNODIGEN, NIET OVERTUIGEN:
+Je wilt niet dat ze "ja" zeggen tegen JOU. Je wilt dat ze "ja" zeggen tegen een KIJKMOMENT. Dat is een veel lagere drempel.
+
+DRIE VOORBEELD-UITNODIGINGEN:
+
+1. WhatsApp aan oud-collega (warm):
+"Hé Mark, ik heb het druk en wilde dit even snel sturen. Jij bent iemand die altijd doorpakt en daarom denk ik aan jou. Ik ben net gestart met Project Meer Tijd en Vrijheid, wil je dat ik je kort laat zien wat het inhoudt? Vrijblijvend hoor. Vanavond of morgen aan het eind van de dag?"
+
+2. DM aan iemand die op je posts reageert (mid):
+"Hé Linda, snel berichtje tussendoor. Je reageert al een tijdje op wat ik deel, dat waardeer ik. Ik ben gestart met iets dat past bij wat ik aan het opbouwen ben. Wil je dat ik je in een kort moment laat zien hoe het werkt? Geen verplichting, even meekijken. Donderdag of vrijdag?"
+
+3. Spraak naar oude vriend (super-indirect):
+"Hé broer, snel ding. Even goed te bellen, jij bent toch diegene die altijd weet wie er met wat bezig is? Ik zoek mensen die openstaan voor een gratis webshop met gezondheidsproducten waarmee je een extra inkomen kunt opbouwen. Ken jij toevallig iemand?"
+
+VEELGEMAAKTE FOUTEN:
+✗ Compliment vergeten → klinkt als pitch.
+✗ Té veel uitleg in de uitnodiging zelf → ze haken af. Uitnodiging is voor het kijkmoment, niet voor de info.
+✗ Open afsluiten ("laat me weten of het je interesseert") → 80% uitstel.
+
+──────────────────────────────────────────
+
+NÁ DE UITNODIGING, TWEE PADEN VOOR ELKE PROSPECT:
+
+🤝 3-WEG-GESPREK
+- Jij + sponsor + prospect samen in een WhatsApp-groep of live-call
+- Sponsor brengt autoriteit en ervaring, jij bent de verbinder
+- Snel pad: van "ja kijken" naar beslissing in 1 gesprek
+- PAST BIJ: warme prospects, mensen die persoonlijk contact zoeken, kort traject mogelijk
+
+✨ MINI-ELEVA
+- Prospect krijgt 14 dagen eigen toegang tot een persoonlijke omgeving
+- Daar staan welkomstvideo's, een ELEVA-mentor (AI, 24/7), en een chat met jou en de sponsor
+- Prospect kijkt op eigen tempo, jij krijgt push-meldingen bij elke actie
+- AVG-veilig: jij ziet WANNEER ze actief zijn, niet WAT ze vragen aan de mentor
+- PAST BIJ: nieuwsgierige twijfelaars, prospects met druk leven, mensen die eerst rustig zelf willen kijken
+
+Beide paden hebben hun moment. 3-weg blijft het krachtigste voor wie warm en beschikbaar is. Mini-ELEVA opent een deur voor mensen die anders zouden zeggen "stuur me wat info, ik kijk later" en dan nooit kijken.</div>
+
+  <h3>Waarom dit werkt</h3>
+  <p class="waarom">"Wees zakelijk. Wees professioneel. Wees kort. Dan neem je mensen serieus genoeg om ze de ruimte te geven zélf nee te zeggen."<span class="bron">— Eric Worre, Go Pro</span></p>
+</section>
+
+<!-- ============= DAG 5 ============= -->
+<section class="dag" id="dag5">
+  <div class="dag-nr">Dag 5</div>
+  <h2>🛡️ Bezwaren? Geen probleem, Feel-Felt-Found</h2>
+  <p class="fase-doel"><strong>Fase-doel week 1:</strong> deze week 2 one-pager-momenten gepland of bekeken krijgen.</p>
+
+  <h3>Vandaag doen</h3>
+  <ul class="taken">
+    <li>
+      <div class="taken-label">5 uitnodigingen (nieuwe mensen of via follow-up) <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">5 mensen uit je lijst uitnodigen voor een kijkmoment. Mix warm (mensen die je goed kent) met lauw (telefoon-contacten waar je weinig mee praat).</div>
+    </li>
+    <li>
+      <div class="taken-label">3 follow-ups op mensen van dag 3-4 <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">3 mensen die eerder een invite/info hebben gehad, vandaag een korte check-in. Niet 'heb je al beslist?' maar 'hoe gaat 't?'.</div>
+    </li>
+    <li>
+      <div class="taken-label">3 namen uit socials <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">3 nieuwe namen uit Instagram, LinkedIn of Facebook. 1 woord context per naam ('fitness', 'oud-collega').</div>
+    </li>
+    <li>
+      <div class="taken-label">Korte roleplay met bezwaren, met sponsor of Mentor <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">Waarom oefenen met bezwaren belangrijk is: in een echt gesprek krijg je geen tweede kans om iets te formuleren. Als jij staat te zoeken naar woorden, voelt de prospect onzekerheid en verliest hij vertrouwen. Door vooraf een paar keer te oefenen, weet je in grote lijnen hoe je elk bezwaar kunt aanvliegen.
+
+Vraag je sponsor om 1-2 typische bezwaren te 'spelen' en oefen Feel-Felt-Found. Geen sponsor beschikbaar? Vraag de Mentor: 'Speel een prospect die zegt: ik heb geen tijd', en oefen je antwoord.</div>
+    </li>
+    <li>
+      <div class="taken-label">🎧 Start met Eric Worre's Seven Skills (15 min Spotify) <span class="opt">optioneel</span></div>
+      <div class="taken-uitleg">Vanaf vandaag dagelijks ~15 minuten luisteren, in de auto, tijdens werk of een wandeling. Voor je mindset én om dit vak goed te leren. Eric Worre is wereldwijd de meest gerespecteerde trainer in network marketing. Niet één keer doorkijken, herhalend aanhoren, wat hij vertelt landt na de 4e of 5e keer pas écht.</div>
+    </li>
+  </ul>
+
+  <h3>Wat je vandaag leert</h3>
+  <div class="les">Feel-Felt-Found is dé universele bezwaar-techniek en werkt op zowat élk bezwaar. Drie psychologische dingen tegelijk: erkennen, normaliseren, herframen. Zonder dat de prospect het gevoel krijgt dat hij wordt 'ompraat'.
+
+DE FORMULE:
+• FEEL, "Ik snap dat het zo voelt." Erken het gevoel. NIET het bezwaar weerleggen, alleen valideren dat het bestaat.
+• FELT, "Veel mensen voelden dat in het begin ook." Normaliseer. De prospect is niet raar, hij is in goed gezelschap.
+• FOUND, "Wat zij merkten was [korte herframing]." Geef de nieuwe lens, in 1 zin, niet als argument maar als observatie.
+• AFSLUITEN MET DOORVRAAG, "Maar vertel eens, waar zit het 'm nu écht in?" Dit is de KEY-stap die de meeste mensen vergeten.
+
+DE GOUDEN REGEL, DE EERSTE WEERSTAND IS BIJNA NOOIT DE ECHTE:
+"Geen tijd", "ik wil eerst nadenken", "ik ben niet van sales", dat zijn emotionele schilden. Beleefde manieren om afstand te maken. De échte twijfel zit eronder: angst voor afwijzing door familie, slechte ervaring met netwerkmarketing, schaamte voor financiële situatie, niet weten waar te beginnen. Jouw werk = vriendelijk doorvragen tot de échte zorg op tafel komt.
+
+DRIE VOORBEELDEN VAN FEEL-FELT-FOUND:
+
+1. Bezwaar: "Ik heb geen tijd."
+"Ik snap dat het zo voelt, iedereen die ik ken heeft het al druk genoeg. Veel mensen die nu starten dachten dat ook in het begin. Wat zij merkten is dat het juist flexibel werkt naast wat ze al deden, een paar avonden in de week, soms minder. Maar vertel eens, waar zit het 'm nu écht in? Is het tijd, of speelt er iets anders mee?"
+
+2. Bezwaar: "Ik wil eerst nadenken."
+"Helemaal logisch dat je daar even mee wilt zitten. Veel mensen voelden dat in het begin ook. Wat zij merkten is dat 'nadenken' meestal betekent dat één specifiek punt nog onduidelijk is, geen totaal nee. Mag ik je iets vragen: waar wil je precies over nadenken? Is het de tijd, het vertrouwen, of het idee zelf?"
+
+3. Bezwaar: "Ik ben niet van sales."
+"Snap ik 100%, ik dacht dat zelf ook. Wat ik (en velen die starten) merkten is dat dit geen sales is in de traditionele zin: geen koud bellen, geen markten afgaan, geen targets. Het is mensen die jij al kent uitnodigen om iets te bekijken. Maar ik ben benieuwd, waar komt dat 'niet van sales'-gevoel bij jou vandaan?"
+
+VEELGEMAAKTE FOUTEN:
+✗ Direct argumenteren ("dat klopt niet, want...") → de prospect sluit af.
+✗ FEEL overslaan en meteen FOUND → voelt als pitch.
+✗ Vergeten af te sluiten met een doorvraag → blijft hangen in de ruimte.
+✗ Drammen na een nee → break van vertrouwen, prospect onthoudt het altijd negatief.
+
+EXTRA, VANDAAG START JE MINDSET-ROUTINE:
+15 minuten per dag Eric Worre in je oren. Wat hij vertelt over WHY, vision en leiderschap is brandstof onder je dagelijkse acties.</div>
+
+  <h3>Waarom dit werkt</h3>
+  <p class="waarom">"Een bezwaar is geen muur. Het is een vraag die niet weet hoe 'm te stellen."<span class="bron">— Fraser Brookes</span></p>
+</section>
+
+<!-- ============= DAG 6 ============= -->
+<section class="dag" id="dag6">
+  <div class="dag-nr">Dag 6</div>
+  <h2>🔄 De fortuin zit in de follow-up, 24-48u-regel</h2>
+  <p class="fase-doel"><strong>Fase-doel week 1:</strong> deze week 2 one-pager-momenten gepland of bekeken krijgen.</p>
+
+  <h3>Vandaag doen</h3>
+  <ul class="taken">
+    <li>
+      <div class="taken-label">5 uitnodigingen <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">5 mensen uit je lijst uitnodigen voor een kijkmoment. Mix warm met lauw.</div>
+    </li>
+    <li>
+      <div class="taken-label">3 follow-ups (stilgevallen gesprekken weer aanwakkeren) <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">Iedereen die je dag 4-5 hebt uitgenodigd of info gestuurd hebt en niet meer gereageerd heeft. Een niet-antwoord is géén nee, meestal gewoon stilte: druk leven, vergeten, of even geen prioriteit.
+
+DE STILGEVALLEN-GESPREKKEN-ZIN (werkt vrijwel altijd):
+"Hé, ik zag dat je niet meer had gereageerd op mijn laatste berichtje. Is dat omdat je druk was of omdat je geen interesse hebt op dit moment? Allebei prima hoor, ik dacht: ik vraag het even!"
+
+Waarom dit werkt:
+• Geen verwijt, geen druk: 'allebei prima hoor' geeft de uitweg.
+• Eerlijk antwoord: mensen die druk waren komen terug, mensen die geen interesse hebben geven dat aan zonder ongemak.
+• Helderheid voor jou: je weet waar je staat, kunt verder.</div>
+    </li>
+    <li>
+      <div class="taken-label">3 namen uit socials <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">3 nieuwe namen uit Instagram, LinkedIn of Facebook. 1 woord context per naam.</div>
+    </li>
+    <li>
+      <div class="taken-label">Vraag sponsor of Mentor: 1 tip op je lastigste follow-up <span class="opt">optioneel</span></div>
+      <div class="taken-uitleg">Heb je 1 contact waar je niet weet wat je moet sturen? Vraag je sponsor: 'Hoe zou jij dit aanpakken?'. Sponsor druk? Dan de Mentor: 'Help me met een follow-up voor [naam] die [situatie]'.</div>
+    </li>
+  </ul>
+
+  <h3>Wat je vandaag leert</h3>
+  <div class="les">Follow-up is geen optie, het is JE WERK. 80% van alle "ja's" komen pas na de derde tot vijfde aanraking. Wie alleen uitnodigt en dan stopt, verliest de meeste deals voordat het gesprek serieus wordt. De goede netwerker volgt OP en blijft warm, zonder te jagen.
+
+DE 24-48U REGEL:
+Stuur 24-48 uur na een uitnodiging je eerste check-in. Niet eerder (dan voelt het opdringerig), niet later (dan is de psychologische ruimte alweer dicht en is je prospect het kwijt). Gemiddeld zijn 5 contactmomenten nodig voor iemand een echte beslissing maakt, dat is geen drammen, dat is gewoon de statistiek van menselijk gedrag.
+
+DE 5-FASEN-FOLLOW-UP:
+1) CHECK-IN (24-48u): "Even inchecken, hoe gaat het met je?" GEEN "heb je al nagedacht?". Geen beoordelaar zijn.
+2) PEILEN (na 3-5 dagen): "Wat sprak je het meeste aan van wat je gezien hebt?" Open vraag, focus op WAT, niet op JA/NEE.
+3) VERDIEPEN (na 7-10 dagen): "Dit wilde ik je ook nog laten zien..." Tweede waardevol punt, een testimonial, een product-review, een nieuw filmpje.
+4) UITNODIGING NAAR EVENT/3-WEG (na 10-14 dagen): "Er is binnenkort iets dat past, wil je erbij zijn?" Verlaag de drempel naar een nieuwe exposure.
+5) SLUITEN OF NOT-YET (na 14-21 dagen): "Wat is voor jou het belangrijkste punt om helder te krijgen?" Direct, eerlijk, zonder druk.
+
+DE TOON, WAT JE WEL EN NIET DOET:
+✓ "Even inchecken" → vriendelijk, niet beoordelend
+✓ "Wat sprak je aan?" → focus op wat positief is
+✗ "Heb je al nagedacht?" → zet ze in beoordelaar-positie
+✗ "Wat vond je ervan?" → vraagt om mening, opent kritiek
+✗ "Ben je er nu uit?" → druk, sluit gesprek af
+✗ Stilte na 1 keer geen reactie → fataal, je verliest 80%
+
+DRIE VOORBEELDEN, verschillende fasen:
+
+1. CHECK-IN (24u na uitnodiging, geen reactie):
+"Hé Mark, even inchecken hoor, hoe gaat het bij jou? Geen druk, ik vroeg me gewoon af of het bericht goed was aangekomen 😊"
+
+2. PEILEN (na de info-link):
+"Hé Linda 🥰 wat sprak je het meeste aan van wat je tot nu hebt gezien? Ben benieuwd!"
+
+3. STILLE PROSPECT (gesprek dat is stilgevallen):
+"Hé Jaap, ik zag dat je niet meer had gereageerd op mijn laatste berichtje. Is dat omdat je druk was of omdat je geen interesse hebt op dit moment? Allebei prima hoor, ik dacht: ik vraag het even! 🙂"
+
+DE LANGSPEELPLATEN-REGEL:
+Een prospect die NU geen ja zegt, kan over 3 maanden alsnog ja zeggen. Of over 1 jaar. Houd ze warm, houd ze vriendelijk, en blijf in hun leven via je gewone content (geen pitches in de DM). Dan ben je top-of-mind als hun situatie verandert.</div>
+
+  <h3>Waarom dit werkt</h3>
+  <p class="waarom">"Niet jagen, niet smeken, wel richting geven. Gemiddeld 5 exposures, dat is gewoon de statistiek."<span class="bron">— Eric Worre, Go Pro</span></p>
+</section>
+
+<!-- ============= DAG 7 ============= -->
+<section class="dag" id="dag7">
+  <div class="dag-nr">Dag 7</div>
+  <h2>🎉 Week 1 zit erop! Tijd voor een rustige reflectie</h2>
+  <p class="fase-doel"><strong>Fase-doel week 1 afgerond.</strong> Heb je je 2 one-pager-momenten? Mooi. Zo niet: ze schuiven door. Focus blijft hetzelfde.</p>
+
+  <h3>Vandaag doen</h3>
+  <ul class="taken">
+    <li>
+      <div class="taken-label">Vul de wekelijkse review in (5 min reflectie) <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">Drie vragen: wat ging goed deze week, wat liep niet soepel, waar focus ik volgende week op? Aan het eind kun je kiezen of je de review met je sponsor wilt delen, zodat hij of zij weet hoe je ervoor staat en waar je in kan groeien.</div>
+    </li>
+    <li>
+      <div class="taken-label">5 uitnodigingen (iets rustiger, het is review-dag) <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">5 uitnodigingen vandaag, iets rustiger want het is review-dag. Mix warm + lauw zoals je gewend bent.</div>
+    </li>
+    <li>
+      <div class="taken-label">3 follow-ups <span class="verpl">verplicht</span></div>
+      <div class="taken-uitleg">3 mensen die eerder een invite/info hebben gehad, vandaag een korte check-in. Niet 'heb je al beslist?' maar 'hoe gaat 't?'.</div>
+    </li>
+    <li>
+      <div class="taken-label">15 min call met sponsor over week 2 <span class="opt">optioneel</span></div>
+      <div class="taken-uitleg">Wat werkte? Wat gaan we anders doen? Wat is week 2?</div>
+    </li>
+  </ul>
+
+  <h3>Wat je vandaag leert</h3>
+  <div class="les">Een wekelijkse review is geen rapportcijfer, het is een KOMPAS-CHECK. 5 minuten reflectie scheelt je 5 dagen dwaling. Niet voor je sponsor, voor jezelf, om te zien waar je staat versus waar je heen wilt.
+
+DRIE VRAGEN DIE WERKEN (en die ELEVA voor je voorlegt):
+1) WAT GING GOED? Eerlijk, klein én groot. "Ik heb 3 invites verstuurd" is een win. "Ik durfde mijn beste vriend uit te nodigen" is óók een win, maar van een andere soort. Beide tellen.
+2) WAT LIEP NIET SOEPEL? Geen oordeel, geen "ik ben gewoon niet goed in dit". Wat ging er onhandig? Welke uitnodiging stuurde ik niet uit angst? Welk berichtje liet ik 4× herschrijven voor ik op verzenden klikte? Daar zit volgende week je oefening.
+3) WAAR FOCUS IK VOLGENDE WEEK? Eén ding. Niet drie. EÉN ding waar je in groeit. Kan zijn: doorvragen na een nee. Kan zijn: 1 dag dichterbij komen aan je dagelijkse aantallen. Kan zijn: durven 3-weg starten met een lauwe prospect.
+
+DE INHAAL-REGEL, voor als je een dag over hebt geslagen:
+• 1 dag stilte = geen drama. Iedereen heeft een dipje. Volgende dag pak je weer op.
+• 2 dagen stilte = actie nodig. Niet schamen, niet "ik begin maandag opnieuw", vandaag start je weer, met +50% aantallen om de gemiste dag in te halen.
+• Geen schuldgevoel-spiraal. Eén overgeslagen dag = data, geen oordeel.
+
+WAT NIET SOEPEL LIEP = GROEI, GEEN FALEN:
+Als je deze week 7 dagen geleden iets compleet nieuws bent gestart, is onhandigheid op dag 1 logisch. En iets meer vlotheid op dag 7. Dát is het volledige plaatje. De mensen die uiteindelijk doorbreken in dit vak zijn niet degenen die in week 1 alles vlekkeloos deden, die bestaan niet, maar degenen die week 2 bleven oefenen op wat in week 1 niet soepel ging.
+
+WAT GA JE VOLGENDE WEEK ZIEN (sneak peek voor dag 8-14):
+• Lat omhoog: 10 uitnodigingen per dag in plaats van 5
+• 3-weg-gesprekken, je gaat ze ECHT doen, niet alleen kennen
+• One-pager versus presentatie, wanneer wat
+• Tweede laag aanbieden als de business-laag niet past (een gratis webshop met productgebruik kan ook)
+• FORM, hoe je iemand écht leert kennen in een kort gesprek
+
+DEZE REVIEW KAN JE DELEN MET JE SPONSOR (zelfde keuze maak je aan het eind van het invul-formulier). Niet om te beoordelen, om te ondersteunen. Sponsor ziet wat niet soepel ging, kan jou specifiek helpen waar het niet soepel loopt. Niet zwijgen, niet polijsten, eerlijk neerzetten levert je de beste hulp.</div>
+
+  <h3>Waarom dit werkt</h3>
+  <p class="waarom">"Vergelijk jezelf met gisteren, niet met anderen. De run is jouw verhaal, de review is hoe je het schrijft."<span class="bron">— Eric Worre + Brookes, samen</span></p>
+</section>
+
+<footer class="bottom">
+  <p>
+    <strong>ELEVA</strong> · Project Meer Tijd en Vrijheid<br>
+    Week 1 (dag 1-7) van het 21-daagse Core-playbook<br>
+    Versie ter review · 9 mei 2026
+  </p>
+</footer>
+
+</div>
+</body>
+</html>
