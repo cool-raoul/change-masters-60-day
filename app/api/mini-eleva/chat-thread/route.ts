@@ -105,16 +105,17 @@ export async function GET(req: NextRequest) {
     };
     const lijstBerichten = (berichten as Bericht[] | null) ?? [];
 
-    // Signed URLs voor spraakberichten
-    const verrijkt = await Promise.all(
-      lijstBerichten.map(async (b) => {
-        if (!b.audio_path) return { ...b, audio_url: null };
-        const { data: signed } = await admin.storage
-          .from("mini-eleva-voice")
-          .createSignedUrl(b.audio_path, 60 * 60);
-        return { ...b, audio_url: signed?.signedUrl ?? null };
-      }),
-    );
+    // Audio-URLs via de eigen proxy-route. Reden: directe Supabase
+    // signed-URLs gaven playback-cutoff op ~5 sec in <audio>-element
+    // (zowel iOS Safari als Chrome desktop). Onze proxy serveert met
+    // correcte Content-Length, Accept-Ranges en 206-Range-responses,
+    // dus <audio> kan ongestoord doorlopen tot het einde.
+    const verrijkt = lijstBerichten.map((b) => ({
+      ...b,
+      audio_url: b.audio_path
+        ? `/api/mini-eleva/voice?berichtId=${encodeURIComponent(b.id)}`
+        : null,
+    }));
 
     // Sponsor-info voor de actieve uitnodiging (voor titel-tonen +
     // wissel-knop in de chat-UI)

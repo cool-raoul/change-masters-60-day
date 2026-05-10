@@ -381,18 +381,23 @@ export async function GET(req: NextRequest) {
     };
     const lijst = (berichten as Bericht[] | null) ?? [];
 
-    const verrijkt = await Promise.all(
-      lijst.map(async (b) => {
-        if (!b.audio_path) return { ...b, audio_url: null };
-        const { data: signed } = await admin.storage
-          .from("mini-eleva-voice")
-          .createSignedUrl(b.audio_path, 60 * 60); // 1 uur geldig
-        return {
-          ...b,
-          audio_url: signed?.signedUrl ?? null,
-        };
-      }),
-    );
+    // Audio-URLs via de eigen proxy-route. Reden: directe Supabase
+    // signed-URLs gaven playback-cutoff op ~5 sec in <audio>-element
+    // (zowel iOS Safari als Chrome desktop). Onze proxy serveert met
+    // correcte Content-Length, Accept-Ranges en 206-Range-responses.
+    //
+    // Voor prospect-pad (token-auth) hangen we de token aan in de URL
+    // zodat de proxy ook hen kan authoriseren. Voor session-auth gaan
+    // de cookies vanzelf mee, geen extra parameter nodig.
+    const tokenQS = req.nextUrl.searchParams.get("token");
+    const verrijkt = lijst.map((b) => ({
+      ...b,
+      audio_url: b.audio_path
+        ? `/api/mini-eleva/voice?berichtId=${encodeURIComponent(b.id)}${
+            tokenQS ? "&token=" + encodeURIComponent(tokenQS) : ""
+          }`
+        : null,
+    }));
 
     return NextResponse.json({
       ok: true,
