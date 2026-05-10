@@ -207,6 +207,16 @@ export function Sidebar({
           >
             <span>🎙️</span> Spraak-commando's
           </Link>
+          {/* Diagnose-link: tijdelijk zichtbaar zodat Raoul + Gaby de
+              push/voice-test vanuit de PWA kunnen openen. In een PWA-shell
+              op iOS is er geen URL-balk, dus zonder linkje is /diagnose
+              niet bereikbaar. Verwijderen zodra alles bevestigd werkt. */}
+          <Link
+            href="/diagnose"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
+          >
+            <span>🩺</span> Diagnose
+          </Link>
           <Link
             href="/over-eleva"
             className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
