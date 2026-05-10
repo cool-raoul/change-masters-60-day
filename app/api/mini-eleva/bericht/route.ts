@@ -208,14 +208,23 @@ export async function POST(req: NextRequest) {
           console.warn("[mini-eleva/bericht] prospect-push faalde:", e);
         });
 
-        // Push naar de andere mens (member ↔ sponsor)
+        // Push naar de andere mens (member ↔ sponsor). URL moet meebewegen
+        // met de ROL van de ONTVANGER, niet hardcoded sponsor-pad: een
+        // member moet naar z'n /namenlijst-chat-tab terug, een sponsor
+        // naar de sponsor-mini-eleva-pagina. Bug-symptoom: voorheen
+        // landde een member die een bericht van z'n sponsor kreeg op
+        // "Je bent geen sponsor van deze mini-ELEVA".
         const andereUserId =
           auth.rol === "member" ? inv.sponsor_user_id : inv.member_user_id;
+        const ontvangerIsSponsor = auth.rol === "member";
+        const andereUrl = ontvangerIsSponsor
+          ? `/sponsor/mini-eleva/${auth.invitationId}`
+          : `/namenlijst/${inv.prospect_id}#mini-eleva-chat`;
         if (andereUserId && andereUserId !== auth.userId) {
           await sendPushToUser(andereUserId, {
             title: pushTitel,
             body: korteTekst,
-            url: `/sponsor/mini-eleva/${auth.invitationId}`,
+            url: andereUrl,
             tag: `mini-eleva-mens-${auth.invitationId}`,
           }).catch((e) => {
             console.warn(
