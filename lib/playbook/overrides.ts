@@ -117,10 +117,29 @@ export function pasSprintDagOverridesToe(
     titel: get("titel") ?? dag.titel,
     watJeLeert: get("watJeLeert") ?? dag.watJeLeert,
     faseDoel: get("faseDoel") ?? dag.faseDoel,
-    vandaagDoen: dag.vandaagDoen.map((taak) => ({
-      ...taak,
-      label: get(`taak.${taak.id}.label`) ?? taak.label,
-      uitleg: get(`taak.${taak.id}.uitleg`) ?? taak.uitleg,
-    })),
+    vandaagDoen: dag.vandaagDoen.map((taak) => {
+      // inlineActie-velden ook overrideable maken (instructie + voorbeeld
+      // tonen zich op /vandaag in de TAAK-stap; placeholder + label gaan
+      // het input-veld in en worden later via aparte sleutels gewrapt
+      // als we ze in een EditableTekst-vriendelijke vorm krijgen).
+      const inlineActie = taak.inlineActie
+        ? {
+            ...taak.inlineActie,
+            instructie:
+              get(`taak.${taak.id}.inlineActie.instructie`) ??
+              taak.inlineActie.instructie,
+            voorbeeld:
+              get(`taak.${taak.id}.inlineActie.voorbeeld`) ??
+              taak.inlineActie.voorbeeld,
+          }
+        : taak.inlineActie;
+
+      return {
+        ...taak,
+        label: get(`taak.${taak.id}.label`) ?? taak.label,
+        uitleg: get(`taak.${taak.id}.uitleg`) ?? taak.uitleg,
+        inlineActie,
+      };
+    }),
   };
 }

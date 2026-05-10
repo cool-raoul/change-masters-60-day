@@ -508,13 +508,29 @@ function VandaagFlowInner({
               !isMobiel &&
               !huidigeTaak.inlineEmbed && (
                 <div className="rounded-lg border-2 border-amber-500/60 bg-amber-900/20 px-4 py-3 space-y-2">
-                  <p className="text-amber-200 text-sm font-semibold flex items-center gap-2">
-                    📱 Doe deze stap op je telefoon
-                  </p>
-                  <p className="text-cm-white opacity-90 text-xs leading-relaxed">
-                    Open ELEVA op je telefoon, je hebt 'm nodig om je
-                    contacten te exporteren. Je dag-flow loopt daar gewoon door.
-                  </p>
+                  <EditableTekst
+                    namespace="sprint-ui"
+                    sleutel="taak.mobiel.titel"
+                    standaard="📱 Doe deze stap op je telefoon"
+                    overrides={uiOverrides}
+                    isFounder={isFounder}
+                    editModusAan={editModusAan}
+                    as="p"
+                    className="text-amber-200 text-sm font-semibold flex items-center gap-2"
+                    hint="Titel van mobiel-waarschuwing, gedeeld over alle dagen"
+                  />
+                  <EditableBlok
+                    namespace="sprint-ui"
+                    sleutel="taak.mobiel.uitleg"
+                    standaard="Open ELEVA op je telefoon, je hebt 'm nodig om je contacten te exporteren. Je dag-flow loopt daar gewoon door."
+                    overrides={uiOverrides}
+                    isFounder={isFounder}
+                    editModusAan={editModusAan}
+                    as="div"
+                    className="text-cm-white opacity-90 text-xs leading-relaxed"
+                    rows={3}
+                    hint="Uitleg-tekst van mobiel-waarschuwing"
+                  />
                 </div>
               )}
 
@@ -588,9 +604,18 @@ function VandaagFlowInner({
                   ✏️ Schrijf hier direct je {huidigeTaak.inlineActie.label.toLowerCase()}
                 </h3>
                 {huidigeTaak.inlineActie.instructie && (
-                  <p className="text-cm-white opacity-80 text-xs leading-relaxed">
-                    {huidigeTaak.inlineActie.instructie}
-                  </p>
+                  <EditableBlok
+                    namespace="sprint-dag"
+                    sleutel={`dag${dag.nummer}.taak.${huidigeTaak.id}.inlineActie.instructie`}
+                    standaard={huidigeTaak.inlineActie.instructie}
+                    overrides={{}}
+                    isFounder={isFounder}
+                    editModusAan={editModusAan}
+                    as="div"
+                    className="text-cm-white opacity-80 text-xs leading-relaxed"
+                    rows={3}
+                    hint={`Briefing boven invoerveld, dag ${dag.nummer}, taak ${huidigeTaak.id}`}
+                  />
                 )}
                 <textarea
                   value={inlineWaardes[huidigeTaak.inlineActie.slug] ?? ""}
@@ -604,12 +629,31 @@ function VandaagFlowInner({
                   rows={4}
                 />
                 {huidigeTaak.inlineActie.voorbeeld && (
-                  <p className="text-cm-white opacity-60 text-xs italic leading-relaxed border-t border-cm-border pt-2">
-                    <strong className="not-italic text-cm-gold">
-                      Voorbeeld:
-                    </strong>{" "}
-                    {huidigeTaak.inlineActie.voorbeeld}
-                  </p>
+                  <div className="border-t border-cm-border pt-2 space-y-1">
+                    <EditableTekst
+                      namespace="sprint-ui"
+                      sleutel="taak.inline-actie.voorbeeld-label"
+                      standaard="Voorbeeld:"
+                      overrides={uiOverrides}
+                      isFounder={isFounder}
+                      editModusAan={editModusAan}
+                      as="span"
+                      className="not-italic text-cm-gold text-xs font-semibold"
+                      hint="Label boven het voorbeeld, gedeeld over alle dagen"
+                    />
+                    <EditableBlok
+                      namespace="sprint-dag"
+                      sleutel={`dag${dag.nummer}.taak.${huidigeTaak.id}.inlineActie.voorbeeld`}
+                      standaard={huidigeTaak.inlineActie.voorbeeld}
+                      overrides={{}}
+                      isFounder={isFounder}
+                      editModusAan={editModusAan}
+                      as="p"
+                      className="text-cm-white opacity-60 text-xs italic leading-relaxed"
+                      rows={3}
+                      hint={`Voorbeeld-tekst, dag ${dag.nummer}, taak ${huidigeTaak.id}`}
+                    />
+                  </div>
                 )}
                 <button
                   type="button"
@@ -702,9 +746,17 @@ function VandaagFlowInner({
 
             {/* Snel overzicht status */}
             <div className="card text-left space-y-2">
-              <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
-                Je voortgang vandaag
-              </p>
+              <EditableTekst
+                namespace="sprint-ui"
+                sleutel="klaar.voortgang-label"
+                standaard="Je voortgang vandaag"
+                overrides={uiOverrides}
+                isFounder={isFounder}
+                editModusAan={editModusAan}
+                as="p"
+                className="text-cm-gold text-xs font-semibold uppercase tracking-wider"
+                hint="Label boven voortgang-overzicht in klaar-stap, alle dagen"
+              />
               <ul className="space-y-1.5 text-sm">
                 {taken.map((t, i) => (
                   <li key={t.id} className="flex items-start gap-2">
