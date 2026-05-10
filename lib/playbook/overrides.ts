@@ -81,3 +81,46 @@ export async function haalOverrides(
   }
   return map;
 }
+
+/**
+ * Pas Sprint-dag-overrides uit `tekst_overrides` (namespace
+ * "sprint-dag") toe op een Dag-object. Overrided velden:
+ *   - dag.titel
+ *   - dag.watJeLeert
+ *   - dag.faseDoel
+ *   - dag.vandaagDoen[i].label
+ *   - dag.vandaagDoen[i].uitleg
+ *
+ * Sleutels:
+ *   `dag${N}.titel`
+ *   `dag${N}.watJeLeert`
+ *   `dag${N}.faseDoel`
+ *   `dag${N}.taak.${taakId}.label`
+ *   `dag${N}.taak.${taakId}.uitleg`
+ *
+ * Lege/missende sleutel = vallen terug op standaard. NIET hernoemen
+ * van taak-ids: bestaande overrides zijn aan de taak-id gekoppeld.
+ */
+export function pasSprintDagOverridesToe(
+  dag: Dag,
+  sprintDagOverrides: Map<string, string> | undefined,
+): Dag {
+  if (!sprintDagOverrides || sprintDagOverrides.size === 0) return dag;
+  const N = dag.nummer;
+  const get = (suffix: string) => {
+    const v = sprintDagOverrides.get(`dag${N}.${suffix}`);
+    return v && v.trim() ? v.trim() : null;
+  };
+
+  return {
+    ...dag,
+    titel: get("titel") ?? dag.titel,
+    watJeLeert: get("watJeLeert") ?? dag.watJeLeert,
+    faseDoel: get("faseDoel") ?? dag.faseDoel,
+    vandaagDoen: dag.vandaagDoen.map((taak) => ({
+      ...taak,
+      label: get(`taak.${taak.id}.label`) ?? taak.label,
+      uitleg: get(`taak.${taak.id}.uitleg`) ?? taak.uitleg,
+    })),
+  };
+}
