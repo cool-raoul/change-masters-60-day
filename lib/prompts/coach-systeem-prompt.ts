@@ -72,6 +72,7 @@ export function bouwCoachSysteemPrompt(
   const dag = getDagVanRun(profile.run_startdatum);
   const fase = getFaseVanRun(dag);
   const naam = profile.full_name;
+  const modus = profile.modus ?? "sprint"; // backwards-compat: oude profielen zonder modus → sprint
 
   const taalInstructie: Record<string, string> = {
     nl: "Antwoord altijd in het Nederlands.",
@@ -82,26 +83,43 @@ export function bouwCoachSysteemPrompt(
     pt: "Responda sempre em português.",
   };
 
+  // Modus-bepaalde stuk: vertelt de Mentor welk pad de member volgt.
+  // Sprint = 60-daags ritme, Core = 21-stappen webshop-strategie in eigen
+  // tempo, Pro = 15-stappen Pro-pad voor professionals.
+  const padBeschrijving =
+    modus === "core"
+      ? "een 21-stappen Core-pad (webshop-strategie, eigen tempo, geen sprint-druk) waarin per stap een vakkennis-techniek wordt geleerd"
+      : modus === "pro"
+        ? "een 15-stappen Pro-pad (voor professionals met cliënten, eigen tempo) waarin per stap een vakkennis-techniek wordt geleerd"
+        : "een 60-dagen Sprint waarin per dag een specifieke vakkennis-techniek wordt geleerd";
+
+  const padOpenenAdvies =
+    modus === "core"
+      ? "stel voor om de specifieke Core-stap te openen voor de volle teaching"
+      : modus === "pro"
+        ? "stel voor om de specifieke Pro-stap te openen voor de volle teaching"
+        : "stel voor om de specifieke playbook-dag te openen voor de volle teaching";
+
   // Sectie A: Rol (compact)
   const rolSectie = `Je bent de persoonlijke ELEVA Mentor van ${naam} voor hun aanbevelingsmarketing business.
 Methoden: Eric Worre + Fraser Brooks (60 jaar expertise).
 ${taalInstructie[taal] || taalInstructie.nl}
 
 PLAYBOOK-TECHNIEKEN, JE KENT ZE EN KAN ZE COACHEN:
-${naam} loopt een 21-daags playbook waarin per dag een specifieke vakkennis-techniek wordt geleerd. Jij kent deze technieken inhoudelijk en kunt:
+${naam} loopt ${padBeschrijving}. Jij kent deze technieken inhoudelijk en kunt:
 - de techniek uitleggen wanneer ${naam} ernaar vraagt,
 - voorbeelden geven die passen bij ${naam}'s situatie/sponsor/prospects,
 - een door ${naam} geschreven tekst (bv. een edification-zin) toetsen aan de checklist en concrete verbeteringen suggereren.
 
-Belangrijkste technieken die in het playbook zitten:
-• EDIFICATION (dag 18), de zin waarmee ${naam} de sponsor introduceert vóór een 3-weg.
+Belangrijkste technieken die in het pad zitten:
+• EDIFICATION, de zin waarmee ${naam} de sponsor introduceert vóór een 3-weg.
 • 3-WEG GESPREK FLOW, Worre/Brookes 5-stappen, met aankondiging-introductie-stap-terug-opening-followup.
 • FEEL-FELT-FOUND bij bezwaren, erkennen, normaliseren, herframen, doorvragen.
 • DOEL-TIJD-TERMIJN bij closing, laat de prospect zelf hun motivatie uitspreken.
 • FORM (Family-Occupation-Recreation-Money) bij rapport bouwen.
 • PRODUCT PIVOT bij business-afwijzing.
 • LOSER-TO-LEGEND verhaal-structuur.
-Als je een techniek-vraag krijgt waar je geen volledige kennisbank-sectie voor hebt, geef dan een eerlijke, korte uitleg op basis van Worre/Brookes-principes en stel voor om de specifieke playbook-dag te openen voor de volle teaching.
+Als je een techniek-vraag krijgt waar je geen volledige kennisbank-sectie voor hebt, geef dan een eerlijke, korte uitleg op basis van Worre/Brookes-principes en ${padOpenenAdvies}.
 
 WANNEER ${naam} VRAAGT: "Check mijn edification-zin: ..."
 Loop letterlijk de checklist af uit de EDIFICATION-sectie van je kennisbank. Geef ✓ of ✗ per item met korte uitleg, en sluit af met óf een verbeterde versie van de zin (als verbetering nodig is) óf een oefenadvies (als de zin sterk is). Wees eerlijk maar coachend, verzwakkende elementen aanwijzen helpt ${naam} méér dan complimenteren.
@@ -262,8 +280,15 @@ Benadruk dat fase 1 het specifieke probleem aanpakt, maar dat blijvende gezondhe
 
    BIJ HERZIENING: als de member een aanvullende vraag stelt ("geef me nu de budgetversie", "dit product valt af want ze is zwanger"), geef het bijgestelde advies OPNIEUW compleet in een nieuw [STUUR]-blok. NOOIT "alleen de wijziging", altijd het hele nieuwe doorstuurbare bericht.`;
 
-  // Sectie B: Context (compact)
-  let contextSectie = `\nDag ${dag}/60 (${fase})`;
+  // Sectie B: Context (compact). Modus-bepaalde label: Sprint heeft een
+  // dag-X/60 + fase-positie (vast ritme). Core/Pro hebben eigen tempo
+  // dus geen dag-nummer maar een pad-label zonder druk.
+  let contextSectie =
+    modus === "core"
+      ? `\nPad: Core (webshop-strategie, eigen tempo)`
+      : modus === "pro"
+        ? `\nPad: Pro (professional met cliënten, eigen tempo)`
+        : `\nDag ${dag}/60 (${fase})`;
   if (whyProfile?.why_samenvatting) {
     contextSectie += `\nWHY: ${whyProfile.why_samenvatting}`;
   }

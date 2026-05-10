@@ -38,6 +38,10 @@ export interface Profile {
   dagelijkse_push_uur?: number; // 0-23, default 7
   tijdzone?: string; // IANA tz, default "Europe/Amsterdam"
   dagelijkse_push_aan?: boolean; // default true
+  // Welk pad volgt de member: 60-dagen-sprint, 21-stappen-core (webshop-
+  // strategie) of 15-stappen-pro (professional met cliënten). Null tot
+  // de eerste keuze in /welkom-keuze gemaakt is.
+  modus?: "sprint" | "core" | "pro" | null;
 }
 
 export interface WhyProfile {
