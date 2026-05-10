@@ -10,6 +10,10 @@ import {
   haalTekstOverridesMulti,
   namespaceAlsRecord,
 } from "@/lib/cms/tekst-overrides";
+import {
+  haalPaginaBlokken,
+  blokkenAlsRecord,
+} from "@/lib/cms/pagina-blokken";
 import { berekenHuidigeDag } from "@/lib/playbook/bereken-dag";
 import { VandaagFlow } from "./vandaag-flow";
 
@@ -114,6 +118,16 @@ export default async function VandaagPagina({
     "sprint-groet",
   );
 
+  // Media-blokken (video/afbeelding/pdf) op 5 vaste posities. Server
+  // genereert signed URLs voor upload-types; we serialiseren de Map
+  // naar Record voor server→client prop-passing.
+  const paginaBlokkenMap = await haalPaginaBlokken(
+    supabase,
+    "sprint-dag",
+    String(dag),
+  );
+  const paginaBlokken = blokkenAlsRecord(paginaBlokkenMap);
+
   // Voltooide taken voor deze dag (uit het al opgehaalde set filteren)
   const voltooidIds = (
     (alleVoltooiingen as Array<{ dag_nummer: number; taak_id: string }>) || []
@@ -153,6 +167,7 @@ export default async function VandaagPagina({
       isFounder={isFounder}
       uiOverrides={uiOverrides}
       groetOverrides={groetOverrides}
+      paginaBlokken={paginaBlokken}
     />
   );
 }

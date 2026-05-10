@@ -22,6 +22,8 @@ import {
 import { EditModeToggle } from "@/components/cms/EditModeToggle";
 import { EditableTekst, EditableBlok } from "@/components/cms/EditableTekst";
 import { TesterToolbar } from "@/components/tester/TesterToolbar";
+import { MediaBlokken } from "@/components/cms/MediaBlokken";
+import type { Blok } from "@/lib/cms/pagina-blokken";
 
 // localStorage-key zodat we bij terugkeer (van een actieRoute) op de
 // juiste taak landen, niet weer in de intro-stap.
@@ -58,6 +60,8 @@ type Props = {
   /** Per-namespace tekst-overrides geladen op de server. */
   uiOverrides?: Record<string, string>;
   groetOverrides?: Record<string, string>;
+  /** Media-blokken per positie (boven-titel, boven-les, etc.). */
+  paginaBlokken?: Record<string, Blok[]>;
 };
 
 const DAG_GROETEN: Record<number, string> = {
@@ -90,9 +94,12 @@ function VandaagFlowInner({
   isFounder = false,
   uiOverrides = {},
   groetOverrides = {},
+  paginaBlokken = {},
 }: Props) {
   const { editModusAan } = useEditModus();
   const router = useRouter();
+  const blokkenOpPositie = (positie: string): Blok[] =>
+    paginaBlokken[positie] ?? [];
   const [voltooidIds, setVoltooidIds] = useState<Set<string>>(
     new Set(initialVoltooid),
   );
@@ -294,6 +301,14 @@ function VandaagFlowInner({
         {/* INTRO-stap */}
         {stap === "intro" && (
           <div className="space-y-6">
+            {/* Media-blok positie 1: bovenaan, vóór dag-titel */}
+            <MediaBlokken
+              paginaNamespace="sprint-dag"
+              paginaId={String(dag.nummer)}
+              positie="boven-titel"
+              blokken={blokkenOpPositie("boven-titel")}
+              isFounder={isFounder}
+            />
             <div className="text-center space-y-2 pt-4">
               <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
                 Dag {dag.nummer} · Fase {dag.fase}
@@ -350,6 +365,15 @@ function VandaagFlowInner({
               verbergZonderFilm
             />
 
+            {/* Media-blok positie 2: net boven de les-card */}
+            <MediaBlokken
+              paginaNamespace="sprint-dag"
+              paginaId={String(dag.nummer)}
+              positie="boven-les"
+              blokken={blokkenOpPositie("boven-les")}
+              isFounder={isFounder}
+            />
+
             {/* 2. DAN DE LES, volledig, geen afkapping. */}
             <div className="card border-l-4 border-cm-gold/60 space-y-2">
               <EditableTekst
@@ -376,6 +400,15 @@ function VandaagFlowInner({
                 hint={`Les voor dag ${dag.nummer}`}
               />
             </div>
+
+            {/* Media-blok positie 3: tussen les en taken-overzicht */}
+            <MediaBlokken
+              paginaNamespace="sprint-dag"
+              paginaId={String(dag.nummer)}
+              positie="tussen-les-taken"
+              blokken={blokkenOpPositie("tussen-les-taken")}
+              isFounder={isFounder}
+            />
 
             {/* 3. DAN GA JE DOEN, kort overzicht van de stappen. */}
             <div className="card space-y-2">
@@ -464,6 +497,15 @@ function VandaagFlowInner({
                 fallbackTekst="Film volgt, wordt door de hoofdbeheerder toegevoegd."
               />
             )}
+
+            {/* Media-blok positie 4: bij specifieke taak */}
+            <MediaBlokken
+              paginaNamespace="sprint-dag"
+              paginaId={String(dag.nummer)}
+              positie={`bij-taak.${huidigeTaak.id}`}
+              blokken={blokkenOpPositie(`bij-taak.${huidigeTaak.id}`)}
+              isFounder={isFounder}
+            />
 
             {/* Uitleg, ONDER het filmpje */}
             {huidigeTaak.uitleg && (
@@ -782,6 +824,15 @@ function VandaagFlowInner({
                 ))}
               </ul>
             </div>
+
+            {/* Media-blok positie 5: op klaar-stap, vóór dashboard-knop */}
+            <MediaBlokken
+              paginaNamespace="sprint-dag"
+              paginaId={String(dag.nummer)}
+              positie="op-klaar-stap"
+              blokken={blokkenOpPositie("op-klaar-stap")}
+              isFounder={isFounder}
+            />
 
             <Link
               href="/dashboard"
