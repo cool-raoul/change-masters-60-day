@@ -17,6 +17,7 @@ import { PresenceHeartbeat } from "@/components/presence/PresenceHeartbeat";
 import { PullToRefresh } from "@/components/layout/PullToRefresh";
 import { haalSponsorNaam } from "@/lib/sponsors/haal-sponsor-naam";
 import { CelebrationLayer } from "@/components/celebrations/CelebrationLayer";
+import { PushResyncBanner } from "@/components/push/PushResyncBanner";
 
 export async function AppShell({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -92,6 +93,12 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
             <Suspense fallback={null}>
               <TerugNaarPlaybookBanner />
             </Suspense>
+            {/* Slimme push-resync-banner: rendert zichzelf alleen als 'r een
+                mismatch is tussen browser-subscription en server-record.
+                Onzichtbaar voor gebruikers wier push gewoon werkt; één-klik
+                herstel voor iedereen die door VAPID-rotatie of ander
+                onderhoud op een ongeldige subscription is achtergebleven. */}
+            <PushResyncBanner />
             {children}
           </main>
         </div>
