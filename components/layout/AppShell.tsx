@@ -81,6 +81,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
         <WelcomePopup />
         <Sidebar
           isLeider={(profile as any)?.role === "leider"}
+          isFounder={(profile as any)?.role === "founder"}
           sponsorNaam={sponsorNaamSidebar}
         />
         <div className="flex-1 flex flex-col min-h-0 min-w-0">

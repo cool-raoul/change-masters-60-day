@@ -9,9 +9,12 @@ import { useTaal } from "@/lib/i18n/TaalContext";
 
 export function Sidebar({
   isLeider = false,
+  isFounder = false,
   sponsorNaam = "",
 }: {
   isLeider?: boolean;
+  /** Founders zien een paar extra menu-items (zoals Diagnose-link). */
+  isFounder?: boolean;
   sponsorNaam?: string;
 }) {
   const pathname = usePathname();
@@ -207,16 +210,20 @@ export function Sidebar({
           >
             <span>🎙️</span> Spraak-commando's
           </Link>
-          {/* Diagnose-link: tijdelijk zichtbaar zodat Raoul + Gaby de
-              push/voice-test vanuit de PWA kunnen openen. In een PWA-shell
-              op iOS is er geen URL-balk, dus zonder linkje is /diagnose
-              niet bereikbaar. Verwijderen zodra alles bevestigd werkt. */}
-          <Link
-            href="/diagnose"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
-          >
-            <span>🩺</span> Diagnose
-          </Link>
+          {/* Diagnose-link: alleen voor founders zichtbaar. Members
+              zien 'm niet meer (push + voice werken). Founders kunnen
+              'm gebruiken om iemand op afstand te debuggen of zelf te
+              testen. Direct invoeren via URL /diagnose werkt nog steeds
+              voor iedereen die 'm nodig heeft (geen rol-check op de
+              pagina zelf, maar geen menu-rommel meer voor members). */}
+          {isFounder && (
+            <Link
+              href="/diagnose"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
+            >
+              <span>🩺</span> Diagnose
+            </Link>
+          )}
           <Link
             href="/over-eleva"
             className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
