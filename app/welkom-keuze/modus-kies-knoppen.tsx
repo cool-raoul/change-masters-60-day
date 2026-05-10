@@ -6,16 +6,16 @@ import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 
 // ============================================================
-// ModusKiesKnoppen, twee grote keuze-tegels (Core / Pro) op de
-// /welkom-keuze pagina. Verwacht 4 children met data-slot attributen:
-//   data-slot="core-titel"
-//   data-slot="core-uitleg"
-//   data-slot="pro-titel"
-//   data-slot="pro-uitleg"
+// ModusKiesKnoppen, drie grote keuze-tegels (Sprint / Core / Pro) op
+// de /welkom-keuze pagina. Verwacht 6 children met data-slot attributen:
+//   data-slot="sprint-titel" / "sprint-uitleg"
+//   data-slot="core-titel"   / "core-uitleg"
+//   data-slot="pro-titel"    / "pro-uitleg"
 //
 // Bij klikken: schrijft modus naar profiles + redirect naar de
-// passende welkomstpagina. De ouder-pagina is een server-component,
-// daarom is dit child een client-component.
+// passende welkomstpagina. Sprint → /dashboard, Core → /welkom-core,
+// Pro → /welkom-pro. De ouder-pagina is een server-component, daarom
+// is dit child een client-component.
 // ============================================================
 
 type Props = {
@@ -23,9 +23,11 @@ type Props = {
   children: ReactNode;
 };
 
+type Modus = "sprint" | "core" | "pro";
+
 export function ModusKiesKnoppen({ userId, children }: Props) {
   const router = useRouter();
-  const [bezig, setBezig] = useState<"core" | "pro" | null>(null);
+  const [bezig, setBezig] = useState<Modus | null>(null);
 
   // Slot-children scheiden op basis van data-slot attribuut
   const slots: Record<string, ReactNode> = {};
@@ -36,7 +38,7 @@ export function ModusKiesKnoppen({ userId, children }: Props) {
     }
   });
 
-  async function kies(modus: "core" | "pro") {
+  async function kies(modus: Modus) {
     if (bezig) return;
     setBezig(modus);
     try {
@@ -47,7 +49,12 @@ export function ModusKiesKnoppen({ userId, children }: Props) {
         .eq("id", userId);
       if (error) throw error;
       toast.success("Route gekozen, één moment...");
-      router.push(modus === "core" ? "/welkom-core" : "/welkom-pro");
+      const redirectMap: Record<Modus, string> = {
+        sprint: "/dashboard",
+        core: "/welkom-core",
+        pro: "/welkom-pro",
+      };
+      router.push(redirectMap[modus]);
       router.refresh();
     } catch (err) {
       console.warn("Modus opslaan mislukt:", err);
@@ -57,7 +64,25 @@ export function ModusKiesKnoppen({ userId, children }: Props) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <button
+        type="button"
+        onClick={() => kies("sprint")}
+        disabled={!!bezig}
+        className="card text-left border-cm-border hover:border-cm-gold-dim hover:glow-gold-soft transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <div className="text-4xl mb-3">🚀</div>
+        <h2 className="font-serif-warm text-cm-gold text-xl mb-2 leading-snug">
+          {slots["sprint-titel"]}
+        </h2>
+        <div className="text-cm-white/80 text-sm leading-relaxed mb-4">
+          {slots["sprint-uitleg"]}
+        </div>
+        <span className="text-cm-gold text-sm font-medium group-hover:translate-x-1 inline-block transition-transform">
+          {bezig === "sprint" ? "Bezig..." : "Kies deze route →"}
+        </span>
+      </button>
+
       <button
         type="button"
         onClick={() => kies("core")}

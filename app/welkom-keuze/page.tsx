@@ -10,14 +10,15 @@ import { ModusKiesKnoppen } from "./modus-kies-knoppen";
 // /welkom-keuze, eenmalige route-keuze voor nieuwe gebruikers
 //
 // Verschijnt zodra een nieuwe member is aangemaakt en zijn modus nog
-// op NULL staat. Twee tegels: Core (webshop-strategie) en Pro
-// (professional met cliënten). Member kiest één van twee, dan wordt
-// de modus opgeslagen in profiles en redirect ELEVA naar de juiste
-// welkomstpagina.
+// op NULL staat. Drie tegels: Sprint (60-dagen-bouwer), Core (webshop-
+// strategie) en Pro (professional met cliënten). Member kiest één
+// van drie, dan wordt de modus opgeslagen in profiles en redirect
+// ELEVA naar de juiste welkomstpagina (Sprint → /dashboard, Core →
+// /welkom-core, Pro → /welkom-pro).
 //
-// Sprint is hier bewust geen instap-keuze: dat is een opt-in op
-// uitnodiging via een bestaand sprint-team-leider, niet een eerste-
-// dag-keuze.
+// Tijdens pilot-fase 1 is Sprint open zichtbaar zodat het pilot-team
+// (Raoul, Gaby, Juan, Sandy, Jaimie) er direct in kan. In een latere
+// fase kunnen we Sprint achter een uitnodiging-tegel zetten.
 // ============================================================
 
 export const dynamic = "force-dynamic";
@@ -87,6 +88,30 @@ export default async function WelkomKeuzePagina() {
       </div>
 
       <ModusKiesKnoppen userId={user.id}>
+        <div data-slot="sprint-titel">
+          <EditableTekst
+            namespace="welkom-keuze"
+            sleutel="sprint-titel"
+            standaard="Sprint, 60-dagen-bouwer"
+            overrides={overrides}
+            isFounder={isFounder}
+            as="span"
+            hint="Titel van de Sprint-tegel."
+          />
+        </div>
+        <div data-slot="sprint-uitleg">
+          <EditableTekst
+            namespace="welkom-keuze"
+            sleutel="sprint-uitleg"
+            standaard="Voor business-bouwers die in 60 dagen samen met een sprint-team een fundament willen leggen. Dagelijkse stap-voor-stap structuur, ritme + accountability, je zoekt mensen voor Core of Pro om met je mee te bouwen."
+            overrides={overrides}
+            isFounder={isFounder}
+            as="span"
+            multiline
+            rows={4}
+            hint="Beschrijving van wat de Sprint-route inhoudt."
+          />
+        </div>
         <div data-slot="core-titel">
           <EditableTekst
             namespace="welkom-keuze"
