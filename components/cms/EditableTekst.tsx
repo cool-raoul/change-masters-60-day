@@ -50,6 +50,14 @@ type Props = {
   standaard: string;
   overrides: Record<string, string>;
   isFounder: boolean;
+  /**
+   * Als false: pencil-knop niet tonen, ook al is isFounder=true. Wordt
+   * meestal via <EditModeProvider/> + useEditModus() gestuurd zodat één
+   * toggle bovenaan de pagina alle pencils aan-/uitzet. Default true
+   * voor backwards-compat met components die de toggle nog niet kennen
+   * (zoals /onboarding, mentor-trainen-form).
+   */
+  editModusAan?: boolean;
   as?: AsTag;
   className?: string;
   multiline?: boolean;
@@ -64,6 +72,7 @@ export function EditableTekst({
   standaard,
   overrides,
   isFounder,
+  editModusAan = true,
   as = "span",
   className = "",
   multiline = false,
@@ -215,7 +224,7 @@ export function EditableTekst({
   return (
     <Element className={className}>
       {actueleTekst}
-      {isFounder && (
+      {isFounder && editModusAan && (
         <button
           type="button"
           onClick={startBewerken}
