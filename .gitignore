@@ -38,3 +38,11 @@ next-env.d.ts
 
 # Claude Code lokale instellingen, persoonlijk per ontwikkelaar
 .claude/
+
+# gevoelige Lifeplus product-ervaringskennis (jaren ervaring + Dr. McKee
+# 2017+), alleen lokaal/intern gebruik, NOOIT in git of publieke deploys
+*supps*.csv
+*supps*.xlsx
+*mckee*.csv
+*mckee*.xlsx
+data/intern/

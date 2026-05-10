@@ -113,6 +113,21 @@ export default async function InstellingenPagina() {
         </div>
       )}
 
+      {/* Mentor product-kennisbank, founder-only — interne 2017-data
+          met aandoening-naar-supplement-koppelingen die gevalideerd
+          moet worden voor de Mentor 'm mag gebruiken. */}
+      {magFilmsBeheren && (
+        <div className="card space-y-3 border-gold-subtle">
+          <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">📚 Mentor product-kennis (intern)</h2>
+          <p className="text-cm-white text-sm opacity-60">
+            127 aandoening-naar-supplement-koppelingen uit 2017 (Dr. McKee + jarenlange teamervaring). Loop ze rij voor rij door en valideer welke nu nog steeds kloppen. ELEVA Mentor gebruikt alléén gevalideerde regels, en altijd claim-vrij.
+          </p>
+          <Link href="/instellingen/mentor-kennis" className="btn-secondary text-sm inline-block">
+            Open kennis-validatie →
+          </Link>
+        </div>
+      )}
+
       {/* Modus-test, founder-only proefaccount-switcher */}
       {magFilmsBeheren && (
         <div className="card space-y-3 border-gold-subtle">
