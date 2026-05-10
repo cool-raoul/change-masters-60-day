@@ -6,8 +6,8 @@
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#000000",
-  "theme_color": "#D4AF37",
+  "background_color": "#0c0e12",
+  "theme_color": "#c4a04a",
   "icons": [
     {
       "src": "/eleva-icon.png",
