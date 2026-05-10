@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
         { status: 400 },
       );
     }
-    if (!["video", "afbeelding", "pdf"].includes(type)) {
+    if (!["video", "afbeelding", "pdf", "audio", "quote"].includes(type)) {
       return NextResponse.json({ error: "Ongeldig type" }, { status: 400 });
     }
 

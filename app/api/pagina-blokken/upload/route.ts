@@ -18,6 +18,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 
 const MAX_AFBEELDING_BYTES = 5 * 1024 * 1024;
 const MAX_PDF_BYTES = 10 * 1024 * 1024;
+const MAX_AUDIO_BYTES = 10 * 1024 * 1024;
 
 export async function POST(req: NextRequest) {
   try {
@@ -50,19 +51,29 @@ export async function POST(req: NextRequest) {
     }
 
     const ext = (bestand as File).name?.split(".").pop()?.toLowerCase();
-    if (!ext || !["jpg", "jpeg", "png", "pdf"].includes(ext)) {
+    if (
+      !ext ||
+      !["jpg", "jpeg", "png", "pdf", "wav", "mp3", "m4a"].includes(ext)
+    ) {
       return NextResponse.json(
-        { error: "Alleen JPG, PNG of PDF" },
+        { error: "Alleen JPG, PNG, PDF, WAV, MP3 of M4A" },
         { status: 400 },
       );
     }
 
     const isPdf = ext === "pdf";
-    const max = isPdf ? MAX_PDF_BYTES : MAX_AFBEELDING_BYTES;
+    const isAudio = ["wav", "mp3", "m4a"].includes(ext);
+    const max = isPdf
+      ? MAX_PDF_BYTES
+      : isAudio
+        ? MAX_AUDIO_BYTES
+        : MAX_AFBEELDING_BYTES;
     if (bestand.size > max) {
       return NextResponse.json(
         {
-          error: `Bestand te groot (max ${isPdf ? "10MB" : "5MB"})`,
+          error: `Bestand te groot (max ${
+            isPdf ? "10MB" : isAudio ? "10MB" : "5MB"
+          })`,
         },
         { status: 413 },
       );

@@ -1,17 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { WavRecorder } from "@/lib/voice/wav-recorder";
 
 // ============================================================
 // MediaToevoegenModal, type-keuze + type-specifieke invoer-flow.
 //
-// Stap 1: type-keuze (video / afbeelding / pdf).
+// Stap 1: type-keuze (video / afbeelding / pdf / audio / quote).
 // Stap 2: invoer per type:
 //   - video: URL-veld + optioneel titel → POST /api/pagina-blokken
 //   - afbeelding: file + alt + titel → upload + POST
 //   - pdf: file + titel + beschrijving → upload + POST
+//   - audio: in-app opname (WavRecorder) + optioneel titel → upload + POST
+//   - quote: tekst + optioneel bron → POST (geen upload)
 // ============================================================
 
 type Props = {
@@ -21,7 +24,7 @@ type Props = {
   onSluit: () => void;
 };
 
-type Stap = "type-keuze" | "video" | "afbeelding" | "pdf";
+type Stap = "type-keuze" | "video" | "afbeelding" | "pdf" | "audio" | "quote";
 
 export function MediaToevoegenModal({
   paginaNamespace,
@@ -46,6 +49,32 @@ export function MediaToevoegenModal({
   const [pdfBestand, setPdfBestand] = useState<File | null>(null);
   const [pdfTitel, setPdfTitel] = useState("");
   const [pdfBeschrijving, setPdfBeschrijving] = useState("");
+
+  // Audio-velden
+  const [audioTitel, setAudioTitel] = useState("");
+  const [audioOpnemen, setAudioOpnemen] = useState(false);
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+  const [audioDuur, setAudioDuur] = useState(0);
+  const [audioTijd, setAudioTijd] = useState(0);
+  const recorderRef = useRef<WavRecorder | null>(null);
+  const audioTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const audioStartRef = useRef<number>(0);
+
+  // Quote-velden
+  const [quoteTekst, setQuoteTekst] = useState("");
+  const [quoteBron, setQuoteBron] = useState("");
+
+  // Cleanup audio-resources bij modal-sluit
+  useEffect(() => {
+    return () => {
+      try {
+        recorderRef.current?.annuleer();
+      } catch {
+        // negeer
+      }
+      if (audioTimerRef.current) clearInterval(audioTimerRef.current);
+    };
+  }, []);
 
   async function bewaarVideo() {
     const url = videoUrl.trim();
@@ -211,6 +240,138 @@ export function MediaToevoegenModal({
     }
   }
 
+  async function startAudioOpname() {
+    if (audioOpnemen || audioBlob) return;
+    try {
+      const recorder = new WavRecorder();
+      await recorder.start();
+      recorderRef.current = recorder;
+      audioStartRef.current = Date.now();
+      setAudioOpnemen(true);
+      setAudioTijd(0);
+      audioTimerRef.current = setInterval(() => {
+        setAudioTijd(Math.round((Date.now() - audioStartRef.current) / 1000));
+      }, 250);
+    } catch {
+      toast.error("Microfoon-toegang geweigerd of niet beschikbaar");
+    }
+  }
+
+  async function stopAudioOpname() {
+    if (!audioOpnemen) return;
+    if (audioTimerRef.current) clearInterval(audioTimerRef.current);
+    setAudioOpnemen(false);
+    const recorder = recorderRef.current;
+    if (!recorder) return;
+    try {
+      const { blob, duurSeconden } = await recorder.stop();
+      recorderRef.current = null;
+      if (blob.size === 0) {
+        toast.error("Geen audio opgenomen, probeer opnieuw");
+        return;
+      }
+      setAudioBlob(blob);
+      setAudioDuur(duurSeconden);
+    } catch {
+      toast.error("Opname-fout, probeer opnieuw");
+    }
+  }
+
+  function annuleerAudio() {
+    setAudioBlob(null);
+    setAudioTijd(0);
+    setAudioDuur(0);
+  }
+
+  async function bewaarAudio() {
+    if (!audioBlob) {
+      toast.error("Neem eerst iets op");
+      return;
+    }
+    setBezig(true);
+    try {
+      // Upload als 'opname.wav' — server-route accepteert WAV
+      const fd = new FormData();
+      const file = new File([audioBlob], "opname.wav", { type: "audio/wav" });
+      fd.append("bestand", file);
+      fd.append("paginaNamespace", paginaNamespace);
+      fd.append("paginaId", paginaId);
+      const upRes = await fetch("/api/pagina-blokken/upload", {
+        method: "POST",
+        body: fd,
+      });
+      const upData = await upRes.json();
+      if (!upRes.ok) {
+        toast.error(upData.error || "Upload mislukt");
+        return;
+      }
+      const res = await fetch("/api/pagina-blokken", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          pagina_namespace: paginaNamespace,
+          pagina_id: paginaId,
+          positie,
+          type: "audio",
+          inhoud: {
+            titel: audioTitel.trim() || undefined,
+            duur_seconden: audioDuur,
+          },
+          storage_pad: upData.storage_pad,
+        }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        toast.error(data.error || "Toevoegen mislukt");
+        return;
+      }
+      toast.success("Audio toegevoegd");
+      onSluit();
+      router.refresh();
+    } catch {
+      toast.error("Verbindingsfout");
+    } finally {
+      setBezig(false);
+    }
+  }
+
+  async function bewaarQuote() {
+    const tekst = quoteTekst.trim();
+    if (!tekst) {
+      toast.error("Quote-tekst is verplicht");
+      return;
+    }
+    setBezig(true);
+    try {
+      const res = await fetch("/api/pagina-blokken", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          pagina_namespace: paginaNamespace,
+          pagina_id: paginaId,
+          positie,
+          type: "quote",
+          inhoud: {
+            tekst,
+            bron: quoteBron.trim() || undefined,
+          },
+        }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        toast.error(data.error || "Toevoegen mislukt");
+        return;
+      }
+      toast.success("Quote toegevoegd");
+      onSluit();
+      router.refresh();
+    } catch {
+      toast.error("Verbindingsfout");
+    } finally {
+      setBezig(false);
+    }
+  }
+
   return (
     <div
       className="fixed inset-0 z-[110] bg-black/70 flex items-center justify-center p-4"
@@ -228,7 +389,11 @@ export function MediaToevoegenModal({
                 ? "Video toevoegen"
                 : stap === "afbeelding"
                   ? "Afbeelding toevoegen"
-                  : "PDF toevoegen"}
+                  : stap === "pdf"
+                    ? "PDF toevoegen"
+                    : stap === "audio"
+                      ? "Voice-bericht opnemen"
+                      : "Quote toevoegen"}
           </h3>
           <button
             type="button"
@@ -241,33 +406,51 @@ export function MediaToevoegenModal({
         </div>
 
         {stap === "type-keuze" && (
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
             <button
               type="button"
               onClick={() => setStap("video")}
-              className="p-4 rounded-lg border border-cm-border hover:border-cm-gold hover:bg-cm-gold/5 text-center"
+              className="p-3 rounded-lg border border-cm-border hover:border-cm-gold hover:bg-cm-gold/5 text-center"
             >
-              <div className="text-3xl mb-1">🎥</div>
+              <div className="text-2xl mb-1">🎥</div>
               <div className="text-xs text-cm-white">Video</div>
               <div className="text-[10px] text-cm-white/60">Vimeo / YouTube</div>
             </button>
             <button
               type="button"
               onClick={() => setStap("afbeelding")}
-              className="p-4 rounded-lg border border-cm-border hover:border-cm-gold hover:bg-cm-gold/5 text-center"
+              className="p-3 rounded-lg border border-cm-border hover:border-cm-gold hover:bg-cm-gold/5 text-center"
             >
-              <div className="text-3xl mb-1">🖼</div>
+              <div className="text-2xl mb-1">🖼</div>
               <div className="text-xs text-cm-white">Plaatje</div>
               <div className="text-[10px] text-cm-white/60">JPG/PNG ≤5MB</div>
             </button>
             <button
               type="button"
               onClick={() => setStap("pdf")}
-              className="p-4 rounded-lg border border-cm-border hover:border-cm-gold hover:bg-cm-gold/5 text-center"
+              className="p-3 rounded-lg border border-cm-border hover:border-cm-gold hover:bg-cm-gold/5 text-center"
             >
-              <div className="text-3xl mb-1">📄</div>
+              <div className="text-2xl mb-1">📄</div>
               <div className="text-xs text-cm-white">PDF</div>
               <div className="text-[10px] text-cm-white/60">≤10MB</div>
+            </button>
+            <button
+              type="button"
+              onClick={() => setStap("audio")}
+              className="p-3 rounded-lg border border-cm-border hover:border-cm-gold hover:bg-cm-gold/5 text-center"
+            >
+              <div className="text-2xl mb-1">🎙</div>
+              <div className="text-xs text-cm-white">Audio</div>
+              <div className="text-[10px] text-cm-white/60">Inspreken</div>
+            </button>
+            <button
+              type="button"
+              onClick={() => setStap("quote")}
+              className="p-3 rounded-lg border border-cm-border hover:border-cm-gold hover:bg-cm-gold/5 text-center"
+            >
+              <div className="text-2xl mb-1">💬</div>
+              <div className="text-xs text-cm-white">Quote</div>
+              <div className="text-[10px] text-cm-white/60">Citaat + bron</div>
             </button>
           </div>
         )}
@@ -426,6 +609,138 @@ export function MediaToevoegenModal({
                 className="btn-gold text-sm disabled:opacity-50"
               >
                 {bezig ? "Uploaden..." : "Toevoegen"}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {stap === "audio" && (
+          <div className="space-y-3">
+            <p className="text-cm-white/70 text-xs italic">
+              Spreek je voice-bericht direct in. Members kunnen 'm afspelen op
+              de pagina.
+            </p>
+
+            {/* Opname-controls + status */}
+            {!audioBlob && (
+              <div className="bg-cm-surface-2/40 border border-cm-border rounded-lg p-4 flex items-center justify-center gap-3">
+                {!audioOpnemen ? (
+                  <button
+                    type="button"
+                    onClick={startAudioOpname}
+                    className="btn-gold text-sm flex items-center gap-2"
+                  >
+                    🎙 Start opname
+                  </button>
+                ) : (
+                  <>
+                    <span className="text-red-400 animate-pulse text-2xl">⏺</span>
+                    <span className="font-mono text-cm-white text-sm">
+                      {audioTijd}s
+                    </span>
+                    <button
+                      type="button"
+                      onClick={stopAudioOpname}
+                      className="bg-red-500/30 border border-red-500/40 text-red-200 hover:bg-red-500/40 text-sm px-3 py-1.5 rounded-lg"
+                    >
+                      Stop
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
+
+            {audioBlob && (
+              <div className="bg-cm-surface-2/40 border border-cm-gold/30 rounded-lg p-3 flex items-center justify-between gap-2">
+                <span className="text-cm-white text-sm">
+                  ✓ Opname klaar ({audioDuur}s)
+                </span>
+                <button
+                  type="button"
+                  onClick={annuleerAudio}
+                  className="text-cm-white/60 hover:text-cm-white text-xs"
+                >
+                  Opnieuw
+                </button>
+              </div>
+            )}
+
+            <div>
+              <label className="text-cm-white/70 text-xs block mb-1">
+                Titel (optioneel)
+              </label>
+              <input
+                type="text"
+                value={audioTitel}
+                onChange={(e) => setAudioTitel(e.target.value)}
+                placeholder="Bijv. 'Hoi, even snel uitleggen'"
+                className="input-cm w-full text-sm"
+              />
+            </div>
+            <div className="flex gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setStap("type-keuze")}
+                className="text-cm-white/60 hover:text-cm-white text-sm"
+              >
+                ← Terug
+              </button>
+              <span className="flex-1" />
+              <button
+                type="button"
+                onClick={bewaarAudio}
+                disabled={bezig || !audioBlob}
+                className="btn-gold text-sm disabled:opacity-50"
+              >
+                {bezig ? "Uploaden..." : "Toevoegen"}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {stap === "quote" && (
+          <div className="space-y-3">
+            <div>
+              <label className="text-cm-white/70 text-xs block mb-1">
+                Citaat-tekst (verplicht)
+              </label>
+              <textarea
+                value={quoteTekst}
+                onChange={(e) => setQuoteTekst(e.target.value)}
+                placeholder="Bijv. 'Hoe je naar mensen kijkt voor de zin verandert hun antwoord.'"
+                className="textarea-cm w-full text-sm leading-relaxed"
+                rows={4}
+                autoFocus
+              />
+            </div>
+            <div>
+              <label className="text-cm-white/70 text-xs block mb-1">
+                Bron (optioneel)
+              </label>
+              <input
+                type="text"
+                value={quoteBron}
+                onChange={(e) => setQuoteBron(e.target.value)}
+                placeholder="Bijv. 'Eric Worre' of 'Les Brown'"
+                className="input-cm w-full text-sm"
+              />
+            </div>
+            <div className="flex gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setStap("type-keuze")}
+                className="text-cm-white/60 hover:text-cm-white text-sm"
+              >
+                ← Terug
+              </button>
+              <span className="flex-1" />
+              <button
+                type="button"
+                onClick={bewaarQuote}
+                disabled={bezig}
+                className="btn-gold text-sm disabled:opacity-50"
+              >
+                {bezig ? "Bezig..." : "Toevoegen"}
               </button>
             </div>
           </div>

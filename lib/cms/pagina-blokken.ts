@@ -6,7 +6,7 @@
 // Faalt stilletjes als tabel ontbreekt → lege Map.
 // ============================================================
 
-export type BlokType = "video" | "afbeelding" | "pdf";
+export type BlokType = "video" | "afbeelding" | "pdf" | "audio" | "quote";
 
 export type VideoInhoud = {
   url: string;
@@ -27,6 +27,16 @@ export type PdfInhoud = {
   bestandsnaam: string;
 };
 
+export type AudioInhoud = {
+  titel?: string;
+  duur_seconden?: number;
+};
+
+export type QuoteInhoud = {
+  tekst: string;
+  bron?: string;
+};
+
 export type Blok = {
   id: string;
   pagina_namespace: string;
@@ -34,9 +44,14 @@ export type Blok = {
   positie: string;
   volgorde: number;
   type: BlokType;
-  inhoud: VideoInhoud | AfbeeldingInhoud | PdfInhoud;
+  inhoud:
+    | VideoInhoud
+    | AfbeeldingInhoud
+    | PdfInhoud
+    | AudioInhoud
+    | QuoteInhoud;
   storage_pad: string | null;
-  /** Server-gegenereerd: signed URL voor afbeelding/pdf */
+  /** Server-gegenereerd: signed URL voor afbeelding/pdf/audio */
   bestand_url?: string;
 };
 
@@ -67,9 +82,15 @@ export async function haalPaginaBlokken(
       .order("volgorde", { ascending: true });
     if (error || !data) return result;
 
-    // Signed URLs voor upload-types
+    // Signed URLs voor upload-types (afbeelding/pdf/audio).
+    // Video gebruikt embed-URL en quote heeft geen storage.
     for (const blok of data as Blok[]) {
-      if (blok.storage_pad && blok.type !== "video") {
+      if (
+        blok.storage_pad &&
+        (blok.type === "afbeelding" ||
+          blok.type === "pdf" ||
+          blok.type === "audio")
+      ) {
         try {
           const { data: signed } = await supabase.storage
             .from("pagina-media")

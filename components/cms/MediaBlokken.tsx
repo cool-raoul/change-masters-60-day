@@ -8,11 +8,15 @@ import type {
   VideoInhoud,
   AfbeeldingInhoud,
   PdfInhoud,
+  AudioInhoud,
+  QuoteInhoud,
 } from "@/lib/cms/pagina-blokken";
 import { useEditModus } from "./EditModeContext";
 import { VideoBlok } from "./blokken/VideoBlok";
 import { AfbeeldingBlok } from "./blokken/AfbeeldingBlok";
 import { PdfBlok } from "./blokken/PdfBlok";
+import { AudioBlok } from "./blokken/AudioBlok";
+import { QuoteBlok } from "./blokken/QuoteBlok";
 import { MediaToevoegenKnop } from "./MediaToevoegenKnop";
 
 // ============================================================
@@ -112,6 +116,15 @@ export function MediaBlokken({
               inhoud={blok.inhoud as PdfInhoud}
               bestandUrl={blok.bestand_url}
             />
+          )}
+          {blok.type === "audio" && (
+            <AudioBlok
+              inhoud={blok.inhoud as AudioInhoud}
+              blokId={blok.id}
+            />
+          )}
+          {blok.type === "quote" && (
+            <QuoteBlok inhoud={blok.inhoud as QuoteInhoud} />
           )}
 
           {/* Founder-knoppen (alleen in edit-modus) */}
