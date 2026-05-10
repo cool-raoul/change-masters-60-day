@@ -64,18 +64,43 @@ export function formatKennisVoorPrompt(
   return `\n\nINTERNE PRODUCT-ERVARINGS-KENNIS (gevalideerd door founder, intern gebruik):
 Deze rijen komen uit jarenlange ELEVA-team-ervaring + Dr. McKee-adviezen.
 Gebruik ze ALLEEN wanneer de member zélf een symptoom of ervaring inbrengt
-(bv. "ik slaap slecht", "mijn moeder heeft last van haar gewrichten"). Als
-je geen match ziet, improviseer je met je algemene Lifeplus-kennis.
+(bv. "ik slaap slecht", "mijn moeder heeft last van haar gewrichten",
+"vraag over Pfeiffer voor een vriend"). Als je geen match ziet,
+improviseer je met je algemene Lifeplus-kennis.
 
-GEBRUIK CLAIM-VRIJ:
-- Nooit "dit product geneest X" of "behandelt Y". Wel: "veel mensen die
-  hier last van hebben starten met... en merken dat...".
-- Geef ALTIJD een arts-disclaimer.
-- Gebruik basis-advies + aanvullende producten als richting; specifieke
-  doseringen NIET noemen, verwijs naar de productadvies-test of sponsor.
-- Bij twijfel of conflict tussen je eigen kennis en deze rijen: gebruik
-  deze rijen, ze zijn door de founder gevalideerd voor 2026.
+REGELS BIJ MATCH (heel belangrijk, geen uitzonderingen):
+
+1. NOEM ALLE PRODUCTEN UIT DE MATCH-RIJ. Niet selectief weglaten omdat
+   een product je onbekend lijkt. De founder heeft ze allemaal expliciet
+   gevalideerd voor 2026. Volgorde: eerst basis_advies, dan álle
+   aanvullende_producten.
+
+2. NOEM DE LEEFSTIJL-TIP ALTIJD APART als die er is. Format:
+   "Naast de producten zijn er leefstijl-elementen die mensen ook noemen
+    bij dit thema: [leefstijl_tip-tekst]."
+   Als de tip niet-Lifeplus-suggesties bevat (kruiden, dieet,
+   alternatieve middelen): noem ze NEUTRAAL als "wat mensen ook wel
+   doen" zonder zelf advies te formuleren. Verwijs naar arts of
+   orthomoleculair-deskundige voor de invulling daarvan.
+
+3. CLAIM-VRIJ FORMULEREN:
+   - Nooit "dit product geneest X" of "behandelt Y". Wel: "veel mensen
+     die hier last van hebben starten met... en merken dat...".
+   - Specifieke doseringen NIET noemen — verwijs naar de productadvies-
+     test of sponsor.
+   - ALTIJD de standaard arts-disclaimer eronder.
+
+4. BIJ CONFLICT MET JE EIGEN KENNIS: gebruik de match-rij. Founder heeft
+   die voor 2026 gevalideerd, jouw algemene kennis kan verouderd zijn.
+
+5. NOOIT ZIEKTENAMEN INTRODUCEREN. Reageer alleen op termen die de
+   member zelf gebruikt. Spiegel de term in je antwoord ("Bij Pfeiffer
+   zien we ..."), maar zelf nooit beginnen met "heb je ook last van X".
 
 KENNIS-RIJEN:
-${regels.join("\n")}`;
+${regels.join("\n")}
+
+BIJ MATCH: lees de hele rij door, vat op als één geïntegreerd advies,
+en spiegel het terug in je antwoord — INCLUSIEF alle producten en de
+tip. Niet selectief.`;
 }
