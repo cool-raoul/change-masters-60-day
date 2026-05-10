@@ -31,7 +31,18 @@ interface TeamLid {
   onboarding?: OnboardingVoortgang | null;
 }
 
-async function haalTeamBoomOp(supabase: any, userId: string, diepte: number = 0, maxDiepte: number = 10): Promise<TeamLid[]> {
+async function haalTeamBoomOp(
+  supabase: any,
+  userId: string,
+  diepte: number = 0,
+  maxDiepte: number = 10,
+  bezocht: Set<string> = new Set([userId]),
+): Promise<TeamLid[]> {
+  // Cycle-detection: bezocht houdt elke al-bezochte user_id bij. Beschermt
+  // tegen kringverwijzingen in sponsor_id-grafiek (Raoul.sponsor=Gaby +
+  // Gaby.sponsor=Raoul → zou anders 10 levels lang dezelfde personen
+  // dupliceren). Root-user staat bij start in de set zodat de root nooit
+  // in z'n eigen subboom kan opduiken.
   if (diepte >= maxDiepte) return [];
 
   const { data: directeleden } = await supabase
@@ -42,8 +53,20 @@ async function haalTeamBoomOp(supabase: any, userId: string, diepte: number = 0,
 
   if (!directeleden || directeleden.length === 0) return [];
 
+  // Filter al-bezochte members weg vóór we recurse'n. Niet alleen 'sla over
+  // bij recursie' maar 'toon ze ook niet in deze level', anders zie je
+  // Gaby twee keer als kind van Raoul bij een ouderwetse loop.
+  const verseLeden = directeleden.filter(
+    (l: { id: string }) => !bezocht.has(l.id),
+  );
+  if (verseLeden.length === 0) return [];
+
+  // Voeg deze level's IDs toe aan bezocht-set vóór we kinderen ophalen,
+  // zodat siblings elkaar niet kunnen "vinden" via gedeelde voorouder.
+  for (const lid of verseLeden) bezocht.add(lid.id);
+
   // Haal onboarding voortgang op voor alle directe leden in één query
-  const ledenIds = directeleden.map((l: any) => l.id);
+  const ledenIds = verseLeden.map((l: any) => l.id);
   const { data: voortgangData } = await supabase
     .from("onboarding_voortgang")
     .select("*")
@@ -55,8 +78,14 @@ async function haalTeamBoomOp(supabase: any, userId: string, diepte: number = 0,
   }
 
   const boom: TeamLid[] = [];
-  for (const lid of directeleden) {
-    const kinderen = await haalTeamBoomOp(supabase, lid.id, diepte + 1, maxDiepte);
+  for (const lid of verseLeden) {
+    const kinderen = await haalTeamBoomOp(
+      supabase,
+      lid.id,
+      diepte + 1,
+      maxDiepte,
+      bezocht,
+    );
     // Privacy: alleen last_seen_at doorgeven als de member zelf z'n
     // presence-zichtbaarheid AAN heeft staan (default true). Anders null.
     const presenceZichtbaar =
