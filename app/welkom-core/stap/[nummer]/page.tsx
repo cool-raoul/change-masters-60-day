@@ -2,11 +2,22 @@ import { redirect, notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { CORE_LEERPAD } from "@/lib/leerpaden/core-stappen";
 import { StapDetail } from "@/components/leerpaden/StapDetail";
+import { pasStapOverridesToe } from "@/lib/leerpaden/overrides";
+import {
+  haalTekstOverridesMulti,
+  namespaceAlsRecord,
+} from "@/lib/cms/tekst-overrides";
+import {
+  haalPaginaBlokken,
+  blokkenAlsRecord,
+} from "@/lib/cms/pagina-blokken";
 
 // ============================================================
 // /welkom-core/stap/[nummer], stap-detail-pagina voor de Core-flow
 //
 // Zelfde structuur als de Pro-stap-detail, maar met Core-data.
+// Server-side laadt nu ook tekst_overrides (core-stap, core-ui) en
+// pagina_blokken zodat founders hun edits inline kunnen doen.
 // ============================================================
 
 export const dynamic = "force-dynamic";
@@ -42,8 +53,25 @@ export default async function CoreStapPagina({ params }: { params: Params }) {
     redirect("/welkom-keuze");
   }
 
-  const stap = CORE_LEERPAD.stappen.find((s) => s.nummer === stapNr);
+  let stap = CORE_LEERPAD.stappen.find((s) => s.nummer === stapNr);
   if (!stap) notFound();
+
+  // Tekst-overrides laden (core-stap voor per-stap content, core-ui
+  // voor gedeelde headers/buttons)
+  const tekstOverrides = await haalTekstOverridesMulti(supabase, [
+    "core-stap",
+    "core-ui",
+  ]);
+  stap = pasStapOverridesToe(stap, tekstOverrides.get("core-stap"));
+  const uiOverrides = namespaceAlsRecord(tekstOverrides, "core-ui");
+
+  // Media-blokken voor deze stap
+  const paginaBlokkenMap = await haalPaginaBlokken(
+    supabase,
+    "core-stap",
+    String(stapNr),
+  );
+  const paginaBlokken = blokkenAlsRecord(paginaBlokkenMap);
 
   return (
     <StapDetail
@@ -51,6 +79,11 @@ export default async function CoreStapPagina({ params }: { params: Params }) {
       stap={stap}
       dashboardRoute="/welkom-core"
       stapFilmSlugPrefix="core-stap"
+      isFounder={isFounder}
+      uiOverrides={uiOverrides}
+      paginaBlokken={paginaBlokken}
+      paginaNamespace="core-stap"
+      tekstNamespace="core"
     />
   );
 }
