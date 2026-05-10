@@ -9,20 +9,21 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // ELEVA "Stiller met glow" palet (mockup 4, akkoord 7 mei 2026).
-        // Aangepast 10 mei 2026 avond op basis van Raoul's feedback +
-        // mockup-screenshot: dieper zwart, subtielere borders, warmer
-        // goud. De vorige (donkergrijs) waarden voelden niet strak genoeg;
-        // de mockup heeft een diep-zwart-met-fluweel-glow karakter.
-        "cm-black": "#0c0e12",       // diep donker, bijna zwart maar nog warmte
-        "cm-surface": "#15171c",     // cards: subtiele elevatie boven achtergrond
-        "cm-surface-2": "#1d2026",   // sub-cards / accents, één stapje lichter
-        "cm-border": "#262a32",      // borders subtieler, bijna onzichtbaar maar voelbaar
-        "cm-gold": "#c4a04a",        // warmer rijker goud, amber-richting
-        "cm-gold-light": "#e0bc62",  // helderder highlight voor accent-buttons
-        "cm-gold-dim": "#5d4a25",    // donker goud voor borders/lijnen
-        "cm-white": "#e8e6e0",       // gebroken cream, zachter dan puur wit
-        "cm-muted": "#8a8b8e",       // neutraal grijs
+        // ELEVA "Stiller met glow" palet, nu met thema-switch via CSS-vars.
+        // Concrete waardes staan in app/globals.css. Dark = default, light
+        // wordt geactiveerd door class="light" op <html> (zie ThemeContext).
+        // De `<alpha-value>`-modifier laat Tailwind opacity-utilities zoals
+        // bg-cm-gold/20 correct genereren.
+        "cm-black": "rgb(var(--cm-black) / <alpha-value>)",
+        "cm-surface": "rgb(var(--cm-surface) / <alpha-value>)",
+        "cm-surface-2": "rgb(var(--cm-surface-2) / <alpha-value>)",
+        "cm-border": "rgb(var(--cm-border) / <alpha-value>)",
+        "cm-gold": "rgb(var(--cm-gold) / <alpha-value>)",
+        "cm-gold-light": "rgb(var(--cm-gold-light) / <alpha-value>)",
+        "cm-gold-dim": "rgb(var(--cm-gold-dim) / <alpha-value>)",
+        "cm-white": "rgb(var(--cm-white) / <alpha-value>)",
+        "cm-muted": "rgb(var(--cm-muted) / <alpha-value>)",
+        "cm-on-gold": "rgb(var(--cm-on-gold) / <alpha-value>)",
         // Pipeline fase kleuren, functioneel behouden
         "fase-lead": "#3A3A3A",
         "fase-uitgenodigd": "#1A2A3A",
@@ -36,14 +37,18 @@ const config: Config = {
         display: ["DM Sans", "system-ui", "sans-serif"],
       },
       backgroundImage: {
+        // De gradient-gold-utility staat ook in globals.css (CSS-var
+        // versie), die wint omdat-ie meeswitcht met het thema. Deze
+        // Tailwind-config-versie blijft voor backwards-compat met
+        // bestaande bg-gradient-gold-aanroepen.
         "gradient-gold":
-          "linear-gradient(135deg, #c4a04a 0%, #e0bc62 50%, #c4a04a 100%)",
+          "linear-gradient(135deg, rgb(var(--cm-gold)) 0%, rgb(var(--cm-gold-light)) 50%, rgb(var(--cm-gold)) 100%)",
         "gradient-dark":
-          "linear-gradient(135deg, #0c0e12 0%, #15171c 100%)",
+          "linear-gradient(135deg, rgb(var(--cm-black)) 0%, rgb(var(--cm-surface)) 100%)",
       },
       boxShadow: {
-        gold: "0 0 20px rgba(196, 160, 74, 0.15)",
-        "gold-lg": "0 0 40px rgba(196, 160, 74, 0.2)",
+        gold: "0 0 20px rgb(var(--cm-gold) / 0.15)",
+        "gold-lg": "0 0 40px rgb(var(--cm-gold) / 0.2)",
       },
       animation: {
         "fade-in": "fadeIn 0.3s ease-in-out",

@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<title>ELEVA — Light-thema opties</title>
+<style>
+  :root {
+    --serif: Georgia, "Times New Roman", serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    background: linear-gradient(180deg, #1a1a1c 0%, #0e0f12 100%);
+    color: #ddd;
+    padding: 24px 16px 80px;
+    min-height: 100vh;
+  }
+  h1 {
+    text-align: center;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 28px;
+    letter-spacing: 0.02em;
+    margin-bottom: 8px;
+  }
+  .intro {
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+    max-width: 600px;
+    margin: 0 auto 32px;
+    line-height: 1.5;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  @media (max-width: 1100px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  .col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .col-titel {
+    font-family: var(--serif);
+    font-size: 22px;
+    color: #fff;
+    text-align: center;
+  }
+  .col-omschrijving {
+    text-align: center;
+    color: #aaa;
+    font-size: 13px;
+    line-height: 1.5;
+    max-width: 320px;
+  }
+
+  /* Phone-frame */
+  .phone {
+    width: 360px;
+    max-width: 100%;
+    border-radius: 36px;
+    padding: 14px 12px;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.04),
+      0 12px 40px rgba(0,0,0,0.5),
+      0 0 60px rgba(0,0,0,0.4);
+  }
+  .screen {
+    border-radius: 24px;
+    padding: 16px 14px 70px;
+    min-height: 700px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ============================================================
+     OPTIE A — WARM PAPER
+     ============================================================ */
+  .a .phone { background: #2a2622; }
+  .a .screen {
+    background: #f8f5ee;
+    color: #2a2826;
+  }
+  .a .header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 4px 4px 16px;
+  }
+  .a .brand {
+    font-family: 'Outfit', system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    background: linear-gradient(135deg, #a8853a 0%, #c9a151 50%, #a8853a 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 17px;
+  }
+  .a .streak {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(168, 133, 58, 0.12);
+    border: 1px solid rgba(168, 133, 58, 0.3);
+    color: #a8853a;
+    padding: 4px 9px; border-radius: 999px;
+    font-size: 12px; font-weight: 600;
+  }
+  .a .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #fff;
+    border: 1px solid #e2dccd;
+    color: #2a2826;
+    font-size: 11px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .a .groet { color: #6e6960; font-style: italic; font-size: 13px; }
+  .a .titel {
+    font-family: var(--serif);
+    font-size: 22px;
+    margin-top: 4px;
+    line-height: 1.3;
+  }
+  .a .titel-accent {
+    color: #a8853a;
+    border-bottom: 1px solid #a8853a;
+    padding-bottom: 1px;
+  }
+  .a .stappen-label {
+    color: #6e6960;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 16px 0 6px;
+  }
+  .a .stappen {
+    display: flex; gap: 4px; flex-wrap: wrap;
+  }
+  .a .stap {
+    width: 12px; height: 12px; border-radius: 50%;
+    background: #ede7d5; border: 1px solid #e2dccd;
+  }
+  .a .stap.actief { background: #a8853a; border-color: #a8853a; }
+  .a .stap.gedaan { background: #c9a151; border-color: #c9a151; }
+  .a .focus-card {
+    background: #fff;
+    border-left: 3px solid #c9a151;
+    border-top: 1px solid #e2dccd;
+    border-right: 1px solid #e2dccd;
+    border-bottom: 1px solid #e2dccd;
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 16px;
+    box-shadow: 0 1px 2px rgba(168,133,58,0.06);
+  }
+  .a .focus-label {
+    color: #a8853a;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .a .focus-titel {
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.4;
+  }
+  .a .focus-titel b { color: #a8853a; }
+  .a .focus-body {
+    color: #6e6960;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-top: 8px;
+  }
+  .a .btn {
+    background: linear-gradient(135deg, #a8853a, #c9a151);
+    color: #1a1816;
+    font-weight: 600;
+    padding: 12px 16px;
+    border-radius: 10px;
+    width: 100%;
+    text-align: center;
+    margin-top: 14px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .a .stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    margin-top: 16px;
+  }
+  .a .stat-card {
+    background: #fff;
+    border: 1px solid #e2dccd;
+    border-radius: 10px;
+    padding: 12px;
+  }
+  .a .stat-getal { font-size: 22px; font-weight: 700; color: #2a2826; }
+  .a .stat-label { font-size: 11px; color: #6e6960; margin-top: 2px; }
+  .a .social-strip {
+    margin-top: 16px;
+    background: #f4f1e9;
+    border: 1px solid #e2dccd;
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px;
+  }
+  .a .social-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #c9a151; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .a .nav {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: rgba(248,245,238,0.92);
+    border-top: 1px solid #e2dccd;
+    padding: 8px 12px 12px;
+    display: flex; justify-content: space-around;
+    font-size: 10px;
+  }
+  .a .nav-item { color: #6e6960; text-align: center; }
+  .a .nav-item.actief { color: #a8853a; font-weight: 600; }
+  .a .nav-icon { font-size: 18px; display: block; margin-bottom: 2px; }
+  .a .fab {
+    position: absolute; right: 16px; bottom: 64px;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: linear-gradient(135deg, #a8853a, #c9a151);
+    box-shadow: 0 4px 12px rgba(168,133,58,0.4);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 20px;
+  }
+
+  /* ============================================================
+     OPTIE B — COOL ZEN
+     ============================================================ */
+  .b .phone { background: #1a1d22; }
+  .b .screen {
+    background: #f7f8fa;
+    color: #1f2227;
+  }
+  .b .header { display: flex; align-items: center; justify-content: space-between; padding: 4px 4px 16px; }
+  .b .brand {
+    font-family: 'Outfit', system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    background: linear-gradient(135deg, #b89042 0%, #d4ad58 50%, #b89042 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 17px;
+  }
+  .b .streak {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(184, 144, 66, 0.1);
+    border: 1px solid rgba(184, 144, 66, 0.3);
+    color: #b89042;
+    padding: 4px 9px; border-radius: 999px;
+    font-size: 12px; font-weight: 600;
+  }
+  .b .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #fff; border: 1px solid #dde1e6;
+    color: #1f2227; font-size: 11px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .b .groet { color: #6b7280; font-style: italic; font-size: 13px; }
+  .b .titel {
+    font-family: var(--serif);
+    font-size: 22px;
+    margin-top: 4px;
+    line-height: 1.3;
+  }
+  .b .titel-accent { color: #b89042; border-bottom: 1px solid #b89042; padding-bottom: 1px; }
+  .b .stappen-label {
+    color: #6b7280; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    margin: 16px 0 6px;
+  }
+  .b .stappen { display: flex; gap: 4px; flex-wrap: wrap; }
+  .b .stap {
+    width: 12px; height: 12px; border-radius: 50%;
+    background: #e5e7eb; border: 1px solid #dde1e6;
+  }
+  .b .stap.actief { background: #b89042; border-color: #b89042; }
+  .b .stap.gedaan { background: #d4ad58; border-color: #d4ad58; }
+  .b .focus-card {
+    background: #fff;
+    border: 1px solid #dde1e6;
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .b .focus-label {
+    color: #b89042; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    font-weight: 600; margin-bottom: 6px;
+  }
+  .b .focus-titel {
+    font-family: var(--serif);
+    font-size: 17px; line-height: 1.4;
+  }
+  .b .focus-titel b { color: #b89042; }
+  .b .focus-body {
+    color: #6b7280; font-size: 13px;
+    line-height: 1.5; margin-top: 8px;
+  }
+  .b .btn {
+    background: linear-gradient(135deg, #b89042, #d4ad58);
+    color: #1a1816;
+    font-weight: 600;
+    padding: 12px 16px; border-radius: 10px;
+    width: 100%; text-align: center;
+    margin-top: 14px; border: none;
+    font-size: 14px; cursor: pointer;
+  }
+  .b .stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    margin-top: 16px;
+  }
+  .b .stat-card {
+    background: #fff; border: 1px solid #dde1e6;
+    border-radius: 10px; padding: 12px;
+  }
+  .b .stat-getal { font-size: 22px; font-weight: 700; color: #1f2227; }
+  .b .stat-label { font-size: 11px; color: #6b7280; margin-top: 2px; }
+  .b .social-strip {
+    margin-top: 16px;
+    background: #f0f2f5;
+    border: 1px solid #dde1e6;
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px;
+  }
+  .b .social-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #d4ad58; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .b .nav {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: rgba(247,248,250,0.95);
+    border-top: 1px solid #dde1e6;
+    padding: 8px 12px 12px;
+    display: flex; justify-content: space-around;
+    font-size: 10px;
+  }
+  .b .nav-item { color: #6b7280; text-align: center; }
+  .b .nav-item.actief { color: #b89042; font-weight: 600; }
+  .b .nav-icon { font-size: 18px; display: block; margin-bottom: 2px; }
+  .b .fab {
+    position: absolute; right: 16px; bottom: 64px;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: linear-gradient(135deg, #b89042, #d4ad58);
+    box-shadow: 0 4px 12px rgba(184,144,66,0.35);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 20px;
+  }
+
+  /* ============================================================
+     OPTIE C — CREAM BRAND
+     ============================================================ */
+  .c .phone { background: #2a2620; }
+  .c .screen {
+    background: #faf6ec;
+    color: #2c2620;
+  }
+  .c .header { display: flex; align-items: center; justify-content: space-between; padding: 4px 4px 16px; }
+  .c .brand {
+    font-family: 'Outfit', system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    background: linear-gradient(135deg, #9b7d3c 0%, #c4a04a 50%, #9b7d3c 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 17px;
+  }
+  .c .streak {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(155, 125, 60, 0.14);
+    border: 1px solid #d9c995;
+    color: #9b7d3c;
+    padding: 4px 9px; border-radius: 999px;
+    font-size: 12px; font-weight: 600;
+  }
+  .c .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #fffdf6; border: 1px solid #d9c995;
+    color: #2c2620; font-size: 11px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .c .groet { color: #7a6d5a; font-style: italic; font-size: 13px; }
+  .c .titel {
+    font-family: var(--serif);
+    font-size: 22px; margin-top: 4px;
+    line-height: 1.3;
+  }
+  .c .titel-accent { color: #9b7d3c; border-bottom: 1px solid #9b7d3c; padding-bottom: 1px; }
+  .c .stappen-label {
+    color: #7a6d5a; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    margin: 16px 0 6px;
+  }
+  .c .stappen { display: flex; gap: 4px; flex-wrap: wrap; }
+  .c .stap {
+    width: 12px; height: 12px; border-radius: 50%;
+    background: #f3eedd; border: 1px solid #d9c995;
+  }
+  .c .stap.actief { background: #9b7d3c; border-color: #9b7d3c; }
+  .c .stap.gedaan { background: #c4a04a; border-color: #c4a04a; }
+  .c .focus-card {
+    background: #fffdf6;
+    border: 1px solid #d9c995;
+    border-radius: 12px;
+    padding: 16px; margin-top: 16px;
+    box-shadow: 0 1px 3px rgba(155,125,60,0.1);
+  }
+  .c .focus-label {
+    color: #9b7d3c; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    font-weight: 600; margin-bottom: 6px;
+  }
+  .c .focus-titel {
+    font-family: var(--serif);
+    font-size: 17px; line-height: 1.4;
+  }
+  .c .focus-titel b { color: #9b7d3c; }
+  .c .focus-body {
+    color: #7a6d5a; font-size: 13px;
+    line-height: 1.5; margin-top: 8px;
+  }
+  .c .btn {
+    background: linear-gradient(135deg, #9b7d3c, #c4a04a);
+    color: #fffdf6;
+    font-weight: 600;
+    padding: 12px 16px; border-radius: 10px;
+    width: 100%; text-align: center;
+    margin-top: 14px; border: none;
+    font-size: 14px; cursor: pointer;
+  }
+  .c .stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    margin-top: 16px;
+  }
+  .c .stat-card {
+    background: #fffdf6; border: 1px solid #d9c995;
+    border-radius: 10px; padding: 12px;
+  }
+  .c .stat-getal { font-size: 22px; font-weight: 700; color: #2c2620; }
+  .c .stat-label { font-size: 11px; color: #7a6d5a; margin-top: 2px; }
+  .c .social-strip {
+    margin-top: 16px;
+    background: #f3eedd;
+    border: 1px solid #d9c995;
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px;
+  }
+  .c .social-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #9b7d3c; color: #fffdf6;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .c .nav {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: rgba(250,246,236,0.95);
+    border-top: 1px solid #d9c995;
+    padding: 8px 12px 12px;
+    display: flex; justify-content: space-around;
+    font-size: 10px;
+  }
+  .c .nav-item { color: #7a6d5a; text-align: center; }
+  .c .nav-item.actief { color: #9b7d3c; font-weight: 600; }
+  .c .nav-icon { font-size: 18px; display: block; margin-bottom: 2px; }
+  .c .fab {
+    position: absolute; right: 16px; bottom: 64px;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: linear-gradient(135deg, #9b7d3c, #c4a04a);
+    box-shadow: 0 4px 14px rgba(155,125,60,0.4);
+    display: flex; align-items: center; justify-content: center;
+    color: #fffdf6; font-size: 20px;
+  }
+
+  .keuze-hint {
+    text-align: center; color: #aaa; font-size: 13px;
+    margin-top: 48px; padding: 16px;
+    border-top: 1px solid #2a2a2c;
+  }
+  .keuze-hint b { color: #d4ad58; }
+</style>
+</head>
+<body>
+
+<h1>ELEVA · Light-thema opties</h1>
+<p class="intro">
+  Drie smaken voor het light-thema. Allemaal met dezelfde lay-out + content,
+  alleen het palet verschilt. Klik tussen de mockups en zie wat het beste
+  past bij hoe jij wilt dat ELEVA voelt in light-mode.
+</p>
+
+<div class="grid">
+
+  <!-- ====== OPTIE A — WARM PAPER ====== -->
+  <div class="col a">
+    <div class="col-titel">A — Warm paper</div>
+    <p class="col-omschrijving">
+      Papier-notitieboek, handgeschreven brief. ELEVA's huidige warmth-pillar
+      vertaald naar licht.
+    </p>
+    <div class="phone">
+      <div class="screen">
+        <div class="header">
+          <div class="brand">ELEVA</div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span class="streak">🔥 7</span>
+            <div class="avatar">RZ</div>
+          </div>
+        </div>
+        <div class="groet">Mooi dat je er bent vandaag,</div>
+        <div class="titel">
+          Raoul, dag <span class="titel-accent">3 van je reis</span>.
+        </div>
+        <div class="stappen-label">Voortgang door je 21 dagen</div>
+        <div class="stappen">
+          <div class="stap gedaan"></div>
+          <div class="stap gedaan"></div>
+          <div class="stap actief"></div>
+          <div class="stap"></div><div class="stap"></div><div class="stap"></div>
+          <div class="stap"></div><div class="stap"></div><div class="stap"></div>
+          <div class="stap"></div><div class="stap"></div><div class="stap"></div>
+          <div class="stap"></div><div class="stap"></div><div class="stap"></div>
+          <div class="stap"></div><div class="stap"></div><div class="stap"></div>
+          <div class="stap"></div><div class="stap"></div><div class="stap"></div>
+        </div>
+        <div class="focus-card">
+          <div class="focus-label">Vandaag jouw focus</div>
+          <div class="focus-titel">
+            Vandaag bouw je je <b>webshop op</b> in drie korte stappen.
+          </div>
+          <div class="focus-body">
+            Webshop aanmaken, kredietformulier, teams-administratie. Eén ochtend,
+            daarna ben je rond.
+          </div>
+          <button class="btn">Hier ga ik mee aan de slag</button>
+        </div>
+        <div class="stats">
+          <div class="stat-card">
+            <div class="stat-getal">23</div>
+            <div class="stat-label">mensen op je lijst</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-getal">3</div>
+            <div class="stat-label">eerste uitnodigingen weg</div>
+          </div>
+        </div>
+        <div class="social-strip">
+          <div class="social-avatar">G</div>
+          <span>Gaby kijkt met je mee</span>
+        </div>
+        <div class="fab">🎙</div>
+        <div class="nav">
+          <div class="nav-item actief"><span class="nav-icon">🏠</span>Vandaag</div>
+          <div class="nav-item"><span class="nav-icon">👥</span>Namen</div>
+          <div class="nav-item"><span class="nav-icon">💬</span>Chats</div>
+          <div class="nav-item"><span class="nav-icon">🤖</span>Mentor</div>
+          <div class="nav-item"><span class="nav-icon">⋯</span>Meer</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== OPTIE B — COOL ZEN ====== -->
+  <div class="col b">
+    <div class="col-titel">B — Cool zen</div>
+    <p class="col-omschrijving">
+      Modern, clean, hedendaagse app. Notion / Linear-stijl.
+      Efficiënt, professional.
+    </p>
+    <div class="phone">
+      <div class="screen">
+        <div class="header">
+          <div class="brand">ELEVA</div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span class="streak">🔥 7</span>
+            <div class="avatar">RZ</div>
+          </div>
+        </div>
+        <div class="groet">Mooi dat je er bent vandaag,</div>
+        <div class="titel">
+          Raoul, dag <span class="titel-accent">3 van je reis</span>.
+        </div>
+        <div class="stappen-label">Voortgang door je 21 dagen</div>
+        <div class="stappen">
+          <div class="stap gedaan"></div>
+          <div class="stap gedaan"></div>
+          <div class="stap actief"></div>
+          <div class="stap"></div><div class="stap"></div><div class="stap"></div>
+          <div class="stap"></div><div class="stap"></div><div class="stap"></div>
+          <div class="stap"></div><div class="stap"></div><div class="stap"></div>
+          <div class="stap"></div><div class="stap"></div><div class="stap"></div>
+          <div class="stap"></div><div class="stap"></div><div class="stap"></div>
+          <div class="stap"></div><div class="stap"></div><div class="stap"></div>
+        </div>
+        <div class="focus-card">
+          <div class="focus-label">Vandaag jouw focus</div>
+          <div class="focus-titel">
+            Vandaag bouw je je <b>webshop op</b> in drie korte stappen.
+          </div>
+          <div class="focus-body">
+            Webshop aanmaken, kredietformulier, teams-administratie. Eén ochtend,
+            daarna ben je rond.
+          </div>
+          <button class="btn">Hier ga ik mee aan de slag</button>
+        </div>
+        <div class="stats">
+          <div class="stat-card">
+            <div class="stat-getal">23</div>
+            <div class="stat-label">mensen op je lijst</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-getal">3</div>
+            <div class="stat-label">eerste uitnodigingen weg</div>
+          </div>
+        </div>
+        <div class="social-strip">
+          <div class="social-avatar">G</div>
+          <span>Gaby kijkt met je mee</span>
+        </div>
+        <div class="fab">🎙</div>
+        <div class="nav">
+          <div class="nav-item actief"><span class="nav-icon">🏠</span>Vandaag</div>
+          <div class="nav-item"><span class="nav-icon">👥</span>Namen</div>
+          <div class="nav-item"><span class="nav-icon">💬</span>Chats</div>
+          <div class="nav-item"><span class="nav-icon">🤖</span>Mentor</div>
+          <div class="nav-item"><span class="nav-icon">⋯</span>Meer</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== OPTIE C — CREAM BRAND ====== -->
+  <div class="col c">
+    <div class="col-titel">C — Cream brand</div>
+    <p class="col-omschrijving">
+      Chic, premium boutique. Goud doorgetrokken tot in borders.
+      "Onderdeel van iets exclusiefs".
+    </p>
+    <div class="phone">
+      <div class="screen">
+        <div class="header">
+          <div class="brand">ELEVA</div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span class="streak">🔥 7</span>
+            <div class="avatar">RZ</div>
+          </div>
+        </div>
+        <div class="groet">Mooi dat je er bent vandaag,</div>
+        <div class="titel">
+          Raoul, dag <span class="titel-accent">3 van je reis</span>.
+        </div>
+        <div class="stappen-label">Voortgang door je 21 dagen</div>
+        <div class="stappen">
+          <div class="stap gedaan"></div>
+          <div class="stap gedaan"></div>
+          <div class="stap actief"></div>
+          <div class="stap"></div><div class="stap"></div><div class="stap"></div>
+          <div class="stap"></div><div class="stap"></div><div class="stap"></div>
+          <div class="stap"></div><div class="stap"></div><div class="stap"></div>
+          <div class="stap"></div><div class="stap"></div><div class="stap"></div>
+          <div class="stap"></div><div class="stap"></div><div class="stap"></div>
+          <div class="stap"></div><div class="stap"></div><div class="stap"></div>
+        </div>
+        <div class="focus-card">
+          <div class="focus-label">Vandaag jouw focus</div>
+          <div class="focus-titel">
+            Vandaag bouw je je <b>webshop op</b> in drie korte stappen.
+          </div>
+          <div class="focus-body">
+            Webshop aanmaken, kredietformulier, teams-administratie. Eén ochtend,
+            daarna ben je rond.
+          </div>
+          <button class="btn">Hier ga ik mee aan de slag</button>
+        </div>
+        <div class="stats">
+          <div class="stat-card">
+            <div class="stat-getal">23</div>
+            <div class="stat-label">mensen op je lijst</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-getal">3</div>
+            <div class="stat-label">eerste uitnodigingen weg</div>
+          </div>
+        </div>
+        <div class="social-strip">
+          <div class="social-avatar">G</div>
+          <span>Gaby kijkt met je mee</span>
+        </div>
+        <div class="fab">🎙</div>
+        <div class="nav">
+          <div class="nav-item actief"><span class="nav-icon">🏠</span>Vandaag</div>
+          <div class="nav-item"><span class="nav-icon">👥</span>Namen</div>
+          <div class="nav-item"><span class="nav-icon">💬</span>Chats</div>
+          <div class="nav-item"><span class="nav-icon">🤖</span>Mentor</div>
+          <div class="nav-item"><span class="nav-icon">⋯</span>Meer</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p class="keuze-hint">
+  Welke voelt het meest als ELEVA voor jou? Stuur een berichtje met je keuze
+  (<b>A</b>, <b>B</b> of <b>C</b>), of zeg <b>"mix A met X van C"</b> als je een
+  combinatie wilt. Daarna bouw ik 'm in als alternatief naast het dark-thema.
+</p>
+
+</body>
+</html>

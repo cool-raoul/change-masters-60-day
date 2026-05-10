@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTaal } from "@/lib/i18n/TaalContext";
+import { useThema } from "@/components/theme/ThemeContext";
 
 export function Topbar({
   gebruikersnaam,
@@ -34,6 +35,7 @@ export function Topbar({
   const fase = dag <= 20 ? 1 : dag <= 40 ? 2 : 3;
   const { v } = useTaal();
   const router = useRouter();
+  const { thema, zetThema } = useThema();
 
   const supabase = createClient();
 
@@ -220,13 +222,13 @@ export function Topbar({
               className="absolute right-0 top-full mt-2 w-56 rounded-xl border border-cm-border shadow-2xl py-1 z-[60]"
               style={{
                 // Drie-laagse fix tegen doorzichtigheid:
-                // 1) Hardcoded solid hex-bg (geen Tailwind alpha-class).
+                // 1) Solid bg via CSS-var (switcht mee met thema).
                 // 2) isolation: isolate creëert nieuwe stacking-context,
                 //    zodat eventuele backdrop-filter van een ouder geen
                 //    invloed meer heeft op deze container.
                 // 3) translateZ(0) forceert een eigen compositing-layer,
                 //    helpt op iOS Safari waar render-bugs voorkomen.
-                backgroundColor: "#1a1d22",
+                backgroundColor: "rgb(var(--cm-surface))",
                 isolation: "isolate",
                 transform: "translateZ(0)",
               }}
@@ -252,6 +254,43 @@ export function Topbar({
               >
                 <span>💡</span> Over ELEVA
               </Link>
+
+              {/* Thema-keuze. Donker = default, licht = "cream brand" alternatief.
+                  Inline-segmented control zodat de keuze direct te zien is. */}
+              <div className="border-t border-cm-border mt-1 px-4 pt-2.5 pb-2">
+                <p className="text-cm-white/60 text-[10px] uppercase tracking-wider mb-1.5">
+                  Thema
+                </p>
+                <div className="flex gap-1 bg-cm-surface-2 rounded-lg p-0.5">
+                  <button
+                    type="button"
+                    role="menuitemradio"
+                    aria-checked={thema === "dark"}
+                    onClick={() => zetThema("dark")}
+                    className={`flex-1 text-xs py-1.5 rounded-md transition-colors flex items-center justify-center gap-1.5 ${
+                      thema === "dark"
+                        ? "bg-cm-gold text-cm-on-gold font-semibold"
+                        : "text-cm-white/70 hover:text-cm-white"
+                    }`}
+                  >
+                    <span>🌙</span> Donker
+                  </button>
+                  <button
+                    type="button"
+                    role="menuitemradio"
+                    aria-checked={thema === "light"}
+                    onClick={() => zetThema("light")}
+                    className={`flex-1 text-xs py-1.5 rounded-md transition-colors flex items-center justify-center gap-1.5 ${
+                      thema === "light"
+                        ? "bg-cm-gold text-cm-on-gold font-semibold"
+                        : "text-cm-white/70 hover:text-cm-white"
+                    }`}
+                  >
+                    <span>☀️</span> Licht
+                  </button>
+                </div>
+              </div>
+
               <button
                 type="button"
                 role="menuitem"

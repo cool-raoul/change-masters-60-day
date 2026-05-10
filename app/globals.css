@@ -4,6 +4,42 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   THEME-VARIABELEN
+   Dark = default. Light wordt geactiveerd door .light op <html>.
+   Waarden zijn 'r g b'-triplets zodat Tailwind's <alpha-value>-
+   modifier werkt (bv. bg-cm-gold/20).
+   ============================================================ */
+:root {
+  /* DARK (default) — diep-zwart fluweel met warm goud */
+  --cm-black: 12 14 18;
+  --cm-surface: 21 23 28;
+  --cm-surface-2: 29 32 38;
+  --cm-border: 38 42 50;
+  --cm-gold: 196 160 74;
+  --cm-gold-light: 224 188 98;
+  --cm-gold-dim: 93 74 37;
+  --cm-white: 232 230 224;
+  --cm-muted: 138 139 142;
+  /* Voor btn-tekst op gold: dark-mode = dark, voor contrast tegen gold */
+  --cm-on-gold: 12 14 18;
+}
+
+:root.light {
+  /* LIGHT — Optie C "Cream brand": premium cream + goud doorgetrokken */
+  --cm-black: 250 246 236;       /* bg: lichte cream */
+  --cm-surface: 255 253 246;     /* cards: bijna-witte cream */
+  --cm-surface-2: 243 238 221;   /* sub-cards: warmer cream */
+  --cm-border: 217 201 149;      /* GOUDEN-TINT border (kenmerkend voor C) */
+  --cm-gold: 155 125 60;         /* diep koffie-goud, leesbaar op licht */
+  --cm-gold-light: 196 160 74;   /* warme highlight */
+  --cm-gold-dim: 93 74 37;       /* zelfde dim-tint */
+  --cm-white: 44 38 32;          /* tekst: donkere koffie */
+  --cm-muted: 122 109 90;        /* muted: warm tan-grijs */
+  /* In light: cream-witte tekst op deep-gold knoppen voor contrast */
+  --cm-on-gold: 255 253 246;
+}
+
 @layer base {
   * {
     box-sizing: border-box;
@@ -47,9 +83,10 @@
     @apply bg-cm-surface border border-cm-border rounded-xl p-4;
   }
 
-  /* Gouden knop */
+  /* Gouden knop — tekst-kleur switcht automatisch met het thema:
+     in dark = dark text op gold, in light = cream text op deep gold. */
   .btn-gold {
-    @apply bg-cm-gold text-cm-black font-semibold px-4 py-2 rounded-lg
+    @apply bg-cm-gold text-cm-on-gold font-semibold px-4 py-2 rounded-lg
            hover:bg-cm-gold-light transition-colors duration-200
            disabled:opacity-50 disabled:cursor-not-allowed;
   }
@@ -80,8 +117,15 @@
 }
 
 @layer utilities {
+  /* Goud-gradients en accents werken via CSS-vars zodat ze meeswitchen
+     met het thema. Voor light = diep koffie-goud → warme highlight,
+     voor dark = warm goud → helderder highlight. */
   .text-gold-gradient {
-    background: linear-gradient(135deg, #c4a04a, #e0bc62);
+    background: linear-gradient(
+      135deg,
+      rgb(var(--cm-gold)),
+      rgb(var(--cm-gold-light))
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -91,26 +135,42 @@
     font-family: 'Outfit', system-ui, sans-serif;
     font-weight: 700;
     letter-spacing: 0.25em;
-    background: linear-gradient(135deg, #c4a04a 0%, #e0bc62 40%, #c4a04a 100%);
+    background: linear-gradient(
+      135deg,
+      rgb(var(--cm-gold)) 0%,
+      rgb(var(--cm-gold-light)) 40%,
+      rgb(var(--cm-gold)) 100%
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .bg-gold-subtle {
-    background: rgba(196, 160, 74, 0.08);
+    background: rgb(var(--cm-gold) / 0.08);
   }
 
   .border-gold-subtle {
-    border-color: rgba(196, 160, 74, 0.3);
+    border-color: rgb(var(--cm-gold) / 0.3);
   }
 
-  /* Subtiele goud-glow rond cards/elementen, voor mockup-4-stijl diepte */
+  /* Subtiele goud-glow rond cards/elementen */
   .glow-gold-soft {
-    box-shadow: 0 0 24px rgba(196, 160, 74, 0.12);
+    box-shadow: 0 0 24px rgb(var(--cm-gold) / 0.12);
   }
   .glow-gold-medium {
-    box-shadow: 0 0 32px rgba(196, 160, 74, 0.18);
+    box-shadow: 0 0 32px rgb(var(--cm-gold) / 0.18);
+  }
+
+  /* bg-gradient-gold via utility class, vervangt Tailwind's bg-gradient-gold
+     uit de oude config — werkt nu met CSS-vars. */
+  .bg-gradient-gold {
+    background-image: linear-gradient(
+      135deg,
+      rgb(var(--cm-gold)) 0%,
+      rgb(var(--cm-gold-light)) 50%,
+      rgb(var(--cm-gold)) 100%
+    );
   }
 
   /* Serif voor headings/welkomsttekst, geeft warm-mens-eerst gevoel */
