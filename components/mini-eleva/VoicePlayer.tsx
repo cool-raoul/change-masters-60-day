@@ -6,21 +6,29 @@ import { toast } from "sonner";
 // ============================================================
 // VoicePlayer, audio + optionele transcriptie voor spraakberichten.
 //
-// Spraakberichten worden als WAV opgenomen (zie WavRecorder), wat
-// duration in de RIFF-header heeft.
+// Speelt af via Web Audio API (decodeAudioData + AudioBufferSourceNode)
+// in plaats van het standaard <audio>-element. Reden:
 //
-// Playback-strategie: we fetchen de signed-URL eerst volledig als
-// Blob en geven 'm aan <audio> via een blob:-URL. Reden: iOS Safari
-// heeft bekende issues met range-requests op grote WAV-files via
-// Supabase Storage signed URLs — playback kapt dan af op ~5 sec
-// omdat Safari na het laden van de eerste chunk niet betrouwbaar
-// een Range-vervolg-fetch doet. Met een blob:-URL is de hele audio
-// klaar in geheugen vóór play, dus geen range-protocol nodig.
-// Tradeoff: ~1 sec extra laad-tijd voor een 2MB-bestand, maar
-// volledige duur weer afspeelbaar op iOS + Android + desktop.
+//   We hebben geverifieerd via scripts/check-wav.mjs dat WAV-files
+//   echt de volle duur audio bevatten (RMS-energie meetbaar tot het
+//   einde). Toch kapt <audio src=signedUrl> playback af bij ~5 sec
+//   op ZOWEL iOS Safari als Chrome desktop. Een eerdere blob:-URL
+//   workaround hielp niet betrouwbaar — vermoedelijk fetch-CORS-edge-
+//   cases of <audio>-element bugs voor grote WAV-buffers.
 //
-// Transcriptie staat standaard verborgen, knop 'Tekst' toont 'm.
-// Eigen berichten kunnen ge-edit worden via de 'aanpassen'-knop.
+//   Web Audio API decoder leest de hele ArrayBuffer in één keer en
+//   geeft een AudioBuffer terug die in geheugen staat. AudioBuffer-
+//   SourceNode speelt 'm af zonder enige range-protocol of HTML-
+//   media-element. Werkt overal hetzelfde. Zelfde technologie die
+//   we ook al gebruiken voor opname (WavRecorder).
+//
+// Tradeoffs:
+//   - ~1 sec extra laad-tijd voor 2MB-bestand (download + decode)
+//   - Pause/resume: Web Audio source-nodes zijn one-shot, dus we
+//     stoppen + heronstarten met offset. Tijd-update via rAF-loop.
+//   - Geen native scrubber-UI, maar dat hadden we toch al niet.
+//
+// Transcriptie-blok onderaan blijft ongewijzigd.
 // ============================================================
 
 type Props = {
@@ -44,12 +52,24 @@ export function VoicePlayer({
   invitationId,
   onTranscriptieGeupdate,
 }: Props) {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  // Player-state
+  const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null);
+  const [laden, setLaden] = useState(true);
+  const [laadFout, setLaadFout] = useState(false);
   const [speelt, setSpeelt] = useState(false);
   const [huidigeTijd, setHuidigeTijd] = useState(0);
   const [werkelijkeDuur, setWerkelijkeDuur] = useState<number>(
     duurSeconden ?? 0,
   );
+
+  // Web Audio refs
+  const ctxRef = useRef<AudioContext | null>(null);
+  const sourceRef = useRef<AudioBufferSourceNode | null>(null);
+  const startCtxTimeRef = useRef<number>(0);
+  const offsetRef = useRef<number>(0);
+  const rafRef = useRef<number | null>(null);
+
+  // Transcriptie/edit-state
   const [tekstZichtbaar, setTekstZichtbaar] = useState(false);
   const [bewerken, setBewerken] = useState(false);
   const [concept, setConcept] = useState(transcriptie ?? "");
@@ -58,57 +78,152 @@ export function VoicePlayer({
     transcriptie ?? "",
   );
 
-  // Pre-fetch de hele audio als Blob → blob:-URL → <audio>. Bypasst
-  // de iOS Safari range-request bug die playback bij ~5 sec afkapt op
-  // WAV-files via Supabase signed URLs.
-  const [blobUrl, setBlobUrl] = useState<string | null>(null);
-  const [blobLaden, setBlobLaden] = useState(true);
-  const [blobFout, setBlobFout] = useState(false);
-
+  // Download + decode op mount/url-change
   useEffect(() => {
     let levend = true;
-    let lokaalBlobUrl: string | null = null;
-    setBlobLaden(true);
-    setBlobFout(false);
-    setBlobUrl(null);
+    setLaden(true);
+    setLaadFout(false);
+    setAudioBuffer(null);
+    setHuidigeTijd(0);
+    setSpeelt(false);
+    offsetRef.current = 0;
 
-    fetch(audioUrl)
-      .then((res) => {
-        if (!res.ok) throw new Error("download faalde: " + res.status);
-        return res.blob();
-      })
-      .then((blob) => {
+    void (async () => {
+      try {
+        const res = await fetch(audioUrl);
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const arrayBuffer = await res.arrayBuffer();
         if (!levend) return;
-        lokaalBlobUrl = URL.createObjectURL(blob);
-        setBlobUrl(lokaalBlobUrl);
-        setBlobLaden(false);
-      })
-      .catch(() => {
+
+        // AudioContext lazily aanmaken — sommige browsers willen 'm pas
+        // na user-gesture, maar decodeAudioData werkt ook in een suspended
+        // context.
+        type CtxCtor = typeof AudioContext;
+        const Ctor =
+          (window as unknown as { AudioContext?: CtxCtor }).AudioContext ??
+          (window as unknown as { webkitAudioContext?: CtxCtor })
+            .webkitAudioContext;
+        if (!Ctor) throw new Error("Geen AudioContext beschikbaar");
+        if (!ctxRef.current) ctxRef.current = new Ctor();
+        const ctx = ctxRef.current;
+
+        // decodeAudioData accepteert zowel Promise- als callback-stijl;
+        // moderne browsers retourneren een Promise.
+        const buffer = await ctx.decodeAudioData(arrayBuffer.slice(0));
         if (!levend) return;
-        // Fallback: gebruik de directe signed URL — werkt op desktop/
-        // Android, faalt mogelijk op iOS, maar beter iets dan niets.
-        setBlobUrl(audioUrl);
-        setBlobLaden(false);
-        setBlobFout(true);
-      });
+        setAudioBuffer(buffer);
+        setWerkelijkeDuur(buffer.duration);
+        setLaden(false);
+      } catch (e) {
+        console.warn("[voiceplayer] laden faalde:", e);
+        if (!levend) return;
+        setLaadFout(true);
+        setLaden(false);
+      }
+    })();
 
     return () => {
       levend = false;
-      if (lokaalBlobUrl) URL.revokeObjectURL(lokaalBlobUrl);
+      // Stop alles bij unmount of audioUrl-change
+      stopRafLoop();
+      stopBron();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [audioUrl]);
 
-  function togglePlay() {
-    const a = audioRef.current;
-    if (!a) return;
-    if (speelt) {
-      a.pause();
-    } else {
-      a.play().catch((e) => {
-        // Autoplay-policy of broken file
-        console.warn("[voiceplayer] play-fout:", e);
-      });
+  function stopRafLoop() {
+    if (rafRef.current !== null) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
     }
+  }
+
+  function stopBron() {
+    const src = sourceRef.current;
+    if (src) {
+      try {
+        src.onended = null;
+        src.stop();
+        src.disconnect();
+      } catch {
+        // negeer als al gestopt
+      }
+      sourceRef.current = null;
+    }
+  }
+
+  function startTijdUpdates() {
+    stopRafLoop();
+    const ctx = ctxRef.current;
+    if (!ctx) return;
+    const tick = () => {
+      if (!sourceRef.current) return;
+      const verstreken = ctx.currentTime - startCtxTimeRef.current;
+      const tijd = offsetRef.current + verstreken;
+      setHuidigeTijd(tijd);
+      rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+  }
+
+  async function speelAf() {
+    const buffer = audioBuffer;
+    const ctx = ctxRef.current;
+    if (!buffer || !ctx) return;
+
+    // Resume context als-ie suspended is (autoplay-policy)
+    if (ctx.state === "suspended") {
+      try {
+        await ctx.resume();
+      } catch {
+        // negeer
+      }
+    }
+
+    // Eventuele oude bron opruimen voor we nieuwe maken
+    stopBron();
+
+    const src = ctx.createBufferSource();
+    src.buffer = buffer;
+    src.connect(ctx.destination);
+
+    // Bereken vanaf welke offset we starten
+    let offset = offsetRef.current;
+    if (offset >= buffer.duration - 0.05) offset = 0; // restart aan einde
+    offsetRef.current = offset;
+    startCtxTimeRef.current = ctx.currentTime;
+
+    src.onended = () => {
+      // Alleen als we niet zelf hebben gestopt
+      if (sourceRef.current !== src) return;
+      sourceRef.current = null;
+      setSpeelt(false);
+      stopRafLoop();
+      // Reset naar begin zodat volgende play opnieuw start
+      offsetRef.current = 0;
+      setHuidigeTijd(buffer.duration);
+    };
+
+    sourceRef.current = src;
+    src.start(0, offset);
+    setSpeelt(true);
+    startTijdUpdates();
+  }
+
+  function pauzeer() {
+    const ctx = ctxRef.current;
+    if (!ctx) return;
+    const verstreken = ctx.currentTime - startCtxTimeRef.current;
+    offsetRef.current = offsetRef.current + verstreken;
+    stopBron();
+    stopRafLoop();
+    setSpeelt(false);
+  }
+
+  function togglePlay() {
+    if (!audioBuffer) return;
+    if (speelt) pauzeer();
+    else void speelAf();
   }
 
   function formatTijd(s: number): string {
@@ -164,38 +279,27 @@ export function VoicePlayer({
 
   return (
     <div className="space-y-2">
-      {/* Pas src zetten als blob klaar is. Voor we de blob hebben staat
-          de play-knop op disabled. Auto-play/play() werkt sowieso pas
-          ná user-gesture, dus geen race-condition-risico. */}
-      {blobUrl && (
-        <audio
-          ref={audioRef}
-          src={blobUrl}
-          preload="auto"
-          onPlay={() => setSpeelt(true)}
-          onPause={() => setSpeelt(false)}
-          onEnded={() => setSpeelt(false)}
-          onLoadedMetadata={(e) => {
-            const d = (e.target as HTMLAudioElement).duration;
-            if (isFinite(d) && d > 0) setWerkelijkeDuur(d);
-          }}
-          onTimeUpdate={(e) =>
-            setHuidigeTijd((e.target as HTMLAudioElement).currentTime)
-          }
-        />
-      )}
-
       {/* Compacte rij: speler + tijd + Tekst-knop */}
       <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={togglePlay}
-          disabled={blobLaden}
-          title={blobLaden ? "Audio laden..." : speelt ? "Pauzeer" : "Speel af"}
+          disabled={laden || laadFout || !audioBuffer}
+          title={
+            laden
+              ? "Audio laden..."
+              : laadFout
+                ? "Audio kon niet geladen worden"
+                : speelt
+                  ? "Pauzeer"
+                  : "Speel af"
+          }
           className="bg-cm-gold/20 hover:bg-cm-gold/30 text-cm-gold rounded-full w-9 h-9 flex items-center justify-center text-sm shrink-0 disabled:opacity-50"
         >
-          {blobLaden ? (
+          {laden ? (
             <span className="animate-pulse text-xs">⏳</span>
+          ) : laadFout ? (
+            "⚠"
           ) : speelt ? (
             "⏸"
           ) : (
@@ -205,6 +309,9 @@ export function VoicePlayer({
         <div className="flex-1 text-xs text-cm-white/70 font-mono">
           {formatTijd(huidigeTijd)}
           {totaleDuur ? ` / ${formatTijd(totaleDuur)}` : ""}
+          {laadFout && (
+            <span className="ml-2 text-red-400/80">audio niet geladen</span>
+          )}
         </div>
         {heeftTranscriptie && (
           <button

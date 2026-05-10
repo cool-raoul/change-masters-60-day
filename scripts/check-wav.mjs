@@ -100,5 +100,27 @@ if (Math.abs(duurUitDataSize - duurUitFileSize) > 0.5) {
 } else if (duurUitDataSize < 6 && duurUitFileSize < 6) {
   console.log("  ⚠ Bestand bevat ECHT maar ~5 sec audio. De recording-pipeline kapt af.");
 } else if (sizeKlopt) {
-  console.log(`  ✓ Bestand zelf is ${duurUitFileSize.toFixed(0)}s — als playback bij 5s stopt, ligt 't bij <audio> of HTTP-serving.`);
+  console.log(`  ✓ Bestand zelf is ${duurUitFileSize.toFixed(0)}s lang — header-niveau klopt.`);
+}
+
+// Inspecteer audio-energie per 1-seconde-window. Zo zien we of er na sec 5
+// nog ECHT geluid is, of dat 't stilte/nullen zijn (zou betekenen dat de
+// recording-pipeline na 5 sec niet meer samples opnam).
+console.log("\n📈 Audio-energie per seconde (RMS, 0 = stil):");
+const samplesPerSec = byteRate / blockAlign; // = sampleRate
+const samplesPerByte = 1 / blockAlign;
+const totaleSec = Math.floor(dataSize / byteRate);
+for (let s = 0; s < Math.min(totaleSec, 25); s++) {
+  let som = 0;
+  let n = 0;
+  const start = 44 + s * byteRate;
+  const eind = Math.min(start + byteRate, buf.length);
+  for (let i = start; i < eind; i += 2) {
+    const sample = buf.readInt16LE(i);
+    som += sample * sample;
+    n++;
+  }
+  const rms = n > 0 ? Math.sqrt(som / n) : 0;
+  const balk = "█".repeat(Math.min(50, Math.round(rms / 200)));
+  console.log(`  sec ${s.toString().padStart(2)}: ${rms.toFixed(0).padStart(6)}  ${balk}`);
 }
