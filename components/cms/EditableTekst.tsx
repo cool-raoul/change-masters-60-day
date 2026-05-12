@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 // ============================================================
@@ -87,6 +87,20 @@ export function EditableTekst({
   const [buffer, setBuffer] = useState("");
   const [bezig, setBezig] = useState(false);
   const heeftOverride = !!overrideWaarde?.trim();
+
+  // Sync interne tekst zodra de props (sleutel/standaard/override) wijzigen.
+  // Zonder dit blijft 'actueleTekst' hangen op de waarde van de eerste mount,
+  // wat zichtbaar werd in de Sprint-playbook: navigeren tussen stappen
+  // hergebruikt dezelfde EditableTekst-instance, dus alle stap-titels lieten
+  // de label van Dag 1, taak 1 zien. Door op de combinatie van
+  // sleutel + standaard + overrideWaarde te luisteren, vangen we zowel
+  // taak-wissels (sleutel verandert) als content-updates op.
+  useEffect(() => {
+    setActueleTekst(overrideWaarde?.trim() || standaard);
+    // Bewerk-modus reset zodra je naar een ander veld navigeert, anders
+    // zit je per ongeluk een andere taak te bewerken dan je dacht.
+    setBewerken(false);
+  }, [sleutel, standaard, overrideWaarde]);
 
   function startBewerken() {
     setBuffer(actueleTekst);
