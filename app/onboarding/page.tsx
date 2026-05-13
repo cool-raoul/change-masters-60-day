@@ -350,27 +350,74 @@ export default function OnboardingPagina() {
               <div className="bg-[#D4AF37]/10 border-2 border-[#D4AF37]/40 rounded-xl p-5 space-y-4">
                 <div className="flex items-center gap-3">
                   <span className="text-3xl">📱</span>
-                  <div>
-                    <p className="text-[#D4AF37] font-bold text-base">Installeer de app op je telefoon</p>
-                    <p className="text-cm-white text-xs opacity-60">Doe dit nu, zo ontvang je ook meldingen</p>
+                  <div className="flex-1">
+                    <EditableTekst
+                      namespace="onboarding"
+                      sleutel="stap1.app_install.titel"
+                      standaard="Installeer de app op je telefoon"
+                      overrides={overrides}
+                      isFounder={isFounder}
+                      as="p"
+                      className="text-[#D4AF37] font-bold text-base"
+                      hint="Titel van het app-install-blok"
+                    />
+                    <EditableTekst
+                      namespace="onboarding"
+                      sleutel="stap1.app_install.subtitel"
+                      standaard="Doe dit nu, zo ontvang je ook meldingen"
+                      overrides={overrides}
+                      isFounder={isFounder}
+                      as="p"
+                      className="text-cm-white text-xs opacity-60"
+                      hint="Subtitel van het app-install-blok"
+                    />
                   </div>
                 </div>
                 <div className="bg-black/30 rounded-lg p-4 space-y-2">
-                  <p className="text-cm-white text-sm font-semibold">📱 iPhone (Safari):</p>
-                  <ol className="text-cm-white text-sm opacity-80 space-y-1 list-decimal list-inside">
-                    <li>Tik op het deel-icoontje onderaan (vierkantje met pijl omhoog)</li>
-                    <li>Kies &quot;Zet op beginscherm&quot;</li>
-                    <li>Tik op &quot;Voeg toe&quot;</li>
-                    <li>Open de app daarna vanuit je beginscherm</li>
-                  </ol>
+                  <EditableTekst
+                    namespace="onboarding"
+                    sleutel="stap1.app_install.iphone.titel"
+                    standaard="📱 iPhone (Safari):"
+                    overrides={overrides}
+                    isFounder={isFounder}
+                    as="p"
+                    className="text-cm-white text-sm font-semibold"
+                    hint="Titel iPhone-stappen"
+                  />
+                  <EditableBlok
+                    namespace="onboarding"
+                    sleutel="stap1.app_install.iphone.stappen"
+                    standaard="1. Tik op het deel-icoontje onderaan (vierkantje met pijl omhoog)\n2. Kies 'Zet op beginscherm'\n3. Tik op 'Voeg toe'\n4. Open de app daarna vanuit je beginscherm"
+                    overrides={overrides}
+                    isFounder={isFounder}
+                    as="div"
+                    className="text-cm-white text-sm opacity-80 whitespace-pre-line"
+                    rows={5}
+                    hint="iPhone-installatiestappen (1 per regel)"
+                  />
                 </div>
                 <div className="bg-black/30 rounded-lg p-4 space-y-2">
-                  <p className="text-cm-white text-sm font-semibold">🌟 Android (Chrome):</p>
-                  <ol className="text-cm-white text-sm opacity-80 space-y-1 list-decimal list-inside">
-                    <li>Tik op de drie puntjes rechtsboven</li>
-                    <li>Kies &quot;Toevoegen aan startscherm&quot;</li>
-                    <li>Tik op &quot;Toevoegen&quot;</li>
-                  </ol>
+                  <EditableTekst
+                    namespace="onboarding"
+                    sleutel="stap1.app_install.android.titel"
+                    standaard="🌟 Android (Chrome):"
+                    overrides={overrides}
+                    isFounder={isFounder}
+                    as="p"
+                    className="text-cm-white text-sm font-semibold"
+                    hint="Titel Android-stappen"
+                  />
+                  <EditableBlok
+                    namespace="onboarding"
+                    sleutel="stap1.app_install.android.stappen"
+                    standaard="1. Tik op de drie puntjes rechtsboven\n2. Kies 'Toevoegen aan startscherm'\n3. Tik op 'Toevoegen'"
+                    overrides={overrides}
+                    isFounder={isFounder}
+                    as="div"
+                    className="text-cm-white text-sm opacity-80 whitespace-pre-line"
+                    rows={4}
+                    hint="Android-installatiestappen (1 per regel)"
+                  />
                 </div>
               </div>
 
@@ -378,12 +425,28 @@ export default function OnboardingPagina() {
               <div className="card space-y-3">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-xl">🔔</span>
-                  <h3 className="text-cm-gold font-semibold">Schakel meldingen in</h3>
+                  <EditableTekst
+                    namespace="onboarding"
+                    sleutel="stap1.push.titel"
+                    standaard="Schakel meldingen in"
+                    overrides={overrides}
+                    isFounder={isFounder}
+                    as="h3"
+                    className="text-cm-gold font-semibold"
+                    hint="Titel van het push-notificatie-blok"
+                  />
                 </div>
-                <p className="text-cm-white text-sm opacity-80 leading-relaxed">
-                  Zo mis je geen follow-up herinneringen en kan je sponsor je op de hoogte houden van activiteiten in je team.
-                  <strong className="text-cm-white"> Dit werkt alleen vanuit de geïnstalleerde app.</strong>
-                </p>
+                <EditableBlok
+                  namespace="onboarding"
+                  sleutel="stap1.push.uitleg"
+                  standaard="Zo mis je geen follow-up herinneringen en kan je sponsor je op de hoogte houden van activiteiten in je team. Dit werkt alleen vanuit de geïnstalleerde app."
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="p"
+                  className="text-cm-white text-sm opacity-80 leading-relaxed"
+                  rows={3}
+                  hint="Uitleg waarom meldingen aan zetten"
+                />
                 <PushNotificationToggle />
               </div>
 
@@ -434,7 +497,15 @@ export default function OnboardingPagina() {
               </div>
 
               <button onClick={() => gaNaarStap(2)} disabled={bezig} className="btn-gold w-full py-4 text-base font-bold">
-                App geïnstalleerd, aan de slag →
+                <EditableTekst
+                  namespace="onboarding"
+                  sleutel="stap1.knop"
+                  standaard="App geïnstalleerd, aan de slag →"
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="span"
+                  hint="Tekst van de knop onderaan stap 1 (door-naar-stap-2)"
+                />
               </button>
             </div>
           )}
@@ -474,7 +545,16 @@ export default function OnboardingPagina() {
 
               {/* Waarom cruciaal */}
               <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
-                <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom deze stap cruciaal is</p>
+                <EditableTekst
+                  namespace="onboarding"
+                  sleutel="stap2.waarom_titel"
+                  standaard="⚡ Waarom deze stap cruciaal is"
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="p"
+                  className="text-amber-300 font-semibold text-sm flex items-center gap-2"
+                  hint="Titel van het waarom-cruciaal-blok in stap 2"
+                />
                 <EditableBlok
                   namespace="onboarding"
                   sleutel="stap2.waarom_cruciaal"
@@ -489,7 +569,16 @@ export default function OnboardingPagina() {
               </div>
 
               <div className="card space-y-3">
-                <h3 className="text-cm-gold font-semibold">Hoe werkt het WHY-gesprek?</h3>
+                <EditableTekst
+                  namespace="onboarding"
+                  sleutel="stap2.how_titel"
+                  standaard="Hoe werkt het WHY-gesprek?"
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="h3"
+                  className="text-cm-gold font-semibold"
+                  hint="Titel van het 'hoe werkt het WHY-gesprek'-blok"
+                />
                 <EditableBlok
                   namespace="onboarding"
                   sleutel="stap2.how_it_works"
@@ -504,12 +593,39 @@ export default function OnboardingPagina() {
               </div>
 
               <div className="bg-[#D4AF37]/10 border-2 border-[#D4AF37]/40 rounded-xl p-5 text-center space-y-3">
-                <p className="text-[#D4AF37] font-bold">Klaar om jouw WHY te ontdekken?</p>
-                <p className="text-cm-white text-sm opacity-70 leading-relaxed">
-                  Het gesprek opent in dit scherm. <strong className="text-cm-white">Kom daarna terug naar deze pagina</strong>, je gaat automatisch verder bij stap 3.
-                </p>
+                <EditableTekst
+                  namespace="onboarding"
+                  sleutel="stap2.cta_titel"
+                  standaard="Klaar om jouw WHY te ontdekken?"
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="p"
+                  className="text-[#D4AF37] font-bold"
+                  hint="Titel boven de WHY-CTA-knop"
+                />
+                <EditableBlok
+                  namespace="onboarding"
+                  sleutel="stap2.cta_uitleg"
+                  standaard="Het gesprek opent in dit scherm. Kom daarna terug naar deze pagina, je gaat automatisch verder bij stap 3."
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="p"
+                  className="text-cm-white text-sm opacity-70 leading-relaxed"
+                  rows={2}
+                  hint="Uitleg boven de WHY-CTA-knop"
+                />
                 <Link href={isPreview ? "/mijn-why?preview=true" : "/mijn-why"} className="btn-gold w-full py-3 text-center block font-bold">
-                  {isPreview ? "Preview: WHY-gesprek (slaat niets op)" : "Start het WHY-gesprek →"}
+                  {isPreview ? "Preview: WHY-gesprek (slaat niets op)" : (
+                    <EditableTekst
+                      namespace="onboarding"
+                      sleutel="stap2.cta_knop"
+                      standaard="Start het WHY-gesprek →"
+                      overrides={overrides}
+                      isFounder={isFounder}
+                      as="span"
+                      hint="Tekst van de start-WHY-gesprek-knop"
+                    />
+                  )}
                 </Link>
               </div>
 
@@ -530,7 +646,15 @@ export default function OnboardingPagina() {
               )}
 
               <button onClick={() => gaNaarStap(3)} disabled={bezig} className="btn-gold w-full py-3 text-base">
-                WHY-gesprek gedaan, verder naar stap 3 →
+                <EditableTekst
+                  namespace="onboarding"
+                  sleutel="stap2.knop"
+                  standaard="WHY-gesprek gedaan, verder naar stap 3 →"
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="span"
+                  hint="Tekst van de knop onderaan stap 2 (door-naar-stap-3)"
+                />
               </button>
             </div>
           )}
@@ -657,12 +781,40 @@ export default function OnboardingPagina() {
               </div>
 
               <div className="bg-gold-subtle border border-gold-subtle rounded-xl p-4">
-                <p className="text-cm-gold font-semibold text-sm mb-1 text-center">✦ De gouden regel</p>
-                <p className="text-cm-white text-sm text-center leading-relaxed italic">&quot;Consistentie slaat motivatie altijd. Doe elke dag iets, ook als je het niet voelt.&quot;</p>
+                <EditableTekst
+                  namespace="onboarding"
+                  sleutel="stap3.gouden_regel_titel"
+                  standaard="✦ De gouden regel"
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="p"
+                  className="text-cm-gold font-semibold text-sm mb-1 text-center"
+                  hint="Titel van de gouden-regel-quote in stap 3"
+                />
+                <EditableTekst
+                  namespace="onboarding"
+                  sleutel="stap3.gouden_regel_quote"
+                  standaard='"Consistentie slaat motivatie altijd. Doe elke dag iets, ook als je het niet voelt."'
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="p"
+                  className="text-cm-white text-sm text-center leading-relaxed italic"
+                  multiline
+                  rows={2}
+                  hint="De gouden-regel-quote zelf"
+                />
               </div>
 
               <button onClick={() => gaNaarStap(4)} disabled={bezig} className="btn-gold w-full py-3 text-base">
-                Begrepen, volgende stap →
+                <EditableTekst
+                  namespace="onboarding"
+                  sleutel="stap3.knop"
+                  standaard="Begrepen, volgende stap →"
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="span"
+                  hint="Tekst van de knop onderaan stap 3 (door-naar-stap-4)"
+                />
               </button>
             </div>
           )}
@@ -803,10 +955,20 @@ export default function OnboardingPagina() {
                         </div>
 
                         {/* Past dit bij jou? Korte herkennings-beschrijving
-                            zodat mensen direct voelen of dit hun tempo is. */}
-                        <p className="text-sm text-cm-white/85 leading-relaxed">
-                          {m.pastBij}
-                        </p>
+                            zodat mensen direct voelen of dit hun tempo is.
+                            Bewerkbaar per tempo zodat founder de tekst kan
+                            bijschaven na pilot-feedback. */}
+                        <EditableBlok
+                          namespace="onboarding"
+                          sleutel={`stap6.tempo${uren}.past_bij`}
+                          standaard={m.pastBij}
+                          overrides={overrides}
+                          isFounder={isFounder}
+                          as="p"
+                          className="text-sm text-cm-white/85 leading-relaxed"
+                          rows={3}
+                          hint={`Beschrijving voor wie bij het tempo van ${uren}u/dag past`}
+                        />
 
                         {/* Dagdoelen-samenvatting, in alledaagse woorden */}
                         <div className="bg-cm-surface-2 rounded-lg p-3 space-y-1">
@@ -860,39 +1022,90 @@ export default function OnboardingPagina() {
 
               {/* Twijfel-hulp */}
               <div className="card border-l-4 border-emerald-500 space-y-2">
-                <h3 className="text-emerald-300 font-semibold text-sm">
-                  💡 Twijfel?
-                </h3>
-                <p className="text-cm-white text-sm leading-relaxed opacity-85">
-                  Begin bij <strong className="text-cm-white">Fundament</strong>. Je kunt later in instellingen altijd opschalen als je merkt dat je meer ruimte hebt. Andersom kan ook: liever even terugschakelen dan helemaal stoppen.
-                </p>
+                <EditableTekst
+                  namespace="onboarding"
+                  sleutel="stap6.twijfel_titel"
+                  standaard="💡 Twijfel?"
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="h3"
+                  className="text-emerald-300 font-semibold text-sm"
+                  hint="Titel van het twijfel-hulp-blok"
+                />
+                <EditableBlok
+                  namespace="onboarding"
+                  sleutel="stap6.twijfel_tekst"
+                  standaard="Begin bij Fundament. Je kunt later in instellingen altijd opschalen als je merkt dat je meer ruimte hebt. Andersom kan ook: liever even terugschakelen dan helemaal stoppen."
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="p"
+                  className="text-cm-white text-sm leading-relaxed opacity-85"
+                  rows={3}
+                  hint="Twijfel-hulp-tekst onder de tempo-cards"
+                />
               </div>
 
               {/* ELEVA Mentor intro */}
               <div className="card space-y-3">
                 <div className="flex items-center gap-3">
                   <span className="text-3xl">🌟</span>
-                  <h3 className="text-cm-gold font-semibold">Jouw ELEVA Mentor staat klaar</h3>
+                  <EditableTekst
+                    namespace="onboarding"
+                    sleutel="stap6.mentor_titel"
+                    standaard="Jouw ELEVA Mentor staat klaar"
+                    overrides={overrides}
+                    isFounder={isFounder}
+                    as="h3"
+                    className="text-cm-gold font-semibold"
+                    hint="Titel van het Mentor-intro-blok"
+                  />
                 </div>
-                <p className="text-cm-white text-sm leading-relaxed opacity-80">
-                  De ELEVA Mentor is gebouwd op basis van 60 jaar gecombineerde ervaring in aanbevelingsmarketing. Na het opslaan van je doelen open je de ELEVA Mentor direct, jouw krachtigste hulpmiddel naast je sponsor.
-                </p>
+                <EditableBlok
+                  namespace="onboarding"
+                  sleutel="stap6.mentor_uitleg"
+                  standaard="De ELEVA Mentor is gebouwd op basis van 60 jaar gecombineerde ervaring in aanbevelingsmarketing. Na het opslaan van je doelen open je de ELEVA Mentor direct, jouw krachtigste hulpmiddel naast je sponsor."
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="p"
+                  className="text-cm-white text-sm leading-relaxed opacity-80"
+                  rows={3}
+                  hint="Uitleg-tekst over de ELEVA Mentor"
+                />
                 <ul className="space-y-1.5">
                   {[
-                    "Klaarstaande DM-teksten voor elk type contact",
-                    "Hulp bij bezwaren ('ik heb geen tijd', 'is dit een pyramid?')",
-                    "Follow-up strategieën voor prospects",
-                    "Motivatie als je een moeilijke dag hebt",
+                    { sleutel: "stap6.mentor_punt1", standaard: "Klaarstaande DM-teksten voor elk type contact" },
+                    { sleutel: "stap6.mentor_punt2", standaard: "Hulp bij bezwaren ('ik heb geen tijd', 'is dit een pyramid?')" },
+                    { sleutel: "stap6.mentor_punt3", standaard: "Follow-up strategieën voor prospects" },
+                    { sleutel: "stap6.mentor_punt4", standaard: "Motivatie als je een moeilijke dag hebt" },
                   ].map((item, i) => (
                     <li key={i} className="flex gap-2 text-sm text-cm-white opacity-80">
-                      <span className="text-cm-gold flex-shrink-0">✦</span>{item}
+                      <span className="text-cm-gold flex-shrink-0">✦</span>
+                      <EditableTekst
+                        namespace="onboarding"
+                        sleutel={item.sleutel}
+                        standaard={item.standaard}
+                        overrides={overrides}
+                        isFounder={isFounder}
+                        as="span"
+                        className=""
+                        hint={`Mentor-bullet ${i + 1}`}
+                      />
                     </li>
                   ))}
                 </ul>
               </div>
 
               <div className="bg-[#D4AF37]/10 border-2 border-[#D4AF37]/40 rounded-xl p-5 text-center space-y-3">
-                <p className="text-[#D4AF37] font-bold">Jouw setup is compleet 🎉</p>
+                <EditableTekst
+                  namespace="onboarding"
+                  sleutel="stap6.setup_compleet_titel"
+                  standaard="Jouw setup is compleet 🎉"
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="p"
+                  className="text-[#D4AF37] font-bold"
+                  hint="Titel van het setup-compleet-blok onderaan stap 4"
+                />
                 <p className="text-cm-white text-sm opacity-70 leading-relaxed">
                   {commitmentUren
                     ? `Je hebt voor ${tempoNaam(commitmentUren)} (± ${commitmentUren} uur per dag) gekozen. Direct door naar de rest van dag 1.`
