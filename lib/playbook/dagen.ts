@@ -19,27 +19,29 @@ export const DAGEN: Dag[] = [
     fase: 1,
     vandaagDoen: [
       {
-        id: "dag1-vcard",
-        label: "📲 Importeer je telefooncontacten in één klik",
-        uitleg:
-          "Open de upload, ELEVA neemt direct alle namen uit je telefoon over en zet ze in je geheugen. Eén klik, en je hebt 100 tot 500 namen in beeld zonder iets te hoeven typen. Dit is geen belkostlijst en geen verkooplijst, het is je netwerk-overzicht. Mensen die in jouw wereld bestaan: familie, oude collega's, sportmaatjes, buren. Filteren komt later, en doe je nooit voor iemand anders.",
-        verplicht: true,
-        vereistMobiel: true,
-        inlineEmbed: "vcard-upload",
-      },
-      {
-        // De handmatige 5 namen-stap is bewust apart van de vcard-import.
-        // De vcard-stap is een grote massa-import zonder denken. Deze
-        // stap is een SPONTANE, bewuste keuze van 5 mensen die in je
-        // hoofd opkomen. Twee verschillende handelingen, twee
-        // verschillende denkfases.
+        // Bewuste keuze: eerst de spontane 5-namen-handeling. Reden
+        // (afspraak Raoul, 2026-05-13): mensen moeten eerst comfortabel
+        // worden met het bewuste denken over wie ze willen aanspreken
+        // ('wie zou ik dit gunnen?'). Daarna pas de massa-import van
+        // hun telefoon. Andersom voelt te overweldigend.
         id: "dag1-5-namen",
         label: "✍️ Schrijf 5 namen op die spontaan in je hoofd opkomen",
         uitleg:
-          "Iets anders dan de telefoonimport hierboven: dit is een bewuste keuze. Stel jezelf de vraag: 'Wie komt er nu spontaan in mijn hoofd op als ik denk aan mensen die ik dit zou gunnen?' De eerste 5 namen die opkomen, schrijf je hieronder op. Niet filteren, niet bedenken 'die past niet'. Iedereen mag erop, zij beslissen zelf. Dit zijn jouw eerste warm-warme contacten, een bewust gekozen lijst NAAST de grote massa-import van je telefoon. Morgen (dag 2) bouw je dit uit naar 20.",
+          "Stel jezelf de vraag: 'Wie komt er nu spontaan in mijn hoofd op als ik denk aan mensen die ik dit zou gunnen?' De eerste 5 namen die opkomen, schrijf je hieronder op. Niet filteren, niet bedenken 'die past niet'. Iedereen mag erop, zij beslissen zelf.\n\nDit zijn jouw eerste warm-warme contacten, een bewust gekozen lijst. Zo word je vertrouwd met het denken in jouw netwerk voordat je in de volgende stap je hele telefoonboek importeert. Morgen (dag 2) bouw je dit uit naar 20.",
         verplicht: true,
         inlineEmbed: "namen-form",
         inlineEmbedDoel: 5,
+      },
+      {
+        // Nu de massa-import, NA de bewuste 5 namen. Zo voelt het minder
+        // overweldigend, je hebt al 'gevoel' voor je eigen netwerk.
+        id: "dag1-vcard",
+        label: "📲 Importeer je telefooncontacten in één klik",
+        uitleg:
+          "Nu je net 5 mensen bewust hebt opgeschreven, ga je je hele telefoonboek erbij pakken. Open de upload, ELEVA neemt direct alle namen uit je telefoon over en zet ze in je geheugen. Eén klik, en je hebt 100 tot 500 namen in beeld zonder iets te hoeven typen.\n\nDit is geen belkostlijst en geen verkooplijst, het is je netwerk-overzicht. Mensen die in jouw wereld bestaan: familie, oude collega's, sportmaatjes, buren. Filteren komt later, en doe je nooit voor iemand anders.",
+        verplicht: true,
+        vereistMobiel: true,
+        inlineEmbed: "vcard-upload",
       },
       {
         id: "dag1-sponsor",
