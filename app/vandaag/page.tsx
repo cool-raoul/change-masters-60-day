@@ -15,6 +15,8 @@ import {
   blokkenAlsRecord,
 } from "@/lib/cms/pagina-blokken";
 import { berekenHuidigeDag } from "@/lib/playbook/bereken-dag";
+import { pasTempoToeOpDag } from "@/lib/playbook/tempo-aware";
+import type { CommitmentUren } from "@/lib/dagdoelen";
 import { VandaagFlow } from "./vandaag-flow";
 
 // ============================================================
@@ -94,6 +96,18 @@ export default async function VandaagPagina({
   let dagData = DAGEN.find((d) => d.nummer === dag);
   if (!dagData) redirect("/dashboard");
 
+  // Tempo-aware vervanging: lees commitment_uren uit user_metadata
+  // en pas tempo-specifieke taken toe (momenteel alleen dag 3).
+  // Doen we VOOR de override-passes zodat founder-CMS-edits nog
+  // steeds bovenop tempo-varianten kunnen worden gelegd.
+  const ruwUren = Number(
+    (user.user_metadata as { commitment_uren?: unknown } | undefined)
+      ?.commitment_uren,
+  );
+  const commitmentUren: CommitmentUren | null =
+    ruwUren === 2 || ruwUren === 4 || ruwUren === 6 ? ruwUren : null;
+  dagData = pasTempoToeOpDag(dagData, commitmentUren);
+
   // Founder-overrides toepassen, zelfde patroon als dashboard.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const overrideMap = await haalOverrides(supabase as any, [dag]);
@@ -168,6 +182,7 @@ export default async function VandaagPagina({
       uiOverrides={uiOverrides}
       groetOverrides={groetOverrides}
       paginaBlokken={paginaBlokken}
+      commitmentUren={commitmentUren}
     />
   );
 }

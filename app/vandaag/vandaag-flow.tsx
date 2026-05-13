@@ -16,6 +16,10 @@ import { NamenForm } from "@/components/vandaag/inline-embeds/NamenForm";
 import { pakDagdeelGroetMetNaam } from "@/lib/util/dagdeel-groet";
 import type { Dag, ControllableTaak } from "@/lib/playbook/types";
 import {
+  type CommitmentUren,
+  tempoNaam,
+} from "@/lib/dagdoelen";
+import {
   EditModeProvider,
   useEditModus,
 } from "@/components/cms/EditModeContext";
@@ -62,6 +66,13 @@ type Props = {
   groetOverrides?: Record<string, string>;
   /** Media-blokken per positie (boven-titel, boven-les, etc.). */
   paginaBlokken?: Record<string, Blok[]>;
+  /**
+   * Het gekozen tempo van de member (2/4/6 uur per dag). Null als
+   * de user nog geen keuze heeft gemaakt. Wordt gebruikt om in de
+   * INTRO een badge te tonen ('Vandaag in jouw [Fundament]-tempo')
+   * zodat helder is welke variant van de dag-taken wordt getoond.
+   */
+  commitmentUren?: CommitmentUren | null;
 };
 
 const DAG_GROETEN: Record<number, string> = {
@@ -95,6 +106,7 @@ function VandaagFlowInner({
   uiOverrides = {},
   groetOverrides = {},
   paginaBlokken = {},
+  commitmentUren = null,
 }: Props) {
   const { editModusAan } = useEditModus();
   const router = useRouter();
@@ -338,6 +350,19 @@ function VandaagFlowInner({
               <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
                 Dag {dag.nummer} · Fase {dag.fase}
               </p>
+              {/* Tempo-badge: alleen tonen bij tempo-aware dagen (= dag 3
+                  voorlopig) zodat de member ziet welke variant van de
+                  taken hieronder wordt getoond. Sluiten zich ook andere
+                  dagen aan tempo-systeem aan, dan kan dit blok generieker. */}
+              {commitmentUren && dag.nummer === 3 && (
+                <p className="text-cm-white/55 text-[11px]">
+                  Aantallen aangepast op jouw{" "}
+                  <span className="text-cm-gold/80 font-medium">
+                    {tempoNaam(commitmentUren)}-tempo
+                  </span>{" "}
+                  (± {commitmentUren} uur per dag)
+                </p>
+              )}
               {DAG_GROETEN[dag.nummer] ? (
                 <EditableTekst
                   namespace="sprint-groet"
