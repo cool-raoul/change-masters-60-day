@@ -40,8 +40,15 @@ function pakBericht(taakId: string | undefined, sponsorVoornaam: string): string
       );
     case "dag3-sponsor-checkin":
       return (
-        `Hoi${naamDeel}! Korte update: heb gisteren mijn eerste 3 invites ` +
-        `verstuurd 🎯 voelt goed dat het rolt. Spreek je later!`
+        `Hoi${naamDeel}! Dag 3 erop ✅ Ben rustig aan het netwerk bouwen, ` +
+        `eerste echte gesprekken lopen. Morgen pas ik de 4-stappen-` +
+        `uitnodiging actief toe!`
+      );
+    case "dag4-sponsor-checkin":
+      return (
+        `Hoi${naamDeel}! Dag 4 zit erop 🎯 Heb vandaag voor het eerst ` +
+        `de 4-stappen-uitnodiging actief toegepast. Voelt nog wat stroef ` +
+        `maar de structuur helpt. Spreek je snel!`
       );
     case "dag6-sponsor-tip":
       return (

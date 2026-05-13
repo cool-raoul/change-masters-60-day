@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 
 // ============================================================
@@ -29,10 +30,12 @@ function bouwWhatsAppLink(
   bericht: string,
 ): string | null {
   if (!telefoon) return null;
-  // Schoon telefoonnummer: alleen cijfers, eerste 0 vervangen door 31
-  // (Nederlandse default), '+' weghalen.
+  // Schoon telefoonnummer: alleen cijfers, '+' weghalen.
   let nummer = telefoon.replace(/[^\d+]/g, "");
   if (nummer.startsWith("+")) nummer = nummer.substring(1);
+  // '00xx' = internationaal-prefix, vervang door 'xx' (de landcode).
+  if (nummer.startsWith("00")) nummer = nummer.substring(2);
+  // Begint met '0' = Nederlandse mobiel, prefix +31.
   if (nummer.startsWith("0")) nummer = "31" + nummer.substring(1);
   return `https://wa.me/${nummer}?text=${encodeURIComponent(bericht)}`;
 }
@@ -109,14 +112,29 @@ export function UitnodigHelpKnoppen() {
             <span className="opacity-60 text-[11px]">WhatsApp openen</span>
           </a>
         ) : (
-          <Link
-            href="/team"
-            className="flex flex-col items-center justify-center gap-1 px-3 py-3 rounded-lg border border-cm-gold/30 bg-cm-surface-2 hover:bg-cm-surface text-cm-white text-xs text-center transition-colors"
+          // Geen sponsor-telefoon bekend: kopieer het bericht naar
+          // klembord en geef een toast met instructie. Werkt op
+          // mobiel zowel als desktop, blijft binnen de dag-flow.
+          <button
+            type="button"
+            onClick={() => {
+              const naamDeel = sponsor?.voornaam
+                ? sponsor.voornaam
+                : "je sponsor";
+              navigator.clipboard
+                .writeText(sponsorBericht || "")
+                .catch(() => {});
+              toast.info(
+                `Bericht naar klembord gekopieerd. Open je WhatsApp van ${naamDeel} en plak het bericht.`,
+                { duration: 6000 },
+              );
+            }}
+            className="flex flex-col items-center justify-center gap-1 px-3 py-3 rounded-lg border border-cm-gold/30 bg-cm-surface-2 hover:bg-cm-surface text-cm-white text-xs text-center transition-colors w-full"
           >
             <span className="text-lg">💬</span>
             <span className="font-semibold">Met je sponsor</span>
-            <span className="opacity-60 text-[11px]">Sponsor-pagina</span>
-          </Link>
+            <span className="opacity-60 text-[11px]">Kopieer bericht</span>
+          </button>
         )}
         <Link
           href="/coach?onderwerp=uitnodiging&prefill=Help+me+een+uitnodiging+schrijven"
