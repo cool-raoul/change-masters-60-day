@@ -58,6 +58,11 @@ export type RadarItem = {
 
 const FASE_GEWICHT: Record<string, number> = {
   prospect: 0,
+  // 'in_gesprek' = je bent in gesprek maar nog niet uitgenodigd voor
+  // een presentatie. Hoger gewicht dan prospect (er is contact), maar
+  // lager dan uitgenodigd (gesprek-vervolgen heeft nog geen presentatie-
+  // intentie). 8 is een rustige tussenwaarde.
+  in_gesprek: 8,
   uitgenodigd: 15,
   one_pager: 30,
   presentatie: 35,

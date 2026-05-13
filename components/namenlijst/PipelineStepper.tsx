@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { PipelineFase, PIPELINE_FASEN } from "@/lib/supabase/types";
 
 // Inline pipeline-stepper voor een prospect-rij.
-// Toont de 5 progressie-fasen als dots (prospect → followup) en drie
+// Toont de 6 progressie-fasen als dots (prospect -> followup) en drie
 // eindstations (member/shopper/not_yet) als uitkomst-badge.
 // Klik op de stepper opent een dropdown om de fase direct te wijzigen.
 // geen detailkaart openen nodig.
@@ -20,8 +20,14 @@ interface Props {
 }
 
 // Progressie-fasen (in volgorde). Eindstations worden apart getoond.
+// 'in_gesprek' (2026-05-13) is de tussenstap tussen 'prospect' (op je
+// lijst) en 'uitgenodigd' (voor een presentatie/one-pager). Concept:
+// je bent met iemand IN GESPREK maar nog niet uitgenodigd. Belangrijk
+// onderscheid want gesprek-vervolgen is iets anders dan opvolgen na
+// een presentatie.
 const PROGRESSIE_FASEN: PipelineFase[] = [
   "prospect",
+  "in_gesprek",
   "uitgenodigd",
   "one_pager",
   "presentatie",

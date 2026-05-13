@@ -197,7 +197,8 @@ MOGELIJKE ACTIES:
 
 1. { "type": "nieuwe_prospect", "volledige_naam": "Pieter de Hoogh", "pipeline_fase": "prospect", "notities": "...", "relatie": "zus van Pieter de Hoogh" (optioneel) }
    - Gebruik als iemand nieuw is (niet in bestaande lijst)
-   - pipeline_fase opties: "prospect", "uitgenodigd", "one_pager", "presentatie", "followup", "shopper", "member", "not_yet"
+   - pipeline_fase opties: "prospect", "in_gesprek", "uitgenodigd", "one_pager", "presentatie", "followup", "shopper", "member", "not_yet"
+   - "in_gesprek" = je bent in gesprek (DM/WhatsApp/bel) met deze persoon over de business, maar nog niet uitgenodigd voor een presentatie of one-pager. Tussenstap tussen "prospect" (alleen op de lijst) en "uitgenodigd" (uitnodiging voor presentatie verzonden).
    - Net ingeschreven als klant/lid: "member"
    - Product besteld, geen lid: "shopper"
    - Open voor gesprek: "prospect"
@@ -521,16 +522,21 @@ BELANGRIJK: Begin altijd met de "redenatie" stap. Dit dwingt je om te denken vó
       ? geparsed.intentie
       : "data";
 
-    // Server-side veiligheidscheck: voorkom ongewenste fase-regressie
+    // Server-side veiligheidscheck: voorkom ongewenste fase-regressie.
+    // 'in_gesprek' (2026-05-13) toegevoegd tussen prospect (1) en
+    // uitgenodigd. Alle hogere fases verschuiven 1 op (uitgenodigd
+    // wordt 3, etc.). De regressie-grens hieronder (>= 7 = shopper/
+    // member, niet meer terugzetten) is daarmee mee verschoven.
     const faseRangorde: Record<string, number> = {
       prospect: 1,
-      uitgenodigd: 2,
-      one_pager: 3,
-      presentatie: 4,
-      followup: 5,
-      not_yet: 6,
-      shopper: 7,
-      member: 8,
+      in_gesprek: 2,
+      uitgenodigd: 3,
+      one_pager: 4,
+      presentatie: 5,
+      followup: 6,
+      not_yet: 7,
+      shopper: 8,
+      member: 9,
     };
     const prospectById = new Map(
       (bestaandeProspects || []).map((p: any) => [p.id, p])
@@ -546,7 +552,8 @@ BELANGRIJK: Begin altijd met de "redenatie" stap. Dit dwingt je om te denken vó
           const huidigRang = faseRangorde[bestaand.pipeline_fase] ?? 0;
           const nieuwRang = faseRangorde[a.pipeline_fase] ?? 0;
           // Blokkeer regressie van shopper/member naar lagere fase
-          if (huidigRang >= 7 && nieuwRang < huidigRang) {
+          // (rangorde 8 = shopper, 9 = member, daaronder mag wel).
+          if (huidigRang >= 8 && nieuwRang < huidigRang) {
             waarschuwingen.push(
               `Fase-verandering geblokkeerd: ${bestaand.volledige_naam} is al ${bestaand.pipeline_fase}, AI wilde terugzetten naar ${a.pipeline_fase}.`
             );

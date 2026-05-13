@@ -1,5 +1,6 @@
 export type PipelineFase =
   | "prospect"
+  | "in_gesprek"
   | "uitgenodigd"
   | "one_pager"
   | "presentatie"
@@ -278,6 +279,13 @@ export interface ProductadviesTest {
 
 export const PIPELINE_FASEN: { fase: PipelineFase; label: string; kleur: string; tekstkleur: string }[] = [
   { fase: "prospect", label: "Prospect", kleur: "#3A3A3A", tekstkleur: "#CCCCCC" },
+  // 'in_gesprek' = nieuwe fase tussen prospect en uitgenodigd. Concept:
+  // het contact staat op je lijst en je bent met ze in gesprek
+  // (WhatsApp/DM/telefoon) maar nog niet uitgenodigd voor een
+  // presentatie of one-pager. Kleur is een warm zand, signaleert
+  // 'warmte op gang' zonder met blauw (uitgenodigd) of paars
+  // (presentatie) te botsen.
+  { fase: "in_gesprek", label: "In gesprek", kleur: "#2A2014", tekstkleur: "#D4A574" },
   { fase: "uitgenodigd", label: "Uitgenodigd", kleur: "#1A2A3A", tekstkleur: "#4A9EDB" },
   { fase: "one_pager", label: "One Pager", kleur: "#1A1A3A", tekstkleur: "#7A6ADB" },
   { fase: "presentatie", label: "Presentatie", kleur: "#2A1A3A", tekstkleur: "#9A6ADB" },

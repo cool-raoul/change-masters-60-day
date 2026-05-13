@@ -321,6 +321,10 @@ export const t: Vertalingen = {
     nl: "Prospects", en: "Prospects", fr: "Prospects",
     es: "Prospectos", de: "Kontakte", pt: "Prospectos",
   },
+  "fase.in_gesprek": {
+    nl: "In gesprek", en: "In conversation", fr: "En conversation",
+    es: "En conversaci\u00f3n", de: "Im Gespr\u00e4ch", pt: "Em conversa",
+  },
   "fase.uitgenodigd": {
     nl: "Uitgenodigd", en: "Invited", fr: "Invit\u00e9",
     es: "Invitado", de: "Eingeladen", pt: "Convidado",

@@ -220,6 +220,7 @@ export default function NieuwProspectPagina() {
               className="input-cm"
             >
               <option value="prospect">{v("fase.prospect")}</option>
+              <option value="in_gesprek">{v("fase.in_gesprek")}</option>
               <option value="uitgenodigd">{v("fase.uitgenodigd")}</option>
               <option value="one_pager">{v("fase.one_pager")}</option>
               <option value="presentatie">{v("fase.presentatie")}</option>

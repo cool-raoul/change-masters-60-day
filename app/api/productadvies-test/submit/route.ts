@@ -137,8 +137,14 @@ export async function POST(req: NextRequest) {
     // ná followup (member, shopper, not_yet) blijven onaangetast.
     // Bij re-submit (wasAlIngevuld) doen we geen pipeline-update of herinnering
     // meer, die zijn al eerder afgehandeld.
+    // PRE_FOLLOWUP_FASES = alle fases die nog vóór 'followup' liggen.
+    // Als iemand uit een van deze fases de productadvies-test invult,
+    // dan markeren we ze automatisch als 'followup' (er is iets
+    // gebeurd waar opvolging op moet komen).
+    // 'in_gesprek' (2026-05-13) hoort hier ook bij.
     const PRE_FOLLOWUP_FASES = [
       "prospect",
+      "in_gesprek",
       "uitgenodigd",
       "one_pager",
       "presentatie",

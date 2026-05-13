@@ -353,9 +353,9 @@ Benadruk dat fase 1 het specifieke probleem aanpakt, maar dat blijvende gezondhe
   let prospectSectie = "";
   if (prospect) {
     const faseLabels: Record<string, string> = {
-      prospect: "Prospect", uitgenodigd: "Uitgenodigd", one_pager: "One Pager",
-      presentatie: "Presentatie", followup: "Follow-up", not_yet: "Not Yet",
-      shopper: "Shopper", member: "Member",
+      prospect: "Prospect", in_gesprek: "In gesprek", uitgenodigd: "Uitgenodigd",
+      one_pager: "One Pager", presentatie: "Presentatie", followup: "Follow-up",
+      not_yet: "Not Yet", shopper: "Shopper", member: "Member",
     };
     prospectSectie = `\nPROSPECT: ${prospect.volledige_naam} (${faseLabels[prospect.pipeline_fase] || prospect.pipeline_fase})`;
     if (prospect.notities) prospectSectie += ` | ${prospect.notities}`;

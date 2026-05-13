@@ -18,6 +18,10 @@ interface Props {
 
 const FASE_KLEUREN: Record<PipelineFase, string> = {
   prospect: "#CCCCCC",
+  // 'in_gesprek' (2026-05-13) = warm zand, tussen grijs (prospect) en
+  // blauw (uitgenodigd). Signaleert 'warmte op gang' zonder met de
+  // andere kleuren te botsen.
+  in_gesprek: "#D4A574",
   uitgenodigd: "#4A9EDB",
   one_pager: "#7A6ADB",
   presentatie: "#9A6ADB",
