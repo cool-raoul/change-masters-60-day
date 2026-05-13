@@ -5,15 +5,22 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 
 // ============================================================
-// SocialPlatformKnoppen, drie knoppen die direct doorlinken naar het
-// eigen Facebook / Instagram / LinkedIn-profiel van de member.
+// SocialPlatformKnoppen, vier knoppen die direct doorlinken naar de
+// vier bronnen waar de member nieuwe namen kan halen:
 //
-// De URLs worden opgehaald uit profiles.facebook_url / instagram_url /
-// linkedin_url. Als een URL leeg is, krijgt de knop een prompt om het
-// eerst in te stellen op /instellingen.
+//   1. Eleva-geheugen (interne namenlijst) — STAAT VOORAAN, want
+//      mensen die hier al in zitten zijn de eerste plek om te kijken
+//      voordat je naar een externe socials gaat scrollen.
+//   2. Facebook (eigen profiel)
+//   3. Instagram (eigen profiel)
+//   4. LinkedIn (eigen profiel)
 //
-// Gebruikt in vandaag-flow op taken waar de member naar zijn social
-// moet (bv. dag 3 stap 4 'start losse chats op socials').
+// De social-URLs worden opgehaald uit profiles.facebook_url /
+// instagram_url / linkedin_url. Leeg = prompt om het in te stellen
+// op /instellingen. Eleva-geheugen is altijd actief — geen URL nodig.
+//
+// Gebruikt in vandaag-flow op taken waar de member nieuwe namen
+// moet vinden (bv. dag 3 + dag 4 'voeg N nieuwe namen toe').
 // ============================================================
 
 type SocialUrls = {
@@ -68,16 +75,27 @@ export function SocialPlatformKnoppen() {
     <div className="rounded-lg border border-cm-gold/30 bg-cm-gold/5 px-4 py-3 space-y-3">
       <div className="flex items-baseline justify-between gap-2 flex-wrap">
         <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
-          📱 Open je socials
+          📚 Vier plekken om namen te vinden
         </p>
         <Link
           href="/instellingen#socials"
           className="text-cm-white/60 hover:text-cm-white text-[11px] underline-offset-2 hover:underline"
         >
-          {heeftIetsIngevuld ? "Wijzig" : "+ Voeg je profielen toe"}
+          {heeftIetsIngevuld ? "Wijzig socials" : "+ Voeg je profielen toe"}
         </Link>
       </div>
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        {/* 1. Eleva-geheugen, altijd zichtbaar en als EERSTE links. Mensen
+            die hier al in zitten zijn de natuurlijke eerste plek voordat
+            je naar externe socials gaat scrollen. */}
+        <Link
+          href="/namenlijst"
+          className="flex flex-col items-center justify-center gap-1 px-3 py-3 rounded-lg border border-cm-gold/30 bg-cm-surface-2 hover:bg-cm-surface text-cm-white text-xs text-center transition-colors"
+        >
+          <span className="text-lg">📚</span>
+          <span className="font-semibold">Eleva-geheugen</span>
+          <span className="opacity-60 text-[11px]">Uit je lijst</span>
+        </Link>
         {heeftFb ? (
           <a
             href={urls!.facebook_url!}
