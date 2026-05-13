@@ -207,7 +207,7 @@ Hoe je vandaag NIVEA in praktijk brengt:
 1. Pak een rustig moment, geen telefoon, geen afleiding.
 2. Loop categorieën door: familie, partners van familie, oude vrienden, huidige vrienden, collega's nu, collega's vroeger, sport/hobby, ouders bij school/club, buurt, ondernemers in je netwerk.
 3. Per categorie: schrijf élke naam op die in je hoofd opkomt. Geen filter. Voelt het ongemakkelijk? Dat is precies de plek om door te zetten.
-4. Spraak-FAB werkt het snelst: "Nieuwe prospect [naam] uit [context]" en je hebt in een korte sessie 20 namen.
+4. De spraakfunctie werkt het snelst: "Nieuwe prospect [naam] uit [context]" en je hebt in een korte sessie 20 namen.
 5. Stop niet bij 20. Ga door totdat het écht op is, vaak zit je dan op 50 tot 100.
 
 Veelgemaakte fouten, herkenbaar?

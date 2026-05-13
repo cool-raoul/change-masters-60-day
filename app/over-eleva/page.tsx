@@ -200,7 +200,7 @@ const FEATURES: Feature[] = [
   },
   {
     emoji: "🎙️",
-    titel: "Spraak-FAB (gouden microfoon)",
+    titel: "Spraakfunctie (gouden microfoon)",
     watIsHet:
       "Onderin elk scherm staat een gouden microfoon-knop. Klik en spreek: 'Nieuwe prospect Jan uit voetbalclub' → Jan staat in je namenlijst. 'Follow-up over 3 dagen voor Linda' → herinnering klaar.",
     watHebJeEraan:

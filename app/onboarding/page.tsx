@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { PushNotificationToggle } from "@/components/pwa/PushNotificationToggle";
-import { EditableTekst } from "@/components/cms/EditableTekst";
+import { EditableTekst, EditableBlok } from "@/components/cms/EditableTekst";
 import { MediaBlokkenClient } from "@/components/cms/MediaBlokkenClient";
 import { EditModeProvider } from "@/components/cms/EditModeContext";
 import { EditModeToggle } from "@/components/cms/EditModeToggle";
@@ -389,19 +389,48 @@ export default function OnboardingPagina() {
 
               {/* Wat je gaat doen */}
               <div className="card space-y-3">
-                <h3 className="text-cm-gold font-semibold">Wat komt er nog na deze setup?</h3>
+                <EditableTekst
+                  namespace="onboarding"
+                  sleutel="stap1.checklijst.titel"
+                  standaard="Wat komt er nog na deze setup?"
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="h3"
+                  className="text-cm-gold font-semibold"
+                  hint="Titel boven de checklijst in stap 1"
+                />
                 <ul className="space-y-2">
                   {[
-                    { icoon: "💛", tekst: "Je ontdekt jouw persoonlijke WHY" },
-                    { icoon: "📖", tekst: "Je leert hoe de 60-dagenrun werkt" },
-                    { icoon: "🎯", tekst: "Je kiest jouw tempo voor de komende 60 dagen" },
+                    { icoon: "💛", sleutel: "stap1.checklijst.item1", standaard: "Je ontdekt jouw persoonlijke WHY" },
+                    { icoon: "📖", sleutel: "stap1.checklijst.item2", standaard: "Je leert hoe de 60-dagenrun werkt" },
+                    { icoon: "🎯", sleutel: "stap1.checklijst.item3", standaard: "Je kiest jouw tempo voor de komende 60 dagen" },
                   ].map((item, i) => (
                     <li key={i} className="flex items-center gap-3 text-sm text-cm-white">
-                      <span className="text-xl">{item.icoon}</span>{item.tekst}
+                      <span className="text-xl">{item.icoon}</span>
+                      <EditableTekst
+                        namespace="onboarding"
+                        sleutel={item.sleutel}
+                        standaard={item.standaard}
+                        overrides={overrides}
+                        isFounder={isFounder}
+                        as="span"
+                        className=""
+                        hint={`Checklist-item ${i + 1} in stap 1`}
+                      />
                     </li>
                   ))}
                 </ul>
-                <p className="text-cm-white text-xs opacity-50 pt-1">Deze setup is het eerste deel van dag 1. Zodra je hier doorheen bent, rol je direct door naar de echte taken van dag 1 (je eerste namen toevoegen, een berichtje naar je sponsor). Samen ben je vandaag goed binnen het uur klaar.</p>
+                <EditableBlok
+                  namespace="onboarding"
+                  sleutel="stap1.checklijst.uitleg"
+                  standaard="Deze setup is het eerste deel van dag 1. Zodra je hier doorheen bent, rol je direct door naar de echte taken van dag 1 (je eerste namen toevoegen, een berichtje naar je sponsor). Samen ben je vandaag goed binnen het uur klaar."
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="p"
+                  className="text-cm-white text-xs opacity-50 pt-1"
+                  rows={3}
+                  hint="Uitleg onder de checklijst in stap 1 (dat de onboarding deel van dag 1 is)"
+                />
               </div>
 
               <button onClick={() => gaNaarStap(2)} disabled={bezig} className="btn-gold w-full py-4 text-base font-bold">
@@ -446,21 +475,32 @@ export default function OnboardingPagina() {
               {/* Waarom cruciaal */}
               <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
                 <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom deze stap cruciaal is</p>
-                <p className="text-cm-white text-sm leading-relaxed opacity-90">
-                  De cijfers liegen niet: mensen die hun WHY helder hebben gaan <strong className="text-cm-white">3× zo lang door</strong> als het moeilijk wordt.
-                  Je WHY is niet &quot;meer geld verdienen&quot;, maar wat dat geld betekent voor jou en je gezin.
-                  Als je WHY sterk genoeg is, vind je altijd de weg.
-                </p>
+                <EditableBlok
+                  namespace="onboarding"
+                  sleutel="stap2.waarom_cruciaal"
+                  standaard="Mensen die hun WHY helder hebben gaan veel langer door als het moeilijk wordt. Je WHY is niet 'meer geld verdienen', maar wat dat geld betekent voor jou en je gezin. Als je WHY sterk genoeg is, vind je altijd de weg."
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="p"
+                  className="text-cm-white text-sm leading-relaxed opacity-90"
+                  rows={4}
+                  hint="Waarom-cruciaal-blok van stap 2 (WHY)"
+                />
               </div>
 
               <div className="card space-y-3">
                 <h3 className="text-cm-gold font-semibold">Hoe werkt het WHY-gesprek?</h3>
-                <p className="text-cm-white text-sm leading-relaxed opacity-80">
-                  Een ELEVA Mentor stelt je de juiste vragen om jouw echte motivatie boven water te krijgen, net zoals een echte persoonlijke coach dat zou doen. Geen formulier invullen, maar een echt gesprek. Dit duurt 5–10 minuten.
-                </p>
-                <p className="text-cm-white text-sm leading-relaxed opacity-80">
-                  Na afloop wordt er een persoonlijke WHY-samenvatting voor je gemaakt. Die staat daarna altijd op je dashboard als motivatie-anker.
-                </p>
+                <EditableBlok
+                  namespace="onboarding"
+                  sleutel="stap2.how_it_works"
+                  standaard="Een ELEVA Mentor stelt je de juiste vragen om jouw echte motivatie boven water te krijgen, net zoals een echte persoonlijke coach dat zou doen. Geen formulier invullen, maar een echt gesprek.\n\nNa afloop wordt er een persoonlijke WHY-samenvatting voor je gemaakt. Die staat daarna altijd op je dashboard als motivatie-anker."
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="div"
+                  className="text-cm-white text-sm leading-relaxed opacity-80 whitespace-pre-line"
+                  rows={5}
+                  hint="Uitleg van hoe het WHY-gesprek werkt"
+                />
               </div>
 
               <div className="bg-[#D4AF37]/10 border-2 border-[#D4AF37]/40 rounded-xl p-5 text-center space-y-3">
@@ -530,24 +570,89 @@ export default function OnboardingPagina() {
               {/* Waarom cruciaal */}
               <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
                 <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom deze stap cruciaal is</p>
-                <p className="text-cm-white text-sm leading-relaxed opacity-90">
-                  Mensen die het systeem begrijpen presteren 5× beter dan mensen die &quot;maar wat doen&quot;. De run heeft een structuur, en die structuur werkt. Je moet hem kennen om hem te kunnen volgen.
-                </p>
+                <EditableBlok
+                  namespace="onboarding"
+                  sleutel="stap3.waarom_cruciaal"
+                  standaard="Mensen die het systeem begrijpen, presteren beter dan mensen die maar wat doen. De run heeft een structuur, en die structuur werkt. Je moet hem kennen om hem te kunnen volgen."
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="p"
+                  className="text-cm-white text-sm leading-relaxed opacity-90"
+                  rows={3}
+                  hint="Waarom-cruciaal-blok van stap 3 (run-uitleg)"
+                />
               </div>
 
               <div className="space-y-3">
                 <h3 className="text-cm-gold font-semibold text-sm uppercase tracking-wider">De 3 blokken</h3>
                 <div className="card border-l-4 border-[#4A9EDB]">
-                  <p className="text-[#4A9EDB] font-semibold text-sm mb-1">Blok 1 · Dag 1–20: Fundament</p>
-                  <p className="text-cm-white text-sm leading-relaxed opacity-80">Je bouwt je netwerk-overzicht op. Je begint bij de mensen die je al goed kent, daar mag je direct uitnodigen. Daarnaast leer je hoe je oudere contacten weer warm maakt en hoe je op een rustige manier zichtbaar wordt in je omgeving.</p>
+                  <EditableTekst
+                    namespace="onboarding"
+                    sleutel="stap3.blok1.titel"
+                    standaard="Blok 1 · Dag 1–20: Fundament"
+                    overrides={overrides}
+                    isFounder={isFounder}
+                    as="p"
+                    className="text-[#4A9EDB] font-semibold text-sm mb-1"
+                    hint="Titel van Blok 1 in stap 3"
+                  />
+                  <EditableBlok
+                    namespace="onboarding"
+                    sleutel="stap3.blok1.tekst"
+                    standaard="Je bouwt je netwerk-overzicht op. Je begint bij de mensen die je al goed kent, daar mag je direct uitnodigen. Daarnaast leer je hoe je oudere contacten weer warm maakt en hoe je op een rustige manier zichtbaar wordt in je omgeving."
+                    overrides={overrides}
+                    isFounder={isFounder}
+                    as="p"
+                    className="text-cm-white text-sm leading-relaxed opacity-80"
+                    rows={3}
+                    hint="Uitleg van Blok 1 (dag 1-20)"
+                  />
                 </div>
                 <div className="card border-l-4 border-[#C9A84C]">
-                  <p className="text-[#C9A84C] font-semibold text-sm mb-1">Blok 2 · Dag 21–40: Verdiepen</p>
-                  <p className="text-cm-white text-sm leading-relaxed opacity-80">Je eerste resultaten komen binnen. Je leert van de eerste gesprekken en scherpt je aanpak aan. Je opvolgwerk wordt belangrijker, want de meeste mensen zeggen niet bij het eerste contact ja. Hier zit het echte verschil.</p>
+                  <EditableTekst
+                    namespace="onboarding"
+                    sleutel="stap3.blok2.titel"
+                    standaard="Blok 2 · Dag 21–40: Verdiepen"
+                    overrides={overrides}
+                    isFounder={isFounder}
+                    as="p"
+                    className="text-[#C9A84C] font-semibold text-sm mb-1"
+                    hint="Titel van Blok 2 in stap 3"
+                  />
+                  <EditableBlok
+                    namespace="onboarding"
+                    sleutel="stap3.blok2.tekst"
+                    standaard="Je eerste resultaten komen binnen. Je leert van de eerste gesprekken en scherpt je aanpak aan. Je opvolgwerk wordt belangrijker, want de meeste mensen zeggen niet bij het eerste contact ja. Hier zit het echte verschil."
+                    overrides={overrides}
+                    isFounder={isFounder}
+                    as="p"
+                    className="text-cm-white text-sm leading-relaxed opacity-80"
+                    rows={3}
+                    hint="Uitleg van Blok 2 (dag 21-40)"
+                  />
                 </div>
                 <div className="card border-l-4 border-[#4ACB6A]">
-                  <p className="text-[#4ACB6A] font-semibold text-sm mb-1">Blok 3 · Dag 41–60: Oogsten en bouwen</p>
-                  <p className="text-cm-white text-sm leading-relaxed opacity-80">Je lijst is gevuld, je ritme zit erin. Nu rond je gesprekken af, begeleid je je eerste partners en help je hen op weg. De gewoontes uit de eerste 40 dagen dragen nu vrucht.</p>
+                  <EditableTekst
+                    namespace="onboarding"
+                    sleutel="stap3.blok3.titel"
+                    standaard="Blok 3 · Dag 41–60: Oogsten en bouwen"
+                    overrides={overrides}
+                    isFounder={isFounder}
+                    as="p"
+                    className="text-[#4ACB6A] font-semibold text-sm mb-1"
+                    hint="Titel van Blok 3 in stap 3"
+                  />
+                  <EditableBlok
+                    namespace="onboarding"
+                    sleutel="stap3.blok3.tekst"
+                    standaard="Je lijst is gevuld, je ritme zit erin. Nu rond je gesprekken af, begeleid je je eerste partners en help je hen op weg. De gewoontes uit de eerste 40 dagen dragen nu vrucht."
+                    overrides={overrides}
+                    isFounder={isFounder}
+                    as="p"
+                    className="text-cm-white text-sm leading-relaxed opacity-80"
+                    rows={3}
+                    hint="Uitleg van Blok 3 (dag 41-60)"
+                  />
                 </div>
               </div>
 
@@ -606,13 +711,38 @@ export default function OnboardingPagina() {
 
               {/* Korte intro waarom dit een keuze is en geen losse getallen */}
               <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
-                <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom je tempo kiest, geen losse getallen</p>
-                <p className="text-cm-white text-sm leading-relaxed opacity-90">
-                  Mensen die zelf met losse getallen rommelen, zetten ze óf veel te laag (dan gebeurt er niets) óf veel te hoog (dan stoppen ze). Met een tempo kies je een ritme dat past bij jouw leven nu. De aantallen volgen automatisch.
-                </p>
-                <p className="text-cm-white text-sm opacity-80">
-                  🎯 Je kunt later in <strong className="text-cm-white">Instellingen</strong> altijd switchen, bijvoorbeeld als je meer ruimte krijgt. Dat is geen falen, dat is luisteren naar jezelf.
-                </p>
+                <EditableTekst
+                  namespace="onboarding"
+                  sleutel="stap6.waarom_tempo_titel"
+                  standaard="⚡ Waarom je tempo kiest, geen losse getallen"
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="p"
+                  className="text-amber-300 font-semibold text-sm flex items-center gap-2"
+                  hint="Titel van het waarom-tempo-blok"
+                />
+                <EditableBlok
+                  namespace="onboarding"
+                  sleutel="stap6.waarom_tempo_tekst1"
+                  standaard="Mensen die zelf met losse getallen rommelen, zetten ze óf veel te laag (dan gebeurt er niets) óf veel te hoog (dan stoppen ze). Met een tempo kies je een ritme dat past bij jouw leven nu. De aantallen volgen automatisch."
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="p"
+                  className="text-cm-white text-sm leading-relaxed opacity-90"
+                  rows={3}
+                  hint="Eerste alinea waarom tempo-keuze"
+                />
+                <EditableBlok
+                  namespace="onboarding"
+                  sleutel="stap6.waarom_tempo_tekst2"
+                  standaard="🎯 Je kunt later in Instellingen altijd switchen, bijvoorbeeld als je meer ruimte krijgt. Dat is geen falen, dat is luisteren naar jezelf."
+                  overrides={overrides}
+                  isFounder={isFounder}
+                  as="p"
+                  className="text-cm-white text-sm opacity-80"
+                  rows={2}
+                  hint="Tweede alinea waarom tempo-keuze (over later switchen)"
+                />
               </div>
 
               {/* De drie tempo-cards */}

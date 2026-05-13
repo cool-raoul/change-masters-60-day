@@ -37,9 +37,14 @@ import type { Dag, ControllableTaak } from "@/lib/playbook/types";
 // en updaten we het op één plek.
 // ============================================================
 
-const STORIES_UITLEG = `Deel 1 tot 3 momenten uit je dag op Instagram of Facebook (stories, niet feed). Een ontbijt, een wandeling, een rustig moment, een blije gedachte. Geen verkoop, geen "kom in m'n business". Gewoon laten zien dat je leeft. Mensen worden door wat ze zien aangetrokken, niet door wat ze lezen.\n\nREAGEREN OP STORIES VAN ANDEREN is minstens zo belangrijk als zelf posten. Waarom? Als je reageert op iemands story, land je RECHTSTREEKS in z'n DM. Dat is de plek waar het echte gesprek begint. Eén oprechte 2-3 zinnen-reactie op een story is goud waard.\n\nWat doe je vandaag?\n\n1. Plaats 1 tot 3 stories uit je dag (lifestyle, geen pitch)\n2. Open Instagram of Facebook en geef bij 3 stories van anderen een ECHTE reactie. Geen "👏👏👏" maar 2-3 zinnen die laten zien dat je hun moment hebt gezien.\n3. Wordt het een gesprek? Top. Als dit een NIEUW persoon is (nog niet op je lijst), voeg ze toe en zet ze op fase 'in gesprek' (gebruik Spraak-FAB: "Ik heb een gesprek gestart met [naam]").\n\nZo bouw je rustige zichtbaarheid + concrete nieuwe gesprekken zonder iets te pushen.`;
+const STORIES_UITLEG = `Deel 1 tot 3 momenten uit je dag op Instagram of Facebook (stories, niet feed). Een ontbijt, een wandeling, een rustig moment, een blije gedachte. Geen verkoop, geen "kom in m'n business". Gewoon laten zien dat je leeft. Mensen worden door wat ze zien aangetrokken, niet door wat ze lezen.\n\nREAGEREN OP STORIES VAN ANDEREN is minstens zo belangrijk als zelf posten. Waarom? Als je reageert op iemands story, land je RECHTSTREEKS in z'n DM. Dat is de plek waar het echte gesprek begint. Eén oprechte 2-3 zinnen-reactie op een story is goud waard.\n\nWat doe je vandaag?\n\n1. Plaats 1 tot 3 stories uit je dag (lifestyle, geen pitch)\n2. Open Instagram of Facebook en geef bij 3 stories van anderen een ECHTE reactie. Geen "👏👏👏" maar 2-3 zinnen die laten zien dat je hun moment hebt gezien.\n3. Wordt het een gesprek? Top. Als dit een NIEUW persoon is (nog niet op je lijst), voeg ze toe en zet ze op fase 'in gesprek' via de spraakfunctie ("Ik heb een gesprek gestart met [naam]").\n\nZo bouw je rustige zichtbaarheid + concrete nieuwe gesprekken zonder iets te pushen.`;
 
-const FOLLOWUP_UITLEG = `Mensen die de film, one-pager of presentatie hebben gezien wachten op opvolging. Geen vast getal vandaag — afhankelijk van wie er klaar staat in je pijplijn. Open je namenlijst en filter op fase 'one-pager', 'presentatie' of 'follow-up'.\n\nDE OPENINGSZIN, twee varianten:\n\n• ALGEMEEN: "Wat spreekt je hier het meeste in aan?"\n  Richt de aandacht op wat hen RAAKTE. Werkt altijd.\n\n• WHY-GERICHT (als jij hun WHY al kent): "Zie je hoe dit je kan brengen tot [hun WHY]?"\n  Voorbeelden:\n    - "Zie je hoe dit je kan brengen tot die extra vrije dag die je graag zou willen?"\n    - "Zie je hoe dit je kan brengen tot die vakantiedagen die je extra zou willen?"\n    - "Zie je hoe dit je kan brengen tot meer tijd met je kinderen?"\n  Deze variant raakt direct in hun motivatie. Krachtig als je het goed weet.\n\nVermijd ABSOLUUT "Wat vond je ervan?" — dat lokt oordeel uit in plaats van verbinding.\n\nWAT KOMT NA HET ANTWOORD?\n\n1. ANTWOORD VAN PROSPECT → luister wat ze zeggen, doorvragen op wat ze NOEMEN.\n\n2. KIES DE VALIDATIE-VORM. Pas hier en NU bepaal je per prospect of dit:\n   🤝 een 3-WEG-GESPREK wordt (met sponsor erbij, klassiek, persoonlijk)\n   ✨ een MINI-ELEVA wordt (14 dagen eigen omgeving voor wie eerst rustig wil verkennen)\n   Open de prospect-kaart in de namenlijst, het keuze-blok bovenaan zit klaar. Niet zeker? Klik 'Overleg met sponsor' en je sponsor krijgt een vooringevulde WhatsApp.\n\n3. BIJ TWIJFEL OF VRAGEN: gebruik Feel-Felt-Found.\n   - "Ik begrijp dat je dat voelt" (Feel)\n   - "Veel mensen voelden dat in het begin ook" (Felt)\n   - "Wat ze ontdekten was..." (Found, met iets concreets)\n\n4. CLOSING-VRAGEN, richting geven:\n   - "Hoe serieus zou je hiernaar willen kijken?"\n   - "Wat heb je nog nodig om hier een goede beslissing over te nemen?"\n   - "Zie je jezelf hier eerder als klant, of zie je ook de opbouwkant?"\n\n5. DOEL-TIJD-TERMIJN, laat HEN hun motivatie uitspreken (gebruik dit als ze geïnteresseerd zijn):\n   - "Hoeveel euro per maand zou je willen verdienen?"\n   - "Hoeveel uur per week heb je realistisch?"\n   - "Na hoeveel maanden zou dat moment er moeten zijn?"\n   - "Als ik een realistisch plan kan laten zien, ben je dan bereid serieus te kijken?"\n\n6. VOLGENDE STAP: of een plan tonen, of direct de eerste stap zetten.\n\nEén prospect kan meerdere follow-up-momenten doorlopen. Geen druk om in 1 gesprek af te ronden. Wel: blijf eerlijk en consistent terugkomen.`;
+// Voor dag 3 + dag 4 (start-fase): alleen de openings-zin + luisteren.
+// De diepere flow (Feel-Felt-Found, closing-vragen, Doel-Tijd-Termijn,
+// volgende stap) komt stap-voor-stap in latere dagen aan bod, niet
+// allemaal tegelijk op dag 3 of 4 — dat zou overweldigend zijn voor
+// een member die net begint.
+const FOLLOWUP_UITLEG_BASIS = `Mensen die de film, one-pager of presentatie hebben gezien wachten op opvolging. Geen vast getal vandaag — afhankelijk van wie er klaar staat in je pijplijn. Open je namenlijst en filter op fase 'one-pager', 'presentatie' of 'follow-up'.\n\nVOOR NU FOCUS JE OP ÉÉN DING, de openingszin. De diepere opvolg-technieken (twijfel ombuigen, closing-vragen, doel-tijd-termijn) komen in de dagen hierna stap voor stap aan bod. Vandaag oefen je alleen het OPENEN van het gesprek.\n\nDE OPENINGSZIN, twee varianten:\n\n• ALGEMEEN: "Wat spreekt je hier het meeste in aan?"\n  Werkt altijd. Richt de aandacht op wat hen RAAKTE.\n\n• WHY-GERICHT (als je hun WHY al kent): "Zie je hoe dit je kan brengen tot [hun WHY]?"\n  Voorbeelden:\n    - "Zie je hoe dit je kan brengen tot die extra vrije dag die je graag zou willen?"\n    - "Zie je hoe dit je kan brengen tot die vakantiedagen die je extra zou willen?"\n    - "Zie je hoe dit je kan brengen tot meer tijd met je kinderen?"\n  Krachtig als je hun WHY weet.\n\nVermijd "Wat vond je ervan?" — dat lokt oordeel uit in plaats van verbinding.\n\nLUISTER WAT ZE ZEGGEN. Doorvragen op wat ze NOEMEN. Geen pitch, geen druk om vandaag iets te beslissen. De volgende stappen (validatie, twijfel ombuigen, closen) leer je later in het playbook.`;
 
 /**
  * Tempo-specifieke vervangings-data voor dag 3.
@@ -68,36 +73,26 @@ function bouwDag3VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     {
       id: "dag3-eerste-berichten",
       label: `💬 Stuur ${dd.contacten} mensen een eerste bericht`,
-      uitleg: `Pak ${dd.contacten} mensen uit je lijst en stuur ze 1-op-1 een persoonlijk bericht. Meestal zijn dit dezelfde ${dd.contacten} die je net hebt toegevoegd, maar als je al een buffer hebt mag je daaruit kiezen.\n\nWAT SCHRIJF JE?\n\nGeen pitch. Geen 'ik heb een geweldige kans'. Gewoon een menselijke vraag waar je oprecht nieuwsgierig naar bent. Een specifieke verwijzing naar iets dat zij hebben gedeeld of een herinnering uit jullie verleden.\n\nVoorbeelden:\n• "Hé Linda, ik moest aan je denken na onze koffie laatst. Hoe is het nu met die nieuwe rol?"\n• "Hé Pieter, ik zag je verhaal over je wandeling in Limburg. Welke route was dat?"\n• "Hé Anne, hoe lang is het ook alweer geleden dat we elkaar hebben gesproken? Hoe is het bij jou?"\n\nZodra je het bericht hebt verstuurd, vertel het aan de Spraak-FAB: "Ik heb een gesprek gestart met [naam]". De prospect gaat dan automatisch van 'prospect' naar 'in gesprek' in je pijplijn.\n\nMORGEN (dag 4) leer je hoe je deze gesprekken omzet in echte uitnodigingen voor een kijkmoment. Vandaag focus op het opbouwen van het gesprek.`,
+      uitleg: `Pak ${dd.contacten} mensen uit je lijst en stuur ze 1-op-1 een persoonlijk bericht. Meestal zijn dit dezelfde ${dd.contacten} die je net hebt toegevoegd, maar als je al een buffer hebt mag je daaruit kiezen.\n\nWAT SCHRIJF JE?\n\nGeen pitch. Geen 'ik heb een geweldige kans'. Gewoon een menselijke vraag waar je oprecht nieuwsgierig naar bent. Een specifieke verwijzing naar iets dat zij hebben gedeeld of een herinnering uit jullie verleden.\n\nVoorbeelden:\n• "Hé Linda, ik moest aan je denken na onze koffie laatst. Hoe is het nu met die nieuwe rol?"\n• "Hé Pieter, ik zag je verhaal over je wandeling in Limburg. Welke route was dat?"\n• "Hé Anne, hoe lang is het ook alweer geleden dat we elkaar hebben gesproken? Hoe is het bij jou?"\n\nZodra je het bericht hebt verstuurd, vertel het aan de spraakfunctie: "Ik heb een gesprek gestart met [naam]". De prospect gaat dan automatisch van 'prospect' naar 'in gesprek' in je pijplijn.\n\nMORGEN (dag 4) leer je hoe je deze gesprekken omzet in echte uitnodigingen voor een kijkmoment. Vandaag focus op het opbouwen van het gesprek.`,
       verplicht: true,
       actieRoute: "/namenlijst",
     },
 
-    // --- Stap D: openstaande follow-ups ---
+    // --- Stap C: openstaande follow-ups ---
     {
       id: "dag3-openstaande-followups",
       label: "🔄 Doe je openstaande follow-ups vandaag",
-      uitleg: FOLLOWUP_UITLEG,
+      uitleg: FOLLOWUP_UITLEG_BASIS,
       verplicht: true,
       actieRoute: "/namenlijst",
     },
 
-    // --- Stap E: stories + reageren op anderen ---
+    // --- Stap D: stories + reageren op anderen ---
     {
       id: "dag3-stories",
       label: "📱 1 tot 3 stories + reageren op andermans stories",
       uitleg: STORIES_UITLEG,
       verplicht: true,
-    },
-
-    // --- Sponsor-checkin (optioneel) ---
-    {
-      id: "dag3-sponsor-checkin",
-      label: "💬 Korte sponsor-checkin",
-      uitleg:
-        "30 seconden. Stuur je sponsor 1 bericht over hoe dag 3 is geweest. Hoeveel nieuwe namen, hoeveel eerste gesprekken? Niets uitgebreids, gewoon een update.",
-      verplicht: false,
-      inlineEmbed: "sponsor-melding",
     },
 
     // --- Teams-administratie (eenmalig, niet tempo-aware) ---
@@ -108,6 +103,16 @@ function bouwDag3VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
         "Lifeplus Partner-aanmelding, eenmalige administratieve registratie. Bekijk de korte film in deze taak voor de exacte stappen.",
       verplicht: true,
       filmSlug: "onboarding-stap-7-teams-admin",
+    },
+
+    // --- LAATSTE STAP: sponsor-checkin (afsluiting van de dag) ---
+    {
+      id: "dag3-sponsor-checkin",
+      label: "💬 Sluit af met een korte sponsor-checkin",
+      uitleg:
+        "30 seconden. Je hebt dag 3 erop zitten. Stuur je sponsor een berichtje met hoe het ging: hoeveel nieuwe namen, hoeveel eerste gesprekken, hoe het voelt. Niets uitgebreids, gewoon even een update om de dag mooi af te sluiten.",
+      verplicht: false,
+      inlineEmbed: "sponsor-melding",
     },
   ];
 }
@@ -129,7 +134,19 @@ function bouwDag4VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
   const dd = berekenDagdoelen(uren);
 
   return [
-    // --- Stap A: nieuwe namen toevoegen ---
+    // --- HOOFDTAAK: 4-stappen-uitnodiging meteen toepassen (vandaag's les) ---
+    // Eerste stap zodat de les bovenaan ('Wat je leert') vers in het hoofd
+    // is wanneer de member de uitnodigingen schrijft.
+    {
+      id: "dag4-uitnodigingen-4stappen",
+      label: `📨 Pas vandaag de 4-stappen-uitnodiging toe bij ${dd.uitnodigingen} mensen`,
+      uitleg: `DE LES van vandaag staat hierboven in 'Wat je leert' met voorbeelden van Eric Worre. Pak die er bij wanneer je gaat schrijven.\n\nDE FORMULE in het kort:\n\n1. COMPLIMENT of erkenning ("je bent iemand die...")\n2. UITNODIGEN ("wil je het zien?"), kies de variant die past bij hoe warm de prospect is (direct / indirect / super-indirect)\n3. PLAN met twee opties ("vanavond of morgen?"), geen open vraag\n4. Optionele opener bij business-prospects ("ik heb weinig tijd, maar...")\n\nDoel: ja op het KIJKMOMENT, niet ja op jou. Als de prospect ja zegt, deel je de link. De pijplijn-fase wordt 'uitgenodigd'. Vertel het aan de spraakfunctie: "Ik heb [naam] uitgenodigd en de link gestuurd".\n\nHULP NODIG? De drie knoppen onder dit vak zijn er om mee te starten:\n• Voorbeelden bekijken: complete scripts klaar om aan te passen\n• Met je sponsor: open WhatsApp met een vraag om hulp\n• Met de Mentor: laat de Mentor een uitnodiging op maat schrijven`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+      uitnodigHelpKnoppen: true,
+    },
+
+    // --- Stap A: nieuwe namen toevoegen (dagritme) ---
     {
       id: "dag4-namen-toevoegen",
       label: `📲 Voeg ${dd.contacten} nieuwe namen toe aan je lijst`,
@@ -142,31 +159,21 @@ function bouwDag4VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     {
       id: "dag4-eerste-berichten",
       label: `💬 Stuur ${dd.contacten} mensen een eerste bericht`,
-      uitleg: `Pak ${dd.contacten} mensen uit je lijst en stuur een persoonlijk eerste bericht. Geen pitch, gewoon een menselijke vraag. Spraak-FAB: "Ik heb een gesprek gestart met [naam]" zet ze automatisch op fase 'in gesprek'.`,
+      uitleg: `Pak ${dd.contacten} mensen uit je lijst en stuur een persoonlijk eerste bericht. Geen pitch, gewoon een menselijke vraag. Via de spraakfunctie meld je: "Ik heb een gesprek gestart met [naam]" — dan zet het systeem ze automatisch op fase 'in gesprek'.`,
       verplicht: true,
       actieRoute: "/namenlijst",
     },
 
-    // --- Stap C: uitnodigingen met de 4-stappen-structuur (vandaag's les) ---
-    {
-      id: "dag4-uitnodigingen-4stappen",
-      label: `📨 ${dd.uitnodigingen} uitnodigingen met de 4-stappen-structuur`,
-      uitleg: `Vandaag pas je actief toe wat hierboven in "Wat je leert" staat. Voor elke uitnodiging:\n\n1. COMPLIMENT of erkenning ("je bent iemand die...")\n2. UITNODIGEN ("wil je het zien?"), kies de variant die past bij hoe warm de prospect is (direct / indirect / super-indirect)\n3. PLAN met twee opties ("vanavond of morgen?"), geen open vraag\n4. Optionele opener bij business-prospects ("ik heb weinig tijd, maar...")\n\nDoel: ja op het KIJKMOMENT, niet ja op jou. Als de prospect ja zegt, deel je de link. De pijplijn-fase wordt 'uitgenodigd'. Vertel het aan de Spraak-FAB: "Ik heb [naam] uitgenodigd en de link gestuurd".\n\nLoop je vast? Vraag de Mentor: "Schrijf een uitnodiging voor [naam] die [context]". Of overleg met je sponsor.`,
-      verplicht: true,
-      actieRoute: "/namenlijst",
-      uitnodigHelpKnoppen: true,
-    },
-
-    // --- Stap D: openstaande follow-ups (inclusief aanpak-keuze NA antwoord) ---
+    // --- Openstaande follow-ups (alleen basis-flow voor nu) ---
     {
       id: "dag4-openstaande-followups",
       label: "🔄 Doe je openstaande follow-ups vandaag",
-      uitleg: FOLLOWUP_UITLEG,
+      uitleg: FOLLOWUP_UITLEG_BASIS,
       verplicht: true,
       actieRoute: "/namenlijst",
     },
 
-    // --- Stap E: stories + reageren ---
+    // --- Stories + reageren ---
     {
       id: "dag4-stories",
       label: "📱 1 tot 3 stories + reageren op andermans stories",
@@ -174,25 +181,25 @@ function bouwDag4VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: true,
     },
 
-    // --- Sponsor-checkin (optioneel) ---
-    {
-      id: "dag4-sponsor-checkin",
-      label: "💬 Korte sponsor-checkin",
-      uitleg:
-        "30 seconden. Stuur je sponsor 1 bericht: hoe ging het toepassen van de 4-stappen-uitnodiging vandaag? Voelde de structuur natuurlijk of nog stroef? Eén zin.",
-      verplicht: false,
-      inlineEmbed: "sponsor-melding",
-    },
-
-    // --- Bestellinks koppelen (eenmalig, admin) ---
+    // --- Bestellinks koppelen (start van meerdere dagen) ---
     {
       id: "dag4-bestellinks",
-      label: "🔗 Bestellinks koppelen aan ELEVA",
+      label: "🔗 Bestellinks koppelen, begin vandaag met zoveel mogelijk",
       uitleg:
-        "Plak per pakket je Lifeplus-webshop-URL in ELEVA. Daarna gebruikt ELEVA die links automatisch in productadvies-flows. Vraag je sponsor om mee te kijken voor de juiste shop-product-pagina's per pakket.",
+        "Plak per pakket je Lifeplus-webshop-URL in ELEVA. Daarna gebruikt het systeem die links automatisch in productadvies-flows.\n\nDIT IS HET BEGIN. Doe vandaag zoveel als je kunt, in de dagen hierna voegen we de rest toe. Niet alles vandaag verplicht — beter rustig en kloppend dan haastig en fout.\n\nVraag je sponsor om mee te kijken voor de juiste shop-product-pagina's per pakket.",
       verplicht: false,
       actieRoute: "/instellingen/bestellinks",
       filmSlug: "onboarding-stap-9-bestellinks",
+    },
+
+    // --- LAATSTE STAP: sponsor-checkin (afsluiting van de dag) ---
+    {
+      id: "dag4-sponsor-checkin",
+      label: "💬 Sluit af met een korte sponsor-checkin",
+      uitleg:
+        "Je hebt dag 4 erop zitten. Stuur je sponsor in 30 seconden hoe het ging: hoe voelde de 4-stappen-uitnodiging? Natuurlijk of nog stroef? Eén zin is genoeg.",
+      verplicht: false,
+      inlineEmbed: "sponsor-melding",
     },
   ];
 }
