@@ -10,6 +10,8 @@
 
 import type { AcademyTraining } from "./types";
 import { SOCIAL_MEDIA_TRAINING } from "./social-media-content";
+import { DAGELIJKS_RITME_TRAINING } from "./dmo-content";
+import { CLAIM_VRIJ_TRAINING } from "./claim-vrij-content";
 
 /**
  * Alle beschikbare trainingen in de Academy, in volgorde van
@@ -17,6 +19,8 @@ import { SOCIAL_MEDIA_TRAINING } from "./social-media-content";
  */
 export const ACADEMY_TRAININGEN: AcademyTraining[] = [
   SOCIAL_MEDIA_TRAINING,
+  DAGELIJKS_RITME_TRAINING,
+  CLAIM_VRIJ_TRAINING,
   // Later: LEIDERSCHAP_TRAINING, MINDSET_TRAINING, etc.
 ];
 
