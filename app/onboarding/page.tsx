@@ -12,204 +12,10 @@ import { EditModeToggle } from "@/components/cms/EditModeToggle";
 
 const SPONSOR_TEL = "https://wa.me/31612345678"; // fallback, wordt dynamisch geladen
 
-function Stap4NamenlijstInline({
-  userId,
-  onVerder,
-  bezig,
-  sponsorNaam,
-  sponsorWaLink,
-  isPreview,
-  overrides,
-  isFounder,
-}: {
-  userId: string | null;
-  onVerder: () => void;
-  bezig: boolean;
-  sponsorNaam: string;
-  sponsorWaLink: string;
-  isPreview: boolean;
-  overrides: Record<string, string>;
-  isFounder: boolean;
-}) {
-  const [naam, setNaam] = useState("");
-  const [telefoon, setTelefoon] = useState("");
-  const [toegevoegd, setToegevoegd] = useState<{ naam: string; telefoon: string }[]>([]);
-  const [bezig2, setBezig2] = useState(false);
-  const supabase = createClient();
-
-  async function voegToe(e: React.FormEvent) {
-    e.preventDefault();
-    if (!naam.trim() || !userId) return;
-    setBezig2(true);
-
-    // In preview-modus: sla niets op in de database
-    if (!isPreview) {
-      const { error } = await supabase.from("prospects").insert({
-        user_id: userId,
-        volledige_naam: naam.trim(),
-        telefoon: telefoon.trim() || null,
-        pipeline_fase: "prospect",
-        bron: "warm",
-      });
-      if (error) {
-        console.error("Prospect opslaan mislukt:", error);
-        alert("Opslaan mislukt: " + error.message);
-        setBezig2(false);
-        return;
-      }
-    }
-
-    setToegevoegd((prev) => [...prev, { naam: naam.trim(), telefoon: telefoon.trim() }]);
-    setNaam("");
-    setTelefoon("");
-    setBezig2(false);
-  }
-
-  return (
-    <div className="space-y-6">
-      <div>
-        <EditableTekst
-          namespace="onboarding"
-          sleutel="stap4.titel"
-          standaard="Bouw je warme markt"
-          overrides={overrides}
-          isFounder={isFounder}
-          as="h2"
-          className="text-2xl font-display font-bold text-cm-white mb-1"
-        />
-        <EditableTekst
-          namespace="onboarding"
-          sleutel="stap4.intro"
-          standaard="Jouw eerste lijst met namen, dit is je startpunt."
-          overrides={overrides}
-          isFounder={isFounder}
-          as="p"
-          className="text-cm-white opacity-60 text-sm"
-          multiline
-          rows={2}
-        />
-      </div>
-
-      <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
-        <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom minimaal 5 namen verplicht zijn</p>
-        <p className="text-cm-white text-sm leading-relaxed opacity-90">
-          Geen namen = geen business. Wie met minder dan 5 namen begint, staat na dag 3 stil. De statistieken zijn duidelijk: teamleden die met 20+ namen starten hebben <strong className="text-cm-white">4× meer kans</strong> op succes in de eerste 30 dagen. Begin breed, jij beslist niet voor ze, zij beslissen zelf.
-        </p>
-        <p className="text-cm-white text-sm opacity-80">
-          🎯 Doel: zo veel mogelijk namen. Minimaal 5 om verder te gaan, maar 20 is beter.
-        </p>
-      </div>
-
-      <div className="card space-y-3">
-        <h3 className="text-cm-gold font-semibold text-sm">Wie zet je op de lijst?</h3>
-        <p className="text-cm-white text-sm leading-relaxed opacity-90">Iedereen die jij kent: vrienden, familie, collega&apos;s, buren, sportmaatjes, oud-klasgenoten, social media contacten.</p>
-        <p className="text-cm-white text-sm font-medium text-white opacity-95">Maar ook:</p>
-        <ul className="space-y-2 mt-1">
-          {[
-            "Mensen die op zoek zijn naar extra inkomen",
-            "Mensen die praten over meer vrijheid of hun leven veranderen",
-            "Mensen die hun eigen baas willen zijn",
-            "Mensen waarvan je hun WHY al kent",
-          ].map((tip, i) => (
-            <li key={i} className="flex gap-2 text-sm text-cm-white opacity-85">
-              <span className="text-cm-gold flex-shrink-0">✦</span>{tip}
-            </li>
-          ))}
-        </ul>
-        <p className="text-cm-white text-sm opacity-80 pt-1">
-          <strong className="text-cm-white">Oordeel niet vooraf.</strong> Schrijf iedereen op. Zij beslissen zelf.
-        </p>
-      </div>
-
-      {/* Inline add form */}
-      <div className="card space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-cm-gold font-semibold text-sm">Voeg namen toe</h3>
-          <span className={`text-xs px-2 py-1 rounded-full border ${toegevoegd.length >= 5 ? "bg-green-900/40 border-green-600/30 text-green-400" : "bg-amber-900/30 border-amber-600/30 text-amber-300"}`}>
-            {toegevoegd.length}/5 minimum
-          </span>
-        </div>
-
-        <p className="text-cm-white text-xs opacity-60 -mt-1">
-          Naam en telefoonnummer is genoeg voor nu. Je kunt later meer informatie toevoegen (e-mail, notities, platform) via de namenlijst.
-        </p>
-
-        <form onSubmit={voegToe} className="space-y-3">
-          <input
-            type="text"
-            value={naam}
-            onChange={(e) => setNaam(e.target.value)}
-            placeholder="Voor- en achternaam"
-            className="input-cm w-full"
-            required
-          />
-          <input
-            type="tel"
-            value={telefoon}
-            onChange={(e) => setTelefoon(e.target.value)}
-            placeholder="Telefoonnummer (optioneel)"
-            className="input-cm w-full"
-          />
-          <button
-            type="submit"
-            disabled={bezig2 || !naam.trim()}
-            className="btn-gold w-full py-2.5 text-sm disabled:opacity-50"
-          >
-            {bezig2 ? "Toevoegen..." : "+ Toevoegen aan lijst"}
-          </button>
-        </form>
-
-        {toegevoegd.length > 0 && (
-          <div className="space-y-1.5 max-h-52 overflow-y-auto pt-1">
-            {toegevoegd.map((item, i) => (
-              <div key={i} className="flex items-center gap-2 text-sm py-1.5 border-b border-cm-border/50 last:border-0">
-                <span className="text-cm-gold text-xs">✓</span>
-                <span className="text-cm-white">{item.naam}</span>
-                {item.telefoon && <span className="text-cm-white opacity-40 text-xs ml-auto">{item.telefoon}</span>}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {sponsorNaam && (
-        <div className="bg-blue-900/20 border border-blue-600/30 rounded-xl p-4">
-          <div className="flex gap-3 items-start">
-            <span className="text-2xl flex-shrink-0">💬</span>
-            <div>
-              <p className="text-blue-300 font-semibold text-sm mb-1">Weet je niet wie je op de lijst moet zetten? Vraag {sponsorNaam}</p>
-              <a href={sponsorWaLink} target="_blank" rel="noopener noreferrer" className="text-xs bg-green-900/40 border border-green-600/30 text-green-400 px-3 py-1.5 rounded-lg inline-flex items-center gap-1">
-                💬 WhatsApp {sponsorNaam}
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div className="space-y-3">
-        {toegevoegd.length < 5 && (
-          <div className="flex gap-1.5 justify-center">
-            {[1,2,3,4,5].map((n) => (
-              <div key={n} className={`h-2 flex-1 rounded-full transition-all ${n <= toegevoegd.length ? "bg-cm-gold" : "bg-cm-surface-2"}`} />
-            ))}
-          </div>
-        )}
-        <button
-          onClick={onVerder}
-          disabled={bezig || toegevoegd.length < 5}
-          className="btn-gold w-full py-3 text-base disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          {toegevoegd.length < 5
-            ? `Nog ${5 - toegevoegd.length} naam${5 - toegevoegd.length !== 1 ? "en" : ""} nodig`
-            : `${toegevoegd.length} namen toegevoegd, verder →`}
-        </button>
-        {toegevoegd.length >= 5 && toegevoegd.length < 20 && (
-          <p className="text-center text-xs text-cm-white opacity-50">💡 Tip: meer namen = meer kans op succes. Je kunt altijd doorgaan via de namenlijst.</p>
-        )}
-      </div>
-    </div>
-  );
-}
+// De oude Stap4NamenlijstInline (5 namen verplicht in onboarding) is per
+// 2026-05-13 weggehaald. Dat dubbelde met dag 1 + dag 2 in het 21-daagse
+// playbook (5 namen op dag 1, 20 namen op dag 2). Onboarding gaat nu in
+// 5 stappen: Welkom+app, WHY, Run-uitleg, Script, Dagdoelen+Mentor.
 
 export default function OnboardingPagina() {
   const [stap, setStap] = useState(1);
@@ -254,11 +60,12 @@ export default function OnboardingPagina() {
     const preview = params.get("preview") === "true";
     setIsPreview(preview);
 
-    // ?stap=N, directe deeplink. Range 1-6 (was 1-11 toen admin-stappen
-    // nog in onboarding zaten; die staan nu in het 21-daagse playbook).
+    // ?stap=N, directe deeplink. Range 1-5 (was 1-6 toen er nog een
+    // namenlijst-stap in zat, en 1-11 toen ook de admin-stappen erin
+    // zaten; namen + admin staan beide nu in het 21-daagse playbook).
     const stapParam = Number(params.get("stap"));
     const directeStap =
-      Number.isFinite(stapParam) && stapParam >= 1 && stapParam <= 6
+      Number.isFinite(stapParam) && stapParam >= 1 && stapParam <= 5
         ? stapParam
         : null;
 
@@ -342,15 +149,18 @@ export default function OnboardingPagina() {
       // Mapping: WANNEER je naar stap N gaat, dan was stap N-1 (deze actie)
       // dus zojuist afgerond. Veldnaam = welke kolom in onboarding_voortgang
       // hoort bij die stap. Push-naam = wat de sponsor in zijn bel ziet.
-      // Onboarding telt 6 stappen. Alle admin-stappen (webshop, kredietformulier,
-      // Teams-administratiesysteem, bestellinks) staan in het 21-daagse playbook
-      // verspreid over dag 2-4. Eric Worre als mindset-tip vanaf dag 5.
+      // Onboarding telt 5 stappen. De namenlijst (5 namen verplicht) is
+      // per 2026-05-13 verhuisd naar dag 1 van het playbook (dubbelde met
+      // dag 2's 20 namen). Admin-stappen (webshop, kredietformulier,
+      // Teams-administratie, bestellinks) staan al in het playbook
+      // verspreid over dag 2-4. DB-veldnamen ongewijzigd voor backwards-
+      // compat (onboarding_voortgang.stap_3_namen is wat historisch zo
+      // heet, niet meer letterlijk wat 'ie doet).
       const stapActies: Record<number, { veld?: string; pushNaam: string }> = {
         2: { veld: "stap_1_welkom", pushNaam: "heeft de app geïnstalleerd 📱" },
         3: { veld: "stap_2_run",    pushNaam: "heeft zijn/haar WHY gemaakt 💛" },
         4: { veld: "stap_3_namen",  pushNaam: "begrijpt de 60-dagenrun 📖" },
-        5: { veld: "stap_4_script", pushNaam: "heeft de namenlijst aangemaakt 📝" },
-        6: { veld: "stap_4_script", pushNaam: "heeft het uitnodigingsscript gelezen 💬" },
+        5: { veld: "stap_4_script", pushNaam: "heeft het uitnodigingsscript gelezen 💬" },
       };
 
       if (stapActies[nieuweStap]) {
@@ -405,7 +215,7 @@ export default function OnboardingPagina() {
     );
   }
 
-  const totaalStappen = 6;
+  const totaalStappen = 5;
   const voortgang = stap <= totaalStappen ? ((stap - 1) / totaalStappen) * 100 : 100;
 
   return (
@@ -447,7 +257,7 @@ export default function OnboardingPagina() {
       {/* Stap bollen */}
       {stap <= totaalStappen && (
         <div className="flex justify-center gap-2 py-4 px-6">
-          {[1, 2, 3, 4, 5, 6].map((n) => (
+          {[1, 2, 3, 4, 5].map((n) => (
             <div key={n} className={`flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold transition-all ${
               n < stap ? "bg-cm-gold text-cm-black" : n === stap ? "bg-cm-gold/20 border-2 border-cm-gold text-cm-gold" : "bg-cm-surface border border-cm-border text-cm-white opacity-40"
             }`}>
@@ -486,7 +296,7 @@ export default function OnboardingPagina() {
                 <EditableTekst
                   namespace="onboarding"
                   sleutel="stap1.intro"
-                  standaard="We zetten je in 6 stappen klaar voor de 60-dagenrun."
+                  standaard="We zetten je in 5 stappen klaar voor de 60-dagenrun."
                   overrides={overrides}
                   isFounder={isFounder}
                   as="p"
@@ -539,12 +349,11 @@ export default function OnboardingPagina() {
 
               {/* Wat je gaat doen */}
               <div className="card space-y-3">
-                <h3 className="text-cm-gold font-semibold">Wat doe je in deze 6 stappen?</h3>
+                <h3 className="text-cm-gold font-semibold">Wat doe je in deze 5 stappen?</h3>
                 <ul className="space-y-2">
                   {[
                     { icoon: "💛", tekst: "Je ontdekt jouw persoonlijke WHY" },
                     { icoon: "📖", tekst: "Je leert hoe de 60-dagenrun werkt" },
-                    { icoon: "📝", tekst: "Je voegt je eerste namen toe" },
                     { icoon: "💬", tekst: "Je leest je uitnodigingsscript" },
                     { icoon: "🎯", tekst: "Je stelt je dagdoelen in en opent de ELEVA Mentor" },
                   ].map((item, i) => (
@@ -553,7 +362,7 @@ export default function OnboardingPagina() {
                     </li>
                   ))}
                 </ul>
-                <p className="text-cm-white text-xs opacity-50 pt-1">Dit kost je ongeveer 15–20 minuten. Daarna kun je dag 1 starten, de admin-stappen (webshop, kredietformulier, Teams-administratie, bestellinks) doe je verspreid over de eerste week vanuit het playbook.</p>
+                <p className="text-cm-white text-xs opacity-50 pt-1">Dit kost je ongeveer 10–15 minuten. Daarna kun je dag 1 starten, daar voeg je je eerste namen toe. De admin-stappen (webshop, kredietformulier, Teams-administratie, bestellinks) doe je verspreid over de eerste week vanuit het playbook.</p>
               </div>
 
               <button onClick={() => gaNaarStap(2)} disabled={bezig} className="btn-gold w-full py-4 text-base font-bold">
@@ -727,30 +536,12 @@ export default function OnboardingPagina() {
             </div>
           )}
 
-          {/* ───── STAP 4: WARME MARKT (inline form) ───── */}
+          {/* ───── STAP 4: UITNODIGINGSSCRIPT (was stap 5) ─────
+              De vroegere stap 4 (5 namen toevoegen) is weggehaald omdat
+              die dubbelde met dag 1 + dag 2 in het playbook. DB-sleutels
+              (paginaId, EditableTekst-sleutels stap5.*) blijven ongewijzigd
+              om eventuele founder-overrides te behouden. */}
           {stap === 4 && (
-            <>
-            <MediaBlokkenClient
-              paginaNamespace="onboarding-stap"
-              paginaId="stap-4"
-              positie="boven-titel"
-              isFounder={isFounder}
-            />
-            <Stap4NamenlijstInline
-              userId={userId}
-              onVerder={() => gaNaarStap(5)}
-              bezig={bezig}
-              sponsorNaam={toonSponsorNaam}
-              sponsorWaLink={toonSponsorLink}
-              isPreview={isPreview}
-              overrides={overrides}
-              isFounder={isFounder}
-            />
-            </>
-          )}
-
-          {/* ───── STAP 5: UITNODIGINGSSCRIPT ───── */}
-          {stap === 5 && (
             <div className="space-y-6">
               <MediaBlokkenClient
                 paginaNamespace="onboarding-stap"
@@ -847,18 +638,19 @@ export default function OnboardingPagina() {
                 </div>
               )}
 
-              <button onClick={() => gaNaarStap(6)} disabled={bezig} className="btn-gold w-full py-3 text-base">
+              <button onClick={() => gaNaarStap(5)} disabled={bezig} className="btn-gold w-full py-3 text-base">
                 Gelezen en begrepen →
               </button>
             </div>
           )}
 
-          {/* ───── STAP 6: DAGDOELEN + ELEVA MENTOR FINALE ─────
+          {/* ───── STAP 5: DAGDOELEN + ELEVA MENTOR FINALE (was stap 6) ─────
               Admin-stappen (webshop, kredietformulier, Teams-administratie,
               bestellinks) zijn verplaatst naar het 21-daagse playbook.
               Eric Worre Seven Skills komt als mindset-tip terug vanaf
-              playbook dag 5. */}
-          {stap === 6 && (
+              playbook dag 5. DB-sleutels (paginaId="stap-6", stap6.*)
+              blijven ongewijzigd voor founder-override-compat. */}
+          {stap === 5 && (
             <div className="space-y-6">
               <MediaBlokkenClient
                 paginaNamespace="onboarding-stap"

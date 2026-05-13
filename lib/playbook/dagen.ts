@@ -28,6 +28,19 @@ export const DAGEN: Dag[] = [
         inlineEmbed: "vcard-upload",
       },
       {
+        // Eerste handmatige namen — vroeger zat dit in onboarding-stap-4,
+        // maar dat dubbelde met dag 2 (20 namen). Nu staat de eerste
+        // verplichting bewust op dag 1, zodat onboarding lichter is en
+        // de echte namenlijst pas in het playbook begint.
+        id: "dag1-5-namen",
+        label: "Voeg minimaal 5 namen handmatig toe",
+        uitleg:
+          "Naast je telefoonimport, schrijf hier 5 namen die SPONTAAN in je hoofd kwamen. Mensen die je écht kent. Familie, beste vrienden, oude collega's, sportmaatjes, buren. Niet filteren, niet bedenken 'die past niet'. Iedereen mag erop, zij beslissen zelf. Dit zijn jouw eerste warm-warme contacten, een bewuste keuze naast de massa-import van je telefoon. Morgen (dag 2) bouw je dit uit naar 20.",
+        verplicht: true,
+        inlineEmbed: "namen-form",
+        inlineEmbedDoel: 5,
+      },
+      {
         id: "dag1-sponsor",
         label: "Stuur je sponsor een kort bericht: 'Ik ben gestart'",
         uitleg:
@@ -55,10 +68,10 @@ export const DAGEN: Dag[] = [
         route: "/mijn-why",
       },
     ],
-    watJeLeert: `Te gek dat je hier bent! 🎉 Je onboarding zit erop, dus je WHY staat al, en de eerste 5 namen ook. Mooi werk. Vandaag bouwen we daar één laag bovenop. Geen drukke dag, een rustige fundamentdag. Twee taken, daarna ben je klaar voor morgen.
+    watJeLeert: `Te gek dat je hier bent! 🎉 Je onboarding zit erop, je WHY staat, je weet hoe de run werkt en je hebt je uitnodigingsscript in handen. Mooi werk. Vandaag leggen we het fundament: je eerste namen op je lijst. Geen drukke dag, een rustige fundamentdag.
 
 JE NAMENLIJST, JE NETWERK-OVERZICHT:
-Het belangrijkste wat je vandaag doet is je telefooncontacten importeren. Eén keer drukken, en je hebt direct 100 tot 500 namen in je overzicht staan. Dubbele namen worden niet apart geteld, dus je hoeft niets te schonen vooraf. Dit is geen verkooplijst, dit is je netwerk in beeld. Een rustig vertrekpunt.
+Twee manieren naast elkaar vandaag. Eerst je telefooncontacten importeren, dat is één klik en direct 100 tot 500 namen in je overzicht. Daarnaast typ je handmatig minimaal 5 namen die je SPONTAAN in je hoofd had toen je nadacht: 'wie zou ik dit gunnen?'. Die 5 zijn bewust gekozen, de telefoon-import is breed. Beide horen bij dit fundament. Dit is geen verkooplijst, dit is je netwerk in beeld. Een rustig vertrekpunt.
 
 EERLIJK OVER VOLUME, dit is een aantallen-verhaal:
 Met 20 namen ga je het niet redden. Niet omdat je faalt, maar omdat een gemiddelde prospect 4 tot 6 contactmomenten nodig heeft voor een echte beslissing. Met te weinig namen draai je vast. Daarom voegen we elke dag namen toe, uit je hoofd, uit je telefoon, uit socials.
