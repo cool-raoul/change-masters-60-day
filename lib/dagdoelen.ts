@@ -124,21 +124,15 @@ export function bouwblokkenVoorTempo(uren: CommitmentUren): Bouwblok[] {
       },
       {
         emoji: "🔄",
-        naam: "3 mensen opvolgen (3-weg)",
+        naam: "3 mensen opvolgen: 3-weg of Mini-ELEVA",
         beschrijving:
-          "Mensen die al een presentatie of one-pager hebben gezien. Volg ze op met een 3-weg-gesprek samen met je sponsor of ervaren teamlid. Niet pusherig, wel op het juiste moment terugkomen.",
+          "Mensen die al een presentatie of one-pager hebben gezien. Per persoon kies je in de namenlijst de aanpak: een 3-weg-gesprek samen met je sponsor (klassiek, persoonlijk) óf Mini-ELEVA waarbij iemand 14 dagen zelf kan rondkijken (voor wie eerst rustig wil verkennen). De ELEVA-mentor helpt je per persoon nadenken over wat past, en je kunt overleggen met je sponsor.",
       },
       {
         emoji: "📱",
         naam: "Stories + reageren op anderen",
         beschrijving:
           "1 tot 3 momenten uit je dag delen (van je leven, nog niet proberen te verkopen in je stories). Plus een paar echte reacties geven op stories van anderen, zo blijf je in beeld zonder te spammen.",
-      },
-      {
-        emoji: "🤖",
-        naam: "Mini-ELEVA inzetten",
-        beschrijving:
-          "Voor wie nog niet klaar is voor een direct gesprek: een Mini-ELEVA-link naar ze sturen, dan helpt ELEVA met wat het beste past per persoon. Lage drempel, zonder pushen.",
       },
       {
         emoji: "🌱",
@@ -170,21 +164,15 @@ export function bouwblokkenVoorTempo(uren: CommitmentUren): Bouwblok[] {
       },
       {
         emoji: "🔄",
-        naam: "6 mensen opvolgen (3-weg)",
+        naam: "6 mensen opvolgen: 3-weg of Mini-ELEVA",
         beschrijving:
-          "Na een presentatie of one-pager: opvolgen met een 3-weg-gesprek (jij + prospect + sponsor of ervaren teamlid). De meeste mensen zeggen niet bij het eerste moment ja, dit opvolg-stuk is het echte verschil.",
+          "Na een presentatie of one-pager: per persoon kies je in de namenlijst hoe je doorbouwt. 3-weg-gesprek (jij + prospect + sponsor of ervaren teamlid) voor wie persoonlijk contact wil en kort traject. Mini-ELEVA voor wie eerst rustig zelf wil verkennen, dan krijgt iemand 14 dagen eigen toegang met films, mentor en chat. De ELEVA-mentor helpt je per persoon onderscheid maken, en je kunt overleggen met je sponsor.",
       },
       {
         emoji: "📱",
         naam: "Stories + reageren op anderen",
         beschrijving:
           "1 tot 3 momenten uit je dag delen (van je leven, nog niet proberen te verkopen in je stories). Plus echte reacties geven op stories van anderen. Zo bouw je zichtbaarheid zonder iets te pushen.",
-      },
-      {
-        emoji: "🤖",
-        naam: "Mini-ELEVA inzetten",
-        beschrijving:
-          "Voor mensen die zelf eerst willen rondkijken: Mini-ELEVA-link sturen, dan helpt ELEVA met wat het beste past per persoon. Werkt als een professionele tussenstap voor het echte gesprek.",
       },
       {
         emoji: "🌱",
@@ -216,21 +204,15 @@ export function bouwblokkenVoorTempo(uren: CommitmentUren): Bouwblok[] {
     },
     {
       emoji: "🔄",
-      naam: "8 tot 10 mensen opvolgen (3-weg)",
+      naam: "8 tot 10 mensen opvolgen: 3-weg of Mini-ELEVA",
       beschrijving:
-        "Strakke opvolg-discipline na presentaties. 3-weg-gesprekken met je sponsor of ervaren teamlid, op het beloofde moment terugkomen. Niet pusherig, wel betrouwbaar.",
+        "Strakke opvolg-discipline na presentaties. Per prospect kies je in de namenlijst de aanpak: 3-weg-gesprek met sponsor voor wie persoonlijk en kort wil, Mini-ELEVA voor wie 14 dagen zelf wil verkennen. Schaalbaar zonder dat je elke vraag zelf hoeft te beantwoorden, ELEVA helpt je nadenken over wat per persoon past.",
     },
     {
       emoji: "📱",
       naam: "Stories + reageren op anderen",
       beschrijving:
         "1 tot 3 momenten uit je dag delen (van je leven, nog niet proberen te verkopen in je stories). Bij dit tempo daarnaast 1 iets langere post of video per week en dagelijks echte reacties op stories van anderen.",
-    },
-    {
-      emoji: "🤖",
-      naam: "Mini-ELEVA inzetten",
-      beschrijving:
-        "Voor mensen die zelf eerst informatie willen of waarbij een direct gesprek nog te vroeg is: Mini-ELEVA-link sturen, dan helpt ELEVA met wat het beste past per persoon. Schaalbaar zonder dat je elke vraag zelf hoeft te beantwoorden.",
     },
     {
       emoji: "🧑‍🤝‍🧑",

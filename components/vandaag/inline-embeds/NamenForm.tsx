@@ -1,16 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
+import {
+  haalNietGeactiveerd,
+  activeerContacten,
+  type ReservoirRow,
+} from "@/lib/contacten-reservoir";
 
 // ============================================================
 // NamenForm, inline-embed voor taken als 'voeg 20 namen toe'.
 //
-// Toont een uitklapbare lijst van naam+telefoon-velden met een
-// duidelijke voortgangsbalk: "X / Y namen ingevuld". Bewaart in
-// één keer naar prospects-tabel (geen reservoir-tussenstap, zelf
-// typen = bewust toevoegen aan actieve namenlijst).
+// Drie routes naast elkaar, altijd zichtbaar zodra de form opent:
+//   1. 📚 SELECTEER UIT JE TELEFOON-GEHEUGEN
+//      Alleen als er rows in contacten_reservoir staan die nog niet
+//      geactiveerd zijn. Snelste route: vink aan wie je herkent, klik
+//      'activeer'. Snelheid + geen denkwerk.
+//
+//   2. 📲 IMPORTEER ALSNOG JE TELEFOON
+//      Alleen als er nog GEEN reservoir-rows zijn. Verwijst naar
+//      /namenlijst waar VCardUploader staat. Daarna kun je terug
+//      naar dag 2 voor de activatie-stap.
+//
+//   3. ✋ ZELF TYPEN
+//      Altijd zichtbaar als fallback. Handmatige naam + telefoon
+//      velden, bewaart direct naar prospects-tabel.
+//
+// Voortgangsbalk telt geheugen-geactiveerde + handmatig-ingevulde
+// samen, zodat de gebruiker het doel kan halen via beide routes.
 //
 // Houdt de member in de dag-flow: geen wegnavigeren naar
 // /namenlijst/nieuw waar telkens 1 naam tegelijk kan.
@@ -33,7 +52,36 @@ export function NamenForm({ doel, alVoltooid, opVoltooid, opOpnieuw }: Props) {
   const [bezig, setBezig] = useState(false);
   const [klaar, setKlaar] = useState(alVoltooid);
 
-  const ingevuld = rijen.filter((r) => r.naam.trim().length > 0).length;
+  // Reservoir-state: niet-geactiveerde rijen (= telefoon-geheugen
+  // dat klaarstaat om gekozen te worden).
+  const [reservoirRows, setReservoirRows] = useState<ReservoirRow[]>([]);
+  const [reservoirLaden, setReservoirLaden] = useState(true);
+  const [keuzeOpen, setKeuzeOpen] = useState(false);
+  const [selectie, setSelectie] = useState<Set<string>>(new Set());
+  const [geactiveerd, setGeactiveerd] = useState(0); // teller voor progress
+  const [activerenBezig, setActiverenBezig] = useState(false);
+
+  // Op mount het reservoir ophalen. Bepaalt of de "Selecteer uit
+  // geheugen"-knop of de "Importeer alsnog"-knop wordt getoond.
+  useEffect(() => {
+    let geannuleerd = false;
+    haalNietGeactiveerd()
+      .then((rows) => {
+        if (!geannuleerd) setReservoirRows(rows);
+      })
+      .catch(() => {
+        // Geen reservoir-toegang of fout, val terug op alleen-handmatig.
+      })
+      .finally(() => {
+        if (!geannuleerd) setReservoirLaden(false);
+      });
+    return () => {
+      geannuleerd = true;
+    };
+  }, []);
+
+  const handmatigIngevuld = rijen.filter((r) => r.naam.trim().length > 0).length;
+  const ingevuld = handmatigIngevuld + geactiveerd;
   const procent = Math.min(100, Math.round((ingevuld / doel) * 100));
 
   function update(idx: number, veld: keyof Rij, waarde: string) {
@@ -44,6 +92,61 @@ export function NamenForm({ doel, alVoltooid, opVoltooid, opOpnieuw }: Props) {
 
   function voegRijToe() {
     setRijen((prev) => [...prev, { naam: "", telefoon: "" }]);
+  }
+
+  function toggleSelectie(id: string) {
+    setSelectie((prev) => {
+      const nieuw = new Set(prev);
+      if (nieuw.has(id)) nieuw.delete(id);
+      else nieuw.add(id);
+      return nieuw;
+    });
+  }
+
+  function selecteerAlles() {
+    setSelectie(new Set(reservoirRows.map((r) => r.id)));
+  }
+
+  function wisSelectie() {
+    setSelectie(new Set());
+  }
+
+  async function activeerGeheugen() {
+    if (selectie.size === 0) {
+      toast.error("Vink eerst minstens 1 naam aan");
+      return;
+    }
+    setActiverenBezig(true);
+    try {
+      const result = await activeerContacten(Array.from(selectie));
+      if (result.geactiveerd === 0 && result.alActief > 0) {
+        toast.success("Deze namen stonden al op je lijst");
+      } else {
+        toast.success(
+          `🎉 ${result.geactiveerd} ${result.geactiveerd === 1 ? "naam" : "namen"} uit je geheugen op je lijst gezet`,
+        );
+      }
+      // Update teller voor progress, verwijder geactiveerde rows uit
+      // het zichtbare reservoir, sluit keuze-paneel.
+      const nieuwTotaalGeactiveerd = geactiveerd + result.geactiveerd;
+      setGeactiveerd(nieuwTotaalGeactiveerd);
+      setReservoirRows((prev) => prev.filter((r) => !selectie.has(r.id)));
+      setSelectie(new Set());
+      setKeuzeOpen(false);
+
+      // Als we het doel hebben gehaald PUUR via geheugen (geen handmatige
+      // rijen), de taak automatisch afvinken zodat de member niet alsnog
+      // op "Bewaar 0" hoeft te drukken.
+      if (handmatigIngevuld === 0 && nieuwTotaalGeactiveerd >= doel) {
+        setKlaar(true);
+        opVoltooid();
+      }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "onbekende fout";
+      toast.error(`Activeren mislukt: ${msg}`);
+    } finally {
+      setActiverenBezig(false);
+    }
   }
 
   async function bewaar() {
@@ -148,25 +251,28 @@ export function NamenForm({ doel, alVoltooid, opVoltooid, opOpnieuw }: Props) {
   }
 
   return (
-    <div className="rounded-lg border-2 border-cm-gold/40 bg-cm-gold/5 px-4 py-4 space-y-3">
+    <div className="rounded-lg border-2 border-cm-gold/40 bg-cm-gold/5 px-4 py-4 space-y-4">
       <div className="space-y-1.5">
         <h4 className="text-cm-gold font-semibold text-sm">
-          ✋ Vul {doel} namen in
+          📝 Voeg {doel} namen toe aan je lijst
         </h4>
         <p className="text-cm-white opacity-80 text-xs leading-relaxed">
-          Uit je hoofd, niet uit je telefoon, nieuwe namen die nog NIET op je
-          lijst stonden. Familie-partners, oude collega's, sport-maatjes,
-          ouders bij school of voetbal, buren, ondernemers in je netwerk. Niet
-          filteren, alles erop.
+          Familie, oude collega's, sportmaatjes, ouders bij school of voetbal, buren, ondernemers in je netwerk. Niet filteren, alles erop. Filteren komt later, en doe je nooit voor iemand anders.
         </p>
       </div>
 
-      {/* Voortgangsbalk */}
+      {/* Voortgangsbalk, telt geheugen-geactiveerde + handmatig samen */}
       <div className="space-y-1">
         <div className="flex items-center justify-between text-xs">
           <span className="text-cm-white opacity-70">
             <strong className="text-cm-gold">{ingevuld}</strong> van {doel}{" "}
-            namen ingevuld
+            namen
+            {geactiveerd > 0 && (
+              <span className="text-cm-white opacity-50">
+                {" "}
+                ({geactiveerd} uit geheugen, {handmatigIngevuld} zelf)
+              </span>
+            )}
           </span>
           {ingevuld >= doel && (
             <span className="text-emerald-400 font-semibold">
@@ -182,6 +288,139 @@ export function NamenForm({ doel, alVoltooid, opVoltooid, opOpnieuw }: Props) {
             style={{ width: `${procent}%` }}
           />
         </div>
+      </div>
+
+      {/* ROUTE 1: Selecteer uit telefoon-geheugen (als reservoir gevuld is) */}
+      {!reservoirLaden && reservoirRows.length > 0 && (
+        <div className="rounded-lg border border-cm-gold/40 bg-cm-gold/10 p-3 space-y-2">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1">
+              <p className="text-cm-gold font-semibold text-sm flex items-center gap-2">
+                📚 Snelste route: je telefoon-geheugen
+              </p>
+              <p className="text-cm-white opacity-80 text-xs leading-relaxed mt-1">
+                Je hebt <strong className="text-cm-white">{reservoirRows.length}</strong> namen in je telefoon-geheugen staan. Vink aan wie je herkent, dat scheelt typen.
+              </p>
+            </div>
+            {!keuzeOpen && (
+              <button
+                type="button"
+                onClick={() => setKeuzeOpen(true)}
+                className="btn-gold text-xs py-1.5 px-3 whitespace-nowrap"
+              >
+                Openen →
+              </button>
+            )}
+          </div>
+
+          {keuzeOpen && (
+            <div className="space-y-2 pt-2">
+              {/* Selectie-knoppen */}
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-cm-white opacity-70">
+                  <strong className="text-cm-gold">{selectie.size}</strong>
+                  {" "}aangevinkt
+                </span>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={selecteerAlles}
+                    className="text-cm-gold hover:underline underline-offset-2"
+                  >
+                    Alles
+                  </button>
+                  <button
+                    type="button"
+                    onClick={wisSelectie}
+                    className="text-cm-white opacity-70 hover:opacity-100"
+                  >
+                    Wis
+                  </button>
+                </div>
+              </div>
+
+              {/* Scrollbare lijst met checkboxes */}
+              <div className="max-h-64 overflow-y-auto space-y-0.5 bg-cm-surface-2 rounded p-2">
+                {reservoirRows.map((row) => {
+                  const aan = selectie.has(row.id);
+                  return (
+                    <label
+                      key={row.id}
+                      className={`flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer transition-colors ${
+                        aan ? "bg-cm-gold/15" : "hover:bg-cm-surface"
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={aan}
+                        onChange={() => toggleSelectie(row.id)}
+                        className="w-4 h-4 flex-shrink-0 accent-cm-gold"
+                      />
+                      <span className="text-sm text-cm-white flex-1 truncate">
+                        {row.volledige_naam}
+                      </span>
+                      {row.telefoon && (
+                        <span className="text-xs text-cm-white opacity-40">
+                          {row.telefoon}
+                        </span>
+                      )}
+                    </label>
+                  );
+                })}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={activeerGeheugen}
+                  disabled={activerenBezig || selectie.size === 0}
+                  className="btn-gold text-xs py-2 px-4 flex-1 disabled:opacity-30"
+                >
+                  {activerenBezig
+                    ? "Bezig..."
+                    : selectie.size === 0
+                      ? "Vink eerst namen aan"
+                      : `✓ Zet ${selectie.size} op mijn lijst`}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setKeuzeOpen(false);
+                    setSelectie(new Set());
+                  }}
+                  className="text-xs text-cm-white opacity-70 hover:opacity-100 px-2 py-2"
+                >
+                  Sluit
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ROUTE 2: Importeer alsnog (als reservoir leeg is) */}
+      {!reservoirLaden && reservoirRows.length === 0 && geactiveerd === 0 && (
+        <div className="rounded-lg border border-blue-500/40 bg-blue-900/15 p-3 space-y-2">
+          <p className="text-blue-300 font-semibold text-sm flex items-center gap-2">
+            📲 Sneller: importeer je telefoon
+          </p>
+          <p className="text-cm-white opacity-80 text-xs leading-relaxed">
+            Je hebt nog geen telefoon-contacten geïmporteerd. Doe dat alsnog op je telefoon, dan kun je hier vanuit het geheugen kiezen in plaats van zelf typen.
+          </p>
+          <Link
+            href="/namenlijst"
+            className="inline-flex items-center gap-1 text-xs bg-blue-900/40 border border-blue-600/30 text-blue-300 px-3 py-1.5 rounded-lg hover:bg-blue-900/60 transition-colors"
+          >
+            📲 Importeer mijn telefoon →
+          </Link>
+        </div>
+      )}
+
+      {/* Scheiding tussen 'sneller'-route en handmatig typen */}
+      <div className="flex items-center gap-2 text-[10px] uppercase tracking-wider text-cm-white/40">
+        <div className="flex-1 h-px bg-cm-white/15" />
+        <span>of typ ze zelf</span>
+        <div className="flex-1 h-px bg-cm-white/15" />
       </div>
 
       {/* Rij-input */}
@@ -223,16 +462,16 @@ export function NamenForm({ doel, alVoltooid, opVoltooid, opOpnieuw }: Props) {
       <button
         type="button"
         onClick={bewaar}
-        disabled={bezig || ingevuld === 0}
+        disabled={bezig || handmatigIngevuld === 0}
         className="btn-gold w-full py-3 text-sm font-semibold disabled:opacity-30"
       >
         {bezig
           ? "Bewaren..."
-          : ingevuld === 0
-            ? "Vul eerst namen in"
-            : ingevuld < doel
-              ? `Bewaar ${ingevuld} (mag ook nog meer)`
-              : `✓ Bewaar deze ${ingevuld} namen op mijn lijst`}
+          : handmatigIngevuld === 0
+            ? geactiveerd > 0 && ingevuld >= doel
+              ? "✓ Doel gehaald via geheugen"
+              : "Vink namen aan of typ ze hieronder"
+            : `✓ Bewaar ${handmatigIngevuld} ${handmatigIngevuld === 1 ? "naam" : "namen"} op mijn lijst`}
       </button>
     </div>
   );
