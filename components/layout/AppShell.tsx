@@ -18,6 +18,7 @@ import { PullToRefresh } from "@/components/layout/PullToRefresh";
 import { haalSponsorNaam } from "@/lib/sponsors/haal-sponsor-naam";
 import { CelebrationLayer } from "@/components/celebrations/CelebrationLayer";
 import { PushResyncBanner } from "@/components/push/PushResyncBanner";
+import { ScrollToTopOnNavigation } from "@/components/layout/ScrollToTopOnNavigation";
 
 export async function AppShell({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -78,6 +79,12 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <TaalProvider initialTaal={taal}>
       <div className="flex h-dvh bg-cm-black overflow-hidden">
+        {/* Scroll naar boven bij elke route-wissel. Onmisbaar omdat
+            de scroll-container <main> is, niet window — Next.js'
+            ingebouwde scroll-restore werkt alleen op window. */}
+        <Suspense fallback={null}>
+          <ScrollToTopOnNavigation />
+        </Suspense>
         <WelcomePopup />
         <Sidebar
           isLeider={(profile as any)?.role === "leider"}
