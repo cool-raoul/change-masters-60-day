@@ -74,18 +74,20 @@ export function leesCommitmentUren(waarde: unknown): CommitmentUren {
 }
 
 /**
- * Beschrijving van wat er IN een uur zit, per tempo. Wordt getoond
- * in de tempo-keuze-card en op het dashboard zodat mensen begrijpen
- * waar hun tijd in gaat zitten.
+ * Beschrijving van wat je per dag concreet doet, per tempo. Wordt getoond
+ * in de tempo-keuze-card en (later) op het dashboard zodat mensen begrijpen
+ * wat hun dag inhoudt.
  *
- * Doseringen gebaseerd op een synthese van Eric Worre (Go Pro 7 Skills)
- * en Frazer Brookes (social media zonder spam), aangepast voor de
- * Lifeplus-context.
+ * BEWUSTE KEUZE: GEEN minuten in deze fase van het gebruik. Reden: in de
+ * eerste 60 dagen werken mensen op gewoonte en actie, niet op tijdsblokken.
+ * "Ik moet 30 min gesprekken voeren" verlamt. "Ik ga 5 echte gesprekken
+ * voeren" zet aan. Korte stukjes door de dag heen werkt beter dan één
+ * grote sessie. We bouwen ritme via consistente acties, niet via een
+ * strakke kalender.
  */
 export type Bouwblok = {
   emoji: string;
   naam: string;
-  duur: string;
   beschrijving: string;
 };
 
@@ -94,36 +96,33 @@ export function bouwblokkenVoorTempo(uren: CommitmentUren): Bouwblok[] {
     return [
       {
         emoji: "🗂️",
-        naam: "Pipeline & lijst-check",
-        duur: "15 min",
+        naam: "Je namenlijst bijhouden",
         beschrijving:
-          "Wie zit waar in je pipeline, korte notities na gesprekken",
+          "Even kijken wie er waar staat (denkt nog na, zegt nee, zegt ja). Korte notities maken van gesprekken die je had.",
       },
       {
         emoji: "💬",
-        naam: "5 echte DM-conversaties",
-        duur: "30 min",
+        naam: "5 echte gesprekken voeren",
         beschrijving:
-          "Mix: koudere contacten opwarmen + warme mensen even bij hervatten. 1-op-1, doorvragen, geen broadcasts",
+          "Op WhatsApp, Instagram of telefoon. 1-op-1, geen kant-en-klaar bericht naar meerdere mensen. Mix van warme mensen even bijspreken en oudere contacten weer warm maken.",
       },
       {
         emoji: "📨",
-        naam: "2 directe uitnodigingen",
-        duur: "30 min",
+        naam: "2 mensen uitnodigen",
         beschrijving:
-          "Bij voorkeur warme bekenden waarvan je de WHY al kent. Die hoeven niet eerst opgewarmd, die kun je direct uitnodigen",
+          "Mensen die je al goed kent en waarvan je weet wat ze belangrijk vinden. Daar mag je direct uitnodigen, geen lange aanloop nodig.",
       },
       {
         emoji: "🔄",
-        naam: "3 follow-ups",
-        duur: "30 min",
-        beschrijving: "Mensen waar je al een gesprek mee had",
+        naam: "3 mensen opvolgen",
+        beschrijving:
+          "Mensen waar je al iets mee besproken had. Even terugkomen op het gesprek, niet pusherig.",
       },
       {
         emoji: "📱",
-        naam: "1 story + engagement",
-        duur: "15 min",
-        beschrijving: "Lifestyle, geen verkoop. Plus 2 echte reacties op anderen",
+        naam: "1 story + reageren op anderen",
+        beschrijving:
+          "Een momentje uit je leven (geen verkoop). Plus 2 echte reacties geven op stories van anderen, zo blijf je in beeld zonder te spammen.",
       },
     ];
   }
@@ -131,47 +130,45 @@ export function bouwblokkenVoorTempo(uren: CommitmentUren): Bouwblok[] {
     return [
       {
         emoji: "🗂️",
-        naam: "Pipeline & lijst-check",
-        duur: "20 min",
-        beschrijving: "Pipeline bijwerken + 3-5 nieuwe namen toevoegen",
+        naam: "Je namenlijst bijhouden",
+        beschrijving:
+          "Wie staat waar in je lijst, plus elke dag een paar nieuwe namen toevoegen (familie, oude collega's, mensen uit je sport, buren).",
       },
       {
         emoji: "💬",
-        naam: "10 DM-conversaties",
-        duur: "45 min",
+        naam: "10 echte gesprekken voeren",
         beschrijving:
-          "Gelaagd: warme mensen die je al kent (kort, doelgericht), koudere contacten opwarmen, nieuwe verbindingen leggen",
+          "Mix van drie soorten: warme bekenden snel bijpraten, oudere contacten weer warm maken, en nieuwe mensen via socials terug-leren-kennen. Altijd 1-op-1.",
       },
       {
         emoji: "📨",
-        naam: "4 directe uitnodigingen",
-        duur: "45 min",
+        naam: "4 mensen uitnodigen",
         beschrijving:
-          "Vooral mensen waarvan je de WHY al kent. Die hoeven niet warm gemaakt, daar mag je direct binnenkomen met de Honest Conversation",
+          "Vooral mensen waarvan je hun behoefte al kent. Die hoeven niet warm gemaakt, daar kom je gewoon eerlijk binnen.",
       },
       {
         emoji: "🔄",
-        naam: "6 follow-ups",
-        duur: "45 min",
-        beschrijving: "Timing > frequentie, juiste moment kiezen",
+        naam: "6 mensen opvolgen",
+        beschrijving:
+          "De meeste mensen zeggen niet bij het eerste contact ja. Goed opvolgen op het juiste moment is het echte verschil.",
       },
       {
         emoji: "📱",
-        naam: "3-3-3 social",
-        duur: "30 min",
-        beschrijving: "3 stories + 3 echte engagements + 3 DM-vervolgen",
+        naam: "3 stories + reageren op anderen",
+        beschrijving:
+          "Drie momenten uit je dag delen (leven, niet verkoop). Plus echte reacties geven op stories van anderen. Zo bouw je zichtbaarheid zonder iets te pushen.",
       },
       {
         emoji: "👥",
-        naam: "Presentatie/3-weg (3× per week)",
-        duur: "30 min gem.",
-        beschrijving: "Niet elke dag, maar gemiddeld 3 per week",
+        naam: "Gesprek met je sponsor erbij",
+        beschrijving:
+          "Niet elke dag, gemiddeld 3 keer per week: een gesprek met een prospect waarbij je sponsor of een ervaren teamlid meeluistert (3-weg). Daar leer je het snelst.",
       },
       {
         emoji: "🌱",
-        naam: "Persoonlijke groei",
-        duur: "15 min",
-        beschrijving: "Audio (Worre/Brookes) of 5 pagina's lezen",
+        naam: "Even bijspijkeren",
+        beschrijving:
+          "Een paar pagina's lezen of een audio luisteren onderweg. Hoeft niet lang, gewoon dagelijks even.",
       },
     ];
   }
@@ -179,53 +176,51 @@ export function bouwblokkenVoorTempo(uren: CommitmentUren): Bouwblok[] {
   return [
     {
       emoji: "🗂️",
-      naam: "Pipeline & lijst-werk",
-      duur: "30 min",
-      beschrijving: "Pipeline + 5+ nieuwe namen + dieper notities",
+      naam: "Je namenlijst grondig bijhouden",
+      beschrijving:
+        "Lijst-werk, plus elke dag nieuwe namen toevoegen, plus diepere notities maken (wat zei iemand, wat is hun behoefte).",
     },
     {
       emoji: "💬",
-      naam: "15+ DM-conversaties",
-      duur: "90 min",
+      naam: "15+ echte gesprekken voeren",
       beschrijving:
-        "Drie lagen: warme bekenden snel bij praten, koudere terug-verbinden, nieuwe contacten opwarmen via stories/comments",
+        "Drie lagen tegelijk: warme bekenden snel bijpraten, oudere contacten weer warm maken, nieuwe contacten via socials/comments leren kennen. Altijd persoonlijk.",
     },
     {
       emoji: "📨",
-      naam: "6 directe uitnodigingen",
-      duur: "60 min",
+      naam: "6 mensen uitnodigen",
       beschrijving:
-        "Warme mensen waar je hun WHY al kent: direct erop. Script-oefenen + sponsor-edificatie voor de moeilijkere",
+        "Warme mensen met bekende behoefte: direct erop. Iets onzekerder: eerst kort script oefenen of even sponsor inschakelen.",
     },
     {
       emoji: "🔄",
-      naam: "8-10 follow-ups",
-      duur: "30 min",
-      beschrijving: "Strakke opvolg-discipline",
+      naam: "8-10 mensen opvolgen",
+      beschrijving:
+        "Strakke opvolg-discipline. Niet pusherig, wel betrouwbaar, op het beloofde moment terugkomen.",
     },
     {
       emoji: "📱",
-      naam: "Content + 3-3-3",
-      duur: "60 min",
-      beschrijving: "1 reel + 3 stories + engagement-block",
+      naam: "Content + reageren op anderen",
+      beschrijving:
+        "Eén iets langere video of post per week, daarnaast dagelijks 3 stories en echte reacties op stories van anderen.",
     },
     {
       emoji: "👥",
-      naam: "Presentaties / 3-weg (5× per week)",
-      duur: "60 min gem.",
-      beschrijving: "Gemiddeld 1 per dag, vaak meer",
+      naam: "Gesprekken samen met sponsor (vaker)",
+      beschrijving:
+        "Gemiddeld 1 per dag een gesprek met sponsor erbij, soms meer als het loopt.",
     },
     {
       emoji: "🧑‍🤝‍🧑",
-      naam: "Team & coaching",
-      duur: "60 min",
-      beschrijving: "Sponsor-call + 1-2 partners helpen",
+      naam: "Je eerste partners helpen",
+      beschrijving:
+        "Zodra je eerste mensen in je team komen: even per dag bij ze checken, vraag beantwoorden, helpen. Sponsor-call voor jezelf erbij.",
     },
     {
       emoji: "🌱",
-      naam: "Persoonlijke groei",
-      duur: "30 min",
-      beschrijving: "Audio + reading + skill-werk",
+      naam: "Even bijspijkeren",
+      beschrijving:
+        "Dagelijks iets lezen of luisteren. Bij dit tempo merk je dat dit het verschil maakt.",
     },
   ];
 }

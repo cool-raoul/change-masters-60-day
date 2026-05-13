@@ -71,12 +71,13 @@ export default function OnboardingPagina() {
     const preview = params.get("preview") === "true";
     setIsPreview(preview);
 
-    // ?stap=N, directe deeplink. Range 1-5 (was 1-6 toen er nog een
-    // namenlijst-stap in zat, en 1-11 toen ook de admin-stappen erin
-    // zaten; namen + admin staan beide nu in het 21-daagse playbook).
+    // ?stap=N, directe deeplink. Range 1-4 (was 1-5 toen scripts er nog
+    // in zaten, 1-6 toen ook namenlijst er in zat, en 1-11 toen ook de
+    // admin-stappen erin zaten; scripts staat nu in dag 2 van het
+    // playbook, namen + admin in dag 1-4).
     const stapParam = Number(params.get("stap"));
     const directeStap =
-      Number.isFinite(stapParam) && stapParam >= 1 && stapParam <= 5
+      Number.isFinite(stapParam) && stapParam >= 1 && stapParam <= 4
         ? stapParam
         : null;
 
@@ -164,18 +165,17 @@ export default function OnboardingPagina() {
       // Mapping: WANNEER je naar stap N gaat, dan was stap N-1 (deze actie)
       // dus zojuist afgerond. Veldnaam = welke kolom in onboarding_voortgang
       // hoort bij die stap. Push-naam = wat de sponsor in zijn bel ziet.
-      // Onboarding telt 5 stappen. De namenlijst (5 namen verplicht) is
-      // per 2026-05-13 verhuisd naar dag 1 van het playbook (dubbelde met
-      // dag 2's 20 namen). Admin-stappen (webshop, kredietformulier,
-      // Teams-administratie, bestellinks) staan al in het playbook
-      // verspreid over dag 2-4. DB-veldnamen ongewijzigd voor backwards-
-      // compat (onboarding_voortgang.stap_3_namen is wat historisch zo
-      // heet, niet meer letterlijk wat 'ie doet).
+      // Onboarding telt 4 stappen. Eerder geverhuisde inhoud:
+      // - Namenlijst (5 namen) -> dag 1 van het playbook
+      // - Scripts (Honest Conversation) -> dag 2, samen met sponsor-call
+      // - Admin (webshop, kredietformulier, Teams, bestellinks) -> dag 2-4
+      // De finale stap is nu 'tempo kiezen' (commitment_uren) en daarna
+      // doorrollen naar dag 1 in /vandaag. DB-veldnamen ongewijzigd voor
+      // backwards-compat (stap_3_namen is historisch zo genoemd).
       const stapActies: Record<number, { veld?: string; pushNaam: string }> = {
         2: { veld: "stap_1_welkom", pushNaam: "heeft de app geïnstalleerd 📱" },
         3: { veld: "stap_2_run",    pushNaam: "heeft zijn/haar WHY gemaakt 💛" },
         4: { veld: "stap_3_namen",  pushNaam: "begrijpt de 60-dagenrun 📖" },
-        5: { veld: "stap_4_script", pushNaam: "heeft het uitnodigingsscript gelezen 💬" },
       };
 
       if (stapActies[nieuweStap]) {
@@ -228,7 +228,12 @@ export default function OnboardingPagina() {
       );
     }
     setBezig(false);
-    router.push("/coach");
+    // Direct doorrollen naar dag 1 in /vandaag (geen tussenstop bij
+    // de coach). De onboarding is bewust opgezet als 'eerste deel van
+    // dag 1', dus iemand moet zich het laatste stuk van dag 1 (eerste
+    // namen + sponsor-bericht) als natuurlijk vervolg ervaren, niet
+    // als 'een nieuwe dag'.
+    router.push("/vandaag");
     router.refresh();
   }
 
@@ -248,7 +253,7 @@ export default function OnboardingPagina() {
     );
   }
 
-  const totaalStappen = 5;
+  const totaalStappen = 4;
   const voortgang = stap <= totaalStappen ? ((stap - 1) / totaalStappen) * 100 : 100;
 
   return (
@@ -290,7 +295,7 @@ export default function OnboardingPagina() {
       {/* Stap bollen */}
       {stap <= totaalStappen && (
         <div className="flex justify-center gap-2 py-4 px-6">
-          {[1, 2, 3, 4, 5].map((n) => (
+          {[1, 2, 3, 4].map((n) => (
             <div key={n} className={`flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold transition-all ${
               n < stap ? "bg-cm-gold text-cm-black" : n === stap ? "bg-cm-gold/20 border-2 border-cm-gold text-cm-gold" : "bg-cm-surface border border-cm-border text-cm-white opacity-40"
             }`}>
@@ -382,20 +387,19 @@ export default function OnboardingPagina() {
 
               {/* Wat je gaat doen */}
               <div className="card space-y-3">
-                <h3 className="text-cm-gold font-semibold">Wat doe je in deze 5 stappen?</h3>
+                <h3 className="text-cm-gold font-semibold">Wat komt er nog na deze setup?</h3>
                 <ul className="space-y-2">
                   {[
                     { icoon: "💛", tekst: "Je ontdekt jouw persoonlijke WHY" },
                     { icoon: "📖", tekst: "Je leert hoe de 60-dagenrun werkt" },
-                    { icoon: "💬", tekst: "Je leest je uitnodigingsscript" },
-                    { icoon: "🎯", tekst: "Je stelt je dagdoelen in en opent de ELEVA Mentor" },
+                    { icoon: "🎯", tekst: "Je kiest jouw tempo voor de komende 60 dagen" },
                   ].map((item, i) => (
                     <li key={i} className="flex items-center gap-3 text-sm text-cm-white">
                       <span className="text-xl">{item.icoon}</span>{item.tekst}
                     </li>
                   ))}
                 </ul>
-                <p className="text-cm-white text-xs opacity-50 pt-1">Dit kost je ongeveer 10–15 minuten. Daarna kun je dag 1 starten, daar voeg je je eerste namen toe. De admin-stappen (webshop, kredietformulier, Teams-administratie, bestellinks) doe je verspreid over de eerste week vanuit het playbook.</p>
+                <p className="text-cm-white text-xs opacity-50 pt-1">Deze setup is het eerste deel van dag 1. Zodra je hier doorheen bent, rol je direct door naar de echte taken van dag 1 (je eerste namen toevoegen, een berichtje naar je sponsor). Samen ben je vandaag goed binnen het uur klaar.</p>
               </div>
 
               <button onClick={() => gaNaarStap(2)} disabled={bezig} className="btn-gold w-full py-4 text-base font-bold">
@@ -532,30 +536,17 @@ export default function OnboardingPagina() {
               <div className="space-y-3">
                 <h3 className="text-cm-gold font-semibold text-sm uppercase tracking-wider">De 3 blokken</h3>
                 <div className="card border-l-4 border-[#4A9EDB]">
-                  <p className="text-[#4A9EDB] font-semibold text-sm mb-1">Blok 1 · Dag 1–20: Bouwen</p>
-                  <p className="text-cm-white text-sm leading-relaxed opacity-80">Je legt de basis. Elke dag contacten aanspreken, uitnodigingen sturen, namen toevoegen. Focus volledig op je warme markt, mensen die je al kent.</p>
+                  <p className="text-[#4A9EDB] font-semibold text-sm mb-1">Blok 1 · Dag 1–20: Fundament</p>
+                  <p className="text-cm-white text-sm leading-relaxed opacity-80">Je bouwt je netwerk-overzicht op. Je begint bij de mensen die je al goed kent, daar mag je direct uitnodigen. Daarnaast leer je hoe je oudere contacten weer warm maakt en hoe je op een rustige manier zichtbaar wordt in je omgeving.</p>
                 </div>
                 <div className="card border-l-4 border-[#C9A84C]">
-                  <p className="text-[#C9A84C] font-semibold text-sm mb-1">Blok 2 · Dag 21–40: Versnellen</p>
-                  <p className="text-cm-white text-sm leading-relaxed opacity-80">Je eerste resultaten komen binnen. Je verdubbelt je activiteit. Follow-ups worden crucialer. Je leert van de eerste gesprekken en scherpt je aanpak aan.</p>
+                  <p className="text-[#C9A84C] font-semibold text-sm mb-1">Blok 2 · Dag 21–40: Verdiepen</p>
+                  <p className="text-cm-white text-sm leading-relaxed opacity-80">Je eerste resultaten komen binnen. Je leert van de eerste gesprekken en scherpt je aanpak aan. Je opvolgwerk wordt belangrijker, want de meeste mensen zeggen niet bij het eerste contact ja. Hier zit het echte verschil.</p>
                 </div>
                 <div className="card border-l-4 border-[#4ACB6A]">
-                  <p className="text-[#4ACB6A] font-semibold text-sm mb-1">Blok 3 · Dag 41–60: Oogsten</p>
-                  <p className="text-cm-white text-sm leading-relaxed opacity-80">Je pipeline staat vol. Je sluit deals, begeleidt je eerste partners en bouwt een team. De gewoontes die je hebt opgebouwd dragen nu vruchten.</p>
+                  <p className="text-[#4ACB6A] font-semibold text-sm mb-1">Blok 3 · Dag 41–60: Oogsten en bouwen</p>
+                  <p className="text-cm-white text-sm leading-relaxed opacity-80">Je lijst is gevuld, je ritme zit erin. Nu rond je gesprekken af, begeleid je je eerste partners en help je hen op weg. De gewoontes uit de eerste 40 dagen dragen nu vrucht.</p>
                 </div>
-              </div>
-
-              <div className="card space-y-4">
-                <h3 className="text-cm-gold font-semibold text-sm uppercase tracking-wider">Jouw dagelijkse minimums</h3>
-                <div className="grid grid-cols-3 gap-3">
-                  {[{ getal: "5+", label: "Contacten" }, { getal: "2+", label: "Uitnodigingen" }, { getal: "3+", label: "Follow-ups" }].map((item) => (
-                    <div key={item.label} className="bg-cm-surface-2 rounded-xl p-3 text-center">
-                      <p className="text-2xl font-bold text-cm-gold">{item.getal}</p>
-                      <p className="text-cm-white text-xs opacity-70 mt-0.5">{item.label} per dag</p>
-                    </div>
-                  ))}
-                </div>
-                <p className="text-cm-white text-xs opacity-50 text-center">Run loopt van <span className="text-cm-gold">12 april</span> t/m <span className="text-cm-gold">11 juni 2026</span></p>
               </div>
 
               <div className="bg-gold-subtle border border-gold-subtle rounded-xl p-4">
@@ -569,127 +560,17 @@ export default function OnboardingPagina() {
             </div>
           )}
 
-          {/* ───── STAP 4: UITNODIGINGSSCRIPT (was stap 5) ─────
-              De vroegere stap 4 (5 namen toevoegen) is weggehaald omdat
-              die dubbelde met dag 1 + dag 2 in het playbook. DB-sleutels
-              (paginaId, EditableTekst-sleutels stap5.*) blijven ongewijzigd
-              om eventuele founder-overrides te behouden. */}
+          {/* ───── STAP 4: KIES JE TEMPO (was 5, daarna FINALE) ─────
+              De voormalige stap 4 ("scripts" met Honest Conversation
+              voorbeelden) is verplaatst naar dag 2 van het playbook,
+              waar 'ie samen met de sponsor-call landt (de eerste echte
+              uitnodigingen doe je samen met je sponsor, daar horen de
+              scripts ook).
+
+              Oude stap 5 (tempo-keuze) is nu de finale stap 4. DB-sleutels
+              (paginaId="stap-6", stap6.*) blijven ongewijzigd voor
+              founder-override-compat. */}
           {stap === 4 && (
-            <div className="space-y-6">
-              <MediaBlokkenClient
-                paginaNamespace="onboarding-stap"
-                paginaId="stap-5"
-                positie="boven-titel"
-                isFounder={isFounder}
-              />
-              <div>
-                <EditableTekst
-                  namespace="onboarding"
-                  sleutel="stap5.titel"
-                  standaard="Je eerste uitnodigingsscript"
-                  overrides={overrides}
-                  isFounder={isFounder}
-                  as="h2"
-                  className="text-2xl font-display font-bold text-cm-white mb-1"
-                />
-                <EditableTekst
-                  namespace="onboarding"
-                  sleutel="stap5.intro"
-                  standaard="Lees dit door, oefen het hardop, gebruik het."
-                  overrides={overrides}
-                  isFounder={isFounder}
-                  as="p"
-                  className="text-cm-white opacity-60 text-sm"
-                  multiline
-                  rows={2}
-                />
-              </div>
-
-              {/* Waarom cruciaal */}
-              <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
-                <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom deze stap cruciaal is</p>
-                <p className="text-cm-white text-sm leading-relaxed opacity-90">
-                  Wat je zegt maakt het verschil. Een goed script neemt de twijfel weg, bij jou én bij de ander. Je hoeft niets te verzinnen, je gebruikt een beproefd bericht dat werkt.
-                </p>
-              </div>
-
-              {/* Script 1, Persoonlijk */}
-              <div className="bg-cm-surface-2 border border-cm-gold/30 rounded-xl p-5 space-y-3">
-                <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">✦ Script 1, Persoonlijk (bellen of voice memo)</p>
-                <div className="space-y-3 text-cm-white text-sm leading-relaxed border-l-2 border-cm-gold/30 pl-4 italic">
-                  <p>"Hey [naam], ik moest even aan je denken en daarom bel ik je.</p>
-                  <p>Ik ga over twee weken starten met iets waar ik 60 dagen echt vol voor ga. Een soort sprint, maar dan wel eentje waar ik echt impact mee wil maken.</p>
-                  <p>En toen ik nadacht met wie ik dat zou willen doen… kwam jij in me op.</p>
-                  <p>Ik weet niet of het bij je past. Maar ik weet wel dat jij iemand bent die dingen voor elkaar krijgt.</p>
-                  <p>Dus voordat ik het straks overal ga delen… wilde ik jou als eerste even meenemen.</p>
-                  <p className="not-italic text-cm-gold font-medium">Zullen we even samen zitten? Koffie, lunch of even via Zoom?"</p>
-                </div>
-              </div>
-
-              {/* Script 2, DM / WhatsApp */}
-              <div className="bg-cm-surface-2 border border-cm-gold/30 rounded-xl p-5 space-y-3">
-                <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">✦ Script 2, Direct & Eerlijk (WhatsApp / DM)</p>
-                <div className="space-y-3 text-cm-white text-sm leading-relaxed border-l-2 border-cm-gold/30 pl-4 italic">
-                  <p>"Oké, ik ga gewoon eerlijk zijn.</p>
-                  <p>Ik ga de komende 60 dagen iets neerzetten waar ik vol voor ga. En toen ik nadacht met wie ik dat zou willen doen… kwam jij meteen in me op.</p>
-                  <p>Omdat jij niet iemand bent die een beetje aanklooit. Als jij iets doet, doe je het goed.</p>
-                  <p>Ik ga je alles laten zien, de producten, het plan, hoe het werkt… dat komt allemaal. Maar eerst wil ik eigenlijk één ding weten:</p>
-                  <p className="not-italic text-cm-gold font-medium">Stel dat alles klopt, stel dat je voelt: dit past bij mij, zou je dan zeggen: hier wil ik bij zijn?"</p>
-                </div>
-              </div>
-
-              <div className="card space-y-3">
-                <h3 className="text-cm-gold font-semibold text-sm">Hoe gebruik je dit?</h3>
-                <ul className="space-y-2">
-                  {[
-                    "Vervang [naam] door de echte naam, persoonlijk werkt altijd beter",
-                    "Bellen of voice memo werkt sterker dan tekst",
-                    "Wacht rustig op reactie, dring nooit aan",
-                    "Zeggen ze ja? Plan het gesprekje samen met je sponsor",
-                    "De ELEVA Mentor schrijft een persoonlijk DM voor elk contact op je lijst",
-                  ].map((tip, i) => (
-                    <li key={i} className="flex gap-2 text-sm text-cm-white opacity-80">
-                      <span className="text-cm-gold flex-shrink-0 mt-0.5">✓</span>{tip}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Sponsor contact */}
-              {toonSponsorNaam && (
-                <div className="bg-blue-900/20 border border-blue-600/30 rounded-xl p-4">
-                  <div className="flex gap-3 items-start">
-                    <span className="text-2xl flex-shrink-0">💬</span>
-                    <div>
-                      <p className="text-blue-300 font-semibold text-sm mb-1">Plan nu al een sessie met {toonSponsorNaam}</p>
-                      <p className="text-cm-white text-sm opacity-80 mb-2">Je eerste uitnodigingen doe je het beste <strong className="text-cm-white">samen</strong> met je sponsor. Stuur nu al een berichtje om dit in te plannen.</p>
-                      <a href={toonSponsorLink} target="_blank" rel="noopener noreferrer" className="text-xs bg-green-900/40 border border-green-600/30 text-green-400 px-3 py-1.5 rounded-lg inline-flex items-center gap-1">
-                        💬 Plan sessie met {toonSponsorNaam}
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <button onClick={() => gaNaarStap(5)} disabled={bezig} className="btn-gold w-full py-3 text-base">
-                Gelezen en begrepen →
-              </button>
-            </div>
-          )}
-
-          {/* ───── STAP 5: KIES JE TEMPO + ELEVA MENTOR FINALE (was dagdoelen) ─────
-              Vervangt de oude +/- knoppen voor losse dagdoelen door drie
-              concrete tempo-keuzes (Fundament/Bouwen/Doorbreken = 2/4/6
-              uur per dag). De dagdoelen worden afgeleid in
-              lib/dagdoelen.ts. Filosofie: één bewuste keuze met een
-              naam + verhaal, niet drie getallen die in het wilde weg
-              kunnen worden ingesteld.
-
-              Admin-stappen (webshop, kredietformulier, Teams-administratie,
-              bestellinks) zijn verplaatst naar het 21-daagse playbook.
-              DB-sleutels (paginaId="stap-6", stap6.*) blijven ongewijzigd
-              voor founder-override-compat. */}
-          {stap === 5 && (
             <div className="space-y-6">
               <MediaBlokkenClient
                 paginaNamespace="onboarding-stap"
@@ -721,14 +602,14 @@ export default function OnboardingPagina() {
                 />
               </div>
 
-              {/* Waarom deze keuze ertoe doet */}
+              {/* Korte intro waarom dit een keuze is en geen losse getallen */}
               <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
-                <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom dit een keuze met een naam is</p>
+                <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom je tempo kiest, geen losse getallen</p>
                 <p className="text-cm-white text-sm leading-relaxed opacity-90">
-                  Losse getallen instellen leidde tot mensen die alles op 1 zetten (waardeloos) of op 20 (niet vol te houden). Nu kies je één tempo met een filosofie erachter. De dagelijkse aantallen volgen automatisch. Geen druk, wel duidelijkheid.
+                  Mensen die zelf met losse getallen rommelen, zetten ze óf veel te laag (dan gebeurt er niets) óf veel te hoog (dan stoppen ze). Met een tempo kies je een ritme dat past bij jouw leven nu. De aantallen volgen automatisch.
                 </p>
                 <p className="text-cm-white text-sm opacity-80">
-                  🎯 Je kunt later in <strong className="text-cm-white">Instellingen</strong> altijd switchen — bijvoorbeeld van Fundament naar Bouwen als je merkt dat je meer ruimte hebt. Dat is geen falen, dat is wijsheid.
+                  🎯 Je kunt later in <strong className="text-cm-white">Instellingen</strong> altijd switchen, bijvoorbeeld als je meer ruimte krijgt. Dat is geen falen, dat is luisteren naar jezelf.
                 </p>
               </div>
 
@@ -740,33 +621,22 @@ export default function OnboardingPagina() {
                   const isGekozen = commitmentUren === uren;
                   const meta: Record<
                     CommitmentUren,
-                    {
-                      emoji: string;
-                      voorWie: string;
-                      eersteResultaten: string;
-                      kleur: string;
-                    }
+                    { emoji: string; pastBij: string }
                   > = {
                     2: {
                       emoji: "🌱",
-                      voorWie:
-                        "Drukke baan, gezin, of je bouwt dit naast alles wat je al hebt.",
-                      eersteResultaten: "Week 3-4",
-                      kleur: "emerald",
+                      pastBij:
+                        "Je hebt een drukke baan, een gezin, of bouwt dit naast alles wat je al hebt. Liever rustig en consistent dan groot beginnen en stoppen.",
                     },
                     4: {
                       emoji: "🔥",
-                      voorWie:
-                        "Je hebt ruimte gemaakt, je gezin weet dat dit jouw 60 dagen zijn.",
-                      eersteResultaten: "Week 2-3",
-                      kleur: "amber",
+                      pastBij:
+                        "Je hebt ruimte gemaakt. Je gezin weet dat dit jouw 60 dagen worden. Je wilt er serieus voor gaan zonder jezelf op te branden.",
                     },
                     6: {
                       emoji: "⚡",
-                      voorWie:
-                        "Geen ander werk, of je hebt 60 dagen echt vrijgemaakt. Full sprint.",
-                      eersteResultaten: "Week 1-2",
-                      kleur: "rose",
+                      pastBij:
+                        "Je hebt geen ander werk, of je hebt deze 60 dagen echt vrijgemaakt. Je wilt er alles uithalen en bent bereid het als hoofdactiviteit te behandelen.",
                     },
                   };
                   const m = meta[uren];
@@ -800,56 +670,53 @@ export default function OnboardingPagina() {
                           )}
                         </div>
 
-                        {/* Voor wie + eerste resultaten */}
-                        <div className="space-y-1.5">
-                          <p className="text-sm text-cm-white/85 leading-relaxed">
-                            <span className="text-cm-gold font-semibold">Voor wie:</span>{" "}
-                            {m.voorWie}
-                          </p>
-                          <p className="text-sm text-cm-white/85 leading-relaxed">
-                            <span className="text-cm-gold font-semibold">Eerste resultaten:</span>{" "}
-                            {m.eersteResultaten}
-                          </p>
-                        </div>
+                        {/* Past dit bij jou? Korte herkennings-beschrijving
+                            zodat mensen direct voelen of dit hun tempo is. */}
+                        <p className="text-sm text-cm-white/85 leading-relaxed">
+                          {m.pastBij}
+                        </p>
 
-                        {/* Dagdoelen-samenvatting */}
+                        {/* Dagdoelen-samenvatting, in alledaagse woorden */}
                         <div className="bg-cm-surface-2 rounded-lg p-3 space-y-1">
                           <p className="text-[10px] uppercase tracking-wider text-cm-white/50">
-                            Elke dag minimaal
+                            Elke dag
                           </p>
-                          <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-sm text-cm-white">
-                            <span>💬 {dd.contacten} contacten</span>
-                            <span>📨 {dd.uitnodigingen} uitnodigingen</span>
-                            <span>🔄 {dd.followups} follow-ups</span>
-                            <span>📱 {dd.stories} {dd.stories === 1 ? "story" : "stories"}</span>
+                          <div className="grid grid-cols-1 gap-y-1 text-sm text-cm-white">
+                            <span>💬 {dd.contacten} echte gesprekken voeren</span>
+                            <span>📨 {dd.uitnodigingen} mensen uitnodigen</span>
+                            <span>🔄 {dd.followups} mensen opvolgen</span>
+                            <span>📱 {dd.stories} {dd.stories === 1 ? "story plaatsen" : "stories plaatsen"} + reageren op anderen</span>
                           </div>
                         </div>
 
-                        {/* Uitklap: waar gaat je tijd in zitten? Alleen tonen
-                            als deze card gekozen is, anders te druk. */}
+                        {/* Uitklap: wat doe je per dag concreet? Alleen tonen
+                            als deze card gekozen is, anders wordt 't te druk. */}
                         {isGekozen && (
                           <div className="border-t border-cm-border pt-3 space-y-2">
                             <p className="text-xs uppercase tracking-wider text-cm-white/50">
-                              Waar gaat die {uren} uur in zitten?
+                              Wat doe je op zo'n dag?
                             </p>
-                            <ul className="space-y-1.5">
+                            <ul className="space-y-2">
                               {blokken.map((b) => (
                                 <li
                                   key={b.naam}
                                   className="text-xs text-cm-white/80 flex gap-2 leading-relaxed"
                                 >
-                                  <span className="flex-shrink-0">{b.emoji}</span>
+                                  <span className="flex-shrink-0 mt-0.5">{b.emoji}</span>
                                   <span>
                                     <strong className="text-cm-white">
-                                      {b.duur} · {b.naam}
+                                      {b.naam}
                                     </strong>
                                     <span className="text-cm-white/60">
-                                      {" "}— {b.beschrijving}
+                                      {". "}{b.beschrijving}
                                     </span>
                                   </span>
                                 </li>
                               ))}
                             </ul>
+                            <p className="text-[11px] text-cm-white/55 italic pt-1 leading-relaxed">
+                              💡 Je hoeft dit niet in één blok te doen. Korte stukjes door je dag heen werkt vaak beter, tussendoor in de auto, na het eten, in de wachtkamer. Zo wordt het een ritme in plaats van een verplichting.
+                            </p>
                           </div>
                         )}
                       </div>
@@ -864,7 +731,7 @@ export default function OnboardingPagina() {
                   💡 Twijfel?
                 </h3>
                 <p className="text-cm-white text-sm leading-relaxed opacity-85">
-                  Begin bij <strong className="text-cm-white">Fundament (2 uur)</strong>. Je kunt later in instellingen altijd switchen als je merkt dat je meer ruimte hebt. Andersom is ook prima: liever stap je een week na de start terug van Doorbreken naar Bouwen, dan dat je opbrandt en stopt.
+                  Begin bij <strong className="text-cm-white">Fundament</strong>. Je kunt later in instellingen altijd opschalen als je merkt dat je meer ruimte hebt. Andersom kan ook: liever even terugschakelen dan helemaal stoppen.
                 </p>
               </div>
 
@@ -900,39 +767,11 @@ export default function OnboardingPagina() {
                 </p>
               </div>
 
-              {/* "Je eerste 24 uur", concrete acties terwijl het momentum
-                  van de onboarding nog warm is. */}
-              <div className="card border-l-4 border-emerald-500 space-y-2.5">
-                <h3 className="text-emerald-300 font-semibold text-sm flex items-center gap-2">
-                  🎯 Je eerste 24 uur, terwijl het warm is
-                </h3>
-                <p className="text-cm-white text-sm opacity-80 leading-relaxed">
-                  Top dat je dit hebt afgerond! Dit zijn 3 dingen die je
-                  gewoon NU even kunt doen, kost minder dan 10 minuten en
-                  zet je goed neer voor morgen:
-                </p>
-                <ul className="space-y-1.5 text-sm text-cm-white opacity-90">
-                  <li className="flex gap-2">
-                    <span className="text-emerald-400 flex-shrink-0">1.</span>
-                    Stuur je sponsor een korte voicememo of berichtje:
-                    "Ik ben gestart, dankjewel!" 🙌
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="text-emerald-400 flex-shrink-0">2.</span>
-                    Voeg vanavond op je telefoon nog 5 namen toe, wie kwam
-                    spontaan in je hoofd?
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="text-emerald-400 flex-shrink-0">3.</span>
-                    Lees je WHY nog 1 keer rustig terug, die wordt morgen
-                    je kompas.
-                  </li>
-                </ul>
-                <p className="text-cm-white text-xs opacity-60 italic">
-                  Morgenochtend krijg je een vriendelijke push voor dag 1.
-                  daar gaat het écht beginnen 💪
-                </p>
-              </div>
+              {/* 'Je eerste 24 uur'-blok is verwijderd. Reden: het zegt
+                  dingen die dag 1 zelf al opvolgt (sponsor-bericht, namen
+                  toevoegen, WHY teruglezen). De gebruiker rolt nu meteen
+                  door naar /vandaag voor dag 1 zodra 'ie z'n tempo heeft
+                  gekozen, dus geen tussenstop met dubbele instructies. */}
 
               <button
                 onClick={slaDoelOp}
@@ -942,7 +781,7 @@ export default function OnboardingPagina() {
                 {bezig
                   ? "Laden..."
                   : commitmentUren
-                  ? `Te gek, start mijn ${tempoNaam(commitmentUren)}-tempo →`
+                  ? `Te gek, door naar de rest van dag 1 →`
                   : "Kies eerst je tempo hierboven"}
               </button>
             </div>

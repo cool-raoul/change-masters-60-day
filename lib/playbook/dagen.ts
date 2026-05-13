@@ -131,10 +131,14 @@ Overweldigd voelen is normaal. Je leert iets nieuws, je stapt uit comfort. Eerst
         inlineEmbed: "sponsor-melding",
       },
       {
+        // Inhoud van de oude onboarding-stap-4 'scripts' zit nu hier in
+        // de uitleg, want de eerste uitnodigingen doe je in deze taak
+        // (samen met sponsor of via Mentor), dat is logischer dan ze
+        // los te lezen tijdens onboarding.
         id: "dag2-3-invites",
         label: "Stuur je eerste 3 uitnodigingen (samen met sponsor of via Mentor)",
         uitleg:
-          "Kies 3 warmere mensen uit je lijst. Stel ze samen met je sponsor op (in jullie call), of vraag de Mentor: 'Schrijf een uitnodiging voor [naam] die [context]'. Drempel laag houden, gewoon doen, niet perfect. Eerste uitnodigingen voelen altijd onhandig, dat hoort.",
+          "Kies 3 warmere mensen uit je lijst. Stel het bericht samen met je sponsor op tijdens jullie call, of vraag de Mentor: 'Schrijf een uitnodiging voor [naam] die [context]'. Drempel laag houden, gewoon doen, niet perfect. Eerste uitnodigingen voelen altijd onhandig, dat hoort.\n\nHOE KLINKT EEN EERLIJK BERICHT?\n\nEen sterk uitnodigingsbericht is kort, eerlijk en persoonlijk. Geen verkoop-praat vooraf, geen mysterie. Hieronder twee voorbeelden ter inspiratie, niet om letterlijk te kopieren. Sponsor of Mentor maakt er straks een versie van die past bij wie jij gaat appen.\n\n📞 Voorbeeld 1, voor een belletje of voice memo (warme bekende):\n\n'Hey [naam], ik moest even aan je denken en daarom bel ik je. Ik ga binnenkort starten met iets waar ik 60 dagen echt vol voor ga. Geen geheim, ik wil gewoon iets serieus neerzetten. En toen ik nadacht met wie ik dat zou willen doen, kwam jij in me op. Ik weet niet of het bij je past. Maar ik weet wel dat jij iemand bent die dingen voor elkaar krijgt. Dus voordat ik het straks breder ga delen, wilde ik jou als eerste even meenemen. Zullen we even samen zitten? Koffie, lunch of even via Zoom?'\n\n💬 Voorbeeld 2, voor WhatsApp of DM (direct en eerlijk):\n\n'Oke, ik ga gewoon eerlijk zijn. Ik ga de komende 60 dagen iets neerzetten waar ik vol voor ga. En toen ik nadacht met wie ik dat zou willen doen, kwam jij meteen in me op. Omdat jij niet iemand bent die een beetje aanklooit. Als jij iets doet, doe je het goed. Ik ga je alles laten zien, de producten, het plan, hoe het werkt. Maar eerst wil ik eigenlijk 1 ding weten: stel dat alles klopt, dat je voelt dit past bij mij, zou je dan zeggen hier wil ik bij zijn?'\n\nWAT MAAKT DEZE BERICHTEN STERK?\n\n• Ze zeggen eerlijk vooraf wat het is, geen mysterie.\n• Ze edificeren de ander, niet jezelf.\n• Ze laten de keuze nadrukkelijk bij de ander.\n• Ze hebben een duidelijke vervolgvraag.\n\nVOORDAT JE STUURT, CHECK:\n\n• Heb je [naam] vervangen door de echte naam?\n• Past de toon bij hoe jij normaal met deze persoon praat?\n• Heb je het hardop voorgelezen, voelt het natuurlijk?\n• Klaar om rustig op reactie te wachten? Aandringen werkt averechts.\n\nZeggen ze ja? Plan het gesprekje liefst samen met je sponsor in. Zo leer je het sneller dan in je eentje.",
         verplicht: true,
         actieRoute: "/namenlijst",
       },
