@@ -210,9 +210,7 @@ export function TempoSectie({ huidigUren }: Props) {
 
                   {/* Compact mini-overzicht, altijd zichtbaar in laag 2 */}
                   <div className="text-[11px] text-cm-white/70 leading-relaxed">
-                    💬 {dd.contacten} contacten · 📨 {dd.uitnodigingen}{" "}
-                    uitnodigen · 🔄 {dd.followups} opvolgen · 📱 1 tot 3
-                    stories
+                    📲 {dd.contacten} namen + 💬 {dd.contacten} berichten · 📨 {dd.uitnodigingen} uitnodigen · 🔄 follow-ups variabel · 📱 1-3 stories
                   </div>
                 </button>
 

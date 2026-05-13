@@ -684,9 +684,10 @@ export default function OnboardingPagina() {
                             Elke dag
                           </p>
                           <div className="grid grid-cols-1 gap-y-1 text-sm text-cm-white">
-                            <span>💬 {dd.contacten} contacten leggen of vervolgen</span>
-                            <span>📨 {dd.uitnodigingen} mensen uitnodigen voor een presentatie</span>
-                            <span>🔄 {dd.followups} mensen opvolgen via 3-weg of Mini-ELEVA</span>
+                            <span>📲 {dd.contacten} nieuwe namen toevoegen</span>
+                            <span>💬 {dd.contacten} eerste berichten sturen</span>
+                            <span>📨 {dd.uitnodigingen} mensen uitnodigen om iets te bekijken</span>
+                            <span>🔄 Openstaande follow-ups doen (variabel)</span>
                             <span>📱 1 tot 3 momenten uit je dag delen (geen verkoop)</span>
                           </div>
                         </div>

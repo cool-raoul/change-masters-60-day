@@ -27,6 +27,19 @@ export type CommitmentUren = 2 | 4 | 6;
 export type Dagdoelen = {
   contacten: number;
   uitnodigingen: number;
+  /**
+   * Follow-ups: GEEN vast getal per dag. Volgens afspraak met Raoul
+   * (2026-05-13) is follow-up variabel: het hangt af van hoeveel
+   * prospects op opvolging wachten (mensen die de film, one-pager
+   * of presentatie hebben gezien). De member doet dagelijks z'n
+   * OPENSTAANDE follow-ups, niet een afgesproken aantal.
+   *
+   * Het getal blijft hier als 'guideline'-cap (richtwaarde voor hoe
+   * druk de pijplijn KAN worden bij dit tempo), maar wordt NIET als
+   * een hard doel in de UI getoond. Voor backwards-compat zit het
+   * nog in user_metadata.dagdoel_followups, maar UI-teksten zeggen
+   * voortaan 'doe je openstaande follow-ups'.
+   */
   followups: number;
   stories: number;
 };
@@ -48,6 +61,11 @@ export const STANDAARD_COMMITMENT: CommitmentUren = 4;
 export function berekenDagdoelen(uren: CommitmentUren): Dagdoelen {
   // Tabel-vorm zodat de mapping in één oogopslag te lezen is.
   // Aanpassen? Doe het hier en NERGENS anders.
+  //
+  // Let op: contacten geldt voor STAP A (namen toevoegen) EN STAP B
+  // (eerste berichten) — dat zijn 2 aparte handelingen met hetzelfde
+  // getal, normaal gesproken voor dezelfde mensen.
+  // followups is een richtwaarde, geen hard doel (zie Dagdoelen-type).
   const tabel: Record<CommitmentUren, Dagdoelen> = {
     2: { contacten: 5, uitnodigingen: 2, followups: 3, stories: 1 },
     4: { contacten: 10, uitnodigingen: 4, followups: 6, stories: 3 },
@@ -124,9 +142,9 @@ export function bouwblokkenVoorTempo(uren: CommitmentUren): Bouwblok[] {
       },
       {
         emoji: "🔄",
-        naam: "3 mensen opvolgen: 3-weg of Mini-ELEVA",
+        naam: "Doe je openstaande follow-ups",
         beschrijving:
-          "Mensen die al een presentatie of one-pager hebben gezien. Per persoon kies je in de namenlijst de aanpak: een 3-weg-gesprek samen met je sponsor (klassiek, persoonlijk) óf Mini-ELEVA waarbij iemand 14 dagen zelf kan rondkijken (voor wie eerst rustig wil verkennen). De ELEVA-mentor helpt je per persoon nadenken over wat past, en je kunt overleggen met je sponsor.",
+          "Mensen die jouw uitnodiging hebben aangenomen en de film/one-pager/presentatie hebben gezien, wachten op opvolging. Geen vast getal — afhankelijk van wie er open staat. Per persoon kies je de aanpak: een 3-weg-gesprek samen met je sponsor (klassiek, persoonlijk) óf Mini-ELEVA waarbij iemand 14 dagen zelf kan rondkijken. Openingszin: 'Wat spreekt je hier het meeste in aan?' (niet 'wat vond je ervan?').",
       },
       {
         emoji: "📱",
@@ -164,9 +182,9 @@ export function bouwblokkenVoorTempo(uren: CommitmentUren): Bouwblok[] {
       },
       {
         emoji: "🔄",
-        naam: "6 mensen opvolgen: 3-weg of Mini-ELEVA",
+        naam: "Doe je openstaande follow-ups",
         beschrijving:
-          "Na een presentatie of one-pager: per persoon kies je in de namenlijst hoe je doorbouwt. 3-weg-gesprek (jij + prospect + sponsor of ervaren teamlid) voor wie persoonlijk contact wil en kort traject. Mini-ELEVA voor wie eerst rustig zelf wil verkennen, dan krijgt iemand 14 dagen eigen toegang met films, mentor en chat. De ELEVA-mentor helpt je per persoon onderscheid maken, en je kunt overleggen met je sponsor.",
+          "Mensen die de film/one-pager/presentatie hebben gezien staan klaar voor opvolging. Geen vast getal per dag — afhankelijk van wie er klaar staat. Per prospect kies je in de namenlijst de aanpak: 3-weg-gesprek samen met sponsor of ervaren teamlid (klassiek, persoonlijk) óf Mini-ELEVA voor wie 14 dagen zelf wil verkennen. Iemand kan meerdere follow-up-momenten doorlopen. Openingszin: 'Wat spreekt je hier het meeste in aan?'.",
       },
       {
         emoji: "📱",
@@ -204,9 +222,9 @@ export function bouwblokkenVoorTempo(uren: CommitmentUren): Bouwblok[] {
     },
     {
       emoji: "🔄",
-      naam: "8 tot 10 mensen opvolgen: 3-weg of Mini-ELEVA",
+      naam: "Doe je openstaande follow-ups (strakke discipline)",
       beschrijving:
-        "Strakke opvolg-discipline na presentaties. Per prospect kies je in de namenlijst de aanpak: 3-weg-gesprek met sponsor voor wie persoonlijk en kort wil, Mini-ELEVA voor wie 14 dagen zelf wil verkennen. Schaalbaar zonder dat je elke vraag zelf hoeft te beantwoorden, ELEVA helpt je nadenken over wat per persoon past.",
+        "Mensen die de film/one-pager/presentatie hebben gezien staan klaar voor opvolging. Geen vast getal — bij dit tempo loopt je pijplijn voller dus zijn het er vaak meerdere per dag. Per prospect kies je in de namenlijst: 3-weg-gesprek met sponsor (persoonlijk, kort) óf Mini-ELEVA (14 dagen zelf verkennen). Openingszin: 'Wat spreekt je hier het meeste in aan?'.",
     },
     {
       emoji: "📱",

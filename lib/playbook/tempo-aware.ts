@@ -39,57 +39,90 @@ import type { Dag, ControllableTaak } from "@/lib/playbook/types";
  * /onboarding ook uit leest. Zo blijft alles consistent.
  *
  * Filosofie van dag 3 (afspraak Raoul, 2026-05-13):
- *   ÉÉN actie per persoon: naam toevoegen + meteen gesprek starten.
- *   Geen aparte 'toevoegen' en 'aanspreken' taken meer, want dat
- *   schept een rekenpuzzel ('hoeveel toevoegen vs hoeveel aanspreken?').
- *   In plaats daarvan: het AANTAL 'nieuwe contacten leggen' is
- *   gelijk aan dd.contacten (5/10/15). Per persoon: lijst-entry +
- *   eerste bericht = 1 actie.
  *
- * Bronnen voor de nieuwe contacten mogen mixen:
- *   - Bestaande telefoonlijst (vrienden je al kent maar nog niet
- *     hebt benaderd over dit)
- *   - Social media-vrienden waar je al volgens bent
- *   - Mensen die je dagelijks tegenkomt (sport, koffietent, werk)
- *   - Nieuwe vrienden op social media via hashtags/comments/stories
- *     (de NLB-aanpak: New, Like, Begin)
+ *   Stap A: voeg X nieuwe namen toe aan je lijst
+ *   Stap B: stuur eerste bericht naar X mensen (meestal dezelfde
+ *           als A, maar mag uit buffer komen)
+ *   Stap C: nodig X mensen uit ('sta je open om iets te bekijken?')
+ *           Als ze JA zeggen, deel je de link. Dat is het einde van
+ *           jouw uitnodig-handeling, jouw werk is dan af voor die
+ *           persoon. Verder wachten op tracking-signaal of ze hebben
+ *           gekeken.
+ *   Stap D: doe je openstaande follow-ups vandaag. GEEN vast getal,
+ *           variabel. Mensen die de film/one-pager/presentatie hebben
+ *           gezien staan in fase 'one_pager' of 'presentatie' en
+ *           wachten op opvolging (3-weg-gesprek, Mini-ELEVA, of
+ *           gewone opvolg-vraag). Iemand kan meerdere follow-up-
+ *           momenten doorlopen.
+ *   Stap E: 1 tot 3 stories + reageren op anderen
  *
- * Spraak-FAB ondersteunt automatisch de pipeline-promotie naar
- * 'in_gesprek' zodra de member zegt 'gesprek gestart met X'.
+ * Plus voor iedereen gelijk:
+ *   Sponsor-checkin (optioneel)
+ *   Teams-administratie (eenmalig)
+ *
+ * Opvolg-zin als jij vraagt 'wat moet ik zeggen bij follow-up':
+ * "Wat spreekt je hier het meeste in aan?" (NIET "wat vond je ervan").
  */
 function bouwDag3VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
   const dd = berekenDagdoelen(uren);
 
   return [
+    // --- Stap A: nieuwe namen toevoegen ---
     {
-      id: "dag3-nieuwe-contacten",
-      label: `💬 ${dd.contacten} nieuwe contacten leggen vandaag`,
-      uitleg: `Vandaag bouw je je netwerk uit met ${dd.contacten} nieuwe mensen. Per persoon doe je 1 ding: naam aan je lijst toevoegen én meteen een eerste bericht sturen. Niet apart, in één beweging.\n\nWAAR HAAL JE DEZE ${dd.contacten} MENSEN VANDAAN?\n\n1. Je telefoonlijst: mensen die je al kent maar nog niet hebt benaderd. Familie, oud-collega's, sportmaatjes, buren, oude vrienden.\n\n2. Je social media-vrienden: mensen die jou al volgen of die jij volgt, maar waar je al een tijd niet mee hebt gesproken. Open Instagram of Facebook, scroll door je vrienden, kies wie er nu spontaan opvalt.\n\n3. Mensen die je dagelijks tegenkomt: bij de koffietent, sportschool, school, werk. Iemand met wie je een gewone kleine babbel had, kun je later vandaag in een DM/WhatsApp ook vervolgen.\n\n4. Nieuwe mensen op social media (advanced): via hashtags die jouw doelgroep gebruikt, mensen in jouw stad, accounts die je volgt en waarvan de volgers passen. Eerst even reageren op hun content (1-3 oprechte comments over een paar dagen), daarna pas een DM-bericht.\n\nWAT SCHRIJF JE IN HET BERICHT?\n\nGeen pitch. Geen 'ik heb een geweldige kans'. Gewoon een menselijke vraag waar je oprecht nieuwsgierig naar bent. Een specifieke verwijzing naar iets dat zij hebben gedeeld, gepost of meegemaakt. Of een herinnering aan iets uit jullie gezamenlijke verleden.\n\nVoorbeelden:\n• 'Hé Linda, ik moest aan je denken na onze koffie laatst. Hoe is het nu met die nieuwe rol?'\n• 'Hé Pieter, ik zag je verhaal over je wandeling in Limburg. Welke route was dat?'\n• 'Hé Anne, hoe lang is het ook alweer geleden dat we elkaar hebben gesproken? Hoe is het bij jou?'\n\nZodra je het bericht hebt verstuurd, vertel het aan de Spraak-FAB: 'Ik heb een gesprek gestart met [naam]'. Dan staat de persoon in je namenlijst, automatisch op fase 'in gesprek', en weet je later precies met wie het loopt.`,
+      id: "dag3-namen-toevoegen",
+      label: `📲 Voeg ${dd.contacten} nieuwe namen toe aan je lijst`,
+      uitleg: `Vandaag breidt je netwerk-overzicht uit met ${dd.contacten} nieuwe mensen. Alleen toevoegen, het bericht komt in de volgende stap.\n\nWAAR HAAL JE DEZE ${dd.contacten} MENSEN VANDAAN?\n\n1. Je telefoonlijst: mensen die je al kent maar nog niet hebt benaderd over dit. Familie, oud-collega's, sportmaatjes, buren, oude vrienden.\n\n2. Je social media-vrienden: mensen die jou al volgen of die jij volgt, maar waar je al een tijd niet mee hebt gesproken. Open Instagram of Facebook, scroll door je vrienden, kies wie er nu spontaan opvalt.\n\n3. Mensen die je dagelijks tegenkomt: bij de koffietent, sportschool, school, werk. Iemand met wie je een gewone kleine babbel had.\n\n4. Nieuwe mensen op social media (advanced): via hashtags die jouw doelgroep gebruikt, mensen in jouw stad, accounts die je volgt en waarvan de volgers passen.\n\nVoeg ze toe in je namenlijst met 1 woord context per persoon ('fitness', 'oud-collega', 'koffietent'). Niet meer, geen biografie. Het label is genoeg om te onthouden waar je 'm zat toen je 'm noteerde.`,
       verplicht: true,
       actieRoute: "/namenlijst",
     },
+
+    // --- Stap B: eerste bericht sturen ---
+    {
+      id: "dag3-eerste-berichten",
+      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht`,
+      uitleg: `Pak ${dd.contacten} mensen uit je lijst en stuur ze 1-op-1 een persoonlijk bericht. Meestal zijn dit dezelfde ${dd.contacten} die je net hebt toegevoegd, maar als je al een buffer hebt mag je daaruit kiezen.\n\nWAT SCHRIJF JE?\n\nGeen pitch. Geen 'ik heb een geweldige kans'. Gewoon een menselijke vraag waar je oprecht nieuwsgierig naar bent. Een specifieke verwijzing naar iets dat zij hebben gedeeld of een herinnering uit jullie verleden.\n\nVoorbeelden:\n• "Hé Linda, ik moest aan je denken na onze koffie laatst. Hoe is het nu met die nieuwe rol?"\n• "Hé Pieter, ik zag je verhaal over je wandeling in Limburg. Welke route was dat?"\n• "Hé Anne, hoe lang is het ook alweer geleden dat we elkaar hebben gesproken? Hoe is het bij jou?"\n\nZodra je het bericht hebt verstuurd, vertel het aan de Spraak-FAB: "Ik heb een gesprek gestart met [naam]". De prospect gaat dan automatisch van 'prospect' naar 'in gesprek' in je pijplijn. Zo zie je later precies met wie het loopt.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap C: uitnodigen om iets te bekijken ---
     {
       id: "dag3-uitnodigingen",
-      label: `📨 ${dd.uitnodigingen} uitnodigingen voor een presentatie`,
-      uitleg: `Naast de nieuwe contacten van vandaag: nodig ${dd.uitnodigingen} mensen uit voor een one-pager of presentatie. Dit zijn mensen waarvan je al weet wat ze belangrijk vinden, mensen die eerder in een gesprek zaten waar het natuurlijk past, of mensen waar je sponsor je kan ondersteunen.\n\nLoop je vast bij het bericht? Vraag de Mentor: 'Schrijf een uitnodiging voor [naam] die [context]'. Of bel je sponsor voor een 3-weg-momentje.\n\nZodra de uitnodiging is verstuurd, vertel het aan de Spraak-FAB: 'Ik heb [naam] uitgenodigd voor de presentatie van [datum]'. De pijplijn-fase wordt automatisch bijgewerkt.`,
+      label: `📨 Nodig ${dd.uitnodigingen} mensen uit om iets te bekijken`,
+      uitleg: `Naast de eerste-bericht-stap: nodig ${dd.uitnodigingen} mensen uit om iets kort te bekijken. Dit zijn mensen waarmee je al even in gesprek bent, waarvan je weet wat ze bezighoudt, of waar je sponsor je bij kan ondersteunen.\n\nWAT IS UITNODIGEN PRECIES?\n\nNiet 'plan een meeting'. Wel: de vraag stellen "sta je open om iets kort te bekijken?". Als ze JA zeggen, deel je de link (film, one-pager, of homepage). Dat is het einde van jouw uitnodig-handeling, hun werk begint dan.\n\nLoop je vast bij het bericht? Vraag de Mentor: "Schrijf een uitnodiging voor [naam] die [context]". Of overleg met je sponsor.\n\nZodra je de link hebt gedeeld, vertel het aan de Spraak-FAB: "Ik heb [naam] uitgenodigd en de link gestuurd". De pijplijn-fase wordt automatisch op 'uitgenodigd' gezet. Vanaf nu is het wachten op signaal dat ze hebben gekeken.`,
       verplicht: true,
       actieRoute: "/namenlijst",
       uitnodigHelpKnoppen: true,
     },
+
+    // --- Stap D: openstaande follow-ups ---
+    {
+      id: "dag3-openstaande-followups",
+      label: "🔄 Doe je openstaande follow-ups vandaag",
+      uitleg: `Mensen die jouw uitnodiging hebben aangenomen EN inmiddels de film, one-pager of presentatie hebben gezien, staan op opvolging te wachten. Geen vast getal vandaag, dat hangt af van hoeveel mensen je in deze fase hebt.\n\nOpen je namenlijst en filter op fase 'one-pager', 'presentatie' of 'follow-up'. Wie staat er open?\n\nDE OPENINGSZIN BIJ EEN FOLLOW-UP:\n\n"Wat spreekt je hier het meeste in aan?"\n\nDeze vraag richt de aandacht op wat hen RAAKT, niet op kritische beoordeling. Vermijd "wat vond je ervan?" — dat lokt vaak negatieve focus uit.\n\nDe vraag opent de echte follow-up-flow:\n1. Peil wat het meeste aansprak\n2. Maak eventuele twijfel helder (Feel-Felt-Found)\n3. Stel closing-vragen, geef richting\n4. Doel-Tijd-Termijn: laat ze hun eigen motivatie uitspreken\n5. Volgende stap: plan of eerste stap\n\nIemand kan in deze follow-up-fase meerdere momenten doorlopen. Geen druk om in één gesprek af te ronden. Wel: blijf eerlijk en consistent terugkomen.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap E: stories + reageren op anderen ---
     {
       id: "dag3-stories",
       label: "📱 1 tot 3 stories plaatsen + reageren op anderen",
-      uitleg: `Deel 1 tot 3 momenten uit je dag op Instagram of Facebook (stories, niet feed). Een ontbijt, een wandeling, een rustig moment, een blije gedachte. Geen verkoop, geen 'kom in m'n business'. Gewoon laten zien dat je leeft. Mensen worden door wat ze zien aangetrokken, niet door wat ze lezen.\n\nDaarnaast: reageer ECHT op een paar stories van anderen. Geen '👏👏👏' maar 2-3 zinnen die laten zien dat je hun moment hebt gezien. Zo blijf je in beeld zonder iets te pushen.\n\nDit kost je 5-10 minuten en bouwt zichtbaarheid op een rustige, respectvolle manier.`,
+      uitleg: `Deel 1 tot 3 momenten uit je dag op Instagram of Facebook (stories, niet feed). Een ontbijt, een wandeling, een rustig moment, een blije gedachte. Geen verkoop, geen "kom in m'n business". Gewoon laten zien dat je leeft. Mensen worden door wat ze zien aangetrokken, niet door wat ze lezen.\n\nDaarnaast: reageer ECHT op een paar stories van anderen. Geen "👏👏👏" maar 2-3 zinnen die laten zien dat je hun moment hebt gezien. Zo blijf je in beeld zonder iets te pushen.\n\nDit kost je 5-10 minuten en bouwt zichtbaarheid op een rustige, respectvolle manier.`,
       verplicht: true,
     },
+
+    // --- Sponsor-checkin (optioneel) ---
     {
       id: "dag3-sponsor-checkin",
       label: "💬 Korte sponsor-checkin",
       uitleg:
-        "30 seconden. Stuur je sponsor 1 bericht: hoeveel nieuwe contacten je vandaag hebt gelegd en hoeveel uitnodigingen je hebt verstuurd. Sponsor weet dat je beweegt, jij voelt de lijn naar boven open. Niets uitgebreids, gewoon even een update.",
+        "30 seconden. Stuur je sponsor 1 bericht: hoeveel nieuwe namen je vandaag hebt toegevoegd, hoeveel eerste berichten je hebt gestuurd en hoeveel uitnodigingen je hebt geplaatst. Sponsor weet dat je beweegt, jij voelt de lijn naar boven open.",
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
+
+    // --- Teams-administratie (eenmalig, niet tempo-aware) ---
     {
       id: "dag3-teams-admin",
       label: "📋 Teams-administratiesysteem aanmaken",
