@@ -42,6 +42,10 @@ export async function updateSession(request: NextRequest) {
     "/sandbox",
     // Prospect ziet hier de film via share-token, geen login nodig.
     "/prospect-film/",
+    // Pro-uitnodiging-one-pager voor professionele ondernemers
+    // (coaches, therapeuten, beauty-pro's). Deelbaar via WhatsApp
+    // of e-mail-link, geen account nodig.
+    "/pro-uitnodiging",
   ];
   const isPublicRoute = publicRoutes.some((r) => pathname.startsWith(r));
 
