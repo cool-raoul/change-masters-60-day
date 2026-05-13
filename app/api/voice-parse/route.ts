@@ -336,12 +336,20 @@ Datum: als gebruiker zegt "vandaag" → vandaag. "Gisteren" → -1 dag. "Vorige 
 
 REGEL 1, PIPELINE_FASE VERANDER JE ALLEEN BIJ EXPLICIETE SIGNALEN
 Verander pipeline_fase alleen als de gebruiker expliciet een status-wijziging vertelt. Triggers per fase:
+- → "in_gesprek": "ik heb een gesprek gestart met X", "ik ben met X in gesprek", "ik heb X aangesproken", "ik heb X benaderd", "ik heb X gedm't / geappt / gebeld over [de business / dit / Lifeplus / ELEVA / wat ik doe]", "X reageerde op m'n bericht", "ik heb X gepolst", "ik heb het thema [business/extra inkomen/eigen baas] aangekaart bij X". GEBRUIK DEZE FASE altijd wanneer de gebruiker zegt dat ze CONTACT hebben gelegd of EEN GESPREK zijn gestart met iemand uit de prospect-fase, ook al is er nog geen uitnodiging voor een presentatie. Dit is de standaard-promotie van prospect naar het volgende niveau zodra er een echt gesprek loopt.
 - → "uitgenodigd": "heb X uitgenodigd", "X komt [op datum] naar [presentatie / event / gesprek / meeting / kennismaking]", "X heeft toegezegd", "X is aangemeld voor ...", "X gaat met me mee naar ...", "X doet mee aan ..."
 - → "presentatie": "presentatie gegeven aan X", "X is bij de presentatie geweest", "presentatie met X gedaan"
 - → "followup": "X wil er nog over nadenken", "X vraagt bedenktijd", "X twijfelt"
 - → "shopper": "X heeft besteld", "X heeft [pakket/product] genomen" (zonder expliciet member-woord)
 - → "member": "X is klant/member geworden", "X heeft ingeschreven als member/lid/partner"
 - → "not_yet": "X heeft afgezegd", "X wil niet meer", "X is niet klaar", "X stopt ermee"
+
+KRITIEK, BIJ "GESPREK GESTART" / "CONTACT GELEGD":
+Als gebruiker zegt dat ze een GESPREK zijn gestart, iemand hebben benaderd of zomaar contact hebben gelegd met iemand die nog in "prospect" staat, dan MOET je naast een contact_log altijd ook de update_prospect-actie genereren met pipeline_fase: "in_gesprek". Dit is een actieve fase-promotie, niet "geen verandering nodig". Voorbeelden:
+- "Gesprek gestart met René" => contact_log (type:dm, "Gesprek gestart") + update_prospect(René, in_gesprek)
+- "Ik heb Pieter geappt over m'n nieuwe plan" => contact_log + update_prospect(Pieter, in_gesprek)
+- "Even Mark gebeld over de business" => contact_log + update_prospect(Mark, in_gesprek)
+LET OP: alleen promoveren als de huidige fase nog 'prospect' is. Als iemand al 'in_gesprek', 'uitgenodigd' of verder is, geen regressie en geen onnodige re-promotie.
 
 "Opvolgen", "bellen", "spreken met", "nog contact zoeken" → GEEN fase-verandering! Dit is een taak (zie REGEL 8).
 Iemand die al "member" of "shopper" is, blijft dat. Ga NOOIT terug naar "prospect", "followup" of "uitgenodigd".
