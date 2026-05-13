@@ -2,15 +2,19 @@
 // lib/academy/social-media-content.ts
 //
 // Eerste training in ELEVA Academy: 'Social Media Strategie',
-// gebaseerd op Frazer Brookes-principes, in ELEVA's anti-spam-stem.
+// in ELEVA's anti-spam-stem.
 //
 // 14 modules, 42 lessen, eigen tempo. Voor Core (prominent),
 // Sprint-na-dag-21 (prominent) en Pro (optioneel).
 //
-// Status (2026-05-13):
-//   - Alle 14 modules + 42 lessen INHOUDELIJK GESCHREVEN
-//   - Verdere polish + Brookes-eigen-training-input volgt na 12
-//     dagen wanneer Raoul zijn live-training heeft afgerond.
+// CONTENT-NOOT: bewust GEEN externe trainersnamen in de zichtbare
+// les-content. ELEVA bouwt op een synthese van publieke netwerk-
+// marketing-principes (Honest Conversation, FORM, 3-min-method,
+// NLB-formule, Loser-to-Legend, Feel-Felt-Found, lifestyle-leakage)
+// maar presenteert het als ELEVA-filosofie. Mensen leren zonder
+// dat de aandacht naar specifieke gurus verschuift. Latere
+// polish-rondes voegen verfijning toe vanuit Raouls eigen
+// vakkennis en live-trainingen.
 // ============================================================
 
 import type { AcademyTraining, AcademyLes } from "./types";
@@ -28,7 +32,7 @@ const M1: AcademyLes[] = [
 
 Voor netwerk-marketing maakt dat het krachtigste medium ooit. Niet vanwege de cijfers (volgers, likes, views), maar vanwege wat de cijfers wegmoffelen: **echte conversaties met mensen die je anders nooit had ontmoet**.
 
-Frazer Brookes noemt het de "coffee shop conversation" filosofie. Stel je voor dat je elke ochtend naar dezelfde koffietent loopt. Je zit, kijkt om je heen, ziet bekenden, knoopt een praatje aan. Je verkoopt niets. Je toont alleen wie je bent en je vraagt hoe het met de ander gaat. Dat is wat social media zou moeten zijn voor jou.
+Denk aan de "coffee shop conversation" filosofie. Stel je voor dat je elke ochtend naar dezelfde koffietent loopt. Je zit, kijkt om je heen, ziet bekenden, knoopt een praatje aan. Je verkoopt niets. Je toont alleen wie je bent en je vraagt hoe het met de ander gaat. Dat is wat social media zou moeten zijn voor jou.
 
 Het probleem is dat de meeste mensen social media gebruiken als een **megafoon** in plaats van als een **koffietent**. Ze posten "ik zoek 5 mensen die..." of "stuur me een 1 als je geïnteresseerd bent in extra inkomen". Dat is roepen. Mensen voelen het van mijlen ver en negeren het.
 
@@ -60,7 +64,7 @@ Het probleem is dat de meeste mensen social media gebruiken als een **megafoon**
 
 **Conversators** kijken om zich heen. Zij praten MET mensen. Ze stellen vragen, reageren oprecht op stories van anderen, sturen 1-op-1 berichten die ook echt 1-op-1 zijn. Ze tellen hoeveel echte gesprekken ze hebben gevoerd. Het voelt minder spectaculair, maar het bouwt aan iets dat blijft.
 
-Frazer Brookes is hier scherp over: **95% is een broadcaster, 95% krijgt geen serieuze resultaten**. De 5% die wel resultaten boekt zijn de conversators.
+De cijfers zijn scherp: **95% is een broadcaster, en 95% krijgt geen serieuze resultaten**. De 5% die wel resultaten boekt zijn de conversators.
 
 **Waarom werkt broadcast niet meer?**
 
@@ -88,7 +92,7 @@ En hoeveel daarvan ben je **aan het maken** in plaats van **aan het consumeren**
 
 Voor de meeste mensen is dat 0%. Pure consumptie. Doom-scrolling. Andermans levens kijken zonder iets bij te dragen. Dat voelt alsof je iets doet op social media, maar je bouwt aan andermans business, niet aan die van jezelf.
 
-Frazer Brookes' regel: **80% van je social-media-tijd zou creating moeten zijn, 20% consuming**.
+De regel die werkt: **80% van je social-media-tijd zou creating moeten zijn, 20% consuming**.
 
 **Wat is creating?**
 
@@ -295,7 +299,7 @@ const M3: AcademyLes[] = [
 
 **Hoe vind je jouw drie?**
 
-Frazer Brookes' formule:
+De drie-pillars formule:
 
 - **Pillar 1: Wat je weet** (jouw vakgebied, jouw expertise)
 - **Pillar 2: Wie je bent** (jouw lifestyle, persoonlijkheid)
@@ -742,7 +746,7 @@ const M6: AcademyLes[] = [
 
 "Volg-volg-volg" massaal volgen in de hoop dat mensen terug-volgen. Algoritmes herkennen dit, je krijgt een tijdelijke ban. En zelfs als het werkt, krijg je connecties zonder substantie.
 
-**Frazer's NLB-aanpak:**
+**De NLB-aanpak:**
 
 Per dag voeg je 1-5 nieuwe mensen toe (afhankelijk van je tempo). Maar gericht: mensen die in je niche passen, niet random.
 
@@ -824,7 +828,7 @@ Het verschil is dat de eerste een gesprek opent. De tweede is zinloos applaus.
 
 **De 3-comments-regel per dag:**
 
-Frazer's advies: kies 3 mensen per dag uit je netwerk en schrijf een ECHTE comment bij hun laatste post. Niet meer, geen scroll-comments. Drie diepe.
+De 3-comments-discipline: kies 3 mensen per dag uit je netwerk en schrijf een ECHTE comment bij hun laatste post. Niet meer, geen scroll-comments. Drie diepe.
 
 Over een maand heb je 90 mensen ECHT gezien. Dat zijn 90 mensen die voelen dat jij aandacht hebt voor hen.
 
@@ -866,7 +870,7 @@ Terecht. Een verkeerde eerste DM kan een relatie verpesten voor altijd.
 
 Dit voelt als koud bellen. Direct in de pitch-modus. 90% reageert niet, en als ze reageren is het defensief.
 
-**Frazer's regel voor de Begin-DM:**
+**De regel voor de Begin-DM:**
 
 Geen pitch. Geen vraag over je business. Geen "info-stuk". Wel een **echte vraag op basis van iets dat ze hebben gepost of gezegd**.
 
@@ -913,7 +917,7 @@ const M7: AcademyLes[] = [
     sleutel: "7.1",
     titel: "Wat doe je in 3 ochtend-minuten",
     leestijdMinuten: 8,
-    inhoud: `De 3-Minutes Method is Frazer's belangrijkste dagelijkse ritueel: 3 minuten 's ochtends, 3 's middags, 3 's avonds. Negen minuten in totaal, en je hebt al meer gedaan dan 95% van de mensen die "uren bezig waren met social media".
+    inhoud: `De 3-Minutes Method is een eenvoudig dagelijks ritueel: 3 minuten 's ochtends, 3 's middags, 3 's avonds. Negen minuten in totaal, en je hebt al meer gedaan dan 95% van de mensen die "uren bezig waren met social media".
 
 **Vandaag de ochtend-sessie. Wat doe je in die 3 minuten?**
 
@@ -1000,7 +1004,7 @@ Niets. Sla over. Doe de volgende. Stress je niet over consistency-streaks. Wat t
 
 **Wat als je veel langer wilt doorgaan dan 3 minuten?**
 
-Mag. Maar zet dan een timer. Anders ga je oneindig, en op een gegeven moment word je een consumer. Frazer's regel: maximaal 30 minuten per sessie, max 3 sessies per dag = 90 minuten max.
+Mag. Maar zet dan een timer. Anders ga je oneindig, en op een gegeven moment word je een consumer. Goede grens: maximaal 30 minuten per sessie, max 3 sessies per dag = 90 minuten max.
 
 **Sneller patroon na 30 dagen:**
 
@@ -1029,7 +1033,7 @@ Dag 5-10: streak gebroken, je geeft op.
 
 Klassieke "alles of niets"-trap.
 
-**Frazer's regel: nooit twee dagen achter elkaar overslaan**
+**De gulden regel: nooit twee dagen achter elkaar overslaan**
 
 Eén dag missen mag. Niet erg. Pak het de volgende dag op.
 
@@ -1120,7 +1124,7 @@ Mensen denken dat stories alleen voor "kleine momenten" zijn. Maar je kunt er oo
 
 Als je 1 ding moet kiezen tussen "perfecte feed-post" en "5 lukrake stories", kies STORIES. Elke keer.
 
-Frazer Brookes zegt: *stories zijn het bloed van je social media, posts zijn de skeletten*. Zonder bloed sterft het skelet.`,
+Een mooie spreuk om te onthouden: *stories zijn het bloed van je social media, posts zijn de skeletten*. Zonder bloed sterft het skelet.`,
     oefening:
       "Tel hoeveel stories je in de afgelopen 7 dagen hebt geplaatst. Was het minder dan 14 (= 2 per dag)? Plaats deze week elke dag minstens 3 stories. Maak niet, gewoon momenten delen.",
   },
@@ -1460,7 +1464,7 @@ const M10: AcademyLes[] = [
     sleutel: "10.1",
     titel: "Wat is lifestyle-leakage precies",
     leestijdMinuten: 8,
-    inhoud: `**Lifestyle-leakage** is een term die Frazer Brookes gebruikt voor: laten zien hoe jij leeft, zonder daarvan een pitch te maken.
+    inhoud: `**Lifestyle-leakage** is de kunst om te laten zien hoe jij leeft, zonder daarvan een pitch te maken.
 
 Het is de antithese van direct verkopen. In plaats van te zeggen "kijk wat ik aanbied", laat je zien "kijk hoe ik leef". Mensen worden door wat ze zien aangetrokken, niet door wat ze lezen.
 
@@ -1530,7 +1534,7 @@ Jouw verhaal gaat over JOU. Wat je hebt meegemaakt, wat je hebt geleerd, hoe je 
 
 Onderzoek na onderzoek bewijst: jouw verhaal. Mensen kopen verbinding, herkenning, hoop. Niet ingrediënten.
 
-**De Loser-to-Legend-structuur (Brookes):**
+**De Loser-to-Legend-structuur:**
 
 Een verhaal-template die altijd werkt:
 
@@ -1721,7 +1725,7 @@ Goeie regel: voor elke vraag deel je 1 zin over jezelf. Symmetrie maakt het een 
     sleutel: "11.2",
     titel: "De FORM-methode in een DM-gesprek",
     leestijdMinuten: 8,
-    inhoud: `FORM is een acroniem dat helpt om in een DM-gesprek of telefoongesprek de juiste richting te vinden. Bedacht door Eric Worre, geadopteerd door Brookes.
+    inhoud: `FORM is een beproefd acroniem dat helpt om in een DM-gesprek of telefoongesprek de juiste richting te vinden.
 
 **F = Family** (gezin, familie)
 **O = Occupation** (werk, beroep, dagelijks ritme)
@@ -1929,7 +1933,7 @@ Belangrijk: bij een "nee" verbreek je niet het contact. Je gaat verder als vrien
     sleutel: "12.2",
     titel: "De Honest Conversation: eerlijk vooraf zeggen wat het is",
     leestijdMinuten: 9,
-    inhoud: `De Honest Conversation (Worre + Brookes) is de uitnodiging-stijl die het beste werkt in onze tijd. De kern: je zegt EERLIJK wat het is, geen mysterieus gedoe.
+    inhoud: `De Honest Conversation is de uitnodiging-stijl die het beste werkt in onze tijd. De kern: je zegt EERLIJK wat het is, geen mysterieus gedoe.
 
 **De fout: mysterieus zijn**
 
@@ -2086,7 +2090,7 @@ const M13: AcademyLes[] = [
     leestijdMinuten: 9,
     inhoud: `Wanneer iemand een bezwaar of twijfel uitspreekt, is de natuurlijke reactie van veel mensen: tegenargumenten geven. Dat werkt zelden. Wat WEL werkt: Feel-Felt-Found.
 
-**De techniek (Worre):**
+**De techniek:**
 
 - **Feel:** "Ik begrijp hoe je dat voelt" (ERKENNING)
 - **Felt:** "Veel mensen voelden dat in het begin ook" (NORMALISERING)
@@ -2283,7 +2287,7 @@ Dat is de zin die het verschil maakt. Je geeft ze toestemming om OOIT terug te k
 
 **De statistiek waar je je aan moet houden:**
 
-Brookes en Worre zeggen beide: 1 op 10 mensen die je benadert wordt iets (klant of partner). 1 op 10. Dat betekent 9 nee's per ja.
+De geijkte verhouding in netwerk-marketing: 1 op 10 mensen die je benadert wordt iets (klant of partner). 1 op 10. Dat betekent 9 nee's per ja.
 
 Als je deze 9 nee's allemaal probeert om te draaien, raken die 9 mensen weg uit je leven. Inclusief de paar die anders later "ja" zouden zijn geworden.
 
@@ -2329,7 +2333,7 @@ Deze cijfers laten zien of jouw social-media-acties leiden tot echte business-vo
 
 **De 1-7-30-365 metriek:**
 
-Frazer Brookes' framework:
+Een handig framework:
 
 - Per dag: hoeveel echte interacties (comments, DM's, story-replies)?
 - Per week: hoeveel nieuwe DM-gesprekken gestart?

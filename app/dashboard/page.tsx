@@ -540,6 +540,35 @@ export default async function DashboardPagina() {
           </div>
         )}
 
+      {/* Academy-tegel: pas zichtbaar NA dag 21. Idee (afspraak Raoul,
+          2026-05-13): in de eerste 21 Sprint-dagen moeten mensen niet
+          afgeleid worden met training, focus blijft op de playbook.
+          Daarna mag de uitnodiging naar diepere social-media-training
+          komen, in eigen tempo, optioneel. */}
+      {dag > 21 && (
+        <Link
+          href="/academy/social-media"
+          className="block rounded-xl bg-gradient-to-br from-purple-900/30 to-cm-surface border-2 border-purple-500/40 px-5 py-4 hover:border-purple-400/60 transition-colors"
+        >
+          <div className="flex items-start gap-3">
+            <span className="text-3xl flex-shrink-0">📚</span>
+            <div className="flex-1">
+              <p className="text-purple-300 text-xs font-semibold uppercase tracking-wider">
+                Klaar voor verdieping?
+              </p>
+              <p className="text-cm-white text-base font-display font-semibold mt-0.5">
+                Open de Academy, social media zonder spam
+              </p>
+              <p className="text-cm-white/70 text-xs mt-1 leading-relaxed">
+                14 modules, 42 lessen, eigen tempo. Bouw een rustige
+                aanwezigheid op socials, vind nieuwe mensen zonder pitches.
+              </p>
+            </div>
+            <span className="text-purple-300 font-bold text-lg self-center">→</span>
+          </div>
+        </Link>
+      )}
+
       {/* Volgende beste actie-radar: top-3 prospects om vandaag op te
           volgen op basis van recente signalen + funnel-fase + stilte-tijd.
           Verbergt zich automatisch als er niets urgents is. */}
