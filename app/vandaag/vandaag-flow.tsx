@@ -354,7 +354,7 @@ function VandaagFlowInner({
                   voorlopig) zodat de member ziet welke variant van de
                   taken hieronder wordt getoond. Sluiten zich ook andere
                   dagen aan tempo-systeem aan, dan kan dit blok generieker. */}
-              {commitmentUren && dag.nummer === 3 && (
+              {commitmentUren && (dag.nummer === 3 || dag.nummer === 4) && (
                 <p className="text-cm-white/55 text-[11px]">
                   Aantallen aangepast op jouw{" "}
                   <span className="text-cm-gold/80 font-medium">

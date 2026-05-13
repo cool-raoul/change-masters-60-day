@@ -8,11 +8,12 @@
 //             gewoon hun eerste stappen hebben gedaan').
 //   - Dag 2 = niet tempo-aware in deze ronde (de '20 namen'-stap
 //             heeft al de drie opties: geheugen / vcard / handmatig).
-//   - Dag 3 = EERSTE tempo-aware dag (proof-of-concept).
-//             Aantallen schalen mee: nieuwe namen, mensen aanspreken
-//             op socials (-> in_gesprek), uitnodigingen.
-//   - Dag 4-21 = nog niet tempo-aware (volgende ronde uitrollen
-//                op basis van Raouls review van dag 3).
+//   - Dag 3 = tempo-aware. Standaard-stappen-model: A+B+C+D+E.
+//   - Dag 4 = tempo-aware. Standaard-stappen-model + dag-specifieke
+//             admin-taken (aanpak-kiezen per prospect, bestellinks
+//             koppelen). watJeLeert blijft de uitnodig-les met de
+//             4-stappen-structuur die de member vandaag toepast.
+//   - Dag 5-21 = nog niet tempo-aware (volgende rondes).
 //
 // De helper neemt een Dag-object + commitment_uren en retourneert
 // een nieuwe Dag waarin de tempo-afhankelijke taken zijn
@@ -135,11 +136,112 @@ function bouwDag3VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
 }
 
 /**
+ * Tempo-specifieke vervangings-data voor dag 4.
+ *
+ * Dag 4-thema: 'Vandaag leer je uitnodigen, 4 stappen die werken'.
+ * De les zelf staat in watJeLeert (in dagen.ts, statisch). Hier
+ * staat de UITVOERINGS-kant: vandaag pas je actief toe wat je leest.
+ *
+ * Stappen (dezelfde A-B-C-D-E structuur als dag 3 + dag-4-specifiek):
+ *
+ *   A. X namen toevoegen (consistente dagritme)
+ *   B. X eerste berichten sturen (dezelfde of buffer)
+ *   C. X uitnodigingen met de 4-stappen-structuur (vandaag pas
+ *      je actief toe wat je hebt geleerd)
+ *   D. Voor wie 'ja' zei: kies de aanpak (3-weg of Mini-ELEVA).
+ *      Eenmalige actie per prospect, niet tempo-afhankelijk
+ *      (afhankelijk van hoeveel ja's je hebt).
+ *   E. Doe je openstaande follow-ups
+ *   F. 1 tot 3 stories + reageren
+ *   + Sponsor-checkin (optioneel)
+ *   + Bestellinks koppelen (eenmalig admin)
+ */
+function bouwDag4VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
+  const dd = berekenDagdoelen(uren);
+
+  return [
+    // --- Stap A: nieuwe namen toevoegen ---
+    {
+      id: "dag4-namen-toevoegen",
+      label: `📲 Voeg ${dd.contacten} nieuwe namen toe aan je lijst`,
+      uitleg: `Dagritme blijft: ${dd.contacten} nieuwe mensen toevoegen aan je netwerk-overzicht. Mensen uit je telefoon die je nog niet hebt benaderd, social-media-vrienden waar je al een tijd niet mee hebt gesproken, mensen die je dagelijks tegenkomt, of nieuwe verbindingen via socials. Eén woord context per persoon is genoeg.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap B: eerste berichten ---
+    {
+      id: "dag4-eerste-berichten",
+      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht`,
+      uitleg: `Pak ${dd.contacten} mensen uit je lijst en stuur een persoonlijk eerste bericht. Geen pitch, gewoon een menselijke vraag waar je oprecht nieuwsgierig naar bent. Spraak-FAB: "Ik heb een gesprek gestart met [naam]" zet ze automatisch op fase 'in gesprek'.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap C: uitnodigingen met de 4-stappen-structuur (vandaag's les) ---
+    {
+      id: "dag4-uitnodigingen-4stappen",
+      label: `📨 ${dd.uitnodigingen} uitnodigingen met de 4-stappen-structuur`,
+      uitleg: `Vandaag pas je actief toe wat je leest in 'Wat je leert' hierboven. Voor elke uitnodiging:\n\n1. COMPLIMENT of erkenning ('je bent iemand die...')\n2. UITNODIGEN ('wil je het zien?'), kies de variant die past bij hoe warm de prospect is (direct / indirect / super-indirect)\n3. PLAN met twee opties ('vanavond of morgen?'), geen open vraag\n4. Optionele opener bij business-prospects ('ik heb weinig tijd, maar...')\n\nDoel: ja op het KIJKMOMENT, niet ja op jou. Als de prospect ja zegt, deel je de link. De pijplijn-fase wordt 'uitgenodigd'. Vertel het aan de Spraak-FAB: "Ik heb [naam] uitgenodigd en de link gestuurd".\n\nLoop je vast? Vraag de Mentor: "Schrijf een uitnodiging voor [naam] die [context]".`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+      uitnodigHelpKnoppen: true,
+    },
+
+    // --- Stap D: aanpak kiezen voor wie ja zei ---
+    {
+      id: "dag4-aanpak-kiezen",
+      label: "🧭 Voor wie 'ja' zei: kies de aanpak (3-weg of Mini-ELEVA)",
+      uitleg: `Voor elke prospect die ja zei tegen een kijkmoment: open hun kaart in de namenlijst en kies één van twee paden via het keuze-blok bovenaan.\n\n🤝 3-WEG-GESPREK voor: warme prospects, mensen die snel willen schakelen, kort traject mogelijk, persoonlijk contact passend. Stappenplan staat klaar achter de '3-weg'-knop op de kaart. Op dag 7 verdiep je dit verder.\n\n✨ MINI-ELEVA voor: twijfelaars, prospects met druk leven, mensen die eerst zelf willen kijken. 14 dagen eigen toegang, welkomstvideo's, AI-mentor, chat met jou en je sponsor. Klik 'Mini-ELEVA-uitnodiging maken' op de kaart.\n\nNiet zeker? Druk op 'Overleg met sponsor' in het keuze-blok, dan opent een vooringevulde WhatsApp aan je sponsor met de prospect-context.\n\nJe hoeft niet voor iedereen vandaag te kiezen, alleen voor de mensen die je deze week serieus opvolgt.`,
+      verplicht: false,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap E: openstaande follow-ups ---
+    {
+      id: "dag4-openstaande-followups",
+      label: "🔄 Doe je openstaande follow-ups vandaag",
+      uitleg: `Mensen die de film, one-pager of presentatie hebben gezien wachten op opvolging. Geen vast getal vandaag, afhankelijk van wie er klaar staat in je pijplijn.\n\nOpen je namenlijst en filter op fase 'one-pager', 'presentatie' of 'follow-up'.\n\nDE OPENINGSZIN BIJ EEN FOLLOW-UP:\n\n"Wat spreekt je hier het meeste in aan?"\n\nVraag op het positieve dat hen RAAKT, niet op kritische beoordeling. Vermijd "wat vond je ervan?".\n\nDaarna volg je de flow: peil wat aansprak → twijfel helder maken → closing-vragen → Doel-Tijd-Termijn → volgende stap.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap F: stories + reageren ---
+    {
+      id: "dag4-stories",
+      label: "📱 1 tot 3 stories plaatsen + reageren op anderen",
+      uitleg: `Deel 1 tot 3 momenten uit je dag op Instagram of Facebook (stories, niet feed). Geen verkoop, gewoon laten zien dat je leeft. Plus echte reacties op stories van anderen, 2-3 zinnen per reactie. Geen "👏👏👏".`,
+      verplicht: true,
+    },
+
+    // --- Sponsor-checkin (optioneel) ---
+    {
+      id: "dag4-sponsor-checkin",
+      label: "💬 Korte sponsor-checkin",
+      uitleg:
+        "30 seconden. Stuur je sponsor 1 bericht: hoe ging het toepassen van de 4-stappen-uitnodiging vandaag? Voelde de structuur natuurlijk of nog stroef? Eén zin.",
+      verplicht: false,
+      inlineEmbed: "sponsor-melding",
+    },
+
+    // --- Bestellinks koppelen (eenmalig, admin) ---
+    {
+      id: "dag4-bestellinks",
+      label: "🔗 Bestellinks koppelen aan ELEVA",
+      uitleg:
+        "Plak per pakket je Lifeplus-webshop-URL in ELEVA. Daarna gebruikt ELEVA die links automatisch in productadvies-flows. Vraag je sponsor om mee te kijken voor de juiste shop-product-pagina's per pakket.",
+      verplicht: false,
+      actieRoute: "/instellingen/bestellinks",
+      filmSlug: "onboarding-stap-9-bestellinks",
+    },
+  ];
+}
+
+/**
  * Past tempo-specifieke vervangingen toe op een dag.
  *
- * Voor dagen met tempo-aware logica (momenteel alleen dag 3):
- * vervangt vandaagDoen + eventueel titel. Voor andere dagen
- * passthrough.
+ * Voor dagen met tempo-aware logica (momenteel dag 3 + dag 4):
+ * vervangt vandaagDoen. Voor andere dagen passthrough.
  *
  * @param dag             Basis-dag uit DAGEN[].
  * @param commitmentUren  Het tempo dat de user heeft gekozen. Null
@@ -160,7 +262,14 @@ export function pasTempoToeOpDag(
     };
   }
 
-  // Andere dagen: voorlopig nog niet tempo-aware. Hier komen na
-  // Raouls review van dag 3 de varianten voor dag 4-21 te zien.
+  if (dag.nummer === 4) {
+    return {
+      ...dag,
+      vandaagDoen: bouwDag4VandaagDoen(commitmentUren),
+    };
+  }
+
+  // Andere dagen: voorlopig nog niet tempo-aware. Hier komen volgende
+  // rondes de varianten voor dag 5-21 te zien.
   return dag;
 }
