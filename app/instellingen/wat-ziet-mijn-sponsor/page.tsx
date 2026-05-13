@@ -22,7 +22,7 @@ const ZICHTBAAR = [
     icoon: "👥",
     label: "Pipeline-fases van je prospects",
     uitleg:
-      "Sponsor ziet hoeveel mensen je in 'prospect', 'uitgenodigd', 'one-pager', 'presentatie', 'follow-up' hebt staan. Niet de namen of details, wel de getallen, om te coachen waar je vastloopt.",
+      "Sponsor ziet hoeveel mensen je in 'prospect', 'in gesprek', 'uitgenodigd', 'one-pager', 'presentatie', 'follow-up' hebt staan. Niet de namen of details, wel de getallen, om te coachen waar je vastloopt.",
   },
   {
     icoon: "🟢",

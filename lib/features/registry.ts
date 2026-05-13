@@ -79,7 +79,7 @@ export const FEATURES: Feature[] = [
     titel: "Namenlijst, je pipeline visueel in beeld",
     lead: "Al je prospects visueel, van eerste contact tot member.",
     bullets: [
-      "Sleep prospects tussen fases: prospect → uitgenodigd → presentatie → follow-up → shopper → member",
+      "Sleep prospects tussen fases: prospect → in gesprek → uitgenodigd → presentatie → follow-up → shopper → member",
       "Elke kaart toont prioriteit, laatste contact, volgende stap",
       "Klik op een naam voor alle details, notities en contact-historie",
       "Sorteer zelf binnen een fase, belangrijkste bovenaan",

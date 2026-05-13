@@ -126,7 +126,7 @@ const FEATURES: Feature[] = [
     emoji: "👥",
     titel: "Namenlijst (Pipeline-weergave)",
     watIsHet:
-      "Al je prospects in 1 overzicht, gesorteerd per fase: lead → uitgenodigd → one-pager → presentatie → shopper → member. Sleep tussen fases of klik door.",
+      "Al je prospects in 1 overzicht, gesorteerd per fase: prospect → in gesprek → uitgenodigd → one-pager → presentatie → follow-up → shopper → member. Sleep tussen fases of klik door.",
     watHebJeEraan:
       "Je ziet in 1 oogopslag waar je staat. Hoeveel mensen in welke fase? Waar lekt mijn pijplijn?",
     waar: "Menu → Namenlijst",

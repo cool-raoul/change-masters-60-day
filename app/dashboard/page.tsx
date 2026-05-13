@@ -344,10 +344,11 @@ export default async function DashboardPagina() {
   }
 
   const faseKleuren: Record<string, string> = {
-    prospect: "text-[#CCCCCC]", uitgenodigd: "text-[#4A9EDB]",
-    one_pager: "text-[#7A6ADB]", presentatie: "text-[#9A6ADB]",
-    followup: "text-cm-gold", not_yet: "text-[#DB6A6A]",
-    shopper: "text-[#4ACB6A]", member: "text-[#E8C96B]",
+    prospect: "text-[#CCCCCC]", in_gesprek: "text-[#D4A574]",
+    uitgenodigd: "text-[#4A9EDB]", one_pager: "text-[#7A6ADB]",
+    presentatie: "text-[#9A6ADB]", followup: "text-cm-gold",
+    not_yet: "text-[#DB6A6A]", shopper: "text-[#4ACB6A]",
+    member: "text-[#E8C96B]",
   };
 
   const voornaam = ((profile as any)?.full_name ?? "").split(" ")[0] ?? "";

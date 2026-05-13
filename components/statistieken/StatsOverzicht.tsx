@@ -224,9 +224,13 @@ export function StatsOverzicht({ alleStats, pipelineCounts, dag }: Props) {
     return weken;
   }, [dagData]);
 
-  // Pipeline funnel data
+  // Pipeline funnel data. Volgorde matcht de werkelijke flow:
+  // prospect -> in_gesprek -> uitgenodigd -> one_pager -> presentatie ->
+  // follow-up -> member/shopper. 'in_gesprek' (2026-05-13) toegevoegd
+  // als nieuwe tussenstap; warm zandkleur signaleert 'warmte op gang'.
   const funnelData = useMemo(() => [
     { name: "Prospect", value: pipelineCounts["prospect"] || 0, fill: "#CCCCCC" },
+    { name: "In gesprek", value: pipelineCounts["in_gesprek"] || 0, fill: "#D4A574" },
     { name: "Uitgenodigd", value: pipelineCounts["uitgenodigd"] || 0, fill: "#4A9EDB" },
     { name: "One Pager", value: pipelineCounts["one_pager"] || 0, fill: "#7A6ADB" },
     { name: "Presentatie", value: pipelineCounts["presentatie"] || 0, fill: "#9A6ADB" },
