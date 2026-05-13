@@ -232,8 +232,10 @@ export default function OnboardingPagina() {
     // de coach). De onboarding is bewust opgezet als 'eerste deel van
     // dag 1', dus iemand moet zich het laatste stuk van dag 1 (eerste
     // namen + sponsor-bericht) als natuurlijk vervolg ervaren, niet
-    // als 'een nieuwe dag'.
-    router.push("/vandaag");
+    // als 'een nieuwe dag'. De ?via=onboarding query-param zorgt dat
+    // /vandaag een welkomstbanner kan tonen die deze continuiteit
+    // expliciet bevestigt.
+    router.push("/vandaag?via=onboarding");
     router.refresh();
   }
 

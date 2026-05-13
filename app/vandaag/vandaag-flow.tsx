@@ -4,7 +4,7 @@ import { celebrate } from "@/lib/celebrate";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { FilmInBlok } from "@/components/film/FilmInBlok";
 import { UitnodigHelpKnoppen } from "@/components/vandaag/UitnodigHelpKnoppen";
@@ -98,6 +98,14 @@ function VandaagFlowInner({
 }: Props) {
   const { editModusAan } = useEditModus();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  // Welkomstbanner-flag: TRUE wanneer iemand net via de onboarding-
+  // finale knop naar /vandaag is geredirect. Vanaf onboarding/page.tsx
+  // wordt ?via=onboarding meegegeven. We tonen 'm alleen één keer (in
+  // de INTRO-stap), zodra de gebruiker doorklikt naar 'taak' verdwijnt
+  // 'ie vanzelf met de stap-wissel.
+  const komtVanOnboarding =
+    dag.nummer === 1 && searchParams?.get("via") === "onboarding";
   const blokkenOpPositie = (positie: string): Blok[] =>
     paginaBlokken[positie] ?? [];
   const [voltooidIds, setVoltooidIds] = useState<Set<string>>(
@@ -301,6 +309,23 @@ function VandaagFlowInner({
         {/* INTRO-stap */}
         {stap === "intro" && (
           <div className="space-y-6">
+            {/* Welkomstbanner: alleen als iemand net via onboarding
+                hier is geland (?via=onboarding op dag 1). Maakt de
+                continuiteit expliciet: 'je setup zit erop, dit is het
+                vervolg van dag 1', zodat het niet voelt als 'een
+                nieuwe dag begint'. Verdwijnt zodra je naar 'taak'
+                doorklikt. */}
+            {komtVanOnboarding && (
+              <div className="rounded-xl border-2 border-cm-gold bg-gradient-to-br from-cm-gold/15 to-cm-gold/5 px-5 py-4 space-y-2 shadow-gold-lg animate-fade-in">
+                <p className="text-cm-gold font-semibold text-sm flex items-center gap-2">
+                  🎉 Te gek, je setup zit erop!
+                </p>
+                <p className="text-cm-white text-sm leading-relaxed opacity-90">
+                  Dit is het vervolg van dag 1. Geen nieuwe dag, gewoon hetzelfde uur waarin je nu zit. Hieronder de laatste twee taken om je fundament écht neer te zetten: je eerste namen toevoegen en een berichtje naar je sponsor.
+                </p>
+              </div>
+            )}
+
             {/* Media-blok positie 1: bovenaan, vóór dag-titel */}
             <MediaBlokken
               paginaNamespace="sprint-dag"

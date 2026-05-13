@@ -2,6 +2,8 @@ import { createClient } from "@/lib/supabase/server";
 import { InstellingenForm } from "@/components/InstellingenForm";
 import { PresenceToggle } from "@/components/presence/PresenceToggle";
 import { SocialAccountsForm } from "@/components/instellingen/SocialAccountsForm";
+import { TempoSectie } from "@/components/instellingen/TempoSectie";
+import type { CommitmentUren } from "@/lib/dagdoelen";
 import Link from "next/link";
 import { getServerTaal, v } from "@/lib/i18n/server";
 
@@ -25,6 +27,16 @@ export default async function InstellingenPagina() {
   // Voor nu alleen founder. Later kunnen we dit verbreden naar 'leider'.
   const magFilmsBeheren = rol === "founder";
 
+  // commitment_uren staat in user_metadata (zie onboarding-stap-4).
+  // Voor de TempoSectie willen we weten of er ECHT een keuze is
+  // gemaakt (vs. niet ingesteld), dus geen fallback naar default.
+  const ruwUren = Number(
+    (user.user_metadata as { commitment_uren?: unknown } | undefined)
+      ?.commitment_uren,
+  );
+  const huidigUren: CommitmentUren | null =
+    ruwUren === 2 || ruwUren === 4 || ruwUren === 6 ? ruwUren : null;
+
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <Link href="/dashboard" className="text-cm-white opacity-60 hover:opacity-100 text-sm flex items-center gap-1 mb-4">
@@ -38,6 +50,12 @@ export default async function InstellingenPagina() {
       </div>
 
       <InstellingenForm profile={profile} email={user.email || ""} />
+
+      {/* Tempo-keuze (commitment_uren). Belangrijk: prominente plek
+          voor zowel bestaande users (die nog geen tempo hebben omdat
+          ze vóór deze feature klaar waren met onboarding) als nieuwe
+          users die later willen switchen. */}
+      <TempoSectie huidigUren={huidigUren} />
 
       {/* Social-profielen, gebruikt door /vandaag taken die naar
           Facebook / Instagram / LinkedIn verwijzen. */}
