@@ -63,6 +63,11 @@ export function Sidebar({
     { href: "/zoeken", labelKey: "nav.zoeken", icoon: "🔍" },
     { href: "/scripts", labelKey: "nav.scripts", icoon: "📋" },
     { href: "/mijn-zinnen", labelKey: "nav.zinnen", icoon: "📝" },
+    // ELEVA Academy: overkoepelende leeromgeving voor verdiepende
+    // trainingen. Eerste training is 'Social Media Strategie'
+    // (Frazer Brookes-principes). Wordt later uitgebreid met meer
+    // trainingen (leiderschap, mindset, productkennis).
+    { href: "/academy", labelKey: "nav.academy", icoon: "📚" },
     { href: "/statistieken", labelKey: "nav.statistieken", icoon: "📊" },
     { href: "/herinneringen", labelKey: "nav.herinneringen", icoon: "🔔" },
     { href: "/team", labelKey: "nav.team", icoon: "🏆" },

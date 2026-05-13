@@ -204,6 +204,10 @@ export const t: Vertalingen = {
     nl: "Herinneringen", en: "Reminders", fr: "Rappels",
     es: "Recordatorios", de: "Erinnerungen", pt: "Lembretes",
   },
+  "nav.academy": {
+    nl: "Academy", en: "Academy", fr: "Academy",
+    es: "Academy", de: "Academy", pt: "Academy",
+  },
   "nav.acties": {
     nl: "Volgende acties", en: "Next actions", fr: "Prochaines actions",
     es: "Próximas acciones", de: "Nächste Aktionen", pt: "Próximas ações",
