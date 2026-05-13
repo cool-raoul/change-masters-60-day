@@ -9,6 +9,13 @@ import { EditableTekst } from "@/components/cms/EditableTekst";
 import { MediaBlokkenClient } from "@/components/cms/MediaBlokkenClient";
 import { EditModeProvider } from "@/components/cms/EditModeContext";
 import { EditModeToggle } from "@/components/cms/EditModeToggle";
+import {
+  type CommitmentUren,
+  STANDAARD_COMMITMENT,
+  berekenDagdoelen,
+  bouwblokkenVoorTempo,
+  tempoNaam,
+} from "@/lib/dagdoelen";
 
 const SPONSOR_TEL = "https://wa.me/31612345678"; // fallback, wordt dynamisch geladen
 
@@ -22,9 +29,13 @@ export default function OnboardingPagina() {
   const [laden, setLaden] = useState(true);
   const [isPreview, setIsPreview] = useState(false);
   const [gebruikersnaam, setGebruikersnaam] = useState("");
-  const [dagdoelContacten, setDagdoelContacten] = useState(5);
-  const [dagdoelUitnodigingen, setDagdoelUitnodigingen] = useState(2);
-  const [dagdoelFollowups, setDagdoelFollowups] = useState(3);
+  // commitmentUren = het tempo dat de gebruiker kiest in stap 5 (Fundament/
+  // Bouwen/Doorbreken = 2/4/6 uur per dag). Daaruit leiden we de concrete
+  // dagdoelen af via berekenDagdoelen() in lib/dagdoelen.ts. Lichte
+  // backwards-compat: oudere users kunnen nog losse dagdoel-velden in
+  // user_metadata hebben - die negeren we, want de nieuwe waarheid is
+  // commitment_uren.
+  const [commitmentUren, setCommitmentUren] = useState<CommitmentUren | null>(null);
   const [bezig, setBezig] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [sponsorNaam, setSponsorNaam] = useState("");
@@ -105,9 +116,13 @@ export default function OnboardingPagina() {
 
       // Prioriteit: ?stap (deeplink) > preview-modus (start bij 1) > opgeslagen huidigStap
       setStap(directeStap ?? (preview ? 1 : huidigStap));
-      if (user?.user_metadata?.dagdoel_contacten) setDagdoelContacten(Number(user.user_metadata.dagdoel_contacten));
-      if (user?.user_metadata?.dagdoel_uitnodigingen) setDagdoelUitnodigingen(Number(user.user_metadata.dagdoel_uitnodigingen));
-      if (user?.user_metadata?.dagdoel_followups) setDagdoelFollowups(Number(user.user_metadata.dagdoel_followups));
+      // Hydrateer eerder gekozen tempo, indien aanwezig. Zo blijft de
+      // keuze zichtbaar gemarkeerd als iemand terug-navigeert naar
+      // stap 5 om aan te passen.
+      const opgeslagenUren = Number(user?.user_metadata?.commitment_uren);
+      if (opgeslagenUren === 2 || opgeslagenUren === 4 || opgeslagenUren === 6) {
+        setCommitmentUren(opgeslagenUren);
+      }
       setLaden(false);
     }
     laadGegevens();
@@ -186,13 +201,31 @@ export default function OnboardingPagina() {
   }
 
   async function slaDoelOp() {
+    if (!commitmentUren) {
+      // Defensieve check, knop is disabled tot er gekozen is. Maar niet
+      // crashen als iemand toch klikt.
+      return;
+    }
     setBezig(true);
     if (!isPreview) {
+      // Afgeleide dagdoelen meteen meeschrijven naar user_metadata zodat
+      // bestaande code die direct user.user_metadata.dagdoel_contacten
+      // leest (dashboard, vandaag-flow) gewoon blijft werken. De
+      // commitment_uren is de waarheid, de losse velden zijn cache.
+      const dd = berekenDagdoelen(commitmentUren);
       await supabase.auth.updateUser({
-        data: { onboarding_stap: 99, dagdoel_contacten: dagdoelContacten, dagdoel_uitnodigingen: dagdoelUitnodigingen, dagdoel_followups: dagdoelFollowups },
+        data: {
+          onboarding_stap: 99,
+          commitment_uren: commitmentUren,
+          dagdoel_contacten: dd.contacten,
+          dagdoel_uitnodigingen: dd.uitnodigingen,
+          dagdoel_followups: dd.followups,
+        },
       });
       await slaVoortgangOp({ stap_5_doelen: true });
-      await stuurPushNaarSponsor("heeft de volledige setup afgerond en is klaar voor dag 1! 🎉");
+      await stuurPushNaarSponsor(
+        `heeft het tempo '${tempoNaam(commitmentUren)}' (${commitmentUren}u/dag) gekozen en is klaar voor dag 1! 🎉`,
+      );
     }
     setBezig(false);
     router.push("/coach");
@@ -644,12 +677,18 @@ export default function OnboardingPagina() {
             </div>
           )}
 
-          {/* ───── STAP 5: DAGDOELEN + ELEVA MENTOR FINALE (was stap 6) ─────
+          {/* ───── STAP 5: KIES JE TEMPO + ELEVA MENTOR FINALE (was dagdoelen) ─────
+              Vervangt de oude +/- knoppen voor losse dagdoelen door drie
+              concrete tempo-keuzes (Fundament/Bouwen/Doorbreken = 2/4/6
+              uur per dag). De dagdoelen worden afgeleid in
+              lib/dagdoelen.ts. Filosofie: één bewuste keuze met een
+              naam + verhaal, niet drie getallen die in het wilde weg
+              kunnen worden ingesteld.
+
               Admin-stappen (webshop, kredietformulier, Teams-administratie,
               bestellinks) zijn verplaatst naar het 21-daagse playbook.
-              Eric Worre Seven Skills komt als mindset-tip terug vanaf
-              playbook dag 5. DB-sleutels (paginaId="stap-6", stap6.*)
-              blijven ongewijzigd voor founder-override-compat. */}
+              DB-sleutels (paginaId="stap-6", stap6.*) blijven ongewijzigd
+              voor founder-override-compat. */}
           {stap === 5 && (
             <div className="space-y-6">
               <MediaBlokkenClient
@@ -663,7 +702,7 @@ export default function OnboardingPagina() {
                 <EditableTekst
                   namespace="onboarding"
                   sleutel="stap6.titel"
-                  standaard="Stel je dagdoelen in"
+                  standaard="Kies jouw tempo voor 60 dagen"
                   overrides={overrides}
                   isFounder={isFounder}
                   as="h2"
@@ -672,7 +711,7 @@ export default function OnboardingPagina() {
                 <EditableTekst
                   namespace="onboarding"
                   sleutel="stap6.intro"
-                  standaard="Wat ga jij elke dag minimaal doen? Wees realistisch."
+                  standaard="Wees eerlijk met jezelf. Liever 2 uur volhouden, dan 6 beloven en stoppen na tien dagen."
                   overrides={overrides}
                   isFounder={isFounder}
                   as="p"
@@ -682,34 +721,151 @@ export default function OnboardingPagina() {
                 />
               </div>
 
-              {/* Waarom cruciaal */}
+              {/* Waarom deze keuze ertoe doet */}
               <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
-                <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom deze stap cruciaal is</p>
+                <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom dit een keuze met een naam is</p>
                 <p className="text-cm-white text-sm leading-relaxed opacity-90">
-                  Doelen zonder getallen zijn wensen. Getallen zonder doelen zijn druk. Stel in wat je <strong className="text-cm-white">realistisch elke dag</strong> kunt halen, dan wordt het een gewoonte, geen last.
+                  Losse getallen instellen leidde tot mensen die alles op 1 zetten (waardeloos) of op 20 (niet vol te houden). Nu kies je één tempo met een filosofie erachter. De dagelijkse aantallen volgen automatisch. Geen druk, wel duidelijkheid.
+                </p>
+                <p className="text-cm-white text-sm opacity-80">
+                  🎯 Je kunt later in <strong className="text-cm-white">Instellingen</strong> altijd switchen — bijvoorbeeld van Fundament naar Bouwen als je merkt dat je meer ruimte hebt. Dat is geen falen, dat is wijsheid.
                 </p>
               </div>
 
-              <div className="card">
-                <p className="text-cm-white text-sm leading-relaxed opacity-80">Begin conservatief. Je kunt altijd meer doen. Het gaat erom dat je <strong className="text-cm-white">elke dag</strong> haalt wat je hier invult.</p>
+              {/* De drie tempo-cards */}
+              <div className="space-y-4">
+                {([2, 4, 6] as const).map((uren) => {
+                  const dd = berekenDagdoelen(uren);
+                  const blokken = bouwblokkenVoorTempo(uren);
+                  const isGekozen = commitmentUren === uren;
+                  const meta: Record<
+                    CommitmentUren,
+                    {
+                      emoji: string;
+                      voorWie: string;
+                      eersteResultaten: string;
+                      kleur: string;
+                    }
+                  > = {
+                    2: {
+                      emoji: "🌱",
+                      voorWie:
+                        "Drukke baan, gezin, of je bouwt dit naast alles wat je al hebt.",
+                      eersteResultaten: "Week 3-4",
+                      kleur: "emerald",
+                    },
+                    4: {
+                      emoji: "🔥",
+                      voorWie:
+                        "Je hebt ruimte gemaakt, je gezin weet dat dit jouw 60 dagen zijn.",
+                      eersteResultaten: "Week 2-3",
+                      kleur: "amber",
+                    },
+                    6: {
+                      emoji: "⚡",
+                      voorWie:
+                        "Geen ander werk, of je hebt 60 dagen echt vrijgemaakt. Full sprint.",
+                      eersteResultaten: "Week 1-2",
+                      kleur: "rose",
+                    },
+                  };
+                  const m = meta[uren];
+                  return (
+                    <button
+                      key={uren}
+                      type="button"
+                      onClick={() => setCommitmentUren(uren)}
+                      className={`w-full text-left rounded-xl border-2 transition-all overflow-hidden ${
+                        isGekozen
+                          ? "border-cm-gold bg-cm-gold/[0.08] shadow-gold-lg"
+                          : "border-cm-border bg-cm-surface hover:border-cm-gold/40 hover:bg-cm-surface-2"
+                      }`}
+                    >
+                      <div className="p-5 space-y-4">
+                        {/* Header van de card */}
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <p className="text-xs uppercase tracking-wider text-cm-white/50 mb-1">
+                              {uren} uur per dag
+                            </p>
+                            <h3 className="text-xl font-display font-bold text-cm-white flex items-center gap-2">
+                              <span className="text-2xl">{m.emoji}</span>
+                              {tempoNaam(uren)}
+                            </h3>
+                          </div>
+                          {isGekozen && (
+                            <span className="text-xs bg-cm-gold text-cm-on-gold font-bold px-3 py-1 rounded-full whitespace-nowrap">
+                              ✓ Gekozen
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Voor wie + eerste resultaten */}
+                        <div className="space-y-1.5">
+                          <p className="text-sm text-cm-white/85 leading-relaxed">
+                            <span className="text-cm-gold font-semibold">Voor wie:</span>{" "}
+                            {m.voorWie}
+                          </p>
+                          <p className="text-sm text-cm-white/85 leading-relaxed">
+                            <span className="text-cm-gold font-semibold">Eerste resultaten:</span>{" "}
+                            {m.eersteResultaten}
+                          </p>
+                        </div>
+
+                        {/* Dagdoelen-samenvatting */}
+                        <div className="bg-cm-surface-2 rounded-lg p-3 space-y-1">
+                          <p className="text-[10px] uppercase tracking-wider text-cm-white/50">
+                            Elke dag minimaal
+                          </p>
+                          <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-sm text-cm-white">
+                            <span>💬 {dd.contacten} contacten</span>
+                            <span>📨 {dd.uitnodigingen} uitnodigingen</span>
+                            <span>🔄 {dd.followups} follow-ups</span>
+                            <span>📱 {dd.stories} {dd.stories === 1 ? "story" : "stories"}</span>
+                          </div>
+                        </div>
+
+                        {/* Uitklap: waar gaat je tijd in zitten? Alleen tonen
+                            als deze card gekozen is, anders te druk. */}
+                        {isGekozen && (
+                          <div className="border-t border-cm-border pt-3 space-y-2">
+                            <p className="text-xs uppercase tracking-wider text-cm-white/50">
+                              Waar gaat die {uren} uur in zitten?
+                            </p>
+                            <ul className="space-y-1.5">
+                              {blokken.map((b) => (
+                                <li
+                                  key={b.naam}
+                                  className="text-xs text-cm-white/80 flex gap-2 leading-relaxed"
+                                >
+                                  <span className="flex-shrink-0">{b.emoji}</span>
+                                  <span>
+                                    <strong className="text-cm-white">
+                                      {b.duur} · {b.naam}
+                                    </strong>
+                                    <span className="text-cm-white/60">
+                                      {" "}— {b.beschrijving}
+                                    </span>
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
 
-              <div className="space-y-4">
-                {[
-                  { label: "👥 Contacten per dag", sub: "Mensen aanspreken, een DM sturen, reageren op stories", val: dagdoelContacten, setVal: setDagdoelContacten },
-                  { label: "📨 Uitnodigingen per dag", sub: "Het script sturen, iemand uitnodigen voor een gesprek", val: dagdoelUitnodigingen, setVal: setDagdoelUitnodigingen },
-                  { label: "🔄 Follow-ups per dag", sub: "Nabellen, terugkomen op een gesprek, opvolgen", val: dagdoelFollowups, setVal: setDagdoelFollowups },
-                ].map((item) => (
-                  <div key={item.label} className="card">
-                    <p className="text-cm-white font-semibold text-sm mb-0.5">{item.label}</p>
-                    <p className="text-cm-white text-xs opacity-50 mb-3">{item.sub}</p>
-                    <div className="flex items-center gap-4">
-                      <button onClick={() => item.setVal(Math.max(1, item.val - 1))} className="w-11 h-11 rounded-full border border-cm-border text-cm-white hover:border-cm-gold transition-colors text-xl">−</button>
-                      <span className="text-4xl font-bold text-cm-gold w-16 text-center">{item.val}</span>
-                      <button onClick={() => item.setVal(item.val + 1)} className="w-11 h-11 rounded-full border border-cm-border text-cm-white hover:border-cm-gold transition-colors text-xl">+</button>
-                    </div>
-                  </div>
-                ))}
+              {/* Twijfel-hulp */}
+              <div className="card border-l-4 border-emerald-500 space-y-2">
+                <h3 className="text-emerald-300 font-semibold text-sm">
+                  💡 Twijfel?
+                </h3>
+                <p className="text-cm-white text-sm leading-relaxed opacity-85">
+                  Begin bij <strong className="text-cm-white">Fundament (2 uur)</strong>. Je kunt later in instellingen altijd switchen als je merkt dat je meer ruimte hebt. Andersom is ook prima: liever stap je een week na de start terug van Doorbreken naar Bouwen, dan dat je opbrandt en stopt.
+                </p>
               </div>
 
               {/* ELEVA Mentor intro */}
@@ -738,7 +894,9 @@ export default function OnboardingPagina() {
               <div className="bg-[#D4AF37]/10 border-2 border-[#D4AF37]/40 rounded-xl p-5 text-center space-y-3">
                 <p className="text-[#D4AF37] font-bold">Jouw setup is compleet 🎉</p>
                 <p className="text-cm-white text-sm opacity-70 leading-relaxed">
-                  Sla je dagdoelen op, de coach opent en je bent klaar om dag 1 te starten.
+                  {commitmentUren
+                    ? `Je hebt voor ${tempoNaam(commitmentUren)} (${commitmentUren}u/dag) gekozen. De coach opent en je bent klaar om dag 1 te starten.`
+                    : "Kies eerst hierboven jouw tempo. Daarna opent de coach en ben je klaar om dag 1 te starten."}
                 </p>
               </div>
 
@@ -776,8 +934,16 @@ export default function OnboardingPagina() {
                 </p>
               </div>
 
-              <button onClick={slaDoelOp} disabled={bezig} className="btn-gold w-full py-4 text-lg font-bold disabled:opacity-50">
-                {bezig ? "Laden..." : "Te gek, open de ELEVA Mentor →"}
+              <button
+                onClick={slaDoelOp}
+                disabled={bezig || !commitmentUren}
+                className="btn-gold w-full py-4 text-lg font-bold disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {bezig
+                  ? "Laden..."
+                  : commitmentUren
+                  ? `Te gek, start mijn ${tempoNaam(commitmentUren)}-tempo →`
+                  : "Kies eerst je tempo hierboven"}
               </button>
             </div>
           )}
