@@ -36,47 +36,42 @@ import type { Dag, ControllableTaak } from "@/lib/playbook/types";
  *
  * Aantallen komen DIRECT uit berekenDagdoelen() uit lib/dagdoelen.ts.
  * Dat is de bron-of-truth waar de tempo-keuze in /instellingen en
- * /onboarding ook uit leest. Zo blijft alles consistent: kiest een
- * member 'Bouwen' (4u), dan ziet 'ie overal 10 contacten / 4
- * uitnodigingen / 6 follow-ups / 1-3 stories.
+ * /onboarding ook uit leest. Zo blijft alles consistent.
  *
- * Voor dag 3 geldt specifiek:
- *   - 'nieuwe namen' is een EXTRA dagelijks ritme (lijst groeien),
- *     niet uit berekenDagdoelen. Lager dan 'aanspreken' want niet
- *     elke nieuwe naam wordt direct aangesproken. Schaalt mee:
- *     2u -> 3, 4u -> 5, 6u -> 8.
- *   - 'aanspreken' = dd.contacten (5/10/15) — start gesprek
- *     waardoor prospect -> in_gesprek promoveert.
- *   - 'uitnodigingen' = dd.uitnodigingen (2/4/6).
- *   - 'stories' = 1-3 momenten uit je dag delen (geen verkoop).
+ * Filosofie van dag 3 (afspraak Raoul, 2026-05-13):
+ *   ÉÉN actie per persoon: naam toevoegen + meteen gesprek starten.
+ *   Geen aparte 'toevoegen' en 'aanspreken' taken meer, want dat
+ *   schept een rekenpuzzel ('hoeveel toevoegen vs hoeveel aanspreken?').
+ *   In plaats daarvan: het AANTAL 'nieuwe contacten leggen' is
+ *   gelijk aan dd.contacten (5/10/15). Per persoon: lijst-entry +
+ *   eerste bericht = 1 actie.
+ *
+ * Bronnen voor de nieuwe contacten mogen mixen:
+ *   - Bestaande telefoonlijst (vrienden je al kent maar nog niet
+ *     hebt benaderd over dit)
+ *   - Social media-vrienden waar je al volgens bent
+ *   - Mensen die je dagelijks tegenkomt (sport, koffietent, werk)
+ *   - Nieuwe vrienden op social media via hashtags/comments/stories
+ *     (de NLB-aanpak: New, Like, Begin)
+ *
+ * Spraak-FAB ondersteunt automatisch de pipeline-promotie naar
+ * 'in_gesprek' zodra de member zegt 'gesprek gestart met X'.
  */
 function bouwDag3VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
   const dd = berekenDagdoelen(uren);
 
-  // Nieuwe-namen-ritme: lager dan de aanspreek-getallen omdat het een
-  // achtergrond-discipline is (je lijst aanvullen), niet een
-  // hoofdactiviteit.
-  const namenAantal = uren === 2 ? 3 : uren === 4 ? 5 : 8;
-
   return [
     {
-      id: "dag3-social-namen",
-      label: `📱 ${namenAantal} nieuwe namen vanuit socials toevoegen`,
-      uitleg: `Scroll 5 minuten door Instagram, Facebook of LinkedIn. Wie reageert op je posts? Wie stuurt DM's? Wie post dingen over energie, doelen, gezondheid, ondernemen? Voeg ${namenAantal} nieuwe namen toe aan je lijst met één woord context per persoon ('fitness', 'oud-collega', 'LinkedIn-coach'). Niet meer, geen biografie. Het label is genoeg om te onthouden waar je zat toen je 'm noteerde.`,
-      verplicht: true,
-      actieRoute: "/namenlijst",
-    },
-    {
-      id: "dag3-aanspreken",
-      label: `💬 ${dd.contacten} mensen aanspreken (start een gesprek)`,
-      uitleg: `Open WhatsApp, Instagram, Facebook of LinkedIn. Pak ${dd.contacten} mensen die je een tijd niet hebt gesproken maar wel volgt of door wie je gevolgd wordt. Per persoon: reageer op hun laatste post of story, of stuur een DM met een gewone vraag ('hé, hoe is het met jou?'). Niets verkopen, geen uitnodiging vandaag voor deze mensen. Gewoon contact leggen, gesprek starten.\n\nZodra je het bericht hebt verzonden, gebruik de Spraak-FAB om dat te vertellen ('Ik heb een gesprek gestart met [naam]'). De prospect gaat dan automatisch van 'prospect' naar 'in gesprek' in je pijplijn. Zo zie je later precies met wie het loopt en wie je kunt vervolgen.`,
+      id: "dag3-nieuwe-contacten",
+      label: `💬 ${dd.contacten} nieuwe contacten leggen vandaag`,
+      uitleg: `Vandaag bouw je je netwerk uit met ${dd.contacten} nieuwe mensen. Per persoon doe je 1 ding: naam aan je lijst toevoegen én meteen een eerste bericht sturen. Niet apart, in één beweging.\n\nWAAR HAAL JE DEZE ${dd.contacten} MENSEN VANDAAN?\n\n1. Je telefoonlijst: mensen die je al kent maar nog niet hebt benaderd. Familie, oud-collega's, sportmaatjes, buren, oude vrienden.\n\n2. Je social media-vrienden: mensen die jou al volgen of die jij volgt, maar waar je al een tijd niet mee hebt gesproken. Open Instagram of Facebook, scroll door je vrienden, kies wie er nu spontaan opvalt.\n\n3. Mensen die je dagelijks tegenkomt: bij de koffietent, sportschool, school, werk. Iemand met wie je een gewone kleine babbel had, kun je later vandaag in een DM/WhatsApp ook vervolgen.\n\n4. Nieuwe mensen op social media (advanced): via hashtags die jouw doelgroep gebruikt, mensen in jouw stad, accounts die je volgt en waarvan de volgers passen. Eerst even reageren op hun content (1-3 oprechte comments over een paar dagen), daarna pas een DM-bericht.\n\nWAT SCHRIJF JE IN HET BERICHT?\n\nGeen pitch. Geen 'ik heb een geweldige kans'. Gewoon een menselijke vraag waar je oprecht nieuwsgierig naar bent. Een specifieke verwijzing naar iets dat zij hebben gedeeld, gepost of meegemaakt. Of een herinnering aan iets uit jullie gezamenlijke verleden.\n\nVoorbeelden:\n• 'Hé Linda, ik moest aan je denken na onze koffie laatst. Hoe is het nu met die nieuwe rol?'\n• 'Hé Pieter, ik zag je verhaal over je wandeling in Limburg. Welke route was dat?'\n• 'Hé Anne, hoe lang is het ook alweer geleden dat we elkaar hebben gesproken? Hoe is het bij jou?'\n\nZodra je het bericht hebt verstuurd, vertel het aan de Spraak-FAB: 'Ik heb een gesprek gestart met [naam]'. Dan staat de persoon in je namenlijst, automatisch op fase 'in gesprek', en weet je later precies met wie het loopt.`,
       verplicht: true,
       actieRoute: "/namenlijst",
     },
     {
       id: "dag3-uitnodigingen",
       label: `📨 ${dd.uitnodigingen} uitnodigingen voor een presentatie`,
-      uitleg: `Bouw door op gisteren. Vandaag mag je dit zelfstandig doen. Loop je vast? Vraag de Mentor: 'Schrijf een uitnodiging voor [naam] die [context]'. Mensen die je hierbij uitnodigt zet je in je pijplijn op 'uitgenodigd' (gebeurt automatisch als je de spraak-FAB gebruikt: 'Ik heb [naam] uitgenodigd voor de presentatie van [datum]').`,
+      uitleg: `Naast de nieuwe contacten van vandaag: nodig ${dd.uitnodigingen} mensen uit voor een one-pager of presentatie. Dit zijn mensen waarvan je al weet wat ze belangrijk vinden, mensen die eerder in een gesprek zaten waar het natuurlijk past, of mensen waar je sponsor je kan ondersteunen.\n\nLoop je vast bij het bericht? Vraag de Mentor: 'Schrijf een uitnodiging voor [naam] die [context]'. Of bel je sponsor voor een 3-weg-momentje.\n\nZodra de uitnodiging is verstuurd, vertel het aan de Spraak-FAB: 'Ik heb [naam] uitgenodigd voor de presentatie van [datum]'. De pijplijn-fase wordt automatisch bijgewerkt.`,
       verplicht: true,
       actieRoute: "/namenlijst",
       uitnodigHelpKnoppen: true,
@@ -91,7 +86,7 @@ function bouwDag3VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       id: "dag3-sponsor-checkin",
       label: "💬 Korte sponsor-checkin",
       uitleg:
-        "30 seconden. Stuur je sponsor 1 bericht: hoeveel mensen je vandaag hebt aangesproken en uitgenodigd. Sponsor weet dat je beweegt, jij voelt de lijn naar boven open. Niets uitgebreids, gewoon even een update.",
+        "30 seconden. Stuur je sponsor 1 bericht: hoeveel nieuwe contacten je vandaag hebt gelegd en hoeveel uitnodigingen je hebt verstuurd. Sponsor weet dat je beweegt, jij voelt de lijn naar boven open. Niets uitgebreids, gewoon even een update.",
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
