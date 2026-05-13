@@ -92,37 +92,59 @@ export type Bouwblok = {
 };
 
 export function bouwblokkenVoorTempo(uren: CommitmentUren): Bouwblok[] {
+  // De flow van een member is:
+  //   1) Contacten toevoegen aan je namenlijst
+  //   2) In gesprek met mensen, gesprekken vervolgen
+  //   3) Mensen uitnodigen voor een presentatie of one-pager
+  //   4) NA die presentatie: opvolgen met een 3-weg-gesprek
+  //   5) Daarnaast: stories delen (geen verkoop), reageren op anderen
+  //   6) Mini-ELEVA inzetten als de prospect eerst zelf info wil
+  //   7) Persoonlijke ontwikkeling (mindset + skills)
+  // Die zeven blokken komen in alle drie de tempo's terug, alleen de
+  // doseringen verschillen.
   if (uren === 2) {
     return [
       {
         emoji: "🗂️",
         naam: "Je namenlijst bijhouden",
         beschrijving:
-          "Even kijken wie er waar staat (denkt nog na, zegt nee, zegt ja). Korte notities maken van gesprekken die je had.",
+          "Even kijken wie er waar staat (denkt nog na, zegt nee, zegt ja). Korte notities maken na gesprekken.",
       },
       {
         emoji: "💬",
-        naam: "5 echte gesprekken voeren",
+        naam: "5 contacten leggen of vervolgen",
         beschrijving:
-          "Op WhatsApp, Instagram of telefoon. 1-op-1, geen kant-en-klaar bericht naar meerdere mensen. Mix van warme mensen even bijspreken en oudere contacten weer warm maken.",
+          "Op WhatsApp, Instagram of telefoon. 1-op-1, geen kant-en-klaar bericht naar meerdere mensen. Mix van warme mensen even bijpraten en oudere contacten weer warm maken.",
       },
       {
         emoji: "📨",
-        naam: "2 mensen uitnodigen",
+        naam: "2 mensen uitnodigen voor een presentatie",
         beschrijving:
-          "Mensen die je al goed kent en waarvan je weet wat ze belangrijk vinden. Daar mag je direct uitnodigen, geen lange aanloop nodig.",
+          "Mensen die je al goed kent en waarvan je weet wat ze belangrijk vinden. Daar mag je direct uitnodigen voor een one-pager-moment of presentatie, geen lange aanloop nodig.",
       },
       {
         emoji: "🔄",
-        naam: "3 mensen opvolgen",
+        naam: "3 mensen opvolgen (3-weg)",
         beschrijving:
-          "Mensen waar je al iets mee besproken had. Even terugkomen op het gesprek, niet pusherig.",
+          "Mensen die al een presentatie of one-pager hebben gezien. Volg ze op met een 3-weg-gesprek samen met je sponsor of ervaren teamlid. Niet pusherig, wel op het juiste moment terugkomen.",
       },
       {
         emoji: "📱",
-        naam: "1 story + reageren op anderen",
+        naam: "Stories + reageren op anderen",
         beschrijving:
-          "Een momentje uit je leven (geen verkoop). Plus 2 echte reacties geven op stories van anderen, zo blijf je in beeld zonder te spammen.",
+          "1 tot 3 momenten uit je dag delen (van je leven, nog niet proberen te verkopen in je stories). Plus een paar echte reacties geven op stories van anderen, zo blijf je in beeld zonder te spammen.",
+      },
+      {
+        emoji: "🤖",
+        naam: "Mini-ELEVA inzetten",
+        beschrijving:
+          "Voor wie nog niet klaar is voor een direct gesprek: een Mini-ELEVA-link naar ze sturen, dan helpt ELEVA met wat het beste past per persoon. Lage drempel, zonder pushen.",
+      },
+      {
+        emoji: "🌱",
+        naam: "Even leren of luisteren",
+        beschrijving:
+          "Persoonlijke ontwikkeling, ook in 2 uur per dag belangrijk. Een paar pagina's lezen of een audio onderweg. Mindset en skills groeien mee.",
       },
     ];
   }
@@ -136,39 +158,39 @@ export function bouwblokkenVoorTempo(uren: CommitmentUren): Bouwblok[] {
       },
       {
         emoji: "💬",
-        naam: "10 echte gesprekken voeren",
+        naam: "10 contacten leggen of vervolgen",
         beschrijving:
-          "Mix van drie soorten: warme bekenden snel bijpraten, oudere contacten weer warm maken, en nieuwe mensen via socials terug-leren-kennen. Altijd 1-op-1.",
+          "Mix van drie soorten: warme bekenden snel bijpraten, oudere contacten weer warm maken, en nieuwe mensen via socials terug-leren-kennen. Altijd 1-op-1, het gesprek vervolgen waar je vorige keer was gebleven.",
       },
       {
         emoji: "📨",
-        naam: "4 mensen uitnodigen",
+        naam: "4 mensen uitnodigen voor een presentatie",
         beschrijving:
-          "Vooral mensen waarvan je hun behoefte al kent. Die hoeven niet warm gemaakt, daar kom je gewoon eerlijk binnen.",
+          "Voor een one-pager-moment of een echte presentatie. Vooral mensen waarvan je de behoefte al kent. Die hoeven niet warm gemaakt, daar kom je gewoon eerlijk binnen.",
       },
       {
         emoji: "🔄",
-        naam: "6 mensen opvolgen",
+        naam: "6 mensen opvolgen (3-weg)",
         beschrijving:
-          "De meeste mensen zeggen niet bij het eerste contact ja. Goed opvolgen op het juiste moment is het echte verschil.",
+          "Na een presentatie of one-pager: opvolgen met een 3-weg-gesprek (jij + prospect + sponsor of ervaren teamlid). De meeste mensen zeggen niet bij het eerste moment ja, dit opvolg-stuk is het echte verschil.",
       },
       {
         emoji: "📱",
-        naam: "3 stories + reageren op anderen",
+        naam: "Stories + reageren op anderen",
         beschrijving:
-          "Drie momenten uit je dag delen (leven, niet verkoop). Plus echte reacties geven op stories van anderen. Zo bouw je zichtbaarheid zonder iets te pushen.",
+          "1 tot 3 momenten uit je dag delen (van je leven, nog niet proberen te verkopen in je stories). Plus echte reacties geven op stories van anderen. Zo bouw je zichtbaarheid zonder iets te pushen.",
       },
       {
-        emoji: "👥",
-        naam: "Gesprek met je sponsor erbij",
+        emoji: "🤖",
+        naam: "Mini-ELEVA inzetten",
         beschrijving:
-          "Niet elke dag, gemiddeld 3 keer per week: een gesprek met een prospect waarbij je sponsor of een ervaren teamlid meeluistert (3-weg). Daar leer je het snelst.",
+          "Voor mensen die zelf eerst willen rondkijken: Mini-ELEVA-link sturen, dan helpt ELEVA met wat het beste past per persoon. Werkt als een professionele tussenstap voor het echte gesprek.",
       },
       {
         emoji: "🌱",
-        naam: "Even bijspijkeren",
+        naam: "Even leren of luisteren",
         beschrijving:
-          "Een paar pagina's lezen of een audio luisteren onderweg. Hoeft niet lang, gewoon dagelijks even.",
+          "Persoonlijke ontwikkeling. Een paar pagina's lezen of een audio onderweg. Hoeft niet lang, gewoon dagelijks even iets dat je sterker maakt als persoon en als bouwer.",
       },
     ];
   }
@@ -182,45 +204,45 @@ export function bouwblokkenVoorTempo(uren: CommitmentUren): Bouwblok[] {
     },
     {
       emoji: "💬",
-      naam: "15+ echte gesprekken voeren",
+      naam: "15+ contacten leggen of vervolgen",
       beschrijving:
-        "Drie lagen tegelijk: warme bekenden snel bijpraten, oudere contacten weer warm maken, nieuwe contacten via socials/comments leren kennen. Altijd persoonlijk.",
+        "Drie lagen tegelijk: warme bekenden snel bijpraten, oudere contacten weer warm maken, nieuwe contacten via socials of comments leren kennen. Altijd persoonlijk en doorbouwend op vorige gesprekken.",
     },
     {
       emoji: "📨",
-      naam: "6 mensen uitnodigen",
+      naam: "6 mensen uitnodigen voor een presentatie",
       beschrijving:
-        "Warme mensen met bekende behoefte: direct erop. Iets onzekerder: eerst kort script oefenen of even sponsor inschakelen.",
+        "Voor een one-pager-moment, presentatie of webinar. Warme mensen met bekende behoefte: direct erop. Iets onzekerder: eerst even sponsor inschakelen.",
     },
     {
       emoji: "🔄",
-      naam: "8-10 mensen opvolgen",
+      naam: "8 tot 10 mensen opvolgen (3-weg)",
       beschrijving:
-        "Strakke opvolg-discipline. Niet pusherig, wel betrouwbaar, op het beloofde moment terugkomen.",
+        "Strakke opvolg-discipline na presentaties. 3-weg-gesprekken met je sponsor of ervaren teamlid, op het beloofde moment terugkomen. Niet pusherig, wel betrouwbaar.",
     },
     {
       emoji: "📱",
-      naam: "Content + reageren op anderen",
+      naam: "Stories + reageren op anderen",
       beschrijving:
-        "Eén iets langere video of post per week, daarnaast dagelijks 3 stories en echte reacties op stories van anderen.",
+        "1 tot 3 momenten uit je dag delen (van je leven, nog niet proberen te verkopen in je stories). Bij dit tempo daarnaast 1 iets langere post of video per week en dagelijks echte reacties op stories van anderen.",
     },
     {
-      emoji: "👥",
-      naam: "Gesprekken samen met sponsor (vaker)",
+      emoji: "🤖",
+      naam: "Mini-ELEVA inzetten",
       beschrijving:
-        "Gemiddeld 1 per dag een gesprek met sponsor erbij, soms meer als het loopt.",
+        "Voor mensen die zelf eerst informatie willen of waarbij een direct gesprek nog te vroeg is: Mini-ELEVA-link sturen, dan helpt ELEVA met wat het beste past per persoon. Schaalbaar zonder dat je elke vraag zelf hoeft te beantwoorden.",
     },
     {
       emoji: "🧑‍🤝‍🧑",
       naam: "Je eerste partners helpen",
       beschrijving:
-        "Zodra je eerste mensen in je team komen: even per dag bij ze checken, vraag beantwoorden, helpen. Sponsor-call voor jezelf erbij.",
+        "Zodra je eerste mensen in je team komen: dagelijks bij ze checken, vragen beantwoorden, mee in gesprek. Sponsor-call voor jezelf hoort hier ook bij.",
     },
     {
       emoji: "🌱",
-      naam: "Even bijspijkeren",
+      naam: "Even leren of luisteren",
       beschrijving:
-        "Dagelijks iets lezen of luisteren. Bij dit tempo merk je dat dit het verschil maakt.",
+        "Persoonlijke ontwikkeling. Bij dit tempo merk je dat dit het verschil maakt: dagelijks iets lezen of luisteren dat je mindset en skills voedt.",
     },
   ];
 }

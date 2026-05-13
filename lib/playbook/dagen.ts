@@ -20,22 +20,23 @@ export const DAGEN: Dag[] = [
     vandaagDoen: [
       {
         id: "dag1-vcard",
-        label: "Voeg de eerste mensen toe aan je namenlijst",
+        label: "📲 Importeer je telefooncontacten in één klik",
         uitleg:
-          "Waarom al op dag 1? Omdat dit jouw netwerk-overzicht wordt. Hoe meer namen je hier hebt staan, hoe rustiger je de komende weken kunt werken. Je hoeft niet elke dag opnieuw te bedenken aan wie je gaat denken. Dit is geen belkostlijst, geen verkooplijst. Het zijn gewoon mensen die jij kent, mensen die in jouw wereld bestaan. Familie, oude collega's, sportmaatjes, buren. Iedereen mag erop. Filteren komt later, en doe je nooit voor iemand anders. Niet alles hoeft vandaag, kies wat je vandaag aankunt en pak het morgen weer op.",
+          "Open de upload, ELEVA neemt direct alle namen uit je telefoon over en zet ze in je geheugen. Eén klik, en je hebt 100 tot 500 namen in beeld zonder iets te hoeven typen. Dit is geen belkostlijst en geen verkooplijst, het is je netwerk-overzicht. Mensen die in jouw wereld bestaan: familie, oude collega's, sportmaatjes, buren. Filteren komt later, en doe je nooit voor iemand anders.",
         verplicht: true,
         vereistMobiel: true,
         inlineEmbed: "vcard-upload",
       },
       {
-        // Eerste handmatige namen — vroeger zat dit in onboarding-stap-4,
-        // maar dat dubbelde met dag 2 (20 namen). Nu staat de eerste
-        // verplichting bewust op dag 1, zodat onboarding lichter is en
-        // de echte namenlijst pas in het playbook begint.
+        // De handmatige 5 namen-stap is bewust apart van de vcard-import.
+        // De vcard-stap is een grote massa-import zonder denken. Deze
+        // stap is een SPONTANE, bewuste keuze van 5 mensen die in je
+        // hoofd opkomen. Twee verschillende handelingen, twee
+        // verschillende denkfases.
         id: "dag1-5-namen",
-        label: "Voeg minimaal 5 namen handmatig toe",
+        label: "✍️ Schrijf 5 namen op die spontaan in je hoofd opkomen",
         uitleg:
-          "Naast je telefoonimport, schrijf hier 5 namen die SPONTAAN in je hoofd kwamen. Mensen die je écht kent. Familie, beste vrienden, oude collega's, sportmaatjes, buren. Niet filteren, niet bedenken 'die past niet'. Iedereen mag erop, zij beslissen zelf. Dit zijn jouw eerste warm-warme contacten, een bewuste keuze naast de massa-import van je telefoon. Morgen (dag 2) bouw je dit uit naar 20.",
+          "Iets anders dan de telefoonimport hierboven: dit is een bewuste keuze. Stel jezelf de vraag: 'Wie komt er nu spontaan in mijn hoofd op als ik denk aan mensen die ik dit zou gunnen?' De eerste 5 namen die opkomen, schrijf je hieronder op. Niet filteren, niet bedenken 'die past niet'. Iedereen mag erop, zij beslissen zelf. Dit zijn jouw eerste warm-warme contacten, een bewust gekozen lijst NAAST de grote massa-import van je telefoon. Morgen (dag 2) bouw je dit uit naar 20.",
         verplicht: true,
         inlineEmbed: "namen-form",
         inlineEmbedDoel: 5,
@@ -115,9 +116,9 @@ Overweldigd voelen is normaal. Je leert iets nieuws, je stapt uit comfort. Eerst
     vandaagDoen: [
       {
         id: "dag2-20-namen",
-        label: "Voeg 20 namen toe (uit je telefoon of zelf typen)",
+        label: "Voeg 20 namen toe aan je namenlijst",
         uitleg:
-          "TWEE manieren, kies welke past:\n\n1️⃣ Vanuit je telefoon: heb je gisteren je telefoon-contacten geüpload? Open Namenlijst → '📚 Mijn ELEVA-geheugen' en activeer er 20 in één klik uit de namen die je telefoon al kent. Snelst, want je hoeft niets te bedenken, je kiest wie je herkent.\n\n2️⃣ Zelf typen: vul hieronder direct namen in (familie, oud-collega's, sport, hobby, ouders bij school, buren). Geen filter, alles erop.\n\nBeide tellen, je mag mixen. Tip: begin met je telefoonlijst, dan komen er namen voorbij waar je niet aan had gedacht. Daarna eventueel zelf aanvullen.",
+          "Vandaag breidt je namenlijst uit naar 20. Je hebt DRIE manieren, kies wat past of mix ze door elkaar:\n\n1️⃣ VANUIT JE TELEFOON-GEHEUGEN (snelst, als je gisteren hebt geüpload)\nOpen Namenlijst → '📚 Mijn ELEVA-geheugen' en activeer er 20 in één klik uit de namen die je telefoon al kent. Snelst, want je hoeft niets te bedenken, je kiest wie je herkent.\n\n2️⃣ ALSNOG JE TELEFOON IMPORTEREN (als je dat gisteren niet hebt gedaan)\nGeen probleem als je gisteren de import overgeslagen hebt. Doe het vandaag alsnog op je telefoon via Namenlijst → 'Importeer contacten'. Daarna kun je vanuit je geheugen 20 namen activeren (zie optie 1).\n\n3️⃣ ZELF TYPEN (altijd mogelijk, ook zonder import)\nVul hieronder direct namen in: familie, oud-collega's, sport, hobby, ouders bij school, buren. Geen filter, alles erop. Werkt prima los van de import, of als aanvulling daarop.\n\n💡 Tip: begin met je telefoonlijst (optie 1 of 2), dan komen er namen voorbij waar je niet aan had gedacht. Daarna eventueel zelf aanvullen met optie 3. Beide tellen mee voor de 20.",
         verplicht: true,
         inlineEmbed: "namen-form",
         inlineEmbedDoel: 20,

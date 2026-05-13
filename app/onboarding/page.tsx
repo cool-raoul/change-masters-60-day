@@ -224,7 +224,7 @@ export default function OnboardingPagina() {
       });
       await slaVoortgangOp({ stap_5_doelen: true });
       await stuurPushNaarSponsor(
-        `heeft het tempo '${tempoNaam(commitmentUren)}' (${commitmentUren}u/dag) gekozen en is klaar voor dag 1! 🎉`,
+        `heeft het tempo '${tempoNaam(commitmentUren)}' (± ${commitmentUren} uur per dag) gekozen en is klaar voor dag 1! 🎉`,
       );
     }
     setBezig(false);
@@ -656,7 +656,7 @@ export default function OnboardingPagina() {
                         <div className="flex items-start justify-between gap-3">
                           <div>
                             <p className="text-xs uppercase tracking-wider text-cm-white/50 mb-1">
-                              {uren} uur per dag
+                              ± {uren} uur per dag
                             </p>
                             <h3 className="text-xl font-display font-bold text-cm-white flex items-center gap-2">
                               <span className="text-2xl">{m.emoji}</span>
@@ -682,10 +682,10 @@ export default function OnboardingPagina() {
                             Elke dag
                           </p>
                           <div className="grid grid-cols-1 gap-y-1 text-sm text-cm-white">
-                            <span>💬 {dd.contacten} echte gesprekken voeren</span>
-                            <span>📨 {dd.uitnodigingen} mensen uitnodigen</span>
-                            <span>🔄 {dd.followups} mensen opvolgen</span>
-                            <span>📱 {dd.stories} {dd.stories === 1 ? "story plaatsen" : "stories plaatsen"} + reageren op anderen</span>
+                            <span>💬 {dd.contacten} contacten leggen of vervolgen</span>
+                            <span>📨 {dd.uitnodigingen} mensen uitnodigen voor een presentatie</span>
+                            <span>🔄 {dd.followups} mensen opvolgen met een 3-weg-gesprek</span>
+                            <span>📱 1 tot 3 momenten uit je dag delen (geen verkoop)</span>
                           </div>
                         </div>
 
@@ -762,8 +762,8 @@ export default function OnboardingPagina() {
                 <p className="text-[#D4AF37] font-bold">Jouw setup is compleet 🎉</p>
                 <p className="text-cm-white text-sm opacity-70 leading-relaxed">
                   {commitmentUren
-                    ? `Je hebt voor ${tempoNaam(commitmentUren)} (${commitmentUren}u/dag) gekozen. De coach opent en je bent klaar om dag 1 te starten.`
-                    : "Kies eerst hierboven jouw tempo. Daarna opent de coach en ben je klaar om dag 1 te starten."}
+                    ? `Je hebt voor ${tempoNaam(commitmentUren)} (± ${commitmentUren} uur per dag) gekozen. Direct door naar de rest van dag 1.`
+                    : "Kies eerst hierboven jouw tempo. Daarna rol je direct door naar de rest van dag 1."}
                 </p>
               </div>
 
