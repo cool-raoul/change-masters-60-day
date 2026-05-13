@@ -867,6 +867,7 @@ export const t: Vertalingen = {
 
   // Totalen kaarten
   "stats.totaal_contacten": { nl: "Totaal contacten", en: "Total contacts", fr: "Total contacts", es: "Total contactos", de: "Kontakte gesamt", pt: "Total contatos" },
+  "stats.in_gesprek_nu": { nl: "In gesprek nu", en: "In conversation now", fr: "En conversation", es: "En conversación", de: "Im Gespräch", pt: "Em conversa" },
   "stats.totaal_uitnodigingen": { nl: "Totaal uitnodigingen", en: "Total invitations", fr: "Total invitations", es: "Total invitaciones", de: "Einladungen gesamt", pt: "Total convites" },
   "stats.totaal_followups": { nl: "Totaal follow-ups", en: "Total follow-ups", fr: "Total suivis", es: "Total seguimientos", de: "Follow-ups gesamt", pt: "Total acompanhamentos" },
   "stats.totaal_presentaties": { nl: "Totaal presentaties", en: "Total presentations", fr: "Total présentations", es: "Total presentaciones", de: "Präsentationen gesamt", pt: "Total apresentações" },

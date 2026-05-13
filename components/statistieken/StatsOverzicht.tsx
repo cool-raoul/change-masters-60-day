@@ -131,6 +131,14 @@ function berekenKPIs(stats: DagelijkseStat[], dag: number, pipelineCounts: Recor
   const prognoseKlanten = dag > 0 ? Math.round((totaalKlanten / dag) * 60) : 0;
   const prognosePartners = dag > 0 ? Math.round((totaalPartners / dag) * 60) : 0;
 
+  // 'in_gesprek' (2026-05-13) is een huidige-stand-meting, geen
+  // event-totaal: hoeveel mensen staan op dit moment in deze fase.
+  // We tonen 'm naast de event-totalen omdat Raoul expliciet wilde
+  // dat 'in gesprek' meetelt in de hoofd-KPI-rij. Een toekomstige
+  // uitbreiding zou zijn om gesprekken_gestart per dag te tracken in
+  // dagelijkse_stats, dan kan deze tegel naar event-stijl over.
+  const huidigInGesprek = pipelineCounts["in_gesprek"] || 0;
+
   return {
     totaalContacten,
     totaalUitnodigingen,
@@ -138,6 +146,7 @@ function berekenKPIs(stats: DagelijkseStat[], dag: number, pipelineCounts: Recor
     totaalPresentaties,
     totaalKlanten,
     totaalPartners,
+    huidigInGesprek,
     actieveDagen,
     consistentie,
     gemContactenPerDag,
@@ -261,9 +270,13 @@ export function StatsOverzicht({ alleStats, pipelineCounts, dag }: Props) {
 
   return (
     <div className="space-y-6">
-      {/* Totalen */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      {/* Totalen, in pijplijn-volgorde. 'In gesprek nu' = huidige
+          stand uit pipelineCounts (geen event-totaal zoals de andere),
+          maar voor de member is dit het natuurlijke teller-blokje
+          tussen 'totaal contacten' en 'uitnodigingen'. */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3">
         <TotaalKaart label={v("stats.totaal_contacten")} waarde={kpis.totaalContacten} icoon="💬" kleur="text-[#4A9EDB]" />
+        <TotaalKaart label={v("stats.in_gesprek_nu")} waarde={kpis.huidigInGesprek} icoon="🗣️" kleur="text-[#D4A574]" />
         <TotaalKaart label={v("stats.totaal_uitnodigingen")} waarde={kpis.totaalUitnodigingen} icoon="📤" kleur="text-[#9A6ADB]" />
         <TotaalKaart label={v("stats.totaal_followups")} waarde={kpis.totaalFollowups} icoon="🔄" kleur="text-cm-gold" />
         <TotaalKaart label={v("stats.totaal_presentaties")} waarde={kpis.totaalPresentaties} icoon="🎯" kleur="text-[#E8C96B]" />

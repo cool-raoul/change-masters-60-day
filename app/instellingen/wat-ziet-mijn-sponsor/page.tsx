@@ -7,9 +7,14 @@ import Link from "next/link";
 // downline van hem kunnen zien. Verlaagt de drempel ('het voelt als
 // surveillance') door duidelijkheid: je weet precies wat er gedeeld
 // wordt en wat niet.
+//
+// LET OP: deze pagina zit onder een AppShell-layout die per request
+// supabase.auth.getUser() doet en bij no-user redirect naar /login.
+// Dus we kunnen 'force-static' niet gebruiken (dat veroorzaakte een
+// bug waar de hele pagina static naar /login redirectte tijdens
+// build-time prerendering). De content is sowieso pure tekst, geen
+// performance-issue.
 // ============================================================
-
-export const dynamic = "force-static";
 
 const ZICHTBAAR = [
   {
