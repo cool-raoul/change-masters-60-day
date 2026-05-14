@@ -148,6 +148,29 @@ export default async function AcademyLesPagina({
         })}
       </article>
 
+      {/* Audio-knop (alleen voor lessen met audioZoekLink, zoals
+          de Audio-onderweg-training. Plek bewust BOVEN de oefening
+          want de oefening hoort meestal NA het luisteren). */}
+      {les.audioZoekLink && (
+        <div className="rounded-lg border-2 border-cm-gold/40 bg-cm-gold/5 p-4 space-y-3">
+          <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
+            🎧 Audio onderweg
+          </p>
+          <p className="text-cm-white/85 text-sm leading-relaxed">
+            Beluister deze aflevering op Spotify. Ongeveer 15-20 min,
+            perfect voor in de auto, tijdens een wandeling of bij koffie.
+          </p>
+          <a
+            href={les.audioZoekLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-gold inline-block py-2 px-4 text-sm font-semibold"
+          >
+            Beluister op Spotify ↗
+          </a>
+        </div>
+      )}
+
       {/* Oefening-blok */}
       {les.oefening && (
         <div className="card border-l-4 border-emerald-500 space-y-2">

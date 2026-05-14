@@ -40,6 +40,13 @@ export type AcademyLes = {
    * zodat de member weet wat 'ie kan verwachten.
    */
   leestijdMinuten?: number;
+  /**
+   * Optionele audio-zoeklink (Spotify, Apple Podcasts, etc.). Wanneer
+   * gezet, rendert de les-pagina een prominent 'Beluister op Spotify'-
+   * knop boven het oefening-blok. Gebruikt door de Audio-onderweg-
+   * training (Worre's Seven Skills).
+   */
+  audioZoekLink?: string;
 };
 
 /**
