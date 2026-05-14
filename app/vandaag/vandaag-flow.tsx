@@ -15,6 +15,7 @@ import { SponsorMeldingKnop } from "@/components/vandaag/inline-embeds/SponsorMe
 import { MentorFunnelAnalyseKnop } from "@/components/vandaag/inline-embeds/MentorFunnelAnalyseKnop";
 import { PartnerCheckEmbed } from "@/components/vandaag/inline-embeds/PartnerCheckEmbed";
 import { NamenForm } from "@/components/vandaag/inline-embeds/NamenForm";
+import { RadarBalk } from "@/components/vandaag/RadarBalk";
 import { pakDagdeelGroetMetNaam } from "@/lib/util/dagdeel-groet";
 import type { Dag, ControllableTaak } from "@/lib/playbook/types";
 import {
@@ -75,6 +76,10 @@ type Props = {
    * zodat helder is welke variant van de dag-taken wordt getoond.
    */
   commitmentUren?: CommitmentUren | null;
+  /** Top-5 radar-items voor de RadarBalk. Pre-rendered op server. */
+  radarItems?: import("@/lib/radar/volgende-beste-actie").RadarItem[];
+  /** Set met prospect-IDs die vandaag al zijn afgevinkt. */
+  radarInitieelAfgevinkt?: string[];
 };
 
 const DAG_GROETEN: Record<number, string> = {
@@ -109,6 +114,8 @@ function VandaagFlowInner({
   groetOverrides = {},
   paginaBlokken = {},
   commitmentUren = null,
+  radarItems = [],
+  radarInitieelAfgevinkt = [],
 }: Props) {
   const { editModusAan } = useEditModus();
   const router = useRouter();
@@ -318,6 +325,17 @@ function VandaagFlowInner({
             <TesterToolbar huidigeDag={dag.nummer} urlModus="queryparam" />
             <EditModeToggle isFounder={isFounder} />
           </div>
+        )}
+
+        {/* Radar-balk: top-5 actie-prospects voor vandaag. Onder de
+            founder-toolbar, boven dag-content zodat de pulsatie in
+            het zicht valt. Verbergt zich bij 0 items. */}
+        {radarItems.length > 0 && (
+          <RadarBalk
+            items={radarItems}
+            initieelAfgevinkt={radarInitieelAfgevinkt}
+            huidigeDag={dag.nummer}
+          />
         )}
 
         {/* INTRO-stap */}

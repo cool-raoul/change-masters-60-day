@@ -20,7 +20,6 @@ import { genereerWeekritmeDag } from "@/lib/playbook/weekritme";
 import { detecteerEnVierEerstePartner } from "@/lib/team/mijlpaal-detector";
 import { pakTopRadar, type ProspectInput } from "@/lib/radar/volgende-beste-actie";
 import { haalRadarAfvinkSets } from "@/lib/radar/carry-over";
-import { RadarBalk } from "@/components/vandaag/RadarBalk";
 import type { CommitmentUren } from "@/lib/dagdoelen";
 import { VandaagFlow } from "./vandaag-flow";
 
@@ -285,27 +284,18 @@ export default async function VandaagPagina({
   // (isFounder is hierboven al gezet voor de dag-berekening)
 
   return (
-    <>
-      {radarItems.length > 0 && (
-        <div className="max-w-3xl mx-auto px-4 pt-3">
-          <RadarBalk
-            items={radarItems}
-            initieelAfgevinkt={Array.from(afvinkSets.vandaagAfgevinkt)}
-            huidigeDag={dag}
-          />
-        </div>
-      )}
-      <VandaagFlow
-        dag={dagData}
-        voltooidIds={voltooidIds}
-        initialZinnen={initialZinnen}
-        voornaam={voornaam}
-        isFounder={isFounder}
-        uiOverrides={uiOverrides}
-        groetOverrides={groetOverrides}
-        paginaBlokken={paginaBlokken}
-        commitmentUren={commitmentUren}
-      />
-    </>
+    <VandaagFlow
+      dag={dagData}
+      voltooidIds={voltooidIds}
+      initialZinnen={initialZinnen}
+      voornaam={voornaam}
+      isFounder={isFounder}
+      uiOverrides={uiOverrides}
+      groetOverrides={groetOverrides}
+      paginaBlokken={paginaBlokken}
+      commitmentUren={commitmentUren}
+      radarItems={radarItems}
+      radarInitieelAfgevinkt={Array.from(afvinkSets.vandaagAfgevinkt)}
+    />
   );
 }

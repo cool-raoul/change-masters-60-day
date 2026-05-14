@@ -240,12 +240,19 @@
   }
 }
 
-/* Subtiele puls voor RadarBalk — minder agressief dan animate-pulse.
-   Pulseert via box-shadow zodat de balk-rand zelf niet hardop knippert. */
+/* Pulseert via box-shadow + border-opacity zodat de RadarBalk opvalt op
+   laptop-schermen waar het oog van nature naar het midden gaat. Sneller
+   ritme (2.2s) en grotere shadow-radius dan eerste versie. */
 @keyframes pulse-soft {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
-  50% { box-shadow: 0 0 12px 1px rgba(212, 175, 55, 0.3); }
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.15);
+    border-color: rgba(212, 175, 55, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 22px 4px rgba(212, 175, 55, 0.55);
+    border-color: rgba(212, 175, 55, 0.95);
+  }
 }
 .animate-pulse-soft {
-  animation: pulse-soft 3s ease-in-out infinite;
+  animation: pulse-soft 2.2s ease-in-out infinite;
 }
