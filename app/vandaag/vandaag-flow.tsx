@@ -661,10 +661,21 @@ function VandaagFlowInner({
             )}
 
             {/* Optionele actie-route, alleen als er geen inline-embed is
-                en het geen mobiel-only taak op desktop is. */}
+                en het geen mobiel-only taak op desktop is. Extra: verberg
+                de knop wanneer 'ie naar /namenlijst gaat EN de 4-vlakken-
+                strip hieronder ook al een Eleva-geheugen-vlak naar
+                /namenlijst toont (dat zou dubbele functie zijn). */}
             {huidigeTaak.actieRoute &&
               !huidigeTaak.inlineEmbed &&
-              !(huidigeTaak.vereistMobiel && !isMobiel) && (
+              !(huidigeTaak.vereistMobiel && !isMobiel) &&
+              !(
+                huidigeTaak.actieRoute.startsWith("/namenlijst") &&
+                (/social|-chat|-dm|losse.chat/i.test(huidigeTaak.id) ||
+                  /Instagram|Facebook|LinkedIn|socials/.test(
+                    huidigeTaak.label,
+                  ) ||
+                  /Instagram|Facebook|LinkedIn/.test(huidigeTaak.uitleg ?? ""))
+              ) && (
                 <a
                   href={
                     /^https?:\/\//i.test(huidigeTaak.actieRoute)
