@@ -74,6 +74,50 @@ function pakBericht(taakId: string | undefined, sponsorVoornaam: string): string
         `prospect wat de volgende stap is. M'n bottleneck zit op [fase]. ` +
         `Heb je een tip voor die fase?`
       );
+    case "dag12-sponsor-checkin":
+      return (
+        `Hoi${naamDeel}! Dag 12 erop ✅ Vandaag een product-pivot gestuurd ` +
+        `naar [naam] die nee zei op business. Spreek je snel!`
+      );
+    case "dag13-sponsor-checkin":
+      return (
+        `Hoi${naamDeel}! Dag 13 erop ✅ FORM bewust toegepast bij [naam]. ` +
+        `Ving deze haak op: [iets dat ze noemden]. Spreek je snel!`
+      );
+    case "dag15-sponsor-checkin":
+      return (
+        `Hoi${naamDeel}! Dag 15 erop ✅ Week 3 begint, follow-up wordt mijn ` +
+        `focus. Hoeveel mensen heb ik nu warm te houden, ongeveer? Help me ` +
+        `even zicht houden.`
+      );
+    case "dag16-sponsor-checkin":
+      return (
+        `Hoi${naamDeel}! Dag 16 erop ✅ Mijn top-20 prospects gecategoriseerd ` +
+        `in de 5 types. Heb [aantal] op type 1+2 — daar gaat m'n energie heen ` +
+        `komende week. Spreek je snel!`
+      );
+    case "dag17-sponsor-checkin":
+      return (
+        `Hoi${naamDeel}! Dag 17 erop ✅ Doel-Tijd-Termijn vandaag toegepast ` +
+        `bij [naam]. M'n closing-zin staat opgeslagen onder /mijn-zinnen. ` +
+        `Spreek je snel!`
+      );
+    case "dag18-sponsor-checkin":
+      return (
+        `Hoi${naamDeel}! Dag 18 erop ✅ Mijn edification-zin geschreven en ` +
+        `opgeslagen. Wil je 'm even checken? Hij staat onder /mijn-zinnen.`
+      );
+    case "dag19-sponsor-checkin":
+      return (
+        `Hoi${naamDeel}! Dag 19 erop ✅ Pipeline-bottleneck zit op [fase]. ` +
+        `Heb je een tip voor de komende 40 dagen om die fase aan te pakken?`
+      );
+    case "dag20-sponsor-checkin":
+      return (
+        `Hoi${naamDeel}! Dag 20 erop ✅ Vandaag (of morgen) voor het eerst ` +
+        `de beslissing gevraagd bij [naam]. Reactie: [ja/nee/nog nodig]. ` +
+        `Beslissing krijgen is winst, ongeacht de richting!`
+      );
     case "dag3-sponsor-checkin":
       return (
         `Hoi${naamDeel}! Dag 3 erop ✅ Ben rustig aan het netwerk bouwen, ` +
@@ -132,6 +176,14 @@ function pakTitel(taakId: string | undefined): string {
     case "dag9-sponsor-checkin":
     case "dag10-sponsor-checkin":
     case "dag11-sponsor-checkin":
+    case "dag12-sponsor-checkin":
+    case "dag13-sponsor-checkin":
+    case "dag15-sponsor-checkin":
+    case "dag16-sponsor-checkin":
+    case "dag17-sponsor-checkin":
+    case "dag18-sponsor-checkin":
+    case "dag19-sponsor-checkin":
+    case "dag20-sponsor-checkin":
       return "📩 Stuur een korte check-in naar je sponsor";
     case "dag6-sponsor-tip":
       return "💬 Vraag je sponsor om een tip";

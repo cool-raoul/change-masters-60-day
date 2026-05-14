@@ -223,7 +223,6 @@ Vandaag stuur je ook al 3 uitnodigingen, samen met je sponsor in een groepje (3-
     waaromWerktDit: {
       tekst:
         "De geheugensteunlijst is je voorraadkast. Hoe voller, hoe makkelijker de keuze wat je vanavond kookt. En de eerste invites zijn altijd het zwaarst, gewoon door.",
-      bron: "Eric Worre, Go Pro",
     },
   },
 
@@ -317,7 +316,6 @@ NIET GELIJK PITCHEN, wat wel: reageer terug op hun content. Vraag iets. Bouw rap
     waaromWerktDit: {
       tekst:
         "Social media is geen podium, het is een radar. Je kijkt niet wie er klapt. Je kijkt wie er zwaait.",
-      bron: "Fraser Brookes, 3 minutes on social",
     },
   },
 
@@ -341,14 +339,6 @@ NIET GELIJK PITCHEN, wat wel: reageer terug op hun content. Vraag iets. Bouw rap
           "Voor elke prospect die ja zei tegen een kijkmoment: open z'n kaart en kies één van twee paden via het keuzeblok bovenaan.\n\n🤝 3-WEG-GESPREK voor: warme prospects, mensen die snel willen schakelen, kort traject mogelijk, persoonlijk contact passend. Stappenplan staat klaar achter de '3-weg'-knop op de kaart, dag 7 verdiep je dit.\n\n✨ MINI-ELEVA voor: twijfelaars, prospects met druk leven, mensen die eerst zelf willen kijken. 14 dagen eigen toegang, welkomstvideo's, AI-mentor, chat met jou en je sponsor. Klik 'Mini-ELEVA-uitnodiging maken' op de kaart en stuur de link via WhatsApp.\n\nNiet zeker? Druk op 'Overleg met sponsor' in het keuzeblok, dan opent een vooringevulde WhatsApp aan je sponsor met de prospect-context.\n\nJe hoeft niet voor iedereen vandaag te kiezen, alleen voor de mensen die je deze week serieus opvolgt.",
         verplicht: false,
         actieRoute: "/namenlijst",
-      },
-      {
-        id: "dag4-social-3",
-        label: "3 namen uit socials",
-        verplicht: true,
-        actieRoute: "/namenlijst",
-        uitleg:
-          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
       {
         id: "dag4-follow-1",
@@ -454,7 +444,6 @@ Op je prospect-kaart kun je de keuze maken via de knop "🧭 Welke aanpak past b
     waaromWerktDit: {
       tekst:
         "Wees zakelijk. Wees professioneel. Wees kort. Dan neem je mensen serieus genoeg om ze de ruimte te geven zélf nee te zeggen.",
-      bron: "Eric Worre, Go Pro",
     },
   },
 
@@ -478,14 +467,6 @@ Op je prospect-kaart kun je de keuze maken via de knop "🧭 Welke aanpak past b
         actieRoute: "/namenlijst",
         uitleg:
           "3 mensen die eerder een invite/info hebben gehad, vandaag een korte check-in. Open Namenlijst → kies prospect → 'Follow-up' of vraag de Mentor: 'Help me met een follow-up voor [naam]'. Niet 'heb je al beslist?' maar 'hoe gaat 't?'.",
-      },
-      {
-        id: "dag5-social-3",
-        label: "3 namen uit socials",
-        verplicht: true,
-        actieRoute: "/namenlijst",
-        uitleg:
-          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
       {
         id: "dag5-roleplay",
@@ -580,14 +561,6 @@ VEELGEMAAKTE FOUTEN:
           "Iedereen die je dag 4-5 hebt uitgenodigd of info gestuurd hebt en niet meer gereageerd heeft. Een niet-antwoord is géén nee, meestal gewoon stilte: druk leven, vergeten, of even geen prioriteit.\n\nDE STILGEVALLEN-GESPREKKEN-ZIN (werkt vrijwel altijd):\n\"Hé, ik zag dat je niet meer had gereageerd op mijn laatste berichtje. Is dat omdat je druk was of omdat je geen interesse hebt op dit moment? Allebei prima hoor, ik dacht: ik vraag het even!\"\n\nWaarom dit werkt:\n• Geen verwijt, geen druk: 'allebei prima hoor' geeft de uitweg.\n• Eerlijk antwoord: mensen die druk waren ('sorry, vergeten!') komen terug. Mensen die geen interesse hebben, geven dat aan zonder ongemak.\n• Helderheid voor jou: je weet waar je staat, kunt verder.\n\nGebruik 'm letterlijk of in jouw eigen woorden, beide werkt.",
         verplicht: true,
         actieRoute: "/namenlijst",
-      },
-      {
-        id: "dag6-social-3",
-        label: "3 namen uit socials",
-        verplicht: true,
-        actieRoute: "/namenlijst",
-        uitleg:
-          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
       {
         id: "dag6-sponsor-tip",
@@ -1117,14 +1090,6 @@ KIJK VANDAAG NAAR JE PIPELINE: hoeveel mensen op "Uitgenodigd"? Hoeveel op "One-
           "5 mensen die eerder gehoord hebben, vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
       },
       {
-        id: "dag12-social-3",
-        label: "3 namen uit socials",
-        verplicht: true,
-        actieRoute: "/namenlijst",
-        uitleg:
-          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
-      },
-      {
         id: "dag12-pivot-1",
         label:
           "Als iemand 'nee' zei op business: probeer een product-pivot vandaag",
@@ -1209,7 +1174,6 @@ EXTRA WAARDE: zeg nee tegen drammen, ja tegen warmte. Een Shopper die jou over e
     waaromWerktDit: {
       tekst:
         "Nee nu is geen nee voor altijd. Blijf warm, blijf in hun leven, wees waardevol. Dan ben je de eerste die ze bellen als de situatie verandert.",
-      bron: "Worre + Brookes, samen",
     },
   },
 
@@ -1233,14 +1197,6 @@ EXTRA WAARDE: zeg nee tegen drammen, ja tegen warmte. Een Shopper die jou over e
         actieRoute: "/namenlijst",
         uitleg:
           "5 mensen die eerder gehoord hebben, vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
-      },
-      {
-        id: "dag13-social-3",
-        label: "3 namen uit socials",
-        verplicht: true,
-        actieRoute: "/namenlijst",
-        uitleg:
-          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
       {
         id: "dag13-form-1",
@@ -1336,7 +1292,6 @@ VANDAAG: kies 1 specifieke prospect, plan een 5-min check-in (DM of telefoon) en
     waaromWerktDit: {
       tekst:
         "Mensen kopen geen producten of opportunities. Ze kopen oplossingen voor wat ze voelen.",
-      bron: "Fraser Brookes, 3 minutes on recruiting",
     },
   },
 
@@ -1437,7 +1392,6 @@ VAN HIER UIT IS HET KILOMETER-WERK. Geen nieuwe technieken meer, alleen oefenen 
     waaromWerktDit: {
       tekst:
         "Je bent nooit zo goed of slecht als je denkt. Je statistieken zijn eerlijker dan je gevoel.",
-      bron: "Eric Worre, Go Pro",
     },
   },
 
@@ -1464,14 +1418,6 @@ VAN HIER UIT IS HET KILOMETER-WERK. Geen nieuwe technieken meer, alleen oefenen 
         actieRoute: "/namenlijst",
         uitleg:
           "10 mensen uit je lijst uitnodigen voor een kijkmoment. Open Namenlijst → klik op een prospect → 'Uitnodigen', of vraag de Mentor: 'Schrijf een uitnodiging voor [naam]'. Mix warm + lauw, halverwege in 5-10 min als je scripts paraat hebt.",
-      },
-      {
-        id: "dag15-social-3",
-        label: "3 namen uit socials",
-        verplicht: true,
-        actieRoute: "/namenlijst",
-        uitleg:
-          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
     ],
     faseDoel:
@@ -1537,7 +1483,6 @@ Een nee NU is geen nee voor altijd. Iemand op "Not-yet" zetten is geen verlies. 
     waaromWerktDit: {
       tekst:
         "De fortuin zit in de follow-up. Eerste contact plant het zaadje. Follow-up water geeft.",
-      bron: "Jim Rohn, vrij vertaald",
     },
   },
 
@@ -1561,14 +1506,6 @@ Een nee NU is geen nee voor altijd. Iemand op "Not-yet" zetten is geen verlies. 
         actieRoute: "/namenlijst",
         uitleg:
           "10 follow-ups vandaag, het is follow-up-week, hier zit de oogst. Loop je pipeline door (Namenlijst → Pipeline) en stuur per persoon een passend bericht. Mentor helpt: 'Schrijf een follow-up voor [naam] die [status]'.",
-      },
-      {
-        id: "dag16-social-3",
-        label: "3 namen uit socials",
-        verplicht: true,
-        actieRoute: "/namenlijst",
-        uitleg:
-          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
       {
         id: "dag16-categoriseer",
@@ -1644,7 +1581,6 @@ VANDAAG, categoriseer je top-20:
     waaromWerktDit: {
       tekst:
         "Je gaat nooit iemand overtuigen die niet wil. Je gaat mensen vinden die al op zoek zijn.",
-      bron: "Eric Worre, Go Pro",
     },
   },
 
@@ -1668,14 +1604,6 @@ VANDAAG, categoriseer je top-20:
         actieRoute: "/namenlijst",
         uitleg:
           "10 follow-ups vandaag, het is follow-up-week, hier zit de oogst. Loop je pipeline door (Namenlijst → Pipeline) en stuur per persoon een passend bericht. Mentor helpt: 'Schrijf een follow-up voor [naam] die [status]'.",
-      },
-      {
-        id: "dag17-social-3",
-        label: "3 namen uit socials",
-        verplicht: true,
-        actieRoute: "/namenlijst",
-        uitleg:
-          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
       {
         id: "dag17-closing",
@@ -1777,7 +1705,6 @@ VANDAAG: probeer Doel-Tijd-Termijn vandaag of morgen bij minstens 1 warme prospe
     waaromWerktDit: {
       tekst:
         "Closing is niet overtuigen, closing is helpen beslissen. Grote verschil.",
-      bron: "Eric Worre, Go Pro",
     },
   },
 
@@ -1801,14 +1728,6 @@ VANDAAG: probeer Doel-Tijd-Termijn vandaag of morgen bij minstens 1 warme prospe
         actieRoute: "/namenlijst",
         uitleg:
           "10 follow-ups vandaag, het is follow-up-week, hier zit de oogst. Loop je pipeline door (Namenlijst → Pipeline) en stuur per persoon een passend bericht. Mentor helpt: 'Schrijf een follow-up voor [naam] die [status]'.",
-      },
-      {
-        id: "dag18-social-3",
-        label: "3 namen uit socials",
-        verplicht: true,
-        actieRoute: "/namenlijst",
-        uitleg:
-          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
       {
         id: "dag18-edification-zin",
@@ -1891,7 +1810,6 @@ Wat je vandaag doet: 5 minuten investeren in JOUW vaste zin. Schrijf 'm op, bewa
     waaromWerktDit: {
       tekst:
         "Edification is wat een 3-weg een 3-weg maakt. Zonder dat is het gewoon nog een gesprek.",
-      bron: "Eric Worre + Fraser Brookes",
     },
   },
 
@@ -1915,14 +1833,6 @@ Wat je vandaag doet: 5 minuten investeren in JOUW vaste zin. Schrijf 'm op, bewa
         actieRoute: "/namenlijst",
         uitleg:
           "10 follow-ups vandaag, het is follow-up-week, hier zit de oogst. Loop je pipeline door (Namenlijst → Pipeline) en stuur per persoon een passend bericht. Mentor helpt: 'Schrijf een follow-up voor [naam] die [status]'.",
-      },
-      {
-        id: "dag19-social-3",
-        label: "3 namen uit socials",
-        verplicht: true,
-        actieRoute: "/namenlijst",
-        uitleg:
-          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
       {
         id: "dag19-pipeline",
@@ -2002,7 +1912,6 @@ Statistieken zijn je leermeester, niet je rechter. Slechte cijfers betekenen nie
     waaromWerktDit: {
       tekst:
         "Wat je meet, verbetert. Wat je niet meet, blijft een gevoel.",
-      bron: "Peter Drucker, vrij vertaald",
     },
   },
 
@@ -2026,14 +1935,6 @@ Statistieken zijn je leermeester, niet je rechter. Slechte cijfers betekenen nie
         actieRoute: "/namenlijst",
         uitleg:
           "10 follow-ups vandaag, het is follow-up-week, hier zit de oogst. Loop je pipeline door (Namenlijst → Pipeline) en stuur per persoon een passend bericht. Mentor helpt: 'Schrijf een follow-up voor [naam] die [status]'.",
-      },
-      {
-        id: "dag20-social-3",
-        label: "3 namen uit socials",
-        verplicht: true,
-        actieRoute: "/namenlijst",
-        uitleg:
-          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
       {
         id: "dag20-vraag-1",
@@ -2109,7 +2010,6 @@ VANDAAG: kies 1 prospect die meer dan 3 exposures heeft gehad zonder beslissing.
     waaromWerktDit: {
       tekst:
         "De enige manier om 'nee' te krijgen is door te vragen. De enige manier om 'ja' te krijgen is door te vragen. Vraag.",
-      bron: "Fraser Brookes",
     },
   },
 
@@ -2214,7 +2114,6 @@ VANDAAG: vul de week-3-review in. Schrijf de drie reflectie-vragen uit, eerlijk.
     waaromWerktDit: {
       tekst:
         "Je bouwt geen business in 21 dagen. Je bouwt een fundament. Daar bovenop zetten we in 40 dagen de muren.",
-      bron: "Project Meer Tijd en Vrijheid, kernfilosofie",
     },
   },
 ];

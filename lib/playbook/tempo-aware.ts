@@ -781,6 +781,421 @@ function bouwDag11VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
 }
 
 /**
+ * Standaard ABC-stappen (namen + eerste berichten + uitnodigingen) plus
+ * D follow-ups (NA_DAG6-frame met FFF + 5-fasen) en E stories. Wordt
+ * hergebruikt door dag 12+ functies om DRY te blijven. Per dag wordt
+ * dit array gecombineerd met dag-specifieke F-stap en sponsor-afsluiter.
+ */
+function standaardABCDEstappen(
+  dagNummer: number,
+  uren: CommitmentUren,
+): ControllableTaak[] {
+  const dd = berekenDagdoelen(uren);
+
+  return [
+    {
+      id: `dag${dagNummer}-namen-toevoegen`,
+      label: `📲 Voeg ${dd.contacten} nieuwe namen toe aan je lijst`,
+      uitleg: `Dagritme: ${dd.contacten} nieuwe mensen toevoegen aan je netwerk-overzicht. Eén woord context per persoon ('fitness', 'oud-collega', 'koffietent').\n\nGebruik de vier bronnen (Eleva-geheugen, Facebook, Instagram, LinkedIn) in de strip hieronder als ingang. Warm voor koud.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+    {
+      id: `dag${dagNummer}-eerste-berichten`,
+      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht`,
+      uitleg: `Pak ${dd.contacten} mensen uit je lijst en stuur een persoonlijk eerste bericht.\n\n📱 In je namenlijst staan naast elke prospect kleine icoontjes (WhatsApp, Instagram, Facebook). Eén klik en de juiste app opent met die persoon — geen kopiëren-en-plakken.\n\nDit is een opener, geen casual catch-up. Doel: binnen 1-3 berichten leiden naar een uitnodiging. Via de spraakfunctie: "Ik heb een gesprek gestart met [naam]" → fase 'in gesprek'.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+    {
+      id: `dag${dagNummer}-uitnodigingen`,
+      label: `📨 Verstuur ${dd.uitnodigingen} uitnodigingen (4-stappen-formule)`,
+      uitleg: `Pas de 4-stappen-formule toe op ${dd.uitnodigingen} mensen vandaag. Compliment → uitnodigen → plan met twee opties → eventueel haast (alleen business).\n\nMix warm + lauw. Bij een ja, deel de link en vertel de spraakfunctie: "Ik heb [naam] uitgenodigd en de link gestuurd". Hulp nodig? Drie knoppen onder dit vak: voorbeelden, sponsor of Mentor.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+      uitnodigHelpKnoppen: true,
+    },
+    {
+      id: `dag${dagNummer}-openstaande-followups`,
+      label: "🔄 Doe je openstaande follow-ups vandaag",
+      uitleg: FOLLOWUP_UITLEG_NA_DAG6,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+    {
+      id: `dag${dagNummer}-stories`,
+      label: "📱 1 tot 3 stories + reageren op andermans stories",
+      uitleg: STORIES_UITLEG,
+      verplicht: true,
+    },
+  ];
+}
+
+/**
+ * Tempo-specifieke vervangings-data voor dag 12.
+ * Thema: Nee op business? Bied de webshop of producten aan (pivot).
+ */
+function bouwDag12VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
+  return [
+    ...standaardABCDEstappen(12, uren),
+    {
+      id: "dag12-pivot",
+      label: "🔄 Stuur 1 product-pivot-bericht naar iemand die 'nee' zei op business",
+      uitleg:
+        "Heb je iemand die deze week 'nee' zei op de business-kant? Top moment om vandaag te pivoten naar product. De volledige pivot-formule (3 stappen + 3 voorbeelden) staat bovenaan onder 'Wat je leert'.\n\nDE KORTE VERSIE\n\n1. ERKEN ZONDER DRUK: 'Helemaal goed dat dit niet bij je past, geen probleem.'\n2. HAAK NAAR GEZONDHEID/ENERGIE: 'Trouwens, hoe gaat het bij je met [energie/slaap/sport]?'\n3. STEL PRODUCT-MOGELIJKHEID VOOR: 'Wil je eens een maand proberen, vrijblijvend?'\n\nNA HET PIVOT-BERICHT\n\nUpdate de pijplijn-fase in de namenlijst naar 'Shopper'. Maak een herinnering voor +21 dagen: '[naam], hoe bevallen de producten?'. Stop de business-vraag voor minstens 3 maanden, laat ze het ervaren.\n\nGeen pivot-kandidaat vandaag? Sla deze stap over. Geen druk om er één te forceren.",
+      verplicht: false,
+      actieRoute: "/namenlijst",
+    },
+    {
+      id: "dag12-sponsor-checkin",
+      label: "💬 Sluit af met een korte sponsor-checkin",
+      uitleg:
+        "30 seconden. Heb je vandaag een pivot gedaan? Of een nee-die-warm-blijft? Stuur je sponsor in één zin hoe het ging.",
+      verplicht: false,
+      inlineEmbed: "sponsor-melding",
+    },
+  ];
+}
+
+/**
+ * Tempo-specifieke vervangings-data voor dag 13.
+ * Thema: FORM (Family, Occupation, Recreation, Money) — rapport bouwen.
+ */
+function bouwDag13VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
+  return [
+    ...standaardABCDEstappen(13, uren),
+    {
+      id: "dag13-form-toepassen",
+      label: "🎙️ Pas FORM bewust toe in minstens 1 gesprek vandaag",
+      uitleg:
+        "De volledige FORM-uitleg met voorbeelden per categorie + 'haken' om te luisteren staat bovenaan onder 'Wat je leert'.\n\nDE KORTE VERSIE\n\n• F (Family): wie hoort er bij hen, hoe gaat het thuis?\n• O (Occupation): wat doen ze nu, hoe bevalt het?\n• R (Recreation): waar krijgen ze energie van?\n• M (Money): hoe tevreden zijn ze met de financiële kant? — alleen na vertrouwen, never als eerste.\n\nDE GOUDEN REGEL\n\nJij praat 30%, zij 70%. Stel je vraag, wacht het antwoord af, vraag door ('vertel eens meer...'). Maak na het gesprek korte notitie in de prospect-kaart.\n\nLUISTER NAAR HAKEN: 'ik zou willen dat...', 'ik mis nog...', 'als ik meer tijd/geld had...'. Daar zit je opening voor een uitnodiging — niet eerder.\n\nKIES 1 SPECIFIEKE PROSPECT vandaag, plan een 5-min check-in (DM of telefoon), pas FORM toe. Schrijf 3 dingen op in de prospect-notities.",
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+    {
+      id: "dag13-sponsor-checkin",
+      label: "💬 Sluit af met een korte sponsor-checkin",
+      uitleg:
+        "30 seconden. Bij welke prospect heb je FORM toegepast? Welke 'haak' heb je opgevangen? Stuur je sponsor één zin.",
+      verplicht: false,
+      inlineEmbed: "sponsor-melding",
+    },
+  ];
+}
+
+/**
+ * Tempo-specifieke vervangings-data voor dag 14.
+ * Thema: Halverwege! Week 2 review. Net als dag 7 staat de review EERST,
+ * vol tempo voor het werk (week 3 wordt belangrijk, niet rustiger),
+ * sponsor-call (15 min) als langere afsluiter.
+ */
+function bouwDag14VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
+  return [
+    {
+      id: "dag14-review",
+      label: "📋 Vul de week 2-review in (5 min reflectie)",
+      uitleg:
+        "Drie vragen: wat ging goed deze week, wat liep niet soepel, waar focus ik volgende week op? Open /statistieken voor de review-vragenlijst. Aan het eind kun je 'm met je sponsor delen — dan kan zij of hij zich voorbereiden op jullie call vanavond.\n\nKijk bij de review ook naar PATRONEN, niet alleen 'deed ik m'n aantallen?'. Welke berichten kregen reactie? Welke fase heeft de meeste vastzittende prospects? Daar zit je werk voor week 3.",
+      verplicht: true,
+      actieRoute: "/statistieken",
+    },
+    ...standaardABCDEstappen(14, uren),
+    {
+      id: "dag14-pipeline-check",
+      label: "🔍 Bekijk je hele pijplijn: wie zit waar?",
+      uitleg:
+        "Open je namenlijst in pijplijn-weergave. Tel per fase. Waar stokt het? Dat is het thema voor week 3.\n\nDE KORTE BOTTLENECK-ANALYSE\n\n• Veel op UITGENODIGD zonder antwoord? Uitnodigingen herzien (dag 4).\n• Veel op ONE-PAGER zonder reactie? Follow-up te direct of mist focus op WAT raakte (dag 6).\n• Veel op PRESENTATIE zonder beslissing? Closing-werk komt op dag 17 (Doel-Tijd-Termijn).\n\nDe volledige bottleneck-uitleg met 40-dagen-fix per type staat bovenaan onder 'Wat je leert'.",
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+    {
+      id: "dag14-sponsor-call",
+      label: "📞 15 min sponsor-call: week 3 voorbereiden",
+      uitleg:
+        "Wat werkte deze week? Wat liep niet soepel? Wat is het thema van week 3? Neem 15 minuten samen om week 2 door te lopen en week 3 vorm te geven. Tip: deel je review-formulier vóór de call zodat je sponsor zich kan voorbereiden.",
+      verplicht: false,
+      inlineEmbed: "sponsor-melding",
+    },
+  ];
+}
+
+/**
+ * Tempo-specifieke vervangings-data voor dag 15.
+ * Thema: Ritme-week start. Follow-up wordt hoofdwerk in week 3.
+ */
+function bouwDag15VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
+  return [
+    ...standaardABCDEstappen(15, uren),
+    {
+      id: "dag15-followup-focus",
+      label: "⏱️ Vandaag start week 3 — follow-up wordt je hoofdwerk",
+      uitleg:
+        "Week 3 verschuift de focus: minder nieuwe contacten verzinnen, meer mensen warm houden die al uitgenodigd zijn. 80% van alle ja's komt op contactmoment 3 t/m 5, niet op het eerste.\n\nDE GOLD QUESTION (werkt op vrijwel iedereen)\n\n'Hoe kijk je er nu naar, na een paar dagen?'\n\nOpen vraag, geen oordeel, geen druk. De volledige 5-fasen-flow staat bovenaan onder 'Wat je leert' + in dag 6 (via Menu → Playbook → Dag 6).\n\nWAT JE VANDAAG EXTRA DOET\n\nNaast je gewone openstaande follow-ups (stap 4 hierboven): kijk in je herinneringen-lijst (Menu → Herinneringen → Alle open). Wie heeft een vervaldatum vandaag of eerder? Doe die vandaag, niet morgen.\n\nDe langspeelplaten-regel: een nee NU is geen nee voor altijd. Iemand op 'Not-yet' zetten is geen verlies — houd ze warm via gewone content, ze komen vaak 6-12 maanden later alsnog terug.",
+      verplicht: true,
+      actieRoute: "/herinneringen",
+    },
+    {
+      id: "dag15-sponsor-checkin",
+      label: "💬 Sluit af met een korte sponsor-checkin",
+      uitleg:
+        "30 seconden. Stuur je sponsor: 'Week 3 begint, follow-up wordt mijn focus. Hoeveel mensen heb ik nu warm te houden, ongeveer?'. Sponsor helpt je zicht houden.",
+      verplicht: false,
+      inlineEmbed: "sponsor-melding",
+    },
+  ];
+}
+
+/**
+ * Tempo-specifieke vervangings-data voor dag 16.
+ * Thema: 5 types prospects — energie waar het telt.
+ */
+function bouwDag16VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
+  return [
+    ...standaardABCDEstappen(16, uren),
+    {
+      id: "dag16-categoriseer",
+      label: "🎯 Categoriseer je top-20 actieve prospects in de 5 types",
+      uitleg:
+        "De volledige 5-types-uitleg met signalen + aanpak per type staat bovenaan onder 'Wat je leert'.\n\nDE KORTE VERSIE\n\n1. ACTIEF ZOEKEND — direct presenteren, hun moment is NU. Energie: HOOG.\n2. OPEN — rapport bouwen, FORM-vragen, langzaam exposeren. Energie: HOOG.\n3. PRODUCTKOPER — pivot naar Shopper (zie dag 12). Energie: GEMIDDELD.\n4. NIET-NU — erkennen, warm houden, herinnering +3 maanden. Energie: LAAG.\n5. NOOIT — erkennen, loslaten als prospect, behouden als persoon. Energie: NUL voor business, 100% warmte als relatie.\n\nDE ÉÉN-WOORD-OEFENING\n\nOpen je namenlijst, pak je top-20 actieve prospects. Per persoon: één type. Pas eventueel de pijplijn-fase of een tag aan.\n\nVOLGENDE WEEK\n\nEnergie-budget: ~70% naar type 1+2, ~20% naar type 3, ~10% naar type 4. Type 5 = warmte-onderhoud, geen werk-tijd. De grootste fout: type 5 behandelen als type 2 (eindeloos hopen op die ene oude vriend).",
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+    {
+      id: "dag16-sponsor-checkin",
+      label: "💬 Sluit af met een korte sponsor-checkin",
+      uitleg:
+        "30 seconden. Hoeveel type 1+2 prospects heb je geïdentificeerd? Dat is je echte werk-voorraad. Stuur je sponsor het aantal.",
+      verplicht: false,
+      inlineEmbed: "sponsor-melding",
+    },
+  ];
+}
+
+/**
+ * Tempo-specifieke vervangings-data voor dag 17.
+ * Thema: Closing met Doel-Tijd-Termijn. Inline-actie: schrijf je eigen
+ * openings-closing-zin (bewaard onder /mijn-zinnen).
+ */
+function bouwDag17VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
+  return [
+    ...standaardABCDEstappen(17, uren),
+    {
+      id: "dag17-eigen-closing-zin",
+      label: "✍️ Schrijf jouw eigen openings-closing-zin (5 min)",
+      uitleg:
+        "Eén vaste zin waarmee jij Doel-Tijd-Termijn introduceert in een gesprek. Bewaard onder /mijn-zinnen zodat je 'm altijd snel kunt oppakken. De 5 vragen + voorbeelden staan bovenaan onder 'Wat je leert'.",
+      verplicht: true,
+      inlineActie: {
+        type: "tekst",
+        slug: "closing-openingszin",
+        label: "Mijn closing-openingszin",
+        instructie:
+          "Een natuurlijke aanloop naar de 5 closing-vragen. Niet pushy, wel duidelijk. Stel het zo voor als 'helpen beslissen'.",
+        placeholder:
+          "Bv. Mag ik je een paar korte vragen stellen om te kijken of dit voor jou realistisch is?",
+        maxTekens: 280,
+        voorbeeld:
+          "Mag ik je 5 korte vragen stellen om te kijken of dit voor jou realistisch is qua tijd en doelen? Geen druk, gewoon eerlijk samen kijken.",
+      },
+    },
+    {
+      id: "dag17-closing-toepassen",
+      label: "🎯 Pas Doel-Tijd-Termijn toe bij minstens 1 warme prospect",
+      uitleg:
+        "Bij iemand die al een presentatie of 3-weg heeft gehad en nog twijfelt: stel de 5 closing-vragen op volgorde. Dit is helpen beslissen, geen drammen.\n\nDE 5 VRAGEN (recap, volledige uitleg + 3 voorbeelden bovenaan)\n\n1. DOEL: 'Hoeveel euro per maand extra zou dit de moeite waard maken?'\n2. TIJD: 'Hoeveel uur per week heb je daar realistisch voor?'\n3. TERMIJN: 'Na hoeveel maanden moet dat bedrag er staan?'\n4. VERBINDING: 'Als ik je kan laten zien dat dat realistisch is — wil je dat dan serieus bekijken?'\n5. START: 'Als dat klopt en goed voelt, starten we dan gewoon?'\n\nLaat de stilte vallen na vraag 5. Dat is goud.",
+      verplicht: false,
+      actieRoute: "/namenlijst",
+    },
+    {
+      id: "dag17-sponsor-checkin",
+      label: "💬 Sluit af met een korte sponsor-checkin",
+      uitleg:
+        "30 seconden. Heb je vandaag Doel-Tijd-Termijn toegepast? Bij wie, hoe verliep het? Stuur je sponsor één zin.",
+      verplicht: false,
+      inlineEmbed: "sponsor-melding",
+    },
+  ];
+}
+
+/**
+ * Tempo-specifieke vervangings-data voor dag 18.
+ * Thema: Edification — de zin die je sponsor laat schitteren.
+ * Inline-actie: schrijf je eigen edification-zin (bewaard onder /mijn-zinnen).
+ */
+function bouwDag18VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
+  return [
+    ...standaardABCDEstappen(18, uren),
+    {
+      id: "dag18-edification-zin",
+      label: "✨ Schrijf jouw eigen edification-zin (5 min)",
+      uitleg:
+        "Eén vaste zin van max 25 woorden waarmee je je sponsor introduceert in elk 3-weg of bij elke presentatie. Bewaard onder /mijn-zinnen, altijd snel terug te vinden.\n\nDE FORMULE (volledig uitleg bovenaan onder 'Wat je leert'):\n1. Wie introduceer je?\n2. Wat is hun track-record of autoriteit?\n3. Waarom heb JIJ ze gekozen?\n\nGeen overdrijving, gewoon de waarheid, sterk gebracht.",
+      verplicht: true,
+      inlineActie: {
+        type: "tekst",
+        slug: "edification-zin",
+        label: "Mijn edification-zin",
+        instructie:
+          "Volg de formule: 1) wie introduceer je, 2) wat is hun track-record of autoriteit, 3) waarom heb JIJ ze gekozen. Max 25 woorden. Geen overdrijving, gewoon de waarheid, sterk gebracht.",
+        placeholder: "Bv. Ik ga je voorstellen aan...",
+        maxTekens: 280,
+        voorbeeld:
+          "Ik ga je voorstellen aan Mark, die al 12 jaar mensen helpt om hun energie en ondernemerschap weer terug te vinden, degene die mij heeft laten zien hoe dit echt werkt.",
+      },
+    },
+    {
+      id: "dag18-edification-toepassen",
+      label: "🎯 Pas je edification-zin minstens 1× toe deze week",
+      uitleg:
+        "Bij je eerstvolgende 3-weg of presentatie: gebruik de zin letterlijk vóór je sponsor introduceert. Niet improviseren, gewoon zeggen. Goede edification verandert een gesprek waar drie mensen praten in een setting waar de prospect denkt: 'wow, deze persoon weet écht waar het over gaat'.",
+      verplicht: false,
+      actieRoute: "/namenlijst",
+    },
+    {
+      id: "dag18-sponsor-checkin",
+      label: "💬 Sluit af met een korte sponsor-checkin",
+      uitleg:
+        "30 seconden. Stuur je sponsor je nieuwe edification-zin: 'Dit is mijn vaste zin waarmee ik je voortaan introduceer — klopt 'm volgens jou?'.",
+      verplicht: false,
+      inlineEmbed: "sponsor-melding",
+    },
+  ];
+}
+
+/**
+ * Tempo-specifieke vervangings-data voor dag 19.
+ * Thema: Pipeline-check — waar lekt je trechter?
+ */
+function bouwDag19VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
+  return [
+    ...standaardABCDEstappen(19, uren),
+    {
+      id: "dag19-trechter-check",
+      label: "🔍 Pipeline-review: tel per fase + identificeer je bottleneck",
+      uitleg:
+        "De volledige bottleneck-analyse (4 types lekken + 40-dagen-fix per type) staat bovenaan onder 'Wat je leert'.\n\nWAT JE VANDAAG DOET\n\n1. Open je namenlijst in pijplijn-weergave (of /statistieken).\n2. Schrijf je aantallen op per fase: Uitgenodigd / One-pager / Presentatie / Beslist.\n3. Identificeer je grootste drop-off — welke fase verliest de meeste mensen?\n4. Schrijf op (notitie-app of papier): één specifieke oefening voor de komende 40 dagen om die drop-off te verkleinen.\n\nVERWACHTE GEZONDE TRECHTER (na 21 dagen)\n\nUitnodigingen → 50-70% reageert → 50% van reacties bekijken one-pager → 40% gaat naar presentatie → 30% beslist.\n\nZit jij ergens veel onder? Daar is je werk voor de komende 40 dagen. Statistieken zijn je leermeester, niet je rechter.",
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+    {
+      id: "dag19-sponsor-checkin",
+      label: "💬 Sluit af met een korte sponsor-checkin",
+      uitleg:
+        "30 seconden. Stuur je sponsor: 'Mijn bottleneck zit op [fase]. Heb je een tip voor de komende 40 dagen?'. Sponsor heeft vaak waardevolle ervaring per fase.",
+      verplicht: false,
+      inlineEmbed: "sponsor-melding",
+    },
+  ];
+}
+
+/**
+ * Tempo-specifieke vervangings-data voor dag 20.
+ * Thema: Vraag de beslissing — de moedigste vraag van het vak.
+ */
+function bouwDag20VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
+  return [
+    ...standaardABCDEstappen(20, uren),
+    {
+      id: "dag20-vraag-beslissing",
+      label: "💪 Vraag minstens 1 warme prospect: 'Wat heb je nog nodig om te beslissen?'",
+      uitleg:
+        "De grootste fout van starters is NIET vragen naar de beslissing. Ze blijven volgen, blijven delen, blijven hopen — soms maandenlang. De prospect raakt overspoeld of vergeet, jij raakt uitgeput, en niemand wordt iets wijzer.\n\nDE DRIE GOEDE VRAAG-VARIANTEN (volledig met voorbeelden bovenaan)\n\n1. ZACHTE VARIANT: 'Wat heb je nog nodig om een goede beslissing te kunnen nemen?' — open vraag, geen druk.\n2. DIRECTE VARIANT: 'De echte vraag is niet of je iets wilt veranderen, maar of dit het juiste voertuig is. Klopt dat?'\n3. PRAGMATISCHE VARIANT: 'Op basis van wat je hebt gezien: zie je jezelf als klant, als opbouwer, of nog niet?'\n\nWAT JE VANDAAG DOET\n\nKies 1 prospect die meer dan 3 exposures heeft gehad zonder beslissing. Vraag vandaag of morgen met variant 1 of 3.\n\nNA EEN BESLISSING: update direct de pijplijn-fase in de namenlijst. Ja op member → enrollment-flow. Ja op shopper → herinnering +21 dagen, géén business-vraag voor 3 maanden. Nee/niet-nu → erkennen warm, herinnering +90 dagen.\n\nBeslissing krijgen is winst — ongeacht de richting.",
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+    {
+      id: "dag20-sponsor-checkin",
+      label: "💬 Sluit af met een korte sponsor-checkin",
+      uitleg:
+        "30 seconden. Bij wie heb je vandaag of morgen voor de beslissing gevraagd? Wat was de reactie? Stuur je sponsor één zin — ongeacht de richting is dit een winst.",
+      verplicht: false,
+      inlineEmbed: "sponsor-melding",
+    },
+  ];
+}
+
+/**
+ * Tempo-specifieke vervangings-data voor dag 21.
+ * Thema: 21 dagen klaar! Net als dag 7+14 een review-dag.
+ * Minimum-aantallen (zoals dag 7) zodat er ruimte is voor de 21-dagen-
+ * reflectie en de 40-min sponsor-call. Niet rustiger op pijplijn,
+ * wel rustiger op nieuw werk.
+ */
+function bouwDag21VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
+  const min = dagdoelenMinimum(uren);
+
+  return [
+    {
+      id: "dag21-review-3",
+      label: "📋 Vul de week 3-review in (5 min)",
+      uitleg:
+        "Drie vragen: wat ging goed deze week, wat liep niet soepel, waar focus ik volgende week op? Open /statistieken voor de review-vragenlijst.",
+      verplicht: true,
+      actieRoute: "/statistieken",
+    },
+    {
+      id: "dag21-reflectie-21",
+      label: "🪞 Reflectie: hoe voelt de eerste 21 dagen?",
+      uitleg:
+        "Wat leerde je over jezelf? Waar groeide je? Wat was moeilijker dan gedacht? Wat bleek makkelijker? Deze reflectie gaat naar je sponsor en helpt bij jullie 40-min call straks.\n\nWAT JE IN 21 DAGEN HEBT GEDAAN (erkén het)\n\n• Een namenlijst van 100+ mensen aangelegd (was 0)\n• Tussen de 100 en 200 uitnodigingen verstuurd\n• Bezwaren leren behandelen met Feel-Felt-Found (FFF)\n• 3-weg-gesprekken gestart en gevoerd\n• Edification, FORM, Doel-Tijd-Termijn als technieken in je gereedschapskist\n• 1-3 beslissingen binnen (member, shopper of not-yet)\n\nDit is een fundament. Het echte gebouw zet je in de komende 40 dagen.",
+      verplicht: true,
+      actieRoute: "/statistieken",
+    },
+    {
+      id: "dag21-namen-toevoegen",
+      label: `📲 Voeg minimaal ${min.contacten} namen toe aan je lijst`,
+      uitleg: `Minimaal ${min.contacten} nieuwe namen vandaag, meer mag altijd. Vandaag is reflectie-dag, dus rustiger op de input — maar je pijplijn houdt z'n stroom. Minder dan ${min.contacten} doe je niet, dat breekt het ritme dat je hebt opgebouwd.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+    {
+      id: "dag21-eerste-berichten",
+      label: `💬 Stuur minimaal ${min.contacten} mensen een eerste bericht`,
+      uitleg: `Minimaal ${min.contacten} eerste berichten vandaag, meer mag.\n\n📱 In je namenlijst staan naast elke prospect kleine icoontjes (WhatsApp, Instagram, Facebook). Eén klik en de juiste app opent met die persoon.\n\nVia de spraakfunctie: "Ik heb een gesprek gestart met [naam]" → fase 'in gesprek'.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+    {
+      id: "dag21-uitnodigingen",
+      label: `📨 Verstuur minimaal ${min.uitnodigingen} uitnodigingen`,
+      uitleg: `Minimaal ${min.uitnodigingen} uitnodigingen vandaag, meer mag. Pas de 4-stappen-formule toe. Hulp nodig? Drie knoppen onder dit vak.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+      uitnodigHelpKnoppen: true,
+    },
+    {
+      id: "dag21-openstaande-followups",
+      label: "🔄 Doe je openstaande follow-ups vandaag",
+      uitleg: FOLLOWUP_UITLEG_NA_DAG6,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+    {
+      id: "dag21-stories",
+      label: "📱 1 tot 3 stories + reageren op andermans stories",
+      uitleg: STORIES_UITLEG,
+      verplicht: true,
+    },
+    {
+      id: "dag21-doel-40",
+      label: "🎯 Stel 1 concreet doel voor de volgende 40 dagen",
+      uitleg:
+        "Geen vaag doel. Iets concreets. 'Ik wil 5 members meer' of 'Ik wil consistent 10-10-3 blijven draaien' of 'Ik wil mijn bottleneck-fase met 50% verkleinen'. Vraag de Mentor als je twijfelt: 'Help me 1 concreet doel formuleren voor de volgende 40 dagen op basis van wat ik in 21 dagen heb behaald'.",
+      verplicht: true,
+      actieRoute: "/mijn-why",
+    },
+    {
+      id: "dag21-sponsor-call",
+      label: "📞 40 min sponsor-call: week 3 afsluiten + blok 2 voorbereiden",
+      uitleg:
+        "Langere call dan een wekelijkse. Neem 40 minuten samen om de hele eerste 21 dagen door te lopen en de volgende 40 te vormgeven. Tip: deel je reflectie + 40-dagen-doel vooraf zodat je sponsor zich kan voorbereiden.",
+      verplicht: false,
+      inlineEmbed: "sponsor-melding",
+    },
+  ];
+}
+
+/**
  * Past tempo-specifieke vervangingen toe op een dag.
  *
  * Voor dagen met tempo-aware logica (momenteel dag 3 + dag 4):
@@ -861,7 +1276,38 @@ export function pasTempoToeOpDag(
     };
   }
 
+  if (dag.nummer === 12) {
+    return { ...dag, vandaagDoen: bouwDag12VandaagDoen(commitmentUren) };
+  }
+  if (dag.nummer === 13) {
+    return { ...dag, vandaagDoen: bouwDag13VandaagDoen(commitmentUren) };
+  }
+  if (dag.nummer === 14) {
+    return { ...dag, vandaagDoen: bouwDag14VandaagDoen(commitmentUren) };
+  }
+  if (dag.nummer === 15) {
+    return { ...dag, vandaagDoen: bouwDag15VandaagDoen(commitmentUren) };
+  }
+  if (dag.nummer === 16) {
+    return { ...dag, vandaagDoen: bouwDag16VandaagDoen(commitmentUren) };
+  }
+  if (dag.nummer === 17) {
+    return { ...dag, vandaagDoen: bouwDag17VandaagDoen(commitmentUren) };
+  }
+  if (dag.nummer === 18) {
+    return { ...dag, vandaagDoen: bouwDag18VandaagDoen(commitmentUren) };
+  }
+  if (dag.nummer === 19) {
+    return { ...dag, vandaagDoen: bouwDag19VandaagDoen(commitmentUren) };
+  }
+  if (dag.nummer === 20) {
+    return { ...dag, vandaagDoen: bouwDag20VandaagDoen(commitmentUren) };
+  }
+  if (dag.nummer === 21) {
+    return { ...dag, vandaagDoen: bouwDag21VandaagDoen(commitmentUren) };
+  }
+
   // Andere dagen: voorlopig nog niet tempo-aware. Hier komen volgende
-  // rondes de varianten voor dag 12-21 te zien.
+  // rondes de varianten voor dag 22+ te zien.
   return dag;
 }
