@@ -38,6 +38,18 @@ function pakBericht(taakId: string | undefined, sponsorVoornaam: string): string
         `korte kennismaak-call van zo'n 30 min, even mijn WHY met je delen, ` +
         `en samen kijken naar mijn eerste 3 invites. Wanneer schikt het bij jou?`
       );
+    case "dag5-sponsor-checkin":
+      return (
+        `Hoi${naamDeel}! Dag 5 erop ✅ Vandaag voor het eerst FFF actief ` +
+        `geoefend op bezwaren. Voelt nog wennen maar de structuur helpt. ` +
+        `Spreek je snel!`
+      );
+    case "dag6-sponsor-checkin":
+      return (
+        `Hoi${naamDeel}! Dag 6 erop ✅ Vandaag actief gewerkt aan follow-ups ` +
+        `en de 24-48u-regel. Voelt goed om systematisch door m'n pijplijn te ` +
+        `lopen. Spreek je snel!`
+      );
     case "dag3-sponsor-checkin":
       return (
         `Hoi${naamDeel}! Dag 3 erop ✅ Ben rustig aan het netwerk bouwen, ` +
@@ -90,6 +102,8 @@ function pakTitel(taakId: string | undefined): string {
     case "dag2-kennismaak":
       return "📞 Stel een kennismaak-call voor";
     case "dag3-sponsor-checkin":
+    case "dag5-sponsor-checkin":
+    case "dag6-sponsor-checkin":
       return "📩 Stuur een korte check-in naar je sponsor";
     case "dag6-sponsor-tip":
       return "💬 Vraag je sponsor om een tip";
