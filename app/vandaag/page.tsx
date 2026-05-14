@@ -105,10 +105,13 @@ export default async function VandaagPagina({
 
   let dagData;
   if (dag >= 22) {
-    // Dag 22-60: weekritme-modus. Synthetische dag op basis van
-    // de weekdag van vandaag. Roterende F-stap, zelfde ABCDE-basis.
-    const weekdag = new Date().getDay() as 0 | 1 | 2 | 3 | 4 | 5 | 6;
-    dagData = genereerWeekritmeDag(dag, weekdag, commitmentUren);
+    // Dag 22-60: weekritme-modus. Synthetische dag op basis van de
+    // RUN-weekdag (= (dag - 1) % 7), niet de kalender-weekdag. Zo blijft
+    // het ritme synchroon met de start-datum van de member: weekstart-dag
+    // (dag 22, 29, 36...), audio-dag, content-dag, plannings-dag,
+    // follow-up-dag, reflectie-dag, week-review-dag. Roterende F-stap,
+    // zelfde ABCDE-basis.
+    dagData = genereerWeekritmeDag(dag, commitmentUren);
     if (!dagData) redirect("/dashboard");
   } else {
     // Dag 1-21: statische basis uit DAGEN[], plus tempo-aware

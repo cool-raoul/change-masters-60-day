@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { StatsOverzicht } from "@/components/statistieken/StatsOverzicht";
 import { WekelijkseReviewFormulier } from "@/components/statistieken/WekelijkseReviewFormulier";
+import { MentorStatsAnalyseKnop } from "@/components/statistieken/MentorStatsAnalyseKnop";
 
 export default async function StatistiekenPagina() {
   const supabase = await createClient();
@@ -56,6 +57,11 @@ export default async function StatistiekenPagina() {
           {v("stats.subtitel", taal)}, {v("dashboard.dag", taal)} {dag} {v("dashboard.van_60", taal)}
         </p>
       </div>
+
+      {/* Mentor-analyse-knop: prominentste plek, bovenaan. Haalt
+          alle cijfers op + bouwt rijke prompt naar Mentor voor
+          diepgaande analyse + concreet advies. */}
+      <MentorStatsAnalyseKnop />
 
       {/* Wekelijkse review-formulier, drie vragen + sponsor-deel-keuze.
           Week-nummer berekend op basis van de huidige run-dag (dag 7,

@@ -1086,18 +1086,20 @@ function bouwDag18VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
 
 /**
  * Tempo-specifieke vervangings-data voor dag 19.
- * Thema: Pipeline-check — waar lekt je trechter?
+ * Thema: Pipeline-check — waar lekt je trechter? Handmatige pijplijn-
+ * doorloop (geen Mentor-funnel-analyse, die komt pas op dag 21 als
+ * 21-dagen-oogst en daarna automatisch elke weekstart-dag in 22-60).
  */
 function bouwDag19VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
   return [
     ...standaardABCDEstappen(19, uren),
     {
-      id: "dag19-funnel-analyse",
-      label: "🔍 Laat ELEVA je funnel diepgaand analyseren",
+      id: "dag19-pipeline-doorloop",
+      label: "🔍 Pipeline-doorloop: tel per fase + identificeer je bottleneck",
       uitleg:
-        "Vandaag is pipeline-dag. De Mentor kijkt naar al jouw cijfers, identificeert je grootste bottleneck (welke fase verliest de meeste mensen?), en geeft een concrete oefening voor de komende 40 dagen om die bottleneck te verkleinen.\n\nDe volledige bottleneck-analyse (4 types lekken + 40-dagen-fix per type) staat ook bovenaan onder 'Wat je leert'. Maar via de knop hieronder krijg je de analyse SPECIFIEK voor jouw cijfers, niet generiek.\n\nDe verwachte gezonde trechter na 21 dagen: uitnodigingen → 50-70% reageert → 50% bekijkt one-pager → 40% naar presentatie → 30% beslist. Zit jij ergens veel onder die conversie? De Mentor zegt het je en wijst je naar de juiste dag-les.",
+        "Vandaag loop je je hele pijplijn handmatig door. De volledige bottleneck-analyse (4 types lekken + 40-dagen-fix per type) staat bovenaan onder 'Wat je leert'.\n\nWAT JE DOET\n\n1. Open je namenlijst in pijplijn-weergave (of /statistieken).\n2. Schrijf voor jezelf de aantallen op per fase: Uitgenodigd / One-pager / Presentatie / Beslist.\n3. Identificeer je grootste drop-off — welke fase verliest de meeste mensen?\n4. Schrijf op: één specifieke oefening voor de komende 40 dagen om die drop-off te verkleinen.\n\nVERWACHTE GEZONDE TRECHTER (na 21 dagen)\n\nUitnodigingen → 50-70% reageert → 50% bekijkt one-pager → 40% naar presentatie → 30% beslist.\n\nZit jij ergens veel onder? Daar is je werk. De Mentor-analyse-knop staat op dag 21 (overmorgen) en daarna op /statistieken om altijd op te roepen.",
       verplicht: true,
-      inlineEmbed: "funnel-analyse",
+      actieRoute: "/namenlijst",
     },
     {
       id: "dag19-sponsor-checkin",
