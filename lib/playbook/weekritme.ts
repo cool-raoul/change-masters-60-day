@@ -1,467 +1,345 @@
 // ============================================================
-// PLAYBOOK, weekritme voor dag 22-60
-// Na de eerste 21 dagen (Fundament → Momentum → Ritme) zit de
-// member in "ritme-verduurzaming": dezelfde acties, maar nu als
-// vast weekritme. Elke weekdag heeft één hoofdfocus.
+// lib/playbook/weekritme.ts
 //
-// De controllable-lat voor dag 22-60:
-//   • 10 uitnodigingen per dag (ma-vr)
-//   • 10 follow-ups per dag (ma-vr)
-//   • 3 namen per dag toevoegen (ma-vr)
-//   • 2 3-weg-gesprekken per week (woensdag-focus)
-//   • 1 weekly review (zondag)
-//   • 1 planning-moment (maandag)
+// Dag 22 tot en met 60: na de eerste 21 dagen leerstof switcht de
+// Sprint naar 'weekritme'-modus. Geen nieuwe technieken meer leren,
+// alleen DOEN wat je hebt geleerd, dag in dag uit. De dagelijkse
+// content roteert op basis van de WEEKDAG, niet het dag-nummer.
+//
+// Filosofie (Raoul, 2026-05-14): dagelijks afvinken blijven, niet
+// wekelijks. Reden: dagelijks ritme borgt gewoonte. Wekelijks
+// overzicht laat mensen 2 dagen vergeten, dan 5 dagen, dan stop.
+//
+// PATROON
+//
+// Maandag    🔍 Pipeline-analyse via Mentor
+// Dinsdag    🎧 Audio-onderweg, 1 track luisteren
+// Woensdag   📱 Lifestyle-content op socials
+// Donderdag  🤝 3-weg of presentatie plannen
+// Vrijdag    🔄 Follow-up-batch (drie-stappen-aanpak)
+// Zaterdag   🪞 Lichte week-reflectie
+// Zondag     📋 Wekelijkse review + sponsor-call (minimum-aantallen)
+//
+// ELKE DAG: A namen + B berichten + C uitnodigingen + D follow-ups
+// + E stories + F (roterend per weekdag) + Z sponsor-checkin
+// (of sponsor-call op zondag, 15 min).
+//
+// Zondag specifiek: minimum-aantallen op A/B/C (zoals dag 7/14/21)
+// zodat er ruimte is voor review + sponsor-call. Andere dagen vol-tempo.
 // ============================================================
 
-import { Weekdag } from "./types";
+import {
+  berekenDagdoelen,
+  dagdoelenMinimum,
+  type CommitmentUren,
+} from "@/lib/dagdoelen";
+import type { Dag, ControllableTaak } from "./types";
+import {
+  FOLLOWUP_UITLEG_NA_DAG6,
+  STORIES_UITLEG,
+  standaardABCDEstappen,
+} from "./tempo-aware";
 
-export const WEEKRITME: Weekdag[] = [
-  // ──────────────────────────────────────────────────────────
-  // MAANDAG · Plannen
-  // ──────────────────────────────────────────────────────────
-  {
-    dagVanDeWeek: 1,
-    titel: "Maandag · plannen",
-    focus:
-      "Je week begint met overzicht. Wie zit waar in de pipeline? Wie krijgt deze week welke stap? Pak even 20 minuten om je week te tekenen vóór je uitnodigingen stuurt.",
-    vandaagDoen: [
-      {
-        id: "ma-pipeline-review",
-        label: "Pipeline-review: wie zit in welke fase?",
-        uitleg:
-          "Open Pipeline in ELEVA. Loop elke fase af: wie wacht op wat? Wie is langer dan 5 dagen niet bewogen? Die krijgen deze week prioriteit.",
-        verplicht: true,
-      },
-      {
-        id: "ma-week-plan",
-        label: "Week-plan: 3 prioriteit-prospects kiezen",
-        uitleg:
-          "Kies 3 mensen die deze week een beslissing nodig hebben. Niet meer. Focus werkt.",
-        verplicht: true,
-      },
-      {
-        id: "ma-inhaaldag-bouwen",
-        label: "Inhaaldag inbouwen indien nodig",
-        uitleg:
-          "Heb je vorige week dagen overgeslagen? Plan deze week 1-2 dagen waar je +50% aantallen draait (15 invites ipv 10). Niet straffen, gewoon inhalen. Op andere dagen blijft het normale ritme.",
-        verplicht: false,
-      },
-      {
-        id: "ma-10-invites",
-        label: "10 uitnodigingen versturen",
-        verplicht: true,
-      },
-      {
-        id: "ma-10-followups",
-        label: "10 follow-ups doen",
-        verplicht: true,
-      },
-      {
-        id: "ma-3-namen",
-        label: "3 nieuwe namen toevoegen",
-        verplicht: true,
-      },
-      {
-        id: "ma-sponsor-plan",
-        label: "Deel je week-plan met je sponsor (optioneel)",
-        verplicht: false,
-      },
-    ],
+// Weekdag-mapping: JavaScript Date.getDay() returnt 0 = zondag,
+// 1 = maandag, ..., 6 = zaterdag.
+type Weekdag = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
+const WEEKDAG_NAMEN: Record<Weekdag, string> = {
+  0: "zondag",
+  1: "maandag",
+  2: "dinsdag",
+  3: "woensdag",
+  4: "donderdag",
+  5: "vrijdag",
+  6: "zaterdag",
+};
+
+// ============================================================
+// Per-weekdag F-stap definities
+// ============================================================
+
+function maandagFStap(): ControllableTaak {
+  return {
+    id: "weekritme-maandag-funnel-analyse",
+    label: "🔍 Pipeline-analyse via ELEVA Mentor",
+    uitleg:
+      "Het is maandag, weekstart. Voordat je in nieuwe acties stort, kijk je eerst even waar de pijplijn staat. ELEVA's Mentor pakt je actuele cijfers per fase, identificeert je grootste bottleneck, en geeft een concrete focus voor deze week.\n\nKlik op de knop hieronder — de cijfers worden automatisch opgehaald, de Mentor opent met een gerichte analyse. Geen typewerk. Vraag eventueel door: 'wat is de slimste verbetering deze week?'.",
+    verplicht: true,
+    inlineEmbed: "funnel-analyse",
+  };
+}
+
+function dinsdagFStap(): ControllableTaak {
+  return {
+    id: "weekritme-dinsdag-audio-onderweg",
+    label: "🎧 Luister 1 audio-onderweg-track (15-20 min)",
+    uitleg:
+      "Het is dinsdag, audio-dag. Open in de Academy de training 'Audio onderweg met Eric Worre' en kies één track om vandaag te luisteren — in de auto, tijdens een wandeling of bij koffie.\n\nNiet alle 8 tracks tegelijk. Kies de skill waar je deze week aan wilt werken: vinden, uitnodigen, presenteren, follow-up, closing, getting started, of events. Eén track per dinsdag, in 8 weken heb je ze allemaal.\n\nDeze weekdag is bewust dieper dan de andere — luistermomenten zetten de mindset waar de andere zes dagen op draaien.",
+    verplicht: true,
+    actieRoute: "/academy/audio-onderweg",
+  };
+}
+
+function woensdagFStap(): ControllableTaak {
+  return {
+    id: "weekritme-woensdag-lifestyle-content",
+    label: "📱 Maak 1 wat-langere lifestyle-story die je leven laat zien",
+    uitleg:
+      "Het is woensdag, content-dag. Naast je gewone 1-3 stories vandaag maak je er één wat dieper: een moment uit je dag dat laat zien wie je bent. Geen pitch, geen 'kom in m'n business'. Wel iets dat een vriendin van je interessant zou vinden om te zien.\n\nIDEEËN:\n• Een mooie wandeling met 1 zin reflectie\n• Iets wat je vandaag hebt geleerd of dat je raakte\n• Een gezond ontbijt met een uitleg waarom je dit doet\n• Een rustig moment, een blije gedachte\n\nDe regel: hoe meer je laat zien wie je BENT, hoe meer mensen je vinden. Lifestyle-content trekt aan, pitch-content jaagt weg.\n\nWil je dieper? In de Academy staat de training 'Social Media Strategie' — die geeft je in 14 modules de hele aanpak.",
+    verplicht: true,
+  };
+}
+
+function donderdagFStap(): ControllableTaak {
+  return {
+    id: "weekritme-donderdag-3weg-of-presentatie",
+    label: "🤝 Plan minstens 1 3-weg of presentatie voor deze week",
+    uitleg:
+      "Het is donderdag, plannings-dag. Kijk in je namenlijst: wie zit er in fase 'one-pager' of 'follow-up' en is klaar voor een diepere exposure? Plan vandaag voor minimaal 1 prospect een 3-weg-gesprek of een presentatie deze week.\n\nDE STAPPEN\n\n1. Kies de prospect (warmste eerst).\n2. Stuur de aankondiging-zin: 'Ik maak een groepje met mijn mentor [sponsor], die kan met je meekijken.'\n3. App je sponsor: 'Heb je deze week 30 min voor een 3-weg met [naam]?'\n4. Maak de afspraak vast in je agenda.\n\nWeekritme-tip: één 3-weg per week is hét tempo voor consistente groei. Geen, dan stagneert de pijplijn. Meer dan twee, dan kakt je voorbereiding in.",
+    verplicht: true,
+    actieRoute: "/namenlijst",
+  };
+}
+
+function vrijdagFStap(): ControllableTaak {
+  return {
+    id: "weekritme-vrijdag-followup-batch",
+    label: "🔄 Follow-up-batch: pak je 5 hardste cases (drie-stappen-aanpak)",
+    uitleg:
+      "Het is vrijdag, focus-follow-up-dag. Naast de gewone openstaande follow-ups (stap 4 hierboven) pak je vandaag SPECIFIEK je 5 hardste cases — prospects waar je niet zo goed weet wat te schrijven.\n\nDE DRIE-STAPPEN-AANPAK PER CASE\n\n1. EERST ZELF: open je notitie-app of typ direct in WhatsApp (concept). Schrijf wat JIJ zou willen sturen, in jouw stijl. Geen scripts kopiëren.\n\n2. CHECK TEGEN WAT JE HEBT GELEERD: past Feel-Felt-Found (FFF) op een bezwaar? Klopt de 5-fasen-fase? Past de openingszin 'wat spreekt je het meeste in aan?'?\n\n3. PAS DAN HULP VRAGEN: stuur je concept naar sponsor of Mentor met 'klopt dit volgens jou?'. Niet 'schrijf 'm voor mij'.\n\nWaarom in deze volgorde: zelf nadenken is een spier die je bouwt door 'm te gebruiken. Hulp meteen vragen is comfort, maar het houdt je beginner.\n\nDieper terug-bladeren? Menu → Playbook → Dag 5 (FFF) en Dag 6 (5-fasen-flow).",
+    verplicht: true,
+    actieRoute: "/namenlijst",
+  };
+}
+
+function zaterdagFStap(): ControllableTaak {
+  return {
+    id: "weekritme-zaterdag-reflectie",
+    label: "🪞 5 min reflectie op de week (lichter weekend-moment)",
+    uitleg:
+      "Het is zaterdag, lichter moment. Vandaag geen extra opdracht buiten je ABCDE-ritme, alleen 5 minuten reflectie.\n\nDRIE VRAGEN VOOR JEZELF\n\n1. Wat ging deze week beter dan vorige week?\n2. Welk moment voelde voor jou als groei (klein of groot)?\n3. Welke prospect of fase houdt vooral mijn aandacht?\n\nSchrijf het op (notitie-app of via de spraakfunctie). Niet als verplichting, wel als anker. Mensen die wekelijks korte reflectie doen, bouwen sneller vakmanschap dan mensen die alleen actie hebben.\n\nMorgen (zondag) doe je de uitgebreide wekelijkse review. Vandaag is alleen een eerste aanloop.",
+    verplicht: false,
+  };
+}
+
+function zondagFStap(): ControllableTaak {
+  return {
+    id: "weekritme-zondag-review",
+    label: "📋 Vul de wekelijkse review in (5 min reflectie)",
+    uitleg:
+      "Het is zondag, review-dag. Drie vragen: wat ging goed deze week, wat liep niet soepel, waar focus ik volgende week op? Aan het eind kun je 'm met je sponsor delen — dan kan zij of hij zich voorbereiden op jullie call.\n\nKijk bij de review naar PATRONEN, niet alleen 'deed ik m'n aantallen?'. Welke berichten kregen reactie? Welke fase heeft de meeste vastzittende prospects? Waar zit je bottleneck? De ELEVA Mentor kan je daarbij helpen via de funnel-analyse-knop op maandag.",
+    verplicht: true,
+    actieRoute: "/statistieken",
+  };
+}
+
+// ============================================================
+// Per-weekdag thema (titel + watJeLeert)
+// ============================================================
+
+type WeekdagThema = {
+  titel: string;
+  watJeLeert: string;
+};
+
+function themaVoor(weekdag: Weekdag): WeekdagThema {
+  switch (weekdag) {
+    case 1: // maandag
+      return {
+        titel: "🔍 Maandag — pipeline-analyse-dag",
+        watJeLeert: `Maandag = de week-opener. Voordat je in nieuwe acties stort, kijk je eerst waar je staat. De Mentor van ELEVA analyseert je actuele pijplijn-cijfers en wijst je naar de fase waar de meeste prospects vastzitten. Dat is je focus voor de week.\n\nGEEN NIEUWE THEORIE\n\nDe eerste 21 dagen heb je alles geleerd wat je nodig hebt: 4-stappen-uitnodiging, Feel-Felt-Found, 5-fasen-follow-up, edification, Doel-Tijd-Termijn. Vanaf nu hoef je niets nieuws meer te leren — alleen blijven DOEN. Dat is waar 80% afhaakt. De 20% die wel doorgaat, daar zit de werkelijke groei.\n\nHET WEEKRITME\n\nElke weekdag heeft één extra focus naast het standaard-ritme:\n• Maandag = pipeline-analyse\n• Dinsdag = audio onderweg\n• Woensdag = lifestyle-content\n• Donderdag = 3-weg of presentatie plannen\n• Vrijdag = follow-up-batch (drie-stappen-aanpak)\n• Zaterdag = lichte reflectie\n• Zondag = wekelijkse review + sponsor-call\n\nDe basis blijft elke dag hetzelfde (namen, berichten, uitnodigingen, follow-ups, stories). De F-stap roteert zodat geen dag hetzelfde voelt — terwijl het ritme wel doorloopt.`,
+      };
+    case 2: // dinsdag
+      return {
+        titel: "🎧 Dinsdag — audio onderweg",
+        watJeLeert: `Dinsdag = audio-dag. Vandaag voed je je mindset met één track uit de Audio-onderweg-Academy. Eric Worre's Seven Skills, perfect voor in de auto, tijdens een wandeling of bij koffie.\n\nWAAROM AUDIO?\n\nLezen en doen vraagt je hoofd. Luisteren tijdens beweging activeert een andere laag. Veel netwerkers melden dat de stof pas écht in plaats valt na de 4e of 5e keer luisteren — niet door één keer doorscannen. Dinsdag-discipline: één track per week.\n\nIN 8 WEKEN HEB JE ALLE SEVEN SKILLS\n\nKies elke dinsdag de skill waarvan je voelt dat je 'm nu het meeste nodig hebt. Geen volgorde verplicht (na de intro). Sommige dagen is dat 'vinden van prospects', andere dagen 'follow-up' of 'closing'. Volg je intuïtie.\n\nNiet beschikbaar voor audio vandaag? Schuif door naar dinsdag volgende week. Een gemist moment is geen drama, een gemist patroon wel.`,
+      };
+    case 3: // woensdag
+      return {
+        titel: "📱 Woensdag — lifestyle-content op socials",
+        watJeLeert: `Woensdag = content-dag. Naast je gewone stories maak je vandaag één wat dieper moment dat laat zien wie je bent. Geen pitch — wel lifestyle.\n\nWAAROM DIT WERKT\n\nMensen worden aangetrokken door wie je BENT, niet door wat je VERKOOPT. Hoe meer je je echte leven laat zien (gezonde keuzes, mooie wandelingen, rustige momenten, doelen waar je aan werkt), hoe meer mensen je zelf opzoeken. Geen DM's meer hoeven sturen — mensen sturen JOU.\n\nDit is een lang spel. Eén lifestyle-post per week bouwt over 6-12 maanden een aanwezigheid op die geen 100 cold-DM's kunnen evenaren.\n\nDIEPER LEREN\n\nIn de Academy staat de training 'Social Media Strategie' (14 modules, 42 lessen). Daar leer je profielinrichting, story-strategie, FORM in DM's, lifestyle-leakage. Geen verplichting — voor wanneer je 'm wilt pakken.\n\nHet komt allemaal in jouw eigen ritme. Eén woensdag tegelijk.`,
+      };
+    case 4: // donderdag
+      return {
+        titel: "🤝 Donderdag — 3-weg of presentatie plannen",
+        watJeLeert: `Donderdag = plannings-dag. Niet uitvoeren in de week, plannen. Eén 3-weg of presentatie voor deze week vastleggen, agenda erbij.\n\nWAAROM PLANNEN ALS APARTE STAP?\n\nVeel netwerkers 'doen het wel als het uitkomt'. Resultaat: er KOMT geen 3-weg uit. Twee weken zonder een 3-weg = pijplijn-stagnatie = afhaken. Met één afgesproken moment per week houd je de motor draaiend.\n\nDE PLANNINGS-FORMULE\n\n1. Kies de warmste prospect die in fase 'one-pager' of 'follow-up' staat.\n2. Stuur de aankondiging.\n3. App je sponsor of teamlid om beschikbaarheid.\n4. Zet 't in je agenda — niet 'ergens deze week' maar dag + tijdslot.\n\nEEN PER WEEK\n\nMinder dan een per week = pijplijn kakt in. Meer dan twee per week = je voorbereiding lijdt eronder en je sponsor raakt overbelast. Eén is het gulden midden tijdens onderhouds-modus.\n\nDieper terug-bladeren: Menu → Playbook → Dag 9 (3-weg-meesterclass) en Dag 10 (3-weg doen).`,
+      };
+    case 5: // vrijdag
+      return {
+        titel: "🔄 Vrijdag — follow-up-batch met drie-stappen-aanpak",
+        watJeLeert: `Vrijdag = focus-follow-up-dag. Naast je gewone openstaande follow-ups pak je vandaag specifiek de 5 HARDSTE cases — prospects waar je niet meteen weet wat te schrijven.\n\nWAAROM DRIE-STAPPEN-AANPAK\n\nDe valkuil van starters: bij elke hardere case meteen de Mentor of sponsor om hulp vragen. Comfort, maar het houdt je beginner. Door eerst ZELF te schrijven, dan te checken tegen wat je hebt geleerd (FFF, 5-fasen-fase, openingszin), bouw je je eigen instinct. Pas als je twijfelt vraag je een tweede mening.\n\nDE BESTE TIJD VOOR HARDE CASES\n\nVrijdagmiddag of -avond. Reden: mensen zijn op vrijdag iets meer ontspannen dan dinsdagochtend. Een doordachte vraag krijgt vrijdag een doordacht antwoord. Op een drukke woensdag krijg je sneller een halve reactie.\n\nNa 5 weken vrijdag-batch heb je 25 moeilijke cases bewust aangepakt. Dat is waar je vakmanschap echt scherp wordt.`,
+      };
+    case 6: // zaterdag
+      return {
+        titel: "🪞 Zaterdag — lichte week-reflectie",
+        watJeLeert: `Zaterdag = lichter moment. Geen zware opdrachten, geen aparte planning. Alleen je gewone ABCDE-ritme + 5 minuten reflectie + sponsor-checkin.\n\nWAAROM EEN 'LICHTERE' DAG IN HET WEEKRITME?\n\nConsistente intensiteit zonder pauze leidt tot uitval. Het weekend is het natuurlijke pauze-moment. Niet je werk weglaten, wel het ritme zacht doorzetten.\n\nDE REFLECTIE-VRAAG VAN ZATERDAG\n\n'Wat ging deze week beter dan vorige week? En welk moment voelde voor jou als groei?'\n\nKlein, lief, persoonlijk. Schrijf het op of spreek het in. Morgen (zondag) doe je de uitgebreide review met sponsor-call — vandaag is alleen het EERSTE rondje.\n\nNetwerkers die hun weekend bewust lichter pakken, halen méér uit hun werkweken. Het is geen luiheid, het is ritme-bewaking.`,
+      };
+    case 0: // zondag
+    default:
+      return {
+        titel: "📋 Zondag — wekelijkse review + sponsor-call",
+        watJeLeert: `Zondag = review-dag. Lichter op de input (minimum-aantallen voor ABCDE), zwaarder op de reflectie + sponsor-call. Dezelfde aanpak als dag 7, 14, 21 — herhaalbaar wekelijks.\n\nDE WEKELIJKSE REVIEW\n\nDrie vragen die je beantwoordt in /statistieken:\n1. Wat ging goed deze week?\n2. Wat liep niet soepel?\n3. Waar focus ik volgende week op?\n\nDeel de review met je sponsor (toggle aan het eind van het formulier). Sponsor kan zich daardoor voorbereiden op jullie call.\n\nDE SPONSOR-CALL (15 min)\n\nWeek doorlopen. Niet alleen 'wat gebeurde' — vooral 'wat ga ik volgende week anders'. De sponsor-call is het moment waar week-na-week patroon-herkenning gebeurt.\n\nMINIMUM-AANTALLEN VANDAAG\n\nA, B en C op minimum-aantallen vandaag (zoals dag 7). Reden: review + sponsor-call vragen ruimte. Maar je pijplijn houdt z'n stroom — minder dan minimum doe je niet.`,
+      };
+  }
+}
+
+// ============================================================
+// HOOFD-FUNCTIE
+// ============================================================
+
+/**
+ * Genereert een synthetisch Dag-object voor dag 22-60.
+ *
+ * @param dagNummer  Tussen 22 en 60.
+ * @param weekdag    JavaScript Date.getDay() output (0 = zondag, ..., 6 = zaterdag).
+ * @param commitmentUren  Het tempo dat de user heeft gekozen.
+ */
+export function genereerWeekritmeDag(
+  dagNummer: number,
+  weekdag: Weekdag,
+  commitmentUren: CommitmentUren | null,
+): Dag | null {
+  if (dagNummer < 22 || dagNummer > 60) return null;
+
+  const thema = themaVoor(weekdag);
+  const fStap = kiesFStap(weekdag);
+
+  // Zondag: minimum-aantallen voor ABCDE (zoals dag 7-patroon).
+  // Andere weekdagen: vol-tempo.
+  const isZondag = weekdag === 0;
+  const stappen: ControllableTaak[] = isZondag
+    ? bouwZondagABCDEstappen(dagNummer, commitmentUren)
+    : commitmentUren
+      ? standaardABCDEstappen(dagNummer, commitmentUren)
+      : [];
+
+  // F-stap inschuiven na ABCDE
+  stappen.push(fStap);
+
+  // Z-stap: sponsor-checkin (zondag: sponsor-call 15 min, langer)
+  stappen.push(
+    isZondag
+      ? {
+          id: `dag${dagNummer}-sponsor-call`,
+          label: "📞 15 min sponsor-call: week doorlopen + volgende voorbereiden",
+          uitleg:
+            "Wat werkte deze week? Wat ga je anders doen? Wat is het thema van volgende week? Neem 15 minuten samen om de week door te lopen en de volgende vorm te geven. Tip: deel je review-formulier vóór de call zodat je sponsor zich kan voorbereiden.",
+          verplicht: false,
+          inlineEmbed: "sponsor-melding",
+        }
+      : {
+          id: `dag${dagNummer}-sponsor-checkin`,
+          label: "💬 Sluit af met een korte sponsor-checkin",
+          uitleg: `30 seconden. Het is ${WEEKDAG_NAMEN[weekdag]}, dag ${dagNummer} van je Sprint. Stuur je sponsor een berichtje hoe het ging vandaag — kort en menselijk.`,
+          verplicht: false,
+          inlineEmbed: "sponsor-melding",
+        },
+  );
+
+  return {
+    nummer: dagNummer,
+    titel: thema.titel,
+    fase: 4,
+    vandaagDoen: stappen,
+    faseDoel:
+      "Weekritme-modus (dag 22-60): consistent ritme bouwen, niets nieuws leren, oogsten wat je in de eerste 21 dagen hebt gezaaid.",
     waarInEleva: [
       {
-        actie: "Pipeline-review (alle fases)",
-        menupad: "Menu → Namenlijst → Weergave: Pipeline",
-        route: "/namenlijst",
-      },
-      {
-        actie: "Top-3 prospects markeren",
-        menupad: "Menu → Namenlijst → klik prospect → Prioriteit",
-        spraak: '"Deze week focus op Jan, Marieke en Peter"',
-        route: "/namenlijst",
-      },
-    ],
-    teaching:
-      "Een week die je niet plant, plant jou. Maandag rustig vooruit-denken spaart je dagen drijven. Pak pen en papier als ELEVA even te klein voelt. Het resultaat hoort in ELEVA, het denken mag overal.",
-  },
-
-  // ──────────────────────────────────────────────────────────
-  // DINSDAG · Uitnodigen
-  // ──────────────────────────────────────────────────────────
-  {
-    dagVanDeWeek: 2,
-    titel: "Dinsdag · uitnodigen",
-    focus:
-      "Vandaag is invite-dag. De 10 uitnodigingen die je stuurt zijn niet random. Ze komen uit je pipeline 'nieuw' en uit je maandag-plan. Kwantiteit mét richting.",
-    vandaagDoen: [
-      {
-        id: "di-10-invites",
-        label: "10 uitnodigingen versturen",
-        uitleg:
-          "Gebruik het 4-stappen-script (haast, complimentje, vraag, set tijd). Varieer de opening. Een tweede invite aan dezelfde persoon vraagt om een andere hoek.",
-        verplicht: true,
-      },
-      {
-        id: "di-10-followups",
-        label: "10 follow-ups doen",
-        verplicht: true,
-      },
-      {
-        id: "di-3-namen",
-        label: "3 nieuwe namen toevoegen",
-        verplicht: true,
-      },
-      {
-        id: "di-no-show-check",
-        label: "No-shows van afgelopen week inhalen",
-        uitleg:
-          "Wie heeft vorige week niet gereageerd op een invite? Eén herkansing, zachte toon. Daarna pas over 2 weken weer.",
-        verplicht: false,
-      },
-    ],
-    waarInEleva: [
-      {
-        actie: "Uitnodiging versturen vanaf prospect-kaart",
-        menupad: "Menu → Namenlijst → klik prospect → Uitnodigen",
-        spraak: '"Stuur uitnodiging naar Jan"',
-        route: "/namenlijst",
-      },
-      {
-        actie: "Uitnodig-scripts openen",
-        menupad: "Menu → Scripts → Uitnodiging",
-        route: "/scripts",
-      },
-    ],
-    teaching:
-      "De regel: 'Make it short, make it urgent, get off the phone.' 30 seconden is genoeg. Hoe langer je praat, hoe meer je jezelf in de weg zit. Je bouwt geen rapport bij een uitnodiging. Je zet alleen even een afspraak.",
-  },
-
-  // ──────────────────────────────────────────────────────────
-  // WOENSDAG · 3-weg / Samen werken
-  // ──────────────────────────────────────────────────────────
-  {
-    dagVanDeWeek: 3,
-    titel: "Woensdag · 3-weg",
-    focus:
-      "Midden van de week: samenwerken met je sponsor of een geupline. Een 3-weg is geen presentatie. Het is een getuigenis met drie stemmen.",
-    vandaagDoen: [
-      {
-        id: "wo-3weg-plannen",
-        label: "Minstens 1 3-weg-gesprek deze week plannen/voeren",
-        uitleg:
-          "Liefst vandaag zelf, anders deze week. Regel: elke prospect die bijna-ja of bijna-nee zegt, krijgt een 3-weg aangeboden.",
-        verplicht: true,
-      },
-      {
-        id: "wo-10-invites",
-        label: "10 uitnodigingen versturen",
-        verplicht: true,
-      },
-      {
-        id: "wo-10-followups",
-        label: "10 follow-ups doen",
-        verplicht: true,
-      },
-      {
-        id: "wo-3-namen",
-        label: "3 nieuwe namen toevoegen",
-        verplicht: true,
-      },
-      {
-        id: "wo-edification-check",
-        label: "Sponsor ge-edifieerd vóór het gesprek?",
-        uitleg:
-          "Vertel je prospect vóórdat de sponsor aanhaakt waarom die goed is, wat hij/zij doet. Zonder edification geen autoriteit.",
-        verplicht: false,
-      },
-    ],
-    waarInEleva: [
-      {
-        actie: "3-weg-scripts vanaf prospect-kaart",
-        menupad: "Menu → Namenlijst → klik prospect → 💬 3-weg gesprek scripts",
-        spraak: '"Plan 3-weg met sponsor en Marieke voor donderdag 20u"',
-        route: "/namenlijst",
-      },
-      {
-        actie: "Edification-zinnen ophalen",
-        menupad: "Menu → Scripts → Edification",
-        route: "/scripts",
-      },
-    ],
-    teaching:
-      "Het 3-weg-principe: jij bent de brug, de sponsor is de autoriteit, de prospect is de beslisser. Jouw taak is edificeren, niet antwoorden. Hoe minder jij zegt in een 3-weg, hoe meer je groeit als vakman.",
-  },
-
-  // ──────────────────────────────────────────────────────────
-  // DONDERDAG · Follow-up
-  // ──────────────────────────────────────────────────────────
-  {
-    dagVanDeWeek: 4,
-    titel: "Donderdag · follow-up",
-    focus:
-      "De fortuin zit in de follow-up. Vandaag extra gewicht op doorvragen: wie heeft iets gezien maar nog niet beslist? Met welke vraag breng je 'm een stap verder?",
-    vandaagDoen: [
-      {
-        id: "do-10-followups-plus",
-        label: "10 follow-ups doen, met open vraag",
-        uitleg:
-          'Niet "heb je nog nagedacht?", maar "wat sprak je het meest aan?" of "wat was je grootste zorg?". Open vragen brengen antwoorden.',
-        verplicht: true,
-      },
-      {
-        id: "do-10-invites",
-        label: "10 uitnodigingen versturen",
-        verplicht: true,
-      },
-      {
-        id: "do-3-namen",
-        label: "3 nieuwe namen toevoegen",
-        verplicht: true,
-      },
-      {
-        id: "do-beslissing-vragen",
-        label: "Vraag bij 2 prospects de beslissing",
-        uitleg:
-          "Wie al 2+ follow-ups heeft gehad zonder beslissing: vraag vandaag expliciet. 'Wat is je gevoel: meedoen als member, als shopper, of nu even niet?'",
-        verplicht: false,
-      },
-    ],
-    waarInEleva: [
-      {
-        actie: "Follow-up-lijst per fase",
-        menupad: "Menu → Namenlijst → Weergave: Pipeline",
-        route: "/namenlijst",
-      },
-      {
-        actie: "Follow-up-scripts (open vragen)",
-        menupad: "Menu → Scripts → Follow-up",
-        route: "/scripts",
-      },
-      {
-        actie: "Open herinneringen voor follow-up-bel-lijst",
-        menupad: "Menu → Herinneringen → Vandaag",
-        route: "/herinneringen",
-      },
-    ],
-    teaching:
-      "80% van de beslissingen valt op follow-up 5-12. Niet op 1 of 2. Als jij stopt bij nummer 3, laat je geld en impact liggen. Maak het zacht, consistent, zonder pushen. Een 'nog niet' is geen 'nooit'.",
-  },
-
-  // ──────────────────────────────────────────────────────────
-  // VRIJDAG · Socials / Lijst uitbreiden
-  // ──────────────────────────────────────────────────────────
-  {
-    dagVanDeWeek: 5,
-    titel: "Vrijdag · socials",
-    focus:
-      "Einde van de werkweek: uitbreiden. Wie heeft deze week op je sociale media gereageerd, geliked, gecommentarieerd? Die mensen willen gezien worden, geef ze een DM.",
-    vandaagDoen: [
-      {
-        id: "vr-5-dms",
-        label: "5 DM's naar reageerders van deze week",
-        uitleg:
-          "Geen verkoop-DM, gewoon een menselijk bericht. 'Leuk dat je reageerde op mijn post, hoe gaat het?'. En dan FORM openen.",
-        verplicht: true,
-      },
-      {
-        id: "vr-social-post",
-        label: "1 waarde-post plaatsen (lifestyle of resultaat-deel)",
-        uitleg:
-          "Niet verkopen op socials, gewoon delen. Je workout, je ochtendritueel, een moment uit je dag. Laat zien wie je bent, niet wat je verkoopt. Als je producten in beeld brengt: vermeld 'uit mijn webshop' zonder specifieke effect-claims (EU-richtlijnen voor voedingsclaims).",
-        verplicht: true,
-      },
-      {
-        id: "vr-10-invites",
-        label: "10 uitnodigingen versturen",
-        verplicht: true,
-      },
-      {
-        id: "vr-5-followups",
-        label: "5 follow-ups doen (lichtere dag)",
-        verplicht: true,
-      },
-      {
-        id: "vr-3-namen-socials",
-        label: "3 nieuwe namen uit socials toevoegen",
-        verplicht: true,
-      },
-    ],
-    waarInEleva: [
-      {
-        actie: "Namen toevoegen via spraak",
-        menupad: "Menu → Namenlijst → + Nieuwe prospect",
-        spraak: '"Voeg 3 namen toe uit Instagram"',
-        route: "/namenlijst",
-      },
-      {
-        actie: "Post-ideeën via Mentor",
-        menupad: "Menu → ELEVA Mentor",
-        spraak: '"Geef me 3 post-ideeën voor vandaag"',
-        route: "/coach",
-      },
-    ],
-    teaching:
-      "Sociale media is geen verkoopkanaal. Het is een vindkanaal. Mensen kopen niet uit je feed, ze ontdekken dat je bestaat. De verkoop gebeurt in de DM, dan in de one-pager, dan in de presentatie. Je feed doet stap 1, jij doet stap 2 t/m 5.",
-  },
-
-  // ──────────────────────────────────────────────────────────
-  // ZATERDAG · Events / Leren
-  // ──────────────────────────────────────────────────────────
-  {
-    dagVanDeWeek: 6,
-    titel: "Zaterdag · events & leren",
-    focus:
-      "Lichtere dag. Weekend-events, team-calls, training, nieuwe leden onboarden. Een dag om te groeien als vakman, niet om door te duwen.",
-    vandaagDoen: [
-      {
-        id: "za-event-of-training",
-        label: "Aanwezig bij team-event OF 30 min training",
-        uitleg:
-          "Als er een team-call, zoom of live-event is: erbij zijn. Geen event? Pak Go Pro, een goede networking-video, of een ELEVA-training uit de bibliotheek.",
-        verplicht: true,
-      },
-      {
-        id: "za-nieuwe-leden-welkom",
-        label: "Nieuwe leden deze week welkom heten",
-        uitleg:
-          "Heb je deze week iemand ingeschreven? Stuur een persoonlijk bericht, plan hun eerste 'waarom-ik-meedeed' gesprek in.",
-        verplicht: false,
-      },
-      {
-        id: "za-5-invites",
-        label: "5 uitnodigingen (lichter weekend-tempo)",
-        verplicht: false,
-      },
-      {
-        id: "za-5-followups",
-        label: "5 follow-ups (lichter weekend-tempo)",
-        verplicht: false,
-      },
-    ],
-    waarInEleva: [
-      {
-        actie: "Team-pagina + sponsor-contact",
-        menupad: "Menu → Team",
-        route: "/team",
-      },
-      {
-        actie: "Mentor: vraag een training-onderwerp uit",
-        menupad: "Menu → ELEVA Mentor",
-        spraak: '"Leer me iets over edification"',
+        actie: "Mentor voor vragen of advies",
+        menupad: "Menu → Mentor",
         route: "/coach",
       },
       {
-        actie: "Nieuwe leden zien in je namenlijst",
-        menupad: "Menu → Namenlijst → filter Member",
-        route: "/namenlijst",
-      },
-    ],
-    teaching:
-      "Je groeit niet door méér te doen, je groeit door beter te worden. Zaterdag is je leer-dag. 30 minuten bewust trainen is meer waard dan 3 uur hulpeloos invites versturen. Leer eerst, dan produceer.",
-  },
-
-  // ──────────────────────────────────────────────────────────
-  // ZONDAG · Review & Reflectie
-  // ──────────────────────────────────────────────────────────
-  {
-    dagVanDeWeek: 0,
-    titel: "Zondag · review",
-    focus:
-      "Einde van de week: terugkijken. Wat heb je gedaan? Wat heeft gewerkt? Wat niet? Welke prospect heeft je verrast? De review is je grootste leermoment.",
-    vandaagDoen: [
-      {
-        id: "zo-week-review",
-        label: "Week-review invullen in ELEVA",
-        uitleg:
-          "Aantal invites / follow-ups / gesprekken / beslissingen. Plus: wat leerde je deze week over jezelf? Over het vak?",
-        verplicht: true,
-      },
-      {
-        id: "zo-cijfers-check",
-        label: "Controllable-lat checken: gehaald of niet?",
-        uitleg:
-          "10 invites/dag × 5 dagen = 50. 10 follow-ups/dag × 5 = 50. Haalde je dat? Zo niet: waar zat de lek? Tijd, focus, angst?",
-        verplicht: true,
-      },
-      {
-        id: "zo-win-van-week",
-        label: "1 win van de week vieren",
-        uitleg:
-          "Klein of groot: iemand zei ja, iemand deed z'n eerste one-pager, je sponsor gaf een complimentje. Schrijf het op. Momentum voedt zich met erkenning.",
-        verplicht: true,
-      },
-      {
-        id: "zo-volgende-week",
-        label: "Top-3 prioriteiten volgende week bedenken",
-        uitleg:
-          "Niet het plan zelf, dat doe je maandag. Wél: welke 3 prospects krijgen volgende week jouw focus? Wat is je emotionele insteek?",
-        verplicht: true,
-      },
-      {
-        id: "zo-inhaaldag-check",
-        label: "Inhaal-check: dagen overgeslagen? Plan inhaaldag(en)",
-        uitleg:
-          "Tellen: hoeveel dagen heb je deze week niet de lat geraakt? Geen schaamte. Plan voor volgende week 1-2 inhaaldagen waar je de aantallen verhoogt (+50% invites/follow-ups). Je staat zo weer op koers.",
-        verplicht: true,
-      },
-      {
-        id: "zo-overwelhm-check",
-        label: "Overwelhm-check: wat liep niet soepel, wat gaf energie?",
-        uitleg:
-          "Wat voelde te veel? Wat ging makkelijker dan vorige week? Schrijf 1 zin op. Wat ongemakkelijk voelt is meestal precies wat groei geeft. Daar zit volgende week je oefening, niet je probleem.",
-        verplicht: true,
-      },
-      {
-        id: "zo-sponsor-checkin",
-        label: "Sponsor-check-in (optioneel)",
-        uitleg:
-          "Een zondagse 'zo ging m'n week'-bericht naar je sponsor is kort, krachtig, en voedt de relatie.",
-        verplicht: false,
-      },
-    ],
-    waarInEleva: [
-      {
-        actie: "Week-review (cijfers + reflectie)",
+        actie: "Statistieken en pijplijn-voortgang",
         menupad: "Menu → Statistieken",
-        spraak: '"Start mijn week-review"',
         route: "/statistieken",
       },
       {
-        actie: "Dashboard cijfer-overzicht",
-        menupad: "Menu → Dashboard",
-        route: "/dashboard",
-      },
-      {
-        actie: "Wins met Mentor delen",
-        menupad: "Menu → ELEVA Mentor",
-        spraak: '"Hier zijn mijn wins van deze week"',
-        route: "/coach",
+        actie: "Academy voor verdere skill-bouw",
+        menupad: "Menu → Academy",
+        route: "/academy",
       },
     ],
-    teaching:
-      "Wat je niet meet, verbeter je niet. Wat je meet zonder te vieren, put je uit. De week-review combineert beide: harde cijfers (heb ik de lat gehaald?) en zachte voeding (wat heeft me gevormd?). Neem er 20 minuten voor. Het is de duurste 20 minuten van je week.\n\nInhaal-regel: dagen worden niet 'verloren'. Een gemiste dag is een verzetbare dag. Plan 'm in de week erna in en til de aantallen op die dag op met 50%. Niet schuld dragen, gewoon doorgaan. De 60-dagenrun beloont volharding, niet perfectie.",
-  },
-];
+    watJeLeert: thema.watJeLeert,
+    waaromWerktDit: {
+      tekst:
+        "Je hebt 21 dagen alles geleerd wat je nodig hebt. Vanaf nu hoef je niets nieuws meer te leren — alleen blijven DOEN. Dat is waar 80% afhaakt. Bij de 20% die wel doorgaat zit de werkelijke groei.",
+    },
+  };
+}
 
-/**
- * Haal de weekdag op voor een specifieke dag in de run (22-60).
- * Dag 22 = maandag als de run op maandag start; berekening loopt
- * via de JS Date van de start-datum.
- */
-export function getWeekdagVoorRundag(
-  rundagNummer: number,
-  runStartDatum: Date
-): Weekdag {
-  const dagenVanaf = rundagNummer - 1;
-  const datum = new Date(runStartDatum);
-  datum.setDate(datum.getDate() + dagenVanaf);
-  const dagVanDeWeek = datum.getDay() as 0 | 1 | 2 | 3 | 4 | 5 | 6;
-  return WEEKRITME.find((w) => w.dagVanDeWeek === dagVanDeWeek)!;
+// ============================================================
+// HELPERS
+// ============================================================
+
+function kiesFStap(weekdag: Weekdag): ControllableTaak {
+  switch (weekdag) {
+    case 0:
+      return zondagFStap();
+    case 1:
+      return maandagFStap();
+    case 2:
+      return dinsdagFStap();
+    case 3:
+      return woensdagFStap();
+    case 4:
+      return donderdagFStap();
+    case 5:
+      return vrijdagFStap();
+    case 6:
+      return zaterdagFStap();
+  }
 }
 
 /**
- * Direct een weekdag ophalen op basis van JS day-of-week.
- * 0 = zondag, 1 = maandag, ... 6 = zaterdag.
+ * Zondag-versie van A-B-C-D-E stappen: minimum-aantallen op A/B/C,
+ * gewone follow-ups (D) en stories (E). Spiegelt het dag-7-patroon.
  */
-export function getWeekdag(dagVanDeWeek: 0 | 1 | 2 | 3 | 4 | 5 | 6): Weekdag {
-  return WEEKRITME.find((w) => w.dagVanDeWeek === dagVanDeWeek)!;
+function bouwZondagABCDEstappen(
+  dagNummer: number,
+  commitmentUren: CommitmentUren | null,
+): ControllableTaak[] {
+  if (!commitmentUren) return [];
+  const min = dagdoelenMinimum(commitmentUren);
+  // berekenDagdoelen niet nodig op zondag (gebruikt minimum), maar
+  // de import wordt in dezelfde file ook elders nuttig — laten staan.
+  void berekenDagdoelen;
+
+  return [
+    {
+      id: `dag${dagNummer}-namen-toevoegen`,
+      label: `📲 Voeg minimaal ${min.contacten} namen toe aan je lijst`,
+      uitleg: `Minimaal ${min.contacten} nieuwe namen vandaag, meer mag altijd. Zondag is reflectie-dag, dus rustiger op de input — maar je pijplijn houdt z'n stroom. Minder doe je niet, dat breekt het ritme.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+    {
+      id: `dag${dagNummer}-eerste-berichten`,
+      label: `💬 Stuur minimaal ${min.contacten} mensen een eerste bericht`,
+      uitleg: `Minimaal ${min.contacten} eerste berichten vandaag, meer mag.\n\n📱 In je namenlijst staan naast elke prospect kleine icoontjes (WhatsApp, Instagram, Facebook). Eén klik en de juiste app opent met die persoon.\n\nVia de spraakfunctie: "Ik heb een gesprek gestart met [naam]" → fase 'in gesprek'.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+    {
+      id: `dag${dagNummer}-uitnodigingen`,
+      label: `📨 Verstuur minimaal ${min.uitnodigingen} uitnodigingen`,
+      uitleg: `Minimaal ${min.uitnodigingen} uitnodigingen vandaag, meer mag. Pas de 4-stappen-formule toe. Hulp nodig? Drie knoppen onder dit vak: voorbeelden, sponsor of Mentor.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+      uitnodigHelpKnoppen: true,
+    },
+    {
+      id: `dag${dagNummer}-openstaande-followups`,
+      label: "🔄 Doe je openstaande follow-ups vandaag",
+      uitleg: FOLLOWUP_UITLEG_NA_DAG6,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+    {
+      id: `dag${dagNummer}-stories`,
+      label: "📱 1 tot 3 stories + reageren op andermans stories",
+      uitleg: STORIES_UITLEG,
+      verplicht: true,
+    },
+  ];
 }

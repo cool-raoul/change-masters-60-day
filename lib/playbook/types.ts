@@ -144,12 +144,18 @@ export type ElevaPad = {
  * Volledige content voor één dag in de 60-dagenrun (dag 1-21).
  */
 export type Dag = {
-  /** 1 t/m 21. */
+  /** 1 t/m 60. */
   nummer: number;
   /** Korte titel, wordt bovenaan de tile getoond. */
   titel: string;
-  /** Welke fase deze dag in valt. */
-  fase: 1 | 2 | 3;
+  /**
+   * Welke fase deze dag in valt.
+   * 1 = week 1 (dag 1-7, fundament)
+   * 2 = week 2 (dag 8-14, momentum)
+   * 3 = week 3 (dag 15-21, oogst)
+   * 4 = weekritme-fase (dag 22-60, onderhoud + reflectie)
+   */
+  fase: 1 | 2 | 3 | 4;
   /** Checkbox-rij. Wat doet de member vandaag? */
   vandaagDoen: ControllableTaak[];
   /** Herinnering aan het fase-doel. Niet afvinkbaar. Schuift door als niet gelukt. */
@@ -189,25 +195,6 @@ export type Fase = {
   doel: string;
   /** Wat leer je in deze fase als vakman? */
   kernprincipe: string;
-};
-
-/**
- * Eén weekdag in het dag 22-60 ritme.
- * Elke weekdag heeft een vaste focus (maandag planning, dinsdag invites, etc.).
- */
-export type Weekdag = {
-  /** 0 = zondag, 1 = maandag, ... 6 = zaterdag. */
-  dagVanDeWeek: 0 | 1 | 2 | 3 | 4 | 5 | 6;
-  /** Bijv. "Maandag · plannen". */
-  titel: string;
-  /** Hoofdfocus in één zin. */
-  focus: string;
-  /** Controllable-rij voor die dag. */
-  vandaagDoen: ControllableTaak[];
-  /** Waar-in-ELEVA-lijst. */
-  waarInEleva: ElevaPad[];
-  /** Korte teaching. */
-  teaching: string;
 };
 
 /**

@@ -16,6 +16,7 @@ import {
 } from "@/lib/cms/pagina-blokken";
 import { berekenHuidigeDag } from "@/lib/playbook/bereken-dag";
 import { pasTempoToeOpDag } from "@/lib/playbook/tempo-aware";
+import { genereerWeekritmeDag } from "@/lib/playbook/weekritme";
 import type { CommitmentUren } from "@/lib/dagdoelen";
 import { VandaagFlow } from "./vandaag-flow";
 
@@ -88,25 +89,36 @@ export default async function VandaagPagina({
       { isTester: isTester || isFounder },
     );
 
-  // Buiten dag 1-21 → terug naar dashboard (weekritme-modus)
-  if (dag < 1 || dag > 21) {
+  // Buiten dag 1-60 → terug naar dashboard
+  if (dag < 1 || dag > 60) {
     redirect("/dashboard");
   }
 
-  let dagData = DAGEN.find((d) => d.nummer === dag);
-  if (!dagData) redirect("/dashboard");
-
   // Tempo-aware vervanging: lees commitment_uren uit user_metadata
-  // en pas tempo-specifieke taken toe (momenteel alleen dag 3).
-  // Doen we VOOR de override-passes zodat founder-CMS-edits nog
-  // steeds bovenop tempo-varianten kunnen worden gelegd.
+  // en pas tempo-specifieke taken toe.
   const ruwUren = Number(
     (user.user_metadata as { commitment_uren?: unknown } | undefined)
       ?.commitment_uren,
   );
   const commitmentUren: CommitmentUren | null =
     ruwUren === 2 || ruwUren === 4 || ruwUren === 6 ? ruwUren : null;
-  dagData = pasTempoToeOpDag(dagData, commitmentUren);
+
+  let dagData;
+  if (dag >= 22) {
+    // Dag 22-60: weekritme-modus. Synthetische dag op basis van
+    // de weekdag van vandaag. Roterende F-stap, zelfde ABCDE-basis.
+    const weekdag = new Date().getDay() as 0 | 1 | 2 | 3 | 4 | 5 | 6;
+    dagData = genereerWeekritmeDag(dag, weekdag, commitmentUren);
+    if (!dagData) redirect("/dashboard");
+  } else {
+    // Dag 1-21: statische basis uit DAGEN[], plus tempo-aware
+    // vervanging waar van toepassing.
+    dagData = DAGEN.find((d) => d.nummer === dag);
+    if (!dagData) redirect("/dashboard");
+    // Doen we VOOR de override-passes zodat founder-CMS-edits nog
+    // steeds bovenop tempo-varianten kunnen worden gelegd.
+    dagData = pasTempoToeOpDag(dagData, commitmentUren);
+  }
 
   // Founder-overrides toepassen, zelfde patroon als dashboard.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
