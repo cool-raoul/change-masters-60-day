@@ -17,7 +17,8 @@ import { genereerWeekritmeDag } from "@/lib/playbook/weekritme";
 import { berekenHuidigeDag } from "@/lib/playbook/bereken-dag";
 import type { CommitmentUren } from "@/lib/dagdoelen";
 import { pakTopRadar, type ProspectInput } from "@/lib/radar/volgende-beste-actie";
-import { VolgendeBesteActie } from "@/components/radar/VolgendeBesteActie";
+import { RadarTeaser } from "@/components/dashboard/RadarTeaser";
+import { haalRadarAfvinkSets } from "@/lib/radar/carry-over";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { pakDagdeelGroet } from "@/lib/util/dagdeel-groet";
 import { Locale } from "date-fns";
@@ -202,6 +203,13 @@ export default async function DashboardPagina({
   // Wat ruimer zodat 3-weg- én mini-ELEVA-rijpe prospects allebei zichtbaar
   // worden. Bij geen of weinig signalen blijft 'ie automatisch korter.
   const topRadar = pakTopRadar(radarInput, 5);
+
+  // Tel hoeveel radar-items vandaag NIET zijn afgevinkt. Dat getal
+  // staat op de RadarTeaser zodat de member weet hoeveel open staat.
+  const radarAfvinkSetsDash = await haalRadarAfvinkSets(supabase, user.id);
+  const aantalRadarOpen = topRadar.filter(
+    (item) => !radarAfvinkSetsDash.vandaagAfgevinkt.has(item.prospect.id),
+  ).length;
 
   // Huidige dag = voortgang-gebaseerd voor members (eerste niet-voltooide
   // dag), kalender-gebaseerd voor testers/founders zodat de spring-toolbar
@@ -672,10 +680,9 @@ export default async function DashboardPagina({
         </Link>
       )}
 
-      {/* Volgende beste actie-radar: top-3 prospects om vandaag op te
-          volgen op basis van recente signalen + funnel-fase + stilte-tijd.
-          Verbergt zich automatisch als er niets urgents is. */}
-      <VolgendeBesteActie items={topRadar} />
+      {/* Radar-teaser: compacte regel die naar /vandaag verwijst waar de
+          volle RadarBalk leeft. Verbergt zich bij 0 open items. */}
+      <RadarTeaser aantalOpen={aantalRadarOpen} />
 
       {/* Streak + mijlpaal-vieringen. Compact, alleen zichtbaar bij
           relevante getallen (geen lege tegels). */}

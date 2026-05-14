@@ -18,6 +18,9 @@ import { berekenHuidigeDag } from "@/lib/playbook/bereken-dag";
 import { pasTempoToeOpDag } from "@/lib/playbook/tempo-aware";
 import { genereerWeekritmeDag } from "@/lib/playbook/weekritme";
 import { detecteerEnVierEerstePartner } from "@/lib/team/mijlpaal-detector";
+import { pakTopRadar, type ProspectInput } from "@/lib/radar/volgende-beste-actie";
+import { haalRadarAfvinkSets } from "@/lib/radar/carry-over";
+import { RadarBalk } from "@/components/vandaag/RadarBalk";
 import type { CommitmentUren } from "@/lib/dagdoelen";
 import { VandaagFlow } from "./vandaag-flow";
 
@@ -73,6 +76,94 @@ export default async function VandaagPagina({
   // wanneer member voor het eerst een directe partner heeft. Race-safe
   // via UNIQUE-constraint op partner_mijlpalen.
   await detecteerEnVierEerstePartner(supabase, user.id);
+
+  // ============================================================
+  // RADAR-BALK: zelfde signaal-bronnen als dashboard, maar nu in /vandaag.
+  // Eén round-trip voor de afvink-sets (vandaag + gisteren).
+  // ============================================================
+  const afvinkSets = await haalRadarAfvinkSets(supabase, user.id);
+
+  const [
+    { data: prospectsRadar },
+    { data: filmViewsRadar },
+    { data: testsRadar },
+    { data: openHerinneringenRadar },
+  ] = await Promise.all([
+    supabase
+      .from("prospects")
+      .select("id, volledige_naam, telefoon, pipeline_fase, laatste_contact, gekozen_aanpak")
+      .eq("user_id", user.id)
+      .eq("gearchiveerd", false),
+    supabase
+      .from("prospect_film_views")
+      .select("prospect_id, afgekeken_op")
+      .eq("member_user_id", user.id)
+      .not("afgekeken_op", "is", null)
+      .gte("afgekeken_op", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
+    supabase
+      .from("productadvies_tests")
+      .select("prospect_id, ingevuld_op")
+      .eq("user_id", user.id)
+      .eq("status", "ingevuld")
+      .not("ingevuld_op", "is", null)
+      .gte("ingevuld_op", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
+    supabase
+      .from("herinneringen")
+      .select("prospect_id, vervaldatum")
+      .eq("user_id", user.id)
+      .eq("voltooid", false)
+      .order("vervaldatum", { ascending: true }),
+  ]);
+
+  // Map: prospectId → meest recente datum
+  const filmAfPerProspect = new Map<string, string>();
+  for (const v of (filmViewsRadar as Array<{ prospect_id: string; afgekeken_op: string }>) || []) {
+    const bestaand = filmAfPerProspect.get(v.prospect_id);
+    if (!bestaand || v.afgekeken_op > bestaand) filmAfPerProspect.set(v.prospect_id, v.afgekeken_op);
+  }
+  const testAfPerProspect = new Map<string, string>();
+  for (const t of (testsRadar as Array<{ prospect_id: string; ingevuld_op: string }>) || []) {
+    if (!t.prospect_id) continue;
+    const bestaand = testAfPerProspect.get(t.prospect_id);
+    if (!bestaand || t.ingevuld_op > bestaand) testAfPerProspect.set(t.prospect_id, t.ingevuld_op);
+  }
+  const oudsteHerinneringPerProspectVandaag = new Map<string, string>();
+  for (const h of (openHerinneringenRadar as Array<{ prospect_id: string; vervaldatum: string }>) || []) {
+    if (!h.prospect_id) continue;
+    if (!oudsteHerinneringPerProspectVandaag.has(h.prospect_id)) {
+      oudsteHerinneringPerProspectVandaag.set(h.prospect_id, h.vervaldatum);
+    }
+  }
+
+  function dagenVanafIso(iso: string | undefined): number | null {
+    if (!iso) return null;
+    return Math.floor((Date.now() - new Date(iso).getTime()) / (24 * 60 * 60 * 1000));
+  }
+
+  const radarInputVandaag: ProspectInput[] = (
+    (prospectsRadar as Array<{
+      id: string;
+      volledige_naam: string;
+      telefoon: string | null;
+      pipeline_fase: string;
+      laatste_contact: string | null;
+      gekozen_aanpak: "drieweg" | "mini_eleva" | null;
+    }>) || []
+  ).map((p) => ({
+    id: p.id,
+    volledige_naam: p.volledige_naam,
+    telefoon: p.telefoon,
+    pipeline_fase: p.pipeline_fase,
+    laatste_contact: p.laatste_contact,
+    oudsteHerinneringDatum: oudsteHerinneringPerProspectVandaag.get(p.id) ?? null,
+    dagenSindsFilmAfgekeken: dagenVanafIso(filmAfPerProspect.get(p.id)),
+    dagenSindsTestIngevuld: dagenVanafIso(testAfPerProspect.get(p.id)),
+    gekozenAanpak: p.gekozen_aanpak ?? null,
+  }));
+
+  const radarItems = pakTopRadar(radarInputVandaag, 5, {
+    bumpIds: afvinkSets.carryOverBump,
+  });
 
   const isFounder = (profile as any)?.role === "founder";
   const isTester = (profile as any)?.is_tester === true;
@@ -194,16 +285,27 @@ export default async function VandaagPagina({
   // (isFounder is hierboven al gezet voor de dag-berekening)
 
   return (
-    <VandaagFlow
-      dag={dagData}
-      voltooidIds={voltooidIds}
-      initialZinnen={initialZinnen}
-      voornaam={voornaam}
-      isFounder={isFounder}
-      uiOverrides={uiOverrides}
-      groetOverrides={groetOverrides}
-      paginaBlokken={paginaBlokken}
-      commitmentUren={commitmentUren}
-    />
+    <>
+      {radarItems.length > 0 && (
+        <div className="max-w-3xl mx-auto px-4 pt-3">
+          <RadarBalk
+            items={radarItems}
+            initieelAfgevinkt={Array.from(afvinkSets.vandaagAfgevinkt)}
+            huidigeDag={dag}
+          />
+        </div>
+      )}
+      <VandaagFlow
+        dag={dagData}
+        voltooidIds={voltooidIds}
+        initialZinnen={initialZinnen}
+        voornaam={voornaam}
+        isFounder={isFounder}
+        uiOverrides={uiOverrides}
+        groetOverrides={groetOverrides}
+        paginaBlokken={paginaBlokken}
+        commitmentUren={commitmentUren}
+      />
+    </>
   );
 }
