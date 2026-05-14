@@ -65,8 +65,15 @@ export type ControllableTaak = {
    *   - 'sponsor-melding' → SponsorMeldingKnop (wa.me bericht naar sponsor)
    *   - 'namen-form'      → NamenForm (snelle handmatige naam-invoer met
    *                         doel-aantal, bv. '20 namen toevoegen')
+   *   - 'funnel-analyse'  → MentorFunnelAnalyseKnop (auto-prefilled
+   *                         Mentor-analyse op basis van pipeline-cijfers,
+   *                         dag 7/14/19/21 + later op week-overzichten)
    */
-  inlineEmbed?: "vcard-upload" | "sponsor-melding" | "namen-form";
+  inlineEmbed?:
+    | "vcard-upload"
+    | "sponsor-melding"
+    | "namen-form"
+    | "funnel-analyse";
   /**
    * Optioneel doelaantal voor `namen-form`-embed. De form telt actief
    * mee hoeveel namen de member heeft ingevuld, en bevestigt zodra het

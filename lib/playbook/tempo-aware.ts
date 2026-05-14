@@ -429,6 +429,16 @@ function bouwDag7VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       actieRoute: "/statistieken",
     },
 
+    // --- Stap 1B: Funnel-analyse door ELEVA Mentor ---
+    {
+      id: "dag7-funnel-analyse",
+      label: "🔍 Laat ELEVA je funnel analyseren (eerste keer)",
+      uitleg:
+        "Het is week 1, je cijfers zijn nog klein — maar dat is precies waarom dit een mooie eerste kennismaking is met de funnel-analyse van ELEVA. De Mentor kijkt naar wie je hebt benaderd, in welke fase ze zitten, en geeft je een eerste indruk waar het focus voor week 2 kan liggen.\n\nKlik op de knop hieronder, dan opent een Mentor-gesprek met jouw cijfers al ingevuld. Geen eigen typewerk nodig. Klein tip: stel daarna nog 1 of 2 vervolgvragen aan de Mentor om dieper te gaan ('wat zou de slimste eerste verbetering zijn?').",
+      verplicht: false,
+      inlineEmbed: "funnel-analyse",
+    },
+
     // --- Stap 2: namen toevoegen (MINIMAAL) ---
     {
       id: "dag7-namen-toevoegen",
@@ -899,6 +909,14 @@ function bouwDag14VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: true,
       actieRoute: "/statistieken",
     },
+    {
+      id: "dag14-funnel-analyse",
+      label: "🔍 Laat ELEVA je funnel analyseren",
+      uitleg:
+        "Na twee weken zit er meer in je pijplijn dan op dag 7. Tijd voor een echte analyse. De Mentor kijkt naar jouw cijfers per fase, identificeert waar mensen vastlopen, en geeft concreet advies welke dag-les je kunt herzien om die bottleneck aan te pakken in week 3.",
+      verplicht: false,
+      inlineEmbed: "funnel-analyse",
+    },
     ...standaardABCDEstappen(14, uren),
     {
       id: "dag14-pipeline-check",
@@ -1074,12 +1092,12 @@ function bouwDag19VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
   return [
     ...standaardABCDEstappen(19, uren),
     {
-      id: "dag19-trechter-check",
-      label: "🔍 Pipeline-review: tel per fase + identificeer je bottleneck",
+      id: "dag19-funnel-analyse",
+      label: "🔍 Laat ELEVA je funnel diepgaand analyseren",
       uitleg:
-        "De volledige bottleneck-analyse (4 types lekken + 40-dagen-fix per type) staat bovenaan onder 'Wat je leert'.\n\nWAT JE VANDAAG DOET\n\n1. Open je namenlijst in pijplijn-weergave (of /statistieken).\n2. Schrijf je aantallen op per fase: Uitgenodigd / One-pager / Presentatie / Beslist.\n3. Identificeer je grootste drop-off — welke fase verliest de meeste mensen?\n4. Schrijf op (notitie-app of papier): één specifieke oefening voor de komende 40 dagen om die drop-off te verkleinen.\n\nVERWACHTE GEZONDE TRECHTER (na 21 dagen)\n\nUitnodigingen → 50-70% reageert → 50% van reacties bekijken one-pager → 40% gaat naar presentatie → 30% beslist.\n\nZit jij ergens veel onder? Daar is je werk voor de komende 40 dagen. Statistieken zijn je leermeester, niet je rechter.",
+        "Vandaag is pipeline-dag. De Mentor kijkt naar al jouw cijfers, identificeert je grootste bottleneck (welke fase verliest de meeste mensen?), en geeft een concrete oefening voor de komende 40 dagen om die bottleneck te verkleinen.\n\nDe volledige bottleneck-analyse (4 types lekken + 40-dagen-fix per type) staat ook bovenaan onder 'Wat je leert'. Maar via de knop hieronder krijg je de analyse SPECIFIEK voor jouw cijfers, niet generiek.\n\nDe verwachte gezonde trechter na 21 dagen: uitnodigingen → 50-70% reageert → 50% bekijkt one-pager → 40% naar presentatie → 30% beslist. Zit jij ergens veel onder die conversie? De Mentor zegt het je en wijst je naar de juiste dag-les.",
       verplicht: true,
-      actieRoute: "/namenlijst",
+      inlineEmbed: "funnel-analyse",
     },
     {
       id: "dag19-sponsor-checkin",
@@ -1144,6 +1162,14 @@ function bouwDag21VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
         "Wat leerde je over jezelf? Waar groeide je? Wat was moeilijker dan gedacht? Wat bleek makkelijker? Deze reflectie gaat naar je sponsor en helpt bij jullie 40-min call straks.\n\nWAT JE IN 21 DAGEN HEBT GEDAAN (erkén het)\n\n• Een namenlijst van 100+ mensen aangelegd (was 0)\n• Tussen de 100 en 200 uitnodigingen verstuurd\n• Bezwaren leren behandelen met Feel-Felt-Found (FFF)\n• 3-weg-gesprekken gestart en gevoerd\n• Edification, FORM, Doel-Tijd-Termijn als technieken in je gereedschapskist\n• 1-3 beslissingen binnen (member, shopper of not-yet)\n\nDit is een fundament. Het echte gebouw zet je in de komende 40 dagen.",
       verplicht: true,
       actieRoute: "/statistieken",
+    },
+    {
+      id: "dag21-funnel-analyse",
+      label: "🔍 21-dagen-oogst: laat ELEVA je complete funnel analyseren",
+      uitleg:
+        "Dit is de derde keer dat je deze analyse doet (na dag 7 en dag 14). Vandaag staan je cijfers het volst — perfect moment om met de Mentor te kijken WAT je in 21 dagen hebt opgebouwd en WAAR je voor de komende 40 dagen op gaat focussen.\n\nDe analyse is ook input voor je 40-dagen-doel (volgende stap) en voor je 40-min sponsor-call straks.",
+      verplicht: true,
+      inlineEmbed: "funnel-analyse",
     },
     {
       id: "dag21-namen-toevoegen",
