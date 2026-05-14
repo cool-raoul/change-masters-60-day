@@ -23,10 +23,16 @@ import { pakDagdeelGroet } from "@/lib/util/dagdeel-groet";
 import { Locale } from "date-fns";
 import { TijdslijnStrip } from "@/components/layout/TijdslijnStrip";
 import { MijlpaalDetector } from "@/components/celebrations/MijlpaalDetector";
+import { EerstePartnerVieringTegel } from "@/components/dashboard/EerstePartnerVieringTegel";
 
 const DATE_LOCALES: Record<string, Locale> = { nl, en: enUS, fr, es, de, pt };
 
-export default async function DashboardPagina() {
+export default async function DashboardPagina({
+  searchParams,
+}: {
+  searchParams?: Promise<{ vier?: string }>;
+}) {
+  const sp = (await searchParams) ?? {};
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
@@ -301,6 +307,63 @@ export default async function DashboardPagina() {
       : null;
 
   // Huidige dag-data. Voor dag 1-21: uit het statische DAGEN-array,
+  // Eerste-partner-viering: triggert via ?vier=eerste-partner OF
+  // wanneer de mijlpaal in afgelopen 24u is geregistreerd.
+  let eerstePartnerViering: {
+    eerstePartner: { fullName: string; telefoon: string | null } | null;
+    eigenSponsor: { fullName: string; telefoon: string | null } | null;
+    triggerConfetti: boolean;
+  } | null = null;
+
+  const { data: recenteMijlpaal } = await supabase
+    .from("partner_mijlpalen")
+    .select("partner_id, gevierd_op")
+    .eq("user_id", user.id)
+    .eq("type", "eerste-partner")
+    .gte("gevierd_op", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+    .maybeSingle();
+
+  if (recenteMijlpaal || sp.vier === "eerste-partner") {
+    // Haal eerste-partner-naam + telefoon op
+    let eerstePartner: { fullName: string; telefoon: string | null } | null = null;
+    if (recenteMijlpaal) {
+      const { data: pData } = await supabase
+        .from("profiles")
+        .select("full_name, telefoon")
+        .eq("id", (recenteMijlpaal as { partner_id: string }).partner_id)
+        .maybeSingle();
+      if (pData) {
+        eerstePartner = {
+          fullName: (pData as { full_name: string }).full_name,
+          telefoon: (pData as { telefoon: string | null }).telefoon ?? null,
+        };
+      }
+    }
+
+    // Haal eigen sponsor op
+    let eigenSponsor: { fullName: string; telefoon: string | null } | null = null;
+    const profSponsor = profile as { sponsor_id?: string | null } | null;
+    if (profSponsor?.sponsor_id) {
+      const { data: sData } = await supabase
+        .from("profiles")
+        .select("full_name, telefoon")
+        .eq("id", profSponsor.sponsor_id)
+        .maybeSingle();
+      if (sData) {
+        eigenSponsor = {
+          fullName: (sData as { full_name: string }).full_name,
+          telefoon: (sData as { telefoon: string | null }).telefoon ?? null,
+        };
+      }
+    }
+
+    eerstePartnerViering = {
+      eerstePartner,
+      eigenSponsor,
+      triggerConfetti: sp.vier === "eerste-partner",
+    };
+  }
+
   // met tempo-aware vervanging + override-pass. Voor dag 22-60: via
   // genereerWeekritmeDag (synthetisch dag-object op basis van
   // run-weekdag). Beide trajecten leveren een Dag-object op met
@@ -449,6 +512,18 @@ export default async function DashboardPagina() {
           {format(new Date(), "EEEE d MMMM yyyy", { locale: datumLocale })}
         </p>
       </div>
+
+      {/* Eerste-partner-viering: eenmalige tegel die verschijnt zodra
+          de member zijn eerste directe partner heeft, met confetti
+          en drie hands-on acties (WhatsApp partner + WhatsApp sponsor +
+          Academy-link). Geen AI-tussenkomst, alle berichten leeg. */}
+      {eerstePartnerViering && (
+        <EerstePartnerVieringTegel
+          eerstePartner={eerstePartnerViering.eerstePartner}
+          eigenSponsor={eerstePartnerViering.eigenSponsor}
+          triggerConfetti={eerstePartnerViering.triggerConfetti}
+        />
+      )}
 
       {/* Sponsor-info-strip (neutraal, mockup-4 element). Toont met avatar
           + naam wie jouw sponsor is. Geen 'kijkt mee'-tekst, dat voelde als
