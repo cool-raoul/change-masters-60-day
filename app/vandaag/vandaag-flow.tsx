@@ -13,6 +13,7 @@ import { HerinnerLaterKnop } from "@/components/playbook/HerinnerLaterKnop";
 import { VCardUploader } from "@/components/vandaag/inline-embeds/VCardUploader";
 import { SponsorMeldingKnop } from "@/components/vandaag/inline-embeds/SponsorMeldingKnop";
 import { MentorFunnelAnalyseKnop } from "@/components/vandaag/inline-embeds/MentorFunnelAnalyseKnop";
+import { PartnerCheckEmbed } from "@/components/vandaag/inline-embeds/PartnerCheckEmbed";
 import { NamenForm } from "@/components/vandaag/inline-embeds/NamenForm";
 import { pakDagdeelGroetMetNaam } from "@/lib/util/dagdeel-groet";
 import type { Dag, ControllableTaak } from "@/lib/playbook/types";
@@ -650,6 +651,14 @@ function VandaagFlowInner({
             )}
             {huidigeTaak.inlineEmbed === "funnel-analyse" && (
               <MentorFunnelAnalyseKnop
+                alVoltooid={voltooidIds.has(huidigeTaak.id)}
+                opVoltooid={() => {
+                  vinkAf(huidigeTaak.id, true);
+                }}
+              />
+            )}
+            {huidigeTaak.inlineEmbed === "partner-check" && (
+              <PartnerCheckEmbed
                 alVoltooid={voltooidIds.has(huidigeTaak.id)}
                 opVoltooid={() => {
                   vinkAf(huidigeTaak.id, true);
