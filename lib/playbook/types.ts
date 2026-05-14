@@ -68,12 +68,16 @@ export type ControllableTaak = {
    *   - 'funnel-analyse'  → MentorFunnelAnalyseKnop (auto-prefilled
    *                         Mentor-analyse op basis van pipeline-cijfers,
    *                         dag 7/14/19/21 + later op week-overzichten)
+   *   - 'partner-check'   → PartnerCheckEmbed (directe + 2e laag downline
+   *                         met geaggregeerde signalen + lege WhatsApp-
+   *                         knop, geen AI-tussenkomst)
    */
   inlineEmbed?:
     | "vcard-upload"
     | "sponsor-melding"
     | "namen-form"
-    | "funnel-analyse";
+    | "funnel-analyse"
+    | "partner-check";
   /**
    * Optioneel doelaantal voor `namen-form`-embed. De form telt actief
    * mee hoeveel namen de member heeft ingevuld, en bevestigt zodra het
