@@ -495,14 +495,6 @@ Op je prospect-kaart kun je de keuze maken via de knop "🧭 Welke aanpak past b
         verplicht: true,
         actieRoute: "/coach",
       },
-      {
-        id: "dag5-eric-worre-start",
-        label: "🎧 Start met Eric Worre's Seven Skills (15 min Spotify)",
-        uitleg:
-          "Vanaf vandaag dagelijks ~15 minuten luisteren, in de auto, tijdens werk of een wandeling. Voor je mindset én om dit vak goed te leren. Eric Worre is wereldwijd de meest gerespecteerde trainer in network marketing. Niet één keer doorkijken, herhalend aanhoren, wat hij vertelt landt na de 4e of 5e keer pas écht.",
-        verplicht: false,
-        actieRoute: "https://open.spotify.com/search/eric%20worre%20network%20marketing%20pro",
-      },
     ],
     faseDoel:
       "Week 1 (dag 1-7): deze week 2 one-pager-momenten gepland of bekeken krijgen.",
@@ -526,8 +518,9 @@ Op je prospect-kaart kun je de keuze maken via de knop "🧭 Welke aanpak past b
         route: "/namenlijst",
       },
       {
-        actie: "Eric Worre Seven Skills (Spotify)",
-        menupad: "https://open.spotify.com/album/3pX4DrWPVsjW8GCE2XYd7D",
+        actie: "Audio onderweg met Eric Worre (Academy)",
+        menupad: "Menu → Academy → Audio onderweg met Eric Worre",
+        route: "/academy/audio-onderweg",
       },
     ],
     watJeLeert: `Feel-Felt-Found is dé universele bezwaar-techniek en werkt op zowat élk bezwaar. Drie psychologische dingen tegelijk: erkennen, normaliseren, herframen. Zonder dat de prospect het gevoel krijgt dat hij wordt 'ompraat'.
@@ -560,14 +553,10 @@ VEELGEMAAKTE FOUTEN:
 ✗ Vergeten af te sluiten met een doorvraag → blijft hangen in de ruimte.
 ✗ Prospect wegwuiven met "ach, dat lossen we wel op" → hij voelt zich niet gehoord.
 ✗ Eigen verhaal lang vertellen ("ik dacht dat ook!") → maakt het over jou.
-✗ Drammen na een nee → break van vertrouwen, prospect onthoudt het altijd negatief.
-
-EXTRA, VANDAAG START JE MINDSET-ROUTINE:
-15 minuten per dag Eric Worre in je oren, auto, wandeling, koffie. Wat hij vertelt over WHY, vision en leiderschap is brandstof onder je dagelijkse acties. Niet één keer doorluisteren, herhalend aanhoren tot het in je systeem zit.`,
+✗ Drammen na een nee → break van vertrouwen, prospect onthoudt het altijd negatief.`,
     waaromWerktDit: {
       tekst:
         "Een bezwaar is geen muur. Het is een vraag die niet weet hoe 'm te stellen.",
-      bron: "Fraser Brookes",
     },
   },
 
@@ -664,11 +653,10 @@ DRIE VOORBEELDEN, verschillende fasen:
 "Hé Jaap, ik zag dat je niet meer had gereageerd op mijn laatste berichtje. Is dat omdat je druk was of omdat je geen interesse hebt op dit moment? Allebei prima hoor, ik dacht: ik vraag het even! 🙂"
 
 DE LANGSPEELPLATEN-REGEL:
-Een prospect die NU geen ja zegt, kan over 3 maanden alsnog ja zeggen. Of over 1 jaar. Houd ze warm, hou ze vriendelijk, en blijf in hun leven via je gewone content (geen pitches in de DM). Dan ben je top-of-mind als hun situatie verandert. "Niet jagen, niet smeken, wel richting geven", Worre.`,
+Een prospect die NU geen ja zegt, kan over 3 maanden alsnog ja zeggen. Of over 1 jaar. Houd ze warm, hou ze vriendelijk, en blijf in hun leven via je gewone content (geen pitches in de DM). Dan ben je top-of-mind als hun situatie verandert. "Niet jagen, niet smeken, wel richting geven" — zo noemen topcoaches in netwerk-marketing het.`,
     waaromWerktDit: {
       tekst:
         "Niet jagen, niet smeken, wel richting geven. Gemiddeld 5 exposures, dat is gewoon de statistiek.",
-      bron: "Eric Worre, Go Pro",
     },
   },
 
@@ -749,7 +737,6 @@ DEZE REVIEW KAN JE DELEN MET JE SPONSOR (zelfde keuze maak je aan het eind van h
     waaromWerktDit: {
       tekst:
         "Vergelijk jezelf met gisteren, niet met anderen. De run is jouw verhaal, de review is hoe je het schrijft.",
-      bron: "Eric Worre + Brookes, samen",
     },
   },
 
