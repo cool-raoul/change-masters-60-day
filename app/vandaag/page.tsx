@@ -17,6 +17,7 @@ import {
 import { berekenHuidigeDag } from "@/lib/playbook/bereken-dag";
 import { pasTempoToeOpDag } from "@/lib/playbook/tempo-aware";
 import { genereerWeekritmeDag } from "@/lib/playbook/weekritme";
+import { detecteerEnVierEerstePartner } from "@/lib/team/mijlpaal-detector";
 import type { CommitmentUren } from "@/lib/dagdoelen";
 import { VandaagFlow } from "./vandaag-flow";
 
@@ -67,6 +68,11 @@ export default async function VandaagPagina({
     .from("dag_voltooiingen")
     .select("dag_nummer, taak_id")
     .eq("user_id", user.id);
+
+  // Eerste-partner-mijlpaal-detectie: registreer mijlpaal + stuur push
+  // wanneer member voor het eerst een directe partner heeft. Race-safe
+  // via UNIQUE-constraint op partner_mijlpalen.
+  await detecteerEnVierEerstePartner(supabase, user.id);
 
   const isFounder = (profile as any)?.role === "founder";
   const isTester = (profile as any)?.is_tester === true;
