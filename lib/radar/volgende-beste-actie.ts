@@ -162,13 +162,26 @@ export function scoorProspect(p: ProspectInput): RadarItem {
 /**
  * Geeft de top-N prospects, gesorteerd op hoogste score.
  * Filtert items met score < 5 (te weinig signaal om aan te bevelen).
+ *
+ * @param opts.bumpIds Optioneel: prospect-IDs die +25 score-bump krijgen
+ *   omdat ze gisteren in de radar zaten maar niet zijn afgevinkt
+ *   (carry-over). Items met bump krijgen de reden "🔄 nog van gisteren".
  */
 export function pakTopRadar(
   prospects: ProspectInput[],
   topN: number = 3,
+  opts?: { bumpIds?: Set<string> },
 ): RadarItem[] {
+  const bumpIds = opts?.bumpIds;
   return prospects
-    .map(scoorProspect)
+    .map((p) => {
+      const item = scoorProspect(p);
+      if (bumpIds && bumpIds.has(p.id)) {
+        item.score += 25;
+        item.redenen = ["🔄 nog van gisteren", ...item.redenen].slice(0, 2);
+      }
+      return item;
+    })
     .filter((item) => item.score >= 5)
     .sort((a, b) => b.score - a.score)
     .slice(0, topN);
