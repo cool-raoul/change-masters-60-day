@@ -82,3 +82,30 @@ export function eerstvolgendeLes(
   }
   return null;
 }
+
+/**
+ * Geeft de sleutel van de eerste les terug (de "intro"). Wordt gebruikt
+ * door trainingen met introVerplicht=true om te checken of een
+ * specifieke les vergrendeld is voor een gegeven voortgang-set.
+ */
+export function geefIntroSleutel(training: AcademyTraining): string | null {
+  return alleLessleutels(training)[0] ?? null;
+}
+
+/**
+ * Returnt true als de gegeven les vergrendeld is voor een member met
+ * de gegeven voortgang. Vergrendelingsregel: alleen actief wanneer
+ * training.introVerplicht=true, en alleen voor lessen die NIET de
+ * intro zelf zijn EN waarvoor de intro nog niet voltooid is.
+ */
+export function isLesVergrendeld(
+  training: AcademyTraining,
+  lesSleutel: string,
+  voltooide: Set<string>,
+): boolean {
+  if (!training.introVerplicht) return false;
+  const introSleutel = geefIntroSleutel(training);
+  if (introSleutel === null) return false;
+  if (lesSleutel === introSleutel) return false; // de intro zelf is nooit vergrendeld
+  return !voltooide.has(introSleutel);
+}

@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { redirect, notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { geefLes, alleLessleutels } from "@/lib/academy/trainingen";
+import {
+  geefLes,
+  alleLessleutels,
+  isLesVergrendeld,
+} from "@/lib/academy/trainingen";
 import { LesVoltooiKnop } from "@/components/academy/LesVoltooiKnop";
 
 // ============================================================
@@ -34,15 +38,27 @@ export default async function AcademyLesPagina({
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  // Check of deze les voor deze user al voltooid is.
-  const { data: bestaande } = await supabase
+  // Haal ALLE voortgang voor deze training op (nodig om te checken of
+  // de huidige les vergrendeld is wegens introVerplicht).
+  const { data: voortgangRows } = await supabase
     .from("training_voortgang")
-    .select("id")
+    .select("les_sleutel")
     .eq("user_id", user.id)
-    .eq("training_slug", slug)
-    .eq("les_sleutel", sleutel)
-    .maybeSingle();
-  const isVoltooid = !!bestaande;
+    .eq("training_slug", slug);
+  const voltooid = new Set(
+    ((voortgangRows as Array<{ les_sleutel: string }> | null) ?? []).map(
+      (r) => r.les_sleutel,
+    ),
+  );
+
+  // Vergrendel-check: als deze training introVerplicht heeft, en de
+  // huidige les is niet de intro, en de intro is nog niet voltooid,
+  // stuur de gebruiker terug naar het overzicht. Daar zien ze het slot.
+  if (isLesVergrendeld(training, sleutel, voltooid)) {
+    redirect(`/academy/${slug}`);
+  }
+
+  const isVoltooid = voltooid.has(sleutel);
 
   // Voor de Vorige/Volgende-navigatie: zoek de positie van deze
   // les in de platte volgorde van alle lessen in de training.

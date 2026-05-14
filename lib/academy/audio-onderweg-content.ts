@@ -284,6 +284,10 @@ export const AUDIO_ONDERWEG_TRAINING: AcademyTraining = {
     "Eric Worre's Seven Skills als luisterlijst voor in de auto, tijdens een wandeling of bij koffie. 15-20 min per dag mindset-voeding die je playbook-werk diepte geeft.",
   zichtbaarVoor: ["sprint-na-21", "core", "pro-optie", "iedereen"],
   doorlooptijdDagen: 14,
+  // Hard-lock: tracks 1-7 zijn vergrendeld tot de intro (track 0) is
+  // voltooid. Raoul: 'mensen moeten wel eerst hoofdstuk 1 of de intro
+  // luisteren, daar vertelt Eric zijn eigen verhaal'.
+  introVerplicht: true,
   modules: [
     {
       nummer: 1,

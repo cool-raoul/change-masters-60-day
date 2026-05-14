@@ -92,6 +92,15 @@ export type AcademyTraining = {
   doorlooptijdDagen: number;
   /** Modules in deze training, in volgorde. */
   modules: AcademyModule[];
+  /**
+   * Wanneer true: alle lessen NA de eerste les ("de intro") zijn
+   * vergrendeld tot de eerste les is voltooid. Bedoeld voor trainingen
+   * waar de intro-context essentieel is voordat de rest pakt (bv.
+   * Audio-onderweg, waar de Worre-intro het kader zet voor de Seven
+   * Skills). UI toont een 🔒 en de les-pagina redirect terug naar het
+   * overzicht als iemand direct via URL probeert te navigeren.
+   */
+  introVerplicht?: boolean;
 };
 
 /**

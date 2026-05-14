@@ -5,6 +5,7 @@ import {
   geefTraining,
   totaalAantalLessen,
   eerstvolgendeLes,
+  isLesVergrendeld,
 } from "@/lib/academy/trainingen";
 
 // ============================================================
@@ -165,10 +166,48 @@ export default async function AcademyTrainingPagina({
                 />
               </div>
 
-              {/* Lessen-lijst per module */}
+              {/* Lessen-lijst per module. Lessen kunnen vergrendeld
+                  zijn (introVerplicht=true en intro nog niet voltooid).
+                  Dan rendert de regel als een niet-klikbare <div> met
+                  een hangslot-icoon en grijze tekst, in plaats van de
+                  klikbare <Link>. */}
               <div className="space-y-1">
                 {mod.lessen.map((les) => {
                   const isVoltooid = voltooid.has(les.sleutel);
+                  const vergrendeld = isLesVergrendeld(
+                    training,
+                    les.sleutel,
+                    voltooid,
+                  );
+
+                  if (vergrendeld) {
+                    return (
+                      <div
+                        key={les.sleutel}
+                        className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-not-allowed"
+                        title="Luister eerst de intro"
+                      >
+                        <span className="flex-shrink-0 w-5 h-5 rounded-full border border-cm-white/15 flex items-center justify-center text-[10px] text-cm-white/40">
+                          🔒
+                        </span>
+                        <span className="flex-1 text-sm text-cm-white/40">
+                          <span className="text-cm-white/25 text-xs mr-2">
+                            {les.sleutel}
+                          </span>
+                          {les.titel}
+                          <span className="ml-2 italic text-cm-white/35 text-xs">
+                            — luister eerst de intro
+                          </span>
+                        </span>
+                        {les.leestijdMinuten && (
+                          <span className="text-cm-white/25 text-xs flex-shrink-0">
+                            {les.leestijdMinuten} min
+                          </span>
+                        )}
+                      </div>
+                    );
+                  }
+
                   return (
                     <Link
                       key={les.sleutel}
