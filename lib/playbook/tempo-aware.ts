@@ -842,7 +842,7 @@ function bouwDag12VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       id: "dag12-pivot",
       label: "🔄 Stuur 1 product-pivot-bericht naar iemand die 'nee' zei op business",
       uitleg:
-        "Heb je iemand die deze week 'nee' zei op de business-kant? Top moment om vandaag te pivoten naar product. De volledige pivot-formule (3 stappen + 3 voorbeelden) staat bovenaan onder 'Wat je leert'.\n\nDE KORTE VERSIE\n\n1. ERKEN ZONDER DRUK: 'Helemaal goed dat dit niet bij je past, geen probleem.'\n2. HAAK NAAR GEZONDHEID/ENERGIE: 'Trouwens, hoe gaat het bij je met [energie/slaap/sport]?'\n3. STEL PRODUCT-MOGELIJKHEID VOOR: 'Wil je eens een maand proberen, vrijblijvend?'\n\nNA HET PIVOT-BERICHT\n\nUpdate de pijplijn-fase in de namenlijst naar 'Shopper'. Maak een herinnering voor +21 dagen: '[naam], hoe bevallen de producten?'. Stop de business-vraag voor minstens 3 maanden, laat ze het ervaren.\n\nGeen pivot-kandidaat vandaag? Sla deze stap over. Geen druk om er één te forceren.",
+        "Heb je iemand die deze week 'nee' zei op de business-kant? Top moment om vandaag te pivoten naar product. De volledige pivot-formule (3 stappen + 3 voorbeelden) staat bovenaan onder 'Wat je leert'.\n\nDE KORTE VERSIE\n\n1. ERKEN ZONDER DRUK: 'Helemaal goed dat dit niet bij je past, geen probleem.'\n2. HAAK NAAR GEZONDHEID/ENERGIE: 'Trouwens, hoe gaat het bij je met [energie/slaap/sport]?'\n3. STEL PRODUCT-MOGELIJKHEID VOOR — twee varianten\n\n📋 VARIANT A: STUUR DE PRODUCTADVIES-TEST ALS ZACHTE TUSSENSTAP (aanbevolen)\n\nIn plaats van direct te vragen 'wil je een maand proberen?', kun je de productadvies-test van ELEVA als tussenstap inzetten. Open de prospect-kaart in je namenlijst, klik op 'Productadvies-test versturen' — de prospect vult een korte vragenlijst in over hun klachten/wensen, en krijgt een gepersonaliseerd advies met welke producten passen.\n\nWaarom dit werkt: de prospect ervaart GERICHTE info in plaats van een algemene pitch. Pas DAARNA komt 'wil je het eens proberen?' — gebaseerd op wat ZIJ zelf hebben aangegeven, niet wat jij voorstelt.\n\n💬 VARIANT B: DIRECT VOORSTELLEN\n\nWil je sneller zijn: 'Wil je eens een maand proberen, vrijblijvend?'. Werkt bij prospects die al concreet hebben verteld over een klacht of wens. Sla de test over en stel direct het product voor.\n\nNA HET PIVOT-BERICHT\n\nUpdate de pijplijn-fase in de namenlijst naar 'Shopper'. Maak een herinnering voor +21 dagen: '[naam], hoe bevallen de producten?'. Stop de business-vraag voor minstens 3 maanden, laat ze het ervaren.\n\nGeen pivot-kandidaat vandaag? Sla deze stap over. Geen druk om er één te forceren.",
       verplicht: false,
       actieRoute: "/namenlijst",
     },
@@ -921,16 +921,20 @@ function bouwDag14VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
 
 /**
  * Tempo-specifieke vervangings-data voor dag 15.
- * Thema: Ritme-week start. Follow-up wordt hoofdwerk in week 3.
+ * Thema: Week 3 begint, follow-up wordt het hoofdwerk. Het week-3-
+ * thema staat in watJeLeert; geen aparte F-stap nodig om dat te
+ * herhalen. Wel een extra ACTIE-stap die niet dubbelt met stap D
+ * (openstaande follow-ups): herinneringen-lijst doorlopen op
+ * vervaldatum van vandaag of eerder.
  */
 function bouwDag15VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
   return [
     ...standaardABCDEstappen(15, uren),
     {
-      id: "dag15-followup-focus",
-      label: "⏱️ Vandaag start week 3 — follow-up wordt je hoofdwerk",
+      id: "dag15-herinneringen-doorlopen",
+      label: "🔔 Loop je herinneringen-lijst door (vervaldatum vandaag of eerder)",
       uitleg:
-        "Week 3 verschuift de focus: minder nieuwe contacten verzinnen, meer mensen warm houden die al uitgenodigd zijn. 80% van alle ja's komt op contactmoment 3 t/m 5, niet op het eerste.\n\nDE GOLD QUESTION (werkt op vrijwel iedereen)\n\n'Hoe kijk je er nu naar, na een paar dagen?'\n\nOpen vraag, geen oordeel, geen druk. De volledige 5-fasen-flow staat bovenaan onder 'Wat je leert' + in dag 6 (via Menu → Playbook → Dag 6).\n\nWAT JE VANDAAG EXTRA DOET\n\nNaast je gewone openstaande follow-ups (stap 4 hierboven): kijk in je herinneringen-lijst (Menu → Herinneringen → Alle open). Wie heeft een vervaldatum vandaag of eerder? Doe die vandaag, niet morgen.\n\nDe langspeelplaten-regel: een nee NU is geen nee voor altijd. Iemand op 'Not-yet' zetten is geen verlies — houd ze warm via gewone content, ze komen vaak 6-12 maanden later alsnog terug.",
+        "Open Menu → Herinneringen → Alle open. Filter op vervaldatum vandaag of eerder. Voor elke openstaande herinnering: doe 'm vandaag of update de vervaldatum.\n\nWaarom apart van stap 4 (openstaande follow-ups)? In stap 4 ga je proactief door je pijplijn voor follow-up-momenten. Hier check je SPECIFIEK welke herinneringen je in eerdere dagen hebt aangemaakt en die nu klaar staan om actie te ondernemen. Vaak zitten daar 'verloren' prospects tussen die je anders zou vergeten.\n\nDe langspeelplaten-regel: een nee NU is geen nee voor altijd. Een herinnering uit dag 5 of dag 10 kan vandaag exact het juiste moment zijn om iemand weer aan te raken.",
       verplicht: true,
       actieRoute: "/herinneringen",
     },

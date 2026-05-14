@@ -1783,9 +1783,15 @@ VANDAAG: probeer Doel-Tijd-Termijn vandaag of morgen bij minstens 1 warme prospe
         route: "/mijn-zinnen",
       },
     ],
-    watJeLeert: `Edification is dé reden dat een 3-weg überhaupt werkt. Zonder edification is het gewoon nog een gesprek waar drie mensen praten, mét edification verandert het in een setting waar de prospect denkt: "wow, deze persoon die ik nu hoor, weet écht waar het over gaat".
+    watJeLeert: `Op dag 9 leerde je WAT edification is en deed je het waarschijnlijk met een script-versie van ELEVA. Vandaag, na een paar 3-wegs in praktijk, schrijf je je EIGEN permanente edification-zin — eentje die voelt als van jou, die je voortaan automatisch gebruikt bij elk 3-weg en elke presentatie. Een eigen zin is natuurlijker dan een script, en makkelijker te onthouden in het moment.
 
-Wat is het concreet? Edification is in 1-2 zinnen vóórdat je sponsor begint te praten:
+WAAROM NU EN NIET OP DAG 9?
+
+Op dag 9 wist je nog niet hoe je sponsor "klinkt" in een echt 3-weg met jouw prospects. Na een paar gesprekken (dag 10-17) heb je dat gevoel wel. Vandaag verwerk je dat in een EIGEN zin die past bij hoe jij je sponsor in echt presenteert. Geen herhaling van dag 9 — wel een verdieping.
+
+QUICK RECAP UIT DAG 9 (voor wie even wil opfrissen)
+
+Edification is in 1-2 zinnen vóórdat je sponsor begint te praten:
 1) wie het is,
 2) wat zijn/haar track-record is (hoe lang, hoeveel mensen geholpen, welke achtergrond),
 3) waarom JIJ deze persoon hebt gekozen om je verder te helpen.
