@@ -12,7 +12,10 @@ import { AutoNaarVandaag } from "@/components/dashboard/AutoNaarVandaag";
 import { HerinnerLaterKnop } from "@/components/playbook/HerinnerLaterKnop";
 import { DAGEN } from "@/lib/playbook/dagen";
 import { haalOverrides, pasOverrideToe } from "@/lib/playbook/overrides";
+import { pasTempoToeOpDag } from "@/lib/playbook/tempo-aware";
+import { genereerWeekritmeDag } from "@/lib/playbook/weekritme";
 import { berekenHuidigeDag } from "@/lib/playbook/bereken-dag";
+import type { CommitmentUren } from "@/lib/dagdoelen";
 import { pakTopRadar, type ProspectInput } from "@/lib/radar/volgende-beste-actie";
 import { VolgendeBesteActie } from "@/components/radar/VolgendeBesteActie";
 import { getServerTaal, v } from "@/lib/i18n/server";
@@ -284,21 +287,48 @@ export default async function DashboardPagina() {
   const week2Klaar = mijlpaalVoltooid(14);
   const week3Klaar = mijlpaalVoltooid(21);
 
-  // Huidige dag-data uit het 21-daagse playbook (alleen relevant voor
-  // dag 1-21, daarna draait de gebruiker op weekritme).
-  let huidigeDagData = dag <= 21
-    ? DAGEN.find((d) => d.nummer === dag) ?? null
-    : null;
-  // Override toepassen, founders kunnen via /instellingen/playbook
-  // teksten aanpassen zonder code-deploy. haalOverrides faalt stilletjes
-  // als de tabel nog niet bestaat (returnt lege map), zodat de tile
-  // gewoon de hardcoded versie blijft tonen.
-  if (huidigeDagData) {
-    const overrideMap = await haalOverrides(supabase as any, [dag]);
-    huidigeDagData = pasOverrideToe(
-      huidigeDagData,
-      overrideMap.get(dag) ?? null,
-    );
+  // Tempo lezen voor zowel dag 1-21 (tempo-aware vervanging) als
+  // dag 22-60 (weekritme-generator).
+  const ruwUrenDashboard = Number(
+    (user.user_metadata as { commitment_uren?: unknown } | undefined)
+      ?.commitment_uren,
+  );
+  const commitmentUrenDashboard: CommitmentUren | null =
+    ruwUrenDashboard === 2 ||
+    ruwUrenDashboard === 4 ||
+    ruwUrenDashboard === 6
+      ? ruwUrenDashboard
+      : null;
+
+  // Huidige dag-data. Voor dag 1-21: uit het statische DAGEN-array,
+  // met tempo-aware vervanging + override-pass. Voor dag 22-60: via
+  // genereerWeekritmeDag (synthetisch dag-object op basis van
+  // run-weekdag). Beide trajecten leveren een Dag-object op met
+  // titel + vandaagDoen, zodat de "Vandaag is dag X"-CTA-tile en
+  // AutoNaarVandaag voor het hele 1-60 bereik werken.
+  let huidigeDagData;
+  if (dag <= 21) {
+    huidigeDagData = DAGEN.find((d) => d.nummer === dag) ?? null;
+    if (huidigeDagData) {
+      huidigeDagData = pasTempoToeOpDag(
+        huidigeDagData,
+        commitmentUrenDashboard,
+      );
+      // Override toepassen, founders kunnen via /instellingen/playbook
+      // teksten aanpassen zonder code-deploy. haalOverrides faalt
+      // stilletjes als de tabel nog niet bestaat (returnt lege map).
+      const overrideMap = await haalOverrides(supabase as any, [dag]);
+      huidigeDagData = pasOverrideToe(
+        huidigeDagData,
+        overrideMap.get(dag) ?? null,
+      );
+    }
+  } else if (dag <= 60) {
+    // Weekritme-modus: synthetisch dag-object. Geen override-pass
+    // (synthetische dagen krijgen geen founder-edits).
+    huidigeDagData = genereerWeekritmeDag(dag, commitmentUrenDashboard);
+  } else {
+    huidigeDagData = null;
   }
   const huidigeDagVoltooidIds = huidigeDagData
     ? huidigeDagData.vandaagDoen
