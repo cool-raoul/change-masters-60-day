@@ -75,6 +75,32 @@ export function berekenDagdoelen(uren: CommitmentUren): Dagdoelen {
 }
 
 /**
+ * Minimum-aantallen voor 'rustige' dagen (specifiek dag 7, week-review).
+ * Filosofie (Raoul, 2026-05-14): niet halveren tot een vast lager getal,
+ * maar een ONDERGRENS aangeven met ruimte om er overheen te gaan. Label
+ * gebruikt 'Minimaal X', uitleg zegt 'meer mag, minder niet'.
+ *
+ * Gekozen aantallen (ongeveer 50-60% van normaal):
+ * - Fundament (5/2/3): minimaal 3/1/1
+ * - Bouwen    (10/4/6): minimaal 5/2/3
+ * - Doorbreken(15/6/10): minimaal 8/3/5
+ */
+export type DagdoelenMinimum = {
+  contacten: number;
+  uitnodigingen: number;
+  followups: number;
+};
+
+export function dagdoelenMinimum(uren: CommitmentUren): DagdoelenMinimum {
+  const tabel: Record<CommitmentUren, DagdoelenMinimum> = {
+    2: { contacten: 3, uitnodigingen: 1, followups: 1 },
+    4: { contacten: 5, uitnodigingen: 2, followups: 3 },
+    6: { contacten: 8, uitnodigingen: 3, followups: 5 },
+  };
+  return tabel[uren];
+}
+
+/**
  * Display-naam voor een tempo. Gebruikt in UI én in Mentor-prompts.
  */
 export function tempoNaam(uren: CommitmentUren): string {
