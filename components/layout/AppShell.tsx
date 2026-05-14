@@ -30,7 +30,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, onboarding_klaar, role, run_startdatum, is_tester, sponsor_id")
+    .select("full_name, onboarding_klaar, role, run_startdatum, is_tester, sponsor_id, foto_url")
     .eq("id", user.id)
     .single();
 
@@ -94,6 +94,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
         <div className="flex-1 flex flex-col min-h-0 min-w-0">
           <Topbar
             gebruikersnaam={profile?.full_name || user.email || "Teamlid"}
+            fotoUrl={(profile as { foto_url?: string | null } | null)?.foto_url ?? null}
             huidigeDag={huidigeDag}
           />
           <main className="flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain p-6 pb-28 lg:pb-6 mobile-scroll">

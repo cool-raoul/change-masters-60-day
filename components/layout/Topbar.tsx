@@ -6,12 +6,16 @@ import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTaal } from "@/lib/i18n/TaalContext";
 import { useThema } from "@/components/theme/ThemeContext";
+import { AvatarFoto } from "@/components/ui/AvatarFoto";
 
 export function Topbar({
   gebruikersnaam,
+  fotoUrl,
   huidigeDag,
 }: {
   gebruikersnaam: string;
+  /** Profielfoto-URL uit profiles.foto_url, null als geen foto geüpload. */
+  fotoUrl: string | null;
   /** Server-side berekende huidige dag (zelfde logica als dashboard).
    *  Topbar overschrijft deze alleen wanneer de URL een ?dag=N
    *  parameter heeft op /playbook (founder-preview-modus). */
@@ -192,16 +196,17 @@ export function Topbar({
             aria-haspopup="menu"
             aria-expanded={profielMenuOpen}
           >
-            <div
-              className={`relative w-8 h-8 rounded-full bg-cm-surface-2 border flex items-center justify-center ${
-                isPremium
-                  ? "border-cm-gold ring-2 ring-cm-gold/30"
-                  : "border-cm-border"
-              }`}
-            >
-              <span className="text-cm-gold text-sm font-semibold">
-                {gebruikersnaam.charAt(0).toUpperCase()}
-              </span>
+            <div className="relative">
+              <AvatarFoto
+                naam={gebruikersnaam}
+                fotoUrl={fotoUrl}
+                maat="sm"
+                className={
+                  isPremium
+                    ? "!w-8 !h-8 !text-sm !border-cm-gold ring-2 ring-cm-gold/30"
+                    : "!w-8 !h-8 !text-sm"
+                }
+              />
               {isPremium && (
                 <span
                   className="absolute -top-1 -right-1 text-[10px]"
