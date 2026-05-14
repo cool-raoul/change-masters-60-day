@@ -425,6 +425,13 @@ export function pasTempoToeOpDag(
     };
   }
 
+  if (dag.nummer === 6) {
+    return {
+      ...dag,
+      vandaagDoen: bouwDag6VandaagDoen(commitmentUren),
+    };
+  }
+
   // Andere dagen: voorlopig nog niet tempo-aware. Hier komen volgende
   // rondes de varianten voor dag 5-21 te zien.
   return dag;
