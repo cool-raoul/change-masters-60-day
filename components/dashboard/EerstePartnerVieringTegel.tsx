@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { AvatarFoto } from "@/components/ui/AvatarFoto";
 
 // ============================================================
 // EerstePartnerVieringTegel, eenmalige speciale tegel op /dashboard.
@@ -17,9 +18,11 @@ import Link from "next/link";
 //   3. Open Audio-onderweg-Academy Skill #6
 // ============================================================
 
+type Persoon = { fullName: string; telefoon: string | null; fotoUrl: string | null };
+
 type Props = {
-  eerstePartner: { fullName: string; telefoon: string | null } | null;
-  eigenSponsor: { fullName: string; telefoon: string | null } | null;
+  eerstePartner: Persoon | null;
+  eigenSponsor: Persoon | null;
   triggerConfetti: boolean;
 };
 
@@ -62,18 +65,21 @@ export function EerstePartnerVieringTegel({
 
   return (
     <div className="rounded-2xl bg-gradient-to-br from-cm-gold/20 via-cm-gold/10 to-cm-surface border-2 border-cm-gold/50 px-5 py-5 space-y-4">
-      <div className="space-y-1">
-        <p className="text-cm-gold text-xs font-bold uppercase tracking-wider">
-          🎉 Mijlpaal
-        </p>
-        <h2 className="text-2xl font-display font-bold text-cm-white">
-          Je hebt je eerste partner!
-        </h2>
-        <p className="text-cm-white/85 text-sm leading-relaxed">
-          <strong className="text-cm-gold">{eerstePartner.fullName}</strong>{" "}
-          heeft zich net onder jou aangemeld. Dit is een groot moment. Drie
-          dingen om vandaag te doen — geen scripts, gewoon jij in jouw woorden.
-        </p>
+      <div className="flex items-start gap-4">
+        <AvatarFoto naam={eerstePartner.fullName} fotoUrl={eerstePartner.fotoUrl} maat="lg" />
+        <div className="space-y-1 flex-1 min-w-0">
+          <p className="text-cm-gold text-xs font-bold uppercase tracking-wider">
+            🎉 Mijlpaal
+          </p>
+          <h2 className="text-2xl font-display font-bold text-cm-white">
+            Je hebt je eerste partner!
+          </h2>
+          <p className="text-cm-white/85 text-sm leading-relaxed">
+            <strong className="text-cm-gold">{eerstePartner.fullName}</strong>{" "}
+            heeft zich net onder jou aangemeld. Dit is een groot moment. Drie
+            dingen om vandaag te doen — geen scripts, gewoon jij in jouw woorden.
+          </p>
+        </div>
       </div>
 
       <div className="space-y-2.5">

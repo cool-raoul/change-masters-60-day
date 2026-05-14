@@ -24,6 +24,7 @@ import { Locale } from "date-fns";
 import { TijdslijnStrip } from "@/components/layout/TijdslijnStrip";
 import { MijlpaalDetector } from "@/components/celebrations/MijlpaalDetector";
 import { EerstePartnerVieringTegel } from "@/components/dashboard/EerstePartnerVieringTegel";
+import { AvatarFoto } from "@/components/ui/AvatarFoto";
 
 const DATE_LOCALES: Record<string, Locale> = { nl, en: enUS, fr, es, de, pt };
 
@@ -309,9 +310,10 @@ export default async function DashboardPagina({
   // Huidige dag-data. Voor dag 1-21: uit het statische DAGEN-array,
   // Eerste-partner-viering: triggert via ?vier=eerste-partner OF
   // wanneer de mijlpaal in afgelopen 24u is geregistreerd.
+  type VieringPersoon = { fullName: string; telefoon: string | null; fotoUrl: string | null };
   let eerstePartnerViering: {
-    eerstePartner: { fullName: string; telefoon: string | null } | null;
-    eigenSponsor: { fullName: string; telefoon: string | null } | null;
+    eerstePartner: VieringPersoon | null;
+    eigenSponsor: VieringPersoon | null;
     triggerConfetti: boolean;
   } | null = null;
 
@@ -324,35 +326,37 @@ export default async function DashboardPagina({
     .maybeSingle();
 
   if (recenteMijlpaal || sp.vier === "eerste-partner") {
-    // Haal eerste-partner-naam + telefoon op
-    let eerstePartner: { fullName: string; telefoon: string | null } | null = null;
+    // Haal eerste-partner-naam + telefoon + foto op
+    let eerstePartner: VieringPersoon | null = null;
     if (recenteMijlpaal) {
       const { data: pData } = await supabase
         .from("profiles")
-        .select("full_name, telefoon")
+        .select("full_name, telefoon, foto_url")
         .eq("id", (recenteMijlpaal as { partner_id: string }).partner_id)
         .maybeSingle();
       if (pData) {
         eerstePartner = {
           fullName: (pData as { full_name: string }).full_name,
           telefoon: (pData as { telefoon: string | null }).telefoon ?? null,
+          fotoUrl: (pData as { foto_url: string | null }).foto_url ?? null,
         };
       }
     }
 
     // Haal eigen sponsor op
-    let eigenSponsor: { fullName: string; telefoon: string | null } | null = null;
+    let eigenSponsor: VieringPersoon | null = null;
     const profSponsor = profile as { sponsor_id?: string | null } | null;
     if (profSponsor?.sponsor_id) {
       const { data: sData } = await supabase
         .from("profiles")
-        .select("full_name, telefoon")
+        .select("full_name, telefoon, foto_url")
         .eq("id", profSponsor.sponsor_id)
         .maybeSingle();
       if (sData) {
         eigenSponsor = {
           fullName: (sData as { full_name: string }).full_name,
           telefoon: (sData as { telefoon: string | null }).telefoon ?? null,
+          fotoUrl: (sData as { foto_url: string | null }).foto_url ?? null,
         };
       }
     }
@@ -452,13 +456,15 @@ export default async function DashboardPagina({
   const sponsorIdDash = (profile as any)?.sponsor_id ?? null;
   const eigenRolDash = (profile as any)?.role ?? null;
   let sponsorNaamDash = "";
+  let sponsorFotoDash: string | null = null;
   if (sponsorIdDash) {
     const { data: sp } = await supabase
       .from("profiles")
-      .select("full_name")
+      .select("full_name, foto_url")
       .eq("id", sponsorIdDash)
       .single();
     sponsorNaamDash = (sp as { full_name?: string } | null)?.full_name ?? "";
+    sponsorFotoDash = (sp as { foto_url?: string | null } | null)?.foto_url ?? null;
   } else if (eigenRolDash === "leider") {
     sponsorNaamDash = "Ramon Sant";
   } else {
@@ -530,15 +536,7 @@ export default async function DashboardPagina({
           surveillance. Klik = naar team-pagina. */}
       {sponsorNaamDash && (
         <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-cm-border bg-cm-surface-2/40 glow-gold-soft">
-          <div className="w-9 h-9 rounded-full border-2 border-cm-gold-dim bg-cm-surface-2 flex items-center justify-center text-cm-gold text-sm font-semibold flex-shrink-0">
-            {sponsorNaamDash
-              .split(/\s|\//)
-              .filter(Boolean)
-              .map((s) => s[0])
-              .join("")
-              .slice(0, 2)
-              .toUpperCase()}
-          </div>
+          <AvatarFoto naam={sponsorNaamDash} fotoUrl={sponsorFotoDash} maat="sm" />
           <div className="flex-1 min-w-0 text-cm-white/80 text-sm leading-snug">
             <span className="text-cm-white font-medium">{sponsorNaamDash}</span>{" "}
             <span className="text-cm-white/60">is je sponsor.</span>

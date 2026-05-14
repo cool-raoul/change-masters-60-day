@@ -24,6 +24,7 @@ export type PartnerInfo = {
   isUrgent: boolean;
   isDirectePartner: boolean;
   viaPartnerNaam: string | null;
+  fotoUrl: string | null;
 };
 
 export type PartnerOverview = {
@@ -41,6 +42,7 @@ type RpcRij = {
   taken_voltooid_pct: number;
   is_directe_partner: boolean;
   via_partner_naam: string | null;
+  foto_url: string | null;
 };
 
 function isUrgent(rij: RpcRij): boolean {
@@ -79,6 +81,7 @@ export async function haalPartnerOverview(
       isUrgent: isUrgent(rij),
       isDirectePartner: rij.is_directe_partner,
       viaPartnerNaam: rij.via_partner_naam,
+      fotoUrl: rij.foto_url,
     };
     if (rij.is_directe_partner) {
       directe.push(info);

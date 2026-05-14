@@ -11,6 +11,9 @@ import { PushInstellingenKaart } from "@/components/pwa/PushInstellingenKaart";
 export function InstellingenForm({ profile, email }: { profile: Profile | null; email: string }) {
   const { v } = useTaal();
   const [naam, setNaam] = useState(profile?.full_name || "");
+  const [telefoon, setTelefoon] = useState(
+    (profile as { telefoon?: string | null } | null)?.telefoon || "",
+  );
   const [laden, setLaden] = useState(false);
   const [wachtwoord, setWachtwoord] = useState("");
   const [wachtwoordBevestig, setWachtwoordBevestig] = useState("");
@@ -58,7 +61,10 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
 
     const { error } = await supabase
       .from("profiles")
-      .update({ full_name: naam })
+      .update({
+        full_name: naam,
+        telefoon: telefoon.trim() ? telefoon.trim() : null,
+      })
       .eq("id", profile?.id);
 
     if (error) {
@@ -160,6 +166,23 @@ export function InstellingenForm({ profile, email }: { profile: Profile | null; 
             disabled
             className="input-cm opacity-50 cursor-not-allowed"
           />
+        </div>
+        <div>
+          <label className="block text-sm text-cm-white mb-1.5">
+            📱 Telefoonnummer
+          </label>
+          <input
+            type="tel"
+            value={telefoon}
+            onChange={(e) => setTelefoon(e.target.value)}
+            placeholder="06 12 34 56 78"
+            className="input-cm"
+            autoComplete="tel"
+          />
+          <p className="text-cm-white/60 text-xs mt-1">
+            Wordt gebruikt door WhatsApp-knoppen op partner-check en mijlpaal-tegel.
+            Vul in zoals je hem normaal opschrijft, het systeem zet 'm zelf goed.
+          </p>
         </div>
         <div>
           <label className="block text-sm text-cm-white mb-1.5">{v("instellingen.rol")}</label>

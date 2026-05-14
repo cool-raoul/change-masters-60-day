@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { InstellingenForm } from "@/components/InstellingenForm";
+import { ProfielFotoUpload } from "@/components/instellingen/ProfielFotoUpload";
 import { PresenceToggle } from "@/components/presence/PresenceToggle";
 import { SocialAccountsForm } from "@/components/instellingen/SocialAccountsForm";
 import { TempoSectie } from "@/components/instellingen/TempoSectie";
@@ -60,6 +61,12 @@ export default async function InstellingenPagina() {
         </h1>
         <p className="text-cm-white mt-1">{v("instellingen.subtitel", taal)}</p>
       </div>
+
+      <ProfielFotoUpload
+        userId={user.id}
+        naam={(profile as { full_name?: string | null } | null)?.full_name ?? null}
+        initieleFotoUrl={(profile as { foto_url?: string | null } | null)?.foto_url ?? null}
+      />
 
       <InstellingenForm profile={profile} email={user.email || ""} />
 

@@ -12,6 +12,7 @@ function RegistreerFormulier() {
   const [naam, setNaam] = useState("");
   const [email, setEmail] = useState("");
   const [emailBevestig, setEmailBevestig] = useState("");
+  const [telefoon, setTelefoon] = useState("");
   const [wachtwoord, setWachtwoord] = useState("");
   const [wachtwoordBevestig, setWachtwoordBevestig] = useState("");
   const [taal, setTaal] = useState<Taal>("nl");
@@ -32,6 +33,11 @@ function RegistreerFormulier() {
 
     if (email !== emailBevestig) {
       toast.error("E-mailadressen komen niet overeen");
+      return;
+    }
+
+    if (!telefoon.trim() || telefoon.replace(/\D/g, "").length < 8) {
+      toast.error("Vul een geldig telefoonnummer in");
       return;
     }
 
@@ -56,6 +62,7 @@ function RegistreerFormulier() {
           role: "lid",
           sponsor_id: sponsorId || null,
           taal: taal,
+          telefoon: telefoon.trim(),
         },
         emailRedirectTo: `${window.location.origin}/api/auth/callback${sponsorId ? `?ref=${sponsorId}` : ""}`,
       },
@@ -218,6 +225,24 @@ function RegistreerFormulier() {
               {emailBevestig && email === emailBevestig && (
                 <p className="text-green-400 text-xs mt-1">✓ E-mailadressen komen overeen</p>
               )}
+            </div>
+
+            <div>
+              <label className="block text-sm text-cm-white mb-1.5">
+                📱 Telefoonnummer
+              </label>
+              <input
+                type="tel"
+                value={telefoon}
+                onChange={(e) => setTelefoon(e.target.value)}
+                placeholder="06 12 34 56 78"
+                className="input-cm"
+                required
+                autoComplete="tel"
+              />
+              <p className="text-cm-white/60 text-xs mt-1">
+                Zodat je sponsor je via WhatsApp kan bereiken bij vragen.
+              </p>
             </div>
 
             <div>

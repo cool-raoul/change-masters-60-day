@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { PartnerInfo, PartnerOverview } from "@/lib/team/partner-overview";
+import { AvatarFoto } from "@/components/ui/AvatarFoto";
 
 // ============================================================
 // PartnerCheckEmbed, inline-embed in /vandaag voor sponsor-rol.
@@ -148,23 +149,28 @@ export function PartnerCheckEmbed({ opVoltooid, alVoltooid }: Props) {
               key={p.userId}
               className={`rounded-md border px-3 py-2.5 space-y-1.5 ${urgencyKleur(p)}`}
             >
-              <div className="flex items-baseline justify-between gap-2 flex-wrap">
-                <p className="text-cm-white font-semibold text-sm">
-                  {p.isUrgent && <span className="mr-1">⚠️</span>}
-                  {p.fullName}
-                  {p.modus && (
-                    <span className="text-cm-white/50 text-[11px] font-normal ml-2">
-                      · {p.modus === "sprint" ? "Sprint" : p.modus === "core" ? "Core" : "Pro"}
+              <div className="flex items-start gap-3">
+                <AvatarFoto naam={p.fullName} fotoUrl={p.fotoUrl} maat="sm" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-baseline justify-between gap-2 flex-wrap">
+                    <p className="text-cm-white font-semibold text-sm">
+                      {p.isUrgent && <span className="mr-1">⚠️</span>}
+                      {p.fullName}
+                      {p.modus && (
+                        <span className="text-cm-white/50 text-[11px] font-normal ml-2">
+                          · {p.modus === "sprint" ? "Sprint" : p.modus === "core" ? "Core" : "Pro"}
+                        </span>
+                      )}
+                    </p>
+                    <span className="text-cm-white/55 text-[11px] tabular-nums">
+                      Dag {p.huidigeDag}
                     </span>
-                  )}
-                </p>
-                <span className="text-cm-white/55 text-[11px] tabular-nums">
-                  Dag {p.huidigeDag}
-                </span>
+                  </div>
+                  <p className="text-cm-white/70 text-xs mt-0.5">
+                    {stil(p.laatstGezienUren)} · {p.takenVoltooidPct}% taken deze week
+                  </p>
+                </div>
               </div>
-              <p className="text-cm-white/70 text-xs">
-                {stil(p.laatstGezienUren)} · {p.takenVoltooidPct}% taken deze week
-              </p>
               {waLink ? (
                 <a
                   href={waLink}
@@ -199,18 +205,21 @@ export function PartnerCheckEmbed({ opVoltooid, alVoltooid }: Props) {
               {tweedeLaag.map((p) => (
                 <div
                   key={p.userId}
-                  className="rounded-md border border-cm-border bg-cm-bg/30 px-3 py-2"
+                  className="rounded-md border border-cm-border bg-cm-bg/30 px-3 py-2 flex items-start gap-2"
                 >
-                  <p className="text-cm-white/85 text-xs">
-                    {p.isUrgent && <span className="mr-1">⚠️</span>}
-                    {p.fullName}{" "}
-                    <span className="text-cm-white/45">
-                      via {p.viaPartnerNaam ?? "—"} · dag {p.huidigeDag}
-                    </span>
-                  </p>
-                  <p className="text-cm-white/50 text-[11px]">
-                    {stil(p.laatstGezienUren)} · {p.takenVoltooidPct}% taken
-                  </p>
+                  <AvatarFoto naam={p.fullName} fotoUrl={p.fotoUrl} maat="xs" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-cm-white/85 text-xs">
+                      {p.isUrgent && <span className="mr-1">⚠️</span>}
+                      {p.fullName}{" "}
+                      <span className="text-cm-white/45">
+                        via {p.viaPartnerNaam ?? "—"} · dag {p.huidigeDag}
+                      </span>
+                    </p>
+                    <p className="text-cm-white/50 text-[11px]">
+                      {stil(p.laatstGezienUren)} · {p.takenVoltooidPct}% taken
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
