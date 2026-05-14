@@ -44,13 +44,22 @@ import type { Dag, ControllableTaak } from "@/lib/playbook/types";
 const STORIES_UITLEG = `Deel 1 tot 3 momenten uit je dag op Instagram of Facebook (stories, niet feed). Een ontbijt, een wandeling, een rustig moment, een blije gedachte. Geen verkoop, geen "kom in m'n business". Gewoon laten zien dat je leeft. Mensen worden door wat ze zien aangetrokken, niet door wat ze lezen.\n\nREAGEREN OP STORIES VAN ANDEREN is minstens zo belangrijk als zelf posten. Waarom? Als je reageert op iemands story, land je RECHTSTREEKS in z'n DM. Dat is de plek waar het echte gesprek begint. Eén oprechte 2-3 zinnen-reactie op een story is goud waard.\n\nWat doe je vandaag?\n\n1. Plaats 1 tot 3 stories uit je dag (lifestyle, geen pitch)\n2. Open Instagram of Facebook en geef bij 3 stories van anderen een ECHTE reactie. Geen "👏👏👏" maar 2-3 zinnen die laten zien dat je hun moment hebt gezien.\n3. Wordt het een gesprek? Top. Als dit een NIEUW persoon is (nog niet op je lijst), voeg ze toe en zet ze op fase 'in gesprek' via de spraakfunctie ("Ik heb een gesprek gestart met [naam]").\n\nZo bouw je rustige zichtbaarheid + concrete nieuwe gesprekken zonder iets te pushen.`;
 
 // Voor dag 3 + dag 4 (start-fase): alleen de openings-zin + luisteren.
-// De diepere flow (Feel-Felt-Found, closing-vragen, Doel-Tijd-Termijn,
-// volgende stap) komt stap-voor-stap in latere dagen aan bod, niet
-// allemaal tegelijk op dag 3 of 4 — dat zou overweldigend zijn voor
-// een member die net begint. Onderaan staat WEL al de verwijzing
-// naar sponsor + Mentor, zodat een member die direct vastloopt op
-// een specifiek bericht weet waar 'ie per direct hulp kan halen.
-const FOLLOWUP_UITLEG_BASIS = `Mensen die de film, one-pager of presentatie hebben gezien wachten op opvolging. Geen vast getal vandaag — afhankelijk van wie er klaar staat in je pijplijn. Open je namenlijst en filter op fase 'one-pager', 'presentatie' of 'follow-up'.\n\nVOOR NU FOCUS JE OP ÉÉN DING, de openingszin. De diepere opvolg-technieken (twijfel ombuigen, closing-vragen, doel-tijd-termijn) komen in de dagen hierna stap voor stap aan bod. Vandaag oefen je alleen het OPENEN van het gesprek.\n\nDE OPENINGSZIN, twee varianten:\n\n• ALGEMEEN: "Wat spreekt je hier het meeste in aan?"\n  Werkt altijd. Richt de aandacht op wat hen RAAKTE.\n\n• WHY-GERICHT (als je hun WHY al kent): "Zie je hoe dit je kan brengen tot [hun WHY]?"\n  Voorbeelden:\n    - "Zie je hoe dit je kan brengen tot die extra vrije dag die je graag zou willen?"\n    - "Zie je hoe dit je kan brengen tot die vakantiedagen die je extra zou willen?"\n    - "Zie je hoe dit je kan brengen tot meer tijd met je kinderen?"\n  Krachtig als je hun WHY weet.\n\nVermijd "Wat vond je ervan?" — dat lokt oordeel uit in plaats van verbinding.\n\nLUISTER WAT ZE ZEGGEN. Doorvragen op wat ze NOEMEN. Geen pitch, geen druk om vandaag iets te beslissen. De volgende stappen (validatie, twijfel ombuigen, closen) leer je later in het playbook.\n\n🆘 KOM JE NU VAST OP EEN SPECIFIEK BERICHT?\n\nWacht niet tot je het zelf moet verzinnen. Je hebt twee snelle hulplijnen — gebruik ze:\n\n• Je sponsor — stuur een korte WhatsApp met de letterlijke tekst die je hebt ontvangen, plus één vraag ("Hoe zou jij hier op reageren?"). Sponsors zijn er precies hiervoor.\n• De Mentor (in het zijmenu) — plak het bericht, vraag een reactie-suggestie. De Mentor schrijft op maat in jouw toon en houdt rekening met fase + WHY van de prospect.\n\nDieper-ingaan op berichten leer je later, maar deze vangnetten zijn er nu al.`;
+// De diepere flow (Feel-Felt-Found vanaf dag 5, follow-up-cadans vanaf
+// dag 6, closing-vragen en Doel-Tijd-Termijn vanaf dag 8+) komt
+// stap-voor-stap in latere dagen aan bod, niet allemaal tegelijk op
+// dag 3 of 4 — dat zou overweldigend zijn voor een member die net
+// begint. Onderaan staat WEL al de verwijzing naar sponsor + Mentor,
+// zodat een member die direct vastloopt op een specifiek bericht weet
+// waar 'ie per direct hulp kan halen.
+const FOLLOWUP_UITLEG_BASIS = `Mensen die de film, one-pager of presentatie hebben gezien wachten op opvolging. Geen vast getal vandaag — afhankelijk van wie er klaar staat in je pijplijn. Open je namenlijst en filter op fase 'one-pager', 'presentatie' of 'follow-up'.\n\nVOOR NU FOCUS JE OP ÉÉN DING, de openingszin. De diepere opvolg-technieken (Feel-Felt-Found voor bezwaren, follow-up-cadans, closing-vragen, doel-tijd-termijn) komen verderop in de playbook stap voor stap aan bod (vanaf dag 5). Vandaag oefen je alleen het OPENEN van het gesprek.\n\nDE OPENINGSZIN, twee varianten:\n\n• ALGEMEEN: "Wat spreekt je hier het meeste in aan?"\n  Werkt altijd. Richt de aandacht op wat hen RAAKTE.\n\n• WHY-GERICHT (als je hun WHY al kent): "Zie je hoe dit je kan brengen tot [hun WHY]?"\n  Voorbeelden:\n    - "Zie je hoe dit je kan brengen tot die extra vrije dag die je graag zou willen?"\n    - "Zie je hoe dit je kan brengen tot die vakantiedagen die je extra zou willen?"\n    - "Zie je hoe dit je kan brengen tot meer tijd met je kinderen?"\n  Krachtig als je hun WHY weet.\n\nVermijd "Wat vond je ervan?" — dat lokt oordeel uit in plaats van verbinding.\n\nLUISTER WAT ZE ZEGGEN. Doorvragen op wat ze NOEMEN. Geen pitch, geen druk om vandaag iets te beslissen. De volgende stappen (validatie, twijfel ombuigen, closen) komen verderop in het playbook (vanaf dag 5).\n\n🆘 KOM JE NU VAST OP EEN SPECIFIEK BERICHT?\n\nWacht niet tot je het zelf moet verzinnen. Je hebt twee snelle hulplijnen — gebruik ze:\n\n• Je sponsor — stuur een korte WhatsApp met de letterlijke tekst die je hebt ontvangen, plus één vraag ("Hoe zou jij hier op reageren?"). Sponsors zijn er precies hiervoor.\n• De Mentor (in het zijmenu) — plak het bericht, vraag een reactie-suggestie. De Mentor schrijft op maat in jouw toon en houdt rekening met fase + WHY van de prospect.\n\nDieper-ingaan op berichten komt verderop in het playbook, maar deze vangnetten zijn er nu al.`;
+
+// Voor dag 5 en dag 7: members hebben Feel-Felt-Found (op dag 5) en
+// follow-up-cadans (op dag 6) al geleerd. De tekst verwijst expliciet
+// terug naar wat ze al kunnen, en moedigt EERST-ZELF-DAN-CHECK aan:
+// schrijf je eigen idee op, vergelijk met wat je hebt geleerd, en pas
+// daarna een tweede mening vragen aan sponsor of Mentor. Dat bouwt
+// vakmanschap op in plaats van afhankelijkheid van hulplijnen.
+const FOLLOWUP_UITLEG_NA_DAG5 = `Mensen die de film, one-pager of presentatie hebben gezien wachten op opvolging. Geen vast getal vandaag — afhankelijk van wie er klaar staat in je pijplijn. Open je namenlijst en filter op fase 'one-pager', 'presentatie' of 'follow-up'.\n\nDE OPENINGSZIN, twee varianten:\n\n• ALGEMEEN: "Wat spreekt je hier het meeste in aan?"\n• WHY-GERICHT (als je hun WHY al kent): "Zie je hoe dit je kan brengen tot [hun WHY]?"\n\nVermijd "Wat vond je ervan?" — dat lokt oordeel uit in plaats van verbinding.\n\n💪 JE HEBT INMIDDELS GEREEDSCHAP — GEBRUIK HET ZELF EERST\n\nJe staat hier niet meer leeg. In de afgelopen dagen heb je technieken geleerd die je vandaag zelf mag toepassen:\n\n• Feel-Felt-Found (FFF) voor bezwaren ombuigen — kun je herlezen via Menu → Playbook → Dag 5\n• De 5-fasen-flow voor follow-up-momenten — Menu → Playbook → Dag 6 (vanaf dag 6 beschikbaar)\n• De stilgevallen-zin "Is dat omdat je druk was of omdat je geen interesse hebt?" (dag 6)\n\nDE DRIE-STAPPEN-AANPAK BIJ ELK NIEUW BERICHT\n\n1. EERST ZELF SCHRIJVEN. Open je notitie-app of typ direct in WhatsApp (concept, niet versturen). Schrijf wat JIJ zou willen sturen, in jouw stijl. Geen scripts kopiëren, geen Mentor vragen.\n\n2. CHECK TEGEN WAT JE HEBT GELEERD. Past Feel-Felt-Found (FFF) op het bezwaar? Past de openingszin 'wat spreekt je hier het meeste in aan?'? Klopt de 5-fasen-fase waar deze prospect in zit?\n\n3. PAS DAN HULP VRAGEN, ALS JE TWIJFELT. Stuur je eigen concept-bericht + een korte prospect-context naar sponsor of Mentor met de vraag 'Klopt dit volgens jou?'. Niet 'schrijf 'm voor mij' — wel 'kijk mee'.\n\nWaarom in deze volgorde? Omdat zelf nadenken een SPIER is die je bouwt door 'm te gebruiken. Hulp meteen vragen is comfort, maar het houdt je beginner. Eerst zelf, dan check — dat is hoe je een professional wordt.\n\n🆘 KOM JE ECHT VAST?\n\n• Je sponsor — stuur de letterlijke tekst die je hebt ontvangen + jouw eerste concept-reactie + de vraag 'wat zou jij ervan vinden?'\n• De Mentor (in het zijmenu) — zelfde aanpak: deel je concept en vraag om feedback. De Mentor is getraind om mee te kijken, niet om voor jou te schrijven.`;
 
 // ============================================================
 // Anti-uitval-blokken voor dag 5 en dag 6. Bovenin de uitleg van
@@ -59,7 +68,7 @@ const FOLLOWUP_UITLEG_BASIS = `Mensen die de film, one-pager of presentatie hebb
 // Doel: het 'zes-nees-en-stoppen'-uitval-patroon ondervangen.
 // ============================================================
 
-const ANTI_UITVAL_DAG5 = `ℹ️ EVEN VOOR DE RUST: VEEL MENSEN TWIJFELEN ROND DIT MOMENT\n\nHeb je deze week 5-10 mensen benaderd en weinig terug gekregen? Dat is normaal en wiskundig verwacht. De gemiddelde response-ratio in netwerk-marketing ligt rond 1 op 15-20 contacten. Dat is geen falen, dat is gewoon hoe het werkt.\n\nWat je vandaag aan extra ankerpunten hebt:\n- De FFF-formule die je zo gaat leren (bezwaren ombuigen)\n- Je sponsor of de Mentor om hulp aan te vragen bij een specifiek bericht\n- De DMO-training in de Academy als je meer wilt begrijpen van de cijfers\n\nVerder met je dag-flow.\n\n──────────────────────────────────────────\n\n`;
+const ANTI_UITVAL_DAG5 = `ℹ️ EVEN VOOR DE RUST: VEEL MENSEN TWIJFELEN ROND DIT MOMENT\n\nHeb je deze week 5-10 mensen benaderd en weinig terug gekregen? Dat is normaal en wiskundig verwacht. De gemiddelde response-ratio in netwerk-marketing ligt rond 1 op 15-20 contacten. Dat is geen falen, dat is gewoon hoe het werkt.\n\nWat je vandaag aan extra ankerpunten hebt:\n- De Feel-Felt-Found-formule (FFF) die je zo gaat leren — voor bezwaren ombuigen\n- Je sponsor of de Mentor om hulp aan te vragen bij een specifiek bericht\n- De DMO-training in de Academy als je meer wilt begrijpen van de cijfers\n\nVerder met je dag-flow.\n\n──────────────────────────────────────────\n\n`;
 
 const ANTI_UITVAL_DAG6 = `ℹ️ EVEN VOOR DE RUST: VEEL MENSEN ONDERSCHATTEN DE 80%-WAARDE\n\n80% van alle ja's in netwerk-marketing komen na de DERDE of latere follow-up. 80% van netwerkers stopt al na de eerste of tweede follow-up. Daar zit het grote verschil tussen mensen die doorbreken en mensen die afhaken: niet talent, niet pitch-kunst, wel hoe goed je opvolgt.\n\nVandaag leer je dat systematisch. Loopt het ergens vast? Sponsor en Mentor staan klaar (zie 'Vraag 1 tip'-stap). Meer over de wiskunde in de DMO-training les 4.1 in de Academy.\n\nVerder met je dag-flow.\n\n──────────────────────────────────────────\n\n`;
 
@@ -268,11 +277,11 @@ function bouwDag5VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       uitnodigHelpKnoppen: true,
     },
 
-    // --- Stap D: openstaande follow-ups ---
+    // --- Stap D: openstaande follow-ups (met drie-stappen-frame) ---
     {
       id: "dag5-openstaande-followups",
       label: "🔄 Doe je openstaande follow-ups vandaag",
-      uitleg: FOLLOWUP_UITLEG_BASIS,
+      uitleg: FOLLOWUP_UITLEG_NA_DAG5,
       verplicht: true,
       actieRoute: "/namenlijst",
     },
@@ -285,12 +294,12 @@ function bouwDag5VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: true,
     },
 
-    // --- Stap F: FFF-roleplay (dag-specifiek) ---
+    // --- Stap F: Feel-Felt-Found-roleplay (dag-specifiek) ---
     {
       id: "dag5-fff-roleplay",
-      label: "🛡️ Korte FFF-roleplay met sponsor of Mentor",
+      label: "🛡️ Korte Feel-Felt-Found-roleplay (FFF) met sponsor of Mentor",
       uitleg:
-        "Waarom oefenen met bezwaren belangrijk is: in een echt gesprek krijg je geen tweede kans om iets te formuleren. Als jij staat te zoeken naar woorden, voelt de prospect onzekerheid en verliest hij vertrouwen. Door vooraf een paar keer te oefenen, weet je in grote lijnen hoe je elk bezwaar kunt aanvliegen, zelfs als je niet de exacte woorden paraat hebt.\n\nVraag je sponsor om 1-2 typische bezwaren te 'spelen' en oefen Feel-Felt-Found. Geen sponsor beschikbaar? Vraag de Mentor: 'Speel een prospect die zegt: ik heb geen tijd', en oefen je antwoord. Daarna een nieuwe ronde met een ander bezwaar. Vier of vijf rondes is genoeg om het ritme te pakken.",
+        "Waarom oefenen met bezwaren belangrijk is: in een echt gesprek krijg je geen tweede kans om iets te formuleren. Als jij staat te zoeken naar woorden, voelt de prospect onzekerheid en verliest hij vertrouwen. Door vooraf een paar keer te oefenen, weet je in grote lijnen hoe je elk bezwaar kunt aanvliegen, zelfs als je niet de exacte woorden paraat hebt.\n\nVraag je sponsor om 1-2 typische bezwaren te 'spelen' en oefen Feel-Felt-Found (FFF). Geen sponsor beschikbaar? Vraag de Mentor: 'Speel een prospect die zegt: ik heb geen tijd', en oefen je antwoord. Daarna een nieuwe ronde met een ander bezwaar. Vier of vijf rondes is genoeg om het ritme te pakken.",
       verplicht: true,
       actieRoute: "/coach",
     },
@@ -300,7 +309,7 @@ function bouwDag5VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       id: "dag5-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
       uitleg:
-        "30 seconden. Je hebt dag 5 erop zitten. Stuur je sponsor een berichtje met hoe het ging: hoe voelde de FFF-oefening? Liep je vandaag tegen een bezwaar aan dat je hebt omgebogen? Niets uitgebreids, gewoon een update om de dag mooi af te sluiten.",
+        "30 seconden. Je hebt dag 5 erop zitten. Stuur je sponsor een berichtje met hoe het ging: hoe voelde de Feel-Felt-Found-oefening (FFF)? Liep je vandaag tegen een bezwaar aan dat je hebt omgebogen? Niets uitgebreids, gewoon een update om de dag mooi af te sluiten.",
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
@@ -438,11 +447,12 @@ function bouwDag7VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       uitnodigHelpKnoppen: true,
     },
 
-    // --- Stap 5: openstaande follow-ups (gewone richtwaarde) ---
+    // --- Stap 5: openstaande follow-ups (met drie-stappen-frame
+    // omdat member nu FFF + 5-fasen-flow al heeft geleerd) ---
     {
       id: "dag7-openstaande-followups",
       label: "🔄 Doe je openstaande follow-ups vandaag",
-      uitleg: FOLLOWUP_UITLEG_BASIS,
+      uitleg: FOLLOWUP_UITLEG_NA_DAG5,
       verplicht: true,
       actieRoute: "/namenlijst",
     },

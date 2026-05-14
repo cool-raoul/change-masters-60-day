@@ -40,9 +40,9 @@ function pakBericht(taakId: string | undefined, sponsorVoornaam: string): string
       );
     case "dag5-sponsor-checkin":
       return (
-        `Hoi${naamDeel}! Dag 5 erop ✅ Vandaag voor het eerst FFF actief ` +
-        `geoefend op bezwaren. Voelt nog wennen maar de structuur helpt. ` +
-        `Spreek je snel!`
+        `Hoi${naamDeel}! Dag 5 erop ✅ Vandaag voor het eerst Feel-Felt-Found ` +
+        `(FFF) actief geoefend op bezwaren. Voelt nog wennen maar de structuur ` +
+        `helpt. Spreek je snel!`
       );
     case "dag6-sponsor-checkin":
       return (
