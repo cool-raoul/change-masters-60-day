@@ -239,3 +239,13 @@
     font-size: 16px !important;
   }
 }
+
+/* Subtiele puls voor RadarBalk — minder agressief dan animate-pulse.
+   Pulseert via box-shadow zodat de balk-rand zelf niet hardop knippert. */
+@keyframes pulse-soft {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+  50% { box-shadow: 0 0 12px 1px rgba(212, 175, 55, 0.3); }
+}
+.animate-pulse-soft {
+  animation: pulse-soft 3s ease-in-out infinite;
+}
