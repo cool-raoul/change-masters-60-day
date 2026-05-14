@@ -88,18 +88,27 @@ export function RadarBalk({ items, initieelAfgevinkt, huidigeDag }: Props) {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-full px-4 py-3 flex items-center justify-between gap-3 text-left"
+        className="w-full px-4 py-3 flex items-start justify-between gap-3 text-left"
         aria-expanded={open}
       >
-        <div className="flex items-center gap-2">
-          <span className="text-lg">{allesGedaan ? "✓" : "🎯"}</span>
-          <span className={`text-sm font-semibold ${allesGedaan ? "text-cm-white/70" : "text-cm-gold"}`}>
+        <div className="flex-1 min-w-0 space-y-0.5">
+          <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
+            🎯 Volgende beste acties
+          </p>
+          <p className={`text-sm font-display font-semibold ${allesGedaan ? "text-cm-white/70" : "text-cm-white"}`}>
             {allesGedaan
               ? `Vandaag alle ${items.length} acties opgepakt`
-              : `${openItems.length} actie-${openItems.length === 1 ? "prospect" : "prospects"} voor je vandaag`}
-          </span>
+              : openItems.length === 1
+                ? "1 prospect waar je nu het meeste momentum kan oogsten"
+                : `${openItems.length} prospects waar je nu het meeste momentum kan oogsten`}
+          </p>
+          {!allesGedaan && (
+            <p className="text-cm-white opacity-60 text-xs">
+              Gerangschikt op recente signalen, fase en stilte-tijd. Pak 'r 1, je gaat sneller dan je denkt.
+            </p>
+          )}
         </div>
-        <span className={`text-sm transition-transform ${open ? "rotate-90" : ""}`}>
+        <span className={`text-sm transition-transform mt-1 ${open ? "rotate-90" : ""}`}>
           ▶
         </span>
       </button>
