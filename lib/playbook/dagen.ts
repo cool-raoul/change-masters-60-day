@@ -8,6 +8,7 @@
 // ============================================================
 
 import { Dag } from "./types";
+import { PARTNER_CHECK_UITLEG } from "@/lib/playbook/tempo-aware";
 
 export const DAGEN: Dag[] = [
   // ============================================================
@@ -50,6 +51,13 @@ export const DAGEN: Dag[] = [
           "Geen lang verhaal nodig, gewoon even laten weten dat je vertrokken bent. Vanaf nu kijkt je sponsor in ELEVA vriendelijk mee of je dagelijks je stappen zet. Niet om te beoordelen. Gewoon om je rugdekking te geven.",
         verplicht: true,
         inlineEmbed: "sponsor-melding",
+      },
+      {
+        id: 'dag1-partner-check',
+        label: '🤝 Check je nieuwe partner(s) vandaag',
+        uitleg: PARTNER_CHECK_UITLEG,
+        verplicht: false,
+        inlineEmbed: 'partner-check',
       },
     ],
     faseDoel:
@@ -168,6 +176,13 @@ Overweldigd voelen is normaal. Je leert iets nieuws, je stapt uit comfort. Eerst
         verplicht: true,
         filmSlug: "onboarding-stap-8-kredietformulier",
       },
+      {
+        id: 'dag2-partner-check',
+        label: '🤝 Check je nieuwe partner(s) vandaag',
+        uitleg: PARTNER_CHECK_UITLEG,
+        verplicht: false,
+        inlineEmbed: 'partner-check',
+      },
     ],
     faseDoel:
       "Week 1 (dag 1-7): deze week 2 one-pager-momenten gepland of bekeken krijgen.",
@@ -279,6 +294,13 @@ Vandaag stuur je ook al 3 uitnodigingen, samen met je sponsor in een groepje (3-
         verplicht: true,
         filmSlug: "onboarding-stap-7-teams-admin",
       },
+      {
+        id: 'dag3-partner-check',
+        label: '🤝 Check je nieuwe partner(s) vandaag',
+        uitleg: PARTNER_CHECK_UITLEG,
+        verplicht: false,
+        inlineEmbed: 'partner-check',
+      },
     ],
     faseDoel:
       "Week 1 (dag 1-7): deze week 2 one-pager-momenten gepland of bekeken krijgen.",
@@ -356,6 +378,13 @@ NIET GELIJK PITCHEN, wat wel: reageer terug op hun content. Vraag iets. Bouw rap
         verplicht: false,
         actieRoute: "/instellingen/bestellinks",
         filmSlug: "onboarding-stap-9-bestellinks",
+      },
+      {
+        id: 'dag4-partner-check',
+        label: '🤝 Check je nieuwe partner(s) vandaag',
+        uitleg: PARTNER_CHECK_UITLEG,
+        verplicht: false,
+        inlineEmbed: 'partner-check',
       },
     ],
     faseDoel:
@@ -476,6 +505,13 @@ Op je prospect-kaart kun je de keuze maken via de knop "🧭 Welke aanpak past b
         verplicht: true,
         actieRoute: "/coach",
       },
+      {
+        id: 'dag5-partner-check',
+        label: '🤝 Check je nieuwe partner(s) vandaag',
+        uitleg: PARTNER_CHECK_UITLEG,
+        verplicht: false,
+        inlineEmbed: 'partner-check',
+      },
     ],
     faseDoel:
       "Week 1 (dag 1-7): deze week 2 one-pager-momenten gepland of bekeken krijgen.",
@@ -569,6 +605,13 @@ VEELGEMAAKTE FOUTEN:
           "Heb je 1 contact waar je niet weet wat je moet sturen? Vraag je sponsor: 'Hoe zou jij dit aanpakken?'. Sponsor even druk? Dan de Mentor: 'Help me met een follow-up voor [naam] die [situatie]'. Je hoeft het niet alleen te bedenken.",
         verplicht: false,
         inlineEmbed: "sponsor-melding",
+      },
+      {
+        id: 'dag6-partner-check',
+        label: '🤝 Check je nieuwe partner(s) vandaag',
+        uitleg: PARTNER_CHECK_UITLEG,
+        verplicht: false,
+        inlineEmbed: 'partner-check',
       },
     ],
     faseDoel:
@@ -669,6 +712,13 @@ Een prospect die NU geen ja zegt, kan over 3 maanden alsnog ja zeggen. Of over 1
         verplicht: false,
         inlineEmbed: "sponsor-melding",
       },
+      {
+        id: 'dag7-partner-check',
+        label: '🤝 Check je nieuwe partner(s) vandaag',
+        uitleg: PARTNER_CHECK_UITLEG,
+        verplicht: false,
+        inlineEmbed: 'partner-check',
+      },
     ],
     faseDoel:
       "Week 1 afgerond. Heb je je 2 one-pager-momenten? Mooi. Zo niet: ze schuiven door. Focus blijft hetzelfde.",
@@ -736,6 +786,13 @@ DEZE REVIEW KAN JE DELEN MET JE SPONSOR (zelfde keuze maak je aan het eind van h
         actieRoute: "/namenlijst",
         uitleg:
           "5 mensen die eerder gehoord hebben, vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
+      },
+      {
+        id: 'dag8-partner-check',
+        label: '🤝 Check je nieuwe partner(s) vandaag',
+        uitleg: PARTNER_CHECK_UITLEG,
+        verplicht: false,
+        inlineEmbed: 'partner-check',
       },
     ],
     faseDoel:
@@ -820,6 +877,13 @@ Verdeel je uitnodigingen ongeveer half warm (mensen die je goed kent) en half la
         actieRoute: "/namenlijst",
         uitleg:
           "5 mensen die eerder gehoord hebben, vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
+      },
+      {
+        id: 'dag9-partner-check',
+        label: '🤝 Check je nieuwe partner(s) vandaag',
+        uitleg: PARTNER_CHECK_UITLEG,
+        verplicht: false,
+        inlineEmbed: 'partner-check',
       },
     ],
     faseDoel:
@@ -922,6 +986,13 @@ VANDAAG: lees de scripts in een prospect-kaart door, zodat je voor je eerstvolge
         uitleg:
           "5 mensen die eerder gehoord hebben, vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
       },
+      {
+        id: 'dag10-partner-check',
+        label: '🤝 Check je nieuwe partner(s) vandaag',
+        uitleg: PARTNER_CHECK_UITLEG,
+        verplicht: false,
+        inlineEmbed: 'partner-check',
+      },
     ],
     faseDoel:
       "Week 2 (dag 8-14): 3 tot 5 presentatie-momenten in de agenda deze week.",
@@ -996,6 +1067,13 @@ Doel deze week: minimaal 1 3-weg starten. Heb je 'm op dag 4 al gehad? Top, plan
         actieRoute: "/namenlijst",
         uitleg:
           "5 mensen die eerder gehoord hebben, vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
+      },
+      {
+        id: 'dag11-partner-check',
+        label: '🤝 Check je nieuwe partner(s) vandaag',
+        uitleg: PARTNER_CHECK_UITLEG,
+        verplicht: false,
+        inlineEmbed: 'partner-check',
       },
     ],
     faseDoel:
@@ -1097,6 +1175,13 @@ KIJK VANDAAG NAAR JE PIPELINE: hoeveel mensen op "Uitgenodigd"? Hoeveel op "One-
           "Maak via de coach een pivot-bericht: 'Helemaal goed, geen probleem. Ken je iemand die last heeft van X? Of wil je het zelf eens een maand proberen?' Zet ze dan op pipeline-fase Shopper.",
         verplicht: false,
         actieRoute: "/namenlijst",
+      },
+      {
+        id: 'dag12-partner-check',
+        label: '🤝 Check je nieuwe partner(s) vandaag',
+        uitleg: PARTNER_CHECK_UITLEG,
+        verplicht: false,
+        inlineEmbed: 'partner-check',
       },
     ],
     faseDoel:
@@ -1213,6 +1298,13 @@ EXTRA WAARDE: zeg nee tegen drammen, ja tegen warmte. Een Shopper die jou over e
           "Kies iemand uit je telefoonlijst met wie je weinig contact hebt. Eerst even een FORM-vraag (zonder pitch), reageer 1-2 dagen op hun socials, dán pas invite. Vraag de Mentor: 'Help me [naam] warm maken vóór ik 'm uitnodig, context: [situatie]'. De Mentor schrijft een opwarm-tekst die geen pitch is.",
         verplicht: true,
         actieRoute: "/namenlijst",
+      },
+      {
+        id: 'dag13-partner-check',
+        label: '🤝 Check je nieuwe partner(s) vandaag',
+        uitleg: PARTNER_CHECK_UITLEG,
+        verplicht: false,
+        inlineEmbed: 'partner-check',
       },
     ],
     faseDoel:
@@ -1338,6 +1430,13 @@ VANDAAG: kies 1 specifieke prospect, plan een 5-min check-in (DM of telefoon) en
         verplicht: false,
         inlineEmbed: "sponsor-melding",
       },
+      {
+        id: 'dag14-partner-check',
+        label: '🤝 Check je nieuwe partner(s) vandaag',
+        uitleg: PARTNER_CHECK_UITLEG,
+        verplicht: false,
+        inlineEmbed: 'partner-check',
+      },
     ],
     faseDoel:
       "Week 2 afgerond. Hoeveel presentatie-momenten staan er in je agenda? Pakken we in week 3 door, follow-up wordt leidend.",
@@ -1418,6 +1517,13 @@ VAN HIER UIT IS HET KILOMETER-WERK. Geen nieuwe technieken meer, alleen oefenen 
         actieRoute: "/namenlijst",
         uitleg:
           "10 mensen uit je lijst uitnodigen voor een kijkmoment. Open Namenlijst → klik op een prospect → 'Uitnodigen', of vraag de Mentor: 'Schrijf een uitnodiging voor [naam]'. Mix warm + lauw, halverwege in 5-10 min als je scripts paraat hebt.",
+      },
+      {
+        id: 'dag15-partner-check',
+        label: '🤝 Check je nieuwe partner(s) vandaag',
+        uitleg: PARTNER_CHECK_UITLEG,
+        verplicht: false,
+        inlineEmbed: 'partner-check',
       },
     ],
     faseDoel:
@@ -1514,6 +1620,13 @@ Een nee NU is geen nee voor altijd. Iemand op "Not-yet" zetten is geen verlies. 
           "Actief zoekend, open, productkoper, niet-nu, nooit. Dit bepaalt hoeveel energie je ergens aan besteedt.",
         verplicht: true,
         actieRoute: "/namenlijst",
+      },
+      {
+        id: 'dag16-partner-check',
+        label: '🤝 Check je nieuwe partner(s) vandaag',
+        uitleg: PARTNER_CHECK_UITLEG,
+        verplicht: false,
+        inlineEmbed: 'partner-check',
       },
     ],
     faseDoel:
@@ -1631,6 +1744,13 @@ VANDAAG, categoriseer je top-20:
           voorbeeld:
             "Mag ik je 5 korte vragen stellen om te kijken of dit voor jou realistisch is qua tijd en doelen? Geen druk, gewoon eerlijk samen kijken.",
         },
+      },
+      {
+        id: 'dag17-partner-check',
+        label: '🤝 Check je nieuwe partner(s) vandaag',
+        uitleg: PARTNER_CHECK_UITLEG,
+        verplicht: false,
+        inlineEmbed: 'partner-check',
       },
     ],
     faseDoel:
@@ -1756,6 +1876,13 @@ VANDAAG: probeer Doel-Tijd-Termijn vandaag of morgen bij minstens 1 warme prospe
         verplicht: false,
         actieRoute: "/namenlijst",
       },
+      {
+        id: 'dag18-partner-check',
+        label: '🤝 Check je nieuwe partner(s) vandaag',
+        uitleg: PARTNER_CHECK_UITLEG,
+        verplicht: false,
+        inlineEmbed: 'partner-check',
+      },
     ],
     faseDoel:
       "Week 3 (dag 15-21): minimaal 2 beslissingen binnen: member, shopper of not-yet.",
@@ -1847,6 +1974,13 @@ Wat je vandaag doet: 5 minuten investeren in JOUW vaste zin. Schrijf 'm op, bewa
           "Uitgenodigd: X / One-pager: Y / Presentatie: Z / Beslist: W. Waar is de grootste drop-off? Dat is je oefenpunt voor de laatste 40 dagen.",
         verplicht: true,
         actieRoute: "/namenlijst",
+      },
+      {
+        id: 'dag19-partner-check',
+        label: '🤝 Check je nieuwe partner(s) vandaag',
+        uitleg: PARTNER_CHECK_UITLEG,
+        verplicht: false,
+        inlineEmbed: 'partner-check',
       },
     ],
     faseDoel:
@@ -1950,6 +2084,13 @@ Statistieken zijn je leermeester, niet je rechter. Slechte cijfers betekenen nie
         verplicht: true,
         actieRoute: "/namenlijst",
       },
+      {
+        id: 'dag20-partner-check',
+        label: '🤝 Check je nieuwe partner(s) vandaag',
+        uitleg: PARTNER_CHECK_UITLEG,
+        verplicht: false,
+        inlineEmbed: 'partner-check',
+      },
     ],
     faseDoel:
       "Week 3 (dag 15-21): minimaal 2 beslissingen binnen: member, shopper of not-yet.",
@@ -2051,6 +2192,13 @@ VANDAAG: kies 1 prospect die meer dan 3 exposures heeft gehad zonder beslissing.
         label: "40-min call met sponsor: week 3 afsluiten en blok 2 voorbereiden",
         verplicht: false,
         inlineEmbed: "sponsor-melding",
+      },
+      {
+        id: 'dag21-partner-check',
+        label: '🤝 Check je nieuwe partner(s) vandaag',
+        uitleg: PARTNER_CHECK_UITLEG,
+        verplicht: false,
+        inlineEmbed: 'partner-check',
       },
     ],
     faseDoel:

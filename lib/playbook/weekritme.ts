@@ -36,6 +36,7 @@ import {
 import type { Dag, ControllableTaak } from "./types";
 import {
   FOLLOWUP_UITLEG_NA_DAG6,
+  PARTNER_CHECK_UITLEG,
   STORIES_UITLEG,
   standaardABCDEstappen,
 } from "./tempo-aware";
@@ -242,6 +243,16 @@ export function genereerWeekritmeDag(
           inlineEmbed: "sponsor-melding",
         },
   );
+
+  // Partner-check als laatste stap. Component rendert onzichtbaar
+  // wanneer member geen partners heeft, dus altijd veilig toe te voegen.
+  stappen.push({
+    id: `dag${dagNummer}-partner-check`,
+    label: "🤝 Check je nieuwe partner(s) vandaag",
+    uitleg: PARTNER_CHECK_UITLEG,
+    verplicht: false,
+    inlineEmbed: "partner-check",
+  });
 
   return {
     nummer: dagNummer,
