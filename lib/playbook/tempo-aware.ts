@@ -523,7 +523,7 @@ function bouwDag8VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     {
       id: "dag8-uitnodigingen",
       label: `📨 Verstuur ${dd.uitnodigingen} uitnodigingen (4-stappen-formule)`,
-      uitleg: `Pas de 4-stappen-formule toe op ${dd.uitnodigingen} mensen vandaag. Compliment → uitnodigen → plan met twee opties → eventueel haast (alleen business).\n\nVANDAAG IS HET SNELHEID-DAG. Lees de F-stap "Snelheid wint" voordat je begint, dan haal je deze ${dd.uitnodigingen} uitnodigingen in 5-10 minuten.\n\nMix warm (bekenden) en lauw (telefoon-contacten). Hulp nodig? De drie knoppen onder dit vak: voorbeelden, sponsor of Mentor.`,
+      uitleg: `Pas de 4-stappen-formule toe op ${dd.uitnodigingen} mensen vandaag. Compliment → uitnodigen → plan met twee opties → eventueel haast (alleen business).\n\nVANDAAG IS HET SNELHEID-DAG. Bovenaan deze pagina staat onder 'Wat je leert' de mindset die je vandaag toepast: snelheid wint van perfectie. Lees die eerst, dan haal je deze ${dd.uitnodigingen} uitnodigingen in 5 tot 10 minuten.\n\nVuistregel: max 30 tot 60 seconden bedenktijd per uitnodiging. Daarna druk je op verzenden, geen herlezen.\n\nMix warm (bekenden) en lauw (telefoon-contacten). Hulp nodig? De drie knoppen onder dit vak: voorbeelden, sponsor of Mentor.`,
       verplicht: true,
       actieRoute: "/namenlijst",
       uitnodigHelpKnoppen: true,
@@ -543,14 +543,6 @@ function bouwDag8VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       id: "dag8-stories",
       label: "📱 1 tot 3 stories + reageren op andermans stories",
       uitleg: STORIES_UITLEG,
-      verplicht: true,
-    },
-
-    // --- Stap F: snelheid-uitdaging (dag-specifiek lees-moment) ---
-    {
-      id: "dag8-snelheid",
-      label: "🚀 Lees: snelheid wint van perfectie",
-      uitleg: `Een lees-stap, geen extra uitnodigingen. Pak je telefoon, lees deze paragraaf, en pas 'm vandaag toe op stap C.\n\n"PERFECT IS DE VIJAND VAN VERZONDEN."\n\nEen onhandige uitnodiging die WEG is presteert oneindig veel beter dan de perfecte uitnodiging die nog op je telefoon staat in concept. Vandaag is GEEN redactie-dag, vandaag is volume-dag in jouw eigen tempo.\n\nDE VUISTREGEL\n\nMax 30 tot 60 seconden bedenktijd per uitnodiging. Daarna: druk op verzenden. Als je 5 minuten staart naar één bericht, pak een ELEVA-script en pas alleen de naam aan.\n\nDE WET VAN GROTE GETALLEN (Nederlandse netwerk-praktijk)\n\n• Van 10 uitnodigingen → 4 tot 6 reacties\n• Van 5 reacties → 2 tot 3 kijkmomenten\n• Van 3 kijkmomenten → 1 ja, 1 not-yet, 1 nee\n\nDat is normaal. Niet rooskleurig, niet teleurstellend. Het is gewoon wat het is.\n\nDE PRAKTIJK\n\nZet een timer van 10 minuten op je telefoon. Kijk hoeveel uitnodigingen je in die 10 min kunt versturen volgens de 4-stappen-formule. Geen herlezen, geen perfectie. Een aanloop voor stap C.`,
       verplicht: true,
     },
 
@@ -618,15 +610,6 @@ function bouwDag9VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       id: "dag9-stories",
       label: "📱 1 tot 3 stories + reageren op andermans stories",
       uitleg: STORIES_UITLEG,
-      verplicht: true,
-    },
-
-    // --- Stap F: 3-weg-meesterclass lezen (dag-specifiek) ---
-    {
-      id: "dag9-3weg-meesterclass",
-      label: "📚 Lees: 3-weg-meesterclass (5 stappen + edification)",
-      uitleg:
-        "De volledige 5-stappen-uitleg + edification-zinnen voor je 3-weg-gesprek staan bovenaan deze pagina onder 'Wat je leert'. Lees rustig door, vink hier af. Op de prospect-kaart vind je later de scripts via '💬 3-weg gesprek scripts'.\n\nMORGEN (dag 10) ga je je eerstvolgende 3-weg in de praktijk starten. Vandaag is de voorbereiding.",
       verplicht: true,
     },
 
@@ -780,7 +763,7 @@ function bouwDag11VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       id: "dag11-pipeline-check",
       label: "🎯 Pipeline-check: weet voor elke prospect wat de volgende stap is",
       uitleg:
-        "De volledige leerstof over one-pager versus presentatie staat bovenaan deze pagina onder 'Wat je leert'. Lees die door, daarna doe je de pipeline-check.\n\nDE KERN IN ÉÉN ZIN: niemand slaat een stap over. Iedereen → one-pager → presentatie of 3-weg → beslissing. Geen sprongen, geen omleidingen.\n\nDE PIPELINE-CHECK (5 minuten)\n\nOpen je namenlijst, schakel naar pijplijn-weergave. Kijk naar elke fase:\n\n• PROSPECT — nog niet benaderd. Doel: vandaag of morgen een opener.\n• IN GESPREK — gesprek loopt. Doel: brug naar uitnodiging vinden.\n• UITGENODIGD — uitnodiging is verstuurd, wachtend op JA. Doel: 24-48u check-in als ze stil zijn.\n• ONE-PAGER — info gestuurd, wachtend op reactie. Doel: tussenstap-zin sturen (zie 'Wat je leert' voor de letterlijke zin).\n• PRESENTATIE — diepgaand gesprek gehad. Doel: 5-fasen-follow-up volgen (dag 6).\n• FOLLOW-UP — denkt na. Doel: openings-zin 'wat spreekt je het meeste in aan?' of FFF bij bezwaren.\n\nWAAR ZIT JE BOTTLENECK?\n\nKijk welke fase de meeste mensen heeft. Dat is waar je extra aandacht moet stoppen. Te veel mensen op 'in gesprek'? Tijd om te bruggen. Te veel op 'one-pager'? Tijd om de tussenstap-zin uit te stoppen.",
+        "Bovenaan deze pagina onder 'Wat je leert' staat de uitleg over one-pager versus presentatie. Lees die door, daarna doe je deze check.\n\nDE KERN IN ÉÉN ZIN: niemand slaat een stap over. Iedereen doorloopt: prospect → uitnodiging → one-pager of 3-weg → presentatie → beslissing. Geen sprongen, geen omleidingen.\n\nDE CHECK (5 minuten)\n\nOpen je namenlijst, schakel naar pijplijn-weergave. Kijk per fase wat je ziet:\n\n• PROSPECT — nog niet benaderd. Doel: vandaag of morgen een opener sturen.\n• IN GESPREK — eerste bericht is uit, gesprek loopt. Doel: zodra het natuurlijk past, een uitnodiging sturen volgens de 4-stappen-formule.\n• UITGENODIGD — uitnodiging is verstuurd, wachtend op JA. Doel: 24-48u check-in als ze stil zijn.\n• ONE-PAGER — info-pagina is gestuurd, wachtend op reactie. Doel: de tussenstap-zin sturen (staat letterlijk uitgeschreven in 'Wat je leert' bovenaan).\n• PRESENTATIE — diepgaand gesprek of 3-weg gehad. Doel: de 5-fasen-follow-up volgen (zie dag 6).\n• FOLLOW-UP — denkt na, twijfelt. Doel: de openings-zin 'wat spreekt je het meeste in aan?' of FFF bij bezwaren (zie dag 5).\n\nWAAR IS JE VERSTOPPING?\n\nDe fase waar de MEESTE mensen op staan is je verstopping — daar zit je vandaag werk. Per fase een concrete vervolgactie:\n\n• Veel mensen op IN GESPREK? Je hebt veel gesprekken lopen maar nog geen uitnodigingen verstuurd. Vandaag: schrijf voor 2 tot 3 van hen een uitnodiging volgens de 4-stappen-formule.\n• Veel mensen op UITGENODIGD? Ze hebben ja gezegd op een kijkmoment maar nog geen info gekregen. Vandaag: stuur ze de one-pager of plan een 3-weg in.\n• Veel mensen op ONE-PAGER? Ze hebben gekeken maar je hebt nog geen vervolg gestuurd. Vandaag: stuur de tussenstap-zin (zie 'Wat je leert' bovenaan voor de letterlijke tekst).\n• Veel mensen op PRESENTATIE? Goed werk — hier zit veel van de echte beweging. Volg de 5-fasen-follow-up van dag 6.\n• Veel mensen op FOLLOW-UP? Ze denken na. Stuur een natuurlijke heropener of, als ze een bezwaar hebben geuit, pas Feel-Felt-Found (FFF) toe van dag 5.\n\nDe truc is niet om alle fases tegelijk te bedienen, wel om VANDAAG je grootste verstopping te ontstoppen.",
       verplicht: true,
       actieRoute: "/namenlijst",
     },

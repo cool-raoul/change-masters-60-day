@@ -745,7 +745,7 @@ DEZE REVIEW KAN JE DELEN MET JE SPONSOR (zelfde keuze maak je aan het eind van h
   // ============================================================
   {
     nummer: 8,
-    titel: "🚀 Momentum! Vandaag lat omhoog: 10 invites",
+    titel: "🚀 Snelheid wint van perfectie",
     fase: 2,
     vandaagDoen: [
       {
@@ -786,34 +786,42 @@ DEZE REVIEW KAN JE DELEN MET JE SPONSOR (zelfde keuze maak je aan het eind van h
           "Help me 10 uitnodigingen versturen vandaag zonder dat het als spam voelt. Ik heb [aantal] warme + [aantal] lauwe prospects op mijn lijst.",
       },
     ],
-    watJeLeert: `In week 1 leerde je HOE het werkt. In week 2 gaat het om VOLUME. 10 uitnodigingen per dag voelt veel, maar het is 10-15 minuten werk zodra je scripts paraat hebt en je lijst goed gevuld is. Het draait vandaag niet om het perfecte bericht, het draait om DOORPAKKEN.
+    watJeLeert: `In week 1 leerde je HOE het werkt. In week 2 gaat het om EFFICIËNTIE. Vandaag leer je de belangrijkste verschuiving die de meeste netwerkers missen: snelheid wint van perfectie. Wat je in jouw tempo (Fundament, Bouwen of Doorbreken) per dag uitnodigt is niet veranderd, maar HOE je het verstuurt wel.
 
-WAAROM 10 EN NIET 5, DE WET VAN GROTE GETALLEN:
-Met 5 uitnodigingen per dag krijg je gemiddeld 1 ja/nee/misschien per week. Met 10 verdubbelt dat, maar belangrijker: je krijgt sneller patronen. Welke openingszin werkt bij wie? Welke variant uit de 4-stappen-uitnodiging slaat aan? Dat leer je niet uit 5 berichten, dat leer je uit 50.
+DE GOUDEN ANKERZIN
 
-NL-NETWERK-WERKELIJKHEID, gemiddelden:
-• Van 10 uitnodigingen → 4-6 reacties
-• Van 5 reacties → 2-3 kijkmomenten (info / 3-weg)
-• Van 3 kijkmomenten → 1 ja-zegger of 1 shopper of 1 not-yet
-Dat is normaal. Niet teleurstellend, niet rooskleurig. Dat is gewoon wat week 2 doet als je consistent blijft.
+"Perfect is de vijand van verzonden."
 
-DE PERFECTIE-VAL:
-"Perfect is de vijand van verzonden." Stuur EERDER af dan je zin hebt om ze af te sturen. Een onhandige uitnodiging die WEG is presteert oneindig veel beter dan de perfecte die nog op je telefoon staat in concept. Per uitnodiging max 30-60 seconden bedenktijd, dan op verzenden. Als je 5 minuten staart naar één bericht: kopieer een ELEVA-script en pas alleen de naam aan.
+Een onhandige uitnodiging die WEG is presteert oneindig veel beter dan de perfecte uitnodiging die nog op je telefoon staat in concept. Vandaag is GEEN redactie-dag, vandaag is doorpakken-dag in jouw eigen tempo.
 
-CONCRETE WERKWIJZE, 10 invites in 15 minuten:
-1. Open je namenlijst, filter op "lead" of "uitgenodigd nog niet gepeild".
-2. Pak 10 namen tegelijk in beeld.
-3. Per naam: 1 zinnetje persoonlijke openingsregel (waar ken je hem/haar van), dan het script erachter geplakt.
-4. Verzonden = afvinken in ELEVA, prospect schuift automatisch in pipeline naar 'uitgenodigd'.
-5. STOP MET HERLEZEN. Vandaag is geen redactie-dag, vandaag is volume-dag.
+DE VUISTREGEL, 30 TOT 60 SECONDEN
 
-VEELGEMAAKTE FOUTEN:
-✗ Elke uitnodiging compleet uniek willen schrijven → kost 30 minuten per stuk, je haalt nooit 10.
-✗ Bang zijn voor "spam-gevoel" en daarom maar 3 sturen → spam = 100 generieke. 10 persoonlijke aan mensen die jou kennen = geen spam.
-✗ Wachten tot je "in de stemming" bent → je raakt nooit in stemming, je doet het en de stemming volgt.
+Max 30 tot 60 seconden bedenktijd per uitnodiging. Daarna druk je op verzenden. Geen herlezen, geen overdenken. Als je 5 minuten staart naar één bericht, kopieer een ELEVA-script en pas alleen de naam aan.
+
+Waarom dit werkt: jouw brein wordt na 60 seconden niet beter in 'm formuleren, het wordt alleen banger om verkeerd over te komen. Dat is geen kwaliteit-redactie, dat is uitstel-gedrag verkleed als zorgvuldigheid.
+
+DE WET VAN GROTE GETALLEN (Nederlandse netwerk-praktijk)
+
+• Van 10 uitnodigingen → 4 tot 6 reacties
+• Van 5 reacties → 2 tot 3 kijkmomenten (one-pager of 3-weg)
+• Van 3 kijkmomenten → 1 ja, 1 not-yet, 1 nee
+
+Dat is normaal. Niet teleurstellend, niet rooskleurig. Het is gewoon wat het is. Hoe sneller je je dagelijkse uitnodigingen wegstuurt, hoe sneller deze cyclus voor jou begint te tellen.
+
+DE PRAKTIJK, EEN TIMER-UITDAGING
+
+Zet een timer van 10 minuten op je telefoon zodra je aan stap C (uitnodigingen) begint. Kijk hoeveel uitnodigingen je in die 10 min kunt versturen volgens de 4-stappen-formule. Geen herlezen, geen perfectie. Dit traint je in snelheid.
+
+VEELGEMAAKTE FOUTEN
+
+✗ Elke uitnodiging compleet uniek willen schrijven → kost 30 minuten per stuk, je haalt nooit je tempo-doel.
+✗ Bang zijn voor 'spam-gevoel' en daarom maar half doen → spam is 100 generieke berichten. Persoonlijke berichten aan mensen die jou kennen is geen spam, ook niet als er 10 of 15 op een dag zijn.
+✗ Wachten tot je 'in de stemming' bent → je raakt nooit in stemming. Je doet het en de stemming volgt.
 ✗ Direct na geen reactie afschrijven → 24-48u wachten, dan follow-uppen (zie dag 6).
 
-MIX WARM EN LAUW: 5 mensen die je goed kent + 5 met wie je 6+ maanden niet gesproken hebt. De warmen geven snelle reacties (positief én negatief), de lauwen geven verrassingen, vaak juist daar zitten je beste matches.`,
+MIX WARM EN LAUW
+
+Verdeel je uitnodigingen ongeveer half warm (mensen die je goed kent) en half lauw (telefoon-contacten waarmee je 6+ maanden niet hebt gesproken). De warmen geven snelle reacties, de lauwen geven verrassingen — vaak juist daar zitten je beste matches.`,
     waaromWerktDit: {
       tekst: "Snelheid wint. Snel handelen verslaat perfect handelen, altijd.",
     },
