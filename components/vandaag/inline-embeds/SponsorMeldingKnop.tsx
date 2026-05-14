@@ -50,6 +50,30 @@ function pakBericht(taakId: string | undefined, sponsorVoornaam: string): string
         `en de 24-48u-regel. Voelt goed om systematisch door m'n pijplijn te ` +
         `lopen. Spreek je snel!`
       );
+    case "dag8-sponsor-checkin":
+      return (
+        `Hoi${naamDeel}! Dag 8 erop ✅ Eerste dag van week 2. Heb vandaag ` +
+        `bewust gewerkt aan snelheid bij m'n uitnodigingen — perfectie-val ` +
+        `proberen te omzeilen. Spreek je snel!`
+      );
+    case "dag9-sponsor-checkin":
+      return (
+        `Hoi${naamDeel}! Dag 9 erop ✅ De 3-weg-meesterclass gelezen, de 5 ` +
+        `stappen + edification helder. Klaar om morgen mijn eerstvolgende ` +
+        `3-weg te starten. Ben je beschikbaar als ik je nodig heb?`
+      );
+    case "dag10-sponsor-checkin":
+      return (
+        `Hoi${naamDeel}! Dag 10 erop ✅ Mijn 3-weg-gesprek vandaag gestart. ` +
+        `Voelde [nog onhandig / goed]. Kunnen we 5 min debriefen? Wat ` +
+        `ging goed, waar liep ik vast?`
+      );
+    case "dag11-sponsor-checkin":
+      return (
+        `Hoi${naamDeel}! Dag 11 erop ✅ Pipeline doorgelopen, weet nu per ` +
+        `prospect wat de volgende stap is. M'n bottleneck zit op [fase]. ` +
+        `Heb je een tip voor die fase?`
+      );
     case "dag3-sponsor-checkin":
       return (
         `Hoi${naamDeel}! Dag 3 erop ✅ Ben rustig aan het netwerk bouwen, ` +
@@ -104,6 +128,10 @@ function pakTitel(taakId: string | undefined): string {
     case "dag3-sponsor-checkin":
     case "dag5-sponsor-checkin":
     case "dag6-sponsor-checkin":
+    case "dag8-sponsor-checkin":
+    case "dag9-sponsor-checkin":
+    case "dag10-sponsor-checkin":
+    case "dag11-sponsor-checkin":
       return "📩 Stuur een korte check-in naar je sponsor";
     case "dag6-sponsor-tip":
       return "💬 Vraag je sponsor om een tip";

@@ -764,14 +764,6 @@ DEZE REVIEW KAN JE DELEN MET JE SPONSOR (zelfde keuze maak je aan het eind van h
         uitleg:
           "5 mensen die eerder gehoord hebben, vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
       },
-      {
-        id: "dag8-social-3",
-        label: "3 namen uit socials",
-        verplicht: true,
-        actieRoute: "/namenlijst",
-        uitleg:
-          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
-      },
     ],
     faseDoel:
       "Week 2 (dag 8-14): 3 tot 5 presentatie-momenten in de agenda deze week.",
@@ -824,7 +816,6 @@ VEELGEMAAKTE FOUTEN:
 MIX WARM EN LAUW: 5 mensen die je goed kent + 5 met wie je 6+ maanden niet gesproken hebt. De warmen geven snelle reacties (positief én negatief), de lauwen geven verrassingen, vaak juist daar zitten je beste matches.`,
     waaromWerktDit: {
       tekst: "Snelheid wint. Snel handelen verslaat perfect handelen, altijd.",
-      bron: "Eric Worre",
     },
   },
 
@@ -848,22 +839,6 @@ MIX WARM EN LAUW: 5 mensen die je goed kent + 5 met wie je 6+ maanden niet gespr
         actieRoute: "/namenlijst",
         uitleg:
           "5 mensen die eerder gehoord hebben, vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
-      },
-      {
-        id: "dag9-social-3",
-        label: "3 namen uit socials",
-        verplicht: true,
-        actieRoute: "/namenlijst",
-        uitleg:
-          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
-      },
-      {
-        id: "dag9-3weg-verdieping",
-        label: "Lees: 3-weg verdieping (5 stappen + edification)",
-        uitleg:
-          "De 5-stappen-uitleg + edification-zinnen voor je 3-weg-gesprek staan volledig in de Les bovenaan deze pagina. Lees rustig door en vink hier af. Op een prospect-kaart vind je later de scripts via '💬 3-weg gesprek scripts'.",
-        verplicht: true,
-        actieRoute: "/onboarding",
       },
     ],
     faseDoel:
@@ -934,7 +909,6 @@ VANDAAG: lees de scripts in een prospect-kaart door, zodat je voor je eerstvolge
     waaromWerktDit: {
       tekst:
         "Edificatie is geen overdrijving. Het is de waarheid vertellen over waarom de persoon gekwalificeerd is om te helpen.",
-      bron: "Eric Worre",
     },
   },
 
@@ -966,14 +940,6 @@ VANDAAG: lees de scripts in een prospect-kaart door, zodat je voor je eerstvolge
         actieRoute: "/namenlijst",
         uitleg:
           "5 mensen die eerder gehoord hebben, vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
-      },
-      {
-        id: "dag10-social-3",
-        label: "3 namen uit socials",
-        verplicht: true,
-        actieRoute: "/namenlijst",
-        uitleg:
-          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
       },
     ],
     faseDoel:
@@ -1026,7 +992,6 @@ Doel deze week: minimaal 1 3-weg starten. Heb je 'm op dag 4 al gehad? Top, plan
     waaromWerktDit: {
       tekst:
         "Je eerste 3-weg gaat onhandig voelen. Dat hóórt. De vijfde voelt natuurlijk. Alleen door te doen kom je daar.",
-      bron: "Fraser Brookes",
     },
   },
 
@@ -1050,21 +1015,6 @@ Doel deze week: minimaal 1 3-weg starten. Heb je 'm op dag 4 al gehad? Top, plan
         actieRoute: "/namenlijst",
         uitleg:
           "5 mensen die eerder gehoord hebben, vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
-      },
-      {
-        id: "dag11-social-3",
-        label: "3 namen uit socials",
-        verplicht: true,
-        actieRoute: "/namenlijst",
-        uitleg:
-          "3 nieuwe namen uit Instagram, LinkedIn of Facebook. Wie reageert op je posts? Wie stuurt je af en toe een DM? Wie post zelf over energie/doelen/ondernemen? 1 woord context per naam ('fitness', 'oud-collega'). Voeg ze toe via Namenlijst → '+ Nieuwe prospect' of 'Mijn ELEVA-geheugen' als ze er al in staan.",
-      },
-      {
-        id: "dag11-lees-flow",
-        label: "Lees: Pipeline-flow, staat in de Les van vandaag",
-        uitleg:
-          "Hoe schuiven prospects van Prospect → Uitgenodigd → One-Pager → Presentatie → Follow-up → Member of Shopper. De volledige uitleg staat in de Les bovenaan deze pagina. Vink af zodra je 'm hebt gehad.",
-        verplicht: true,
       },
     ],
     faseDoel:
@@ -1134,7 +1084,6 @@ KIJK VANDAAG NAAR JE PIPELINE: hoeveel mensen op "Uitgenodigd"? Hoeveel op "One-
     waaromWerktDit: {
       tekst:
         "De presentatie bereikt alleen zijn volle kracht als het fundament eronder klopt.",
-      bron: "Eric Worre, principe van progressie",
     },
   },
 

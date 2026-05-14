@@ -488,6 +488,316 @@ function bouwDag7VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
 }
 
 /**
+ * Tempo-specifieke vervangings-data voor dag 8.
+ *
+ * Dag 8-thema: Snelheid wint. In jouw eigen tempo (Fundament/Bouwen/
+ * Doorbreken) ga je vandaag de perfectie-val omzeilen: max 30-60 sec
+ * per uitnodiging, verzonden is altijd beter dan perfect. De F-stap
+ * is een korte lees-stap om de mindset binnen te krijgen voordat je
+ * de C-stap (uitnodigingen) doet — dus de F-stap staat ZONDER eigen
+ * extra uitnodigingen, het is een SKILL-laag bovenop de C-stap.
+ */
+function bouwDag8VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
+  const dd = berekenDagdoelen(uren);
+
+  return [
+    // --- Stap A: nieuwe namen toevoegen ---
+    {
+      id: "dag8-namen-toevoegen",
+      label: `📲 Voeg ${dd.contacten} nieuwe namen toe aan je lijst`,
+      uitleg: `Vandaag breidt je netwerk-overzicht uit met ${dd.contacten} nieuwe mensen.\n\nWAAR HAAL JE DEZE ${dd.contacten} MENSEN VANDAAN?\n\n1. Je telefoonlijst: mensen die je al kent maar nog niet hebt benaderd.\n2. Je social media-vrienden: open Instagram of Facebook, scroll door je vrienden, kies wie er nu spontaan opvalt.\n3. Mensen die je dagelijks tegenkomt.\n4. Nieuwe mensen via hashtags of comments op accounts die je volgt.\n\nVoeg ze toe met 1 woord context per persoon.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap B: eerste berichten ---
+    {
+      id: "dag8-eerste-berichten",
+      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht`,
+      uitleg: `Pak ${dd.contacten} mensen uit je lijst en stuur ze een persoonlijk eerste bericht.\n\n📱 DIRECT IN WHATSAPP/IG/FB: in je namenlijst staan naast elke prospect kleine icoontjes (WhatsApp, Instagram, Facebook). Eén klik en de juiste app opent. Geen kopiëren-en-plakken, geen zoeken.\n\nDit is een opener, geen casual catch-up. Doel: binnen 1-3 berichten leiden naar een uitnodiging. Via de spraakfunctie meld je: "Ik heb een gesprek gestart met [naam]".`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap C: uitnodigingen ---
+    {
+      id: "dag8-uitnodigingen",
+      label: `📨 Verstuur ${dd.uitnodigingen} uitnodigingen (4-stappen-formule)`,
+      uitleg: `Pas de 4-stappen-formule toe op ${dd.uitnodigingen} mensen vandaag. Compliment → uitnodigen → plan met twee opties → eventueel haast (alleen business).\n\nVANDAAG IS HET SNELHEID-DAG. Lees de F-stap "Snelheid wint" voordat je begint, dan haal je deze ${dd.uitnodigingen} uitnodigingen in 5-10 minuten.\n\nMix warm (bekenden) en lauw (telefoon-contacten). Hulp nodig? De drie knoppen onder dit vak: voorbeelden, sponsor of Mentor.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+      uitnodigHelpKnoppen: true,
+    },
+
+    // --- Stap D: openstaande follow-ups (drie-stappen-frame met FFF + 5-fasen) ---
+    {
+      id: "dag8-openstaande-followups",
+      label: "🔄 Doe je openstaande follow-ups vandaag",
+      uitleg: FOLLOWUP_UITLEG_NA_DAG6,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap E: stories ---
+    {
+      id: "dag8-stories",
+      label: "📱 1 tot 3 stories + reageren op andermans stories",
+      uitleg: STORIES_UITLEG,
+      verplicht: true,
+    },
+
+    // --- Stap F: snelheid-uitdaging (dag-specifiek lees-moment) ---
+    {
+      id: "dag8-snelheid",
+      label: "🚀 Lees: snelheid wint van perfectie",
+      uitleg: `Een lees-stap, geen extra uitnodigingen. Pak je telefoon, lees deze paragraaf, en pas 'm vandaag toe op stap C.\n\n"PERFECT IS DE VIJAND VAN VERZONDEN."\n\nEen onhandige uitnodiging die WEG is presteert oneindig veel beter dan de perfecte uitnodiging die nog op je telefoon staat in concept. Vandaag is GEEN redactie-dag, vandaag is volume-dag in jouw eigen tempo.\n\nDE VUISTREGEL\n\nMax 30 tot 60 seconden bedenktijd per uitnodiging. Daarna: druk op verzenden. Als je 5 minuten staart naar één bericht, pak een ELEVA-script en pas alleen de naam aan.\n\nDE WET VAN GROTE GETALLEN (Nederlandse netwerk-praktijk)\n\n• Van 10 uitnodigingen → 4 tot 6 reacties\n• Van 5 reacties → 2 tot 3 kijkmomenten\n• Van 3 kijkmomenten → 1 ja, 1 not-yet, 1 nee\n\nDat is normaal. Niet rooskleurig, niet teleurstellend. Het is gewoon wat het is.\n\nDE PRAKTIJK\n\nZet een timer van 10 minuten op je telefoon. Kijk hoeveel uitnodigingen je in die 10 min kunt versturen volgens de 4-stappen-formule. Geen herlezen, geen perfectie. Een aanloop voor stap C.`,
+      verplicht: true,
+    },
+
+    // --- LAATSTE STAP: sponsor-checkin ---
+    {
+      id: "dag8-sponsor-checkin",
+      label: "💬 Sluit af met een korte sponsor-checkin",
+      uitleg:
+        "30 seconden. Je hebt dag 8 erop zitten — eerste dag van week 2. Stuur je sponsor een berichtje: hoe voelde de snelheid-modus? Lukte het om de perfectie-val te vermijden? Niets uitgebreids.",
+      verplicht: false,
+      inlineEmbed: "sponsor-melding",
+    },
+  ];
+}
+
+/**
+ * Tempo-specifieke vervangings-data voor dag 9.
+ *
+ * Dag 9-thema: 3-weg-gesprek meesterclass — 5 stappen + edification.
+ * Leerdag (lees-stap F), niet doe-dag. Dag 10 is de doe-dag.
+ */
+function bouwDag9VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
+  const dd = berekenDagdoelen(uren);
+
+  return [
+    // --- Stap A: nieuwe namen toevoegen ---
+    {
+      id: "dag9-namen-toevoegen",
+      label: `📲 Voeg ${dd.contacten} nieuwe namen toe aan je lijst`,
+      uitleg: `Dagritme: ${dd.contacten} nieuwe mensen toevoegen aan je netwerk-overzicht. Eén woord context per persoon.\n\nGebruik de vier bronnen (Eleva-geheugen, Facebook, Instagram, LinkedIn) in de strip hieronder als ingang.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap B: eerste berichten ---
+    {
+      id: "dag9-eerste-berichten",
+      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht`,
+      uitleg: `Pak ${dd.contacten} mensen uit je lijst en stuur ze een persoonlijk eerste bericht.\n\n📱 DIRECT IN WHATSAPP/IG/FB: in je namenlijst staan naast elke prospect kleine icoontjes. Eén klik en de juiste app opent met die persoon.\n\nDit is een opener, geen casual catch-up. Via de spraakfunctie: "Ik heb een gesprek gestart met [naam]" → fase 'in gesprek'.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap C: uitnodigingen ---
+    {
+      id: "dag9-uitnodigingen",
+      label: `📨 Verstuur ${dd.uitnodigingen} uitnodigingen (4-stappen-formule)`,
+      uitleg: `Pas de 4-stappen-formule toe op ${dd.uitnodigingen} mensen vandaag. Compliment → uitnodigen → plan met twee opties → eventueel haast (alleen business).\n\nMix warm + lauw. Bij een ja, deel de link en vertel de spraakfunctie: "Ik heb [naam] uitgenodigd en de link gestuurd". Hulp nodig? Drie knoppen: voorbeelden, sponsor of Mentor.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+      uitnodigHelpKnoppen: true,
+    },
+
+    // --- Stap D: openstaande follow-ups ---
+    {
+      id: "dag9-openstaande-followups",
+      label: "🔄 Doe je openstaande follow-ups vandaag",
+      uitleg: FOLLOWUP_UITLEG_NA_DAG6,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap E: stories ---
+    {
+      id: "dag9-stories",
+      label: "📱 1 tot 3 stories + reageren op andermans stories",
+      uitleg: STORIES_UITLEG,
+      verplicht: true,
+    },
+
+    // --- Stap F: 3-weg-meesterclass lezen (dag-specifiek) ---
+    {
+      id: "dag9-3weg-meesterclass",
+      label: "📚 Lees: 3-weg-meesterclass (5 stappen + edification)",
+      uitleg:
+        "De volledige 5-stappen-uitleg + edification-zinnen voor je 3-weg-gesprek staan bovenaan deze pagina onder 'Wat je leert'. Lees rustig door, vink hier af. Op de prospect-kaart vind je later de scripts via '💬 3-weg gesprek scripts'.\n\nMORGEN (dag 10) ga je je eerstvolgende 3-weg in de praktijk starten. Vandaag is de voorbereiding.",
+      verplicht: true,
+    },
+
+    // --- LAATSTE STAP: sponsor-checkin ---
+    {
+      id: "dag9-sponsor-checkin",
+      label: "💬 Sluit af met een korte sponsor-checkin",
+      uitleg:
+        "30 seconden. Je hebt dag 9 erop zitten — de 3-weg-meesterclass gelezen. Stuur je sponsor een berichtje: ben je klaar om morgen je eerste (of volgende) 3-weg in praktijk te brengen? Vraag of zij of hij beschikbaar is voor het groepje.",
+      verplicht: false,
+      inlineEmbed: "sponsor-melding",
+    },
+  ];
+}
+
+/**
+ * Tempo-specifieke vervangings-data voor dag 10.
+ *
+ * Dag 10-thema: 3-weg-gesprek in praktijk. Geen theorie-dag, een
+ * DOE-dag. De F-stap is concreet: vandaag start je je eerstvolgende
+ * 3-weg-gesprek met een warme prospect en je sponsor.
+ */
+function bouwDag10VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
+  const dd = berekenDagdoelen(uren);
+
+  return [
+    // --- Stap A: nieuwe namen toevoegen ---
+    {
+      id: "dag10-namen-toevoegen",
+      label: `📲 Voeg ${dd.contacten} nieuwe namen toe aan je lijst`,
+      uitleg: `Dagritme: ${dd.contacten} nieuwe mensen toevoegen. Eén woord context per persoon. Gebruik de vier bronnen in de strip hieronder.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap B: eerste berichten ---
+    {
+      id: "dag10-eerste-berichten",
+      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht`,
+      uitleg: `Pak ${dd.contacten} mensen en stuur een persoonlijk eerste bericht.\n\n📱 Gebruik de kleine icoontjes in je namenlijst om direct in WhatsApp/Instagram/Facebook te belanden — geen kopiëren-en-plakken.\n\nVia de spraakfunctie: "Ik heb een gesprek gestart met [naam]" → fase 'in gesprek'.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap C: uitnodigingen ---
+    {
+      id: "dag10-uitnodigingen",
+      label: `📨 Verstuur ${dd.uitnodigingen} uitnodigingen (4-stappen-formule)`,
+      uitleg: `Pas de 4-stappen-formule toe op ${dd.uitnodigingen} mensen vandaag.\n\nMix warm + lauw. Hulp nodig? Drie knoppen: voorbeelden, sponsor of Mentor.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+      uitnodigHelpKnoppen: true,
+    },
+
+    // --- Stap D: openstaande follow-ups ---
+    {
+      id: "dag10-openstaande-followups",
+      label: "🔄 Doe je openstaande follow-ups vandaag",
+      uitleg: FOLLOWUP_UITLEG_NA_DAG6,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap E: stories ---
+    {
+      id: "dag10-stories",
+      label: "📱 1 tot 3 stories + reageren op andermans stories",
+      uitleg: STORIES_UITLEG,
+      verplicht: true,
+    },
+
+    // --- Stap F: 3-weg-gesprek starten (dag-specifiek, de DOE-stap) ---
+    {
+      id: "dag10-3weg-doen",
+      label: "🤝 Start je eerstvolgende 3-weg-gesprek (vandaag of morgen)",
+      uitleg:
+        "Vandaag is GEEN theorie-dag, vandaag is een DOE-dag. Gisteren leerde je de 5 stappen, vandaag start je je eerstvolgende 3-weg in de praktijk.\n\nKIES 1 WARME PROSPECT\n\nIemand die nog geen 3-weg heeft gehad, met wie het gesprek warm is, en die heeft gezien wat jij doet (one-pager of film). Geen koude prospect — die werkt nog niet voor een 3-weg.\n\nDE 5 STAPPEN (recap van dag 9, scripts staan in de prospect-kaart):\n\n1. AANKONDIGING — stuur je prospect een bericht: 'Ik maak even een groepje aan met mijn mentor [sponsor], die kan met je meekijken.'\n2. INTRODUCTIE IN HET GROEPJE — edifieer je sponsor + geef prospect-context aan sponsor.\n3. JIJ STAPT TERUG ⚠️ — DIT IS DE LASTIGSTE STAP. Zwijg in het groepje. Niet meepraten. Niet aanvullen. Sponsor neemt over.\n4. SPONSOR OPENT — sponsor bouwt rapport met de prospect, luistert eerst.\n5. FOLLOW-UP — JIJ stuurt de prospect apart binnen 24u: 'Wat sprak je het meeste in aan?'.\n\nDE EERSTE 3-WEG VOELT ONHANDIG\n\nDat hóórt. De vijfde voelt natuurlijk. Alleen door te DOEN kom je daar. Achteraf 5 min met je sponsor debriefen: wat ging goed, wat liep niet soepel, welke vraag bracht 'm in moeilijkheden?\n\nGEEN WARME PROSPECT KLAAR? VRAAG SPONSOR\n\nStuur sponsor een bericht: 'Ik wil mijn eerstvolgende 3-weg starten maar weet niet bij wie te beginnen. Mag ik samen met jou kijken in mijn namenlijst?'.",
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- LAATSTE STAP: sponsor-checkin ---
+    {
+      id: "dag10-sponsor-checkin",
+      label: "💬 Sluit af met een korte sponsor-checkin",
+      uitleg:
+        "30 seconden. Stuur je sponsor een berichtje: hoe voelde je eerste (of volgende) 3-weg vandaag? Wat ging goed, wat liep niet soepel? Vraag of jullie er 5 min over kunnen debriefen.",
+      verplicht: false,
+      inlineEmbed: "sponsor-melding",
+    },
+  ];
+}
+
+/**
+ * Tempo-specifieke vervangings-data voor dag 11.
+ *
+ * Dag 11-thema: Pipeline-flow + wanneer one-pager versus presentatie.
+ * De F-stap is een lees-stap PLUS een pipeline-check in de namenlijst.
+ */
+function bouwDag11VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
+  const dd = berekenDagdoelen(uren);
+
+  return [
+    // --- Stap A: nieuwe namen toevoegen ---
+    {
+      id: "dag11-namen-toevoegen",
+      label: `📲 Voeg ${dd.contacten} nieuwe namen toe aan je lijst`,
+      uitleg: `Dagritme: ${dd.contacten} nieuwe mensen toevoegen. Eén woord context per persoon. Gebruik de vier bronnen in de strip hieronder.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap B: eerste berichten ---
+    {
+      id: "dag11-eerste-berichten",
+      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht`,
+      uitleg: `Pak ${dd.contacten} mensen en stuur een persoonlijk eerste bericht.\n\n📱 Gebruik de kleine icoontjes in je namenlijst om direct in WhatsApp/Instagram/Facebook te belanden.\n\nVia de spraakfunctie: "Ik heb een gesprek gestart met [naam]" → fase 'in gesprek'.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap C: uitnodigingen ---
+    {
+      id: "dag11-uitnodigingen",
+      label: `📨 Verstuur ${dd.uitnodigingen} uitnodigingen (4-stappen-formule)`,
+      uitleg: `Pas de 4-stappen-formule toe op ${dd.uitnodigingen} mensen vandaag.\n\nMix warm + lauw. Hulp nodig? Drie knoppen: voorbeelden, sponsor of Mentor.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+      uitnodigHelpKnoppen: true,
+    },
+
+    // --- Stap D: openstaande follow-ups ---
+    {
+      id: "dag11-openstaande-followups",
+      label: "🔄 Doe je openstaande follow-ups vandaag",
+      uitleg: FOLLOWUP_UITLEG_NA_DAG6,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap E: stories ---
+    {
+      id: "dag11-stories",
+      label: "📱 1 tot 3 stories + reageren op andermans stories",
+      uitleg: STORIES_UITLEG,
+      verplicht: true,
+    },
+
+    // --- Stap F: pipeline-check + leerstof (dag-specifiek) ---
+    {
+      id: "dag11-pipeline-check",
+      label: "🎯 Pipeline-check: weet voor elke prospect wat de volgende stap is",
+      uitleg:
+        "De volledige leerstof over one-pager versus presentatie staat bovenaan deze pagina onder 'Wat je leert'. Lees die door, daarna doe je de pipeline-check.\n\nDE KERN IN ÉÉN ZIN: niemand slaat een stap over. Iedereen → one-pager → presentatie of 3-weg → beslissing. Geen sprongen, geen omleidingen.\n\nDE PIPELINE-CHECK (5 minuten)\n\nOpen je namenlijst, schakel naar pijplijn-weergave. Kijk naar elke fase:\n\n• PROSPECT — nog niet benaderd. Doel: vandaag of morgen een opener.\n• IN GESPREK — gesprek loopt. Doel: brug naar uitnodiging vinden.\n• UITGENODIGD — uitnodiging is verstuurd, wachtend op JA. Doel: 24-48u check-in als ze stil zijn.\n• ONE-PAGER — info gestuurd, wachtend op reactie. Doel: tussenstap-zin sturen (zie 'Wat je leert' voor de letterlijke zin).\n• PRESENTATIE — diepgaand gesprek gehad. Doel: 5-fasen-follow-up volgen (dag 6).\n• FOLLOW-UP — denkt na. Doel: openings-zin 'wat spreekt je het meeste in aan?' of FFF bij bezwaren.\n\nWAAR ZIT JE BOTTLENECK?\n\nKijk welke fase de meeste mensen heeft. Dat is waar je extra aandacht moet stoppen. Te veel mensen op 'in gesprek'? Tijd om te bruggen. Te veel op 'one-pager'? Tijd om de tussenstap-zin uit te stoppen.",
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- LAATSTE STAP: sponsor-checkin ---
+    {
+      id: "dag11-sponsor-checkin",
+      label: "💬 Sluit af met een korte sponsor-checkin",
+      uitleg:
+        "30 seconden. Stuur je sponsor een berichtje: hoe ziet jouw pijplijn eruit na de check? Waar zit je bottleneck? Vraag of zij of hij een tip heeft voor de fase waar de meeste mensen vastzitten.",
+      verplicht: false,
+      inlineEmbed: "sponsor-melding",
+    },
+  ];
+}
+
+/**
  * Past tempo-specifieke vervangingen toe op een dag.
  *
  * Voor dagen met tempo-aware logica (momenteel dag 3 + dag 4):
@@ -540,7 +850,35 @@ export function pasTempoToeOpDag(
     };
   }
 
+  if (dag.nummer === 8) {
+    return {
+      ...dag,
+      vandaagDoen: bouwDag8VandaagDoen(commitmentUren),
+    };
+  }
+
+  if (dag.nummer === 9) {
+    return {
+      ...dag,
+      vandaagDoen: bouwDag9VandaagDoen(commitmentUren),
+    };
+  }
+
+  if (dag.nummer === 10) {
+    return {
+      ...dag,
+      vandaagDoen: bouwDag10VandaagDoen(commitmentUren),
+    };
+  }
+
+  if (dag.nummer === 11) {
+    return {
+      ...dag,
+      vandaagDoen: bouwDag11VandaagDoen(commitmentUren),
+    };
+  }
+
   // Andere dagen: voorlopig nog niet tempo-aware. Hier komen volgende
-  // rondes de varianten voor dag 8-21 te zien.
+  // rondes de varianten voor dag 12-21 te zien.
   return dag;
 }
