@@ -387,6 +387,87 @@ function bouwDag6VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
 }
 
 /**
+ * Tempo-specifieke vervangings-data voor dag 7.
+ *
+ * Dag 7-thema: Week 1-reflectie. Bewust RUSTIGER dan dag 5+6 zodat
+ * er ruimte is voor de review en de sponsor-call, maar pijplijn-
+ * instroom kakt niet in. Filosofie: minimum-aantallen ipv harde
+ * halvering. Label gebruikt 'Minimaal X', uitleg zegt 'meer mag,
+ * minder niet'. Sponsor-call (15 min, langer dan checkin) als
+ * afsluitende stap.
+ */
+function bouwDag7VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
+  const min = dagdoelenMinimum(uren);
+
+  return [
+    // --- Stap 1: Wekelijkse review (EERST, focus van de dag) ---
+    {
+      id: "dag7-review",
+      label: "📋 Vul de wekelijkse review in (5 min reflectie)",
+      uitleg:
+        "Drie vragen: wat ging goed deze week, wat liep niet soepel, waar focus ik volgende week op? Aan het eind kun je kiezen of je de review met je sponsor wilt delen, zodat hij of zij weet hoe je ervoor staat en waar je in kan groeien.",
+      verplicht: true,
+      actieRoute: "/statistieken",
+    },
+
+    // --- Stap 2: namen toevoegen (MINIMAAL) ---
+    {
+      id: "dag7-namen-toevoegen",
+      label: `📲 Voeg minimaal ${min.contacten} namen toe aan je lijst`,
+      uitleg: `Minimaal ${min.contacten} nieuwe namen vandaag, meer mag altijd. Vandaag is review-dag, dus rustiger op de input — maar je pijplijn houdt z'n stroom. Minder dan ${min.contacten} doe je niet, dat breekt het ritme dat je deze week hebt opgebouwd.\n\nWAAR HAAL JE ZE VANDAAN?\n\n1. Je telefoonlijst: mensen die je al kent maar nog niet hebt benaderd.\n2. Je social media-vrienden: open Instagram of Facebook, scroll door je vrienden, kies wie er nu spontaan opvalt.\n3. Mensen die je dagelijks tegenkomt.\n4. Nieuwe mensen via hashtags of comments.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap 3: eerste berichten (MINIMAAL) ---
+    {
+      id: "dag7-eerste-berichten",
+      label: `💬 Stuur minimaal ${min.contacten} mensen een eerste bericht`,
+      uitleg: `Minimaal ${min.contacten} eerste berichten vandaag, meer mag.\n\n📱 In je namenlijst staan naast elke prospect kleine icoontjes (WhatsApp, Instagram, Facebook). Eén klik en de juiste app opent met die persoon.\n\nDit is een opener, geen casual catch-up. Doel: binnen 1-3 berichten leiden naar een uitnodiging. Via de spraakfunctie meld je: "Ik heb een gesprek gestart met [naam]".`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap 4: uitnodigingen (MINIMAAL) ---
+    {
+      id: "dag7-uitnodigingen",
+      label: `📨 Verstuur minimaal ${min.uitnodigingen} uitnodigingen`,
+      uitleg: `Minimaal ${min.uitnodigingen} uitnodigingen vandaag, meer mag. Pas de 4-stappen-formule toe. Compliment → uitnodigen → plan met twee opties → eventueel haast (alleen business).\n\nHulp nodig? De drie knoppen onder dit vak: voorbeelden, sponsor of Mentor.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+      uitnodigHelpKnoppen: true,
+    },
+
+    // --- Stap 5: openstaande follow-ups (gewone richtwaarde) ---
+    {
+      id: "dag7-openstaande-followups",
+      label: "🔄 Doe je openstaande follow-ups vandaag",
+      uitleg: FOLLOWUP_UITLEG_BASIS,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap 6: stories ---
+    {
+      id: "dag7-stories",
+      label: "📱 1 tot 3 stories + reageren op andermans stories",
+      uitleg: STORIES_UITLEG,
+      verplicht: true,
+    },
+
+    // --- LAATSTE STAP: sponsor-call (15 min, langer dan checkin) ---
+    {
+      id: "dag7-sponsor-call",
+      label: "📞 15 min sponsor-call over week 2",
+      uitleg:
+        "Wat werkte? Wat gaan we anders doen? Wat is het thema van week 2? Deze call is langer dan een dagelijkse checkin — neem 15 minuten samen om week 1 door te lopen en week 2 vorm te geven. Tip: deel je review-formulier vóór de call zodat je sponsor zich kan voorbereiden.",
+      verplicht: false,
+      inlineEmbed: "sponsor-melding",
+    },
+  ];
+}
+
+/**
  * Past tempo-specifieke vervangingen toe op een dag.
  *
  * Voor dagen met tempo-aware logica (momenteel dag 3 + dag 4):
@@ -432,7 +513,14 @@ export function pasTempoToeOpDag(
     };
   }
 
+  if (dag.nummer === 7) {
+    return {
+      ...dag,
+      vandaagDoen: bouwDag7VandaagDoen(commitmentUren),
+    };
+  }
+
   // Andere dagen: voorlopig nog niet tempo-aware. Hier komen volgende
-  // rondes de varianten voor dag 5-21 te zien.
+  // rondes de varianten voor dag 8-21 te zien.
   return dag;
 }
