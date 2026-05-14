@@ -308,6 +308,85 @@ function bouwDag5VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
 }
 
 /**
+ * Tempo-specifieke vervangings-data voor dag 6.
+ *
+ * Dag 6-thema: Follow-up systematiek (24-48u-regel + 5-fasen-flow +
+ * stilgevallen-zin). Uitnodigen blijft vast onderdeel van het ritme.
+ * Sponsor-tip als zesde stap, sponsor-checkin als afsluiter.
+ * Anti-uitval-blok bovenin focust op de 80%-wet van follow-up.
+ */
+function bouwDag6VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
+  const dd = berekenDagdoelen(uren);
+
+  return [
+    // --- Stap A: nieuwe namen toevoegen (met anti-uitval-blok bovenin) ---
+    {
+      id: "dag6-namen-toevoegen",
+      label: `📲 Voeg ${dd.contacten} nieuwe namen toe aan je lijst`,
+      uitleg: `${ANTI_UITVAL_DAG6}Vandaag breidt je netwerk-overzicht uit met ${dd.contacten} nieuwe mensen.\n\nWAAR HAAL JE DEZE ${dd.contacten} MENSEN VANDAAN?\n\n1. Je telefoonlijst: mensen die je al kent maar nog niet hebt benaderd.\n2. Je social media-vrienden: open Instagram of Facebook, scroll door je vrienden, kies wie er nu spontaan opvalt.\n3. Mensen die je dagelijks tegenkomt.\n4. Nieuwe mensen via hashtags of comments.\n\nVoeg ze toe met 1 woord context per persoon.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap B: eerste berichten ---
+    {
+      id: "dag6-eerste-berichten",
+      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht`,
+      uitleg: `Pak ${dd.contacten} mensen uit je lijst en stuur ze een persoonlijk eerste bericht.\n\n📱 DIRECT IN WHATSAPP/IG/FB BELANDEN: in je namenlijst staan naast elke prospect kleine icoontjes (WhatsApp, Instagram, Facebook). Eén klik en de juiste app opent met die persoon. Vereiste: telefoonnummer of social-handle staat op de kaart.\n\nDit is een OPENER, geen casual catch-up. Doel: binnen 1-3 berichten leiden naar een uitnodiging. Vandaag verstuur je later ook uitnodigingen — voor mensen die warm reageren kun je vandaag al doorzetten.\n\nVia de spraakfunctie meld je: "Ik heb een gesprek gestart met [naam]" → fase 'in gesprek'.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap C: uitnodigingen ---
+    {
+      id: "dag6-uitnodigingen",
+      label: `📨 Verstuur ${dd.uitnodigingen} uitnodigingen (4-stappen-formule)`,
+      uitleg: `Pas de 4-stappen-formule toe op ${dd.uitnodigingen} mensen vandaag. Compliment → uitnodigen → plan met twee opties → eventueel haast (alleen business-prospects).\n\nMix warm (bekenden) en lauw (telefoon-contacten). Bij een ja, deel de link en vertel de spraakfunctie: "Ik heb [naam] uitgenodigd en de link gestuurd".\n\nHulp nodig? De drie knoppen onder dit vak: voorbeelden, sponsor of Mentor.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+      uitnodigHelpKnoppen: true,
+    },
+
+    // --- Stap D: openstaande follow-ups (UITGEBREIDE uitleg op dag 6) ---
+    {
+      id: "dag6-openstaande-followups",
+      label: "🔄 Follow-ups vandaag (24-48u-regel + 5-fasen-flow)",
+      uitleg: FOLLOWUP_UITLEG_DAG6,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap E: stories ---
+    {
+      id: "dag6-stories",
+      label: "📱 1 tot 3 stories + reageren op andermans stories",
+      uitleg: STORIES_UITLEG,
+      verplicht: true,
+    },
+
+    // --- Stap F: sponsor-tip (dag-specifiek) ---
+    {
+      id: "dag6-sponsor-tip",
+      label: "💡 Vraag sponsor of Mentor: 1 tip op je lastigste follow-up",
+      uitleg:
+        "Heb je 1 contact waar je niet weet wat je moet sturen? Vraag je sponsor: 'Hoe zou jij dit aanpakken?'. Sponsor even druk? Dan de Mentor: 'Help me met een follow-up voor [naam] die [situatie]'. Je hoeft het niet alleen te bedenken.",
+      verplicht: false,
+      inlineEmbed: "sponsor-melding",
+    },
+
+    // --- LAATSTE STAP: sponsor-checkin ---
+    {
+      id: "dag6-sponsor-checkin",
+      label: "💬 Sluit af met een korte sponsor-checkin",
+      uitleg:
+        "30 seconden. Je hebt dag 6 erop zitten. Stuur je sponsor een berichtje: hoe voelde het om systematisch door je pijplijn te lopen? Werkte de 24-48u-regel? Niets uitgebreids, gewoon even een update om de dag af te sluiten.",
+      verplicht: false,
+      inlineEmbed: "sponsor-melding",
+    },
+  ];
+}
+
+/**
  * Past tempo-specifieke vervangingen toe op een dag.
  *
  * Voor dagen met tempo-aware logica (momenteel dag 3 + dag 4):
