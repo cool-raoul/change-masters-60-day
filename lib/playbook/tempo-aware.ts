@@ -28,7 +28,11 @@
 //     doorwerken zonder DB-migratie
 // ============================================================
 
-import { berekenDagdoelen, type CommitmentUren } from "@/lib/dagdoelen";
+import {
+  berekenDagdoelen,
+  dagdoelenMinimum,
+  type CommitmentUren,
+} from "@/lib/dagdoelen";
 import type { Dag, ControllableTaak } from "@/lib/playbook/types";
 
 // ============================================================
@@ -47,6 +51,23 @@ const STORIES_UITLEG = `Deel 1 tot 3 momenten uit je dag op Instagram of Faceboo
 // naar sponsor + Mentor, zodat een member die direct vastloopt op
 // een specifiek bericht weet waar 'ie per direct hulp kan halen.
 const FOLLOWUP_UITLEG_BASIS = `Mensen die de film, one-pager of presentatie hebben gezien wachten op opvolging. Geen vast getal vandaag — afhankelijk van wie er klaar staat in je pijplijn. Open je namenlijst en filter op fase 'one-pager', 'presentatie' of 'follow-up'.\n\nVOOR NU FOCUS JE OP ÉÉN DING, de openingszin. De diepere opvolg-technieken (twijfel ombuigen, closing-vragen, doel-tijd-termijn) komen in de dagen hierna stap voor stap aan bod. Vandaag oefen je alleen het OPENEN van het gesprek.\n\nDE OPENINGSZIN, twee varianten:\n\n• ALGEMEEN: "Wat spreekt je hier het meeste in aan?"\n  Werkt altijd. Richt de aandacht op wat hen RAAKTE.\n\n• WHY-GERICHT (als je hun WHY al kent): "Zie je hoe dit je kan brengen tot [hun WHY]?"\n  Voorbeelden:\n    - "Zie je hoe dit je kan brengen tot die extra vrije dag die je graag zou willen?"\n    - "Zie je hoe dit je kan brengen tot die vakantiedagen die je extra zou willen?"\n    - "Zie je hoe dit je kan brengen tot meer tijd met je kinderen?"\n  Krachtig als je hun WHY weet.\n\nVermijd "Wat vond je ervan?" — dat lokt oordeel uit in plaats van verbinding.\n\nLUISTER WAT ZE ZEGGEN. Doorvragen op wat ze NOEMEN. Geen pitch, geen druk om vandaag iets te beslissen. De volgende stappen (validatie, twijfel ombuigen, closen) leer je later in het playbook.\n\n🆘 KOM JE NU VAST OP EEN SPECIFIEK BERICHT?\n\nWacht niet tot je het zelf moet verzinnen. Je hebt twee snelle hulplijnen — gebruik ze:\n\n• Je sponsor — stuur een korte WhatsApp met de letterlijke tekst die je hebt ontvangen, plus één vraag ("Hoe zou jij hier op reageren?"). Sponsors zijn er precies hiervoor.\n• De Mentor (in het zijmenu) — plak het bericht, vraag een reactie-suggestie. De Mentor schrijft op maat in jouw toon en houdt rekening met fase + WHY van de prospect.\n\nDieper-ingaan op berichten leer je later, maar deze vangnetten zijn er nu al.`;
+
+// ============================================================
+// Anti-uitval-blokken voor dag 5 en dag 6. Bovenin de uitleg van
+// de eerste stap (dag5-namen-toevoegen / dag6-namen-toevoegen)
+// staat dit korte blokje dat de wiskunde van drop-off normaliseert.
+// Doel: het 'zes-nees-en-stoppen'-uitval-patroon ondervangen.
+// ============================================================
+
+const ANTI_UITVAL_DAG5 = `ℹ️ EVEN VOOR DE RUST: VEEL MENSEN TWIJFELEN ROND DIT MOMENT\n\nHeb je deze week 5-10 mensen benaderd en weinig terug gekregen? Dat is normaal en wiskundig verwacht. De gemiddelde response-ratio in netwerk-marketing ligt rond 1 op 15-20 contacten. Dat is geen falen, dat is gewoon hoe het werkt.\n\nWat je vandaag aan extra ankerpunten hebt:\n- De FFF-formule die je zo gaat leren (bezwaren ombuigen)\n- Je sponsor of de Mentor om hulp aan te vragen bij een specifiek bericht\n- De DMO-training in de Academy als je meer wilt begrijpen van de cijfers\n\nVerder met je dag-flow.\n\n──────────────────────────────────────────\n\n`;
+
+const ANTI_UITVAL_DAG6 = `ℹ️ EVEN VOOR DE RUST: VEEL MENSEN ONDERSCHATTEN DE 80%-WAARDE\n\n80% van alle ja's in netwerk-marketing komen na de DERDE of latere follow-up. 80% van netwerkers stopt al na de eerste of tweede follow-up. Daar zit het grote verschil tussen mensen die doorbreken en mensen die afhaken: niet talent, niet pitch-kunst, wel hoe goed je opvolgt.\n\nVandaag leer je dat systematisch. Loopt het ergens vast? Sponsor en Mentor staan klaar (zie 'Vraag 1 tip'-stap). Meer over de wiskunde in de DMO-training les 4.1 in de Academy.\n\nVerder met je dag-flow.\n\n──────────────────────────────────────────\n\n`;
+
+// Uitgebreide follow-up-uitleg voor dag 6, met 24-48u-regel,
+// 5-fasen-flow en de stilgevallen-gesprekken-zin. Op dag 3, 4, 5
+// en 7 wordt FOLLOWUP_UITLEG_BASIS gebruikt; op dag 6 deze diepere
+// variant omdat de hele dag-les daarover gaat.
+const FOLLOWUP_UITLEG_DAG6 = `Mensen die de film, one-pager of presentatie hebben gezien wachten op opvolging. Vandaag is de DAG om hier scherp en systematisch in te zijn. Open je namenlijst en filter op fase 'one-pager', 'presentatie' of 'follow-up'.\n\nDE 24-48U-REGEL\n\nStuur 24-48 uur na een uitnodiging je eerste check-in. Niet eerder (dan voelt het opdringerig), niet later (dan is de psychologische ruimte alweer dicht). Gemiddeld zijn 5 contactmomenten nodig voordat iemand een echte beslissing maakt — dat is geen drammen, dat is gewoon de statistiek van menselijk gedrag.\n\nDE 5-FASEN-FOLLOW-UP\n\n1. CHECK-IN (24-48u): "Even inchecken, hoe gaat het met je?" GEEN "heb je al nagedacht?"\n2. PEILEN (na 3-5 dagen): "Wat sprak je het meeste aan van wat je gezien hebt?" Open vraag op WAT, niet op JA/NEE.\n3. VERDIEPEN (na 7-10 dagen): "Dit wilde ik je ook nog laten zien..." Tweede waardevol punt, een testimonial, een nieuw filmpje.\n4. UITNODIGING NAAR EVENT/3-WEG (na 10-14 dagen): "Er is binnenkort iets dat past, wil je erbij zijn?"\n5. SLUITEN OF NOT-YET (na 14-21 dagen): "Wat is voor jou het belangrijkste punt om helder te krijgen?"\n\nDE STILGEVALLEN-GESPREKKEN-ZIN\n\nWanneer iemand een paar dagen of weken niet meer reageert, werkt deze zin bijna altijd:\n\n"Hé [naam], ik zag dat je niet meer had gereageerd op mijn laatste berichtje. Is dat omdat je druk was of omdat je geen interesse hebt op dit moment? Allebei prima hoor, ik dacht: ik vraag het even!"\n\nWaarom dit werkt:\n- Geen verwijt, geen druk: 'allebei prima hoor' geeft de uitweg.\n- Eerlijk antwoord: mensen die druk waren ('sorry, vergeten!') komen terug. Mensen die geen interesse hebben, geven dat aan zonder ongemak.\n- Helderheid voor jou: je weet waar je staat, kunt verder.\n\nWAT JE WEL EN NIET DOET\n\n- WEL: "Even inchecken" - vriendelijk, niet beoordelend\n- WEL: "Wat sprak je aan?" - focus op wat positief is\n- NIET: "Heb je al nagedacht?" - zet ze in beoordelaar-positie\n- NIET: "Wat vond je ervan?" - vraagt om oordeel, opent kritiek\n- NIET: stilte na 1 keer geen reactie - fataal, je verliest 80%\n\n🆘 KOM JE NU VAST OP EEN SPECIFIEK BERICHT?\n\nWacht niet tot je het zelf moet verzinnen. Je hebt twee snelle hulplijnen:\n- Je sponsor - stuur een korte WhatsApp met de letterlijke tekst die je hebt ontvangen, plus één vraag\n- De Mentor (in het zijmenu) - plak het bericht, vraag een reactie-suggestie. De Mentor schrijft op maat in jouw toon en houdt rekening met fase + WHY van de prospect.`;
 
 /**
  * Tempo-specifieke vervangings-data voor dag 3.
@@ -207,6 +228,86 @@ function bouwDag4VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
 }
 
 /**
+ * Tempo-specifieke vervangings-data voor dag 5.
+ *
+ * Dag 5-thema: Bezwaren omgaan met Feel-Felt-Found. Vanaf vandaag
+ * is uitnodigen ook een dagelijks ritme (niet meer enkel een
+ * 'leerdag' zoals dag 4). De FFF-roleplay als specifieke dag-stap.
+ * Anti-uitval-blok bovenin om het 'zes-nees-en-stoppen'-patroon
+ * te normaliseren met wiskunde-context.
+ */
+function bouwDag5VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
+  const dd = berekenDagdoelen(uren);
+
+  return [
+    // --- Stap A: nieuwe namen toevoegen (met anti-uitval-blok bovenin) ---
+    {
+      id: "dag5-namen-toevoegen",
+      label: `📲 Voeg ${dd.contacten} nieuwe namen toe aan je lijst`,
+      uitleg: `${ANTI_UITVAL_DAG5}Vandaag breidt je netwerk-overzicht uit met ${dd.contacten} nieuwe mensen.\n\nWAAR HAAL JE DEZE ${dd.contacten} MENSEN VANDAAN?\n\n1. Je telefoonlijst: mensen die je al kent maar nog niet hebt benaderd.\n2. Je social media-vrienden: open Instagram of Facebook, scroll door je vrienden, kies wie er nu spontaan opvalt.\n3. Mensen die je dagelijks tegenkomt: bij de koffietent, sportschool, school, werk.\n4. Nieuwe mensen via hashtags of comments op accounts die je volgt.\n\nVoeg ze toe in je namenlijst met 1 woord context per persoon ('fitness', 'oud-collega', 'koffietent').`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap B: eerste berichten ---
+    {
+      id: "dag5-eerste-berichten",
+      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht`,
+      uitleg: `Pak ${dd.contacten} mensen uit je lijst en stuur ze 1-op-1 een persoonlijk bericht.\n\n📱 HOE JE DIRECT IN WHATSAPP, INSTAGRAM OF FACEBOOK BELANDT\n\nIn je namenlijst staan naast elke prospect kleine icoontjes (WhatsApp, Instagram, Facebook). Eén klik en de juiste app opent met die persoon. Vereiste: telefoonnummer of social-handle staat op de kaart. Niet ingevuld? Open de prospect, vul aan, en de icoontjes verschijnen vanzelf.\n\nDIT IS EEN OPENER, GEEN CASUAL CATCH-UP\n\nEen eerste bericht is bedoeld om een gesprek te openen dat BINNEN 1 TOT 3 BERICHTEN leidt tot een uitnodiging voor een kijkmoment. Niet om eerst weken te koffieklokken.\n\nWAT SCHRIJF JE\n\nGeen pitch. Wél een menselijke, specifieke vraag waar je oprecht nieuwsgierig naar bent.\n\nVoorbeelden:\n- "Hé Linda, ik moest aan je denken na onze koffie laatst. Hoe is het nu met die nieuwe rol?"\n- "Hé Pieter, ik zag je verhaal over je wandeling in Limburg. Welke route was dat?"\n\nZodra je het bericht hebt verstuurd, vertel het aan de spraakfunctie: "Ik heb een gesprek gestart met [naam]". De prospect gaat dan automatisch van 'prospect' naar 'in gesprek'.`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap C: uitnodigingen (vanaf dag 5 vast onderdeel van het ritme) ---
+    {
+      id: "dag5-uitnodigingen",
+      label: `📨 Verstuur ${dd.uitnodigingen} uitnodigingen (4-stappen-formule)`,
+      uitleg: `Vanaf vandaag is uitnodigen een vast onderdeel van je dagelijkse ritme. Je past de 4-stappen-formule toe die je gisteren leerde op ${dd.uitnodigingen} mensen.\n\nDE FORMULE IN HET KORT\n\n1. COMPLIMENT of erkenning ("je bent iemand die...")\n2. UITNODIGEN ("wil je het zien?"), kies de variant die past bij hoe warm de prospect is (direct / indirect / super-indirect)\n3. PLAN met twee opties ("vanavond of morgen?"), geen open vraag\n4. Optionele opener bij business-prospects ("ik heb weinig tijd, maar...")\n\nMix warm (mensen die je goed kent) met lauw (telefoon-contacten waar je weinig mee praat). Bij een ja, vertel de spraakfunctie: "Ik heb [naam] uitgenodigd en de link gestuurd".\n\nHULP NODIG\n\nDe drie knoppen onder dit vak zijn er om mee te starten:\n- Voorbeelden bekijken: complete scripts klaar om aan te passen\n- Met je sponsor: open WhatsApp met een vraag om hulp\n- Met de Mentor: laat de Mentor een uitnodiging op maat schrijven`,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+      uitnodigHelpKnoppen: true,
+    },
+
+    // --- Stap D: openstaande follow-ups ---
+    {
+      id: "dag5-openstaande-followups",
+      label: "🔄 Doe je openstaande follow-ups vandaag",
+      uitleg: FOLLOWUP_UITLEG_BASIS,
+      verplicht: true,
+      actieRoute: "/namenlijst",
+    },
+
+    // --- Stap E: stories ---
+    {
+      id: "dag5-stories",
+      label: "📱 1 tot 3 stories + reageren op andermans stories",
+      uitleg: STORIES_UITLEG,
+      verplicht: true,
+    },
+
+    // --- Stap F: FFF-roleplay (dag-specifiek) ---
+    {
+      id: "dag5-fff-roleplay",
+      label: "🛡️ Korte FFF-roleplay met sponsor of Mentor",
+      uitleg:
+        "Waarom oefenen met bezwaren belangrijk is: in een echt gesprek krijg je geen tweede kans om iets te formuleren. Als jij staat te zoeken naar woorden, voelt de prospect onzekerheid en verliest hij vertrouwen. Door vooraf een paar keer te oefenen, weet je in grote lijnen hoe je elk bezwaar kunt aanvliegen, zelfs als je niet de exacte woorden paraat hebt.\n\nVraag je sponsor om 1-2 typische bezwaren te 'spelen' en oefen Feel-Felt-Found. Geen sponsor beschikbaar? Vraag de Mentor: 'Speel een prospect die zegt: ik heb geen tijd', en oefen je antwoord. Daarna een nieuwe ronde met een ander bezwaar. Vier of vijf rondes is genoeg om het ritme te pakken.",
+      verplicht: true,
+      actieRoute: "/coach",
+    },
+
+    // --- LAATSTE STAP: sponsor-checkin ---
+    {
+      id: "dag5-sponsor-checkin",
+      label: "💬 Sluit af met een korte sponsor-checkin",
+      uitleg:
+        "30 seconden. Je hebt dag 5 erop zitten. Stuur je sponsor een berichtje met hoe het ging: hoe voelde de FFF-oefening? Liep je vandaag tegen een bezwaar aan dat je hebt omgebogen? Niets uitgebreids, gewoon een update om de dag mooi af te sluiten.",
+      verplicht: false,
+      inlineEmbed: "sponsor-melding",
+    },
+  ];
+}
+
+/**
  * Past tempo-specifieke vervangingen toe op een dag.
  *
  * Voor dagen met tempo-aware logica (momenteel dag 3 + dag 4):
@@ -235,6 +336,13 @@ export function pasTempoToeOpDag(
     return {
       ...dag,
       vandaagDoen: bouwDag4VandaagDoen(commitmentUren),
+    };
+  }
+
+  if (dag.nummer === 5) {
+    return {
+      ...dag,
+      vandaagDoen: bouwDag5VandaagDoen(commitmentUren),
     };
   }
 
