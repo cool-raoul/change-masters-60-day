@@ -36,12 +36,30 @@ import {
 import type { Dag, ControllableTaak } from "@/lib/playbook/types";
 
 // ============================================================
+// Tekst voor de "🤝 Check je partners"-stap die verschijnt zodra
+// een member directe downline heeft. De component PartnerCheckEmbed
+// rendert zichzelf onzichtbaar als geen partners gevonden — dus de
+// stap is altijd veilig toe te voegen aan elke dag.
+//
+// Geen AI-tussenkomst (Raoul, 2026-05-14): tekst zegt expliciet
+// dat sponsor zelf schrijft in eigen woorden.
+// ============================================================
+
+export const PARTNER_CHECK_UITLEG = `Sponsor-zijn is een MENSELIJKE rol. Geen scripts, geen AI-zinnen — gewoon jij die contact houdt met de mensen die jij hebt aangemeld. ELEVA toont je waar aandacht nodig is. Wat je stuurt, kies je zelf, in jouw eigen woorden.
+
+Hieronder zie je je directe partners (en optioneel de 2e laag via uitklap-knop). Per partner: hun dag, hun laatste login, en hoeveel % van hun verplichte taken ze deze week hebben afgevinkt. Een ⚠️-icoon verschijnt bij urgentie (>72u stil OF <30% taken).
+
+WhatsApp-knop opent een LEEG gesprek. Schrijf zelf wat past — een hartelijk "hoe gaat het?", een specifieke vraag over waar ze stuk lopen, of gewoon een complimentje voor doorzettings-vermogen.
+
+Wil je dieper leren hoe je sponsor bent? In de Academy staat de Audio-onderweg-training met Skill #6 — "Helping Your New Distributor Get Started Right". Luister 'm in de auto of tijdens een wandeling, niet hier in een snelle-fix.`;
+
+// ============================================================
 // Tekst-blok dat we hergebruiken op alle tempo-aware dagen:
 // stories-uitleg + follow-up-uitleg. Zo blijft het consistent
 // en updaten we het op één plek.
 // ============================================================
 
-export const STORIES_UITLEG = `Deel 1 tot 3 momenten uit je dag op Instagram of Facebook (stories, niet feed). Een ontbijt, een wandeling, een rustig moment, een blije gedachte. Geen verkoop, geen "kom in m'n business". Gewoon laten zien dat je leeft. Mensen worden door wat ze zien aangetrokken, niet door wat ze lezen.\n\nREAGEREN OP STORIES VAN ANDEREN is minstens zo belangrijk als zelf posten. Waarom? Als je reageert op iemands story, land je RECHTSTREEKS in z'n DM. Dat is de plek waar het echte gesprek begint. Eén oprechte 2-3 zinnen-reactie op een story is goud waard.\n\nWat doe je vandaag?\n\n1. Plaats 1 tot 3 stories uit je dag (lifestyle, geen pitch)\n2. Open Instagram of Facebook en geef bij 3 stories van anderen een ECHTE reactie. Geen "👏👏👏" maar 2-3 zinnen die laten zien dat je hun moment hebt gezien.\n3. Wordt het een gesprek? Top. Als dit een NIEUW persoon is (nog niet op je lijst), voeg ze toe en zet ze op fase 'in gesprek' via de spraakfunctie ("Ik heb een gesprek gestart met [naam]").\n\nZo bouw je rustige zichtbaarheid + concrete nieuwe gesprekken zonder iets te pushen.`;
+export const STORIES_UITLEG =`Deel 1 tot 3 momenten uit je dag op Instagram of Facebook (stories, niet feed). Een ontbijt, een wandeling, een rustig moment, een blije gedachte. Geen verkoop, geen "kom in m'n business". Gewoon laten zien dat je leeft. Mensen worden door wat ze zien aangetrokken, niet door wat ze lezen.\n\nREAGEREN OP STORIES VAN ANDEREN is minstens zo belangrijk als zelf posten. Waarom? Als je reageert op iemands story, land je RECHTSTREEKS in z'n DM. Dat is de plek waar het echte gesprek begint. Eén oprechte 2-3 zinnen-reactie op een story is goud waard.\n\nWat doe je vandaag?\n\n1. Plaats 1 tot 3 stories uit je dag (lifestyle, geen pitch)\n2. Open Instagram of Facebook en geef bij 3 stories van anderen een ECHTE reactie. Geen "👏👏👏" maar 2-3 zinnen die laten zien dat je hun moment hebt gezien.\n3. Wordt het een gesprek? Top. Als dit een NIEUW persoon is (nog niet op je lijst), voeg ze toe en zet ze op fase 'in gesprek' via de spraakfunctie ("Ik heb een gesprek gestart met [naam]").\n\nZo bouw je rustige zichtbaarheid + concrete nieuwe gesprekken zonder iets te pushen.`;
 
 // Voor dag 3 + dag 4 (start-fase): alleen de openings-zin + luisteren.
 // De diepere flow (Feel-Felt-Found vanaf dag 5, follow-up-cadans vanaf
