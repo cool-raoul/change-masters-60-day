@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 // Publiek deelbare one-pager voor professionele ondernemers
 // (coaches, therapeuten, beauty-pro's, personal trainers, studio's,
 // salons) die we willen uitnodigen om naast hun praktijk een extra
-// inkomstenlaag met Lifeplus + ELEVA op te bouwen.
+// inkomstenlaag op te bouwen via een eigen gratis webshop + ELEVA.
 //
 // Bedoeld om als link te versturen via WhatsApp of e-mail. GEEN
 // login nodig (zie publicRoutes in lib/supabase/middleware.ts).
@@ -52,8 +52,13 @@ export default function ProUitnodigingPagina() {
             Je helpt mensen, je hebt klanten, je levert kwaliteit. En toch:
           </p>
           <ul className="space-y-1.5">
+            <li className="flex gap-2 text-cm-white/85 text-sm">
+              <span className="text-cm-gold flex-shrink-0">•</span>
+              <span>
+                <strong className="text-cm-white">Je inkomen is niet schaalbaar</strong>, het blijft gekoppeld aan je tijd
+              </span>
+            </li>
             {[
-              "Je inkomen blijft gekoppeld aan je tijd",
               "Je agenda bepaalt je omzet",
               "Als jij niet werkt of op vakantie gaat, stopt je inkomen",
               "Je wilt méér, maar niet nog harder werken",
@@ -73,7 +78,44 @@ export default function ProUitnodigingPagina() {
           </ul>
         </section>
 
-        {/* ─────────────── 3 G's ─────────────── */}
+        {/* ─────────────── ANDERE WEG (NU EERST) ─────────────── */}
+        <section className="space-y-3">
+          <h2 className="font-serif-warm text-2xl text-cm-white border-b border-cm-gold/40 pb-2">
+            Je wilt groeien, maar niet zo
+          </h2>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <div className="card">
+              <ul className="space-y-1.5 text-sm text-cm-white/85">
+                {[
+                  "Niet opnieuw beginnen",
+                  "Niet alles omgooien",
+                  "Niet nóg harder werken",
+                  "Niet je prijs hoeven verhogen",
+                  "Geen extra grote tijdsinvesteringen",
+                ].map((t, i) => (
+                  <li key={i} className="flex gap-2">
+                    <span className="text-cm-gold flex-shrink-0">•</span>
+                    <span>{t}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="card border-l-4 border-cm-gold space-y-2">
+              <h3 className="text-cm-gold font-semibold text-sm">
+                Wat als het anders kan?
+              </h3>
+              <p className="text-cm-white/85 text-sm leading-relaxed">
+                Slimmer bouwen op wat je al hebt staan. Je huidige business
+                behouden, en er een{" "}
+                <strong className="text-cm-white">schaalbaar inkomen</strong>{" "}
+                naast zetten dat met je meebeweegt, zonder je prijs te hoeven
+                verhogen en zonder extra grote tijdsinvesteringen.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ─────────────── 3 G's (NA "JE WILT GROEIEN") ─────────────── */}
         <section className="space-y-4">
           <h2 className="font-serif-warm text-2xl text-cm-white border-b border-cm-gold/40 pb-2">
             De drie G's die het verschil maken
@@ -141,49 +183,21 @@ export default function ProUitnodigingPagina() {
           </div>
         </section>
 
-        {/* ─────────────── ANDERE WEG ─────────────── */}
-        <section className="space-y-3">
-          <h2 className="font-serif-warm text-2xl text-cm-white border-b border-cm-gold/40 pb-2">
-            Je wilt groeien, maar niet zo
-          </h2>
-          <div className="grid sm:grid-cols-2 gap-3">
-            <div className="card">
-              <ul className="space-y-1.5 text-sm text-cm-white/85">
-                {[
-                  "Niet opnieuw beginnen",
-                  "Niet alles omgooien",
-                  "Niet nóg harder werken",
-                ].map((t, i) => (
-                  <li key={i} className="flex gap-2">
-                    <span className="text-cm-gold flex-shrink-0">•</span>
-                    <span>{t}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="card border-l-4 border-cm-gold space-y-2">
-              <h3 className="text-cm-gold font-semibold text-sm">
-                Wat als het anders kan?
-              </h3>
-              <p className="text-cm-white/85 text-sm leading-relaxed">
-                Slimmer bouwen op wat je al hebt staan. Je huidige business
-                behouden, en er een extra inkomstenlaag onder zetten die met
-                je meebeweegt en niet afhankelijk is van jouw tijd.
-              </p>
-            </div>
-          </div>
-        </section>
-
         {/* ─────────────── GRATIS WEBSHOP ─────────────── */}
         <section className="space-y-3">
           <h2 className="font-serif-warm text-2xl text-cm-white border-b border-cm-gold/40 pb-2">
             Een gratis eigen webshop, alles geregeld
           </h2>
-          <p className="text-cm-white/75 text-sm">
+          <p className="text-cm-white/75 text-sm leading-relaxed">
             Je ontvangt gratis een{" "}
-            <strong className="text-cm-white">Lifeplus-webshop</strong> vol
-            hoogwaardige holistische producten als verlengstuk van jouw
-            business:
+            <strong className="text-cm-white">eigen webshop</strong> vol
+            hoogwaardige holistische wellness-producten als verlengstuk van
+            jouw business. Achter de webshop staat een{" "}
+            <strong className="text-cm-white">
+              samenwerkend bedrijf dat ruim 35 jaar bestaat, gebaseerd op 80
+              jaar kennis en ervaring
+            </strong>
+            .
           </p>
           <div className="card grid sm:grid-cols-2 gap-x-4 gap-y-1.5">
             {[
@@ -196,7 +210,7 @@ export default function ProUitnodigingPagina() {
               "Gratis klantenservice voor jou en je cliënten",
               "30 dagen niet-goed-geld-terug garantie",
               "Uitbetaling elke 15e van de maand",
-              "35 jaar Lifeplus (Bob Lemon, Dr. McKee)",
+              "Ruim 35 jaar samenwerking, 80 jaar kennis",
             ].map((t, i) => (
               <div key={i} className="flex gap-2 text-sm text-cm-white/85">
                 <span className="text-emerald-400 flex-shrink-0">✓</span>
@@ -220,6 +234,53 @@ export default function ProUitnodigingPagina() {
           </p>
         </section>
 
+        {/* ─────────────── SCHAALBAAR EN GELAAGD INKOMEN ─────────────── */}
+        <section className="space-y-3">
+          <h2 className="font-serif-warm text-2xl text-cm-white border-b border-cm-gold/40 pb-2">
+            Hoe het schaalbare, gelaagde inkomen ontstaat
+          </h2>
+          <p className="text-cm-white/75 text-sm">
+            Je bouwt in drie lagen, zonder extra uren te draaien. Iedere laag
+            werkt naast de vorige.
+          </p>
+          <div className="grid sm:grid-cols-3 gap-3">
+            {[
+              {
+                titel: "Laag 1, jouw klanten",
+                tekst:
+                  "Jouw klanten bestellen in jouw eigen webshop. Jij ontvangt percentages over wat zij maandelijks bestellen.",
+              },
+              {
+                titel: "Laag 2, andere professionals",
+                tekst:
+                  "Jij biedt andere professionals dezelfde optie aan: zij krijgen ook een gratis webshop. Jij krijgt percentages over hun webshop-omzet.",
+              },
+              {
+                titel: "Laag 3, pay-it-forward",
+                tekst:
+                  "Zij doen op hun beurt hetzelfde voor anderen. Jij ontvangt ook over die verder-via-via-webshops. Zo wordt het inkomen écht gelaagd en schaalbaar.",
+              },
+            ].map((l, i) => (
+              <div
+                key={i}
+                className="card border-l-4 border-cm-gold space-y-1.5"
+              >
+                <p className="text-cm-white font-semibold text-sm">
+                  {l.titel}
+                </p>
+                <p className="text-cm-white/75 text-xs leading-relaxed">
+                  {l.tekst}
+                </p>
+              </div>
+            ))}
+          </div>
+          <p className="text-cm-white/55 text-xs italic">
+            Geen pyramide, geen druk om te werven. Wel een eerlijk systeem
+            waarin jij deelt wat werkt, en de mensen die jij hebt geholpen op
+            hun beurt anderen mogen helpen.
+          </p>
+        </section>
+
         {/* ─────────────── CATEGORIEËN ─────────────── */}
         <section className="space-y-3">
           <h2 className="font-serif-warm text-2xl text-cm-white border-b border-cm-gold/40 pb-2">
@@ -232,6 +293,8 @@ export default function ProUitnodigingPagina() {
               "😴 **Stress, burnout-herstel, slaap**",
               "🌸 **Hormonale balans**",
               "💪 **Sport, performance, herstel**",
+              "✨ **Huid, beauty en verzorging**",
+              "🌿 **Holistische wellness-aanvulling**",
               "**... en meer**",
             ].map((t, i) => {
               const parts = t.split(/\*\*(.+?)\*\*/g);
@@ -278,10 +341,11 @@ export default function ProUitnodigingPagina() {
                 emoji: "🤖",
                 titel: "De ELEVA Mentor",
                 bullets: [
-                  "Claimvrij advies-op-maat op basis van jouw input",
+                  "Cliënt vult een korte vragenlijst in",
+                  "Mentor geeft claim-vrij advies op maat",
                   "Inclusief leefstijl-pijlers (slaap, beweging, voeding, stress)",
-                  "3 fases: herstel, overgang, onderhoud",
-                  "Jij blijft de expert, opstel-werk uit handen",
+                  "Afstemming in overleg met jouw expertise",
+                  "Jij blijft de expert, mentor doet voorwerk",
                 ],
               },
               {
@@ -308,10 +372,11 @@ export default function ProUitnodigingPagina() {
                 emoji: "🎓",
                 titel: "15-stappen pad in eigen tempo",
                 bullets: [
-                  "Geen 60-dagen-sprint, geen druk",
-                  "Naast je praktijk opbouwen",
-                  "Stap voor stap je systeem leren",
-                  "Doe het wanneer het past",
+                  "Geen sprint, geen tijdsdruk",
+                  "Geen verplichtingen",
+                  "Opzetten en uitbouwen in je eigen tempo",
+                  "Stap voor stap je systeem aanleren",
+                  "Naast je praktijk, wanneer het past",
                 ],
               },
             ].map((f, i) => (
