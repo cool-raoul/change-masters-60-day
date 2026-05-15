@@ -244,6 +244,16 @@ export function genereerWeekritmeDag(
         },
   );
 
+  // Momentum-radar (één-na-laatste stap): end-of-day check op
+  // openstaande momentum-prospects. Verbergt zichzelf als items leeg.
+  stappen.push({
+    id: `dag${dagNummer}-momentum-radar`,
+    label: "🎯 Open momentum-acties van vandaag",
+    uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Items waar je vandaag al actie op hebt ondernomen — gebeld, herinnering afgevinkt, of via spraak 'laatste contact' bijgewerkt — vallen vanzelf weg uit deze lijst.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+    verplicht: false,
+    inlineEmbed: "momentum-radar",
+  });
+
   // Partner-check als laatste stap. Component rendert onzichtbaar
   // wanneer member geen partners heeft, dus altijd veilig toe te voegen.
   stappen.push({

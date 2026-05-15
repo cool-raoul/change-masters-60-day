@@ -327,17 +327,6 @@ function VandaagFlowInner({
           </div>
         )}
 
-        {/* Radar-balk: top-5 actie-prospects voor vandaag. Onder de
-            founder-toolbar, boven dag-content zodat de pulsatie in
-            het zicht valt. Verbergt zich bij 0 items. */}
-        {radarItems.length > 0 && (
-          <RadarBalk
-            items={radarItems}
-            initieelAfgevinkt={radarInitieelAfgevinkt}
-            huidigeDag={dag.nummer}
-          />
-        )}
-
         {/* INTRO-stap */}
         {stap === "intro" && (
           <div className="space-y-6">
@@ -681,6 +670,13 @@ function VandaagFlowInner({
                 opVoltooid={() => {
                   vinkAf(huidigeTaak.id, true);
                 }}
+              />
+            )}
+            {huidigeTaak.inlineEmbed === "momentum-radar" && radarItems.length > 0 && (
+              <RadarBalk
+                items={radarItems}
+                initieelAfgevinkt={radarInitieelAfgevinkt}
+                huidigeDag={dag.nummer}
               />
             )}
             {huidigeTaak.inlineEmbed === "namen-form" && (

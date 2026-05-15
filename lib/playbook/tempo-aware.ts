@@ -70,6 +70,27 @@ export function partnerCheckStap(dagNummer: number): ControllableTaak {
   };
 }
 
+/**
+ * Helper die de momentum-radar-stap genereert. Toont top-5 prospects
+ * met meeste momentum vandaag (mix van follow-ups + herinneringen +
+ * recente signalen). Auto-filtert items waar member vandaag al actie
+ * op heeft ondernomen. Verbergt zichzelf bij 0 open items, dus
+ * functioneert als end-of-day check: "Niks vergeten vandaag?".
+ *
+ * Filosofie: positie tussen sponsor-checkin en partner-check als
+ * "afsluit-check". Niet dwingend, wel attentie-trekkend met pulsatie
+ * zolang er items zijn.
+ */
+export function momentumRadarStap(dagNummer: number): ControllableTaak {
+  return {
+    id: `dag${dagNummer}-momentum-radar`,
+    label: "🎯 Open momentum-acties van vandaag",
+    uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Een mix van openstaande follow-ups, herinneringen die vandaag aan de beurt zijn, en mensen die net iets hebben gedaan (film gekeken, test ingevuld).\n\nItems waar je vandaag al actie op hebt ondernomen — je hebt 'm gebeld, een herinnering afgevinkt, of via de spraakfunctie 'laatste contact' bijgewerkt — vallen vanzelf weg uit deze lijst. Wat overblijft, vraagt nog je aandacht.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+    verplicht: false,
+    inlineEmbed: "momentum-radar",
+  };
+}
+
 // ============================================================
 // Tekst-blok dat we hergebruiken op alle tempo-aware dagen:
 // stories-uitleg + follow-up-uitleg. Zo blijft het consistent
@@ -187,6 +208,7 @@ function bouwDag3VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
+    momentumRadarStap(3),
     partnerCheckStap(3),
   ];
 }
@@ -275,6 +297,7 @@ function bouwDag4VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
+    momentumRadarStap(4),
     partnerCheckStap(4),
   ];
 }
@@ -360,6 +383,7 @@ function bouwDag5VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
+    momentumRadarStap(5),
     partnerCheckStap(5),
   ];
 }
@@ -440,6 +464,7 @@ function bouwDag6VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
+    momentumRadarStap(6),
     partnerCheckStap(6),
   ];
 }
@@ -533,6 +558,7 @@ function bouwDag7VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
+    momentumRadarStap(7),
     partnerCheckStap(7),
   ];
 }
@@ -605,6 +631,7 @@ function bouwDag8VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
+    momentumRadarStap(8),
     partnerCheckStap(8),
   ];
 }
@@ -673,6 +700,7 @@ function bouwDag9VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
+    momentumRadarStap(9),
     partnerCheckStap(9),
   ];
 }
@@ -752,6 +780,7 @@ function bouwDag10VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
+    momentumRadarStap(10),
     partnerCheckStap(10),
   ];
 }
@@ -830,6 +859,7 @@ function bouwDag11VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
+    momentumRadarStap(11),
     partnerCheckStap(11),
   ];
 }
@@ -908,6 +938,7 @@ function bouwDag12VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
+    momentumRadarStap(12),
     partnerCheckStap(12),
   ];
 }
@@ -935,6 +966,7 @@ function bouwDag13VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
+    momentumRadarStap(13),
     partnerCheckStap(13),
   ];
 }
@@ -980,6 +1012,7 @@ function bouwDag14VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
+    momentumRadarStap(14),
     partnerCheckStap(14),
   ];
 }
@@ -1011,6 +1044,7 @@ function bouwDag15VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
+    momentumRadarStap(15),
     partnerCheckStap(15),
   ];
 }
@@ -1038,6 +1072,7 @@ function bouwDag16VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
+    momentumRadarStap(16),
     partnerCheckStap(16),
   ];
 }
@@ -1085,6 +1120,7 @@ function bouwDag17VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
+    momentumRadarStap(17),
     partnerCheckStap(17),
   ];
 }
@@ -1131,6 +1167,7 @@ function bouwDag18VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
+    momentumRadarStap(18),
     partnerCheckStap(18),
   ];
 }
@@ -1160,6 +1197,7 @@ function bouwDag19VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
+    momentumRadarStap(19),
     partnerCheckStap(19),
   ];
 }
@@ -1187,6 +1225,7 @@ function bouwDag20VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
+    momentumRadarStap(20),
     partnerCheckStap(20),
   ];
 }
@@ -1277,6 +1316,7 @@ function bouwDag21VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
+    momentumRadarStap(21),
     partnerCheckStap(21),
   ];
 }

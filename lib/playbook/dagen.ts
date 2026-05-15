@@ -53,6 +53,13 @@ export const DAGEN: Dag[] = [
         inlineEmbed: "sponsor-melding",
       },
       {
+        id: 'dag1-momentum-radar',
+        label: '🎯 Open momentum-acties van vandaag',
+        uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Items waar je vandaag al actie op hebt ondernomen vallen vanzelf weg.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+        verplicht: false,
+        inlineEmbed: 'momentum-radar',
+      },
+      {
         id: 'dag1-partner-check',
         label: '🤝 Check je nieuwe partner(s) vandaag',
         uitleg: PARTNER_CHECK_UITLEG,
@@ -177,6 +184,13 @@ Overweldigd voelen is normaal. Je leert iets nieuws, je stapt uit comfort. Eerst
         filmSlug: "onboarding-stap-8-kredietformulier",
       },
       {
+        id: 'dag2-momentum-radar',
+        label: '🎯 Open momentum-acties van vandaag',
+        uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Items waar je vandaag al actie op hebt ondernomen vallen vanzelf weg.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+        verplicht: false,
+        inlineEmbed: 'momentum-radar',
+      },
+      {
         id: 'dag2-partner-check',
         label: '🤝 Check je nieuwe partner(s) vandaag',
         uitleg: PARTNER_CHECK_UITLEG,
@@ -295,6 +309,13 @@ Vandaag stuur je ook al 3 uitnodigingen, samen met je sponsor in een groepje (3-
         filmSlug: "onboarding-stap-7-teams-admin",
       },
       {
+        id: 'dag3-momentum-radar',
+        label: '🎯 Open momentum-acties van vandaag',
+        uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Items waar je vandaag al actie op hebt ondernomen vallen vanzelf weg.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+        verplicht: false,
+        inlineEmbed: 'momentum-radar',
+      },
+      {
         id: 'dag3-partner-check',
         label: '🤝 Check je nieuwe partner(s) vandaag',
         uitleg: PARTNER_CHECK_UITLEG,
@@ -378,6 +399,13 @@ NIET GELIJK PITCHEN, wat wel: reageer terug op hun content. Vraag iets. Bouw rap
         verplicht: false,
         actieRoute: "/instellingen/bestellinks",
         filmSlug: "onboarding-stap-9-bestellinks",
+      },
+      {
+        id: 'dag4-momentum-radar',
+        label: '🎯 Open momentum-acties van vandaag',
+        uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Items waar je vandaag al actie op hebt ondernomen vallen vanzelf weg.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+        verplicht: false,
+        inlineEmbed: 'momentum-radar',
       },
       {
         id: 'dag4-partner-check',
@@ -506,6 +534,13 @@ Op je prospect-kaart kun je de keuze maken via de knop "🧭 Welke aanpak past b
         actieRoute: "/coach",
       },
       {
+        id: 'dag5-momentum-radar',
+        label: '🎯 Open momentum-acties van vandaag',
+        uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Items waar je vandaag al actie op hebt ondernomen vallen vanzelf weg.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+        verplicht: false,
+        inlineEmbed: 'momentum-radar',
+      },
+      {
         id: 'dag5-partner-check',
         label: '🤝 Check je nieuwe partner(s) vandaag',
         uitleg: PARTNER_CHECK_UITLEG,
@@ -605,6 +640,13 @@ VEELGEMAAKTE FOUTEN:
           "Heb je 1 contact waar je niet weet wat je moet sturen? Vraag je sponsor: 'Hoe zou jij dit aanpakken?'. Sponsor even druk? Dan de Mentor: 'Help me met een follow-up voor [naam] die [situatie]'. Je hoeft het niet alleen te bedenken.",
         verplicht: false,
         inlineEmbed: "sponsor-melding",
+      },
+      {
+        id: 'dag6-momentum-radar',
+        label: '🎯 Open momentum-acties van vandaag',
+        uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Items waar je vandaag al actie op hebt ondernomen vallen vanzelf weg.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+        verplicht: false,
+        inlineEmbed: 'momentum-radar',
       },
       {
         id: 'dag6-partner-check',
@@ -713,6 +755,13 @@ Een prospect die NU geen ja zegt, kan over 3 maanden alsnog ja zeggen. Of over 1
         inlineEmbed: "sponsor-melding",
       },
       {
+        id: 'dag7-momentum-radar',
+        label: '🎯 Open momentum-acties van vandaag',
+        uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Items waar je vandaag al actie op hebt ondernomen vallen vanzelf weg.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+        verplicht: false,
+        inlineEmbed: 'momentum-radar',
+      },
+      {
         id: 'dag7-partner-check',
         label: '🤝 Check je nieuwe partner(s) vandaag',
         uitleg: PARTNER_CHECK_UITLEG,
@@ -786,6 +835,13 @@ DEZE REVIEW KAN JE DELEN MET JE SPONSOR (zelfde keuze maak je aan het eind van h
         actieRoute: "/namenlijst",
         uitleg:
           "5 mensen die eerder gehoord hebben, vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
+      },
+      {
+        id: 'dag8-momentum-radar',
+        label: '🎯 Open momentum-acties van vandaag',
+        uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Items waar je vandaag al actie op hebt ondernomen vallen vanzelf weg.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+        verplicht: false,
+        inlineEmbed: 'momentum-radar',
       },
       {
         id: 'dag8-partner-check',
@@ -877,6 +933,13 @@ Verdeel je uitnodigingen ongeveer half warm (mensen die je goed kent) en half la
         actieRoute: "/namenlijst",
         uitleg:
           "5 mensen die eerder gehoord hebben, vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
+      },
+      {
+        id: 'dag9-momentum-radar',
+        label: '🎯 Open momentum-acties van vandaag',
+        uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Items waar je vandaag al actie op hebt ondernomen vallen vanzelf weg.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+        verplicht: false,
+        inlineEmbed: 'momentum-radar',
       },
       {
         id: 'dag9-partner-check',
@@ -987,6 +1050,13 @@ VANDAAG: lees de scripts in een prospect-kaart door, zodat je voor je eerstvolge
           "5 mensen die eerder gehoord hebben, vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
       },
       {
+        id: 'dag10-momentum-radar',
+        label: '🎯 Open momentum-acties van vandaag',
+        uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Items waar je vandaag al actie op hebt ondernomen vallen vanzelf weg.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+        verplicht: false,
+        inlineEmbed: 'momentum-radar',
+      },
+      {
         id: 'dag10-partner-check',
         label: '🤝 Check je nieuwe partner(s) vandaag',
         uitleg: PARTNER_CHECK_UITLEG,
@@ -1067,6 +1137,13 @@ Doel deze week: minimaal 1 3-weg starten. Heb je 'm op dag 4 al gehad? Top, plan
         actieRoute: "/namenlijst",
         uitleg:
           "5 mensen die eerder gehoord hebben, vandaag check-in. Open Namenlijst → klik op prospect → 'Follow-up'. Houd 't kort en vriendelijk.",
+      },
+      {
+        id: 'dag11-momentum-radar',
+        label: '🎯 Open momentum-acties van vandaag',
+        uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Items waar je vandaag al actie op hebt ondernomen vallen vanzelf weg.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+        verplicht: false,
+        inlineEmbed: 'momentum-radar',
       },
       {
         id: 'dag11-partner-check',
@@ -1175,6 +1252,13 @@ KIJK VANDAAG NAAR JE PIPELINE: hoeveel mensen op "Uitgenodigd"? Hoeveel op "One-
           "Maak via de coach een pivot-bericht: 'Helemaal goed, geen probleem. Ken je iemand die last heeft van X? Of wil je het zelf eens een maand proberen?' Zet ze dan op pipeline-fase Shopper.",
         verplicht: false,
         actieRoute: "/namenlijst",
+      },
+      {
+        id: 'dag12-momentum-radar',
+        label: '🎯 Open momentum-acties van vandaag',
+        uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Items waar je vandaag al actie op hebt ondernomen vallen vanzelf weg.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+        verplicht: false,
+        inlineEmbed: 'momentum-radar',
       },
       {
         id: 'dag12-partner-check',
@@ -1298,6 +1382,13 @@ EXTRA WAARDE: zeg nee tegen drammen, ja tegen warmte. Een Shopper die jou over e
           "Kies iemand uit je telefoonlijst met wie je weinig contact hebt. Eerst even een FORM-vraag (zonder pitch), reageer 1-2 dagen op hun socials, dán pas invite. Vraag de Mentor: 'Help me [naam] warm maken vóór ik 'm uitnodig, context: [situatie]'. De Mentor schrijft een opwarm-tekst die geen pitch is.",
         verplicht: true,
         actieRoute: "/namenlijst",
+      },
+      {
+        id: 'dag13-momentum-radar',
+        label: '🎯 Open momentum-acties van vandaag',
+        uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Items waar je vandaag al actie op hebt ondernomen vallen vanzelf weg.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+        verplicht: false,
+        inlineEmbed: 'momentum-radar',
       },
       {
         id: 'dag13-partner-check',
@@ -1431,6 +1522,13 @@ VANDAAG: kies 1 specifieke prospect, plan een 5-min check-in (DM of telefoon) en
         inlineEmbed: "sponsor-melding",
       },
       {
+        id: 'dag14-momentum-radar',
+        label: '🎯 Open momentum-acties van vandaag',
+        uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Items waar je vandaag al actie op hebt ondernomen vallen vanzelf weg.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+        verplicht: false,
+        inlineEmbed: 'momentum-radar',
+      },
+      {
         id: 'dag14-partner-check',
         label: '🤝 Check je nieuwe partner(s) vandaag',
         uitleg: PARTNER_CHECK_UITLEG,
@@ -1517,6 +1615,13 @@ VAN HIER UIT IS HET KILOMETER-WERK. Geen nieuwe technieken meer, alleen oefenen 
         actieRoute: "/namenlijst",
         uitleg:
           "10 mensen uit je lijst uitnodigen voor een kijkmoment. Open Namenlijst → klik op een prospect → 'Uitnodigen', of vraag de Mentor: 'Schrijf een uitnodiging voor [naam]'. Mix warm + lauw, halverwege in 5-10 min als je scripts paraat hebt.",
+      },
+      {
+        id: 'dag15-momentum-radar',
+        label: '🎯 Open momentum-acties van vandaag',
+        uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Items waar je vandaag al actie op hebt ondernomen vallen vanzelf weg.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+        verplicht: false,
+        inlineEmbed: 'momentum-radar',
       },
       {
         id: 'dag15-partner-check',
@@ -1620,6 +1725,13 @@ Een nee NU is geen nee voor altijd. Iemand op "Not-yet" zetten is geen verlies. 
           "Actief zoekend, open, productkoper, niet-nu, nooit. Dit bepaalt hoeveel energie je ergens aan besteedt.",
         verplicht: true,
         actieRoute: "/namenlijst",
+      },
+      {
+        id: 'dag16-momentum-radar',
+        label: '🎯 Open momentum-acties van vandaag',
+        uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Items waar je vandaag al actie op hebt ondernomen vallen vanzelf weg.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+        verplicht: false,
+        inlineEmbed: 'momentum-radar',
       },
       {
         id: 'dag16-partner-check',
@@ -1744,6 +1856,13 @@ VANDAAG, categoriseer je top-20:
           voorbeeld:
             "Mag ik je 5 korte vragen stellen om te kijken of dit voor jou realistisch is qua tijd en doelen? Geen druk, gewoon eerlijk samen kijken.",
         },
+      },
+      {
+        id: 'dag17-momentum-radar',
+        label: '🎯 Open momentum-acties van vandaag',
+        uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Items waar je vandaag al actie op hebt ondernomen vallen vanzelf weg.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+        verplicht: false,
+        inlineEmbed: 'momentum-radar',
       },
       {
         id: 'dag17-partner-check',
@@ -1877,6 +1996,13 @@ VANDAAG: probeer Doel-Tijd-Termijn vandaag of morgen bij minstens 1 warme prospe
         actieRoute: "/namenlijst",
       },
       {
+        id: 'dag18-momentum-radar',
+        label: '🎯 Open momentum-acties van vandaag',
+        uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Items waar je vandaag al actie op hebt ondernomen vallen vanzelf weg.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+        verplicht: false,
+        inlineEmbed: 'momentum-radar',
+      },
+      {
         id: 'dag18-partner-check',
         label: '🤝 Check je nieuwe partner(s) vandaag',
         uitleg: PARTNER_CHECK_UITLEG,
@@ -1974,6 +2100,13 @@ Wat je vandaag doet: 5 minuten investeren in JOUW vaste zin. Schrijf 'm op, bewa
           "Uitgenodigd: X / One-pager: Y / Presentatie: Z / Beslist: W. Waar is de grootste drop-off? Dat is je oefenpunt voor de laatste 40 dagen.",
         verplicht: true,
         actieRoute: "/namenlijst",
+      },
+      {
+        id: 'dag19-momentum-radar',
+        label: '🎯 Open momentum-acties van vandaag',
+        uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Items waar je vandaag al actie op hebt ondernomen vallen vanzelf weg.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+        verplicht: false,
+        inlineEmbed: 'momentum-radar',
       },
       {
         id: 'dag19-partner-check',
@@ -2085,6 +2218,13 @@ Statistieken zijn je leermeester, niet je rechter. Slechte cijfers betekenen nie
         actieRoute: "/namenlijst",
       },
       {
+        id: 'dag20-momentum-radar',
+        label: '🎯 Open momentum-acties van vandaag',
+        uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Items waar je vandaag al actie op hebt ondernomen vallen vanzelf weg.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+        verplicht: false,
+        inlineEmbed: 'momentum-radar',
+      },
+      {
         id: 'dag20-partner-check',
         label: '🤝 Check je nieuwe partner(s) vandaag',
         uitleg: PARTNER_CHECK_UITLEG,
@@ -2192,6 +2332,13 @@ VANDAAG: kies 1 prospect die meer dan 3 exposures heeft gehad zonder beslissing.
         label: "40-min call met sponsor: week 3 afsluiten en blok 2 voorbereiden",
         verplicht: false,
         inlineEmbed: "sponsor-melding",
+      },
+      {
+        id: 'dag21-momentum-radar',
+        label: '🎯 Open momentum-acties van vandaag',
+        uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Items waar je vandaag al actie op hebt ondernomen vallen vanzelf weg.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+        verplicht: false,
+        inlineEmbed: 'momentum-radar',
       },
       {
         id: 'dag21-partner-check',

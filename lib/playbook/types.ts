@@ -71,13 +71,17 @@ export type ControllableTaak = {
    *   - 'partner-check'   → PartnerCheckEmbed (directe + 2e laag downline
    *                         met geaggregeerde signalen + lege WhatsApp-
    *                         knop, geen AI-tussenkomst)
+   *   - 'momentum-radar'  → RadarBalk (top-5 prospects met meeste momentum,
+   *                         end-of-day-check; auto-filtert items waar
+   *                         vandaag al actie op is geweest)
    */
   inlineEmbed?:
     | "vcard-upload"
     | "sponsor-melding"
     | "namen-form"
     | "funnel-analyse"
-    | "partner-check";
+    | "partner-check"
+    | "momentum-radar";
   /**
    * Optioneel doelaantal voor `namen-form`-embed. De form telt actief
    * mee hoeveel namen de member heeft ingevuld, en bevestigt zodra het
