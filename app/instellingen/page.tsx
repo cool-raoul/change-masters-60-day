@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { InstellingenForm } from "@/components/InstellingenForm";
 import { ProfielFotoUpload } from "@/components/instellingen/ProfielFotoUpload";
+import { CoreTempoSectie } from "@/components/instellingen/CoreTempoSectie";
 import { PresenceToggle } from "@/components/presence/PresenceToggle";
 import { SocialAccountsForm } from "@/components/instellingen/SocialAccountsForm";
 import { TempoSectie } from "@/components/instellingen/TempoSectie";
@@ -75,6 +76,25 @@ export default async function InstellingenPagina() {
           ze vóór deze feature klaar waren met onboarding) als nieuwe
           users die later willen switchen. */}
       <TempoSectie huidigUren={huidigUren} />
+
+      {/* Core-tempo-sectie verschijnt alleen voor members met modus=core.
+          Member kan DTT op elk moment aanpassen. */}
+      {(profile as { modus?: string | null } | null)?.modus === "core" && (
+        <CoreTempoSectie
+          initieelDoel={
+            ((profile as { core_dtt?: { doel_per_maand?: number } | null } | null)
+              ?.core_dtt?.doel_per_maand) ?? null
+          }
+          initieleUren={
+            ((profile as { core_dtt?: { uren_per_week?: number } | null } | null)
+              ?.core_dtt?.uren_per_week) ?? null
+          }
+          initieleTermijn={
+            ((profile as { core_dtt?: { termijn_maanden?: number } | null } | null)
+              ?.core_dtt?.termijn_maanden) ?? null
+          }
+        />
+      )}
 
       {/* Social-profielen, gebruikt door /vandaag taken die naar
           Facebook / Instagram / LinkedIn verwijzen. */}
