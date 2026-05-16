@@ -113,23 +113,72 @@ Opgeslagen in nieuwe kolom `profiles.core_dtt` als JSONB met `{ doel_per_maand, 
 
 ### 5.2 De 5 brackets
 
-| Bracket | Tijd/week | Realistisch doel | Daily DMO-aantal-richtlijn |
-|---|---|---|---|
-| **Minimaal** | <3u | "Producten gratis aanbieden in netwerk, geen serieus inkomen" | 1 contact/week, 0-1 social-post/maand |
-| **Rustig** | 3-6u | "Eerste klanten in 30-60 dagen" | 1-2 contacten/dag, 1 social/week |
-| **Gestaag** | 6-10u | "Eerste members in 2-3 maanden" | 2-3 contacten/dag, 2 social/week |
-| **Serieus** | 10-16u | "Builder-rank in 3-4 maanden" | 4-5 contacten/dag, dagelijks social |
-| **Doorpakken** | 16+u | "Builder-rank in 1-2 maanden" | 6+ contacten/dag, dagelijks meerdere social-acties |
+Alle aantallen zijn **minimum-richtlijnen**. Member mag altijd meer doen, nooit minder zonder herziening van z'n DTT. Geen tijdsprognoses (zoals "klanten in 30 dagen"), wel werkomvang-categorieën en duidelijke verwachtingen.
 
-### 5.3 Eerlijk advies bij <3u
+| Bracket | Tijd/week | Realistische verwachting | Minimum daily DMO-richtlijn |
+|---|---|---|---|
+| **Minimaal** | <3u | "Je producten terugverdienen. Inkomsten ongeveer gelijk aan je eigen maandelijkse bestellingen, dus je product wordt voor jou gratis." | Top-20 lijst opbouwen + telefoonlijst invoeren in eigen tempo + 1-2 contacten/week |
+| **Rustig** | 3-6u | "Eerste klanten in je eigen netwerk opbouwen, kleine commissies bovenop je eigen bestellingen." | Min 2 contacten/dag, min 2 social-posts/week, freebies meelopen met die posts als intekenplek |
+| **Gestaag** | 6-10u | "Eerste members aanbrengen. Builder-rank wordt realistisch." | Min 3 contacten/dag, min 2-3 social-posts/week, freebies meelopen |
+| **Serieus** | 10-16u | "Builder-rank opbouwen en eerste duplicatie starten (een andere Builder helpen worden)." | Min 5 contacten/dag, dagelijks social, wekelijks freebie-campagne |
+| **Doorpakken** | 16+u | "Meerdere Builders helpen worden, schaalbaar gelaagd inkomen op gang." | Min 7 contacten/dag, dagelijks meerdere social-acties, structureel freebies-flow |
+
+### 5.3 Builder-rank als kern-doel
+
+Voor Core is het bereiken van **Builder-rank** de hoofd-mijlpaal die member bewust naartoe werkt. Reden: Builder = het bouwblok van duplicatie. Op het moment dat je Builder bent kun je een ander persoon helpen óók Builder te worden via hetzelfde systeem. Die anderen helpen dan weer anderen. Dat is hoe een gelaagd schaalbaar inkomen ontstaat (zoals beschreven in de Pro-uitnodiging-onepager).
+
+**UI-effect**: vanaf dag 1 toont Core een rustige progress-balk: *"Op weg naar Builder"*. Vanaf bracket Gestaag (6u+) is dit een actief doel. Bij Minimaal/Rustig wordt 'm getoond maar zonder druk, als zicht op de volgende fase.
+
+**Voor wie is Builder realistisch?**
+- **Minimaal/Rustig**: Builder is geen primair doel, wel zichtbaar. Member focust op klanten.
+- **Gestaag** (6u+): Builder wordt expliciet een werkbaar doel, mensen worden vanaf dag 16+ (Builder-energie herkennen) actief aangemoedigd richting eigen Builder + eerste duplicaten.
+- **Serieus/Doorpakken**: Builder is hét doel. Het systeem stuwt richting Builder + meerdere duplicaten.
+
+### 5.4 Het compensation plan in één oogopslag (Eric Worre's basic-understanding-principe)
+
+Eric Worre's regel voor nieuwe distributors: ze moeten meteen in opstart een **basic understanding** krijgen van het compensation plan, zodat ze weten wat ze moeten doen om hun doel te bereiken. Anders werken ze blind.
+
+**Rank-ladder met minimum-vanaf-bedragen per maand:**
+
+| Rank | Vanaf €/maand | Wat dit betekent |
+|---|---|---|
+| **Builder** | (eerste bouwsteen, 1500 IP op eerste 3 levels) | Je hebt het systeem in je vingers. Vanaf hier kun je iemand anders óók Builder maken. Dit is de sleutel tot duplicatie. |
+| **Bronze** | €300-600 | Eerste serieuze inkomensstroom. |
+| **Silver** | vanaf €600 | Stabiele bij-inkomensstroom. |
+| **Gold** | vanaf €900 | Een halve dag werk minder per week wordt realistisch. |
+| **Diamond** | vanaf €1200 | Naar een dag werk minder per week of meer. |
+
+Alle bedragen zijn **minimum-vanaf**, geen plafond. Werkelijke inkomsten hangen af van:
+- Of je alleen bouwt of met andere members die zelf weer members zoeken
+- Hoeveel eigen webshop-klanten je hebt
+- Hoe diep de duplicatie loopt onder jouw eerste-laag-members
+
+Daarom kan iemand op Bronze-rank met diep doorlopende duplicatie soms meer verdienen dan iemand op Gold-rank zonder duplicatie. Het is geen vaste mapping, wel een richtlijn.
+
+**Waar in Core leer je dit?**
+- **Dag 1 (DTT)**: nadat member zijn doel-bedrag invult ziet 'ie direct in welke rank-range dat valt. Rustige melding, geen druk.
+- **Dag 4 (bestellinks + productadvies-test)**: korte uitleg-blok over hoe commissies werken (eigen webshop + 1e laag + 2e laag + diepere lagen via rank-status). Link naar volledig commission-plan-document.
+- **Dag 17 (Builder-energie herkennen)**: link naar deze ranks teruglees-mogelijkheid.
+
+**Helper-functie:**
+```typescript
+// lib/dtt/rank-vanaf-doel.ts
+export function rankVanafDoel(doelPerMaand: number): {
+  rank: "builder" | "bronze" | "silver" | "gold" | "diamond";
+  label: string;
+  toelichting: string;
+};
+```
+
+### 5.5 Eerlijk advies bij <3u
 
 Bij invoer van <3u toont de UI een onderscheidend, niet-ontmoedigend bericht:
 
-> "Met <3u/week is het lastig om een netwerk-business op te bouwen waarmee je een serieus inkomen genereert. Wel kun je je producten gratis aanbieden in je eigen kring, en blijven je commissies als mensen via je webshop bestellen. Overweeg of je 4-6u kunt vrijmaken voor 'rustig opbouwen'. Dat is een groot verschil."
+> "Met <3u/week kun je je producten terugverdienen: je inkomsten zullen ongeveer gelijk zijn aan wat je zelf maandelijks bestelt, zodat je product voor jou gratis wordt. Een netwerk opbouwen waarmee je een serieus inkomen genereert is in dit tempo niet realistisch. Overweeg of je 4-6u per week kunt vrijmaken voor 'rustig opbouwen'. Dat is een groot verschil."
 
 Member kan toch <3u kiezen. Geen blokkade.
 
-### 5.4 Tempo-aanpassen
+### 5.6 Tempo-aanpassen
 
 `/instellingen` krijgt een **Tempo-sectie voor Core** (parallel aan Sprint's tempo-sectie). Member kan op elk moment z'n DTT bijwerken. Wijziging is direct van kracht op de aantal-richtlijnen die de DMO-blok toont.
 
@@ -206,9 +255,9 @@ Mapping van bestaande 21 stappen naar nieuwe 21 dagen:
 | Nieuwe dag | Bestaande stap | Verandering |
 |---|---|---|
 | 1 | Stap 1 (WHY) | + DTT-onboarding + pre-post-keuze + sponsor + **1 eerste contact** |
-| 2 | Stap 2 (lijst) | + DMO-blok |
+| 2 | Stap 2 (lijst, herzien naar **Top-20 namenlijst**) | + telefoonlijst-import (oneindig aantal prospects) + social-media-contacten toevoegen (zelfde patroon als Sprint) + DMO-blok. Ook bij Minimaal-bracket actief. |
 | 3 | Stap 3 (webshop admin) | + DMO-blok |
-| 4 | Stap 4 (bestellinks + test) | + DMO-blok, webshop-actie wordt zichtbaar in blok |
+| 4 | Stap 4 (bestellinks + test) | + DMO-blok, webshop-actie wordt zichtbaar in blok, **+ compensation-plan-uitleg-blok (rank-ladder Builder/Bronze/Silver/Gold/Diamond)** |
 | 5 | Stap 5 (productkennis) | + DMO-blok |
 | 6 | Stap 6 (natuurlijke webshop-intro) | + DMO-blok |
 | 7 | **Vertakking: pre-post OF 21-post deel 1** | (zie sectie 6.2) |
@@ -266,7 +315,7 @@ RLS: alleen eigen rijen selecteren. Insert via SECURITY DEFINER server-functie.
 | `why` | dag 1 | dag 1 | dag 1 |
 | `dtt` | (commitment_uren) | dag 1 (uitgebreid) | dag 1 |
 | `sponsor-koppeling` | dag 1 | dag 1 | dag 1 |
-| `namenlijst-eerste-20` | dag 2 | dag 2 | n.v.t. |
+| `top-20-namenlijst` | dag 1 (5-namen-flow) | dag 2 | n.v.t. |
 | `webshop-aangemaakt` | dag 3 | dag 3 | dag 1 |
 | `kredietformulier` | dag 3 | dag 3 | dag 1 |
 | `teams-admin` | dag 3 | dag 3 | dag 1 |
@@ -384,5 +433,11 @@ Elke taak heeft eigen build-check. Smoke-test op productie aan eind.
 - **Cross-modus overlap-detectie** via `onboarding_voltooiingen`-tabel, Raoul, 16 mei
 - **Sprint's `Dag`-type hergebruiken**, `/vandaag` universele route, voorgesteld, akkoord Raoul
 - **Pro is veel lichter dan Core**, eigen webshop + klanten + duplicatie, Raoul, 16 mei
+- **Bracket-doelen zonder tijdsprognoses**: tijdsbeloften zoals "klanten in 30 dagen" / "Builder-rank in 3 maanden" weg, vervangen door werkomvang-categorieën en kwalitatieve verwachtingen, Raoul, 16 mei
+- **Top-20 namenlijst** als Core-terminologie + telefoonlijst-import + social-media-contacten ook bij Minimaal-bracket, Raoul, 16 mei
+- **Minimaal-bracket (<3u)**: producten terugverdienen (inkomsten ongeveer gelijk aan eigen bestellingen), niet "gratis producten", Raoul, 16 mei
+- **Builder-rank als kern-doel** voor 6u+ brackets, want Builder = bouwsteen voor duplicatie, Raoul, 16 mei
+- **Compensation-plan in opstart** (Eric Worre): rank-ladder Builder/Bronze/Silver/Gold/Diamond met minimum-vanaf-bedragen (€300-600 / €600+ / €900+ / €1200+) zichtbaar bij DTT-onboarding en dag 4, Raoul, 16 mei
+- **Aantallen overal vanuit minimaal**: alle DMO-richtlijnen zijn minimum-vlakken, member mag altijd meer, Raoul, 16 mei
 
 Geen open punten meer voor implementatie. Raoul: "behouden + verrijken, als de basis staat schiet ik feedback".
