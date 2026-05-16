@@ -17,6 +17,7 @@ import { PartnerCheckEmbed } from "@/components/vandaag/inline-embeds/PartnerChe
 import { NamenForm } from "@/components/vandaag/inline-embeds/NamenForm";
 import { RadarBalk } from "@/components/vandaag/RadarBalk";
 import { DTTOnboardingEmbed } from "@/components/onboarding/DTTOnboardingEmbed";
+import { PrePostKeuzeEmbed } from "@/components/onboarding/PrePostKeuzeEmbed";
 import { pakDagdeelGroetMetNaam } from "@/lib/util/dagdeel-groet";
 import type { Dag, ControllableTaak } from "@/lib/playbook/types";
 import {
@@ -682,6 +683,14 @@ function VandaagFlowInner({
             )}
             {huidigeTaak.inlineEmbed === "dtt-onboarding" && (
               <DTTOnboardingEmbed
+                alVoltooid={voltooidIds.has(huidigeTaak.id)}
+                opVoltooid={() => {
+                  vinkAf(huidigeTaak.id, true);
+                }}
+              />
+            )}
+            {huidigeTaak.inlineEmbed === "prepost-keuze" && (
+              <PrePostKeuzeEmbed
                 alVoltooid={voltooidIds.has(huidigeTaak.id)}
                 opVoltooid={() => {
                   vinkAf(huidigeTaak.id, true);
