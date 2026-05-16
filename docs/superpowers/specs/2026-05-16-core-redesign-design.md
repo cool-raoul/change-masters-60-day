@@ -138,22 +138,33 @@ Voor Core is het bereiken van **Builder-rank** de hoofd-mijlpaal die member bewu
 
 Eric Worre's regel voor nieuwe distributors: ze moeten meteen in opstart een **basic understanding** krijgen van het compensation plan, zodat ze weten wat ze moeten doen om hun doel te bereiken. Anders werken ze blind.
 
-**Rank-ladder met minimum-vanaf-bedragen per maand:**
+**Rank-ladder met exacte rank-vereisten + minimum-vanaf-bedragen per maand:**
 
-| Rank | Vanaf €/maand | Wat dit betekent |
-|---|---|---|
-| **Builder** | (eerste bouwsteen, 1500 IP op eerste 3 levels) | Je hebt het systeem in je vingers. Vanaf hier kun je iemand anders óók Builder maken. Dit is de sleutel tot duplicatie. |
-| **Bronze** | €300-600 | Eerste serieuze inkomensstroom. |
-| **Silver** | vanaf €600 | Stabiele bij-inkomensstroom. |
-| **Gold** | vanaf €900 | Een halve dag werk minder per week wordt realistisch. |
-| **Diamond** | vanaf €1200 | Naar een dag werk minder per week of meer. |
+Officiële cijfers uit [kennisbank/verdienmodel-commissieplan.md](kennisbank/verdienmodel-commissieplan.md). Drie sleutel-cijfers per rank:
+- **AV** (Activiteitsvolume) = eigen IP-bestelling per maand
+- **QGV** (Gekwalificeerd Groepsvolume) = IP totaal in eerste 3 levels (jouw + alle daaronder)
+- **QL** (Kwalificerende Benen) = members in verschillende lijnen onder jou
 
-Alle bedragen zijn **minimum-vanaf**, geen plafond. Werkelijke inkomsten hangen af van:
-- Of je alleen bouwt of met andere members die zelf weer members zoeken
-- Hoeveel eigen webshop-klanten je hebt
-- Hoe diep de duplicatie loopt onder jouw eerste-laag-members
+| Rank | AV (eigen IP) | QGV (totaal) | QL (members) | Vanaf €/maand |
+|---|---:|---:|---:|---:|
+| **Believer** | 40 | 500 | 3 | (start-rank, kleine bonus) |
+| **Builder** | 40 | 1500 | 3 | (eerste echte bouwsteen) |
+| **Bronze** | 100 | 3000 | 3 | €300-600 |
+| **Silver** | 100 | 6000 | 6 | vanaf €600 |
+| **Gold** | 150 | 9000 | 9 | vanaf €900 |
+| **Diamond** | 150 | 15000 | 12 (12 verschillende lijnen) | vanaf €1200 |
+| **1★/2★/3★ Diamond** | 150 | 15000-25000 | 12 (+Diamonds in benen) | hogere niveaus |
 
-Daarom kan iemand op Bronze-rank met diep doorlopende duplicatie soms meer verdienen dan iemand op Gold-rank zonder duplicatie. Het is geen vaste mapping, wel een richtlijn.
+Alle €-bedragen zijn **minimum-vanaf**, geen plafond. Een Diamond kan ook €4000-5000+ verdienen afhankelijk van hoe diep de duplicatie loopt. Werkelijke inkomsten hangen af van:
+
+- Of je alleen bouwt of met members die zelf weer members zoeken
+- Hoeveel eigen webshop-klanten je hebt (Shopper-bestellingen leveren extra commissie)
+- Hoe diep de duplicatie loopt onder jouw eerste-laag-members (Leadership-pool vanaf level 4)
+- Of je zelf Star-Diamond status haalt (extra Star-Leadership-pool)
+
+Daarom kan iemand op Bronze-rank met diep doorlopende duplicatie soms meer verdienen dan iemand op Gold-rank zonder duplicatie. Het is **geen vaste mapping, wel een richtlijn**.
+
+**Compressie-mechanisme** (belangrijk te begrijpen): members hoeven niet per se in je eerste level te zitten. Als een member geen bestelling plaatst, schuift de member daaronder omhoog voor de QL-telling. Dit maakt het rank-systeem flexibeler dan het lijkt.
 
 **Waar in Core leer je dit?**
 - **Dag 1 (DTT)**: nadat member zijn doel-bedrag invult ziet 'ie direct in welke rank-range dat valt. Rustige melding, geen druk.
