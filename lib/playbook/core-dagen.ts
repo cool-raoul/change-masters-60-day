@@ -93,14 +93,52 @@ export const CORE_DAGEN: Dag[] = [
       { actie: "Open de Mentor", menupad: "Menu, Mentor", route: "/coach" },
       { actie: "Naar je namenlijst", menupad: "Menu, Namenlijst", route: "/namenlijst" },
     ],
-    watJeLeert: `ELEVA Core gaat over één ding: je eigen webshop opzetten als basis voor meer tijd en vrijheid. Geen drukke sprint, wel een dagelijks ritme dat past in jouw leven. De komende 21 dagen leer je hoe je je webshop opbouwt, hoe je via sociale media en gratis weggevers klanten bereikt, en hoe je daar een echte business van maakt.
+    watJeLeert: `Welkom in ELEVA Core! 🎉 Vandaag leg je het fundament voor de komende 40 dagen opstart-fase, en het lifetime ritme dat daarna blijft draaien. Geen drukke sprint, wel een dagelijks ritme dat past in jouw leven.
 
-Vanaf vandaag stuur je elke dag minimaal 1 contact (afhankelijk van je DTT-tempo meer). Hoe sneller je eerste echte interactie komt, hoe sterker je momentum.
+WAT IS CORE PRECIES?
 
-In je DMO-blok hieronder zie je je dagelijkse aantallen op basis van je tempo-keuze. Aanpassen kan altijd via /instellingen.`,
+Core is geen cursus die je doet en daarna weglegt. Core is een dagelijks ritme van handelingen, dat na 40 dagen in je systeem zit en daarna lifetime doorrolt. De eerste 21 dagen leer je de skills, dag 22-40 verankert het ritme, en vanaf dag 41 is het permanente DMO (Daily Method of Operations).
+
+Vandaag staan er vier sleutel-stappen open, en daar onder vind je je dagelijkse DMO-stappen die elke dag terugkomen. Allemaal op basis van het tempo dat jij straks zelf kiest.
+
+DE VIER SLEUTEL-STAPPEN VAN DAG 1:
+
+1. JE WHY, je waarom. Een sterke WHY trekt je door de momenten waarop het tegenzit, en het is het haakje waarmee je in gesprek komt met anderen. Mensen haken niet aan op een product of bedrijf, wel op een persoonlijk verhaal. De ELEVA Mentor stelt vragen en helpt je 'm formuleren. Heb je 'm al gedaan tijdens Sprint of Pro? Dan slaat het systeem 'm over.
+
+2. DOEL-TIJD-TERMIJN (DTT). Drie korte vragen. Hoeveel extra inkomen per maand wil je over 12 maanden, hoeveel tijd kan je realistisch investeren, en in hoeveel maanden moet het er staan. Op basis hiervan krijg je een tempo-advies met dagelijkse aantallen. En je ziet direct welke rank in het commissieplan je nastreeft (Builder, Bronze, Silver, Gold, Diamond).
+
+3. PRE-POST OF 21-DAGEN-POST? Heb je al een eigen product-ervaring? Geen → je begint dag 7 met een pre-post (je deelt je voornemen, en je start je eigen 21-dagen ervaring). Wel → je deelt direct een 21-dagen-post (eerlijk, claim-vrij, wat je hebt gemerkt). Beide werken, het verschil zit in dag 7-11 content.
+
+4. EERSTE CONTACT VANDAAG. Eric Worre is duidelijk: hoe sneller je eerste echte interactie komt, hoe sterker je momentum. Wacht niet tot je alles 'klaar' hebt. Pak vandaag 1 warm contact, stuur een korte berichtje dat je gestart bent. Niet pitchen, gewoon delen. Eén bericht is genoeg.
+
+EERLIJK OVER TEMPO (de DTT-keuze):
+
+Met minder dan 3 uur per week kun je je producten terugverdienen, je inkomsten zullen ongeveer gelijk zijn aan wat je zelf bestelt. Een netwerk opbouwen is in dat tempo niet realistisch. Vanaf 3 tot 6 uur (Rustig) bouw je rustig klanten op. Vanaf 6 uur per week (Gestaag) wordt Builder-rank een werkbaar doel. Vanaf 10 uur (Serieus) ga je voor Builder + eerste duplicatie. Vanaf 16 uur (Doorpakken) ga je voor meerdere Builders.
+
+Het tempo is geen contract. Je kunt 'm op /instellingen altijd aanpassen. Iemand begint vaak met 3 uur, merkt resultaat, schroeft op naar 6 of 10. Dat is de natuurlijke groei.
+
+JIJ LAAT ZIEN, ZIJ BESLISSEN:
+
+Jouw taak in Core is niet om mensen te overtuigen of binnen te praten. Jouw taak is om te delen wat je doet, jouw producten te laten zien, en mensen zelf te laten beslissen. Daardoor voelt niemand zich gemanipuleerd, jij voelt je geen verkoper, en de mensen die wel kiezen doen dat omdat het echt bij ze past.
+
+JE SPONSOR IS JE RUGDEKKING:
+
+Een sponsor is geen baas. Het is iemand die meekijkt, je vragen beantwoordt, en je springt bij waar nodig. Eén berichtje vandaag (ik ben gestart) opent de relatie. Vanaf dat moment kijkt 'ie in ELEVA mee en weet ie wanneer 't goed gaat of vastzit.
+
+WAT ER MORGEN GEBEURT (DAG 2):
+
+Je bouwt je 'Top-20 namenlijst' op (de 20 mensen die spontaan in je hoofd opkomen), importeert je telefoonboek voor breedte, en voegt 3 social-contacten toe. Plus een korte kennismakings-call met je sponsor. Geen verkoop-werk nog, wel je netwerk in beeld.
+
+VEELGEMAAKTE FOUTEN OP DAG 1:
+
+✗ DTT skippen omdat 'je nog niet zeker weet wat je doel is'. Je kunt 'm later altijd aanpassen, vandaag heb je een richtlijn nodig.
+✗ Pre-post vs 21-post-keuze uitstellen tot dag 7. Vandaag invullen scheelt jou en het systeem werk.
+✗ De eerste contact-stap overslaan omdat je 'eerst alles wil leren'. Eric Worre's principe: leren-door-doen werkt 4x sneller dan leren-zonder-doen.
+
+Overweldigd voelen op dag 1 is normaal. Je leert iets nieuws, je stapt uit comfort. Eerst onhandig, dan vaardig. Sponsor staat naast je, ELEVA Mentor ook. Niet alleen.`,
     waaromWerktDit: {
       tekst:
-        "Mensen die op dag 1 al een eerste contact maken, halen vier keer zo vaak hun eerste klant binnen 30 dagen dan mensen die eerst alles 'klaar maken' voordat ze in actie komen.",
+        "Mensen die op dag 1 al een eerste contact maken EN hun DTT hebben ingevuld, halen vier keer zo vaak hun eerste klant in de eerste maand dan mensen die eerst alles voorbereiden voordat ze in actie komen.",
     },
   },
   {

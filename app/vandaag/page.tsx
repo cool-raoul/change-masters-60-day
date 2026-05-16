@@ -26,6 +26,7 @@ import { detecteerEnVierEerstePartner } from "@/lib/team/mijlpaal-detector";
 import { pakTopRadar, type ProspectInput } from "@/lib/radar/volgende-beste-actie";
 import { haalRadarAfvinkSets } from "@/lib/radar/carry-over";
 import { bracketVoorDTT, type DTTInput } from "@/lib/dtt/advies";
+import { genereerDMOStappen } from "@/lib/dtt/dmo-stappen";
 import { haalAlleVoltooiingenVoorUser, type Modus } from "@/lib/onboarding/voltooiingen";
 import type { CommitmentUren } from "@/lib/dagdoelen";
 import { VandaagFlow } from "./vandaag-flow";
@@ -242,6 +243,30 @@ export default async function VandaagPagina({
       dagData = genereerLifetimeDag(dag);
     }
     if (!dagData) redirect("/dashboard");
+
+    // Voeg DMO-stappen toe als afvinkbare taken TUSSEN skill-stappen en
+    // afsluit-stappen (sponsor-checkin/momentum-radar/partner-check).
+    // Zo zijn DMO-acties echte stappen met actie-routes, niet alleen
+    // info in een uitklap-zone.
+    const dmoTaken = genereerDMOStappen(dag, coreBracket, {
+      bestellinksGekoppeld: dag >= 4,
+      eersteKlantenStapVoorbij: dag >= 12,
+    });
+    const afsluitPrefixen = [
+      `core-dag${dag}-sponsor-checkin`,
+      `core-dag${dag}-momentum-radar`,
+      `core-dag${dag}-partner-check`,
+    ];
+    const skillStappen = dagData.vandaagDoen.filter(
+      (t) => !afsluitPrefixen.includes(t.id),
+    );
+    const afsluitTaken = dagData.vandaagDoen.filter((t) =>
+      afsluitPrefixen.includes(t.id),
+    );
+    dagData = {
+      ...dagData,
+      vandaagDoen: [...skillStappen, ...dmoTaken, ...afsluitTaken],
+    };
   } else if (dag >= 22) {
     // Sprint dag 22-60: weekritme-modus.
     dagData = genereerWeekritmeDag(dag, commitmentUren);
