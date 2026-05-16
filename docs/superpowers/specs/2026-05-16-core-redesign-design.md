@@ -227,17 +227,24 @@ Vanaf dag 7 (= de eerste post staat live) wordt het 3e DMO-onderdeel **reactief 
 
 ## 7. DMO-blok per dag
 
-Elke dag krijgt onder de leer-stap een DMO-blok met 7 onderdelen, allemaal aantal-flexibel op basis van DTT-bracket. Member ziet ze als een vaste lijst onder de skill-les, niet als aparte stappen-volgorde.
+Elke dag krijgt onder de leer-stappen een DMO-blok met 6 onderdelen, allemaal aantal-flexibel op basis van DTT-bracket. Member ziet ze als een vaste uitklap-zone (niet-afvinkbaar), niet als aparte stappen-volgorde. Het blok dient als reminder van het dagelijkse ritme.
 
 | # | Onderdeel | Wat | Activeert |
 |---|---|---|---|
 | 1 | 🛒 **Webshop-actie** | Deelbaar winkelmandje sturen, freebie-link delen, productadvies-test versturen | Dag 4+ (na bestellinks) |
 | 2 | 💬 **Actief contact** | Bericht aan warme markt of lauwe markt (opener) | Dag 1+ (Eric Worre first-win) |
-| 3 | 💎 **Reactief social-contact** | Reageer op likes/comments → DM-gesprek → info delen | Dag 7+ (na eerste post) |
+| 3 | 💎 **Reactief social-contact** | Reageer op likes/comments, voer DM-gesprek, deel info | Dag 7+ (na eerste post) |
 | 4 | 🔄 **Follow-up** | Bestaande prospect/klant volgen | Dag 12+ (na eerste klanten-stap) |
 | 5 | 📱 **Social-post** | Lifestyle / waarde / testimonial-post | Dag 7+ |
 | 6 | 🎯 **Pijplijn-update** | Spraak-functie: "gesprek gestart met X", "X heeft besteld" | Dag 1+ |
-| 7 | 🤝 **Sponsor-checkin** | Kort berichtje einde dag | Dag 1+ |
+
+**Plus drie vaste afsluit-stappen aan einde van elke Core-dag** (zoals in Sprint, NIET in DMO-blok om dubbeling te voorkomen):
+
+- 💬 **Sponsor-checkin** (`inlineEmbed: "sponsor-melding"`): 30 sec berichtje
+- 🎯 **Momentum-acties** (`inlineEmbed: "momentum-radar"`): end-of-day-check
+- 🤝 **Partner-check** (`inlineEmbed: "partner-check"`): voor wie team heeft
+
+Deze drie stappen zijn afvinkbaar (zoals in Sprint), staan altijd onderaan, en verbergen zich automatisch als 't niet relevant is (partner-check zonder team blijft onzichtbaar).
 
 ### 7.1 Aantal-richtlijnen per onderdeel × bracket
 
