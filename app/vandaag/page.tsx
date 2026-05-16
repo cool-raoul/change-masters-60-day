@@ -17,9 +17,16 @@ import {
 import { berekenHuidigeDag } from "@/lib/playbook/bereken-dag";
 import { pasTempoToeOpDag } from "@/lib/playbook/tempo-aware";
 import { genereerWeekritmeDag } from "@/lib/playbook/weekritme";
+import {
+  CORE_DAGEN,
+  genereerVerankeringsDag,
+  genereerLifetimeDag,
+} from "@/lib/playbook/core-dagen";
 import { detecteerEnVierEerstePartner } from "@/lib/team/mijlpaal-detector";
 import { pakTopRadar, type ProspectInput } from "@/lib/radar/volgende-beste-actie";
 import { haalRadarAfvinkSets } from "@/lib/radar/carry-over";
+import { bracketVoorDTT, type DTTInput } from "@/lib/dtt/advies";
+import { haalAlleVoltooiingenVoorUser, type Modus } from "@/lib/onboarding/voltooiingen";
 import type { CommitmentUren } from "@/lib/dagdoelen";
 import { VandaagFlow } from "./vandaag-flow";
 
@@ -55,7 +62,7 @@ export default async function VandaagPagina({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("run_startdatum, full_name, role, is_tester")
+    .select("run_startdatum, full_name, role, is_tester, modus, core_dtt, core_eigen_resultaat")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -199,23 +206,50 @@ export default async function VandaagPagina({
   const commitmentUren: CommitmentUren | null =
     ruwUren === 2 || ruwUren === 4 || ruwUren === 6 ? ruwUren : null;
 
+  // Modus-detectie voor universele /vandaag-route.
+  // sprint = standaard (zoals voorheen).
+  // core   = laad Core-content uit lib/playbook/core-dagen.ts.
+  // pro    = nog niet gemigreerd, valt terug op sprint-content.
+  const modus: Modus = (((profile as any)?.modus as string | null) === "core"
+    ? "core"
+    : ((profile as any)?.modus as string | null) === "pro"
+      ? "pro"
+      : "sprint");
+
+  const coreDtt: DTTInput | null = (profile as any)?.core_dtt ?? null;
+  const coreBracket = bracketVoorDTT(coreDtt);
+  const crossModusVoltooiingenMap = await haalAlleVoltooiingenVoorUser(
+    supabase,
+    user.id,
+  );
+  // Voor server-naar-client serialisatie omzetten naar plain object.
+  const crossModusVoltooiingen: Record<
+    string,
+    { voltooid: boolean; modus: Modus | null; datum: string | null }
+  > = {};
+  crossModusVoltooiingenMap.forEach((v, k) => {
+    crossModusVoltooiingen[k] = v;
+  });
+
   let dagData;
-  if (dag >= 22) {
-    // Dag 22-60: weekritme-modus. Synthetische dag op basis van de
-    // RUN-weekdag (= (dag - 1) % 7), niet de kalender-weekdag. Zo blijft
-    // het ritme synchroon met de start-datum van de member: weekstart-dag
-    // (dag 22, 29, 36...), audio-dag, content-dag, plannings-dag,
-    // follow-up-dag, reflectie-dag, week-review-dag. Roterende F-stap,
-    // zelfde ABCDE-basis.
+  if (modus === "core") {
+    // Core: 21 skill-dagen + 19 verankering + lifetime daarna.
+    if (dag <= 21) {
+      dagData = CORE_DAGEN.find((d) => d.nummer === dag) ?? null;
+    } else if (dag <= 40) {
+      dagData = genereerVerankeringsDag(dag);
+    } else {
+      dagData = genereerLifetimeDag(dag);
+    }
+    if (!dagData) redirect("/dashboard");
+  } else if (dag >= 22) {
+    // Sprint dag 22-60: weekritme-modus.
     dagData = genereerWeekritmeDag(dag, commitmentUren);
     if (!dagData) redirect("/dashboard");
   } else {
-    // Dag 1-21: statische basis uit DAGEN[], plus tempo-aware
-    // vervanging waar van toepassing.
+    // Sprint dag 1-21: statische basis uit DAGEN[].
     dagData = DAGEN.find((d) => d.nummer === dag);
     if (!dagData) redirect("/dashboard");
-    // Doen we VOOR de override-passes zodat founder-CMS-edits nog
-    // steeds bovenop tempo-varianten kunnen worden gelegd.
     dagData = pasTempoToeOpDag(dagData, commitmentUren);
   }
 
@@ -296,6 +330,9 @@ export default async function VandaagPagina({
       commitmentUren={commitmentUren}
       radarItems={radarItems}
       radarInitieelAfgevinkt={Array.from(afvinkSets.vandaagAfgevinkt)}
+      modus={modus}
+      coreBracket={coreBracket}
+      crossModusVoltooiingen={crossModusVoltooiingen}
     />
   );
 }

@@ -18,6 +18,7 @@ import { NamenForm } from "@/components/vandaag/inline-embeds/NamenForm";
 import { RadarBalk } from "@/components/vandaag/RadarBalk";
 import { DTTOnboardingEmbed } from "@/components/onboarding/DTTOnboardingEmbed";
 import { PrePostKeuzeEmbed } from "@/components/onboarding/PrePostKeuzeEmbed";
+import { DMOBlok } from "@/components/vandaag/DMOBlok";
 import { pakDagdeelGroetMetNaam } from "@/lib/util/dagdeel-groet";
 import type { Dag, ControllableTaak } from "@/lib/playbook/types";
 import {
@@ -82,6 +83,19 @@ type Props = {
   radarItems?: import("@/lib/radar/volgende-beste-actie").RadarItem[];
   /** Set met prospect-IDs die vandaag al zijn afgevinkt. */
   radarInitieelAfgevinkt?: string[];
+  /** Modus van de huidige user: sprint/core/pro. */
+  modus?: "sprint" | "core" | "pro";
+  /** Core-DTT-bracket op basis van uren/week. */
+  coreBracket?: import("@/lib/dtt/brackets").Bracket;
+  /** Cross-modus voltooiingen voor skip-kaart-rendering. */
+  crossModusVoltooiingen?: Record<
+    string,
+    {
+      voltooid: boolean;
+      modus: "sprint" | "core" | "pro" | null;
+      datum: string | null;
+    }
+  >;
 };
 
 const DAG_GROETEN: Record<number, string> = {
@@ -118,6 +132,8 @@ function VandaagFlowInner({
   commitmentUren = null,
   radarItems = [],
   radarInitieelAfgevinkt = [],
+  modus = "sprint",
+  coreBracket = "rustig",
 }: Props) {
   const { editModusAan } = useEditModus();
   const router = useRouter();
@@ -327,6 +343,17 @@ function VandaagFlowInner({
             <TesterToolbar huidigeDag={dag.nummer} urlModus="queryparam" />
             <EditModeToggle isFounder={isFounder} />
           </div>
+        )}
+
+        {/* Core DMO-blok: uitklap-zone met 6 dagelijkse-ritme-onderdelen.
+            Alleen voor Core-modus. Verbergt zich automatisch bij Sprint/Pro. */}
+        {modus === "core" && (
+          <DMOBlok
+            bracket={coreBracket}
+            dagNummer={dag.nummer}
+            bestellinksGekoppeld={dag.nummer >= 4}
+            eersteKlantenStapVoorbij={dag.nummer >= 12}
+          />
         )}
 
         {/* INTRO-stap */}
