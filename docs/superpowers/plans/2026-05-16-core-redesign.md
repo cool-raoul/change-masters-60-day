@@ -117,7 +117,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 
 ---
 
-## Task 2: Helpers — DTT-brackets, advies, voltooiingen
+## Task 2: Helpers, DTT-brackets, advies, voltooiingen
 
 **Files:**
 - Create: `lib/dtt/brackets.ts`
