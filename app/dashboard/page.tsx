@@ -52,7 +52,7 @@ export default async function DashboardPagina({
     .maybeSingle();
   if (!modusError) {
     const modus = (modusProfiel as { modus?: string | null } | null)?.modus;
-    if (modus === "core") redirect("/welkom-core");
+    if (modus === "core") redirect("/vandaag");
     if (modus === "pro") redirect("/welkom-pro");
     if (modus === null || modus === undefined) {
       // null/onbekend = nog geen keuze gemaakt, naar keuzepagina
