@@ -81,7 +81,9 @@ export type ControllableTaak = {
     | "namen-form"
     | "funnel-analyse"
     | "partner-check"
-    | "momentum-radar";
+    | "momentum-radar"
+    | "dtt-onboarding"
+    | "prepost-keuze";
   /**
    * Optioneel doelaantal voor `namen-form`-embed. De form telt actief
    * mee hoeveel namen de member heeft ingevuld, en bevestigt zodra het
