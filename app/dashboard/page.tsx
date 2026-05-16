@@ -52,7 +52,11 @@ export default async function DashboardPagina({
     .maybeSingle();
   if (!modusError) {
     const modus = (modusProfiel as { modus?: string | null } | null)?.modus;
-    if (modus === "core") redirect("/vandaag");
+    // Per 2026-05-16: core-members hebben /vandaag als hoofd-route,
+    // maar dashboard moet bereikbaar blijven (anders loop met de
+    // 'terug naar dashboard'-knop in /vandaag). Dashboard is nog
+    // Sprint-geënt, dus voor core kan het rommelig voelen. Later
+    // wordt dashboard modus-aware. Voor nu: geen redirect.
     if (modus === "pro") redirect("/welkom-pro");
     if (modus === null || modus === undefined) {
       // null/onbekend = nog geen keuze gemaakt, naar keuzepagina
