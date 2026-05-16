@@ -16,6 +16,7 @@ import { MentorFunnelAnalyseKnop } from "@/components/vandaag/inline-embeds/Ment
 import { PartnerCheckEmbed } from "@/components/vandaag/inline-embeds/PartnerCheckEmbed";
 import { NamenForm } from "@/components/vandaag/inline-embeds/NamenForm";
 import { RadarBalk } from "@/components/vandaag/RadarBalk";
+import { DTTOnboardingEmbed } from "@/components/onboarding/DTTOnboardingEmbed";
 import { pakDagdeelGroetMetNaam } from "@/lib/util/dagdeel-groet";
 import type { Dag, ControllableTaak } from "@/lib/playbook/types";
 import {
@@ -677,6 +678,14 @@ function VandaagFlowInner({
                 items={radarItems}
                 initieelAfgevinkt={radarInitieelAfgevinkt}
                 huidigeDag={dag.nummer}
+              />
+            )}
+            {huidigeTaak.inlineEmbed === "dtt-onboarding" && (
+              <DTTOnboardingEmbed
+                alVoltooid={voltooidIds.has(huidigeTaak.id)}
+                opVoltooid={() => {
+                  vinkAf(huidigeTaak.id, true);
+                }}
               />
             )}
             {huidigeTaak.inlineEmbed === "namen-form" && (
