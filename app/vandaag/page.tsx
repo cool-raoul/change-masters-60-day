@@ -30,6 +30,9 @@ import { genereerDMOStappen } from "@/lib/dtt/dmo-stappen";
 import { haalAlleVoltooiingenVoorUser, type Modus } from "@/lib/onboarding/voltooiingen";
 import type { CommitmentUren } from "@/lib/dagdoelen";
 import { VandaagFlow } from "./vandaag-flow";
+import { ADMIN_ITEMS } from "@/lib/setup/admin-items";
+import { SetupPopup } from "@/components/setup/SetupPopup";
+import { haalTekstOverrides } from "@/lib/cms/tekst-overrides";
 
 // ============================================================
 // /vandaag, guided full-screen flow voor de huidige playbook-dag.
@@ -352,22 +355,41 @@ export default async function VandaagPagina({
 
   // (isFounder is hierboven al gezet voor de dag-berekening)
 
+  // Admin-rail status berekenen voor SetupPopup. Aantal items waarvan
+  // de slug nog NIET in onboarding_voltooiingen staat.
+  const adminOpen = ADMIN_ITEMS.filter(
+    (it) => !crossModusVoltooiingenMap.get(it.slug)?.voltooid,
+  ).length;
+  const setupPopupOverrides = await haalTekstOverrides(
+    supabase,
+    "setup-popup",
+  );
+
   return (
-    <VandaagFlow
-      dag={dagData}
-      voltooidIds={voltooidIds}
-      initialZinnen={initialZinnen}
-      voornaam={voornaam}
-      isFounder={isFounder}
-      uiOverrides={uiOverrides}
-      groetOverrides={groetOverrides}
-      paginaBlokken={paginaBlokken}
-      commitmentUren={commitmentUren}
-      radarItems={radarItems}
-      radarInitieelAfgevinkt={Array.from(afvinkSets.vandaagAfgevinkt)}
-      modus={modus}
-      coreBracket={coreBracket}
-      crossModusVoltooiingen={crossModusVoltooiingen}
-    />
+    <>
+      {adminOpen > 0 && (
+        <SetupPopup
+          aantalOpen={adminOpen}
+          isFounder={isFounder}
+          overrides={setupPopupOverrides}
+        />
+      )}
+      <VandaagFlow
+        dag={dagData}
+        voltooidIds={voltooidIds}
+        initialZinnen={initialZinnen}
+        voornaam={voornaam}
+        isFounder={isFounder}
+        uiOverrides={uiOverrides}
+        groetOverrides={groetOverrides}
+        paginaBlokken={paginaBlokken}
+        commitmentUren={commitmentUren}
+        radarItems={radarItems}
+        radarInitieelAfgevinkt={Array.from(afvinkSets.vandaagAfgevinkt)}
+        modus={modus}
+        coreBracket={coreBracket}
+        crossModusVoltooiingen={crossModusVoltooiingen}
+      />
+    </>
   );
 }
