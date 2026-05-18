@@ -20,22 +20,11 @@ export const DAGEN: Dag[] = [
     fase: 1,
     vandaagDoen: [
       {
-        // Bewuste keuze: eerst de spontane 5-namen-handeling. Reden
-        // (afspraak Raoul, 2026-05-13): mensen moeten eerst comfortabel
-        // worden met het bewuste denken over wie ze willen aanspreken
-        // ('wie zou ik dit gunnen?'). Daarna pas de massa-import van
-        // hun telefoon. Andersom voelt te overweldigend.
-        id: "dag1-5-namen",
-        label: "✍️ Schrijf 5 namen op die spontaan in je hoofd opkomen",
-        uitleg:
-          "Stel jezelf de vraag: 'Wie komt er nu spontaan in mijn hoofd op als ik denk aan mensen die ik dit zou gunnen?' De eerste 5 namen die opkomen, schrijf je hieronder op. Niet filteren, niet bedenken 'die past niet'. Iedereen mag erop, zij beslissen zelf.\n\nDit zijn jouw eerste warm-warme contacten, een bewust gekozen lijst. Zo word je vertrouwd met het denken in jouw netwerk voordat je in de volgende stap je hele telefoonboek importeert. Morgen (dag 2) bouw je dit uit naar 20.",
-        verplicht: true,
-        inlineEmbed: "namen-form",
-        inlineEmbedDoel: 5,
-      },
-      {
-        // Nu de massa-import, NA de bewuste 5 namen. Zo voelt het minder
-        // overweldigend, je hebt al 'gevoel' voor je eigen netwerk.
+        // Per 2026-05-18: 'dag1-5-namen' is verhuisd naar pre-day-1 stap 3
+        // (zelfde voor Sprint en Core). De handmatige 5 spontane namen
+        // worden nu vóór dag 1 ingevuld. De telefoonboek-import blijft
+        // op dag 1 (eerste echte taak) maar wordt overgeslagen voor wie
+        // 'm al via Core had ingevuld.
         id: "dag1-vcard",
         label: "📲 Importeer je telefooncontacten in één klik",
         uitleg:
@@ -86,40 +75,33 @@ export const DAGEN: Dag[] = [
         route: "/mijn-why",
       },
     ],
-    watJeLeert: `Te gek dat je hier bent! 🎉 Je onboarding zit erop, je WHY staat, je weet hoe de run werkt en je hebt je uitnodigingsscript in handen. Mooi werk. Vandaag leggen we het fundament: je eerste namen op je lijst. Geen drukke dag, een rustige fundamentdag.
+    watJeLeert: `Te gek dat je hier bent! 🎉 Je fundament staat. Je WHY, je eerste 5 namen, je tempo, ze zijn al binnen. Vandaag pakken we de telefoonboek-import erbij en stuur je je sponsor een berichtje. Rustige dag, geen drukke dag.
 
-JE NAMENLIJST, JE NETWERK-OVERZICHT:
-Twee manieren naast elkaar vandaag. Eerst je telefooncontacten importeren, dat is één klik en direct 100 tot 500 namen in je overzicht. Daarnaast typ je handmatig minimaal 5 namen die je SPONTAAN in je hoofd had toen je nadacht: 'wie zou ik dit gunnen?'. Die 5 zijn bewust gekozen, de telefoon-import is breed. Beide horen bij dit fundament. Dit is geen verkooplijst, dit is je netwerk in beeld. Een rustig vertrekpunt.
+JE NAMENLIJST GROEIT VANDAAG
 
-EERLIJK OVER VOLUME, dit is een aantallen-verhaal:
-Met 20 namen ga je het niet redden. Niet omdat je faalt, maar omdat een gemiddelde prospect 4 tot 6 contactmomenten nodig heeft voor een echte beslissing. Met te weinig namen draai je vast. Daarom voegen we elke dag namen toe, uit je hoofd, uit je telefoon, uit socials.
+Eén klik op de telefoonboek-import en je hele lijst is in beeld. Geen verkooplijst, geen belkost-lijst, gewoon je netwerk in overzicht. Mensen die in jouw wereld bestaan: familie, oude collega's, sportmaatjes, buren. Filteren komt later, en doe je nooit voor iemand anders.
 
-CATEGORIEËN OM TE OVERWEGEN VOOR JE LIJST:
-• Familie + partners van familie
-• Beste vrienden + hun partners
-• Oude vrienden (school, studie, vorige stad)
-• Huidige collega's
-• Vorige collega's
-• Sport, hobby, club
-• Ouders bij school of voetbal
-• Buurt
-• Ondernemers in je netwerk
-• Mensen die je via socials volgt
-• Vroegere klanten of opdrachtgevers
-Niemand filteren. Alles op de lijst.
+EERLIJK OVER VOLUME
 
-JIJ LAAT ZIEN, ZIJ BESLISSEN, de grootste mental shift:
-Jouw taak is NIÉT overtuigen, NIÉT mensen "binnenpraten", NIÉT iemand laten kiezen voor wat jij wilt. Jouw taak = laten ZIEN wat het is. Zij beslissen wat ze ermee doen. Dat maakt je werk lichter dan veel mensen denken, en respectvoller. Niemand voelt zich gemanipuleerd, jij voelt je geen verkoper, en de mensen die wel kiezen doen dat omdat het écht bij ze past.
+Met 20 namen ga je het niet redden. Niet omdat je faalt, maar omdat een gemiddelde prospect 4 tot 6 contactmomenten nodig heeft voor een echte beslissing. Met te weinig namen draai je vast. Daarom voegen we elke dag namen toe.
 
-Waarom je sponsor inlichten belangrijk is:
-Je sponsor is geen baas, die is je rugdekking. Een kort "ik ben gestart"-berichtje is genoeg. Vanaf nu kijkt 'ie in ELEVA mee, ziet je voortgang, en springt bij waar nodig. Eén berichtje vandaag betekent vele momenten van steun in de komende weken.
+JE SPONSOR INLICHTEN
 
-VEELGEMAAKTE FOUTEN OP DAG 1:
-✗ Namenlijst meteen filteren ("die zou nooit..."), NIVEA komt morgen, voor nu alles erop.
-✗ Direct mensen DM-en omdat je "wilt scoren", vandaag is fundament, niet acquisitie.
-✗ Sponsor niet inlichten, je rugdekking begint nu.
+Een sponsor is geen baas, het is je rugdekking. Eén kort "ik ben gestart"-berichtje is genoeg. Vanaf nu kijkt 'ie in ELEVA mee en ziet wat er gebeurt. Vele momenten van steun in de komende weken, vanuit één bericht.
 
-Overweldigd voelen is normaal. Je leert iets nieuws, je stapt uit comfort. Eerst onhandig, dan vaardig. Sponsor staat naast je, ELEVA Mentor ook. Niet alleen.`,
+JIJ LAAT ZIEN, ZIJ BESLISSEN
+
+Jouw taak is niet overtuigen, niet binnenpraten, niet iemand laten kiezen voor wat jij wilt. Jouw taak is laten zien wat het is. Zij beslissen wat ze ermee doen. Dat maakt je werk lichter en respectvoller.
+
+VEELGEMAAKTE FOUTEN OP DAG 1
+
+✗ Direct mensen DM-en omdat je 'wilt scoren'. Vandaag is fundament, niet acquisitie.
+✗ Sponsor niet inlichten. Je rugdekking begint nu.
+✗ Te lang piekeren over wie je 'eerst' moet aanspreken. Morgen breiden we je lijst uit.
+
+Overweldigd voelen is normaal. Je leert iets nieuws, je stapt uit comfort. Eerst onhandig, dan vaardig. Niet alleen.
+
+Bouwen mag leuk zijn 💟`,
     waaromWerktDit: {
       tekst:
         "De mensen die op dag 47 nog doorgaan, zijn vaak dezelfden die in week 1 hun netwerk-overzicht rustig hebben gevuld. Zonder mensen op je lijst geen werk, zonder fundament geen gebouw.",
@@ -167,22 +149,11 @@ Overweldigd voelen is normaal. Je leert iets nieuws, je stapt uit comfort. Eerst
           "Een 3-weg-gesprek is een gesprekje met drie mensen: jij, je prospect, en je sponsor (of een ervaren teamlid). Het werkt om drie redenen tegelijk:\n\n• SPONSOR brengt autoriteit (heeft track-record, ervaring, weet de antwoorden op vragen die jij nog niet hebt).\n• JIJ brengt vertrouwen (de prospect kent jou, niet de sponsor).\n• PROSPECT ziet twee mensen die al samenwerken, dat geeft sociaal bewijs: 'blijkbaar werkt dit echt'.\n\nGeen van de drie kan dit alléén. Het is de combinatie. Vandaar 3-weg.\n\nVoorbeeld waarop het werkt: warme prospect heeft een vraag waar jij geen antwoord op hebt. Niet zelf gokken, je opent een groepje met sponsor erbij, sponsor pakt het op. Jij leert mee, prospect krijgt een goed antwoord, vertrouwen blijft.\n\nJe hoeft 'm vandaag nog niet te starten, alleen even snappen dát het bestaat en wanneer 'ie nuttig is. Op dag 4 ga je 'm voor het eerst toepassen.",
         verplicht: true,
       },
-      {
-        id: "dag2-webshop",
-        label: "🛒 Lifeplus webshop aanmaken",
-        uitleg:
-          "Eenmalige opzet, bekijk de korte film (te vinden in deze taak) en je shop staat. Dit moet eerst gebeuren voordat je je kredietformulier kunt invullen.",
-        verplicht: true,
-        filmSlug: "onboarding-stap-6-webshop",
-      },
-      {
-        id: "dag2-krediet",
-        label: "✅ Kredietformulier invullen (verplicht voor uitbetaling)",
-        uitleg:
-          "Korte stap van ~5 minuten, NA het aanmaken van je webshop. Zonder dit formulier kan je eerste maand-uitbetaling niet verwerkt worden, doe het direct.",
-        verplicht: true,
-        filmSlug: "onboarding-stap-8-kredietformulier",
-      },
+      // Per 2026-05-18: 'dag2-webshop' en 'dag2-krediet' zijn verhuisd
+      // naar de admin-rail op /setup, samen met teams-admin, bestellinks
+      // en productadvies-test. Zo blijven de dag-taken puur over inhoud
+      // en groei van het netwerk, en zit alle eenmalige admin gebundeld
+      // op één plek met pop-up-herinnering.
       {
         id: 'dag2-momentum-radar',
         label: '🎯 Open momentum-acties van vandaag',
