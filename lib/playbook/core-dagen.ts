@@ -50,24 +50,27 @@ function afsluitStappen(dagNummer: number): ControllableTaak[] {
 export const CORE_DAGEN: Dag[] = [
   {
     nummer: 1,
-    titel: "🚀 24u-fundament: WHY, DTT, eerste contact",
+    titel: "🚀 Eerste dag: netwerk + sponsor + eerste warm contact",
     fase: 1,
     vandaagDoen: [
+      // Per 2026-05-18: core-dag1-why en core-dag1-dtt zijn verhuisd naar
+      // pre-day-1 stap 2 en stap 4. Dag 1 wordt een inhoud-dag.
       {
-        id: "core-dag1-why",
-        label: "Maak je WHY (overgeslagen als al gedaan in Sprint/Pro)",
-        verplicht: true,
-        actieRoute: "/mijn-why",
+        id: "core-dag1-vcard-import",
+        label: "📲 Importeer je telefooncontacten",
+        verplicht: false,
+        vereistMobiel: true,
+        inlineEmbed: "vcard-upload",
         uitleg:
-          "De ELEVA Mentor stelt vragen en helpt je formuleren waarom jij hieraan begint. Sterke WHY = brandstof voor de mindere dagen.",
+          "Eén klik en je hele lijst is in beeld. Net als bij Sprint: dit is je netwerk-overzicht, geen verkooplijst.",
       },
       {
-        id: "core-dag1-dtt",
-        label: "Vul je Doel-Tijd-Termijn in",
+        id: "core-dag1-sponsor-bericht",
+        label: "💬 Stuur je sponsor een bericht: 'Ik ben gestart'",
         verplicht: true,
-        inlineEmbed: "dtt-onboarding",
+        inlineEmbed: "sponsor-melding",
         uitleg:
-          "Drie vragen: hoeveel inkomen per maand wil je, hoeveel tijd per week kan je investeren, in hoeveel maanden moet het er staan? Op basis hiervan krijg je advies over dagelijkse aantallen.",
+          "Geen lang verhaal, gewoon laten weten dat je vertrokken bent. Vanaf nu kijkt je sponsor in ELEVA mee.",
       },
       {
         id: "core-dag1-prepost",
@@ -87,7 +90,7 @@ export const CORE_DAGEN: Dag[] = [
       },
       ...afsluitStappen(1),
     ],
-    faseDoel: "Fundament gelegd: WHY, DTT, sponsor-verbinding en eerste echte contact.",
+    faseDoel: "Netwerk in beeld, sponsor-verbinding gelegd, en eerste echte contact gemaakt.",
     waarInEleva: [
       { actie: "Maak je WHY", menupad: "Menu, Mijn WHY", route: "/mijn-why" },
       { actie: "Open de Mentor", menupad: "Menu, Mentor", route: "/coach" },
@@ -95,48 +98,34 @@ export const CORE_DAGEN: Dag[] = [
     ],
     watJeLeert: `Welkom bij Core 💟 Wat bijzonder dat je hier bent.
 
-Je hebt iets bewust gekozen, en die keuze betaalt zichzelf de komende dagen terug. Geen sprint, geen rush. Dit is jouw weg, in jouw tempo. Vandaag leg je het fundament.
+Je fundament staat. Je WHY, je eerste 5 namen, je Doel-Tijd-Termijn, ze zijn al binnen. Vandaag is je dag van koppelen: je netwerk in beeld, je sponsor in de loop, en je eerste keuze voor hoe je dag 7 ingaat.
 
-JE EERSTE DAG, HEEL RUSTIG
+VANDAAG, EEN RUSTIG MAAR DUIDELIJK BEGIN
 
-Vandaag staan er vier sleutel-momenten open. Geen lange dag, geen drukke dag. Wel een dag waarin je 'm écht zet. Hieronder zie je wat we vandaag samen vorm geven, en daarna volgt elke dag een nieuw stukje van het puzzelstuk.
+Vier momenten staan open. Geen lange dag, wel een dag waarin je 'm écht zet.
 
-**Je WHY**, je waarom. De reden waarom je begint is je brandstof op de momenten waarop het tegenzit. Voor de een is dat vrijheid en ademruimte, voor de ander is het mensen helpen die op zoek zijn naar meer energie, en sommigen voelen gewoon: er zit meer in mij. Wat jouw ingang ook is, je WHY houdt je in koers, en het is je haakje in gesprekken met anderen. Mensen haken niet aan op een product of bedrijf, wel op een persoonlijk verhaal. De ELEVA Mentor stelt vragen en helpt 'm formuleren, of je 'm nu helder voor ogen hebt of nog tastend.
+**Je telefoonboek importeren.** Eén klik en je hele lijst is in beeld. Geen verkooplijst, geen belkost-lijst. Gewoon je netwerk in overzicht, zodat je weet wie er om je heen staat. Familie, oude collega's, sportmaatjes, buren. Filteren komt later, en doe je nooit voor iemand anders.
 
-**Je Doel-Tijd-Termijn**, drie korte vragen. Hoeveel inkomen wil je over een jaar? Hoeveel tijd kan je realistisch investeren? In hoeveel maanden moet het er staan om de moeite waard te zijn? Op basis hiervan krijg je je dagelijkse aantallen op maat. Geen vast schema, wel een richtlijn die past bij jouw leven. En je ziet direct welke rank in het commissieplan je nastreeft, van Builder tot Diamond.
+**Je sponsor inlichten.** Eén kort berichtje, "ik ben gestart". Geen lang verhaal nodig. Vanaf dat moment kijkt 'ie in ELEVA mee en weet 'ie wanneer het loopt of wanneer er even iets is.
 
-**Een persoonlijk verhaal of een gemerkt verschil**, vandaag kies je hoe je begint. Heb je al een product van Lifeplus geprobeerd en iets gemerkt? Top, dan deel je dat eerlijk en raakt het mensen. Heb je nog geen ervaring? Ook prima, dan deel je je voornemen en bouw je je eigen 21-dagen-ervaring de komende weken op. Beide werken. Het verschil zit alleen in welk soort post je dag 7 plaatst.
+**Een keuze maken: pre-post of 21-dagen-post.** Heb je al een product van Lifeplus geprobeerd en iets gemerkt? Dan deel je dat eerlijk, en raakt het mensen. Heb je nog geen ervaring? Ook prima, dan deel je je voornemen en bouw je de komende 21 dagen je eigen ervaring op. Beide werken. Het verschil zit in welk soort post je dag 7 plaatst.
 
-**Je eerste contact vandaag**, hier zit de kracht. Niet wachten tot alles 'klaar' is. Niet pitchen, niet verkopen. Gewoon één warm contact uit je kring een berichtje sturen dat je gestart bent. Eén persoon. Dat is je eerste win.
-
-JOUW TEMPO IS JOUW KEUZE, EN HIJ MAG SCHUIVEN
-
-Met minder dan 3 uur per week verdien je je eigen producten terug. Dat is een eerlijke situatie, alleen geen netwerk om inkomen mee op te bouwen. Vanaf 3 tot 6 uur (Rustig) bouw je rustig klanten op. Vanaf 6 uur (Gestaag) wordt Builder een werkbaar doel. Vanaf 10 uur (Serieus) ga je voor Builder en eerste duplicatie. Vanaf 16 uur (Doorpakken) ga je voor meerdere Builders.
-
-Je tempo is geen contract. Veel mensen beginnen rustig, merken resultaat, en schroeven op naar 6 of 10 uur als hun werk vrucht gaat dragen. Aanpassen kan altijd via /instellingen, jouw aantallen schuiven dan vanzelf mee.
-
-WAT HET COMMISSIEPLAN VOOR JE BETEKENT
-
-Op dag 4 krijg je de complete rank-uitleg, maar je mag het nu vast weten. Builder is de eerste bouwsteen, daar gaat het echt dupliceren. Vanaf Bronze zit je tussen 300 en 600 euro per maand, Silver vanaf 600, Gold vanaf 900, Diamond vanaf 1200. Dit zijn vanaf-bedragen, geen plafond. Een Diamond met diep doorlopende duplicatie verdient soms vier of vijf keer dat minimum. Het hangt af van hoe je bouwt, met klanten of met members.
-
-JE SPONSOR IS JE RUGDEKKING
-
-Niet je baas. Iemand die meekijkt, je vragen beantwoordt, en bijspringt als het even stroef gaat. Eén berichtje vandaag, een korte "ik ben gestart", opent de relatie. Vanaf dat moment ziet 'ie in ELEVA wat er gebeurt en weet 'ie wanneer het loopt of wanneer er even iets is.
+**Je eerste warm contact vandaag.** Niet wachten tot alles 'klaar' is, niet pitchen, niet verkopen. Gewoon één warm contact uit je kring een berichtje sturen dat je gestart bent. Eén persoon. Dat is je eerste win.
 
 JIJ LAAT ZIEN, ZIJ BESLISSEN
 
-De grootste mentale shift in Core: je hoeft niemand binnen te praten, niemand te overtuigen, niemand te laten kiezen voor wat jij wilt. Jouw taak is laten zien wat er is. Zij beslissen wat ze ermee doen. Dat maakt je werk lichter dan veel mensen denken, en respectvoller. Niemand voelt zich gemanipuleerd, jij voelt je geen verkoper, en de mensen die wel kiezen doen dat omdat het écht bij ze past.
+De grootste mentale shift in Core: je hoeft niemand binnen te praten, niemand te overtuigen, niemand te laten kiezen voor wat jij wilt. Jouw taak is laten zien wat er is. Zij beslissen. Dat maakt je werk lichter en respectvoller.
 
 WAT ER MORGEN GEBEURT
 
-Dag 2 bouw je je Top-20 namenlijst op, de twintig mensen die spontaan in je hoofd opkomen. Daarna importeer je je telefoonboek voor breedte, en voeg je een paar social-contacten toe. Een korte kennismakings-call met je sponsor erbij. Geen verkoop, geen werving. Wel je netwerk in beeld zodat je weet wie er om je heen staat.
+Dag 2 vul je je Top-20 namenlijst aan, de twintig mensen die spontaan in je hoofd opkomen. Je sponsor heeft een korte kennismakings-call met je staan. Geen verkoop, geen werving. Je netwerk in beeld zodat je weet wie er om je heen staat.
 
 Overweldigd voelen op dag 1 is normaal. Je leert iets nieuws, je stapt uit comfort. Eerst onhandig, dan vaardig. Je sponsor staat naast je, de ELEVA Mentor ook.
 
 Niet alleen. Bouwen mag leuk zijn 💟`,
     waaromWerktDit: {
       tekst:
-        "Mensen die op dag 1 hun WHY plaatsen, hun tempo eerlijk inschatten, en die ene eerste warme contact gewoon DOEN, zetten een fundament neer dat de komende 40 dagen draagt. Wachten tot 'alles klaar' is, is precies waar de meesten in vast lopen.",
+        "Mensen die op dag 1 hun netwerk binnenhalen, hun sponsor in de loop zetten en die ene eerste warme contact gewoon doen, zetten een fundament neer dat de komende 40 dagen draagt. Wachten tot 'alles klaar' is, is precies waar de meesten in vast lopen.",
     },
   },
   {
@@ -196,78 +185,74 @@ In je DMO-blok hieronder zie je dat lijst-opbouw doorgaat. Elke dag mogen er mee
   },
   {
     nummer: 3,
-    titel: "🛒 Webshop opzetten + krediet + teams (admin-dag)",
+    titel: "📝 Je natuurlijke gespreksopener uitwerken",
     fase: 1,
     vandaagDoen: [
+      // Per 2026-05-18: admin-taken (webshop, krediet, teams) verhuisd
+      // naar /setup. Dag 3 is nu een inhoud-dag over je gespreksopener.
       {
-        id: "core-dag3-webshop",
-        label: "🛒 Maak je eigen webshop aan",
+        id: "core-dag3-opener",
+        label: "Schrijf 2 zinnen waarmee je natuurlijk over je werk vertelt",
         verplicht: true,
+        actieRoute: "/mijn-zinnen",
         uitleg:
-          "Volg de instructies van je sponsor of de hand-out. Eenmalige stap, hierna is je shop online.",
+          "Voorbeeld: 'Ik ben sinds kort gestart met hoogwaardige supplementen. Ik vind het zelf leuk om te zien wat het mensen brengt.' De Mentor kan helpen om 'm naar jouw stem te schrijven.",
       },
       {
-        id: "core-dag3-krediet",
-        label: "✅ Vul je kredietformulier in (zonder dit geen uitbetaling)",
-        verplicht: true,
+        id: "core-dag3-mentor-hulp",
+        label: "Vraag de Mentor om feedback op je opener",
+        verplicht: false,
+        actieRoute: "/coach",
         uitleg:
-          "Zonder dit formulier ontvang je geen commissies. Eenmalige stap.",
-      },
-      {
-        id: "core-dag3-teams",
-        label: "📋 Teams-administratie inrichten",
-        verplicht: true,
-        uitleg:
-          "Hier wordt je team-structuur en business-data bijgehouden. Bekijk het film-blok hieronder voor de exacte stappen.",
-        filmSlug: "core-dag3-teams-admin",
+          "Plak je twee zinnen, de Mentor schaaft 'm bij. Niet perfect, wel authentiek.",
       },
       ...afsluitStappen(3),
     ],
-    faseDoel: "Drie admin-fundamenten staan: webshop, krediet, teams.",
-    waarInEleva: [],
-    watJeLeert: `Vandaag is je admin-dag. Drie korte taken die je in een ochtend hebt staan, daarna kun je verder met het echte werk: je webshop activeren, je krediet-uitbetaling regelen, en je teams-admin opzetten.
+    faseDoel: "Eén korte natuurlijke gespreksopener op papier en in praktijk.",
+    waarInEleva: [
+      { actie: "Naar je zinnen", menupad: "Menu, Mijn zinnen", route: "/mijn-zinnen" },
+      { actie: "Open de Mentor", menupad: "Menu, Mentor", route: "/coach" },
+    ],
+    watJeLeert: `Vandaag schrijf je een korte opener: twee zinnen die je natuurlijk kunt gebruiken als iemand vraagt 'wat doe jij eigenlijk?'. Geen verkoop-praat, gewoon hoe jij erover praat.
 
-Lichte dag qua leerstof, zware dag qua afvinken. De rest van Core leunt op deze drie fundamenten.`,
+Je hoeft niet het volledige verhaal in twee zinnen te proppen. Eén zin over wat je doet, één zin over wat het je brengt. Bijvoorbeeld:
+
+"Ik ben sinds kort gestart met hoogwaardige supplementen. Vind het zelf leuk om te zien wat het mensen brengt."
+
+Of:
+
+"Ik ben aan het opbouwen, naast m'n werk. Eigen webshop, mensen krijgen advies op maat."
+
+Beide werken. Het verschil zit in jouw stem. De ELEVA Mentor helpt 'm bijschaven, jij houdt 'm jouw.
+
+Waarom dit voor dag 3 staat: zonder een opener loop je vast als iemand 't vraagt. Mét een opener komt het natuurlijk uit je mond. Vandaag werk je 'm uit, morgen ga je 'm in de praktijk testen.
+
+Bouwen mag leuk zijn 💟`,
     waaromWerktDit: {
       tekst:
-        "Mensen die hun admin op dag 3 doen, vergeten 'm zelden later. Mensen die 'm uitstellen, krijgen er na maanden mee te maken in de vorm van gemiste commissies.",
+        "Mensen die hun opener eenmalig op papier hebben, voelen zich 4× rustiger wanneer iemand er natuurlijk om vraagt. Geen 'wat zeg ik nu?', wel een vertrouwde paar zinnen klaar.",
     },
   },
   {
     nummer: 4,
-    titel: "🔗 Bestellinks + productadvies-test + commission-plan",
+    titel: "📊 Het commissieplan begrijpen",
     fase: 1,
     vandaagDoen: [
-      {
-        id: "core-dag4-bestellinks",
-        label: "🔗 Koppel je webshop-links aan ELEVA",
-        verplicht: true,
-        actieRoute: "/instellingen/bestellinks",
-        uitleg:
-          "Plak per pakket je eigen verkooplink. Eenmalig werk, daarna gebruikt ELEVA ze automatisch in productadvies-flows.",
-      },
-      {
-        id: "core-dag4-test",
-        label: "Doe zelf de productadvies-test (3 min)",
-        verplicht: true,
-        actieRoute: "/test-pakket-bouwer",
-        uitleg:
-          "Door 'm zelf te doen weet je hoe je prospects de test ervaren en welk advies eruit kan komen.",
-      },
+      // Per 2026-05-18: bestellinks + productadvies-test verhuisd naar
+      // /setup (admin-rail). Commissie-plan-kennis (geen admin) blijft
+      // op dag 4, gekoppeld aan de rank-suggestie die je in pre-day-1
+      // bij je DTT hebt gezien.
       {
         id: "core-dag4-commission-plan",
-        label: "Lees het korte commission-plan-overzicht",
+        label: "Lees het korte commissieplan-overzicht",
         verplicht: true,
         uitleg:
-          "Onder 'Wat je leert' staat de rank-ladder Builder/Bronze/Silver/Gold/Diamond met minimum-vereisten. Je weet daarna wat je moet doen om jouw doel uit dag 1 te halen.",
+          "Onder 'Wat je leert' staat de rank-ladder Builder/Bronze/Silver/Gold/Diamond met minimum-vereisten. Je weet daarna wat je moet doen om je rank-doel te halen.",
       },
       ...afsluitStappen(4),
     ],
-    faseDoel: "Bestellinks gekoppeld, productadvies-test verkend, commission-plan in beeld.",
-    waarInEleva: [
-      { actie: "Beheer bestellinks", menupad: "Instellingen, Bestellinks", route: "/instellingen/bestellinks" },
-      { actie: "Doe de productadvies-test", menupad: "Menu, Test", route: "/test-pakket-bouwer" },
-    ],
+    faseDoel: "Basis-kennis van het commissieplan: welke rank wil jij?",
+    waarInEleva: [],
     watJeLeert: `Vandaag drie dingen: bestellinks koppelen, productadvies-test verkennen, en basis-kennis van het commission-plan.
 
 COMMISSION-PLAN IN 1 OOGOPSLAG:
