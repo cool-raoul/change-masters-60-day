@@ -278,23 +278,33 @@ export default async function VandaagPagina({
     dagData = pasTempoToeOpDag(dagData, commitmentUren);
   }
 
-  // Founder-overrides toepassen, zelfde patroon als dashboard.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const overrideMap = await haalOverrides(supabase as any, [dag]);
-  dagData = pasOverrideToe(dagData, overrideMap.get(dag) ?? null);
+  // Founder-overrides toepassen. BELANGRIJK: playbook_overrides en
+  // de "sprint-dag" namespace zijn historisch alleen voor Sprint
+  // gebruikt. Core krijgt een eigen namespace "core-dag" zodat
+  // Sprint-edits niet over Core dag 1 heen schuiven (en omgekeerd).
+  // Pro werkt nu nog niet via deze route.
+  const dagNamespace = modus === "core" ? "core-dag" : "sprint-dag";
 
-  // Nieuwe namespace-style overrides laden (sprint-dag, sprint-ui,
-  // sprint-groet) en per-dag-content toepassen op dagData. Dit werkt
-  // NAAST de oude playbook_overrides-tabel — bestaande edits in die
-  // tabel blijven werken.
+  if (modus !== "core") {
+    // playbook_overrides is een platte tabel zonder modus-veld, dus
+    // we passen 'm alleen toe op Sprint (de oorspronkelijke gebruiker).
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const overrideMap = await haalOverrides(supabase as any, [dag]);
+    dagData = pasOverrideToe(dagData, overrideMap.get(dag) ?? null);
+  }
+
+  // Namespace-style overrides laden. Core leest core-dag, Sprint
+  // leest sprint-dag. Beide gebruiken pasSprintDagOverridesToe omdat
+  // die functie generiek op een Map<string,string> werkt; de naam is
+  // historisch en zegt niets over de modus.
   const tekstOverrides = await haalTekstOverridesMulti(supabase, [
-    "sprint-dag",
+    dagNamespace,
     "sprint-ui",
     "sprint-groet",
   ]);
   dagData = pasSprintDagOverridesToe(
     dagData,
-    tekstOverrides.get("sprint-dag"),
+    tekstOverrides.get(dagNamespace),
   );
   const uiOverrides = namespaceAlsRecord(tekstOverrides, "sprint-ui");
   const groetOverrides = namespaceAlsRecord(
@@ -307,7 +317,7 @@ export default async function VandaagPagina({
   // naar Record voor server→client prop-passing.
   const paginaBlokkenMap = await haalPaginaBlokken(
     supabase,
-    "sprint-dag",
+    dagNamespace,
     String(dag),
   );
   const paginaBlokken = blokkenAlsRecord(paginaBlokkenMap);
