@@ -33,6 +33,8 @@ import { VandaagFlow } from "./vandaag-flow";
 import { ADMIN_ITEMS } from "@/lib/setup/admin-items";
 import { SetupPopup } from "@/components/setup/SetupPopup";
 import { haalTekstOverrides } from "@/lib/cms/tekst-overrides";
+import { dagVoorModus, startdatumVoorModus } from "@/lib/playbook/dag-teller";
+import { ModusSwitchBanner } from "@/components/vandaag/ModusSwitchBanner";
 
 // ============================================================
 // /vandaag, guided full-screen flow voor de huidige playbook-dag.
@@ -66,7 +68,9 @@ export default async function VandaagPagina({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("run_startdatum, full_name, role, is_tester, modus, core_dtt, core_eigen_resultaat")
+    .select(
+      "run_startdatum, sprint_startdatum, core_startdatum, created_at, full_name, role, is_tester, modus, core_dtt, core_eigen_resultaat, commitment_uren",
+    )
     .eq("id", user.id)
     .maybeSingle();
 
@@ -187,12 +191,36 @@ export default async function VandaagPagina({
       ? dagParam
       : null;
 
+  // Modus eerst afleiden, want de dag-teller is modus-specifiek.
+  const modusVoorDagTeller: Modus =
+    ((profile as any)?.modus as string | null) === "core"
+      ? "core"
+      : ((profile as any)?.modus as string | null) === "pro"
+        ? "pro"
+        : "sprint";
+
+  // Modus-specifieke startdatum als anker voor berekenHuidigeDag, met
+  // fallback op de legacy run_startdatum voor bestaande Sprint-leden.
+  const profielDatumVelden = {
+    sprint_startdatum: (profile as any)?.sprint_startdatum ?? null,
+    core_startdatum: (profile as any)?.core_startdatum ?? null,
+    run_startdatum: (profile as any)?.run_startdatum ?? null,
+    created_at: (profile as any)?.created_at ?? null,
+  };
+  const modusStartDatum = startdatumVoorModus(
+    profielDatumVelden,
+    modusVoorDagTeller,
+  );
+  const modusStartIso = modusStartDatum
+    ? modusStartDatum.toISOString().slice(0, 10)
+    : null;
+
   const dag =
     dagOverride ??
     berekenHuidigeDag(
       (alleVoltooiingen as Array<{ dag_nummer: number; taak_id: string }>) ||
         [],
-      (profile as any)?.run_startdatum ?? null,
+      modusStartIso,
       { isTester: isTester || isFounder },
     );
 
@@ -214,11 +242,7 @@ export default async function VandaagPagina({
   // sprint = standaard (zoals voorheen).
   // core   = laad Core-content uit lib/playbook/core-dagen.ts.
   // pro    = nog niet gemigreerd, valt terug op sprint-content.
-  const modus: Modus = (((profile as any)?.modus as string | null) === "core"
-    ? "core"
-    : ((profile as any)?.modus as string | null) === "pro"
-      ? "pro"
-      : "sprint");
+  const modus: Modus = modusVoorDagTeller;
 
   const coreDtt: DTTInput | null = (profile as any)?.core_dtt ?? null;
   const coreBracket = bracketVoorDTT(coreDtt);
@@ -365,8 +389,35 @@ export default async function VandaagPagina({
     "setup-popup",
   );
 
+  // Modus-switch banner: toon als de modus-specifieke keuze nog ontbreekt
+  // (Sprint = commitment_uren, Core = core_dtt). Bij her-activatie van
+  // een eerder gebruikte modus komt ook de oppakken/opnieuw-keuze.
+  const profCommitment = Number((profile as any)?.commitment_uren ?? NaN);
+  const sprintTempoIngevuld =
+    profCommitment === 2 || profCommitment === 4 || profCommitment === 6;
+  const coreDttIngevuld = !!(profile as any)?.core_dtt;
+  const modusKeuzeMist =
+    (modus === "core" && !coreDttIngevuld) ||
+    (modus === "sprint" && !sprintTempoIngevuld);
+  const hadEerderDezeModus =
+    modus === "core"
+      ? !!(profile as any)?.core_startdatum
+      : !!(profile as any)?.sprint_startdatum;
+  const modusSwitchOverrides = await haalTekstOverrides(
+    supabase,
+    "modus-switch",
+  );
+
   return (
     <>
+      {modusKeuzeMist && (modus === "sprint" || modus === "core") && (
+        <ModusSwitchBanner
+          modus={modus}
+          hadEerderDezeModus={hadEerderDezeModus}
+          isFounder={isFounder}
+          overrides={modusSwitchOverrides}
+        />
+      )}
       {adminOpen > 0 && (
         <SetupPopup
           aantalOpen={adminOpen}
