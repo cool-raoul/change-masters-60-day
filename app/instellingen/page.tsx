@@ -71,11 +71,12 @@ export default async function InstellingenPagina() {
 
       <InstellingenForm profile={profile} email={user.email || ""} />
 
-      {/* Tempo-keuze (commitment_uren). Belangrijk: prominente plek
-          voor zowel bestaande users (die nog geen tempo hebben omdat
-          ze vóór deze feature klaar waren met onboarding) als nieuwe
-          users die later willen switchen. */}
-      <TempoSectie huidigUren={huidigUren} />
+      {/* Tempo-keuze (commitment_uren). Alleen voor Sprint-members, want
+          Core gebruikt DTT (Doel-Tijd-Termijn) als ritme-bepaler. Beide
+          tegelijk tonen is verwarrend. */}
+      {(profile as { modus?: string | null } | null)?.modus !== "core" && (
+        <TempoSectie huidigUren={huidigUren} />
+      )}
 
       {/* Core-tempo-sectie verschijnt alleen voor members met modus=core.
           Member kan DTT op elk moment aanpassen. */}

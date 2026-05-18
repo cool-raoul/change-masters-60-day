@@ -50,19 +50,14 @@ export default async function DashboardPagina({
     .select("modus")
     .eq("id", user.id)
     .maybeSingle();
+  let huidigeModus: "sprint" | "core" | "pro" | null = null;
   if (!modusError) {
     const modus = (modusProfiel as { modus?: string | null } | null)?.modus;
-    // Per 2026-05-16: core-members hebben /vandaag als hoofd-route,
-    // maar dashboard moet bereikbaar blijven (anders loop met de
-    // 'terug naar dashboard'-knop in /vandaag). Dashboard is nog
-    // Sprint-geënt, dus voor core kan het rommelig voelen. Later
-    // wordt dashboard modus-aware. Voor nu: geen redirect.
     if (modus === "pro") redirect("/welkom-pro");
     if (modus === null || modus === undefined) {
-      // null/onbekend = nog geen keuze gemaakt, naar keuzepagina
       redirect("/welkom-keuze");
     }
-    // modus === "sprint" (of fallback): door naar het normale dashboard
+    huidigeModus = modus === "core" ? "core" : "sprint";
   }
 
   const taal = await getServerTaal();
@@ -516,7 +511,14 @@ export default async function DashboardPagina({
         <h1 className="font-serif-warm text-2xl sm:text-3xl text-cm-white mt-1 leading-tight">
           {dag === 1 ? (
             <>
-              <span className="text-cm-gold">Dag 1</span> van je 60-dagen reis. 🚀
+              <span className="text-cm-gold">Dag 1</span>
+              {huidigeModus === "core"
+                ? " van je Core-traject. 💟"
+                : " van je 60-dagen reis. 🚀"}
+            </>
+          ) : huidigeModus === "core" ? (
+            <>
+              Core dag <span className="text-cm-gold">{dag}</span>
             </>
           ) : (
             <>
@@ -556,19 +558,39 @@ export default async function DashboardPagina({
         </div>
       )}
 
-      {/* Voortgang als subtiele tijdslijn-strip met cirkels (mockup-4 stijl).
-          60 cirkels passen op alle viewport-breedtes door grid-min-0. */}
-      <div>
-        <TijdslijnStrip
-          totaal={60}
-          huidig={dag}
-          label="Voortgang door je 60 dagen"
-        />
-        <div className="flex items-center justify-between text-xs text-cm-white/50 mt-2">
-          <span>{Math.round((dag / 60) * 100)}% voltooid</span>
-          <span>{60 - dag} {v("dashboard.dagen_te_gaan", taal)}</span>
+      {/* Voortgang als subtiele tijdslijn-strip. Sprint: 60 dagen.
+          Core: 40 dagen opstart (lifetime daarna heeft geen einde). */}
+      {huidigeModus === "core" ? (
+        <div>
+          <TijdslijnStrip
+            totaal={40}
+            huidig={Math.min(dag, 40)}
+            label="Jouw 40-dagen opstart"
+          />
+          <div className="flex items-center justify-between text-xs text-cm-white/50 mt-2">
+            <span>
+              {dag <= 40
+                ? `Opstart-fase, ${Math.round((dag / 40) * 100)}% voltooid`
+                : "Opstart voltooid · Lifetime DMO actief"}
+            </span>
+            <span>
+              {dag <= 40 ? `${40 - dag} dagen tot lifetime-ritme` : ""}
+            </span>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div>
+          <TijdslijnStrip
+            totaal={60}
+            huidig={dag}
+            label="Voortgang door je 60 dagen"
+          />
+          <div className="flex items-center justify-between text-xs text-cm-white/50 mt-2">
+            <span>{Math.round((dag / 60) * 100)}% voltooid</span>
+            <span>{60 - dag} {v("dashboard.dagen_te_gaan", taal)}</span>
+          </div>
+        </div>
+      )}
 
       {/* Reminder-tegel: open admin-stappen van VORIGE dagen die nog
           niet zijn afgevinkt. Verschijnt elke dag opnieuw zolang er

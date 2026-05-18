@@ -1,9 +1,12 @@
 import { ITEM_SLUGS, type ItemSlug } from "@/lib/onboarding/sleutels";
 
 // ============================================================
-// Vijf admin-items voor /setup. Eén bron van waarheid: deze lijst
+// Vier admin-items voor /setup. Eén bron van waarheid: deze lijst
 // wordt gerenderd op /setup en gecontroleerd vanuit /vandaag voor
 // de SetupPopup. Volgorde is de aanbevolen volgorde voor de member.
+//
+// Productadvies-test is per 2026-05-19 uit deze lijst gehaald. Iemand
+// die start met Sprint/Core/Pro heeft al een eigen product-keuze.
 // ============================================================
 
 export type AdminItem = {
@@ -11,10 +14,11 @@ export type AdminItem = {
   emoji: string;
   titel: string;
   uitleg: string;
-  // Optionele route. Als gezet, knop "Open uitleg" linkt hierheen.
-  // Veel admin-stappen zijn buiten ELEVA (Lifeplus-backoffice), dus
-  // dan is route null en geeft de uitleg-tekst zelf de instructie.
-  route: string | null;
+  // Optionele film-slug die op de uitleg-pagina /setup/[slug] gerenderd
+  // wordt via FilmInBlok. Null = alleen tekst.
+  filmSlug: string | null;
+  // Optionele externe of interne route (Lifeplus-backoffice link).
+  externeLink: string | null;
 };
 
 export const ADMIN_ITEMS: AdminItem[] = [
@@ -23,24 +27,27 @@ export const ADMIN_ITEMS: AdminItem[] = [
     emoji: "🛒",
     titel: "Webshop aanmaken",
     uitleg:
-      "Maak je eigen Lifeplus-webshop aan via de officiële backoffice. Vraag je sponsor om de hand-out of korte instructiefilm. Eenmalige stap, hierna is je shop online en kun je hem delen.",
-    route: null,
+      "Maak je eigen Lifeplus-webshop aan via de officiële backoffice. Bekijk de instructiefilm hieronder en volg de stappen. Eenmalige stap, hierna is je shop online en kun je hem delen.",
+    filmSlug: "onboarding-stap-6-webshop",
+    externeLink: null,
   },
   {
     slug: ITEM_SLUGS.kredietformulierIngevuld,
     emoji: "✅",
     titel: "Kredietformulier invullen",
     uitleg:
-      "Zonder dit formulier kunnen je commissies niet worden uitbetaald. Vul 'm in via de Lifeplus-backoffice. Korte stap van een paar minuten.",
-    route: null,
+      "Zonder dit formulier kunnen je commissies niet worden uitbetaald. Vul 'm in via de Lifeplus-backoffice. De korte instructie staat in de film hieronder.",
+    filmSlug: "onboarding-stap-8-kredietformulier",
+    externeLink: null,
   },
   {
     slug: ITEM_SLUGS.teamsAdminIngericht,
     emoji: "📋",
     titel: "Teams-administratie inrichten",
     uitleg:
-      "Hier wordt je team-structuur en business-data bijgehouden. Volg de korte instructie uit de team-onboarding van je sponsor.",
-    route: null,
+      "Hier wordt je team-structuur en business-data bijgehouden. Volg de instructie in de film hieronder voor de exacte stappen.",
+    filmSlug: "core-dag3-teams-admin",
+    externeLink: null,
   },
   {
     slug: ITEM_SLUGS.bestellinksGekoppeld,
@@ -48,14 +55,7 @@ export const ADMIN_ITEMS: AdminItem[] = [
     titel: "Bestellinks koppelen",
     uitleg:
       "Plak je eigen Lifeplus-bestellinks per pakket in ELEVA. Hierna gebruikt het systeem ze automatisch in productadvies-flows.",
-    route: "/instellingen/bestellinks",
-  },
-  {
-    slug: ITEM_SLUGS.productadviesTestGedaan,
-    emoji: "🧪",
-    titel: "Productadvies-test zelf doen",
-    uitleg:
-      "Doe de test één keer zelf, zo weet je wat een prospect ervaart en welk advies eruit kan komen. Drie minuten.",
-    route: "/test-pakket-bouwer",
+    filmSlug: null,
+    externeLink: "/instellingen/bestellinks",
   },
 ];

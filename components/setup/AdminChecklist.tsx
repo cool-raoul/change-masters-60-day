@@ -107,22 +107,20 @@ export function AdminChecklist({ beginVoltooiingen, isFounder, overrides }: Prop
               className="text-cm-white text-sm opacity-80 leading-relaxed mb-3"
               rows={3}
             />
-            <div className="flex gap-2">
-              {item.route && (
-                <a
-                  href={item.route}
-                  className="text-sm bg-cm-surface border border-cm-border text-cm-white px-3 py-2 rounded-lg"
-                >
-                  Open uitleg
-                </a>
-              )}
+            <div className="flex gap-2 flex-wrap">
+              <a
+                href={`/setup/${item.slug}`}
+                className="text-sm bg-cm-surface border border-cm-border text-cm-white px-3 py-2 rounded-lg"
+              >
+                Open uitleg
+              </a>
               {!isAf && (
                 <button
                   onClick={() => afvinken(item.slug)}
                   disabled={bezig === item.slug}
                   className="btn-gold text-sm px-3 py-2 disabled:opacity-50"
                 >
-                  {bezig === item.slug ? "Bezig..." : "Markeer als gedaan"}
+                  {bezig === item.slug ? "Bezig..." : "Snel afvinken"}
                 </button>
               )}
             </div>

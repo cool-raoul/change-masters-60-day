@@ -51,7 +51,7 @@ export function SetupPopup({ aantalOpen, isFounder, overrides }: Props) {
           <EditableTekst
             namespace="setup-popup"
             sleutel="titel"
-            standaard={`Je hebt nog ${aantalOpen} admin-stap${aantalOpen === 1 ? "" : "pen"} openstaan`}
+            standaard="Even je setup compleet maken"
             overrides={overrides}
             isFounder={isFounder}
             as="h2"
@@ -61,19 +61,19 @@ export function SetupPopup({ aantalOpen, isFounder, overrides }: Props) {
         <EditableBlok
           namespace="setup-popup"
           sleutel="body"
-          standaard="Doe ze binnen drie dagen, ze zijn nodig voor de rest van je traject. Webshop, kredietformulier, teams-admin, bestellinks en productadvies-test."
+          standaard={`Er staan nog ${aantalOpen} administratieve stappen klaar (webshop, kredietformulier, teams-admin, bestellinks). Doe ze rustig binnen de eerste paar dagen, ze zijn nodig om straks commissies te ontvangen en je producten goed te delen.`}
           overrides={overrides}
           isFounder={isFounder}
           as="p"
           className="text-cm-white text-sm leading-relaxed opacity-90 text-center"
-          rows={3}
+          rows={4}
         />
         <div className="flex flex-col gap-2 pt-2">
           <button onClick={openSetup} className="btn-gold py-3 font-semibold">
             <EditableTekst
               namespace="setup-popup"
               sleutel="cta_open"
-              standaard="Open admin-checklist"
+              standaard="Naar de checklist"
               overrides={overrides}
               isFounder={isFounder}
               as="span"

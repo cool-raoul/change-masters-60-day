@@ -232,14 +232,31 @@ export function PushNotificationToggle() {
     }
   }
 
-  // Not in PWA mode, show install instruction
+  // Niet in PWA-modus: detecteer of het waarschijnlijk een desktop is,
+  // dan tonen we een desktop-vriendelijke uitleg. Op mobiel zonder
+  // PWA-installatie verschijnt de install-prompt.
+  const isLikelyDesktop =
+    typeof window !== "undefined" &&
+    typeof navigator !== "undefined" &&
+    !/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || "");
+
   if (!isStandalone && !isSubscribed) {
+    if (isLikelyDesktop) {
+      return (
+        <div className="p-4 bg-cm-surface-2 border border-cm-border rounded-xl">
+          <p className="text-cm-gold font-semibold text-sm mb-2">💻 Je zit op een computer</p>
+          <p className="text-cm-white text-xs leading-relaxed opacity-80">
+            Meldingen werken via je telefoon. Open ELEVA later op je telefoon, installeer 'm via de instructies hierboven (Safari op iPhone, Chrome op Android), en zet 'm daar aan. Op je computer hoef je nu niets te doen.
+          </p>
+        </div>
+      );
+    }
     return (
       <div className="space-y-3">
         <div className="p-4 bg-amber-900/20 border border-amber-600/30 rounded-xl">
           <p className="text-amber-300 font-semibold text-sm mb-2">📱 Installeer de app eerst</p>
           <p className="text-cm-white text-xs leading-relaxed opacity-80">
-            Push meldingen werken alleen vanuit de geïnstalleerde app. Volg de installatie-instructies hierboven, open daarna de app vanuit je beginscherm en kom terug naar deze pagina om meldingen in te schakelen.
+            Meldingen werken alleen vanuit de geïnstalleerde app. Volg de installatie-instructies hierboven, open daarna ELEVA vanuit je beginscherm en kom terug naar deze pagina om meldingen in te schakelen.
           </p>
         </div>
         {isSupported && (
@@ -248,7 +265,7 @@ export function PushNotificationToggle() {
             disabled={isLoading}
             className="w-full px-4 py-2 rounded-lg text-sm font-semibold bg-cm-surface border border-cm-border text-cm-white hover:border-cm-gold transition-colors disabled:opacity-50"
           >
-            {isLoading ? "Bezig..." : "Toch proberen (al geïnstalleerd)"}
+            {isLoading ? "Bezig..." : "Toch proberen (app al geïnstalleerd)"}
           </button>
         )}
       </div>

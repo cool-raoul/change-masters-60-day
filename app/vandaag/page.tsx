@@ -349,12 +349,25 @@ export default async function VandaagPagina({
     "core-dag1-vcard-import": "vcard-import-gedaan",
     "core-dag1-sponsor-bericht": "sponsor-eerste-bericht",
   };
+
+  // Lege-widget filter: als er geen partners en geen momentum-acties
+  // zijn, slaan we die taken helemaal over. Geen 'kijk maar je hebt
+  // geen partners'-tussenscherm, gewoon niet zichtbaar.
+  const heeftRadarItems = radarItems.length > 0;
+  const { count: partnerCount } = await supabase
+    .from("profiles")
+    .select("id", { count: "exact", head: true })
+    .eq("sponsor_id", user.id);
+  const heeftPartners = (partnerCount ?? 0) > 0;
+
   dagData = {
     ...dagData,
     vandaagDoen: dagData.vandaagDoen.filter((t) => {
       const slug = taakNaarCrossModusSlug[t.id];
-      if (!slug) return true;
-      return !crossModusVoltooiingenMap.get(slug)?.voltooid;
+      if (slug && crossModusVoltooiingenMap.get(slug)?.voltooid) return false;
+      if (t.inlineEmbed === "momentum-radar" && !heeftRadarItems) return false;
+      if (t.inlineEmbed === "partner-check" && !heeftPartners) return false;
+      return true;
     }),
   };
 

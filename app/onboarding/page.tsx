@@ -11,6 +11,7 @@ import { EditModeProvider } from "@/components/cms/EditModeContext";
 import { EditModeToggle } from "@/components/cms/EditModeToggle";
 import { AlGedaanLabel } from "@/components/onboarding/AlGedaanLabel";
 import { Stap4ModusKeuze } from "@/components/onboarding/Stap4ModusKeuze";
+import { NamenForm } from "@/components/vandaag/inline-embeds/NamenForm";
 import type { Modus } from "@/lib/onboarding/voltooiingen";
 
 const SPONSOR_TEL = "https://wa.me/31612345678"; // fallback, wordt dynamisch geladen
@@ -328,7 +329,7 @@ export default function OnboardingPagina() {
                 <EditableTekst
                   namespace="onboarding"
                   sleutel="stap1.intro"
-                  standaard="We zetten je in 5 stappen klaar voor de 60-dagenrun."
+                  standaard="In vier rustige stappen leggen we samen je fundament."
                   overrides={overrides}
                   isFounder={isFounder}
                   as="p"
@@ -457,8 +458,15 @@ export default function OnboardingPagina() {
                 <ul className="space-y-2">
                   {[
                     { icoon: "💛", sleutel: "stap1.checklijst.item1", standaard: "Je ontdekt jouw persoonlijke WHY" },
-                    { icoon: "📖", sleutel: "stap1.checklijst.item2", standaard: "Je leert hoe de 60-dagenrun werkt" },
-                    { icoon: "🎯", sleutel: "stap1.checklijst.item3", standaard: "Je kiest jouw tempo voor de komende 60 dagen" },
+                    { icoon: "📖", sleutel: "stap1.checklijst.item2", standaard: "Je legt je eerste 5 namen vast" },
+                    {
+                      icoon: "🎯",
+                      sleutel: "stap1.checklijst.item3",
+                      standaard:
+                        modus === "core"
+                          ? "Je vult je Doel-Tijd-Termijn in"
+                          : "Je kiest jouw tempo voor de komende periode",
+                    },
                   ].map((item, i) => (
                     <li key={i} className="flex items-center gap-3 text-sm text-cm-white">
                       <span className="text-xl">{item.icoon}</span>
@@ -644,11 +652,19 @@ export default function OnboardingPagina() {
                 </div>
               )}
 
-              <button onClick={() => gaNaarStap(3)} disabled={bezig} className="btn-gold w-full py-3 text-base">
+              <button
+                onClick={() => gaNaarStap(3)}
+                disabled={bezig || !voltooiingen["why"]?.voltooid}
+                className="btn-gold w-full py-3 text-base disabled:opacity-40 disabled:cursor-not-allowed"
+              >
                 <EditableTekst
                   namespace="onboarding"
                   sleutel="stap2.knop"
-                  standaard="WHY-gesprek gedaan, verder naar stap 3 →"
+                  standaard={
+                    voltooiingen["why"]?.voltooid
+                      ? "WHY-gesprek gedaan, verder naar stap 3 →"
+                      : "Doe eerst je WHY-gesprek hierboven"
+                  }
                   overrides={overrides}
                   isFounder={isFounder}
                   as="span"
@@ -701,26 +717,30 @@ export default function OnboardingPagina() {
                   bekijkRoute="/namenlijst"
                 />
               ) : (
-                <p className="text-cm-white text-sm opacity-60 italic">
-                  De namen-invoer staat klaar op je namenlijst. Open 'm, vul minimaal 5 in, en kom dan terug.
-                </p>
+                <NamenForm
+                  doel={5}
+                  alVoltooid={false}
+                  opVoltooid={() => {
+                    setVoltooiingen((v) => ({
+                      ...v,
+                      "eerste-5-namen": {
+                        voltooid: true,
+                        modus: modus,
+                        datum: new Date().toISOString(),
+                      },
+                    }));
+                  }}
+                />
               )}
-
-              <a
-                href="/namenlijst"
-                className="btn-gold w-full py-3 text-center block font-bold"
-              >
-                {voltooiingen["eerste-5-namen"]?.voltooid
-                  ? "Bekijk je namenlijst →"
-                  : "Open namenlijst en vul 5 namen in →"}
-              </a>
 
               <button
                 onClick={() => gaNaarStap(4)}
-                disabled={bezig}
-                className="w-full py-3 border border-cm-border text-cm-white rounded-lg"
+                disabled={bezig || !voltooiingen["eerste-5-namen"]?.voltooid}
+                className="btn-gold w-full py-3 text-base font-bold disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                Verder naar stap 4 →
+                {voltooiingen["eerste-5-namen"]?.voltooid
+                  ? "Verder naar stap 4 →"
+                  : "Vul eerst 5 namen hierboven in"}
               </button>
             </div>
           )}
