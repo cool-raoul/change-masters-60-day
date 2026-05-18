@@ -239,6 +239,25 @@ export default function MijnWhyPagina() {
       .update({ onboarding_klaar: true })
       .eq("id", user.id);
 
+    // Cross-modus skip-tabel bijwerken: WHY is eenmalig over Sprint/Core,
+    // dus na het opslaan markeren we 'm in onboarding_voltooiingen onder
+    // de huidige modus. Een latere modus-switch ziet 'm dan als gedaan.
+    try {
+      const { data: prof } = await supabase
+        .from("profiles")
+        .select("modus")
+        .eq("id", user.id)
+        .maybeSingle();
+      const modusWaarin = (prof as { modus?: string | null } | null)?.modus ?? "sprint";
+      await fetch("/api/onboarding/markeer-voltooid", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug: "why", modus: modusWaarin }),
+      });
+    } catch {
+      // Stille fail: WHY is wel opgeslagen, alleen cross-modus markering mist
+    }
+
     // Stel onboarding_stap in als dit de eerste keer is (niet voor bestaande gebruikers)
     if (!user.user_metadata?.onboarding_stap) {
       await supabase.auth.updateUser({ data: { onboarding_stap: 1 } });

@@ -44,6 +44,31 @@ type Props = {
   opOpnieuw?: () => void;
 };
 
+// Helper: markeer 'eerste-5-namen' in cross-modus skip-tabel. Idempotent
+// (23505 unique-violation wordt aan de server-kant geslikt). Faalt stil.
+async function markeerEersteVijfNamenAlsCrossModusVoltooid() {
+  try {
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
+    const { data: prof } = await supabase
+      .from("profiles")
+      .select("modus")
+      .eq("id", user.id)
+      .maybeSingle();
+    const modus = (prof as { modus?: string | null } | null)?.modus ?? "sprint";
+    await fetch("/api/onboarding/markeer-voltooid", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ slug: "eerste-5-namen", modus }),
+    });
+  } catch {
+    /* stil falen */
+  }
+}
+
 export function NamenForm({ doel, alVoltooid, opVoltooid, opOpnieuw }: Props) {
   // Start met `doel` lege rijen + 5 buffer (zodat 'ie ruimte heeft).
   const [rijen, setRijen] = useState<Rij[]>(
@@ -139,6 +164,7 @@ export function NamenForm({ doel, alVoltooid, opVoltooid, opOpnieuw }: Props) {
       // op "Bewaar 0" hoeft te drukken.
       if (handmatigIngevuld === 0 && nieuwTotaalGeactiveerd >= doel) {
         setKlaar(true);
+        markeerEersteVijfNamenAlsCrossModusVoltooid();
         opVoltooid();
       }
     } catch (e) {
@@ -210,6 +236,7 @@ export function NamenForm({ doel, alVoltooid, opVoltooid, opOpnieuw }: Props) {
         `🎉 ${nieuw.length} naam${nieuw.length === 1 ? "" : "en"} op je namenlijst gezet`,
       );
       setKlaar(true);
+      markeerEersteVijfNamenAlsCrossModusVoltooid();
       opVoltooid();
     } catch (e) {
       const msg = e instanceof Error ? e.message : "onbekende fout";

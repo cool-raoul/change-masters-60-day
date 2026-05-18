@@ -200,6 +200,16 @@ function VandaagFlowInner({
   const groet =
     DAG_GROETEN[dag.nummer] || pakDagdeelGroetMetNaam(voornaam);
 
+  // Mapping van taak-ids naar cross-modus slugs in onboarding_voltooiingen.
+  // Wordt gebruikt om bij voltooiing OOK de cross-modus slug te markeren,
+  // zodat een switch naar de andere modus die taak overslaat.
+  const taakNaarCrossModusSlug: Record<string, string> = {
+    "dag1-vcard": "vcard-import-gedaan",
+    "dag1-sponsor": "sponsor-eerste-bericht",
+    "core-dag1-vcard-import": "vcard-import-gedaan",
+    "core-dag1-sponsor-bericht": "sponsor-eerste-bericht",
+  };
+
   async function vinkAf(taakId: string, nieuwVoltooid: boolean) {
     if (bezigIds.has(taakId)) return;
     setBezigIds((p) => new Set(p).add(taakId));
@@ -228,6 +238,18 @@ function VandaagFlowInner({
           return n;
         });
         toast.error("Opslaan mislukt");
+      } else if (nieuwVoltooid && taakNaarCrossModusSlug[taakId]) {
+        // Cross-modus skip-tabel ook bijwerken bij afvinken (niet bij
+        // uit-vinken, want we willen 'm dan niet ook bij de andere
+        // modus opnieuw laten verschijnen).
+        await fetch("/api/onboarding/markeer-voltooid", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            slug: taakNaarCrossModusSlug[taakId],
+            modus,
+          }),
+        }).catch(() => {});
       }
     } catch {
       toast.error("Verbindingsfout");

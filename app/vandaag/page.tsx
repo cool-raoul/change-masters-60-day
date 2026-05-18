@@ -339,6 +339,25 @@ export default async function VandaagPagina({
     "sprint-groet",
   );
 
+  // Cross-modus skip: taken waarvan de cross-modus slug al in een andere
+  // modus is afgevinkt, verbergen we vandaag. Member die Sprint→Core (of
+  // omgekeerd) switcht ziet die taken niet meer in dag 1 van de nieuwe
+  // modus, want het werk is al gedaan.
+  const taakNaarCrossModusSlug: Record<string, string> = {
+    "dag1-vcard": "vcard-import-gedaan",
+    "dag1-sponsor": "sponsor-eerste-bericht",
+    "core-dag1-vcard-import": "vcard-import-gedaan",
+    "core-dag1-sponsor-bericht": "sponsor-eerste-bericht",
+  };
+  dagData = {
+    ...dagData,
+    vandaagDoen: dagData.vandaagDoen.filter((t) => {
+      const slug = taakNaarCrossModusSlug[t.id];
+      if (!slug) return true;
+      return !crossModusVoltooiingenMap.get(slug)?.voltooid;
+    }),
+  };
+
   // Media-blokken (video/afbeelding/pdf) op 5 vaste posities. Server
   // genereert signed URLs voor upload-types; we serialiseren de Map
   // naar Record voor server→client prop-passing.
