@@ -9,13 +9,9 @@ import { EditableTekst, EditableBlok } from "@/components/cms/EditableTekst";
 import { MediaBlokkenClient } from "@/components/cms/MediaBlokkenClient";
 import { EditModeProvider } from "@/components/cms/EditModeContext";
 import { EditModeToggle } from "@/components/cms/EditModeToggle";
-import {
-  type CommitmentUren,
-  STANDAARD_COMMITMENT,
-  berekenDagdoelen,
-  bouwblokkenVoorTempo,
-  tempoNaam,
-} from "@/lib/dagdoelen";
+import { AlGedaanLabel } from "@/components/onboarding/AlGedaanLabel";
+import { Stap4ModusKeuze } from "@/components/onboarding/Stap4ModusKeuze";
+import type { Modus } from "@/lib/onboarding/voltooiingen";
 
 const SPONSOR_TEL = "https://wa.me/31612345678"; // fallback, wordt dynamisch geladen
 
@@ -35,11 +31,15 @@ export default function OnboardingPagina() {
   // backwards-compat: oudere users kunnen nog losse dagdoel-velden in
   // user_metadata hebben - die negeren we, want de nieuwe waarheid is
   // commitment_uren.
-  const [commitmentUren, setCommitmentUren] = useState<CommitmentUren | null>(null);
   const [bezig, setBezig] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [sponsorNaam, setSponsorNaam] = useState("");
   const [sponsorWaLink, setSponsorWaLink] = useState("");
+  const [modus, setModus] = useState<Modus>("sprint");
+  const [dttAlIngevuld, setDttAlIngevuld] = useState(false);
+  const [voltooiingen, setVoltooiingen] = useState<
+    Record<string, { voltooid: boolean; modus: string | null; datum: string | null }>
+  >({});
   // Founder-edit state: ophalen via /api/cms/overrides bij mount.
   // Members krijgen lege map + isFounder=false → niets visueel.
   const [overrides, setOverrides] = useState<Record<string, string>>({});
@@ -92,38 +92,58 @@ export default function OnboardingPagina() {
         setGebruikersnaam(user.email.split("@")[0]);
       }
 
-      // Laad sponsor info
-      const sponsorId = user?.user_metadata?.sponsor_id;
-      if (sponsorId) {
+      // Modus + sponsor + DTT-status laden uit profiles
+      const { data: prof } = await supabase
+        .from("profiles")
+        .select("modus, sponsor_id, core_dtt")
+        .eq("id", user.id)
+        .maybeSingle();
+      const profData = (prof as {
+        modus?: string | null;
+        sponsor_id?: string | null;
+        core_dtt?: unknown;
+      } | null) ?? {};
+
+      const m = profData.modus === "core" ? "core" : "sprint";
+      setModus(m);
+      setDttAlIngevuld(!!profData.core_dtt);
+
+      if (profData.sponsor_id) {
         const { data: sponsor } = await supabase
           .from("profiles")
           .select("full_name, email")
-          .eq("id", sponsorId)
+          .eq("id", profData.sponsor_id)
           .single();
         if (sponsor) {
-          setSponsorNaam(sponsor.full_name);
-          setSponsorWaLink(`https://wa.me/?text=Hoi%20${encodeURIComponent(sponsor.full_name)}%2C%20ik%20heb%20een%20vraag%20over%20de%20setup`);
+          const s = sponsor as { full_name: string };
+          setSponsorNaam(s.full_name);
+          setSponsorWaLink(
+            `https://wa.me/?text=Hoi%20${encodeURIComponent(s.full_name)}%2C%20ik%20heb%20een%20vraag%20over%20de%20setup`,
+          );
         }
+      }
+
+      // Cross-modus voltooiingen ophalen voor skip-detectie (stap 1-3)
+      try {
+        const r = await fetch("/api/onboarding/markeer-voltooid");
+        if (r.ok) {
+          const data = await r.json();
+          if (data?.voltooiingen) setVoltooiingen(data.voltooiingen);
+        }
+      } catch {
+        // netwerk-fout, gewoon geen skip-detectie
       }
 
       const huidigStap = Number(user?.user_metadata?.onboarding_stap || 1);
       // Alleen redirecten naar dashboard als gebruiker al klaar is EN
-      // GEEN expliciete ?stap=N is meegegeven (anders willen we juist
-      // terug naar die specifieke open admin-stap).
+      // GEEN expliciete ?stap=N is meegegeven.
       if (huidigStap >= 99 && !preview && directeStap === null) {
-        router.push("/dashboard");
+        router.push("/vandaag");
         return;
       }
 
       // Prioriteit: ?stap (deeplink) > preview-modus (start bij 1) > opgeslagen huidigStap
       setStap(directeStap ?? (preview ? 1 : huidigStap));
-      // Hydrateer eerder gekozen tempo, indien aanwezig. Zo blijft de
-      // keuze zichtbaar gemarkeerd als iemand terug-navigeert naar
-      // stap 5 om aan te passen.
-      const opgeslagenUren = Number(user?.user_metadata?.commitment_uren);
-      if (opgeslagenUren === 2 || opgeslagenUren === 4 || opgeslagenUren === 6) {
-        setCommitmentUren(opgeslagenUren);
-      }
       setLaden(false);
     }
     laadGegevens();
@@ -200,44 +220,10 @@ export default function OnboardingPagina() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  async function slaDoelOp() {
-    if (!commitmentUren) {
-      // Defensieve check, knop is disabled tot er gekozen is. Maar niet
-      // crashen als iemand toch klikt.
-      return;
-    }
-    setBezig(true);
-    if (!isPreview) {
-      // Afgeleide dagdoelen meteen meeschrijven naar user_metadata zodat
-      // bestaande code die direct user.user_metadata.dagdoel_contacten
-      // leest (dashboard, vandaag-flow) gewoon blijft werken. De
-      // commitment_uren is de waarheid, de losse velden zijn cache.
-      const dd = berekenDagdoelen(commitmentUren);
-      await supabase.auth.updateUser({
-        data: {
-          onboarding_stap: 99,
-          commitment_uren: commitmentUren,
-          dagdoel_contacten: dd.contacten,
-          dagdoel_uitnodigingen: dd.uitnodigingen,
-          dagdoel_followups: dd.followups,
-        },
-      });
-      await slaVoortgangOp({ stap_5_doelen: true });
-      await stuurPushNaarSponsor(
-        `heeft het tempo '${tempoNaam(commitmentUren)}' (± ${commitmentUren} uur per dag) gekozen en is klaar voor dag 1! 🎉`,
-      );
-    }
-    setBezig(false);
-    // Direct doorrollen naar dag 1 in /vandaag (geen tussenstop bij
-    // de coach). De onboarding is bewust opgezet als 'eerste deel van
-    // dag 1', dus iemand moet zich het laatste stuk van dag 1 (eerste
-    // namen + sponsor-bericht) als natuurlijk vervolg ervaren, niet
-    // als 'een nieuwe dag'. De ?via=onboarding query-param zorgt dat
-    // /vandaag een welkomstbanner kan tonen die deze continuiteit
-    // expliciet bevestigt.
-    router.push("/vandaag?via=onboarding");
-    router.refresh();
-  }
+  // Stap 4 (modus-keuze + opslag) is verhuisd naar de Stap4ModusKeuze-
+  // component (zowel Sprint-tempo-cards als Core-DTT-form). De oude
+  // slaDoelOp() is daarmee overbodig en weggehaald.
+
 
   // In preview-modus: toon sponsor-blokken altijd (met voorbeeldnaam als er geen sponsor is)
   const toonSponsorNaam = sponsorNaam || (isPreview ? "jouw sponsor" : "");
@@ -319,6 +305,12 @@ export default function OnboardingPagina() {
                 positie="boven-titel"
                 isFounder={isFounder}
               />
+              {voltooiingen["app-geinstalleerd"]?.voltooid && (
+                <AlGedaanLabel
+                  modus={(voltooiingen["app-geinstalleerd"].modus ?? "sprint") as Modus}
+                  datum={voltooiingen["app-geinstalleerd"].datum}
+                />
+              )}
               <div className="text-center">
                 <div className="text-6xl mb-4">👋</div>
                 <h2 className="text-3xl font-display font-bold text-cm-white mb-2">
@@ -519,6 +511,13 @@ export default function OnboardingPagina() {
                 positie="boven-titel"
                 isFounder={isFounder}
               />
+              {voltooiingen["why"]?.voltooid && (
+                <AlGedaanLabel
+                  modus={(voltooiingen["why"].modus ?? "sprint") as Modus}
+                  datum={voltooiingen["why"].datum}
+                  bekijkRoute="/mijn-why"
+                />
+              )}
               <div className="text-center">
                 <div className="text-6xl mb-4">💛</div>
                 <EditableTekst
@@ -659,7 +658,11 @@ export default function OnboardingPagina() {
             </div>
           )}
 
-          {/* ───── STAP 3: HOE WERKT DE RUN ───── */}
+          {/* ───── STAP 3: EERSTE 5 NAMEN ─────
+              Voorheen was stap 3 de run-uitleg ("3 blokken"). Die uitleg
+              is per 2026-05-18 verhuisd naar stap 4 (boven de tempo/DTT-
+              keuze), modus-eigen. Stap 3 is nu de gedeelde 5-namen-stap
+              voor Sprint en Core. */}
           {stap === 3 && (
             <div className="space-y-6">
               <MediaBlokkenClient
@@ -668,469 +671,74 @@ export default function OnboardingPagina() {
                 positie="boven-titel"
                 isFounder={isFounder}
               />
-              <div>
+              <div className="text-center">
+                <div className="text-6xl mb-3">📲</div>
                 <EditableTekst
                   namespace="onboarding"
                   sleutel="stap3.titel"
-                  standaard="Hoe werkt de 60-dagenrun?"
-                  overrides={overrides}
-                  isFounder={isFounder}
-                  as="h2"
-                  className="text-2xl font-display font-bold text-cm-white mb-1"
-                />
-                <EditableTekst
-                  namespace="onboarding"
-                  sleutel="stap3.intro"
-                  standaard="Lees dit goed, dit is je speelplan voor de komende 60 dagen."
-                  overrides={overrides}
-                  isFounder={isFounder}
-                  as="p"
-                  className="text-cm-white opacity-60 text-sm"
-                  multiline
-                  rows={2}
-                />
-              </div>
-
-              {/* Waarom cruciaal */}
-              <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
-                <p className="text-amber-300 font-semibold text-sm flex items-center gap-2">⚡ Waarom deze stap cruciaal is</p>
-                <EditableBlok
-                  namespace="onboarding"
-                  sleutel="stap3.waarom_cruciaal"
-                  standaard="Mensen die het systeem begrijpen, presteren beter dan mensen die maar wat doen. De run heeft een structuur, en die structuur werkt. Je moet hem kennen om hem te kunnen volgen."
-                  overrides={overrides}
-                  isFounder={isFounder}
-                  as="p"
-                  className="text-cm-white text-sm leading-relaxed opacity-90"
-                  rows={3}
-                  hint="Waarom-cruciaal-blok van stap 3 (run-uitleg)"
-                />
-              </div>
-
-              <div className="space-y-3">
-                <h3 className="text-cm-gold font-semibold text-sm uppercase tracking-wider">De 3 blokken</h3>
-                <div className="card border-l-4 border-[#4A9EDB]">
-                  <EditableTekst
-                    namespace="onboarding"
-                    sleutel="stap3.blok1.titel"
-                    standaard="Blok 1 · Dag 1–20: Fundament"
-                    overrides={overrides}
-                    isFounder={isFounder}
-                    as="p"
-                    className="text-[#4A9EDB] font-semibold text-sm mb-1"
-                    hint="Titel van Blok 1 in stap 3"
-                  />
-                  <EditableBlok
-                    namespace="onboarding"
-                    sleutel="stap3.blok1.tekst"
-                    standaard="Je bouwt je netwerk-overzicht op. Je begint bij de mensen die je al goed kent, daar mag je direct uitnodigen. Daarnaast leer je hoe je oudere contacten weer warm maakt en hoe je op een rustige manier zichtbaar wordt in je omgeving."
-                    overrides={overrides}
-                    isFounder={isFounder}
-                    as="p"
-                    className="text-cm-white text-sm leading-relaxed opacity-80"
-                    rows={3}
-                    hint="Uitleg van Blok 1 (dag 1-20)"
-                  />
-                </div>
-                <div className="card border-l-4 border-[#C9A84C]">
-                  <EditableTekst
-                    namespace="onboarding"
-                    sleutel="stap3.blok2.titel"
-                    standaard="Blok 2 · Dag 21–40: Verdiepen"
-                    overrides={overrides}
-                    isFounder={isFounder}
-                    as="p"
-                    className="text-[#C9A84C] font-semibold text-sm mb-1"
-                    hint="Titel van Blok 2 in stap 3"
-                  />
-                  <EditableBlok
-                    namespace="onboarding"
-                    sleutel="stap3.blok2.tekst"
-                    standaard="Je eerste resultaten komen binnen. Je leert van de eerste gesprekken en scherpt je aanpak aan. Je opvolgwerk wordt belangrijker, want de meeste mensen zeggen niet bij het eerste contact ja. Hier zit het echte verschil."
-                    overrides={overrides}
-                    isFounder={isFounder}
-                    as="p"
-                    className="text-cm-white text-sm leading-relaxed opacity-80"
-                    rows={3}
-                    hint="Uitleg van Blok 2 (dag 21-40)"
-                  />
-                </div>
-                <div className="card border-l-4 border-[#4ACB6A]">
-                  <EditableTekst
-                    namespace="onboarding"
-                    sleutel="stap3.blok3.titel"
-                    standaard="Blok 3 · Dag 41–60: Oogsten en bouwen"
-                    overrides={overrides}
-                    isFounder={isFounder}
-                    as="p"
-                    className="text-[#4ACB6A] font-semibold text-sm mb-1"
-                    hint="Titel van Blok 3 in stap 3"
-                  />
-                  <EditableBlok
-                    namespace="onboarding"
-                    sleutel="stap3.blok3.tekst"
-                    standaard="Je lijst is gevuld, je ritme zit erin. Nu rond je gesprekken af, begeleid je je eerste partners en help je hen op weg. De gewoontes uit de eerste 40 dagen dragen nu vrucht."
-                    overrides={overrides}
-                    isFounder={isFounder}
-                    as="p"
-                    className="text-cm-white text-sm leading-relaxed opacity-80"
-                    rows={3}
-                    hint="Uitleg van Blok 3 (dag 41-60)"
-                  />
-                </div>
-              </div>
-
-              <div className="bg-gold-subtle border border-gold-subtle rounded-xl p-4">
-                <EditableTekst
-                  namespace="onboarding"
-                  sleutel="stap3.gouden_regel_titel"
-                  standaard="✦ De gouden regel"
-                  overrides={overrides}
-                  isFounder={isFounder}
-                  as="p"
-                  className="text-cm-gold font-semibold text-sm mb-1 text-center"
-                  hint="Titel van de gouden-regel-quote in stap 3"
-                />
-                <EditableTekst
-                  namespace="onboarding"
-                  sleutel="stap3.gouden_regel_quote"
-                  standaard='"Consistentie slaat motivatie altijd. Doe elke dag iets, ook als je het niet voelt."'
-                  overrides={overrides}
-                  isFounder={isFounder}
-                  as="p"
-                  className="text-cm-white text-sm text-center leading-relaxed italic"
-                  multiline
-                  rows={2}
-                  hint="De gouden-regel-quote zelf"
-                />
-              </div>
-
-              <button onClick={() => gaNaarStap(4)} disabled={bezig} className="btn-gold w-full py-3 text-base">
-                <EditableTekst
-                  namespace="onboarding"
-                  sleutel="stap3.knop"
-                  standaard="Begrepen, volgende stap →"
-                  overrides={overrides}
-                  isFounder={isFounder}
-                  as="span"
-                  hint="Tekst van de knop onderaan stap 3 (door-naar-stap-4)"
-                />
-              </button>
-            </div>
-          )}
-
-          {/* ───── STAP 4: KIES JE TEMPO (was 5, daarna FINALE) ─────
-              De voormalige stap 4 ("scripts" met Honest Conversation
-              voorbeelden) is verplaatst naar dag 2 van het playbook,
-              waar 'ie samen met de sponsor-call landt (de eerste echte
-              uitnodigingen doe je samen met je sponsor, daar horen de
-              scripts ook).
-
-              Oude stap 5 (tempo-keuze) is nu de finale stap 4. DB-sleutels
-              (paginaId="stap-6", stap6.*) blijven ongewijzigd voor
-              founder-override-compat. */}
-          {stap === 4 && (
-            <div className="space-y-6">
-              <MediaBlokkenClient
-                paginaNamespace="onboarding-stap"
-                paginaId="stap-6"
-                positie="boven-titel"
-                isFounder={isFounder}
-              />
-              <div className="text-center">
-                <div className="text-6xl mb-4">🎯</div>
-                <EditableTekst
-                  namespace="onboarding"
-                  sleutel="stap6.titel"
-                  standaard="Kies jouw tempo voor 60 dagen"
+                  standaard="Schrijf 5 namen op die spontaan in je hoofd opkomen"
                   overrides={overrides}
                   isFounder={isFounder}
                   as="h2"
                   className="text-2xl font-display font-bold text-cm-white mb-2"
                 />
-                <EditableTekst
-                  namespace="onboarding"
-                  sleutel="stap6.intro"
-                  standaard="Wees eerlijk met jezelf. Liever 2 uur volhouden, dan 6 beloven en stoppen na tien dagen."
-                  overrides={overrides}
-                  isFounder={isFounder}
-                  as="p"
-                  className="text-cm-white opacity-60 text-sm"
-                  multiline
-                  rows={2}
-                />
-              </div>
-
-              {/* Korte intro waarom dit een keuze is en geen losse getallen */}
-              <div className="bg-amber-900/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
-                <EditableTekst
-                  namespace="onboarding"
-                  sleutel="stap6.waarom_tempo_titel"
-                  standaard="⚡ Waarom je tempo kiest, geen losse getallen"
-                  overrides={overrides}
-                  isFounder={isFounder}
-                  as="p"
-                  className="text-amber-300 font-semibold text-sm flex items-center gap-2"
-                  hint="Titel van het waarom-tempo-blok"
-                />
                 <EditableBlok
                   namespace="onboarding"
-                  sleutel="stap6.waarom_tempo_tekst1"
-                  standaard="Mensen die zelf met losse getallen rommelen, zetten ze óf veel te laag (dan gebeurt er niets) óf veel te hoog (dan stoppen ze). Met een tempo kies je een ritme dat past bij jouw leven nu. De aantallen volgen automatisch."
+                  sleutel="stap3.intro"
+                  standaard="Niet filteren, niet bedenken 'die past niet'. Iedereen mag erop, zij beslissen zelf. Dit zijn jouw eerste warme contacten."
                   overrides={overrides}
                   isFounder={isFounder}
                   as="p"
-                  className="text-cm-white text-sm leading-relaxed opacity-90"
+                  className="text-cm-white opacity-70 text-sm leading-relaxed"
                   rows={3}
-                  hint="Eerste alinea waarom tempo-keuze"
-                />
-                <EditableBlok
-                  namespace="onboarding"
-                  sleutel="stap6.waarom_tempo_tekst2"
-                  standaard="🎯 Je kunt later in Instellingen altijd switchen, bijvoorbeeld als je meer ruimte krijgt. Dat is geen falen, dat is luisteren naar jezelf."
-                  overrides={overrides}
-                  isFounder={isFounder}
-                  as="p"
-                  className="text-cm-white text-sm opacity-80"
-                  rows={2}
-                  hint="Tweede alinea waarom tempo-keuze (over later switchen)"
                 />
               </div>
 
-              {/* De drie tempo-cards */}
-              <div className="space-y-4">
-                {([2, 4, 6] as const).map((uren) => {
-                  const dd = berekenDagdoelen(uren);
-                  const blokken = bouwblokkenVoorTempo(uren);
-                  const isGekozen = commitmentUren === uren;
-                  const meta: Record<
-                    CommitmentUren,
-                    { emoji: string; pastBij: string }
-                  > = {
-                    2: {
-                      emoji: "🌱",
-                      pastBij:
-                        "Je hebt een drukke baan, een gezin, of bouwt dit naast alles wat je al hebt. Liever rustig en consistent dan groot beginnen en stoppen.",
-                    },
-                    4: {
-                      emoji: "🔥",
-                      pastBij:
-                        "Je hebt ruimte gemaakt. Je gezin weet dat dit jouw 60 dagen worden. Je wilt er serieus voor gaan zonder jezelf op te branden.",
-                    },
-                    6: {
-                      emoji: "⚡",
-                      pastBij:
-                        "Je hebt geen ander werk, of je hebt deze 60 dagen echt vrijgemaakt. Je wilt er alles uithalen en bent bereid het als hoofdactiviteit te behandelen.",
-                    },
-                  };
-                  const m = meta[uren];
-                  return (
-                    <button
-                      key={uren}
-                      type="button"
-                      onClick={() => setCommitmentUren(uren)}
-                      className={`w-full text-left rounded-xl border-2 transition-all overflow-hidden ${
-                        isGekozen
-                          ? "border-cm-gold bg-cm-gold/[0.08] shadow-gold-lg"
-                          : "border-cm-border bg-cm-surface hover:border-cm-gold/40 hover:bg-cm-surface-2"
-                      }`}
-                    >
-                      <div className="p-5 space-y-4">
-                        {/* Header van de card */}
-                        <div className="flex items-start justify-between gap-3">
-                          <div>
-                            <p className="text-xs uppercase tracking-wider text-cm-white/50 mb-1">
-                              ± {uren} uur per dag
-                            </p>
-                            <h3 className="text-xl font-display font-bold text-cm-white flex items-center gap-2">
-                              <span className="text-2xl">{m.emoji}</span>
-                              {tempoNaam(uren)}
-                            </h3>
-                          </div>
-                          {isGekozen && (
-                            <span className="text-xs bg-cm-gold text-cm-on-gold font-bold px-3 py-1 rounded-full whitespace-nowrap">
-                              ✓ Gekozen
-                            </span>
-                          )}
-                        </div>
-
-                        {/* Past dit bij jou? Korte herkennings-beschrijving
-                            zodat mensen direct voelen of dit hun tempo is.
-                            Bewerkbaar per tempo zodat founder de tekst kan
-                            bijschaven na pilot-feedback. */}
-                        <EditableBlok
-                          namespace="onboarding"
-                          sleutel={`stap6.tempo${uren}.past_bij`}
-                          standaard={m.pastBij}
-                          overrides={overrides}
-                          isFounder={isFounder}
-                          as="p"
-                          className="text-sm text-cm-white/85 leading-relaxed"
-                          rows={3}
-                          hint={`Beschrijving voor wie bij het tempo van ${uren}u/dag past`}
-                        />
-
-                        {/* Dagdoelen-samenvatting, in alledaagse woorden */}
-                        <div className="bg-cm-surface-2 rounded-lg p-3 space-y-1">
-                          <p className="text-[10px] uppercase tracking-wider text-cm-white/50">
-                            Elke dag
-                          </p>
-                          <div className="grid grid-cols-1 gap-y-1 text-sm text-cm-white">
-                            <span>📲 {dd.contacten} nieuwe namen toevoegen</span>
-                            <span>💬 {dd.contacten} eerste berichten sturen</span>
-                            <span>📨 {dd.uitnodigingen} mensen uitnodigen om iets te bekijken</span>
-                            <span>🔄 Openstaande follow-ups doen (variabel)</span>
-                            <span>📱 1 tot 3 momenten uit je dag delen (geen verkoop)</span>
-                          </div>
-                        </div>
-
-                        {/* Uitklap: wat doe je per dag concreet? Alleen tonen
-                            als deze card gekozen is, anders wordt 't te druk. */}
-                        {isGekozen && (
-                          <div className="border-t border-cm-border pt-3 space-y-2">
-                            <p className="text-xs uppercase tracking-wider text-cm-white/50">
-                              Wat doe je op zo'n dag?
-                            </p>
-                            <ul className="space-y-2">
-                              {blokken.map((b) => (
-                                <li
-                                  key={b.naam}
-                                  className="text-xs text-cm-white/80 flex gap-2 leading-relaxed"
-                                >
-                                  <span className="flex-shrink-0 mt-0.5">{b.emoji}</span>
-                                  <span>
-                                    <strong className="text-cm-white">
-                                      {b.naam}
-                                    </strong>
-                                    <span className="text-cm-white/60">
-                                      {". "}{b.beschrijving}
-                                    </span>
-                                  </span>
-                                </li>
-                              ))}
-                            </ul>
-                            <p className="text-[11px] text-cm-white/55 italic pt-1 leading-relaxed">
-                              💡 Je hoeft dit niet in één blok te doen. Korte stukjes door je dag heen werkt vaak beter, tussendoor in de auto, na het eten, in de wachtkamer. Zo wordt het een ritme in plaats van een verplichting.
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Twijfel-hulp */}
-              <div className="card border-l-4 border-emerald-500 space-y-2">
-                <EditableTekst
-                  namespace="onboarding"
-                  sleutel="stap6.twijfel_titel"
-                  standaard="💡 Twijfel?"
-                  overrides={overrides}
-                  isFounder={isFounder}
-                  as="h3"
-                  className="text-emerald-300 font-semibold text-sm"
-                  hint="Titel van het twijfel-hulp-blok"
+              {voltooiingen["eerste-5-namen"]?.voltooid ? (
+                <AlGedaanLabel
+                  modus={(voltooiingen["eerste-5-namen"].modus ?? "sprint") as Modus}
+                  datum={voltooiingen["eerste-5-namen"].datum}
+                  bekijkRoute="/namenlijst"
                 />
-                <EditableBlok
-                  namespace="onboarding"
-                  sleutel="stap6.twijfel_tekst"
-                  standaard="Begin bij Fundament. Je kunt later in instellingen altijd opschalen als je merkt dat je meer ruimte hebt. Andersom kan ook: liever even terugschakelen dan helemaal stoppen."
-                  overrides={overrides}
-                  isFounder={isFounder}
-                  as="p"
-                  className="text-cm-white text-sm leading-relaxed opacity-85"
-                  rows={3}
-                  hint="Twijfel-hulp-tekst onder de tempo-cards"
-                />
-              </div>
-
-              {/* ELEVA Mentor intro */}
-              <div className="card space-y-3">
-                <div className="flex items-center gap-3">
-                  <span className="text-3xl">🌟</span>
-                  <EditableTekst
-                    namespace="onboarding"
-                    sleutel="stap6.mentor_titel"
-                    standaard="Jouw ELEVA Mentor staat klaar"
-                    overrides={overrides}
-                    isFounder={isFounder}
-                    as="h3"
-                    className="text-cm-gold font-semibold"
-                    hint="Titel van het Mentor-intro-blok"
-                  />
-                </div>
-                <EditableBlok
-                  namespace="onboarding"
-                  sleutel="stap6.mentor_uitleg"
-                  standaard="De ELEVA Mentor is gebouwd op basis van 60 jaar gecombineerde ervaring in aanbevelingsmarketing. Na het opslaan van je doelen open je de ELEVA Mentor direct, jouw krachtigste hulpmiddel naast je sponsor."
-                  overrides={overrides}
-                  isFounder={isFounder}
-                  as="p"
-                  className="text-cm-white text-sm leading-relaxed opacity-80"
-                  rows={3}
-                  hint="Uitleg-tekst over de ELEVA Mentor"
-                />
-                <ul className="space-y-1.5">
-                  {[
-                    { sleutel: "stap6.mentor_punt1", standaard: "Klaarstaande DM-teksten voor elk type contact" },
-                    { sleutel: "stap6.mentor_punt2", standaard: "Hulp bij bezwaren ('ik heb geen tijd', 'is dit een pyramid?')" },
-                    { sleutel: "stap6.mentor_punt3", standaard: "Follow-up strategieën voor prospects" },
-                    { sleutel: "stap6.mentor_punt4", standaard: "Motivatie als je een moeilijke dag hebt" },
-                  ].map((item, i) => (
-                    <li key={i} className="flex gap-2 text-sm text-cm-white opacity-80">
-                      <span className="text-cm-gold flex-shrink-0">✦</span>
-                      <EditableTekst
-                        namespace="onboarding"
-                        sleutel={item.sleutel}
-                        standaard={item.standaard}
-                        overrides={overrides}
-                        isFounder={isFounder}
-                        as="span"
-                        className=""
-                        hint={`Mentor-bullet ${i + 1}`}
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="bg-[#D4AF37]/10 border-2 border-[#D4AF37]/40 rounded-xl p-5 text-center space-y-3">
-                <EditableTekst
-                  namespace="onboarding"
-                  sleutel="stap6.setup_compleet_titel"
-                  standaard="Jouw setup is compleet 🎉"
-                  overrides={overrides}
-                  isFounder={isFounder}
-                  as="p"
-                  className="text-[#D4AF37] font-bold"
-                  hint="Titel van het setup-compleet-blok onderaan stap 4"
-                />
-                <p className="text-cm-white text-sm opacity-70 leading-relaxed">
-                  {commitmentUren
-                    ? `Je hebt voor ${tempoNaam(commitmentUren)} (± ${commitmentUren} uur per dag) gekozen. Direct door naar de rest van dag 1.`
-                    : "Kies eerst hierboven jouw tempo. Daarna rol je direct door naar de rest van dag 1."}
+              ) : (
+                <p className="text-cm-white text-sm opacity-60 italic">
+                  De namen-invoer staat klaar op je namenlijst. Open 'm, vul minimaal 5 in, en kom dan terug.
                 </p>
-              </div>
+              )}
 
-              {/* 'Je eerste 24 uur'-blok is verwijderd. Reden: het zegt
-                  dingen die dag 1 zelf al opvolgt (sponsor-bericht, namen
-                  toevoegen, WHY teruglezen). De gebruiker rolt nu meteen
-                  door naar /vandaag voor dag 1 zodra 'ie z'n tempo heeft
-                  gekozen, dus geen tussenstop met dubbele instructies. */}
+              <a
+                href="/namenlijst"
+                className="btn-gold w-full py-3 text-center block font-bold"
+              >
+                {voltooiingen["eerste-5-namen"]?.voltooid
+                  ? "Bekijk je namenlijst →"
+                  : "Open namenlijst en vul 5 namen in →"}
+              </a>
 
               <button
-                onClick={slaDoelOp}
-                disabled={bezig || !commitmentUren}
-                className="btn-gold w-full py-4 text-lg font-bold disabled:opacity-40 disabled:cursor-not-allowed"
+                onClick={() => gaNaarStap(4)}
+                disabled={bezig}
+                className="w-full py-3 border border-cm-border text-cm-white rounded-lg"
               >
-                {bezig
-                  ? "Laden..."
-                  : commitmentUren
-                  ? `Te gek, door naar de rest van dag 1 →`
-                  : "Kies eerst je tempo hierboven"}
+                Verder naar stap 4 →
               </button>
             </div>
+          )}
+
+          {/* ───── STAP 4: MODUS-BEWUSTE KEUZE (Sprint=tempo / Core=DTT) ─────
+              Oude run-uitleg ("3 blokken") + oude tempo-cards zijn per
+              2026-05-18 vervangen door de gedeelde Stap4ModusKeuze-
+              component. Sprint krijgt daar de tempo-cards (2/4/6 uur)
+              en Core krijgt de DTT-form. Beide schrijven onboarding_stap
+              = 99 en redirecten naar /vandaag. */}
+          {stap === 4 && (
+            <Stap4ModusKeuze
+              modus={modus}
+              isPreview={isPreview}
+              isFounder={isFounder}
+              overrides={overrides}
+              dttAlIngevuld={dttAlIngevuld}
+            />
           )}
 
         </div>

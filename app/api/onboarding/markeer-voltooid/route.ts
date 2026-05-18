@@ -1,12 +1,44 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { markeerVoltooid, type Modus } from "@/lib/onboarding/voltooiingen";
+import {
+  markeerVoltooid,
+  haalAlleVoltooiingenVoorUser,
+  type Modus,
+} from "@/lib/onboarding/voltooiingen";
 
 // ============================================================
-// POST /api/onboarding/markeer-voltooid
-// Body: { item_slug, modus_waarin, taak_id }
-// Schrijft naar onboarding_voltooiingen + dag_voltooiingen.
+// /api/onboarding/markeer-voltooid
+//
+// POST: markeert een onderdeel als voltooid voor de huidige user.
+//   Body accepteert beide naming-conventies:
+//     - { slug, modus }              (nieuwe pre-day-1 / admin-rail)
+//     - { item_slug, modus_waarin }  (oude dag-taak markering)
+//   Optioneel: taak_id (dag-taak), wordt ook in dag_voltooiingen geschreven.
+//
+// GET: geeft alle voltooiingen voor de huidige user terug, als
+//   { voltooiingen: { [item_slug]: { voltooid, modus, datum } } }
+//   voor cross-modus skip-detectie op de onboarding-pagina.
 // ============================================================
+
+export async function GET() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ voltooiingen: {} }, { status: 401 });
+  }
+
+  const map = await haalAlleVoltooiingenVoorUser(supabase, user.id);
+  const obj: Record<
+    string,
+    { voltooid: boolean; modus: string | null; datum: string | null }
+  > = {};
+  map.forEach((v, k) => {
+    obj[k] = v;
+  });
+  return NextResponse.json({ voltooiingen: obj });
+}
 
 export async function POST(request: Request) {
   try {
@@ -20,37 +52,42 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { item_slug, modus_waarin, taak_id } = body as {
+    const raw = body as {
+      slug?: string;
+      modus?: Modus;
       item_slug?: string;
       modus_waarin?: Modus;
       taak_id?: string;
     };
 
-    if (!item_slug || !modus_waarin || !taak_id) {
+    const slug = raw.slug ?? raw.item_slug;
+    const modus = raw.modus ?? raw.modus_waarin;
+    const taakId = raw.taak_id;
+
+    if (!slug || !modus) {
       return NextResponse.json(
-        { error: "item_slug, modus_waarin en taak_id zijn vereist" },
+        { error: "slug en modus zijn vereist" },
         { status: 400 },
       );
     }
 
     // Markeer in cross-modus tabel
-    await markeerVoltooid(supabase, user.id, item_slug, modus_waarin);
+    await markeerVoltooid(supabase, user.id, slug, modus);
 
-    // Markeer huidige taak als voltooid in dag_voltooiingen
-    // dag_nummer extraheren uit taak_id, format "core-dagN-xxx" of "dagN-xxx"
-    const dagMatch = taak_id.match(/(?:core-)?dag(\d+)/);
-    const dagNummer = dagMatch ? parseInt(dagMatch[1], 10) : null;
-    if (dagNummer !== null) {
-      await supabase
-        .from("dag_voltooiingen")
-        .upsert(
+    // Als er een taak_id meegegeven is: schrijf 'm ook in dag_voltooiingen.
+    if (taakId) {
+      const dagMatch = taakId.match(/(?:core-)?dag(\d+)/);
+      const dagNummer = dagMatch ? parseInt(dagMatch[1], 10) : null;
+      if (dagNummer !== null) {
+        await supabase.from("dag_voltooiingen").upsert(
           {
             user_id: user.id,
             dag_nummer: dagNummer,
-            taak_id,
+            taak_id: taakId,
           },
           { onConflict: "user_id,dag_nummer,taak_id" },
         );
+      }
     }
 
     return NextResponse.json({ ok: true });

@@ -4,10 +4,10 @@ import { redirect } from "next/navigation";
 // ============================================================
 // /welkom-core, legacy route.
 //
-// Per 2026-05-16: Core is universeel naar /vandaag verhuisd.
+// Per 2026-05-18: Core gebruikt nu de gedeelde pre-day-1 in /onboarding.
 // Deze pagina blijft als redirect voor backward-compat en oude
 // bookmarks. Logica per modus:
-//   - core  -> /vandaag (nieuwe Core-content)
+//   - core  -> /onboarding (gedeelde pre-day-1, modus-bewust)
 //   - sprint -> /dashboard
 //   - pro   -> /welkom-pro
 //   - geen modus -> /welkom-keuze
@@ -30,7 +30,7 @@ export default async function WelkomCorePagina() {
 
   const modus = (profile as { modus?: string | null } | null)?.modus ?? null;
 
-  if (modus === "core") redirect("/vandaag");
+  if (modus === "core") redirect("/onboarding");
   if (modus === "sprint") redirect("/dashboard");
   if (modus === "pro") redirect("/welkom-pro");
   redirect("/welkom-keuze");
