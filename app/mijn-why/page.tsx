@@ -23,6 +23,18 @@ export default function MijnWhyPagina() {
   const [isPreview, setIsPreview] = useState(false);
   const chatEindRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  // Waar gaan we naartoe na opslag/terug? Default = dashboard. Maar als
+  // de gebruiker uit /onboarding kwam (via=onboarding query-param), gaan
+  // we terug naar /onboarding stap 2 zodat de pre-day-1 flow doorloopt.
+  // window.location.search direct uitlezen (geen useSearchParams) om de
+  // Suspense-boundary-vereiste in Next.js 14 te vermijden.
+  const [redirectNa, setRedirectNa] = useState("/dashboard");
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("via") === "onboarding") {
+      setRedirectNa("/onboarding?stap=2");
+    }
+  }, []);
   const supabase = createClient();
 
   useEffect(() => {
@@ -332,7 +344,7 @@ export default function MijnWhyPagina() {
         </div>
         {opgeslagen && (
           <button
-            onClick={() => router.push("/dashboard")}
+            onClick={() => router.push(redirectNa)}
             className="btn-gold text-sm"
           >
             {v("why.naar_dashboard")} →
@@ -370,7 +382,7 @@ export default function MijnWhyPagina() {
               </p>
               <div className="flex gap-3">
                 <button
-                  onClick={() => router.push("/dashboard")}
+                  onClick={() => router.push(redirectNa)}
                   className="btn-secondary text-sm flex-1"
                 >
                   {v("why.terug")}

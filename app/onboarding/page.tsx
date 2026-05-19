@@ -531,7 +531,7 @@ export default function OnboardingPagina() {
                 <AlGedaanLabel
                   modus={(voltooiingen["why"].modus ?? "sprint") as Modus}
                   datum={voltooiingen["why"].datum}
-                  bekijkRoute="/mijn-why"
+                  bekijkRoute="/mijn-why?via=onboarding"
                 />
               )}
               <div className="text-center">
@@ -629,7 +629,7 @@ export default function OnboardingPagina() {
                   rows={2}
                   hint="Uitleg boven de WHY-CTA-knop"
                 />
-                <Link href={isPreview ? "/mijn-why?preview=true" : "/mijn-why"} className="btn-gold w-full py-3 text-center block font-bold">
+                <Link href={isPreview ? "/mijn-why?preview=true&via=onboarding" : "/mijn-why?via=onboarding"} className="btn-gold w-full py-3 text-center block font-bold">
                   {isPreview ? "Preview: WHY-gesprek (slaat niets op)" : (
                     <EditableTekst
                       namespace="onboarding"

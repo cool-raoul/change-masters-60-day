@@ -90,13 +90,19 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone();
 
     if (profile && !profile.onboarding_klaar) {
-      // Pro-leden hebben geen WHY-pad in deze pilot. Stuur ze naar
-      // hun eigen welkom-pagina. Andere modi (sprint, core, null)
-      // gaan via /mijn-why.
-      if ((profile as { modus?: string | null }).modus === "pro") {
+      const profModus = (profile as { modus?: string | null }).modus;
+      // Drie scenario's per 2026-05-19:
+      // 1. Modus nog NULL → /welkom-keuze (modus-keuze EERST, geen
+      //    impliciete WHY-flow voor wie 't niet wil zoals Pro).
+      // 2. Modus=pro → /welkom-pro (eigen 14-stappen pad).
+      // 3. Modus=sprint/core → /onboarding (pre-day-1 doet de WHY-stap
+      //    netjes als onderdeel van stap 2, niet als losse pagina vooraf).
+      if (!profModus) {
+        url.pathname = "/welkom-keuze";
+      } else if (profModus === "pro") {
         url.pathname = "/welkom-pro";
       } else {
-        url.pathname = "/mijn-why";
+        url.pathname = "/onboarding";
       }
       return NextResponse.redirect(url);
     }
