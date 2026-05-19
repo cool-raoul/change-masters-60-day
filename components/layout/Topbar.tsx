@@ -7,19 +7,31 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTaal } from "@/lib/i18n/TaalContext";
 import { useThema } from "@/components/theme/ThemeContext";
 import { AvatarFoto } from "@/components/ui/AvatarFoto";
+import {
+  topbarLabelVoorModus,
+  voortgangPercentageVoorModus,
+} from "@/lib/playbook/dagen-voor-modus";
+import type { Modus } from "@/lib/onboarding/voltooiingen";
 
 export function Topbar({
   gebruikersnaam,
   fotoUrl,
   huidigeDag,
+  modus,
+  proStap,
 }: {
   gebruikersnaam: string;
   /** Profielfoto-URL uit profiles.foto_url, null als geen foto geüpload. */
   fotoUrl: string | null;
-  /** Server-side berekende huidige dag (zelfde logica als dashboard).
-   *  Topbar overschrijft deze alleen wanneer de URL een ?dag=N
-   *  parameter heeft op /playbook (founder-preview-modus). */
+  /** Server-side berekende huidige dag (modus-bewust, via dezelfde
+   *  helper als dashboard en /vandaag). Topbar overschrijft alleen
+   *  wanneer de URL ?dag=N parameter heeft op /playbook. */
   huidigeDag: number;
+  /** Modus van de gebruiker. Bepaalt label-tekst en voortgangs-formule. */
+  modus: Modus;
+  /** Voor Pro: huidige stap (1-14) in PRO_LEERPAD. Voor Sprint/Core
+   *  niet gebruikt. */
+  proStap?: number;
 }) {
   const [aantalHerinneringen, setAantalHerinneringen] = useState(0);
   const [isPremium, setIsPremium] = useState(false);
@@ -27,16 +39,19 @@ export function Topbar({
   const profielMenuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  // Founder-preview: als de pathname /playbook is en er staat ?dag=N
-  // in de URL, volg die. Zo blijft de Topbar-cirkel altijd congruent
-  // met de dag die de founder op dit moment in het playbook bekijkt.
+  // Founder-preview: ?dag=N op /playbook overschrijft de berekende dag.
+  // Sprint cappt op 60, Core mag doorrollen (lifetime).
   const dagFromUrl =
     pathname === "/playbook" ? Number(searchParams.get("dag")) : NaN;
+  const maxDag = modus === "sprint" ? 60 : 999;
   const dag =
-    Number.isFinite(dagFromUrl) && dagFromUrl >= 1 && dagFromUrl <= 60
+    Number.isFinite(dagFromUrl) && dagFromUrl >= 1 && dagFromUrl <= maxDag
       ? dagFromUrl
       : huidigeDag;
-  const fase = dag <= 20 ? 1 : dag <= 40 ? 2 : 3;
+  // Cirkel-getal: voor Pro tonen we proStap, voor Sprint/Core dag-nummer.
+  const cirkelGetal = modus === "pro" ? (proStap ?? 1) : dag;
+  const label = topbarLabelVoorModus(modus, dag, proStap);
+  const percentage = voortgangPercentageVoorModus(modus, dag, proStap);
   const { v } = useTaal();
   const router = useRouter();
   const { thema, zetThema } = useThema();
@@ -119,28 +134,27 @@ export function Topbar({
 
   return (
     <header className="h-16 border-b border-cm-border bg-cm-surface flex items-center justify-between px-4 lg:px-6">
-      {/* Dag teller, op mobiel alleen het ronde cijfer (de tekst-info
-          staat al op het dashboard zelf, dubbel op de topbar voelt druk).
-          Op desktop tonen we de volledige tekst voor context. */}
+      {/* Dag teller, modus-bewust. Sprint: 'Dag X van 60'. Core: 'Dag X
+          opstart' (1-40) of 'Lifetime dag X' (41+). Pro: 'Stap X van 14'. */}
       <div className="flex items-center gap-4 ml-10 lg:ml-0">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-cm-gold/15 border border-cm-gold/50 flex items-center justify-center">
-            <span className="text-cm-gold text-xs font-bold">{dag}</span>
+            <span className="text-cm-gold text-xs font-bold">{cirkelGetal}</span>
           </div>
           <div className="hidden md:block">
-            <p className="text-cm-white text-sm font-medium">{v("dashboard.dag")} {dag} <span className="text-cm-white/50">{v("dashboard.van_60")}</span></p>
+            <p className="text-cm-white text-sm font-medium">{label}</p>
           </div>
         </div>
 
-        {/* Voortgangsbalk, dunner voor subtieler gevoel */}
+        {/* Voortgangsbalk, modus-bewust percentage */}
         <div className="hidden md:flex items-center gap-2">
           <div className="w-32 h-1 bg-cm-surface-2 rounded-full overflow-hidden">
             <div
               className="h-full bg-gradient-gold rounded-full transition-all duration-500"
-              style={{ width: `${(dag / 60) * 100}%` }}
+              style={{ width: `${percentage}%` }}
             />
           </div>
-          <span className="text-cm-white/60 text-xs">{Math.round((dag / 60) * 100)}%</span>
+          <span className="text-cm-white/60 text-xs">{percentage}%</span>
         </div>
       </div>
 
