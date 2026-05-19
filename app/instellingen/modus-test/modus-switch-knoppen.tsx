@@ -30,9 +30,32 @@ export function ModusSwitchKnoppen({ userId, huidigeModus }: Props) {
     setBezig(label);
     try {
       const supabase = createClient();
+
+      // Bij eerste activatie van een modus: zet ook de modus-specifieke
+      // startdatum. Bij her-activatie van een eerder gebruikte modus:
+      // laat de startdatum staan zodat de banner op /vandaag de
+      // 'oppakken vs opnieuw'-keuze kan tonen.
+      const today = new Date().toISOString().slice(0, 10);
+      const updates: Record<string, unknown> = { modus: nieuweModus };
+      if (nieuweModus === "sprint" || nieuweModus === "core") {
+        const datumVeld =
+          nieuweModus === "sprint" ? "sprint_startdatum" : "core_startdatum";
+        const { data: prof } = await supabase
+          .from("profiles")
+          .select(datumVeld)
+          .eq("id", userId)
+          .maybeSingle();
+        const bestaat = (prof as Record<string, string | null> | null)?.[
+          datumVeld
+        ];
+        if (!bestaat) {
+          updates[datumVeld] = today;
+        }
+      }
+
       const { error } = await supabase
         .from("profiles")
-        .update({ modus: nieuweModus })
+        .update(updates)
         .eq("id", userId);
       if (error) throw error;
       toast.success(`Modus aangepast naar: ${label}`);
