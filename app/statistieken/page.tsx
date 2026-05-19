@@ -1,10 +1,14 @@
 import { createClient } from "@/lib/supabase/server";
-import { differenceInDays } from "date-fns";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { StatsOverzicht } from "@/components/statistieken/StatsOverzicht";
 import { WekelijkseReviewFormulier } from "@/components/statistieken/WekelijkseReviewFormulier";
 import { MentorStatsAnalyseKnop } from "@/components/statistieken/MentorStatsAnalyseKnop";
+import { startdatumVoorModus } from "@/lib/playbook/dag-teller";
+import { topbarLabelVoorModus } from "@/lib/playbook/dagen-voor-modus";
+import { berekenKalenderdag } from "@/lib/playbook/bereken-dag";
+import type { Modus } from "@/lib/onboarding/voltooiingen";
 
 export default async function StatistiekenPagina() {
   const supabase = await createClient();
@@ -16,29 +20,63 @@ export default async function StatistiekenPagina() {
 
   const taal = await getServerTaal();
 
-  // Haal alle stats op voor de hele run
-  const [{ data: profile }, { data: alleStats }, { data: prospects }] = await Promise.all([
-    supabase.from("profiles").select("run_startdatum").eq("id", user.id).maybeSingle(),
-    supabase
-      .from("dagelijkse_stats")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("stat_datum", { ascending: true }),
-    supabase
-      .from("prospects")
-      .select("pipeline_fase")
-      .eq("user_id", user.id)
-      .eq("gearchiveerd", false),
-  ]);
+  const [{ data: profile }, { data: alleStats }, { data: prospects }] =
+    await Promise.all([
+      supabase
+        .from("profiles")
+        .select(
+          "modus, run_startdatum, sprint_startdatum, core_startdatum, created_at",
+        )
+        .eq("id", user.id)
+        .maybeSingle(),
+      supabase
+        .from("dagelijkse_stats")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("stat_datum", { ascending: true }),
+      supabase
+        .from("prospects")
+        .select("pipeline_fase")
+        .eq("user_id", user.id)
+        .eq("gearchiveerd", false),
+    ]);
 
-  const runStart = (profile as any)?.run_startdatum ? new Date((profile as any).run_startdatum) : new Date();
-  const dag = Math.max(1, Math.min(60, differenceInDays(new Date(), runStart) + 1));
+  // Pro heeft eigen leerpad zonder dag-gebaseerde stats in deze pilot.
+  const profielModus = ((profile as { modus?: string | null } | null)?.modus ??
+    "sprint") as Modus;
+  if (profielModus === "pro") redirect("/welkom-pro");
+
+  // Modus-specifieke startdatum als anker. Voor Sprint capt op 60,
+  // voor Core mag boven 40 (lifetime).
+  const profielDatums = {
+    sprint_startdatum:
+      (profile as { sprint_startdatum?: string | null } | null)
+        ?.sprint_startdatum ?? null,
+    core_startdatum:
+      (profile as { core_startdatum?: string | null } | null)
+        ?.core_startdatum ?? null,
+    run_startdatum:
+      (profile as { run_startdatum?: string | null } | null)?.run_startdatum ??
+      null,
+    created_at:
+      (profile as { created_at?: string | null } | null)?.created_at ?? null,
+  };
+  const startdatumDate = startdatumVoorModus(profielDatums, profielModus);
+  const startdatumIso = startdatumDate
+    ? startdatumDate.toISOString().slice(0, 10)
+    : null;
+  const ruweDag = berekenKalenderdag(startdatumIso);
+  const dag =
+    profielModus === "sprint" ? Math.max(1, Math.min(60, ruweDag)) : ruweDag;
 
   // Pipeline counts
   const pipelineCounts: Record<string, number> = {};
   (prospects || []).forEach((p: { pipeline_fase: string }) => {
-    pipelineCounts[p.pipeline_fase] = (pipelineCounts[p.pipeline_fase] || 0) + 1;
+    pipelineCounts[p.pipeline_fase] =
+      (pipelineCounts[p.pipeline_fase] || 0) + 1;
   });
+
+  const dagLabel = topbarLabelVoorModus(profielModus, dag);
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -54,7 +92,7 @@ export default async function StatistiekenPagina() {
           {v("stats.titel", taal)}
         </h1>
         <p className="text-cm-white mt-1 opacity-70">
-          {v("stats.subtitel", taal)}, {v("dashboard.dag", taal)} {dag} {v("dashboard.van_60", taal)}
+          {v("stats.subtitel", taal)}, {dagLabel}
         </p>
       </div>
 
