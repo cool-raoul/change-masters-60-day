@@ -17,6 +17,7 @@ import { pasTempoToeOpDag } from "@/lib/playbook/tempo-aware";
 import { genereerWeekritmeDag } from "@/lib/playbook/weekritme";
 import { berekenHuidigeDag } from "@/lib/playbook/bereken-dag";
 import { startdatumVoorModus } from "@/lib/playbook/dag-teller";
+import { dagVoorModusEnNummer } from "@/lib/playbook/dagen-voor-modus";
 import type { CommitmentUren } from "@/lib/dagdoelen";
 import { pakTopRadar, type ProspectInput } from "@/lib/radar/volgende-beste-actie";
 import { RadarBalk } from "@/components/vandaag/RadarBalk";
@@ -395,29 +396,26 @@ export default async function DashboardPagina({
   // run-weekdag). Beide trajecten leveren een Dag-object op met
   // titel + vandaagDoen, zodat de "Vandaag is dag X"-CTA-tile en
   // AutoNaarVandaag voor het hele 1-60 bereik werken.
-  let huidigeDagData;
-  if (dag <= 21) {
-    huidigeDagData = DAGEN.find((d) => d.nummer === dag) ?? null;
-    if (huidigeDagData) {
-      huidigeDagData = pasTempoToeOpDag(
-        huidigeDagData,
-        commitmentUrenDashboard,
-      );
-      // Override toepassen, founders kunnen via /instellingen/playbook
-      // teksten aanpassen zonder code-deploy. haalOverrides faalt
-      // stilletjes als de tabel nog niet bestaat (returnt lege map).
+  // Modus-bewuste CTA-tile data via centrale helper. Voor Sprint gebruikt
+  // 'ie DAGEN, voor Core CORE_DAGEN + generator voor verankering/lifetime.
+  // Pro is hierboven al via redirect afgehandeld.
+  const dashboardCtaModus = huidigeModus ?? "sprint";
+  let huidigeDagData = dagVoorModusEnNummer(dashboardCtaModus, dag);
+  if (huidigeDagData && dashboardCtaModus === "sprint") {
+    if (dag <= 21) {
+      // Sprint behoudt tempo-aware + founder-overrides voor dag 1-21.
+      huidigeDagData = pasTempoToeOpDag(huidigeDagData, commitmentUrenDashboard);
       const overrideMap = await haalOverrides(supabase as any, [dag]);
       huidigeDagData = pasOverrideToe(
         huidigeDagData,
         overrideMap.get(dag) ?? null,
       );
+    } else if (dag <= 60) {
+      // Weekritme-modus: synthetisch dag-object zonder override-pass.
+      huidigeDagData = genereerWeekritmeDag(dag, commitmentUrenDashboard);
+    } else {
+      huidigeDagData = null;
     }
-  } else if (dag <= 60) {
-    // Weekritme-modus: synthetisch dag-object. Geen override-pass
-    // (synthetische dagen krijgen geen founder-edits).
-    huidigeDagData = genereerWeekritmeDag(dag, commitmentUrenDashboard);
-  } else {
-    huidigeDagData = null;
   }
   const huidigeDagVoltooidIds = huidigeDagData
     ? huidigeDagData.vandaagDoen
