@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { BRACKETS } from "@/lib/dtt/brackets";
 import { bracketVoorUren } from "@/lib/dtt/advies";
+import { createClient } from "@/lib/supabase/client";
 
 // ============================================================
 // Core Tempo-sectie op /instellingen.
@@ -48,6 +49,12 @@ export function CoreTempoSectie({
     });
 
     if (res.ok) {
+      // Sessie verfrissen voor consistente banner-check op /vandaag (K3).
+      // core_dtt zit in profiles, niet in JWT, maar refreshSession()
+      // forceert ook een server-component-rerender van pages die het
+      // profile opnieuw uitlezen.
+      const supabase = createClient();
+      await supabase.auth.refreshSession();
       toast.success("Tempo bijgewerkt");
       router.refresh();
     } else {
