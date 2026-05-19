@@ -1,11 +1,15 @@
 import { createClient } from "@/lib/supabase/server";
-import { differenceInDays } from "date-fns";
+import { redirect } from "next/navigation";
 import KopieerLink from "@/components/team/KopieerLink";
 import { TeamBoom } from "@/components/team/TeamBoom";
 import { PremiumToggleKnop } from "@/components/team/PremiumToggleKnop";
 import { RolToggleKnop } from "@/components/team/RolToggleKnop";
 import Link from "next/link";
 import { getServerTaal, v } from "@/lib/i18n/server";
+import { startdatumVoorModus } from "@/lib/playbook/dag-teller";
+import { topbarLabelVoorModus } from "@/lib/playbook/dagen-voor-modus";
+import { berekenKalenderdag } from "@/lib/playbook/bereken-dag";
+import type { Modus } from "@/lib/onboarding/voltooiingen";
 
 interface OnboardingVoortgang {
   user_id: string;
@@ -144,10 +148,42 @@ export default async function TeamPagina({ searchParams }: { searchParams: { lid
 
   const taal = await getServerTaal();
 
-  const { data: profile } = await supabase.from("profiles").select("run_startdatum, role").eq("id", user.id).maybeSingle();
-  const isLeider = (profile as any)?.role === "leider";
-  const runStart = (profile as any)?.run_startdatum ? new Date((profile as any).run_startdatum) : new Date();
-  const dag = Math.max(1, Math.min(60, differenceInDays(new Date(), runStart) + 1));
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select(
+      "modus, run_startdatum, sprint_startdatum, core_startdatum, created_at, role",
+    )
+    .eq("id", user.id)
+    .maybeSingle();
+  const isLeider = (profile as { role?: string } | null)?.role === "leider";
+
+  // Pro heeft eigen leerpad-overzicht, niet team-pagina (in deze pilot).
+  const profielModus = ((profile as { modus?: string | null } | null)?.modus ??
+    "sprint") as Modus;
+  if (profielModus === "pro") redirect("/welkom-pro");
+
+  // Modus-specifieke startdatum + dag-berekening + label.
+  const profielDatums = {
+    sprint_startdatum:
+      (profile as { sprint_startdatum?: string | null } | null)
+        ?.sprint_startdatum ?? null,
+    core_startdatum:
+      (profile as { core_startdatum?: string | null } | null)
+        ?.core_startdatum ?? null,
+    run_startdatum:
+      (profile as { run_startdatum?: string | null } | null)?.run_startdatum ??
+      null,
+    created_at:
+      (profile as { created_at?: string | null } | null)?.created_at ?? null,
+  };
+  const startdatumDate = startdatumVoorModus(profielDatums, profielModus);
+  const startdatumIso = startdatumDate
+    ? startdatumDate.toISOString().slice(0, 10)
+    : null;
+  const ruweDag = berekenKalenderdag(startdatumIso);
+  const dag =
+    profielModus === "sprint" ? Math.max(1, Math.min(60, ruweDag)) : ruweDag;
+  const dagLabel = topbarLabelVoorModus(profielModus, dag);
 
   const teamboom = await haalTeamBoomOp(supabase, user.id);
   const totaalLeden = telTotaal(teamboom);
@@ -181,9 +217,7 @@ export default async function TeamPagina({ searchParams }: { searchParams: { lid
           <h1 className="text-2xl font-display font-bold text-cm-white">
             {v("team.titel", taal)}
           </h1>
-          <p className="text-cm-white mt-1">
-            {v("team.dag", taal)} {dag} {v("dashboard.van_60", taal)}
-          </p>
+          <p className="text-cm-white mt-1">{dagLabel}</p>
         </div>
       </div>
 
