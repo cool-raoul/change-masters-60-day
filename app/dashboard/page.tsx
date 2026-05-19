@@ -7,7 +7,8 @@ import { DagelijkseStat, Herinnering, WhyProfile } from "@/lib/supabase/types";
 // DagStatForm verwijderd van dashboard, handmatig stats invullen
 // hoort op /statistieken (en wordt straks automatisch gevuld door
 // pipeline-veranderingen).
-import { TesterToolbar } from "@/components/tester/TesterToolbar";
+// TesterToolbar is verhuisd naar FounderTopStrip (AppShell), dus dashboard
+// importeert 'm niet meer rechtstreeks.
 import { AutoNaarVandaag } from "@/components/dashboard/AutoNaarVandaag";
 import { HerinnerLaterKnop } from "@/components/playbook/HerinnerLaterKnop";
 import { DAGEN } from "@/lib/playbook/dagen";
@@ -17,7 +18,7 @@ import { genereerWeekritmeDag } from "@/lib/playbook/weekritme";
 import { berekenHuidigeDag } from "@/lib/playbook/bereken-dag";
 import type { CommitmentUren } from "@/lib/dagdoelen";
 import { pakTopRadar, type ProspectInput } from "@/lib/radar/volgende-beste-actie";
-import { RadarTeaser } from "@/components/dashboard/RadarTeaser";
+import { RadarBalk } from "@/components/vandaag/RadarBalk";
 import { haalRadarAfvinkSets } from "@/lib/radar/carry-over";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { pakDagdeelGroet } from "@/lib/util/dagdeel-groet";
@@ -706,9 +707,18 @@ export default async function DashboardPagina({
         </Link>
       )}
 
-      {/* Radar-teaser: compacte regel die naar /vandaag verwijst waar de
-          volle RadarBalk leeft. Verbergt zich bij 0 open items. */}
-      <RadarTeaser aantalOpen={aantalRadarOpen} />
+      {/* Radar-balk inline op /dashboard: uitklap-component met afvinkbare
+          acties direct hier, geen sprong naar /vandaag meer nodig.
+          Afvinken syncrt via /api/radar/afvinken naar dezelfde tabel die
+          /vandaag leest, dus daar verdwijnt 't ook automatisch. Verbergt
+          zich bij 0 items. */}
+      {aantalRadarOpen > 0 && (
+        <RadarBalk
+          items={topRadar}
+          initieelAfgevinkt={Array.from(radarAfvinkSetsDash.vandaagAfgevinkt)}
+          huidigeDag={dag}
+        />
+      )}
 
       {/* Streak + mijlpaal-vieringen. Compact, alleen zichtbaar bij
           relevante getallen (geen lege tegels). */}
@@ -757,14 +767,8 @@ export default async function DashboardPagina({
         </div>
       )}
 
-      {/* Tester-toolbar, alleen voor pilot-testers + founders.
-          Verzet run_startdatum zodat je virtueel op een andere dag zit
-          en zo door alle 60 dagen kan klikken voor bug-rapporten.
-          Voorheen verborg de toolbar zich vanaf dag 22, waardoor founders
-          niet meer konden terugspringen naar week 1-3 om content te reviewen. */}
-      {(isTester || isFounder) && (
-        <TesterToolbar huidigeDag={dag} />
-      )}
+      {/* Tester-toolbar zit nu bovenaan in FounderTopStrip (zie AppShell),
+          dus hier niet meer een tweede dezelfde balk. */}
 
       {/* Daily tasks staan EXCLUSIEF in /vandaag, niet meer dubbel op
           het dashboard. De gouden CTA hierboven is de enige entry naar
