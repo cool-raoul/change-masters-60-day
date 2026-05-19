@@ -42,6 +42,11 @@ type Props = {
   alVoltooid: boolean;
   opVoltooid: () => void;
   opOpnieuw?: () => void;
+  /** Verberg telefoon-import-routes en toon alleen het handmatige
+   *  type-veld. Wordt op /onboarding stap 3 gebruikt waar we
+   *  expliciet de spontane denkflow willen ("uit je hoofd"). De
+   *  telefoon-import komt later in Sprint dag 1 of Core dag 2. */
+  alleenHandmatig?: boolean;
 };
 
 // Helper: markeer 'eerste-5-namen' in cross-modus skip-tabel. Idempotent
@@ -69,7 +74,13 @@ async function markeerEersteVijfNamenAlsCrossModusVoltooid() {
   }
 }
 
-export function NamenForm({ doel, alVoltooid, opVoltooid, opOpnieuw }: Props) {
+export function NamenForm({
+  doel,
+  alVoltooid,
+  opVoltooid,
+  opOpnieuw,
+  alleenHandmatig = false,
+}: Props) {
   // Start met `doel` lege rijen + 5 buffer (zodat 'ie ruimte heeft).
   const [rijen, setRijen] = useState<Rij[]>(
     Array.from({ length: doel + 5 }, () => ({ naam: "", telefoon: "" })),
@@ -281,7 +292,7 @@ export function NamenForm({ doel, alVoltooid, opVoltooid, opOpnieuw }: Props) {
     <div className="rounded-lg border-2 border-cm-gold/40 bg-cm-gold/5 px-4 py-4 space-y-4">
       <div className="space-y-1.5">
         <h4 className="text-cm-gold font-semibold text-sm">
-          📝 Voeg {doel} namen toe aan je lijst
+          📝 Voeg minimaal {doel} {doel === 1 ? "naam" : "namen"} toe aan je lijst
         </h4>
         <p className="text-cm-white opacity-80 text-xs leading-relaxed">
           Familie, oude collega's, sportmaatjes, ouders bij school of voetbal, buren, ondernemers in je netwerk. Niet filteren, alles erop. Filteren komt later, en doe je nooit voor iemand anders.
@@ -317,8 +328,10 @@ export function NamenForm({ doel, alVoltooid, opVoltooid, opOpnieuw }: Props) {
         </div>
       </div>
 
-      {/* ROUTE 1: Selecteer uit telefoon-geheugen (als reservoir gevuld is) */}
-      {!reservoirLaden && reservoirRows.length > 0 && (
+      {/* ROUTE 1: Selecteer uit telefoon-geheugen (als reservoir gevuld is)
+          Verbergen bij alleenHandmatig=true (pre-day-1 stap 3, daar willen we
+          spontaan-uit-hoofd, telefoon-import komt later in dag 1/2). */}
+      {!alleenHandmatig && !reservoirLaden && reservoirRows.length > 0 && (
         <div className="rounded-lg border border-cm-gold/40 bg-cm-gold/10 p-3 space-y-2">
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1">
@@ -425,8 +438,9 @@ export function NamenForm({ doel, alVoltooid, opVoltooid, opOpnieuw }: Props) {
         </div>
       )}
 
-      {/* ROUTE 2: Importeer alsnog (als reservoir leeg is) */}
-      {!reservoirLaden && reservoirRows.length === 0 && geactiveerd === 0 && (
+      {/* ROUTE 2: Importeer alsnog (als reservoir leeg is). Verbergen
+          bij alleenHandmatig=true. */}
+      {!alleenHandmatig && !reservoirLaden && reservoirRows.length === 0 && geactiveerd === 0 && (
         <div className="rounded-lg border border-blue-500/40 bg-blue-900/15 p-3 space-y-2">
           <p className="text-blue-300 font-semibold text-sm flex items-center gap-2">
             📲 Sneller: importeer je telefoon

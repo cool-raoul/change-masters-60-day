@@ -274,6 +274,40 @@ export default async function InstellingenPagina() {
         </div>
       )}
 
+      {/* Admin-checklist: 4 eenmalige stappen (webshop, krediet, teams,
+          bestellinks) voor alle modi. Zichtbaar voor iedereen, founder
+          kan via /setup en /setup/[slug] de uitleg + films per item
+          beheren (MediaBlokkenClient + EditableTekst). */}
+      <div className="card space-y-3 border-l-4 border-cm-gold">
+        <EditableTekst
+          namespace="instellingen"
+          sleutel="admin_checklist.titel"
+          standaard="📋 Eenmalige admin-stappen"
+          overrides={overrides}
+          isFounder={isFounder}
+          as="h2"
+          className="text-sm font-semibold text-cm-white uppercase tracking-wider"
+          hint="Titel van de admin-checklist-sectie op /instellingen"
+        />
+        <EditableBlok
+          namespace="instellingen"
+          sleutel="admin_checklist.uitleg"
+          standaard="Webshop aanmaken, kredietformulier invullen, teams-administratie inrichten, bestellinks koppelen. Vier stappen die je één keer doet. Klik op een item om de uitleg + film te zien."
+          overrides={overrides}
+          isFounder={isFounder}
+          as="p"
+          className="text-cm-white text-sm opacity-70 leading-relaxed"
+          rows={3}
+          hint="Korte uitleg boven de admin-checklist-knop"
+        />
+        <Link
+          href="/setup"
+          className="btn-gold text-sm inline-block px-4 py-2 font-semibold"
+        >
+          Open admin-checklist →
+        </Link>
+      </div>
+
       {/* Modus-test: founder + tester proefaccount-switcher */}
       {magModusTesten && (
         <div className="card space-y-3 border-gold-subtle">

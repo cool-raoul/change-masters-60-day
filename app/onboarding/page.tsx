@@ -201,10 +201,19 @@ export default function OnboardingPagina() {
       // De finale stap is nu 'tempo kiezen' (commitment_uren) en daarna
       // doorrollen naar dag 1 in /vandaag. DB-veldnamen ongewijzigd voor
       // backwards-compat (stap_3_namen is historisch zo genoemd).
+      // Push-teksten zijn modus-bewust. Stap 4 was eerst "begrijpt de
+      // 60-dagenrun" (Sprint-only). Nu een neutralere zin die voor
+      // Sprint, Core én Pro past.
       const stapActies: Record<number, { veld?: string; pushNaam: string }> = {
         2: { veld: "stap_1_welkom", pushNaam: "heeft de app geïnstalleerd 📱" },
-        3: { veld: "stap_2_run",    pushNaam: "heeft zijn/haar WHY gemaakt 💛" },
-        4: { veld: "stap_3_namen",  pushNaam: "begrijpt de 60-dagenrun 📖" },
+        3: { veld: "stap_2_run",    pushNaam: "heeft de eerste 5 namen op de lijst gezet ✍️" },
+        4: {
+          veld: "stap_3_namen",
+          pushNaam:
+            modus === "core"
+              ? "is klaar voor dag 1 in Core 🚶"
+              : "is klaar voor dag 1 in Sprint 🏃",
+        },
       };
 
       if (stapActies[nieuweStap]) {
@@ -771,6 +780,7 @@ export default function OnboardingPagina() {
                 <NamenForm
                   doel={5}
                   alVoltooid={false}
+                  alleenHandmatig
                   opVoltooid={() => {
                     setVoltooiingen((v) => ({
                       ...v,
