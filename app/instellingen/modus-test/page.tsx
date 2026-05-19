@@ -4,17 +4,18 @@ import Link from "next/link";
 import { ModusSwitchKnoppen } from "./modus-switch-knoppen";
 
 // ============================================================
-// /instellingen/modus-test, founder-only modus-switcher
+// /instellingen/modus-test, founder + tester modus-switcher
 //
-// Voor jou en Gaby (founders) om snel te kunnen testen hoe een
-// nieuwe gebruiker binnenkomt in elke modus, zonder een tweede
-// account aan te maken. Vier knoppen:
+// Voor founders (Raoul, Gaby) én pilot-testaccounts (is_tester=true)
+// om snel te kunnen testen hoe een nieuwe gebruiker binnenkomt in
+// elke modus, zonder een tweede account aan te maken. Vier knoppen:
 //   - Reset naar nieuwe gebruiker (modus = NULL → /welkom-keuze)
-//   - Word Sprint-gebruiker (modus = sprint → /dashboard)
-//   - Word Core-gebruiker (modus = core → /welkom-core)
+//   - Word Sprint-gebruiker (modus = sprint → /vandaag)
+//   - Word Core-gebruiker (modus = core → /vandaag)
 //   - Word Pro-gebruiker (modus = pro → /welkom-pro)
 //
-// Members en leiders zien deze pagina niet (redirect naar /dashboard).
+// Gewone members en leiders zien deze pagina niet (redirect naar
+// /dashboard).
 // ============================================================
 
 export const dynamic = "force-dynamic";
@@ -28,14 +29,16 @@ export default async function ModusTestPagina() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("role, modus")
+    .select("role, modus, is_tester")
     .eq("id", user.id)
     .maybeSingle();
 
   const role = (profile as { role?: string | null } | null)?.role;
+  const isTester =
+    (profile as { is_tester?: boolean | null } | null)?.is_tester === true;
   const huidigeModus = (profile as { modus?: string | null } | null)?.modus ?? null;
 
-  if (role !== "founder") redirect("/dashboard");
+  if (role !== "founder" && !isTester) redirect("/dashboard");
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">

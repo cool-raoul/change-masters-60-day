@@ -34,6 +34,12 @@ export default async function InstellingenPagina() {
   // Voor nu alleen founder. Later kunnen we dit verbreden naar 'leider'.
   const magFilmsBeheren = rol === "founder";
   const isFounder = rol === "founder";
+  // Modus-test pagina mag ook door pilot-testaccounts (is_tester=true)
+  // gebruikt worden. Zo kunnen testers zonder founder-rechten wel
+  // switchen tussen Sprint/Core/Pro om de flows te ervaren.
+  const isTester =
+    (profile as { is_tester?: boolean | null } | null)?.is_tester === true;
+  const magModusTesten = isFounder || isTester;
 
   // Founder-tekst-overrides voor de sectie-titels en uitleg-blokken op
   // deze pagina. Founders kunnen via ✏️-knop alle teksten direct
@@ -268,8 +274,8 @@ export default async function InstellingenPagina() {
         </div>
       )}
 
-      {/* Modus-test, founder-only proefaccount-switcher */}
-      {magFilmsBeheren && (
+      {/* Modus-test: founder + tester proefaccount-switcher */}
+      {magModusTesten && (
         <div className="card space-y-3 border-gold-subtle">
           <EditableTekst
             namespace="instellingen"
