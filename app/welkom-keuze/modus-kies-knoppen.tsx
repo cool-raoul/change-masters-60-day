@@ -43,32 +43,12 @@ export function ModusKiesKnoppen({ userId, children }: Props) {
     setBezig(modus);
     try {
       const supabase = createClient();
-
-      // Per 2026-05-19: zet ook de modus-specifieke startdatum bij
-      // eerste activatie. Bij her-activatie (datum bestaat al) niets
-      // doen, zodat de banner op /vandaag de oppakken/opnieuw-keuze
-      // kan tonen.
-      const today = new Date().toISOString().slice(0, 10);
-      const updates: Record<string, unknown> = { modus };
-      if (modus === "sprint" || modus === "core") {
-        const datumVeld =
-          modus === "sprint" ? "sprint_startdatum" : "core_startdatum";
-        const { data: prof } = await supabase
-          .from("profiles")
-          .select(datumVeld)
-          .eq("id", userId)
-          .maybeSingle();
-        const bestaat = (prof as Record<string, string | null> | null)?.[
-          datumVeld
-        ];
-        if (!bestaat) {
-          updates[datumVeld] = today;
-        }
-      }
-
+      // Per 2026-05-19 (fase 3b): zetten van sprint_startdatum/core_startdatum
+      // is verhuisd naar Stap4ModusKeuze, waar het atomair samen met
+      // tempo/DTT-opslag gebeurt. Hier alleen de modus zelf.
       const { error } = await supabase
         .from("profiles")
-        .update(updates)
+        .update({ modus })
         .eq("id", userId);
       if (error) throw error;
       toast.success("Route gekozen, één moment...");
