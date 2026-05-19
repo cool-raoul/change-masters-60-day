@@ -57,12 +57,16 @@ export async function POST(req: NextRequest) {
     nieuweStart.setDate(nieuweStart.getDate() - (dagNummer - 1));
     const isoDatum = nieuweStart.toISOString().split("T")[0];
 
-    // Update zowel de legacy run_startdatum als het modus-specifieke
-    // startdatum-veld, zodat AppShell/Topbar (run_startdatum) en /vandaag
-    // (sprint_startdatum/core_startdatum) hetzelfde dag-nummer tonen.
-    const updates: Record<string, string> = { run_startdatum: isoDatum };
-    if (rij?.modus === "sprint") updates.sprint_startdatum = isoDatum;
-    if (rij?.modus === "core") updates.core_startdatum = isoDatum;
+    // Update alle drie startdatum-velden tegelijk. Reden: founder die
+    // in Sprint test op dag 30 en daarna naar Core switcht, moet ook
+    // in Core op dag 30 zitten. Voor gewone gebruikers irrelevant
+    // (die springen niet). Voor founder/tester is dit precies wat
+    // ze willen voor consistente test-ervaring.
+    const updates: Record<string, string> = {
+      run_startdatum: isoDatum,
+      sprint_startdatum: isoDatum,
+      core_startdatum: isoDatum,
+    };
 
     const { error: updErr } = await supabase
       .from("profiles")
