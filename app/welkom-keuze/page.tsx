@@ -56,7 +56,26 @@ export default async function WelkomKeuzePagina() {
   const overrides = await haalTekstOverrides(supabase, "welkom-keuze");
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-3xl mx-auto px-4 py-6 sm:py-10 space-y-6">
+      {/* Eigen header omdat de Topbar uit AppShell niet meer aanwezig is.
+          Logo + brand-naam zodat de gebruiker direct ziet waar 'ie is. */}
+      <div className="flex items-center gap-3 pb-2">
+        <img
+          src="/eleva-icon.png"
+          alt="ELEVA"
+          className="h-10 w-10 rounded-lg"
+        />
+        <div>
+          <p className="eleva-brand text-xl leading-none">ELEVA</p>
+          <p className="text-cm-white/55 text-[10px] tracking-wider uppercase mt-0.5">
+            Project Meer Tijd en Vrijheid
+          </p>
+        </div>
+      </div>
+
+      {/* Welkomstfilm bovenaan, of placeholder als de founder 'm nog niet
+          heeft geplaatst. Per modus-welkomstfilm-slug (geconfigureerd in
+          /instellingen/films). */}
       <FilmInBlok slug={MODUS_WELKOMSTFILM_SLUGS.KEUZE} verbergZonderFilm />
 
       {/* Founder media-placeholder bovenaan, voor extra welkomstfilm,
