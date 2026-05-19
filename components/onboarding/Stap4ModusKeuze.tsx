@@ -75,12 +75,48 @@ function CoreBlock({
   async function naDTT() {
     setVoltooid(true);
     if (!isPreview) {
-      await supabase.auth.updateUser({ data: { onboarding_stap: 99 } });
-      await fetch("/api/onboarding/markeer-voltooid", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug: "modus-keuze-dtt", modus: "core" }),
-      }).catch(() => {});
+      const today = new Date().toISOString().slice(0, 10);
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        // Atomaire profile-update: modus + core_startdatum, alleen als
+        // ze nog NULL zijn. core_dtt is hierboven al door
+        // DTTOnboardingEmbed in de profile gezet.
+        const { data: prof } = await supabase
+          .from("profiles")
+          .select("modus, core_startdatum")
+          .eq("id", user.id)
+          .maybeSingle();
+        const profielUpdates: Record<string, unknown> = {};
+        if (!(prof as { modus?: string | null } | null)?.modus) {
+          profielUpdates.modus = "core";
+        }
+        if (
+          !(prof as { core_startdatum?: string | null } | null)
+            ?.core_startdatum
+        ) {
+          profielUpdates.core_startdatum = today;
+        }
+        if (Object.keys(profielUpdates).length > 0) {
+          await supabase
+            .from("profiles")
+            .update(profielUpdates)
+            .eq("id", user.id);
+        }
+
+        await supabase.auth.updateUser({ data: { onboarding_stap: 99 } });
+
+        await fetch("/api/onboarding/markeer-voltooid", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ slug: "modus-keuze-dtt", modus: "core" }),
+        }).catch(() => {});
+
+        // Sessie-refresh: voorkomt K3.
+        await supabase.auth.refreshSession();
+      }
     }
   }
 
