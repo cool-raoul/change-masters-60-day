@@ -105,6 +105,14 @@ export default function OnboardingPagina() {
         core_dtt?: unknown;
       } | null) ?? {};
 
+      // Per 2026-05-19 (fase 3b): geen impliciete Sprint-fallback meer.
+      // Gebruikers zonder modus moeten eerst expliciet kiezen via
+      // /welkom-keuze. Anders glipt iemand impliciet de Sprint-flow in
+      // (K2).
+      if (!profData.modus) {
+        router.push("/welkom-keuze");
+        return;
+      }
       const m = profData.modus === "core" ? "core" : "sprint";
       setModus(m);
       setDttAlIngevuld(!!profData.core_dtt);
