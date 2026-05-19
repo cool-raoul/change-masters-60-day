@@ -439,9 +439,22 @@ export default async function VandaagPagina({
       ? !!(profile as any)?.core_startdatum
       : !!(profile as any)?.sprint_startdatum;
 
-  if (modusKeuzeMist && (modus === "sprint" || modus === "core") && !hadEerderDezeModus) {
-    // Nieuwe modus, modus-keuze ontbreekt: stuur de gebruiker eerst door
-    // pre-day-1 naar de modus-keuze. Geen banner-overlap meer op /vandaag.
+  // Pre-day-1-redirect alleen voor NIEUWE gebruikers (onboarding_stap < 99).
+  // Bestaande pilot-leden die nooit door de nieuwe pre-day-1 zijn gelopen
+  // hebben modus-keuze leeg maar onboarding_stap = 99 (oude flow). Voor
+  // hen géén redirect, anders ontstaat een loop tussen /vandaag en
+  // /onboarding (onboarding zelf stuurt onboarding_stap >= 99 ook terug
+  // naar /vandaag). Voor bestaande leden volstaat de banner.
+  const onboardingStapNum = Number(
+    (user.user_metadata as { onboarding_stap?: number } | undefined)
+      ?.onboarding_stap ?? 1,
+  );
+  if (
+    modusKeuzeMist &&
+    (modus === "sprint" || modus === "core") &&
+    !hadEerderDezeModus &&
+    onboardingStapNum < 99
+  ) {
     redirect("/onboarding");
   }
 
@@ -452,7 +465,7 @@ export default async function VandaagPagina({
 
   return (
     <>
-      {modusKeuzeMist && (modus === "sprint" || modus === "core") && hadEerderDezeModus && (
+      {modusKeuzeMist && (modus === "sprint" || modus === "core") && (
         <ModusSwitchBanner
           modus={modus}
           hadEerderDezeModus={hadEerderDezeModus}
