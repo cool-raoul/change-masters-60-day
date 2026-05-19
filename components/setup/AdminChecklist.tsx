@@ -42,7 +42,7 @@ export function AdminChecklist({ beginVoltooiingen, isFounder, overrides }: Prop
         <EditableTekst
           namespace="setup-admin"
           sleutel="header.titel"
-          standaard="Eenmalige admin-stappen"
+          standaard="Administratieve stappen"
           overrides={overrides}
           isFounder={isFounder}
           as="h1"
@@ -51,12 +51,12 @@ export function AdminChecklist({ beginVoltooiingen, isFounder, overrides }: Prop
         <EditableBlok
           namespace="setup-admin"
           sleutel="header.uitleg"
-          standaard="Vijf stappen die je één keer doet en daarna nooit meer. Advies: doe ze binnen drie dagen, ze zijn nodig voor de rest van je traject. Heb je 'm al in een andere modus afgevinkt? Dan staat hij hier vanzelf groen."
+          standaard="Vier administratieve stappen voor je business: webshop, kredietformulier, teams-administratie en bestellinks. Sommige doe je één keer, andere update je af en toe. Doe ze rustig binnen de eerste paar dagen. Heb je 'm al in een andere modus afgevinkt? Dan staat hij hier vanzelf groen."
           overrides={overrides}
           isFounder={isFounder}
           as="p"
           className="text-cm-white text-sm opacity-80 leading-relaxed"
-          rows={3}
+          rows={4}
         />
         {aantalOpen > 0 ? (
           <p className="text-cm-gold text-sm font-semibold mt-3">
@@ -64,7 +64,7 @@ export function AdminChecklist({ beginVoltooiingen, isFounder, overrides }: Prop
           </p>
         ) : (
           <p className="text-emerald-300 text-sm font-semibold mt-3">
-            ✓ Alle admin-stappen afgevinkt
+            ✓ Alle administratieve stappen afgevinkt
           </p>
         )}
       </div>

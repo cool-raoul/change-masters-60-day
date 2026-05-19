@@ -9,7 +9,8 @@ import { EditableTekst, EditableBlok } from "@/components/cms/EditableTekst";
 //
 // Verschijnt 1× per dag zolang er nog admin-rail items openstaan.
 // LocalStorage onthoudt de dismiss-datum. Verdwijnt automatisch
-// zodra alle 5 admin-items afgevinkt zijn (geen klaar-pop-up).
+// zodra alle 4 administratieve stappen afgevinkt zijn (geen klaar-
+// pop-up).
 // ============================================================
 
 type Props = {

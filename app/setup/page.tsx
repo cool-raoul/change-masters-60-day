@@ -8,10 +8,9 @@ import { ADMIN_ITEMS } from "@/lib/setup/admin-items";
 // ============================================================
 // /setup, admin-rail pagina.
 //
-// Vijf eenmalige admin-stappen (webshop, krediet, teams-admin,
-// bestellinks, productadvies-test). Cross-modus voltooid blijft
-// cross-modus voltooid. Pop-up op /vandaag wijst hierheen zolang
-// niet alles is afgevinkt.
+// Vier administratieve stappen (webshop, krediet, teams-admin,
+// bestellinks). Cross-modus voltooid blijft cross-modus voltooid.
+// Pop-up op /vandaag wijst hierheen zolang niet alles is afgevinkt.
 // ============================================================
 
 export const dynamic = "force-dynamic";

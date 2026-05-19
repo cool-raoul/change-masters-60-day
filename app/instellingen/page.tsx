@@ -274,15 +274,15 @@ export default async function InstellingenPagina() {
         </div>
       )}
 
-      {/* Admin-checklist: 4 eenmalige stappen (webshop, krediet, teams,
-          bestellinks) voor alle modi. Zichtbaar voor iedereen, founder
-          kan via /setup en /setup/[slug] de uitleg + films per item
-          beheren (MediaBlokkenClient + EditableTekst). */}
+      {/* Admin-checklist: 4 administratieve stappen (webshop, krediet,
+          teams, bestellinks) voor alle modi. Zichtbaar voor iedereen,
+          founder kan via /setup en /setup/[slug] de uitleg + films per
+          item beheren (MediaBlokkenClient + EditableTekst). */}
       <div className="card space-y-3 border-l-4 border-cm-gold">
         <EditableTekst
           namespace="instellingen"
           sleutel="admin_checklist.titel"
-          standaard="📋 Eenmalige admin-stappen"
+          standaard="📋 Administratieve stappen"
           overrides={overrides}
           isFounder={isFounder}
           as="h2"
@@ -292,7 +292,7 @@ export default async function InstellingenPagina() {
         <EditableBlok
           namespace="instellingen"
           sleutel="admin_checklist.uitleg"
-          standaard="Webshop aanmaken, kredietformulier invullen, teams-administratie inrichten, bestellinks koppelen. Vier stappen die je één keer doet. Klik op een item om de uitleg + film te zien."
+          standaard="Webshop aanmaken, kredietformulier invullen, teams-administratie inrichten, bestellinks koppelen. Vier administratieve stappen voor je business. Klik op een item om de uitleg + film te zien."
           overrides={overrides}
           isFounder={isFounder}
           as="p"
@@ -304,7 +304,7 @@ export default async function InstellingenPagina() {
           href="/setup"
           className="btn-gold text-sm inline-block px-4 py-2 font-semibold"
         >
-          Open admin-checklist →
+          Open administratieve stappen →
         </Link>
       </div>
 
