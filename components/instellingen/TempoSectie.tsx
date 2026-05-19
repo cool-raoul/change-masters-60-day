@@ -66,6 +66,9 @@ export function TempoSectie({ huidigUren }: Props) {
         toast.error(`Opslaan mislukt: ${error.message}`);
         return;
       }
+      // Sessie verfrissen zodat de volgende page-render meteen de
+      // nieuwe commitment_uren leest (lost K3 op).
+      await supabase.auth.refreshSession();
       toast.success(
         `✓ Tempo ingesteld op ${tempoNaam(uren)} (± ${uren} uur per dag)`,
       );
