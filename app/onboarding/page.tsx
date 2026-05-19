@@ -654,22 +654,24 @@ export default function OnboardingPagina() {
 
               <button
                 onClick={() => gaNaarStap(3)}
-                disabled={bezig || !voltooiingen["why"]?.voltooid}
+                disabled={bezig || (!isFounder && !voltooiingen["why"]?.voltooid)}
                 className="btn-gold w-full py-3 text-base disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                <EditableTekst
-                  namespace="onboarding"
-                  sleutel="stap2.knop"
-                  standaard={
-                    voltooiingen["why"]?.voltooid
-                      ? "WHY-gesprek gedaan, verder naar stap 3 →"
-                      : "Doe eerst je WHY-gesprek hierboven"
-                  }
-                  overrides={overrides}
-                  isFounder={isFounder}
-                  as="span"
-                  hint="Tekst van de knop onderaan stap 2 (door-naar-stap-3)"
-                />
+                {voltooiingen["why"]?.voltooid ? (
+                  <EditableTekst
+                    namespace="onboarding"
+                    sleutel="stap2.knop"
+                    standaard="WHY-gesprek gedaan, verder naar stap 3 →"
+                    overrides={overrides}
+                    isFounder={isFounder}
+                    as="span"
+                    hint="Tekst van de knop onderaan stap 2 (door-naar-stap-3)"
+                  />
+                ) : isFounder ? (
+                  <span>Door naar stap 3 (founder-skip) →</span>
+                ) : (
+                  <span>Doe eerst je WHY-gesprek hierboven</span>
+                )}
               </button>
             </div>
           )}
@@ -735,12 +737,16 @@ export default function OnboardingPagina() {
 
               <button
                 onClick={() => gaNaarStap(4)}
-                disabled={bezig || !voltooiingen["eerste-5-namen"]?.voltooid}
+                disabled={
+                  bezig || (!isFounder && !voltooiingen["eerste-5-namen"]?.voltooid)
+                }
                 className="btn-gold w-full py-3 text-base font-bold disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {voltooiingen["eerste-5-namen"]?.voltooid
                   ? "Verder naar stap 4 →"
-                  : "Vul eerst 5 namen hierboven in"}
+                  : isFounder
+                    ? "Door naar stap 4 (founder-skip) →"
+                    : "Vul eerst 5 namen hierboven in"}
               </button>
             </div>
           )}
