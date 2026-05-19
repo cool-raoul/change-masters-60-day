@@ -155,20 +155,60 @@ function SprintTempoBlock({
     setBezig(true);
     if (!isPreview) {
       const dd = berekenDagdoelen(commitmentUren);
-      await supabase.auth.updateUser({
-        data: {
-          onboarding_stap: 99,
-          commitment_uren: commitmentUren,
-          dagdoel_contacten: dd.contacten,
-          dagdoel_uitnodigingen: dd.uitnodigingen,
-          dagdoel_followups: dd.followups,
-        },
-      });
-      await fetch("/api/onboarding/markeer-voltooid", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug: "modus-keuze-tempo", modus: "sprint" }),
-      }).catch(() => {});
+      const today = new Date().toISOString().slice(0, 10);
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        // Atomaire profile-update: modus + sprint_startdatum, alleen als
+        // ze nog NULL zijn. Lost K1 op (startdatum komt nu pas wanneer
+        // tempo daadwerkelijk is gekozen).
+        const { data: prof } = await supabase
+          .from("profiles")
+          .select("modus, sprint_startdatum")
+          .eq("id", user.id)
+          .maybeSingle();
+        const profielUpdates: Record<string, unknown> = {};
+        if (!(prof as { modus?: string | null } | null)?.modus) {
+          profielUpdates.modus = "sprint";
+        }
+        if (
+          !(prof as { sprint_startdatum?: string | null } | null)
+            ?.sprint_startdatum
+        ) {
+          profielUpdates.sprint_startdatum = today;
+        }
+        if (Object.keys(profielUpdates).length > 0) {
+          await supabase
+            .from("profiles")
+            .update(profielUpdates)
+            .eq("id", user.id);
+        }
+
+        // Tempo + dagdoelen in user_metadata.
+        await supabase.auth.updateUser({
+          data: {
+            onboarding_stap: 99,
+            commitment_uren: commitmentUren,
+            dagdoel_contacten: dd.contacten,
+            dagdoel_uitnodigingen: dd.uitnodigingen,
+            dagdoel_followups: dd.followups,
+          },
+        });
+
+        // Cross-modus markering.
+        await fetch("/api/onboarding/markeer-voltooid", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ slug: "modus-keuze-tempo", modus: "sprint" }),
+        }).catch(() => {});
+
+        // Sessie-refresh: voorkomt K3 (banner blijft staan na opslag
+        // doordat de JWT user_metadata-cache de nieuwe commitment_uren
+        // nog niet kende).
+        await supabase.auth.refreshSession();
+      }
     }
     setBezig(false);
     router.push("/vandaag?via=onboarding");
