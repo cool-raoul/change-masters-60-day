@@ -314,12 +314,16 @@ export default function OnboardingPagina() {
                 positie="boven-titel"
                 isFounder={isFounder}
               />
-              {voltooiingen["app-geinstalleerd"]?.voltooid && (
-                <AlGedaanLabel
-                  modus={(voltooiingen["app-geinstalleerd"].modus ?? "sprint") as Modus}
-                  datum={voltooiingen["app-geinstalleerd"].datum}
-                />
-              )}
+              {voltooiingen["app-geinstalleerd"]?.voltooid &&
+                voltooiingen["app-geinstalleerd"].modus &&
+                voltooiingen["app-geinstalleerd"].modus !== modus && (
+                  <AlGedaanLabel
+                    modus={
+                      (voltooiingen["app-geinstalleerd"].modus ?? "sprint") as Modus
+                    }
+                    datum={voltooiingen["app-geinstalleerd"].datum}
+                  />
+                )}
               <div className="text-center">
                 <div className="text-6xl mb-4">👋</div>
                 <h2 className="text-3xl font-display font-bold text-cm-white mb-2">
@@ -527,13 +531,34 @@ export default function OnboardingPagina() {
                 positie="boven-titel"
                 isFounder={isFounder}
               />
-              {voltooiingen["why"]?.voltooid && (
-                <AlGedaanLabel
-                  modus={(voltooiingen["why"].modus ?? "sprint") as Modus}
-                  datum={voltooiingen["why"].datum}
-                  bekijkRoute="/mijn-why?via=onboarding"
-                />
-              )}
+              {voltooiingen["why"]?.voltooid &&
+                (voltooiingen["why"].modus &&
+                voltooiingen["why"].modus !== modus ? (
+                  // WHY eerder gedaan in andere modus.
+                  <AlGedaanLabel
+                    modus={(voltooiingen["why"].modus ?? "sprint") as Modus}
+                    datum={voltooiingen["why"].datum}
+                    bekijkRoute="/mijn-why?via=onboarding"
+                  />
+                ) : (
+                  // WHY net in deze sessie afgerond.
+                  <div className="rounded-lg border border-emerald-500/50 bg-emerald-900/20 px-4 py-3 flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-emerald-300 font-semibold text-sm">
+                        ✓ WHY opgeslagen
+                      </p>
+                      <p className="text-cm-white text-xs opacity-70 mt-0.5">
+                        Verder naar de volgende stap hieronder.
+                      </p>
+                    </div>
+                    <a
+                      href="/mijn-why?via=onboarding"
+                      className="text-xs bg-cm-surface border border-cm-border text-cm-white px-3 py-1.5 rounded-lg whitespace-nowrap"
+                    >
+                      Bekijk opnieuw
+                    </a>
+                  </div>
+                ))}
               <div className="text-center">
                 <div className="text-6xl mb-4">💛</div>
                 <EditableTekst
@@ -723,11 +748,25 @@ export default function OnboardingPagina() {
               </div>
 
               {voltooiingen["eerste-5-namen"]?.voltooid ? (
-                <AlGedaanLabel
-                  modus={(voltooiingen["eerste-5-namen"].modus ?? "sprint") as Modus}
-                  datum={voltooiingen["eerste-5-namen"].datum}
-                  bekijkRoute="/namenlijst"
-                />
+                voltooiingen["eerste-5-namen"].modus &&
+                voltooiingen["eerste-5-namen"].modus !== modus ? (
+                  // Cross-modus voltooid (eerder al gedaan in andere modus).
+                  <AlGedaanLabel
+                    modus={(voltooiingen["eerste-5-namen"].modus ?? "sprint") as Modus}
+                    datum={voltooiingen["eerste-5-namen"].datum}
+                    bekijkRoute="/namenlijst"
+                  />
+                ) : (
+                  // Net afgevinkt in deze sessie / huidige modus.
+                  <div className="rounded-lg border border-emerald-500/50 bg-emerald-900/20 px-4 py-3">
+                    <p className="text-emerald-300 font-semibold text-sm">
+                      ✓ Top 5 namen ingevuld, goed zo!
+                    </p>
+                    <p className="text-cm-white text-xs opacity-70 mt-0.5">
+                      Verder naar de volgende stap hieronder.
+                    </p>
+                  </div>
+                )
               ) : (
                 <NamenForm
                   doel={5}

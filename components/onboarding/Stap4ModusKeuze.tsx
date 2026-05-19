@@ -118,6 +118,11 @@ function CoreBlock({
         await supabase.auth.refreshSession();
       }
     }
+    // Automatisch doorlopen naar /vandaag (consistent met Sprint-tak,
+    // voorkomt hang-staat waarin gebruiker op een knop moet wachten
+    // terwijl middleware al door kan).
+    router.push("/vandaag?via=onboarding");
+    router.refresh();
   }
 
   return (
@@ -150,12 +155,9 @@ function CoreBlock({
       <DTTOnboardingEmbed alVoltooid={voltooid} opVoltooid={naDTT} />
 
       {voltooid && (
-        <button
-          onClick={() => router.push("/vandaag?via=onboarding")}
-          className="btn-gold w-full py-4 text-lg font-bold"
-        >
-          Te gek, door naar dag 1 →
-        </button>
+        <p className="text-emerald-300 text-sm text-center font-semibold">
+          ✓ Doel-Tijd-Termijn opgeslagen, je gaat door naar dag 1...
+        </p>
       )}
 
       <EditableBlok
