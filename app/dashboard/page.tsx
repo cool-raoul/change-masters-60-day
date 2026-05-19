@@ -16,6 +16,7 @@ import { haalOverrides, pasOverrideToe } from "@/lib/playbook/overrides";
 import { pasTempoToeOpDag } from "@/lib/playbook/tempo-aware";
 import { genereerWeekritmeDag } from "@/lib/playbook/weekritme";
 import { berekenHuidigeDag } from "@/lib/playbook/bereken-dag";
+import { startdatumVoorModus } from "@/lib/playbook/dag-teller";
 import type { CommitmentUren } from "@/lib/dagdoelen";
 import { pakTopRadar, type ProspectInput } from "@/lib/radar/volgende-beste-actie";
 import { RadarBalk } from "@/components/vandaag/RadarBalk";
@@ -76,7 +77,7 @@ export default async function DashboardPagina({
     { data: testsRecent },
     { data: openHerinneringenAlle },
   ] = await Promise.all([
-    supabase.from("profiles").select("full_name, run_startdatum, role, is_tester, dagelijkse_push_aan, dagelijkse_push_uur, sponsor_id").eq("id", user.id).maybeSingle(),
+    supabase.from("profiles").select("full_name, run_startdatum, sprint_startdatum, core_startdatum, created_at, modus, role, is_tester, dagelijkse_push_aan, dagelijkse_push_uur, sponsor_id").eq("id", user.id).maybeSingle(),
     supabase.from("why_profiles").select("*").eq("user_id", user.id).maybeSingle(),
     supabase.from("dagelijkse_stats").select("*").eq("user_id", user.id).eq("stat_datum", vandaagStr).maybeSingle(),
     supabase.from("herinneringen").select("*, prospect:prospects(id, volledige_naam)").eq("user_id", user.id).lte("vervaldatum", vandaagStr).eq("voltooid", false).order("vervaldatum", { ascending: true }).limit(5),
@@ -215,9 +216,22 @@ export default async function DashboardPagina({
   // dag), kalender-gebaseerd voor testers/founders zodat de spring-toolbar
   // blijft werken. Iemand die dag 16 doet en 4 dagen mist, opent ELEVA
   // opnieuw en staat op dag 17, niet op dag 20.
+  // Per-modus startdatum als anker (zelfde helper als AppShell en /vandaag).
+  // Voorkomt mismatch tussen Topbar-cirkel, dashboard-titel en /vandaag-flow.
+  const dashboardModus: "sprint" | "core" | "pro" =
+    huidigeModus === "core" ? "core" : "sprint";
+  const dashboardModusStartIso = startdatumVoorModus(
+    {
+      sprint_startdatum: (profile as any)?.sprint_startdatum ?? null,
+      core_startdatum: (profile as any)?.core_startdatum ?? null,
+      run_startdatum: (profile as any)?.run_startdatum ?? null,
+      created_at: (profile as any)?.created_at ?? null,
+    },
+    dashboardModus,
+  );
   const dag = berekenHuidigeDag(
     (dagVoltooiingen as Array<{ dag_nummer: number; taak_id: string }>) || [],
-    (profile as any)?.run_startdatum ?? null,
+    dashboardModusStartIso ? dashboardModusStartIso.toISOString().slice(0, 10) : null,
     { isTester: isTester || isFounder },
   );
 

@@ -468,6 +468,7 @@ export default async function VandaagPagina({
         <ModusSwitchBanner
           modus={modus}
           hadEerderDezeModus={hadEerderDezeModus}
+          laatsteDagInDezeModus={hadEerderDezeModus ? dag : null}
           isFounder={isFounder}
           overrides={modusSwitchOverrides}
         />
