@@ -199,6 +199,11 @@ export default async function VandaagPagina({
         ? "pro"
         : "sprint";
 
+  // Per 2026-05-19: Pro heeft geen /vandaag-flow in deze pilot. Stuur
+  // Pro-gebruikers naar hun eigen leerpad-overzicht in plaats van
+  // terug te vallen op Sprint-content.
+  if (modusVoorDagTeller === "pro") redirect("/welkom-pro");
+
   // Modus-specifieke startdatum als anker voor berekenHuidigeDag, met
   // fallback op de legacy run_startdatum voor bestaande Sprint-leden.
   const profielDatumVelden = {
@@ -241,7 +246,7 @@ export default async function VandaagPagina({
   // Modus-detectie voor universele /vandaag-route.
   // sprint = standaard (zoals voorheen).
   // core   = laad Core-content uit lib/playbook/core-dagen.ts.
-  // pro    = nog niet gemigreerd, valt terug op sprint-content.
+  // pro    = bovenaan al via redirect afgehandeld, komt hier niet door.
   const modus: Modus = modusVoorDagTeller;
 
   const coreDtt: DTTInput | null = (profile as any)?.core_dtt ?? null;
