@@ -5,7 +5,7 @@ import { Sidebar } from "@/components/layout/Sidebar";
 import { Topbar } from "@/components/layout/Topbar";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { berekenHuidigeDag } from "@/lib/playbook/bereken-dag";
-import { WelcomePopup } from "@/components/layout/WelcomePopup";
+// WelcomePopup import weggehaald per 2026-05-19, niet meer gebruikt.
 import { TaalProvider } from "@/lib/i18n/TaalContext";
 import { Taal } from "@/lib/i18n/vertalingen";
 import { VoiceFab } from "@/components/voice/VoiceFab";
@@ -40,7 +40,19 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
     .eq("id", user.id)
     .single();
 
-  if (!profile?.onboarding_klaar) redirect("/mijn-why");
+  // Per 2026-05-19 (na fase 3b): voor users met onboarding_klaar=false
+  // doet de middleware al de juiste redirect (modus=null → /welkom-keuze,
+  // modus=pro → /welkom-pro, anders /onboarding). AppShell hoeft niet
+  // meer zelf naar /mijn-why te sturen (was oude flow waar WHY vooraf
+  // verplicht was).
+  // Veiligheidsnet: als we hier toch belanden met onboarding_klaar=false,
+  // sluit aan op middleware-logica.
+  if (!profile?.onboarding_klaar) {
+    const m = (profile as { modus?: string | null } | null)?.modus;
+    if (!m) redirect("/welkom-keuze");
+    if (m === "pro") redirect("/welkom-pro");
+    redirect("/onboarding");
+  }
 
   // Lees taal uit user metadata, direct beschikbaar voor alle client componenten
   const taal = (user.user_metadata?.taal as Taal) || "nl";
@@ -114,7 +126,10 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
         <Suspense fallback={null}>
           <ScrollToTopOnNavigation />
         </Suspense>
-        <WelcomePopup />
+        {/* WelcomePopup is per 2026-05-19 weggehaald: oude pop-up met
+            "te gek dat je er bent" + WHY-knop hoort niet meer in de
+            nieuwe flow waarin /welkom-keuze + /onboarding stap 2 (WHY)
+            de gebruiker netjes door 't pad leiden. */}
         <Sidebar
           isLeider={(profile as any)?.role === "leider"}
           isFounder={(profile as any)?.role === "founder"}

@@ -5,6 +5,7 @@ import { ADMIN_ITEMS } from "@/lib/setup/admin-items";
 import { isReedsVoltooid } from "@/lib/onboarding/voltooiingen";
 import { FilmInBlok } from "@/components/film/FilmInBlok";
 import { AdminItemAfvinkKnop } from "@/components/setup/AdminItemAfvinkKnop";
+import { MediaBlokkenClient } from "@/components/cms/MediaBlokkenClient";
 
 // ============================================================
 // /setup/[slug], uitleg-detail-pagina per admin-item.
@@ -32,6 +33,16 @@ export default async function SetupItemPagina({
 
   const status = await isReedsVoltooid(supabase, user.id, item.slug);
 
+  // Founder-check: laat MediaBlokkenClient z'n upload-UI tonen aan
+  // founders zodat zij per admin-item extra films, screenshots of
+  // PDFs kunnen plaatsen rondom de uitleg.
+  const { data: prof } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .maybeSingle();
+  const isFounder = (prof as { role?: string | null } | null)?.role === "founder";
+
   return (
     <div className="max-w-2xl mx-auto px-4 py-6 space-y-5">
       <Link
@@ -40,6 +51,14 @@ export default async function SetupItemPagina({
       >
         ← Terug naar admin-checklist
       </Link>
+
+      {/* Founder-media bovenaan, per slug eigen placeholder. */}
+      <MediaBlokkenClient
+        paginaNamespace="setup-item"
+        paginaId={item.slug}
+        positie="boven-titel"
+        isFounder={isFounder}
+      />
 
       <div className="card border-l-4 border-cm-gold space-y-3">
         <div className="flex items-center gap-3">
@@ -57,6 +76,14 @@ export default async function SetupItemPagina({
           </p>
         )}
       </div>
+
+      {/* Founder-media tussen uitleg en film. */}
+      <MediaBlokkenClient
+        paginaNamespace="setup-item"
+        paginaId={item.slug}
+        positie="onder-titel"
+        isFounder={isFounder}
+      />
 
       {item.filmSlug && (
         <FilmInBlok slug={item.filmSlug} verbergZonderFilm />

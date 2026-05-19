@@ -711,12 +711,14 @@ export default function OnboardingPagina() {
                 <EditableBlok
                   namespace="onboarding"
                   sleutel="stap3.intro"
-                  standaard="Niet filteren, niet bedenken 'die past niet'. Iedereen mag erop, zij beslissen zelf. Dit zijn jouw eerste warme contacten."
+                  standaard={
+                    "Stel jezelf de vraag: 'Wie komt er nu spontaan in mijn hoofd op als ik denk aan mensen die ik dit zou gunnen?' De eerste 5 namen die opkomen, schrijf je hieronder op.\n\nNiet filteren, niet bedenken 'die past niet'. Iedereen mag erop, zij beslissen zelf.\n\nDit zijn jouw eerste warm-warme contacten, een bewust gekozen lijst. Zo word je vertrouwd met het denken in jouw netwerk. Morgen bouw je dit uit naar meer namen."
+                  }
                   overrides={overrides}
                   isFounder={isFounder}
                   as="p"
-                  className="text-cm-white opacity-70 text-sm leading-relaxed"
-                  rows={3}
+                  className="text-cm-white opacity-70 text-sm leading-relaxed whitespace-pre-line"
+                  rows={8}
                 />
               </div>
 

@@ -5,6 +5,7 @@ import { EditableTekst } from "@/components/cms/EditableTekst";
 import { haalTekstOverrides } from "@/lib/cms/tekst-overrides";
 import { MODUS_WELKOMSTFILM_SLUGS } from "@/lib/films/embed";
 import { ModusKiesKnoppen } from "./modus-kies-knoppen";
+import { MediaBlokkenClient } from "@/components/cms/MediaBlokkenClient";
 
 // ============================================================
 // /welkom-keuze, eenmalige route-keuze voor nieuwe gebruikers
@@ -57,6 +58,15 @@ export default async function WelkomKeuzePagina() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <FilmInBlok slug={MODUS_WELKOMSTFILM_SLUGS.KEUZE} verbergZonderFilm />
+
+      {/* Founder media-placeholder bovenaan, voor extra welkomstfilm,
+          afbeelding of korte uitleg-pdf per modus-keuze. */}
+      <MediaBlokkenClient
+        paginaNamespace="welkom-keuze"
+        paginaId="hoofd"
+        positie="boven-titel"
+        isFounder={isFounder}
+      />
 
       <div>
         <p className="text-cm-white/60 text-sm italic">
