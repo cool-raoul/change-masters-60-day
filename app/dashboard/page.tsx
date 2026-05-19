@@ -397,26 +397,30 @@ export default async function DashboardPagina({
   // titel + vandaagDoen, zodat de "Vandaag is dag X"-CTA-tile en
   // AutoNaarVandaag voor het hele 1-60 bereik werken.
   // Modus-bewuste CTA-tile data via centrale helper. Voor Sprint gebruikt
-  // 'ie DAGEN, voor Core CORE_DAGEN + generator voor verankering/lifetime.
-  // Pro is hierboven al via redirect afgehandeld.
+  // 'ie DAGEN (dag 1-21), voor Core CORE_DAGEN + generator voor verankering
+  // (22-40) en lifetime (41+). Pro is hierboven al via redirect afgehandeld.
   const dashboardCtaModus = huidigeModus ?? "sprint";
   let huidigeDagData = dagVoorModusEnNummer(dashboardCtaModus, dag);
-  if (huidigeDagData && dashboardCtaModus === "sprint") {
-    if (dag <= 21) {
-      // Sprint behoudt tempo-aware + founder-overrides voor dag 1-21.
+
+  if (dashboardCtaModus === "sprint") {
+    if (huidigeDagData && dag <= 21) {
+      // Sprint dag 1-21: tempo-aware + founder-overrides.
       huidigeDagData = pasTempoToeOpDag(huidigeDagData, commitmentUrenDashboard);
       const overrideMap = await haalOverrides(supabase as any, [dag]);
       huidigeDagData = pasOverrideToe(
         huidigeDagData,
         overrideMap.get(dag) ?? null,
       );
-    } else if (dag <= 60) {
-      // Weekritme-modus: synthetisch dag-object zonder override-pass.
+    } else if (dag >= 22 && dag <= 60) {
+      // Sprint dag 22-60: weekritme-generator (synthetisch dag-object).
+      // Onafhankelijk van helper-uitkomst, want DAGEN bevat alleen 1-21.
       huidigeDagData = genereerWeekritmeDag(dag, commitmentUrenDashboard);
-    } else {
+    } else if (dag > 60) {
       huidigeDagData = null;
     }
   }
+  // Voor Core: dagVoorModusEnNummer dekte alles al (CORE_DAGEN +
+  // verankering + lifetime). Geen extra branch nodig.
   const huidigeDagVoltooidIds = huidigeDagData
     ? huidigeDagData.vandaagDoen
         .filter((t) => voltooidSet.has(`${dag}|${t.id}`))

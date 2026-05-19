@@ -816,12 +816,10 @@ export function genereerVerankeringsDag(dagNummer: number): Dag {
   if (dagNummer < 22 || dagNummer > 40) {
     throw new Error(`Verankerings-dag moet tussen 22 en 40 zijn, kreeg ${dagNummer}`);
   }
-  const dagInVerankering = dagNummer - 21;
-  const totaalVerankering = 19;
 
   return {
     nummer: dagNummer,
-    titel: `🌱 Verankering, dag ${dagInVerankering} van ${totaalVerankering}`,
+    titel: `🌱 Ritme verankeren`,
     fase: 2,
     vandaagDoen: [
       {
@@ -861,7 +859,7 @@ export function genereerLifetimeDag(dagNummer: number): Dag {
 
   return {
     nummer: dagNummer,
-    titel: `🌿 Lifetime DMO, dag ${dagNummer}`,
+    titel: `🌿 Lifetime ritme`,
     fase: 3,
     vandaagDoen: [
       {
