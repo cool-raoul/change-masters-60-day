@@ -21,6 +21,8 @@ import { PushResyncBanner } from "@/components/push/PushResyncBanner";
 import { ScrollToTopOnNavigation } from "@/components/layout/ScrollToTopOnNavigation";
 import { FounderTopStrip } from "@/components/layout/FounderTopStrip";
 import { startdatumVoorModus } from "@/lib/playbook/dag-teller";
+import { differenceInDays } from "date-fns";
+import { PRO_LEERPAD } from "@/lib/leerpaden/pro-stappen";
 
 export async function AppShell({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -127,6 +129,15 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
             gebruikersnaam={profile?.full_name || user.email || "Teamlid"}
             fotoUrl={(profile as { foto_url?: string | null } | null)?.foto_url ?? null}
             huidigeDag={huidigeDag}
+            modus={huidigeModus}
+            proStap={(() => {
+              if (huidigeModus !== "pro") return undefined;
+              const startBron =
+                profielData.run_startdatum ?? profielData.created_at ?? null;
+              const start = startBron ? new Date(startBron) : new Date();
+              const dagen = differenceInDays(new Date(), start) + 1;
+              return Math.max(1, Math.min(PRO_LEERPAD.totaal, dagen));
+            })()}
           />
           <main className="flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain p-6 pb-28 lg:pb-6 mobile-scroll">
             {/* Toont alleen iets bij ?van=playbook&dag=N, anders renders null. */}
