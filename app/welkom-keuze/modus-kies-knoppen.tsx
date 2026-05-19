@@ -50,8 +50,8 @@ export function ModusKiesKnoppen({ userId, children }: Props) {
       if (error) throw error;
       toast.success("Route gekozen, één moment...");
       const redirectMap: Record<Modus, string> = {
-        sprint: "/dashboard",
-        core: "/welkom-core",
+        sprint: "/onboarding",
+        core: "/onboarding",
         pro: "/welkom-pro",
       };
       router.push(redirectMap[modus]);

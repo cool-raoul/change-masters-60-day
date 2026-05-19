@@ -421,9 +421,12 @@ export default async function VandaagPagina({
     "setup-popup",
   );
 
-  // Modus-switch banner: toon als de modus-specifieke keuze nog ontbreekt
-  // (Sprint = commitment_uren, Core = core_dtt). Bij her-activatie van
-  // een eerder gebruikte modus komt ook de oppakken/opnieuw-keuze.
+  // Modus-keuze check. Voor Sprint = commitment_uren, voor Core = core_dtt.
+  // Drie scenario's:
+  //   - Keuze mist, modus is nieuw (geen startdatum)        → redirect naar /onboarding
+  //   - Keuze mist, modus was eerder al actief              → kleine banner met oppakken/opnieuw-keuze
+  //   - Keuze al gemaakt                                     → niets, /vandaag laadt normaal
+  // Pro slaat deze check over.
   const profCommitment = Number((profile as any)?.commitment_uren ?? NaN);
   const sprintTempoIngevuld =
     profCommitment === 2 || profCommitment === 4 || profCommitment === 6;
@@ -435,6 +438,13 @@ export default async function VandaagPagina({
     modus === "core"
       ? !!(profile as any)?.core_startdatum
       : !!(profile as any)?.sprint_startdatum;
+
+  if (modusKeuzeMist && (modus === "sprint" || modus === "core") && !hadEerderDezeModus) {
+    // Nieuwe modus, modus-keuze ontbreekt: stuur de gebruiker eerst door
+    // pre-day-1 naar de modus-keuze. Geen banner-overlap meer op /vandaag.
+    redirect("/onboarding");
+  }
+
   const modusSwitchOverrides = await haalTekstOverrides(
     supabase,
     "modus-switch",
@@ -442,7 +452,7 @@ export default async function VandaagPagina({
 
   return (
     <>
-      {modusKeuzeMist && (modus === "sprint" || modus === "core") && (
+      {modusKeuzeMist && (modus === "sprint" || modus === "core") && hadEerderDezeModus && (
         <ModusSwitchBanner
           modus={modus}
           hadEerderDezeModus={hadEerderDezeModus}
