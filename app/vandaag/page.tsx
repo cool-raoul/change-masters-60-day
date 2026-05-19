@@ -69,7 +69,7 @@ export default async function VandaagPagina({
   const { data: profile } = await supabase
     .from("profiles")
     .select(
-      "run_startdatum, sprint_startdatum, core_startdatum, created_at, full_name, role, is_tester, modus, core_dtt, core_eigen_resultaat, commitment_uren",
+      "run_startdatum, sprint_startdatum, core_startdatum, created_at, full_name, role, is_tester, modus, core_dtt, core_eigen_resultaat",
     )
     .eq("id", user.id)
     .maybeSingle();
@@ -421,15 +421,14 @@ export default async function VandaagPagina({
     "setup-popup",
   );
 
-  // Modus-keuze check. Voor Sprint = commitment_uren, voor Core = core_dtt.
+  // Modus-keuze check. Voor Sprint = commitment_uren (zit in user_metadata,
+  // NIET in profiles), voor Core = profiles.core_dtt.
   // Drie scenario's:
   //   - Keuze mist, modus is nieuw (geen startdatum)        → redirect naar /onboarding
   //   - Keuze mist, modus was eerder al actief              → kleine banner met oppakken/opnieuw-keuze
   //   - Keuze al gemaakt                                     → niets, /vandaag laadt normaal
   // Pro slaat deze check over.
-  const profCommitment = Number((profile as any)?.commitment_uren ?? NaN);
-  const sprintTempoIngevuld =
-    profCommitment === 2 || profCommitment === 4 || profCommitment === 6;
+  const sprintTempoIngevuld = commitmentUren !== null;
   const coreDttIngevuld = !!(profile as any)?.core_dtt;
   const modusKeuzeMist =
     (modus === "core" && !coreDttIngevuld) ||

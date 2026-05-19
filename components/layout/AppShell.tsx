@@ -19,6 +19,7 @@ import { haalSponsorNaam } from "@/lib/sponsors/haal-sponsor-naam";
 import { CelebrationLayer } from "@/components/celebrations/CelebrationLayer";
 import { PushResyncBanner } from "@/components/push/PushResyncBanner";
 import { ScrollToTopOnNavigation } from "@/components/layout/ScrollToTopOnNavigation";
+import { FounderTopStrip } from "@/components/layout/FounderTopStrip";
 
 export async function AppShell({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -92,6 +93,10 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
           sponsorNaam={sponsorNaamSidebar}
         />
         <div className="flex-1 flex flex-col min-h-0 min-w-0">
+          <FounderTopStrip
+            isFounder={profielData.role === "founder"}
+            huidigeDag={huidigeDag}
+          />
           <Topbar
             gebruikersnaam={profile?.full_name || user.email || "Teamlid"}
             fotoUrl={(profile as { foto_url?: string | null } | null)?.foto_url ?? null}
