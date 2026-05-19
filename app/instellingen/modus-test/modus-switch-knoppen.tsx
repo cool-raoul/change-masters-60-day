@@ -94,7 +94,7 @@ export function ModusSwitchKnoppen({ userId, huidigeModus }: Props) {
 
       <button
         type="button"
-        onClick={() => switchNaar("sprint", "/dashboard", "Sprint")}
+        onClick={() => switchNaar("sprint", "/vandaag", "Sprint")}
         disabled={!!bezig}
         className={`card text-left transition-colors group disabled:opacity-50 disabled:cursor-not-allowed ${
           huidigeModus === "sprint"
@@ -116,7 +116,7 @@ export function ModusSwitchKnoppen({ userId, huidigeModus }: Props) {
 
       <button
         type="button"
-        onClick={() => switchNaar("core", "/welkom-core", "Core")}
+        onClick={() => switchNaar("core", "/vandaag", "Core")}
         disabled={!!bezig}
         className={`card text-left transition-colors group disabled:opacity-50 disabled:cursor-not-allowed ${
           huidigeModus === "core"

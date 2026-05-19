@@ -25,11 +25,11 @@ export async function POST(req: NextRequest) {
 
     const { data: profiel } = await supabase
       .from("profiles")
-      .select("role, is_tester")
+      .select("role, is_tester, modus")
       .eq("id", user.id)
       .maybeSingle();
     const rij = profiel as
-      | { role?: string | null; is_tester?: boolean | null }
+      | { role?: string | null; is_tester?: boolean | null; modus?: string | null }
       | null;
     const magSpringen = rij?.is_tester === true || rij?.role === "founder";
     if (!magSpringen) {
@@ -57,9 +57,16 @@ export async function POST(req: NextRequest) {
     nieuweStart.setDate(nieuweStart.getDate() - (dagNummer - 1));
     const isoDatum = nieuweStart.toISOString().split("T")[0];
 
+    // Update zowel de legacy run_startdatum als het modus-specifieke
+    // startdatum-veld, zodat AppShell/Topbar (run_startdatum) en /vandaag
+    // (sprint_startdatum/core_startdatum) hetzelfde dag-nummer tonen.
+    const updates: Record<string, string> = { run_startdatum: isoDatum };
+    if (rij?.modus === "sprint") updates.sprint_startdatum = isoDatum;
+    if (rij?.modus === "core") updates.core_startdatum = isoDatum;
+
     const { error: updErr } = await supabase
       .from("profiles")
-      .update({ run_startdatum: isoDatum })
+      .update(updates)
       .eq("id", user.id);
     if (updErr) {
       return NextResponse.json(

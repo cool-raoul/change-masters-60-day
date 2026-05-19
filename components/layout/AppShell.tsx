@@ -20,6 +20,7 @@ import { CelebrationLayer } from "@/components/celebrations/CelebrationLayer";
 import { PushResyncBanner } from "@/components/push/PushResyncBanner";
 import { ScrollToTopOnNavigation } from "@/components/layout/ScrollToTopOnNavigation";
 import { FounderTopStrip } from "@/components/layout/FounderTopStrip";
+import { startdatumVoorModus } from "@/lib/playbook/dag-teller";
 
 export async function AppShell({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -31,7 +32,9 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, onboarding_klaar, role, run_startdatum, is_tester, sponsor_id, foto_url")
+    .select(
+      "full_name, onboarding_klaar, role, run_startdatum, sprint_startdatum, core_startdatum, created_at, modus, is_tester, sponsor_id, foto_url",
+    )
     .eq("id", user.id)
     .single();
 
@@ -40,12 +43,16 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
   // Lees taal uit user metadata, direct beschikbaar voor alle client componenten
   const taal = (user.user_metadata?.taal as Taal) || "nl";
 
-  // Bereken huidige dag op zelfde manier als dashboard, zodat de Topbar-cirkel
-  // altijd hetzelfde getal toont als de header op het dashboard. Members
-  // krijgen voortgang-modus, founders/testers krijgen kalender.
+  // Bereken huidige dag op zelfde manier als dashboard + /vandaag, zodat de
+  // Topbar-cirkel altijd hetzelfde getal toont. Per-modus dag-teller, met
+  // legacy run_startdatum als fallback.
   const profielData = profile as {
     role?: string | null;
     run_startdatum?: string | null;
+    sprint_startdatum?: string | null;
+    core_startdatum?: string | null;
+    created_at?: string | null;
+    modus?: string | null;
     is_tester?: boolean | null;
   };
   const isFounderOfTester =
@@ -63,9 +70,28 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
     .from("dag_voltooiingen")
     .select("dag_nummer, taak_id")
     .eq("user_id", user.id);
+  // Modus-specifieke startdatum als anker. Fallback: legacy run_startdatum.
+  const huidigeModus: "sprint" | "core" | "pro" =
+    profielData.modus === "core"
+      ? "core"
+      : profielData.modus === "pro"
+        ? "pro"
+        : "sprint";
+  const modusStartIso = startdatumVoorModus(
+    {
+      sprint_startdatum: profielData.sprint_startdatum ?? null,
+      core_startdatum: profielData.core_startdatum ?? null,
+      run_startdatum: profielData.run_startdatum ?? null,
+      created_at: profielData.created_at ?? null,
+    },
+    huidigeModus,
+  );
+  const modusStartIsoString = modusStartIso
+    ? modusStartIso.toISOString().slice(0, 10)
+    : null;
   const huidigeDag = berekenHuidigeDag(
     (voltooiingen ?? []) as { dag_nummer: number; taak_id: string }[],
-    profielData.run_startdatum ?? null,
+    modusStartIsoString,
     { isTester: isFounderOfTester },
   );
 
