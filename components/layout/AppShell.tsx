@@ -40,19 +40,11 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
     .eq("id", user.id)
     .single();
 
-  // Per 2026-05-19 (na fase 3b): voor users met onboarding_klaar=false
-  // doet de middleware al de juiste redirect (modus=null → /welkom-keuze,
-  // modus=pro → /welkom-pro, anders /onboarding). AppShell hoeft niet
-  // meer zelf naar /mijn-why te sturen (was oude flow waar WHY vooraf
-  // verplicht was).
-  // Veiligheidsnet: als we hier toch belanden met onboarding_klaar=false,
-  // sluit aan op middleware-logica.
-  if (!profile?.onboarding_klaar) {
-    const m = (profile as { modus?: string | null } | null)?.modus;
-    if (!m) redirect("/welkom-keuze");
-    if (m === "pro") redirect("/welkom-pro");
-    redirect("/onboarding");
-  }
+  // Per 2026-05-19 (na fase 3b): middleware doet al de juiste redirect
+  // voor users met onboarding_klaar=false (modus=null → /welkom-keuze,
+  // modus=pro → /welkom-pro, anders /onboarding). Aparte AppShell-redirect
+  // veroorzaakte een loop op /welkom-keuze want AppShell op die route
+  // pushte 'm terug naar /welkom-keuze. Vertrouw nu volledig op middleware.
 
   // Lees taal uit user metadata, direct beschikbaar voor alle client componenten
   const taal = (user.user_metadata?.taal as Taal) || "nl";
