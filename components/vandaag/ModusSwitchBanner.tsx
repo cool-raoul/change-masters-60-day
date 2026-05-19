@@ -37,10 +37,15 @@ export function ModusSwitchBanner({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ modus, keuze }),
     });
-    // Na her-activatie-keuze óók de modus-keuze-stap doorlopen (tempo
-    // voor Sprint, DTT voor Core), anders blijft de banner staan omdat
-    // commitment_uren of core_dtt nog leeg is.
-    router.push("/onboarding?stap=4");
+    if (keuze === "opnieuw") {
+      // Startdatum is gereset door de API. Tempo/DTT moet opnieuw,
+      // dus naar /onboarding stap 4.
+      router.push("/onboarding?stap=4");
+      router.refresh();
+      return;
+    }
+    // Oppakken: alles staat al klaar, simpele refresh zodat de
+    // banner verdwijnt. Lost B6 op (geen onnodige redirect meer).
     router.refresh();
   }
 
