@@ -61,32 +61,54 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Welkom-routes mogen los van /mijn-why/onboarding bezocht worden.
+  // Anders krijgen Pro-leden en nieuwe gebruikers redirect-loops.
+  const welkomRoutes = [
+    "/welkom-keuze",
+    "/welkom-pro",
+    "/welkom-core",
+    "/welkom",
+  ];
+  const isWelkomRoute = welkomRoutes.some((r) => pathname.startsWith(r));
+
   const isProtectedRoute =
     user &&
     !isPublicRoute &&
+    !isWelkomRoute &&
     pathname !== "/mijn-why" &&
     pathname !== "/onboarding" &&
     !pathname.startsWith("/api/");
 
   if (isProtectedRoute) {
-    // Controleer of onboarding klaar is
+    // Controleer of onboarding klaar is + welke modus
     const { data: profile } = await supabase
       .from("profiles")
-      .select("onboarding_klaar")
+      .select("onboarding_klaar, modus")
       .eq("id", user.id)
       .single();
 
     const url = request.nextUrl.clone();
 
     if (profile && !profile.onboarding_klaar) {
-      url.pathname = "/mijn-why";
+      // Pro-leden hebben geen WHY-pad in deze pilot. Stuur ze naar
+      // hun eigen welkom-pagina. Andere modi (sprint, core, null)
+      // gaan via /mijn-why.
+      if ((profile as { modus?: string | null }).modus === "pro") {
+        url.pathname = "/welkom-pro";
+      } else {
+        url.pathname = "/mijn-why";
+      }
       return NextResponse.redirect(url);
     }
 
     // Onboarding klaar maar stappen nog niet afgerond → naar /onboarding
     if (profile?.onboarding_klaar) {
       const onboardingStap = user.user_metadata?.onboarding_stap;
-      if (onboardingStap !== undefined && onboardingStap !== null && Number(onboardingStap) < 99) {
+      if (
+        onboardingStap !== undefined &&
+        onboardingStap !== null &&
+        Number(onboardingStap) < 99
+      ) {
         url.pathname = "/onboarding";
         return NextResponse.redirect(url);
       }
