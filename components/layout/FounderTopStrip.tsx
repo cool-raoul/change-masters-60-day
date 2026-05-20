@@ -23,10 +23,10 @@ export function FounderTopStrip({ isFounder, huidigeDag }: Props) {
   if (!isFounder) return null;
   return (
     <EditModeProvider>
-      <div className="bg-purple-950/30 border-b border-purple-700/30 px-4 py-2">
-        <div className="max-w-screen-xl mx-auto flex items-center gap-3 flex-wrap">
-          <span className="text-purple-300 text-xs font-semibold uppercase tracking-wider whitespace-nowrap">
-            👑 Founder
+      <div className="bg-purple-950/30 border-b border-purple-700/30 px-2 sm:px-4 py-1 sm:py-2">
+        <div className="max-w-screen-xl mx-auto flex items-center gap-2 sm:gap-3 flex-wrap">
+          <span className="text-purple-300 text-[11px] sm:text-xs font-semibold uppercase tracking-wider whitespace-nowrap">
+            👑<span className="hidden sm:inline ml-1">Founder</span>
           </span>
           <div className="flex-1 min-w-0">
             <TesterToolbar huidigeDag={huidigeDag} />

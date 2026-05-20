@@ -19,12 +19,12 @@ export function EditModeToggle({ isFounder }: Props) {
   if (!isFounder) return null;
 
   return (
-    <div className="rounded-lg border border-cm-gold/40 bg-cm-gold/5 px-4 py-2.5 flex items-center gap-3">
-      <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-cm-gold text-cm-black font-bold">
-        ✍️ Founder
+    <div className="rounded-lg border border-cm-gold/40 bg-cm-gold/5 px-2 sm:px-4 py-1.5 sm:py-2.5 flex items-center gap-2 sm:gap-3">
+      <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-cm-gold text-cm-black font-bold whitespace-nowrap">
+        ✍️<span className="hidden sm:inline ml-1">Founder</span>
       </span>
-      <span className="text-cm-white text-sm flex-1">
-        Edit-modus is{" "}
+      <span className="hidden sm:flex text-cm-white text-sm flex-1">
+        Edit-modus is&nbsp;
         <strong className={editModusAan ? "text-cm-gold" : "text-cm-white/60"}>
           {editModusAan ? "AAN" : "UIT"}
         </strong>
@@ -35,7 +35,7 @@ export function EditModeToggle({ isFounder }: Props) {
         className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
           editModusAan ? "bg-cm-gold" : "bg-cm-surface-2"
         }`}
-        aria-label="Edit-modus aan of uit"
+        aria-label={`Edit-modus is ${editModusAan ? "aan" : "uit"}, tap om te wisselen`}
       >
         <span
           className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform ${

@@ -87,23 +87,29 @@ export function TesterToolbar({
   }
 
   return (
-    <div className="rounded-lg border border-purple-500/40 bg-purple-900/20 px-4 py-2.5">
-      <div className="flex items-center justify-between gap-3 flex-wrap">
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-purple-500 text-white font-bold">
-            🧪 Test-modus
+    <div className="rounded-lg border border-purple-500/40 bg-purple-900/20 px-2 sm:px-4 py-1.5 sm:py-2.5">
+      <div className="flex items-center justify-between gap-2 sm:gap-3 flex-wrap">
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-purple-500 text-white font-bold whitespace-nowrap">
+            🧪<span className="hidden sm:inline ml-1">Test-modus</span>
           </span>
-          <span className="text-cm-white text-sm">
-            Je bent virtueel op{" "}
+          <span className="text-cm-white text-xs sm:text-sm whitespace-nowrap">
+            <span className="hidden sm:inline">Je bent virtueel op </span>
             <strong className="text-purple-300">dag {huidigeDag}</strong>
           </span>
         </div>
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
-          className="text-xs text-purple-300 hover:underline underline-offset-2"
+          className="text-xs text-purple-300 hover:underline underline-offset-2 whitespace-nowrap"
         >
-          {open ? "Inklappen" : "Spring naar andere dag →"}
+          {open ? "Inklappen" : (
+            <>
+              <span className="hidden sm:inline">Spring naar andere dag </span>
+              <span className="sm:hidden">Spring </span>
+              →
+            </>
+          )}
         </button>
       </div>
 
