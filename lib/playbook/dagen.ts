@@ -219,11 +219,7 @@ Veelgemaakte fouten, herkenbaar?
 ✗ Wachten met uitnodigen tot je lijst "perfect" is → de lijst is nooit perfect.
 ✗ Eerst zelf alle bezwaren beantwoorden in je hoofd → dat is hun werk, niet jouw werk.
 
-Vandaag stuur je ook al 3 uitnodigingen, samen met je sponsor in een groepje (3-weg-principe). Sponsor brengt autoriteit, jij koppelt, prospect ziet twee mensen die samenwerken. Dat is de hefboom waarmee je niet alles zelf hoeft te weten of te kunnen. Eerste uitnodigingen voelen onhandig, dat klopt en gaat over. Niet daardoor stoppen, juist daardoor met steun starten.
-
-WAT GAAT ER NU GEBEUREN MET JOUW UITNODIGINGEN
-
-Stel iemand zegt binnen 1-3 dagen "ja, ik wil meer weten" of laat weten dat ze gekeken hebben. Vanaf dat moment opent het echte gesprek. Je opent z'n kaart in /namenlijst, en samen met je sponsor kies je hoe je verder gaat, een 3-weg-gesprek (jullie samen in een groepje met sponsor) of Mini-ELEVA (de prospect krijgt 14 dagen eigen toegang om in eigen tempo te ontdekken). Beide zijn volwaardige paden, je kiest wat past bij die prospect en de situatie. Op dag 4 leer je de keuze maken, op dag 9 verdiep je het 3-weg-gesprek. Vandaag focus op lekker uitnodigen, de rest volgt.`,
+Vandaag stuur je ook al 3 uitnodigingen, samen met je sponsor in een groepje (3-weg-principe). Sponsor brengt autoriteit, jij koppelt, prospect ziet twee mensen die samenwerken. Dat is de hefboom waarmee je niet alles zelf hoeft te weten of te kunnen. Eerste uitnodigingen voelen onhandig, dat klopt en gaat over. Niet daardoor stoppen, juist daardoor met steun starten.`,
     waaromWerktDit: {
       tekst:
         "De geheugensteunlijst is je voorraadkast. Hoe voller, hoe makkelijker de keuze wat je vanavond kookt. En de eerste invites zijn altijd het zwaarst, gewoon door.",
