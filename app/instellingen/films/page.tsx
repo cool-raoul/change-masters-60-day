@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import {
   SLUG_BESCHRIJVINGEN,
   WELKOMSTFILM_SLUG,
+  MODUS_WELKOMSTFILM_SLUGS,
   PROSPECT_FILM_SLUGS,
   PROSPECT_FILM_BESCHRIJVINGEN,
 } from "@/lib/films/embed";
@@ -70,6 +71,7 @@ export default async function FilmsBeheerPage() {
   // ad-hoc slugs zonder duidelijke functie.
 
   const prospectFilmSlots = Object.values(PROSPECT_FILM_SLUGS);
+  const modusWelkomstfilmSlots = Object.values(MODUS_WELKOMSTFILM_SLUGS);
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -144,6 +146,41 @@ export default async function FilmsBeheerPage() {
                 bestaande={(filmsMap.get(WELKOMSTFILM_SLUG) as any) ?? null}
                 userId={user.id}
               />
+            </div>
+          </section>
+
+          {/* Modus-welkomstfilms: drie pagina's waar founder zelf moeilijk
+              naartoe kan navigeren (alleen nieuwe members zonder modus zien
+              /welkom-keuze, Core/Pro hun eigen welkom-pagina). Vandaar
+              centraal beheer hier, niet via MediaBlokken op die pagina's
+              zelf. */}
+          <section>
+            <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider mb-2">
+              🌟 Modus-welkomstfilms (Keuze / Core / Pro)
+            </h2>
+            <p className="text-cm-white opacity-60 text-xs mb-3 leading-relaxed">
+              Korte welkomstfilm bovenaan de keuze-pagina (voor nieuwe leden
+              zonder modus) of de modus-eigen welkomstpagina (Core, Pro).
+              Niet verplicht, lege URL = geen film bovenaan. Pas wanneer de
+              gebruiker /welkom-keuze, /welkom-core of /welkom-pro opent
+              ziet 'ie de film, dus test 'm via de tester-toolbar of een
+              proefaccount.
+            </p>
+            <div className="space-y-3">
+              {modusWelkomstfilmSlots.map((slug) => {
+                const film = filmsMap.get(slug) as any;
+                const meta = SLUG_BESCHRIJVINGEN[slug];
+                return (
+                  <FilmRowEditor
+                    key={slug}
+                    slug={slug}
+                    plekBeschrijving={meta?.plek ?? slug}
+                    suggestieTitel={meta?.suggestieTitel ?? ""}
+                    bestaande={film ?? null}
+                    userId={user.id}
+                  />
+                );
+              })}
             </div>
           </section>
 

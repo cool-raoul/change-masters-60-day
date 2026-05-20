@@ -1,7 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { FilmInBlok } from "@/components/film/FilmInBlok";
 import { EditableTekst } from "@/components/cms/EditableTekst";
 import { haalTekstOverrides } from "@/lib/cms/tekst-overrides";
+import { MODUS_WELKOMSTFILM_SLUGS } from "@/lib/films/embed";
 import { ModusKiesKnoppen } from "./modus-kies-knoppen";
 import { MediaBlokkenClient } from "@/components/cms/MediaBlokkenClient";
 
@@ -71,11 +73,17 @@ export default async function WelkomKeuzePagina() {
         </div>
       </div>
 
-      {/* Founder media-placeholder bovenaan. Eerder stond hier ook nog
-          een FilmInBlok met slug modus-welkom-keuze (Films-CMS), per
-          2026-05-20 verwijderd. Principe: media op de pagina zelf
-          plaatsen via ✏️ edit-modus + MediaBlokken, niet via een
-          centraal Films-CMS-slot. */}
+      {/* Welkomstfilm voor de keuze-pagina, via Films-CMS slot
+          (modus-welkom-keuze). Founder beheert 'm via /instellingen/films
+          → Modus-welkomstfilms. Reden voor Films-CMS i.p.v. MediaBlokken:
+          welkomstfilms zijn lastig via MediaBlokken te beheren omdat de
+          founder de welkomst-context (nieuwe-gebruiker-zonder-modus) niet
+          altijd kan oproepen om bij de edit-modus te komen. */}
+      <FilmInBlok slug={MODUS_WELKOMSTFILM_SLUGS.KEUZE} verbergZonderFilm />
+
+      {/* Daarnaast een MediaBlokken-placeholder voor extra media op deze
+          pagina (afbeelding, PDF, quote, etc.). Welkomstfilm zelf gaat
+          via Films-CMS hierboven. */}
       <MediaBlokkenClient
         paginaNamespace="welkom-keuze"
         paginaId="hoofd"
