@@ -115,6 +115,115 @@ Dus stel… alles klopt, stel dat dit voelt als iets voor jou:
 ben je dan in, of ben je uit?"`,
   },
 
+  // ─────────────────────────────────────────────
+  // AANSLUITEN, gespreks-openers voor de in_gesprek-fase.
+  // Vier ingangen (warm/koud/social/lead-magnet) plus een
+  // bedrijfs-variant van lead-magnet. Pipeline-fase = in_gesprek
+  // omdat je hier een gesprek opent of warmer maakt zonder al uit
+  // te nodigen voor iets specifieks.
+  // ─────────────────────────────────────────────
+  {
+    titel: "Aansluiten, Warme start",
+    categorie: "uitnodiging" as const,
+    pipeline_fase: "in_gesprek" as const,
+    tags: ["aansluiten", "warm", "opener"],
+    inhoud: `Hoi [Voornaam], hoe gaat het met je de laatste tijd? En je [werk/gezin/hobby's], hoe loopt dat? 🙂`,
+  },
+  {
+    titel: "Aansluiten, Koude start",
+    categorie: "uitnodiging" as const,
+    pipeline_fase: "in_gesprek" as const,
+    tags: ["aansluiten", "koud", "opener", "heractiveren"],
+    inhoud: `Hoi [Voornaam], we zijn al een tijdje verbonden maar hebben nog nooit echt gepraat. Dat wilde ik veranderen 🙂 Hoe gaat het met je?`,
+  },
+  {
+    titel: "Aansluiten, Via social media",
+    categorie: "uitnodiging" as const,
+    pipeline_fase: "in_gesprek" as const,
+    tags: ["aansluiten", "social", "opener", "story-reactie"],
+    inhoud: `Hé [Voornaam]! Leuk dat je reageerde op mijn story 😊 Hoe is het met je de laatste tijd?`,
+  },
+  {
+    titel: "Aansluiten, Via lead magnet (product-focus)",
+    categorie: "uitnodiging" as const,
+    pipeline_fase: "in_gesprek" as const,
+    tags: ["aansluiten", "lead-magnet", "opener", "product"],
+    inhoud: `Hoi [Voornaam], leuk dat je [Titel Lead Magnet] hebt gedownload 🙂 Ik heb het gemaakt voor mensen die met [doel of vraag] bezig zijn. Uit nieuwsgierigheid: wat sprak je het meeste aan?`,
+  },
+  {
+    titel: "Aansluiten, Via lead magnet (bedrijf-focus)",
+    categorie: "uitnodiging" as const,
+    pipeline_fase: "in_gesprek" as const,
+    tags: ["aansluiten", "lead-magnet", "opener", "bedrijf"],
+    inhoud: `Hoi [Voornaam], leuk dat je [Titel Lead Magnet] hebt gedownload 🙂 Wat sprak je het meeste aan? Ben je op dit moment bezig met [doel of vraag]?`,
+  },
+
+  // ─────────────────────────────────────────────
+  // UITNODIGEN, voor de uitgenodigd-fase. Twee stappen per
+  // ingang: stap 1 = interesse tonen / gedeeld probleem, stap 2
+  // = peilen / interesse checken / voorstel oplossing. Vier
+  // ingangen (warm/koud/social/lead-magnet).
+  //
+  // STIJL-anker: "Helemaal vrijblijvend. Als het niets voor je
+  // is, is dat ook prima." (zie memory eleva-stem-uitnodigen).
+  // ─────────────────────────────────────────────
+  {
+    titel: "Uitnodigen, Warm 1 (interesse tonen)",
+    categorie: "uitnodiging" as const,
+    pipeline_fase: "uitgenodigd" as const,
+    tags: ["uitnodigen", "warm", "stap-1"],
+    inhoud: `[Voornaam], je [vaardigheid/talent] is iets waar ik altijd respect voor heb 🙂 Ik ben met iets nieuws bezig en moest aan jou denken. Mag ik er kort iets over vertellen?`,
+  },
+  {
+    titel: "Uitnodigen, Koud 1 (interesse tonen)",
+    categorie: "uitnodiging" as const,
+    pipeline_fase: "uitgenodigd" as const,
+    tags: ["uitnodigen", "koud", "stap-1"],
+    inhoud: `Wauw! Ik ben echt onder de indruk van je inzet voor [doel] [Voornaam]. Dat zegt veel over je ambitie en drive. Wat is op dit moment je grootste uitdaging daarin?`,
+  },
+  {
+    titel: "Uitnodigen, Social 1 (gedeeld probleem)",
+    categorie: "uitnodiging" as const,
+    pipeline_fase: "uitgenodigd" as const,
+    tags: ["uitnodigen", "social", "stap-1", "gedeeld-probleem"],
+    inhoud: `Ik kreeg laatst een vraag van iemand over [onderwerp]. Daar moest ik aan denken bij jouw post. Speelt [doel of vraag] ook bij jou?`,
+  },
+  {
+    titel: "Uitnodigen, Lead magnet 1 (gedeeld probleem)",
+    categorie: "uitnodiging" as const,
+    pipeline_fase: "uitgenodigd" as const,
+    tags: ["uitnodigen", "lead-magnet", "stap-1", "gedeeld-probleem"],
+    inhoud: `Sinds ik [Titel Lead Magnet] heb gedeeld, hoor ik vaak terug dat [doel of thema] herkenbaar is. Werk jij daar ook aan? En wat is je grootste uitdaging op dit moment?`,
+  },
+  {
+    titel: "Uitnodigen, Warm 2 (peilen van interesse)",
+    categorie: "uitnodiging" as const,
+    pipeline_fase: "uitgenodigd" as const,
+    tags: ["uitnodigen", "warm", "stap-2", "peilen"],
+    inhoud: `Fijn dat je dat deelde, [Voornaam]. Ik hoor hoe belangrijk [doel] voor je is. Ik werk zelf met iets dat hier echt bij past. Mag ik je daar kort iets over laten zien? Helemaal vrijblijvend. Als het niets voor je is, is dat ook prima.`,
+  },
+  {
+    titel: "Uitnodigen, Koud 2 (peilen van interesse)",
+    categorie: "uitnodiging" as const,
+    pipeline_fase: "uitgenodigd" as const,
+    tags: ["uitnodigen", "koud", "stap-2", "peilen"],
+    inhoud: `Dat klinkt herkenbaar, [Voornaam]. Ik werk zelf met iets dat hier voor mij goed werkt. Mag ik je daar kort iets over sturen? Helemaal vrijblijvend. Als het niets voor je is, is dat ook prima.`,
+  },
+  {
+    titel: "Uitnodigen, Social 2 (interesse checken)",
+    categorie: "uitnodiging" as const,
+    pipeline_fase: "uitgenodigd" as const,
+    tags: ["uitnodigen", "social", "stap-2", "interesse-checken"],
+    inhoud: `Ik heb hier zelf een weg in gevonden die echt voor me werkt 🙂 Als je nieuwsgierig bent: ik stuur je een kort filmpje of wat info? Beslis je daarna zelf of het bij je past.`,
+  },
+  {
+    titel: "Uitnodigen, Lead magnet 2 (voorstel oplossing)",
+    categorie: "uitnodiging" as const,
+    pipeline_fase: "uitgenodigd" as const,
+    tags: ["uitnodigen", "lead-magnet", "stap-2", "voorstel"],
+    inhoud: `Snap ik. Ik heb hier zelf een weg in gevonden die voor mij echt werkt. Als je interesse hebt, mag ik je een korte video of wat info sturen? Kijk daarna zelf of het bij je past.`,
+  },
+
   // =============================================
   // BEZWAREN BEHANDELING
   // =============================================
@@ -216,6 +325,88 @@ Vraag terug:
   // =============================================
   // FOLLOW-UP
   // =============================================
+
+  // ─────────────────────────────────────────────
+  // OPVOLGEN, INFORMEREN, ritme van 24u/48u/72u na een gedeelde
+  // link of video. Vijf scripts om opvolging niet pushy te laten
+  // voelen. Geldt voor de followup-fase wanneer de prospect iets
+  // heeft gekregen maar nog niet heeft gereageerd.
+  //
+  // STIJL-anker: "ik denk dat het waardevol voor je kan zijn"
+  // mag, dat is een persoonlijke inschatting (zie memory
+  // eleva-stem-uitnodigen). NIET "ik weet zeker dat dit je
+  // gaat helpen" (claim).
+  // ─────────────────────────────────────────────
+  {
+    titel: "Opvolgen na 24u, deel 1 (niet bekeken)",
+    categorie: "followup" as const,
+    pipeline_fase: "followup" as const,
+    tags: ["opvolgen", "informeren", "24u", "niet-bekeken"],
+    inhoud: `Hoi [Voornaam], ik zag dat je de link die ik eerder stuurde nog niet hebt bekeken. Helemaal oké, ik snap dat je het druk hebt 🙂 Ik denk wel dat het waardevol voor je kan zijn. Was er een reden dat je nog niet hebt gekeken?`,
+  },
+  {
+    titel: "Opvolgen na 24u, deel 2 (gentle nudge)",
+    categorie: "followup" as const,
+    pipeline_fase: "followup" as const,
+    tags: ["opvolgen", "informeren", "24u", "nudge"],
+    inhoud: `Ik denk dat dit je wel kan ondersteunen, [Voornaam]. Neem gerust even een moment om naar de link te kijken als je tijd hebt. Laat het me weten als je hem gezien hebt door een 👍 te sturen, dan kan ik meteen je vragen beantwoorden 🙂`,
+  },
+  {
+    titel: "Opvolgen na 48u, deel 1 (wat sprak je aan)",
+    categorie: "followup" as const,
+    pipeline_fase: "followup" as const,
+    tags: ["opvolgen", "informeren", "48u", "wat-sprak-aan"],
+    inhoud: `Hoi [Voornaam], ik ben benieuwd: wat sprak je het meeste aan in de info die ik stuurde? En denk je dat het past bij wat jij zoekt rond [doel of vraag]?`,
+  },
+  {
+    titel: "Opvolgen na 48u, deel 2 (video bekeken)",
+    categorie: "followup" as const,
+    pipeline_fase: "followup" as const,
+    tags: ["opvolgen", "informeren", "48u", "video-bekeken"],
+    inhoud: `Hoi [Voornaam], heb je de video die ik stuurde inmiddels bekeken? Wat sprak je het meeste aan?`,
+  },
+  {
+    titel: "Opvolgen na 72u (warm check)",
+    categorie: "followup" as const,
+    pipeline_fase: "followup" as const,
+    tags: ["opvolgen", "informeren", "72u", "warm-check"],
+    inhoud: `Hoi [Voornaam], ik weet dat je het druk hebt, maar ik wilde even checken hoe het gaat. Je [doel] is belangrijk, dus als ik je ergens mee kan helpen, laat het me gerust weten 🙂`,
+  },
+
+  // ─────────────────────────────────────────────
+  // OPVOLGEN, DIENSTVERLENING, drie scripts voor prospects die
+  // een dienst overwegen (coaches, professionals met cliënten).
+  // Direct karakter, Eric Worre-stijl bij de 24/48u-versies om
+  // ja/nee duidelijkheid te krijgen zonder pushy te worden.
+  // ─────────────────────────────────────────────
+  {
+    titel: "Opvolgen dienstverlening, 1 (info al bekeken)",
+    categorie: "followup" as const,
+    pipeline_fase: "followup" as const,
+    tags: ["opvolgen", "dienstverlening", "info-bekeken"],
+    inhoud: `Hoi [Voornaam], ik vroeg me af of je de info die ik stuurde al hebt bekeken? Wat sprak je het meeste aan? Laat het me weten 🙂`,
+  },
+  {
+    titel: "Opvolgen dienstverlening, 2 (eerlijke ja-of-nee na 24u)",
+    categorie: "followup" as const,
+    pipeline_fase: "followup" as const,
+    tags: ["opvolgen", "dienstverlening", "24u", "eerlijk"],
+    inhoud: `Hoi [Voornaam], misschien is het nu geen goed moment, dat begrijp ik. Daarom wil ik gewoon even eerlijk vragen: ben je klaar om je [doel] serieus aan te pakken? Als het antwoord nee is, is dat ook helemaal oké. Laat het me gerust weten.`,
+  },
+  {
+    titel: "Opvolgen dienstverlening, 3 (3-opties na 48u)",
+    categorie: "followup" as const,
+    pipeline_fase: "followup" as const,
+    tags: ["opvolgen", "dienstverlening", "48u", "3-opties"],
+    inhoud: `Hoi [Voornaam], ik dacht dat je misschien één van deze drie dingen ervaart:
+
+1. Je bent geïnteresseerd, maar hebt het gewoon druk
+2. Je hebt vragen, maar bent er nog niet aan toegekomen
+3. Je bent eigenlijk niet zo geïnteresseerd, maar weet niet goed hoe je dat moet zeggen
+
+Zit daar iets tussen? Geen probleem, ik waardeer je eerlijkheid 🙂`,
+  },
+
   {
     titel: "Follow-up na video of presentatie",
     categorie: "followup" as const,

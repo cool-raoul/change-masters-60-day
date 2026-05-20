@@ -8,6 +8,7 @@ Laatst bijgewerkt: 2026-05-20
 
 ## ✅ Recent afgerond
 
+- **2026-05-20** Scripts-set polish + uitbreiding: 21 nieuwe scripts in lib/scripts-data.ts (5 Aansluiten in_gesprek + 8 Uitnodigen uitgenodigd + 5 Opvolgen Informeren followup + 3 Opvolgen Dienstverlening followup), allemaal claim-vrij + zonder em-dashes + zonder "wat vond je ervan", in ELEVA-stem. Memory eleva-stem-uitnodigen vastgelegd.
 - **2026-05-20** Mentor-prompt update: claim-vrij niveau 2 nu altijd in prompt (was alleen bij `social`/`motivatie` vraagtypes, miste bv. "21-dagen-Reset post"). Mentor doet zelf publieke-uiting-check op signaalwoorden. Academy uitgebreid met DMO + Spreken-zoals-het-raakt. Partner-check + Momentum-radar awareness: verwijst naar ELEVA-tool ipv zelf scripts genereren.
 - **2026-05-20** Films-CMS volledig opgeruimd. Alleen Welkomstfilm + Modus-welkomstfilms + 10 Prospect-films over. Principe vastgelegd: MediaBlokken voor pagina-specifieke media, Films-CMS voor pop-ups en hergebruikte films.
 - **2026-05-20** Fase 3c cross-modus skip versterking, alle 5 bugs live (B1+B2+B3+B5+B7). Centrale taak-cross-modus mapping, ITEM_SLUGS-constanten, NamenForm DB-count check.
@@ -45,13 +46,13 @@ Volgorde-akkoord van Raoul op 2026-05-20:
 - [ ] **Nieuwe uitnodig-stijl** (wacht op #4 uitnodig-scripts her-brainstorm)
 
 ### 4. Uitnodig-scripts her-brainstorm
-- [ ] 4 voorbeeld-varianten staan klaar (A vitaliteit-warm, B business-warm, C lauw, D met prospect-WHY-haakje)
-- [ ] Wacht op Raoul's akkoord met Core-perspectief erbij
-- Plekken om aan te passen na akkoord:
-  - `lib/scripts-data.ts:9-115`
+- [x] ~~Algemene scripts gepolisht en live~~ (21 stuks, afgerond 2026-05-20)
+- [ ] **Modus-specifieke scripts** (Sprint/Core/Pro) wacht op brainstorm
+- Plekken om aan te passen na modus-specifieke brainstorm:
+  - `lib/scripts-data.ts:9-115` (oude 4 Sprint-werving-scripts, framing herzien)
   - `lib/playbook/dagen.ts:159` + `:449-466`
   - `lib/academy/dmo-content.ts:419-494`
-  - `lib/prompts/coach-systeem-prompt.ts`
+  - `lib/prompts/coach-systeem-prompt.ts` (uitnodig-stijl in Mentor)
 
 ### 5. Core-content ronde
 - [ ] Dag 2, dag 5 t/m 21 + verankering + lifetime templates
