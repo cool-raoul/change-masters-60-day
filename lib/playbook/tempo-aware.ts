@@ -91,31 +91,12 @@ export function momentumRadarStap(dagNummer: number): ControllableTaak {
   };
 }
 
-// ============================================================
-// AANPAK_KIEZEN_UITLEG, dagelijkse check vanaf dag 4. Tekst is
-// hergebruikbaar op elke dag waar er prospects in 'gekeken / wil
-// meer weten'-fase kunnen zitten. Bij lege pijplijn: skip-friendly.
-// ============================================================
-
-export const AANPAK_KIEZEN_UITLEG = `Dagelijkse check: heeft iemand sinds gisteren gekeken of laat weten "ja, ik wil meer weten"?\n\nLege pijplijn vandaag? Sla dit over. Deze taak wacht op je tot er een prospect klaarstaat. Geen reactie binnen, geen actie hier. Check 'm gewoon morgen weer.\n\nWel iemand die heeft gekeken of meer wil weten? Open z'n kaart en kies één van twee paden via het keuzeblok bovenaan. App je sponsor erbij: "Hé [sponsornaam], [prospect] heeft gekeken. Zullen we even kort: 3-weg of Mini-ELEVA?"\n\n🤝 3-WEG-GESPREK voor warme prospects die snel willen schakelen, kort traject, persoonlijk contact passend. Sponsor doet het zwaardere praatwerk, jij brengt vertrouwen. Stappenplan staat klaar achter de '3-weg'-knop op de kaart, dag 9 verdiep je dit.\n\n✨ MINI-ELEVA voor prospects met een druk leven, mensen die eerst zelf willen kijken, of wanneer een 3-weg-gesprek qua planning niet snel lukt en je momentum wilt houden. 14 dagen eigen toegang, welkomstvideo's, AI-mentor, chat met jou en je sponsor. Klik 'Mini-ELEVA-uitnodiging maken' op de kaart.\n\nBeide paden zijn volwaardig, je kiest wat past bij die prospect én jouw situatie. Niet zeker? Druk 'Overleg met sponsor' in het keuzeblok.`;
-
-/**
- * Helper die de aanpak-kiezen-stap genereert. Dagelijkse optionele
- * check vanaf dag 4: heeft een prospect gekeken of meer informatie
- * gevraagd? Dan opent de member z'n kaart en kiest samen met sponsor
- * tussen 3-weg-gesprek of Mini-ELEVA. Bij lege pijplijn skip-friendly.
- *
- * Niet op dag 1-3 omdat daar nog geen uitnodigingen lopen.
- */
-export function aanpakKiezenStap(dagNummer: number): ControllableTaak {
-  return {
-    id: `dag${dagNummer}-aanpak-kiezen`,
-    label: "🧭 Heeft iemand gekeken of meer willen weten? Kies de aanpak",
-    uitleg: AANPAK_KIEZEN_UITLEG,
-    verplicht: false,
-    actieRoute: "/namenlijst",
-  };
-}
+// Aanpak-keuze (3-weg vs Mini-ELEVA) is GEEN aparte taak meer per
+// 2026-05-20. De keuze is onderdeel van de follow-up-flow: wanneer
+// een prospect heeft gekeken of meer wil weten, opent de member z'n
+// kaart in /namenlijst en kiest samen met sponsor. Zie de drie
+// FOLLOWUP_UITLEG-teksten hieronder voor de geïntegreerde uitleg
+// ("PER PROSPECT KIES JE AANPAK"-blok).
 
 // ============================================================
 // Tekst-blok dat we hergebruiken op alle tempo-aware dagen:
@@ -133,7 +114,7 @@ export const STORIES_UITLEG =`Deel 1 tot 3 momenten uit je dag op Instagram of F
 // begint. Onderaan staat WEL al de verwijzing naar sponsor + Mentor,
 // zodat een member die direct vastloopt op een specifiek bericht weet
 // waar 'ie per direct hulp kan halen.
-export const FOLLOWUP_UITLEG_BASIS = `Mensen die de film, one-pager of presentatie hebben gezien wachten op opvolging. Geen vast getal vandaag, afhankelijk van wie er klaar staat in je pijplijn. Open je namenlijst en filter op fase 'one-pager', 'presentatie' of 'follow-up'.\n\nVOOR NU FOCUS JE OP ÉÉN DING, de openingszin. De diepere opvolg-technieken (Feel-Felt-Found voor bezwaren, follow-up-cadans, closing-vragen, doel-tijd-termijn) komen verderop in de playbook stap voor stap aan bod (vanaf dag 5). Vandaag oefen je alleen het OPENEN van het gesprek.\n\nDE OPENINGSZIN, twee varianten:\n\n• ALGEMEEN: "Wat spreekt je hier het meeste in aan?"\n  Werkt altijd. Richt de aandacht op wat hen RAAKTE.\n\n• WHY-GERICHT (als je hun WHY al kent): "Zie je hoe dit je kan brengen tot [hun WHY]?"\n  Voorbeelden:\n    - "Zie je hoe dit je kan brengen tot die extra vrije dag die je graag zou willen?"\n    - "Zie je hoe dit je kan brengen tot die vakantiedagen die je extra zou willen?"\n    - "Zie je hoe dit je kan brengen tot meer tijd met je kinderen?"\n  Krachtig als je hun WHY weet.\n\nVermijd "Wat vond je ervan?", dat lokt oordeel uit in plaats van verbinding.\n\nLUISTER WAT ZE ZEGGEN. Doorvragen op wat ze NOEMEN. Geen pitch, geen druk om vandaag iets te beslissen. De volgende stappen (validatie, twijfel ombuigen, closen) komen verderop in het playbook (vanaf dag 5).\n\n🆘 KOM JE NU VAST OP EEN SPECIFIEK BERICHT?\n\nWacht niet tot je het zelf moet verzinnen. Je hebt twee snelle hulplijnen, gebruik ze:\n\n• Je sponsor, stuur een korte WhatsApp met de letterlijke tekst die je hebt ontvangen, plus één vraag ("Hoe zou jij hier op reageren?"). Sponsors zijn er precies hiervoor.\n• De Mentor (in het zijmenu), plak het bericht, vraag een reactie-suggestie. De Mentor schrijft op maat in jouw toon en houdt rekening met fase + WHY van de prospect.\n\nDieper-ingaan op berichten komt verderop in het playbook, maar deze vangnetten zijn er nu al.`;
+export const FOLLOWUP_UITLEG_BASIS = `Mensen die de film, one-pager of presentatie hebben gezien wachten op opvolging. Geen vast getal vandaag, afhankelijk van wie er klaar staat in je pijplijn. Open je namenlijst en filter op fase 'one-pager', 'presentatie' of 'follow-up'.\n\nVOOR NU FOCUS JE OP ÉÉN DING, de openingszin. De diepere opvolg-technieken (Feel-Felt-Found voor bezwaren, follow-up-cadans, closing-vragen, doel-tijd-termijn) komen verderop in de playbook stap voor stap aan bod (vanaf dag 5). Vandaag oefen je alleen het OPENEN van het gesprek.\n\nDE OPENINGSZIN, twee varianten:\n\n• ALGEMEEN: "Wat spreekt je hier het meeste in aan?"\n  Werkt altijd. Richt de aandacht op wat hen RAAKTE.\n\n• WHY-GERICHT (als je hun WHY al kent): "Zie je hoe dit je kan brengen tot [hun WHY]?"\n  Voorbeelden:\n    - "Zie je hoe dit je kan brengen tot die extra vrije dag die je graag zou willen?"\n    - "Zie je hoe dit je kan brengen tot die vakantiedagen die je extra zou willen?"\n    - "Zie je hoe dit je kan brengen tot meer tijd met je kinderen?"\n  Krachtig als je hun WHY weet.\n\nVermijd "Wat vond je ervan?", dat lokt oordeel uit in plaats van verbinding.\n\nPER PROSPECT KIES JE AANPAK (3-WEG OF MINI-ELEVA)\n\nHeeft iemand gekeken of laten weten "ja, ik wil meer weten"? Open z'n kaart in /namenlijst en kies één van twee paden via het keuzeblok bovenaan. App je sponsor erbij voor het korte overleg: "Hé [sponsornaam], [prospect] is klaar. 3-weg of Mini-ELEVA?"\n\n🤝 3-WEG-GESPREK voor warme prospects die snel willen schakelen, sponsor doet het zwaardere praatwerk, jij brengt vertrouwen.\n\n✨ MINI-ELEVA voor prospects met een druk leven, mensen die eerst zelf willen kijken, of wanneer een 3-weg-planning niet snel lukt en je momentum wilt houden. 14 dagen eigen toegang, AI-mentor, chat met jou en sponsor.\n\nBeide paden volwaardig. Niet zeker? Druk 'Overleg met sponsor' in het keuzeblok. Op dag 9 verdiep je de 3-weg-gesprek-techniek.\n\nLUISTER WAT ZE ZEGGEN. Doorvragen op wat ze NOEMEN. Geen pitch, geen druk om vandaag iets te beslissen. De volgende stappen (validatie, twijfel ombuigen, closen) komen verderop in het playbook (vanaf dag 5).\n\n🆘 KOM JE NU VAST OP EEN SPECIFIEK BERICHT?\n\nWacht niet tot je het zelf moet verzinnen. Je hebt twee snelle hulplijnen, gebruik ze:\n\n• Je sponsor, stuur een korte WhatsApp met de letterlijke tekst die je hebt ontvangen, plus één vraag ("Hoe zou jij hier op reageren?"). Sponsors zijn er precies hiervoor.\n• De Mentor (in het zijmenu), plak het bericht, vraag een reactie-suggestie. De Mentor schrijft op maat in jouw toon en houdt rekening met fase + WHY van de prospect.\n\nDieper-ingaan op berichten komt verderop in het playbook, maar deze vangnetten zijn er nu al.`;
 
 // Voor dag 7+: members hebben Feel-Felt-Found (FFF, op dag 5) EN
 // follow-up-cadans + 5-fasen-flow (op dag 6) al geleerd. De tekst
@@ -142,7 +123,7 @@ export const FOLLOWUP_UITLEG_BASIS = `Mensen die de film, one-pager of presentat
 // zonder eerst terug-bladeren. Daarna een drie-stappen-aanpak
 // 'eerst-zelf-dan-check' die voor beide technieken werkt. Doel:
 // vakmanschap door eigen denken, niet afhankelijkheid van Mentor.
-export const FOLLOWUP_UITLEG_NA_DAG6 = `Mensen die de film, one-pager of presentatie hebben gezien wachten op opvolging. Geen vast getal vandaag, afhankelijk van wie er klaar staat in je pijplijn. Open je namenlijst en filter op fase 'one-pager', 'presentatie' of 'follow-up'.\n\nDE OPENINGSZIN, twee varianten:\n\n• ALGEMEEN: "Wat spreekt je hier het meeste in aan?"\n• WHY-GERICHT (als je hun WHY al kent): "Zie je hoe dit je kan brengen tot [hun WHY]?"\n\nVermijd "Wat vond je ervan?", dat lokt oordeel uit in plaats van verbinding.\n\n💪 VANDAAG GA JE ZELF OEFENEN MET TWEE TECHNIEKEN\n\nDe afgelopen twee dagen heb je twee technieken geleerd. Vandaag pas je ze ZELF toe, dat is de overgang van leren naar kunnen.\n\nDE 5-FASEN-FOLLOW-UP (van dag 6), concrete zinnen per fase:\n\n1. CHECK-IN (24-48u na uitnodiging): "Even inchecken, hoe gaat het met je?"\n2. PEILEN (na 3-5 dagen): "Wat sprak je het meeste aan van wat je gezien hebt?"\n3. VERDIEPEN (na 7-10 dagen): "Dit wilde ik je ook nog laten zien..." + tweede waardevol punt\n4. UITNODIGING NAAR EVENT/3-WEG (na 10-14 dagen): "Er is binnenkort iets dat past, wil je erbij zijn?"\n5. SLUITEN OF NOT-YET (na 14-21 dagen): "Wat is voor jou het belangrijkste punt om helder te krijgen?"\n\nPLUS de stilgevallen-zin als iemand al langer stil is:\n"Hé [naam], ik zag dat je niet meer had gereageerd op mijn laatste berichtje. Is dat omdat je druk was of omdat je geen interesse hebt op dit moment? Allebei prima hoor, ik dacht: ik vraag het even!"\n\nFEEL-FELT-FOUND (FFF, van dag 5), voor wanneer er een bezwaar komt:\n\n• FEEL: "Ik snap dat het zo voelt."\n• FELT: "Veel mensen voelden dat in het begin ook."\n• FOUND: "Wat zij merkten was [korte herframing]."\n• DOORVRAAG: "Maar vertel eens, waar zit het 'm nu écht in?"\n\nDE DRIE-STAPPEN-AANPAK BIJ ELK NIEUW BERICHT\n\n1. EERST ZELF SCHRIJVEN. Open je notitie-app of typ in WhatsApp (concept, niet versturen). Welk fase-zin past bij deze prospect (waar staan ze in de 5 fasen)? Komt er een bezwaar? Schrijf de FFF-reactie in jouw stijl. Geen scripts kopiëren, geen Mentor vragen.\n\n2. CHECK TEGEN WAT JE HEBT GELEERD. Klopt de fase-zin die je koos? Past de FFF-volgorde (feel-felt-found-doorvraag) op het bezwaar? Voelt het natuurlijk of geforceerd?\n\n3. PAS DAN HULP VRAGEN, ALS JE TWIJFELT. Stuur je concept + korte prospect-context naar sponsor of Mentor met de vraag 'Klopt dit volgens jou?'. Niet 'schrijf 'm voor mij', wel 'kijk mee'.\n\nWaarom in deze volgorde? Omdat zelf nadenken een SPIER is die je bouwt door 'm te gebruiken. Hulp meteen vragen is comfort, maar het houdt je beginner. Eerst zelf, dan check, dat is hoe je een professional wordt.\n\nDieper terug-bladeren? Menu → Playbook → Dag 5 (FFF in detail) en Dag 6 (5-fasen-flow in detail).\n\n🆘 KOM JE ECHT VAST?\n\n• Je sponsor, stuur de letterlijke tekst die je hebt ontvangen + jouw concept-reactie + de vraag 'wat zou jij ervan vinden?'\n• De Mentor (in het zijmenu), zelfde aanpak: deel je concept en vraag om feedback. De Mentor is getraind om mee te kijken, niet om voor jou te schrijven.`;
+export const FOLLOWUP_UITLEG_NA_DAG6 = `Mensen die de film, one-pager of presentatie hebben gezien wachten op opvolging. Geen vast getal vandaag, afhankelijk van wie er klaar staat in je pijplijn. Open je namenlijst en filter op fase 'one-pager', 'presentatie' of 'follow-up'.\n\nDE OPENINGSZIN, twee varianten:\n\n• ALGEMEEN: "Wat spreekt je hier het meeste in aan?"\n• WHY-GERICHT (als je hun WHY al kent): "Zie je hoe dit je kan brengen tot [hun WHY]?"\n\nVermijd "Wat vond je ervan?", dat lokt oordeel uit in plaats van verbinding.\n\nPER PROSPECT KIES JE AANPAK (3-WEG OF MINI-ELEVA)\n\nHeeft iemand gekeken of laten weten "ja, ik wil meer weten"? Open z'n kaart in /namenlijst en kies één van twee paden via het keuzeblok bovenaan. App je sponsor erbij voor het korte overleg: "Hé [sponsornaam], [prospect] is klaar. 3-weg of Mini-ELEVA?"\n\n🤝 3-WEG-GESPREK voor warme prospects die snel willen schakelen, sponsor doet het zwaardere praatwerk, jij brengt vertrouwen.\n\n✨ MINI-ELEVA voor prospects met een druk leven, mensen die eerst zelf willen kijken, of wanneer een 3-weg-planning niet snel lukt en je momentum wilt houden. 14 dagen eigen toegang, AI-mentor, chat met jou en sponsor.\n\nBeide paden volwaardig. Niet zeker? Druk 'Overleg met sponsor' in het keuzeblok.\n\n💪 VANDAAG GA JE ZELF OEFENEN MET TWEE TECHNIEKEN\n\nDe afgelopen twee dagen heb je twee technieken geleerd. Vandaag pas je ze ZELF toe, dat is de overgang van leren naar kunnen.\n\nDE 5-FASEN-FOLLOW-UP (van dag 6), concrete zinnen per fase:\n\n1. CHECK-IN (24-48u na uitnodiging): "Even inchecken, hoe gaat het met je?"\n2. PEILEN (na 3-5 dagen): "Wat sprak je het meeste aan van wat je gezien hebt?"\n3. VERDIEPEN (na 7-10 dagen): "Dit wilde ik je ook nog laten zien..." + tweede waardevol punt\n4. UITNODIGING NAAR EVENT/3-WEG (na 10-14 dagen): "Er is binnenkort iets dat past, wil je erbij zijn?"\n5. SLUITEN OF NOT-YET (na 14-21 dagen): "Wat is voor jou het belangrijkste punt om helder te krijgen?"\n\nPLUS de stilgevallen-zin als iemand al langer stil is:\n"Hé [naam], ik zag dat je niet meer had gereageerd op mijn laatste berichtje. Is dat omdat je druk was of omdat je geen interesse hebt op dit moment? Allebei prima hoor, ik dacht: ik vraag het even!"\n\nFEEL-FELT-FOUND (FFF, van dag 5), voor wanneer er een bezwaar komt:\n\n• FEEL: "Ik snap dat het zo voelt."\n• FELT: "Veel mensen voelden dat in het begin ook."\n• FOUND: "Wat zij merkten was [korte herframing]."\n• DOORVRAAG: "Maar vertel eens, waar zit het 'm nu écht in?"\n\nDE DRIE-STAPPEN-AANPAK BIJ ELK NIEUW BERICHT\n\n1. EERST ZELF SCHRIJVEN. Open je notitie-app of typ in WhatsApp (concept, niet versturen). Welk fase-zin past bij deze prospect (waar staan ze in de 5 fasen)? Komt er een bezwaar? Schrijf de FFF-reactie in jouw stijl. Geen scripts kopiëren, geen Mentor vragen.\n\n2. CHECK TEGEN WAT JE HEBT GELEERD. Klopt de fase-zin die je koos? Past de FFF-volgorde (feel-felt-found-doorvraag) op het bezwaar? Voelt het natuurlijk of geforceerd?\n\n3. PAS DAN HULP VRAGEN, ALS JE TWIJFELT. Stuur je concept + korte prospect-context naar sponsor of Mentor met de vraag 'Klopt dit volgens jou?'. Niet 'schrijf 'm voor mij', wel 'kijk mee'.\n\nWaarom in deze volgorde? Omdat zelf nadenken een SPIER is die je bouwt door 'm te gebruiken. Hulp meteen vragen is comfort, maar het houdt je beginner. Eerst zelf, dan check, dat is hoe je een professional wordt.\n\nDieper terug-bladeren? Menu → Playbook → Dag 5 (FFF in detail) en Dag 6 (5-fasen-flow in detail).\n\n🆘 KOM JE ECHT VAST?\n\n• Je sponsor, stuur de letterlijke tekst die je hebt ontvangen + jouw concept-reactie + de vraag 'wat zou jij ervan vinden?'\n• De Mentor (in het zijmenu), zelfde aanpak: deel je concept en vraag om feedback. De Mentor is getraind om mee te kijken, niet om voor jou te schrijven.`;
 
 // ============================================================
 // Anti-uitval-blokken voor dag 5 en dag 6. Bovenin de uitleg van
@@ -164,7 +145,7 @@ const ANTI_UITVAL_DAG6 = `ℹ️ EVEN VOOR DE RUST: VEEL MENSEN ONDERSCHATTEN DE
 // Feel-Felt-Found (FFF, geleerd op dag 5) als enige techniek voor
 // zelf-toepassen. De 5-fasen-flow is JUIST vandaag de leerstof,
 // dus die toetsen we vandaag nog niet zelf. Dat doen we vanaf dag 7.
-const FOLLOWUP_UITLEG_DAG6 = `Mensen die de film, one-pager of presentatie hebben gezien wachten op opvolging. Vandaag is de DAG om hier scherp en systematisch in te zijn. Open je namenlijst en filter op fase 'one-pager', 'presentatie' of 'follow-up'.\n\nDE 24-48U-REGEL\n\nStuur 24-48 uur na een uitnodiging je eerste check-in. Niet eerder (dan voelt het opdringerig), niet later (dan is de psychologische ruimte alweer dicht). Gemiddeld zijn 5 contactmomenten nodig voordat iemand een echte beslissing maakt, dat is geen drammen, dat is gewoon de statistiek van menselijk gedrag.\n\nDE 5-FASEN-FOLLOW-UP\n\n1. CHECK-IN (24-48u): "Even inchecken, hoe gaat het met je?" GEEN "heb je al nagedacht?"\n2. PEILEN (na 3-5 dagen): "Wat sprak je het meeste aan van wat je gezien hebt?" Open vraag op WAT, niet op JA/NEE.\n3. VERDIEPEN (na 7-10 dagen): "Dit wilde ik je ook nog laten zien..." Tweede waardevol punt, een testimonial, een nieuw filmpje.\n4. UITNODIGING NAAR EVENT/3-WEG (na 10-14 dagen): "Er is binnenkort iets dat past, wil je erbij zijn?"\n5. SLUITEN OF NOT-YET (na 14-21 dagen): "Wat is voor jou het belangrijkste punt om helder te krijgen?"\n\nDE STILGEVALLEN-GESPREKKEN-ZIN\n\nWanneer iemand een paar dagen of weken niet meer reageert, werkt deze zin bijna altijd:\n\n"Hé [naam], ik zag dat je niet meer had gereageerd op mijn laatste berichtje. Is dat omdat je druk was of omdat je geen interesse hebt op dit moment? Allebei prima hoor, ik dacht: ik vraag het even!"\n\nWaarom dit werkt:\n- Geen verwijt, geen druk: 'allebei prima hoor' geeft de uitweg.\n- Eerlijk antwoord: mensen die druk waren ('sorry, vergeten!') komen terug. Mensen die geen interesse hebben, geven dat aan zonder ongemak.\n- Helderheid voor jou: je weet waar je staat, kunt verder.\n\nWAT JE WEL EN NIET DOET\n\n- WEL: "Even inchecken" - vriendelijk, niet beoordelend\n- WEL: "Wat sprak je aan?" - focus op wat positief is\n- NIET: "Heb je al nagedacht?" - zet ze in beoordelaar-positie\n- NIET: "Wat vond je ervan?" - vraagt om oordeel, opent kritiek\n- NIET: stilte na 1 keer geen reactie - fataal, je verliest 80%\n\n💪 KOMT ER EEN BEZWAAR TIJDENS JE FOLLOW-UP? PAS FFF ZELF TOE\n\nGisteren (dag 5) heb je Feel-Felt-Found (FFF) geleerd. Als een prospect vandaag een bezwaar uit ('ik heb geen tijd', 'ik wil eerst nadenken'), pas dan FFF zelf toe, in deze volgorde:\n\n1. EERST ZELF SCHRIJVEN. Open je notitie-app of typ in WhatsApp (concept, niet versturen). Schrijf de FFF-reactie in jouw eigen stijl. Geen scripts kopiëren.\n\n2. CHECK TEGEN FFF. Klopt het patroon? Feel (ik snap dat het zo voelt) → Felt (anderen voelden dat ook) → Found (wat zij merkten was...) → doorvraag-zin.\n\n3. PAS DAN HULP VRAGEN, ALS JE TWIJFELT. Stuur je concept naar sponsor of Mentor met de vraag 'Klopt dit volgens jou?'. Niet 'schrijf 'm voor mij', wel 'kijk mee'. Bezwaren-bibliotheek terug-bladeren? Menu → Playbook → Dag 5.\n\n🆘 KOM JE ECHT VAST OP EEN SPECIFIEK BERICHT?\n\n• Je sponsor - stuur de letterlijke tekst die je hebt ontvangen + jouw eerste concept-reactie + de vraag 'wat zou jij ervan vinden?'\n• De Mentor (in het zijmenu) - zelfde aanpak: deel je concept en vraag om feedback. De Mentor is getraind om mee te kijken, niet om voor jou te schrijven.`;
+const FOLLOWUP_UITLEG_DAG6 = `Mensen die de film, one-pager of presentatie hebben gezien wachten op opvolging. Vandaag is de DAG om hier scherp en systematisch in te zijn. Open je namenlijst en filter op fase 'one-pager', 'presentatie' of 'follow-up'.\n\nDE 24-48U-REGEL\n\nStuur 24-48 uur na een uitnodiging je eerste check-in. Niet eerder (dan voelt het opdringerig), niet later (dan is de psychologische ruimte alweer dicht). Gemiddeld zijn 5 contactmomenten nodig voordat iemand een echte beslissing maakt, dat is geen drammen, dat is gewoon de statistiek van menselijk gedrag.\n\nDE 5-FASEN-FOLLOW-UP\n\n1. CHECK-IN (24-48u): "Even inchecken, hoe gaat het met je?" GEEN "heb je al nagedacht?"\n2. PEILEN (na 3-5 dagen): "Wat sprak je het meeste aan van wat je gezien hebt?" Open vraag op WAT, niet op JA/NEE.\n3. VERDIEPEN (na 7-10 dagen): "Dit wilde ik je ook nog laten zien..." Tweede waardevol punt, een testimonial, een nieuw filmpje.\n4. UITNODIGING NAAR EVENT/3-WEG (na 10-14 dagen): "Er is binnenkort iets dat past, wil je erbij zijn?"\n5. SLUITEN OF NOT-YET (na 14-21 dagen): "Wat is voor jou het belangrijkste punt om helder te krijgen?"\n\nPER PROSPECT KIES JE AANPAK (3-WEG OF MINI-ELEVA)\n\nNa fase 2-3 zit de prospect vaak in 'wil meer weten'-modus. Open z'n kaart in /namenlijst en kies één van twee paden via het keuzeblok bovenaan. App je sponsor erbij voor het korte overleg: "Hé [sponsornaam], [prospect] is klaar. 3-weg of Mini-ELEVA?"\n\n🤝 3-WEG-GESPREK voor warme prospects die snel willen schakelen, sponsor doet het zwaardere praatwerk, jij brengt vertrouwen.\n\n✨ MINI-ELEVA voor prospects met een druk leven, mensen die eerst zelf willen kijken, of wanneer een 3-weg-planning niet snel lukt en je momentum wilt houden. 14 dagen eigen toegang, AI-mentor, chat met jou en sponsor.\n\nBeide paden volwaardig. Niet zeker? Druk 'Overleg met sponsor' in het keuzeblok. Op dag 9 verdiep je de 3-weg-gesprek-techniek.\n\nDE STILGEVALLEN-GESPREKKEN-ZIN\n\nWanneer iemand een paar dagen of weken niet meer reageert, werkt deze zin bijna altijd:\n\n"Hé [naam], ik zag dat je niet meer had gereageerd op mijn laatste berichtje. Is dat omdat je druk was of omdat je geen interesse hebt op dit moment? Allebei prima hoor, ik dacht: ik vraag het even!"\n\nWaarom dit werkt:\n- Geen verwijt, geen druk: 'allebei prima hoor' geeft de uitweg.\n- Eerlijk antwoord: mensen die druk waren ('sorry, vergeten!') komen terug. Mensen die geen interesse hebben, geven dat aan zonder ongemak.\n- Helderheid voor jou: je weet waar je staat, kunt verder.\n\nWAT JE WEL EN NIET DOET\n\n- WEL: "Even inchecken" - vriendelijk, niet beoordelend\n- WEL: "Wat sprak je aan?" - focus op wat positief is\n- NIET: "Heb je al nagedacht?" - zet ze in beoordelaar-positie\n- NIET: "Wat vond je ervan?" - vraagt om oordeel, opent kritiek\n- NIET: stilte na 1 keer geen reactie - fataal, je verliest 80%\n\n💪 KOMT ER EEN BEZWAAR TIJDENS JE FOLLOW-UP? PAS FFF ZELF TOE\n\nGisteren (dag 5) heb je Feel-Felt-Found (FFF) geleerd. Als een prospect vandaag een bezwaar uit ('ik heb geen tijd', 'ik wil eerst nadenken'), pas dan FFF zelf toe, in deze volgorde:\n\n1. EERST ZELF SCHRIJVEN. Open je notitie-app of typ in WhatsApp (concept, niet versturen). Schrijf de FFF-reactie in jouw eigen stijl. Geen scripts kopiëren.\n\n2. CHECK TEGEN FFF. Klopt het patroon? Feel (ik snap dat het zo voelt) → Felt (anderen voelden dat ook) → Found (wat zij merkten was...) → doorvraag-zin.\n\n3. PAS DAN HULP VRAGEN, ALS JE TWIJFELT. Stuur je concept naar sponsor of Mentor met de vraag 'Klopt dit volgens jou?'. Niet 'schrijf 'm voor mij', wel 'kijk mee'. Bezwaren-bibliotheek terug-bladeren? Menu → Playbook → Dag 5.\n\n🆘 KOM JE ECHT VAST OP EEN SPECIFIEK BERICHT?\n\n• Je sponsor - stuur de letterlijke tekst die je hebt ontvangen + jouw eerste concept-reactie + de vraag 'wat zou jij ervan vinden?'\n• De Mentor (in het zijmenu) - zelfde aanpak: deel je concept en vraag om feedback. De Mentor is getraind om mee te kijken, niet om voor jou te schrijven.`;
 
 /**
  * Tempo-specifieke vervangings-data voor dag 3.
@@ -315,7 +296,6 @@ function bouwDag4VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- LAATSTE STAP: sponsor-checkin (afsluiting van de dag) ---
-    aanpakKiezenStap(4),
     {
       id: "dag4-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -402,7 +382,6 @@ function bouwDag5VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- LAATSTE STAP: sponsor-checkin ---
-    aanpakKiezenStap(5),
     {
       id: "dag5-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -484,7 +463,6 @@ function bouwDag6VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- LAATSTE STAP: sponsor-checkin ---
-    aanpakKiezenStap(6),
     {
       id: "dag6-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -579,7 +557,6 @@ function bouwDag7VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- LAATSTE STAP: sponsor-call (15 min, langer dan checkin) ---
-    aanpakKiezenStap(7),
     {
       id: "dag7-sponsor-call",
       label: "📞 15 min sponsor-call over week 2",
@@ -653,7 +630,6 @@ function bouwDag8VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- LAATSTE STAP: sponsor-checkin ---
-    aanpakKiezenStap(8),
     {
       id: "dag8-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -723,7 +699,6 @@ function bouwDag9VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- LAATSTE STAP: sponsor-checkin ---
-    aanpakKiezenStap(9),
     {
       id: "dag9-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -804,7 +779,6 @@ function bouwDag10VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- LAATSTE STAP: sponsor-checkin ---
-    aanpakKiezenStap(10),
     {
       id: "dag10-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -884,7 +858,6 @@ function bouwDag11VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- LAATSTE STAP: sponsor-checkin ---
-    aanpakKiezenStap(11),
     {
       id: "dag11-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -964,7 +937,6 @@ function bouwDag12VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       actieRoute: "/namenlijst",
     },
-    aanpakKiezenStap(12),
     {
       id: "dag12-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -993,7 +965,6 @@ function bouwDag13VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: true,
       actieRoute: "/namenlijst",
     },
-    aanpakKiezenStap(13),
     {
       id: "dag13-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -1040,7 +1011,6 @@ function bouwDag14VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: true,
       actieRoute: "/namenlijst",
     },
-    aanpakKiezenStap(14),
     {
       id: "dag14-sponsor-call",
       label: "📞 15 min sponsor-call: week 3 voorbereiden",
@@ -1073,7 +1043,6 @@ function bouwDag15VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: true,
       actieRoute: "/herinneringen",
     },
-    aanpakKiezenStap(15),
     {
       id: "dag15-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -1102,7 +1071,6 @@ function bouwDag16VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: true,
       actieRoute: "/namenlijst",
     },
-    aanpakKiezenStap(16),
     {
       id: "dag16-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -1151,7 +1119,6 @@ function bouwDag17VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       actieRoute: "/namenlijst",
     },
-    aanpakKiezenStap(17),
     {
       id: "dag17-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -1199,7 +1166,6 @@ function bouwDag18VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       actieRoute: "/namenlijst",
     },
-    aanpakKiezenStap(18),
     {
       id: "dag18-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -1230,7 +1196,6 @@ function bouwDag19VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: true,
       actieRoute: "/namenlijst",
     },
-    aanpakKiezenStap(19),
     {
       id: "dag19-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -1259,7 +1224,6 @@ function bouwDag20VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: true,
       actieRoute: "/namenlijst",
     },
-    aanpakKiezenStap(20),
     {
       id: "dag20-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -1351,7 +1315,6 @@ function bouwDag21VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: true,
       actieRoute: "/mijn-why",
     },
-    aanpakKiezenStap(21),
     {
       id: "dag21-sponsor-call",
       label: "📞 40 min sponsor-call: week 3 afsluiten + blok 2 voorbereiden",
