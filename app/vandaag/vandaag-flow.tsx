@@ -33,6 +33,7 @@ import { EditableTekst, EditableBlok } from "@/components/cms/EditableTekst";
 import { TesterToolbar } from "@/components/tester/TesterToolbar";
 import { MediaBlokken } from "@/components/cms/MediaBlokken";
 import type { Blok } from "@/lib/cms/pagina-blokken";
+import { TAAK_NAAR_CROSS_MODUS_SLUG } from "@/lib/onboarding/taak-cross-modus";
 
 // localStorage-key zodat we bij terugkeer (van een actieRoute) op de
 // juiste taak landen, niet weer in de intro-stap.
@@ -200,15 +201,9 @@ function VandaagFlowInner({
   const groet =
     DAG_GROETEN[dag.nummer] || pakDagdeelGroetMetNaam(voornaam);
 
-  // Mapping van taak-ids naar cross-modus slugs in onboarding_voltooiingen.
-  // Wordt gebruikt om bij voltooiing OOK de cross-modus slug te markeren,
-  // zodat een switch naar de andere modus die taak overslaat.
-  const taakNaarCrossModusSlug: Record<string, string> = {
-    "dag1-vcard": "vcard-import-gedaan",
-    "dag1-sponsor": "sponsor-eerste-bericht",
-    "core-dag1-vcard-import": "vcard-import-gedaan",
-    "core-dag1-sponsor-bericht": "sponsor-eerste-bericht",
-  };
+  // Mapping van taak-ids naar cross-modus slugs leeft sinds 2026-05-20
+  // centraal in lib/onboarding/taak-cross-modus.ts. Eén bron, geen
+  // dubbele lijst meer die uit sync kan raken (B5-fix in fase 3c).
 
   async function vinkAf(taakId: string, nieuwVoltooid: boolean) {
     if (bezigIds.has(taakId)) return;
@@ -238,7 +233,7 @@ function VandaagFlowInner({
           return n;
         });
         toast.error("Opslaan mislukt");
-      } else if (nieuwVoltooid && taakNaarCrossModusSlug[taakId]) {
+      } else if (nieuwVoltooid && TAAK_NAAR_CROSS_MODUS_SLUG[taakId]) {
         // Cross-modus skip-tabel ook bijwerken bij afvinken (niet bij
         // uit-vinken, want we willen 'm dan niet ook bij de andere
         // modus opnieuw laten verschijnen).
@@ -246,7 +241,7 @@ function VandaagFlowInner({
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            slug: taakNaarCrossModusSlug[taakId],
+            slug: TAAK_NAAR_CROSS_MODUS_SLUG[taakId],
             modus,
           }),
         }).catch(() => {});

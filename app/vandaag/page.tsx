@@ -28,6 +28,7 @@ import { haalRadarAfvinkSets } from "@/lib/radar/carry-over";
 import { bracketVoorDTT, type DTTInput } from "@/lib/dtt/advies";
 import { genereerDMOStappen } from "@/lib/dtt/dmo-stappen";
 import { haalAlleVoltooiingenVoorUser, type Modus } from "@/lib/onboarding/voltooiingen";
+import { TAAK_NAAR_CROSS_MODUS_SLUG } from "@/lib/onboarding/taak-cross-modus";
 import type { CommitmentUren } from "@/lib/dagdoelen";
 import { VandaagFlow } from "./vandaag-flow";
 import { ADMIN_ITEMS } from "@/lib/setup/admin-items";
@@ -347,13 +348,8 @@ export default async function VandaagPagina({
   // Cross-modus skip: taken waarvan de cross-modus slug al in een andere
   // modus is afgevinkt, verbergen we vandaag. Member die Sprint→Core (of
   // omgekeerd) switcht ziet die taken niet meer in dag 1 van de nieuwe
-  // modus, want het werk is al gedaan.
-  const taakNaarCrossModusSlug: Record<string, string> = {
-    "dag1-vcard": "vcard-import-gedaan",
-    "dag1-sponsor": "sponsor-eerste-bericht",
-    "core-dag1-vcard-import": "vcard-import-gedaan",
-    "core-dag1-sponsor-bericht": "sponsor-eerste-bericht",
-  };
+  // modus, want het werk is al gedaan. Mapping leeft sinds 2026-05-20
+  // centraal in lib/onboarding/taak-cross-modus.ts (B5-fix).
 
   // Lege-widget filter: als er geen partners en geen momentum-acties
   // zijn, slaan we die taken helemaal over. Geen 'kijk maar je hebt
@@ -368,7 +364,7 @@ export default async function VandaagPagina({
   dagData = {
     ...dagData,
     vandaagDoen: dagData.vandaagDoen.filter((t) => {
-      const slug = taakNaarCrossModusSlug[t.id];
+      const slug = TAAK_NAAR_CROSS_MODUS_SLUG[t.id];
       if (slug && crossModusVoltooiingenMap.get(slug)?.voltooid) return false;
       if (t.inlineEmbed === "momentum-radar" && !heeftRadarItems) return false;
       if (t.inlineEmbed === "partner-check" && !heeftPartners) return false;
