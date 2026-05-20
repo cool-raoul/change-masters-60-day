@@ -8,6 +8,7 @@ Laatst bijgewerkt: 2026-05-20
 
 ## ✅ Recent afgerond
 
+- **2026-05-20** Films-CMS volledig opgeruimd. Alleen Welkomstfilm + 10 Prospect-films over. Playbook-films (dag 2-4), Andere films, Nieuwe film toevoegen, 21 dag-films, modus-welkomstfilm-rendering weg. Principe vastgelegd: MediaBlokken voor pagina-specifieke media, Films-CMS alleen voor hergebruikte films.
 - **2026-05-20** Fase 3c cross-modus skip versterking, alle 5 bugs live (B1+B2+B3+B5+B7). Centrale taak-cross-modus mapping, ITEM_SLUGS-constanten, NamenForm DB-count check.
 - **2026-05-20** Founder-strip compact op mobiel (FounderTopStrip + TesterToolbar + EditModeToggle nu één regel op telefoon)
 - **2026-05-20** Films-CMS verduidelijkt + Sprint-dag-films redundantie weg (per-dag film via Films-CMS verwijderd uit vandaag-flow, MediaBlokken edit-modus blijft enige weg voor Sprint-dag-video's). Films-CMS blijft actief voor welkomst, prospect, leerpaden, academy.
