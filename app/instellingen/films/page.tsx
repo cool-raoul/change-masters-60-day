@@ -3,7 +3,6 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import {
   SLUG_BESCHRIJVINGEN,
-  ONBOARDING_FILM_SLUGS,
   WELKOMSTFILM_SLUG,
   PROSPECT_FILM_SLUGS,
   PROSPECT_FILM_BESCHRIJVINGEN,
@@ -53,10 +52,11 @@ export default async function FilmsBeheerPage() {
     (films ?? []).map((f: any) => [f.slug, f]),
   );
 
-  // Standaard-slots die we in onboarding gebruiken, altijd zichtbaar
-  // ook als ze nog geen film-rij hebben.
-  const standaardSlots = Object.values(ONBOARDING_FILM_SLUGS);
-
+  // ONBOARDING_FILM_SLUGS (webshop/teams/krediet/bestellinks) zijn niet
+  // meer in deze UI gerenderd. Founders zetten film-URL's voor de admin-
+  // items rechtstreeks op /setup/[slug]. Slugs leven nog in lib/films/
+  // embed.ts voor backwards-compat met bestaande FilmInBlok-fallbacks.
+  //
   // Playbook-dag-N slots (slug "playbook-dag-1" t/m "playbook-dag-21")
   // zijn per 2026-05-20 uit de Films-CMS UI gehaald. Founders plaatsen
   // dag-films voortaan direct op /vandaag via ✏️ edit-modus + MediaBlokken.
@@ -147,28 +147,12 @@ export default async function FilmsBeheerPage() {
             </div>
           </section>
 
-          {/* Playbook-admin-slots, staan in dag 2/3/4 van het 21-daagse playbook */}
-          <section>
-            <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider mb-3">
-              Playbook-films (dag 2-4)
-            </h2>
-            <div className="space-y-3">
-              {standaardSlots.map((slug) => {
-                const film = filmsMap.get(slug) as any;
-                const meta = SLUG_BESCHRIJVINGEN[slug];
-                return (
-                  <FilmRowEditor
-                    key={slug}
-                    slug={slug}
-                    plekBeschrijving={meta?.plek ?? slug}
-                    suggestieTitel={meta?.suggestieTitel ?? ""}
-                    bestaande={film ?? null}
-                    userId={user.id}
-                  />
-                );
-              })}
-            </div>
-          </section>
+          {/* Playbook-films (dag 2-4) sectie is per 2026-05-20 weggehaald.
+              De 4 admin-items (webshop, teams-admin, krediet, bestellinks)
+              hebben hun eigen film-URL veld direct op /setup/[slug] via de
+              paarse founder-strip. Dubbel pad was ruis. Onderliggende slugs
+              (onboarding-stap-6/7/8/9-*) blijven werken voor bestaande
+              fallback-rendering via huidigeTaak.filmSlug op /vandaag. */}
 
           {/* Prospect-films: members kunnen deze met een unieke share-link
               naar individuele prospects sturen. Tracking + auto-pipeline-shift
