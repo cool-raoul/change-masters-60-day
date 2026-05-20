@@ -315,6 +315,7 @@ function bouwDag4VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- LAATSTE STAP: sponsor-checkin (afsluiting van de dag) ---
+    aanpakKiezenStap(4),
     {
       id: "dag4-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -323,7 +324,6 @@ function bouwDag4VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
-    aanpakKiezenStap(4),
     momentumRadarStap(4),
     partnerCheckStap(4),
   ];
@@ -402,6 +402,7 @@ function bouwDag5VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- LAATSTE STAP: sponsor-checkin ---
+    aanpakKiezenStap(5),
     {
       id: "dag5-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -410,7 +411,6 @@ function bouwDag5VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
-    aanpakKiezenStap(5),
     momentumRadarStap(5),
     partnerCheckStap(5),
   ];
@@ -484,6 +484,7 @@ function bouwDag6VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- LAATSTE STAP: sponsor-checkin ---
+    aanpakKiezenStap(6),
     {
       id: "dag6-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -492,7 +493,6 @@ function bouwDag6VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
-    aanpakKiezenStap(6),
     momentumRadarStap(6),
     partnerCheckStap(6),
   ];
@@ -579,6 +579,7 @@ function bouwDag7VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- LAATSTE STAP: sponsor-call (15 min, langer dan checkin) ---
+    aanpakKiezenStap(7),
     {
       id: "dag7-sponsor-call",
       label: "📞 15 min sponsor-call over week 2",
@@ -587,7 +588,6 @@ function bouwDag7VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
-    aanpakKiezenStap(7),
     momentumRadarStap(7),
     partnerCheckStap(7),
   ];
@@ -653,6 +653,7 @@ function bouwDag8VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- LAATSTE STAP: sponsor-checkin ---
+    aanpakKiezenStap(8),
     {
       id: "dag8-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -661,7 +662,6 @@ function bouwDag8VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
-    aanpakKiezenStap(8),
     momentumRadarStap(8),
     partnerCheckStap(8),
   ];
@@ -723,6 +723,7 @@ function bouwDag9VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- LAATSTE STAP: sponsor-checkin ---
+    aanpakKiezenStap(9),
     {
       id: "dag9-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -731,7 +732,6 @@ function bouwDag9VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
-    aanpakKiezenStap(9),
     momentumRadarStap(9),
     partnerCheckStap(9),
   ];
@@ -804,6 +804,7 @@ function bouwDag10VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- LAATSTE STAP: sponsor-checkin ---
+    aanpakKiezenStap(10),
     {
       id: "dag10-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -812,7 +813,6 @@ function bouwDag10VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
-    aanpakKiezenStap(10),
     momentumRadarStap(10),
     partnerCheckStap(10),
   ];
@@ -884,6 +884,7 @@ function bouwDag11VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- LAATSTE STAP: sponsor-checkin ---
+    aanpakKiezenStap(11),
     {
       id: "dag11-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -892,7 +893,6 @@ function bouwDag11VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
-    aanpakKiezenStap(11),
     momentumRadarStap(11),
     partnerCheckStap(11),
   ];
@@ -964,6 +964,7 @@ function bouwDag12VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       actieRoute: "/namenlijst",
     },
+    aanpakKiezenStap(12),
     {
       id: "dag12-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -972,7 +973,6 @@ function bouwDag12VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
-    aanpakKiezenStap(12),
     momentumRadarStap(12),
     partnerCheckStap(12),
   ];
@@ -993,6 +993,7 @@ function bouwDag13VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: true,
       actieRoute: "/namenlijst",
     },
+    aanpakKiezenStap(13),
     {
       id: "dag13-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -1001,7 +1002,6 @@ function bouwDag13VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
-    aanpakKiezenStap(13),
     momentumRadarStap(13),
     partnerCheckStap(13),
   ];
@@ -1040,6 +1040,7 @@ function bouwDag14VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: true,
       actieRoute: "/namenlijst",
     },
+    aanpakKiezenStap(14),
     {
       id: "dag14-sponsor-call",
       label: "📞 15 min sponsor-call: week 3 voorbereiden",
@@ -1048,7 +1049,6 @@ function bouwDag14VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
-    aanpakKiezenStap(14),
     momentumRadarStap(14),
     partnerCheckStap(14),
   ];
@@ -1073,6 +1073,7 @@ function bouwDag15VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: true,
       actieRoute: "/herinneringen",
     },
+    aanpakKiezenStap(15),
     {
       id: "dag15-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -1081,7 +1082,6 @@ function bouwDag15VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
-    aanpakKiezenStap(15),
     momentumRadarStap(15),
     partnerCheckStap(15),
   ];
@@ -1102,6 +1102,7 @@ function bouwDag16VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: true,
       actieRoute: "/namenlijst",
     },
+    aanpakKiezenStap(16),
     {
       id: "dag16-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -1110,7 +1111,6 @@ function bouwDag16VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
-    aanpakKiezenStap(16),
     momentumRadarStap(16),
     partnerCheckStap(16),
   ];
@@ -1151,6 +1151,7 @@ function bouwDag17VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       actieRoute: "/namenlijst",
     },
+    aanpakKiezenStap(17),
     {
       id: "dag17-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -1159,7 +1160,6 @@ function bouwDag17VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
-    aanpakKiezenStap(17),
     momentumRadarStap(17),
     partnerCheckStap(17),
   ];
@@ -1199,6 +1199,7 @@ function bouwDag18VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       actieRoute: "/namenlijst",
     },
+    aanpakKiezenStap(18),
     {
       id: "dag18-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -1207,7 +1208,6 @@ function bouwDag18VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
-    aanpakKiezenStap(18),
     momentumRadarStap(18),
     partnerCheckStap(18),
   ];
@@ -1230,6 +1230,7 @@ function bouwDag19VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: true,
       actieRoute: "/namenlijst",
     },
+    aanpakKiezenStap(19),
     {
       id: "dag19-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -1238,7 +1239,6 @@ function bouwDag19VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
-    aanpakKiezenStap(19),
     momentumRadarStap(19),
     partnerCheckStap(19),
   ];
@@ -1259,6 +1259,7 @@ function bouwDag20VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: true,
       actieRoute: "/namenlijst",
     },
+    aanpakKiezenStap(20),
     {
       id: "dag20-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
@@ -1267,7 +1268,6 @@ function bouwDag20VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
-    aanpakKiezenStap(20),
     momentumRadarStap(20),
     partnerCheckStap(20),
   ];
@@ -1351,6 +1351,7 @@ function bouwDag21VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: true,
       actieRoute: "/mijn-why",
     },
+    aanpakKiezenStap(21),
     {
       id: "dag21-sponsor-call",
       label: "📞 40 min sponsor-call: week 3 afsluiten + blok 2 voorbereiden",
@@ -1359,7 +1360,6 @@ function bouwDag21VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
-    aanpakKiezenStap(21),
     momentumRadarStap(21),
     partnerCheckStap(21),
   ];
