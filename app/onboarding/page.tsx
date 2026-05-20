@@ -13,6 +13,7 @@ import { AlGedaanLabel } from "@/components/onboarding/AlGedaanLabel";
 import { Stap4ModusKeuze } from "@/components/onboarding/Stap4ModusKeuze";
 import { NamenForm } from "@/components/vandaag/inline-embeds/NamenForm";
 import type { Modus } from "@/lib/onboarding/voltooiingen";
+import { ITEM_SLUGS } from "@/lib/onboarding/sleutels";
 
 const SPONSOR_TEL = "https://wa.me/31612345678"; // fallback, wordt dynamisch geladen
 
@@ -176,6 +177,24 @@ export default function OnboardingPagina() {
     } catch (e) { /* stil falen */ }
   }
 
+  // Markeer een cross-modus voltooi-slug, idempotent. Onderdrukt fouten
+  // omdat dit een progressie-update is, niet kritiek. Lost B1 op: stap 1
+  // (app-geinstalleerd + push-aan) was nooit als cross-modus voltooid
+  // gemarkeerd, waardoor een Sprint-gebruiker die switcht naar Core ze
+  // opnieuw moest doorlopen.
+  async function markeerCrossModusVoltooid(slug: string) {
+    if (isPreview) return;
+    try {
+      await fetch("/api/onboarding/markeer-voltooid", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug, modus }),
+      });
+    } catch {
+      /* stil falen */
+    }
+  }
+
   /**
    * Verplaats de gebruiker naar de volgende stap.
    *
@@ -226,6 +245,17 @@ export default function OnboardingPagina() {
         if (voltooid) {
           await stuurPushNaarSponsor(pushNaam);
         }
+      }
+
+      // Cross-modus voltooi-markering (B1-fix). Bij overgang naar stap 2
+      // (= stap 1 net afgerond) zetten we app-geinstalleerd én push-aan
+      // op voltooid in de skip-tabel. WHY en eerste-5-namen markeren
+      // zichzelf elders (in /mijn-why respectievelijk NamenForm), dus
+      // hoeven hier niet. Stap 4 (modus-keuze) markeert via
+      // Stap4ModusKeuze.
+      if (voltooid && nieuweStap === 2) {
+        await markeerCrossModusVoltooid(ITEM_SLUGS.appGeinstalleerd);
+        await markeerCrossModusVoltooid(ITEM_SLUGS.pushAan);
       }
     }
     setStap(nieuweStap);
