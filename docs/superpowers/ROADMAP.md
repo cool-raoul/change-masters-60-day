@@ -8,7 +8,8 @@ Laatst bijgewerkt: 2026-05-20
 
 ## ✅ Recent afgerond
 
-- **2026-05-20** Films-CMS volledig opgeruimd. Alleen Welkomstfilm + 10 Prospect-films over. Playbook-films (dag 2-4), Andere films, Nieuwe film toevoegen, 21 dag-films, modus-welkomstfilm-rendering weg. Principe vastgelegd: MediaBlokken voor pagina-specifieke media, Films-CMS alleen voor hergebruikte films.
+- **2026-05-20** Mentor-prompt update: claim-vrij niveau 2 nu altijd in prompt (was alleen bij `social`/`motivatie` vraagtypes, miste bv. "21-dagen-Reset post"). Mentor doet zelf publieke-uiting-check op signaalwoorden. Academy uitgebreid met DMO + Spreken-zoals-het-raakt. Partner-check + Momentum-radar awareness: verwijst naar ELEVA-tool ipv zelf scripts genereren.
+- **2026-05-20** Films-CMS volledig opgeruimd. Alleen Welkomstfilm + Modus-welkomstfilms + 10 Prospect-films over. Principe vastgelegd: MediaBlokken voor pagina-specifieke media, Films-CMS voor pop-ups en hergebruikte films.
 - **2026-05-20** Fase 3c cross-modus skip versterking, alle 5 bugs live (B1+B2+B3+B5+B7). Centrale taak-cross-modus mapping, ITEM_SLUGS-constanten, NamenForm DB-count check.
 - **2026-05-20** Founder-strip compact op mobiel (FounderTopStrip + TesterToolbar + EditModeToggle nu één regel op telefoon)
 - **2026-05-20** Films-CMS verduidelijkt + Sprint-dag-films redundantie weg (per-dag film via Films-CMS verwijderd uit vandaag-flow, MediaBlokken edit-modus blijft enige weg voor Sprint-dag-video's). Films-CMS blijft actief voor welkomst, prospect, leerpaden, academy.
@@ -37,11 +38,11 @@ Volgorde-akkoord van Raoul op 2026-05-20:
   - NamenForm doel-check via DB-count
 
 ### 3. Mentor-prompt update
-- [ ] `lib/prompts/coach-systeem-prompt.ts` bijwerken voor:
-  - Claim-vrij voor algemene communicatie (niet alleen supplementen)
-  - Sprint/Core/Pro-framing
-  - Partner-check + momentum-radar
-  - Nieuwe uitnodig-stijl (na #4)
+- [x] ~~Claim-vrij niveau 2 altijd in prompt, Mentor doet zelf publieke-uiting-check~~ (afgerond 2026-05-20)
+- [x] ~~Sprint/Core/Pro-framing~~ (al eerder gedaan, padBeschrijving regel 89-101)
+- [x] ~~Partner-check + Momentum-radar awareness~~ (afgerond 2026-05-20)
+- [x] ~~Academy uitgebreid met DMO + Spreken-zoals-het-raakt~~ (afgerond 2026-05-20)
+- [ ] **Nieuwe uitnodig-stijl** (wacht op #4 uitnodig-scripts her-brainstorm)
 
 ### 4. Uitnodig-scripts her-brainstorm
 - [ ] 4 voorbeeld-varianten staan klaar (A vitaliteit-warm, B business-warm, C lauw, D met prospect-WHY-haakje)
