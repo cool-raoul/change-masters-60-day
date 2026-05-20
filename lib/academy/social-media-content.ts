@@ -56,7 +56,7 @@ Het probleem is dat de meeste mensen social media gebruiken als een **megafoon**
   },
   {
     sleutel: "1.2",
-    titel: "De fout die 95% maakt — broadcast versus conversatie",
+    titel: "De fout die 95% maakt: broadcast versus conversatie",
     leestijdMinuten: 9,
     inhoud: `Er zijn twee soorten mensen op social media. Broadcasters en conversators.
 
@@ -194,7 +194,7 @@ Zet je belangrijkste woord HELEMAAL VOORAAN. Want op telefoon ziet iemand alleen
 **De fouten die de meesten maken:**
 
 - Een groepsfoto waar jij ergens tussen staat (welke ben jij?)
-- Een logo (je bent geen merk, je bent een mens — netwerk-marketing draait om mensen)
+- Een logo (je bent geen merk, je bent een mens, netwerk-marketing draait om mensen)
 - Een foto met zonnebril (ogen wegnemen halveert vertrouwen)
 - Een foto van 5 jaar geleden (mensen herkennen je niet als ze je in real life zien)
 
@@ -341,7 +341,7 @@ Klopt. En dat is precies de bedoeling.
 
 **Waarom niche werkt:**
 
-Mensen voelen zich aangetrokken tot iemand die SPECIFIEK iets voor HEN doet. Een coach voor "iedereen" trekt niemand aan. Een coach voor "drukke moeders die zich schuldig voelen als ze even niets doen" — dat is herkenning.
+Mensen voelen zich aangetrokken tot iemand die SPECIFIEK iets voor HEN doet. Een coach voor "iedereen" trekt niemand aan. Een coach voor "drukke moeders die zich schuldig voelen als ze even niets doen", dat is herkenning.
 
 Niche is geen begrenzing. Niche is een **magneet**.
 
@@ -487,7 +487,7 @@ Dat is je elevator pitch in story-vorm. Iemand klikt, ziet 5 stories in 30 secon
     sleutel: "4.2",
     titel: "Je eerste 9 posts grid bewust opbouwen",
     leestijdMinuten: 8,
-    inhoud: `Wanneer iemand op je Instagram-profiel komt, zien ze eerst de **grid** — een 3×3 vakje met je laatste 9 posts. Dat is je etalage.
+    inhoud: `Wanneer iemand op je Instagram-profiel komt, zien ze eerst de **grid**: een 3×3 vakje met je laatste 9 posts. Dat is je etalage.
 
 De fout die de meesten maken: ze posten random door elkaar. Een productfoto. Een vakantiefoto. Een quote. Een selfie. Geen samenhang.
 
@@ -527,7 +527,7 @@ Niet je hele content-kalender, maar gewoon: wat ga ik vandaag, morgen en overmor
 
 **De truc met Reels:**
 
-Op Instagram zijn Reels groter geworden dan posts. Je kunt 9 Reels op je grid hebben staan en dat is helemaal prima — vaak zelfs sterker dan stilstaande posts. Mix gerust.`,
+Op Instagram zijn Reels groter geworden dan posts. Je kunt 9 Reels op je grid hebben staan en dat is helemaal prima, vaak zelfs sterker dan stilstaande posts. Mix gerust.`,
     oefening:
       "Open je Instagram-grid. Pak een blaadje. Schrijf naast elke van je laatste 9 posts welke pillar het is (1, 2 of 3). Te veel 1'tjes? Te veel 2'tjes? Dat is je signaal voor wat de komende week ontbreekt.",
   },
@@ -589,7 +589,7 @@ const M5: AcademyLes[] = [
 
 **De fout: te grote hashtags gebruiken**
 
-#liefde, #gezondheid, #fitness, #moeder — deze hebben miljoenen posts. Jouw post verdwijnt binnen 5 seconden onder duizenden andere. Geen vindbaar effect.
+#liefde, #gezondheid, #fitness, #moeder, deze hebben miljoenen posts. Jouw post verdwijnt binnen 5 seconden onder duizenden andere. Geen vindbaar effect.
 
 **Wat werkt: gerichte, niche-hashtags**
 
@@ -762,7 +762,7 @@ Per dag voeg je 1-5 nieuwe mensen toe (afhankelijk van je tempo). Maar gericht: 
 - Open een hashtag of een account in jouw niche
 - Scroll door de top-posts of de volgers
 - Vind iemand die er interessant uitziet
-- Open hun profiel — voldoet aan jouw niche?
+- Open hun profiel, voldoet aan jouw niche?
 - Volg + geef 1-2 oprechte likes op recente posts
 - Doe NIETS meer vandaag. Geen DM, geen comment-spree.
 
@@ -812,7 +812,7 @@ Op social media gebeurt het echte werk in **comments**, niet in likes. Likes zij
 
 Drie regels:
 
-- **Reageer op iets SPECIFIEKS uit hun post.** Niet "mooi!" maar "die manier waarop je over loslaten praat — heb je dat zelf moeten leren?"
+- **Reageer op iets SPECIFIEKS uit hun post.** Niet "mooi!" maar "die manier waarop je over loslaten praat, heb je dat zelf moeten leren?"
 - **Voeg iets toe.** Een eigen ervaring, een vraag, een herkenning. Geen pluimpje.
 - **Vraag iets terug.** Open vraag, niet ja/nee.
 
@@ -938,7 +938,7 @@ Je doet 3 dingen:
 
 - Je begint je dag CREATING in plaats van CONSUMING (zie les 1.3)
 - Je hebt al 2-3 menselijke connecties gehad vóór 9 uur 's ochtends
-- Mensen die jouw story zien om 8 uur reageren misschien om 10 uur — gesprek loopt vanzelf
+- Mensen die jouw story zien om 8 uur reageren misschien om 10 uur, gesprek loopt vanzelf
 
 **Wat NIET doen:**
 
@@ -948,7 +948,7 @@ Je doet 3 dingen:
 
 **Wanneer doe je dit?**
 
-Vast moment: bij je eerste koffie, tijdens je tandenpoetsen, op weg naar werk in de bus. NIET in bed bij het wakker worden — dan ga je doomscrollen.
+Vast moment: bij je eerste koffie, tijdens je tandenpoetsen, op weg naar werk in de bus. NIET in bed bij het wakker worden, dan ga je doomscrollen.
 
 **Tip: zet een herinnering op je telefoon**
 
@@ -1220,7 +1220,7 @@ Wat WEL werkt: het product IN context van je leven. Foto van het product in je h
 
 Dit triggert het algoritme als manipulatief en wordt onderdrukt. Mensen herkennen het inmiddels ook.
 
-Wat WEL werkt: echte vragen waar je echt nieuwsgierig naar bent. "Wat is het beste boek dat je dit jaar hebt gelezen?" — open, oprecht, geen mind-trick.
+Wat WEL werkt: echte vragen waar je echt nieuwsgierig naar bent. "Wat is het beste boek dat je dit jaar hebt gelezen?", open, oprecht, geen mind-trick.
 
 **3. Vaak posts met "swipe up voor info"**
 
@@ -1347,9 +1347,9 @@ Posts die langer blijven staan, beter onthouden worden, en mensen helpen jou te 
 
 **Wat werkt op feed:**
 
-- **Carousels** (meerdere afbeeldingen door te swipen) — momenteel het best presterend format
+- **Carousels** (meerdere afbeeldingen door te swipen), momenteel het best presterend format
 - **Sterke quote-posts** met jouw eigen woorden, niet hergebruikte quotes
-- **Foto + verhaal** — een foto met een caption van 100-300 woorden
+- **Foto + verhaal**, een foto met een caption van 100-300 woorden
 - **Voor-en-na verhalen** met visuele anker
 
 **Carousels in detail:**
@@ -1628,7 +1628,7 @@ Beter: wacht tot er natuurlijk iets gebeurt over je business (een nieuwe inzicht
 
 **De stille kracht van LEVEN-content:**
 
-Wanneer mensen jou 3 maanden volgen en 80% van je content gaat over je gezin, je sport, je gedachten — dan voelen ze alsof ze jou kennen. Wanneer die 20% business-content komt, geloven ze het, want het sluit aan bij wie je bent.
+Wanneer mensen jou 3 maanden volgen en 80% van je content gaat over je gezin, je sport, je gedachten, dan voelen ze alsof ze jou kennen. Wanneer die 20% business-content komt, geloven ze het, want het sluit aan bij wie je bent.
 
 Andersom werkt het niet: 80% business van een vreemde voelt als reclame, ook als de business 1 op 1 zou matchen.
 
@@ -1793,7 +1793,7 @@ Dat is de natuurlijke overgang van rapport naar uitnodiging. Geen pitch. Wel: aa
     sleutel: "11.3",
     titel: "Luisteren > vertellen, ook in tekst",
     leestijdMinuten: 7,
-    inhoud: `Luisteren in een DM klinkt vreemd — je hoort niemand. Maar het bestaat wél: het is hoe je LEEST en hoe je REAGEERT op wat iemand schrijft.
+    inhoud: `Luisteren in een DM klinkt vreemd, je hoort niemand. Maar het bestaat wél: het is hoe je LEEST en hoe je REAGEERT op wat iemand schrijft.
 
 **De fout: vertel-overload**
 
@@ -1850,7 +1850,7 @@ Lees jouw laatste 5 DM-berichten. Tel hoe vaak het woord "ik/mijn/me" voorkomt v
 
 **Luisteren is geen passiviteit:**
 
-Het is actief. Je leest dieper, je vraagt scherper, je laat hen schitteren. Dat is de duurzame manier om relaties te bouwen — én verkoop te laten gebeuren.
+Het is actief. Je leest dieper, je vraagt scherper, je laat hen schitteren. Dat is de duurzame manier om relaties te bouwen, én verkoop te laten gebeuren.
 
 Mensen die zich gehoord voelen door jou, kopen graag van jou. Niet omdat jij ze "convinced" hebt. Omdat ze willen blijven praten met iemand die ECHT luistert.`,
     oefening:
@@ -1875,7 +1875,7 @@ const M12: AcademyLes[] = [
 
 - **Signaal 2: Er is een Message (M).** Je weet hun GROTERE motivatie of pijn. Iets wat ze willen veranderen, willen bereiken, of waar ze van wegrennen.
 
-- **Signaal 3: De Message past bij wat jij doet.** Hun M ligt in een gebied waar jouw werk of business naar werkt. Niet random "ze wil financieel onafhankelijk zijn" — wel: dat sluit aan op wat jij aanbiedt.
+- **Signaal 3: De Message past bij wat jij doet.** Hun M ligt in een gebied waar jouw werk of business naar werkt. Niet random "ze wil financieel onafhankelijk zijn", wel: dat sluit aan op wat jij aanbiedt.
 
 **Als alle 3 waar zijn, mag je uitnodigen.**
 
@@ -1887,7 +1887,7 @@ Niet "kom kopen". Wel: een PERSOONLIJKE invitatie om iets specifieks te bekijken
 
 Voorbeelden:
 
-- "Ik dacht aan jouw verhaal over je moeder. Heb iets dat misschien past — mag ik je dat in 10 min via Zoom laten zien?"
+- "Ik dacht aan jouw verhaal over je moeder. Heb iets dat misschien past, mag ik je dat in 10 min via Zoom laten zien?"
 - "Wat je zei over uit je hoofd komen klopt zo. Stuur ik je een korte video die exact daarover gaat?"
 - "Heb een document waarvan ik denk dat het je verder helpt. Wil je m bekijken?"
 
@@ -1899,7 +1899,7 @@ Mensen worden ongeduldig en nodigen na 2-3 berichten al uit. Dat voelt voor de a
 
 **De andere fout: te laat uitnodigen**
 
-Sommige mensen blijven eindeloos rapport bouwen zonder ooit door te gaan. Na 50 berichten is het gek geworden — dan voelt een uitnodiging onnatuurlijk, alsof je een vriend opeens iets wilt verkopen.
+Sommige mensen blijven eindeloos rapport bouwen zonder ooit door te gaan. Na 50 berichten is het gek geworden, dan voelt een uitnodiging onnatuurlijk, alsof je een vriend opeens iets wilt verkopen.
 
 **Sweet spot: 5-10 berichten in, met duidelijke M.**
 
@@ -2050,7 +2050,7 @@ Specifiek + onderbouwd + relevant voor deze prospect.
 
 Soms is het andersom. Je sponsor introduceert JOU bij je prospect:
 
-> "Linda, dit is [jouw naam]. Ze is sinds [datum] met ons aan het bouwen en ze heeft al [X] mensen om zich heen verzameld die ook deze weg willen. Wat opvalt aan haar is hoe oprecht ze in gesprekken is — geen verkoop-modus, gewoon mensen helpen."
+> "Linda, dit is [jouw naam]. Ze is sinds [datum] met ons aan het bouwen en ze heeft al [X] mensen om zich heen verzameld die ook deze weg willen. Wat opvalt aan haar is hoe oprecht ze in gesprekken is, geen verkoop-modus, gewoon mensen helpen."
 
 Dat geeft jou krediet bij Linda. Linda voelt: ah, deze persoon is serieus, wordt aanbevolen door iemand die ik vertrouw.
 
@@ -2107,7 +2107,7 @@ Slechte reactie (tegenargument):
 Wat doet dit: je verdedigt, ze voelen dat ze gelijk hebben, weerstand groeit.
 
 Goede reactie (Feel-Felt-Found):
-> "Ik begrijp hoe je dat voelt (FEEL). Heel veel mensen hadden dat gevoel in het begin (FELT). Wat ze ontdekten was dat er een groot verschil is tussen netwerk-marketing en pyramid schemes — bij ons komt al het inkomen uit de verkoop van producten, niet uit het aanwerven zelf (FOUND). Mag ik je het verschil even laten zien in een kort plaatje?"
+> "Ik begrijp hoe je dat voelt (FEEL). Heel veel mensen hadden dat gevoel in het begin (FELT). Wat ze ontdekten was dat er een groot verschil is tussen netwerk-marketing en pyramid schemes: bij ons komt al het inkomen uit de verkoop van producten, niet uit het aanwerven zelf (FOUND). Mag ik je het verschil even laten zien in een kort plaatje?"
 
 Wat doet dit: je erkent hun gevoel zonder ermee in te stemmen, je normaliseert het, en je biedt een herframing aan.
 
@@ -2183,7 +2183,7 @@ Eerlijk + erken + bied alternatief (wachten).
 Onderliggende boodschap: ik ben wantrouwig, ik heb misschien slechte verhalen gehoord.
 
 Antwoord:
-> "Snap ik totaal. Dit is een vraag die ik zelf ook stelde toen ik begon. Wat ik ontdekte: pyramid schemes zijn illegaal en hebben GEEN PRODUCT — alle inkomen komt uit nieuwe deelnemers, geen verkoop. Bij ons komt al het inkomen uit de verkoop van producten. Geen verkoop = geen inkomen, hoe groot je team ook is. Dat is het wezenlijke verschil. Wil je dat ik je het verschil even uitleg in een visueel plaatje?"
+> "Snap ik totaal. Dit is een vraag die ik zelf ook stelde toen ik begon. Wat ik ontdekte: pyramid schemes zijn illegaal en hebben GEEN PRODUCT, alle inkomen komt uit nieuwe deelnemers, geen verkoop. Bij ons komt al het inkomen uit de verkoop van producten. Geen verkoop = geen inkomen, hoe groot je team ook is. Dat is het wezenlijke verschil. Wil je dat ik je het verschil even uitleg in een visueel plaatje?"
 
 Educatie + bewijs + open uitnodiging.
 

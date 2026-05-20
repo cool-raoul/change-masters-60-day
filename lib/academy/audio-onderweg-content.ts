@@ -62,10 +62,10 @@ In de Spotify-album van Eric Worre's audiobook 'Go Pro' staan de eerste vier tra
 
 In het Spotify-album (link onderaan):
 
-- **Track 1: Introduction** — Eric's eigen verhaal
-- **Track 2: Chapter 1 — Network Marketing Isn't Perfect... It's Just Better** — waarom dit vak, en wat het juist niet is
-- **Track 3: Chapter 2 — Decide to Be a Professional. Decide to Go Pro** — het verschil tussen amateur, hobbyist en professional
-- **Track 4: Chapter 3 — You'll Need to Learn Some Skills** — waarom de zeven skills een SYSTEEM vormen, geen losse tips
+- **Track 1: Introduction**: Eric's eigen verhaal
+- **Track 2: Chapter 1, Network Marketing Isn't Perfect... It's Just Better**: waarom dit vak, en wat het juist niet is
+- **Track 3: Chapter 2, Decide to Be a Professional. Decide to Go Pro**: het verschil tussen amateur, hobbyist en professional
+- **Track 4: Chapter 3, You'll Need to Learn Some Skills**: waarom de zeven skills een SYSTEEM vormen, geen losse tips
 
 Samen ongeveer 30 tot 40 minuten luistertijd. Perfect voor één wandeling of een autoritje. Daarna mag je de zeven skill-tracks in vrije volgorde luisteren.
 
@@ -89,19 +89,19 @@ Daarna zijn de overige zeven tracks in deze training (1.vinden, 2.uitnodigen, ..
   // ============================================================
   {
     sleutel: "1.vinden",
-    titel: "Skill #1 — Vinden van prospects",
+    titel: "Skill #1: Vinden van prospects",
     leestijdMinuten: 3,
     audioZoekLink: SPOTIFY_GOPRO_ALBUM,
-    inhoud: `**Spotify Track 5 — Chapter 4: Skill #1 (Finding Prospects)**
+    inhoud: `**Spotify Track 5: Chapter 4: Skill #1 (Finding Prospects)**
 
 Eric's eerste skill: het opbouwen en continu uitbreiden van wat hij een 'Active Candidate List' noemt. Niet rekenen op een kleine mentale lijst of hopen op één 'big person'. Wel: een groeiende, levende lijst van mensen om te benaderen, met systematische uitbreiding elke dag.
 
 **Het vier-stappen-systeem dat Eric in dit hoofdstuk uitlegt:**
 
-1. **Comprehensive listing** — schrijf ALLES op wat je kent. Familie, vrienden, oud-collega's, sportmaatjes, alle contacten in je telefoon. Zonder filteren.
-2. **Expand through connections** — denk in tweede laag: wie kennen jouw contacten? Bij elke naam op je lijst, vraag jezelf: wie zou deze persoon kunnen kennen die mij ook zou kunnen helpen?
-3. **Constant expansion** — voeg dagelijks minimaal twee nieuwe namen toe. Niet eens per week, dagelijks. Dat houdt de lijst LEVEND.
-4. **Purposeful networking** — zorg dat je actief naar plekken gaat waar je nieuwe mensen ontmoet (sport, evenementen, koffietent). Niet om aan iedereen je business te pitchen, wel om je netwerk natuurlijk te laten groeien.
+1. **Comprehensive listing**: schrijf ALLES op wat je kent. Familie, vrienden, oud-collega's, sportmaatjes, alle contacten in je telefoon. Zonder filteren.
+2. **Expand through connections**: denk in tweede laag: wie kennen jouw contacten? Bij elke naam op je lijst, vraag jezelf: wie zou deze persoon kunnen kennen die mij ook zou kunnen helpen?
+3. **Constant expansion**: voeg dagelijks minimaal twee nieuwe namen toe. Niet eens per week, dagelijks. Dat houdt de lijst LEVEND.
+4. **Purposeful networking**: zorg dat je actief naar plekken gaat waar je nieuwe mensen ontmoet (sport, evenementen, koffietent). Niet om aan iedereen je business te pitchen, wel om je netwerk natuurlijk te laten groeien.
 
 **Hoe dit aansluit op ELEVA**
 
@@ -113,7 +113,7 @@ Stap A van jouw dagelijkse flow ('Voeg N nieuwe namen toe') komt rechtstreeks ui
 
 Op Spotify klik je op de album-link, scroll je naar **Track 5 (Chapter 4)** en speel je 'm af. Ongeveer 15-20 minuten.`,
     oefening:
-      "Na het luisteren: open je namenlijst en tel hoeveel mensen er nu in fase 'prospect' staan. Voeg vandaag, voordat je gaat slapen, minimaal twee nieuwe namen toe — Eric's 'constant expansion'-regel in actie.",
+      "Na het luisteren: open je namenlijst en tel hoeveel mensen er nu in fase 'prospect' staan. Voeg vandaag, voordat je gaat slapen, minimaal twee nieuwe namen toe, Eric's 'constant expansion'-regel in actie.",
   },
 
   // ============================================================
@@ -121,10 +121,10 @@ Op Spotify klik je op de album-link, scroll je naar **Track 5 (Chapter 4)** en s
   // ============================================================
   {
     sleutel: "2.uitnodigen",
-    titel: "Skill #2 — Uitnodigen voor een kijkmoment",
+    titel: "Skill #2: Uitnodigen voor een kijkmoment",
     leestijdMinuten: 3,
     audioZoekLink: SPOTIFY_GOPRO_ALBUM,
-    inhoud: `**Spotify Track 6 — Chapter 5: Skill #2 (Inviting Prospects to Understand Your Product or Opportunity)**
+    inhoud: `**Spotify Track 6: Chapter 5: Skill #2 (Inviting Prospects to Understand Your Product or Opportunity)**
 
 Eric ziet uitnodigen als de skill waar de meeste netwerkers het meest mee worstelen. Niet omdat de woorden moeilijk zijn, maar omdat de psychologie eronder subtiel is. Twee mindsets staan tegenover elkaar:
 
@@ -141,19 +141,19 @@ In Chapter 5 leert Eric een complete invitatie-formule met acht stappen, inclusi
 
 **Hoe dit aansluit op ELEVA**
 
-Op dag 4 hebben we Eric's 8-stappen-formule samengevat tot een werkbare 4-stappen-versie (compliment, uitnodigen, plan met twee opties, optionele haast voor business-prospects). Beide werken — de 4-stappen-versie is sneller te onthouden en past beter bij de 1-op-1-DM-context die de meeste ELEVA-leden gebruiken. Wil je Eric's volledige 8 stappen, dan haal je die uit dit hoofdstuk.
+Op dag 4 hebben we Eric's 8-stappen-formule samengevat tot een werkbare 4-stappen-versie (compliment, uitnodigen, plan met twee opties, optionele haast voor business-prospects). Beide werken, de 4-stappen-versie is sneller te onthouden en past beter bij de 1-op-1-DM-context die de meeste ELEVA-leden gebruiken. Wil je Eric's volledige 8 stappen, dan haal je die uit dit hoofdstuk.
 
 **Belangrijke kern**
 
 > "Emotional detachment enhances effectiveness. You can't control what others decide. You can only control how authentically you show up."
 
-Eric benadrukt dat je niet HOEFT te overtuigen — je hoeft alleen UIT TE NODIGEN. Het verschil zit in wat je vraagt: niet 'wil je mijn business overnemen' maar 'wil je 20 minuten een filmpje bekijken om te zien wat ik doe'.
+Eric benadrukt dat je niet HOEFT te overtuigen, je hoeft alleen UIT TE NODIGEN. Het verschil zit in wat je vraagt: niet 'wil je mijn business overnemen' maar 'wil je 20 minuten een filmpje bekijken om te zien wat ik doe'.
 
 **Praktisch**
 
 Spotify-album openen, **Track 6 (Chapter 5)**, ongeveer 15-20 minuten.`,
     oefening:
-      "Pak een prospect uit je lijst in fase 'in gesprek'. Schat de warmte op 1-10. Schrijf voor jezelf op welke variant van de 4-stappen-uitnodiging past (direct/indirect/super-indirect). Niet versturen — alleen oefenen om de spier te bouwen.",
+      "Pak een prospect uit je lijst in fase 'in gesprek'. Schat de warmte op 1-10. Schrijf voor jezelf op welke variant van de 4-stappen-uitnodiging past (direct/indirect/super-indirect). Niet versturen, alleen oefenen om de spier te bouwen.",
   },
 
   // ============================================================
@@ -161,10 +161,10 @@ Spotify-album openen, **Track 6 (Chapter 5)**, ongeveer 15-20 minuten.`,
   // ============================================================
   {
     sleutel: "3.presenteren",
-    titel: "Skill #3 — Presenteren van het verhaal",
+    titel: "Skill #3: Presenteren van het verhaal",
     leestijdMinuten: 3,
     audioZoekLink: SPOTIFY_GOPRO_ALBUM,
-    inhoud: `**Spotify Track 7 — Chapter 6: Skill #3 (Presenting Your Product or Opportunity to Your Prospects)**
+    inhoud: `**Spotify Track 7: Chapter 6: Skill #3 (Presenting Your Product or Opportunity to Your Prospects)**
 
 Eric's derde skill heeft een kerninzicht dat veel nieuwkomers verrast: JIJ bent niet de presentator. Je gebruikt een 'third-party tool' (een film, een one-pager, een ervaren upline, een webinar) en jouw rol is REGISSEUR, niet hoofdrol.
 
@@ -172,9 +172,9 @@ Eric's derde skill heeft een kerninzicht dat veel nieuwkomers verrast: JIJ bent 
 
 Drie redenen die Eric uitwerkt:
 
-1. **Sociale bewijskracht** — een gevestigde tool met testimonials werkt geloofwaardiger dan jouw eigen pitch
-2. **Duplicatie** — je teamleden moeten dit ook kunnen doen. Een tool dupliceert, een persoonlijke pitch niet
-3. **Emotionele afstand** — bij een tool kan de prospect 'nee' zeggen tegen het TOOL zonder ongemak naar jou
+1. **Sociale bewijskracht**: een gevestigde tool met testimonials werkt geloofwaardiger dan jouw eigen pitch
+2. **Duplicatie**: je teamleden moeten dit ook kunnen doen. Een tool dupliceert, een persoonlijke pitch niet
+3. **Emotionele afstand**: bij een tool kan de prospect 'nee' zeggen tegen het TOOL zonder ongemak naar jou
 
 **Edification**
 
@@ -195,7 +195,7 @@ Per prospect kies je in de namenlijst welke aanpak past. De keuze hangt af van h
 
 Spotify, **Track 7 (Chapter 6)**. ~15-20 minuten.`,
     oefening:
-      "Na het luisteren: kijk eens kritisch naar JOUW laatste paar prospect-gesprekken. Stuurde jij ze naar een third-party tool (one-pager / film / 3-weg / Mini-ELEVA), of probeerde je het zelf uit te leggen? Geen oordeel — alleen patroon zien.",
+      "Na het luisteren: kijk eens kritisch naar JOUW laatste paar prospect-gesprekken. Stuurde jij ze naar een third-party tool (one-pager / film / 3-weg / Mini-ELEVA), of probeerde je het zelf uit te leggen? Geen oordeel, alleen patroon zien.",
   },
 
   // ============================================================
@@ -203,12 +203,12 @@ Spotify, **Track 7 (Chapter 6)**. ~15-20 minuten.`,
   // ============================================================
   {
     sleutel: "4.followup",
-    titel: "Skill #4 — Follow-up (waar de meeste resultaten liggen)",
+    titel: "Skill #4: Follow-up (waar de meeste resultaten liggen)",
     leestijdMinuten: 3,
     audioZoekLink: SPOTIFY_GOPRO_ALBUM,
-    inhoud: `**Spotify Track 8 — Chapter 7: Skill #4 (Following Up With Your Prospects)**
+    inhoud: `**Spotify Track 8: Chapter 7: Skill #4 (Following Up With Your Prospects)**
 
-Eric noemt follow-up de skill waar professional en amateur het hardst van elkaar verschillen. Amateurs nodigen uit, sturen materiaal, en wachten af. Professionals NEMEN DE LEIDING en blijven aanwezig — zonder pushy te zijn.
+Eric noemt follow-up de skill waar professional en amateur het hardst van elkaar verschillen. Amateurs nodigen uit, sturen materiaal, en wachten af. Professionals NEMEN DE LEIDING en blijven aanwezig, zonder pushy te zijn.
 
 **De kerngedachte**
 
@@ -218,10 +218,10 @@ Veel uitnodigingen kakken in nadat de prospect het materiaal heeft gezien. Niet 
 
 **Wat Eric in dit hoofdstuk behandelt:**
 
-- **Commitment** — het belangrijkste woord in netwerk-marketing. Een vage 'ik kijk er wel naar' is geen commitment. Een afspraak op een specifieke dag en tijd is wel een commitment.
-- **De pre-follow-up afspraak** — maak een follow-up-afspraak VOORDAT de prospect het materiaal heeft gezien. Bv. "Ik stuur je nu de link. Mag ik je morgenavond om 19:00 even bellen om te horen wat je ervan vond?"
-- **De vier types follow-up** — Eric onderscheidt info-, decision-, training- en team-follow-up, elk met een eigen toon
-- **Wat te doen bij niet-reageren** — niet meer dan twee tot drie aanrakingen voordat je iemand op 'not-yet' zet. Door blijven jagen breekt de relatie.
+- **Commitment**: het belangrijkste woord in netwerk-marketing. Een vage 'ik kijk er wel naar' is geen commitment. Een afspraak op een specifieke dag en tijd is wel een commitment.
+- **De pre-follow-up afspraak**: maak een follow-up-afspraak VOORDAT de prospect het materiaal heeft gezien. Bv. "Ik stuur je nu de link. Mag ik je morgenavond om 19:00 even bellen om te horen wat je ervan vond?"
+- **De vier types follow-up**: Eric onderscheidt info-, decision-, training- en team-follow-up, elk met een eigen toon
+- **Wat te doen bij niet-reageren**: niet meer dan twee tot drie aanrakingen voordat je iemand op 'not-yet' zet. Door blijven jagen breekt de relatie.
 
 **Hoe dit aansluit op ELEVA**
 
@@ -231,7 +231,7 @@ Op dag 6 leer je een ELEVA-versie van Eric's follow-up-systeem: de 24-48u-regel 
 
 Spotify, **Track 8 (Chapter 7)**. ~15-20 minuten. Veel mensen vinden dit een van de zwaarste tracks omdat 'ie hun eigen vermijdings-gedrag belicht.`,
     oefening:
-      "Open je namenlijst en filter op fase 'one-pager' of 'presentatie'. Voor elke prospect die >48u stil is sinds kijkmateriaal: schrijf vandaag een korte check-in. 'Even inchecken, wat sprak je het meeste in aan?' — geen druk, wel aanwezig.",
+      "Open je namenlijst en filter op fase 'one-pager' of 'presentatie'. Voor elke prospect die >48u stil is sinds kijkmateriaal: schrijf vandaag een korte check-in. 'Even inchecken, wat sprak je het meeste in aan?', geen druk, wel aanwezig.",
   },
 
   // ============================================================
@@ -239,10 +239,10 @@ Spotify, **Track 8 (Chapter 7)**. ~15-20 minuten. Veel mensen vinden dit een van
   // ============================================================
   {
     sleutel: "5.closing",
-    titel: "Skill #5 — Helpen kiezen tussen klant of partner",
+    titel: "Skill #5: Helpen kiezen tussen klant of partner",
     leestijdMinuten: 3,
     audioZoekLink: SPOTIFY_GOPRO_ALBUM,
-    inhoud: `**Spotify Track 9 — Chapter 8: Skill #5 (Helping Your Prospects Become Customers or Distributors)**
+    inhoud: `**Spotify Track 9: Chapter 8: Skill #5 (Helping Your Prospects Become Customers or Distributors)**
 
 Let op de titel van dit hoofdstuk: het heet niet 'Closing'. Eric vermijdt dat woord bewust. In zijn visie zet je niemand onder druk; je HELPT iemand een beslissing nemen die ze al hebben gevormd, maar nog niet hardop hebben uitgesproken.
 
@@ -250,9 +250,9 @@ Let op de titel van dit hoofdstuk: het heet niet 'Closing'. Eric vermijdt dat wo
 
 Bij elke prospect die het materiaal heeft gezien moet je helpen ontdekken welk pad past:
 
-- **Klant** — wil de producten gebruiken, geen interesse in de business-kant
-- **Partner / distributeur** — wil ook anderen helpen en bouwt mee aan een team
-- **Niet nu** — past niet op dit moment, mogelijk later
+- **Klant**: wil de producten gebruiken, geen interesse in de business-kant
+- **Partner / distributeur**: wil ook anderen helpen en bouwt mee aan een team
+- **Niet nu**: past niet op dit moment, mogelijk later
 
 Eric stelt het scherp: je hoeft GEEN voorkeur te hebben tussen klant en partner. Voor sommige mensen is klant het juiste pad. Voor anderen partner. Jouw werk is helpen ontdekken welk past.
 
@@ -260,7 +260,7 @@ Eric stelt het scherp: je hoeft GEEN voorkeur te hebben tussen klant en partner.
 
 In Chapter 8 leert Eric specifieke vraagsoorten die helpen om de beslissing aan het oppervlak te brengen. Deze vragen gaan over de situatie van de prospect, hun gevoel bij wat ze hebben gezien, hun zorgen, en hun timing.
 
-> "Ask questions that drive them to a fit conclusion. Not your conclusion — THEIR conclusion. Help them see what fits their life, not what fits your downline."
+> "Ask questions that drive them to a fit conclusion. Not your conclusion, THEIR conclusion. Help them see what fits their life, not what fits your downline."
 
 **Hoe dit aansluit op ELEVA**
 
@@ -273,7 +273,7 @@ In de dag-flow zit dit verstopt in:
 
 Spotify, **Track 9 (Chapter 8)**. ~15-20 minuten.`,
     oefening:
-      "Pak een prospect die in fase 'follow-up' zit en al een paar weken in twijfel hangt. Schrijf voor jezelf de vraag 'Wat is voor jou het belangrijkste punt om helder te krijgen?' op in je eigen toon. Niet versturen, alleen voorbereiden — Eric's principe in actie.",
+      "Pak een prospect die in fase 'follow-up' zit en al een paar weken in twijfel hangt. Schrijf voor jezelf de vraag 'Wat is voor jou het belangrijkste punt om helder te krijgen?' op in je eigen toon. Niet versturen, alleen voorbereiden, Eric's principe in actie.",
   },
 
   // ============================================================
@@ -281,18 +281,18 @@ Spotify, **Track 9 (Chapter 8)**. ~15-20 minuten.`,
   // ============================================================
   {
     sleutel: "6.startup",
-    titel: "Skill #6 — Een nieuwe partner goed laten starten",
+    titel: "Skill #6: Een nieuwe partner goed laten starten",
     leestijdMinuten: 3,
     audioZoekLink: SPOTIFY_GOPRO_ALBUM,
-    inhoud: `**Spotify Track 10 — Chapter 9: Skill #6 (Helping Your New Distributor Get Started Right)**
+    inhoud: `**Spotify Track 10: Chapter 9: Skill #6 (Helping Your New Distributor Get Started Right)**
 
-Eric stelt dat dit een van de meest ONDERSCHATTE skills is. De eerste 30 tot 90 dagen na aanmelding zijn cruciaal — wat daar gebeurt bepaalt voor een groot deel of iemand blijft of afhaakt.
+Eric stelt dat dit een van de meest ONDERSCHATTE skills is. De eerste 30 tot 90 dagen na aanmelding zijn cruciaal, wat daar gebeurt bepaalt voor een groot deel of iemand blijft of afhaakt.
 
 **Eric's drie kernactiviteiten voor een goede start:**
 
-1. **Vier de beslissing** — een nieuwe partner heeft net een grote stap gezet. Vier dat moment. Stuur een berichtje, bel even, laat ze voelen dat ze welkom zijn.
-2. **Toon de upcoming opportunities** — laat ze direct zien wat er komt: webinars, events, trainings. Geef ze een agenda, zodat ze weten dat er momentum is.
-3. **Equip met producten en informatie** — zorg dat ze direct kunnen starten met de tools die ze nodig hebben: een eigen pakket, scripts, een namenlijst-systeem, een mentor.
+1. **Vier de beslissing**: een nieuwe partner heeft net een grote stap gezet. Vier dat moment. Stuur een berichtje, bel even, laat ze voelen dat ze welkom zijn.
+2. **Toon de upcoming opportunities**: laat ze direct zien wat er komt: webinars, events, trainings. Geef ze een agenda, zodat ze weten dat er momentum is.
+3. **Equip met producten en informatie**: zorg dat ze direct kunnen starten met de tools die ze nodig hebben: een eigen pakket, scripts, een namenlijst-systeem, een mentor.
 
 **Het 'fast start' principe**
 
@@ -308,7 +308,7 @@ Het hele Sprint-playbook is ontworpen om dit op te lossen. Een nieuwe partner kr
 
 Spotify, **Track 10 (Chapter 9)**. ~15-20 minuten. Extra waardevol zodra je je eerste partner hebt geworven en niet zeker weet hoe te begeleiden.`,
     oefening:
-      "Stel je voor dat jij volgende week je eerste partner aanmeldt. Schrijf voor jezelf de drie eerste afspraken op die je met hen zou maken in de eerste 48 uur. Geen scripts — alleen je intentie. Eric's 'fast start' begint bij JOU.",
+      "Stel je voor dat jij volgende week je eerste partner aanmeldt. Schrijf voor jezelf de drie eerste afspraken op die je met hen zou maken in de eerste 48 uur. Geen scripts, alleen je intentie. Eric's 'fast start' begint bij JOU.",
   },
 
   // ============================================================
@@ -316,10 +316,10 @@ Spotify, **Track 10 (Chapter 9)**. ~15-20 minuten. Extra waardevol zodra je je e
   // ============================================================
   {
     sleutel: "7.events",
-    titel: "Skill #7 — Events promoten",
+    titel: "Skill #7: Events promoten",
     leestijdMinuten: 3,
     audioZoekLink: SPOTIFY_GOPRO_ALBUM,
-    inhoud: `**Spotify Track 11 — Chapter 10: Skill #7 (Promoting Events)**
+    inhoud: `**Spotify Track 11: Chapter 10: Skill #7 (Promoting Events)**
 
 Eric noemt deze laatste skill 'de versneller'. Events brengen je team samen, zorgen voor leiderschaps-ontwikkeling, en versnellen het werk dat in alle andere zes skills gebeurt.
 
@@ -327,15 +327,15 @@ Eric noemt deze laatste skill 'de versneller'. Events brengen je team samen, zor
 
 Eric introduceert hier een belangrijk concept:
 
-> "The destination event — where people travel from home to attend — is the most powerful type of meeting in network marketing. People who go to destination events become professionals. People who don't, often stay amateurs."
+> "The destination event, where people travel from home to attend, is the most powerful type of meeting in network marketing. People who go to destination events become professionals. People who don't, often stay amateurs."
 
-Een 'destination event' is een event waar mensen voor reizen (een ander stad, een ander land, een weekend weg). Het verschil met een lokale meeting is enorm: bij een destination event zijn mensen volledig immersief — geen gezin, geen werk, alleen het event. Dat creëert transformatie die in een avond-meeting onmogelijk is.
+Een 'destination event' is een event waar mensen voor reizen (een ander stad, een ander land, een weekend weg). Het verschil met een lokale meeting is enorm: bij een destination event zijn mensen volledig immersief, geen gezin, geen werk, alleen het event. Dat creëert transformatie die in een avond-meeting onmogelijk is.
 
 **Wat Eric in dit hoofdstuk behandelt:**
 
-- **Promote mensen, niet het event** — zeg niet 'er is een geweldig event', zeg 'mijn upline gaat zijn doorbraak-verhaal vertellen, en ik wil dat jij dat hoort'
-- **Champions** — identificeer 'champions' in je team: key-personen die anderen meenemen. Zorg dat zij eerst gaan, de rest volgt
-- **Vroeg promoten, vaak herhalen** — een event 6 maanden vooruit benoemen werkt beter dan 6 weken vooruit. Mensen moeten budgetteren, plannen, hun gezin informeren
+- **Promote mensen, niet het event**: zeg niet 'er is een geweldig event', zeg 'mijn upline gaat zijn doorbraak-verhaal vertellen, en ik wil dat jij dat hoort'
+- **Champions**: identificeer 'champions' in je team: key-personen die anderen meenemen. Zorg dat zij eerst gaan, de rest volgt
+- **Vroeg promoten, vaak herhalen**: een event 6 maanden vooruit benoemen werkt beter dan 6 weken vooruit. Mensen moeten budgetteren, plannen, hun gezin informeren
 
 **Hoe dit aansluit op ELEVA**
 
@@ -347,7 +347,7 @@ Voor pilot-bouwers (Raoul + Gaby + Jaimie + jullie eerste partners) is dit relev
 
 Spotify, **Track 11 (Chapter 10)**. ~15-20 minuten. Mooi om als laatste in de reeks te luisteren omdat het de andere zes skills samenbindt.`,
     oefening:
-      "Na het luisteren: noteer welke vaardigheid uit deze zeven JIJ als eerste wilt versterken in de komende 4 weken. Niet alle zeven tegelijk — één. Welke voelt voor jou nu het meest knellend, en welke wil je leren via oefening?",
+      "Na het luisteren: noteer welke vaardigheid uit deze zeven JIJ als eerste wilt versterken in de komende 4 weken. Niet alle zeven tegelijk, één. Welke voelt voor jou nu het meest knellend, en welke wil je leren via oefening?",
   },
 ];
 

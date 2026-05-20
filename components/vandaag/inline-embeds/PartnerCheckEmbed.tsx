@@ -213,7 +213,7 @@ export function PartnerCheckEmbed({ opVoltooid, alVoltooid }: Props) {
                       {p.isUrgent && <span className="mr-1">⚠️</span>}
                       {p.fullName}{" "}
                       <span className="text-cm-white/45">
-                        via {p.viaPartnerNaam ?? "—"} · dag {p.huidigeDag}
+                        via {p.viaPartnerNaam ?? "onbekend"} · dag {p.huidigeDag}
                       </span>
                     </p>
                     <p className="text-cm-white/50 text-[11px]">

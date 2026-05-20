@@ -589,7 +589,7 @@ Mensen lezen het tweede aandachtiger. Beter geheugen-effect, sterker beeld in he
 >
 > Geef me een claim, en ik geef je een gevoel-variant. Geef me een gevoel-zin die nog niet helemaal goed loopt, en ik help 'm krachtiger te maken. Je hoeft deze tabellen niet uit het hoofd te leren. Geef me jouw zin en we lossen 'm samen op. Daar ben ik voor.`,
     oefening:
-      "Pak 1 categorie uit deze les die voor JOUW praktijk het meest relevant is (energie, slaap, lichtheid, etc.). Schrijf 5 zinnen in jouw eigen toon waarin je je eigen ervaring deelt in die categorie. Geen producten noemen, alleen gevoel en gedrag. Bewaar deze zinnen — ze worden de basis voor jouw toekomstige posts.",
+      "Pak 1 categorie uit deze les die voor JOUW praktijk het meest relevant is (energie, slaap, lichtheid, etc.). Schrijf 5 zinnen in jouw eigen toon waarin je je eigen ervaring deelt in die categorie. Geen producten noemen, alleen gevoel en gedrag. Bewaar deze zinnen, ze worden de basis voor jouw toekomstige posts.",
   },
   {
     sleutel: "3.3",
@@ -684,7 +684,7 @@ Dat zijn de delen van het verhaal die kracht hebben. Niet de bedragen.
 
 > 💬 **De Mentor over deze les**
 >
-> Wanneer iemand jou vraagt naar bedragen, hoef je niet te jokken. Je kunt ook gewoon zeggen: "Ik wil eerlijk zijn — ik praat liever over wat het me brengt dan over getallen. Wil je dat ik je vertel hoe deze keuze mijn week en mijn weekend heeft veranderd?" Dat is mooier en eerlijker dan een bedrag. En het is bovendien wat mensen ECHT willen horen.`,
+> Wanneer iemand jou vraagt naar bedragen, hoef je niet te jokken. Je kunt ook gewoon zeggen: "Ik wil eerlijk zijn, ik praat liever over wat het me brengt dan over getallen. Wil je dat ik je vertel hoe deze keuze mijn week en mijn weekend heeft veranderd?" Dat is mooier en eerlijker dan een bedrag. En het is bovendien wat mensen ECHT willen horen.`,
     oefening:
       "Schrijf voor jezelf op (notitie-app of spraakfunctie): welke 3 keuzes geeft deze business jou waar je trots op bent? Niet in bedragen, wel in concrete dingen. Bewaar deze drie keuzes als jouw eigen mogelijkheid-storytelling-bank.",
   },
@@ -818,7 +818,7 @@ Een goede resultaat-post heeft vijf blokken:
 Eén of twee zinnen die de aandacht trekken. Veilige openings-zinnen die werken:
 
 - "Wauw, ik herken mezelf bijna niet meer."
-- "OMG, wat een verschil — van futloos naar vol energie."
+- "OMG, wat een verschil: van futloos naar vol energie."
 - "Yes, mijn energie is terug."
 - "Wow, 21 dagen geleden voelde ik me compleet anders."
 - "Nooit gedacht dat drie weken zóveel verschil konden maken."
@@ -885,7 +885,7 @@ De rede: claim-rijke posts triggeren reclame-allergie. Eerlijke ervarings-posts 
 >
 > Schroom niet om mij te vragen om hulp bij jouw resultaat-post. Geef me jouw verhaal in 3 zinnen (hoe je je voor de start voelde, wat je hebt gedaan, hoe je je nu voelt), en ik bouw met jou een complete post op die helemaal jouw klinkt. Module 5 laat zien hoe dat praktisch gaat.`,
     oefening:
-      "Stel je voor dat je net een 21-dagen-traject hebt afgerond. Schrijf jouw resultaat-post volgens de 5 blokken. In ik-vorm, met gedrag voorop. Laat 'm 24 uur liggen, lees opnieuw met de 5 principes-check. Pas aan tot alles raakt. Dit is je oefening, niet bedoeld om te posten — alleen om de spier te bouwen.",
+      "Stel je voor dat je net een 21-dagen-traject hebt afgerond. Schrijf jouw resultaat-post volgens de 5 blokken. In ik-vorm, met gedrag voorop. Laat 'm 24 uur liggen, lees opnieuw met de 5 principes-check. Pas aan tot alles raakt. Dit is je oefening, niet bedoeld om te posten, alleen om de spier te bouwen.",
   },
   {
     sleutel: "4.3",
@@ -900,7 +900,7 @@ Mensen scrollen Instagram en Facebook in 2 tot 3 seconden voorbij. Jouw eerste z
 **Tien scroll-stops die werken**
 
 1. "Wauw, ik herken mezelf bijna niet meer."
-2. "OMG, wat een verschil — van futloos naar vol energie."
+2. "OMG, wat een verschil: van futloos naar vol energie."
 3. "Yes, mijn energie is terug."
 4. "Wow, 21 dagen geleden voelde ik me compleet anders."
 5. "Nooit gedacht dat drie weken zoveel verschil konden maken."
@@ -973,7 +973,7 @@ Als het natuurlijk aanvoelt, breng je een uitnodiging in:
 
 Stories vragen om dezelfde aandacht als permanente posts. Ze zijn snel gemaakt, voelen vluchtig, maar worden ook gearchiveerd en kunnen even goed door anderen worden gezien.
 
-Pas dezelfde principes toe op je stories. Zie ze niet als minder formeel — ze zijn even publiek.
+Pas dezelfde principes toe op je stories. Zie ze niet als minder formeel, ze zijn even publiek.
 
 **De diepere les**
 
@@ -1180,7 +1180,7 @@ Telkens dezelfde drie-stappen-flow: context geven, eerste versie krijgen, finale
 
 > 💬 **De Mentor over deze les**
 >
-> Deze flow werkt het beste als je mij gewoon JE VERHAAL geeft, in jouw eigen woorden, ongepoetst. Daar maak ik dan een eerste versie van die jou klinkt. Dus geen kant-en-klare zinnen verzinnen voor mij — gewoon vertellen hoe het voor je was en is. De gevoelens en gedrag zijn van jou, ik help met de structuur en de toon.`,
+> Deze flow werkt het beste als je mij gewoon JE VERHAAL geeft, in jouw eigen woorden, ongepoetst. Daar maak ik dan een eerste versie van die jou klinkt. Dus geen kant-en-klare zinnen verzinnen voor mij, gewoon vertellen hoe het voor je was en is. De gevoelens en gedrag zijn van jou, ik help met de structuur en de toon.`,
     oefening:
       "Doe deze oefening écht. Open de Mentor nu, geef een fictief of echt verhaal (Reset, traject, gewone leefstijl-update). Laat hem een post schrijven. Pas 'm aan naar jouw toon. Vraag de finale check. Doorloop alle 5 stappen. Dit is waar je vakmanschap in gevoel-taal groeit.",
   },

@@ -8,6 +8,8 @@ Laatst bijgewerkt: 2026-05-20
 
 ## ✅ Recent afgerond
 
+- **2026-05-20** Em-dashes bulk-fix in member-facing content (142 vervangingen in 8 bestanden, resterende 15 zijn code-comments)
+- **2026-05-20** Veiligheidsslagen: git tag `v-pilot-werkend-2026-05-20`, smoke-test checklist, ROADMAP, risico-categorie regel
 - **2026-05-20** "Administratieve stappen" rename + /setup/[slug] founder-bewerkbaar (titel, uitleg, eigen-film-URL, film-uitleg)
 - **2026-05-19** Fase 3b onboarding-flow opschoning (K1+K2+K3+B6 opgelost, atomaire opslag, sessie-refresh)
 - **2026-05-19** Fase 3a modus-bewust foundation (topbar, dashboard, stats, team via centrale helpers)
@@ -20,14 +22,7 @@ Laatst bijgewerkt: 2026-05-20
 Volgorde-akkoord van Raoul op 2026-05-20:
 
 ### 1. Opruim-werk (klein, eerst)
-- [ ] **Em-dashes bulk-fix in member-facing content** (~113 stuks, ~30 in code-comments mogen blijven)
-  - `lib/playbook/tempo-aware.ts` (41)
-  - `lib/academy/audio-onderweg-content.ts` (42)
-  - `lib/playbook/weekritme.ts` (24)
-  - `lib/academy/social-media-content.ts` (20)
-  - `lib/academy/claim-vrij-content.ts` (7)
-  - `lib/playbook/dagen.ts` (3)
-  - 3 componenten (RadarBalk, PartnerCheckEmbed, EerstePartnerVieringTegel)
+- [x] ~~Em-dashes bulk-fix in member-facing content~~ (afgerond 2026-05-20, 142 vervangingen)
 - [ ] **Films CMS in /instellingen opruimen** (geen functie meer sinds /setup/[slug] eigen film-URL kan)
 
 ### 2. Fase 3c cross-modus skip versterking

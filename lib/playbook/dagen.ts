@@ -682,7 +682,7 @@ DRIE VOORBEELDEN, verschillende fasen:
 "Hé Jaap, ik zag dat je niet meer had gereageerd op mijn laatste berichtje. Is dat omdat je druk was of omdat je geen interesse hebt op dit moment? Allebei prima hoor, ik dacht: ik vraag het even! 🙂"
 
 DE LANGSPEELPLATEN-REGEL:
-Een prospect die NU geen ja zegt, kan over 3 maanden alsnog ja zeggen. Of over 1 jaar. Houd ze warm, hou ze vriendelijk, en blijf in hun leven via je gewone content (geen pitches in de DM). Dan ben je top-of-mind als hun situatie verandert. "Niet jagen, niet smeken, wel richting geven" — zo noemen topcoaches in netwerk-marketing het.`,
+Een prospect die NU geen ja zegt, kan over 3 maanden alsnog ja zeggen. Of over 1 jaar. Houd ze warm, hou ze vriendelijk, en blijf in hun leven via je gewone content (geen pitches in de DM). Dan ben je top-of-mind als hun situatie verandert. "Niet jagen, niet smeken, wel richting geven", zo noemen topcoaches in netwerk-marketing het.`,
     waaromWerktDit: {
       tekst:
         "Niet jagen, niet smeken, wel richting geven. Gemiddeld 5 exposures, dat is gewoon de statistiek.",
@@ -878,7 +878,7 @@ VEELGEMAAKTE FOUTEN
 
 MIX WARM EN LAUW
 
-Verdeel je uitnodigingen ongeveer half warm (mensen die je goed kent) en half lauw (telefoon-contacten waarmee je 6+ maanden niet hebt gesproken). De warmen geven snelle reacties, de lauwen geven verrassingen — vaak juist daar zitten je beste matches.`,
+Verdeel je uitnodigingen ongeveer half warm (mensen die je goed kent) en half lauw (telefoon-contacten waarmee je 6+ maanden niet hebt gesproken). De warmen geven snelle reacties, de lauwen geven verrassingen, vaak juist daar zitten je beste matches.`,
     waaromWerktDit: {
       tekst: "Snelheid wint. Snel handelen verslaat perfect handelen, altijd.",
     },
@@ -2007,11 +2007,11 @@ VANDAAG: probeer Doel-Tijd-Termijn vandaag of morgen bij minstens 1 warme prospe
         route: "/mijn-zinnen",
       },
     ],
-    watJeLeert: `Op dag 9 leerde je WAT edification is en deed je het waarschijnlijk met een script-versie van ELEVA. Vandaag, na een paar 3-wegs in praktijk, schrijf je je EIGEN permanente edification-zin — eentje die voelt als van jou, die je voortaan automatisch gebruikt bij elk 3-weg en elke presentatie. Een eigen zin is natuurlijker dan een script, en makkelijker te onthouden in het moment.
+    watJeLeert: `Op dag 9 leerde je WAT edification is en deed je het waarschijnlijk met een script-versie van ELEVA. Vandaag, na een paar 3-wegs in praktijk, schrijf je je EIGEN permanente edification-zin, eentje die voelt als van jou, die je voortaan automatisch gebruikt bij elk 3-weg en elke presentatie. Een eigen zin is natuurlijker dan een script, en makkelijker te onthouden in het moment.
 
 WAAROM NU EN NIET OP DAG 9?
 
-Op dag 9 wist je nog niet hoe je sponsor "klinkt" in een echt 3-weg met jouw prospects. Na een paar gesprekken (dag 10-17) heb je dat gevoel wel. Vandaag verwerk je dat in een EIGEN zin die past bij hoe jij je sponsor in echt presenteert. Geen herhaling van dag 9 — wel een verdieping.
+Op dag 9 wist je nog niet hoe je sponsor "klinkt" in een echt 3-weg met jouw prospects. Na een paar gesprekken (dag 10-17) heb je dat gevoel wel. Vandaag verwerk je dat in een EIGEN zin die past bij hoe jij je sponsor in echt presenteert. Geen herhaling van dag 9, wel een verdieping.
 
 QUICK RECAP UIT DAG 9 (voor wie even wil opfrissen)
 

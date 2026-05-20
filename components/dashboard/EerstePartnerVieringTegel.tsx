@@ -77,7 +77,7 @@ export function EerstePartnerVieringTegel({
           <p className="text-cm-white/85 text-sm leading-relaxed">
             <strong className="text-cm-gold">{eerstePartner.fullName}</strong>{" "}
             heeft zich net onder jou aangemeld. Dit is een groot moment. Drie
-            dingen om vandaag te doen — geen scripts, gewoon jij in jouw woorden.
+            dingen om vandaag te doen, geen scripts, gewoon jij in jouw woorden.
           </p>
         </div>
       </div>
@@ -100,7 +100,7 @@ export function EerstePartnerVieringTegel({
             </a>
           ) : (
             <p className="text-cm-white/40 text-[11px] italic">
-              📞 Telefoonnummer onbekend — neem zelf contact op
+              📞 Telefoonnummer onbekend, neem zelf contact op
             </p>
           )}
         </div>
@@ -108,7 +108,7 @@ export function EerstePartnerVieringTegel({
         {/* Actie 2: bedank eigen sponsor */}
         <div className="rounded-md bg-cm-bg/50 border border-cm-border px-3 py-2.5">
           <p className="text-cm-white text-sm font-semibold mb-1">
-            2. Bedank {voornaamSponsor} — die heeft jou hier gebracht
+            2. Bedank {voornaamSponsor}, die heeft jou hier gebracht
           </p>
           <p className="text-cm-white/60 text-xs mb-2">
             Een korte, eerlijke dank-zin
