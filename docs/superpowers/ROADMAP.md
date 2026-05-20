@@ -8,6 +8,7 @@ Laatst bijgewerkt: 2026-05-20
 
 ## ✅ Recent afgerond
 
+- **2026-05-20** Dag 2 vs dag 4 timing-mismatch opgelost: dag 4 aanpak-kiezen-taak verduidelijkt (alleen voor wie heeft gekeken / meer wil weten, sponsor-app expliciet, Mini-ELEVA framing breder), dag 2 watJeLeert breidt uit met "wat gaat er nu gebeuren met jouw uitnodigingen"-slot zodat member psychologisch voorbereid is.
 - **2026-05-20** Scripts-set polish + uitbreiding: 21 nieuwe scripts in lib/scripts-data.ts (5 Aansluiten in_gesprek + 8 Uitnodigen uitgenodigd + 5 Opvolgen Informeren followup + 3 Opvolgen Dienstverlening followup), allemaal claim-vrij + zonder em-dashes + zonder "wat vond je ervan", in ELEVA-stem. Memory eleva-stem-uitnodigen vastgelegd.
 - **2026-05-20** Mentor-prompt update: claim-vrij niveau 2 nu altijd in prompt (was alleen bij `social`/`motivatie` vraagtypes, miste bv. "21-dagen-Reset post"). Mentor doet zelf publieke-uiting-check op signaalwoorden. Academy uitgebreid met DMO + Spreken-zoals-het-raakt. Partner-check + Momentum-radar awareness: verwijst naar ELEVA-tool ipv zelf scripts genereren.
 - **2026-05-20** Films-CMS volledig opgeruimd. Alleen Welkomstfilm + Modus-welkomstfilms + 10 Prospect-films over. Principe vastgelegd: MediaBlokken voor pagina-specifieke media, Films-CMS voor pop-ups en hergebruikte films.
@@ -59,11 +60,11 @@ Volgorde-akkoord van Raoul op 2026-05-20:
 - Stem-anker: kennisbank pagina's (zie [[raoul-stem-anker]])
 
 ### 6. Sprint-structurele issues
-- [ ] Eric Worre first-win op dag 1 (laagdrempelig bericht naar warmste contact)
+- [x] ~~Eric Worre first-win op dag 1~~ (vervalt 2026-05-20, dag 2 doet dit al via 3 uitnodigingen + sponsor-call)
+- [x] ~~Dag 2 vs dag 4 timing-mismatch~~ (afgerond 2026-05-20)
 - [ ] Dag 6 ontladen (FFF + 5-fasen splitsen)
 - [ ] Sponsor-rol consistent maken (instructeur, mentor, cheerleader oscillatie)
 - [ ] Week 3 rode draad geven
-- [ ] Dag 2 vs dag 4 timing-mismatch oplossen
 
 ---
 

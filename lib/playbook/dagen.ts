@@ -219,7 +219,11 @@ Veelgemaakte fouten, herkenbaar?
 ✗ Wachten met uitnodigen tot je lijst "perfect" is → de lijst is nooit perfect.
 ✗ Eerst zelf alle bezwaren beantwoorden in je hoofd → dat is hun werk, niet jouw werk.
 
-Vandaag stuur je ook al 3 uitnodigingen, samen met je sponsor in een groepje (3-weg-principe). Sponsor brengt autoriteit, jij koppelt, prospect ziet twee mensen die samenwerken. Dat is de hefboom waarmee je niet alles zelf hoeft te weten of te kunnen. Eerste uitnodigingen voelen onhandig, dat klopt en gaat over. Niet daardoor stoppen, juist daardoor met steun starten.`,
+Vandaag stuur je ook al 3 uitnodigingen, samen met je sponsor in een groepje (3-weg-principe). Sponsor brengt autoriteit, jij koppelt, prospect ziet twee mensen die samenwerken. Dat is de hefboom waarmee je niet alles zelf hoeft te weten of te kunnen. Eerste uitnodigingen voelen onhandig, dat klopt en gaat over. Niet daardoor stoppen, juist daardoor met steun starten.
+
+WAT GAAT ER NU GEBEUREN MET JOUW UITNODIGINGEN
+
+Stel iemand zegt binnen 1-3 dagen "ja, ik wil meer weten" of laat weten dat ze gekeken hebben. Vanaf dat moment opent het echte gesprek. Je opent z'n kaart in /namenlijst, en samen met je sponsor kies je hoe je verder gaat, een 3-weg-gesprek (jullie samen in een groepje met sponsor) of Mini-ELEVA (de prospect krijgt 14 dagen eigen toegang om in eigen tempo te ontdekken). Beide zijn volwaardige paden, je kiest wat past bij die prospect en de situatie. Op dag 4 leer je de keuze maken, op dag 9 verdiep je het 3-weg-gesprek. Vandaag focus op lekker uitnodigen, de rest volgt.`,
     waaromWerktDit: {
       tekst:
         "De geheugensteunlijst is je voorraadkast. Hoe voller, hoe makkelijker de keuze wat je vanavond kookt. En de eerste invites zijn altijd het zwaarst, gewoon door.",
@@ -348,9 +352,9 @@ NIET GELIJK PITCHEN, wat wel: reageer terug op hun content. Vraag iets. Bouw rap
       },
       {
         id: "dag4-aanpak-kiezen",
-        label: "🧭 Voor wie 'ja' zei: kies aanpak per prospect",
+        label: "🧭 Heeft iemand gekeken of meer willen weten? Kies de aanpak",
         uitleg:
-          "Voor elke prospect die ja zei tegen een kijkmoment: open z'n kaart en kies één van twee paden via het keuzeblok bovenaan.\n\n🤝 3-WEG-GESPREK voor: warme prospects, mensen die snel willen schakelen, kort traject mogelijk, persoonlijk contact passend. Stappenplan staat klaar achter de '3-weg'-knop op de kaart, dag 7 verdiep je dit.\n\n✨ MINI-ELEVA voor: twijfelaars, prospects met druk leven, mensen die eerst zelf willen kijken. 14 dagen eigen toegang, welkomstvideo's, AI-mentor, chat met jou en je sponsor. Klik 'Mini-ELEVA-uitnodiging maken' op de kaart en stuur de link via WhatsApp.\n\nNiet zeker? Druk op 'Overleg met sponsor' in het keuzeblok, dan opent een vooringevulde WhatsApp aan je sponsor met de prospect-context.\n\nJe hoeft niet voor iedereen vandaag te kiezen, alleen voor de mensen die je deze week serieus opvolgt.",
+          "Lege pijplijn vandaag? Sla dit over. Deze taak wacht op je tot er een prospect heeft gekeken of laat weten 'ja ik wil meer weten'. Geen reactie binnen, geen actie hier. Check 'm gewoon de komende dagen even.\n\nWel iemand die heeft gekeken of meer wil weten? Open z'n kaart en kies één van twee paden via het keuzeblok bovenaan. App je sponsor erbij: 'Hé [sponsornaam], [prospect] heeft gekeken. Zullen we even kort: 3-weg of Mini-ELEVA?'\n\n🤝 3-WEG-GESPREK voor warme prospects die snel willen schakelen, kort traject, persoonlijk contact passend. Sponsor doet het zwaardere praatwerk, jij brengt vertrouwen. Stappenplan staat klaar achter de '3-weg'-knop op de kaart, dag 9 verdiep je dit.\n\n✨ MINI-ELEVA voor prospects met een druk leven, mensen die eerst zelf willen kijken, of wanneer een 3-weg-gesprek qua planning niet snel lukt en je momentum wilt houden. 14 dagen eigen toegang, welkomstvideo's, AI-mentor, chat met jou en je sponsor. Klik 'Mini-ELEVA-uitnodiging maken' op de kaart.\n\nBeide paden zijn volwaardig, je kiest wat past bij die prospect én jouw situatie. Niet zeker? Druk 'Overleg met sponsor' in het keuzeblok.",
         verplicht: false,
         actieRoute: "/namenlijst",
       },
