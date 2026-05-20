@@ -214,13 +214,19 @@ export default async function InstellingenPagina() {
         </Link>
       </div>
 
-      {/* Film-CMS, alleen voor leiders/founders */}
+      {/* Film-CMS, alleen voor leiders/founders.
+          Sinds 2026-05-20 is Films-CMS NIET meer voor Sprint-dag-films
+          (die staan nu direct op /vandaag via ✏️ MediaBlokken edit-
+          modus) en NIET voor /setup admin-items (die hebben hun eigen
+          film-URL op /setup/[slug]). Films-CMS blijft wel actief voor:
+          welkomstfilms per modus, prospect-films, leerpaden-films en
+          academy-films. */}
       {magFilmsBeheren && (
         <div className="card space-y-3 border-gold-subtle">
           <EditableTekst
             namespace="instellingen"
             sleutel="films_cms.titel"
-            standaard="🎬 Films-CMS"
+            standaard="🎬 Films-CMS (welkomst, prospect, leerpaden, academy)"
             overrides={overrides}
             isFounder={isFounder}
             as="h2"
@@ -230,13 +236,13 @@ export default async function InstellingenPagina() {
           <EditableBlok
             namespace="instellingen"
             sleutel="films_cms.uitleg"
-            standaard="Beheer de films die in onboarding en op andere plekken worden getoond. Plak een YouTube/Vimeo URL, de embed gebeurt automatisch."
+            standaard="Beheer hier de films voor welkomstpagina's per modus, prospect-films, leerpaden en academy. Plak een YouTube/Vimeo URL, de embed gebeurt automatisch. NIET voor Sprint-dag-films, die plaats je direct op /vandaag via ✏️ edit-modus → + media. NIET voor /setup admin-items, die hebben hun eigen film-URL op /setup/[slug]."
             overrides={overrides}
             isFounder={isFounder}
             as="p"
             className="text-cm-white text-sm opacity-60"
-            rows={2}
-            hint="Uitleg van de Films-CMS-sectie"
+            rows={5}
+            hint="Uitleg van de Films-CMS-sectie. Maak duidelijk welk soort films wel/niet hier horen."
           />
           <Link href="/instellingen/films" className="btn-secondary text-sm inline-block">
             Beheer films →

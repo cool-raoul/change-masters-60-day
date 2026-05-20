@@ -452,16 +452,13 @@ function VandaagFlowInner({
               />
             </div>
 
-            {/* 1. EERST HET FILMPJE (boven de tekst), alleen als founder
-                via /instellingen/films onder slug 'playbook-dag-N' een
-                film heeft gezet. Anders rendert FilmInBlok niets, en
-                begint de pagina direct met de Les. Volgorde-besluit
-                Raoul: filmpje altijd boven uitgebreide tekst zodat de
-                visuele uitleg eerst is. */}
-            <FilmInBlok
-              slug={`playbook-dag-${dag.nummer}`}
-              verbergZonderFilm
-            />
+            {/* Per-dag films lopen voortaan via MediaBlokken hieronder
+                (positie "boven-les"). De founder dropt direct vanuit
+                edit-modus op /vandaag een video, geen aparte Films-CMS-
+                stap meer nodig voor Sprint-dagen. Films-CMS blijft wel
+                actief voor welkomstfilms, prospect-films, leerpaden en
+                academy. Oude playbook-dag-N films blijven in de DB
+                staan, niet verloren, maar renderen niet meer hier. */}
 
             {/* Media-blok positie 2: net boven de les-card */}
             <MediaBlokken

@@ -8,6 +8,7 @@ Laatst bijgewerkt: 2026-05-20
 
 ## ✅ Recent afgerond
 
+- **2026-05-20** Films-CMS verduidelijkt + Sprint-dag-films redundantie weg (per-dag film via Films-CMS verwijderd uit vandaag-flow, MediaBlokken edit-modus blijft enige weg voor Sprint-dag-video's). Films-CMS blijft actief voor welkomst, prospect, leerpaden, academy.
 - **2026-05-20** Em-dashes bulk-fix in member-facing content (142 vervangingen in 8 bestanden, resterende 15 zijn code-comments)
 - **2026-05-20** Veiligheidsslagen: git tag `v-pilot-werkend-2026-05-20`, smoke-test checklist, ROADMAP, risico-categorie regel
 - **2026-05-20** "Administratieve stappen" rename + /setup/[slug] founder-bewerkbaar (titel, uitleg, eigen-film-URL, film-uitleg)
@@ -23,7 +24,7 @@ Volgorde-akkoord van Raoul op 2026-05-20:
 
 ### 1. Opruim-werk (klein, eerst)
 - [x] ~~Em-dashes bulk-fix in member-facing content~~ (afgerond 2026-05-20, 142 vervangingen)
-- [ ] **Films CMS in /instellingen opruimen** (geen functie meer sinds /setup/[slug] eigen film-URL kan)
+- [x] ~~Films CMS verduidelijkt en Sprint-dag-redundantie weg~~ (afgerond 2026-05-20)
 
 ### 2. Fase 3c cross-modus skip versterking
 - [ ] B1, B2, B3, B5, B7 uit oorspronkelijke audit
