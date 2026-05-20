@@ -60,23 +60,16 @@ export default async function FilmsBeheerPage() {
   // Playbook-dag-N slots (slug "playbook-dag-1" t/m "playbook-dag-21")
   // zijn per 2026-05-20 uit de Films-CMS UI gehaald. Founders plaatsen
   // dag-films voortaan direct op /vandaag via ✏️ edit-modus + MediaBlokken.
-  // Reden: dubbel pad was ruis voor andere founders. Eventueel bestaande
-  // playbook-dag-N rijen in de films-tabel blijven staan (niets verloren),
-  // ze verschijnen onderaan in "Andere films" als ze nog data hebben.
+  // Reden: dubbel pad was ruis voor andere founders.
+  //
+  // Ook de "Andere films"-sectie (extraSlugs) en "Nieuwe film toevoegen"-
+  // sectie zijn per 2026-05-20 verwijderd. Bestaande rijen in de films-
+  // tabel blijven in de DB, niets verloren, ze renderen alleen niet meer
+  // in deze UI. Nieuwe film-slugs uitbreiden gebeurt voortaan via code
+  // (lib/films/embed.ts) zodat we niet eindigen met een wildgroei aan
+  // ad-hoc slugs zonder duidelijke functie.
 
   const prospectFilmSlots = Object.values(PROSPECT_FILM_SLUGS);
-
-  // Eventuele extra slugs die al in de DB staan (custom toegevoegde films).
-  // We FILTER GEEN playbook-dag-N meer uit, dus ze verschijnen in "Andere
-  // films" als de founder ze ooit heeft geplakt. Bewust zichtbaar zodat
-  // bestaande URLs niet uit het zicht raken.
-  const dbSlugs = (films ?? []).map((f: any) => f.slug);
-  const bekendeSlugs = new Set<string>([
-    WELKOMSTFILM_SLUG,
-    ...prospectFilmSlots,
-    ...standaardSlots,
-  ]);
-  const extraSlugs = dbSlugs.filter((s) => !bekendeSlugs.has(s));
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -214,50 +207,14 @@ export default async function FilmsBeheerPage() {
             </div>
           </section>
 
-          {/* Per-dag films (slug playbook-dag-N) zijn per 2026-05-20 uit
-              deze UI gehaald. Plaats dag-films voortaan direct op /vandaag
-              via ✏️ edit-modus → + media. Eventuele oude playbook-dag-N
-              films verschijnen onderaan in "Andere films" zodat je
-              bestaande URLs kunt opzoeken of verplaatsen. */}
-
-          {/* Extra slugs die in DB staan maar niet in onze standaard lijst */}
-          {extraSlugs.length > 0 && (
-            <section>
-              <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider mb-3">
-                Andere films
-              </h2>
-              <div className="space-y-3">
-                {extraSlugs.map((slug) => {
-                  const film = filmsMap.get(slug) as any;
-                  return (
-                    <FilmRowEditor
-                      key={slug}
-                      slug={slug}
-                      plekBeschrijving={`Custom slot: ${slug}`}
-                      suggestieTitel=""
-                      bestaande={film}
-                      userId={user.id}
-                    />
-                  );
-                })}
-              </div>
-            </section>
-          )}
-
-          {/* Nieuwe slug toevoegen */}
-          <section>
-            <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider mb-3">
-              Nieuwe film toevoegen
-            </h2>
-            <FilmRowEditor
-              slug=""
-              plekBeschrijving="Nieuwe slug, vul zelf in (bv. prospect-intro-1)"
-              suggestieTitel=""
-              bestaande={null}
-              userId={user.id}
-              isNieuw
-            />
-          </section>
+          {/* "Andere films" (extraSlugs) en "Nieuwe film toevoegen"-sectie
+              zijn per 2026-05-20 verwijderd. Reden: voor founders zonder
+              context was niet duidelijk waar die slots in het systeem
+              terechtkomen. Uitbreiden van het aantal prospect-films of
+              andere structurele plekken gebeurt voortaan via een code-
+              wijziging in lib/films/embed.ts (PROSPECT_FILM_SLUGS,
+              ONBOARDING_FILM_SLUGS, etc.), zodat elke slug een vaste
+              functie heeft. */}
         </>
       )}
     </div>

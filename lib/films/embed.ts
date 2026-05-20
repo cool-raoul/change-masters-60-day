@@ -130,7 +130,17 @@ export const PROSPECT_FILM_SLUGS = {
   TESTIMONIAL: "prospect-3-testimonial",
   PRODUCT_DEMO: "prospect-4-product-demo",
   TEAM_SUPPORT: "prospect-5-team-en-support",
+  EXTRA_6: "prospect-6-extra",
+  EXTRA_7: "prospect-7-extra",
+  EXTRA_8: "prospect-8-extra",
+  EXTRA_9: "prospect-9-extra",
+  EXTRA_10: "prospect-10-extra",
 } as const;
+
+// Uitbreidbaar: voeg gewoon een nieuwe regel toe aan PROSPECT_FILM_SLUGS
+// (bv. EXTRA_11: "prospect-11-extra") plus een matchende entry in
+// PROSPECT_FILM_BESCHRIJVINGEN hieronder. De Films-CMS en /prospect-film/
+// [token]-pagina pikken het automatisch op zonder verdere code-wijzigingen.
 
 /**
  * Metadata voor prospect-films, gebruikt door de admin-UI én door de
@@ -173,6 +183,36 @@ export const PROSPECT_FILM_BESCHRIJVINGEN: Record<
     voorbeeldIntro:
       "We bouwen dit samen op. Hier laten we zien hoe ons team werkt, welke begeleiding je krijgt, en met wie je dagelijks contact hebt.",
     callToAction: "Klaar",
+  },
+  [PROSPECT_FILM_SLUGS.EXTRA_6]: {
+    suggestieTitel: "Extra prospect-film 6",
+    voorbeeldIntro:
+      "Pas de leidende tekst aan op de plek waar je deze film inzet. Founder vult titel + voorbeeldzin in via /instellingen/films.",
+    callToAction: "Ik heb 'm bekeken",
+  },
+  [PROSPECT_FILM_SLUGS.EXTRA_7]: {
+    suggestieTitel: "Extra prospect-film 7",
+    voorbeeldIntro:
+      "Pas de leidende tekst aan op de plek waar je deze film inzet. Founder vult titel + voorbeeldzin in via /instellingen/films.",
+    callToAction: "Ik heb 'm bekeken",
+  },
+  [PROSPECT_FILM_SLUGS.EXTRA_8]: {
+    suggestieTitel: "Extra prospect-film 8",
+    voorbeeldIntro:
+      "Pas de leidende tekst aan op de plek waar je deze film inzet. Founder vult titel + voorbeeldzin in via /instellingen/films.",
+    callToAction: "Ik heb 'm bekeken",
+  },
+  [PROSPECT_FILM_SLUGS.EXTRA_9]: {
+    suggestieTitel: "Extra prospect-film 9",
+    voorbeeldIntro:
+      "Pas de leidende tekst aan op de plek waar je deze film inzet. Founder vult titel + voorbeeldzin in via /instellingen/films.",
+    callToAction: "Ik heb 'm bekeken",
+  },
+  [PROSPECT_FILM_SLUGS.EXTRA_10]: {
+    suggestieTitel: "Extra prospect-film 10",
+    voorbeeldIntro:
+      "Pas de leidende tekst aan op de plek waar je deze film inzet. Founder vult titel + voorbeeldzin in via /instellingen/films.",
+    callToAction: "Ik heb 'm bekeken",
   },
 };
 
