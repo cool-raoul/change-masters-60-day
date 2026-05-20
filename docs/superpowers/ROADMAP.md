@@ -50,7 +50,9 @@ Volgorde-akkoord van Raoul op 2026-05-20:
 
 ### 4. Uitnodig-scripts her-brainstorm
 - [x] ~~Algemene scripts gepolisht en live~~ (21 stuks, afgerond 2026-05-20)
-- [ ] **Modus-specifieke scripts** (Sprint/Core/Pro) wacht op brainstorm
+- [ ] **Sprint-specifieke scripts** ← agenda 2026-05-21, eerste blok
+- [ ] **Core-specifieke scripts** (na Core-content brainstorm, niet eerder)
+- [ ] **Pro-specifieke scripts** (na Core)
 - Plekken om aan te passen na modus-specifieke brainstorm:
   - `lib/scripts-data.ts:9-115` (oude 4 Sprint-werving-scripts, framing herzien)
   - `lib/playbook/dagen.ts:159` + `:449-466`
@@ -58,7 +60,8 @@ Volgorde-akkoord van Raoul op 2026-05-20:
   - `lib/prompts/coach-systeem-prompt.ts` (uitnodig-stijl in Mentor)
 
 ### 5. Core-content ronde
-- [ ] Dag 2, dag 5 t/m 21 + verankering + lifetime templates
+- [ ] **Brainstorm op basis van** `OVERZICHT-CORE-V5.html` (lokale file in project-root, laatste brainstorm-versie van Raoul). Start agenda 2026-05-21, tweede blok.
+- [ ] Dag 2, dag 5 t/m 21 + verankering + lifetime templates schrijven na brainstorm-akkoord
 - Stem-anker: kennisbank pagina's (zie [[raoul-stem-anker]])
 
 ### 6. Sprint-structurele issues
