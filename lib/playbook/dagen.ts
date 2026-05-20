@@ -350,14 +350,11 @@ NIET GELIJK PITCHEN, wat wel: reageer terug op hun content. Vraag iets. Bouw rap
         verplicht: true,
         actieRoute: "/namenlijst",
       },
-      {
-        id: "dag4-aanpak-kiezen",
-        label: "🧭 Heeft iemand gekeken of meer willen weten? Kies de aanpak",
-        uitleg:
-          "Lege pijplijn vandaag? Sla dit over. Deze taak wacht op je tot er een prospect heeft gekeken of laat weten 'ja ik wil meer weten'. Geen reactie binnen, geen actie hier. Check 'm gewoon de komende dagen even.\n\nWel iemand die heeft gekeken of meer wil weten? Open z'n kaart en kies één van twee paden via het keuzeblok bovenaan. App je sponsor erbij: 'Hé [sponsornaam], [prospect] heeft gekeken. Zullen we even kort: 3-weg of Mini-ELEVA?'\n\n🤝 3-WEG-GESPREK voor warme prospects die snel willen schakelen, kort traject, persoonlijk contact passend. Sponsor doet het zwaardere praatwerk, jij brengt vertrouwen. Stappenplan staat klaar achter de '3-weg'-knop op de kaart, dag 9 verdiep je dit.\n\n✨ MINI-ELEVA voor prospects met een druk leven, mensen die eerst zelf willen kijken, of wanneer een 3-weg-gesprek qua planning niet snel lukt en je momentum wilt houden. 14 dagen eigen toegang, welkomstvideo's, AI-mentor, chat met jou en je sponsor. Klik 'Mini-ELEVA-uitnodiging maken' op de kaart.\n\nBeide paden zijn volwaardig, je kiest wat past bij die prospect én jouw situatie. Niet zeker? Druk 'Overleg met sponsor' in het keuzeblok.",
-        verplicht: false,
-        actieRoute: "/namenlijst",
-      },
+      // dag4-aanpak-kiezen leeft sinds 2026-05-20 in tempo-aware.ts als
+      // dagelijkse `aanpakKiezenStap(N)`-helper, op alle dagen 4 t/m 21
+      // beschikbaar zodat de check elke dag terugkomt zolang er prospects
+      // in 'gekeken' / 'wil meer weten'-fase kunnen zitten. Zie
+      // AANPAK_KIEZEN_UITLEG in lib/playbook/tempo-aware.ts.
       {
         id: "dag4-follow-1",
         label: "Minimaal 2 herinneringen sturen aan eerdere prospects",
