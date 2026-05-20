@@ -62,10 +62,11 @@ Volgorde-akkoord van Raoul op 2026-05-20:
 
 ## 📦 Geparkeerd, lichte triggers
 
-- **ChatGPT-isms herschrijven** (top 7 sterk verdacht, 8 mild) — losse polish-ronde
-- **Profielfoto's in /team TeamBoom** — aparte ronde
+- **ChatGPT-isms herschrijven** (top 7 sterk verdacht, 8 mild), losse polish-ronde
+- **Profielfoto's in /team TeamBoom**, aparte ronde
 - **Mentor-kennisbank vrijschakelen** (2017 CSV ingeladen, wacht op claims-grens-ontwerp)
 - **Lifeplus IP en pakketten herziening** (wachten op Raoul+Gaby)
+- **Supabase Pro PITR upgrade** (€25/m, geparkeerd 2026-05-20, gratis alternatief via docs/wekelijkse-data-export.md)
 
 ---
 
