@@ -361,12 +361,9 @@ export function PlaybookDagTile({
 
   return (
     <div className="space-y-4">
-      {/* Optionele dag-film bovenaan, alleen zichtbaar als founder
-          'm in /instellingen/films onder slug `playbook-dag-N` heeft
-          ingevuld. Anders rendert het component niets. */}
-      {toonDagFilm && (
-        <FilmInBlok slug={`playbook-dag-${dag.nummer}`} verbergZonderFilm />
-      )}
+      {/* Per-dag films via Films-CMS-slug zijn per 2026-05-20 weggehaald.
+          Voor een instructie- of inspiratiefilm boven de dag: ✏️ edit-modus
+          op /vandaag → + media (MediaBlokken). Geen aparte CMS-stap meer. */}
 
       <div className="card space-y-4">
         {/* Header, altijd zichtbaar, ongeacht actieve tab */}

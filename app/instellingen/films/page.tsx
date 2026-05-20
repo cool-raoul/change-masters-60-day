@@ -57,23 +57,24 @@ export default async function FilmsBeheerPage() {
   // ook als ze nog geen film-rij hebben.
   const standaardSlots = Object.values(ONBOARDING_FILM_SLUGS);
 
-  // Optionele dag-films: per playbook-dag (1-21) één slot waar je
-  // bovenin de dagtegel een korte intro-/inspiratiefilm kan plaatsen.
-  // Niet verplicht, bij lege URL toont de tegel niets bovenaan.
-  const dagFilmSlots: string[] = Array.from(
-    { length: 21 },
-    (_, i) => `playbook-dag-${i + 1}`,
-  );
+  // Playbook-dag-N slots (slug "playbook-dag-1" t/m "playbook-dag-21")
+  // zijn per 2026-05-20 uit de Films-CMS UI gehaald. Founders plaatsen
+  // dag-films voortaan direct op /vandaag via ✏️ edit-modus + MediaBlokken.
+  // Reden: dubbel pad was ruis voor andere founders. Eventueel bestaande
+  // playbook-dag-N rijen in de films-tabel blijven staan (niets verloren),
+  // ze verschijnen onderaan in "Andere films" als ze nog data hebben.
 
   const prospectFilmSlots = Object.values(PROSPECT_FILM_SLUGS);
 
-  // Eventuele extra slugs die al in de DB staan (custom toegevoegde films)
+  // Eventuele extra slugs die al in de DB staan (custom toegevoegde films).
+  // We FILTER GEEN playbook-dag-N meer uit, dus ze verschijnen in "Andere
+  // films" als de founder ze ooit heeft geplakt. Bewust zichtbaar zodat
+  // bestaande URLs niet uit het zicht raken.
   const dbSlugs = (films ?? []).map((f: any) => f.slug);
   const bekendeSlugs = new Set<string>([
     WELKOMSTFILM_SLUG,
     ...prospectFilmSlots,
     ...standaardSlots,
-    ...dagFilmSlots,
   ]);
   const extraSlugs = dbSlugs.filter((s) => !bekendeSlugs.has(s));
 
@@ -213,34 +214,11 @@ export default async function FilmsBeheerPage() {
             </div>
           </section>
 
-          {/* Optionele dag-films, bovenaan de dagtegel in het 21-daagse playbook.
-              Niet verplicht: lege slot = geen film boven de dagtegel. */}
-          <section>
-            <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider mb-2">
-              Dag-films (optioneel, 21 dagen)
-            </h2>
-            <p className="text-cm-white opacity-60 text-xs mb-3 leading-relaxed">
-              Per dag kun je hier een korte intro-/inspiratiefilm toevoegen die
-              bovenaan de dagtegel verschijnt. Laat een dag leeg en de tegel
-              toont op die dag automatisch geen film-blok.
-            </p>
-            <div className="space-y-3">
-              {dagFilmSlots.map((slug, i) => {
-                const film = filmsMap.get(slug) as any;
-                const dagNummer = i + 1;
-                return (
-                  <FilmRowEditor
-                    key={slug}
-                    slug={slug}
-                    plekBeschrijving={`Playbook dag ${dagNummer}, bovenaan de dagtegel`}
-                    suggestieTitel={`Dag ${dagNummer}, intro`}
-                    bestaande={film ?? null}
-                    userId={user.id}
-                  />
-                );
-              })}
-            </div>
-          </section>
+          {/* Per-dag films (slug playbook-dag-N) zijn per 2026-05-20 uit
+              deze UI gehaald. Plaats dag-films voortaan direct op /vandaag
+              via ✏️ edit-modus → + media. Eventuele oude playbook-dag-N
+              films verschijnen onderaan in "Andere films" zodat je
+              bestaande URLs kunt opzoeken of verplaatsen. */}
 
           {/* Extra slugs die in DB staan maar niet in onze standaard lijst */}
           {extraSlugs.length > 0 && (
