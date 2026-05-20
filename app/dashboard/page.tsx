@@ -436,17 +436,41 @@ export default async function DashboardPagina({
   // taken alleen voor admin-stappen, niet alle gemiste invites etc.
   // Mapping admin-taak → emoji + 'kale' titel zonder emoji-prefix
   // (zo voorkomen we een unicode-regex die niet in alle TS-versies werkt).
-  const ADMIN_TAKEN: Record<string, { emoji: string; kort: string }> = {
-    "dag2-webshop": { emoji: "🛒", kort: "Lifeplus webshop aanmaken" },
-    "dag2-krediet": { emoji: "✅", kort: "Kredietformulier invullen" },
-    "dag3-teams-admin": { emoji: "📋", kort: "Teams-administratiesysteem aanmaken" },
-    "dag4-bestellinks": { emoji: "🔗", kort: "Bestellinks koppelen aan ELEVA" },
+  // Mapping playbook-taak → admin-rail setup-slug. Dashboard-reminders
+  // linken sinds 2026-05-20 rechtstreeks naar /setup/[slug] met de
+  // uitleg + film, niet meer naar /playbook?dag=N (oude route, was
+  // verwarrend voor founders die per-dag-bewerken nu op /vandaag doen).
+  const ADMIN_TAKEN: Record<
+    string,
+    { emoji: string; kort: string; setupSlug: string }
+  > = {
+    "dag2-webshop": {
+      emoji: "🛒",
+      kort: "Lifeplus webshop aanmaken",
+      setupSlug: "webshop-aangemaakt",
+    },
+    "dag2-krediet": {
+      emoji: "✅",
+      kort: "Kredietformulier invullen",
+      setupSlug: "kredietformulier-ingevuld",
+    },
+    "dag3-teams-admin": {
+      emoji: "📋",
+      kort: "Teams-administratiesysteem aanmaken",
+      setupSlug: "teams-admin-ingericht",
+    },
+    "dag4-bestellinks": {
+      emoji: "🔗",
+      kort: "Bestellinks koppelen aan ELEVA",
+      setupSlug: "bestellinks-gekoppeld",
+    },
   };
   type OpenReminder = {
     dagNummer: number;
     taakId: string;
     label: string;
     emoji: string;
+    setupSlug: string;
   };
   const openAdminReminders: OpenReminder[] = [];
   for (const d of DAGEN) {
@@ -460,6 +484,7 @@ export default async function DashboardPagina({
         taakId: taak.id,
         label: meta.kort,
         emoji: meta.emoji,
+        setupSlug: meta.setupSlug,
       });
     }
   }
@@ -621,13 +646,13 @@ export default async function DashboardPagina({
             <span className="text-cm-white text-xs opacity-60">{openAdminReminders.length} open</span>
           </div>
           <p className="text-cm-white text-xs opacity-70 mb-3 leading-relaxed">
-            Deze stappen heb je nog niet afgevinkt. Tik om naar de juiste dag in het playbook te gaan.
+            Deze stappen heb je nog niet afgevinkt. Tik om de uitleg en film direct te openen op /setup.
           </p>
           <div className="space-y-2">
             {openAdminReminders.map((r) => (
               <Link
                 key={`${r.dagNummer}-${r.taakId}`}
-                href={`/playbook?dag=${r.dagNummer}`}
+                href={`/setup/${r.setupSlug}`}
                 className="flex items-center gap-3 p-3 rounded-lg bg-cm-surface-2 border border-cm-border hover:border-cm-gold-dim transition-colors"
               >
                 <span className="text-xl">{r.emoji}</span>

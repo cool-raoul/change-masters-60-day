@@ -396,38 +396,12 @@ export default async function InstellingenPagina() {
         </div>
       )}
 
-      {/* Playbook preview & bewerken (founder-only) */}
-      {magFilmsBeheren && (
-        <div className="card space-y-3 border-gold-subtle">
-          <EditableTekst
-            namespace="instellingen"
-            sleutel="playbook_bewerken.titel"
-            standaard="✍️ 21-daags Playbook, preview & bewerken"
-            overrides={overrides}
-            isFounder={isFounder}
-            as="h2"
-            className="text-sm font-semibold text-cm-white uppercase tracking-wider"
-            hint="Titel van de playbook-bewerken-sectie"
-          />
-          <EditableBlok
-            namespace="instellingen"
-            sleutel="playbook_bewerken.uitleg"
-            standaard="Scrol door alle 21 dagen heen, lees rustig de teksten zoals members ze zien, en klik op de ✏️-knop naast elke tekst om aan te passen. Wijzigingen zijn onmiddellijk live voor alle members. Met de pijltjes onderaan blader je verder."
-            overrides={overrides}
-            isFounder={isFounder}
-            as="p"
-            className="text-cm-white text-sm opacity-70 leading-relaxed"
-            rows={4}
-            hint="Uitleg van de playbook-bewerken-sectie"
-          />
-          <Link
-            href="/playbook?dag=1&preview=true"
-            className="btn-secondary text-sm inline-block"
-          >
-            Open preview vanaf dag 1 →
-          </Link>
-        </div>
-      )}
+      {/* Playbook preview & bewerken sectie verwijderd per 2026-05-20.
+          Founders bewerken dag-teksten nu rechtstreeks op /vandaag via
+          de ✏️ Bewerk-knop per dag. De aparte /playbook?dag=N preview-
+          pagina is daarmee overbodig geworden, zat alleen nog voor
+          verwarring. Route blijft bestaan voor backwards-compat met
+          eventuele bookmarks, maar geen actieve links meer. */}
     </div>
   );
 }
