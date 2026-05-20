@@ -120,6 +120,38 @@ export function NamenForm({
   const ingevuld = handmatigIngevuld + geactiveerd;
   const procent = Math.min(100, Math.round((ingevuld / doel) * 100));
 
+  // B7-fix: bepaal of de stap echt klaar is op basis van de DB-count,
+  // niet alleen de session-counters. Voorkomt dat we de stap markeren
+  // bij minder dan `doel` namen (bv. 3 ingevuld + Bewaar = ten onrechte
+  // klaar). Bij voldoende: voltooid-markering + opVoltooid-callback.
+  // Bij te weinig: vriendelijke teller-melding, geen klaar-toestand.
+  async function controleerEnMarkeerKlaar(opgeslagenToast?: string) {
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
+    const { count } = await supabase
+      .from("prospects")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .eq("gearchiveerd", false);
+    const totaal = count ?? 0;
+    if (totaal >= doel) {
+      if (opgeslagenToast) toast.success(opgeslagenToast);
+      setKlaar(true);
+      markeerEersteVijfNamenAlsCrossModusVoltooid();
+      opVoltooid();
+    } else {
+      const restant = doel - totaal;
+      const opgeslagen = opgeslagenToast ? opgeslagenToast + ". " : "";
+      toast(
+        `${opgeslagen}Je hebt nu ${totaal} ${totaal === 1 ? "naam" : "namen"} op je lijst, nog ${restant} ${restant === 1 ? "naam" : "namen"} om de stap af te ronden.`,
+        { duration: 4500 },
+      );
+    }
+  }
+
   function update(idx: number, veld: keyof Rij, waarde: string) {
     setRijen((prev) =>
       prev.map((r, i) => (i === idx ? { ...r, [veld]: waarde } : r)),
@@ -170,14 +202,12 @@ export function NamenForm({
       setSelectie(new Set());
       setKeuzeOpen(false);
 
-      // Als we het doel hebben gehaald PUUR via geheugen (geen handmatige
-      // rijen), de taak automatisch afvinken zodat de member niet alsnog
-      // op "Bewaar 0" hoeft te drukken.
-      if (handmatigIngevuld === 0 && nieuwTotaalGeactiveerd >= doel) {
-        setKlaar(true);
-        markeerEersteVijfNamenAlsCrossModusVoltooid();
-        opVoltooid();
-      }
+      // B7-fix: check tegen DB-count zodat ook combi handmatig + geheugen
+      // de stap kan afronden. Voorheen vereiste deze pad strikt
+      // `handmatigIngevuld === 0` waardoor 2 handmatig + 3 geheugen niet
+      // klaar werd gezet. controleerEnMarkeerKlaar() pakt nu de werkelijke
+      // lijst-grootte als bron van waarheid.
+      await controleerEnMarkeerKlaar();
     } catch (e) {
       const msg = e instanceof Error ? e.message : "onbekende fout";
       toast.error(`Activeren mislukt: ${msg}`);
@@ -231,9 +261,9 @@ export function NamenForm({
         }));
 
       if (nieuw.length === 0) {
-        toast.success("Deze namen stonden al op je lijst");
-        setKlaar(true);
-        opVoltooid();
+        // Niets nieuws toe te voegen (alles dupes). Toch via de
+        // klaar-check, want de bestaande lijst kan toch >= doel zijn.
+        await controleerEnMarkeerKlaar("Deze namen stonden al op je lijst");
         return;
       }
 
@@ -243,12 +273,12 @@ export function NamenForm({
         return;
       }
 
-      toast.success(
+      // B7-fix: pas markeren als voltooid wanneer de totale lijst >= doel.
+      // Voorheen werd setKlaar(true) blind aangeroepen na elke succesvolle
+      // insert, ook bij 3 van 5 namen.
+      await controleerEnMarkeerKlaar(
         `🎉 ${nieuw.length} naam${nieuw.length === 1 ? "" : "en"} op je namenlijst gezet`,
       );
-      setKlaar(true);
-      markeerEersteVijfNamenAlsCrossModusVoltooid();
-      opVoltooid();
     } catch (e) {
       const msg = e instanceof Error ? e.message : "onbekende fout";
       toast.error(`Opslaan mislukt: ${msg}`);
