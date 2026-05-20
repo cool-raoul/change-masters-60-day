@@ -8,6 +8,8 @@ Laatst bijgewerkt: 2026-05-20
 
 ## ✅ Recent afgerond
 
+- **2026-05-20** Fase 3c cross-modus skip versterking, alle 5 bugs live (B1+B2+B3+B5+B7). Centrale taak-cross-modus mapping, ITEM_SLUGS-constanten, NamenForm DB-count check.
+- **2026-05-20** Founder-strip compact op mobiel (FounderTopStrip + TesterToolbar + EditModeToggle nu één regel op telefoon)
 - **2026-05-20** Films-CMS verduidelijkt + Sprint-dag-films redundantie weg (per-dag film via Films-CMS verwijderd uit vandaag-flow, MediaBlokken edit-modus blijft enige weg voor Sprint-dag-video's). Films-CMS blijft actief voor welkomst, prospect, leerpaden, academy.
 - **2026-05-20** Em-dashes bulk-fix in member-facing content (142 vervangingen in 8 bestanden, resterende 15 zijn code-comments)
 - **2026-05-20** Veiligheidsslagen: git tag `v-pilot-werkend-2026-05-20`, smoke-test checklist, ROADMAP, risico-categorie regel
@@ -27,10 +29,11 @@ Volgorde-akkoord van Raoul op 2026-05-20:
 - [x] ~~Films CMS verduidelijkt en Sprint-dag-redundantie weg~~ (afgerond 2026-05-20)
 
 ### 2. Fase 3c cross-modus skip versterking
-- [ ] B1, B2, B3, B5, B7 uit oorspronkelijke audit
-  - `app-geinstalleerd` markering centraliseren
-  - `ITEM_SLUGS` imports consistent
-  - Taak-mapping centraliseren zodat een Core'er die switcht naar Sprint geen dubbele taken krijgt
+- [x] ~~B1, B2, B3, B5, B7 uit oorspronkelijke audit~~ (afgerond 2026-05-20)
+  - app-geinstalleerd + push-aan markering toegevoegd in gaNaarStap
+  - ITEM_SLUGS overal geïmporteerd waar relevant
+  - Centrale taak-cross-modus mapping in lib/onboarding/taak-cross-modus.ts
+  - NamenForm doel-check via DB-count
 
 ### 3. Mentor-prompt update
 - [ ] `lib/prompts/coach-systeem-prompt.ts` bijwerken voor:
