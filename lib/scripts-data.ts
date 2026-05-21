@@ -5,114 +5,70 @@ export const SCRIPTS_DATA = [
   // =============================================
   // UITNODIGINGEN
   // =============================================
+  // Top-5 webshop-uitnodig-scripts vooraan (2026-05-21). Vervangen de
+  // oude 4 '60-Dagen'-scripts die nog op de oude "ben je in of uit"-
+  // framing draaiden zonder webshop-anker en zonder WHY-coach-zin.
+  // De andere 9 webshop-varianten (lead-magnet, social, familie, etc.)
+  // staan verderop in deze file onder een eigen sectie. Meer varianten
+  // via /scripts (Uitnodigingen-tabblad, filter op tag 'webshop').
   {
-    titel: "60-Dagen Script, Persoonlijk",
+    titel: "Webshop, eigen WHY + hoe het werkt",
     categorie: "uitnodiging" as const,
-    pipeline_fase: "lead" as const,
-    tags: ["60-dagen", "persoonlijk", "koffie", "zoom"],
-    inhoud: `"Hey [naam], ik moest even aan je denken en daarom bel ik je.
+    pipeline_fase: "uitgenodigd" as const,
+    tags: ["webshop", "uitnodiging", "warm", "eigen-why", "top-5"],
+    inhoud: `Hé [Voornaam], ik ben [beroep] en ik wil graag [doel uit eigen WHY, bv. een dagje in de week minder werken].
 
-Ik ga over twee weken starten met iets waar ik 60 dagen echt vol voor ga.
+Ik heb een manier gevonden om dat te doen via een gratis online webshop met hoogwaardige holistische wellness-producten. Het enige wat ik hoef te doen is producten voor mezelf bestellen die ik dagelijks toch al gebruik. Alle logistiek wordt geregeld, er is gratis hulp en training, en een AI-systeem voor support om aan klanten te komen.
 
-Een soort sprint, maar dan wel eentje waar ik echt impact mee wil maken.
-
-En toen ik nadacht met wie ik dat zou willen doen… kwam jij in me op.
-
-Ik weet niet of het bij je past.
-Ik weet ook niet of je hier überhaupt op zit te wachten.
-
-Maar ik weet wel dat jij iemand bent die dingen voor elkaar krijgt.
-
-Dus voordat ik het straks overal ga delen… wilde ik jou als eerste even meenemen.
-
-Ik wil je gewoon laten zien wat ik ga doen.
-
-En dan mag jij zelf voelen: is dit iets voor mij of niet?
-
-Zullen we even samen zitten? Koffie, lunch of even via Zoom?"`,
+Mag ik je kort laten zien hoe het werkt?`,
   },
   {
-    titel: "60-Dagen Script, Direct & Eerlijk",
+    titel: "Webshop, vanuit eigen ervaring (V5-stijl)",
     categorie: "uitnodiging" as const,
-    pipeline_fase: "lead" as const,
-    tags: ["60-dagen", "direct", "eerlijk", "warme-prospect"],
-    inhoud: `"Oké, ik ga gewoon eerlijk zijn.
+    pipeline_fase: "uitgenodigd" as const,
+    tags: ["webshop", "uitnodiging", "eigen-ervaring", "warm", "top-5"],
+    inhoud: `Hé [Voornaam], [eigen ervaring in 1-2 zinnen, bv. "ik kan 's middags weer doorpakken in plaats van die 3-uur-dip"].
 
-Ik heb hier echt zin in.
+Allemaal door producten uit mijn eigen webshop. Het mooie: zo'n webshop kost je niets, je bestelt er zelf in en daarmee staat-ie. Iedereen kan dat hebben.
 
-Ik ga de komende 60 dagen iets neerzetten waar ik vol voor ga.
-
-En toen ik nadacht met wie ik dat zou willen doen…
-kwam jij meteen in me op.
-
-Omdat jij niet iemand bent die een beetje aanklooit.
-Als jij iets doet, dan doe je het goed.
-
-En ik denk oprecht: als wij dit samen doen… kunnen we echt iets neerzetten.
-
-Niet langzaam. Gewoon tempo maken.
-
-Ik ga je zo alles laten zien, de producten, het plan, hoe het werkt… dat komt allemaal.
-
-Maar eerst wil ik eigenlijk één ding weten:
-
-Stel dat alles klopt, stel dat je voelt: dit past bij mij,
-zou je dan zeggen: hier wil ik bij zijn? Of niet?"`,
+Sta je open om te zien hoe?`,
   },
   {
-    titel: "Whisper Campaign, Geheime start",
+    titel: "Webshop, met prospect-WHY-haakje",
     categorie: "uitnodiging" as const,
-    pipeline_fase: "lead" as const,
-    tags: ["whisper", "exclusief", "nieuwsgierigheid"],
-    inhoud: `"Niemand weet dit nog.
+    pipeline_fase: "uitgenodigd" as const,
+    tags: ["webshop", "uitnodiging", "prospect-why", "warm", "top-5"],
+    inhoud: `Hé [Voornaam], ik heb een manier gevonden om online inkomsten op te bouwen zonder investeringen en zonder risico, via een gratis holistische webshop met wellness-producten.
 
-Maar ik ga over twee weken starten met iets groots.
+Jij gaf vorige keer aan dat je [prospect's eigen WHY, bv. "graag een dag minder zou willen werken"]. Ik denk dat dit echt bij jou zou kunnen passen.
 
-60 dagen. Vol gas.
-
-En toen ik nadacht met wie ik dat zou willen doen…
-kwam jij in me op.
-
-Dus voordat ik het straks overal ga delen,
-wilde ik jou dit eerst laten weten.
-
-Want als ik start, ga ik echt all-in
-en dan heb ik minder ruimte.
-
-Dus dit is eigenlijk je moment om even mee te kijken aan de voorkant.
-
-Als je voelt: dit zou zomaar eens iets voor mij kunnen zijn.
-laten we even zitten. Dan laat ik je zien wat ik ga doen."`,
+Sta je open om te kijken wat dit voor jou zou kunnen betekenen?`,
   },
   {
-    titel: "60-Dagen Plan Uitleg",
+    titel: "Webshop, koud of oud contact heractiveren",
     categorie: "uitnodiging" as const,
-    pipeline_fase: "lead" as const,
-    tags: ["plan", "uitleg", "60-dagen", "fasen"],
-    inhoud: `Uitleg van de 60-dagenrun die je kunt delen:
+    pipeline_fase: "uitgenodigd" as const,
+    tags: ["webshop", "uitnodiging", "koud", "heractiveren", "top-5"],
+    inhoud: `Hé [Voornaam], we hebben elkaar al een tijdje niet gesproken, maar ik moest aan je denken. Ik heb een manier gevonden om online inkomsten op te bouwen zonder investeringen en zonder risico, via een gratis webshop met holistische wellness-producten.
 
-"Ik ga iets doen de komende 60 dagen.
-Niet een beetje proberen. Echt gaan.
+Niet wetende of het bij je past, dacht ik gewoon: vraag het even. Sta je open om te kijken wat het is? Helemaal vrijblijvend, als het niets voor je is is dat ook prima.`,
+  },
+  {
+    titel: "Webshop, Serious Business Builder (compliment + samen bouwen)",
+    categorie: "uitnodiging" as const,
+    pipeline_fase: "uitgenodigd" as const,
+    tags: ["webshop", "uitnodiging", "business-builder", "compliment", "top-5"],
+    inhoud: `Hé [Voornaam], ik moest aan je denken. Wat jij hebt opgebouwd met [hun bedrijf / track-record / wat je waardeert] vind ik echt sterk. Er zijn niet zo veel mensen waar ik denk "die heeft het echt geleerd om dingen rond te krijgen", bij jou denk ik dat wel.
 
-Ik start op 12 april en dan ga ik all-in.
+Daarom wil ik je iets laten zien dat ik recent ben gestart. Ik heb een manier gevonden om online inkomsten op te bouwen zonder investeringen en zonder risico, via een gratis webshop met holistische wellness-producten.
 
-De eerste 20 dagen: bouw ik mijn team
-De tweede 20 dagen: ga ik met mijn team hun teams bouwen
-De derde 20 dagen: gaan we opschalen en zorgen dat het staat
+Wat me erin trok als ondernemer:
+• Geen eigen producten, geen voorraad, geen klantenservice, alles is geregeld
+• Loopt parallel aan wat je nu al doet, dus geen verlies van focus op je primaire werk
+• Schaalt door zonder dat je elke euro met je eigen tijd hoeft te ruilen
+• Gratis training en AI-systeem voor support, dus geen leercurve waar je 6 maanden in zit
 
-En ondertussen:
-• werken we samen
-• hebben we vaste momenten
-• supporten we elkaar
-• bouwen we iets wat blijft staan
-
-Ik ga hier echt iets neerzetten.
-
-En ik zoek geen massa.
-ik zoek een paar mensen die dit met mij willen doen.
-
-Dus stel… alles klopt, stel dat dit voelt als iets voor jou:
-ben je dan in, of ben je uit?"`,
+Sta je open om er kort naar te kijken? Helemaal vrijblijvend, als het niets voor je is is dat ook prima.`,
   },
 
   // ─────────────────────────────────────────────
@@ -224,33 +180,13 @@ ben je dan in, of ben je uit?"`,
   },
 
   // ─────────────────────────────────────────────
-  // WEBSHOP-UITNODIGINGEN (Sprint + Core gedeeld)
+  // WEBSHOP-UITNODIGINGEN, extra varianten (Sprint + Core gedeeld)
+  // De top-5 staan vooraan in deze file als hoofd-scripts.
+  // Hieronder de niche-varianten voor specifieke contexten.
   // Bouwsteen: [WAI-haakje] -> [manier gevonden / wat het is]
   //  -> [webshop hoe het werkt] -> [permissie-vraag]
-  //
-  // Structuur uit brainstorm 2026-05-21 met Raoul, gebaseerd op
-  // OVERZICHT-CORE-V5.html en de verplichte WHY-coach-zin "Ik heb een
-  // manier gevonden om online (extra) inkomsten op te bouwen zonder
-  // investeringen en zonder risico".
-  //
-  // Stijl-anker uit [[eleva-stem-uitnodigen]]: "Helemaal vrijblijvend.
-  // Als het niets voor je is, is dat ook prima." NIET "geen druk, gewoon
-  // kijken of het bij je voelt".
-  //
-  // Allemaal voor de uitgenodigd-fase, raakbaar via Sprint en Core.
-  // Modus-specifieke aanpassingen later.
+  // Stijl-anker: [[eleva-stem-uitnodigen]] memory.
   // ─────────────────────────────────────────────
-  {
-    titel: "Webshop, eigen WHY + hoe het werkt",
-    categorie: "uitnodiging" as const,
-    pipeline_fase: "uitgenodigd" as const,
-    tags: ["webshop", "uitnodiging", "warm", "eigen-why"],
-    inhoud: `Hé [Voornaam], ik ben [beroep] en ik wil graag [doel uit eigen WHY, bv. een dagje in de week minder werken].
-
-Ik heb een manier gevonden om dat te doen via een gratis online webshop met hoogwaardige holistische wellness-producten. Het enige wat ik hoef te doen is producten voor mezelf bestellen die ik dagelijks toch al gebruik. Alle logistiek wordt geregeld, er is gratis hulp en training, en een AI-systeem voor support om aan klanten te komen.
-
-Mag ik je kort laten zien hoe het werkt?`,
-  },
   {
     titel: "Webshop, kort + duplicatie-focus",
     categorie: "uitnodiging" as const,
@@ -259,28 +195,6 @@ Mag ik je kort laten zien hoe het werkt?`,
     inhoud: `Hé [Voornaam], ik heb een manier gevonden om online extra inkomsten op te bouwen zonder investeringen en zonder risico, via een gratis webshop met holistische wellness-producten.
 
 Ik help anderen ook hoe ze zo'n gratis webshop kunnen krijgen voor een extra inkomstenstroom naast hun werk. Mag ik je daar kort iets over sturen?`,
-  },
-  {
-    titel: "Webshop, vanuit eigen ervaring (V5-stijl)",
-    categorie: "uitnodiging" as const,
-    pipeline_fase: "uitgenodigd" as const,
-    tags: ["webshop", "uitnodiging", "eigen-ervaring", "warm"],
-    inhoud: `Hé [Voornaam], [eigen ervaring in 1-2 zinnen, bv. "ik kan 's middags weer doorpakken in plaats van die 3-uur-dip"].
-
-Allemaal door producten uit mijn eigen webshop. Het mooie: zo'n webshop kost je niets, je bestelt er zelf in en daarmee staat-ie. Iedereen kan dat hebben.
-
-Sta je open om te zien hoe?`,
-  },
-  {
-    titel: "Webshop, met prospect-WHY-haakje",
-    categorie: "uitnodiging" as const,
-    pipeline_fase: "uitgenodigd" as const,
-    tags: ["webshop", "uitnodiging", "prospect-why", "warm"],
-    inhoud: `Hé [Voornaam], ik heb een manier gevonden om online inkomsten op te bouwen zonder investeringen en zonder risico, via een gratis holistische webshop met wellness-producten.
-
-Jij gaf vorige keer aan dat je [prospect's eigen WHY, bv. "graag een dag minder zou willen werken"]. Ik denk dat dit echt bij jou zou kunnen passen.
-
-Sta je open om te kijken wat dit voor jou zou kunnen betekenen?`,
   },
   {
     titel: "Webshop, drie-keuze bij start programma",
@@ -296,15 +210,6 @@ Daar kun je drie kanten op:
 3. Ik leer je hoe je hiermee een extra inkomen opbouwt
 
 Wat spreekt je het meest aan om mee te starten?`,
-  },
-  {
-    titel: "Webshop, koud of oud contact heractiveren",
-    categorie: "uitnodiging" as const,
-    pipeline_fase: "uitgenodigd" as const,
-    tags: ["webshop", "uitnodiging", "koud", "heractiveren"],
-    inhoud: `Hé [Voornaam], we hebben elkaar al een tijdje niet gesproken, maar ik moest aan je denken. Ik heb een manier gevonden om online inkomsten op te bouwen zonder investeringen en zonder risico, via een gratis webshop met holistische wellness-producten.
-
-Niet wetende of het bij je past, dacht ik gewoon: vraag het even. Sta je open om te kijken wat het is? Helemaal vrijblijvend, als het niets voor je is is dat ook prima.`,
   },
   {
     titel: "Webshop, na social-reactie (story / post)",
@@ -360,23 +265,6 @@ Sta je open om te zien hoe?`,
 Ik heb een manier gevonden om dat te creëren via online inkomsten, zonder investeringen of risico. Een gratis online webshop met holistische wellness-producten, draait door doordat je zelf bestelt wat je toch al gebruikt.
 
 Geen extra werk-druk op een toch al volle agenda, gewoon ernaast opbouwen. Wil je dat ik je laat zien hoe het werkt?`,
-  },
-  {
-    titel: "Webshop, Serious Business Builder (compliment + samen bouwen)",
-    categorie: "uitnodiging" as const,
-    pipeline_fase: "uitgenodigd" as const,
-    tags: ["webshop", "uitnodiging", "business-builder", "compliment"],
-    inhoud: `Hé [Voornaam], ik moest aan je denken. Wat jij hebt opgebouwd met [hun bedrijf / track-record / wat je waardeert] vind ik echt sterk. Er zijn niet zo veel mensen waar ik denk "die heeft het echt geleerd om dingen rond te krijgen", bij jou denk ik dat wel.
-
-Daarom wil ik je iets laten zien dat ik recent ben gestart. Ik heb een manier gevonden om online inkomsten op te bouwen zonder investeringen en zonder risico, via een gratis webshop met holistische wellness-producten.
-
-Wat me erin trok als ondernemer:
-• Geen eigen producten, geen voorraad, geen klantenservice, alles is geregeld
-• Loopt parallel aan wat je nu al doet, dus geen verlies van focus op je primaire werk
-• Schaalt door zonder dat je elke euro met je eigen tijd hoeft te ruilen
-• Gratis training en AI-systeem voor support, dus geen leercurve waar je 6 maanden in zit
-
-Sta je open om er kort naar te kijken? Helemaal vrijblijvend, als het niets voor je is is dat ook prima.`,
   },
   {
     titel: "Webshop, Serious Business Builder (connectie-waarde + samen)",
