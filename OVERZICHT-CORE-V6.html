@@ -531,8 +531,49 @@
   </p>
 </div>
 
+<div class="mentor-block">
+  <h4>8 · Drie-laags Mentor-architectuur, kosten + kwaliteit hand-in-hand <span class="badge badge-nieuw">verfijning V6</span></h4>
+  <p>De Mentor is geen single AI-bot meer. Hij bestaat uit drie lagen die in volgorde worden
+    geraadpleegd, zodat het overgrote deel van vragen goedkoop én in Raoul-en-Gaby-stem wordt
+    afgehandeld, en AI alleen wordt ingezet waar dat echt waarde toevoegt. Geldt voor zowel de
+    Core-member-Mentor als de klantomgeving-Mentor.</p>
+
+  <p style="margin-top:10px;"><strong>Laag 1, standaardvragen-bibliotheek (geen AI, vooraf-
+    geredigeerde antwoorden in jullie stem).</strong> 30 tot 50 typische vragen met vaste
+    antwoorden. Bezwaren ("piramide?", "ik heb geen tijd", "ik ben geen verkoper"), product-
+    vragen ("hoe lang duurt een kuur?", "kan ik combineren?"), business-vragen ("hoeveel
+    verdien je?"). Dropdown of zoekbalk. Lid of klant kiest of de Mentor herkent de vraag en
+    serveert het vooraf-geschreven antwoord. Drukt AI-kosten dramatisch + kwaliteit gaat
+    omhoog omdat het jullie echte stem is.</p>
+
+  <p style="margin-top:10px;"><strong>Laag 2, ELEVA-Mentor (AI, voor afwijkende vragen).</strong>
+    Alleen wanneer de vraag niet in Laag 1 zit, gaat 'ie naar de AI-Mentor. Die heeft het
+    member-profiel (Core-zijde) of de kuur-context (klantomgeving), plus alle ankerstappen,
+    plus Train-de-Mentor-voorbeelden van Raoul-en-Gaby. Voor eenvoudige antwoorden kiest het
+    systeem een goedkoper model (bijvoorbeeld Haiku), voor complexe of nuance-gevoelige vragen
+    een sterker model (Sonnet of Opus). Zo betaal je alleen de kostprijs die de complexiteit
+    rechtvaardigt.</p>
+
+  <p style="margin-top:10px;"><strong>Laag 3, escalatie naar sponsor (bij echt complex of
+    claim-gevoelig).</strong> Wanneer de Mentor signaleert "dit kan ik niet betrouwbaar genoeg
+    beantwoorden" of "dit raakt aan medische claims, persoonlijke crisis, of een specifieke
+    relatie-vraag", verwijst hij door naar de sponsor. De sponsor krijgt een vooraf-ingevulde
+    context-melding: <em>"Hé [sponsor], [klant of member] heeft een vraag over X, hier is de
+    chat-context van de laatste paar berichten, kun jij dit oppakken?"</em>. Sponsor krijgt
+    push-melding, klant of member weet dat hulp onderweg is.</p>
+
+  <p style="font-size:13px; color:var(--muted); margin-top:10px;">
+    Technisch: Laag 1 is een lookup-tabel in DB met vraag-patronen + vaste antwoorden. Laag 2
+    is de bestaande prompt-flow uitgebreid met model-tier-keuze. Laag 3 is een nieuwe API-route
+    die een handover-bericht naar sponsor verstuurt met chat-context. Train-de-Mentor-CMS
+    (founder-only) waar Raoul-en-Gaby standaardvragen-antwoorden goedkeuren of toevoegen, en
+    waar ze model-tier-regels onderhouden ("voor product-stack-advies altijd Sonnet, voor
+    simpele uitleg Haiku").
+  </p>
+</div>
+
 <div class="key-block">
-  <h4>8 · Warm-netwerk-skip mogelijk, afgeraden</h4>
+  <h4>9 · Warm-netwerk-skip mogelijk, afgeraden</h4>
   <p style="font-style:italic; color:var(--text);">
     Bij warm netwerk is het vertrouwen er al. Mensen kennen je, zien je eigen verandering.
     Dat is de snelste opstart die er is. Bij social-media-strategie moet je eerst invloed
@@ -1260,6 +1301,20 @@ Sta je open om te kijken hoe dat voor jou kan werken?"</code>
 </div>
 
 <div class="open-vraag">
+  <strong>Escalatie-trigger Mentor naar sponsor, wanneer precies? <span class="badge badge-nieuw">V6</span></strong>
+  De Mentor in Laag 2 moet kunnen herkennen wanneer een vraag te zwaar wordt en doorverwijzen naar
+  de sponsor. Vraag: welke triggers laten we de Mentor herkennen? Voorstel: (a) claim-gevoelig
+  taalgebruik in de vraag (medische uitspraak, diagnose-richting), (b) emotioneel-zwaar signaal
+  (woorden als crisis, ik weet het niet meer, hopeloos), (c) Mentor-eigen onzekerheid (kan niet
+  betrouwbaar antwoorden binnen de bestaande context), (d) directe expliciete vraag van de member of
+  klant ("ik wil met een mens praten"). Open: doen we voor (a) en (b) automatische hard-stop met
+  alleen sponsor-doorverwijzing, of mag de Mentor eerst geruststellen en daarna doorverwijzen? Hoe
+  voorkomen we dat Mentor te snel escaleert (sponsor wordt overspoeld) of te laat (klant raakt
+  gefrustreerd)? Concreet voorbeeld-gevallenset uitwerken in Train-de-Mentor-CMS, met "doorverwijs-
+  drempel" als instelbare regel per sponsor.
+</div>
+
+<div class="open-vraag">
   <strong>DMO + ankerstap, hoe naast elkaar tonen op /vandaag? <span class="badge badge-nieuw">V6</span></strong>
   De DMO is dagelijks (vast ritme passend bij gekozen tempo), de ankerstap loopt op eigen snelheid.
   Open vragen: tonen we de DMO als compact blok ("3 van 5 vandaag") of uitgeklapt met alle 5 taken?
@@ -1271,7 +1326,7 @@ Sta je open om te kijken hoe dat voor jou kan werken?"</code>
 
 <!-- ============================================================ -->
 <div class="footer">
-  <strong>Status V6:</strong> klaar voor review door Raoul + Gaby. V5-skelet behouden, drie lagen
+  <strong>Status V6:</strong> klaar voor review door Raoul + Gaby. V5-skelet behouden, zes lagen
   toegevoegd. (1) Sprint-elementen ingewoven: top-20-namenlijst in Stap 2, vier uitnodig-bouwstenen
   in Stap 4, 3-weg-meesterclass in Stap 10, 3-weg-praktijk in Stap 11, Mini-ELEVA-introductie in Stap 9.
   (2) Admin-stappen losgekoppeld van het leerpad en via dagelijkse SetupPopup (zoals nu in Sprint).
@@ -1279,6 +1334,12 @@ Sta je open om te kijken hoe dat voor jou kan werken?"</code>
   leerstappen + admin-pop-up. (3) Klantomgeving als parallel pad, met de Mentor in twee rollen.
   Klant krijgt eigen ELEVA-omgeving waarin pulse-momenten en kuurbegeleiding via de Mentor lopen,
   Core-member wordt ontlast en duplicatie wordt schaalbaar.
+  (4) DMO + ankerstap als twee parallelle ritmes, dagelijks vast tempo voor de DMO + eigen
+  leertempo voor de ankerstappen.
+  (5) Mentor als les-curator, kan vooruit-sturen, afvinken, of versneld doorlopen op verzoek.
+  (6) Drie-laags Mentor-architectuur, standaardvragen-bibliotheek (geen AI) als Laag 1, AI-Mentor
+  met model-tier-keuze als Laag 2, escalatie naar sponsor als Laag 3. Kosten beheersbaar +
+  kwaliteit Raoul-en-Gaby-stem geborgd.
   <br><br>
   Zodra V6 is goedgekeurd: (1) korte sessie om de tien voorbeeldzinnen + 14 webshop-scripts in
   Raoul-en-Gaby-stem te verfijnen, (2) datamodel voor het Mentor-profiel uitbreiden naar
