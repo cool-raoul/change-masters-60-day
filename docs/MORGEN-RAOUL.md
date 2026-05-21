@@ -8,6 +8,7 @@
 Wordt bijgewerkt onderweg. Per commit volgt hier een korte regel met wat is gebouwd.
 
 - Task 1: feature-flag `core_v6_actief` op profiles (SQL-migratie + lib helper). SQL nog niet gedraaid, ligt klaar in supabase/migrations/.
+- Task 2: Mentor-profiel datamodel + SQL + helpers. SQL ligt klaar in supabase/migrations/.
 
 ## Verhelderingsvragen voor jullie (Raoul + Gaby)
 
