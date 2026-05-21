@@ -13,6 +13,7 @@ Wordt bijgewerkt onderweg. Per commit volgt hier een korte regel met wat is gebo
 - Task 4: Drie-laags Mentor Laag 2 (model-tier-router). analyseerSignalen + kiesModelTier + modelIdVoorTier. Nog niet gekoppeld aan /api/coach, dat is een latere Fase.
 - Task 5: Drie-laags Mentor Laag 3 (sponsor-escalatie). Tabel + log-functie + open-count helper. Push-notificatie naar sponsor nog niet, komt in latere Fase.
 - Task 6: Drie-laags Mentor unified API (lib/mentor/index.ts). Eén functie vraagAanMentor() routeert door alle drie lagen. Nog niet gekoppeld aan /api/coach route (latere Fase, want huidige route is Sprint-stabiel).
+- Task 7: Freebies datamodel + SQL + types + voorbeeld-toolkit. Vijf PLACEHOLDER-templates in code (energie / slaap / darm / sport / hormonen). TODO-GABY: claim-vrije inhoud per stuk schrijven.
 
 ## Verhelderingsvragen voor jullie (Raoul + Gaby)
 
