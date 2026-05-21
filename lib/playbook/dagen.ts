@@ -193,11 +193,13 @@ Bouwen mag leuk zijn 💟`,
       },
     ],
     watJeLeert:
-      `NIVEA is dé regel die de meeste starters vergeten en daardoor 80% van hun beste prospects op voorhand wegfilteren. NIVEA staat voor: Niet Invullen Voor Een Ander.
+      `Vandaag doe je twee dingen: je netwerk-overzicht uitbreiden naar 20 namen, en je eerste 3 uitnodigingen versturen samen met je sponsor. Beide werken op één principe: NIVEA, Niet Invullen Voor Een Ander.
 
-Wat het concreet betekent: jij weet niet wat er in iemand omgaat. Wat zijn financiële situatie is. Wat zijn relatie doet. Of zijn werk hem nog vult. Of zijn gezondheid 'm uitput. Of die gladde collega thuis stiekem worstelt. Je hebt een momentopname in je hoofd, vaak van jaren geleden, en daarop maak je een oordeel "die zit hier niet op te wachten". Dat is zelden waar.
+NIVEA, DE REGEL VOOR JE NAMENLIJST
 
-Bovendien: zelfs als die specifieke persoon écht niet voor zichzelf gaat, kent hij of zij wél iemand die wél past. Iedereen heeft een netwerk van 100+ mensen. Een schoonzus die net moeder is geworden, een oud-collega die ontslag heeft gekregen, een buurman die met pensioen twijfelt. Jij weet dat niet. Je kunt het niet weten. Daarom: alle namen op de lijst. Filteren doe je later, als je échte signalen hebt, niet vooraf in je eigen hoofd.
+NIVEA is dé regel die de meeste starters vergeten en daardoor 80% van hun beste prospects op voorhand wegfilteren. Wat het concreet betekent: jij weet niet wat er in iemand omgaat. Wat zijn financiële situatie is. Wat zijn relatie doet. Of zijn werk hem nog vult. Je hebt een momentopname in je hoofd, vaak van jaren geleden, en daarop maak je een oordeel "die zit hier niet op te wachten". Dat is zelden waar.
+
+Bovendien: zelfs als die specifieke persoon écht niet voor zichzelf gaat, kent hij of zij wél iemand die wél past. Iedereen heeft een netwerk van 100+ mensen. Een schoonzus die net moeder is geworden, een oud-collega die ontslag heeft gekregen, een buurman die met pensioen twijfelt. Jij weet dat niet, je kunt het niet weten. Daarom: alle namen op de lijst. Filteren doe je later, als je échte signalen hebt, niet vooraf in je eigen hoofd.
 
 Drie typische "ik filter al"-fouten en wat de waarheid bleek:
 • "Die zwager heeft een goede baan", bleek 6 maanden later open te staan toen er herstructurering kwam.
@@ -212,14 +214,23 @@ Hoe je vandaag NIVEA in praktijk brengt:
 4. De spraakfunctie werkt het snelst: "Nieuwe prospect [naam] uit [context]" en je hebt in een korte sessie 20 namen.
 5. Stop niet bij 20. Ga door totdat het écht op is, vaak zit je dan op 50 tot 100.
 
-Veelgemaakte fouten, herkenbaar?
+JE EERSTE 3 UITNODIGINGEN, MET WEBSHOP-FRAME
+
+Vandaag stuur je ook al 3 uitnodigingen, samen met je sponsor in een groepje (3-weg-principe). Het anker van die uitnodiging is het webshop-frame, jouw "manier gevonden"-zin: online inkomsten opbouwen zonder investeringen en zonder risico, via een gratis webshop met holistische wellness-producten. In de taak hierboven staan 5 voorbeelden in verschillende stijlen (warm, eigen ervaring, prospect-WHY, koud, business-builder). Kies wat past bij wie je gaat appen, je sponsor of de Mentor helpt je het bericht persoonlijk te maken.
+
+Sponsor brengt autoriteit, jij koppelt, prospect ziet twee mensen die samenwerken. Dat is de hefboom waarmee je niet alles zelf hoeft te weten of te kunnen. Op dag 4 leer je de volle 4-bouwsteen-formule (haakje, manier gevonden, hoe het werkt, permissie-vraag), op dag 9 verdiep je het 3-weg-gesprek. Vandaag focus op rustig leren uitnodigen met steun naast je.
+
+EERSTE UITNODIGINGEN VOELEN ALTIJD ONHANDIG
+
+Dat klopt en het gaat over. Niemand begint vaardig. Niet daardoor stoppen, juist daardoor met steun starten. Een nee is geen oordeel over jou, het is een momentopname over hen.
+
+Veelgemaakte fouten op dag 2, herkenbaar?
 ✗ "Hij heeft toch geen geld" → vooroordeel, geen feit.
 ✗ "Die heeft het te druk" → laat hem zelf bepalen of hij tijd heeft.
 ✗ "Die zou nooit naar mij luisteren" → projectie van eigen onzekerheid.
 ✗ Wachten met uitnodigen tot je lijst "perfect" is → de lijst is nooit perfect.
 ✗ Eerst zelf alle bezwaren beantwoorden in je hoofd → dat is hun werk, niet jouw werk.
-
-Vandaag stuur je ook al 3 uitnodigingen, samen met je sponsor in een groepje (3-weg-principe). Sponsor brengt autoriteit, jij koppelt, prospect ziet twee mensen die samenwerken. Dat is de hefboom waarmee je niet alles zelf hoeft te weten of te kunnen. Eerste uitnodigingen voelen onhandig, dat klopt en gaat over. Niet daardoor stoppen, juist daardoor met steun starten.`,
+✗ Het bericht uit je hoofd willen schrijven zonder sponsor → je hebt vandaag steun, gebruik 'm. De 5 voorbeelden bovenaan zijn een prima startpunt.`,
     waaromWerktDit: {
       tekst:
         "De geheugensteunlijst is je voorraadkast. Hoe voller, hoe makkelijker de keuze wat je vanavond kookt. En de eerste invites zijn altijd het zwaarst, gewoon door.",
@@ -404,23 +415,37 @@ NIET GELIJK PITCHEN, wat wel: reageer terug op hun content. Vraag iets. Bouw rap
         route: "/namenlijst",
       },
     ],
-    watJeLeert: `De 4-stappen-uitnodiging (Worre) is dé reden dat netwerkers met dezelfde lijst totaal verschillende resultaten boeken. Het is een vaste opbouw waarbij elk onderdeel een specifieke psychologische functie heeft.
+    watJeLeert: `Vandaag leer je hoe je uitnodigt op de ELEVA-manier: webshop-frame als anker, jouw eigen WHY als haakje, en altijd vrijblijvend. Niet hard verkopen of overhalen, wel uitnodigen om eens mee te kijken. Onthoud: je wilt niet dat ze ja zeggen tegen JOU, je wilt dat ze ja zeggen tegen een KIJKMOMENT. Dat is een veel lagere drempel.
 
-DE FORMULE, drie kern-stappen + één optionele opener:
+DE VIER BOUWSTENEN VAN EEN STERKE WEBSHOP-UITNODIGING
 
-OPTIONEEL (ALLEEN bij business-prospects, ondernemers of duidelijk-zakelijke context):
-0) WEES DRUK, "Ik heb weinig tijd, maar..." Eén zinnetje. Signaleert waarde aan je tijd én voorkomt een lang vrijblijvend gesprek. LET OP: dit is niet de standaard-opener. Bij vrienden, familie of mensen waar je een rustige relatie mee hebt past dit niet, dat klinkt geforceerd. Worre's 'wees druk' is bedoeld voor doelgerichte business-uitnodigingen, niet als universele opener.
+1. HAAKJE (persoonlijk, kort, niet generiek)
+Kies één van drie haakjes per prospect:
+• EIGEN WHY: "Ik ben [beroep] en ik wil graag [doel uit eigen WHY]." Werkt bij warme contacten waar je je verhaal kunt delen.
+• PROSPECT-WHY: "Jij gaf vorige keer aan dat je [hun WHY]." Krachtig als je hun WHY al weet uit een eerder gesprek.
+• COMPLIMENT: "Wat jij hebt opgebouwd met [hun bedrijf/track-record] vind ik echt sterk." Werkt bij Serious Business Builders die je hoog hebt zitten.
 
-DE DRIE KERN-STAPPEN:
-1) COMPLIMENT of ERKENNING, "Jij bent iemand die dingen voor elkaar krijgt", of "ik moest aan jou denken omdat...". Echt, specifiek, geen smeerolie. Maakt dat je prospect zich GEZIEN voelt. Mensen werken niet voor verkoop-praatjes, ze werken voor erkenning.
-2) UITNODIGEN, kies de variant die past bij hoe warm de prospect is:
-   • DIRECT (warme prospect, vertrouwen al hoog): "Ik ben gestart met iets nieuws, wil het je laten zien."
-   • INDIRECT (mid-warm): "Dit is vast niets voor jou, maar ken jij iemand die extra wil verdienen?"
-   • SUPER-INDIRECT (lauw of onbekend): "Ken jij toevallig mensen die openstaan voor bij-inkomen?"
-3) PLAN, "Wanneer schikt het, vanavond of morgen?" Geef twee tijdsblokken, geen open vraag. Open vragen ("wanneer kan jij?") leiden 80% naar uitstel.
+2. MANIER-GEVONDEN-ZIN (de centrale ELEVA-zin)
+"Ik heb een manier gevonden om online inkomsten op te bouwen zonder investeringen en zonder risico, via een gratis webshop met holistische wellness-producten."
+
+Deze zin is je anker. Hij vertelt EERLIJK wat het is (geen mysterie), POSITIEF (geen investering, geen risico), en CONCREET (webshop, niet 'iets vaags').
+
+3. HOE-HET-WERKT (kort, drie bouwsteentjes)
+• Zelf bestellen wat je toch al gebruikt
+• Alle logistiek geregeld, geen voorraad of klantenservice
+• Gratis training en AI-systeem voor support, geen leercurve van 6 maanden
+
+Drie zinnetjes, niet langer. Doel: bewijs dat het laagdrempelig is, geen volledige uitleg. De volle info komt in het kijkmoment, niet in het uitnodig-bericht.
+
+4. PERMISSIE-VRAAG (geen agenda-vraag, geen druk)
+"Mag ik je kort laten zien hoe het werkt?" of "Sta je open om te zien hoe?"
+
+ELEVA-stem-anker bij twijfel of weerstand: "Helemaal vrijblijvend. Als het niets voor je is, is dat ook prima."
+
+NIET: "Wanneer schikt het, vanavond of morgen?" Dat is agenda-druk en past niet bij onze stem. We nodigen uit, we plannen niet.
 
 DE KERN, JE TAAK = UITNODIGEN, NIET OVERTUIGEN:
-Je wilt niet dat ze "ja" zeggen tegen JOU. Je wilt dat ze "ja" zeggen tegen een KIJKMOMENT. Dat is een veel lagere drempel. Een kijkmoment is geen commitment, geen mening, geen koop. Het is alleen "ik kijk even mee, daarna beslis ik". Dat verkoop je 10× makkelijker dan een product.
+Je wilt dat ze ja zeggen tegen een KIJKMOMENT. Geen koop, geen commitment, geen mening, alleen "ik kijk even mee, daarna beslis ik". Dat verkoop je 10× makkelijker dan een product. Plus, een uitnodiging is geen oordeel over hen. Ze zeggen ja of nee tegen het ONDERWERP, niet tegen jou.
 
 VIJF VOORBEELD-UITNODIGINGEN, allemaal met webshop-frame + "manier gevonden"-zin:
 
@@ -442,12 +467,13 @@ VIJF VOORBEELD-UITNODIGINGEN, allemaal met webshop-frame + "manier gevonden"-zin
 💡 MEER VOORBEELDEN voor andere contexten (lead-magnet, na social-reactie, familie, drukke moeder/vader, andere business-builder-varianten): open /scripts → Uitnodigingen-tabblad → filter op tag 'webshop'. Daar staan 14 varianten klaar, allemaal in dezelfde stem.
 
 VEELGEMAAKTE FOUTEN:
-✗ Compliment vergeten → klinkt als pitch.
-✗ Geen tijdslimiet ("Ik heb druk") in plaats van "weinig tijd, maar..." → mist de spanning.
-✗ Té veel uitleg in de uitnodiging zelf → ze haken af. Uitnodiging is voor het kijkmoment, niet voor de info.
-✗ Open afsluiten ("laat me weten of het je interesseert") → 80% uitstel.
-✗ Antwoord op bezwaren al vooraf in het bericht stoppen ("ik weet dat je geen tijd hebt maar...") → je legt zelf de twijfel op tafel, doe dat niet.
+✗ Haakje vergeten of generiek "hoi, hoe gaat het?" → klinkt als pitch zonder verbinding. Begin altijd persoonlijk (eigen WHY, prospect-WHY of compliment).
+✗ Te veel uitleg in het bericht zelf, productnamen erin, claims over wat het DOET → ze haken af. De uitnodiging is voor het kijkmoment, niet voor de info.
+✗ Open afsluiten ("laat me weten of het je interesseert") → 80% uitstel. Stel een concrete permissie-vraag.
+✗ Antwoord op bezwaren vooraf in het bericht stoppen ("ik weet dat je geen tijd hebt maar...") → je legt zelf de twijfel op tafel, doe dat niet.
+✗ Agenda-druk ("vanavond of morgen om 19u?") → ELEVA-stem is vrijblijvend, geen agenda-eis. Pas op dat je niet schuift naar "Worre-tijd-druk", dat past niet bij ons.
 ✗ "Ja zeggen tegen jou" willen forceren in plaats van "ja tegen het kijkmoment". Verschuif de vraag.
+✗ Holistische wellness-producten omschrijven met medische claims ("dit helpt tegen X") → blijf bij wat je zelf merkt of bij neutrale termen. Claims over wat producten doen zijn EFSA-gevoelig.
 
 Vandaag stap je actief uit je comfortzone, en dat kriebelt, afwijzingsangst, "wat als ze me raar vinden?". Helemaal normaal. Niemand begint vaardig. Een nee is geen oordeel over jou, het is een momentopname over hen. Volgende uitnodiging gewoon doorgaan.
 
