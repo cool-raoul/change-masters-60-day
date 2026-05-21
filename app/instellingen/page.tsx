@@ -250,18 +250,19 @@ export default async function InstellingenPagina() {
         </div>
       )}
 
-      {/* Tekst-overrides overzicht (founder-only). Sinds 2026-05-20.
-          Geeft founder zicht op alle teksten die zelf zijn aangepast
-          via ✍️ Bewerk, met een reset-knop per stuk. */}
+      {/* Aanpassingen-overzicht (founder-only). Sinds 2026-05-21
+          unified: toont alle drie soorten overrides (tekst, playbook-
+          dag, scripts) op één plek met reset-knop per stuk. */}
       {magFilmsBeheren && (
         <div className="card space-y-3 border-gold-subtle">
           <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
-            ✍️ Mijn tekst-overrides
+            ✍️ Mijn aanpassingen
           </h2>
           <p className="text-cm-white opacity-70 text-sm leading-relaxed">
-            Overzicht van alle tekst-aanpassingen die jij via ✍️ Bewerk hebt
-            gemaakt. Snel terug naar standaard zetten als een nieuwe
-            code-tekst niet doorkomt.
+            Eén plek voor alle tekst- en content-aanpassingen die jij hebt
+            gemaakt op ELEVA (losse teksten, Sprint-dag-aanpassingen,
+            script-aanpassingen). Snel terug naar standaard zetten als een
+            nieuwe code-tekst niet doorkomt.
           </p>
           <Link
             href="/instellingen/tekst-overrides"
