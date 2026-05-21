@@ -12,6 +12,7 @@ Wordt bijgewerkt onderweg. Per commit volgt hier een korte regel met wat is gebo
 - Task 3: Drie-laags Mentor Laag 1 (standaardvragen-bibliotheek). SQL + matcher klaar. Inhoud (30-50 vragen) nog leeg, wacht op Raoul-en-Gaby-input.
 - Task 4: Drie-laags Mentor Laag 2 (model-tier-router). analyseerSignalen + kiesModelTier + modelIdVoorTier. Nog niet gekoppeld aan /api/coach, dat is een latere Fase.
 - Task 5: Drie-laags Mentor Laag 3 (sponsor-escalatie). Tabel + log-functie + open-count helper. Push-notificatie naar sponsor nog niet, komt in latere Fase.
+- Task 6: Drie-laags Mentor unified API (lib/mentor/index.ts). Eén functie vraagAanMentor() routeert door alle drie lagen. Nog niet gekoppeld aan /api/coach route (latere Fase, want huidige route is Sprint-stabiel).
 
 ## Verhelderingsvragen voor jullie (Raoul + Gaby)
 
