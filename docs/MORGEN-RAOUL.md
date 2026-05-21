@@ -9,6 +9,7 @@ Wordt bijgewerkt onderweg. Per commit volgt hier een korte regel met wat is gebo
 
 - Task 1: feature-flag `core_v6_actief` op profiles (SQL-migratie + lib helper). SQL nog niet gedraaid, ligt klaar in supabase/migrations/.
 - Task 2: Mentor-profiel datamodel + SQL + helpers. SQL ligt klaar in supabase/migrations/.
+- Task 3: Drie-laags Mentor Laag 1 (standaardvragen-bibliotheek). SQL + matcher klaar. Inhoud (30-50 vragen) nog leeg, wacht op Raoul-en-Gaby-input.
 
 ## Verhelderingsvragen voor jullie (Raoul + Gaby)
 
