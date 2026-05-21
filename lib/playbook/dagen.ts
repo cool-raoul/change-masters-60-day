@@ -193,13 +193,11 @@ Bouwen mag leuk zijn 💟`,
       },
     ],
     watJeLeert:
-      `Vandaag doe je twee dingen: je netwerk-overzicht uitbreiden naar 20 namen, en je eerste 3 uitnodigingen versturen samen met je sponsor. Beide werken op één principe: NIVEA, Niet Invullen Voor Een Ander.
+      `NIVEA is dé regel die de meeste starters vergeten en daardoor 80% van hun beste prospects op voorhand wegfilteren. NIVEA staat voor: Niet Invullen Voor Een Ander.
 
-NIVEA, DE REGEL VOOR JE NAMENLIJST
+Wat het concreet betekent: jij weet niet wat er in iemand omgaat. Wat zijn financiële situatie is. Wat zijn relatie doet. Of zijn werk hem nog vult. Of zijn gezondheid 'm uitput. Of die gladde collega thuis stiekem worstelt. Je hebt een momentopname in je hoofd, vaak van jaren geleden, en daarop maak je een oordeel "die zit hier niet op te wachten". Dat is zelden waar.
 
-NIVEA is dé regel die de meeste starters vergeten en daardoor 80% van hun beste prospects op voorhand wegfilteren. Wat het concreet betekent: jij weet niet wat er in iemand omgaat. Wat zijn financiële situatie is. Wat zijn relatie doet. Of zijn werk hem nog vult. Je hebt een momentopname in je hoofd, vaak van jaren geleden, en daarop maak je een oordeel "die zit hier niet op te wachten". Dat is zelden waar.
-
-Bovendien: zelfs als die specifieke persoon écht niet voor zichzelf gaat, kent hij of zij wél iemand die wél past. Iedereen heeft een netwerk van 100+ mensen. Een schoonzus die net moeder is geworden, een oud-collega die ontslag heeft gekregen, een buurman die met pensioen twijfelt. Jij weet dat niet, je kunt het niet weten. Daarom: alle namen op de lijst. Filteren doe je later, als je échte signalen hebt, niet vooraf in je eigen hoofd.
+Bovendien: zelfs als die specifieke persoon écht niet voor zichzelf gaat, kent hij of zij wél iemand die wél past. Iedereen heeft een netwerk van 100+ mensen. Een schoonzus die net moeder is geworden, een oud-collega die ontslag heeft gekregen, een buurman die met pensioen twijfelt. Jij weet dat niet. Je kunt het niet weten. Daarom: alle namen op de lijst. Filteren doe je later, als je échte signalen hebt, niet vooraf in je eigen hoofd.
 
 Drie typische "ik filter al"-fouten en wat de waarheid bleek:
 • "Die zwager heeft een goede baan", bleek 6 maanden later open te staan toen er herstructurering kwam.
@@ -214,23 +212,14 @@ Hoe je vandaag NIVEA in praktijk brengt:
 4. De spraakfunctie werkt het snelst: "Nieuwe prospect [naam] uit [context]" en je hebt in een korte sessie 20 namen.
 5. Stop niet bij 20. Ga door totdat het écht op is, vaak zit je dan op 50 tot 100.
 
-JE EERSTE 3 UITNODIGINGEN, MET WEBSHOP-FRAME
-
-Vandaag stuur je ook al 3 uitnodigingen, samen met je sponsor in een groepje (3-weg-principe). Het anker van die uitnodiging is het webshop-frame, jouw "manier gevonden"-zin: online inkomsten opbouwen zonder investeringen en zonder risico, via een gratis webshop met holistische wellness-producten. In de taak hierboven staan 5 voorbeelden in verschillende stijlen (warm, eigen ervaring, prospect-WHY, koud, business-builder). Kies wat past bij wie je gaat appen, je sponsor of de Mentor helpt je het bericht persoonlijk te maken.
-
-Sponsor brengt autoriteit, jij koppelt, prospect ziet twee mensen die samenwerken. Dat is de hefboom waarmee je niet alles zelf hoeft te weten of te kunnen. Op dag 4 leer je de volle 4-bouwsteen-formule (haakje, manier gevonden, hoe het werkt, permissie-vraag), op dag 9 verdiep je het 3-weg-gesprek. Vandaag focus op rustig leren uitnodigen met steun naast je.
-
-EERSTE UITNODIGINGEN VOELEN ALTIJD ONHANDIG
-
-Dat klopt en het gaat over. Niemand begint vaardig. Niet daardoor stoppen, juist daardoor met steun starten. Een nee is geen oordeel over jou, het is een momentopname over hen.
-
-Veelgemaakte fouten op dag 2, herkenbaar?
+Veelgemaakte fouten, herkenbaar?
 ✗ "Hij heeft toch geen geld" → vooroordeel, geen feit.
 ✗ "Die heeft het te druk" → laat hem zelf bepalen of hij tijd heeft.
 ✗ "Die zou nooit naar mij luisteren" → projectie van eigen onzekerheid.
 ✗ Wachten met uitnodigen tot je lijst "perfect" is → de lijst is nooit perfect.
 ✗ Eerst zelf alle bezwaren beantwoorden in je hoofd → dat is hun werk, niet jouw werk.
-✗ Het bericht uit je hoofd willen schrijven zonder sponsor → je hebt vandaag steun, gebruik 'm. De 5 voorbeelden bovenaan zijn een prima startpunt.`,
+
+Vandaag stuur je ook al 3 uitnodigingen, samen met je sponsor in een groepje (3-weg-principe). Sponsor brengt autoriteit, jij koppelt, prospect ziet twee mensen die samenwerken. Dat is de hefboom waarmee je niet alles zelf hoeft te weten of te kunnen. Eerste uitnodigingen voelen onhandig, dat klopt en gaat over. Niet daardoor stoppen, juist daardoor met steun starten.`,
     waaromWerktDit: {
       tekst:
         "De geheugensteunlijst is je voorraadkast. Hoe voller, hoe makkelijker de keuze wat je vanavond kookt. En de eerste invites zijn altijd het zwaarst, gewoon door.",
