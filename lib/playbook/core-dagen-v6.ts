@@ -468,15 +468,43 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       { actie: "Freebie-toolkit", route: "/instellingen/freebies" },
       { actie: "Schrijf met de Mentor", route: "/coach" },
     ],
-    waaromWerktDit: PLACEHOLDER_WAAROM,
+    waaromWerktDit: {
+      tekst:
+        "Een freebie is geen weggeefactie, het is een bruggetje. Mensen die nog niet klaar zijn voor de webshop, willen vaak wel een gids of een mini-test. Wie zo binnenkomt, blijft veel langer in beeld dan iemand die je een keer een bericht stuurde.",
+    },
   },
   {
     nummer: 8,
     titel: "✨ Drie verhalen + eerste niche-zaadje",
     fase: 2,
-    faseDoel: "Drie korte verhalen op papier en een eerste idee van je niche-zaadje + passies.",
-    watJeLeert:
-      "PLACEHOLDER. TODO-GABY: schrijf in ELEVA-stem. Anker: drie verhalen op papier (persoonlijk / product / business), eerste idee van niche-zaadje + passies.",
+    faseDoel: "Drie korte verhalen op papier en een eerste idee van wie jouw ideale klant is.",
+    watJeLeert: `Vandaag zet je drie verhalen op papier 💟
+
+Drie korte verhalen, elk over een ander aspect van wat jij brengt. Dit is geen schrijfopdracht, dit is voorbereiding voor straks. Want zodra je social gaat oppakken (stap 12 met Stories, en later de uitbreiding-module), put je uit deze drie.
+
+DRIE VERHALEN, DRIE LIJNEN
+
+**1. Persoonlijk verhaal.** Wie was je een paar jaar geleden, wat veranderde, en waar sta je nu? Niet de fantasieversie. Wel het echte verhaal met de momenten die jou hebben gevormd. Hoeft niet dramatisch, wel waarachtig.
+
+**2. Product-verhaal (vanuit webshop-frame).** Hoe ben je in contact gekomen met Lifeplus, wat ervaarde je zelf, en waarom werd het meer dan alleen "ik gebruik wat producten"? De webshop is hier het anker, niet het product zelf.
+
+**3. Business-verhaal.** Wat trekt jou in dit pad? Niet "ik wil rijk worden", wel "vrijheid om wat met mijn tijd te doen", "dichter bij m'n kinderen", "andere mensen helpen op een schaalbare manier". Wat is jouw waarom achter het werken?
+
+VANDAAG GA JE
+
+**Persoonlijk verhaal schrijven met de Mentor.** Hij stelt vragen, jij vult in. Tien tot vijftien minuten.
+
+**Product-verhaal schrijven met de Mentor.** Idem, en de Mentor zorgt dat het claim-vrij blijft (geen "het genas mijn klachten", wel "ik merkte X").
+
+**Business-verhaal schrijven met de Mentor.** Wat trekt jou hieraan, en wat zou je willen dat anderen hierin gaan voelen.
+
+**Niche-zaadje + passies met de Mentor.** Vijf minuten praten over de vraag "wie was ik vroeger, wat veranderde, en welke onderwerpen raken mij persoonlijk?". De Mentor noteert dit als jouw niche-zaadje. Pas niet definitief, wel een eerste richting waar jij straks meer over wilt vertellen dan over willekeurige onderwerpen.
+
+WAT DIT JOU OPLEVERT
+
+Vanaf nu hoef je niet meer te bedenken "wat moet ik schrijven". Je hebt drie verhalen waaruit je kunt putten, en een niche-richting waar jouw passie zit. Dat is de helft van het content-werk dat anderen onder dwang moeten doen.
+
+Niet alleen. Bouwen mag leuk zijn 💟`,
     vandaagDoen: [
       {
         id: "core-v6-stap8-persoonlijk",
@@ -505,15 +533,41 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       ...afsluitStappenV6(8),
     ],
     waarInEleva: [{ actie: "Schrijf met de Mentor", route: "/coach" }],
-    waaromWerktDit: PLACEHOLDER_WAAROM,
+    waaromWerktDit: {
+      tekst:
+        "Wie zijn eigen drie verhalen kent, hoeft niet bij elke post na te denken wat 'ie moet zeggen. De drie verhalen worden de bron, en jij hoeft alleen nog te kiezen welk verhaal vandaag passend is.",
+    },
   },
   {
     nummer: 9,
-    titel: "💬 Eerste warme uitnodigingen + Mini-ELEVA introductie",
+    titel: "💬 Eerste warme uitnodigingen + Mini-ELEVA",
     fase: 2,
     faseDoel: "Drie warme uitnodigingen versturen en kennismaken met Mini-ELEVA als opvolg-pad.",
-    watJeLeert:
-      "PLACEHOLDER. TODO-GABY: schrijf in ELEVA-stem. Anker: drie warme uitnodigingen, kennismaken met Mini-ELEVA als opvolg-pad.",
+    watJeLeert: `Vandaag stuur je je eerste drie uitnodigingen 💟
+
+Eindelijk in actie. Tot nu deed je voorbereidend werk: WHY, lijst, productkennis, webshop-pivot, jouw zin. Vandaag wordt het concreet: drie mensen uit je top-20 krijgen een bericht van je.
+
+GEEN PERFECTIE, WEL VERZENDEN
+
+De eerste drie zijn altijd het zwaarst. Je zit te twijfelen over de exacte zin, het exacte moment, de exacte persoon. Stop daarmee. Eerste keer mag onhandig zijn. Daar leer je van. Pas na drie of vier weet je hoe het voelt.
+
+VANDAAG GA JE
+
+**Bericht versturen naar 3 mensen uit je top-20, met jouw zin uit stap 4.** Niet kopieer-plakken. Wel jouw zin, telkens een beetje afgestemd op wie deze persoon is (de Mentor kent de FORM-context per top-5).
+
+**Bij een ja kies je per prospect: 3-weg of Mini-ELEVA.** Dat doen we straks samen met de prospect-kaart. Wat doe je vandaag: even kennismaken met Mini-ELEVA, zodat je weet hoe het werkt.
+
+**Zet je eerste prospect die ja zei in Mini-ELEVA.** Je ziet meteen hoe de klantomgeving eruitziet vanuit het perspectief van een prospect, en wat ELEVA voor jou overneemt qua pulse-momenten.
+
+WAT MINI-ELEVA IS
+
+Een lichte versie van ELEVA voor prospects. Geen volledig leerpad, wel een omgeving waar ze welkom worden, films krijgen die bij hun vraag passen, een Mentor hebben die zachte vragen stelt, en waar ze in hun eigen tempo kunnen kijken of het iets voor hen is. Jij wordt ontlast en de prospect voelt geen druk.
+
+REACTIES
+
+Wat je krijgt is wat je krijgt. Soms ja, soms nee, soms "misschien later". Allemaal goed. Reageer binnen een uur op elke reactie, ook op de nee'en. Vriendelijk en kort. Dat is dezelfde respect-grond als waarmee je opent.
+
+Niet alleen. Bouwen mag leuk zijn 💟`,
     vandaagDoen: [
       {
         id: "core-v6-stap9-drie-namen",
@@ -530,15 +584,48 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       ...afsluitStappenV6(9),
     ],
     waarInEleva: [{ actie: "Naar je namenlijst", route: "/namenlijst" }],
-    waaromWerktDit: PLACEHOLDER_WAAROM,
+    waaromWerktDit: {
+      tekst:
+        "De eerste drie uitnodigingen zijn de duurste in tijd, omdat je nadenkt over alles. De volgende dertig kosten samen minder mentale ruimte dan die eerste drie. Daarom is verzenden vandaag belangrijker dan perfect formuleren.",
+      bron: "Eric Worre, Go Pro",
+    },
   },
   {
     nummer: 10,
     titel: "💪 3-weg-meesterclass, 5 stappen die werken",
     fase: 2,
     faseDoel: "De vijf stappen van een 3-weg-gesprek leren en scripts klaar hebben voor je eerstvolgende.",
-    watJeLeert:
-      "PLACEHOLDER. TODO-GABY: schrijf in ELEVA-stem. Anker: vijf stappen 3-weg-gesprek + scripts klaar voor eerstvolgende.",
+    watJeLeert: `Vandaag leer je de krachtigste hefboom: het 3-weg-gesprek 💟
+
+Een 3-weg is geen truc, het is de combinatie van autoriteit (je sponsor) + verbinding (jij) + sociaal bewijs (zichtbaarheid dat jullie samenwerken) in een kort gesprek. Voor warme prospects is het de snelste weg van interesse naar beslissing zonder dat het pushy voelt.
+
+WAAROM HET WERKT
+
+Jouw warme prospect kent JOU, maar weet niet alles van Lifeplus. Je sponsor weet alles van Lifeplus, maar kent jouw prospect niet. Samen in een gesprek geeft elk van jullie de helft. Voor de prospect voelt het als kennismaken met een expert via een vertrouwde introductie. Dat is iets heel anders dan een verkoper laten bellen.
+
+DE VIJF STAPPEN
+
+**1. Edification.** Jij introduceert je sponsor met respect en bevattelijk. "Ik wil je voorstellen aan iemand die al X jaar mensen helpt met Y, en degene die mij heeft geholpen met Z." Geen overdrijving, wel oprecht.
+
+**2. Korte intro van de prospect.** Sponsor stelt zich kort voor, en vraagt prospect "wat trekt je het meest aan in wat Jan / Marieke je vertelde?" Open begin.
+
+**3. Inhoud + ervaring + vragen.** Sponsor vertelt het kader, geeft eigen verhaal, en houdt ruimte voor vragen. Jij blijft erbij, knikt of vult aan, maar laat sponsor leiden.
+
+**4. Vraag aan de prospect.** "Wat denk je nu? Klinkt dit als iets dat je verder wilt verkennen?" Concreet, niet open afsluiten met "denk er nog maar over".
+
+**5. Vervolgafspraak of volgende stap.** Wat de uitkomst ook is, je sluit af met een concrete vervolgactie. Een tweede gesprek inplannen, samen iets bekijken, of een vriendelijke afsluiting bij een nee.
+
+VANDAAG GA JE
+
+**De meesterclass-film over 3-weg bekijken.** Ongeveer tien minuten.
+
+**Met de Mentor de 5 stappen doorlopen voor één specifieke prospect.** Dus niet in theorie, wel concreet voor iemand die jij in gedachten hebt. De Mentor heeft de scripts per stap klaar.
+
+**Je eigen edification-zin over je sponsor schrijven.** Dit is een herbruikbare zin die je voor elke 3-weg kunt gebruiken (of in varianten). Bewaar 'm in je zinnen-bibliotheek.
+
+**Sponsor vragen of 'ie beschikbaar is voor jouw eerstvolgende 3-weg.** Geen specifieke datum nodig, wel "ben je deze week beschikbaar als ik er een prospect klaar voor heb?".
+
+Niet alleen. Bouwen mag leuk zijn 💟`,
     vandaagDoen: [
       {
         id: "core-v6-stap10-film",
@@ -560,15 +647,39 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       ...afsluitStappenV6(10),
     ],
     waarInEleva: [{ actie: "Bewaar je zinnen", route: "/mijn-zinnen" }],
-    waaromWerktDit: PLACEHOLDER_WAAROM,
+    waaromWerktDit: {
+      tekst:
+        "Een 3-weg-gesprek is geen verkooptechniek, het is een eerlijke combinatie: jij brengt de verbinding, je sponsor brengt de kennis, en de prospect krijgt zonder druk een compleet beeld. Drie ingredienten waar geen van drieen los hetzelfde effect heeft.",
+    },
   },
   {
     nummer: 11,
     titel: "🤝 Je eerstvolgende 3-weg starten",
     fase: 2,
     faseDoel: "Een echte 3-weg starten met een warme prospect, samen met je sponsor.",
-    watJeLeert:
-      "PLACEHOLDER. TODO-GABY: schrijf in ELEVA-stem. Anker: niet meer theorie, praktijk.",
+    watJeLeert: `Vandaag stop je met theorie en begin je in de praktijk 💟
+
+Een eerste 3-weg voelt onhandig. Dat is normaal. De vijfde voelt natuurlijk. Daar zit dezelfde leercurve in als bij alle vaardigheden waar je publiek moet zijn: eerst stuntelig, dan vaardig. Pas in de praktijk leer je het echt.
+
+VANDAAG GA JE
+
+**Eén warme prospect kiezen die nog geen 3-weg heeft gehad.** Liefst iemand uit je top-20 die al heeft gereageerd op je eerste uitnodiging, of zelfs nog niet, maar waarvan jij voelt "die zou hier echt iets aan kunnen hebben".
+
+**Stap 1 van de 5 sturen: introductie naar sponsor, volgens script.** In /scripts vind je het exacte script-blok voor stap 1. Niet woordelijk overnemen, wel als sjabloon gebruiken en in jouw stem zetten.
+
+**De vijf stappen samen met je sponsor doorlopen.** Datum en tijd plannen, en het doen. Het gesprek mag echt zijn, niet een rollenspel. De prospect weet niet beter dan dat 'ie jou en je sponsor spreekt.
+
+**Na afloop kort reflecteren met de Mentor.** Wat ging goed, wat liep onhandig, wat zou je een volgende keer anders doen. De Mentor noteert dit zodat hij volgende 3-weg je sterker kan voorbereiden.
+
+OVER UITKOMSTEN
+
+Een 3-weg eindigt of in een ja, een nee, of een "ik wil er nog over nadenken". Allemaal goede uitkomsten. Wat geen goede uitkomst is: een 3-weg waarvan jij na afloop denkt "dat had ik niet moeten doen". Daarom doe je 'm samen met je sponsor: je hebt altijd iemand naast je die het kader bewaakt.
+
+WAT HET MENTOR-PROFIEL LEERT
+
+Bij elke 3-weg leert de Mentor meer over welk type prospect bij jou tot ja komt, welk type tot nee, en welke vragen telkens terugkomen. Dat scherpt je voorbereiding voor de volgende keer.
+
+Niet alleen. Bouwen mag leuk zijn 💟`,
     vandaagDoen: [
       {
         id: "core-v6-stap11-kies",
@@ -590,15 +701,43 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       ...afsluitStappenV6(11),
     ],
     waarInEleva: [{ actie: "Naar scripts", route: "/scripts" }],
-    waaromWerktDit: PLACEHOLDER_WAAROM,
+    waaromWerktDit: {
+      tekst:
+        "De eerste 3-weg telt voor tien voorbereidingsuren. Daarna wordt het lichter, omdat je weet hoe het verloopt. Wachten tot je 'klaar' bent voor de eerste, is de plek waar bijna iedereen vastloopt.",
+    },
   },
   {
     nummer: 12,
     titel: "📸 Stories-ritme + freebie-aankondiging",
     fase: 2,
-    faseDoel: "Een dagelijks Stories-ritme oppakken en je gekozen freebie zichtbaar maken via Stories.",
-    watJeLeert:
-      "PLACEHOLDER. TODO-GABY: schrijf in ELEVA-stem. Anker: dagelijks Stories-ritme + freebie zichtbaar via Stories.",
+    faseDoel: "Een dagelijks Stories-ritme oppakken en je freebie zichtbaar maken via Stories.",
+    watJeLeert: `Vandaag pak je een Stories-ritme op 💟
+
+Niet om iedereen op Instagram te bereiken, niet om viral te gaan. Wel om dagelijks een klein moment zichtbaar te zijn zodat mensen die jou volgen je geleidelijk zien evolueren. Stories blijft een lichte versie naast je posts, en is precies daarom zo geschikt voor de freebie.
+
+WAAROM STORIES, NIET REELS
+
+Reels vraagt productie, montage, hooks, geluid. Reels komt later in de Uitbreiding-module wanneer je structureel content gaat bouwen. Stories is laagdrempelig, blijft 24 uur staan, en past in een dag die al vol is. Geen perfecte beelden nodig, wel jouw aanwezigheid.
+
+VANDAAG GA JE
+
+**Vandaag minimaal een Story plaatsen.** Wat dan ook. Een foto van iets dat je raakte, een citaat dat je leuk vond, een korte gedachte. Niet over Lifeplus per se. Wel jouw aanwezigheid.
+
+**Een Story plaatsen die je freebie aankondigt.** "Heb ik net deze gids gemaakt over X, link in bio voor wie 'm wil ontvangen". De Mentor heeft een korte tekst in jouw stem klaarstaan als je niet weet hoe te beginnen.
+
+**Een vast moment plannen voor je dagelijkse Story.** Ochtend, lunchpauze, avond. Maakt niet uit, wel vast. Vaste momenten verlagen drempel zodat je niet elke dag opnieuw moet bedenken "wanneer doe ik dit nu?".
+
+**Binnen 1 uur reageren op DM's en stickers.** Stories nodigen mensen uit om in te tikken op je posts. Snelle reactie = mensen voelen zich gezien = vertrouwen groeit. Anti-bot.
+
+WAT JE STRAKS ZIET IN JE DASHBOARD
+
+Voor elke freebie-opt-in via je Stories of bio-link verschijnt straks een nieuwe lead in je dashboard met bron-tag (welke freebie, welke kanaal). De Mentor pakt 'm op in Mini-ELEVA-zachte-opvolg, en je krijgt seintjes wanneer een lead in beweging komt.
+
+WAAR JE OP MOET LETTEN
+
+Niet elke Story hoeft over Lifeplus te gaan. Sterker, dat zou het juist verzwakken. Zeven van de tien Stories gaan over jouw leven, je passies, alledaagse dingen. Drie gaan via je waarde, verhaal, freebie. Die balans maakt dat mensen jou blijven volgen.
+
+Niet alleen. Bouwen mag leuk zijn 💟`,
     vandaagDoen: [
       {
         id: "core-v6-stap12-story",
@@ -619,15 +758,37 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       ...afsluitStappenV6(12),
     ],
     waarInEleva: [{ actie: "Freebie-toolkit", route: "/instellingen/freebies" }],
-    waaromWerktDit: PLACEHOLDER_WAAROM,
+    waaromWerktDit: {
+      tekst:
+        "Stories doen wat losse posts niet doen: ze maken je menselijk zichtbaar zonder dat je elke keer een mini-publicatie hoeft te maken. De ene Story is even goed als de andere, en samen geven ze het beeld dat jij er bent.",
+    },
   },
   {
     nummer: 13,
     titel: "📦 Eerste Shoppers, supplementen-binnen",
     fase: 2,
-    faseDoel: "Tweede pulsmoment in de klantomgeving, deels door de Mentor, deels door jou.",
-    watJeLeert:
-      "PLACEHOLDER. TODO-GABY: schrijf in ELEVA-stem. Anker: tweede pulsmoment (klantomgeving), deels Mentor, deels menselijk contact.",
+    faseDoel: "Tweede pulsmoment uitvoeren: deels door de Mentor in de klantomgeving, deels door jou met menselijk contact.",
+    watJeLeert: `Vandaag krijg je je eerste Shoppers in beeld 💟
+
+De prospects die "ja" zeiden in stap 9, hebben straks hun supplementen ontvangen. Dat is het tweede pulsmoment in hun klantomgeving. De Mentor heeft de eerste open vraag al gesteld in hun klantomgeving ("zijn je supplementen binnen, heb je vragen?"), jij voegt menselijk contact toe waar het natuurlijk past.
+
+VANDAAG GA JE
+
+**Je eerste Shoppers controleren in hun klantomgeving.** In /klant zie je per klant de status en wat de Mentor al heeft gedaan. Geaggregeerd, niet inhoudelijk (AVG-veilig, jij ziet wat ze doen, niet wat ze precies aan de Mentor vragen).
+
+**Elke Shopper een persoonlijk "spullen binnen?"-bericht sturen.** Eén of twee zinnen, vriendelijk en open. "Hé X, denk er aan dat ik er ben als je vragen hebt over hoe je begint, of als iets niet helemaal duidelijk is." De Mentor heeft 'm al gevraagd, jij voegt het menselijke laagje erbovenop.
+
+**Ze uitnodigen voor de eerstvolgende product-info-avond of webinar (optioneel).** Niet voor iedereen passend, en niet verplicht. Wel een laagdrempelige manier om context te geven aan wie nieuwsgierig is.
+
+WAAROM TWEE SPOREN
+
+De Mentor doet het ritme dat anders zou wegglijden: timing-pulse op vaste momenten in de klantomgeving. Jij doet de menselijke aanwezigheid die geen algoritme kan vervangen. Samen zijn die twee meer dan de som van delen, en jij raakt geen klanten kwijt omdat het te druk werd.
+
+WAT JE STRAKS GAAT VOELEN
+
+Met drie of vier klanten is dit nog te overzien. Met twintig of vijftig zou je het niet aankunnen zonder ELEVA. Dat is precies waarom de klantomgeving bestaat: jij houdt het menselijke, ELEVA houdt het schaalbare.
+
+Niet alleen. Bouwen mag leuk zijn 💟`,
     vandaagDoen: [
       {
         id: "core-v6-stap13-check",
@@ -648,15 +809,53 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       ...afsluitStappenV6(13),
     ],
     waarInEleva: [{ actie: "Mijn klanten", route: "/klant" }],
-    waaromWerktDit: PLACEHOLDER_WAAROM,
+    waaromWerktDit: {
+      tekst:
+        "Klanten die in de eerste week na ontvangst een vraag stellen of zich gezien voelen, blijven gemiddeld vier keer langer klant dan klanten die in stilte beginnen. De Mentor signaleert, jij voegt aanwezigheid toe.",
+    },
   },
   {
     nummer: 14,
     titel: "🛡️ Bezwaren-skills, 4-stappen + bibliotheek",
     fase: 2,
-    faseDoel: "De 4-stappen-methode leren en oefenen met de bezwaren-bibliotheek.",
-    watJeLeert:
-      "PLACEHOLDER. TODO-GABY: schrijf in ELEVA-stem. Anker: 4-stappen-methode + bezwaren-bibliotheek.",
+    faseDoel: "De 4-stappen-methode leren en oefenen met drie bezwaren uit de top-21.",
+    watJeLeert: `Vandaag leer je rustig met bezwaren omgaan 💟
+
+Bezwaren zijn geen tegenwerking. Ze zijn signalen dat iemand interesse heeft en even iets nodig heeft om verder te kunnen. Wie bezwaren ziet als afwijzing, raakt mensen kwijt die wel openstaan. Wie ze ziet als vragen, wint vertrouwen.
+
+DE TOP-21 BEZWAREN (Eric Worre)
+
+Worre heeft de meest voorkomende bezwaren in twee categorieen verdeeld:
+
+**Externe bezwaren**: "ik heb geen tijd", "ik heb geen geld", "ik ken de mensen niet", "mijn partner staat er niet achter".
+
+**Interne bezwaren**: "ik ben geen verkoper", "ik kan dit niet", "ik weet niet of het bij me past", "ik ben niet goed in netwerken".
+
+Externe bezwaren hebben vaak interne wortels. "Ik heb geen tijd" betekent meestal "ik prioriteer dit niet, want ik weet niet of ik er goed in zou zijn". Daar achter komen vraagt een rustige methode.
+
+DE 4-STAPPEN-METHODE
+
+**1. Erkennen.** Niet meteen weerleggen. "Dat snap ik" of "die vraag krijg ik vaker". De ander voelt zich gezien.
+
+**2. Doorvragen.** "Wat zou er nodig zijn voordat dit voor jou wel zou werken?" of "Wat speelt er specifiek voor jou hierin?". Open vraag die het echte achter het bezwaar opent.
+
+**3. Feel-Felt-Found (FFF).** "Dat voel ik (Feel). Anderen voelden dat ook (Felt). En zij ontdekten dat (Found)." Geen rationele tegenargumentatie, wel gedeelde herkenning.
+
+**4. Concrete vraag terug.** "Zal ik je laten zien hoe het bij hen werkte?" of "Wil je dat we er kort over praten?". Geen open afsluiting, wel een richting.
+
+VANDAAG GA JE
+
+**10 minuten roleplay met de Mentor doen, 3 bezwaren uit de top-21 kiezen.** Welke drie krijg jij nu het meest, of welke verwacht je het meest? De Mentor speelt prospect, jij oefent met de 4-stappen.
+
+**De bezwaren-bibliotheek bekijken.** In /scripts vind je het volledige overzicht, met per bezwaar een voorbeeld-FFF. Niet woordelijk overnemen, wel als inspiratie.
+
+**FFF op een bezwaar oefenen, een alternatieve benadering op een ander.** Niet alles werkt voor iedereen. Twee verschillende benaderingen oefenen geeft je flexibiliteit straks in gesprek.
+
+WAT JE NIET MOET DOEN
+
+Niet argumenteren tegen bezwaren. Niet bewijzen dat de prospect het mis heeft. Wel ruimte geven, en samen kijken naar wat er nodig is.
+
+Niet alleen. Bouwen mag leuk zijn 💟`,
     vandaagDoen: [
       {
         id: "core-v6-stap14-roleplay",
