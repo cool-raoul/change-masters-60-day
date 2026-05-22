@@ -40,6 +40,24 @@
   --cm-on-gold: 255 253 246;
 }
 
+/* CORE V6 — luchtig grijs, eigen smaak naast Sprint.
+   Wordt geactiveerd door een wrapper-div met class="core-v6"
+   in app/core-v6/layout.tsx. Tailwind-utilities die op
+   var(--cm-*) leunen pakken automatisch deze waarden over
+   binnen de Core V6-pagina's. */
+.core-v6 {
+  --cm-black: 38 44 54;          /* hoofd-achtergrond: luchtig leigrijs, geen zwart */
+  --cm-surface: 50 58 70;        /* cards: iets lichter grijs */
+  --cm-surface-2: 65 74 88;      /* sub-cards: nog iets lichter */
+  --cm-border: 96 108 124;       /* zachte grijze rand, niet hard */
+  --cm-gold: 196 160 74;         /* zelfde goud als Sprint, identiteit consistent */
+  --cm-gold-light: 224 188 98;
+  --cm-gold-dim: 115 95 50;      /* iets warmer, leesbaar op luchtige achtergrond */
+  --cm-white: 236 234 228;       /* warme off-white tekst */
+  --cm-muted: 175 178 186;       /* zachter muted-grijs voor luchtig effect */
+  --cm-on-gold: 38 44 54;        /* btn-tekst op gold: zelfde luchtige grijs */
+}
+
 @layer base {
   * {
     box-sizing: border-box;
