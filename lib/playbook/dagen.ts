@@ -326,7 +326,7 @@ VEELGEMAAKTE FOUTEN:
 ✗ Direct DM-en als "verkooppraatje" → eerst koppelen, peilen, niet pitchen.
 ✗ Tegen jezelf zeggen "ze hebben me lang niet meer geliket dus zal niet meer interesseren" → 3 weken stilte ≠ uit-radar, het is gewoon niet hun moment.
 
-NIET GELIJK PITCHEN, wat wel: reageer terug op hun content. Vraag iets. Bouw rapport. Pas DAARNA, in een tweede of derde gesprek, kom je met een uitnodiging (zie dag 4 voor de 4-stappen-formule).`,
+NIET GELIJK PITCHEN, wat wel: reageer terug op hun content. Vraag iets. Bouw rapport. Pas DAARNA, in een tweede of derde gesprek, kom je met een uitnodiging volgens de vier bouwstenen (zie dag 4 + /scripts).`,
     waaromWerktDit: {
       tekst:
         "Social media is geen podium, het is een radar. Je kijkt niet wie er klapt. Je kijkt wie er zwaait.",
@@ -335,14 +335,14 @@ NIET GELIJK PITCHEN, wat wel: reageer terug op hun content. Vraag iets. Bouw rap
 
   {
     nummer: 4,
-    titel: "💬 Vandaag leer je uitnodigen, 4 stappen die werken",
+    titel: "💬 Vandaag leer je uitnodigen, vier bouwstenen die werken",
     fase: 1,
     vandaagDoen: [
       {
         id: "dag4-uitnodiging-1-5",
-        label: "5 uitnodigingen versturen, structuur toepassen",
+        label: "5 uitnodigingen versturen volgens de vier bouwstenen",
         uitleg:
-          "Compliment + uitnodigen voor kijkmoment + tijd voorstellen. De 'ik heb haast'-opener is OPTIONEEL, alleen bij business-prospects of zakelijke context. Bij vrienden of familie laat je 'm weg en begin je gewoon warm. Doel: ja tegen het kijkmoment, niet ja tegen jou.",
+          "Pas de vier bouwstenen van vandaag toe (haakje, manier-gevonden-zin, hoe-het-werkt, permissie-vraag) op 5 mensen uit je lijst. Mix warm (bekenden) en lauw (telefoon-contacten of social-vrienden waar je een tijd niet mee sprak). Verschillende haakjes per prospect. Inspiratie? Open /scripts voor 14 kant-en-klare webshop-uitnodigingen, of laat de Mentor er een schrijven in jouw stem.\n\nHet doel: ja tegen een kijkmoment, niet ja tegen jou. Vrijblijvend houden: \"Helemaal vrijblijvend, als het niets voor je is is dat ook prima.\"",
         verplicht: true,
         actieRoute: "/namenlijst",
       },
@@ -887,7 +887,7 @@ Dat is normaal. Niet teleurstellend, niet rooskleurig. Het is gewoon wat het is.
 
 DE PRAKTIJK, EEN TIMER-UITDAGING
 
-Zet een timer van 10 minuten op je telefoon zodra je aan stap C (uitnodigingen) begint. Kijk hoeveel uitnodigingen je in die 10 min kunt versturen volgens de 4-stappen-formule. Geen herlezen, geen perfectie. Dit traint je in snelheid.
+Zet een timer van 10 minuten op je telefoon zodra je aan stap C (uitnodigingen) begint. Kijk hoeveel uitnodigingen je in die 10 min kunt versturen volgens de vier bouwstenen (zie dag 4). Geen herlezen, geen perfectie. Dit traint je in snelheid.
 
 VEELGEMAAKTE FOUTEN
 
@@ -1453,7 +1453,7 @@ Niet iedereen op je lijst is direct warm genoeg voor een uitnodiging. Koude cont
 1. Reageer 2-3 keer waardevol op hun socials (oprechte reactie, geen "leuk!" maar iets persoonlijks).
 2. Stuur een DM met een FORM-vraag, GEEN pitch. "Wat ben je tegenwoordig allemaal aan het doen?"
 3. Wees 1-2 weken zichtbaar in hun leven (likes, reacties, een chat over iets niet-business).
-4. PAS DAN de uitnodiging, met de 4-stappen-formule (dag 4).
+4. PAS DAN de uitnodiging, met de vier bouwstenen uit dag 4 + /scripts.
 
 VEELGEMAAKTE FOUTEN:
 ✗ FORM-vragen stellen om bij M (Money) uit te komen → voelt geforceerd, prospect ruikt het.
@@ -1553,7 +1553,7 @@ VANDAAG: kies 1 specifieke prospect, plan een 5-min check-in (DM of telefoon) en
 DE BOTTLENECK-REGEL, kijk waar de meeste prospects "vastliggen":
 
 Veel op UITGENODIGD (ze reageren niet of zeggen direct nee):
-→ Probleem zit in de UITNODIGING zelf. Vandaag 4-stappen herzien (dag 4). Mentor: "schrijf een uitnodiging variant voor [type prospect]", leer 3 verschillende stijlen.
+→ Probleem zit in de UITNODIGING zelf. Vandaag de vier bouwstenen uit dag 4 herzien + /scripts erbij pakken. Mentor: "schrijf een uitnodiging variant voor [type prospect]", leer 3 verschillende stijlen.
 
 Veel op ONE-PAGER (bekeken, geen reactie meer):
 → Probleem zit in de FOLLOW-UP. Te lang stil, of te direct doorvragen. Vandaag dag 6 reviseren, de 5-fasen follow-up.
@@ -2144,7 +2144,7 @@ DE 4 BOTTLENECKS, herken je patroon:
 BOTTLENECK 1, VEEL "UITGENODIGD", WEINIG REACTIE
 Symptoom: 60+% reageert niet op je uitnodiging.
 Oorzaak: uitnodiging is niet warm/persoonlijk genoeg, of voelt als pitch.
-Oefening: dag 4 herzien. 4-stappen-formule. Mentor: "schrijf 3 varianten van mijn standaard-uitnodiging."
+Oefening: dag 4 herzien (vier bouwstenen) + /scripts erbij pakken. Mentor: "schrijf 3 varianten van mijn standaard-uitnodiging."
 40-dagen-fix: 1 week alleen op uitnodigingen oefenen, mix variant 1/2/3.
 
 BOTTLENECK 2, VEEL "ONE-PAGER", WEINIG PRESENTATIE

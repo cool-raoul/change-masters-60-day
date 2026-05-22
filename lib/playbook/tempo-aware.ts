@@ -114,6 +114,25 @@ export function momentumRadarStap(dagNummer: number): ControllableTaak {
 export const STORIES_UITLEG =`Plaats 1 tot 3 stories uit je dag op Instagram of Facebook (stories, niet feed). Geen verkoop, geen "kom in m'n business". Gewoon laten zien dat je leeft. Mensen worden door wat ze zien aangetrokken, niet door wat ze lezen.\n\nWAT KUN JE LATEN ZIEN? DRIE RICHTINGEN OM UIT TE KIEZEN.\n\n1. LIFESTYLE-MOMENT. Een ontbijt, een wandeling, een training, een blije gedachte, een moment dat je raakte vandaag. Niets over Lifeplus per se, gewoon jouw leven van vandaag. Het simpelste en het meest werkbaar. Doe dit het vaakst.\n\n2. WAARDE-MOMENT. Iets dat je leerde of dat jou helpt. Een citaat dat klopte, een mini-inzicht, een gewoonte die je hebt ingebouwd. Geen lange uitleg, één regel of één visual. Lezers denken "hier heb ik iets aan".\n\n3. EIGEN-VERHAAL-MOMENT. Iets persoonlijks dat raakt aan waarom jij hier in zit. Een why-moment, een herinnering, een voor-en-na-gevoel. Niet vaak (één keer per week of zo), wel diep wanneer je 't deelt. Bouwt vertrouwen omdat mensen jou leren kennen.\n\nDe verdieping op deze drie zit in de academy onder "Stories die werken" / Brookes-formule. Daar staan voorbeelden + opbouw per type. Voor vandaag: kies één van de drie en plaats.\n\nREAGEREN OP STORIES VAN ANDEREN is minstens zo belangrijk als zelf posten. Waarom? Als je reageert op iemands story, land je RECHTSTREEKS in z'n DM. Dat is de plek waar het echte gesprek begint. Eén oprechte 2-3 zinnen-reactie op een story is goud waard.\n\nWAT DOE JE VANDAAG?\n\n1. Plaats 1 tot 3 stories uit je dag (kies een van de drie richtingen hierboven)\n2. Open Instagram of Facebook en geef bij 3 stories van anderen een ECHTE reactie. Geen "👏👏👏" maar 2-3 zinnen die laten zien dat je hun moment hebt gezien.\n3. Wordt het een gesprek? Top. Als dit een NIEUW persoon is (nog niet op je lijst), voeg ze toe en zet ze op fase 'in gesprek' via de spraakfunctie ("Ik heb een gesprek gestart met [naam]").\n\nZo bouw je rustige zichtbaarheid + concrete nieuwe gesprekken zonder iets te pushen.`;
 
 // ============================================================
+// Centrale uitleg voor "verstuur X uitnodigingen" stappen.
+// Vervangt de oude Eric-Worre-4-stappen-formule (Compliment ->
+// Uitnodigen -> Plan -> Haast) door verwijzing naar de NIEUWE
+// vier bouwstenen die op dag 4 zijn geleerd (Haakje, Manier-gevonden-
+// zin, Hoe-het-werkt, Permissie-vraag) + de 14 webshop-scripts in
+// /scripts + de drie hulp-knoppen (voorbeelden, sponsor, Mentor).
+// ============================================================
+export function uitnodigingenUitleg(
+  aantal: number,
+  opties?: { compact?: boolean; extraIntro?: string },
+): string {
+  const prefix = opties?.extraIntro ? `${opties.extraIntro}\n\n` : "";
+  if (opties?.compact) {
+    return `${prefix}Verstuur ${aantal} uitnodigingen vandaag in jouw stem. Mix warm (bekenden) en lauw (telefoon-contacten of social-vrienden waar je al een tijd niet mee sprak). Niet woordelijk overnemen, wel inspiratie pakken uit /scripts (14 webshop-uitnodigingen) of de Mentor laten meeschrijven.\n\nDe vier bouwstenen die je op dag 4 leerde:\n1. HAAKJE (eigen WHY / prospect-WHY / compliment)\n2. MANIER-GEVONDEN-ZIN (de centrale ELEVA-zin)\n3. HOE-HET-WERKT (drie korte zinnen over de webshop)\n4. PERMISSIE-VRAAG ("Mag ik je kort laten zien hoe het werkt?")\n\nBij een ja, deel de link en vertel de spraakfunctie: "Ik heb [naam] uitgenodigd en de link gestuurd". Hulp nodig? Drie knoppen onder dit vak: voorbeelden, sponsor of Mentor.`;
+  }
+  return `${prefix}Vandaag verstuur je ${aantal} uitnodigingen aan mensen uit je lijst. Geen vaste formule, wel jouw stem op basis van de vier bouwstenen die je op dag 4 hebt geleerd.\n\nDE VIER BOUWSTENEN VAN EEN STERKE WEBSHOP-UITNODIGING\n\n1. HAAKJE. Persoonlijk en kort, niet generiek. Drie varianten om uit te kiezen:\n   - Eigen WHY ("Ik ben [beroep] en ik wil graag [doel uit eigen WHY]")\n   - Prospect-WHY ("Jij gaf vorige keer aan dat je [hun WHY]")\n   - Compliment ("Wat jij hebt opgebouwd met [hun bedrijf/track-record] vind ik echt sterk")\n\n2. MANIER-GEVONDEN-ZIN. De centrale ELEVA-zin: "Ik heb een manier gevonden om online inkomsten op te bouwen zonder investeringen en zonder risico, via een gratis webshop met holistische wellness-producten."\n\n3. HOE-HET-WERKT. Drie korte zinnetjes (niet meer):\n   - Zelf bestellen wat je toch al gebruikt\n   - Alle logistiek geregeld, geen voorraad of klantenservice\n   - Gratis training en AI-systeem voor support\n\n4. PERMISSIE-VRAAG. "Mag ik je kort laten zien hoe het werkt?" of "Sta je open om te zien hoe?". Vrijblijvend: "Helemaal vrijblijvend, als het niets voor je is is dat ook prima."\n\nWAAR HAAL JE INSPIRATIE? In /scripts staan 14 kant-en-klare webshop-uitnodigingen (eigen WHY / eigen ervaring / prospect-WHY / koud-of-oud-contact / Serious Business Builder). Niet woordelijk overnemen, wel als startpunt om in jouw stem te zetten.\n\nMIX WARM EN LAUW. Pak ${aantal} mensen: een paar warme (bekenden, familie, vrienden) en een paar lauwe (telefoon-contacten of social-vrienden waar je al een tijd niet mee sprak). Verschillende stijlen, verschillende haakjes per type.\n\nBIJ EEN JA, deel de link en vertel de spraakfunctie: "Ik heb [naam] uitgenodigd en de link gestuurd". Daarmee verschuift de prospect naar fase 'uitgenodigd' in je namenlijst.\n\nHULP NODIG? Drie knoppen onder dit vak:\n- VOORBEELDEN BEKIJKEN: open /scripts in de uitnodigingen-sectie\n- MET JE SPONSOR: open WhatsApp met een vraag om hulp\n- MET DE MENTOR: laat de Mentor een uitnodiging op maat schrijven in jouw stem voor een specifieke prospect`;
+}
+
+// ============================================================
 // Centrale uitleg voor "voeg X nieuwe namen toe" stappen.
 // Wordt op heel veel dagen gebruikt (dag 3+). Helper-functie zodat
 // we de uitleg op één plek onderhouden en uitbreiden.
@@ -266,13 +285,16 @@ function bouwDag4VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
   const dd = berekenDagdoelen(uren);
 
   return [
-    // --- HOOFDTAAK: 4-stappen-uitnodiging meteen toepassen (vandaag's les) ---
-    // Eerste stap zodat de les bovenaan ('Wat je leert') vers in het hoofd
-    // is wanneer de member de uitnodigingen schrijft.
+    // --- HOOFDTAAK: webshop-uitnodiging meteen toepassen (vandaag's les) ---
+    // Eerste stap zodat de les bovenaan ('Wat je leert') met de vier
+    // bouwstenen vers in het hoofd is wanneer de member de uitnodigingen
+    // schrijft.
     {
       id: "dag4-uitnodigingen-4stappen",
-      label: `📨 Pas vandaag de 4-stappen-uitnodiging toe bij ${dd.uitnodigingen} mensen`,
-      uitleg: `DE LES van vandaag staat hierboven in 'Wat je leert' met voorbeelden van Eric Worre. Pak die er bij wanneer je gaat schrijven.\n\nDE FORMULE in het kort:\n\n1. COMPLIMENT of erkenning ("je bent iemand die...")\n2. UITNODIGEN ("wil je het zien?"), kies de variant die past bij hoe warm de prospect is (direct / indirect / super-indirect)\n3. PLAN met twee opties ("vanavond of morgen?"), geen open vraag\n4. Optionele opener bij business-prospects ("ik heb weinig tijd, maar...")\n\nDoel: ja op het KIJKMOMENT, niet ja op jou. Als de prospect ja zegt, deel je de link. De pijplijn-fase wordt 'uitgenodigd'. Vertel het aan de spraakfunctie: "Ik heb [naam] uitgenodigd en de link gestuurd".\n\nHULP NODIG? De drie knoppen onder dit vak zijn er om mee te starten:\n• Voorbeelden bekijken: complete scripts klaar om aan te passen\n• Met je sponsor: open WhatsApp met een vraag om hulp\n• Met de Mentor: laat de Mentor een uitnodiging op maat schrijven`,
+      label: `📨 Pas de vier bouwstenen toe bij ${dd.uitnodigingen} uitnodigingen`,
+      uitleg: uitnodigingenUitleg(dd.uitnodigingen, {
+        extraIntro: "De LES van vandaag staat hierboven in 'Wat je leert' met voorbeelden in jouw stem. Pak die er bij wanneer je gaat schrijven. Doel: ja op het KIJKMOMENT, niet ja op jou. Als de prospect ja zegt, deel je de link. Vertel het aan de spraakfunctie: \"Ik heb [naam] uitgenodigd en de link gestuurd\".",
+      }),
       verplicht: true,
       actieRoute: "/namenlijst",
       uitnodigHelpKnoppen: true,
@@ -291,7 +313,7 @@ function bouwDag4VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     {
       id: "dag4-eerste-berichten",
       label: `💬 Stuur ${dd.contacten} mensen een eerste bericht`,
-      uitleg: `Pak ${dd.contacten} mensen uit je lijst en stuur een persoonlijk eerste bericht.\n\n📱 DIRECT IN WHATSAPP/IG/FB BELANDEN: in je namenlijst staan naast elke prospect kleine icoontjes (WhatsApp, Instagram, Facebook). Eén klik en de juiste app opent met die persoon. Vereiste: telefoonnummer of social-handle staat op de kaart. Niet ingevuld? Open de prospect, vul aan, en de icoontjes verschijnen vanzelf.\n\nLINK MET DE LES VAN VANDAAG: dit is je OPENER. Je 4-stappen-uitnodiging hierboven leer je vandaag niet om in losse berichten over weken uit te smeren, maar om in dezelfde chat-flow door te zetten zodra het natuurlijk past. Topcoaches zijn het er over eens: openen → korte verbinding → uitnodigen, het liefst in dezelfde gespreksbeurt, hooguit binnen een paar berichten. Wachten met de uitnodiging tot 'over een week' voelt voor de prospect als een verborgen agenda.\n\nPRAKTISCH:\n\n1. Open met een menselijke, specifieke vraag (geen pitch). "Hé [naam], moest aan je denken omdat..." of "Hé [naam], hoe gaat het nu met...?"\n2. Laat ze reageren. Lees wat ze NOEMEN (energie, druk, doelen, zorgen).\n3. Brug naar de uitnodiging: gebruik de 4-stappen-formule van vandaag. Compliment → uitnodiging → twee tijdsblokken. Heb je hulp nodig? Drie knoppen onder de hoofd-stap brengen je naar voorbeelden, je sponsor of de Mentor.\n\nVia de spraakfunctie meld je: "Ik heb een gesprek gestart met [naam]" → fase 'in gesprek'. Zodra je hen ook uitnodigt: "Ik heb [naam] uitgenodigd" → fase 'uitgenodigd'.`,
+      uitleg: `Pak ${dd.contacten} mensen uit je lijst en stuur een persoonlijk eerste bericht.\n\n📱 DIRECT IN WHATSAPP/IG/FB BELANDEN: in je namenlijst staan naast elke prospect kleine icoontjes (WhatsApp, Instagram, Facebook). Eén klik en de juiste app opent met die persoon. Vereiste: telefoonnummer of social-handle staat op de kaart. Niet ingevuld? Open de prospect, vul aan, en de icoontjes verschijnen vanzelf.\n\nLINK MET DE LES VAN VANDAAG: dit is je OPENER. De webshop-uitnodiging die je hierboven leerde (vier bouwstenen) zet je vandaag niet om in losse berichten over weken uit te smeren, maar om in dezelfde chat-flow door te zetten zodra het natuurlijk past. Topcoaches zijn het er over eens: openen → korte verbinding → uitnodigen, het liefst in dezelfde gespreksbeurt, hooguit binnen een paar berichten. Wachten met de uitnodiging tot 'over een week' voelt voor de prospect als een verborgen agenda.\n\nPRAKTISCH:\n\n1. Open met een menselijke, specifieke vraag (geen pitch). "Hé [naam], moest aan je denken omdat..." of "Hé [naam], hoe gaat het nu met...?"\n2. Laat ze reageren. Lees wat ze NOEMEN (energie, druk, doelen, zorgen).\n3. Brug naar de uitnodiging: gebruik de vier bouwstenen van vandaag (haakje → manier-gevonden-zin → hoe → permissie-vraag). Inspiratie? Open /scripts of laat de Mentor er een schrijven. Drie hulp-knoppen onder de hoofd-stap brengen je naar voorbeelden, je sponsor of de Mentor.\n\nVia de spraakfunctie meld je: "Ik heb een gesprek gestart met [naam]" → fase 'in gesprek'. Zodra je hen ook uitnodigt: "Ik heb [naam] uitgenodigd" → fase 'uitgenodigd'.`,
       verplicht: true,
       actieRoute: "/namenlijst",
     },
@@ -329,7 +351,7 @@ function bouwDag4VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       id: "dag4-sponsor-checkin",
       label: "💬 Sluit af met een korte sponsor-checkin",
       uitleg:
-        "Je hebt dag 4 erop zitten. Stuur je sponsor in 30 seconden hoe het ging: hoe voelde de 4-stappen-uitnodiging? Natuurlijk of nog stroef? Eén zin is genoeg.",
+        "Je hebt dag 4 erop zitten. Stuur je sponsor in 30 seconden hoe het ging: hoe voelden de vier bouwstenen van de webshop-uitnodiging? Natuurlijk of nog stroef? Eén zin is genoeg.",
       verplicht: false,
       inlineEmbed: "sponsor-melding",
     },
@@ -372,8 +394,10 @@ function bouwDag5VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     // --- Stap C: uitnodigingen (vanaf dag 5 vast onderdeel van het ritme) ---
     {
       id: "dag5-uitnodigingen",
-      label: `📨 Verstuur ${dd.uitnodigingen} uitnodigingen (4-stappen-formule)`,
-      uitleg: `Vanaf vandaag is uitnodigen een vast onderdeel van je dagelijkse ritme. Je past de 4-stappen-formule toe die je gisteren leerde op ${dd.uitnodigingen} mensen.\n\nDE FORMULE IN HET KORT\n\n1. COMPLIMENT of erkenning ("je bent iemand die...")\n2. UITNODIGEN ("wil je het zien?"), kies de variant die past bij hoe warm de prospect is (direct / indirect / super-indirect)\n3. PLAN met twee opties ("vanavond of morgen?"), geen open vraag\n4. Optionele opener bij business-prospects ("ik heb weinig tijd, maar...")\n\nMix warm (mensen die je goed kent) met lauw (telefoon-contacten waar je weinig mee praat). Bij een ja, vertel de spraakfunctie: "Ik heb [naam] uitgenodigd en de link gestuurd".\n\nHULP NODIG\n\nDe drie knoppen onder dit vak zijn er om mee te starten:\n- Voorbeelden bekijken: complete scripts klaar om aan te passen\n- Met je sponsor: open WhatsApp met een vraag om hulp\n- Met de Mentor: laat de Mentor een uitnodiging op maat schrijven`,
+      label: `📨 Verstuur ${dd.uitnodigingen} uitnodigingen (scripts + jouw stem)`,
+      uitleg: uitnodigingenUitleg(dd.uitnodigingen, {
+        extraIntro: "Vanaf vandaag is uitnodigen een vast onderdeel van je dagelijkse ritme. Je past de vier bouwstenen toe die je gisteren op dag 4 leerde.",
+      }),
       verplicht: true,
       actieRoute: "/namenlijst",
       uitnodigHelpKnoppen: true,
@@ -457,8 +481,8 @@ function bouwDag6VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     // --- Stap C: uitnodigingen ---
     {
       id: "dag6-uitnodigingen",
-      label: `📨 Verstuur ${dd.uitnodigingen} uitnodigingen (4-stappen-formule)`,
-      uitleg: `Pas de 4-stappen-formule toe op ${dd.uitnodigingen} mensen vandaag. Compliment → uitnodigen → plan met twee opties → eventueel haast (alleen business-prospects).\n\nMix warm (bekenden) en lauw (telefoon-contacten). Bij een ja, deel de link en vertel de spraakfunctie: "Ik heb [naam] uitgenodigd en de link gestuurd".\n\nHulp nodig? De drie knoppen onder dit vak: voorbeelden, sponsor of Mentor.`,
+      label: `📨 Verstuur ${dd.uitnodigingen} uitnodigingen (scripts + jouw stem)`,
+      uitleg: uitnodigingenUitleg(dd.uitnodigingen),
       verplicht: true,
       actieRoute: "/namenlijst",
       uitnodigHelpKnoppen: true,
@@ -561,7 +585,7 @@ function bouwDag7VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     {
       id: "dag7-uitnodigingen",
       label: `📨 Verstuur minimaal ${min.uitnodigingen} uitnodigingen`,
-      uitleg: `Minimaal ${min.uitnodigingen} uitnodigingen vandaag, meer mag. Pas de 4-stappen-formule toe. Compliment → uitnodigen → plan met twee opties → eventueel haast (alleen business).\n\nHulp nodig? De drie knoppen onder dit vak: voorbeelden, sponsor of Mentor.`,
+      uitleg: `Minimaal ${min.uitnodigingen} uitnodigingen vandaag, meer mag.\n\n${uitnodigingenUitleg(min.uitnodigingen, { compact: true })}`,
       verplicht: true,
       actieRoute: "/namenlijst",
       uitnodigHelpKnoppen: true,
@@ -634,8 +658,10 @@ function bouwDag8VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     // --- Stap C: uitnodigingen ---
     {
       id: "dag8-uitnodigingen",
-      label: `📨 Verstuur ${dd.uitnodigingen} uitnodigingen (4-stappen-formule)`,
-      uitleg: `Pas de 4-stappen-formule toe op ${dd.uitnodigingen} mensen vandaag. Compliment → uitnodigen → plan met twee opties → eventueel haast (alleen business).\n\nVANDAAG IS HET SNELHEID-DAG. Bovenaan deze pagina staat onder 'Wat je leert' de mindset die je vandaag toepast: snelheid wint van perfectie. Lees die eerst, dan haal je deze ${dd.uitnodigingen} uitnodigingen in 5 tot 10 minuten.\n\nVuistregel: max 30 tot 60 seconden bedenktijd per uitnodiging. Daarna druk je op verzenden, geen herlezen.\n\nMix warm (bekenden) en lauw (telefoon-contacten). Hulp nodig? De drie knoppen onder dit vak: voorbeelden, sponsor of Mentor.`,
+      label: `📨 Verstuur ${dd.uitnodigingen} uitnodigingen (scripts + jouw stem)`,
+      uitleg: uitnodigingenUitleg(dd.uitnodigingen, {
+        extraIntro: `VANDAAG IS HET SNELHEID-DAG. Bovenaan deze pagina staat onder 'Wat je leert' de mindset die je vandaag toepast: snelheid wint van perfectie. Lees die eerst, dan haal je deze ${dd.uitnodigingen} uitnodigingen in 5 tot 10 minuten. Vuistregel: max 30 tot 60 seconden bedenktijd per uitnodiging, daarna druk je op verzenden, geen herlezen.`,
+      }),
       verplicht: true,
       actieRoute: "/namenlijst",
       uitnodigHelpKnoppen: true,
@@ -703,8 +729,8 @@ function bouwDag9VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     // --- Stap C: uitnodigingen ---
     {
       id: "dag9-uitnodigingen",
-      label: `📨 Verstuur ${dd.uitnodigingen} uitnodigingen (4-stappen-formule)`,
-      uitleg: `Pas de 4-stappen-formule toe op ${dd.uitnodigingen} mensen vandaag. Compliment → uitnodigen → plan met twee opties → eventueel haast (alleen business).\n\nMix warm + lauw. Bij een ja, deel de link en vertel de spraakfunctie: "Ik heb [naam] uitgenodigd en de link gestuurd". Hulp nodig? Drie knoppen: voorbeelden, sponsor of Mentor.`,
+      label: `📨 Verstuur ${dd.uitnodigingen} uitnodigingen (scripts + jouw stem)`,
+      uitleg: uitnodigingenUitleg(dd.uitnodigingen, { compact: true }),
       verplicht: true,
       actieRoute: "/namenlijst",
       uitnodigHelpKnoppen: true,
@@ -773,8 +799,8 @@ function bouwDag10VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     // --- Stap C: uitnodigingen ---
     {
       id: "dag10-uitnodigingen",
-      label: `📨 Verstuur ${dd.uitnodigingen} uitnodigingen (4-stappen-formule)`,
-      uitleg: `Pas de 4-stappen-formule toe op ${dd.uitnodigingen} mensen vandaag.\n\nMix warm + lauw. Hulp nodig? Drie knoppen: voorbeelden, sponsor of Mentor.`,
+      label: `📨 Verstuur ${dd.uitnodigingen} uitnodigingen (scripts + jouw stem)`,
+      uitleg: uitnodigingenUitleg(dd.uitnodigingen, { compact: true }),
       verplicht: true,
       actieRoute: "/namenlijst",
       uitnodigHelpKnoppen: true,
@@ -852,8 +878,8 @@ function bouwDag11VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     // --- Stap C: uitnodigingen ---
     {
       id: "dag11-uitnodigingen",
-      label: `📨 Verstuur ${dd.uitnodigingen} uitnodigingen (4-stappen-formule)`,
-      uitleg: `Pas de 4-stappen-formule toe op ${dd.uitnodigingen} mensen vandaag.\n\nMix warm + lauw. Hulp nodig? Drie knoppen: voorbeelden, sponsor of Mentor.`,
+      label: `📨 Verstuur ${dd.uitnodigingen} uitnodigingen (scripts + jouw stem)`,
+      uitleg: uitnodigingenUitleg(dd.uitnodigingen, { compact: true }),
       verplicht: true,
       actieRoute: "/namenlijst",
       uitnodigHelpKnoppen: true,
@@ -881,7 +907,7 @@ function bouwDag11VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       id: "dag11-pipeline-check",
       label: "🎯 Pipeline-check: weet voor elke prospect wat de volgende stap is",
       uitleg:
-        "Bovenaan deze pagina onder 'Wat je leert' staat de uitleg over one-pager versus presentatie. Lees die door, daarna doe je deze check.\n\nDE KERN IN ÉÉN ZIN: niemand slaat een stap over. Iedereen doorloopt: prospect → uitnodiging → one-pager of 3-weg → presentatie → beslissing. Geen sprongen, geen omleidingen.\n\nDE CHECK (5 minuten)\n\nOpen je namenlijst, schakel naar pijplijn-weergave. Kijk per fase wat je ziet:\n\n• PROSPECT: nog niet benaderd. Doel: vandaag of morgen een opener sturen.\n• IN GESPREK: eerste bericht is uit, gesprek loopt. Doel: zodra het natuurlijk past, een uitnodiging sturen volgens de 4-stappen-formule.\n• UITGENODIGD: uitnodiging is verstuurd, wachtend op JA. Doel: 24-48u check-in als ze stil zijn.\n• ONE-PAGER: info-pagina is gestuurd, wachtend op reactie. Doel: de tussenstap-zin sturen (staat letterlijk uitgeschreven in 'Wat je leert' bovenaan).\n• PRESENTATIE: diepgaand gesprek of 3-weg gehad. Doel: de 5-fasen-follow-up volgen (zie dag 6).\n• FOLLOW-UP: denkt na, twijfelt. Doel: de openings-zin 'wat spreekt je het meeste in aan?' of FFF bij bezwaren (zie dag 5).\n\nWAAR IS JE VERSTOPPING?\n\nDe fase waar de MEESTE mensen op staan is je verstopping, daar zit je vandaag werk. Per fase een concrete vervolgactie:\n\n• Veel mensen op IN GESPREK? Je hebt veel gesprekken lopen maar nog geen uitnodigingen verstuurd. Vandaag: schrijf voor 2 tot 3 van hen een uitnodiging volgens de 4-stappen-formule.\n• Veel mensen op UITGENODIGD? Ze hebben ja gezegd op een kijkmoment maar nog geen info gekregen. Vandaag: stuur ze de one-pager of plan een 3-weg in.\n• Veel mensen op ONE-PAGER? Ze hebben gekeken maar je hebt nog geen vervolg gestuurd. Vandaag: stuur de tussenstap-zin (zie 'Wat je leert' bovenaan voor de letterlijke tekst).\n• Veel mensen op PRESENTATIE? Goed werk, hier zit veel van de echte beweging. Volg de 5-fasen-follow-up van dag 6.\n• Veel mensen op FOLLOW-UP? Ze denken na. Stuur een natuurlijke heropener of, als ze een bezwaar hebben geuit, pas Feel-Felt-Found (FFF) toe van dag 5.\n\nDe truc is niet om alle fases tegelijk te bedienen, wel om VANDAAG je grootste verstopping te ontstoppen.",
+        "Bovenaan deze pagina onder 'Wat je leert' staat de uitleg over one-pager versus presentatie. Lees die door, daarna doe je deze check.\n\nDE KERN IN ÉÉN ZIN: niemand slaat een stap over. Iedereen doorloopt: prospect → uitnodiging → one-pager of 3-weg → presentatie → beslissing. Geen sprongen, geen omleidingen.\n\nDE CHECK (5 minuten)\n\nOpen je namenlijst, schakel naar pijplijn-weergave. Kijk per fase wat je ziet:\n\n• PROSPECT: nog niet benaderd. Doel: vandaag of morgen een opener sturen.\n• IN GESPREK: eerste bericht is uit, gesprek loopt. Doel: zodra het natuurlijk past, een uitnodiging sturen volgens de vier bouwstenen (zie dag 4).\n• UITGENODIGD: uitnodiging is verstuurd, wachtend op JA. Doel: 24-48u check-in als ze stil zijn.\n• ONE-PAGER: info-pagina is gestuurd, wachtend op reactie. Doel: de tussenstap-zin sturen (staat letterlijk uitgeschreven in 'Wat je leert' bovenaan).\n• PRESENTATIE: diepgaand gesprek of 3-weg gehad. Doel: de 5-fasen-follow-up volgen (zie dag 6).\n• FOLLOW-UP: denkt na, twijfelt. Doel: de openings-zin 'wat spreekt je het meeste in aan?' of FFF bij bezwaren (zie dag 5).\n\nWAAR IS JE VERSTOPPING?\n\nDe fase waar de MEESTE mensen op staan is je verstopping, daar zit je vandaag werk. Per fase een concrete vervolgactie:\n\n• Veel mensen op IN GESPREK? Je hebt veel gesprekken lopen maar nog geen uitnodigingen verstuurd. Vandaag: schrijf voor 2 tot 3 van hen een uitnodiging volgens de vier bouwstenen uit dag 4. Inspiratie in /scripts of via de Mentor.\n• Veel mensen op UITGENODIGD? Ze hebben ja gezegd op een kijkmoment maar nog geen info gekregen. Vandaag: stuur ze de one-pager of plan een 3-weg in.\n• Veel mensen op ONE-PAGER? Ze hebben gekeken maar je hebt nog geen vervolg gestuurd. Vandaag: stuur de tussenstap-zin (zie 'Wat je leert' bovenaan voor de letterlijke tekst).\n• Veel mensen op PRESENTATIE? Goed werk, hier zit veel van de echte beweging. Volg de 5-fasen-follow-up van dag 6.\n• Veel mensen op FOLLOW-UP? Ze denken na. Stuur een natuurlijke heropener of, als ze een bezwaar hebben geuit, pas Feel-Felt-Found (FFF) toe van dag 5.\n\nDe truc is niet om alle fases tegelijk te bedienen, wel om VANDAAG je grootste verstopping te ontstoppen.",
       verplicht: true,
       actieRoute: "/namenlijst",
     },
@@ -929,8 +955,8 @@ export function standaardABCDEstappen(
     },
     {
       id: `dag${dagNummer}-uitnodigingen`,
-      label: `📨 Verstuur ${dd.uitnodigingen} uitnodigingen (4-stappen-formule)`,
-      uitleg: `Pas de 4-stappen-formule toe op ${dd.uitnodigingen} mensen vandaag. Compliment → uitnodigen → plan met twee opties → eventueel haast (alleen business).\n\nMix warm + lauw. Bij een ja, deel de link en vertel de spraakfunctie: "Ik heb [naam] uitgenodigd en de link gestuurd". Hulp nodig? Drie knoppen onder dit vak: voorbeelden, sponsor of Mentor.`,
+      label: `📨 Verstuur ${dd.uitnodigingen} uitnodigingen (scripts + jouw stem)`,
+      uitleg: uitnodigingenUitleg(dd.uitnodigingen, { compact: true }),
       verplicht: true,
       actieRoute: "/namenlijst",
       uitnodigHelpKnoppen: true,
@@ -1318,7 +1344,7 @@ function bouwDag21VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     {
       id: "dag21-uitnodigingen",
       label: `📨 Verstuur minimaal ${min.uitnodigingen} uitnodigingen`,
-      uitleg: `Minimaal ${min.uitnodigingen} uitnodigingen vandaag, meer mag. Pas de 4-stappen-formule toe. Hulp nodig? Drie knoppen onder dit vak.`,
+      uitleg: `Minimaal ${min.uitnodigingen} uitnodigingen vandaag, meer mag.\n\n${uitnodigingenUitleg(min.uitnodigingen, { compact: true })}`,
       verplicht: true,
       actieRoute: "/namenlijst",
       uitnodigHelpKnoppen: true,
