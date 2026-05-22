@@ -81,6 +81,22 @@ export function partnerCheckStap(dagNummer: number): ControllableTaak {
  * "afsluit-check". Niet dwingend, wel attentie-trekkend met pulsatie
  * zolang er items zijn.
  */
+// ============================================================
+// Helper voor de dagelijkse stories-stap. Klikbare actieRoute naar
+// de social-media-training in Academy, daar staat module 8 "Stories
+// die werken" met de drie onderwerp-richtingen + 5 soorten stories
+// die werken + wat absoluut niet in je stories hoort.
+// ============================================================
+export function storiesStap(dagNummer: number): ControllableTaak {
+  return {
+    id: `dag${dagNummer}-stories`,
+    label: "📱 1 tot 3 stories + reageren op andermans stories",
+    uitleg: STORIES_UITLEG,
+    verplicht: true,
+    actieRoute: "/academy/social-media",
+  };
+}
+
 export function momentumRadarStap(dagNummer: number): ControllableTaak {
   // Week 1 (dag 3-7): uitgebreide uitleg + uitleg wat 'momentum' hier
   // betekent. Vanaf week 2 (dag 8+): compactere versie want member
@@ -129,7 +145,7 @@ export function uitnodigingenUitleg(
   if (opties?.compact) {
     return `${prefix}Verstuur ${aantal} uitnodigingen vandaag in jouw stem. Mix warm (bekenden) en lauw (telefoon-contacten of social-vrienden waar je al een tijd niet mee sprak). Niet woordelijk overnemen, wel inspiratie pakken uit /scripts (14 webshop-uitnodigingen) of de Mentor laten meeschrijven.\n\nDe vier bouwstenen die je op dag 4 leerde:\n1. HAAKJE (eigen WHY / prospect-WHY / compliment)\n2. MANIER-GEVONDEN-ZIN (de centrale ELEVA-zin)\n3. HOE-HET-WERKT (drie korte zinnen over de webshop)\n4. PERMISSIE-VRAAG ("Mag ik je kort laten zien hoe het werkt?")\n\nBij een ja, deel de link en vertel de spraakfunctie: "Ik heb [naam] uitgenodigd en de link gestuurd". Hulp nodig? Drie knoppen onder dit vak: voorbeelden, sponsor of Mentor.`;
   }
-  return `${prefix}Vandaag verstuur je ${aantal} uitnodigingen aan mensen uit je lijst. Geen vaste formule, wel jouw stem op basis van de vier bouwstenen die je op dag 4 hebt geleerd.\n\nDE VIER BOUWSTENEN VAN EEN STERKE WEBSHOP-UITNODIGING\n\n1. HAAKJE. Persoonlijk en kort, niet generiek. Drie varianten om uit te kiezen:\n   - Eigen WHY ("Ik ben [beroep] en ik wil graag [doel uit eigen WHY]")\n   - Prospect-WHY ("Jij gaf vorige keer aan dat je [hun WHY]")\n   - Compliment ("Wat jij hebt opgebouwd met [hun bedrijf/track-record] vind ik echt sterk")\n\n2. MANIER-GEVONDEN-ZIN. De centrale ELEVA-zin: "Ik heb een manier gevonden om online inkomsten op te bouwen zonder investeringen en zonder risico, via een gratis webshop met holistische wellness-producten."\n\n3. HOE-HET-WERKT. Drie korte zinnetjes (niet meer):\n   - Zelf bestellen wat je toch al gebruikt\n   - Alle logistiek geregeld, geen voorraad of klantenservice\n   - Gratis training en AI-systeem voor support\n\n4. PERMISSIE-VRAAG. "Mag ik je kort laten zien hoe het werkt?" of "Sta je open om te zien hoe?". Vrijblijvend: "Helemaal vrijblijvend, als het niets voor je is is dat ook prima."\n\nWAAR HAAL JE INSPIRATIE? In /scripts staan 14 kant-en-klare webshop-uitnodigingen (eigen WHY / eigen ervaring / prospect-WHY / koud-of-oud-contact / Serious Business Builder). Niet woordelijk overnemen, wel als startpunt om in jouw stem te zetten.\n\nMIX WARM EN LAUW. Pak ${aantal} mensen: een paar warme (bekenden, familie, vrienden) en een paar lauwe (telefoon-contacten of social-vrienden waar je al een tijd niet mee sprak). Verschillende stijlen, verschillende haakjes per type.\n\nBIJ EEN JA, deel de link en vertel de spraakfunctie: "Ik heb [naam] uitgenodigd en de link gestuurd". Daarmee verschuift de prospect naar fase 'uitgenodigd' in je namenlijst.\n\nHULP NODIG? Drie knoppen onder dit vak:\n- VOORBEELDEN BEKIJKEN: open /scripts in de uitnodigingen-sectie\n- MET JE SPONSOR: open WhatsApp met een vraag om hulp\n- MET DE MENTOR: laat de Mentor een uitnodiging op maat schrijven in jouw stem voor een specifieke prospect`;
+  return `${prefix}Vandaag verstuur je ${aantal} uitnodigingen aan mensen uit je lijst. Geen vaste formule, wel jouw stem op basis van de vier bouwstenen die je op dag 4 hebt geleerd.\n\nDE VIER BOUWSTENEN VAN EEN STERKE WEBSHOP-UITNODIGING\n\n1. HAAKJE. Persoonlijk en kort, niet generiek. Drie varianten om uit te kiezen:\n   - Eigen WHY ("Ik ben [beroep] en ik wil graag [doel uit eigen WHY]")\n   - Prospect-WHY ("Jij gaf vorige keer aan dat je [hun WHY]")\n   - Compliment ("Wat jij hebt opgebouwd met [hun bedrijf/track-record] vind ik echt sterk")\n\n2. MANIER-GEVONDEN-ZIN. De centrale ELEVA-zin: "Ik heb een manier gevonden om online inkomsten op te bouwen zonder investeringen en zonder risico, via een gratis webshop met holistische wellness-producten."\n\n3. HOE-HET-WERKT. Drie korte zinnetjes (niet meer):\n   - Zelf bestellen wat je toch al gebruikt\n   - Alle logistiek geregeld, geen voorraad of klantenservice\n   - Gratis training en AI-systeem voor support\n\n4. PERMISSIE-VRAAG. "Mag ik je kort laten zien hoe het werkt?" of "Sta je open om te zien hoe?". Vrijblijvend: "Helemaal vrijblijvend, als het niets voor je is is dat ook prima."\n\nWAAR HAAL JE INSPIRATIE? In /scripts staan 14 kant-en-klare webshop-uitnodigingen (eigen WHY / eigen ervaring / prospect-WHY / koud-of-oud-contact / Serious Business Builder). Niet woordelijk overnemen, wel als startpunt om in jouw stem te zetten.\n\nMIX WARM EN LAUW. Pak ${aantal} mensen: een paar warme (bekenden, familie, vrienden) en een paar lauwe (telefoon-contacten of social-vrienden waar je al een tijd niet mee sprak). Verschillende stijlen, verschillende haakjes per type.\n\nBIJ EEN JA, deel de link en vertel de spraakfunctie: "Ik heb [naam] uitgenodigd en de link gestuurd". Daarmee verschuift de prospect naar fase 'uitgenodigd' in je namenlijst.\n\nDRIE KLIKBARE HULP-PADEN ONDER DIT VAK\n\n• VOORBEELDEN BEKIJKEN: opent /scripts in de Uitnodigingen-categorie, met 14 kant-en-klare webshop-uitnodig-scripts.\n\n• MET JE SPONSOR: opent WhatsApp met een vraag aan je sponsor, eerste reactie binnen een paar minuten.\n\n• MET DE MENTOR: opent een nieuw Mentor-gesprek met onderwerp 'uitnodiging'. De Mentor schrijft een uitnodiging op maat in jouw stem voor een specifieke prospect.`;
 }
 
 // ============================================================
@@ -145,9 +161,9 @@ export function eersteBerichtUitleg(
 ): string {
   const prefix = opties?.extraIntro ? `${opties.extraIntro}\n\n` : "";
   if (opties?.compact) {
-    return `${prefix}Stuur ${aantal} mensen uit je lijst een persoonlijk eerste bericht. Geen pitch, geen catch-up. Wel een opener: een menselijke specifieke vraag waar je oprecht nieuwsgierig naar bent.\n\nKORTE VOORBEELDEN:\n• "Hé Linda, moest aan je denken na onze koffie laatst. Hoe is het nu met die nieuwe rol?"\n• "Hé Pieter, ik zag je verhaal over je wandeling in Limburg. Welke route was dat?"\n• "Hé Anne, hoe lang is het ook alweer geleden? Hoe is het bij jou?"\n\nMEER OPENERS NODIG? In /scripts vind je kant-en-klare openers per situatie (warm netwerk, koud/oud contact, social-story-reactie, lead-magnet-binnenkomer). Niet woordelijk overnemen, wel als startpunt om in jouw stem te zetten.\n\nDe Mentor-knop hieronder helpt je een opener te maken die past bij EEN SPECIFIEKE prospect (de Mentor kent de FORM-context als je die hebt vastgelegd).\n\nNa versturen: spraakfunctie "Ik heb een gesprek gestart met [naam]" → fase 'in gesprek'.`;
+    return `${prefix}Stuur ${aantal} mensen uit je lijst een persoonlijk eerste bericht. Geen pitch, geen catch-up. Wel een opener: een menselijke specifieke vraag waar je oprecht nieuwsgierig naar bent.\n\nKORTE VOORBEELDEN:\n• "Hé Linda, moest aan je denken na onze koffie laatst. Hoe is het nu met die nieuwe rol?"\n• "Hé Pieter, ik zag je verhaal over je wandeling in Limburg. Welke route was dat?"\n• "Hé Anne, hoe lang is het ook alweer geleden? Hoe is het bij jou?"\n\nMEER OPENERS NODIG? Klik onderin op de knop 'Voorbeeld-openers' om de opener-bibliotheek in /scripts te openen (categorie 'Openers', met varianten per situatie). Niet woordelijk overnemen, wel als startpunt om in jouw stem te zetten.\n\nDe Mentor-knop hieronder helpt je een opener te maken die past bij EEN SPECIFIEKE prospect (de Mentor kent de FORM-context als je die hebt vastgelegd).\n\nNa versturen: spraakfunctie "Ik heb een gesprek gestart met [naam]" → fase 'in gesprek'.`;
   }
-  return `${prefix}Pak ${aantal} mensen uit je lijst en stuur ze 1-op-1 een persoonlijk bericht.\n\n📱 HOE JE DIRECT IN WHATSAPP, INSTAGRAM OF FACEBOOK BELANDT\n\nIn je namenlijst staan naast elke prospect kleine icoontjes (WhatsApp, Instagram, Facebook). Eén klik op het juiste icoon en de juiste app opent met die persoon, geen kopiëren-en-plakken, geen zoeken. Vereiste: telefoonnummer of social-handle moet ingevuld zijn op de kaart. Heb je dat niet? Klik op de prospect, vul het in, en daarna verschijnen de icoontjes vanzelf op zowel de lijst als de detail-kaart.\n\nWAT IS EEN OPENER, EN WAT IS HET NIET?\n\nEen opener is NIET:\n• Een pitch ("ik heb iets geweldigs voor je")\n• Een casual koffie-catch-up zonder doel ("hoe is het ouwe?")\n• Een verkapt verkoop-bericht ("ik dacht aan jou ivm m'n nieuwe ding")\n\nEen opener IS:\n• Een menselijke specifieke vraag waar je OPRECHT nieuwsgierig naar bent\n• Een verwijzing naar iets dat ZIJ hebben gedeeld (post, verhaal, gesprek)\n• Een herinnering uit jullie gezamenlijke verleden waarmee je rapport opent\n• Kort en concreet (één tot twee zinnen, niet meer)\n\nDoel: een gesprek openen dat binnen 1 tot 3 berichten leidt tot een uitnodiging voor een kijkmoment, wanneer dat natuurlijk past. Niet weken koffieklokken voordat je 'iets vertelt', want dat voelt voor de prospect als een verborgen agenda.\n\nVOORBEELD-OPENERS PER SITUATIE\n\n1. WARM CONTACT, met gedeelde geschiedenis:\n   "Hé Linda, moest aan je denken na onze koffie laatst. Hoe is het nu met die nieuwe rol?"\n\n2. OUD CONTACT, langere tijd niet gesproken:\n   "Hé Anne, hoe lang is het ook alweer geleden dat we elkaar hebben gesproken? Hoe is het bij jou?"\n\n3. SOCIAL-STORY-REACTIE, na hun post of story:\n   "Hé Pieter, ik zag je verhaal over je wandeling in Limburg. Welke route was dat?"\n\n4. GEDEELDE INTERESSE OF HOBBY:\n   "Hé Marieke, zag je net op het sportveld. Wat goed dat je weer aan het trainen bent! Hoe gaat dat voor je?"\n\n5. WAARDERING UITSPREKEN:\n   "Hé Jeroen, jouw bericht over [onderwerp] bleef me bezighouden. Hoe sta je er nu in?"\n\nMEER OPENERS NODIG? In /scripts vind je verschillende opener-templates per situatie (warm netwerk, koud/oud contact, social-story-reactie, lead-magnet-binnenkomer, Serious Business Builder-aanspreek). Niet woordelijk overnemen, wel als startpunt om in jouw stem te zetten.\n\nDe drie hulp-knoppen onder dit vak helpen je:\n• VOORBEELDEN BEKIJKEN: open /scripts in de uitnodigingen-sectie\n• MET JE SPONSOR: korte WhatsApp met "Hoe zou jij dit eerste bericht openen voor [naam], context [bv. oude collega]?"\n• MET DE MENTOR: laat de Mentor een opener op maat schrijven voor een specifieke prospect (de Mentor kent de FORM-context als je die hebt vastgelegd op de prospect-kaart)\n\nNa het versturen, vertel het aan de spraakfunctie: "Ik heb een gesprek gestart met [naam]". De prospect schuift dan automatisch van 'prospect' naar 'in gesprek' in je pijplijn.\n\nALS IEMAND WARM TERUGKOMT vandaag, hoef je niet te wachten tot morgen. Reageer kort, peil wat ze nu bezighoudt, en bewaar de uitnodig-stap voor wanneer dat natuurlijk past, maar het móét niet weken wachten.`;
+  return `${prefix}Pak ${aantal} mensen uit je lijst en stuur ze 1-op-1 een persoonlijk bericht.\n\n📱 HOE JE DIRECT IN WHATSAPP, INSTAGRAM OF FACEBOOK BELANDT\n\nIn je namenlijst staan naast elke prospect kleine icoontjes (WhatsApp, Instagram, Facebook). Eén klik op het juiste icoon en de juiste app opent met die persoon, geen kopiëren-en-plakken, geen zoeken. Vereiste: telefoonnummer of social-handle moet ingevuld zijn op de kaart. Heb je dat niet? Klik op de prospect, vul het in, en daarna verschijnen de icoontjes vanzelf op zowel de lijst als de detail-kaart.\n\nWAT IS EEN OPENER, EN WAT IS HET NIET?\n\nEen opener is NIET:\n• Een pitch ("ik heb iets geweldigs voor je")\n• Een casual koffie-catch-up zonder doel ("hoe is het ouwe?")\n• Een verkapt verkoop-bericht ("ik dacht aan jou ivm m'n nieuwe ding")\n\nEen opener IS:\n• Een menselijke specifieke vraag waar je OPRECHT nieuwsgierig naar bent\n• Een verwijzing naar iets dat ZIJ hebben gedeeld (post, verhaal, gesprek)\n• Een herinnering uit jullie gezamenlijke verleden waarmee je rapport opent\n• Kort en concreet (één tot twee zinnen, niet meer)\n\nDoel: een gesprek openen dat binnen 1 tot 3 berichten leidt tot een uitnodiging voor een kijkmoment, wanneer dat natuurlijk past. Niet weken koffieklokken voordat je 'iets vertelt', want dat voelt voor de prospect als een verborgen agenda.\n\nVOORBEELD-OPENERS PER SITUATIE\n\n1. WARM CONTACT, met gedeelde geschiedenis:\n   "Hé Linda, moest aan je denken na onze koffie laatst. Hoe is het nu met die nieuwe rol?"\n\n2. OUD CONTACT, langere tijd niet gesproken:\n   "Hé Anne, hoe lang is het ook alweer geleden dat we elkaar hebben gesproken? Hoe is het bij jou?"\n\n3. SOCIAL-STORY-REACTIE, na hun post of story:\n   "Hé Pieter, ik zag je verhaal over je wandeling in Limburg. Welke route was dat?"\n\n4. GEDEELDE INTERESSE OF HOBBY:\n   "Hé Marieke, zag je net op het sportveld. Wat goed dat je weer aan het trainen bent! Hoe gaat dat voor je?"\n\n5. WAARDERING UITSPREKEN:\n   "Hé Jeroen, jouw bericht over [onderwerp] bleef me bezighouden. Hoe sta je er nu in?"\n\nDRIE KLIKBARE HULP-PADEN ONDER DIT VAK\n\n• VOORBEELD-OPENERS: opent /scripts in de Openers-categorie, met verschillende templates per situatie (warm netwerk, koud/oud contact, social-story-reactie, lead-magnet-binnenkomer, hobby/gedeelde-interesse). Niet woordelijk overnemen, wel als startpunt om in jouw stem te zetten.\n\n• MET JE SPONSOR: opent WhatsApp met een kant-en-klaar bericht aan je sponsor ("Hoe zou jij deze opener schrijven voor [naam]?"). Eén klik, jij vult de details in.\n\n• MET DE MENTOR: opent een nieuw Mentor-gesprek met onderwerp 'opener'. De Mentor weet dat je een eerste-bericht-opener wilt (geen uitnodiging) en kan er een op maat schrijven voor een specifieke prospect (de Mentor kent de FORM-context als je die hebt vastgelegd op de prospect-kaart).\n\nNa het versturen, vertel het aan de spraakfunctie: "Ik heb een gesprek gestart met [naam]". De prospect schuift dan automatisch van 'prospect' naar 'in gesprek' in je pijplijn.\n\nALS IEMAND WARM TERUGKOMT vandaag, hoef je niet te wachten tot morgen. Reageer kort, peil wat ze nu bezighoudt, en bewaar de uitnodig-stap voor wanneer dat natuurlijk past, maar het móét niet weken wachten.`;
 }
 
 // ============================================================
@@ -258,12 +274,7 @@ function bouwDag3VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- Stap D: stories + reageren op anderen ---
-    {
-      id: "dag3-stories",
-      label: "📱 1 tot 3 stories + reageren op andermans stories",
-      uitleg: STORIES_UITLEG,
-      verplicht: true,
-    },
+    storiesStap(3),
 
     // --- Teams-administratie (eenmalig, niet tempo-aware) ---
     {
@@ -352,12 +363,7 @@ function bouwDag4VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- Stories + reageren ---
-    {
-      id: "dag4-stories",
-      label: "📱 1 tot 3 stories + reageren op andermans stories",
-      uitleg: STORIES_UITLEG,
-      verplicht: true,
-    },
+    storiesStap(4),
 
     // --- Bestellinks koppelen (start van meerdere dagen) ---
     {
@@ -442,12 +448,7 @@ function bouwDag5VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- Stap E: stories ---
-    {
-      id: "dag5-stories",
-      label: "📱 1 tot 3 stories + reageren op andermans stories",
-      uitleg: STORIES_UITLEG,
-      verplicht: true,
-    },
+    storiesStap(5),
 
     // --- Stap F: Feel-Felt-Found-roleplay (dag-specifiek) ---
     {
@@ -524,12 +525,7 @@ function bouwDag6VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- Stap E: stories ---
-    {
-      id: "dag6-stories",
-      label: "📱 1 tot 3 stories + reageren op andermans stories",
-      uitleg: STORIES_UITLEG,
-      verplicht: true,
-    },
+    storiesStap(6),
 
     // --- Stap F: sponsor-tip (dag-specifiek) ---
     {
@@ -629,12 +625,7 @@ function bouwDag7VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- Stap 6: stories ---
-    {
-      id: "dag7-stories",
-      label: "📱 1 tot 3 stories + reageren op andermans stories",
-      uitleg: STORIES_UITLEG,
-      verplicht: true,
-    },
+    storiesStap(7),
 
     // --- LAATSTE STAP: sponsor-call (15 min, langer dan checkin) ---
     {
@@ -705,12 +696,7 @@ function bouwDag8VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- Stap E: stories ---
-    {
-      id: "dag8-stories",
-      label: "📱 1 tot 3 stories + reageren op andermans stories",
-      uitleg: STORIES_UITLEG,
-      verplicht: true,
-    },
+    storiesStap(8),
 
     // --- LAATSTE STAP: sponsor-checkin ---
     {
@@ -775,12 +761,7 @@ function bouwDag9VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- Stap E: stories ---
-    {
-      id: "dag9-stories",
-      label: "📱 1 tot 3 stories + reageren op andermans stories",
-      uitleg: STORIES_UITLEG,
-      verplicht: true,
-    },
+    storiesStap(9),
 
     // --- LAATSTE STAP: sponsor-checkin ---
     {
@@ -846,12 +827,7 @@ function bouwDag10VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- Stap E: stories ---
-    {
-      id: "dag10-stories",
-      label: "📱 1 tot 3 stories + reageren op andermans stories",
-      uitleg: STORIES_UITLEG,
-      verplicht: true,
-    },
+    storiesStap(10),
 
     // --- Stap F: 3-weg-gesprek starten (dag-specifiek, de DOE-stap) ---
     {
@@ -926,12 +902,7 @@ function bouwDag11VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
 
     // --- Stap E: stories ---
-    {
-      id: "dag11-stories",
-      label: "📱 1 tot 3 stories + reageren op andermans stories",
-      uitleg: STORIES_UITLEG,
-      verplicht: true,
-    },
+    storiesStap(11),
 
     // --- Stap F: pipeline-check + leerstof (dag-specifiek) ---
     {
@@ -1000,12 +971,7 @@ export function standaardABCDEstappen(
       verplicht: true,
       actieRoute: "/namenlijst",
     },
-    {
-      id: `dag${dagNummer}-stories`,
-      label: "📱 1 tot 3 stories + reageren op andermans stories",
-      uitleg: STORIES_UITLEG,
-      verplicht: true,
-    },
+    storiesStap(dagNummer),
   ];
 }
 
@@ -1389,12 +1355,7 @@ function bouwDag21VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
       verplicht: true,
       actieRoute: "/namenlijst",
     },
-    {
-      id: "dag21-stories",
-      label: "📱 1 tot 3 stories + reageren op andermans stories",
-      uitleg: STORIES_UITLEG,
-      verplicht: true,
-    },
+    storiesStap(21),
     {
       id: "dag21-doel-40",
       label: "🎯 Stel 1 concreet doel voor de volgende 40 dagen",

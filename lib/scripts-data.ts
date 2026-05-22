@@ -72,42 +72,79 @@ Sta je open om er kort naar te kijken? Helemaal vrijblijvend, als het niets voor
   },
 
   // ─────────────────────────────────────────────
-  // GESPREKS-OPENERS voor de in_gesprek-fase. Vier ingangen
-  // (warm/koud/social/lead-magnet) plus een bedrijfs-variant van
-  // lead-magnet. Voor wanneer je een gesprek opent of warmer maakt
-  // zonder al uit te nodigen voor iets specifieks.
+  // OPENERS voor het EERSTE BERICHT, de fase 'in gesprek'. Een opener
+  // is een natuurlijke specifieke vraag die een gesprek opent zonder
+  // pitch, zonder catch-up zonder doel. Doel: binnen 1 tot 3 berichten
+  // leiden naar een uitnodiging voor een kijkmoment, wanneer dat
+  // natuurlijk past. Een opener is NIET hetzelfde als een uitnodiging.
+  // Zie de "Uitnodigingen"-categorie voor de webshop-uitnodig-scripts.
   // ─────────────────────────────────────────────
   {
-    titel: "Warme start",
-    categorie: "uitnodiging" as const,
+    titel: "Warme start (algemeen)",
+    categorie: "opener" as const,
     pipeline_fase: "in_gesprek" as const,
     tags: ["warm", "opener"],
     inhoud: `Hoi [Voornaam], hoe gaat het met je de laatste tijd? En je [werk/gezin/hobby's], hoe loopt dat? 🙂`,
   },
   {
-    titel: "Koude start",
-    categorie: "uitnodiging" as const,
+    titel: "Warm, na gedeelde geschiedenis",
+    categorie: "opener" as const,
+    pipeline_fase: "in_gesprek" as const,
+    tags: ["warm", "opener", "geschiedenis"],
+    inhoud: `Hé [Voornaam], moest aan je denken na onze [koffie/wandeling/laatste gesprek]. Hoe is het nu met die [nieuwe rol / verhuizing / [onderwerp]]?`,
+  },
+  {
+    titel: "Oud contact, langere tijd niet gesproken",
+    categorie: "opener" as const,
+    pipeline_fase: "in_gesprek" as const,
+    tags: ["oud", "opener", "heractiveren"],
+    inhoud: `Hoi [Voornaam], hoe lang is het ook alweer geleden dat we elkaar hebben gesproken? Hoe is het bij jou? 🙂`,
+  },
+  {
+    titel: "Koud contact, eerste keer écht praten",
+    categorie: "opener" as const,
     pipeline_fase: "in_gesprek" as const,
     tags: ["koud", "opener", "heractiveren"],
     inhoud: `Hoi [Voornaam], we zijn al een tijdje verbonden maar hebben nog nooit echt gepraat. Dat wilde ik veranderen 🙂 Hoe gaat het met je?`,
   },
   {
-    titel: "Via social media",
-    categorie: "uitnodiging" as const,
+    titel: "Reactie op iemands story of post",
+    categorie: "opener" as const,
     pipeline_fase: "in_gesprek" as const,
     tags: ["social", "opener", "story-reactie"],
+    inhoud: `Hé [Voornaam], ik zag je [verhaal / post] over [onderwerp]. [Specifieke nieuwsgierige vraag erbij, bv. "Welke route was dat?" of "Hoe ging dat voor je?"]`,
+  },
+  {
+    titel: "Reactie op iemands story (lifestyle / sport / hobby)",
+    categorie: "opener" as const,
+    pipeline_fase: "in_gesprek" as const,
+    tags: ["social", "opener", "hobby"],
     inhoud: `Hé [Voornaam]! Leuk dat je reageerde op mijn story 😊 Hoe is het met je de laatste tijd?`,
   },
   {
+    titel: "Gedeelde interesse of hobby",
+    categorie: "opener" as const,
+    pipeline_fase: "in_gesprek" as const,
+    tags: ["hobby", "opener", "warm"],
+    inhoud: `Hé [Voornaam], zag je net op het [sportveld / yogales / koffietent]. Wat goed dat je weer [aan het trainen / actief] bent! Hoe gaat dat voor je?`,
+  },
+  {
+    titel: "Waardering uitspreken voor iets dat ze deelden",
+    categorie: "opener" as const,
+    pipeline_fase: "in_gesprek" as const,
+    tags: ["warm", "opener", "waardering"],
+    inhoud: `Hé [Voornaam], jouw bericht over [onderwerp] bleef me bezighouden. Hoe sta je er nu in?`,
+  },
+  {
     titel: "Via lead magnet (product-focus)",
-    categorie: "uitnodiging" as const,
+    categorie: "opener" as const,
     pipeline_fase: "in_gesprek" as const,
     tags: ["lead-magnet", "opener", "product"],
     inhoud: `Hoi [Voornaam], leuk dat je [Titel Lead Magnet] hebt gedownload 🙂 Ik heb het gemaakt voor mensen die met [doel of vraag] bezig zijn. Uit nieuwsgierigheid: wat sprak je het meeste aan?`,
   },
   {
     titel: "Via lead magnet (bedrijf-focus)",
-    categorie: "uitnodiging" as const,
+    categorie: "opener" as const,
     pipeline_fase: "in_gesprek" as const,
     tags: ["lead-magnet", "opener", "bedrijf"],
     inhoud: `Hoi [Voornaam], leuk dat je [Titel Lead Magnet] hebt gedownload 🙂 Wat sprak je het meeste aan? Ben je op dit moment bezig met [doel of vraag]?`,

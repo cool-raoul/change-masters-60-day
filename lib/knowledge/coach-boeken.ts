@@ -4,14 +4,16 @@
 // Bronnen: Eric Worre (Go Pro + 90 Day Run) + Fraser Brookes
 // ============================================================
 
-export type VraagType = "dm" | "bezwaar" | "followup" | "closing" | "motivatie" | "accountability" | "social" | "drieweg" | "productadvies" | "algemeen";
+export type VraagType = "dm" | "opener" | "bezwaar" | "followup" | "closing" | "motivatie" | "accountability" | "social" | "drieweg" | "productadvies" | "algemeen";
 
 // Patronen voor specifieke (niet-productadvies) vraagtypen. Apart geplaatst
 // zodat ze hergebruikt kunnen worden voor de "eerste-vraag-sticky"-logica
-// hieronder. Volgorde van checks blijft belangrijk: drieweg vóór dm
-// (anders pakt "stuur dit groepje-bericht" verkeerd dm ipv drieweg).
+// hieronder. Volgorde van checks belangrijk: drieweg vóór opener vóór dm
+// (anders pakt "stuur dit groepje-bericht" verkeerd dm ipv drieweg, en
+// "opener voor X" verkeerd dm ipv opener).
 const SPECIFIEKE_PATRONEN: Array<{ type: VraagType; regex: RegExp }> = [
   { type: "drieweg",        regex: /\b(3.?weg|drieweg|groepje|aanmaken|sponsor koppel|introduceer|edif\w*|edification|aankondig|presentatie.*groep|groep.*presentatie|sponsor (laten )?(presenteren|introduce|opvoeren))\b/ },
+  { type: "opener",         regex: /\b(opener|eerste bericht|gesprek openen|gesprek starten|warm[- ]?starten|hoe begin ik|hoe start ik|hoe open ik|in.gesprek.brengen)\b/ },
   { type: "dm",             regex: /\b(dm|bericht|schrij|tekst|uitnodig|whatsapp|instagram|sturen)\b/ },
   { type: "bezwaar",        regex: /\b(bezwaar|objection|geen tijd|nadenken|niet van sales|ken te weinig|geen geld|partner overleg|twijfel)\b/ },
   { type: "followup",       regex: /\b(follow.?up|opvolg|stilte|geen reactie|niet gereageerd|terugkom)\b/ },

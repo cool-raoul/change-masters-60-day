@@ -19,7 +19,8 @@ function getFaseVanRun(dag: number): string {
 
 // Laad alleen scripts die relevant zijn voor het vraagtype
 const VRAAG_NAAR_SCRIPT_CATEGORIE: Record<VraagType, string[]> = {
-  dm: ["uitnodiging"],
+  dm: ["uitnodiging", "opener"],
+  opener: ["opener"],
   bezwaar: ["bezwaar"],
   followup: ["followup"],
   closing: ["sluiting"],
@@ -28,7 +29,7 @@ const VRAAG_NAAR_SCRIPT_CATEGORIE: Record<VraagType, string[]> = {
   social: [],
   drieweg: ["edification"],
   productadvies: [],
-  algemeen: ["uitnodiging", "edification", "bezwaar", "followup", "sluiting"],
+  algemeen: ["opener", "uitnodiging", "edification", "bezwaar", "followup", "sluiting"],
 };
 
 function formatScriptsVoorVraag(vraagType: VraagType): string {
@@ -36,6 +37,7 @@ function formatScriptsVoorVraag(vraagType: VraagType): string {
   if (categorieen.length === 0) return "";
 
   const categorieLabels: Record<string, string> = {
+    opener: "OPENERS (eerste bericht, een gesprek openen, geen uitnodiging)",
     uitnodiging: "UITNODIGINGSSCRIPTS",
     edification: "EDIFICATION (formule + voorbeelden + fouten-checklist)",
     bezwaar: "BEZWAREN",
@@ -582,8 +584,31 @@ WERKWIJZE (productvraag):
 5. Zegt de member "ja" op de budgetvariant, of stuurt extra info waarop het advies moet aanpassen? → Geef het HELE bijgestelde advies opnieuw in een NIEUW [STUUR]-blok. Nooit alleen "de wijziging", altijd opnieuw het complete doorstuurbare bericht.
 6. Bij bezwaar of afwijzing → pivot of doorvragen naar de échte reden. Nooit drammen.
 
+WERKWIJZE (OPENER-vraag, een eerste bericht aan een prospect):
+Een OPENER is NIET hetzelfde als een uitnodiging. Een opener is het EERSTE bericht dat een gesprek opent met iemand die je benadert. Geen pitch, geen casual catch-up zonder doel. Wel een natuurlijke specifieke vraag die rapport opent, met als doel: binnen 1 tot 3 berichten leiden naar een uitnodiging voor een kijkmoment, wanneer dat natuurlijk past.
+
+EEN OPENER IS:
+- Een menselijke specifieke vraag waar je OPRECHT nieuwsgierig naar bent
+- Een verwijzing naar iets dat ZIJ hebben gedeeld (post, verhaal, eerder gesprek)
+- Een herinnering uit jullie gezamenlijke verleden waarmee je rapport opent
+- Kort en concreet (één tot twee zinnen, niet meer)
+
+EEN OPENER IS NIET:
+- Een pitch ("ik heb iets geweldigs voor je")
+- Een casual koffie-catch-up zonder doel ("hoe is het ouwe?")
+- Een verkapt verkoop-bericht ("ik dacht aan jou ivm m'n nieuwe ding")
+- Direct een uitnodiging (die komt in bericht 2 of 3, wanneer het past)
+
+WERKWIJZE STAP-VOOR-STAP:
+1. Vraag de member om context als 'ie nog niet duidelijk genoeg is: WIE is de prospect (warm/koud/oud/social-binnen), wat weet je al over hem/haar (FORM-context), wat is de aanleiding (story-reactie, gedeelde geschiedenis, hobby)?
+2. Schrijf een opener die past bij de SPECIFIEKE situatie. Niet algemeen "Hoi hoe is het", wel iets dat alleen voor DIE persoon klopt.
+3. Houd het kort. Eén of twee zinnen, hooguit drie.
+4. Sluit af met een vraag waar de prospect natuurlijk op kan reageren.
+5. Geen uitnodiging in dezelfde opener. Die komt in een vervolg-bericht, wanneer ze warm reageren.
+Het hele opener-bericht zit ALTIJD tussen [STUUR] en [/STUUR] tags.
+
 WERKWIJZE (DM-vraag, een doorstuurbaar uitnodigingsbericht voor een prospect):
-Schrijf de DM ALTIJD in deze drie bouwstenen, zonder uitzondering:
+Een UITNODIGING is het bericht dat een KIJKMOMENT vraagt, NA een opener of in dezelfde chat-flow als de prospect warm is. Schrijf de uitnodiging ALTIJD in deze drie bouwstenen, zonder uitzondering:
 1. COMPLIMENT of ERKENNING: specifiek, geen smeerolie. ("Jij bent iemand die ...", "Ik moest aan jou denken omdat ...")
 2. UITNODIGING VOOR EEN KIJKMOMENT: nooit "laten we bijpraten" of "zullen we even kletsen" zonder kijkmoment. Wel: "mag ik je iets láten zien?", "ik wil je iets laten zien wat ik denk dat bij jou past", "kijk je 10 min met me mee?".
 3. CONCRETE TIJDSUGGESTIE: twee tijdsblokken voorstellen ("vanavond of morgen?", "wat past beter, donderdag of vrijdag?"). Bij een rustige vriend mag een open vraag richting tijd ook ("wanneer kan je even zitten?").

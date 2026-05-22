@@ -613,13 +613,23 @@ function VandaagFlowInner({
               />
             )}
 
-            {/* Hulp-knoppen voor uitnodig-taken: voorbeelden, sponsor,
-                Mentor. Trigger op uitnodigHelpKnoppen=true OF automatisch
-                als de taak-id of label naar uitnodigen verwijst. */}
+            {/* Hulp-knoppen voor uitnodig- en opener-taken: voorbeelden,
+                sponsor, Mentor. Trigger op uitnodigHelpKnoppen=true OF
+                automatisch als de taak-id of label naar uitnodigen of een
+                opener verwijst. Variant bepaald door taak-id: -eerste-
+                berichten = opener, anders uitnodiging. */}
             {(huidigeTaak.uitnodigHelpKnoppen ||
               /invite|uitnodig/i.test(huidigeTaak.id) ||
-              /uitnodig/i.test(huidigeTaak.label)) && (
-              <UitnodigHelpKnoppen />
+              /uitnodig/i.test(huidigeTaak.label) ||
+              /eerste-berichten|opener/i.test(huidigeTaak.id)) && (
+              <UitnodigHelpKnoppen
+                variant={
+                  /eerste-berichten|opener/i.test(huidigeTaak.id) &&
+                  !/uitnodig/i.test(huidigeTaak.id)
+                    ? "opener"
+                    : "uitnodiging"
+                }
+              />
             )}
 
             {/* Social-platform-knoppen voor taken die naar Facebook /

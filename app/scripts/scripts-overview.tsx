@@ -39,6 +39,7 @@ export function ScriptsOverview({
 
   const CATEGORIE_LABELS: Record<string, string> = {
     alle: v("scripts.alle"),
+    opener: "Openers",
     uitnodiging: v("scripts.uitnodiging"),
     edification: v("scripts.edification"),
     bezwaar: v("scripts.bezwaar"),
@@ -165,6 +166,7 @@ function ScriptKaart({
   const [bezig, setBezig] = useState(false);
 
   const CATEGORIE_BADGE: Record<string, string> = {
+    opener: "bg-[#1A2A2A] text-[#4ADBC9]",
     uitnodiging: "bg-[#1A2A3A] text-[#4A9EDB]",
     edification: "bg-[#2A2438] text-[#C9A84C]",
     bezwaar: "bg-[#2A1A1A] text-[#DB6A4A]",

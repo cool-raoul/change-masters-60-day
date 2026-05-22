@@ -5,19 +5,23 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 
 // ============================================================
-// UitnodigHelpKnoppen, drie laagdrempelige paden voor uitnodig-taken.
+// UitnodigHelpKnoppen, drie laagdrempelige paden voor uitnodig- en
+// opener-taken.
 //
 // Renderd onder de taak-uitleg in vandaag-flow.tsx als de taak
 // `uitnodigHelpKnoppen: true` heeft (of automatisch via id-detectie).
 //
-// Drie knoppen:
-//   1. Voorbeelden bekijken (naar /scripts?cat=uitnodiging direct)
-//   2. Met je sponsor (opent WhatsApp met bericht aan sponsor)
-//   3. Met de Mentor (naar /coach met onderwerp-prefill voor uitnodiging)
+// Drie knoppen, context-bepaald via `variant` prop:
+//   - variant="uitnodiging" (default): naar /scripts?cat=uitnodiging,
+//     sponsor-bericht over uitnodigingen, Mentor-onderwerp=uitnodiging
+//   - variant="opener": naar /scripts?cat=opener, sponsor-bericht over
+//     openers, Mentor-onderwerp=opener
 //
 // Voor starters in week 1-2 die elke dag opnieuw moeten bedenken hoe
-// een uitnodiging eruitziet. Drie paden, altijd zichtbaar.
+// een uitnodiging of opener eruitziet. Drie paden, altijd zichtbaar.
 // ============================================================
+
+export type HelpVariant = "uitnodiging" | "opener";
 
 type SponsorInfo = {
   voornaam: string;
@@ -39,8 +43,13 @@ function bouwWhatsAppLink(
   return `https://wa.me/${nummer}?text=${encodeURIComponent(bericht)}`;
 }
 
-export function UitnodigHelpKnoppen() {
+export function UitnodigHelpKnoppen({
+  variant = "uitnodiging",
+}: {
+  variant?: HelpVariant;
+}) {
   const [sponsor, setSponsor] = useState<SponsorInfo | null>(null);
+  const isOpener = variant === "opener";
 
   useEffect(() => {
     let actief = true;
@@ -81,7 +90,9 @@ export function UitnodigHelpKnoppen() {
   }, []);
 
   const sponsorBericht = sponsor
-    ? `Hoi${sponsor.voornaam ? " " + sponsor.voornaam : ""}! Ik moet vandaag een paar uitnodigingen versturen. Mag ik je even bellen of appen om er samen één op te stellen?`
+    ? isOpener
+      ? `Hoi${sponsor.voornaam ? " " + sponsor.voornaam : ""}! Ik moet vandaag een paar openers (eerste berichten) versturen aan mensen uit mijn lijst. Mag ik je even bellen of appen om er samen één op te stellen voor een specifieke prospect?`
+      : `Hoi${sponsor.voornaam ? " " + sponsor.voornaam : ""}! Ik moet vandaag een paar uitnodigingen versturen. Mag ik je even bellen of appen om er samen één op te stellen?`
     : "";
   // Met telefoonnummer: directe wa.me-link met nummer (opent direct
   // het juiste gesprek). Zonder telefoonnummer: wa.me/?text=... opent
@@ -90,18 +101,29 @@ export function UitnodigHelpKnoppen() {
   const sponsorLink = bouwWhatsAppLink(sponsor?.telefoon ?? null, sponsorBericht)
     ?? `https://wa.me/?text=${encodeURIComponent(sponsorBericht)}`;
 
+  const scriptsLink = isOpener
+    ? "/scripts?cat=opener"
+    : "/scripts?cat=uitnodiging";
+  const mentorLink = isOpener
+    ? "/coach?onderwerp=opener&prefill=Help+me+een+opener+schrijven+voor+een+specifieke+prospect"
+    : "/coach?onderwerp=uitnodiging&prefill=Help+me+een+uitnodiging+schrijven";
+  const titel = isOpener
+    ? "✨ Hulp nodig bij je opener?"
+    : "✨ Hulp nodig bij je uitnodiging?";
+  const voorbeeldenLabel = isOpener ? "Voorbeeld-openers" : "Voorbeelden bekijken";
+
   return (
     <div className="rounded-lg border border-cm-gold/30 bg-cm-gold/5 px-4 py-3 space-y-3">
       <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
-        ✨ Hulp nodig bij je uitnodiging?
+        {titel}
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
         <Link
-          href="/scripts?cat=uitnodiging"
+          href={scriptsLink}
           className="flex flex-col items-center justify-center gap-1 px-3 py-3 rounded-lg border border-cm-gold/30 bg-cm-surface-2 hover:bg-cm-surface text-cm-white text-xs text-center transition-colors"
         >
           <span className="text-lg">📝</span>
-          <span className="font-semibold">Voorbeelden bekijken</span>
+          <span className="font-semibold">{voorbeeldenLabel}</span>
           <span className="opacity-60 text-[11px]">Snelle inspiratie</span>
         </Link>
         {/* Eén variant: altijd WhatsApp direct openen. Met telefoon →
@@ -118,7 +140,7 @@ export function UitnodigHelpKnoppen() {
           <span className="opacity-60 text-[11px]">WhatsApp openen</span>
         </a>
         <Link
-          href="/coach?onderwerp=uitnodiging&prefill=Help+me+een+uitnodiging+schrijven"
+          href={mentorLink}
           className="flex flex-col items-center justify-center gap-1 px-3 py-3 rounded-lg border border-cm-gold/30 bg-cm-surface-2 hover:bg-cm-surface text-cm-white text-xs text-center transition-colors"
         >
           <span className="text-lg">🤖</span>

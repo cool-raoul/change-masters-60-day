@@ -3,6 +3,46 @@
 > Verzameld tijdens nacht-bouw 2026-05-22 / 23. Loop door als je terug bent. Antwoorden in deze
 > file noteren of in chat, dan vul ik morgen verder.
 
+## OPENSTAANDE PUNTEN VOOR MORGEN (toegevoegd 2026-05-23 avond)
+
+**Sprint-fixes hebben we afgerond.** Zes verbeterpunten doorgevoerd op Sprint dag 3-21:
+1. "Voeg X namen toe" body op alle dagen (vier bronnen)
+2. Stories met drie onderwerp-richtingen
+3. Momentum-acties jargon uitgelegd (week 1 lang, later kort)
+4. Partner-check label "(nieuwe) partner(s)"
+5. Oude Eric-Worre 4-stappen-formule vervangen door vier bouwstenen + /scripts
+6. "Stuur X mensen eerste bericht (opener)" met body + voorbeelden + /scripts?cat=opener + Mentor
+
+**Plus deze gerelateerde toevoegingen:**
+- Nieuwe /scripts categorie "Opener" (10 opener-templates)
+- UitnodigHelpKnoppen variant prop (opener vs uitnodiging) zodat hulp-knoppen contextueel routen
+- Mentor-prompt: nieuwe sectie WERKWIJZE (OPENER-vraag) + verschil met DM-vraag uitgelegd
+- VraagType uitgebreid met "opener", regex herkent opener-vragen
+- Stories-substeps krijgen actieRoute naar /academy/social-media (klikbaar pijltje)
+
+**DOORTREKKEN NAAR CORE V6 (morgenochtend):**
+
+Deze 6 Sprint-fixes gelden 1-op-1 ook voor Core V6. Bij het oppakken van Core V6 morgenochtend
+meenemen in het stappenplan dat we eerder hadden:
+
+- **Voeg X namen toe**: Core V6 ankerstap-substeps die over naam-toevoegen gaan moeten dezelfde body krijgen
+- **Stories**: Core V6 stap 12 (Stories-ritme + freebie-aankondiging) gebruikt dezelfde drie onderwerp-richtingen + Academy-deeplink
+- **Momentum-acties**: Core V6 afsluit-substeps (momentumRadarStap-equivalent) krijgen dezelfde week-1-lange / later-korte uitleg
+- **Partner-check**: Core V6 afsluit-substeps krijgen "(nieuwe) partner(s)"-label
+- **4-stappen-formule -> vier bouwstenen**: Core V6 stap 4 (webshop-pivot) gebruikt al de vier bouwstenen, maar elke uitnodig-substep moet naar /scripts + Mentor verwijzen
+- **Openers**: Core V6 stap 9 (eerste warme uitnodigingen) en stap 6 (post-reacties) krijgen opener-substeps met /scripts?cat=opener verwijzing + Mentor-helper
+
+**Centrale aanknopingspunten in code:**
+- `namenToevoegenUitleg()`, `eersteBerichtUitleg()`, `uitnodigingenUitleg()`, `storiesStap()`, `momentumRadarStap()`, `partnerCheckStap()` in `lib/playbook/tempo-aware.ts` zijn allemaal HERBRUIKBAAR voor Core V6.
+- Core V6 substeps in `lib/playbook/core-dagen-v6.ts` kunnen dezelfde helpers gebruiken via dependency-injection of door eerst te importeren.
+
+**Daarnaast wachten:**
+- V6 structuur-review (open vragen 1-9 op /core-v6/structuur)
+- 21 ankerstap-watJeLeert + waaromWerktDit-teksten reviewen
+- DB-migraties draaien (6 SQL-bestanden in supabase/migrations/)
+
+---
+
 ## Status nacht-bouw
 
 Wordt bijgewerkt onderweg. Per commit volgt hier een korte regel met wat is gebouwd.
