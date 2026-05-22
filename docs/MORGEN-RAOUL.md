@@ -16,6 +16,7 @@ Wordt bijgewerkt onderweg. Per commit volgt hier een korte regel met wat is gebo
 - Task 7: Freebies datamodel + SQL + types + voorbeeld-toolkit. Vijf PLACEHOLDER-templates in code (energie / slaap / darm / sport / hormonen). TODO-GABY: claim-vrije inhoud per stuk schrijven.
 - Task 8: Klantomgeving datamodel + SQL + types + pulse-momenten. Vijf tijdlijn-pulsmomenten gedefinieerd (dag 0 / 5 / 14 / 28 / 56). Mentor-acties + member-seintjes per pulse staan klaar. Inhoud kan Gaby morgen aanscherpen.
 - Task 9: Core V6 21-ankerstappen-scaffold (lib/playbook/core-dagen-v6.ts). Mechanica + taken concreet, watJeLeert + waaromWerktDit zijn PLACEHOLDER met TODO-GABY-markers. Klaar voor schrijfsessie met Gaby.
+- Task 10: CompactDMOBlok (K1-anti-overwhelm). Default ingeklapt, header toont 'X van Y vandaag'. Klikbaar af te vinken per taak.
 
 ## Verhelderingsvragen voor jullie (Raoul + Gaby)
 
