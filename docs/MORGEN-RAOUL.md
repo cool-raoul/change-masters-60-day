@@ -87,3 +87,94 @@ Deze staan in `OVERZICHT-CORE-V6.html` onderaan, hier alleen als checklist:
 - **Anti-overwhelm-kompas K1 tot K5** als toets bij elke nieuwe UI.
 - **Geen content-changes aan bestaande Sprint-teksten.**
 - **`npm run build` moet groen blijven na elke commit.**
+
+---
+
+## Hand-over voor morgen
+
+### Wat staat klaar (Fase A skelet compleet)
+
+Bestanden: zie task-status hierboven. Samenvatting per laag:
+
+- **Feature-flag**: `profiles.core_v6_actief` (SQL klaar, niet gedraaid).
+- **Mentor-profiel**: tabel + types + helpers (lees/patch).
+- **Drie-laags Mentor**: Laag 1 (standaardvragen-matcher) + Laag 2 (model-tier-router) + Laag 3 (sponsor-escalatie) + unified API `vraagAanMentor()`.
+- **Freebies**: tabel + opt-ins + types + 5 PLACEHOLDER-templates + founder-CMS-shell.
+- **Klantomgeving**: tabel klanten + pulses + types + 5 pulse-moment-definities + entry-route /klant.
+- **Core V6 21 ankerstappen**: scaffold in `lib/playbook/core-dagen-v6.ts`, PLACEHOLDER per stap.
+- **Anti-overwhelm UI-primitives**: CompactDMOBlok (K1) + KlantenTegel (K2) + GeadviseerdPad (K3) + PulseSignaalBox (K4) + MentorCuratorVoorstel (K5).
+- **Core V6 vandaag-shell**: `/core-v6` met de vier kompas-componenten boven elkaar.
+- **Standaardvragen-CMS-shell**: `/instellingen/standaardvragen`.
+
+### Wat moet jij doen om te activeren
+
+1. **Draai 6 SQL-migraties** in Supabase SQL Editor in deze volgorde:
+   - `supabase/migrations/2026-05-22-01-core-v6-feature-flag.sql`
+   - `supabase/migrations/2026-05-22-02-mentor-profielen.sql`
+   - `supabase/migrations/2026-05-22-03-standaardvragen.sql`
+   - `supabase/migrations/2026-05-22-04-mentor-escalaties.sql`
+   - `supabase/migrations/2026-05-22-05-freebies.sql`
+   - `supabase/migrations/2026-05-22-06-klantomgeving.sql`
+
+2. **Activeer de feature-flag voor jouw account** (alleen jij eerst, niet andere pilot-leden):
+   ```sql
+   update public.profiles set core_v6_actief = true where id = '<jouw-user-id>';
+   ```
+
+3. **Test smoke**: open `/core-v6` en kijk of de shell laadt zonder errors. Open `/klant` en kijk of de lijst-shell laadt. Open `/instellingen/freebies` en `/instellingen/standaardvragen` als founder.
+
+4. **Beslissingen die ik in #6 t/m #9 hierboven voor jou heb gemaakt** (klantomgeving-auto-delete, escalatie-opt-in, mentor-profiel JSONB, core-v6 routes). Bevestig of pas aan.
+
+5. **Schrijfsessie met Gaby** voor:
+   - 21 ankerstap-`watJeLeert`-teksten + `waaromWerktDit` quotes (zie `lib/playbook/core-dagen-v6.ts`, zoek op TODO-GABY)
+   - 5 freebie-inhouds-templates (zie `lib/freebies/voorbeeld-toolkit.ts`, zoek op TODO-GABY)
+   - Eerste 20 standaardvragen Laag 1 (na SQL-migratie via insert-statements)
+
+### Wat ik morgen voor je oppak (Fase B en later)
+
+- DMO-progressie aansluiten op `/core-v6` (DB-tabel `core_v6_dmo_voortgang` + helper)
+- Ankerstap-progressie verhogen na voltooien (kolom `profiles.core_v6_ankerstap`)
+- Cross-modus skip ook voor V6 stappen (verwijzen naar Sprint-equivalenten)
+- `/api/coach` route koppelen aan `vraagAanMentor()` voor Core-V6-leden
+- Klantomgeving per-klant-detail-pagina + pulse-engine cron-job
+- Freebies edit-knoppen in founder-CMS
+- Mentor-profiel auto-vullen na elke ankerstap (hook in voltooi-flow)
+- Privacy-statement update voor klantomgeving + sponsor-escalatie + freebies opt-in
+
+### Bestanden-index (alle nieuwe files)
+
+```
+supabase/migrations/2026-05-22-01-core-v6-feature-flag.sql
+supabase/migrations/2026-05-22-02-mentor-profielen.sql
+supabase/migrations/2026-05-22-03-standaardvragen.sql
+supabase/migrations/2026-05-22-04-mentor-escalaties.sql
+supabase/migrations/2026-05-22-05-freebies.sql
+supabase/migrations/2026-05-22-06-klantomgeving.sql
+
+lib/feature-flags/core-v6.ts
+lib/mentor-profiel/types.ts
+lib/mentor-profiel/helpers.ts
+lib/mentor/laag-1-standaardvragen.ts
+lib/mentor/laag-2-router.ts
+lib/mentor/laag-3-escalatie.ts
+lib/mentor/index.ts
+lib/freebies/types.ts
+lib/freebies/voorbeeld-toolkit.ts
+lib/klantomgeving/types.ts
+lib/klantomgeving/pulse-momenten.ts
+lib/playbook/core-dagen-v6.ts
+
+components/anti-overwhelm/CompactDMOBlok.tsx
+components/anti-overwhelm/GeadviseerdPad.tsx
+components/anti-overwhelm/KlantenTegel.tsx
+components/anti-overwhelm/PulseSignaalBox.tsx
+components/anti-overwhelm/MentorCuratorVoorstel.tsx
+
+app/core-v6/page.tsx
+app/klant/layout.tsx
+app/klant/page.tsx
+app/instellingen/freebies/page.tsx
+app/instellingen/standaardvragen/page.tsx
+```
+
+Geen bestaande files gewijzigd buiten `docs/MORGEN-RAOUL.md` en `docs/superpowers/plans/2026-05-22-core-v6-fase-a.md`. Sprint blijft volledig intact.
