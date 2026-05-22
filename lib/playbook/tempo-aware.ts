@@ -106,6 +106,28 @@ export function momentumRadarStap(dagNummer: number): ControllableTaak {
 
 export const STORIES_UITLEG =`Deel 1 tot 3 momenten uit je dag op Instagram of Facebook (stories, niet feed). Een ontbijt, een wandeling, een rustig moment, een blije gedachte. Geen verkoop, geen "kom in m'n business". Gewoon laten zien dat je leeft. Mensen worden door wat ze zien aangetrokken, niet door wat ze lezen.\n\nREAGEREN OP STORIES VAN ANDEREN is minstens zo belangrijk als zelf posten. Waarom? Als je reageert op iemands story, land je RECHTSTREEKS in z'n DM. Dat is de plek waar het echte gesprek begint. Eén oprechte 2-3 zinnen-reactie op een story is goud waard.\n\nWat doe je vandaag?\n\n1. Plaats 1 tot 3 stories uit je dag (lifestyle, geen pitch)\n2. Open Instagram of Facebook en geef bij 3 stories van anderen een ECHTE reactie. Geen "👏👏👏" maar 2-3 zinnen die laten zien dat je hun moment hebt gezien.\n3. Wordt het een gesprek? Top. Als dit een NIEUW persoon is (nog niet op je lijst), voeg ze toe en zet ze op fase 'in gesprek' via de spraakfunctie ("Ik heb een gesprek gestart met [naam]").\n\nZo bouw je rustige zichtbaarheid + concrete nieuwe gesprekken zonder iets te pushen.`;
 
+// ============================================================
+// Centrale uitleg voor "voeg X nieuwe namen toe" stappen.
+// Wordt op heel veel dagen gebruikt (dag 3+). Helper-functie zodat
+// we de uitleg op één plek onderhouden en uitbreiden.
+//
+// Opties:
+//   - compact: korte herhalings-versie voor dag 11+ (member kent de
+//     vier bronnen al, alleen reminder + 1-woord-context-regel)
+//   - antiUitval: optionele prefix-string (dag 5 + dag 6) die de
+//     drop-off-wiskunde normaliseert. Wordt VOOR de uitleg gezet.
+// ============================================================
+export function namenToevoegenUitleg(
+  aantal: number,
+  opties?: { compact?: boolean; antiUitval?: string },
+): string {
+  const prefix = opties?.antiUitval ?? "";
+  if (opties?.compact) {
+    return `${prefix}Voeg vandaag ${aantal} nieuwe mensen toe aan je netwerk-overzicht. Niet bellen, niet uitnodigen, alleen toevoegen aan je lijst. Het bericht komt in de volgende stap.\n\nZelfde vier bronnen als de dagen ervoor:\n1. Je telefoonlijst (familie, oud-collega's, sportmaatjes, buren)\n2. Je social-media-vrienden (Instagram, Facebook, scroll en kies wie spontaan opvalt)\n3. Mensen die je dagelijks tegenkomt (koffietent, sportschool, vereniging)\n4. Nieuwe verbindingen via hashtags of accounts die je volgt\n\nVoeg ze toe met 1 woord context per persoon ('fitness', 'oud-collega', 'koffietent'). De vier-bouwstenen-strip onder je takenlijst toont elke bron met de juiste ingang, kies wat voor jou nu makkelijkst is.`;
+  }
+  return `${prefix}Vandaag breid je je netwerk-overzicht uit met ${aantal} nieuwe mensen. Belangrijk: NIET BELLEN, NIET UITNODIGEN, alleen toevoegen aan je lijst. Het bericht komt in de volgende stap.\n\nWAAR HAAL JE ZE VANDAAN, vier bronnen:\n\n1. JE TELEFOONLIJST. Mensen die je al kent maar nog niet hebt benaderd over dit. Familie, oud-collega's, sportmaatjes, buren, oude vrienden die je een tijd niet sprak, ouders bij school.\n\n2. JE SOCIAL-MEDIA-VRIENDEN. Open Instagram of Facebook, scroll door je vrienden, en kies wie er nu spontaan opvalt. Mensen die jou al volgen of die jij volgt, maar waar je al een tijd niet mee hebt gesproken.\n\n3. MENSEN DIE JE DAGELIJKS TEGENKOMT. Bij de koffietent, sportschool, school, werk, vereniging. Iemand met wie je een gewone kleine babbel had en die jij sympathiek vindt.\n\n4. NIEUWE MENSEN VIA SOCIAL. Hashtags die jouw doelgroep gebruikt, mensen in jouw stad, of via accounts waar je zelf volger bent en waar de andere volgers passen bij jouw type contact.\n\nVOEG ZE TOE met 1 woord context per persoon ('fitness', 'oud-collega', 'koffietent'). Niet meer, geen biografie. De context helpt jou later om te kiezen WIE je het eerste benadert.\n\nDe VIER-BOUWSTENEN-STRIP onder je takenlijst toont per bron de juiste ingang (telefoon-import, Instagram, Facebook, of Eleva-geheugen). Kies wat voor jou nu makkelijkst is.`;
+}
+
 // Voor dag 3 + dag 4 (start-fase): alleen de openings-zin + luisteren.
 // De diepere flow (Feel-Felt-Found vanaf dag 5, follow-up-cadans vanaf
 // dag 6, closing-vragen en Doel-Tijd-Termijn vanaf dag 8+) komt
@@ -165,7 +187,7 @@ function bouwDag3VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     {
       id: "dag3-namen-toevoegen",
       label: `📲 Voeg ${dd.contacten} nieuwe namen toe aan je lijst`,
-      uitleg: `Vandaag breidt je netwerk-overzicht uit met ${dd.contacten} nieuwe mensen. Alleen toevoegen, het bericht komt in de volgende stap.\n\nWAAR HAAL JE DEZE ${dd.contacten} MENSEN VANDAAN?\n\n1. Je telefoonlijst: mensen die je al kent maar nog niet hebt benaderd over dit. Familie, oud-collega's, sportmaatjes, buren, oude vrienden.\n\n2. Je social media-vrienden: mensen die jou al volgen of die jij volgt, maar waar je al een tijd niet mee hebt gesproken. Open Instagram of Facebook, scroll door je vrienden, kies wie er nu spontaan opvalt.\n\n3. Mensen die je dagelijks tegenkomt: bij de koffietent, sportschool, school, werk. Iemand met wie je een gewone kleine babbel had.\n\n4. Nieuwe mensen op social media: via hashtags die jouw doelgroep gebruikt, mensen in jouw stad, accounts die je volgt en waarvan de volgers passen.\n\nVoeg ze toe in je namenlijst met 1 woord context per persoon ('fitness', 'oud-collega', 'koffietent'). Niet meer, geen biografie.`,
+      uitleg: namenToevoegenUitleg(dd.contacten),
       verplicht: true,
       actieRoute: "/namenlijst",
     },
@@ -253,7 +275,7 @@ function bouwDag4VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     {
       id: "dag4-namen-toevoegen",
       label: `📲 Voeg ${dd.contacten} nieuwe namen toe aan je lijst`,
-      uitleg: `Dagritme blijft: ${dd.contacten} nieuwe mensen toevoegen aan je netwerk-overzicht. Mensen uit je telefoon die je nog niet hebt benaderd, social-media-vrienden waar je al een tijd niet mee hebt gesproken, mensen die je dagelijks tegenkomt, of nieuwe verbindingen via socials. Eén woord context per persoon is genoeg.`,
+      uitleg: namenToevoegenUitleg(dd.contacten),
       verplicht: true,
       actieRoute: "/namenlijst",
     },
@@ -326,7 +348,7 @@ function bouwDag5VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     {
       id: "dag5-namen-toevoegen",
       label: `📲 Voeg ${dd.contacten} nieuwe namen toe aan je lijst`,
-      uitleg: `${ANTI_UITVAL_DAG5}Vandaag breidt je netwerk-overzicht uit met ${dd.contacten} nieuwe mensen.\n\nWAAR HAAL JE DEZE ${dd.contacten} MENSEN VANDAAN?\n\n1. Je telefoonlijst: mensen die je al kent maar nog niet hebt benaderd.\n2. Je social media-vrienden: open Instagram of Facebook, scroll door je vrienden, kies wie er nu spontaan opvalt.\n3. Mensen die je dagelijks tegenkomt: bij de koffietent, sportschool, school, werk.\n4. Nieuwe mensen via hashtags of comments op accounts die je volgt.\n\nVoeg ze toe in je namenlijst met 1 woord context per persoon ('fitness', 'oud-collega', 'koffietent').`,
+      uitleg: namenToevoegenUitleg(dd.contacten, { antiUitval: ANTI_UITVAL_DAG5 }),
       verplicht: true,
       actieRoute: "/namenlijst",
     },
@@ -411,7 +433,7 @@ function bouwDag6VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     {
       id: "dag6-namen-toevoegen",
       label: `📲 Voeg ${dd.contacten} nieuwe namen toe aan je lijst`,
-      uitleg: `${ANTI_UITVAL_DAG6}Vandaag breidt je netwerk-overzicht uit met ${dd.contacten} nieuwe mensen.\n\nWAAR HAAL JE DEZE ${dd.contacten} MENSEN VANDAAN?\n\n1. Je telefoonlijst: mensen die je al kent maar nog niet hebt benaderd.\n2. Je social media-vrienden: open Instagram of Facebook, scroll door je vrienden, kies wie er nu spontaan opvalt.\n3. Mensen die je dagelijks tegenkomt.\n4. Nieuwe mensen via hashtags of comments.\n\nVoeg ze toe met 1 woord context per persoon.`,
+      uitleg: namenToevoegenUitleg(dd.contacten, { antiUitval: ANTI_UITVAL_DAG6 }),
       verplicht: true,
       actieRoute: "/namenlijst",
     },
@@ -514,7 +536,7 @@ function bouwDag7VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     {
       id: "dag7-namen-toevoegen",
       label: `📲 Voeg minimaal ${min.contacten} namen toe aan je lijst`,
-      uitleg: `Minimaal ${min.contacten} nieuwe namen vandaag, meer mag altijd. Vandaag is review-dag, dus rustiger op de input, maar je pijplijn houdt z'n stroom. Minder dan ${min.contacten} doe je niet, dat breekt het ritme dat je deze week hebt opgebouwd.\n\nWAAR HAAL JE ZE VANDAAN?\n\n1. Je telefoonlijst: mensen die je al kent maar nog niet hebt benaderd.\n2. Je social media-vrienden: open Instagram of Facebook, scroll door je vrienden, kies wie er nu spontaan opvalt.\n3. Mensen die je dagelijks tegenkomt.\n4. Nieuwe mensen via hashtags of comments.`,
+      uitleg: `Vandaag is review-dag, dus rustiger op de input, maar je pijplijn houdt z'n stroom. Minimaal ${min.contacten} nieuwe namen, meer mag altijd. Minder dan ${min.contacten} doe je niet, dat breekt het ritme dat je deze week hebt opgebouwd.\n\n${namenToevoegenUitleg(min.contacten, { compact: true })}`,
       verplicht: true,
       actieRoute: "/namenlijst",
     },
@@ -588,7 +610,7 @@ function bouwDag8VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     {
       id: "dag8-namen-toevoegen",
       label: `📲 Voeg ${dd.contacten} nieuwe namen toe aan je lijst`,
-      uitleg: `Vandaag breidt je netwerk-overzicht uit met ${dd.contacten} nieuwe mensen.\n\nWAAR HAAL JE DEZE ${dd.contacten} MENSEN VANDAAN?\n\n1. Je telefoonlijst: mensen die je al kent maar nog niet hebt benaderd.\n2. Je social media-vrienden: open Instagram of Facebook, scroll door je vrienden, kies wie er nu spontaan opvalt.\n3. Mensen die je dagelijks tegenkomt.\n4. Nieuwe mensen via hashtags of comments op accounts die je volgt.\n\nVoeg ze toe met 1 woord context per persoon.`,
+      uitleg: namenToevoegenUitleg(dd.contacten),
       verplicht: true,
       actieRoute: "/namenlijst",
     },
@@ -657,7 +679,7 @@ function bouwDag9VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     {
       id: "dag9-namen-toevoegen",
       label: `📲 Voeg ${dd.contacten} nieuwe namen toe aan je lijst`,
-      uitleg: `Dagritme: ${dd.contacten} nieuwe mensen toevoegen aan je netwerk-overzicht. Eén woord context per persoon.\n\nGebruik de vier bronnen (Eleva-geheugen, Facebook, Instagram, LinkedIn) in de strip hieronder als ingang.`,
+      uitleg: namenToevoegenUitleg(dd.contacten),
       verplicht: true,
       actieRoute: "/namenlijst",
     },
@@ -727,7 +749,7 @@ function bouwDag10VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     {
       id: "dag10-namen-toevoegen",
       label: `📲 Voeg ${dd.contacten} nieuwe namen toe aan je lijst`,
-      uitleg: `Dagritme: ${dd.contacten} nieuwe mensen toevoegen. Eén woord context per persoon. Gebruik de vier bronnen in de strip hieronder.`,
+      uitleg: namenToevoegenUitleg(dd.contacten),
       verplicht: true,
       actieRoute: "/namenlijst",
     },
@@ -806,7 +828,7 @@ function bouwDag11VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     {
       id: "dag11-namen-toevoegen",
       label: `📲 Voeg ${dd.contacten} nieuwe namen toe aan je lijst`,
-      uitleg: `Dagritme: ${dd.contacten} nieuwe mensen toevoegen. Eén woord context per persoon. Gebruik de vier bronnen in de strip hieronder.`,
+      uitleg: namenToevoegenUitleg(dd.contacten, { compact: true }),
       verplicht: true,
       actieRoute: "/namenlijst",
     },
@@ -887,7 +909,7 @@ export function standaardABCDEstappen(
     {
       id: `dag${dagNummer}-namen-toevoegen`,
       label: `📲 Voeg ${dd.contacten} nieuwe namen toe aan je lijst`,
-      uitleg: `Dagritme: ${dd.contacten} nieuwe mensen toevoegen aan je netwerk-overzicht. Eén woord context per persoon ('fitness', 'oud-collega', 'koffietent').\n\nGebruik de vier bronnen (Eleva-geheugen, Facebook, Instagram, LinkedIn) in de strip hieronder als ingang. Warm voor koud.`,
+      uitleg: namenToevoegenUitleg(dd.contacten, { compact: true }),
       verplicht: true,
       actieRoute: "/namenlijst",
     },
@@ -1275,7 +1297,7 @@ function bouwDag21VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     {
       id: "dag21-namen-toevoegen",
       label: `📲 Voeg minimaal ${min.contacten} namen toe aan je lijst`,
-      uitleg: `Minimaal ${min.contacten} nieuwe namen vandaag, meer mag altijd. Vandaag is reflectie-dag, dus rustiger op de input, maar je pijplijn houdt z'n stroom. Minder dan ${min.contacten} doe je niet, dat breekt het ritme dat je hebt opgebouwd.`,
+      uitleg: `Vandaag is reflectie-dag, dus rustiger op de input, maar je pijplijn houdt z'n stroom. Minimaal ${min.contacten} nieuwe namen, meer mag altijd. Minder dan ${min.contacten} doe je niet, dat breekt het ritme dat je hebt opgebouwd.\n\n${namenToevoegenUitleg(min.contacten, { compact: true })}`,
       verplicht: true,
       actieRoute: "/namenlijst",
     },
