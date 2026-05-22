@@ -82,10 +82,17 @@ export function partnerCheckStap(dagNummer: number): ControllableTaak {
  * zolang er items zijn.
  */
 export function momentumRadarStap(dagNummer: number): ControllableTaak {
+  // Week 1 (dag 3-7): uitgebreide uitleg + uitleg wat 'momentum' hier
+  // betekent. Vanaf week 2 (dag 8+): compactere versie want member
+  // kent de term inmiddels.
+  const isEersteWeek = dagNummer <= 7;
+  const uitleg = isEersteWeek
+    ? `Voordat je de dag afsluit, je momentum-acties van vandaag bekijken. 'Momentum' is hier het natuurlijke moment dat een prospect net iets heeft gedaan, zoals de film gekeken, een herinnering aangevraagd, of een vraag gesteld. Op die plekken in je pijplijn ben je het meest welkom om aan te haken, want het is vers in hun hoofd.\n\nWAT IS DE MOMENTUM-RADAR? Een kort overzicht van de top-5 prospects waar NU het meeste momentum zit. Een mix van openstaande follow-ups, herinneringen die vandaag aan de beurt zijn, en mensen die net iets hebben gedaan (film gekeken, test ingevuld, bericht beantwoord).\n\nVANZELF FILTEREN: items waar je vandaag al actie op hebt ondernomen, dus je hebt 'm gebeld, een herinnering afgevinkt, of via de spraakfunctie 'laatste contact' bijgewerkt, vallen vanzelf weg uit deze lijst. Wat overblijft, vraagt nog je aandacht.\n\nWAAROM AAN HET EIND VAN DE DAG? Het is een check zodat je niks vergeet. Eén blik, even reageren waar het natuurlijk past, en je dag is afgerond.\n\nGeen lijst? Top, je hebt je dag stevig afgesloten.`
+    : `Eind-van-dag-check op je momentum-radar: de top-5 prospects waar nu het meeste momentum zit (openstaande follow-ups, herinneringen vandaag, recente signalen).\n\nItems waar je vandaag al actie op hebt ondernomen vallen vanzelf weg. Wat overblijft, vraagt nog je aandacht.\n\nGeen lijst? Top, je hebt je dag stevig afgesloten.`;
   return {
     id: `dag${dagNummer}-momentum-radar`,
     label: "🎯 Open momentum-acties van vandaag",
-    uitleg: `Voordat je de dag afsluit: een kort check-overzicht van de prospects waar nu het meeste momentum zit. Een mix van openstaande follow-ups, herinneringen die vandaag aan de beurt zijn, en mensen die net iets hebben gedaan (film gekeken, test ingevuld).\n\nItems waar je vandaag al actie op hebt ondernomen, je hebt 'm gebeld, een herinnering afgevinkt, of via de spraakfunctie 'laatste contact' bijgewerkt, vallen vanzelf weg uit deze lijst. Wat overblijft, vraagt nog je aandacht.\n\nGeen lijst? Top. Je hebt je dag stevig afgesloten.`,
+    uitleg,
     verplicht: false,
     inlineEmbed: "momentum-radar",
   };
