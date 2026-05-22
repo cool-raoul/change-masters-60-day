@@ -88,6 +88,15 @@ Deze staan in `OVERZICHT-CORE-V6.html` onderaan, hier alleen als checklist:
 - **Geen content-changes aan bestaande Sprint-teksten.**
 - **`npm run build` moet groen blijven na elke commit.**
 
+## Beslissingen van Raoul (2026-05-22 avond)
+
+- **Klantomgeving auto-delete: 60 dagen na laatste activiteit** (NIET 30, zoals ik eerst had). Geldt voor klanten die geen activiteit meer laten zien. Cron-job komt in Fase B.
+- **Sponsor-escalatie opt-in: A voor BEIDE paden** (Core-member-zijde naar sponsor, klantomgeving-Mentor naar Core-member). Eén keer in onboarding, vinkje geldt tot wederopzegging. Inbouw komt in Fase B.
+- **Mentor-profiel als JSONB-blob**: bevestigd, al gebouwd, geen wijziging.
+- **Parallel pad**: bevestigd, al gebouwd. Raoul kan vergelijken via `/vandaag` (huidige Core) en `/core-v6` (nieuwe Core).
+- **Core V6 vandaag-pagina moet Sprint-rijkheid hebben** (film + uitleg + quote + afvinken + inline embeds), niet de mager-shell die ik vannacht bouwde. Plus per-stap-detailpagina.
+- **PLACEHOLDER-teksten in core-dagen-v6.ts**: Claude vult zelf in op basis van wat hij weet (ELEVA-stem, kennisbank, scripts, V6-document). Raoul reviewt achteraf.
+
 ---
 
 ## Hand-over voor morgen

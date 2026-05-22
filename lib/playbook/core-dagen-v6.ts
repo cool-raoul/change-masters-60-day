@@ -45,6 +45,11 @@ function afsluitStappenV6(stapNummer: number): ControllableTaak[] {
   ];
 }
 
+// Media per stap loopt via MediaBlokken-component, met namespace
+// `core-v6-stap` en paginaId = stap-nummer. Zelfde patroon als Sprint
+// (`sprint-dag`). Founder kan op /core-v6 of /core-v6/stap/[nummer] direct
+// vanuit edit-modus een video droppen. Geen Films-CMS-slug nodig.
+
 const PLACEHOLDER_WAAROM = {
   tekst: "PLACEHOLDER. TODO-GABY: quote of principe van de stap, met bron erbij.",
   bron: "TODO-GABY",
@@ -55,11 +60,36 @@ export const CORE_V6_STAPPEN: Dag[] = [
   // ---------- FUNDAMENT (1-5) ----------
   {
     nummer: 1,
-    titel: "🚀 Welkom, WHY + sponsor + scenario-keuze",
+    titel: "🚀 Welkom bij Core, WHY + sponsor + jouw scenario",
     fase: 1,
-    faseDoel: "Helder krijgen waarom jij dit doet en welk scenario op jou past.",
-    watJeLeert:
-      "PLACEHOLDER. TODO-GABY: schrijf de eerste-stap-uitleg in ELEVA-stem. Anker: helder krijgen waarom jij dit doet, kennismaken met sponsor, en kiezen welk scenario op jou past (A: al eigen resultaat / B: begin samen met Core).",
+    faseDoel: "Helder krijgen waarom jij dit doet, je sponsor in de loop, en kiezen welk scenario op jou past.",
+    watJeLeert: `Welkom bij Core 💟 Wat bijzonder dat je hier bent.
+
+Dit is anders dan een sprint. Geen 60-dagen-druk, geen "vandaag moet alles". Je werkt op jouw tempo, ankerstap voor ankerstap. Tussendoor loopt een dagelijks ritme mee (de DMO) zodat je richting houdt, maar je ankerstap pak je op wanneer JIJ eraan toe bent.
+
+VANDAAG, EEN RUSTIG BEGIN
+
+Vier dingen zetten we vandaag neer. Geen lange dag, wel een dag waarin het fundament er staat.
+
+**Je WHY samen met de Mentor.** Waarom doe je dit? Niet een mooi verhaal, het echte verhaal. De Mentor stelt vragen, jij praat, en aan het einde staat er één zin die jou over een paar maanden er nog steeds doorheen trekt op een lastige dag.
+
+**Je situatie delen met de Mentor.** In drie tot vijf zinnen: hoe staat je leven nu, hoeveel tijd heb je per dag, wat zoek je hier? De Mentor onthoudt dit en past z'n suggesties straks aan op jouw werkelijkheid, niet op een ideaal.
+
+**Je sponsor inlichten.** Eén kort berichtje, "ik ben gestart". Geen lang verhaal nodig. Vanaf dat moment kijkt 'ie in ELEVA mee en weet 'ie wanneer het loopt of wanneer er even iets is.
+
+**Je scenario kiezen.** Heb je al een product van Lifeplus geprobeerd en iets gemerkt? Dan zit je in scenario A. Heb je nog geen ervaring? Dan zit je in scenario B en bouw je de komende weken je eigen ervaring op. Beide werken. Het verschil zit in wat je straks deelt: jouw resultaat (A) of jouw voornemen (B).
+
+JIJ LAAT ZIEN, ZIJ BESLISSEN
+
+De grootste mentale shift in Core: je hoeft niemand binnen te praten, niemand te overtuigen, niemand te laten kiezen voor wat jij wilt. Jouw taak is laten zien wat er is. Zij beslissen. Dat maakt je werk lichter en respectvoller.
+
+WAT ER STRAKS GEBEURT
+
+Ankerstap 2 vul je je top-20 namenlijst aan en plan je een kennismakings-call met je sponsor. Geen verkoop, geen werving. Je netwerk in beeld zodat je weet wie er om je heen staat.
+
+Overweldigd voelen op stap 1 is normaal. Je leert iets nieuws, je stapt uit comfort. Eerst onhandig, dan vaardig. Je sponsor staat naast je, de ELEVA Mentor ook.
+
+Niet alleen. Bouwen mag leuk zijn 💟`,
     vandaagDoen: [
       {
         id: "core-v6-stap1-why",
@@ -92,15 +122,40 @@ export const CORE_V6_STAPPEN: Dag[] = [
       { actie: "Maak je WHY", route: "/mijn-why" },
       { actie: "Open de Mentor", route: "/coach" },
     ],
-    waaromWerktDit: PLACEHOLDER_WAAROM,
+    waaromWerktDit: {
+      tekst:
+        "Een sterke WHY houdt je staande op de momenten dat het niet vanzelf gaat. Zonder WHY zoek je iedereen z'n motivatie. Met WHY heb je je eigen kompas, en valt het werk lichter omdat je weet waarvoor.",
+      bron: "Simon Sinek (Start With Why), eigen vertaling",
+    },
   },
   {
     nummer: 2,
-    titel: "👥 Top-20-namenlijst opbouwen + sponsor-call",
+    titel: "👥 Top-20-namenlijst + sponsor-call",
     fase: 1,
     faseDoel: "Een werkende top-20-lijst opzetten en samen met je sponsor de eerste oefen-uitnodiging versturen.",
-    watJeLeert:
-      "PLACEHOLDER. TODO-GABY: schrijf in ELEVA-stem. Anker: werkende top-20-lijst en samen met sponsor de eerste oefen-uitnodiging.",
+    watJeLeert: `Vandaag breng je je netwerk in beeld 💟
+
+Niet om straks iedereen te bellen, niet om een verkooplijst aan te leggen. Wel om te weten WIE er om je heen staat. Want zonder dat overzicht ga je rondjes draaien tussen "wie zou ik nou benaderen?" en uiteindelijk niemand.
+
+EERST UITBREIDEN, DAN PAS FILTEREN
+
+Veel mensen beginnen klein omdat ze al gaan filteren in hun hoofd. "Die past nooit", "die heeft geen geld", "die heeft het te druk". Stop daarmee. Schrijf eerst tot je op twintig namen zit. Filteren komt later, en doe je nooit voor iemand anders.
+
+Vier bronnen helpen je daarbij. Familie en directe vrienden. Oude collega's, oud-klasgenoten, oud-buren. Ouders bij school, sportclub, vereniging, hobby. En de mensen die je via social al een tijd volgt of die jou volgen. Spontaan opschrijven, niet redeneren.
+
+**Twintig namen handmatig.** Pen erbij, of je telefoonboek scrollen. Schrijf alles op wat in je hoofd komt, ook degenen waarvan je nu al denkt "die past nooit". Vaak verrassen ze je, en deze stap is voor jouw overzicht, niet voor hen.
+
+**Top-5 markeren.** Van de twintig pak je vijf mensen die spontaan opvallen. Niet "wie zou willen kopen". Wel "wie zou ik dit het liefst gunnen" of "wie heeft hier het meest aan". Dat zijn je top-5.
+
+**FORM-vragen met de Mentor.** Voor je top-5 loop je met de Mentor de FORM-vragen door. Family, Occupation, Recreation, Money. Geen interview-checklist, gewoon "wat weet ik al over deze persoon op die vier vlakken". De Mentor onthoudt dit en kan je later helpen om die persoon RAAK te benaderen, niet generiek.
+
+**Sponsor-call inplannen.** Ongeveer dertig minuten, kennismaking en samen kijken naar je lijst. Niet "wie gaan we bellen", wel "wie ken jij om mij heen, hoe denk jij over deze namen, en welke twee mensen zou jij eerst proberen".
+
+WAAROM TWINTIG, NIET VIJF
+
+Vijf namen is geen netwerk, dat is een verlanglijstje. Twintig dwingt je om buiten je comfort-vijf te kijken. Dat is precies de groep waar de meeste verrassingen zitten.
+
+Niet alleen. Bouwen mag leuk zijn 💟`,
     vandaagDoen: [
       {
         id: "core-v6-stap2-namen",
