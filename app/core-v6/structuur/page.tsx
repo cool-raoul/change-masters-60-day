@@ -25,80 +25,95 @@ type Observatie = {
   signaal: string;
   voorstel: string;
   ernst: "denk-richting" | "wel-overwegen" | "belangrijk";
+  /** Waar komt deze observatie vandaan? */
+  herkomst:
+    | "sprint-volgorde-principe" // Sprint heeft een doordachte volgorde die ook in Core relevant is
+    | "core-specifiek" // Iets dat Sprint niet kent, Core-eigen behoefte
+    | "sprint-idee-mogelijk" // Sprint heeft iets dat in Core óók waardevol kan zijn (geen must)
+    | "kennisbank-basis"; // Bron is de Core-kennisbank, niet Sprint
 };
 
 const OBSERVATIES: Observatie[] = [
   {
     titel: "Bezwaren-skills (Stap 14) ligt na de eerste 3-weg (Stap 11)",
     signaal:
-      "Sprint heeft bezwaren-skills op DAG 5, ruim VOOR 3-weg-meesterclass (dag 9) en eerste 3-weg (dag 10). In V6 staat het op stap 14, NA de eerste 3-weg. Je doet je eerste 3-weg zonder voorbereiding op de meest voorkomende bezwaren. Sprint heeft dit bewust anders gevolgd.",
+      "Sprint heeft bezwaren-skills op DAG 5, ruim VOOR 3-weg-meesterclass (dag 9) en eerste 3-weg (dag 10). In V6 staat het op stap 14, NA de eerste 3-weg. Je doet je eerste 3-weg zonder voorbereiding op de meest voorkomende bezwaren.",
     voorstel:
-      "Bezwaren-skills verplaatsen naar Stap 5 (direct na webshop-pivot in Stap 4, ruim VOOR 3-weg). 3-weg-meesterclass schuift dan naar Stap 11, eerste 3-weg naar Stap 12. Volgorde matched Sprint dag 5 → dag 9 → dag 10.",
+      "Bezwaren-skills verplaatsen naar Stap 5 of 6 (ruim VOOR 3-weg-meesterclass). 3-weg-meesterclass schuift dan naar Stap 11, eerste 3-weg naar Stap 12.",
     ernst: "belangrijk",
+    herkomst: "sprint-volgorde-principe",
   },
   {
-    titel: "Follow-up als eigen stap ontbreekt in V6 (Sprint dag 6 + dag 15)",
+    titel: "Pre-post + reactie-flow staat te laat (Stap 6) en mist substeps",
     signaal:
-      "Sprint heeft follow-up TWEE keer als eigen dag: dag 6 (24-48u-regel) en dag 15 (ritme-week, follow-up als hoofdwerk). In V6 zit follow-up versplinterd over Stap 17 (opvolg-routine) en is het niet vroeg in beeld. Sprint zegt: de fortuin zit in de follow-up.",
+      "In de Core-kennisbank zit pre-post al in stap 1 van de eerste 2 uur. In V6 staat 'm op ankerstap 6, na productkennis en webshop-pivot. Plus alle reactie-vervolg-acties (reactie-script, reageren binnen uur, prospect naar Mini-ELEVA, film doorsturen) zijn niet als substeps gebouwd. Bij Stories, Brookes, eerste uitnodigingen geldt hetzelfde: reacties brengen substeps mee die nu niet bestaan.",
     voorstel:
-      "Follow-up-substeps toevoegen aan Stap 6 of 7 (vroeg, 24-48u-regel), en Stap 17 verbreden tot een echte ritme-stap. Vergelijkbaar met Sprint's dag 6 + dag 15.",
+      "Pre-post-flow eerder plaatsen (Stap 2 of 3) en uitsplitsen in substeps: voorbereiding lezen, tekst schrijven, upline-check ('puntjes op de i'), plaatsen, reactie-script-klaarzetten, reageren-routine. 21-dagen-post houden we op Stap 15 (komt 21 dagen na pre-post). Bij alle post-stappen vaste substeps 'reactie-script klaarzetten' + 'reageer binnen 1 uur' + 'stuur film' + 'prospect toevoegen aan Mini-ELEVA'.",
     ernst: "belangrijk",
+    herkomst: "core-specifiek",
   },
   {
-    titel: "Pre-post / 21-dagen-post staat te laat (Stap 6)",
+    titel: "Follow-up als concept zit versplinterd in V6 (vergelijk Sprint dag 6 + 15)",
     signaal:
-      "Sprint heeft pre-post niet (Sprint = 60-day Run, andere strategie). In de Core-kennisbank zit pre-post al in stap 1 van de eerste 2 uur. In V6 staat 'm op ankerstap 6, na productkennis en webshop-pivot. Plus alle reactie-vervolg-acties (reactie-script, reageren binnen uur, prospect naar Mini-ELEVA, film doorsturen) zijn niet als substeps gebouwd.",
+      "Sprint heeft follow-up TWEE keer expliciet: dag 6 (24-48u-regel) en dag 15 (ritme-week). In V6 zit follow-up alleen op Stap 17 (opvolg-routine) en is het laat in het pad. Het volgorde-principe 'fortuin in de follow-up + 24-48u-regel' is universeel.",
     voorstel:
-      "Pre-post-flow eerder plaatsen (Stap 2 of 3) en uitsplitsen in substeps: voorbereiding lezen, tekst schrijven, upline-check ('puntjes op de i'), plaatsen, reactie-script-klaarzetten, reageren-routine. 21-dagen-post houden we op Stap 15 want die komt pas 21 dagen na de pre-post.",
+      "Follow-up-substeps toevoegen bij vroege ankerstappen (rond Stap 6-7, 24-48u-regel) en Stap 17 behouden als ritme-stap. Niet noodzakelijk twee aparte ankerstappen zoals Sprint, wel het PRINCIPE vroeg in beeld brengen.",
     ernst: "belangrijk",
+    herkomst: "sprint-volgorde-principe",
   },
   {
-    titel: "FORM-vragen mogelijk te vroeg in V6 (Sprint pas dag 13)",
+    titel: "FORM-vragen mogelijk te vroeg in Stap 2",
     signaal:
-      "Sprint heeft FORM-vragen pas op DAG 13, als eigen dag ('FORM: leer iemand kennen in 5 minuten'). In V6 zit FORM in Stap 2, samen met top-20 opbouwen. Sprint legt het bewust uit elkaar: eerst basis (lijst, uitnodigen, bezwaren, 3-weg, follow-up), pas DAN FORM-context per prospect.",
+      "Sprint heeft FORM-vragen pas op dag 13 als eigen dag, na alle basis (lijst, uitnodigen, bezwaren, 3-weg, follow-up). In V6 zit FORM in Stap 2, samen met top-20 opbouwen. Risico: FORM-context invullen vóór je echt weet welke contacten in beeld blijven, is investering die je later opnieuw moet doen.",
     voorstel:
-      "FORM-vragen losmaken van Stap 2 (alleen top-20 lijst opbouwen). FORM een eigen ankerstap maken rond Stap 12-13, na de eerste 3-weg-praktijk. Of: FORM behouden in Stap 2 als kort intro, en verdieping op Stap 13.",
+      "Stap 2 alleen top-20 lijst opbouwen (zonder FORM). FORM-verdieping rond Stap 12-13 plaatsen, als eigen ankerstap, na de eerste echte 3-weg-ervaring.",
     ernst: "wel-overwegen",
+    herkomst: "sprint-volgorde-principe",
   },
   {
-    titel: "Edification mogelijk te vroeg in V6 (Sprint pas dag 18)",
+    titel: "Edification mogelijk te vroeg, nu substep onder 3-weg-meesterclass",
     signaal:
-      "Sprint heeft edification als eigen dag op DAG 18 ('de zin die je sponsor laat schitteren'), na alle 3-weg-praktijk. In V6 zit edification verstopt onder Stap 10 (3-weg-meesterclass) als substep. Sprint geeft het bewust eigen ruimte na de eerste ervaringen.",
+      "Sprint heeft edification als eigen dag op DAG 18, na alle 3-weg-praktijk. In V6 zit edification als kleine substep onder Stap 10. Je schrijft een edification-zin VOOR je weet wat in praktijk werkt om je sponsor te introduceren. Vergelijkbaar volgorde-issue als bezwaren-skills.",
     voorstel:
-      "Edification eigen ankerstap maken rond Stap 17 of 18 (na eerste 3-wegs ervaring). De edification-zin schrijf je beter na een paar 3-wegs, want dan weet je wat WERKT om je sponsor te introduceren.",
+      "Edification eigen ankerstap rond Stap 17-18, na meerdere 3-wegs. Stap 10 (3-weg-meesterclass) houden bij het PRINCIPE van edification, niet bij het schrijven van je eigen zin.",
     ernst: "wel-overwegen",
+    herkomst: "sprint-volgorde-principe",
   },
   {
-    titel: "Verdienmodel-basis (Stap 5) komt mogelijk te vroeg",
+    titel: "Verdienmodel-basis (Stap 5) mogelijk te vroeg, basic-understanding-principe",
     signaal:
-      "In Sprint zit verdienmodel niet als losse dag (zit verstopt in WHY-dag of Mentor). V6 heeft het op Stap 5, in het Fundament-blok. In praktijk vragen prospects pas vanaf de eerste echte gesprekken iets over verdienmodel. Te vroeg = vergeten tegen de tijd dat 'ie nodig is.",
+      "Eric Worre noemt het basic-understanding: snap zelf hoe je verdient voor je gesprekken voert. V6 heeft het op Stap 5 (Fundament). In praktijk vragen prospects pas tijdens de eerste 3-weg iets over verdienmodel. Stap 5 = te vroeg, niet vers in hoofd op moment dat het nodig is.",
     voorstel:
-      "Verdienmodel-basis verschuiven naar rond Stap 9 of 10 (vlak voor de eerste 3-weg), zodat de basic-understanding-les vers in het hoofd zit op het moment dat 'ie gevraagd wordt.",
+      "Verdienmodel-basis verschuiven naar rond Stap 9-10 (vlak voor de eerste 3-weg-meesterclass), zodat de les vers zit op het moment dat 'ie gevraagd wordt.",
     ernst: "wel-overwegen",
+    herkomst: "kennisbank-basis",
   },
   {
-    titel: "One-pager / presentatie-keuze ontbreekt in V6 (Sprint dag 11)",
+    titel: "Pipeline / trechter-check ontbreekt in V6 (Sprint heeft dit dag 19)",
     signaal:
-      "Sprint heeft op dag 11 een eigen dag 'One-pager of presentatie? Vandaag leer je kiezen'. In V6 is dit er niet expliciet. We hebben Mini-ELEVA als opvolg-pad, maar de bewuste keuze (live presentatie / 3-weg / one-pager via WhatsApp / film) wordt niet expliciet geleerd.",
+      "Sprint heeft op dag 19 een eigen reflectie-moment 'waar lekt je trechter?'. In Core is dit nóg waardevoller, omdat je via social media + freebies + klantomgeving meer instroom-bronnen hebt en patronen herkennen helpt om te focussen waar het werkt.",
     voorstel:
-      "Een ankerstap toevoegen 'Welke informatie geef je een prospect?' met de keuzes: live 3-weg / Mini-ELEVA / one-pager / video door. Past rond Stap 11 of 12 in V6, na 3-weg-praktijk.",
+      "Pipeline-check ankerstap toevoegen rond Stap 18-19, met namenlijst-statuses + klantomgeving-overview + freebie-opt-in-cijfers. Mentor helpt patronen herkennen.",
+    ernst: "wel-overwegen",
+    herkomst: "sprint-idee-mogelijk",
+  },
+  {
+    titel: "Drie verhalen (Stap 8) kan parallel aan webshop-pivot (Stap 4)",
+    signaal:
+      "Stap 4 schrijft de webshop-zin in jouw stem. Stap 8 schrijft drie verhalen (persoonlijk/product/business) ook in jouw stem. Twee stem-leermomenten los van elkaar kan voelen als twee keer iets nieuws beginnen. Sprint heeft 'drie verhalen' niet, dit is Core-eigen.",
+    voorstel:
+      "Drie verhalen verplaatsen naar Stap 5 (direct na webshop-pivot), of als ankerblok bij Stap 4 zelf. Webshop-zin + drie verhalen samen leren als één stem-blok.",
     ernst: "denk-richting",
+    herkomst: "core-specifiek",
   },
   {
-    titel: "Pipeline-check ontbreekt in V6 (Sprint dag 19)",
+    titel: "One-pager / presentatie-keuze (Sprint dag 11) hoeft niet 1-op-1",
     signaal:
-      "Sprint heeft op dag 19 'Pipeline-check, waar lekt je trechter?'. Een reflectie-moment waarbij je kijkt waar in je funnel prospects verdwijnen. In V6 zit niets gelijkwaardigs.",
+      "Sprint heeft 'one-pager of presentatie?' op dag 11 als bewuste keuze. In Core is de webshop het primaire frame en Mini-ELEVA het opvolg-pad. De one-pager-traditie past minder bij Core. Sprint-idee, niet per se nodig in Core.",
     voorstel:
-      "Pipeline-check ankerstap toevoegen rond Stap 18-19, vergelijkbaar met Sprint dag 19. Member kijkt naar z'n eigen namenlijst-statuses + de klantomgeving-overview, en de Mentor helpt patronen herkennen.",
-    ernst: "wel-overwegen",
-  },
-  {
-    titel: "Reactie-opvolging als losse substeps mist overal",
-    signaal:
-      "Bij Stap 6 (post plaatsen), Stap 7 (Brookes + freebie), Stap 9 (warme uitnodigingen), Stap 12 (Stories) en Stap 15 (resultaat-post) komen ALLEMAAL reacties binnen waar je weer wat mee moet. Nu staat er telkens losjes 'reageer binnen 1 uur'. Niet als concrete substep met script.",
-    voorstel:
-      "Per post-stap een vaste substep 'Reactie-script klaarzetten' en 'Reageer binnen 1 uur op alles wat binnenkomt'. Plus mogelijke vervolg-substeps 'Stuur film door' en 'Prospect toevoegen aan Mini-ELEVA' wanneer iemand doorvraagt.",
-    ernst: "wel-overwegen",
+      "Niet kopiëren. Eventueel als optionele substep onder de 3-weg-meesterclass: 'welke vorm van info werkt voor deze prospect, live 3-weg, Mini-ELEVA, of doorsturen van een film'.",
+    ernst: "denk-richting",
+    herkomst: "sprint-idee-mogelijk",
   },
 ];
 
@@ -179,9 +194,19 @@ export default async function CoreV6StructuurPagina() {
 
       {/* Mijn observaties */}
       <section className="mb-10 card border-cm-gold/40">
-        <h2 className="text-cm-gold font-semibold text-sm uppercase tracking-wider mb-3">
+        <h2 className="text-cm-gold font-semibold text-sm uppercase tracking-wider mb-2">
           🔎 Mijn observaties ({OBSERVATIES.length})
         </h2>
+        <p className="text-cm-muted text-xs leading-relaxed mb-4">
+          <strong className="text-cm-white/80">Belangrijk:</strong> Sprint en
+          Core zijn verschillende paden. Sprint draait om dagelijks namen
+          toevoegen + uitnodigen. Core is breder met social media, freebies,
+          klantomgeving. Per observatie staat met een tag waar 'ie vandaan
+          komt: <em>sprint-volgorde-principe</em> (universele les),{" "}
+          <em>core-specifiek</em> (Core-eigen behoefte),{" "}
+          <em>kennisbank-basis</em> (Core-bron), of <em>sprint-idee-mogelijk</em>{" "}
+          (Sprint heeft iets dat in Core óók waardevol kan zijn, geen must).
+        </p>
         <ol className="space-y-5">
           {OBSERVATIES.map((o, i) => {
             const ernstColor =
@@ -190,6 +215,14 @@ export default async function CoreV6StructuurPagina() {
                 : o.ernst === "wel-overwegen"
                   ? "text-cm-gold/80"
                   : "text-cm-muted";
+            const herkomstColor =
+              o.herkomst === "sprint-volgorde-principe"
+                ? "bg-cm-gold/15 text-cm-gold border-cm-gold/40"
+                : o.herkomst === "core-specifiek"
+                  ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/40"
+                  : o.herkomst === "kennisbank-basis"
+                    ? "bg-sky-500/15 text-sky-300 border-sky-500/40"
+                    : "bg-cm-muted/15 text-cm-muted border-cm-muted/40";
             return (
               <li
                 key={i}
@@ -206,6 +239,11 @@ export default async function CoreV6StructuurPagina() {
                       </h3>
                       <span className={`text-xs uppercase ${ernstColor}`}>
                         {o.ernst}
+                      </span>
+                      <span
+                        className={`text-[10px] uppercase tracking-wider border rounded px-1.5 py-0.5 ${herkomstColor}`}
+                      >
+                        {o.herkomst}
                       </span>
                     </div>
                     <p className="text-cm-muted text-xs leading-relaxed mt-1">
