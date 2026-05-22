@@ -17,6 +17,7 @@ Wordt bijgewerkt onderweg. Per commit volgt hier een korte regel met wat is gebo
 - Task 8: Klantomgeving datamodel + SQL + types + pulse-momenten. Vijf tijdlijn-pulsmomenten gedefinieerd (dag 0 / 5 / 14 / 28 / 56). Mentor-acties + member-seintjes per pulse staan klaar. Inhoud kan Gaby morgen aanscherpen.
 - Task 9: Core V6 21-ankerstappen-scaffold (lib/playbook/core-dagen-v6.ts). Mechanica + taken concreet, watJeLeert + waaromWerktDit zijn PLACEHOLDER met TODO-GABY-markers. Klaar voor schrijfsessie met Gaby.
 - Task 10: CompactDMOBlok (K1-anti-overwhelm). Default ingeklapt, header toont 'X van Y vandaag'. Klikbaar af te vinken per taak.
+- Task 11: KlantenTegel (K2-anti-overwhelm). Eén tegel op dashboard met aantal klanten + nieuwe signalen. Klik opent lijst /klant (route komt in Task 14).
 
 ## Verhelderingsvragen voor jullie (Raoul + Gaby)
 
