@@ -20,6 +20,7 @@ Wordt bijgewerkt onderweg. Per commit volgt hier een korte regel met wat is gebo
 - Task 11: KlantenTegel (K2-anti-overwhelm). Eén tegel op dashboard met aantal klanten + nieuwe signalen. Klik opent lijst /klant (route komt in Task 14).
 - Task 12: Anti-overwhelm UI-primitives. GeadviseerdPad (K3 prospect-kaart, één knop + alternatieven-dropdown). PulseSignaalBox (K4 maximaal 3 signalen per dag, prioriteit-gesorteerd). MentorCuratorVoorstel (K5 voorstel + akkoord/niet-nu, nooit stille acties).
 - Task 13: Founder-CMS shell /instellingen/freebies. Toont live DB-freebies + PLACEHOLDER-templates uit code. Edit-knoppen komen in latere Fase. Founder-only (role-check + redirect).
+- Task 14: Klantomgeving entry-routes /klant + /klant layout. Beschermd door feature-flag core_v6_actief (default false). Toont lijst klanten met status + laatste activiteit. Per-klant-detail komt in latere Fase.
 
 ## Verhelderingsvragen voor jullie (Raoul + Gaby)
 
