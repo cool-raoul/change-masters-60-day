@@ -29,45 +29,107 @@ type Observatie = {
 
 const OBSERVATIES: Observatie[] = [
   {
+    titel: "Bezwaren-skills (Stap 14) ligt na de eerste 3-weg (Stap 11)",
+    signaal:
+      "Sprint heeft bezwaren-skills op DAG 5, ruim VOOR 3-weg-meesterclass (dag 9) en eerste 3-weg (dag 10). In V6 staat het op stap 14, NA de eerste 3-weg. Je doet je eerste 3-weg zonder voorbereiding op de meest voorkomende bezwaren. Sprint heeft dit bewust anders gevolgd.",
+    voorstel:
+      "Bezwaren-skills verplaatsen naar Stap 5 (direct na webshop-pivot in Stap 4, ruim VOOR 3-weg). 3-weg-meesterclass schuift dan naar Stap 11, eerste 3-weg naar Stap 12. Volgorde matched Sprint dag 5 → dag 9 → dag 10.",
+    ernst: "belangrijk",
+  },
+  {
+    titel: "Follow-up als eigen stap ontbreekt in V6 (Sprint dag 6 + dag 15)",
+    signaal:
+      "Sprint heeft follow-up TWEE keer als eigen dag: dag 6 (24-48u-regel) en dag 15 (ritme-week, follow-up als hoofdwerk). In V6 zit follow-up versplinterd over Stap 17 (opvolg-routine) en is het niet vroeg in beeld. Sprint zegt: de fortuin zit in de follow-up.",
+    voorstel:
+      "Follow-up-substeps toevoegen aan Stap 6 of 7 (vroeg, 24-48u-regel), en Stap 17 verbreden tot een echte ritme-stap. Vergelijkbaar met Sprint's dag 6 + dag 15.",
+    ernst: "belangrijk",
+  },
+  {
     titel: "Pre-post / 21-dagen-post staat te laat (Stap 6)",
     signaal:
-      "In de kennisbank zit pre-post al in stap 1 van de eerste 2 uur. In V6 staat 'm op ankerstap 6, na productkennis en de webshop-pivot. Maar als iemand net gestart is, doet 'ie juist een post DAT 'ie gestart is. En reacties + opvolging brengen weer eigen substeps mee (voorbereiding-PDF, schrijven, naar upline, plaatsen, reactie-script klaar, reageren binnen uur).",
+      "Sprint heeft pre-post niet (Sprint = 60-day Run, andere strategie). In de Core-kennisbank zit pre-post al in stap 1 van de eerste 2 uur. In V6 staat 'm op ankerstap 6, na productkennis en webshop-pivot. Plus alle reactie-vervolg-acties (reactie-script, reageren binnen uur, prospect naar Mini-ELEVA, film doorsturen) zijn niet als substeps gebouwd.",
     voorstel:
-      "Pre-post-flow eerder plaatsen (Stap 2 of 3) en uitsplitsen in 4-6 substeps: voorbereiding lezen, tekst schrijven, upline check, plaatsen, reactie-script-klaarzetten, reageren-routine. 21-dagen-post houden we op Stap 15 want die komt pas 21 dagen na de pre-post.",
+      "Pre-post-flow eerder plaatsen (Stap 2 of 3) en uitsplitsen in substeps: voorbereiding lezen, tekst schrijven, upline-check ('puntjes op de i'), plaatsen, reactie-script-klaarzetten, reageren-routine. 21-dagen-post houden we op Stap 15 want die komt pas 21 dagen na de pre-post.",
     ernst: "belangrijk",
+  },
+  {
+    titel: "FORM-vragen mogelijk te vroeg in V6 (Sprint pas dag 13)",
+    signaal:
+      "Sprint heeft FORM-vragen pas op DAG 13, als eigen dag ('FORM: leer iemand kennen in 5 minuten'). In V6 zit FORM in Stap 2, samen met top-20 opbouwen. Sprint legt het bewust uit elkaar: eerst basis (lijst, uitnodigen, bezwaren, 3-weg, follow-up), pas DAN FORM-context per prospect.",
+    voorstel:
+      "FORM-vragen losmaken van Stap 2 (alleen top-20 lijst opbouwen). FORM een eigen ankerstap maken rond Stap 12-13, na de eerste 3-weg-praktijk. Of: FORM behouden in Stap 2 als kort intro, en verdieping op Stap 13.",
+    ernst: "wel-overwegen",
+  },
+  {
+    titel: "Edification mogelijk te vroeg in V6 (Sprint pas dag 18)",
+    signaal:
+      "Sprint heeft edification als eigen dag op DAG 18 ('de zin die je sponsor laat schitteren'), na alle 3-weg-praktijk. In V6 zit edification verstopt onder Stap 10 (3-weg-meesterclass) als substep. Sprint geeft het bewust eigen ruimte na de eerste ervaringen.",
+    voorstel:
+      "Edification eigen ankerstap maken rond Stap 17 of 18 (na eerste 3-wegs ervaring). De edification-zin schrijf je beter na een paar 3-wegs, want dan weet je wat WERKT om je sponsor te introduceren.",
+    ernst: "wel-overwegen",
   },
   {
     titel: "Verdienmodel-basis (Stap 5) komt mogelijk te vroeg",
     signaal:
-      "Stap 5 zit nu nog in het Fundament-blok. Maar in praktijk vragen prospects pas vanaf de eerste echte gesprekken iets over verdienmodel. Te vroeg betekent: les vergeten tegen de tijd dat 'ie relevant wordt.",
+      "In Sprint zit verdienmodel niet als losse dag (zit verstopt in WHY-dag of Mentor). V6 heeft het op Stap 5, in het Fundament-blok. In praktijk vragen prospects pas vanaf de eerste echte gesprekken iets over verdienmodel. Te vroeg = vergeten tegen de tijd dat 'ie nodig is.",
     voorstel:
       "Verdienmodel-basis verschuiven naar rond Stap 9 of 10 (vlak voor de eerste 3-weg), zodat de basic-understanding-les vers in het hoofd zit op het moment dat 'ie gevraagd wordt.",
     ernst: "wel-overwegen",
   },
   {
-    titel: "Drie verhalen (Stap 8) kan parallel aan webshop-pivot (Stap 4)",
+    titel: "One-pager / presentatie-keuze ontbreekt in V6 (Sprint dag 11)",
     signaal:
-      "Stap 4 schrijft de webshop-zin in jouw stem. Stap 8 schrijft persoonlijk / product / business-verhaal. Die stem ontstaat in beide. Ze los van elkaar leren kan het gevoel geven van twee keer iets nieuws beginnen.",
+      "Sprint heeft op dag 11 een eigen dag 'One-pager of presentatie? Vandaag leer je kiezen'. In V6 is dit er niet expliciet. We hebben Mini-ELEVA als opvolg-pad, maar de bewuste keuze (live presentatie / 3-weg / one-pager via WhatsApp / film) wordt niet expliciet geleerd.",
     voorstel:
-      "Drie verhalen verplaatsen naar Stap 4 als ankerblok 4b (dezelfde dag), of als opvolger van Stap 4 (Stap 5 dus). Webshop-zin + drie verhalen samen leren als één stem-blok.",
+      "Een ankerstap toevoegen 'Welke informatie geef je een prospect?' met de keuzes: live 3-weg / Mini-ELEVA / one-pager / video door. Past rond Stap 11 of 12 in V6, na 3-weg-praktijk.",
     ernst: "denk-richting",
   },
   {
-    titel: "Bezwaren-skills (Stap 14) ligt na de eerste 3-weg (Stap 11)",
+    titel: "Pipeline-check ontbreekt in V6 (Sprint dag 19)",
     signaal:
-      "Eerste 3-weg in Stap 11, bezwaren-bibliotheek pas in Stap 14. Dat betekent dat je je eerste 3-weg doet zonder voorbereiding op de meest voorkomende bezwaren. Onnodig stressmoment.",
+      "Sprint heeft op dag 19 'Pipeline-check, waar lekt je trechter?'. Een reflectie-moment waarbij je kijkt waar in je funnel prospects verdwijnen. In V6 zit niets gelijkwaardigs.",
     voorstel:
-      "Bezwaren-skills VOOR de eerste 3-weg plaatsen, bijvoorbeeld als Stap 10 (vlak voor of na de 3-weg-meesterclass). De 3-weg-praktijk komt dan met meer rugdekking.",
-    ernst: "belangrijk",
+      "Pipeline-check ankerstap toevoegen rond Stap 18-19, vergelijkbaar met Sprint dag 19. Member kijkt naar z'n eigen namenlijst-statuses + de klantomgeving-overview, en de Mentor helpt patronen herkennen.",
+    ernst: "wel-overwegen",
   },
   {
     titel: "Reactie-opvolging als losse substeps mist overal",
     signaal:
       "Bij Stap 6 (post plaatsen), Stap 7 (Brookes + freebie), Stap 9 (warme uitnodigingen), Stap 12 (Stories) en Stap 15 (resultaat-post) komen ALLEMAAL reacties binnen waar je weer wat mee moet. Nu staat er telkens losjes 'reageer binnen 1 uur'. Niet als concrete substep met script.",
     voorstel:
-      "Per post-stap een vaste substep 'Reactie-script klaarzetten' en 'Reageer binnen 1 uur op alles wat binnenkomt'. Inline-embed naar /scripts/reageer-script. Plus mogelijke vervolg-substeps 'Stuur film door' en 'Prospect toevoegen aan Mini-ELEVA'.",
+      "Per post-stap een vaste substep 'Reactie-script klaarzetten' en 'Reageer binnen 1 uur op alles wat binnenkomt'. Plus mogelijke vervolg-substeps 'Stuur film door' en 'Prospect toevoegen aan Mini-ELEVA' wanneer iemand doorvraagt.",
     ernst: "wel-overwegen",
   },
+];
+
+// Sprint-volgorde als referentie. Door op /core-v6/structuur direct te zien
+// welke Sprint-dag inhoudelijk overlapt met welke V6-ankerstap.
+const SPRINT_REFERENTIE: Array<{
+  dag: number;
+  sprint: string;
+  v6Match: string;
+}> = [
+  { dag: 1, sprint: "🚀 Welkom + fundament", v6Match: "Stap 1, vergelijkbaar" },
+  { dag: 2, sprint: "👋 Open je hoofd, alle namen op de lijst", v6Match: "Stap 2 (top-20)" },
+  { dag: 3, sprint: "📱 Socials goudmijn, 3 namen + 5 invites", v6Match: "(ontbreekt in V6)" },
+  { dag: 4, sprint: "💬 Uitnodigen, 4 stappen die werken", v6Match: "Stap 4 (webshop-pivot)" },
+  { dag: 5, sprint: "🛡️ Bezwaren, Feel-Felt-Found", v6Match: "Stap 14 (te laat in V6)" },
+  { dag: 6, sprint: "🔄 Fortuin in follow-up, 24-48u", v6Match: "(versplinterd in V6)" },
+  { dag: 7, sprint: "🎉 Week 1 reflectie", v6Match: "(ontbreekt expliciet)" },
+  { dag: 8, sprint: "🚀 Snelheid wint van perfectie", v6Match: "(impliciet in V6)" },
+  { dag: 9, sprint: "💪 3-weg-meesterclass, 5 stappen", v6Match: "Stap 10" },
+  { dag: 10, sprint: "🤝 Eerstvolgende 3-weg starten", v6Match: "Stap 11" },
+  { dag: 11, sprint: "🎯 One-pager of presentatie?", v6Match: "(ontbreekt in V6)" },
+  { dag: 12, sprint: "🔄 Nee op business? Bied webshop", v6Match: "(impliciet in Core, want webshop = frame)" },
+  { dag: 13, sprint: "🎙️ FORM in 5 minuten", v6Match: "Stap 2 (te vroeg in V6)" },
+  { dag: 14, sprint: "🏁 Week 2 review", v6Match: "(ontbreekt expliciet)" },
+  { dag: 15, sprint: "⏱️ Follow-up ritme-week", v6Match: "Stap 17" },
+  { dag: 16, sprint: "🎯 5 types prospects", v6Match: "Stap 18" },
+  { dag: 17, sprint: "🎯 Closing met DTT", v6Match: "Stap 19 (closingsvraag)" },
+  { dag: 18, sprint: "✨ Edification eigen ankerstap", v6Match: "Stap 10 substep (te vroeg in V6)" },
+  { dag: 19, sprint: "🔍 Pipeline-check", v6Match: "(ontbreekt in V6)" },
+  { dag: 20, sprint: "💪 Vraag de beslissing", v6Match: "Stap 19 (mogelijk samen met closing)" },
+  { dag: 21, sprint: "🏆 21 dagen reflectie", v6Match: "Stap 21" },
 ];
 
 export default async function CoreV6StructuurPagina() {
@@ -168,6 +230,60 @@ export default async function CoreV6StructuurPagina() {
           Bespreek deze observaties met Gaby. Geef me terug welke aanpassingen
           mogen door (titel + nieuwe positie + welke substeps eraan), dan
           herschrijf ik de structuur en pas substep-teksten daarna aan.
+        </p>
+      </section>
+
+      {/* Sprint-referentie-tabel */}
+      <section className="mb-10 card border-cm-gold/20">
+        <h2 className="text-cm-gold font-semibold text-sm uppercase tracking-wider mb-3">
+          🪟 Sprint-volgorde als referentie
+        </h2>
+        <p className="text-cm-muted text-xs mb-3 leading-relaxed">
+          Sprint heeft 21 dagen in een specifieke volgorde, waar al veel
+          denkwerk in zit. Hieronder per Sprint-dag wat het inhoudelijk is
+          en waar het in Core V6 zit (of mist).
+        </p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-xs">
+            <thead>
+              <tr className="text-cm-gold/80 text-left border-b border-cm-border">
+                <th className="py-1.5 pr-2 font-semibold">Sprint</th>
+                <th className="py-1.5 pr-2 font-semibold">Onderwerp</th>
+                <th className="py-1.5 font-semibold">In V6</th>
+              </tr>
+            </thead>
+            <tbody>
+              {SPRINT_REFERENTIE.map((r) => {
+                const ontbreekt = r.v6Match.includes("ontbreekt");
+                const teLaatOfVroeg =
+                  r.v6Match.includes("te laat") || r.v6Match.includes("te vroeg");
+                const versplinterd = r.v6Match.includes("versplinterd");
+                const flag = ontbreekt
+                  ? "text-amber-400"
+                  : teLaatOfVroeg || versplinterd
+                    ? "text-cm-gold/80"
+                    : "text-cm-white/70";
+                return (
+                  <tr
+                    key={r.dag}
+                    className="border-b border-cm-border/50 align-top"
+                  >
+                    <td className="py-1.5 pr-2 text-cm-muted whitespace-nowrap">
+                      Dag {r.dag}
+                    </td>
+                    <td className="py-1.5 pr-2 text-cm-white/85">
+                      {r.sprint}
+                    </td>
+                    <td className={`py-1.5 ${flag}`}>{r.v6Match}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-3 text-xs text-cm-muted italic">
+          Amber = ontbreekt in V6. Goud = zit erin maar verkeerd geplaatst.
+          Wit = klopt grotendeels.
         </p>
       </section>
 
