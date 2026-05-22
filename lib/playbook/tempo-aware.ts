@@ -45,7 +45,7 @@ import type { Dag, ControllableTaak } from "@/lib/playbook/types";
 // dat sponsor zelf schrijft in eigen woorden.
 // ============================================================
 
-export const PARTNER_CHECK_UITLEG = `Sponsor-zijn is een MENSELIJKE rol. Geen scripts, geen AI-zinnen, gewoon jij die contact houdt met de mensen die jij hebt aangemeld. ELEVA toont je waar aandacht nodig is. Wat je stuurt, kies je zelf, in jouw eigen woorden.
+export const PARTNER_CHECK_UITLEG = `Sponsor-zijn is een MENSELIJKE rol. Geen scripts, geen AI-zinnen, gewoon jij die contact houdt met de mensen die jij hebt aangemeld. Dit geldt voor zowel NIEUWE partners (vers aangemeld, eerste dagen, eerste week) als BESTAANDE partners (die je al langer in je team hebt, en die ook gewoon dagelijks of wekelijks even contact verdienen als nodig). ELEVA toont je waar aandacht nodig is. Wat je stuurt, kies je zelf, in jouw eigen woorden.
 
 Hieronder zie je je directe partners (en optioneel de 2e laag via uitklap-knop). Per partner: hun dag, hun laatste login, en hoeveel % van hun verplichte taken ze deze week hebben afgevinkt. Een ⚠️-icoon verschijnt bij urgentie (>72u stil OF <30% taken).
 
@@ -63,7 +63,7 @@ Wil je dieper leren hoe je sponsor bent? In de Academy staat de Audio-onderweg-t
 export function partnerCheckStap(dagNummer: number): ControllableTaak {
   return {
     id: `dag${dagNummer}-partner-check`,
-    label: "🤝 Check je nieuwe partner(s) vandaag",
+    label: "🤝 Check je (nieuwe) partner(s) vandaag",
     uitleg: PARTNER_CHECK_UITLEG,
     verplicht: false,
     inlineEmbed: "partner-check",
