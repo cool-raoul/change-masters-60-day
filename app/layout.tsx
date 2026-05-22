@@ -7,6 +7,7 @@ import {
   ThemeProvider,
   themeInlineScript,
 } from "@/components/theme/ThemeContext";
+import { ModusBodyClass } from "@/components/theme/ModusBodyClass";
 
 export const metadata: Metadata = {
   title: "ELEVA",
@@ -42,7 +43,7 @@ export const viewport: Viewport = {
   themeColor: "#c4a04a",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -68,10 +69,12 @@ export default function RootLayout({
       </head>
       <body>
         <ThemeProvider>
-          <TaalProvider>
-            {children}
-            <ServiceWorkerRegister />
-          </TaalProvider>
+          <ModusBodyClass>
+            <TaalProvider>
+              {children}
+              <ServiceWorkerRegister />
+            </TaalProvider>
+          </ModusBodyClass>
           <Toaster
             theme="dark"
             toastOptions={{

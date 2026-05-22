@@ -129,7 +129,8 @@ export default async function AcademyTrainingPagina({
           return (
             <div
               key={mod.nummer}
-              className={`card space-y-3 ${
+              id={`module-${mod.nummer}`}
+              className={`card space-y-3 scroll-mt-20 ${
                 moduleIsKlaar
                   ? "border-emerald-500/40"
                   : voltooidInModule > 0

@@ -93,7 +93,11 @@ export function storiesStap(dagNummer: number): ControllableTaak {
     label: "📱 1 tot 3 stories + reageren op andermans stories",
     uitleg: STORIES_UITLEG,
     verplicht: true,
-    actieRoute: "/academy/social-media",
+    // Deeplink rechtstreeks naar module 8 'Stories die werken' in de
+    // social-media-training (academy/[slug]/page.tsx zet id='module-N'
+    // op elke module-card, scroll-mt-20 voor mooie offset).
+    actieRoute: "/academy/social-media#module-8",
+    actieRouteLabel: "📖 Bekijk training: Stories die werken (module 8) →",
   };
 }
 

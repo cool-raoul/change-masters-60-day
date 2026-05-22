@@ -783,9 +783,11 @@ function VandaagFlowInner({
                   }
                   className="btn-secondary w-full py-3 text-center text-sm font-semibold inline-block"
                 >
-                  {/^https?:\/\//i.test(huidigeTaak.actieRoute)
-                    ? "Open in nieuwe tab ↗"
-                    : "Open deze plek →"}
+                  {huidigeTaak.actieRouteLabel
+                    ? huidigeTaak.actieRouteLabel
+                    : /^https?:\/\//i.test(huidigeTaak.actieRoute)
+                      ? "Open in nieuwe tab ↗"
+                      : "Open deze plek →"}
                 </a>
               )}
 

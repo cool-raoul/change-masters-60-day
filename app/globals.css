@@ -40,11 +40,15 @@
   --cm-on-gold: 255 253 246;
 }
 
-/* CORE V6 — luchtig grijs, eigen smaak naast Sprint.
-   Wordt geactiveerd door een wrapper-div met class="core-v6"
-   in app/core-v6/layout.tsx. Tailwind-utilities die op
-   var(--cm-*) leunen pakken automatisch deze waarden over
-   binnen de Core V6-pagina's. */
+/* MODUS-CORE — luchtig grijs, eigen smaak naast Sprint.
+   Wordt door ModusBodyClass-component op root-layout-niveau gezet
+   voor alle users met modus='core'. Voor de feature-flag-pilot-route
+   /core-v6 wordt dezelfde stijl gebruikt via de .core-v6 selector
+   (zodat ook niet-Core-users die de pilot via direct-link openen
+   alvast de luchtige look zien).
+
+   Werkt naast .light: zie .light .modus-core verderop. */
+.modus-core,
 .core-v6 {
   --cm-black: 38 44 54;          /* hoofd-achtergrond: luchtig leigrijs, geen zwart */
   --cm-surface: 50 58 70;        /* cards: iets lichter grijs */
@@ -56,6 +60,23 @@
   --cm-white: 236 234 228;       /* warme off-white tekst */
   --cm-muted: 175 178 186;       /* zachter muted-grijs voor luchtig effect */
   --cm-on-gold: 38 44 54;        /* btn-tekst op gold: zelfde luchtige grijs */
+}
+
+/* In LIGHT-mode is de Core-variant nog wittere variant van Optie C cream.
+   Sprint blijft de huidige cream, Core wordt bijna-wit met zachte cream-
+   accenten. Zo zien Core-members in light ook duidelijk verschil. */
+:root.light .modus-core,
+:root.light .core-v6 {
+  --cm-black: 254 252 248;       /* bg: bijna-wit met heel zachte warmte */
+  --cm-surface: 255 254 252;     /* cards: zuiverder wit */
+  --cm-surface-2: 248 244 235;   /* sub-cards: lichte cream-toets */
+  --cm-border: 200 188 152;      /* zachtere goud-tint border */
+  --cm-gold: 175 142 70;         /* iets dieper goud voor leesbaarheid op wit */
+  --cm-gold-light: 210 175 90;
+  --cm-gold-dim: 110 88 42;
+  --cm-white: 52 44 36;          /* tekst: warmer donker dan Sprint-licht */
+  --cm-muted: 130 118 100;
+  --cm-on-gold: 255 254 252;
 }
 
 @layer base {

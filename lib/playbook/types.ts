@@ -29,6 +29,13 @@ export type ControllableTaak = {
    */
   actieRoute?: string;
   /**
+   * Optioneel: aangepaste tekst voor de actieRoute-knop. Default
+   * "Open deze plek →" is generiek; voor specifieke routes (bv. een
+   * Academy-deeplink naar een specifieke module) is een duidelijker
+   * label fijner. Wordt alleen gebruikt als actieRoute is gezet.
+   */
+  actieRouteLabel?: string;
+  /**
    * Optioneel: slug naar de films-CMS. Als gezet, rendert de tile-UI
    * een uitklapbare film-embed onder de taak, zodat admin-stappen
    * (webshop, kredietformulier, teams-admin, bestellinks) een
