@@ -133,6 +133,24 @@ export function uitnodigingenUitleg(
 }
 
 // ============================================================
+// Centrale uitleg voor "stuur X mensen een eerste bericht (opener)".
+// Een opener is NIET een casual catch-up, en NIET een pitch. Het is
+// een natuurlijke, specifieke zin die een gesprek opent. Helper geeft
+// member body + concrete voorbeelden + verwijzing naar /scripts
+// (waar tag-'opener' scripts staan) + Mentor-knop benadrukt.
+// ============================================================
+export function eersteBerichtUitleg(
+  aantal: number,
+  opties?: { compact?: boolean; extraIntro?: string },
+): string {
+  const prefix = opties?.extraIntro ? `${opties.extraIntro}\n\n` : "";
+  if (opties?.compact) {
+    return `${prefix}Stuur ${aantal} mensen uit je lijst een persoonlijk eerste bericht. Geen pitch, geen catch-up. Wel een opener: een menselijke specifieke vraag waar je oprecht nieuwsgierig naar bent.\n\nKORTE VOORBEELDEN:\n• "Hé Linda, moest aan je denken na onze koffie laatst. Hoe is het nu met die nieuwe rol?"\n• "Hé Pieter, ik zag je verhaal over je wandeling in Limburg. Welke route was dat?"\n• "Hé Anne, hoe lang is het ook alweer geleden? Hoe is het bij jou?"\n\nMEER OPENERS NODIG? In /scripts vind je kant-en-klare openers per situatie (warm netwerk, koud/oud contact, social-story-reactie, lead-magnet-binnenkomer). Niet woordelijk overnemen, wel als startpunt om in jouw stem te zetten.\n\nDe Mentor-knop hieronder helpt je een opener te maken die past bij EEN SPECIFIEKE prospect (de Mentor kent de FORM-context als je die hebt vastgelegd).\n\nNa versturen: spraakfunctie "Ik heb een gesprek gestart met [naam]" → fase 'in gesprek'.`;
+  }
+  return `${prefix}Pak ${aantal} mensen uit je lijst en stuur ze 1-op-1 een persoonlijk bericht.\n\n📱 HOE JE DIRECT IN WHATSAPP, INSTAGRAM OF FACEBOOK BELANDT\n\nIn je namenlijst staan naast elke prospect kleine icoontjes (WhatsApp, Instagram, Facebook). Eén klik op het juiste icoon en de juiste app opent met die persoon, geen kopiëren-en-plakken, geen zoeken. Vereiste: telefoonnummer of social-handle moet ingevuld zijn op de kaart. Heb je dat niet? Klik op de prospect, vul het in, en daarna verschijnen de icoontjes vanzelf op zowel de lijst als de detail-kaart.\n\nWAT IS EEN OPENER, EN WAT IS HET NIET?\n\nEen opener is NIET:\n• Een pitch ("ik heb iets geweldigs voor je")\n• Een casual koffie-catch-up zonder doel ("hoe is het ouwe?")\n• Een verkapt verkoop-bericht ("ik dacht aan jou ivm m'n nieuwe ding")\n\nEen opener IS:\n• Een menselijke specifieke vraag waar je OPRECHT nieuwsgierig naar bent\n• Een verwijzing naar iets dat ZIJ hebben gedeeld (post, verhaal, gesprek)\n• Een herinnering uit jullie gezamenlijke verleden waarmee je rapport opent\n• Kort en concreet (één tot twee zinnen, niet meer)\n\nDoel: een gesprek openen dat binnen 1 tot 3 berichten leidt tot een uitnodiging voor een kijkmoment, wanneer dat natuurlijk past. Niet weken koffieklokken voordat je 'iets vertelt', want dat voelt voor de prospect als een verborgen agenda.\n\nVOORBEELD-OPENERS PER SITUATIE\n\n1. WARM CONTACT, met gedeelde geschiedenis:\n   "Hé Linda, moest aan je denken na onze koffie laatst. Hoe is het nu met die nieuwe rol?"\n\n2. OUD CONTACT, langere tijd niet gesproken:\n   "Hé Anne, hoe lang is het ook alweer geleden dat we elkaar hebben gesproken? Hoe is het bij jou?"\n\n3. SOCIAL-STORY-REACTIE, na hun post of story:\n   "Hé Pieter, ik zag je verhaal over je wandeling in Limburg. Welke route was dat?"\n\n4. GEDEELDE INTERESSE OF HOBBY:\n   "Hé Marieke, zag je net op het sportveld. Wat goed dat je weer aan het trainen bent! Hoe gaat dat voor je?"\n\n5. WAARDERING UITSPREKEN:\n   "Hé Jeroen, jouw bericht over [onderwerp] bleef me bezighouden. Hoe sta je er nu in?"\n\nMEER OPENERS NODIG? In /scripts vind je verschillende opener-templates per situatie (warm netwerk, koud/oud contact, social-story-reactie, lead-magnet-binnenkomer, Serious Business Builder-aanspreek). Niet woordelijk overnemen, wel als startpunt om in jouw stem te zetten.\n\nDe drie hulp-knoppen onder dit vak helpen je:\n• VOORBEELDEN BEKIJKEN: open /scripts in de uitnodigingen-sectie\n• MET JE SPONSOR: korte WhatsApp met "Hoe zou jij dit eerste bericht openen voor [naam], context [bv. oude collega]?"\n• MET DE MENTOR: laat de Mentor een opener op maat schrijven voor een specifieke prospect (de Mentor kent de FORM-context als je die hebt vastgelegd op de prospect-kaart)\n\nNa het versturen, vertel het aan de spraakfunctie: "Ik heb een gesprek gestart met [naam]". De prospect schuift dan automatisch van 'prospect' naar 'in gesprek' in je pijplijn.\n\nALS IEMAND WARM TERUGKOMT vandaag, hoef je niet te wachten tot morgen. Reageer kort, peil wat ze nu bezighoudt, en bewaar de uitnodig-stap voor wanneer dat natuurlijk past, maar het móét niet weken wachten.`;
+}
+
+// ============================================================
 // Centrale uitleg voor "voeg X nieuwe namen toe" stappen.
 // Wordt op heel veel dagen gebruikt (dag 3+). Helper-functie zodat
 // we de uitleg op één plek onderhouden en uitbreiden.
@@ -221,8 +239,11 @@ function bouwDag3VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     // --- Stap B: eerste bericht sturen ---
     {
       id: "dag3-eerste-berichten",
-      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht`,
-      uitleg: `Pak ${dd.contacten} mensen uit je lijst en stuur ze 1-op-1 een persoonlijk bericht.\n\n📱 HOE JE DIRECT IN WHATSAPP, INSTAGRAM OF FACEBOOK BELANDT\n\nIn je namenlijst staan naast elke prospect kleine icoontjes (WhatsApp, Instagram, Facebook). Eén klik op het juiste icoon en de juiste app opent met die persoon, geen kopiëren-en-plakken, geen zoeken. Vereiste: telefoonnummer of social-handle moet ingevuld zijn op de kaart. Heb je dat niet? Klik op de prospect, vul het in, en daarna verschijnen de icoontjes vanzelf op zowel de lijst als de detail-kaart.\n\nBELANGRIJK: DIT IS EEN OPENER, GEEN CASUAL CATCH-UP.\n\nTopcoaches in netwerkmarketing zijn er duidelijk over: een eerste bericht is bedoeld om een gesprek te openen dat BINNEN 1 TOT 3 BERICHTEN leidt tot een uitnodiging voor een kijkmoment. Niet om eerst weken te koffieklokken en pas later 'iets te vertellen'. Dat tweede pad voelt voor de prospect als een verborgen agenda, ze hebben jou prima door wanneer de pitch eindelijk komt.\n\nDe regel: open zo dat het natuurlijk voelt, en wees binnen 1-3 berichten bij je uitnodiging. Vandaag oefen je STAP 1, het openen. MORGEN (dag 4) leer je de uitnodig-formule die je per direct mag toepassen op iedereen die vandaag warm reageert.\n\nWAT SCHRIJF JE ALS OPENER?\n\nGeen pitch. Geen 'ik heb een geweldige kans'. Wél een menselijke, specifieke vraag waar je oprecht nieuwsgierig naar bent. Een specifieke verwijzing naar iets dat zij hebben gedeeld of een herinnering uit jullie verleden.\n\nVoorbeelden:\n• "Hé Linda, ik moest aan je denken na onze koffie laatst. Hoe is het nu met die nieuwe rol?"\n• "Hé Pieter, ik zag je verhaal over je wandeling in Limburg. Welke route was dat?"\n• "Hé Anne, hoe lang is het ook alweer geleden dat we elkaar hebben gesproken? Hoe is het bij jou?"\n\nZodra je het bericht hebt verstuurd, vertel het aan de spraakfunctie: "Ik heb een gesprek gestart met [naam]". De prospect gaat dan automatisch van 'prospect' naar 'in gesprek' in je pijplijn.\n\nALS IEMAND WARM TERUGKOMT vandaag, hoef je niet te wachten tot morgen. Reageer kort, peil wat ze nu bezighoudt en bewaar de uitnodig-stap voor wanneer dat natuurlijk past, maar weet: het móét niet weken wachten.`,
+      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht (opener)`,
+      uitleg: eersteBerichtUitleg(dd.contacten, {
+        extraIntro: "Vandaag oefen je STAP 1, het openen. MORGEN (dag 4) leer je de vier bouwstenen van een sterke webshop-uitnodiging die je per direct mag toepassen op iedereen die vandaag warm reageert.",
+      }),
+      uitnodigHelpKnoppen: true,
       verplicht: true,
       actieRoute: "/namenlijst",
     },
@@ -312,8 +333,11 @@ function bouwDag4VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     // --- Stap B: eerste berichten ---
     {
       id: "dag4-eerste-berichten",
-      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht`,
-      uitleg: `Pak ${dd.contacten} mensen uit je lijst en stuur een persoonlijk eerste bericht.\n\n📱 DIRECT IN WHATSAPP/IG/FB BELANDEN: in je namenlijst staan naast elke prospect kleine icoontjes (WhatsApp, Instagram, Facebook). Eén klik en de juiste app opent met die persoon. Vereiste: telefoonnummer of social-handle staat op de kaart. Niet ingevuld? Open de prospect, vul aan, en de icoontjes verschijnen vanzelf.\n\nLINK MET DE LES VAN VANDAAG: dit is je OPENER. De webshop-uitnodiging die je hierboven leerde (vier bouwstenen) zet je vandaag niet om in losse berichten over weken uit te smeren, maar om in dezelfde chat-flow door te zetten zodra het natuurlijk past. Topcoaches zijn het er over eens: openen → korte verbinding → uitnodigen, het liefst in dezelfde gespreksbeurt, hooguit binnen een paar berichten. Wachten met de uitnodiging tot 'over een week' voelt voor de prospect als een verborgen agenda.\n\nPRAKTISCH:\n\n1. Open met een menselijke, specifieke vraag (geen pitch). "Hé [naam], moest aan je denken omdat..." of "Hé [naam], hoe gaat het nu met...?"\n2. Laat ze reageren. Lees wat ze NOEMEN (energie, druk, doelen, zorgen).\n3. Brug naar de uitnodiging: gebruik de vier bouwstenen van vandaag (haakje → manier-gevonden-zin → hoe → permissie-vraag). Inspiratie? Open /scripts of laat de Mentor er een schrijven. Drie hulp-knoppen onder de hoofd-stap brengen je naar voorbeelden, je sponsor of de Mentor.\n\nVia de spraakfunctie meld je: "Ik heb een gesprek gestart met [naam]" → fase 'in gesprek'. Zodra je hen ook uitnodigt: "Ik heb [naam] uitgenodigd" → fase 'uitgenodigd'.`,
+      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht (opener)`,
+      uitleg: eersteBerichtUitleg(dd.contacten, {
+        extraIntro: "LINK MET DE LES VAN VANDAAG: dit is je OPENER. De webshop-uitnodiging die je hierboven leerde (vier bouwstenen) zet je vandaag niet om in losse berichten over weken uit te smeren, maar om in dezelfde chat-flow door te zetten zodra het natuurlijk past. Topcoaches zijn het er over eens: openen → korte verbinding → uitnodigen, het liefst in dezelfde gespreksbeurt, hooguit binnen een paar berichten.",
+      }),
+      uitnodigHelpKnoppen: true,
       verplicht: true,
       actieRoute: "/namenlijst",
     },
@@ -385,8 +409,9 @@ function bouwDag5VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     // --- Stap B: eerste berichten ---
     {
       id: "dag5-eerste-berichten",
-      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht`,
-      uitleg: `Pak ${dd.contacten} mensen uit je lijst en stuur ze 1-op-1 een persoonlijk bericht.\n\n📱 HOE JE DIRECT IN WHATSAPP, INSTAGRAM OF FACEBOOK BELANDT\n\nIn je namenlijst staan naast elke prospect kleine icoontjes (WhatsApp, Instagram, Facebook). Eén klik en de juiste app opent met die persoon. Vereiste: telefoonnummer of social-handle staat op de kaart. Niet ingevuld? Open de prospect, vul aan, en de icoontjes verschijnen vanzelf.\n\nDIT IS EEN OPENER, GEEN CASUAL CATCH-UP\n\nEen eerste bericht is bedoeld om een gesprek te openen dat BINNEN 1 TOT 3 BERICHTEN leidt tot een uitnodiging voor een kijkmoment. Niet om eerst weken te koffieklokken.\n\nWAT SCHRIJF JE\n\nGeen pitch. Wél een menselijke, specifieke vraag waar je oprecht nieuwsgierig naar bent.\n\nVoorbeelden:\n- "Hé Linda, ik moest aan je denken na onze koffie laatst. Hoe is het nu met die nieuwe rol?"\n- "Hé Pieter, ik zag je verhaal over je wandeling in Limburg. Welke route was dat?"\n\nZodra je het bericht hebt verstuurd, vertel het aan de spraakfunctie: "Ik heb een gesprek gestart met [naam]". De prospect gaat dan automatisch van 'prospect' naar 'in gesprek'.`,
+      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht (opener)`,
+      uitleg: eersteBerichtUitleg(dd.contacten),
+      uitnodigHelpKnoppen: true,
       verplicht: true,
       actieRoute: "/namenlijst",
     },
@@ -472,8 +497,9 @@ function bouwDag6VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     // --- Stap B: eerste berichten ---
     {
       id: "dag6-eerste-berichten",
-      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht`,
-      uitleg: `Pak ${dd.contacten} mensen uit je lijst en stuur ze een persoonlijk eerste bericht.\n\n📱 DIRECT IN WHATSAPP/IG/FB BELANDEN: in je namenlijst staan naast elke prospect kleine icoontjes (WhatsApp, Instagram, Facebook). Eén klik en de juiste app opent met die persoon. Vereiste: telefoonnummer of social-handle staat op de kaart.\n\nDit is een OPENER, geen casual catch-up. Doel: binnen 1-3 berichten leiden naar een uitnodiging. Vandaag verstuur je later ook uitnodigingen, voor mensen die warm reageren kun je vandaag al doorzetten.\n\nVia de spraakfunctie meld je: "Ik heb een gesprek gestart met [naam]" → fase 'in gesprek'.`,
+      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht (opener)`,
+      uitleg: eersteBerichtUitleg(dd.contacten, { compact: true }),
+      uitnodigHelpKnoppen: true,
       verplicht: true,
       actieRoute: "/namenlijst",
     },
@@ -575,8 +601,9 @@ function bouwDag7VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     // --- Stap 3: eerste berichten (MINIMAAL) ---
     {
       id: "dag7-eerste-berichten",
-      label: `💬 Stuur minimaal ${min.contacten} mensen een eerste bericht`,
-      uitleg: `Minimaal ${min.contacten} eerste berichten vandaag, meer mag.\n\n📱 In je namenlijst staan naast elke prospect kleine icoontjes (WhatsApp, Instagram, Facebook). Eén klik en de juiste app opent met die persoon.\n\nDit is een opener, geen casual catch-up. Doel: binnen 1-3 berichten leiden naar een uitnodiging. Via de spraakfunctie meld je: "Ik heb een gesprek gestart met [naam]".`,
+      label: `💬 Stuur minimaal ${min.contacten} mensen een eerste bericht (opener)`,
+      uitleg: `Minimaal ${min.contacten} eerste berichten vandaag, meer mag.\n\n${eersteBerichtUitleg(min.contacten, { compact: true })}`,
+      uitnodigHelpKnoppen: true,
       verplicht: true,
       actieRoute: "/namenlijst",
     },
@@ -649,8 +676,9 @@ function bouwDag8VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     // --- Stap B: eerste berichten ---
     {
       id: "dag8-eerste-berichten",
-      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht`,
-      uitleg: `Pak ${dd.contacten} mensen uit je lijst en stuur ze een persoonlijk eerste bericht.\n\n📱 DIRECT IN WHATSAPP/IG/FB: in je namenlijst staan naast elke prospect kleine icoontjes (WhatsApp, Instagram, Facebook). Eén klik en de juiste app opent. Geen kopiëren-en-plakken, geen zoeken.\n\nDit is een opener, geen casual catch-up. Doel: binnen 1-3 berichten leiden naar een uitnodiging. Via de spraakfunctie meld je: "Ik heb een gesprek gestart met [naam]".`,
+      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht (opener)`,
+      uitleg: eersteBerichtUitleg(dd.contacten, { compact: true }),
+      uitnodigHelpKnoppen: true,
       verplicht: true,
       actieRoute: "/namenlijst",
     },
@@ -720,8 +748,9 @@ function bouwDag9VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     // --- Stap B: eerste berichten ---
     {
       id: "dag9-eerste-berichten",
-      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht`,
-      uitleg: `Pak ${dd.contacten} mensen uit je lijst en stuur ze een persoonlijk eerste bericht.\n\n📱 DIRECT IN WHATSAPP/IG/FB: in je namenlijst staan naast elke prospect kleine icoontjes. Eén klik en de juiste app opent met die persoon.\n\nDit is een opener, geen casual catch-up. Via de spraakfunctie: "Ik heb een gesprek gestart met [naam]" → fase 'in gesprek'.`,
+      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht (opener)`,
+      uitleg: eersteBerichtUitleg(dd.contacten, { compact: true }),
+      uitnodigHelpKnoppen: true,
       verplicht: true,
       actieRoute: "/namenlijst",
     },
@@ -790,8 +819,9 @@ function bouwDag10VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     // --- Stap B: eerste berichten ---
     {
       id: "dag10-eerste-berichten",
-      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht`,
-      uitleg: `Pak ${dd.contacten} mensen en stuur een persoonlijk eerste bericht.\n\n📱 Gebruik de kleine icoontjes in je namenlijst om direct in WhatsApp/Instagram/Facebook te belanden, geen kopiëren-en-plakken.\n\nVia de spraakfunctie: "Ik heb een gesprek gestart met [naam]" → fase 'in gesprek'.`,
+      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht (opener)`,
+      uitleg: eersteBerichtUitleg(dd.contacten, { compact: true }),
+      uitnodigHelpKnoppen: true,
       verplicht: true,
       actieRoute: "/namenlijst",
     },
@@ -869,8 +899,9 @@ function bouwDag11VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     // --- Stap B: eerste berichten ---
     {
       id: "dag11-eerste-berichten",
-      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht`,
-      uitleg: `Pak ${dd.contacten} mensen en stuur een persoonlijk eerste bericht.\n\n📱 Gebruik de kleine icoontjes in je namenlijst om direct in WhatsApp/Instagram/Facebook te belanden.\n\nVia de spraakfunctie: "Ik heb een gesprek gestart met [naam]" → fase 'in gesprek'.`,
+      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht (opener)`,
+      uitleg: eersteBerichtUitleg(dd.contacten, { compact: true }),
+      uitnodigHelpKnoppen: true,
       verplicht: true,
       actieRoute: "/namenlijst",
     },
@@ -948,8 +979,9 @@ export function standaardABCDEstappen(
     },
     {
       id: `dag${dagNummer}-eerste-berichten`,
-      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht`,
-      uitleg: `Pak ${dd.contacten} mensen uit je lijst en stuur een persoonlijk eerste bericht.\n\n📱 In je namenlijst staan naast elke prospect kleine icoontjes (WhatsApp, Instagram, Facebook). Eén klik en de juiste app opent met die persoon, geen kopiëren-en-plakken.\n\nDit is een opener, geen casual catch-up. Doel: binnen 1-3 berichten leiden naar een uitnodiging. Via de spraakfunctie: "Ik heb een gesprek gestart met [naam]" → fase 'in gesprek'.`,
+      label: `💬 Stuur ${dd.contacten} mensen een eerste bericht (opener)`,
+      uitleg: eersteBerichtUitleg(dd.contacten, { compact: true }),
+      uitnodigHelpKnoppen: true,
       verplicht: true,
       actieRoute: "/namenlijst",
     },
@@ -1336,8 +1368,9 @@ function bouwDag21VandaagDoen(uren: CommitmentUren): ControllableTaak[] {
     },
     {
       id: "dag21-eerste-berichten",
-      label: `💬 Stuur minimaal ${min.contacten} mensen een eerste bericht`,
-      uitleg: `Minimaal ${min.contacten} eerste berichten vandaag, meer mag.\n\n📱 In je namenlijst staan naast elke prospect kleine icoontjes (WhatsApp, Instagram, Facebook). Eén klik en de juiste app opent met die persoon.\n\nVia de spraakfunctie: "Ik heb een gesprek gestart met [naam]" → fase 'in gesprek'.`,
+      label: `💬 Stuur minimaal ${min.contacten} mensen een eerste bericht (opener)`,
+      uitleg: `Minimaal ${min.contacten} eerste berichten vandaag, meer mag.\n\n${eersteBerichtUitleg(min.contacten, { compact: true })}`,
+      uitnodigHelpKnoppen: true,
       verplicht: true,
       actieRoute: "/namenlijst",
     },
