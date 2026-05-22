@@ -5,10 +5,10 @@
 // Gebruikt de bestaande Dag-type uit lib/playbook/types.ts zodat de bestaande
 // vandaag-flow het kan renderen.
 //
-// PLACEHOLDER per ankerstap: watJeLeert + faseDoel + waaromWerktDit zijn skeletten
-// die Gaby in een schrijfsessie invult (zoek op TODO-GABY). Taken (vandaagDoen)
-// zijn al concreet zodat de mechanica bestaat, alleen labels en uitleg kunnen
-// jullie aanscherpen.
+// Teksten per ankerstap (watJeLeert + faseDoel + waaromWerktDit) zijn in
+// 2026-05-22 vooraf-geschreven door Claude in Raoul-en-Gaby-stem op basis
+// van kennisbank, scripts-data en V6-document. Raoul reviewt en past aan
+// waar nodig via founder-edit-modus op /core-v6/stap/[nummer].
 //
 // Type-mapping naar bestaand Dag-type:
 //   - Dag.nummer = ankerstap-nummer (1-21)
@@ -49,11 +49,6 @@ function afsluitStappenV6(stapNummer: number): ControllableTaak[] {
 // `core-v6-stap` en paginaId = stap-nummer. Zelfde patroon als Sprint
 // (`sprint-dag`). Founder kan op /core-v6 of /core-v6/stap/[nummer] direct
 // vanuit edit-modus een video droppen. Geen Films-CMS-slug nodig.
-
-const PLACEHOLDER_WAAROM = {
-  tekst: "PLACEHOLDER. TODO-GABY: quote of principe van de stap, met bron erbij.",
-  bron: "TODO-GABY",
-};
 
 /** Core V6: 21 ankerstappen. Volgnummer = stap-nummer in de UI. */
 export const CORE_V6_STAPPEN: Dag[] = [
@@ -872,16 +867,43 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       ...afsluitStappenV6(14),
     ],
     waarInEleva: [{ actie: "Naar scripts", route: "/scripts" }],
-    waaromWerktDit: PLACEHOLDER_WAAROM,
+    waaromWerktDit: {
+      tekst:
+        "Wie bezwaren ziet als vragen in plaats van als afwijzing, vindt het werk lichter en wint vertrouwen waar anderen ruzie maken. FFF is een methode om dezelfde verhalen te delen zonder dat het belerend wordt.",
+      bron: "Eric Worre, Go Pro (Feel-Felt-Found)",
+    },
   },
   // ---------- BUSINESS-RITME (15-21) ----------
   {
     nummer: 15,
     titel: "🌟 Resultaat-post + Tijdlijn-moment 3",
     fase: 3,
-    faseDoel: "Tijdlijn-moment 3 inzetten en (scenario B) je eerste 21-dagen-resultaat-post plaatsen.",
-    watJeLeert:
-      "PLACEHOLDER. TODO-GABY: schrijf in ELEVA-stem. Anker: Tijdlijn-moment 3 + nieuwe iteratie resultaat-post.",
+    faseDoel: "Tijdlijn-moment 3 inzetten (klantomgeving), en je 21-dagen-resultaat-post plaatsen of itereren.",
+    watJeLeert: `Vandaag activeer je Tijdlijn-moment 3 💟
+
+Je eerste Shoppers zitten nu rond de tien tot achttien dagen. Dat is het moment waarop ze de eerste echte effecten van hun programma beginnen te merken. Voor jou is dit het zachte peilmoment: voelt deze klant zo positief dat 'ie ook openstaat voor de webshop-kant?
+
+DE TIJDLIJN-MOMENT-3 ZIN
+
+Een vaste zin die op dit moment werkt, en in jouw stem mag worden gezet:
+
+"Heb je al leuke reacties in je omgeving op je veranderingen? Gun je anderen ook zo'n mooi resultaat? Want weet je nog wat ik in het begin zei? Dat je hiermee ook minimaal je producten kan terugverdienen of een online inkomen kan opbouwen door je gratis webshop. Sta je open om te kijken hoe dat voor jou kan werken?"
+
+Geen verkoop, wel een uitnodiging om verder te kijken. De Mentor heeft 'm al ingeleid in de klantomgeving, jij voegt het menselijke aan toe.
+
+VANDAAG GA JE
+
+**Scenario A: nieuwe iteratie van je resultaat-post.** Tweede versie, andere invalshoek, of een aanvullend resultaat dat je hebt opgemerkt. Houd je verhaal vers en gevarieerd.
+
+**Scenario B: je eerste 21-dagen-resultaat-post.** Je hebt nu zelf drie weken eigen ervaring. Tijd om die te delen. Schrijf met de Mentor je post, en plaats 'm op Facebook + Instagram.
+
+**Tijdlijn-moment 3 toepassen op minimaal 1 enthousiaste Shopper.** De Mentor laat in je dashboard zien welke Shopper het meest enthousiaste signaal geeft. Daar pas je de zin op toe. Eventueel laat je de Mentor het inleiden in de klantomgeving en haak je zelf aan op het juiste moment.
+
+WAAROM TIJDLIJN-MOMENTEN
+
+Mensen kopen niet op een willekeurig moment. Ze kopen wanneer de timing klopt: na een eerste resultaat, in een fase van enthousiasme. Tijdlijn-momenten zijn de natuurlijke beslismomenten in een product-traject. Wie ze respecteert, vraagt op het juiste moment. Wie ze negeert, vraagt te vroeg of te laat.
+
+Niet alleen. Bouwen mag leuk zijn 💟`,
     vandaagDoen: [
       {
         id: "core-v6-stap15-post",
@@ -897,15 +919,44 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       ...afsluitStappenV6(15),
     ],
     waarInEleva: [{ actie: "Mijn klanten", route: "/klant" }],
-    waaromWerktDit: PLACEHOLDER_WAAROM,
+    waaromWerktDit: {
+      tekst:
+        "Het moment dat een klant zelf trots zegt 'ik voel een verschil', is het moment om vrijblijvend te peilen of 'ie ook openstaat om zelf te bouwen. Niet voor of na, wel precies op dat moment werkt het.",
+    },
   },
   {
     nummer: 16,
     titel: "👀 Builder-energie + ideale klant",
     fase: 3,
-    faseDoel: "Onder je klanten herkennen wie zelf een gratis webshop zou willen.",
-    watJeLeert:
-      "PLACEHOLDER. TODO-GABY: schrijf in ELEVA-stem. Anker: onder klanten herkennen wie zelf een webshop zou willen.",
+    faseDoel: "Onder je klanten herkennen wie zelf een gratis webshop zou willen, en je ideale-klant-profiel scherper maken.",
+    watJeLeert: `Vandaag scherp je je ideale-klant-profiel 💟
+
+Tot nu was iedereen welkom in je top-20 en je eerste contacten. Vanaf nu ga je leren herkennen WIE bij jou hoort en wie niet. Dat klinkt selectief, en dat is het ook. Maar het is geen filteren vooraf, het is leren van patronen die je nu begint te zien.
+
+WAT IS BUILDER-ENERGIE
+
+Builder-energie is wat je voelt bij iemand die zelf een eigen webshop zou kunnen runnen. Niet "wil meer geld", niet "is altijd gestrest". Wel:
+
+- Ondernemend in de breedte (initiatief nemen, dingen oppakken)
+- Mensen-mens (oprecht in contact met anderen)
+- Doorzettingsvermogen (afmaken wat 'ie begint)
+- Open voor groei (leerbaar, niet vastgeroest)
+
+Niet iedere klant heeft Builder-energie. Dat is OK, die blijft een geweldige klant. Wel waardevol om degenen met Builder-energie te herkennen, zodat je ze straks vrijblijvend kunt vragen of een eigen webshop iets voor hen is.
+
+VANDAAG GA JE
+
+**Markeer 2 tot 3 klanten met Builder-energie in je namenlijst.** Ga niet overdenken. Vertrouw je gevoel, je kunt later altijd herclassificeren.
+
+**Praat 5 minuten met de Mentor over: "voor wie kan ik het meest betekenen?".** Dit is je ideale-klant-profiel. Niet de markt-segmentatie, wel de mens-beschrijving. "Iemand die X voelt en Y zoekt." De Mentor noteert dit als jouw profielblok ideale-klant.
+
+**Voor 1 klant een webshop-versie van de uitnodiging voorbereiden (optioneel).** Niet versturen, wel klaarzetten. Welke woorden zou jij gebruiken om deze specifieke klant uit te nodigen voor de webshop-kant? De Mentor helpt je.
+
+WAAROM NU EN NIET EERDER
+
+Twee redenen. Eén: je hebt nu eerste klanten gezien en hebt patronen om uit te putten. Twee: je weet nu welke type op jouw eerste uitnodigingen heeft gereageerd. Dat is veel meer data dan een vooraf-bedacht profiel.
+
+Niet alleen. Bouwen mag leuk zijn 💟`,
     vandaagDoen: [
       {
         id: "core-v6-stap16-markeer",
@@ -922,15 +973,41 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       ...afsluitStappenV6(16),
     ],
     waarInEleva: [{ actie: "Naar je namenlijst", route: "/namenlijst" }],
-    waaromWerktDit: PLACEHOLDER_WAAROM,
+    waaromWerktDit: {
+      tekst:
+        "Mensen vinden bij wie jij het meest waardevol bent, is geen filter dat je aan de buitenkant aanlegt. Het is een herkenning na de eerste twintig gesprekken: dit type werkte, dit type voelde anders. Pas dan kun je richting kiezen.",
+    },
   },
   {
     nummer: 17,
-    titel: "👋 Klantcontact + opvolg-routine + hercontact",
+    titel: "👋 Opvolg-routine + hercontact met bestaande klanten",
     fase: 3,
-    faseDoel: "Een routine bouwen voor follow-up en bestaande klanten benaderen voor hercontact.",
-    watJeLeert:
-      "PLACEHOLDER. TODO-GABY: schrijf in ELEVA-stem. Anker: follow-up-routine + bestaande klanten benaderen voor hercontact.",
+    faseDoel: "Een routine bouwen voor follow-up en drie bestaande klanten benaderen voor hercontact.",
+    watJeLeert: `Vandaag bouw je een opvolg-routine 💟
+
+Een van de grootste lekken in dit werk: prospects die je een keer hebt gesproken en daarna laat liggen. Niet omdat je ze niet wilde opvolgen, wel omdat het tussen alles in viel. Vandaag zet je een routine neer die voorkomt dat dit gebeurt.
+
+VOOR PROSPECTS, DE OPVOLG-HERINNERING
+
+Je opvolg-herinneringen zorgen ervoor dat geen prospect verdwijnt zonder dat jij bewust hebt besloten om los te laten.
+
+**Voor 3 prospects een opvolg-herinnering inplannen.** Voor wie je in de afgelopen weken hebt gesproken maar nog geen ja of nee hebt gehad. Eén of twee weken vooruit, met een korte notitie wat je gaat zeggen.
+
+VOOR BESTAANDE KLANTEN, HET HERCONTACT
+
+Bestaande klanten zijn vaak de plek waar de meeste warmte ligt. Ze hebben al een ja gezegd, hebben al ervaring, en zijn vaak open voor "hoe gaat het sinds we het laatst spraken".
+
+**3 bestaande klanten een persoonlijk hercontact-bericht sturen.** Niet over verkoop. Wel oprecht. "Hoe gaat het sinds je je producten gebruikt? Heb je nog vragen of wil je iets aanpassen?" Korte vraag, ruimte voor wat zij willen delen.
+
+WAT DE MENTOR DOET
+
+De Mentor signaleert in de klantomgeving wanneer een klant al een tijdje stil is, zonder activiteit. Jij ziet die seintjes vanaf je dashboard, en kunt natuurlijk vanaf daar reageren.
+
+WAAROM NIET PUSHY
+
+Hercontact uit oprechte interesse is geen verkoopstap. Het is hoe relaties werken. Niemand voelt zich vervelend wanneer iemand vriendelijk vraagt hoe het gaat zonder iets te willen. Wel als iemand pas weer in beeld komt op het moment dat er iets te koop is. Dat verschil maakt of mensen open of dicht reageren.
+
+Niet alleen. Bouwen mag leuk zijn 💟`,
     vandaagDoen: [
       {
         id: "core-v6-stap17-opvolg",
@@ -945,15 +1022,43 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       ...afsluitStappenV6(17),
     ],
     waarInEleva: [{ actie: "Mijn klanten", route: "/klant" }],
-    waaromWerktDit: PLACEHOLDER_WAAROM,
+    waaromWerktDit: {
+      tekst:
+        "Een opvolg-routine is goedkoper dan een nieuwe prospect. Wie systematisch hercontact maakt, vindt vaak meer rendement bij bestaande mensen dan bij compleet nieuwe gesprekken. Het ritme is wat het laat werken, niet de inspanning per moment.",
+    },
   },
   {
     nummer: 18,
     titel: "📊 5 typen prospects + funnel continu vullen",
     fase: 3,
-    faseDoel: "Je top-20 categoriseren in 5 typen en afspreken dat je lijst nooit klaar is.",
-    watJeLeert:
-      "PLACEHOLDER. TODO-GABY: schrijf in ELEVA-stem. Anker: top-20 categoriseren + lijst is nooit klaar.",
+    faseDoel: "Je top-20 categoriseren in 5 typen en met jezelf afspreken dat je lijst nooit klaar is.",
+    watJeLeert: `Vandaag categoriseer je je prospects, en zet je een afspraak met jezelf 💟
+
+Tot nu had je een ongesorteerde top-20. Vandaag breng je structuur. Vijf typen helpen je niet om mensen te beoordelen, wel om je gesprek te kalibreren op wat er bij wie nodig is.
+
+DE 5 TYPEN PROSPECTS
+
+**1. Direct geinteresseerd.** Wil meer weten, neemt initiatief, gaat door op informatie. Hier ga je sneller naar 3-weg of Mini-ELEVA.
+
+**2. Open, maar voorzichtig.** Vond het leuk, maar wil niet overhaast. Hier geef je tijd, freebie als tussenstap, en pak je later op.
+
+**3. Nieuwsgierig, niet direct beschikbaar.** Voelt interesse, maar zit in een ander seizoen van het leven. Hier blijf je in zachte aanwezigheid (Stories volgen, terugkomen na maanden).
+
+**4. Vriendelijk, niet bezig.** Reageert prettig, niet bezig met dit. Hier blijf je vrienden, en het hoeft niet meer te zijn dan dat.
+
+**5. Niet voor jou bedoeld.** Past niet bij wat jij brengt, of past niet bij jouw stijl. Hier respecteer je dat, en je gaat verder.
+
+VANDAAG GA JE
+
+**Je top-20 categoriseren in 5 typen.** Niet definitief, wel een eerste classificatie. De Mentor onthoudt dit en gebruikt het straks om je per type passende vervolgacties te suggereren.
+
+**Een afspraak met jezelf maken: minimaal 5 nieuwe namen per week erbij.** De lijst is nooit klaar. Wie blijft toevoegen, blijft bouwen. Wie stopt met toevoegen, raakt langzaam in een lege funnel.
+
+WAAROM "NOOIT KLAAR"
+
+Een namenlijst is geen tank die op een gegeven moment vol is. Het is een rivier. Mensen stromen in, mensen stromen uit (naar klant, naar Builder, of buiten beeld). Wie steeds bovenstrooms blijft toevoegen, heeft altijd flow. Vijf per week is laag genoeg om vol te houden, hoog genoeg om verschil te maken.
+
+Niet alleen. Bouwen mag leuk zijn 💟`,
     vandaagDoen: [
       {
         id: "core-v6-stap18-categoriseer",
@@ -969,15 +1074,45 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       ...afsluitStappenV6(18),
     ],
     waarInEleva: [{ actie: "Naar je namenlijst", route: "/namenlijst" }],
-    waaromWerktDit: PLACEHOLDER_WAAROM,
+    waaromWerktDit: {
+      tekst:
+        "Een namenlijst die niet groeit, droogt op. Een namenlijst die wel groeit, geeft jou keuze. Vijf nieuwe namen per week is geen ambitie, het is een gewoonte die zichzelf onderhoudt.",
+    },
   },
   {
     nummer: 19,
-    titel: "🎯 Closingsvraag",
+    titel: "🎯 De closingsvraag",
     fase: 3,
-    faseDoel: "De moedigste vraag van het vak stellen aan minstens één warme prospect.",
-    watJeLeert:
-      "PLACEHOLDER. TODO-GABY: schrijf in ELEVA-stem. Anker: de moedigste vraag van het vak.",
+    faseDoel: "De moedigste vraag van het vak stellen aan minstens een warme prospect.",
+    watJeLeert: `Vandaag stel je de moedigste vraag van het vak 💟
+
+In je gesprekken met prospects komt vaak het moment dat je voelt: er is interesse, er is informatie gegeven, en nu hangt het in de lucht. Veel mensen wachten dan af in plaats van te vragen. Dat is precies waar deals verdampen.
+
+DE CLOSINGSVRAAG
+
+"Wat heb je nog nodig om te beslissen?"
+
+Eén zin. Helder. Niet pushy, wel concreet. Niet "wat denk je", niet "zou je willen". Wel "wat heb je nog nodig".
+
+WAAROM HET WERKT
+
+Drie redenen.
+
+**1. Het respecteert het beslismoment.** Je gaat niet om de hete brij heen. Je geeft niet meer informatie. Je vraagt wat ER NOG NODIG IS, en daarmee respecteer je dat de prospect het beslismoment in handen heeft.
+
+**2. Het krijgt eerlijke antwoorden.** Mensen geven vaak een eerlijker antwoord op deze vraag dan op "wil je kopen". Soms is het "ik wil het er met mijn partner over hebben" (specifieke vervolgactie). Soms is het "ik denk niet dat het iets voor mij is" (eerlijke nee, geen kostbare tijd verloren). Beide is goud.
+
+**3. Het opent samenwerking.** Vaak komt er een antwoord waar JIJ iets mee kunt doen ("ik wil eerst snappen hoe de levering werkt"). Dan kun je samen die laatste vraag beantwoorden, niet doordrukken.
+
+VANDAAG GA JE
+
+**De closingsvraag stellen aan minstens 1 warme prospect.** Niet aan al je prospects in een dag. Wel aan een waarvan jij voelt "die is in fase, en wachten verandert er niks meer aan".
+
+OVER MOEDIG VOELEN
+
+Deze vraag voelt eng omdat 'ie ruimte geeft voor een nee. Daar zit precies de waarde. Een vraag waar geen nee mogelijk is, krijgt ook geen oprechte ja. Wie deze vraag eerlijk durft te stellen, vindt het werk lichter en respecteert zichzelf en de prospect.
+
+Niet alleen. Bouwen mag leuk zijn 💟`,
     vandaagDoen: [
       {
         id: "core-v6-stap19-vraag",
@@ -987,15 +1122,41 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       ...afsluitStappenV6(19),
     ],
     waarInEleva: [],
-    waaromWerktDit: PLACEHOLDER_WAAROM,
+    waaromWerktDit: {
+      tekst:
+        "De moedigste vraag stellen kost een seconde. Hem niet stellen kost weken aan onzekerheid, vermijding, en uiteindelijk een prospect die in stilte vertrokken is. Eén vraag, een respectvol gesprek, en helderheid voor allebei.",
+    },
   },
   {
     nummer: 20,
     titel: "🔄 Klantomgeving-review + duplicatie zien",
     fase: 3,
-    faseDoel: "Bewuste blik op alle klantomgevingen, voelen dat duplicatie schaalbaar wordt.",
-    watJeLeert:
-      "PLACEHOLDER. TODO-GABY: schrijf in ELEVA-stem. Anker: bewuste blik op alle klantomgevingen, voelen dat duplicatie schaalbaar wordt.",
+    faseDoel: "Bewuste blik op alle klantomgevingen, voelen dat duplicatie schaalbaar wordt via ELEVA.",
+    watJeLeert: `Vandaag krijg je een vol overzicht van wat je hebt opgebouwd 💟
+
+Tot nu was elke ankerstap een actie. Vandaag is het reflectie en zicht. Open je klantomgeving-overzicht, kijk naar wie er in beeld is, en voel hoe duplicatie hier vorm krijgt.
+
+VANDAAG GA JE
+
+**De klantomgeving-overview in je dashboard openen.** /klant toont alle klantomgevingen die je hebt geopend. Niet inhoudelijk (AVG-Keuze-A), wel met status, signalen, en welke pulse-momenten zijn langsgekomen.
+
+**Per klant bekijken: welke pulse-momenten zijn al geweest, wat is de stand.** Niet om actie te plannen, wel om patronen te zien. Welke klanten zijn enthousiast? Welke zijn stil? Welke voelen klaar voor een tweede gesprek?
+
+**2 klanten markeren waar je gevoel zegt: hier kan een uitnodiging naar Core / webshop passen.** Niet versturen vandaag. Wel markeren. De Mentor noteert dit en jij komt er deze week op terug.
+
+**5 minuten met de Mentor praten over wat je opvalt aan het patroon.** Niet over een specifieke klant, wel over de stroom. Welke type komt het meest binnen? Wie haakt af, wie blijft? Dit is jouw data, en de Mentor helpt om er betekenis aan te geven.
+
+WAAROM DEZE STAP
+
+In de oude flow moest jij vijf keer dezelfde zin in WhatsApp plakken op vijf verschillende momenten over weken verspreid. Voor drie klanten was dat te doen. Voor twintig niet. Daar struikelde duplicatie altijd: members raakten kwijt waar ze waren.
+
+Vandaag voel je dat ELEVA dat overneemt. Jij ziet het overzicht, jij doet de menselijke aanwezigheid, en het ritme loopt vanzelf. Dit is wat schaalbaar maken er anders maakt dan wat de meeste mensen denken: niet meer doen, wel het juiste laten lopen.
+
+WAT JE NA DEZE STAP VOELT
+
+Je voelt of dit pad voor jou werkt op grote schaal. Heb je drie klanten, heb je vijf, heb je tien? Maakt niet uit, want het mechanisme is hetzelfde. Pas dan kun je je doelen voor de Uitbreiding-module realistisch inschieten in stap 21.
+
+Niet alleen. Bouwen mag leuk zijn 💟`,
     vandaagDoen: [
       {
         id: "core-v6-stap20-overview",
@@ -1017,15 +1178,43 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       ...afsluitStappenV6(20),
     ],
     waarInEleva: [{ actie: "Mijn klanten", route: "/klant" }],
-    waaromWerktDit: PLACEHOLDER_WAAROM,
+    waaromWerktDit: {
+      tekst:
+        "Duplicatie is geen verkooptechniek, het is een infrastructuur. Wie het overzicht kan houden zonder zelf elke pulse handmatig te sturen, kan duplicatie volhouden. Wie zelf het anker en de pulse-bron is, raakt uitgeput bij vijf klanten.",
+    },
   },
   {
     nummer: 21,
-    titel: "🏆 Reflectie + talent-keuze + eerste 30-dagen-doel",
+    titel: "🏆 Reflectie + talent + eerste 30-dagen-doel",
     fase: 3,
-    faseDoel: "Reflecteren, creator-talent benoemen, en je eerste 30-dagen-doel inschieten.",
-    watJeLeert:
-      "PLACEHOLDER. TODO-GABY: schrijf in ELEVA-stem. Anker: reflectie, creator-talent benoemen, eerste 30-dagen-doel inschieten.",
+    faseDoel: "Reflecteren op het pad tot nu, je creator-talent benoemen, en je eerste 30-dagen-doel inschieten.",
+    watJeLeert: `Vandaag sluit je Core af en open je de volgende fase 💟
+
+Eenentwintig ankerstappen verder, en je staat in een hele andere plek dan op stap 1. Vandaag reflecteer je rustig, benoem je je creator-talent, en zet je het eerste 30-dagen-doel waarmee de Uitbreiding-module straks samenwerkt.
+
+VANDAAG GA JE
+
+**De eindreflectie invullen (10 min).** Wat heb je geleerd, wat verraste je, waar zat je weerstand, en waar ben je trots op. Niet voor een diploma, wel voor jezelf. De Mentor noteert dit als jouw eind-Core-profiel.
+
+**De talent-vraag met de Mentor beantwoorden.** "Ben jij het sterkst als schrijver, spreker, filmer, of in 1-op-1-gesprekken?" Vier opties, kies wat in jouw geval het meest natuurlijk voelt. De Mentor noteert dit als jouw creator-talent.
+
+**Je eerste 30-dagen-doel instellen.** Concreet en meetbaar. Bijvoorbeeld: "500 euro extra verdienen", "3 nieuwe Shoppers", "1 nieuwe Webshophouder onder me", "30 freebie-leads". Niet vaag, wel realistisch. De Mentor combineert dit met alles wat hij over jou heeft geleerd en bouwt straks een persoonlijke 30-dagen-roadmap.
+
+**Een call met je sponsor plannen om je voortgang te bespreken.** Ongeveer dertig minuten, ergens deze week. Bespreek je 30-dagen-doel, je sterkste contacten, en wat je nog nodig hebt voor de overgang naar de Uitbreiding-module.
+
+**De schets van de Uitbreiding-module bekijken (optioneel).** Wanneer voelt je warme netwerk uitgemold raken, dan stap je in de Uitbreiding-module: social-media-motor, 30-dagen-doel-roadmap, freebies-flow op grotere schaal. Geen tijdsdruk, je start als jij voelt dat het tijd is.
+
+WAT HET MENTOR-PROFIEL NU OVER JOU WEET
+
+WHY. Situatie. Top-20 met FORM-context. Jouw producten en eigen ervaring. Jouw stem en de vier bouwstenen. Jouw publieke verhaal en eerste resultaten. Drie verhalen + niche-zaadje + passies. Welk type mensen op jou reageren. Ideale-klant-profiel. Creator-talent. Eerste 30-dagen-doel.
+
+Genoeg om in de Uitbreiding-module gepersonaliseerde content en roadmap te maken die alleen voor jou klopt. Geen algemeen Reels-trucje, wel een plan dat voor jouw situatie werkt.
+
+WAT ER STRAKS GEBEURT
+
+Vanaf nu loop je in het dagelijkse ritme van de DMO, met af en toe een nieuwe ankerstap op jouw tempo (vooral als je voelt dat een nieuw onderwerp speelt, of na de Uitbreiding-module). Geen 21-dagen-druk. Wel een omgeving die met jou meegroeit.
+
+Je bent in beweging. Dat was het hele punt 💟`,
     vandaagDoen: [
       {
         id: "core-v6-stap21-reflectie",
@@ -1051,8 +1240,14 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       },
       ...afsluitStappenV6(21),
     ],
-    waarInEleva: [{ actie: "Open de Mentor", route: "/coach" }],
-    waaromWerktDit: PLACEHOLDER_WAAROM,
+    waarInEleva: [
+      { actie: "Open de Mentor", route: "/coach" },
+      { actie: "Mijn klanten", route: "/klant" },
+    ],
+    waaromWerktDit: {
+      tekst:
+        "Wie eenentwintig ankerstappen achter zich heeft, heeft niet alleen kennis. Heeft ook een Mentor-profiel dat hem persoonlijk kan begeleiden in de Uitbreiding-module. Dat is wat dit pad anders maakt dan een cursus die je volgt en daarna alleen verder moet.",
+    },
   },
 ];
 
