@@ -179,15 +179,34 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       ...afsluitStappenV6(2),
     ],
     waarInEleva: [{ actie: "Naar je namenlijst", route: "/namenlijst" }],
-    waaromWerktDit: PLACEHOLDER_WAAROM,
+    waaromWerktDit: {
+      tekst:
+        "De grootste belemmering bij een nieuwe start is niet het werk, het is de illusie dat je weet wie wel en wie niet. Niemand weet dat. De top-20 dwingt je om mensen een eerlijke kans te geven, en in praktijk verrast de helft je.",
+      bron: "Eric Worre, Go Pro",
+    },
   },
   {
     nummer: 3,
-    titel: "📦 Productkennis-basis",
+    titel: "📦 Productkennis-basis, voor jezelf, niet om uit je hoofd te kennen",
     fase: 1,
     faseDoel: "Een gevoel hebben van de hoofdcategorieën en de Mentor weet welke producten jij gebruikt.",
-    watJeLeert:
-      "PLACEHOLDER. TODO-GABY: schrijf in ELEVA-stem. Anker: gevoel van hoofdcategorieën en de Mentor weet welke producten jij gebruikt.",
+    watJeLeert: `Vandaag zet je je productkennis-basis 💟
+
+Belangrijk om vooraf te weten: je hoeft niet alles uit je hoofd te kennen. Niemand verwacht dat van je. De Mentor kent alle producten met alle details, jij hoeft alleen een gevoel te hebben van de hoofdcategorieën.
+
+DRIE DINGEN VANDAAG
+
+**Vragen aan de Mentor: welke producten verkoop ik het meest?** Dat zijn jouw vijf producten om eerst te kennen. Niet alle 80, niet de catalogus uit je hoofd. Vijf hoofdproducten waarvan je weet wat ze doen, voor wie ze passen, en wat een typisch gebruik is.
+
+**Bestel je eigen pakket als je dat nog niet hebt.** Niet om te verkopen, om te ervaren. Mensen voelen het verschil tussen iemand die het zelf gebruikt en iemand die het van papier kent. Je eigen ervaring is wat straks geloofwaardig maakt.
+
+**Vertel de Mentor welke producten jij persoonlijk gebruikt.** Dit lijkt klein, maar is goud. De Mentor onthoudt dit, en wanneer een prospect straks vraagt "wat gebruik jij zelf?", weet de Mentor het en kan 'ie meedenken over jouw resultaat-post, jouw verhaal, jouw zinnen.
+
+WAAROM DIT WERKT
+
+Mensen kopen geen producten. Mensen kopen veranderingen die ze in jou zien. Daarom hoef je geen wandelende encyclopedie te zijn. Wel iemand die kan zeggen "dit gebruik ik zelf, dit merkte ik, en dit gun ik jou ook".
+
+Niet alleen. Bouwen mag leuk zijn 💟`,
     vandaagDoen: [
       {
         id: "core-v6-stap3-vraag-mentor",
@@ -209,15 +228,49 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       ...afsluitStappenV6(3),
     ],
     waarInEleva: [{ actie: "Open de Mentor", route: "/coach" }],
-    waaromWerktDit: PLACEHOLDER_WAAROM,
+    waaromWerktDit: {
+      tekst:
+        "De Mentor doet het zware geheugenwerk, jij draagt je eigen ervaring. Die twee samen zijn sterker dan een Mentor met alle kennis en een member zonder verhaal.",
+    },
   },
   {
     nummer: 4,
-    titel: "🎯 De webshop-pivot, vier uitnodig-bouwstenen + jouw zin",
+    titel: "🎯 De webshop-pivot, vier bouwstenen + jouw eigen zin",
     fase: 1,
-    faseDoel: "Begrijpen waarom de webshop het frame is en je eigen versie schrijven.",
-    watJeLeert:
-      "PLACEHOLDER. TODO-GABY: schrijf in ELEVA-stem. Anker: webshop als frame, vier bouwstenen leren (haakje, manier-gevonden-zin, hoe-het-werkt, permissie-vraag), eigen versie schrijven.",
+    faseDoel: "Begrijpen waarom de webshop het frame is, de vier bouwstenen leren, en je eigen versie schrijven.",
+    watJeLeert: `Vandaag het hart van Core 💟
+
+Tot nu was alles voorbereiding. Vanaf nu ga je leren hoe je iemand uitnodigt zonder dat het pushy voelt. De truc zit in één pivot: de WEBSHOP staat centraal, niet het verkopen.
+
+WAAROM DE WEBSHOP ALS FRAME
+
+Mensen zijn allergisch voor "wil je iets bij mij kopen". Maar mensen zijn nieuwsgierig naar "een webshop waar je je producten gratis krijgt en eventueel inkomen mee opbouwt, zonder voorraad en zonder risico". Hetzelfde verhaal, een ander frame, en het ene werkt en het andere niet.
+
+DE VIER BOUWSTENEN VAN EEN STERKE WEBSHOP-UITNODIGING
+
+Elk bericht dat goed werkt, heeft deze vier ingredienten. Niet alle vier even prominent, wel allemaal aanwezig.
+
+**1. Het haakje.** Een opener die persoonlijk is voor deze prospect. Hun naam, gedeelde geschiedenis, of een hint over iets wat hen bezighoudt. Geen koud "hoi, hoe gaat het", wel iets dat alleen voor hen klopt.
+
+**2. De manier-gevonden-zin.** Vast onderdeel, vast werkend: "Ik heb een manier gevonden om online extra inkomsten op te bouwen zonder investeringen en zonder risico." Geen claim, geen belofte, wel een uitnodiging om te kijken.
+
+**3. Hoe het werkt, kort.** Een of twee zinnen over de webshop. "Je krijgt een gratis eigen webshop, je zet je producten erop, en je kunt direct beginnen met delen." Geen lange uitleg, wel een beeld dat klopt.
+
+**4. De permissie-vraag.** Concreet, niet open afsluiten. "Mag ik je kort laten zien hoe het werkt?" of "Sta je open om te kijken wat het is? Helemaal vrijblijvend, als het niets voor je is is dat ook prima."
+
+VANDAAG GA JE
+
+**De vier bouwstenen doorlopen met de Mentor.** Hij stelt je vragen, jij oefent met je eigen woorden per bouwsteen.
+
+**De 14 webshop-scripts openen samen met de Mentor.** Niet woordelijk overnemen. Wel inspiratie pakken om je eigen versie te bouwen, met jouw stem.
+
+**Schrijf je eigen webshop-uitnodigingszin.** Drie tot vier regels, in jouw woorden, voor jouw stijl. De Mentor leert hiermee jouw stijl, en kan je later helpen om varianten te maken voor specifieke prospects.
+
+WAT JE NIET MOET DOEN
+
+Niet kopieren van scripts. Niet "iemand die het bij iedereen gebruikt". Wel jouw versie, jouw stem, jouw bouw. Pas dan straalt geloofwaardigheid eruit.
+
+Niet alleen. Bouwen mag leuk zijn 💟`,
     vandaagDoen: [
       {
         id: "core-v6-stap4-bouwstenen",
@@ -244,15 +297,37 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       { actie: "Naar scripts", route: "/scripts" },
       { actie: "Bewaar je zinnen", route: "/mijn-zinnen" },
     ],
-    waaromWerktDit: PLACEHOLDER_WAAROM,
+    waaromWerktDit: {
+      tekst:
+        "Een uitnodiging die werkt is geen verkooptruc, het is een eerlijke uitnodiging in jouw stem die ruimte laat voor een vrij ja en een vrij nee. De webshop-pivot maakt dat respectvol mogelijk.",
+    },
   },
   {
     nummer: 5,
-    titel: "💡 Verdienmodel-basis",
+    titel: "💡 Verdienmodel-basis, snappen hoe je geld verdient",
     fase: 1,
-    faseDoel: "Zelf snappen hoe je geld verdient, zodat je niet onzeker wordt.",
-    watJeLeert:
-      "PLACEHOLDER. TODO-GABY: schrijf in ELEVA-stem. Anker: zelf snappen hoe je geld verdient (basic understanding, Eric Worre).",
+    faseDoel: "Zelf snappen hoe je geld verdient, niet om uit te leggen, wel zodat je niet onzeker wordt.",
+    watJeLeert: `Vandaag krijg je grip op het verdienmodel 💟
+
+Niet om straks tegen prospects op te dreunen, daar zit niemand op te wachten. Wel zodat JIJ weet hoe het werkt, en niet bang wordt als iemand vraagt "ja maar hoe verdien je dan precies?". Eric Worre noemt dit basic understanding, en hij is daar streng in. Als je het zelf niet snapt, werk je in het wilde weg.
+
+VANDAAG TWEE DINGEN
+
+**De prospect-film over het verdienmodel kijken.** Ongeveer tien minuten. Dezelfde film die prospects straks zien als ze meer willen weten. Het is fijn als jij die hebt gezien, ook al ga je 'm zelf niet uitleggen.
+
+**De 3-vragen-quiz met de Mentor doen.** Drie korte vragen waarmee de Mentor checkt of jij snapt hoe het in de basis werkt. Geen examen, geen druk. Als je 'm niet weet, herhaalt hij het rustig.
+
+WAT JE STRAKS WEET
+
+Hoe een commissie op een eerste bestelling werkt. Wat een Builder-rank is en waarom dat het bouwblok is van duplicatie. Wat een team-volume betekent en waarom dat groeit als jij anderen helpt Builder te worden.
+
+Dat is de basis. Niet alles. Wel genoeg om met rust te kunnen zeggen "ja, dat snap ik" als iemand het vraagt. En om in praktijk te zien dat je begeleiding van mensen onder jou waardevoller wordt naarmate ze rangen gaan halen.
+
+NIET MORGEN-LATER MAAR IETS LATER, GEEN HAAST
+
+Je hoeft dit niet vandaag perfect te kennen. Het zakt in tijdens de komende stappen, vooral wanneer je je eerste echte gesprekken hebt. Voor nu is "ik snap globaal hoe het loopt" genoeg.
+
+Niet alleen. Bouwen mag leuk zijn 💟`,
     vandaagDoen: [
       {
         id: "core-v6-stap5-film",
@@ -268,16 +343,51 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       ...afsluitStappenV6(5),
     ],
     waarInEleva: [{ actie: "Open de Mentor voor de quiz", route: "/coach" }],
-    waaromWerktDit: PLACEHOLDER_WAAROM,
+    waaromWerktDit: {
+      tekst:
+        "Mensen die de basis snappen, durven gesprekken te voeren zonder bang te zijn dat ze iets niet kunnen uitleggen. Niet omdat ze alles weten, wel omdat ze weten waar de Mentor klaarstaat als het echt gevraagd wordt.",
+      bron: "Eric Worre, Go Pro",
+    },
   },
   // ---------- IN BEWEGING (6-14) ----------
   {
     nummer: 6,
-    titel: "📅 Aanloop-stap (per scenario)",
+    titel: "📅 Aanloop-stap, jouw eerste publieke moment",
     fase: 2,
-    faseDoel: "De eerste social-aanwezigheid neerzetten, afhankelijk van je scenario.",
-    watJeLeert:
-      "PLACEHOLDER. TODO-GABY: schrijf in ELEVA-stem. Anker: eerste social-aanwezigheid (pre-post of 21-dagen-resultaat-post afhankelijk van scenario).",
+    faseDoel: "De eerste social-aanwezigheid neerzetten, in jouw scenario, met de Mentor naast je.",
+    watJeLeert: `Vanaf vandaag word je zichtbaar 💟
+
+Tot nu was alles voorbereiding. Vandaag stap je voor het eerst publiek met je verhaal, op de manier die bij jouw scenario past. Twee paden, beide werken.
+
+SCENARIO A, JIJ HEBT AL EEN EIGEN RESULTAAT
+
+Je hebt al een product gebruikt en iets gemerkt. Dan deel je je 21-dagen-resultaat-post.
+
+**Kies de 1 of 2 belangrijkste veranderingen die je voelt.** Niet alles in een post stoppen, dat verwatert. Wel een of twee ankers die voor jou echt voelen.
+
+**Schrijf je 21-dagen-resultaat-post met de Mentor.** Hij stelt vragen, jij vult in. Daar komt een post uit die in jouw stem klopt en die claim-vrij is.
+
+**Plaats de post op Facebook en Instagram.** Niet eerst nog vier keer herschrijven. Klaar is klaar, en de eerste keer mag ook onhandig.
+
+SCENARIO B, JE BEGINT NU JE EIGEN PROGRAMMA
+
+Je hebt nog geen eigen ervaring. Dan deel je een pre-post.
+
+**Schrijf met de Mentor je pre-post (2 tot 3 regels).** Iets als "ik begin vandaag aan 21 dagen X, ben benieuwd wat ik ga merken". Eerlijk, geen belofte.
+
+**Plaats de pre-post.** Idem als boven, klaar is klaar.
+
+**Begin je eigen 21-dagen-programma.** De resultaat-post komt straks in stap 15, met je echte ervaring erbij.
+
+WAT HET MENTOR-PROFIEL LEERT
+
+Vanaf nu weet de Mentor hoe jij over jezelf schrijft op een publiek moment. Welke woorden je kiest, welke kant je opdraait, hoe lang je posts zijn. Dat is goud waard voor latere content-suggesties.
+
+OVER REACTIES VAN MENSEN
+
+Reacties komen of komen niet. Beide is OK. Wat wel telt: reageer binnen een uur op iedere reactie die je krijgt. Niet om de algoritme te masseren, wel omdat het hart van duplicatie zit in laten zien dat je echt contact zoekt, niet bot uitzendt.
+
+Niet alleen. Bouwen mag leuk zijn 💟`,
     vandaagDoen: [
       {
         id: "core-v6-stap6-keuze-of-resultaat",
@@ -293,15 +403,45 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       ...afsluitStappenV6(6),
     ],
     waarInEleva: [{ actie: "Schrijf met de Mentor", route: "/coach" }],
-    waaromWerktDit: PLACEHOLDER_WAAROM,
+    waaromWerktDit: {
+      tekst:
+        "De eerste post is altijd de zwaarste. Niet omdat 'ie ingewikkeld is, wel omdat 'ie publiek is. Wie 'm eenmaal heeft staan, is voorbij de psychologische drempel en bouwt daarna lichter door.",
+    },
   },
   {
     nummer: 7,
-    titel: "📱 Brookes 3-stappen + eerste freebie-keuze",
+    titel: "📱 Brookes 3-stappen + jouw eerste freebie",
     fase: 2,
-    faseDoel: "Eén post leren maken volgens Waarde + Verhaal + Zachte uitnodiging, met je gekozen freebie als waarde-anker.",
-    watJeLeert:
-      "PLACEHOLDER. TODO-GABY: schrijf in ELEVA-stem. Anker: Waarde + Verhaal + Zachte uitnodiging, freebie als waarde-anker.",
+    faseDoel: "Een post leren maken volgens Waarde + Verhaal + Zachte uitnodiging, met je eerste freebie als waarde-anker.",
+    watJeLeert: `Vandaag leer je posten op een manier die werkt 💟
+
+De fout die de meeste mensen maken op social: hard verkopen, of alleen lifestyle-foto's plaatsen zonder richting. Beide werkt niet. Wat wel werkt is de Brookes-formule. Drie ingredienten per post, in deze volgorde.
+
+DE BROOKES-FORMULE
+
+**1. Waarde.** Iets dat de lezer iets oplevert ook al doet 'ie verder niks. Een inzicht, een tip, een citaat dat raakt, een vraag die laat nadenken.
+
+**2. Verhaal.** Iets uit jouw eigen leven of werk dat de waarde verankert. Niet abstract, wel persoonlijk. Hoe het bij jou ging, wat je hebt gemerkt.
+
+**3. Zachte uitnodiging.** Niet "koop bij mij", wel "als je hier meer over wilt weten, mijn DM staat open" of "ik heb een gratis gids over dit onderwerp, link in bio". De freebie wordt hier de natuurlijke aansluiting.
+
+WAAROM EEN FREEBIE NU IN BEELD KOMT
+
+Een directe webshop-link is een grote ja. Een freebie downloaden is een kleine ja. Mensen die geinteresseerd zijn maar nog niet "klaar" voor de webshop, kun je via een freebie wel binnenhouden. Ze geven hun naam en mail, krijgen jouw waarde, en komen via Mini-ELEVA in een zachte opvolg-flow zonder dat jij elke week handmatig moet sturen.
+
+VANDAAG GA JE
+
+**De freebie-toolkit openen en 1 freebie kiezen die bij jouw verhaal past.** Vijf tot tien kant-en-klare freebies van Raoul en Gaby, claim-vrij geschreven, automatisch gepersonaliseerd met jouw webshop-link. Je hoeft 'm dus niet zelf te maken, je kiest welke past.
+
+**Een post schrijven met de Brookes-formule, Mentor geeft feedback.** Korte iteratie, geen perfectie. Een goede eerste post is beter dan een nooit-geplaatste perfecte post.
+
+**De post plaatsen, met je freebie-link erbij.** In de tekst of in je bio. Beide werkt, en straks zie je in je dashboard hoeveel opt-ins je via deze post krijgt.
+
+EIGEN FREEBIE MAKEN KAN OOK
+
+Voor wie wil: met de Mentor kun je later een eigen mini-pdf of mini-mailreeks samenstellen op basis van jouw niche-zaadje uit stap 8. Voor nu is een toolkit-freebie de snelle ja, en dat is precies wat je nodig hebt vandaag.
+
+Niet alleen. Bouwen mag leuk zijn 💟`,
     vandaagDoen: [
       {
         id: "core-v6-stap7-freebie",
