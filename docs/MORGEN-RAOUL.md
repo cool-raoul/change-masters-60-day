@@ -18,6 +18,7 @@ Wordt bijgewerkt onderweg. Per commit volgt hier een korte regel met wat is gebo
 - Task 9: Core V6 21-ankerstappen-scaffold (lib/playbook/core-dagen-v6.ts). Mechanica + taken concreet, watJeLeert + waaromWerktDit zijn PLACEHOLDER met TODO-GABY-markers. Klaar voor schrijfsessie met Gaby.
 - Task 10: CompactDMOBlok (K1-anti-overwhelm). Default ingeklapt, header toont 'X van Y vandaag'. Klikbaar af te vinken per taak.
 - Task 11: KlantenTegel (K2-anti-overwhelm). Eén tegel op dashboard met aantal klanten + nieuwe signalen. Klik opent lijst /klant (route komt in Task 14).
+- Task 12: Anti-overwhelm UI-primitives. GeadviseerdPad (K3 prospect-kaart, één knop + alternatieven-dropdown). PulseSignaalBox (K4 maximaal 3 signalen per dag, prioriteit-gesorteerd). MentorCuratorVoorstel (K5 voorstel + akkoord/niet-nu, nooit stille acties).
 
 ## Verhelderingsvragen voor jullie (Raoul + Gaby)
 
