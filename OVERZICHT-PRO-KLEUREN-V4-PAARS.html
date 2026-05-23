@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8" />
+<title>Pro modus, drie luxe-paars voorstellen</title>
+<style>
+  body {
+    margin: 0;
+    background: #1a1a1c;
+    color: #ebe6da;
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    padding: 32px 16px;
+  }
+  .container { max-width: 1400px; margin: 0 auto; }
+  h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 28px;
+    margin: 0 0 8px;
+    text-align: center;
+  }
+  .intro {
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+    max-width: 720px;
+    margin: 0 auto 40px;
+    line-height: 1.6;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  @media (max-width: 1000px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+  .mock {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .mock-naam {
+    padding: 10px 16px;
+    background: #2a2a2c;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #c4a04a;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .mock-body {
+    padding: 24px;
+    background: rgb(var(--cm-black));
+    color: rgb(var(--cm-white));
+    min-height: 580px;
+  }
+  .mock-fase {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgb(var(--cm-gold));
+    font-weight: 600;
+  }
+  .mock-titel {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 22px;
+    color: rgb(var(--cm-white));
+    margin: 6px 0 16px;
+    line-height: 1.3;
+  }
+  .mock-card {
+    background: rgb(var(--cm-surface));
+    border: 1px solid rgb(var(--cm-border));
+    border-left: 4px solid rgb(var(--cm-gold));
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+  .mock-card-header {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: rgb(var(--cm-gold));
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .mock-card p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.55;
+    color: rgb(var(--cm-white));
+  }
+  .mock-subcard {
+    background: rgb(var(--cm-surface-2));
+    border: 1px solid rgb(var(--cm-border));
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 14px;
+    font-size: 12px;
+    color: rgb(var(--cm-muted));
+  }
+  .mock-knop {
+    background: rgb(var(--cm-gold));
+    color: rgb(var(--cm-on-gold));
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .mock-knop-secondair {
+    background: transparent;
+    color: rgb(var(--cm-white));
+    border: 1px solid rgb(var(--cm-border));
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    width: 100%;
+  }
+  .mock-quote {
+    border-left: 3px solid rgb(var(--cm-gold));
+    padding: 8px 14px;
+    margin: 14px 0;
+    font-style: italic;
+    font-size: 12px;
+    color: rgb(var(--cm-muted));
+  }
+  .label {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 11px;
+    color: #999;
+    font-family: monospace;
+  }
+
+  /* Variant 1, AUBERGINE. Diep paars met rode ondertoon, klassiek warm goud.
+     Klassiek-luxueus, theatraal, voorname expressie. */
+  .variant-1 {
+    --cm-black:        38 22 42;
+    --cm-surface:      54 32 60;
+    --cm-surface-2:    72 44 78;
+    --cm-border:       112 80 122;
+    --cm-gold:         218 175 92;
+    --cm-gold-light:   240 200 122;
+    --cm-gold-dim:     128 96 42;
+    --cm-white:        236 226 222;
+    --cm-muted:        180 156 184;
+    --cm-on-gold:      38 22 42;
+  }
+
+  /* Variant 2, PLUM + CHAMPAGNE. Pruim/plum-paars met champagne-goud.
+     Modern-luxueus, hospitality, vrouwelijk-elegant. */
+  .variant-2 {
+    --cm-black:        50 38 60;
+    --cm-surface:      66 52 80;
+    --cm-surface-2:    84 68 100;
+    --cm-border:       128 108 148;
+    --cm-gold:         220 192 134;
+    --cm-gold-light:   240 215 162;
+    --cm-gold-dim:     130 108 70;
+    --cm-white:        236 230 232;
+    --cm-muted:        184 170 198;
+    --cm-on-gold:      50 38 60;
+  }
+
+  /* Variant 3, DIEPVIOLET + COGNAC. Bijna-zwart met paarse ondertoon,
+     warm cognac-goud. Mannelijk-modern, mystiek + bezonken. */
+  .variant-3 {
+    --cm-black:        20 14 32;
+    --cm-surface:      32 24 50;
+    --cm-surface-2:    46 36 68;
+    --cm-border:       96 78 130;
+    --cm-gold:         198 138 64;
+    --cm-gold-light:   228 170 98;
+    --cm-gold-dim:     112 76 32;
+    --cm-white:        224 220 228;
+    --cm-muted:        158 148 188;
+    --cm-on-gold:      20 14 32;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Pro modus, drie luxe-paars voorstellen</h1>
+  <p class="intro">
+    Drie variaties op luxe-paars. Sprint blijft zwart, Core blijft luchtig grijs,
+    Pro krijgt een eigen paarse smaak met goud-accent voor ELEVA-consistentie.
+  </p>
+
+  <div class="grid">
+    <div>
+      <div class="mock variant-1">
+        <div class="mock-naam">Variant 1 · Aubergine</div>
+        <div class="mock-body">
+          <div class="mock-fase">Pro · Stap 3 · Fundament</div>
+          <div class="mock-titel">Productadvies-test, jouw signatuur-tool</div>
+          <div class="mock-card">
+            <div class="mock-card-header">📖 Wat je leert</div>
+            <p>Als professional bouw je je praktijk via de productadvies-test als signatuur-instrument. Klanten ervaren maatwerk, jij hebt een tool die zichzelf herhaalt.</p>
+          </div>
+          <div class="mock-subcard">5 substappen · 1 verplicht · 3 reeds gedaan</div>
+          <div class="mock-quote">"Een specialist verkoopt geen producten, hij geeft mensen helderheid en de juiste keuze."</div>
+          <button class="mock-knop">Begin met substep 1 →</button>
+          <button class="mock-knop-secondair">Open scripts-bibliotheek</button>
+        </div>
+      </div>
+      <p class="label">Klassiek-luxueus, theatraal, voornaam</p>
+    </div>
+
+    <div>
+      <div class="mock variant-2">
+        <div class="mock-naam">Variant 2 · Plum + Champagne</div>
+        <div class="mock-body">
+          <div class="mock-fase">Pro · Stap 3 · Fundament</div>
+          <div class="mock-titel">Productadvies-test, jouw signatuur-tool</div>
+          <div class="mock-card">
+            <div class="mock-card-header">📖 Wat je leert</div>
+            <p>Als professional bouw je je praktijk via de productadvies-test als signatuur-instrument. Klanten ervaren maatwerk, jij hebt een tool die zichzelf herhaalt.</p>
+          </div>
+          <div class="mock-subcard">5 substappen · 1 verplicht · 3 reeds gedaan</div>
+          <div class="mock-quote">"Een specialist verkoopt geen producten, hij geeft mensen helderheid en de juiste keuze."</div>
+          <button class="mock-knop">Begin met substep 1 →</button>
+          <button class="mock-knop-secondair">Open scripts-bibliotheek</button>
+        </div>
+      </div>
+      <p class="label">Modern-luxueus, vrouwelijk-elegant</p>
+    </div>
+
+    <div>
+      <div class="mock variant-3">
+        <div class="mock-naam">Variant 3 · Diepviolet + Cognac</div>
+        <div class="mock-body">
+          <div class="mock-fase">Pro · Stap 3 · Fundament</div>
+          <div class="mock-titel">Productadvies-test, jouw signatuur-tool</div>
+          <div class="mock-card">
+            <div class="mock-card-header">📖 Wat je leert</div>
+            <p>Als professional bouw je je praktijk via de productadvies-test als signatuur-instrument. Klanten ervaren maatwerk, jij hebt een tool die zichzelf herhaalt.</p>
+          </div>
+          <div class="mock-subcard">5 substappen · 1 verplicht · 3 reeds gedaan</div>
+          <div class="mock-quote">"Een specialist verkoopt geen producten, hij geeft mensen helderheid en de juiste keuze."</div>
+          <button class="mock-knop">Begin met substep 1 →</button>
+          <button class="mock-knop-secondair">Open scripts-bibliotheek</button>
+        </div>
+      </div>
+      <p class="label">Mannelijk-modern, mystiek, bezonken</p>
+    </div>
+  </div>
+
+  <div style="margin-top:40px; text-align:center; color:#666; font-size:12px;">
+    Sprint zwart, Core luchtig grijs, Pro krijgt deze luxe-paars-met-goud variant.
+    Het goud blijft als ELEVA-anker tussen alle drie de modi.
+  </div>
+</div>
+</body>
+</html>
