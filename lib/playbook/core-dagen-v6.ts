@@ -18,30 +18,53 @@
 //   - Dag.waaromWerktDit = quote/principe (PLACEHOLDER)
 
 import type { Dag, ControllableTaak, ElevaPad } from "./types";
+import {
+  momentumRadarStap,
+  partnerCheckStap,
+  storiesStap,
+  namenToevoegenUitleg,
+  eersteBerichtUitleg,
+  uitnodigingenUitleg,
+} from "./tempo-aware";
+
+// ============================================================
+// CROSS-MODUS HELPERS, hergebruik van Sprint-helpers
+//
+// Sprint helpers in lib/playbook/tempo-aware.ts hebben een idPrefix-
+// parameter (default "dag" voor Sprint) zodat Core V6 ze kan
+// hergebruiken met prefix "core-v6-stap". Eén plek aanpassen aan
+// label/uitleg = beide modi profiteren. Zie ook MEMORY: cross-modus-
+// helpers convention.
+//
+// Beschikbare helpers:
+//   - storiesStap(N, { idPrefix }), met deeplink naar academy module 8
+//   - momentumRadarStap(N, { idPrefix }), week-1/later split
+//   - partnerCheckStap(N, { idPrefix }), label "(nieuwe) partner(s)"
+//   - namenToevoegenUitleg(aantal, opties) — pure tekst-helper
+//   - eersteBerichtUitleg(aantal, opties) — pure tekst-helper, opener
+//   - uitnodigingenUitleg(aantal, opties) — pure tekst-helper,
+//     vier bouwstenen + /scripts + Mentor
+// ============================================================
+
+const V6_PREFIX = "core-v6-stap";
 
 function afsluitStappenV6(stapNummer: number): ControllableTaak[] {
   return [
+    // Sponsor-checkin blijft Core V6-eigen: korte tekst, geen Sprint-
+    // helper. Sprint heeft per dag een unieke sponsor-checkin-uitleg
+    // hardcoded, Core V6 een generieke.
     {
-      id: `core-v6-stap${stapNummer}-sponsor-checkin`,
+      id: `${V6_PREFIX}${stapNummer}-sponsor-checkin`,
       label: "💬 Sluit af met een korte sponsor-checkin",
       verplicht: false,
       inlineEmbed: "sponsor-melding",
       uitleg: `30 sec berichtje naar je sponsor hoe deze ankerstap ging.`,
     },
-    {
-      id: `core-v6-stap${stapNummer}-momentum-radar`,
-      label: "🎯 Open momentum-acties van vandaag",
-      verplicht: false,
-      inlineEmbed: "momentum-radar",
-      uitleg: "Check openstaande acties van vandaag.",
-    },
-    {
-      id: `core-v6-stap${stapNummer}-partner-check`,
-      label: "🤝 Check je nieuwe partner(s) vandaag",
-      verplicht: false,
-      inlineEmbed: "partner-check",
-      uitleg: "Voor wie al team heeft. Verbergt zich onzichtbaar bij geen partners.",
-    },
+    // Momentum-radar + partner-check via Sprint-helpers met V6-prefix.
+    // Cross-modus: aanpassingen aan jargon-uitleg of label gelden voor
+    // Sprint én Core V6 in één.
+    momentumRadarStap(stapNummer, { idPrefix: V6_PREFIX }),
+    partnerCheckStap(stapNummer, { idPrefix: V6_PREFIX }),
   ];
 }
 
@@ -566,7 +589,13 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
     vandaagDoen: [
       {
         id: "core-v6-stap9-drie-namen",
-        label: "Stuur bericht naar 3 mensen, gebruik je zin uit Stap 4",
+        label: "💬 Stuur 3 mensen een eerste bericht (opener)",
+        // Cross-modus helper: zelfde body + drie hulp-paden als in Sprint
+        // dag 3-eerste-berichten. /scripts?cat=opener + sponsor + Mentor.
+        uitleg: eersteBerichtUitleg(3, {
+          extraIntro:
+            "Vandaag stuur je je eerste drie openers naar mensen uit je top-20. Gebruik je zin uit stap 4 als anker, en stem 'm af op wie deze persoon is (de Mentor kent de FORM-context per top-5).",
+        }),
         verplicht: true,
         actieRoute: "/namenlijst",
         uitnodigHelpKnoppen: true,
@@ -734,11 +763,9 @@ Niet elke Story hoeft over Lifeplus te gaan. Sterker, dat zou het juist verzwakk
 
 Niet alleen. Bouwen mag leuk zijn 💟`,
     vandaagDoen: [
-      {
-        id: "core-v6-stap12-story",
-        label: "Plaats vandaag minimaal één Story",
-        verplicht: true,
-      },
+      // Cross-modus helper: zelfde Stories-uitleg + drie onderwerp-
+      // richtingen + Academy-deeplink naar module 8 als in Sprint.
+      storiesStap(12, { idPrefix: V6_PREFIX }),
       {
         id: "core-v6-stap12-freebie-story",
         label: "Plaats een Story die je freebie aankondigt",
@@ -752,7 +779,10 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       },
       ...afsluitStappenV6(12),
     ],
-    waarInEleva: [{ actie: "Freebie-toolkit", route: "/instellingen/freebies" }],
+    waarInEleva: [
+      { actie: "Stories-training in Academy", route: "/academy/social-media#module-8" },
+      { actie: "Freebie-toolkit", route: "/instellingen/freebies" },
+    ],
     waaromWerktDit: {
       tekst:
         "Stories doen wat losse posts niet doen: ze maken je menselijk zichtbaar zonder dat je elke keer een mini-publicatie hoeft te maken. De ene Story is even goed als de andere, en samen geven ze het beeld dat jij er bent.",
