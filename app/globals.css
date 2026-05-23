@@ -79,6 +79,38 @@
   --cm-on-gold: 255 254 252;
 }
 
+/* MODUS-PRO — Plum + Champagne (paars-V2, gekozen 2026-05-23).
+   Modern-luxueus, vrouwelijk-elegant. Voor de Professional-doelgroep.
+   Wordt door ModusBodyClass gezet voor users met modus='pro'.
+   Bron: OVERZICHT-PRO-KLEUREN-V4-PAARS.html, variant-2. */
+.modus-pro {
+  --cm-black:       50 38 60;     /* plum/pruim achtergrond */
+  --cm-surface:     66 52 80;     /* cards: iets lichter plum */
+  --cm-surface-2:   84 68 100;    /* sub-cards: nog iets lichter */
+  --cm-border:      128 108 148;  /* zachte paarse rand */
+  --cm-gold:        220 192 134;  /* champagne-goud, warm */
+  --cm-gold-light:  240 215 162;  /* lichter champagne */
+  --cm-gold-dim:    130 108 70;
+  --cm-white:       236 230 232;  /* warme off-white met lichte paarse ondertoon */
+  --cm-muted:       184 170 198;  /* zacht lavender-muted */
+  --cm-on-gold:     50 38 60;     /* btn-tekst: zelfde plum */
+}
+
+/* In LIGHT-mode is Pro een bijna-witte variant met zachte lavendel-accent.
+   Zo zien Pro-members in light ook duidelijk verschil met Sprint en Core. */
+:root.light .modus-pro {
+  --cm-black:       250 246 252;  /* bg: bijna-wit met paarse ondertoon */
+  --cm-surface:     255 252 255;  /* cards: zuiverder wit */
+  --cm-surface-2:   244 238 248;  /* sub-cards: lichte lavender-toets */
+  --cm-border:      210 192 220;  /* zachte lavender-rand */
+  --cm-gold:        180 152 90;   /* dieper champagne voor leesbaarheid op wit */
+  --cm-gold-light:  215 188 122;
+  --cm-gold-dim:    120 100 50;
+  --cm-white:       50 38 60;     /* tekst: het dark-plum */
+  --cm-muted:       138 122 158;
+  --cm-on-gold:     255 252 255;
+}
+
 @layer base {
   * {
     box-sizing: border-box;
