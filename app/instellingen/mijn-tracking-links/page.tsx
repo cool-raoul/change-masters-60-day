@@ -12,6 +12,11 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { genereerBotToken } from "@/lib/freebie-bots/token";
+import {
+  haalProductadviesStats,
+  haalTweedeLenteStats,
+} from "@/lib/freebie-bots/stats";
+import { StatTegel } from "@/components/freebies/FreebieStatsBlok";
 import { KopieerKnop } from "./kopieer-knop";
 
 export const dynamic = "force-dynamic";
@@ -127,6 +132,12 @@ export default async function MijnTrackingLinksPagina() {
 
   const productadviesUrl = `${origin}/test/${productadviesToken}`;
 
+  // Stats per freebie ophalen
+  const productadviesStats = await haalProductadviesStats(supabase, user.id);
+  const tweedeLenteStats = ziet_tweede_lente
+    ? await haalTweedeLenteStats(supabase, user.id)
+    : null;
+
   return (
     <main className="mx-auto max-w-2xl px-4 py-8 text-slate-100">
       <h1 className="text-2xl font-semibold">🎁 Mijn freebies</h1>
@@ -151,6 +162,25 @@ export default async function MijnTrackingLinksPagina() {
                 aangeeft.
               </p>
             </div>
+          </div>
+
+          {/* Stats voor productadvies */}
+          <div className="mt-4 grid grid-cols-3 gap-2">
+            <StatTegel
+              label="Verzonden"
+              waarde={productadviesStats.totaalVerzonden}
+              kleur="slate"
+            />
+            <StatTegel
+              label="Ingevuld"
+              waarde={productadviesStats.ingevuld}
+              kleur="emerald"
+            />
+            <StatTegel
+              label="Conversie"
+              waarde={`${productadviesStats.conversie}%`}
+              kleur="emerald"
+            />
           </div>
 
           <div className="mt-4 rounded-lg bg-slate-800 px-3 py-2 text-xs text-slate-300 break-all">
@@ -195,6 +225,32 @@ export default async function MijnTrackingLinksPagina() {
                     </p>
                   </div>
                 </div>
+
+                {/* Stats voor Tweede Lente */}
+                {tweedeLenteStats && (
+                  <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    <StatTegel
+                      label="Ingetekend"
+                      waarde={tweedeLenteStats.totaalIngetekend}
+                      kleur="slate"
+                    />
+                    <StatTegel
+                      label="Afgemaakt"
+                      waarde={tweedeLenteStats.vragenlijstAfgemaakt}
+                      kleur="emerald"
+                    />
+                    <StatTegel
+                      label="Contact"
+                      waarde={tweedeLenteStats.contactGevraagd}
+                      kleur="rose"
+                    />
+                    <StatTegel
+                      label="Conversie"
+                      waarde={`${tweedeLenteStats.conversie}%`}
+                      kleur="emerald"
+                    />
+                  </div>
+                )}
 
                 <div className="mt-4 rounded-lg bg-slate-800 px-3 py-2 text-xs text-slate-300 break-all">
                   {url}

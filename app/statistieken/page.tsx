@@ -5,6 +5,14 @@ import { getServerTaal, v } from "@/lib/i18n/server";
 import { StatsOverzicht } from "@/components/statistieken/StatsOverzicht";
 import { WekelijkseReviewFormulier } from "@/components/statistieken/WekelijkseReviewFormulier";
 import { MentorStatsAnalyseKnop } from "@/components/statistieken/MentorStatsAnalyseKnop";
+import {
+  ProductadviesStatsBlok,
+  TweedeLenteStatsBlok,
+} from "@/components/freebies/FreebieStatsBlok";
+import {
+  haalProductadviesStats,
+  haalTweedeLenteStats,
+} from "@/lib/freebie-bots/stats";
 import { startdatumVoorModus } from "@/lib/playbook/dag-teller";
 import { topbarLabelVoorModus } from "@/lib/playbook/dagen-voor-modus";
 import { berekenKalenderdag } from "@/lib/playbook/bereken-dag";
@@ -25,7 +33,7 @@ export default async function StatistiekenPagina() {
       supabase
         .from("profiles")
         .select(
-          "modus, run_startdatum, sprint_startdatum, core_startdatum, created_at",
+          "modus, role, run_startdatum, sprint_startdatum, core_startdatum, created_at",
         )
         .eq("id", user.id)
         .maybeSingle(),
@@ -78,6 +86,16 @@ export default async function StatistiekenPagina() {
 
   const dagLabel = topbarLabelVoorModus(profielModus, dag);
 
+  // Freebie-stats: zichtbaar voor iedereen (productadvies-vragenlijst)
+  // en voor Core + founders (Tweede Lente bot).
+  const productadviesStats = await haalProductadviesStats(supabase, user.id);
+  const eigenRol = (profile as { role?: string | null } | null)?.role ?? null;
+  const ziet_tweede_lente =
+    eigenRol === "founder" || profielModus === "core";
+  const tweedeLenteStats = ziet_tweede_lente
+    ? await haalTweedeLenteStats(supabase, user.id)
+    : null;
+
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       <Link
@@ -112,6 +130,25 @@ export default async function StatistiekenPagina() {
         pipelineCounts={pipelineCounts}
         dag={dag}
       />
+
+      {/* Freebie-stats: prestaties van de freebies die deze member
+          deelt. Productadvies-vragenlijst voor iedereen, Tweede Lente
+          bot alleen voor Core + founder. */}
+      <section className="space-y-4">
+        <div>
+          <h2 className="text-xl font-display font-bold text-cm-white">
+            🎁 Mijn freebies
+          </h2>
+          <p className="text-cm-white opacity-60 text-sm mt-1">
+            Hoeveel mensen hebben jouw freebies gedaan, en hoeveel maakten
+            het helemaal af.
+          </p>
+        </div>
+        <ProductadviesStatsBlok stats={productadviesStats} />
+        {tweedeLenteStats && (
+          <TweedeLenteStatsBlok stats={tweedeLenteStats} />
+        )}
+      </section>
     </div>
   );
 }
