@@ -20,6 +20,7 @@ import { CoachGesprekkenInklapbaar } from "@/components/namenlijst/CoachGesprekk
 // drukte rechtsboven te verminderen. Triggeren via /coach met prospect-context.
 // import { ProductadviesKnop } from "@/components/namenlijst/ProductadviesKnop";
 import { ProductadviesTestKnop } from "@/components/namenlijst/ProductadviesTestKnop";
+import { StuurFreebieKnop } from "@/components/namenlijst/StuurFreebieKnop";
 import { StuurFilmKnop } from "@/components/namenlijst/StuurFilmKnop";
 import { VoiceUitnodigingKnop } from "@/components/namenlijst/VoiceUitnodigingKnop";
 import { FilmKijkOverzicht } from "@/components/namenlijst/FilmKijkOverzicht";
@@ -85,7 +86,7 @@ export default async function ProspectDetailPagina({
       .order("updated_at", { ascending: false }),
     supabase
       .from("profiles")
-      .select("sponsor_id, role, full_name")
+      .select("sponsor_id, role, full_name, modus")
       .eq("id", user.id)
       .single(),
     // Openstaande herinneringen voor deze prospect, toont ze op de kaart
@@ -234,29 +235,38 @@ export default async function ProspectDetailPagina({
                 ((eigenProfiel as any)?.full_name ?? "").split(" ")[0] || ""
               }
             />
-            <ProductadviesTestKnop
+            <StuurFreebieKnop
               prospectId={id}
               prospectNaam={prospect.volledige_naam}
               memberNaam={(eigenProfiel as any)?.full_name ?? "je member"}
-              bestaande={
-                productadviesTest
-                  ? {
-                      token: productadviesTest.token,
-                      status: productadviesTest.status as
-                        | "verstuurd"
-                        | "ingevuld"
-                        | "geen",
-                      trigger_60day: productadviesTest.trigger_60day,
-                      uitslag: productadviesTest.uitslag as any,
-                      ingevuld_op: productadviesTest.ingevuld_op,
-                      darmvragenlijst_uitslag:
-                        productadviesTest.darmvragenlijst_uitslag as any,
-                      darmvragenlijst_ingevuld_op:
-                        productadviesTest.darmvragenlijst_ingevuld_op,
-                    }
-                  : null
-              }
+              memberModus={(eigenProfiel as any)?.modus ?? null}
+              memberRole={(eigenProfiel as any)?.role ?? null}
             />
+            {/* Toon altijd de uitkomst-chips als de productadvies-vragenlijst
+                al is ingevuld. Het verzenden gebeurt nu via 'Stuur freebie'
+                hierboven. ProductadviesTestKnop laat alleen de chips zien
+                wanneer status='ingevuld' en uitslag aanwezig. */}
+            {productadviesTest?.status === "ingevuld" && productadviesTest.uitslag && (
+              <ProductadviesTestKnop
+                prospectId={id}
+                prospectNaam={prospect.volledige_naam}
+                memberNaam={(eigenProfiel as any)?.full_name ?? "je member"}
+                bestaande={{
+                  token: productadviesTest.token,
+                  status: productadviesTest.status as
+                    | "verstuurd"
+                    | "ingevuld"
+                    | "geen",
+                  trigger_60day: productadviesTest.trigger_60day,
+                  uitslag: productadviesTest.uitslag as any,
+                  ingevuld_op: productadviesTest.ingevuld_op,
+                  darmvragenlijst_uitslag:
+                    productadviesTest.darmvragenlijst_uitslag as any,
+                  darmvragenlijst_ingevuld_op:
+                    productadviesTest.darmvragenlijst_ingevuld_op,
+                }}
+              />
+            )}
             <ProspectVerwijderKnop
               prospectId={id}
               prospectNaam={prospect.volledige_naam}
