@@ -3,12 +3,12 @@
 // Blok 4. Drie sub-blokken:
 //   4a. Product-richting via member's eigen bestellinks (hormoonbalans
 //       essential, plus, complete). Geen advies, wel een richting.
-//   4b. Optioneel persoonlijk contact-aanbod (vinkje).
+//   4b. Optioneel persoonlijk contact-aanbod (vinkje) + telefoon-veld
+//       dat verplicht wordt als de checkbox aanstaat.
 //   4c. Prominent disclaimer.
 //
 // Naam + e-mail + akkoord zijn al opgegeven in stap 'intekenen-vooraf'
-// (zit in `inteken` prop). We hoeven hier alleen het contact-vinkje en
-// de submit-knop te tonen.
+// (zit in `inteken` prop).
 
 "use client";
 
@@ -68,10 +68,20 @@ export function BlokOptIn({
   onKlaar: () => void;
 }) {
   const [contactGewenst, setContactGewenst] = useState(false);
+  const [telefoon, setTelefoon] = useState("");
   const [bezig, setBezig] = useState(false);
   const [fout, setFout] = useState<string | null>(null);
 
+  // Als contact-vinkje aan staat: telefoon verplicht (min 8 cijfers).
+  const telefoonOk = !contactGewenst || telefoon.trim().replace(/\D/g, "").length >= 8;
+
   async function verstuur() {
+    if (!telefoonOk) {
+      setFout(
+        `Vul een telefoonnummer in zodat ${memberVoornaam} contact kan opnemen.`,
+      );
+      return;
+    }
     setBezig(true);
     setFout(null);
     try {
@@ -87,8 +97,10 @@ export function BlokOptIn({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           token,
-          leadNaam: inteken.voornaam,
+          leadVoornaam: inteken.voornaam,
+          leadAchternaam: inteken.achternaam,
           leadEmail: inteken.email,
+          leadTelefoon: contactGewenst ? telefoon.trim() : null,
           antwoorden,
           spiegelTekst,
           contactGewenst,
@@ -107,6 +119,8 @@ export function BlokOptIn({
     }
   }
 
+  const geenEnkeleLink = Object.keys(bestellinks).length === 0;
+
   return (
     <div>
       <div className="text-rose-500 text-sm font-medium uppercase tracking-wider">
@@ -119,11 +133,20 @@ export function BlokOptIn({
           Drie niveaus die {memberVoornaam} en haar team vaker zien werken
         </h2>
         <p className="mt-2 text-sm text-gray-700">
-          De vier ankers en de voedingsstoffen uit de spiegel zitten als
-          basis ook in onze pakketten. Hieronder zie je drie niveaus, van
-          eenvoudig instap tot volledig pakket. Zelf in onze webshop te
-          bestellen, geen gesprek of programma vooraf nodig.
+          De ankers en voedingsstoffen uit de spiegel zitten als basis
+          ook in deze pakketten. Drie niveaus, van eenvoudig instap tot
+          volledig pakket. Zelf in de webshop te bestellen, zonder
+          gesprek vooraf.
         </p>
+
+        {geenEnkeleLink && (
+          <div className="mt-4 rounded-lg bg-amber-50 border border-amber-200 p-3 text-xs text-amber-900">
+            <strong>Let op:</strong> {memberVoornaam} heeft nog geen
+            persoonlijke bestellinks voor deze drie pakketten ingesteld.
+            Stuur haar gerust een berichtje, dan stuurt zij je
+            persoonlijke links direct.
+          </div>
+        )}
 
         <ul className="mt-5 space-y-3">
           {PAKKET_NIVEAUS.map((p) => {
@@ -147,21 +170,14 @@ export function BlokOptIn({
                   </a>
                 ) : (
                   <div className="mt-3 text-xs italic text-gray-500">
-                    {memberVoornaam} heeft hier nog geen persoonlijke
-                    bestellink ingesteld. Stuur haar een berichtje, dan
-                    krijg je hem direct.
+                    Voor dit niveau heeft {memberVoornaam} nog geen
+                    bestellink ingesteld.
                   </div>
                 )}
               </li>
             );
           })}
         </ul>
-
-        <p className="mt-4 text-xs text-gray-500">
-          Geen advies, wel een richting. Voor specifieke vragen of een
-          persoonlijke kennismaking kun je hieronder een berichtje van
-          {" "}{memberVoornaam} vragen.
-        </p>
       </section>
 
       {/* 4b, Persoonlijk contact-aanbod */}
@@ -174,11 +190,31 @@ export function BlokOptIn({
             className="mt-1"
           />
           <span>
-            <strong className="text-gray-900">Ja, ik wil dat {memberVoornaam} contact opneemt.</strong>
+            <strong className="text-gray-900">
+              Ja, ik wil dat {memberVoornaam} contact opneemt.
+            </strong>
             {" "}Vrijblijvend gesprekje van een kwartier, geen
             verkoopgesprek. Iemand die meedenkt over mijn fase.
           </span>
         </label>
+
+        {contactGewenst && (
+          <label className="mt-4 block">
+            <span className="text-sm font-medium text-gray-900">
+              Op welk telefoonnummer kan {memberVoornaam} je bereiken?
+            </span>
+            <input
+              type="tel"
+              value={telefoon}
+              onChange={(e) => setTelefoon(e.target.value)}
+              className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900"
+              placeholder="06 12 34 56 78"
+            />
+            <span className="mt-1 block text-xs text-gray-500">
+              Alleen {memberVoornaam} ziet dit nummer, niet openbaar.
+            </span>
+          </label>
+        )}
       </section>
 
       {/* Submit */}
@@ -188,14 +224,14 @@ export function BlokOptIn({
       <button
         type="button"
         onClick={verstuur}
-        disabled={bezig}
+        disabled={bezig || !telefoonOk}
         className="mt-6 w-full rounded-full bg-rose-600 px-6 py-3 text-white text-base font-medium disabled:opacity-40"
       >
         {bezig ? "Even versturen..." : "Verstuur mijn spiegel en sluit af"}
       </button>
 
       <p className="mt-3 text-center text-xs text-gray-500">
-        Je krijgt vanavond een mail met de spiegel en de vier ankers.
+        Je krijgt vanavond een mail met de spiegel en de handvatten.
         Daarna vijf korte vervolg-mails over vijf dagen.
       </p>
 

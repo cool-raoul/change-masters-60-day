@@ -1,9 +1,8 @@
 // File: app/bot/tweede-lente/[token]/blok-intekenen-vooraf.tsx
 //
-// Nieuwe stap tussen intro en vragen: e-mail + naam + akkoord, vóór de
-// vragen. Werkt als filter: alleen vrouwen die serieus genoeg zijn om
-// hun gegevens te delen, doen de vragen. Drempel verlaagt willekeurige
-// klikkers, verhoogt commitment.
+// Nieuwe stap tussen intro en vragen: voornaam + achternaam + e-mail
+// + akkoord, vóór de vragen. Filter-effect: alleen vrouwen die serieus
+// genoeg zijn om gegevens te delen, doen de vragen.
 //
 // Data wordt in client-state bewaard tot het eind van de flow. Eén
 // API-call bij voltooiing met alle data tegelijk.
@@ -14,6 +13,7 @@ import { useState } from "react";
 
 export type IntekenGegevens = {
   voornaam: string;
+  achternaam: string;
   email: string;
   toestemming: boolean;
 };
@@ -28,11 +28,13 @@ export function BlokIntekenenVooraf({
   onTerug: () => void;
 }) {
   const [voornaam, setVoornaam] = useState("");
+  const [achternaam, setAchternaam] = useState("");
   const [email, setEmail] = useState("");
   const [toestemming, setToestemming] = useState(false);
 
   const klaar =
     voornaam.trim().length > 1 &&
+    achternaam.trim().length > 1 &&
     /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) &&
     toestemming;
 
@@ -40,6 +42,7 @@ export function BlokIntekenenVooraf({
     if (!klaar) return;
     onKlaar({
       voornaam: voornaam.trim(),
+      achternaam: achternaam.trim(),
       email: email.trim(),
       toestemming,
     });
@@ -55,23 +58,35 @@ export function BlokIntekenenVooraf({
       </h2>
       <p className="mt-4 text-gray-700 leading-relaxed text-center">
         Hierna stellen we je zeven korte vragen, geven je een rustige
-        spiegel, vier concrete ankers en een paar nuttige voedingsstoffen
-        die veel vrouwen in jouw fase rust geven. Je ontvangt het ook in
-        je mail zodat je het rustig kunt nalezen.
+        spiegel die past bij jouw situatie, en concrete handvatten +
+        voedingsstoffen die in jouw fase vaak belangrijk worden. Je
+        ontvangt het ook in je mail zodat je het rustig kunt nalezen.
       </p>
 
       <div className="mt-6 space-y-3">
-        <label className="block">
-          <span className="text-sm text-gray-700">Voornaam</span>
-          <input
-            type="text"
-            value={voornaam}
-            onChange={(e) => setVoornaam(e.target.value)}
-            className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900"
-            placeholder="Je voornaam"
-            autoFocus
-          />
-        </label>
+        <div className="grid grid-cols-2 gap-3">
+          <label className="block">
+            <span className="text-sm text-gray-700">Voornaam</span>
+            <input
+              type="text"
+              value={voornaam}
+              onChange={(e) => setVoornaam(e.target.value)}
+              className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900"
+              placeholder="Voornaam"
+              autoFocus
+            />
+          </label>
+          <label className="block">
+            <span className="text-sm text-gray-700">Achternaam</span>
+            <input
+              type="text"
+              value={achternaam}
+              onChange={(e) => setAchternaam(e.target.value)}
+              className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900"
+              placeholder="Achternaam"
+            />
+          </label>
+        </div>
         <label className="block">
           <span className="text-sm text-gray-700">E-mailadres</span>
           <input

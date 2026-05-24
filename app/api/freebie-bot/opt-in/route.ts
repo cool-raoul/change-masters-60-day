@@ -27,8 +27,17 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
     const token = body.token as string | undefined;
-    const leadNaam = body.leadNaam as string | undefined;
+    // Backwards compat: oude clients sturen leadNaam (één veld).
+    // Nieuwe clients sturen leadVoornaam + leadAchternaam apart.
+    const leadVoornaam = body.leadVoornaam as string | undefined;
+    const leadAchternaam = body.leadAchternaam as string | undefined;
+    const leadNaamLegacy = body.leadNaam as string | undefined;
+    const leadNaam =
+      leadVoornaam && leadAchternaam
+        ? `${leadVoornaam.trim()} ${leadAchternaam.trim()}`
+        : leadNaamLegacy?.trim();
     const leadEmail = body.leadEmail as string | undefined;
+    const leadTelefoon = body.leadTelefoon as string | null | undefined;
     const antwoorden = body.antwoorden as TweedeLenteAntwoorden | undefined;
     const spiegelTekst = body.spiegelTekst as string | undefined;
     const contactGewenst = body.contactGewenst === true;
@@ -155,23 +164,66 @@ export async function POST(req: NextRequest) {
       spiegelTekst ?? "(geen)",
     ].join("\n");
 
-    const { error: prospectErr } = await supabase
+    // Check eerst of er al een prospect-rij bestaat voor deze member +
+    // email-combinatie. Zo ja: aanvullen ipv dubbele kaart maken.
+    // (Tweede Lente parkeerlijst item 1 uit 2026-05-24 alvast ingebouwd.)
+    const { data: bestaande } = await supabase
       .from("prospects")
-      .insert({
-        user_id: tokenRow.member_id,
-        volledige_naam: leadNaam,
-        email: leadEmail,
-        bron: "social",
-        pipeline_fase: "prospect",
-        prioriteit: contactGewenst ? "hoog" : "normaal",
-        notities: notitieRegels,
-      });
+      .select("id, notities, ingezette_tools, telefoon, prioriteit, gearchiveerd")
+      .eq("user_id", tokenRow.member_id)
+      .ilike("email", leadEmail)
+      .maybeSingle();
 
-    if (prospectErr) {
-      console.error("Prospect-rij niet aangemaakt:", prospectErr);
-      // niet blokkerend, opt-in is veilig opgeslagen in freebie_opt_ins.
-      // Maar we loggen wel als ERROR (niet warn) zodat het zichtbaar is
-      // in Vercel logs en we het kunnen monitoren.
+    const huidigeTools = (bestaande?.ingezette_tools ?? []) as string[];
+    const nieuweTools = huidigeTools.includes("Tweede Lente bot")
+      ? huidigeTools
+      : [...huidigeTools, "Tweede Lente bot"];
+
+    if (bestaande) {
+      // Update bestaande prospect: notitie aanvullen, tool-tag toevoegen,
+      // telefoon zetten als die ontbrak, prioriteit omhoog bij contact.
+      const aangevuldeNotitie =
+        (bestaande.notities ? `${bestaande.notities}\n\n` : "") + notitieRegels;
+      const nieuwePrioriteit =
+        contactGewenst && bestaande.prioriteit !== "hoog"
+          ? "hoog"
+          : bestaande.prioriteit;
+      const updateData: Record<string, unknown> = {
+        notities: aangevuldeNotitie,
+        ingezette_tools: nieuweTools,
+        prioriteit: nieuwePrioriteit,
+        gearchiveerd: false,
+        updated_at: new Date().toISOString(),
+      };
+      if (leadTelefoon && !bestaande.telefoon) {
+        updateData.telefoon = leadTelefoon;
+      }
+      const { error: updateErr } = await supabase
+        .from("prospects")
+        .update(updateData)
+        .eq("id", bestaande.id);
+      if (updateErr) {
+        console.error("Prospect-update mislukt:", updateErr);
+      }
+    } else {
+      // Nieuwe prospect-rij
+      const { error: prospectErr } = await supabase
+        .from("prospects")
+        .insert({
+          user_id: tokenRow.member_id,
+          volledige_naam: leadNaam,
+          email: leadEmail,
+          telefoon: leadTelefoon || null,
+          bron: "social",
+          pipeline_fase: "prospect",
+          prioriteit: contactGewenst ? "hoog" : "normaal",
+          notities: notitieRegels,
+          ingezette_tools: nieuweTools,
+        });
+
+      if (prospectErr) {
+        console.error("Prospect-rij niet aangemaakt:", prospectErr);
+      }
     }
 
     // Push-notificatie naar member bij ELKE opt-in (niet alleen bij

@@ -60,6 +60,13 @@ function ProspectKaart({
     : null;
 
   const nietActief = prospect.actief === false;
+  // Detecteer freebie-bot leads via ingezette_tools (set door API
+  // opt-in-route). De bot-naam staat exact in de array. Wisseltbij meer
+  // bots: detecteer alles dat eindigt op 'bot' of begint met 'Tweede '.
+  const tools = (prospect.ingezette_tools ?? []) as string[];
+  const freebieBotTag = tools.find(
+    (t) => t === "Tweede Lente bot" || t.endsWith(" bot"),
+  );
   return (
     <div
       draggable
@@ -67,11 +74,16 @@ function ProspectKaart({
       onDragEnd={onDragEnd}
       onDragOver={(e) => onDragOverKaart(e, prospect.id)}
       onDrop={(e) => onDropOpKaart(e, prospect.id)}
-      className={`relative bg-cm-surface border border-cm-border rounded-xl p-3 space-y-2 hover:border-cm-gold-dim transition-all cursor-grab active:cursor-grabbing group select-none ${
+      className={`relative bg-cm-surface border ${freebieBotTag ? "border-rose-500/60 ring-1 ring-rose-500/20" : "border-cm-border"} rounded-xl p-3 space-y-2 hover:border-cm-gold-dim transition-all cursor-grab active:cursor-grabbing group select-none ${
         isDragging ? "opacity-40 ring-2 ring-cm-gold" : nietActief ? "opacity-60" : "opacity-100"
       } ${dropIndicator === "boven" ? "border-t-2 border-t-cm-gold" : ""} ${dropIndicator === "onder" ? "border-b-2 border-b-cm-gold" : ""}`}
     >
-      <div className="flex items-start justify-between">
+      {freebieBotTag && (
+        <div className="absolute -top-2 left-3 px-2 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-semibold uppercase tracking-wider shadow-sm">
+          🌷 {freebieBotTag}
+        </div>
+      )}
+      <div className={`flex items-start justify-between ${freebieBotTag ? "pt-1" : ""}`}>
         <Link
           href={`/namenlijst/${prospect.id}`}
           className="font-semibold text-cm-white text-sm hover:text-cm-gold transition-colors flex-1"
