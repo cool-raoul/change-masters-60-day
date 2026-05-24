@@ -87,11 +87,28 @@ export function BlokVragen({
     (stap === 6 && deel !== null) ||
     (stap === 7 && zoek !== null);
 
+  // Per stap een passend icoon voor visuele verankering
+  const stapIcoon: Record<Stap, string> = {
+    1: "🌷",
+    2: "💗",
+    3: "🥗",
+    4: "🚶‍♀️",
+    5: "🌿",
+    6: "💞",
+    7: "🪞",
+  };
+
   return (
     <div>
       <ProgressBar stap={stap} totaal={7} />
 
-      <div className="mt-6">
+      <div className="mt-7">
+        <div className="text-center mb-6">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-rose-100 text-2xl shadow-sm">
+            {stapIcoon[stap]}
+          </div>
+        </div>
+
         {stap === 1 && (
           <SingleChoice
             titel="In welke fase voel je je nu?"
@@ -103,7 +120,7 @@ export function BlokVragen({
         {stap === 2 && (
           <MultiChoice
             titel="Wat valt je het meest op in je lichaam de laatste maanden?"
-            ondertitel="Kies één tot drie."
+            ondertitel="Kies één tot drie keuzes die het sterkst voor jou gelden."
             opties={VRAAG_WAT_VALT_OP}
             gekozen={watValtOp}
             onToggle={toggleWatValtOp}
@@ -156,7 +173,7 @@ export function BlokVragen({
           type="button"
           onClick={back}
           disabled={stap === 1}
-          className="text-sm text-gray-500 disabled:opacity-30"
+          className="text-sm text-gray-500 disabled:opacity-30 hover:text-gray-700"
         >
           ← Vorige
         </button>
@@ -164,9 +181,9 @@ export function BlokVragen({
           type="button"
           onClick={next}
           disabled={!huidigeStapKlaar}
-          className="rounded-full bg-rose-600 px-6 py-2 text-white text-sm font-medium disabled:opacity-40"
+          className="rounded-full bg-gradient-to-r from-rose-600 to-pink-600 px-6 py-2.5 text-white text-sm font-semibold shadow-md hover:shadow-lg disabled:from-gray-300 disabled:to-gray-300 disabled:shadow-none transition"
         >
-          {stap === 7 ? "Spiegel tonen" : "Volgende →"}
+          {stap === 7 ? "Toon mijn spiegel ✨" : "Volgende →"}
         </button>
       </div>
     </div>
@@ -177,13 +194,13 @@ function ProgressBar({ stap, totaal }: { stap: number; totaal: number }) {
   const pct = (stap / totaal) * 100;
   return (
     <div className="w-full">
-      <div className="flex justify-between text-xs text-gray-500 mb-1">
+      <div className="flex justify-between text-xs text-rose-700 font-medium mb-1.5">
         <span>Vraag {stap} van {totaal}</span>
         <span>{Math.round(pct)}%</span>
       </div>
-      <div className="h-1.5 bg-rose-100 rounded-full overflow-hidden">
+      <div className="h-2 bg-white/70 rounded-full overflow-hidden border border-rose-100">
         <div
-          className="h-full bg-rose-500 transition-all"
+          className="h-full bg-gradient-to-r from-rose-500 to-pink-500 transition-all duration-500 ease-out"
           style={{ width: `${pct}%` }}
         />
       </div>
@@ -206,8 +223,8 @@ function SingleChoice<T extends string>({
 }) {
   return (
     <div>
-      <h2 className="text-xl font-semibold text-gray-900">{titel}</h2>
-      <div className="mt-4 space-y-2">
+      <h2 className="text-xl sm:text-2xl font-bold text-gray-900 text-center">{titel}</h2>
+      <div className="mt-5 space-y-2.5">
         {opties.map((o) => {
           const actief = gekozen === o.waarde;
           return (
@@ -215,13 +232,24 @@ function SingleChoice<T extends string>({
               key={o.waarde}
               type="button"
               onClick={() => onKies(o.waarde)}
-              className={`w-full text-left rounded-xl px-4 py-3 border transition ${
+              className={`group w-full text-left rounded-2xl px-4 py-3.5 border-2 transition-all flex items-center gap-3 ${
                 actief
-                  ? "bg-rose-50 border-rose-400 text-rose-900"
-                  : "bg-white border-gray-200 text-gray-700 hover:border-rose-300"
+                  ? "bg-gradient-to-r from-rose-50 to-pink-50 border-rose-400 text-rose-900 shadow-md scale-[1.01]"
+                  : "bg-white/80 border-gray-200 text-gray-700 hover:border-rose-300 hover:bg-rose-50/40"
               }`}
             >
-              {o.label}
+              <span
+                className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2 transition ${
+                  actief
+                    ? "border-rose-500 bg-rose-500"
+                    : "border-gray-300 group-hover:border-rose-300"
+                }`}
+              >
+                {actief && (
+                  <span className="block h-2 w-2 rounded-full bg-white" />
+                )}
+              </span>
+              <span className="flex-1 text-sm leading-snug">{o.label}</span>
             </button>
           );
         })}
@@ -245,11 +273,11 @@ function MultiChoice<T extends string>({
 }) {
   return (
     <div>
-      <h2 className="text-xl font-semibold text-gray-900">{titel}</h2>
+      <h2 className="text-xl sm:text-2xl font-bold text-gray-900 text-center">{titel}</h2>
       {ondertitel && (
-        <p className="mt-1 text-sm text-gray-500">{ondertitel}</p>
+        <p className="mt-2 text-sm text-gray-500 text-center">{ondertitel}</p>
       )}
-      <div className="mt-4 space-y-2">
+      <div className="mt-5 space-y-2.5">
         {opties.map((o) => {
           const actief = gekozen.includes(o.waarde);
           return (
@@ -257,19 +285,27 @@ function MultiChoice<T extends string>({
               key={o.waarde}
               type="button"
               onClick={() => onToggle(o.waarde)}
-              className={`w-full text-left rounded-xl px-4 py-3 border transition ${
+              className={`group w-full text-left rounded-2xl px-4 py-3.5 border-2 transition-all flex items-center gap-3 ${
                 actief
-                  ? "bg-rose-50 border-rose-400 text-rose-900"
-                  : "bg-white border-gray-200 text-gray-700 hover:border-rose-300"
+                  ? "bg-gradient-to-r from-rose-50 to-pink-50 border-rose-400 text-rose-900 shadow-md scale-[1.01]"
+                  : "bg-white/80 border-gray-200 text-gray-700 hover:border-rose-300 hover:bg-rose-50/40"
               }`}
             >
-              {actief ? "✓ " : ""}
-              {o.label}
+              <span
+                className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md border-2 transition ${
+                  actief
+                    ? "border-rose-500 bg-rose-500 text-white"
+                    : "border-gray-300 group-hover:border-rose-300"
+                }`}
+              >
+                {actief && <span className="text-xs">✓</span>}
+              </span>
+              <span className="flex-1 text-sm leading-snug">{o.label}</span>
             </button>
           );
         })}
       </div>
-      <p className="mt-3 text-xs text-gray-400">
+      <p className="mt-3 text-center text-xs font-medium text-rose-700">
         {gekozen.length}/3 gekozen
       </p>
     </div>

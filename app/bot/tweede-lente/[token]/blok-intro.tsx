@@ -1,13 +1,8 @@
 // File: app/bot/tweede-lente/[token]/blok-intro.tsx
 //
-// Blok 1, warme intro. Toont de naam van de member die de link
-// heeft gedeeld, zodat de vrouw voelt dat ze door iemand persoonlijk
-// is uitgenodigd. Naam-mismatch tussen social-profiel en
-// systeem-profiel is geaccepteerd: het kan zijn dat ze 'Raoul' ziet
-// terwijl ze via Gaby kwam. De vrouw begrijpt dat het team is.
-//
-// TODO-GABY: definitieve openings-tekst aanleveren. Onder staat
-// een placeholder die claim-vrij is en in jullie stem klinkt.
+// Blok 1, warme intro met hero-graphic. Decoratieve bloesems + gradient
+// + duidelijke USP-iconen. Toont de naam van de member die de link
+// heeft gedeeld, persoonlijk gevoel.
 
 "use client";
 
@@ -20,30 +15,57 @@ export function BlokIntro({
 }) {
   return (
     <div className="text-center">
-      <div className="text-rose-500 text-sm font-medium uppercase tracking-wider">
+      {/* Hero-graphic */}
+      <div className="relative mx-auto mb-2 h-24 w-24 sm:h-28 sm:w-28">
+        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-rose-200 via-pink-200 to-amber-100 blur-xl opacity-70" />
+        <div className="relative flex h-full w-full items-center justify-center rounded-full bg-gradient-to-br from-rose-100 to-pink-50 text-5xl sm:text-6xl shadow-md ring-4 ring-white/60">
+          🌷
+        </div>
+      </div>
+
+      <div className="mt-4 text-rose-500 text-sm font-semibold uppercase tracking-widest">
         Tweede Lente
       </div>
-      <h1 className="mt-3 text-3xl sm:text-4xl font-bold text-gray-900">
-        Welkom bij {memberVoornaam} 💟
+      <h1 className="mt-3 text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">
+        Welkom bij {memberVoornaam}
+        <span className="ml-1 inline-block">💟</span>
       </h1>
       <p className="mt-5 text-lg text-gray-700 leading-relaxed">
         Fijn dat je hier bent. {memberVoornaam} heeft deze ruimte met haar team
         voor jou klaargezet, vrouwen die zelf door deze fase zijn gegaan.
       </p>
-      <p className="mt-4 text-gray-700 leading-relaxed">
-        Vijf minuten, zeven vragen. Aan het eind een rustige spiegel,
-        vier concrete ankers, en zes voedingsstoffen die in deze fase
-        vaak belangrijk worden. Je krijgt het ook in je mail zodat je
-        het rustig kunt nalezen.
+
+      {/* Drie USP-pillen */}
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-xs">
+        <span className="rounded-full bg-white/80 px-3 py-1.5 text-rose-700 font-medium shadow-sm border border-rose-100">
+          ⏱ 5 minuten
+        </span>
+        <span className="rounded-full bg-white/80 px-3 py-1.5 text-rose-700 font-medium shadow-sm border border-rose-100">
+          📝 7 vragen
+        </span>
+        <span className="rounded-full bg-white/80 px-3 py-1.5 text-rose-700 font-medium shadow-sm border border-rose-100">
+          🪞 Persoonlijke spiegel
+        </span>
+      </div>
+
+      <p className="mt-6 text-gray-700 leading-relaxed">
+        Aan het eind krijg je een rustige spiegel die past bij jouw situatie,
+        concrete handvatten en de voedingsstoffen die in jouw fase vaak
+        belangrijk worden. Je ontvangt het ook in je mail.
       </p>
+
       <button
         type="button"
         onClick={onStart}
-        className="mt-8 rounded-full bg-rose-600 px-8 py-3 text-white text-base font-medium shadow-sm hover:bg-rose-700 transition"
+        className="mt-8 group rounded-full bg-gradient-to-r from-rose-600 to-pink-600 px-10 py-4 text-white text-base font-semibold shadow-lg hover:shadow-xl hover:from-rose-700 hover:to-pink-700 transition-all"
       >
-        Ja, start
+        Ja, ik start
+        <span className="ml-2 inline-block transition-transform group-hover:translate-x-1">
+          →
+        </span>
       </button>
-      <p className="mt-6 text-xs text-gray-400">
+
+      <p className="mt-6 text-xs text-gray-500">
         Tweede Lente deelt herkenning en richting, geen medisch advies.
       </p>
     </div>

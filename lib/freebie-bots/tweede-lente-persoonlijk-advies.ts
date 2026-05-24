@@ -131,6 +131,10 @@ export type Anker = {
   waarom: string;
   themas: Thema[];
   prioriteit: number; // hoger = belangrijker bij gelijke match
+  /** Emoji-icoon voor visuele herkenning. */
+  icoon: string;
+  /** Tailwind-kleur-suffix voor accenten (rose, amber, emerald, sky, violet). */
+  kleur: "rose" | "amber" | "emerald" | "sky" | "violet" | "stone";
 };
 
 export const ANKER_BIBLIOTHEEK: Anker[] = [
@@ -143,6 +147,8 @@ export const ANKER_BIBLIOTHEEK: Anker[] = [
       "In de eerste minuten ontwaakt het cortisol-ritme, dat regelt je energie de hele dag. Een paar minuten rust zonder scherm laat dat ritme natuurlijk omhoog komen, zonder dat externe prikkels het uit balans halen. Een glas water op een lege maag activeert je spijsvertering en helpt tegen de lichte uitdroging van de nacht.",
     themas: ["energie", "stress", "stemming"],
     prioriteit: 9,
+    icoon: "🌅",
+    kleur: "amber",
   },
   {
     id: "daglicht-ochtend",
@@ -153,6 +159,8 @@ export const ANKER_BIBLIOTHEEK: Anker[] = [
       "Daglicht in de ochtend zet je biologische klok scherper, wat het slaap-waakritme stabieler maakt. Het stimuleert ook natuurlijke vitamine D-aanmaak in de huid en helpt je stemming de dag in. Bewolkt weer geeft nog steeds tien tot honderd keer meer licht dan binnen.",
     themas: ["slaap", "stemming", "energie", "botten"],
     prioriteit: 9,
+    icoon: "☀️",
+    kleur: "amber",
   },
   {
     id: "eet-venster",
@@ -163,6 +171,8 @@ export const ANKER_BIBLIOTHEEK: Anker[] = [
       "In een vast venster van twaalf uur krijgt je spijsvertering rust. De andere twaalf uur heeft je lichaam tijd voor herstel en regulatie van je hormoonsignalen, in plaats van constant te verteren. Veel vrouwen voelen hun energie en slaap meeschuiven met dit ritme.",
     themas: ["energie", "spijsvertering", "hormonen", "slaap"],
     prioriteit: 8,
+    icoon: "🍃",
+    kleur: "emerald",
   },
   {
     id: "eiwit-per-maaltijd",
@@ -173,6 +183,8 @@ export const ANKER_BIBLIOTHEEK: Anker[] = [
       "In de overgang neemt spiermassa sneller af zonder gerichte aandacht. Voldoende eiwit per maaltijd, verspreid over de dag, is de eenvoudigste manier om je spierweefsel te ondersteunen. Spieren zijn ook hormoongevoelig weefsel.",
     themas: ["spieren", "lichaam", "hormonen", "energie"],
     prioriteit: 7,
+    icoon: "🥚",
+    kleur: "emerald",
   },
   {
     id: "beweeg-tweetal",
@@ -183,6 +195,8 @@ export const ANKER_BIBLIOTHEEK: Anker[] = [
       "Lopen in de ochtend met daglicht op je gezicht zet je biologische klok scherper. Lopen na het avondeten helpt je bloedsuiker geleidelijk dalen in plaats van met een piek. Geen prestatie, wel ritme.",
     themas: ["spieren", "energie", "slaap", "stemming", "lichaam"],
     prioriteit: 8,
+    icoon: "🚶‍♀️",
+    kleur: "sky",
   },
   {
     id: "krachttraining",
@@ -193,6 +207,8 @@ export const ANKER_BIBLIOTHEEK: Anker[] = [
       "Krachttraining is de meest effectieve manier om botdichtheid en spiermassa op peil te houden in en na de overgang. Korte sessies, twee keer per week, zijn voldoende om effect op te bouwen. Geen sportschool nodig.",
     themas: ["botten", "spieren", "lichaam"],
     prioriteit: 7,
+    icoon: "💪",
+    kleur: "sky",
   },
   {
     id: "avond-zonder-scherm",
@@ -203,6 +219,8 @@ export const ANKER_BIBLIOTHEEK: Anker[] = [
       "Blauw licht van schermen remt de aanmaak van het slaap-signaal in je hoofd. Een half uur zonder scherm en een paar diepe ademhalingen geven je zenuwstelsel het signaal dat de dag voorbij is, zodat je makkelijker in slaap valt en dieper slaapt.",
     themas: ["slaap", "stress", "hersenen"],
     prioriteit: 8,
+    icoon: "🌙",
+    kleur: "violet",
   },
   {
     id: "alcohol-bewustzijn",
@@ -213,6 +231,8 @@ export const ANKER_BIBLIOTHEEK: Anker[] = [
       "Alcohol, en vooral rode wijn, verstoort de tweede slaaphelft (REM-slaap) bij vrouwen in de overgang sterker dan eerder. Het verergert opvliegers en hete flushes vaak ook. Minder alcohol geeft veel vrouwen direct merkbaar betere slaap en stabielere temperatuur.",
     themas: ["slaap", "warmte", "hormonen", "stress"],
     prioriteit: 9,
+    icoon: "🍷",
+    kleur: "rose",
   },
   {
     id: "suiker-bewustzijn",
@@ -223,6 +243,8 @@ export const ANKER_BIBLIOTHEEK: Anker[] = [
       "Bloedsuiker-pieken belasten je insuline-balans extra in de overgang. Geraffineerde suiker zorgt ook voor energie-dips en stemmings-schommelingen. Vezel uit groente, volkoren en peulvruchten houdt je glucose stabieler en voedt bovendien je darmflora.",
     themas: ["energie", "stemming", "spijsvertering", "hormonen"],
     prioriteit: 8,
+    icoon: "🍯",
+    kleur: "amber",
   },
   {
     id: "cafeine-grens",
@@ -233,6 +255,8 @@ export const ANKER_BIBLIOTHEEK: Anker[] = [
       "In de overgang reageert je zenuwstelsel sterker op stimulerende stoffen. Cafeïne in de namiddag kan ook bij vrouwen die er nooit last van hadden, ineens de slaapdiepte ondermijnen. Schakel over op kruidenthee of warm water met citroen.",
     themas: ["slaap", "stress", "energie"],
     prioriteit: 7,
+    icoon: "☕",
+    kleur: "stone",
   },
   {
     id: "verbinding-rust",
@@ -243,6 +267,8 @@ export const ANKER_BIBLIOTHEEK: Anker[] = [
       "Vrouwen die hun overgang in gesprek brengen, herstellen significant beter dan vrouwen die het alleen dragen. Niet de oplossing zoeken, wel de herkenning krijgen, is een belangrijke buffer tegen de eenzaamheid die deze fase vaak meebrengt.",
     themas: ["verbinding", "stemming", "stress"],
     prioriteit: 8,
+    icoon: "💞",
+    kleur: "rose",
   },
   {
     id: "ademhaling-pauze",
@@ -253,6 +279,8 @@ export const ANKER_BIBLIOTHEEK: Anker[] = [
       "Verlengd uitademen activeert het parasympathisch zenuwstelsel, de rust-stand. Drie korte momenten per dag bouwen op tot een merkbaar rustiger algeheel grond-niveau. Werkt ook direct bij een opkomende warmte-flush.",
     themas: ["stress", "warmte", "slaap", "stemming"],
     prioriteit: 7,
+    icoon: "🌬️",
+    kleur: "sky",
   },
 ];
 
@@ -267,6 +295,10 @@ export type Nutrient = {
   efsaClaims: string[];
   themas: Thema[];
   prioriteit: number;
+  /** Emoji voor visuele herkenning. */
+  icoon: string;
+  /** Tailwind-kleur-suffix (zonnig geel, kalmerend groen, etc.). */
+  kleur: "amber" | "emerald" | "sky" | "violet" | "rose" | "stone";
 };
 
 export const NUTRIENT_BIBLIOTHEEK: Nutrient[] = [
@@ -282,6 +314,8 @@ export const NUTRIENT_BIBLIOTHEEK: Nutrient[] = [
     ],
     themas: ["slaap", "stress", "energie", "spieren", "stemming"],
     prioriteit: 9,
+    icoon: "🌿",
+    kleur: "emerald",
   },
   {
     id: "vitamine-b6",
@@ -294,6 +328,8 @@ export const NUTRIENT_BIBLIOTHEEK: Nutrient[] = [
     ],
     themas: ["hormonen", "stemming", "energie", "hersenen"],
     prioriteit: 9,
+    icoon: "🌸",
+    kleur: "rose",
   },
   {
     id: "vitamine-d",
@@ -306,6 +342,8 @@ export const NUTRIENT_BIBLIOTHEEK: Nutrient[] = [
     ],
     themas: ["botten", "spieren", "immuun", "stemming"],
     prioriteit: 9,
+    icoon: "☀️",
+    kleur: "amber",
   },
   {
     id: "vitamine-k",
@@ -317,6 +355,8 @@ export const NUTRIENT_BIBLIOTHEEK: Nutrient[] = [
     ],
     themas: ["botten"],
     prioriteit: 7,
+    icoon: "🥬",
+    kleur: "emerald",
   },
   {
     id: "omega-3",
@@ -329,6 +369,8 @@ export const NUTRIENT_BIBLIOTHEEK: Nutrient[] = [
     ],
     themas: ["hersenen", "stemming", "lichaam"],
     prioriteit: 8,
+    icoon: "🐟",
+    kleur: "sky",
   },
   {
     id: "calcium",
@@ -341,6 +383,8 @@ export const NUTRIENT_BIBLIOTHEEK: Nutrient[] = [
     ],
     themas: ["botten", "spieren"],
     prioriteit: 7,
+    icoon: "🦴",
+    kleur: "stone",
   },
   {
     id: "b-complex",
@@ -353,6 +397,8 @@ export const NUTRIENT_BIBLIOTHEEK: Nutrient[] = [
     ],
     themas: ["energie", "hersenen", "stemming"],
     prioriteit: 7,
+    icoon: "⚡",
+    kleur: "amber",
   },
   {
     id: "ijzer",
@@ -365,6 +411,8 @@ export const NUTRIENT_BIBLIOTHEEK: Nutrient[] = [
     ],
     themas: ["energie", "hersenen", "cyclus"],
     prioriteit: 7,
+    icoon: "🩸",
+    kleur: "rose",
   },
   {
     id: "zink",
@@ -377,6 +425,8 @@ export const NUTRIENT_BIBLIOTHEEK: Nutrient[] = [
     ],
     themas: ["hormonen", "immuun", "lichaam"],
     prioriteit: 6,
+    icoon: "✨",
+    kleur: "violet",
   },
 ];
 

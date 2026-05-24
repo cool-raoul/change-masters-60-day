@@ -4,14 +4,8 @@
 // patroon met een deterministisch advies-pakket dat varieert op basis van
 // de antwoorden (zie lib/freebie-bots/tweede-lente-persoonlijk-advies).
 //
-// Volgorde:
-//   1. AI-spiegel: opening + patroon-paragraaf
-//   2. Jouw situatie samengevat (deterministisch op antwoorden)
-//   3. Extra aandacht (alleen als specifieke combi)
-//   4. Vier ankers (gerankt op antwoorden)
-//   5. Drie basis-tips over overgang (algemeen, deels conditioneel)
-//   6. Vijf voedingsstoffen met EFSA-claims (gerankt op antwoorden)
-//   7. Afsluiting + knop naar opt-in
+// Visueel verzorgd: per anker een gekleurde card met icoon, per nutriënt
+// een gekleurde card met icoon. Spiegel begint met opvallende hero-quote.
 
 "use client";
 
@@ -23,7 +17,53 @@ import type {
 import {
   selecteerAdvies,
   type AdviesPakket,
+  type Anker,
+  type Nutrient,
 } from "@/lib/freebie-bots/tweede-lente-persoonlijk-advies";
+
+// Tailwind-class mapping per kleur. We hardcoderen omdat Tailwind alleen
+// classes detecteert die letterlijk in de bron staan (purge-mechanisme).
+const KLEUR_CLASSES: Record<
+  Anker["kleur"],
+  { bg: string; border: string; iconBg: string; text: string }
+> = {
+  rose: {
+    bg: "bg-rose-50/70",
+    border: "border-rose-200",
+    iconBg: "bg-rose-100",
+    text: "text-rose-900",
+  },
+  amber: {
+    bg: "bg-amber-50/70",
+    border: "border-amber-200",
+    iconBg: "bg-amber-100",
+    text: "text-amber-900",
+  },
+  emerald: {
+    bg: "bg-emerald-50/70",
+    border: "border-emerald-200",
+    iconBg: "bg-emerald-100",
+    text: "text-emerald-900",
+  },
+  sky: {
+    bg: "bg-sky-50/70",
+    border: "border-sky-200",
+    iconBg: "bg-sky-100",
+    text: "text-sky-900",
+  },
+  violet: {
+    bg: "bg-violet-50/70",
+    border: "border-violet-200",
+    iconBg: "bg-violet-100",
+    text: "text-violet-900",
+  },
+  stone: {
+    bg: "bg-stone-50/70",
+    border: "border-stone-200",
+    iconBg: "bg-stone-100",
+    text: "text-stone-900",
+  },
+};
 
 export function BlokSpiegel({
   token,
@@ -39,8 +79,6 @@ export function BlokSpiegel({
   const [spiegel, setSpiegel] = useState<SpiegelOutput | null>(null);
   const [fout, setFout] = useState<string | null>(null);
 
-  // Persoonlijk advies-pakket berekenen op de antwoorden. Deterministisch
-  // (zelfde antwoorden = zelfde advies), maar VARIEERT bij andere antwoorden.
   const advies: AdviesPakket = useMemo(
     () => selecteerAdvies(antwoorden),
     [antwoorden],
@@ -75,7 +113,10 @@ export function BlokSpiegel({
 
   if (fout) {
     return (
-      <div>
+      <div className="text-center">
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-rose-100 text-3xl">
+          🙏
+        </div>
         <h2 className="text-xl font-semibold text-gray-900">
           Het lukte even niet om je spiegel op te halen
         </h2>
@@ -85,7 +126,7 @@ export function BlokSpiegel({
         <button
           type="button"
           onClick={() => window.location.reload()}
-          className="mt-4 rounded-full bg-rose-600 px-6 py-2 text-white text-sm font-medium"
+          className="mt-4 rounded-full bg-gradient-to-r from-rose-600 to-pink-600 px-6 py-2 text-white text-sm font-semibold shadow-md"
         >
           Opnieuw proberen
         </button>
@@ -95,16 +136,17 @@ export function BlokSpiegel({
 
   if (!spiegel) {
     return (
-      <div>
-        <div className="text-rose-500 text-sm font-medium uppercase tracking-wider">
-          Een moment, je spiegel komt eraan
+      <div className="text-center py-6">
+        <div className="mx-auto mb-5 h-16 w-16 animate-pulse rounded-full bg-gradient-to-br from-rose-200 to-pink-200 flex items-center justify-center text-3xl">
+          🪞
+        </div>
+        <div className="text-rose-500 text-sm font-semibold uppercase tracking-widest">
+          Een moment, {memberVoornaam} stelt je spiegel samen
         </div>
         <div className="mt-6 space-y-3 animate-pulse">
-          <div className="h-4 bg-rose-100 rounded w-3/4" />
-          <div className="h-4 bg-rose-100 rounded w-5/6" />
-          <div className="h-4 bg-rose-100 rounded w-2/3" />
-          <div className="mt-4 h-4 bg-rose-100 rounded w-4/5" />
-          <div className="h-4 bg-rose-100 rounded w-3/5" />
+          <div className="h-4 bg-rose-100 rounded-full w-3/4 mx-auto" />
+          <div className="h-4 bg-rose-100 rounded-full w-5/6 mx-auto" />
+          <div className="h-4 bg-rose-100 rounded-full w-2/3 mx-auto" />
         </div>
       </div>
     );
@@ -112,33 +154,47 @@ export function BlokSpiegel({
 
   return (
     <div>
-      <div className="text-rose-500 text-sm font-medium uppercase tracking-wider">
-        Jouw spiegel, klaargezet door {memberVoornaam}
+      {/* Hero-block met spiegel-icoon + opening */}
+      <div className="text-center">
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-rose-100 to-pink-100 text-3xl shadow-sm ring-4 ring-white/60">
+          🪞
+        </div>
+        <div className="text-rose-500 text-xs font-semibold uppercase tracking-widest">
+          Jouw spiegel
+        </div>
       </div>
 
-      {/* 1. AI-opening + patroon */}
-      <p className="mt-4 text-lg text-gray-800 leading-relaxed">
-        {spiegel.opening}
-      </p>
-      <p className="mt-4 text-gray-700 leading-relaxed">
+      {/* 1. AI-opening als opvallende quote */}
+      <div className="mt-5 relative rounded-2xl bg-gradient-to-br from-rose-50 to-pink-50 border border-rose-100 p-6 shadow-sm">
+        <div className="absolute -top-3 left-6 text-5xl text-rose-200 leading-none select-none">
+          &ldquo;
+        </div>
+        <p className="text-lg text-gray-800 leading-relaxed italic pl-2">
+          {spiegel.opening}
+        </p>
+      </div>
+
+      <p className="mt-5 text-gray-700 leading-relaxed">
         {spiegel.patroon}
       </p>
 
       {/* 2. Jouw situatie samengevat */}
-      <div className="mt-6 rounded-2xl bg-rose-50 border border-rose-100 px-5 py-4">
-        <div className="text-xs font-semibold uppercase tracking-wider text-rose-600">
-          Wat jij hebt aangegeven
+      <div className="mt-6 rounded-2xl bg-white/80 backdrop-blur-sm border border-rose-100 px-5 py-4 shadow-sm">
+        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-rose-600">
+          <span>📝</span>
+          <span>Wat jij hebt aangegeven</span>
         </div>
         <p className="mt-2 text-gray-800 leading-relaxed">
           {advies.jouwSituatie}
         </p>
       </div>
 
-      {/* 3. Extra aandacht (alleen als specifieke combi gedetecteerd) */}
+      {/* 3. Extra aandacht (conditioneel) */}
       {advies.extraAandacht && (
-        <div className="mt-4 rounded-2xl bg-amber-50 border border-amber-200 px-5 py-4">
-          <div className="text-xs font-semibold uppercase tracking-wider text-amber-700">
-            Wat hier extra opvalt
+        <div className="mt-4 rounded-2xl bg-amber-50 border border-amber-200 px-5 py-4 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-amber-700">
+            <span>✨</span>
+            <span>Wat hier extra opvalt</span>
           </div>
           <p className="mt-2 text-gray-800 leading-relaxed">
             {advies.extraAandacht}
@@ -146,100 +202,164 @@ export function BlokSpiegel({
         </div>
       )}
 
-      {/* 4. Ankers (gerankt op antwoorden) */}
+      {/* 4. Ankers, gekleurd per kleur-tag */}
       <div className="mt-8">
-        <h3 className="text-lg font-semibold text-gray-900">
-          Vier handvatten die bij jouw situatie passen
-        </h3>
-        <p className="mt-1 text-sm text-gray-500">
-          Concreet, biologisch onderbouwd, geen belofte. Begin met wat
-          aanspreekt.
-        </p>
-        <ul className="mt-3 space-y-3 text-sm">
-          {advies.ankers.map((anker) => (
-            <li
-              key={anker.id}
-              className="rounded-xl border border-rose-100 bg-white px-4 py-3"
-            >
-              <div>
-                <strong className="text-gray-900">{anker.titel}.</strong>{" "}
-                <span className="text-gray-700">{anker.actie}</span>
-              </div>
-              <div className="mt-2 text-xs text-gray-500 italic leading-relaxed">
-                Waarom: {anker.waarom}
-              </div>
-            </li>
-          ))}
+        <div className="text-center mb-5">
+          <div className="text-rose-500 text-xs font-semibold uppercase tracking-widest">
+            Jouw vier handvatten
+          </div>
+          <h3 className="mt-1 text-2xl font-bold text-gray-900">
+            Concreet, biologisch onderbouwd
+          </h3>
+          <p className="mt-1 text-sm text-gray-500">
+            Geselecteerd op basis van wat jij hebt aangegeven.
+          </p>
+        </div>
+        <ul className="space-y-3">
+          {advies.ankers.map((anker) => {
+            const c = KLEUR_CLASSES[anker.kleur];
+            return (
+              <li
+                key={anker.id}
+                className={`rounded-2xl border ${c.border} ${c.bg} px-4 py-4 shadow-sm`}
+              >
+                <div className="flex items-start gap-3">
+                  <div
+                    className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full ${c.iconBg} text-2xl shadow-sm`}
+                  >
+                    {anker.icoon}
+                  </div>
+                  <div className="flex-1">
+                    <div className={`text-sm font-bold ${c.text}`}>
+                      {anker.titel}
+                    </div>
+                    <p className="mt-1 text-sm text-gray-700 leading-snug">
+                      {anker.actie}
+                    </p>
+                    <details className="mt-2 group">
+                      <summary className="cursor-pointer text-xs font-medium text-gray-500 hover:text-gray-700 list-none flex items-center gap-1">
+                        <span className="inline-block transition-transform group-open:rotate-90">
+                          ▸
+                        </span>
+                        Waarom dit werkt
+                      </summary>
+                      <p className="mt-2 text-xs text-gray-600 leading-relaxed italic">
+                        {anker.waarom}
+                      </p>
+                    </details>
+                  </div>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       </div>
 
-      {/* 5. Basis-tips over deze fase (deels conditioneel) */}
-      <div className="mt-8">
-        <h3 className="text-lg font-semibold text-gray-900">
-          Wat we vaak vertellen aan vrouwen in deze fase
-        </h3>
-        <ul className="mt-3 space-y-3 text-sm">
+      {/* 5. Basis-tips over deze fase */}
+      <div className="mt-10">
+        <div className="text-center mb-5">
+          <div className="text-rose-500 text-xs font-semibold uppercase tracking-widest">
+            Achtergrond
+          </div>
+          <h3 className="mt-1 text-2xl font-bold text-gray-900">
+            Wat we vaak vertellen aan vrouwen in deze fase
+          </h3>
+        </div>
+        <ul className="space-y-3">
           {advies.basisTips.map((tip) => (
             <li
               key={tip.id}
-              className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3"
+              className="rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-sm px-5 py-4 shadow-sm"
             >
-              <div className="font-semibold text-gray-900">{tip.titel}</div>
-              <p className="mt-1 text-gray-700 leading-relaxed">{tip.uitleg}</p>
+              <div className="flex items-center gap-2 font-semibold text-gray-900">
+                <span className="text-rose-400">◆</span>
+                <span>{tip.titel}</span>
+              </div>
+              <p className="mt-2 text-sm text-gray-700 leading-relaxed">
+                {tip.uitleg}
+              </p>
             </li>
           ))}
         </ul>
       </div>
 
-      {/* 6. Voedingsstoffen (gerankt op antwoorden) */}
-      <div className="mt-8">
-        <h3 className="text-lg font-semibold text-gray-900">
-          Voedingsstoffen die in jouw situatie vaak belangrijk worden
-        </h3>
-        <p className="mt-1 text-sm text-gray-500 leading-relaxed">
-          Onder elke stof staat de wetenschappelijk-bevestigde rol die ze
-          in je lichaam spelen. Aanvullen kan via voeding (zie bron) of
-          gerichte supplementen. In de overgang hebben veel vrouwen ondanks
-          gezond eten toch tekorten, doordat onze huidige voeding gemiddeld
-          minder dichtheid heeft en je lichaam meer vraagt.
-        </p>
-        <ul className="mt-3 space-y-3 text-sm">
-          {advies.nutrienten.map((n) => (
-            <li
-              key={n.id}
-              className="rounded-xl border border-emerald-100 bg-emerald-50/50 px-4 py-3"
-            >
-              <div className="flex items-baseline justify-between gap-3">
-                <strong className="text-gray-900">{n.naam}</strong>
-                <span className="text-xs text-gray-500">{n.bron}</span>
-              </div>
-              <ul className="mt-1 text-gray-700 text-xs leading-relaxed list-disc list-inside space-y-0.5">
-                {n.efsaClaims.map((claim, i) => (
-                  <li key={i}>{claim}</li>
-                ))}
-              </ul>
-            </li>
-          ))}
+      {/* 6. Voedingsstoffen, gekleurd per nutriënt */}
+      <div className="mt-10">
+        <div className="text-center mb-5">
+          <div className="text-rose-500 text-xs font-semibold uppercase tracking-widest">
+            Voedingsstoffen
+          </div>
+          <h3 className="mt-1 text-2xl font-bold text-gray-900">
+            Wat in jouw situatie vaak belangrijk wordt
+          </h3>
+          <p className="mt-2 text-sm text-gray-500 leading-relaxed max-w-md mx-auto">
+            Onder elke stof staat de wetenschappelijk-bevestigde rol die
+            ze in je lichaam speelt. In de overgang hebben veel vrouwen
+            ondanks gezond eten toch tekorten, doordat onze huidige
+            voeding gemiddeld minder dichtheid heeft en je lichaam meer
+            vraagt.
+          </p>
+        </div>
+        <ul className="space-y-3">
+          {advies.nutrienten.map((n: Nutrient) => {
+            const c = KLEUR_CLASSES[n.kleur];
+            return (
+              <li
+                key={n.id}
+                className={`rounded-2xl border ${c.border} ${c.bg} px-4 py-4 shadow-sm`}
+              >
+                <div className="flex items-start gap-3">
+                  <div
+                    className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full ${c.iconBg} text-2xl shadow-sm`}
+                  >
+                    {n.icoon}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-baseline justify-between gap-2">
+                      <strong className={`text-base font-bold ${c.text}`}>
+                        {n.naam}
+                      </strong>
+                      <span className="text-[11px] text-gray-500 italic">
+                        bron: {n.bron}
+                      </span>
+                    </div>
+                    <ul className="mt-2 space-y-1">
+                      {n.efsaClaims.map((claim, i) => (
+                        <li
+                          key={i}
+                          className="flex items-start gap-2 text-xs text-gray-700 leading-snug"
+                        >
+                          <span className="text-emerald-600 flex-shrink-0">✓</span>
+                          <span>{claim}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+            );
+          })}
         </ul>
-        <p className="mt-3 text-xs text-gray-500 italic">
-          Bronvermelding: de claims hierboven zijn EFSA-goedgekeurde
-          health-claims (EU Verordening 1924/2006), juridisch toegestaan
-          in marketing wanneer het product de minimale werkzame
-          hoeveelheid bevat.
+        <p className="mt-4 text-[11px] text-gray-500 italic text-center">
+          De claims hierboven zijn EFSA-goedgekeurde health-claims
+          (EU Verordening 1924/2006).
         </p>
       </div>
 
       {/* 7. Afsluiting + door */}
-      <p className="mt-8 text-gray-700 leading-relaxed">
+      <p className="mt-10 text-gray-700 leading-relaxed text-center italic">
         {spiegel.afsluiting}
       </p>
 
       <button
         type="button"
         onClick={() => onVolgende(spiegel)}
-        className="mt-6 w-full rounded-full bg-rose-600 px-6 py-3 text-white text-base font-medium"
+        className="mt-6 group w-full rounded-full bg-gradient-to-r from-rose-600 to-pink-600 px-6 py-4 text-white text-base font-semibold shadow-lg hover:shadow-xl hover:from-rose-700 hover:to-pink-700 transition-all"
       >
-        Ga verder naar de pakket-richting →
+        Ga verder naar de pakket-richting
+        <span className="ml-2 inline-block transition-transform group-hover:translate-x-1">
+          →
+        </span>
       </button>
     </div>
   );

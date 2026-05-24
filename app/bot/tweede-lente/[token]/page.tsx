@@ -100,13 +100,35 @@ export default async function TweedeLenteTokenPagina({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-rose-50 to-white">
-      <TweedeLenteFlow
-        token={token}
-        memberId={row.member_id}
-        memberVoornaam={memberVoornaam}
-        bestellinks={linksMap}
-      />
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-rose-50 via-pink-50 to-amber-50/50">
+      {/* Subtiele decoratieve blossoms ver in de achtergrond */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed top-20 -left-10 text-9xl opacity-[0.04] rotate-12 select-none"
+      >
+        🌸
+      </div>
+      <div
+        aria-hidden
+        className="pointer-events-none fixed bottom-32 -right-12 text-9xl opacity-[0.04] -rotate-12 select-none"
+      >
+        🌷
+      </div>
+      <div
+        aria-hidden
+        className="pointer-events-none fixed top-1/2 right-10 text-7xl opacity-[0.03] select-none"
+      >
+        🌿
+      </div>
+
+      <div className="relative">
+        <TweedeLenteFlow
+          token={token}
+          memberId={row.member_id}
+          memberVoornaam={memberVoornaam}
+          bestellinks={linksMap}
+        />
+      </div>
     </div>
   );
 }

@@ -22,31 +22,51 @@ import type { IntekenGegevens } from "./blok-intekenen-vooraf";
 type PakketNiveau = {
   key: "hormoonbalans-essential" | "hormoonbalans-plus" | "hormoonbalans-complete";
   label: string;
+  korteLabel: string;
   beschrijving: string;
   ipPunten: string;
+  prijs: string;
+  badge: string; // brons / zilver / goud emoji
+  gradient: string; // tailwind background gradient classes
+  borderKleur: string;
 };
 
 const PAKKET_NIVEAUS: PakketNiveau[] = [
   {
     key: "hormoonbalans-essential",
-    label: "Essential, instap-niveau",
+    label: "Essential",
+    korteLabel: "Instap",
     beschrijving:
       "Mena Plus en Evening Primrose Oil als gerichte hormoon-instap. Twee producten, één thema.",
     ipPunten: "57 IP",
+    prijs: "€96,75",
+    badge: "🥉",
+    gradient: "from-amber-50 to-orange-50",
+    borderKleur: "border-amber-300",
   },
   {
     key: "hormoonbalans-plus",
-    label: "Plus, met dagelijkse basis",
+    label: "Plus",
+    korteLabel: "Met dagelijkse basis",
     beschrijving:
       "Daily BioBasics als fundament, plus Mena Plus, EPO en Vitamins D & K. Vier producten samen.",
     ipPunten: "113 IP",
+    prijs: "€181,75",
+    badge: "🥈",
+    gradient: "from-slate-50 to-gray-100",
+    borderKleur: "border-slate-300",
   },
   {
     key: "hormoonbalans-complete",
-    label: "Complete, volledig pakket",
+    label: "Complete",
+    korteLabel: "Volledig pakket",
     beschrijving:
       "Maintain & Protect 100 Gold Light als premium fundament, plus Mena Plus, EPO en Vitamins D & K.",
     ipPunten: "191 IP",
+    prijs: "€289,00",
+    badge: "🥇",
+    gradient: "from-yellow-50 to-amber-100",
+    borderKleur: "border-yellow-400",
   },
 ];
 
@@ -123,57 +143,93 @@ export function BlokOptIn({
 
   return (
     <div>
-      <div className="text-rose-500 text-sm font-medium uppercase tracking-wider">
-        Drie laagdrempelige startpunten
+      <div className="text-center">
+        <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-rose-100 text-2xl shadow-sm">
+          🎁
+        </div>
+        <div className="text-rose-500 text-xs font-semibold uppercase tracking-widest">
+          Pakket-richting
+        </div>
+        <h2 className="mt-2 text-2xl font-bold text-gray-900">
+          Drie laagdrempelige startpunten
+        </h2>
       </div>
 
       {/* 4a, Product-richting met member's eigen bestellinks */}
-      <section className="mt-4 rounded-2xl bg-rose-50 px-5 py-5">
-        <h2 className="text-xl font-semibold text-gray-900">
-          Drie niveaus die {memberVoornaam} en haar team vaker zien werken
-        </h2>
-        <p className="mt-2 text-sm text-gray-700">
-          De ankers en voedingsstoffen uit de spiegel zitten als basis
-          ook in deze pakketten. Drie niveaus, van eenvoudig instap tot
-          volledig pakket. Zelf in de webshop te bestellen, zonder
-          gesprek vooraf.
+      <section className="mt-6">
+        <p className="text-sm text-gray-700 leading-relaxed text-center">
+          De handvatten en voedingsstoffen uit jouw spiegel zitten als
+          basis ook in deze drie pakketten van {memberVoornaam}. Kies wat
+          bij jou past, zelf te bestellen.
         </p>
 
         {geenEnkeleLink && (
-          <div className="mt-4 rounded-lg bg-amber-50 border border-amber-200 p-3 text-xs text-amber-900">
-            <strong>Let op:</strong> {memberVoornaam} heeft nog geen
-            persoonlijke bestellinks voor deze drie pakketten ingesteld.
-            Stuur haar gerust een berichtje, dan stuurt zij je
-            persoonlijke links direct.
+          <div className="mt-4 rounded-2xl bg-amber-50 border border-amber-200 p-4 text-sm text-amber-900">
+            <div className="flex items-start gap-2">
+              <span className="text-lg">⚠️</span>
+              <div>
+                <strong>Let op:</strong> {memberVoornaam} heeft nog geen
+                persoonlijke bestellinks voor deze drie pakketten
+                ingesteld. Stuur haar gerust een berichtje, dan stuurt zij
+                je persoonlijke links direct.
+              </div>
+            </div>
           </div>
         )}
 
-        <ul className="mt-5 space-y-3">
+        <ul className="mt-6 space-y-4">
           {PAKKET_NIVEAUS.map((p) => {
             const url = bestellinks[p.key];
+            const isComplete = p.key === "hormoonbalans-complete";
             return (
               <li
                 key={p.key}
-                className="rounded-xl bg-white border border-rose-100 p-4"
+                className={`relative rounded-2xl bg-gradient-to-br ${p.gradient} border-2 ${p.borderKleur} p-5 shadow-sm transition-all hover:shadow-md ${
+                  isComplete ? "ring-2 ring-yellow-200 ring-offset-2" : ""
+                }`}
               >
-                <div className="font-semibold text-gray-900">{p.label}</div>
-                <div className="mt-1 text-sm text-gray-700">{p.beschrijving}</div>
-                <div className="mt-1 text-xs text-gray-500">{p.ipPunten}</div>
-                {url ? (
-                  <a
-                    href={url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="mt-3 inline-block rounded-full bg-rose-600 px-4 py-1.5 text-white text-xs font-medium hover:bg-rose-700"
-                  >
-                    Open bestelpagina van {memberVoornaam} →
-                  </a>
-                ) : (
-                  <div className="mt-3 text-xs italic text-gray-500">
-                    Voor dit niveau heeft {memberVoornaam} nog geen
-                    bestellink ingesteld.
+                {isComplete && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-gradient-to-r from-yellow-500 to-amber-500 text-white text-[10px] font-bold uppercase tracking-wider shadow-md">
+                    ⭐ Meest compleet
                   </div>
                 )}
+                <div className="flex items-start gap-3">
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm text-2xl shadow-sm">
+                    {p.badge}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-baseline gap-2">
+                      <strong className="text-lg font-bold text-gray-900">
+                        {p.label}
+                      </strong>
+                      <span className="text-xs text-gray-600">
+                        {p.korteLabel}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-sm text-gray-700 leading-snug">
+                      {p.beschrijving}
+                    </p>
+                    <div className="mt-2 flex items-center gap-3 text-xs text-gray-600">
+                      <span className="font-bold text-gray-900">{p.prijs}</span>
+                      <span>·</span>
+                      <span>{p.ipPunten}</span>
+                    </div>
+                    {url ? (
+                      <a
+                        href={url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-3 inline-block rounded-full bg-gradient-to-r from-rose-600 to-pink-600 px-4 py-2 text-white text-xs font-semibold shadow-md hover:shadow-lg transition"
+                      >
+                        Open bestelpagina van {memberVoornaam} →
+                      </a>
+                    ) : (
+                      <div className="mt-3 inline-block rounded-full bg-white/80 border border-gray-300 px-3 py-1.5 text-xs italic text-gray-600">
+                        Vraag {memberVoornaam} voor de bestellink
+                      </div>
+                    )}
+                  </div>
+                </div>
               </li>
             );
           })}
@@ -181,13 +237,21 @@ export function BlokOptIn({
       </section>
 
       {/* 4b, Persoonlijk contact-aanbod */}
-      <section className="mt-6 rounded-xl border border-gray-200 bg-white p-4">
-        <label className="flex items-start gap-2 text-sm text-gray-700">
+      <section className="mt-8 rounded-2xl border-2 border-rose-100 bg-gradient-to-br from-white to-rose-50/50 p-5 shadow-sm">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-rose-100 text-lg">
+            💬
+          </div>
+          <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider">
+            Wil je een gesprekje?
+          </h3>
+        </div>
+        <label className="flex items-start gap-3 text-sm text-gray-700 cursor-pointer">
           <input
             type="checkbox"
             checked={contactGewenst}
             onChange={(e) => setContactGewenst(e.target.checked)}
-            className="mt-1"
+            className="mt-1 h-4 w-4 accent-rose-600"
           />
           <span>
             <strong className="text-gray-900">
@@ -200,18 +264,18 @@ export function BlokOptIn({
 
         {contactGewenst && (
           <label className="mt-4 block">
-            <span className="text-sm font-medium text-gray-900">
-              Op welk telefoonnummer kan {memberVoornaam} je bereiken?
+            <span className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
+              📞 Op welk nummer kan {memberVoornaam} je bereiken?
             </span>
             <input
               type="tel"
               value={telefoon}
               onChange={(e) => setTelefoon(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900"
+              className="mt-1 w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-gray-900 focus:border-rose-400 focus:ring-2 focus:ring-rose-100 outline-none transition"
               placeholder="06 12 34 56 78"
             />
             <span className="mt-1 block text-xs text-gray-500">
-              Alleen {memberVoornaam} ziet dit nummer, niet openbaar.
+              🔒 Alleen {memberVoornaam} ziet dit nummer, niet openbaar.
             </span>
           </label>
         )}
@@ -219,35 +283,46 @@ export function BlokOptIn({
 
       {/* Submit */}
       {fout && (
-        <p className="mt-4 text-sm text-red-600">{fout}</p>
+        <div className="mt-4 rounded-xl bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+          {fout}
+        </div>
       )}
       <button
         type="button"
         onClick={verstuur}
         disabled={bezig || !telefoonOk}
-        className="mt-6 w-full rounded-full bg-rose-600 px-6 py-3 text-white text-base font-medium disabled:opacity-40"
+        className="mt-6 group w-full rounded-full bg-gradient-to-r from-rose-600 to-pink-600 px-6 py-4 text-white text-base font-semibold shadow-lg hover:shadow-xl hover:from-rose-700 hover:to-pink-700 transition-all disabled:from-gray-300 disabled:to-gray-300 disabled:shadow-none"
       >
-        {bezig ? "Even versturen..." : "Verstuur mijn spiegel en sluit af"}
+        {bezig ? (
+          "Even versturen..."
+        ) : (
+          <>
+            ✨ Verstuur mijn spiegel
+            <span className="ml-2 inline-block transition-transform group-hover:translate-x-1">
+              →
+            </span>
+          </>
+        )}
       </button>
 
       <p className="mt-3 text-center text-xs text-gray-500">
-        Je krijgt vanavond een mail met de spiegel en de handvatten.
+        Je krijgt vanavond een mail met je spiegel en de handvatten.
         Daarna vijf korte vervolg-mails over vijf dagen.
       </p>
 
       {/* 4c, Disclaimer */}
-      <footer className="mt-8 rounded-xl border border-gray-200 bg-white px-4 py-3">
-        <p className="text-xs text-gray-500 leading-relaxed">
-          Dit is geen medisch advies. Voor specifieke klachten, een
-          persoonlijke aanpak of vragen over je gezondheid, raadpleeg
-          altijd je huisarts of gynaecoloog. Onze bot deelt herkenning en
-          richtingen, geen behandeling. Lifeplus producten zijn
-          voedingssupplementen, geen geneesmiddelen.
+      <footer className="mt-8 rounded-2xl border border-gray-200 bg-white/70 backdrop-blur-sm px-4 py-3">
+        <p className="text-[11px] text-gray-500 leading-relaxed">
+          <strong>Disclaimer:</strong> Dit is geen medisch advies. Voor
+          specifieke klachten, een persoonlijke aanpak of vragen over je
+          gezondheid, raadpleeg altijd je huisarts of gynaecoloog. Onze
+          bot deelt herkenning en richtingen, geen behandeling. Lifeplus
+          producten zijn voedingssupplementen, geen geneesmiddelen.
         </p>
       </footer>
 
       <p className="mt-3 text-xs text-gray-400 text-center">
-        Klaargezet door {memberVoornaam} en haar team.
+        🌷 Klaargezet door {memberVoornaam} en haar team.
       </p>
     </div>
   );
