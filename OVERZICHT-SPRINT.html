@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8" />
+<title>Sprint 60-day Run, volledig dag-overzicht</title>
+<style>
+  :root {
+    --bg: #0c0e12;
+    --card: #15181d;
+    --card2: #1c2027;
+    --gold: #c4a04a;
+    --gold-soft: #5d4a25;
+    --gold-light: #e0bc62;
+    --text: #e8e6e0;
+    --muted: #8a8b8e;
+    --warn: #d18b5c;
+    --new: #8ad15c;
+    --weekritme: #5c9ad1;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+    padding: 24px 16px 80px;
+  }
+  main { max-width: 920px; margin: 0 auto; }
+  h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 28px;
+    margin: 0 0 4px;
+  }
+  h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    color: var(--gold);
+    font-size: 22px;
+    margin: 40px 0 12px;
+    border-bottom: 1px solid var(--gold-soft);
+    padding-bottom: 6px;
+  }
+  h3 { color: var(--gold-light); font-size: 17px; margin: 24px 0 8px; }
+  p, li { font-size: 14px; line-height: 1.65; }
+  .intro {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .uitleg {
+    background: rgba(196,160,74,0.07);
+    border-left: 3px solid var(--gold);
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin: 8px 0 24px;
+    font-size: 13px;
+  }
+  .uitleg-titel { font-weight: 600; color: var(--gold); font-size: 13px; margin-bottom: 4px; }
+
+  details.stap {
+    background: var(--card);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 8px 0;
+    border-left: 3px solid var(--gold-soft);
+    cursor: pointer;
+  }
+  details.stap[open] { border-left-color: var(--gold); }
+  details.stap > summary {
+    list-style: none;
+    cursor: pointer;
+    position: relative;
+    padding-right: 28px;
+  }
+  details.stap > summary::-webkit-details-marker { display: none; }
+  details.stap > summary::after {
+    content: "▸";
+    position: absolute;
+    right: 0;
+    top: 2px;
+    color: var(--gold);
+    font-size: 14px;
+    transition: transform 0.15s ease;
+  }
+  details.stap[open] > summary::after { transform: rotate(90deg); }
+  .stap-num {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--bg);
+    font-weight: 700;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    text-align: center;
+    line-height: 28px;
+    font-size: 12px;
+    margin-right: 8px;
+  }
+  .stap-titel { font-weight: 600; color: var(--text); display: inline-block; }
+  .stap-doel { color: var(--muted); font-size: 13px; font-style: italic; margin-top: 4px; }
+  .stap-substeps {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: var(--card2);
+    border-radius: 6px;
+    border-left: 2px solid var(--gold-soft);
+  }
+  .stap-substeps-titel {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--gold);
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .stap-substeps ol {
+    margin: 0;
+    padding-left: 22px;
+    color: var(--text);
+    font-size: 13px;
+  }
+  .stap-substeps li { margin: 3px 0; }
+  .stap-substeps li small {
+    color: var(--muted);
+    font-style: italic;
+    margin-left: 4px;
+  }
+  .vast {
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px dotted var(--gold-soft);
+  }
+
+  /* Weekritme-blokken: blauwere tint zodat ze visueel anders zijn */
+  details.weekritme {
+    background: rgba(92,154,209,0.07);
+    border-left-color: var(--weekritme);
+  }
+  details.weekritme .stap-num {
+    background: var(--weekritme);
+    color: var(--bg);
+  }
+  details.weekritme[open] {
+    border-left-color: var(--weekritme);
+  }
+  details.weekritme > summary::after {
+    color: var(--weekritme);
+  }
+
+  .footer {
+    margin-top: 60px;
+    padding: 20px;
+    background: var(--card);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  code { background: var(--card2); padding: 2px 6px; border-radius: 3px; font-size: 12px; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Sprint, 60-Day Run, volledig dag-overzicht</h1>
+<p class="intro">
+  Per dag een uitklap-blok met titel, fase-doel, en alle substeps die de member op die dag tegenkomt.
+  Bedoeld om een dag-overzicht in een blik te kunnen scannen zonder elke dag in de app open te hoeven klikken.
+</p>
+
+<div class="uitleg">
+  <div class="uitleg-titel">Hoe Sprint is opgebouwd</div>
+  <p>
+    Sprint loopt 60 dagen. De eerste 21 dagen zijn elk individueel uitgewerkt met een eigen leer-thema en
+    bijbehorende substeps. Vanaf dag 22 stapt de member in <strong>weekritme-modus</strong>: geen nieuwe technieken
+    meer leren, alleen blijven doen. Elke 7e dag in z'n run heeft een eigen ritme-focus
+    (pipeline-analyse / audio onderweg / lifestyle-content / 3-weg of presentatie / follow-up-batch /
+    lichte reflectie / weekreview).
+  </p>
+  <p>
+    De ritme-dag is gebaseerd op JOUW startdatum, niet op de echte kalender-weekdag. Voor de meeste
+    mensen die op een willekeurige kalenderdag zijn gestart, valt dat dus niet samen met
+    maandag-tot-zondag.
+  </p>
+  <p>
+    Elke dag eindigt met drie vaste afsluit-stappen: <strong>sponsor-checkin</strong>,
+    <strong>momentum-radar</strong> en <strong>partner-check</strong>. Die staan onderaan elke dag,
+    in dit overzicht aangeduid met "Vast afsluit".
+  </p>
+</div>
+
+<h2>Fase 1, Fundament (dag 1 t/m 7)</h2>
+<p class="intro" style="margin: -4px 0 16px;">
+  Fase-doel: <em>deze week 2 one-pager-momenten gepland of bekeken krijgen.</em>
+</p>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">1</span>
+    <span class="stap-titel">🚀 Welkom! Vandaag leg je je fundament</span>
+    <div class="stap-doel">Telefoonboek importeren en je sponsor in de loop zetten. Rustige startdag.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op dag 1</div>
+    <ol>
+      <li>Importeer je telefooncontacten in één klik <small>(vCard-upload, mobiel vereist)</small></li>
+      <li>Stuur je sponsor een kort bericht: 'Ik ben gestart' <small>(inline sponsor-melding)</small></li>
+    </ol>
+    <div class="vast">Vast afsluit: momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">2</span>
+    <span class="stap-titel">👋 Open je hoofd: alle namen op de lijst</span>
+    <div class="stap-doel">Namenlijst uitbouwen naar 20, eerste oefen-uitnodigingen samen met sponsor.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op dag 2</div>
+    <ol>
+      <li>Voeg 20 namen toe aan je namenlijst <small>(via geheugen, telefoon-import of zelf typen)</small></li>
+      <li>Plan een korte call met je sponsor <small>(~30 min, eerste stappen samen doorlopen)</small></li>
+      <li>Stuur je eerste 3 uitnodigingen <small>(samen met sponsor of via Mentor, 5 voorbeeld-zinnen in de uitleg)</small></li>
+      <li>Begrijp het 3-weg-gesprek-principe <small>(jij + prospect + sponsor, drie redenen waarom het werkt)</small></li>
+    </ol>
+    <div class="vast">Vast afsluit: momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">3</span>
+    <span class="stap-titel">📱 Je socials zijn een goudmijn, 3 namen + 5 invites</span>
+    <div class="stap-doel">Eerste sociale-media-aanwezigheid, eerste uitnodig-ervaringen, teams-admin afronden.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op dag 3</div>
+    <ol>
+      <li>Open Instagram of LinkedIn, zet 3 namen in je lijst <small>(5 min scrollen, wie reageert / post energie-onderwerpen)</small></li>
+      <li>5 uitnodigingen versturen <small>(zelfstandig nu, Mentor helpt als je vastloopt)</small></li>
+      <li>5 nieuwe namen toevoegen vandaag <small>(elke dag groeit je pijplijn, basis van het systeem)</small></li>
+      <li>Start 3 losse chats op socials <small>(geen pitch, gewoon contact, koud → warm maken)</small></li>
+      <li>Korte sponsor-checkin <small>('Heb gister 3 invites gestuurd', 30 seconden)</small></li>
+      <li>Teams-administratiesysteem aanmaken <small>(Lifeplus partner-aanmelding, eenmalige admin)</small></li>
+    </ol>
+    <div class="vast">Vast afsluit: momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">4</span>
+    <span class="stap-titel">💬 Vandaag leer je uitnodigen, vier bouwstenen die werken</span>
+    <div class="stap-doel">De vier bouwstenen (haakje, manier-gevonden-zin, hoe-het-werkt, permissie-vraag) leren toepassen.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op dag 4</div>
+    <ol>
+      <li>5 uitnodigingen versturen volgens de vier bouwstenen <small>(mix warm + lauw, inspiratie via /scripts of Mentor)</small></li>
+      <li>Aanpak-keuze per actieve prospect <small>(3-weg of Mini-ELEVA, samen met sponsor of via Mentor)</small></li>
+      <li>Minimaal 2 herinneringen sturen aan eerdere prospects <small>(geen follow-up in strikte zin, gewoon contact)</small></li>
+      <li>Bestellinks koppelen aan ELEVA <small>(eenmalig, vraag sponsor mee te kijken)</small></li>
+      <li>Tempo-substeps (uit DMO): voeg X namen toe · stuur X mensen een opener · plaats 1-3 stories · openstaande follow-ups</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">5</span>
+    <span class="stap-titel">🛡️ Bezwaren? Geen probleem, Feel-Felt-Found</span>
+    <div class="stap-doel">FFF leren toepassen op de top-21 bezwaren uit Eric Worre. Voorbereiden op je eerste 3-weg.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op dag 5</div>
+    <ol>
+      <li>Bekijk de bezwaren-bibliotheek <small>(/scripts?cat=bezwaar, top-21 in twee categorieën)</small></li>
+      <li>Doe 10 min roleplay met de Mentor: 3 bezwaren <small>(externe + interne mix)</small></li>
+      <li>Tempo-substeps: voeg namen toe · openers versturen · openstaande follow-ups · 1-3 stories · uitnodigingen versturen</li>
+      <li>Aanpak-keuze per actieve prospect</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">6</span>
+    <span class="stap-titel">🔄 De fortuin zit in de follow-up, 24-48u-regel</span>
+    <div class="stap-doel">De 24-48u-follow-up-regel leren + de 5-fasen-flow voor opvolg-berichten.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op dag 6</div>
+    <ol>
+      <li>Loop met de Mentor de 5-fasen-follow-up-flow door <small>(check-in / peilen / verdiepen / event-uitnodiging / sluiten)</small></li>
+      <li>Stuur 24-48u-check-in naar prospects die je gisteren of eergisteren hebt uitgenodigd</li>
+      <li>Tempo-substeps: voeg namen toe · openers · openstaande follow-ups · 1-3 stories · uitnodigingen</li>
+      <li>Aanpak-keuze per actieve prospect</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">7</span>
+    <span class="stap-titel">🎉 Week 1 zit erop! Tijd voor een rustige reflectie</span>
+    <div class="stap-doel">Week 1 review: 2 one-pager-momenten gehaald? Eerste pipeline-analyse met de Mentor. Lichter ritme.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op dag 7</div>
+    <ol>
+      <li>Eerste pipeline-analyse met de Mentor <small>(Funnel-analyse-knop, geaggregeerde cijfers)</small></li>
+      <li>Reflectie-vragen beantwoorden <small>(wat ging goed, waar zat de meeste energie, wat plan je voor week 2)</small></li>
+      <li>Tempo-substeps: minimaal X namen toe · minimaal X openers · openstaande follow-ups · 1-3 stories</li>
+      <li>Geen nieuwe uitnodigingen verplicht vandaag, rust + ritme</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<h2>Fase 2, Momentum (dag 8 t/m 14)</h2>
+<p class="intro" style="margin: -4px 0 16px;">
+  Fase-doel: <em>3 tot 5 presentatie-momenten in de agenda deze week.</em>
+</p>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">8</span>
+    <span class="stap-titel">🚀 Snelheid wint van perfectie</span>
+    <div class="stap-doel">Mindset-dag. Timer-uitdaging op uitnodigingen, 30-60 seconden bedenktijd per stuk.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op dag 8</div>
+    <ol>
+      <li>Lees de "snelheid wint van perfectie"-mindset bovenaan <small>(Worre-principe)</small></li>
+      <li>Tempo-substeps: voeg namen toe · openers · openstaande follow-ups · 1-3 stories</li>
+      <li>Uitnodigingen versturen in 5-10 min totaal <small>(timer op je telefoon, max 30-60s per stuk)</small></li>
+      <li>Aanpak-keuze per actieve prospect</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">9</span>
+    <span class="stap-titel">💪 3-weg-meesterclass: 5 stappen die werken</span>
+    <div class="stap-doel">De 5 stappen van een 3-weg-gesprek leren: edification, intro, inhoud, vraag aan prospect, vervolg.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op dag 9</div>
+    <ol>
+      <li>Bekijk de meesterclass-film over 3-weg <small>(~10 min)</small></li>
+      <li>Loop met de Mentor de 5 stappen door voor één specifieke prospect</li>
+      <li>Open de 3-weg-scripts <small>(/scripts, tag 3-weg)</small></li>
+      <li>Vraag je sponsor of die deze week beschikbaar is voor jouw eerstvolgende 3-weg</li>
+      <li>Tempo-substeps: voeg namen toe · openers · openstaande follow-ups · 1-3 stories · uitnodigingen</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">10</span>
+    <span class="stap-titel">🤝 Vandaag start je je eerstvolgende 3-weg</span>
+    <div class="stap-doel">Niet meer theorie, praktijk. Een echte 3-weg starten met een warme prospect samen met sponsor.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op dag 10</div>
+    <ol>
+      <li>Kies 1 warme prospect die nog geen 3-weg heeft gehad</li>
+      <li>Stuur stap 1 (introductie naar sponsor) volgens script</li>
+      <li>Plan de 3-weg in met sponsor en prospect deze week</li>
+      <li>Korte reflectie na afloop met de Mentor</li>
+      <li>Tempo-substeps: voeg namen toe · openers · openstaande follow-ups · 1-3 stories · uitnodigingen</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">11</span>
+    <span class="stap-titel">🎯 One-pager of presentatie? Vandaag leer je kiezen</span>
+    <div class="stap-doel">Per prospect kiezen tussen one-pager (info-pagina) of live presentatie / 3-weg.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op dag 11</div>
+    <ol>
+      <li>Pipeline-weergave openen, check waar elke prospect staat</li>
+      <li>Pipeline-check: waar zit jouw grootste verstopping deze week</li>
+      <li>Stuur een one-pager naar 1 prospect of plan een 3-weg-moment</li>
+      <li>Tempo-substeps: voeg namen toe · openers · openstaande follow-ups · 1-3 stories · uitnodigingen</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">12</span>
+    <span class="stap-titel">🔄 Nee op business? Bied de webshop of producten aan</span>
+    <div class="stap-doel">Pivot-formule leren: zachte overstap van business-uitnodiging naar product- of webshop-aanbod.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op dag 12</div>
+    <ol>
+      <li>Stuur 1 product-pivot-bericht naar iemand die 'nee' zei op business <small>(3-stappen-formule: erkennen / haken naar gezondheid / mogelijkheid voorstellen)</small></li>
+      <li>Variant A: productadvies-test sturen als zachte tussenstap</li>
+      <li>Variant B: direct voorstellen (vrijblijvend, 1 maand proberen)</li>
+      <li>Update pijplijn-fase naar 'Shopper' + maak herinnering +21 dagen</li>
+      <li>Tempo-substeps: voeg namen toe · openers · openstaande follow-ups · 1-3 stories · uitnodigingen</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">13</span>
+    <span class="stap-titel">🎙️ FORM: leer iemand écht kennen in 5 minuten</span>
+    <div class="stap-doel">Family, Occupation, Recreation, Money als gespreks-anker. Diepere verbinding in 5 minuten.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op dag 13</div>
+    <ol>
+      <li>Mentor licht FORM toe <small>(geen interview-checklist, wel gesprek-anker)</small></li>
+      <li>Oefen FORM met de Mentor in een rollenspel</li>
+      <li>Pas FORM toe in een aankomend gesprek <small>(natuurlijk, niet als checklist)</small></li>
+      <li>Tempo-substeps: voeg namen toe · openers · openstaande follow-ups · 1-3 stories · uitnodigingen</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">14</span>
+    <span class="stap-titel">🏁 Halverwege! Week 2 review, welk patroon zie je?</span>
+    <div class="stap-doel">Tweede pipeline-analyse, midweek-reflectie, patronen herkennen.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op dag 14</div>
+    <ol>
+      <li>Tweede pipeline-analyse met de Mentor <small>(vergelijk met dag 7)</small></li>
+      <li>Reflectie-vragen <small>(welk patroon zie je in wie ja zegt, wat heb je nu meer in de hand dan vorige week)</small></li>
+      <li>Plan voor week 3 maken: focus op closing + beslissingen</li>
+      <li>Tempo-substeps: minimaal X namen · openers · stories · follow-ups</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<h2>Fase 3, Oogst (dag 15 t/m 21)</h2>
+<p class="intro" style="margin: -4px 0 16px;">
+  Fase-doel: <em>minimaal 2 beslissingen binnen: member, shopper of not-yet.</em>
+</p>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">15</span>
+    <span class="stap-titel">⏱️ Ritme-week: follow-up is nu je hoofdwerk</span>
+    <div class="stap-doel">Follow-up als hoofdwerk, niet meer alleen ergens tussendoor. Drie-stappen-aanpak per prospect.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op dag 15</div>
+    <ol>
+      <li>Open je follow-up-lijst <small>(filter op fase one-pager / presentatie / follow-up)</small></li>
+      <li>Drie-stappen-aanpak per bericht <small>(eerst zelf concept, dan checken tegen wat je leerde, pas dan hulp vragen)</small></li>
+      <li>Doe minstens 5 openstaande follow-ups vandaag</li>
+      <li>Tempo-substeps: voeg namen toe · openers · 1-3 stories · uitnodigingen (lichter)</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">16</span>
+    <span class="stap-titel">🎯 5 types prospects, energie waar 't telt</span>
+    <div class="stap-doel">Top-20 categoriseren in 5 typen, energie focussen op wie het meeste oplevert.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op dag 16</div>
+    <ol>
+      <li>Categoriseer je top-20 in 5 typen <small>(direct geïnteresseerd / open voorzichtig / nieuwsgierig niet beschikbaar / vriendelijk niet bezig / niet voor jou bedoeld)</small></li>
+      <li>Per type een passende vervolgactie plannen</li>
+      <li>Energie focussen op de groep met de meeste potentie deze week</li>
+      <li>Tempo-substeps: voeg namen toe · openers · openstaande follow-ups · 1-3 stories · uitnodigingen</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">17</span>
+    <span class="stap-titel">🎯 Closing met Doel-Tijd-Termijn, helpen beslissen</span>
+    <div class="stap-doel">DTT-closing leren: drie vragen die een prospect helpen om voor zichzelf te beslissen.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op dag 17</div>
+    <ol>
+      <li>Mentor licht Doel-Tijd-Termijn toe <small>(drie vragen die richting geven)</small></li>
+      <li>Roleplay DTT-closing met de Mentor <small>(een specifieke prospect in gedachten)</small></li>
+      <li>Pas DTT toe op minstens 1 prospect in beslis-fase</li>
+      <li>Tempo-substeps: voeg namen toe · openers · openstaande follow-ups · 1-3 stories · uitnodigingen</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">18</span>
+    <span class="stap-titel">✨ Edification: de zin die je sponsor laat schitteren</span>
+    <div class="stap-doel">Eigen edification-zin schrijven, dé herbruikbare zin om je sponsor in 3-wegs te introduceren.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op dag 18</div>
+    <ol>
+      <li>Reflectie: welke introducties hebben in de afgelopen 3-wegs gewerkt</li>
+      <li>Schrijf je eigen edification-zin <small>(/mijn-zinnen, herbruikbaar in varianten)</small></li>
+      <li>Test de zin in je eerstvolgende 3-weg</li>
+      <li>Tempo-substeps: voeg namen toe · openers · openstaande follow-ups · 1-3 stories · uitnodigingen</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">19</span>
+    <span class="stap-titel">🔍 Pipeline-check, waar lekt je trechter?</span>
+    <div class="stap-doel">Per fase in je pijplijn checken waar mensen blijven hangen, grootste verstopping ontstoppen.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op dag 19</div>
+    <ol>
+      <li>Open je namenlijst in pijplijn-weergave</li>
+      <li>Tel per fase hoeveel prospects er staan <small>(in_gesprek / uitgenodigd / one-pager / presentatie / follow-up)</small></li>
+      <li>Identificeer je grootste verstopping</li>
+      <li>De Mentor geeft 1-2 concrete vervolgacties voor die bottleneck</li>
+      <li>Doe vandaag minstens 3 acties op de bottleneck-fase</li>
+      <li>Tempo-substeps: voeg namen toe · openers · 1-3 stories · uitnodigingen</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">20</span>
+    <span class="stap-titel">💪 Vraag de beslissing, de moedigste vraag van je vak</span>
+    <div class="stap-doel">"Wat heb je nog nodig om te beslissen?" leren stellen. Beslismomenten activeren.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op dag 20</div>
+    <ol>
+      <li>Mentor licht de closingsvraag toe <small>("Wat heb je nog nodig om te beslissen?", drie redenen waarom hij werkt)</small></li>
+      <li>Roleplay met de Mentor: stel de vraag aan een lastige prospect in gedachten</li>
+      <li>Stel de vraag aan minstens 1 warme prospect in beslis-fase</li>
+      <li>Tempo-substeps: voeg namen toe · openers · openstaande follow-ups · 1-3 stories · uitnodigingen</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">21</span>
+    <span class="stap-titel">🏆 21 dagen klaar! Dit is je startlijn, niet de eindstreep</span>
+    <div class="stap-doel">21-dagen-oogst: derde pipeline-analyse. Reflectie + plan voor de volgende 40 dagen.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op dag 21</div>
+    <ol>
+      <li>Derde pipeline-analyse met de Mentor <small>(volste cijfers, vergelijk dag 7 en 14)</small></li>
+      <li>21-dagen-reflectie schrijven <small>(wat heb je geleerd, waar trots op, welke patronen)</small></li>
+      <li>40-dagen-doel inschieten <small>(concreet en meetbaar)</small></li>
+      <li>Plan 40-min sponsor-call voor de echte review</li>
+      <li>Tempo-substeps: minimaal X namen toevoegen · minimaal X openers · openstaande follow-ups</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<h2>Fase 4, Weekritme (dag 22 t/m 60)</h2>
+<p class="intro" style="margin: -4px 0 16px;">
+  Fase-doel: <em>niets meer leren, alleen blijven doen. Hier valt 80% af, de 20% die doorgaat groeit echt.</em>
+</p>
+
+<div class="uitleg">
+  <div class="uitleg-titel">Hoe het weekritme werkt</div>
+  <p>
+    Vanaf dag 22 stapt de member in weekritme-modus. Elke 7e dag in z'n eigen run heeft één extra focus
+    naast het standaard-ritme (namen, openers, follow-ups, stories, uitnodigingen). Het systeem volgt
+    JOUW startdatum, niet de echte kalenderweek. Voor iemand die op een woensdag is gestart, valt
+    "ritme-dag 1 = weekstart" op woensdag.
+  </p>
+  <p>
+    De zeven ritme-dagen herhalen zich tot dag 60. Hieronder elk ritme-dag-type één keer beschreven.
+  </p>
+</div>
+
+<details class="stap weekritme">
+  <summary>
+    <span class="stap-num">R1</span>
+    <span class="stap-titel">📊 Ritme-dag 1, Weekstart, pipeline-analyse</span>
+    <div class="stap-doel">Begin van een nieuwe week. Voor je nieuwe acties doet, kijken waar je staat.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op ritme-dag 1</div>
+    <ol>
+      <li>Pipeline-analyse met de Mentor <small>(funnel-analyse-knop, jouw actuele cijfers)</small></li>
+      <li>Mentor wijst je op de fase waar de meeste prospects vastzitten <small>(focus voor de week)</small></li>
+      <li>Plan deze week 3-5 concrete acties op die bottleneck</li>
+      <li>Tempo-substeps: voeg namen toe · openers · openstaande follow-ups · 1-3 stories · uitnodigingen</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap weekritme">
+  <summary>
+    <span class="stap-num">R2</span>
+    <span class="stap-titel">🎧 Ritme-dag 2, Audiodag, leren onderweg</span>
+    <div class="stap-doel">Audio-training onderweg: in de auto, wandeling, of tijdens andere taken.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op ritme-dag 2</div>
+    <ol>
+      <li>Open de audio-onderweg-training in de Academy <small>(verschillende skills van Eric Worre + Fraser Brookes)</small></li>
+      <li>Luister 1 skill terwijl je iets anders doet <small>(geen actieve studie, wel passieve verdieping)</small></li>
+      <li>1 inzicht noteren in je profiel</li>
+      <li>Tempo-substeps: voeg namen toe · openers · openstaande follow-ups · 1-3 stories · uitnodigingen</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap weekritme">
+  <summary>
+    <span class="stap-num">R3</span>
+    <span class="stap-titel">📸 Ritme-dag 3, Contentdag, lifestyle + verhaal</span>
+    <div class="stap-doel">Lifestyle-content delen op socials, je verhaal blijven dragen op een ontspannen manier.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op ritme-dag 3</div>
+    <ol>
+      <li>Plaats 1 lifestyle-post op socials <small>(ontspannen, geen pitch, drie onderwerp-richtingen: lifestyle / waarde / eigen verhaal)</small></li>
+      <li>Reageer op andermans stories en posts <small>(land direct in DM-en)</small></li>
+      <li>Tempo-substeps: voeg namen toe · openers · openstaande follow-ups · 1-3 stories · uitnodigingen</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap weekritme">
+  <summary>
+    <span class="stap-num">R4</span>
+    <span class="stap-titel">🤝 Ritme-dag 4, 3-weg of presentatie plannen</span>
+    <div class="stap-doel">Concreet 3-weg-gesprekken of presentatie-momenten inplannen voor deze week.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op ritme-dag 4</div>
+    <ol>
+      <li>Identificeer welke prospects klaar zijn voor een 3-weg of presentatie</li>
+      <li>Plan minstens 1 moment in deze week <small>(samen met sponsor)</small></li>
+      <li>Stuur de edification-zin + introductie-bericht volgens script</li>
+      <li>Tempo-substeps: voeg namen toe · openers · openstaande follow-ups · 1-3 stories · uitnodigingen</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap weekritme">
+  <summary>
+    <span class="stap-num">R5</span>
+    <span class="stap-titel">🔄 Ritme-dag 5, Follow-up-batch, hardste cases</span>
+    <div class="stap-doel">De openstaande follow-ups doen, vooral degenen waar je tegen op ziet.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op ritme-dag 5</div>
+    <ol>
+      <li>Open je follow-up-lijst, filter op de 'hardste cases' <small>(prospects waar je tegen op ziet om terug te benaderen)</small></li>
+      <li>Drie-stappen-aanpak per bericht <small>(zelf concept, check tegen wat je weet, dan pas hulp)</small></li>
+      <li>Doe minstens 5 follow-ups vandaag</li>
+      <li>Tempo-substeps: voeg namen toe · openers · 1-3 stories · uitnodigingen (lichter)</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap weekritme">
+  <summary>
+    <span class="stap-num">R6</span>
+    <span class="stap-titel">☕ Ritme-dag 6, Lichte reflectie-dag</span>
+    <div class="stap-doel">Bewust lichter ritme om uitval te voorkomen. Reflectie-vraag + sponsor-checkin.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op ritme-dag 6</div>
+    <ol>
+      <li>Reflectie-vraag beantwoorden <small>("Wat ging deze week beter dan vorige week? Welk moment voelde als groei?")</small></li>
+      <li>Schrijf het op of spreek het in <small>(via spraakfunctie of /mijn-why)</small></li>
+      <li>Tempo-substeps: minimaal X namen · minimaal X openers · openstaande follow-ups · 1-3 stories</li>
+      <li>Geen verplichte uitnodigingen vandaag, rust + ritme</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<details class="stap weekritme">
+  <summary>
+    <span class="stap-num">R7</span>
+    <span class="stap-titel">📋 Ritme-dag 7, Wekelijkse review + sponsor-call</span>
+    <div class="stap-doel">Volle weekreview met de Mentor + langere sponsor-call. Planning voor de volgende week.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps op ritme-dag 7</div>
+    <ol>
+      <li>Volledige pipeline-analyse met de Mentor <small>(wat is er deze week veranderd, waar zit groei, waar uitval)</small></li>
+      <li>Plan een 30-min sponsor-call <small>(samen door de week, plannen voor de week erna)</small></li>
+      <li>Beantwoord de week-reflectie-vragen <small>(wat behoud je, wat verander je, wat heb je nodig)</small></li>
+      <li>Tempo-substeps: voeg namen toe · openers · openstaande follow-ups · 1-3 stories</li>
+    </ol>
+    <div class="vast">Vast afsluit: sponsor-checkin · momentum-radar · partner-check</div>
+  </div>
+</details>
+
+<div class="footer">
+  <strong>Bronnen:</strong> de exacte substep-labels per dag staan in
+  <code>lib/playbook/dagen.ts</code> (dag 1-21) en <code>lib/playbook/weekritme.ts</code> (dag 22-60).
+  Tempo-aware uitbreidingen (voeg namen toe, openers, uitnodigingen, stories) staan in
+  <code>lib/playbook/tempo-aware.ts</code>. Wijzigingen aan helpers gelden cross-modus voor zowel Sprint
+  als Core V6/V7 (zie memory <em>cross-modus-helpers</em>).
+  <br><br>
+  <strong>Tip voor Gaby:</strong> gebruik dit overzicht naast de live app. Per dag dat je controleert,
+  hier opzoeken wat de bedoeling is. Wijzigingen aan teksten gaan via founder-edit-modus in de app
+  (✍️ Bewerk-knop op de live dag-pagina) of via overrides.
+</div>
+
+</main>
+</body>
+</html>
