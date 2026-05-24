@@ -91,25 +91,25 @@ function ProspectKaart({
       } ${dropIndicator === "boven" ? "border-t-2 border-t-cm-gold" : ""} ${dropIndicator === "onder" ? "border-b-2 border-b-cm-gold" : ""}`}
     >
       {freebieBotNaam && (
-        <div className="absolute -top-2 left-3 flex items-center gap-1">
-          <div className="px-2 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-semibold uppercase tracking-wider shadow-sm">
-            🌷 Freebie: {freebieBotNaam}
-          </div>
-          {vragenlijstIngevuld ? (
-            <div
-              className="px-2 py-0.5 rounded-full bg-emerald-600 text-white text-[10px] font-semibold shadow-sm"
-              title="Vragenlijst helemaal afgemaakt"
-            >
-              ✓ ingevuld
-            </div>
-          ) : (
-            <div
-              className="px-2 py-0.5 rounded-full bg-amber-500 text-white text-[10px] font-semibold shadow-sm"
-              title="Ingetekend maar vragenlijst nog niet afgemaakt"
-            >
-              ⏳ wacht
-            </div>
-          )}
+        <div
+          className="absolute -top-[7px] left-3 inline-flex items-center gap-1 px-1.5 py-[1px] rounded-full bg-rose-600/95 text-white text-[9px] font-medium leading-tight shadow-sm"
+          title={
+            vragenlijstIngevuld
+              ? `${freebieBotNaam} · vragenlijst helemaal afgemaakt`
+              : `${freebieBotNaam} · ingetekend, vragenlijst nog niet ingevuld`
+          }
+        >
+          <span>🌷</span>
+          <span>{freebieBotNaam}</span>
+          <span
+            className={`inline-flex items-center justify-center h-3 w-3 rounded-full text-[8px] ${
+              vragenlijstIngevuld
+                ? "bg-emerald-400 text-emerald-950"
+                : "bg-amber-300 text-amber-950"
+            }`}
+          >
+            {vragenlijstIngevuld ? "✓" : "⏳"}
+          </span>
         </div>
       )}
       <div className={`flex items-start justify-between ${freebieBotNaam ? "pt-1" : ""}`}>
