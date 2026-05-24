@@ -66,4 +66,16 @@ export const VOORBEELD_TOOLKIT: Omit<Freebie, "id" | "actief">[] = [
     inhoudTemplate: "TODO-GABY: PDF-inhoud invullen.",
     duurMinuten: 12,
   },
+  {
+    slug: "tweede-lente",
+    titel: "Tweede Lente",
+    ondertitel: "Een rustige spiegel voor jouw fase",
+    vorm: "test",
+    onderwerp: "overgang",
+    beschrijving:
+      "Vijf-minuten web-bot voor vrouwen in peri-, volle of post-overgang. Zeven vragen + een spiegel + opt-in voor vijf-mail-reeks. Pilot voor freebie-bot-architectuur.",
+    inhoudTemplate:
+      "Bot-content staat in code (lib/freebie-bots/tweede-lente-vragen.ts en tweede-lente-system-prompt.ts). TODO-GABY: 5 mail-templates aanleveren voor de 5-mail-reeks.",
+    duurMinuten: 5,
+  },
 ];
