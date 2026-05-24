@@ -17,6 +17,7 @@ import {
   haalTweedeLenteStats,
 } from "@/lib/freebie-bots/stats";
 import { StatTegel } from "@/components/freebies/FreebieStatsBlok";
+import { ManyChatHandleiding } from "@/components/freebies/ManyChatHandleiding";
 import { KopieerKnop } from "./kopieer-knop";
 
 export const dynamic = "force-dynamic";
@@ -298,6 +299,18 @@ export default async function MijnTrackingLinksPagina() {
           </p>
         </section>
       )}
+
+      {/* ManyChat-handleiding (uitklap-blok) voor optionele Instagram-
+          trigger-automatisering. Werkt voor alle freebies (productadvies
+          + Tweede Lente). Members hoeven dit niet, het is een extra. */}
+      <ManyChatHandleiding
+        voorbeeldLink={
+          ziet_tweede_lente && tokensPerBot["tweede-lente"]
+            ? `${origin}/bot/tweede-lente/${tokensPerBot["tweede-lente"]}`
+            : productadviesUrl
+        }
+        triggerVoorbeeld="TWEEDE-LENTE"
+      />
 
       <section className="mt-6 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5">
         <h3 className="text-base font-medium text-amber-100">
