@@ -22,12 +22,43 @@ const STANDAARD_TOOLS = [
 // (Freebie-bot tag, vragenlijst-status). Die tonen we apart bovenaan
 // als 'Freebies binnengekomen' zodat de member ziet dat de prospect
 // daadwerkelijk wat heeft ingevuld, niet alleen een handmatig vinkje.
+//
+// Sinds 2026-05-25: deze tags zijn READ-ONLY (vergrendeld). Member
+// kan ze niet wegvinken, want eenmaal ingezet IS ingezet. Het zou
+// raar zijn als de pijplijn-badge verdwijnt na een per-ongeluk klik.
 function isFreebieTag(tool: string): boolean {
   return (
     tool.startsWith("Freebie:") ||
     tool === "Vragenlijst ingevuld" ||
     tool === "Tweede Lente bot" // backwards compat
   );
+}
+
+// Bouw één samenvattende regel per gevonden freebie:
+//   "Freebie: Tweede Lente" + "Vragenlijst ingevuld" → 1 regel met status
+// Backwards compat: oude tag 'Tweede Lente bot' wordt ook als compleet
+// geteld (was vroeger alleen na voltooien gezet).
+type FreebieSamenvatting = {
+  naam: string;
+  ingevuld: boolean;
+};
+
+function combineerFreebieTags(tools: string[]): FreebieSamenvatting[] {
+  const namen = new Set<string>();
+  for (const t of tools) {
+    if (t.startsWith("Freebie:")) {
+      namen.add(t.replace(/^Freebie:\s*/, "").trim());
+    } else if (t === "Tweede Lente bot") {
+      namen.add("Tweede Lente"); // backwards compat
+    }
+  }
+  const ingevuldAlgemeen =
+    tools.includes("Vragenlijst ingevuld") ||
+    tools.includes("Tweede Lente bot");
+  return Array.from(namen).map((naam) => ({
+    naam,
+    ingevuld: ingevuldAlgemeen,
+  }));
 }
 
 interface Props {
@@ -66,8 +97,10 @@ export function IngezetteTools({ prospectId, ingezet }: Props) {
 
   const aantal = selectie.length;
 
-  // Freebie-items uit de huidige selectie (automatisch toegevoegd).
-  const freebieItems = selectie.filter(isFreebieTag);
+  // Freebie-items uit de huidige selectie, samengevoegd tot één regel per
+  // freebie (de losse tags 'Freebie: X' + 'Vragenlijst ingevuld' worden
+  // gecombineerd tot bv. 'Tweede Lente — ingevuld').
+  const freebieSamenvattingen = combineerFreebieTags(selectie);
 
   // Overige items uit selectie die niet in standaard-lijst staan
   // (extra handmatige tools die ooit toegevoegd zijn).
@@ -102,30 +135,40 @@ export function IngezetteTools({ prospectId, ingezet }: Props) {
         </span>
       </summary>
       <div className="border-t border-cm-border p-3 space-y-3">
-        {/* Freebies binnengekomen, automatisch gezet door bot/freebie-flow */}
-        {freebieItems.length > 0 && (
+        {/* Freebies binnengekomen: read-only, één regel per freebie met
+            ingevuld/wacht-status. Niet wegvinkbaar, want eenmaal ingezet
+            blijft ingezet. */}
+        {freebieSamenvattingen.length > 0 && (
           <div>
             <div className="flex items-center gap-1.5 mb-1.5">
               <span className="text-rose-400 text-xs">🌷</span>
               <p className="text-[11px] uppercase tracking-wider text-rose-300 font-semibold">
-                Freebies binnengekomen
+                Freebies ingezet
               </p>
             </div>
             <div className="space-y-1.5">
-              {freebieItems.map((tool) => (
-                <label
-                  key={tool}
-                  className="flex items-center gap-2 text-sm cursor-pointer select-none rounded px-2 py-1.5 bg-rose-500/10 text-rose-200"
+              {freebieSamenvattingen.map((f) => (
+                <div
+                  key={f.naam}
+                  className="flex items-center gap-2 text-sm rounded px-2 py-1.5 bg-rose-500/10 text-rose-200"
+                  title="Automatisch geregistreerd, niet wegvinkbaar"
                 >
-                  <input
-                    type="checkbox"
-                    checked
-                    onChange={() => toggle(tool)}
-                    disabled={bezig}
-                    className="accent-rose-500 w-4 h-4"
-                  />
-                  {tool}
-                </label>
+                  <span className="w-4 h-4 flex items-center justify-center text-rose-300">
+                    🔒
+                  </span>
+                  <span className="flex-1">
+                    {f.naam}
+                  </span>
+                  {f.ingevuld ? (
+                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-600/80 text-white font-semibold">
+                      ✓ ingevuld
+                    </span>
+                  ) : (
+                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-500/80 text-white font-semibold">
+                      ⏳ wacht
+                    </span>
+                  )}
+                </div>
               ))}
             </div>
           </div>
@@ -133,7 +176,7 @@ export function IngezetteTools({ prospectId, ingezet }: Props) {
 
         {/* Standaard tools, handmatig aan/uit */}
         <div>
-          {freebieItems.length > 0 && (
+          {freebieSamenvattingen.length > 0 && (
             <p className="text-[11px] uppercase tracking-wider text-cm-white opacity-60 font-semibold mb-1.5">
               Handmatig
             </p>
