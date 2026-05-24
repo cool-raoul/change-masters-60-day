@@ -21,6 +21,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendPushToUser } from "@/lib/push/sendPush";
+import { planMailSequence } from "@/lib/freebie-bots/mail-queue";
 import type { TweedeLenteAntwoorden } from "@/lib/freebie-bots/types";
 
 export async function POST(req: NextRequest) {
@@ -297,6 +298,18 @@ export async function POST(req: NextRequest) {
     } catch (pushErr) {
       console.warn("Push-notificatie mislukt:", pushErr);
     }
+
+    // Plan de 5-mail-vervolgreeks in de queue. Cron pakt ze later op
+    // mits member's freebie_mails_actief op true staat. Faalt veilig
+    // als de migratie nog niet is gedraaid: log + ga door, opt-in is
+    // veilig opgeslagen.
+    await planMailSequence(supabase, {
+      optInId: optIn.id,
+      freebieSlug: "tweede-lente",
+      memberId: tokenRow.member_id,
+      leadNaam,
+      leadEmail,
+    });
 
     return NextResponse.json({ ok: true, optInId: optIn.id });
   } catch (e) {
