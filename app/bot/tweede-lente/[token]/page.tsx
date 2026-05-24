@@ -77,12 +77,35 @@ export default async function TweedeLenteTokenPagina({
   const memberVoornaam =
     ((profile?.full_name ?? "") as string).split(" ")[0] || "iemand";
 
+  // Bestellinks voor de drie hormoonbalans-pakketten van de member.
+  // Deze drie matchen exact het Tweede Lente product-blok in de bot.
+  // Als een member geen bestellink heeft ingesteld, toont blok-opt-in
+  // de fallback "vraag {memberVoornaam} voor een bestellink".
+  const { data: bestellinks } = await supabase
+    .from("member_bestellinks")
+    .select("pakket_key, url")
+    .eq("user_id", row.member_id)
+    .in("pakket_key", [
+      "hormoonbalans-essential",
+      "hormoonbalans-plus",
+      "hormoonbalans-complete",
+    ]);
+
+  const linksMap: Record<string, string> = {};
+  for (const b of (bestellinks ?? []) as Array<{
+    pakket_key: string;
+    url: string | null;
+  }>) {
+    if (b.url) linksMap[b.pakket_key] = b.url;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-rose-50 to-white">
       <TweedeLenteFlow
         token={token}
         memberId={row.member_id}
         memberVoornaam={memberVoornaam}
+        bestellinks={linksMap}
       />
     </div>
   );

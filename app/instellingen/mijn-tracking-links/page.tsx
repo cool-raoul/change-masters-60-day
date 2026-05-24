@@ -5,6 +5,7 @@
 // Lente actief. Genereert token aan bij eerste bezoek.
 
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { genereerBotToken } from "@/lib/freebie-bots/token";
 import { KopieerKnop } from "./kopieer-knop";
@@ -57,7 +58,17 @@ export default async function MijnTrackingLinksPagina() {
     tokensPerBot[bot.slug] = inserted?.token ?? nieuweToken;
   }
 
-  const origin = process.env.NEXT_PUBLIC_APP_URL ?? "";
+  // Bouw volledige origin met fallback: env-var → request-host → leeg.
+  // NEXT_PUBLIC_APP_URL is op productie soms niet gezet; dan willen we
+  // alsnog een werkende link tonen via de huidige request-host.
+  const headersList = await headers();
+  const host = headersList.get("host") ?? "";
+  const protocol =
+    headersList.get("x-forwarded-proto") ??
+    (host.includes("localhost") ? "http" : "https");
+  const origin =
+    process.env.NEXT_PUBLIC_APP_URL ||
+    (host ? `${protocol}://${host}` : "");
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-8 text-slate-100">
@@ -104,7 +115,26 @@ export default async function MijnTrackingLinksPagina() {
         })}
       </section>
 
-      <section className="mt-10 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5">
+      <section className="mt-10 rounded-2xl border border-rose-500/30 bg-rose-500/5 p-5">
+        <h3 className="text-base font-medium text-rose-100">
+          Belangrijk: koppel je bestellinks
+        </h3>
+        <p className="mt-1 text-sm text-rose-200/80 leading-relaxed">
+          Tweede Lente toont drie pakket-niveaus voor hormoonbalans
+          (essential / plus / complete). Onder elk niveau verschijnt jouw
+          persoonlijke bestellink uit je{" "}
+          <a
+            href="/instellingen/bestellinks"
+            className="text-rose-100 underline hover:text-white"
+          >
+            bestellinks-instellingen
+          </a>
+          . Heb je voor een niveau geen link ingesteld, dan ziet de vrouw
+          een tekst dat ze jou even een berichtje mag sturen.
+        </p>
+      </section>
+
+      <section className="mt-6 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5">
         <h3 className="text-base font-medium text-amber-100">
           Meer bots komen later
         </h3>

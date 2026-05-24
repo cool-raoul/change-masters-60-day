@@ -1,32 +1,39 @@
 // File: app/bot/tweede-lente/[token]/blok-intro.tsx
 //
-// Blok 1, warme intro in ELEVA-team-stem (niet Gaby-specifiek).
-// Geen member-naam zichtbaar voor prospect, om twee redenen:
-//   1. Naam-mismatch tussen social en systeem (Raoul, 2026-05-24)
-//   2. De vrouw moet zich op zichzelf richten, niet op de afzender
+// Blok 1, warme intro. Toont de naam van de member die de link
+// heeft gedeeld, zodat de vrouw voelt dat ze door iemand persoonlijk
+// is uitgenodigd. Naam-mismatch tussen social-profiel en
+// systeem-profiel is geaccepteerd: het kan zijn dat ze 'Raoul' ziet
+// terwijl ze via Gaby kwam. De vrouw begrijpt dat het team is.
 //
 // TODO-GABY: definitieve openings-tekst aanleveren. Onder staat
 // een placeholder die claim-vrij is en in jullie stem klinkt.
 
 "use client";
 
-export function BlokIntro({ onStart }: { onStart: () => void }) {
+export function BlokIntro({
+  memberVoornaam,
+  onStart,
+}: {
+  memberVoornaam: string;
+  onStart: () => void;
+}) {
   return (
     <div className="text-center">
       <div className="text-rose-500 text-sm font-medium uppercase tracking-wider">
         Tweede Lente
       </div>
       <h1 className="mt-3 text-3xl sm:text-4xl font-bold text-gray-900">
-        Welkom 💟
+        Welkom bij {memberVoornaam} 💟
       </h1>
       <p className="mt-5 text-lg text-gray-700 leading-relaxed">
-        Fijn dat je hier bent. Wij zijn vrouwen die door deze fase zijn
-        gegaan, en wij hebben deze ruimte voor jou gemaakt.
+        Fijn dat je hier bent. {memberVoornaam} heeft deze ruimte met haar team
+        voor jou klaargezet, vrouwen die zelf door deze fase zijn gegaan.
       </p>
       <p className="mt-4 text-gray-700 leading-relaxed">
         Vijf minuten, zeven vragen. Aan het eind een rustige spiegel en
-        een paar concrete ideeën waar veel vrouwen in jouw fase voor
-        kiezen.
+        concrete ideeën die veel vrouwen in jouw fase rust geven. Daarna
+        kun je optioneel intekenen voor vijf avonden korte mail.
       </p>
       <button
         type="button"

@@ -130,36 +130,57 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Klantomgeving-rij maken
-    const { error: klantErr } = await supabase
-      .from("klantomgeving_klanten")
+    // Prospect-rij maken in de namenlijst van de member. Klantomgeving
+    // bewust NIET, want dat is voor klanten die al iets besteld hebben.
+    // Freebie-leads zijn prospects (warm via bot). Member ziet ze direct
+    // in /namenlijst met bron='tweede-lente-bot'.
+    const notitieRegels = [
+      `Binnen via Tweede Lente bot op ${new Date().toLocaleDateString("nl-NL")}.`,
+      `Fase: ${antwoorden.fase}`,
+      `Valt op: ${antwoorden.watValtOp.join(", ")}`,
+      `Zoekt: ${antwoorden.zoek}`,
+      contactGewenst ? "VRAAGT PERSOONLIJK CONTACT" : "Alleen mailreeks-opt-in",
+      "",
+      "Spiegel die ze zag:",
+      spiegelTekst ?? "(geen)",
+    ].join("\n");
+
+    const { error: prospectErr } = await supabase
+      .from("prospects")
       .insert({
-        member_id: tokenRow.member_id,
-        klant_naam: leadNaam,
-        klant_email: leadEmail,
-        bron: "freebie-opt-in",
-        freebie_opt_in_id: optIn.id,
-        status: "actief",
+        user_id: tokenRow.member_id,
+        volledige_naam: leadNaam,
+        email: leadEmail,
+        bron: "tweede-lente-bot",
+        pipeline_fase: "prospect",
+        prioriteit: contactGewenst ? "hoog" : "normaal",
+        notities: notitieRegels,
       });
 
-    if (klantErr) {
-      console.warn("Klantomgeving-rij niet aangemaakt:", klantErr);
-      // niet blokkerend, we hebben de opt-in al
+    if (prospectErr) {
+      console.warn("Prospect-rij niet aangemaakt:", prospectErr);
+      // niet blokkerend, opt-in is veilig opgeslagen in freebie_opt_ins
     }
 
-    // Notificatie alleen bij contactGewenst. sendPushToUser-signature
-    // uit lib/push/sendPush.ts: (userId, { title, body, url?, tag? }).
-    if (contactGewenst) {
-      try {
-        await sendPushToUser(tokenRow.member_id, {
-          title: "Nieuwe lead vraagt contact",
-          body: `${leadNaam} heeft via Tweede Lente om contact gevraagd.`,
-          url: "/klant",
-          tag: "tweede-lente-contact",
-        });
-      } catch (pushErr) {
-        console.warn("Push-notificatie mislukt:", pushErr);
-      }
+    // Push-notificatie naar member bij ELKE opt-in (niet alleen bij
+    // contactGewenst), met andere tekst. Member wil weten dat er een
+    // lead binnenkwam ook als die alleen voor mailreeks koos.
+    // sendPushToUser-signature: (userId, { title, body, url?, tag? }).
+    try {
+      const titel = contactGewenst
+        ? `${leadNaam} vraagt persoonlijk contact`
+        : `${leadNaam} schreef zich in via Tweede Lente`;
+      const omschrijving = contactGewenst
+        ? "Wil een vrijblijvend gesprekje van een kwartier. Open haar prospect-kaart in namenlijst."
+        : "Nieuwe prospect via de bot. Komt automatisch in je namenlijst.";
+      await sendPushToUser(tokenRow.member_id, {
+        title: titel,
+        body: omschrijving,
+        url: "/namenlijst",
+        tag: "tweede-lente-opt-in",
+      });
+    } catch (pushErr) {
+      console.warn("Push-notificatie mislukt:", pushErr);
     }
 
     return NextResponse.json({ ok: true, optInId: optIn.id });

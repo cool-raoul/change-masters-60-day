@@ -29,10 +29,15 @@ import {
 type Stap = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 export function BlokVragen({
+  memberVoornaam,
   onKlaar,
 }: {
+  memberVoornaam: string;
   onKlaar: (a: TweedeLenteAntwoorden) => void;
 }) {
+  // memberVoornaam tonen we hier nog niet (vragen-flow zelf is neutraal),
+  // maar we accepteren de prop zodat de container hem consistent doorgeeft.
+  void memberVoornaam;
   const [stap, setStap] = useState<Stap>(1);
   const [fase, setFase] = useState<TweedeLenteFase | null>(null);
   const [watValtOp, setWatValtOp] = useState<TweedeLenteWatValtOp[]>([]);

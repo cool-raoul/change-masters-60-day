@@ -18,10 +18,12 @@ import type {
 export function BlokSpiegel({
   token,
   antwoorden,
+  memberVoornaam,
   onVolgende,
 }: {
   token: string;
   antwoorden: TweedeLenteAntwoorden;
+  memberVoornaam: string;
   onVolgende: (s: SpiegelOutput) => void;
 }) {
   const [spiegel, setSpiegel] = useState<SpiegelOutput | null>(null);
@@ -99,7 +101,7 @@ export function BlokSpiegel({
   return (
     <div>
       <div className="text-rose-500 text-sm font-medium uppercase tracking-wider">
-        Jouw spiegel
+        Jouw spiegel, klaargezet door {memberVoornaam}
       </div>
 
       <p className="mt-4 text-lg text-gray-800 leading-relaxed">
@@ -124,6 +126,50 @@ export function BlokSpiegel({
               <span className="text-gray-800">{aanpassing}</span>
             </li>
           ))}
+        </ul>
+      </div>
+
+      {/* Extra-waardeblok: vier rust-handvatten die elke vrouw direct mag
+          meenemen, ook als ze niet intekent op de mailreeks. Anti-overwhelm
+          K1 (één thema per kaart, makkelijk te scannen). */}
+      <div className="mt-8">
+        <h3 className="text-base font-semibold text-gray-900">
+          Vier ankers die je vandaag al kunt pakken
+        </h3>
+        <p className="mt-1 text-sm text-gray-500">
+          Klein, concreet, zonder belofte. Probeer er één deze week.
+        </p>
+        <ul className="mt-3 space-y-2 text-sm">
+          <li className="rounded-xl border border-rose-100 bg-white px-4 py-3">
+            <strong className="text-gray-900">Ochtend-anker.</strong>{" "}
+            <span className="text-gray-700">
+              Eerste kwartier na het wakker worden: geen scherm, één glas
+              water, kort de dag in jezelf doorlopen.
+            </span>
+          </li>
+          <li className="rounded-xl border border-rose-100 bg-white px-4 py-3">
+            <strong className="text-gray-900">Eet-anker.</strong>{" "}
+            <span className="text-gray-700">
+              Drie maaltijden met een vast venster van twaalf uur (van
+              ontbijt tot avondeten). Veel vrouwen voelen dat hun energie
+              en slaap meeschuiven met dit ritme.
+            </span>
+          </li>
+          <li className="rounded-xl border border-rose-100 bg-white px-4 py-3">
+            <strong className="text-gray-900">Beweeg-anker.</strong>{" "}
+            <span className="text-gray-700">
+              Twee kortere wandelingen per dag van ongeveer tien minuten,
+              één in de ochtend en één na het avondeten. Geen prestatie,
+              wel ritme.
+            </span>
+          </li>
+          <li className="rounded-xl border border-rose-100 bg-white px-4 py-3">
+            <strong className="text-gray-900">Avond-anker.</strong>{" "}
+            <span className="text-gray-700">
+              Een vast moment, een half uur voor het slapen, zonder
+              scherm. Drie diepe ademhalingen en de dag mag aflopen.
+            </span>
+          </li>
         </ul>
       </div>
 

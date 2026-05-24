@@ -18,10 +18,12 @@ export function TweedeLenteFlow({
   token,
   memberId,
   memberVoornaam,
+  bestellinks,
 }: {
   token: string;
   memberId: string;
   memberVoornaam: string;
+  bestellinks: Record<string, string>;
 }) {
   const [blok, setBlok] = useState<FlowBlok>("intro");
   const [antwoorden, setAntwoorden] = useState<TweedeLenteAntwoorden | null>(null);
@@ -34,10 +36,14 @@ export function TweedeLenteFlow({
   return (
     <div className="mx-auto max-w-2xl px-4 py-8 sm:py-12">
       {blok === "intro" && (
-        <BlokIntro onStart={() => setBlok("vragen")} />
+        <BlokIntro
+          memberVoornaam={memberVoornaam}
+          onStart={() => setBlok("vragen")}
+        />
       )}
       {blok === "vragen" && (
         <BlokVragen
+          memberVoornaam={memberVoornaam}
           onKlaar={(a) => {
             setAntwoorden(a);
             setBlok("spiegel");
@@ -48,6 +54,7 @@ export function TweedeLenteFlow({
         <BlokSpiegel
           token={token}
           antwoorden={antwoorden}
+          memberVoornaam={memberVoornaam}
           onVolgende={(s) => {
             setSpiegel(s);
             setBlok("opt-in");
@@ -60,6 +67,7 @@ export function TweedeLenteFlow({
           antwoorden={antwoorden}
           spiegel={spiegel}
           memberVoornaam={memberVoornaam}
+          bestellinks={bestellinks}
           onKlaar={() => setBlok("klaar")}
         />
       )}
@@ -69,11 +77,15 @@ export function TweedeLenteFlow({
             Je inschrijving is binnen
           </h2>
           <p className="mt-3 text-gray-700">
-            Je ontvangt de eerste mail vanavond. Kijk er even rustig naar
-            wanneer het je uitkomt. Geen druk.
+            {memberVoornaam} stuurt je vanavond de eerste mail. Kijk er rustig
+            naar wanneer het je uitkomt. Geen druk.
+          </p>
+          <p className="mt-3 text-gray-700">
+            Heb je een vraag? Stuur {memberVoornaam} gerust een berichtje, ze
+            heeft je hier persoonlijk uitgenodigd.
           </p>
           <p className="mt-6 text-xs text-gray-400">
-            Tweede Lente, met dank dat je deze ruimte hebt gepakt.
+            Met dank dat je deze ruimte hebt gepakt.
           </p>
         </div>
       )}
