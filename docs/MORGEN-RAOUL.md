@@ -305,3 +305,22 @@ app/instellingen/mijn-tracking-links/kopieer-knop.tsx
 Pilot raakt geen Sprint-bestanden, geen Core-V6-bestanden. Alle nieuwe
 code zit in `lib/freebie-bots/`, `app/api/freebie-bot/`, `app/bot/`,
 `app/instellingen/mijn-tracking-links/`.
+
+---
+
+## Tweede Lente, na-de-test parkeerlijst (2026-05-24)
+
+Items die expliciet zijn geparkeerd door Raoul voor NA de eerste pilot-test:
+
+**1. Dubbele-prospect-detectie op e-mailadres (bovenste prio)**
+Als een vrouw intekent met een e-mailadres dat al als prospect bij de member bestaat: aanvullen bestaande kaart, NIET nieuwe kaart maken. Bestand: `app/api/freebie-bot/opt-in/route.ts`. Match case-insensitive op `prospects.email` waar `user_id=member`. Bij match: notitie aanvullen met datum-prefix + nieuwe bot-antwoorden + spiegel, prioriteit omhoog naar 'hoog' als contactGewenst.
+
+**2. 5-mail-reeks-versturing**
+Pilot bouwt alleen opslag. Resend of Postmark integratie + per-opt-in mail-queue dag 1-5.
+
+**3. Test-knop opt-in vooraf vs achteraf**
+Feature-flag of A/B om te testen of e-mail-opt-in als filter VOORAF beter werkt dan na de spiegel.
+
+**4. Inhoud Gaby:** definitieve openings-tekst, 10-12 template-zinnen, 5 mail-templates, anekdotes.
+
+**5. Member zelf:** hormoonbalans-bestellinks invullen op /instellingen/bestellinks (essential/plus/complete) voordat bot bruikbare productknoppen kan tonen.
