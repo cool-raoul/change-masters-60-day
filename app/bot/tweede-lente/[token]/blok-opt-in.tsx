@@ -1,18 +1,14 @@
 // File: app/bot/tweede-lente/[token]/blok-opt-in.tsx
 //
-// Blok 4. Drie sub-blokken in volgorde:
+// Blok 4. Drie sub-blokken:
 //   4a. Product-richting via member's eigen bestellinks (hormoonbalans
 //       essential, plus, complete). Geen advies, wel een richting.
-//   4b. Optionele mailreeks-opt-in als extraatje. Niet de hoofd-deliverable,
-//       het waarde-stuk zit in de spiegel + 4 ankers in blok 3.
-//   4c. Optioneel persoonlijk contact-aanbod.
-//   4d. Prominent disclaimer.
+//   4b. Optioneel persoonlijk contact-aanbod (vinkje).
+//   4c. Prominent disclaimer.
 //
-// Bestellinks-prop bevat per pakket-key de member's eigen webshop-URL.
-// Als een pakket geen URL heeft: fallback "vraag {memberVoornaam} voor
-// een bestellink" zonder kapotte link te tonen.
-//
-// TODO-GABY: definitieve openings-tekst voor mailreeks-opt-in.
+// Naam + e-mail + akkoord zijn al opgegeven in stap 'intekenen-vooraf'
+// (zit in `inteken` prop). We hoeven hier alleen het contact-vinkje en
+// de submit-knop te tonen.
 
 "use client";
 
@@ -21,6 +17,7 @@ import type {
   TweedeLenteAntwoorden,
   SpiegelOutput,
 } from "@/lib/freebie-bots/types";
+import type { IntekenGegevens } from "./blok-intekenen-vooraf";
 
 type PakketNiveau = {
   key: "hormoonbalans-essential" | "hormoonbalans-plus" | "hormoonbalans-complete";
@@ -57,6 +54,7 @@ export function BlokOptIn({
   token,
   antwoorden,
   spiegel,
+  inteken,
   memberVoornaam,
   bestellinks,
   onKlaar,
@@ -64,24 +62,16 @@ export function BlokOptIn({
   token: string;
   antwoorden: TweedeLenteAntwoorden;
   spiegel: SpiegelOutput;
+  inteken: IntekenGegevens;
   memberVoornaam: string;
   bestellinks: Record<string, string>;
   onKlaar: () => void;
 }) {
-  const [voornaam, setVoornaam] = useState("");
-  const [email, setEmail] = useState("");
-  const [toestemming, setToestemming] = useState(false);
   const [contactGewenst, setContactGewenst] = useState(false);
   const [bezig, setBezig] = useState(false);
   const [fout, setFout] = useState<string | null>(null);
 
-  const klaarOmTeVerzenden =
-    voornaam.trim().length > 1 &&
-    /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) &&
-    toestemming;
-
   async function verstuur() {
-    if (!klaarOmTeVerzenden) return;
     setBezig(true);
     setFout(null);
     try {
@@ -97,8 +87,8 @@ export function BlokOptIn({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           token,
-          leadNaam: voornaam.trim(),
-          leadEmail: email.trim(),
+          leadNaam: inteken.voornaam,
+          leadEmail: inteken.email,
           antwoorden,
           spiegelTekst,
           contactGewenst,
@@ -120,7 +110,7 @@ export function BlokOptIn({
   return (
     <div>
       <div className="text-rose-500 text-sm font-medium uppercase tracking-wider">
-        Eén ademhaling verder
+        Drie laagdrempelige startpunten
       </div>
 
       {/* 4a, Product-richting met member's eigen bestellinks */}
@@ -129,8 +119,9 @@ export function BlokOptIn({
           Drie niveaus die {memberVoornaam} en haar team vaker zien werken
         </h2>
         <p className="mt-2 text-sm text-gray-700">
-          Laagdrempelig startpunt voor vrouwen in jouw fase. Drie niveaus,
-          van eenvoudig instap tot volledig pakket. Zelf in de webshop te
+          De vier ankers en de voedingsstoffen uit de spiegel zitten als
+          basis ook in onze pakketten. Hieronder zie je drie niveaus, van
+          eenvoudig instap tot volledig pakket. Zelf in onze webshop te
           bestellen, geen gesprek of programma vooraf nodig.
         </p>
 
@@ -173,57 +164,8 @@ export function BlokOptIn({
         </p>
       </section>
 
-      {/* 4b, Optionele mailreeks (extraatje, geen filter) */}
-      <section className="mt-8">
-        <h2 className="text-xl font-semibold text-gray-900">
-          Wil je dat {memberVoornaam} je vijf avonden een korte mail stuurt?
-        </h2>
-        <p className="mt-2 text-gray-700 leading-relaxed">
-          Helemaal optioneel. Vijf korte mails, één per dag, geschreven
-          door vrouwen uit ons team die deze fase hebben gelopen. Niet om
-          iets te beloven, wel om je opties te tonen. Daarna stilte tenzij
-          jij zelf reageert.
-        </p>
-
-        <div className="mt-4 space-y-3">
-          <label className="block">
-            <span className="text-sm text-gray-700">Voornaam</span>
-            <input
-              type="text"
-              value={voornaam}
-              onChange={(e) => setVoornaam(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900"
-              placeholder="Je voornaam"
-            />
-          </label>
-          <label className="block">
-            <span className="text-sm text-gray-700">E-mailadres</span>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900"
-              placeholder="naam@voorbeeld.nl"
-            />
-          </label>
-          <label className="flex items-start gap-2 text-sm text-gray-700">
-            <input
-              type="checkbox"
-              checked={toestemming}
-              onChange={(e) => setToestemming(e.target.checked)}
-              className="mt-1"
-            />
-            <span>
-              Ik ga akkoord dat mijn naam en e-mailadres worden gebruikt
-              om mij vijf mails te sturen en dat {memberVoornaam} kan zien
-              dat ik haar bot heb gedaan. Ik kan op elk moment afmelden.
-            </span>
-          </label>
-        </div>
-      </section>
-
-      {/* 4c, Persoonlijk contact-aanbod */}
-      <section className="mt-6">
+      {/* 4b, Persoonlijk contact-aanbod */}
+      <section className="mt-6 rounded-xl border border-gray-200 bg-white p-4">
         <label className="flex items-start gap-2 text-sm text-gray-700">
           <input
             type="checkbox"
@@ -232,9 +174,9 @@ export function BlokOptIn({
             className="mt-1"
           />
           <span>
-            Ik wil dat {memberVoornaam} binnen een paar dagen contact opneemt
-            voor een vrijblijvend gesprekje van een kwartier. Geen
-            verkoopgesprek, wel iemand die meedenkt over mijn fase.
+            <strong className="text-gray-900">Ja, ik wil dat {memberVoornaam} contact opneemt.</strong>
+            {" "}Vrijblijvend gesprekje van een kwartier, geen
+            verkoopgesprek. Iemand die meedenkt over mijn fase.
           </span>
         </label>
       </section>
@@ -246,18 +188,18 @@ export function BlokOptIn({
       <button
         type="button"
         onClick={verstuur}
-        disabled={!klaarOmTeVerzenden || bezig}
+        disabled={bezig}
         className="mt-6 w-full rounded-full bg-rose-600 px-6 py-3 text-white text-base font-medium disabled:opacity-40"
       >
-        {bezig ? "Even versturen..." : "Schrijf mij in voor de mails"}
+        {bezig ? "Even versturen..." : "Verstuur mijn spiegel en sluit af"}
       </button>
 
       <p className="mt-3 text-center text-xs text-gray-500">
-        Niet intekenen kan ook, je hebt de spiegel en de vier ankers al
-        gehad.
+        Je krijgt vanavond een mail met de spiegel en de vier ankers.
+        Daarna vijf korte vervolg-mails over vijf dagen.
       </p>
 
-      {/* 4d, Disclaimer */}
+      {/* 4c, Disclaimer */}
       <footer className="mt-8 rounded-xl border border-gray-200 bg-white px-4 py-3">
         <p className="text-xs text-gray-500 leading-relaxed">
           Dit is geen medisch advies. Voor specifieke klachten, een

@@ -29,6 +29,21 @@ export default async function MijnTrackingLinksPagina() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
+  // Toegang: alleen Core-members + founders. Sprint en Pro krijgen dit
+  // in latere fase (eerst in Core inregelen, daar is bot primair voor
+  // bedoeld). Founders mogen altijd vanwege test- en bouwflexibiliteit.
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("modus, role")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  const isFounder = (profile as { role?: string } | null)?.role === "founder";
+  const isCore = (profile as { modus?: string } | null)?.modus === "core";
+  if (!isFounder && !isCore) {
+    redirect("/instellingen");
+  }
+
   // Voor elke actieve bot: haal of maak token aan
   const tokensPerBot: Record<string, string> = {};
   for (const bot of ACTIEVE_BOTS) {

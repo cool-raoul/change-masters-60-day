@@ -129,9 +129,9 @@ export function BlokSpiegel({
         </ul>
       </div>
 
-      {/* Extra-waardeblok: vier rust-handvatten die elke vrouw direct mag
-          meenemen, ook als ze niet intekent op de mailreeks. Anti-overwhelm
-          K1 (één thema per kaart, makkelijk te scannen). */}
+      {/* Vier ankers MET uitleg-waarom. Elk anker krijgt twee paragrafen:
+          de actie + waarom het werkt. Geen claims, wel context, zodat de
+          vrouw begrijpt waarom de aanpassing helpend kan zijn. */}
       <div className="mt-8">
         <h3 className="text-base font-semibold text-gray-900">
           Vier ankers die je vandaag al kunt pakken
@@ -139,41 +139,163 @@ export function BlokSpiegel({
         <p className="mt-1 text-sm text-gray-500">
           Klein, concreet, zonder belofte. Probeer er één deze week.
         </p>
-        <ul className="mt-3 space-y-2 text-sm">
+        <ul className="mt-3 space-y-3 text-sm">
           <li className="rounded-xl border border-rose-100 bg-white px-4 py-3">
-            <strong className="text-gray-900">Ochtend-anker.</strong>{" "}
-            <span className="text-gray-700">
-              Eerste kwartier na het wakker worden: geen scherm, één glas
-              water, kort de dag in jezelf doorlopen.
-            </span>
+            <div>
+              <strong className="text-gray-900">Ochtend-anker.</strong>{" "}
+              <span className="text-gray-700">
+                Eerste kwartier na het wakker worden: geen scherm, één
+                glas water, kort de dag in jezelf doorlopen.
+              </span>
+            </div>
+            <div className="mt-2 text-xs text-gray-500 italic">
+              Waarom: in de eerste minuten ontwaakt het cortisol-ritme,
+              dat regelt je energie de hele dag. Een paar minuten rust
+              zonder scherm laat dat ritme natuurlijk omhoog komen,
+              zonder dat externe prikkels het uit balans halen. Een glas
+              water op een lege maag activeert je spijsvertering en helpt
+              tegen de lichte uitdroging van de nacht.
+            </div>
           </li>
           <li className="rounded-xl border border-rose-100 bg-white px-4 py-3">
-            <strong className="text-gray-900">Eet-anker.</strong>{" "}
-            <span className="text-gray-700">
-              Drie maaltijden met een vast venster van twaalf uur (van
-              ontbijt tot avondeten). Veel vrouwen voelen dat hun energie
-              en slaap meeschuiven met dit ritme.
-            </span>
+            <div>
+              <strong className="text-gray-900">Eet-anker.</strong>{" "}
+              <span className="text-gray-700">
+                Drie maaltijden met een vast venster van twaalf uur (van
+                ontbijt tot avondeten).
+              </span>
+            </div>
+            <div className="mt-2 text-xs text-gray-500 italic">
+              Waarom: in een vast venster van twaalf uur krijgt je
+              spijsvertering ook rust. De andere twaalf uur heeft je
+              lichaam tijd voor herstel en regulatie van je
+              hormoonsignalen, in plaats van constant te verteren. Veel
+              vrouwen voelen dat hun energie en slaap meeschuiven met
+              dit ritme.
+            </div>
           </li>
           <li className="rounded-xl border border-rose-100 bg-white px-4 py-3">
-            <strong className="text-gray-900">Beweeg-anker.</strong>{" "}
-            <span className="text-gray-700">
-              Twee kortere wandelingen per dag van ongeveer tien minuten,
-              één in de ochtend en één na het avondeten. Geen prestatie,
-              wel ritme.
-            </span>
+            <div>
+              <strong className="text-gray-900">Beweeg-anker.</strong>{" "}
+              <span className="text-gray-700">
+                Twee kortere wandelingen per dag van ongeveer tien
+                minuten, één in de ochtend en één na het avondeten.
+              </span>
+            </div>
+            <div className="mt-2 text-xs text-gray-500 italic">
+              Waarom: lopen in de ochtend, vooral met daglicht op je
+              gezicht, zet je biologische klok scherper. Lopen na het
+              avondeten helpt je bloedsuiker geleidelijk dalen in plaats
+              van met een piek. Geen prestatie, wel ritme.
+            </div>
           </li>
           <li className="rounded-xl border border-rose-100 bg-white px-4 py-3">
-            <strong className="text-gray-900">Avond-anker.</strong>{" "}
-            <span className="text-gray-700">
-              Een vast moment, een half uur voor het slapen, zonder
-              scherm. Drie diepe ademhalingen en de dag mag aflopen.
-            </span>
+            <div>
+              <strong className="text-gray-900">Avond-anker.</strong>{" "}
+              <span className="text-gray-700">
+                Een vast moment, een half uur voor het slapen, zonder
+                scherm. Drie diepe ademhalingen en de dag mag aflopen.
+              </span>
+            </div>
+            <div className="mt-2 text-xs text-gray-500 italic">
+              Waarom: blauw licht van schermen remt de aanmaak van het
+              slaap-signaal in je hoofd. Een half uur zonder scherm en
+              een paar diepe ademhalingen geven je zenuwstelsel het
+              signaal dat de dag voorbij is, zodat je makkelijker in
+              slaap valt en dieper slaapt.
+            </div>
           </li>
         </ul>
       </div>
 
-      <p className="mt-6 text-gray-700 leading-relaxed">
+      {/* EFSA-toegestane voedingsstoffen-blok. Bruggetje naar de Lifeplus-
+          pakketten in de opt-in-stap. Elke zin is een geautoriseerde EFSA-
+          health-claim (Verordening EU 1924/2006), letterlijk toegestaan in
+          marketing wanneer het product de minimale hoeveelheid bevat. */}
+      <div className="mt-8">
+        <h3 className="text-base font-semibold text-gray-900">
+          Voedingsstoffen die in deze fase vaak belangrijk worden
+        </h3>
+        <p className="mt-1 text-sm text-gray-500">
+          Krijg je ze al via je dagelijkse voeding? Mooi. Anders kan
+          gerichte aanvulling rust geven. Onder elk staat de
+          wetenschappelijk-bevestigde rol die de stof in je lichaam
+          speelt.
+        </p>
+        <ul className="mt-3 space-y-3 text-sm">
+          <li className="rounded-xl border border-emerald-100 bg-emerald-50/50 px-4 py-3">
+            <div className="flex items-baseline justify-between gap-3">
+              <strong className="text-gray-900">Magnesium</strong>
+              <span className="text-xs text-gray-500">bladgroente, pitten, peulvruchten</span>
+            </div>
+            <ul className="mt-1 text-gray-700 text-xs leading-relaxed list-disc list-inside space-y-0.5">
+              <li>draagt bij aan vermindering van vermoeidheid</li>
+              <li>draagt bij aan een normale werking van het zenuwstelsel</li>
+              <li>draagt bij aan een normale spierfunctie</li>
+              <li>draagt bij aan een normale psychologische functie</li>
+            </ul>
+          </li>
+          <li className="rounded-xl border border-emerald-100 bg-emerald-50/50 px-4 py-3">
+            <div className="flex items-baseline justify-between gap-3">
+              <strong className="text-gray-900">Vitamine B6</strong>
+              <span className="text-xs text-gray-500">vis, kip, banaan, volkoren</span>
+            </div>
+            <ul className="mt-1 text-gray-700 text-xs leading-relaxed list-disc list-inside space-y-0.5">
+              <li>draagt bij aan de regulatie van de hormonale activiteit</li>
+              <li>draagt bij aan een normale psychologische functie</li>
+              <li>draagt bij aan vermindering van vermoeidheid</li>
+            </ul>
+          </li>
+          <li className="rounded-xl border border-emerald-100 bg-emerald-50/50 px-4 py-3">
+            <div className="flex items-baseline justify-between gap-3">
+              <strong className="text-gray-900">Vitamine D</strong>
+              <span className="text-xs text-gray-500">daglicht, vette vis, eieren</span>
+            </div>
+            <ul className="mt-1 text-gray-700 text-xs leading-relaxed list-disc list-inside space-y-0.5">
+              <li>draagt bij aan de instandhouding van normale botten</li>
+              <li>draagt bij aan een normale werking van het immuunsysteem</li>
+              <li>draagt bij aan een normale spierfunctie</li>
+            </ul>
+          </li>
+          <li className="rounded-xl border border-emerald-100 bg-emerald-50/50 px-4 py-3">
+            <div className="flex items-baseline justify-between gap-3">
+              <strong className="text-gray-900">Vitamine K</strong>
+              <span className="text-xs text-gray-500">bladgroente, broccoli, gefermenteerd</span>
+            </div>
+            <ul className="mt-1 text-gray-700 text-xs leading-relaxed list-disc list-inside space-y-0.5">
+              <li>draagt bij aan de instandhouding van normale botten</li>
+              <li>draagt bij aan een normale bloedstolling</li>
+            </ul>
+          </li>
+          <li className="rounded-xl border border-emerald-100 bg-emerald-50/50 px-4 py-3">
+            <div className="flex items-baseline justify-between gap-3">
+              <strong className="text-gray-900">Omega-3 (DHA)</strong>
+              <span className="text-xs text-gray-500">vette vis, lijnzaad, walnoot</span>
+            </div>
+            <ul className="mt-1 text-gray-700 text-xs leading-relaxed list-disc list-inside space-y-0.5">
+              <li>draagt bij aan een normale werking van de hersenen</li>
+              <li>draagt bij aan instandhouding van een normaal gezichtsvermogen</li>
+            </ul>
+          </li>
+          <li className="rounded-xl border border-emerald-100 bg-emerald-50/50 px-4 py-3">
+            <div className="flex items-baseline justify-between gap-3">
+              <strong className="text-gray-900">Calcium</strong>
+              <span className="text-xs text-gray-500">zuivel, sesamzaad, amandel</span>
+            </div>
+            <ul className="mt-1 text-gray-700 text-xs leading-relaxed list-disc list-inside space-y-0.5">
+              <li>is nodig voor de instandhouding van normale botten</li>
+              <li>draagt bij aan een normale werking van spieren</li>
+            </ul>
+          </li>
+        </ul>
+        <p className="mt-4 text-xs text-gray-500 italic">
+          Bron: deze formuleringen zijn EFSA-goedgekeurde health-claims
+          (Verordening EU 1924/2006). Bij gerichte aanvulling kies een
+          product dat de wettelijk minimale hoeveelheid per stof bevat.
+        </p>
+      </div>
+
+      <p className="mt-8 text-gray-700 leading-relaxed">
         {spiegel.afsluiting}
       </p>
 
@@ -182,7 +304,7 @@ export function BlokSpiegel({
         onClick={() => onVolgende(spiegel)}
         className="mt-8 w-full rounded-full bg-rose-600 px-6 py-3 text-white text-base font-medium"
       >
-        Ja, ik wil verder kijken
+        Ga verder naar de pakket-richting →
       </button>
     </div>
   );

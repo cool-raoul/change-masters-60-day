@@ -132,14 +132,24 @@ export async function POST(req: NextRequest) {
 
     // Prospect-rij maken in de namenlijst van de member. Klantomgeving
     // bewust NIET, want dat is voor klanten die al iets besteld hebben.
-    // Freebie-leads zijn prospects (warm via bot). Member ziet ze direct
-    // in /namenlijst met bron='tweede-lente-bot'.
+    // Freebie-leads zijn prospects (warm via bot).
+    //
+    // bron='social': prospects.bron heeft een check-constraint die alleen
+    // warm/social/doorverwijzing/koud accepteert. Tweede Lente komt via
+    // social-trigger-woord, dus 'social' is natuurlijk. De specifieke bot
+    // staat duidelijk bovenaan in de notities zodat het direct herkenbaar
+    // is in /namenlijst.
+    const datum = new Date().toLocaleDateString("nl-NL");
     const notitieRegels = [
-      `Binnen via Tweede Lente bot op ${new Date().toLocaleDateString("nl-NL")}.`,
+      `🌷 VIA TWEEDE LENTE BOT (${datum})`,
       `Fase: ${antwoorden.fase}`,
       `Valt op: ${antwoorden.watValtOp.join(", ")}`,
+      `Eet-ritme: ${antwoorden.eetRitme}`,
+      `Beweging: ${antwoorden.beweging}`,
+      `Rust: ${antwoorden.rust}`,
+      `Deelt met: ${antwoorden.deel}`,
       `Zoekt: ${antwoorden.zoek}`,
-      contactGewenst ? "VRAAGT PERSOONLIJK CONTACT" : "Alleen mailreeks-opt-in",
+      contactGewenst ? "⚡ VRAAGT PERSOONLIJK CONTACT" : "Mailreeks-opt-in",
       "",
       "Spiegel die ze zag:",
       spiegelTekst ?? "(geen)",
@@ -151,15 +161,17 @@ export async function POST(req: NextRequest) {
         user_id: tokenRow.member_id,
         volledige_naam: leadNaam,
         email: leadEmail,
-        bron: "tweede-lente-bot",
+        bron: "social",
         pipeline_fase: "prospect",
         prioriteit: contactGewenst ? "hoog" : "normaal",
         notities: notitieRegels,
       });
 
     if (prospectErr) {
-      console.warn("Prospect-rij niet aangemaakt:", prospectErr);
-      // niet blokkerend, opt-in is veilig opgeslagen in freebie_opt_ins
+      console.error("Prospect-rij niet aangemaakt:", prospectErr);
+      // niet blokkerend, opt-in is veilig opgeslagen in freebie_opt_ins.
+      // Maar we loggen wel als ERROR (niet warn) zodat het zichtbaar is
+      // in Vercel logs en we het kunnen monitoren.
     }
 
     // Push-notificatie naar member bij ELKE opt-in (niet alleen bij

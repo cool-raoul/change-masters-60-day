@@ -31,16 +31,17 @@ export function BlokIntro({
         voor jou klaargezet, vrouwen die zelf door deze fase zijn gegaan.
       </p>
       <p className="mt-4 text-gray-700 leading-relaxed">
-        Vijf minuten, zeven vragen. Aan het eind een rustige spiegel en
-        concrete ideeën die veel vrouwen in jouw fase rust geven. Daarna
-        kun je optioneel intekenen voor vijf avonden korte mail.
+        Vijf minuten, zeven vragen. Aan het eind een rustige spiegel,
+        vier concrete ankers, en zes voedingsstoffen die in deze fase
+        vaak belangrijk worden. Je krijgt het ook in je mail zodat je
+        het rustig kunt nalezen.
       </p>
       <button
         type="button"
         onClick={onStart}
         className="mt-8 rounded-full bg-rose-600 px-8 py-3 text-white text-base font-medium shadow-sm hover:bg-rose-700 transition"
       >
-        Ja, start de vragen
+        Ja, start
       </button>
       <p className="mt-6 text-xs text-gray-400">
         Tweede Lente deelt herkenning en richting, geen medisch advies.
