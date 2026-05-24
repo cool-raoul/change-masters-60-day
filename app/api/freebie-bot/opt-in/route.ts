@@ -166,18 +166,22 @@ export async function POST(req: NextRequest) {
 
     // Check eerst of er al een prospect-rij bestaat voor deze member +
     // email-combinatie. Zo ja: aanvullen ipv dubbele kaart maken.
-    // (Tweede Lente parkeerlijst item 1 uit 2026-05-24 alvast ingebouwd.)
     const { data: bestaande } = await supabase
       .from("prospects")
-      .select("id, notities, ingezette_tools, telefoon, prioriteit, gearchiveerd")
+      .select("id, volledige_naam, notities, ingezette_tools, telefoon, prioriteit, gearchiveerd")
       .eq("user_id", tokenRow.member_id)
       .ilike("email", leadEmail)
       .maybeSingle();
 
+    // Tool-tag: 'Freebie: Tweede Lente'. Backwards compat: oude
+    // 'Tweede Lente bot' wordt automatisch vervangen.
+    const NIEUWE_TAG = "Freebie: Tweede Lente";
+    const OUDE_TAG = "Tweede Lente bot";
     const huidigeTools = (bestaande?.ingezette_tools ?? []) as string[];
-    const nieuweTools = huidigeTools.includes("Tweede Lente bot")
-      ? huidigeTools
-      : [...huidigeTools, "Tweede Lente bot"];
+    const opgeschoond = huidigeTools.filter((t) => t !== OUDE_TAG);
+    const nieuweTools = opgeschoond.includes(NIEUWE_TAG)
+      ? opgeschoond
+      : [...opgeschoond, NIEUWE_TAG];
 
     if (bestaande) {
       // Update bestaande prospect: notitie aanvullen, tool-tag toevoegen,
@@ -197,6 +201,16 @@ export async function POST(req: NextRequest) {
       };
       if (leadTelefoon && !bestaande.telefoon) {
         updateData.telefoon = leadTelefoon;
+      }
+      // Naam updaten als de vrouw nu een andere (of vollediger) naam
+      // doorgeeft. Vorige naam bewaren we niet apart, wel zichtbaar
+      // bovenaan in notitie als 'eerder bekend als'.
+      const oudeNaam = (bestaande.volledige_naam ?? "").trim();
+      const nieuweNaam = leadNaam.trim();
+      if (nieuweNaam && oudeNaam && nieuweNaam.toLowerCase() !== oudeNaam.toLowerCase()) {
+        updateData.volledige_naam = nieuweNaam;
+        // Plaats 'eerder bekend als'-notitie bovenaan de aangevulde tekst
+        updateData.notities = `(Eerder ingevuld als: ${oudeNaam})\n\n${aangevuldeNotitie}`;
       }
       const { error: updateErr } = await supabase
         .from("prospects")

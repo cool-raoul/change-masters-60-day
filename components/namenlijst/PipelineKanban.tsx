@@ -61,12 +61,20 @@ function ProspectKaart({
 
   const nietActief = prospect.actief === false;
   // Detecteer freebie-bot leads via ingezette_tools (set door API
-  // opt-in-route). De bot-naam staat exact in de array. Wisseltbij meer
-  // bots: detecteer alles dat eindigt op 'bot' of begint met 'Tweede '.
+  // opt-in-route). De bot-naam staat met 'Freebie: ' prefix in de array.
+  // Backwards compat: oude tag 'Tweede Lente bot' wordt ook gedetecteerd.
   const tools = (prospect.ingezette_tools ?? []) as string[];
-  const freebieBotTag = tools.find(
-    (t) => t === "Tweede Lente bot" || t.endsWith(" bot"),
+  const freebieRaw = tools.find(
+    (t) =>
+      t.startsWith("Freebie:") ||
+      t === "Tweede Lente bot" ||
+      t.endsWith(" bot"),
   );
+  const freebieBotTag = freebieRaw
+    ? freebieRaw.startsWith("Freebie:")
+      ? freebieRaw
+      : `Freebie: ${freebieRaw.replace(/ bot$/, "")}`
+    : null;
   return (
     <div
       draggable
