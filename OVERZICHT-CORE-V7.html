@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8" />
+<title>Core V7 — Aanbevelingen verwerkt + side-flows voor pre-post en 21-dagen-post</title>
+<style>
+  :root {
+    --bg: #15171b;
+    --card: #1c1f24;
+    --card2: #232730;
+    --gold: #c4a04a;
+    --gold-soft: #5d4a25;
+    --gold-light: #e0bc62;
+    --text: #e8e6e0;
+    --muted: #8a8b8e;
+    --warn: #d18b5c;
+    --new: #8ad15c;
+    --side: #5c9ad1;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+    padding: 24px 16px 80px;
+  }
+  main { max-width: 920px; margin: 0 auto; }
+  h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 28px;
+    margin: 0 0 4px;
+  }
+  h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    color: var(--gold);
+    font-size: 22px;
+    margin: 40px 0 12px;
+    border-bottom: 1px solid var(--gold-soft);
+    padding-bottom: 6px;
+  }
+  h3 { color: var(--gold-light); font-size: 17px; margin: 24px 0 8px; }
+  h4 { color: var(--gold); font-size: 15px; margin: 14px 0 6px; }
+  p, li { font-size: 14px; line-height: 1.65; }
+  .intro {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 6px;
+    vertical-align: middle;
+    font-weight: 600;
+  }
+  .badge-nieuw { background: rgba(138,209,92,0.15); color: var(--new); border: 1px solid rgba(138,209,92,0.35); }
+  .badge-verplaatst { background: rgba(209,139,92,0.15); color: var(--warn); border: 1px solid rgba(209,139,92,0.35); }
+  .badge-aangepast { background: rgba(196,160,74,0.15); color: var(--gold); border: 1px solid rgba(196,160,74,0.35); }
+  .badge-side { background: rgba(92,154,209,0.15); color: var(--side); border: 1px solid rgba(92,154,209,0.35); }
+
+  .wijz {
+    background: rgba(138,209,92,0.07);
+    border-left: 3px solid var(--new);
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin: 8px 0 16px;
+  }
+  .wijz-titel { font-weight: 600; color: var(--new); font-size: 13px; margin-bottom: 4px; }
+  .wijz-uitleg { font-size: 13px; color: var(--text); }
+
+  .stap {
+    background: var(--card);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 10px 0;
+    border-left: 3px solid var(--gold-soft);
+  }
+  .stap-num {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--bg);
+    font-weight: 700;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    text-align: center;
+    line-height: 26px;
+    font-size: 13px;
+    margin-right: 8px;
+  }
+  .stap-titel { font-weight: 600; color: var(--text); display: inline-block; }
+  .stap-doel { color: var(--muted); font-size: 13px; font-style: italic; margin-top: 4px; }
+
+  .side-flow {
+    background: rgba(92,154,209,0.07);
+    border: 1px solid rgba(92,154,209,0.3);
+    border-left: 4px solid var(--side);
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin: 18px 0;
+  }
+  .side-flow h3 { color: var(--side); margin-top: 0; }
+  .side-flow ol { padding-left: 22px; }
+  .side-flow li { margin: 6px 0; }
+
+  .vergelijking {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .vergelijking-card {
+    background: var(--card);
+    padding: 12px 16px;
+    border-radius: 6px;
+    border-left: 3px solid var(--muted);
+  }
+  .vergelijking-card.v6 { border-left-color: var(--warn); }
+  .vergelijking-card.v7 { border-left-color: var(--new); }
+  .vergelijking-card h5 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+  .vergelijking-card.v6 h5 { color: var(--warn); }
+  .vergelijking-card.v7 h5 { color: var(--new); }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--card2); vertical-align: top; }
+  th { color: var(--gold); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+
+  .footer {
+    margin-top: 60px;
+    padding: 20px;
+    background: var(--card);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  code { background: var(--card2); padding: 2px 6px; border-radius: 3px; font-size: 12px; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Core V7, aanbevelingen verwerkt + side-flows voor pre-post en 21-dagen-post</h1>
+<p class="intro">
+  Versie 7 bouwt voort op V6. Twee dingen zijn nieuw: (1) mijn negen aanbevelingen
+  uit <code>/core-v6/structuur</code> zijn doorgevoerd in de ankerstap-volgorde,
+  (2) twee side-flows zijn toegevoegd voor de pre-post en de 21-dagen-post zodat
+  een member tijdelijk uit de normale dagflow stapt in een eigen omgeving die
+  specifiek over die activiteit gaat, met altijd een knop terug naar de dagflow.
+</p>
+
+<h2>Wat verandert er ten opzichte van V6</h2>
+
+<div class="wijz">
+  <div class="wijz-titel">Volgorde-aanpassingen (mijn aanbevelingen verwerkt)</div>
+  <div class="wijz-uitleg">
+    <ul>
+      <li><strong>Bezwaren-skills</strong> verplaatst van stap 14 naar <strong>stap 5</strong> (ruim VOOR de eerste 3-weg in stap 10). Sprint-volgorde-principe: bezwaren leer je voordat je in de praktijk staat, niet daarna.</li>
+      <li><strong>Verdienmodel-basis</strong> verplaatst van stap 5 naar <strong>stap 8</strong> (vlak voor de 3-weg-meesterclass). Eric-Worre basic-understanding-principe: vers in het hoofd op het moment dat prospects er om vragen.</li>
+      <li><strong>Drie verhalen</strong> samengevoegd met stap 4 (webshop-pivot). Beide stem-leermomenten in één blok, geen twee keer iets nieuws beginnen.</li>
+      <li><strong>FORM-vragen</strong> los van stap 2. FORM-verdieping krijgt eigen stap <strong>11</strong>, NA de eerste 3-weg-praktijk. Sprint heeft dit op dag 13, om dezelfde reden.</li>
+      <li><strong>Edification</strong> losgekoppeld uit substep onder stap 10. Krijgt eigen stap <strong>19</strong>, na alle 3-weg-ervaring. Sprint heeft dit als eigen dag 18.</li>
+      <li><strong>Pipeline-check</strong> toegevoegd aan stap <strong>20</strong> samen met closingsvraag. Sprint heeft dit als dag 19, in Core nog waardevoller met social + freebie-bronnen.</li>
+      <li><strong>Follow-up-principe vroeg</strong> ingevoegd als substep bij stap 6 en 7 (24-48u-regel). Sprint heeft dit op dag 6 + 15, principe geldt ook in Core.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="wijz">
+  <div class="wijz-titel">Nieuw concept: side-flows voor pre-post en 21-dagen-post</div>
+  <div class="wijz-uitleg">
+    Pre-post en 21-dagen-post zijn momenten waar de actie zich uitstrekt over uren tot meerdere dagen,
+    afhankelijk van hoe actief de member is op socials en hoeveel reacties binnenkomen. Tijdens die
+    fase zit een member niet in de normale dagflow, maar in een aparte sub-omgeving die alle relevante
+    substeps op een rij toont: tekst schrijven, upline-check, plaatsen, reactie-script klaarzetten,
+    reageren, opvolgen, prospects toevoegen aan Mini-ELEVA. Een knop "Terug naar dagflow" is altijd
+    zichtbaar. Pas wanneer de side-flow is afgerond, schuift de member door naar de volgende ankerstap.
+    Sponsor staat naast de member om in te springen waar nodig (bezwaren, twijfels, 3-weg-momenten).
+  </div>
+</div>
+
+<div class="wijz">
+  <div class="wijz-titel">Wat is GELIJK gebleven aan V6</div>
+  <div class="wijz-uitleg">
+    De 6 uitgangspunten uit V6 (één hoofdverhaal webshop-frame, Mentor leert jou kennen,
+    klantomgeving als parallel pad, twee scenario's bij start, drie-laags Mentor-architectuur,
+    freebies vanaf Core, DMO + ankerstap als twee parallelle ritmes, Mentor als les-curator,
+    anti-overwhelm-kompas K1-K5). Plus alle 6 Sprint-fixes die we via gedeelde helpers doorvoeren.
+  </div>
+</div>
+
+<h2>De 21 ankerstappen V7, volledige volgorde</h2>
+
+<h3>Fundament (1 t/m 5)</h3>
+
+<div class="stap">
+  <span class="stap-num">1</span>
+  <span class="stap-titel">🚀 Welkom + WHY + sponsor + scenario-keuze</span>
+  <div class="stap-doel">Helder krijgen waarom je dit doet, je sponsor in de loop, en kiezen welk scenario op jou past (A: al eigen resultaat / B: begin samen met Core).</div>
+</div>
+
+<div class="stap">
+  <span class="stap-num">2</span>
+  <span class="stap-titel">👥 Top-20-namenlijst + sponsor-call</span>
+  <span class="badge badge-aangepast">FORM eruit</span>
+  <div class="stap-doel">Een werkende top-20-lijst opzetten en samen met je sponsor de eerste oefen-uitnodiging versturen. FORM-verdieping komt op stap 11.</div>
+</div>
+
+<div class="stap">
+  <span class="stap-num">3</span>
+  <span class="stap-titel">📦 Productkennis-basis</span>
+  <div class="stap-doel">Een gevoel hebben van de hoofdcategorieën en de Mentor weet welke producten jij gebruikt.</div>
+</div>
+
+<div class="stap">
+  <span class="stap-num">4</span>
+  <span class="stap-titel">🎯 Webshop-pivot + vier bouwstenen + drie verhalen + jouw eigen zin</span>
+  <span class="badge badge-aangepast">samengevoegd met drie verhalen</span>
+  <div class="stap-doel">Webshop-frame leren, vier uitnodig-bouwstenen, drie verhalen (persoonlijk / product / business) schrijven en je eigen webshop-zin in jouw stem zetten. Eén stem-blok, niet meer twee aparte leerstappen.</div>
+</div>
+
+<div class="stap">
+  <span class="stap-num">5</span>
+  <span class="stap-titel">🛡️ Bezwaren-skills, 4-stappen + top-21-bibliotheek</span>
+  <span class="badge badge-verplaatst">van V6 stap 14 naar 5</span>
+  <div class="stap-doel">Feel-Felt-Found en de 4-stappen-methode leren, oefenen met drie bezwaren uit de top-21. Ruim VOOR de eerste 3-weg.</div>
+</div>
+
+<h3 style="color: var(--side);">→ Side-flow trigger na stap 5 (afhankelijk van scenario)</h3>
+
+<div class="side-flow">
+  <span class="badge badge-side">Side-flow A</span>
+  <h3>21-dagen-resultaat-post side-flow (scenario A, eigen resultaat)</h3>
+  <p>
+    Member met eigen resultaat stapt na ankerstap 5 in deze side-flow. Knop "Terug naar dagflow" altijd zichtbaar.
+    Sponsor wordt geinformeerd. Dagelijkse afsluit-stappen blijven actief.
+  </p>
+  <h4>Substeps in de side-flow</h4>
+  <ol>
+    <li><strong>Voorbereiding lezen.</strong> PDF "Voorbereiding 21 Dagen Post" doornemen, Mentor licht eventuele claim-vrije nuances toe.</li>
+    <li><strong>De 1 of 2 belangrijkste veranderingen kiezen.</strong> Niet alles in een post, één of twee ankers.</li>
+    <li><strong>Tekst schrijven met de Mentor.</strong> Claim-vrij, in jouw stem, met webshop-anker. Drie iteraties max.</li>
+    <li><strong>Upline-check.</strong> Stuur de concept-tekst naar sponsor of upline voor puntjes op de i. Wacht op akkoord.</li>
+    <li><strong>Plaatsen op Facebook en Instagram.</strong> Klaar is klaar.</li>
+    <li><strong>Reactie-script klaarzetten.</strong> /scripts categorie "Opener" en "Uitnodiging" geopend in tweede tab. Mentor staat klaar voor on-the-fly hulp.</li>
+    <li><strong>Reageer-routine.</strong> Binnen 1 uur op elke reactie. Bij DM-aanvragen direct doorzetten naar opener-flow met de Mentor erbij.</li>
+    <li><strong>Geïnteresseerde prospects toevoegen aan Mini-ELEVA.</strong> Eén klik vanuit de prospect-kaart.</li>
+    <li><strong>Reflectie + afronden.</strong> Wat ging goed, wat onhandig. Klaar met side-flow, terug naar dagflow ankerstap 6.</li>
+  </ol>
+  <p style="color: var(--muted); font-size: 13px;">
+    Duur: een uur tot meerdere dagen, afhankelijk van het reactie-volume. De side-flow blijft open tot de
+    member zelf "afronden"-knop drukt of na X dagen automatisch sluit. Tijdens deze side-flow loopt de
+    DMO niet, want de focus is op de post-stroom.
+  </p>
+</div>
+
+<div class="side-flow">
+  <span class="badge badge-side">Side-flow B</span>
+  <h3>Pre-post side-flow (scenario B, nog geen eigen resultaat)</h3>
+  <p>
+    Member zonder eigen resultaat stapt na ankerstap 5 in deze side-flow. Pre-post is "ik begin
+    vandaag aan X, ben benieuwd wat ik ga merken". Eerlijk, geen belofte. Doel: aanwezigheid
+    creëren, voorbereiden op de 21-dagen-post later.
+  </p>
+  <h4>Substeps in de side-flow</h4>
+  <ol>
+    <li><strong>Voorbereiding lezen.</strong> PDF "Voorbereiding Pre Post Lancering" doornemen.</li>
+    <li><strong>Eigen 21-dagen-programma starten.</strong> Programma bestellen of programma kiezen uit je eigen pakket.</li>
+    <li><strong>Pre-post tekst schrijven met de Mentor.</strong> Twee tot drie regels, jouw stem, voornemen delen.</li>
+    <li><strong>Upline-check.</strong> Stuur de concept-tekst naar sponsor of upline voor akkoord.</li>
+    <li><strong>Plaatsen op Facebook en Instagram.</strong> Klaar is klaar.</li>
+    <li><strong>Reactie-script klaarzetten.</strong> /scripts categorie "Opener". Mentor staat klaar.</li>
+    <li><strong>Reageer-routine.</strong> Binnen 1 uur op elke reactie. Bij interesse: ga met opener-flow door.</li>
+    <li><strong>Geïnteresseerde prospects toevoegen aan Mini-ELEVA.</strong></li>
+    <li><strong>Reminder voor over 21 dagen.</strong> Side-flow B sluit, member krijgt automatisch een reminder rond dag 21 om de tweede side-flow (21-dagen-resultaat-post) te starten.</li>
+    <li><strong>Reflectie + afronden.</strong> Terug naar dagflow ankerstap 6.</li>
+  </ol>
+  <p style="color: var(--muted); font-size: 13px;">
+    Side-flow B duurt typisch 1 tot 3 dagen voor de eerste post-fase. Na 21 dagen productervaring
+    wordt side-flow A getriggerd voor de echte resultaat-post.
+  </p>
+</div>
+
+<h3>In beweging (6 t/m 14)</h3>
+
+<div class="stap">
+  <span class="stap-num">6</span>
+  <span class="stap-titel">📱 Brookes 3-stappen + eerste freebie-keuze + follow-up-principe</span>
+  <span class="badge badge-aangepast">+ follow-up-substep</span>
+  <div class="stap-doel">Eén post leren maken volgens Waarde + Verhaal + Zachte uitnodiging, eerste freebie kiezen uit toolkit, en de 24-48u-follow-up-regel intern maken voor latere prospect-momenten.</div>
+</div>
+
+<div class="stap">
+  <span class="stap-num">7</span>
+  <span class="stap-titel">📅 Aanloop-stap, opvolging op de post-stroom</span>
+  <span class="badge badge-aangepast">na side-flow</span>
+  <div class="stap-doel">Reflectie op wat de pre-post of resultaat-post heeft opgeleverd. Welke gesprekken zijn ontstaan, wie staat er klaar voor een 3-weg of Mini-ELEVA, en welke leads zitten in stilte.</div>
+</div>
+
+<div class="stap">
+  <span class="stap-num">8</span>
+  <span class="stap-titel">💡 Verdienmodel-basis</span>
+  <span class="badge badge-verplaatst">van V6 stap 5 naar 8</span>
+  <div class="stap-doel">Zelf snappen hoe je verdient, vlak voor je eerste 3-weg waar prospects vragen kunnen gaan stellen. Basic-understanding-principe.</div>
+</div>
+
+<div class="stap">
+  <span class="stap-num">9</span>
+  <span class="stap-titel">💪 3-weg-meesterclass, 5 stappen die werken</span>
+  <div class="stap-doel">De vijf stappen van een 3-weg-gesprek leren. Bezwaren-bibliotheek uit stap 5 in zak, verdienmodel uit stap 8 in hoofd. Klaar voor praktijk.</div>
+</div>
+
+<div class="stap">
+  <span class="stap-num">10</span>
+  <span class="stap-titel">🤝 Je eerstvolgende 3-weg starten</span>
+  <div class="stap-doel">Een echte 3-weg met een warme prospect, samen met je sponsor.</div>
+</div>
+
+<div class="stap">
+  <span class="stap-num">11</span>
+  <span class="stap-titel">🎙️ FORM: leer een prospect kennen in 5 minuten</span>
+  <span class="badge badge-verplaatst">van V6 stap 2 naar 11</span>
+  <div class="stap-doel">Family, Occupation, Recreation, Money als gespreks-anker. Pas NA de eerste 3-weg-praktijk, want dan weet je voor welke contacten FORM-context echt waardevol is. Top-5 namenlijst krijgt nu FORM-verdieping.</div>
+</div>
+
+<div class="stap">
+  <span class="stap-num">12</span>
+  <span class="stap-titel">💬 Eerste warme uitnodigingen + Mini-ELEVA introductie</span>
+  <div class="stap-doel">Drie warme prospects uitnodigen met opener-flow, en kennismaken met Mini-ELEVA als opvolg-pad.</div>
+</div>
+
+<div class="stap">
+  <span class="stap-num">13</span>
+  <span class="stap-titel">📸 Stories-ritme + freebie-aankondiging</span>
+  <div class="stap-doel">Dagelijkse Stories oppakken, freebie zichtbaar maken via Stories. Drie onderwerp-richtingen (lifestyle / waarde / eigen verhaal) zoals Sprint.</div>
+</div>
+
+<div class="stap">
+  <span class="stap-num">14</span>
+  <span class="stap-titel">📦 Eerste Shoppers, supplementen-binnen</span>
+  <div class="stap-doel">Tweede pulsmoment in de klantomgeving. Mentor doet de eerste open vraag, jij voegt menselijk contact toe.</div>
+</div>
+
+<h3 style="color: var(--side);">→ Side-flow A herstart na ankerstap 14 (alleen scenario B)</h3>
+
+<p>
+  Voor scenario B-members: na ongeveer 21 dagen sinds de pre-post start, triggert Side-flow A (21-dagen-resultaat-post)
+  automatisch. Member heeft nu wel eigen ervaring opgebouwd. Side-flow A wordt opnieuw geopend met de juiste substeps.
+  Voor scenario A-members is dit moment niet relevant (zij hebben al een resultaat-post gepubliceerd in stap 5-side-flow).
+</p>
+
+<h3>Business-ritme (15 t/m 21)</h3>
+
+<div class="stap">
+  <span class="stap-num">15</span>
+  <span class="stap-titel">🌟 Resultaat-post-iteratie + Tijdlijn-moment 3</span>
+  <div class="stap-doel">Voor scenario A: nieuwe iteratie van de resultaat-post (andere invalshoek of aanvullend resultaat). Voor scenario B: je echte 21-dagen-post is net afgerond in side-flow, hier is reflectie + Tijdlijn-moment 3 toepassen op enthousiaste Shoppers.</div>
+</div>
+
+<div class="stap">
+  <span class="stap-num">16</span>
+  <span class="stap-titel">👀 Builder-energie + ideale klant</span>
+  <div class="stap-doel">Onder klanten herkennen wie zelf een gratis webshop zou willen. Ideale-klant-profiel scherper maken op basis van eerste ervaring.</div>
+</div>
+
+<div class="stap">
+  <span class="stap-num">17</span>
+  <span class="stap-titel">👋 Klantcontact + opvolg-routine + hercontact-ritme</span>
+  <div class="stap-doel">Follow-up als ritme (niet meer als principe alleen). Bestaande klanten via hercontact-berichten in beweging houden.</div>
+</div>
+
+<div class="stap">
+  <span class="stap-num">18</span>
+  <span class="stap-titel">📊 5 typen prospects + funnel continu vullen</span>
+  <div class="stap-doel">Categoriseren van top-20 in 5 typen, afspreken minimaal 5 nieuwe namen per week. Lijst is nooit klaar.</div>
+</div>
+
+<div class="stap">
+  <span class="stap-num">19</span>
+  <span class="stap-titel">✨ Edification, de zin die je sponsor laat schitteren</span>
+  <span class="badge badge-nieuw">eigen ankerstap (V6 had substep)</span>
+  <div class="stap-doel">Een eigen edification-zin schrijven NA verschillende 3-wegs, want pas dan weet je wat in praktijk werkt om je sponsor te introduceren. Sprint heeft dit als eigen dag 18.</div>
+</div>
+
+<div class="stap">
+  <span class="stap-num">20</span>
+  <span class="stap-titel">🔍 Pipeline-check + Closingsvraag</span>
+  <span class="badge badge-nieuw">pipeline-check toegevoegd</span>
+  <div class="stap-doel">Waar lekt je trechter? Per fase een check (in_gesprek / uitgenodigd / one-pager / presentatie / follow-up), je grootste verstopping deze week ontstoppen. Plus: de moedige closingsvraag stellen aan minstens een prospect.</div>
+</div>
+
+<div class="stap">
+  <span class="stap-num">21</span>
+  <span class="stap-titel">🏆 Klantomgeving-review + reflectie + talent + eerste 30-dagen-doel</span>
+  <span class="badge badge-aangepast">samengevoegd met reflectie</span>
+  <div class="stap-doel">Bewuste blik op alle klantomgevingen, voelen dat duplicatie schaalbaar is. Plus eindreflectie, creator-talent benoemen, en het eerste 30-dagen-doel inschieten waarmee de Uitbreiding-module straks samenwerkt.</div>
+</div>
+
+<h2>Vergelijking V6 vs V7 op een rij</h2>
+
+<table>
+<thead>
+<tr><th>Onderwerp</th><th>V6 positie</th><th>V7 positie</th><th>Reden</th></tr>
+</thead>
+<tbody>
+<tr>
+  <td>Bezwaren-skills</td>
+  <td>Stap 14 (na 3-weg)</td>
+  <td>Stap 5 (voor 3-weg)</td>
+  <td>Sprint-volgorde-principe: skills VOOR de praktijk</td>
+</tr>
+<tr>
+  <td>Verdienmodel-basis</td>
+  <td>Stap 5 (Fundament)</td>
+  <td>Stap 8 (voor 3-weg)</td>
+  <td>Basic-understanding vers wanneer prospects vragen stellen</td>
+</tr>
+<tr>
+  <td>Drie verhalen</td>
+  <td>Stap 8 (eigen stap)</td>
+  <td>Stap 4 (samen met webshop-pivot)</td>
+  <td>Beide stem-leermomenten in één blok</td>
+</tr>
+<tr>
+  <td>FORM-vragen</td>
+  <td>Stap 2 (substep)</td>
+  <td>Stap 11 (eigen stap)</td>
+  <td>FORM-context na ervaring met prospects, niet vooraf</td>
+</tr>
+<tr>
+  <td>Edification</td>
+  <td>Substep onder stap 10</td>
+  <td>Stap 19 (eigen stap)</td>
+  <td>Edification-zin schrijven na 3-weg-ervaring</td>
+</tr>
+<tr>
+  <td>Follow-up-principe</td>
+  <td>Versplinterd</td>
+  <td>Substep in stap 6 + stap 17 als ritme</td>
+  <td>24-48u-regel vroeg in beeld, ritme later</td>
+</tr>
+<tr>
+  <td>Pipeline-check</td>
+  <td>Ontbrak</td>
+  <td>Stap 20 (samen met closingsvraag)</td>
+  <td>Trechter-controle waardevol met social + freebie-bronnen</td>
+</tr>
+<tr>
+  <td>Pre-post / 21-dagen-post</td>
+  <td>Stap 6 (binnen ankerstap)</td>
+  <td>Side-flow A en B (eigen omgeving)</td>
+  <td>Activiteit strekt zich uit over uren tot dagen, verdient eigen ruimte</td>
+</tr>
+<tr>
+  <td>One-pager-keuze</td>
+  <td>Ontbrak</td>
+  <td>Niet als ankerstap, wel als optionele substep onder stap 10</td>
+  <td>Sprint-idee, niet 1-op-1 nodig in Core</td>
+</tr>
+</tbody>
+</table>
+
+<h2>Hoe de side-flows werken in de UI</h2>
+
+<div class="vergelijking">
+  <div class="vergelijking-card v6">
+    <h5>V6 (huidig)</h5>
+    <p>Stap 6 (Aanloop-stap per scenario) is een normale ankerstap met daarin substeps "Kies veranderingen" of "Schrijf pre-post" en "Plaats post". Member voltooit de stap, drukt op klaar, gaat door naar stap 7. Reacties + opvolging blijven hangen in DMO of namenlijst.</p>
+  </div>
+  <div class="vergelijking-card v7">
+    <h5>V7 (nieuw)</h5>
+    <p>Na ankerstap 5 triggert automatisch een side-flow op basis van scenario. Member ziet een eigen omgeving met 8 tot 10 substeps die specifiek over de post gaan (van voorbereiding tot reageren tot prospects toevoegen). Een knop "Terug naar dagflow" is altijd zichtbaar voor wie even iets anders wil doen. Side-flow sluit pas wanneer de member zelf "afronden" drukt, daarna door naar stap 6.</p>
+  </div>
+</div>
+
+<h2>Open vragen voor jou en Gaby</h2>
+
+<div class="wijz">
+  <div class="wijz-titel">Vraag 1: kloppen mijn negen aanbevelingen voor jullie?</div>
+  <div class="wijz-uitleg">
+    Bezwaren, verdienmodel, drie verhalen, FORM, edification, follow-up, pipeline-check
+    en het skippen van one-pager-keuze. Allemaal akkoord, of wil je ergens een nuance?
+  </div>
+</div>
+
+<div class="wijz">
+  <div class="wijz-titel">Vraag 2: side-flows-concept, zit dit goed in je hoofd?</div>
+  <div class="wijz-uitleg">
+    Twee side-flows (A voor scenario A, B voor scenario B + later A voor B-members na 21 dagen).
+    Acht tot tien substeps per side-flow, knop terug naar dagflow altijd zichtbaar, DMO pauzeert
+    tijdens side-flow. Klopt dat voor jou? En accepteer je een aparte UI-schil voor deze flow?
+  </div>
+</div>
+
+<div class="wijz">
+  <div class="wijz-titel">Vraag 3: hoe lang mag een side-flow open blijven?</div>
+  <div class="wijz-uitleg">
+    Een member kan in een uur klaar zijn, of dagen bezig. Voorstel: side-flow blijft open tot
+    member zelf afrondt. Plus automatische sluit na 7 dagen inactiviteit met reminder. Akkoord
+    of liever anders?
+  </div>
+</div>
+
+<div class="wijz">
+  <div class="wijz-titel">Vraag 4: scenario A-members triggeren side-flow A vroeg, scenario B-members triggeren A na 21 dagen. Reminder-mechanisme?</div>
+  <div class="wijz-uitleg">
+    Voor scenario B-members moet er een reminder zijn rond dag 21 na pre-post om side-flow A
+    te triggeren. Voorstel: automatische push-notificatie + dashboard-tegel. Akkoord?
+  </div>
+</div>
+
+<div class="footer">
+  <strong>Status V7:</strong> klaar voor review door Raoul en Gaby.
+  V6-structuur grondig herzien op basis van mijn negen aanbevelingen (8 daarvan zijn doorgevoerd, één
+  laten vallen). Plus side-flows toegevoegd voor pre-post en 21-dagen-post.
+  <br><br>
+  Zodra V7 is goedgekeurd: (1) <code>lib/playbook/core-dagen-v7.ts</code> aanmaken met de
+  nieuwe 21 ankerstappen, (2) side-flow-engine ontwerpen (eigen route, eigen substep-progressie,
+  knop terug-naar-dagflow), (3) bestaande core-dagen-v6.ts in archive zetten als referentie,
+  (4) Pre-post-PDF + 21-dagen-post-PDF koppelen aan de side-flow-substeps.
+</div>
+
+</main>
+</body>
+</html>
