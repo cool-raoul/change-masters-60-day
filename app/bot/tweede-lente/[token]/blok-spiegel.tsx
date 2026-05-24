@@ -118,7 +118,7 @@ export function BlokSpiegel({
           🙏
         </div>
         <h2 className="text-xl font-semibold text-gray-900">
-          Het lukte even niet om je spiegel op te halen
+          Het lukte even niet om je overzicht op te halen
         </h2>
         <p className="mt-2 text-sm text-gray-600">
           Wil je het opnieuw proberen? Soms is de verbinding traag.
@@ -141,7 +141,7 @@ export function BlokSpiegel({
           🪞
         </div>
         <div className="text-rose-500 text-sm font-semibold uppercase tracking-widest">
-          Een moment, {memberVoornaam} stelt je spiegel samen
+          Een moment, {memberVoornaam} stelt je overzicht samen
         </div>
         <div className="mt-6 space-y-3 animate-pulse">
           <div className="h-4 bg-rose-100 rounded-full w-3/4 mx-auto" />
@@ -160,7 +160,7 @@ export function BlokSpiegel({
           🪞
         </div>
         <div className="text-rose-500 text-xs font-semibold uppercase tracking-widest">
-          Jouw spiegel
+          Jouw persoonlijk overzicht
         </div>
       </div>
 
@@ -255,14 +255,14 @@ export function BlokSpiegel({
         </ul>
       </div>
 
-      {/* 5. Basis-tips over deze fase */}
+      {/* 5. Basis-tips over deze tijd */}
       <div className="mt-10">
         <div className="text-center mb-5">
           <div className="text-rose-500 text-xs font-semibold uppercase tracking-widest">
             Achtergrond
           </div>
           <h3 className="mt-1 text-2xl font-bold text-gray-900">
-            Wat we vaak vertellen aan vrouwen in deze fase
+            Wat we vaak vertellen in deze tijd
           </h3>
         </div>
         <ul className="space-y-3">

@@ -97,13 +97,13 @@ export function BlokIntekenenVooraf({
           Wat is jouw naam en e-mail?
         </h2>
         <p className="mt-4 text-gray-700 leading-relaxed">
-          Zo kan {memberVoornaam} je na de bot ook in je mail nog rustig
-          de spiegel + vervolg sturen.
+          Zo kan {memberVoornaam} je na de vragenlijst ook in je mail nog
+          rustig het overzicht plus het vervolg sturen.
         </p>
       </div>
 
       <div className="mt-6 rounded-2xl bg-white/80 backdrop-blur-sm border border-rose-100 shadow-sm p-5 space-y-4">
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <label className="block">
             <span className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Voornaam</span>
             <input
@@ -145,8 +145,8 @@ export function BlokIntekenenVooraf({
           />
           <span>
             Ik ga akkoord dat {memberVoornaam} mijn naam en e-mailadres
-            mag gebruiken om mij de spiegel en vijf korte vervolg-mails
-            te sturen. Ik kan op elk moment afmelden.
+            mag gebruiken om mij het persoonlijk overzicht en vijf korte
+            vervolg-mails te sturen. Ik kan op elk moment afmelden.
           </span>
         </label>
       </div>
@@ -171,7 +171,7 @@ export function BlokIntekenenVooraf({
       </div>
 
       <p className="mt-6 text-xs text-gray-500 text-center">
-        🔒 Je gegevens worden alleen door {memberVoornaam} en haar team
+        🔒 Je gegevens worden alleen door {memberVoornaam} en het team
         gebruikt. Geen advertenties, geen doorverkoop.
       </p>
     </div>

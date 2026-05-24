@@ -214,42 +214,36 @@ export default async function InstellingenPagina() {
         </Link>
       </div>
 
-      {/* Freebie-bot tracking-links (pilot: Tweede Lente). Iedere member
-          krijgt per actieve bot een unieke 16-char hex tracking-token in
-          een persoonlijke URL. Iedereen die via die URL de bot doet komt
-          als prospect in de namenlijst van de member terecht.
-
-          Zichtbaarheid: alleen Core-members + founders. Bot is primair
-          voor Core bedoeld; Sprint en Pro krijgen 'm in latere fase. */}
-      {(isFounder ||
-        (profile as { modus?: string } | null)?.modus === "core") && (
-        <div className="card space-y-3">
-          <EditableTekst
-            namespace="instellingen"
-            sleutel="tracking_links.titel"
-            standaard="🔗 Mijn freebie-bot-links"
-            overrides={overrides}
-            isFounder={isFounder}
-            as="h2"
-            className="text-sm font-semibold text-cm-white uppercase tracking-wider"
-            hint="Titel van de freebie-bot-tracking-links-sectie"
-          />
-          <EditableBlok
-            namespace="instellingen"
-            sleutel="tracking_links.uitleg"
-            standaard="Persoonlijke links naar onze freebie-bots, zoals Tweede Lente voor de overgang. Iedereen die via jouw link de bot doet komt als prospect in jouw namenlijst terecht."
-            overrides={overrides}
-            isFounder={isFounder}
-            as="p"
-            className="text-cm-white text-sm opacity-60"
-            rows={2}
-            hint="Uitleg van de freebie-bot-tracking-links-sectie"
-          />
-          <Link href="/instellingen/mijn-tracking-links" className="btn-secondary text-sm inline-block">
-            Open mijn links →
-          </Link>
-        </div>
-      )}
+      {/* Mijn freebies: persoonlijke links naar de productadvies-
+          vragenlijst (voor iedereen) en optioneel de Tweede Lente bot
+          (alleen Core + founder). Iedereen die via een link een freebie
+          doet komt automatisch op de namenlijst van de member. */}
+      <div className="card space-y-3">
+        <EditableTekst
+          namespace="instellingen"
+          sleutel="tracking_links.titel"
+          standaard="🎁 Mijn freebies"
+          overrides={overrides}
+          isFounder={isFounder}
+          as="h2"
+          className="text-sm font-semibold text-cm-white uppercase tracking-wider"
+          hint="Titel van de freebies-sectie"
+        />
+        <EditableBlok
+          namespace="instellingen"
+          sleutel="tracking_links.uitleg"
+          standaard="Persoonlijke links naar je freebies, zoals de productadvies-vragenlijst en (voor Core-members) de Tweede Lente bot. Wie via jouw link een freebie doet, komt als prospect op jouw namenlijst."
+          overrides={overrides}
+          isFounder={isFounder}
+          as="p"
+          className="text-cm-white text-sm opacity-60"
+          rows={2}
+          hint="Uitleg van de freebies-sectie"
+        />
+        <Link href="/instellingen/mijn-tracking-links" className="btn-secondary text-sm inline-block">
+          Open mijn freebies →
+        </Link>
+      </div>
 
       {/* Film-CMS, alleen voor leiders/founders.
           Sinds 2026-05-20 is Films-CMS NIET meer voor Sprint-dag-films

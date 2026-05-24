@@ -51,7 +51,7 @@ export function BotHeader({
               Tweede Lente
             </div>
             <div className="text-gray-700 text-sm">
-              Klaargezet door <strong>{memberVoornaam}</strong> en haar team
+              Klaargezet door <strong>{memberVoornaam}</strong> en het team
             </div>
           </div>
         </div>

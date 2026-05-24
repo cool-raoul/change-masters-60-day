@@ -1,8 +1,12 @@
 // File: app/instellingen/mijn-tracking-links/page.tsx
 //
-// Member-dashboard, sectie "Mijn freebie-bot-links". Toont per bot de
-// persoonlijke tracking-URL met kopieer-knop. Voor pilot alleen Tweede
-// Lente actief. Genereert token aan bij eerste bezoek.
+// Member-dashboard, sectie "Mijn freebies". Toont per freebie de
+// persoonlijke tracking-URL met kopieer-knop.
+//
+// Twee types freebies:
+// 1. Productadvies-vragenlijst (open-template) - voor IEDEREEN
+//    (Sprint, Core, Pro), bestaat al langer in ELEVA.
+// 2. Tweede Lente bot - alleen Core (+founder voor testen), pilot.
 
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
@@ -12,15 +16,25 @@ import { KopieerKnop } from "./kopieer-knop";
 
 export const dynamic = "force-dynamic";
 
-const ACTIEVE_BOTS = [
+const FREEBIE_BOTS = [
   {
     slug: "tweede-lente",
     titel: "Tweede Lente",
-    beschrijving:
-      "Vijf-minuten spiegel voor vrouwen in peri-, volle of post-overgang.",
+    ondertitel: "Persoonlijk overzicht voor wat speelt in en rond de overgang",
     triggerVoorbeeld: "TWEEDE-LENTE",
+    iconEmoji: "🌷",
+    coreOnly: true,
   },
-];
+] as const;
+
+function genereerOpenToken(): string {
+  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "open-";
+  for (let i = 0; i < 14; i++) {
+    result += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return result;
+}
 
 export default async function MijnTrackingLinksPagina() {
   const supabase = await createClient();
@@ -29,24 +43,25 @@ export default async function MijnTrackingLinksPagina() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  // Toegang: alleen Core-members + founders. Sprint en Pro krijgen dit
-  // in latere fase (eerst in Core inregelen, daar is bot primair voor
-  // bedoeld). Founders mogen altijd vanwege test- en bouwflexibiliteit.
+  // Pagina toegankelijk voor iedereen die is ingelogd. Per freebie
+  // wordt apart bepaald of die zichtbaar is op basis van modus / rol.
   const { data: profile } = await supabase
     .from("profiles")
-    .select("modus, role")
+    .select("modus, role, full_name")
     .eq("id", user.id)
     .maybeSingle();
 
   const isFounder = (profile as { role?: string } | null)?.role === "founder";
   const isCore = (profile as { modus?: string } | null)?.modus === "core";
-  if (!isFounder && !isCore) {
-    redirect("/instellingen");
-  }
+  const ziet_tweede_lente = isFounder || isCore;
+  const memberVoornaam =
+    ((profile as { full_name?: string } | null)?.full_name ?? "")
+      .split(" ")[0] || "jij";
 
-  // Voor elke actieve bot: haal of maak token aan
+  // 1. Tokens ophalen / aanmaken voor de freebie-bots (waaronder Tweede Lente)
   const tokensPerBot: Record<string, string> = {};
-  for (const bot of ACTIEVE_BOTS) {
+  for (const bot of FREEBIE_BOTS) {
+    if (bot.coreOnly && !ziet_tweede_lente) continue;
     const { data: bestaand } = await supabase
       .from("freebie_bot_member_tokens")
       .select("token")
@@ -69,13 +84,38 @@ export default async function MijnTrackingLinksPagina() {
       })
       .select("token")
       .single();
-
     tokensPerBot[bot.slug] = inserted?.token ?? nieuweToken;
   }
 
-  // Bouw volledige origin met fallback: env-var → request-host → leeg.
-  // NEXT_PUBLIC_APP_URL is op productie soms niet gezet; dan willen we
-  // alsnog een werkende link tonen via de huidige request-host.
+  // 2. Productadvies-vragenlijst (open-template) token ophalen / aanmaken
+  let productadviesToken: string | null = null;
+  {
+    const { data: bestaande } = await supabase
+      .from("productadvies_tests")
+      .select("token")
+      .eq("member_id", user.id)
+      .eq("is_open_template", true)
+      .maybeSingle();
+    if (bestaande?.token) {
+      productadviesToken = bestaande.token;
+    } else {
+      const nieuw = genereerOpenToken();
+      const { data: inserted } = await supabase
+        .from("productadvies_tests")
+        .insert({
+          token: nieuw,
+          member_id: user.id,
+          prospect_id: null,
+          is_open_template: true,
+          status: "verstuurd",
+        })
+        .select("token")
+        .single();
+      productadviesToken = inserted?.token ?? nieuw;
+    }
+  }
+
+  // Bouw volledige origin met fallback
   const headersList = await headers();
   const host = headersList.get("host") ?? "";
   const protocol =
@@ -85,78 +125,132 @@ export default async function MijnTrackingLinksPagina() {
     process.env.NEXT_PUBLIC_APP_URL ||
     (host ? `${protocol}://${host}` : "");
 
+  const productadviesUrl = `${origin}/test/${productadviesToken}`;
+
   return (
     <main className="mx-auto max-w-2xl px-4 py-8 text-slate-100">
-      <h1 className="text-2xl font-semibold">🔗 Mijn freebie-bot-links</h1>
+      <h1 className="text-2xl font-semibold">🎁 Mijn freebies</h1>
       <p className="mt-2 text-sm text-slate-400 leading-relaxed">
-        Dit zijn jouw persoonlijke links naar onze freebie-bots. Iedereen
-        die via jouw link de bot doet, komt in jouw klantomgeving terecht.
+        Jouw persoonlijke links naar onze freebies. Iedereen die via jouw
+        link een freebie doet, komt automatisch als prospect op jouw
+        namenlijst.
       </p>
 
-      <section className="mt-8 space-y-4">
-        {ACTIEVE_BOTS.map((bot) => {
-          const url = `${origin}/bot/${bot.slug}/${tokensPerBot[bot.slug]}`;
-          return (
-            <div
-              key={bot.slug}
-              className="rounded-2xl border border-slate-700 bg-slate-900/40 p-5"
-            >
-              <h2 className="text-lg font-semibold">{bot.titel}</h2>
-              <p className="mt-1 text-sm text-slate-400">
-                {bot.beschrijving}
-              </p>
-
-              <div className="mt-4 rounded-lg bg-slate-800 px-3 py-2 text-xs text-slate-300 break-all">
-                {url}
-              </div>
-              <KopieerKnop tekst={url} />
-
-              <details className="mt-4 text-sm text-slate-400">
-                <summary className="cursor-pointer hover:text-slate-200">
-                  Voorbeeld-zin voor social-post
-                </summary>
-                <p className="mt-2 text-xs leading-relaxed bg-slate-900/60 p-3 rounded-lg">
-                  &quot;Wil je vijf minuten naar je eigen ritme kijken in deze
-                  fase? Reageer met {bot.triggerVoorbeeld} en ik stuur je
-                  mijn persoonlijke link.&quot;
-                </p>
-                <p className="mt-2 text-xs">
-                  De vrouw reageert, jij stuurt haar via DM jouw link
-                  hierboven. Zo houd je controle over wie haar krijgt.
-                </p>
-              </details>
+      {/* Sectie 1, Productadvies-vragenlijst (voor iedereen) */}
+      <section className="mt-8">
+        <div className="rounded-2xl border border-slate-700 bg-slate-900/40 p-5">
+          <div className="flex items-start gap-3">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-xl">
+              📋
             </div>
-          );
-        })}
+            <div className="flex-1">
+              <h2 className="text-lg font-semibold">Productadvies-vragenlijst</h2>
+              <p className="mt-1 text-sm text-slate-400">
+                Korte vragenlijst van drie minuten. Aan het eind krijgt de
+                invuller een pakket-advies dat past bij wat zij of hij
+                aangeeft.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-4 rounded-lg bg-slate-800 px-3 py-2 text-xs text-slate-300 break-all">
+            {productadviesUrl}
+          </div>
+          <KopieerKnop tekst={productadviesUrl} />
+
+          <details className="mt-4 text-sm text-slate-400">
+            <summary className="cursor-pointer hover:text-slate-200">
+              Hoe gebruik je deze link?
+            </summary>
+            <p className="mt-2 text-xs leading-relaxed bg-slate-900/60 p-3 rounded-lg">
+              Deel deze link via social media, in een nieuwsbrief, op een
+              event of in een persoonlijk bericht. Wie de link opent vult
+              eerst zijn naam plus e-mail of telefoon in, daarna doorloopt
+              hij of zij de vragenlijst, en jij krijgt direct de uitkomst
+              op zijn of haar prospect-kaart in je namenlijst.
+            </p>
+          </details>
+        </div>
       </section>
 
-      <section className="mt-10 rounded-2xl border border-rose-500/30 bg-rose-500/5 p-5">
-        <h3 className="text-base font-medium text-rose-100">
-          Belangrijk: koppel je bestellinks
-        </h3>
-        <p className="mt-1 text-sm text-rose-200/80 leading-relaxed">
-          Tweede Lente toont drie pakket-niveaus voor hormoonbalans
-          (essential / plus / complete). Onder elk niveau verschijnt jouw
-          persoonlijke bestellink uit je{" "}
-          <a
-            href="/instellingen/bestellinks"
-            className="text-rose-100 underline hover:text-white"
-          >
-            bestellinks-instellingen
-          </a>
-          . Heb je voor een niveau geen link ingesteld, dan ziet de vrouw
-          een tekst dat ze jou even een berichtje mag sturen.
-        </p>
-      </section>
+      {/* Sectie 2, Freebie-bots (alleen voor Core + founders) */}
+      {ziet_tweede_lente && (
+        <section className="mt-6 space-y-4">
+          {FREEBIE_BOTS.map((bot) => {
+            if (bot.coreOnly && !ziet_tweede_lente) return null;
+            const url = `${origin}/bot/${bot.slug}/${tokensPerBot[bot.slug]}`;
+            return (
+              <div
+                key={bot.slug}
+                className="rounded-2xl border border-rose-500/40 bg-rose-500/5 p-5"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-rose-500/20 text-xl">
+                    {bot.iconEmoji}
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="text-lg font-semibold">{bot.titel}</h2>
+                    <p className="mt-1 text-sm text-slate-400">
+                      {bot.ondertitel}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-4 rounded-lg bg-slate-800 px-3 py-2 text-xs text-slate-300 break-all">
+                  {url}
+                </div>
+                <KopieerKnop tekst={url} />
+
+                <details className="mt-4 text-sm text-slate-400">
+                  <summary className="cursor-pointer hover:text-slate-200">
+                    Voorbeeld-zin voor social-post
+                  </summary>
+                  <p className="mt-2 text-xs leading-relaxed bg-slate-900/60 p-3 rounded-lg">
+                    &quot;Wil je vijf minuten naar je eigen ritme kijken
+                    rond de overgang? Reageer met {bot.triggerVoorbeeld}{" "}
+                    en {memberVoornaam} stuurt je de persoonlijke link.&quot;
+                  </p>
+                  <p className="mt-2 text-xs">
+                    De persoon reageert, jij stuurt via DM jouw link
+                    hierboven. Zo houd je controle over wie hem krijgt.
+                  </p>
+                </details>
+              </div>
+            );
+          })}
+        </section>
+      )}
+
+      {/* Bestellinks-info, alleen tonen als Tweede Lente zichtbaar is */}
+      {ziet_tweede_lente && (
+        <section className="mt-10 rounded-2xl border border-rose-500/30 bg-rose-500/5 p-5">
+          <h3 className="text-base font-medium text-rose-100">
+            Belangrijk: koppel je bestellinks
+          </h3>
+          <p className="mt-1 text-sm text-rose-200/80 leading-relaxed">
+            Tweede Lente toont drie pakket-niveaus voor hormoonbalans
+            (essential / plus / complete). Onder elk niveau verschijnt
+            jouw persoonlijke bestellink uit je{" "}
+            <a
+              href="/instellingen/bestellinks"
+              className="text-rose-100 underline hover:text-white"
+            >
+              bestellinks-instellingen
+            </a>
+            . Heb je voor een niveau geen link ingesteld, dan ziet de
+            invuller een tekst dat ze jou even een berichtje mag sturen.
+          </p>
+        </section>
+      )}
 
       <section className="mt-6 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5">
         <h3 className="text-base font-medium text-amber-100">
-          Meer bots komen later
+          Meer freebies komen later
         </h3>
         <p className="mt-1 text-sm text-amber-200/80">
-          Tweede Lente is de pilot. Daarna volgen Slaap-Loep, Energie-Loep
-          en andere onderwerpen. Allemaal met dezelfde architectuur en
-          claim-vrije bewaking.
+          Tweede Lente is de eerste bot-pilot. Daarna volgen Slaap-Loep,
+          Energie-Loep en andere onderwerpen, allemaal met dezelfde
+          architectuur en claim-vrije bewaking.
         </p>
       </section>
     </main>

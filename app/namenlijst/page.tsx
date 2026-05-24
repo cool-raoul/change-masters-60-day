@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { Prospect } from "@/lib/supabase/types";
 import { NamenlijstToggle } from "@/components/namenlijst/NamenlijstToggle";
-import { OpenTestlinkKnop } from "@/components/namenlijst/OpenTestlinkKnop";
 import { RealtimeProspectsRefresh } from "@/components/namenlijst/RealtimeProspectsRefresh";
 import { ElevaGeheugen } from "@/components/namenlijst/ElevaGeheugen";
 import { MiniElevaNotificatieBanner } from "@/components/namenlijst/MiniElevaNotificatieBanner";
@@ -126,7 +125,6 @@ export default async function NamenlijstPagina({
             {alleProspects.length} {v("namenlijst.contacten_in_pipeline", taal)}
           </p>
         </div>
-        <OpenTestlinkKnop memberNaam={memberNaam} />
       </div>
 
       <ElevaGeheugen />

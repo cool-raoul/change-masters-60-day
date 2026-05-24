@@ -38,8 +38,8 @@ export async function generateMetadata({
       ((profile?.full_name ?? "") as string).split(" ")[0] || "iemand";
   }
 
-  const titel = "Tweede Lente, een korte spiegel voor jouw fase";
-  const beschrijving = `Vijf minuten, zeven vragen, een rustige spiegel. Klaargezet door ${memberVoornaam} en haar team.`;
+  const titel = "Tweede Lente, een persoonlijk overzicht voor waar je nu staat";
+  const beschrijving = `Vijf minuten, zeven vragen, een persoonlijk overzicht. Klaargezet door ${memberVoornaam} en het team.`;
 
   return {
     title: titel,

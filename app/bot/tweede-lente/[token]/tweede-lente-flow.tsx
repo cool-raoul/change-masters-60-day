@@ -149,9 +149,9 @@ function BlokKlaar({ memberVoornaam }: { memberVoornaam: string }) {
         Je inschrijving is binnen ✨
       </h2>
       <p className="mt-5 text-gray-700 leading-relaxed max-w-md mx-auto">
-        {memberVoornaam} stuurt je vanavond een mail met je spiegel en de
-        handvatten, plus extra context per voedingsstof. Kijk er rustig
-        naar wanneer het je uitkomt.
+        {memberVoornaam} stuurt je vanavond een mail met je persoonlijk
+        overzicht en de handvatten, plus extra context per voedingsstof.
+        Kijk er rustig naar wanneer het je uitkomt.
       </p>
 
       <div className="mt-6 rounded-2xl bg-rose-50 border border-rose-100 px-5 py-4 text-left max-w-md mx-auto">

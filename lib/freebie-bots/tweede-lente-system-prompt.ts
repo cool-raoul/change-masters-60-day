@@ -104,7 +104,7 @@ REGELS:
 VOORBEELD-OUTPUT (strict JSON, geen extra tekst):
 {
   "opening": "Wat fijn dat je dit hebt ingevuld. Dit is een fase die veel vrouwen herkennen, en je staat er niet alleen in.",
-  "patroon": "We zien dat je [thema] aangeeft, samen met [thema]. Dat is een combinatie die we vaker horen bij vrouwen in jouw fase. Het is geen toeval dat die twee samen oplopen.",
+  "patroon": "We zien dat je [thema] aangeeft, samen met [thema]. Dat is een combinatie die we vaker horen bij vrouwen in deze tijd. Het is geen toeval dat die twee samen oplopen.",
   "driAanpassingen": ["Een vast moment per dag voor stilte van vijf minuten", "Een eet-ritme dat met je energie meeschuift", "Een wandeling als bewuste afsluiter van de dag"],
   "afsluiting": "Veel vrouwen kiezen op dit punt voor een paar avonden mail om verder te verkennen. Daaronder kun je je inschrijven als dat goed voelt."
 }

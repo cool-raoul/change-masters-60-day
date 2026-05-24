@@ -10,11 +10,11 @@ export const dynamic = "force-static";
 export const metadata: Metadata = {
   title: "Tweede Lente",
   description:
-    "Een korte spiegel voor vrouwen in peri-, volle of post-overgang. Toegang via een persoonlijke link.",
+    "Een persoonlijk overzicht voor wat speelt in en rond de overgang. Toegang via een persoonlijke link.",
   openGraph: {
     title: "Tweede Lente",
     description:
-      "Een korte spiegel voor vrouwen in peri-, volle of post-overgang.",
+      "Een persoonlijk overzicht voor wat speelt in en rond de overgang.",
     images: [],
   },
 };
@@ -53,7 +53,7 @@ export default function TweedeLenteLandingPagina() {
             Deze link heeft een persoonlijk adres nodig
           </h1>
           <p className="mt-5 text-gray-700 leading-relaxed">
-            Tweede Lente is een korte spiegel voor vrouwen in de overgang.
+            Tweede Lente is een persoonlijk overzicht voor wat speelt in en rond de overgang.
             Je opent hem via een persoonlijke link van iemand uit ons team.
           </p>
           <div className="mt-6 rounded-2xl bg-white/80 backdrop-blur-sm border border-rose-100 px-5 py-4 shadow-sm text-left">

@@ -1,8 +1,10 @@
 // File: app/bot/tweede-lente/[token]/blok-intro.tsx
 //
-// Blok 1, warme intro met hero-graphic. Decoratieve bloesems + gradient
-// + duidelijke USP-iconen. Toont de naam van de member die de link
-// heeft gedeeld, persoonlijk gevoel.
+// Blok 1, warme intro. Variant 2-stijl (warm + persoonlijker + open).
+// Gender-neutraal: 'iemand uit het team' werkt voor zowel mannelijke
+// als vrouwelijke verzenders. Geen 'welkom' (te ouderwets), geen
+// 'spiegel' (te vaag), geen 'fase' (te robotachtig). Wel expliciet
+// 'overgang' zodat thema direct duidelijk is.
 
 "use client";
 
@@ -26,13 +28,15 @@ export function BlokIntro({
       <div className="mt-4 text-rose-500 text-sm font-semibold uppercase tracking-widest">
         Tweede Lente
       </div>
+      <p className="mt-1 text-sm text-gray-500">
+        Een rustige plek voor wat speelt in en rond de overgang
+      </p>
       <h1 className="mt-3 text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">
-        Welkom bij {memberVoornaam}
-        <span className="ml-1 inline-block">💟</span>
+        Hey, leuk dat je deze stap nam
       </h1>
       <p className="mt-5 text-lg text-gray-700 leading-relaxed">
-        Fijn dat je hier bent. {memberVoornaam} heeft deze ruimte met haar team
-        voor jou klaargezet, vrouwen die zelf door deze fase zijn gegaan.
+        {memberVoornaam} heeft deze plek voor je klaargezet. Vijf minuten
+        voor jezelf, zonder druk.
       </p>
 
       {/* Drie USP-pillen */}
@@ -44,14 +48,15 @@ export function BlokIntro({
           📝 7 vragen
         </span>
         <span className="rounded-full bg-white/80 px-3 py-1.5 text-rose-700 font-medium shadow-sm border border-rose-100">
-          🪞 Persoonlijke spiegel
+          🌷 Voor jou alleen
         </span>
       </div>
 
       <p className="mt-6 text-gray-700 leading-relaxed">
-        Aan het eind krijg je een rustige spiegel die past bij jouw situatie,
-        concrete handvatten en de voedingsstoffen die in jouw fase vaak
-        belangrijk worden. Je ontvangt het ook in je mail.
+        Aan het eind krijg je een persoonlijk overzicht voor jou, plus
+        vier handvatten en de voedingsstoffen die helpend zijn bij wat
+        je nu ervaart. We sturen het ook door in je mail zodat je er
+        later rustig op terug kunt komen.
       </p>
 
       <button

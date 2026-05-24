@@ -173,7 +173,7 @@ export const VRAAG_ZOEK: VraagKeuze<TweedeLenteZoek>[] = [
   },
   {
     waarde: "concrete-kennis",
-    label: "Concrete kennis over wat in deze fase werkt",
+    label: "Concrete kennis over wat in deze tijd werkt",
     korteCode: "kennis",
   },
 ];

@@ -158,7 +158,7 @@ export function BlokOptIn({
       {/* 4a, Product-richting met member's eigen bestellinks */}
       <section className="mt-6">
         <p className="text-sm text-gray-700 leading-relaxed text-center">
-          De handvatten en voedingsstoffen uit jouw spiegel zitten als
+          De handvatten en voedingsstoffen uit jouw overzicht zitten als
           basis ook in deze drie pakketten van {memberVoornaam}. Kies wat
           bij jou past, zelf te bestellen.
         </p>
@@ -258,7 +258,7 @@ export function BlokOptIn({
               Ja, ik wil dat {memberVoornaam} contact opneemt.
             </strong>
             {" "}Vrijblijvend gesprekje van een kwartier, geen
-            verkoopgesprek. Iemand die meedenkt over mijn fase.
+            verkoopgesprek. Iemand die meedenkt over waar ik nu sta.
           </span>
         </label>
 
@@ -297,7 +297,7 @@ export function BlokOptIn({
           "Even versturen..."
         ) : (
           <>
-            ✨ Verstuur mijn spiegel
+            ✨ Verstuur mijn overzicht
             <span className="ml-2 inline-block transition-transform group-hover:translate-x-1">
               →
             </span>
@@ -306,7 +306,7 @@ export function BlokOptIn({
       </button>
 
       <p className="mt-3 text-center text-xs text-gray-500">
-        Je krijgt vanavond een mail met je spiegel en de handvatten.
+        Je krijgt vanavond een mail met je overzicht en de handvatten.
         Daarna vijf korte vervolg-mails over vijf dagen.
       </p>
 
@@ -322,7 +322,7 @@ export function BlokOptIn({
       </footer>
 
       <p className="mt-3 text-xs text-gray-400 text-center">
-        🌷 Klaargezet door {memberVoornaam} en haar team.
+        🌷 Klaargezet door {memberVoornaam} en het team.
       </p>
     </div>
   );

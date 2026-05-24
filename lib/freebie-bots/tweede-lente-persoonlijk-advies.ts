@@ -262,9 +262,9 @@ export const ANKER_BIBLIOTHEEK: Anker[] = [
     id: "verbinding-rust",
     titel: "Verbinding-anker",
     actie:
-      "Eén keer per week een echt gesprek met een vrouw die deze fase ook kent of kende. Tien minuten telefoon is genoeg.",
+      "Eén keer per week een echt gesprek met iemand die deze tijd ook kent of kende. Tien minuten telefoon is genoeg.",
     waarom:
-      "Vrouwen die hun overgang in gesprek brengen, herstellen significant beter dan vrouwen die het alleen dragen. Niet de oplossing zoeken, wel de herkenning krijgen, is een belangrijke buffer tegen de eenzaamheid die deze fase vaak meebrengt.",
+      "Vrouwen die hun overgang in gesprek brengen, herstellen significant beter dan vrouwen die het alleen dragen. Niet de oplossing zoeken, wel de herkenning krijgen, is een belangrijke buffer tegen de eenzaamheid die deze tijd vaak meebrengt.",
     themas: ["verbinding", "stemming", "stress"],
     prioriteit: 8,
     icoon: "💞",
@@ -445,23 +445,23 @@ export const BASIS_TIPS: BasisTip[] = [
     id: "voeding-tekorten",
     titel: "Onze huidige voeding heeft vaak tekorten",
     uitleg:
-      "Groente en fruit van vandaag bevatten gemiddeld minder vitaminen en mineralen dan vijftig jaar geleden. Intensieve landbouw, lange transport-routes en vroegtijdig oogsten zijn de oorzaken. Veel vrouwen in deze fase merken dat een gerichte aanvulling het verschil maakt, vooral van stoffen die in de overgang extra belast worden.",
+      "Groente en fruit van vandaag bevatten gemiddeld minder vitaminen en mineralen dan vijftig jaar geleden. Intensieve landbouw, lange transport-routes en vroegtijdig oogsten zijn de oorzaken. Veel vrouwen in deze tijd merken dat een gerichte aanvulling het verschil maakt, vooral van stoffen die in de overgang extra belast worden.",
   },
   {
     id: "lichaam-belasting",
-    titel: "Je lichaam is in deze fase extra belast",
+    titel: "Je lichaam is in deze tijd extra belast",
     uitleg:
       "Veranderende hormonen vragen meer van je systeem. Tegelijk komen we via voeding, water, lucht en producten dagelijks in aanraking met stoffen die je lever extra werk geven (E-nummers, pesticide-residuen, micro-plastics). Je lichaam vraagt in deze periode dus zowel om extra bouwstoffen als om minder belasting.",
   },
   {
     id: "stress-overgang",
-    titel: "Stress voelt anders in deze fase",
+    titel: "Stress voelt anders in deze tijd",
     uitleg:
       "Dezelfde gebeurtenis kan zwaarder landen dan eerder. Dat komt door schommelende oestrogeen-niveaus die je stress-respons mede regelen. Het is geen zwakte, het is biochemie. Bewustzijn helpt: niet alles is jouw schuld, sommige reactiviteit is hormoon-tijdelijk.",
   },
   {
     id: "slaap-investeren",
-    titel: "Slaap is in deze fase een investering",
+    titel: "Slaap is in deze tijd een investering",
     uitleg:
       "De diepe slaap waarin je hersenen opruimen en herstellen, neemt natuurlijk af tussen je 40e en 60e. Wie nu actief in slaap-hygiëne investeert (vast ritme, donker, koel, geen schermen voor bed), profiteert daar tien tot twintig jaar van.",
   },
@@ -469,7 +469,7 @@ export const BASIS_TIPS: BasisTip[] = [
     id: "spieren-bouwen",
     titel: "Spieren zijn je beste pensioen",
     uitleg:
-      "Vanaf je 40e verlies je natuurlijk spiermassa als je niets doet (1-2% per jaar). In de overgang versnelt dit. Spieren zijn niet alleen voor kracht: ze regelen je stofwisseling, vangen klappen op voor je botten en houden je glucose stabiel. Krachttraining is wetenschappelijk de meest onderbouwde investering in deze fase.",
+      "Vanaf je 40e verlies je natuurlijk spiermassa als je niets doet (1-2% per jaar). In de overgang versnelt dit. Spieren zijn niet alleen voor kracht: ze regelen je stofwisseling, vangen klappen op voor je botten en houden je glucose stabiel. Krachttraining is wetenschappelijk de meest onderbouwde investering in deze tijd.",
   },
   {
     id: "zon-vitamine-d",
@@ -523,7 +523,7 @@ function bouwJouwSituatie(a: TweedeLenteAntwoorden): string {
     "peri-overgang": "midden in de peri-overgang",
     "volle-overgang": "in de volle overgang",
     "post-overgang": "in de post-overgang",
-    "weet-niet": "in een fase die je nog niet helemaal kunt plaatsen",
+    "weet-niet": "in een tijd die je nog niet helemaal kunt plaatsen",
   };
 
   const themaLabels: Record<string, string> = {
@@ -575,7 +575,7 @@ function bouwExtraAandacht(a: TweedeLenteAntwoorden): string | undefined {
     a.beweging === "weinig" &&
     (a.fase === "volle-overgang" || a.fase === "post-overgang")
   ) {
-    return "Beweging is in deze fase extra belangrijk geworden. Niet om af te vallen, wel om botten, spieren en stemming te ondersteunen. Begin klein: tien minuten lopen per dag is al een merkbare basis.";
+    return "Beweging is in deze tijd extra belangrijk geworden. Niet om af te vallen, wel om botten, spieren en stemming te ondersteunen. Begin klein: tien minuten lopen per dag is al een merkbare basis.";
   }
   if (
     a.eetRitme === "vaak-snel-tussendoor" &&

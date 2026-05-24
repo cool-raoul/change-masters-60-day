@@ -17,7 +17,7 @@ const FALLBACK_OPENING =
   "Wat fijn dat je dit hebt ingevuld. Dit is een fase die veel vrouwen herkennen, en je staat er niet alleen in.";
 
 const FALLBACK_PATROON =
-  "We zien een combinatie van dingen die we vaker horen bij vrouwen in deze fase. Het is geen toeval dat die signalen samen oplopen. Veel vrouwen voelen herkenning als ze zien dat het een patroon is, niet een losse klacht.";
+  "We zien een combinatie van dingen die we vaker horen bij vrouwen in deze tijd. Het is geen toeval dat die signalen samen oplopen. Veel vrouwen voelen herkenning als ze zien dat het een patroon is, niet een losse klacht.";
 
 const FALLBACK_AFSLUITING =
   "Veel vrouwen kiezen op dit punt voor een paar avonden mail om verder te verkennen. Daaronder kun je je inschrijven als dat goed voelt.";
