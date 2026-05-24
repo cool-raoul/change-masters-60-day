@@ -115,28 +115,57 @@ export async function POST(req: NextRequest) {
       freebieRij = nieuweFreebie as { id: string };
     }
 
-    // Opt-in rij invoegen
-    const { data: optIn, error: optInErr } = await supabase
+    // Bestaande opt-in (van intekening-vooraf) aanvullen, of nieuwe maken
+    // als die er nog niet was (backwards compat met legacy clients).
+    const { data: bestaandeOptIn } = await supabase
       .from("freebie_opt_ins")
-      .insert({
-        freebie_id: freebieRij.id,
-        member_id: tokenRow.member_id,
-        lead_naam: leadNaam,
-        lead_email: leadEmail,
-        bron_kanaal: "tweede-lente-bot",
-        status: "nieuw",
-        bot_antwoorden: antwoorden,
-        spiegel_tekst: spiegelTekst ?? null,
-      })
       .select("id")
-      .single();
+      .eq("member_id", tokenRow.member_id)
+      .eq("freebie_id", freebieRij.id)
+      .ilike("lead_email", leadEmail)
+      .maybeSingle();
 
-    if (optInErr || !optIn) {
-      console.error("opt-in insert fout:", optInErr);
-      return NextResponse.json(
-        { error: "Opt-in opslag mislukt" },
-        { status: 500 },
-      );
+    let optIn: { id: string };
+    if (bestaandeOptIn) {
+      const { error: updErr } = await supabase
+        .from("freebie_opt_ins")
+        .update({
+          lead_naam: leadNaam,
+          bot_antwoorden: antwoorden,
+          spiegel_tekst: spiegelTekst ?? null,
+        })
+        .eq("id", bestaandeOptIn.id);
+      if (updErr) {
+        console.error("opt-in update fout:", updErr);
+        return NextResponse.json(
+          { error: "Opt-in update mislukt" },
+          { status: 500 },
+        );
+      }
+      optIn = { id: bestaandeOptIn.id };
+    } else {
+      const { data: nieuw, error: optInErr } = await supabase
+        .from("freebie_opt_ins")
+        .insert({
+          freebie_id: freebieRij.id,
+          member_id: tokenRow.member_id,
+          lead_naam: leadNaam,
+          lead_email: leadEmail,
+          bron_kanaal: "tweede-lente-bot",
+          status: "nieuw",
+          bot_antwoorden: antwoorden,
+          spiegel_tekst: spiegelTekst ?? null,
+        })
+        .select("id")
+        .single();
+      if (optInErr || !nieuw) {
+        console.error("opt-in insert fout:", optInErr);
+        return NextResponse.json(
+          { error: "Opt-in opslag mislukt" },
+          { status: 500 },
+        );
+      }
+      optIn = nieuw;
     }
 
     // Prospect-rij maken in de namenlijst van de member. Klantomgeving
@@ -173,15 +202,23 @@ export async function POST(req: NextRequest) {
       .ilike("email", leadEmail)
       .maybeSingle();
 
-    // Tool-tag: 'Freebie: Tweede Lente'. Backwards compat: oude
-    // 'Tweede Lente bot' wordt automatisch vervangen.
-    const NIEUWE_TAG = "Freebie: Tweede Lente";
+    // Tool-tags:
+    //   'Freebie: Tweede Lente' = ingetekend (zet door intekening-vooraf
+    //   of door deze route als legacy)
+    //   'Vragenlijst ingevuld'  = bot helemaal afgemaakt (alleen door
+    //   deze route)
+    // Backwards compat: oude 'Tweede Lente bot' wordt vervangen.
+    const FREEBIE_TAG = "Freebie: Tweede Lente";
+    const INGEVULD_TAG = "Vragenlijst ingevuld";
     const OUDE_TAG = "Tweede Lente bot";
     const huidigeTools = (bestaande?.ingezette_tools ?? []) as string[];
     const opgeschoond = huidigeTools.filter((t) => t !== OUDE_TAG);
-    const nieuweTools = opgeschoond.includes(NIEUWE_TAG)
+    const metFreebie = opgeschoond.includes(FREEBIE_TAG)
       ? opgeschoond
-      : [...opgeschoond, NIEUWE_TAG];
+      : [...opgeschoond, FREEBIE_TAG];
+    const nieuweTools = metFreebie.includes(INGEVULD_TAG)
+      ? metFreebie
+      : [...metFreebie, INGEVULD_TAG];
 
     if (bestaande) {
       // Update bestaande prospect: notitie aanvullen, tool-tag toevoegen,
@@ -240,22 +277,22 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Push-notificatie naar member bij ELKE opt-in (niet alleen bij
-    // contactGewenst), met andere tekst. Member wil weten dat er een
-    // lead binnenkwam ook als die alleen voor mailreeks koos.
-    // sendPushToUser-signature: (userId, { title, body, url?, tag? }).
+    // Push-notificatie naar member: bot is afgerond (vragenlijst klaar).
+    // De eerdere 'intekening'-push is al gestuurd door
+    // /api/freebie-bot/intekening-vooraf. Deze melding markeert het
+    // moment dat de prospect-kaart compleet is.
     try {
       const titel = contactGewenst
         ? `${leadNaam} vraagt persoonlijk contact`
-        : `${leadNaam} schreef zich in via Tweede Lente`;
+        : `${leadNaam} heeft Tweede Lente afgerond`;
       const omschrijving = contactGewenst
-        ? "Wil een vrijblijvend gesprekje van een kwartier. Open haar prospect-kaart in namenlijst."
-        : "Nieuwe prospect via de bot. Komt automatisch in je namenlijst.";
+        ? "Wil een vrijblijvend gesprekje van een kwartier. Open haar prospect-kaart."
+        : "Vragenlijst en spiegel zijn klaar. Open haar prospect-kaart om de antwoorden te zien.";
       await sendPushToUser(tokenRow.member_id, {
         title: titel,
         body: omschrijving,
         url: "/namenlijst",
-        tag: "tweede-lente-opt-in",
+        tag: "tweede-lente-compleet",
       });
     } catch (pushErr) {
       console.warn("Push-notificatie mislukt:", pushErr);

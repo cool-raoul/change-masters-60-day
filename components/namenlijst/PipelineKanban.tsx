@@ -60,9 +60,10 @@ function ProspectKaart({
     : null;
 
   const nietActief = prospect.actief === false;
-  // Detecteer freebie-bot leads via ingezette_tools (set door API
-  // opt-in-route). De bot-naam staat met 'Freebie: ' prefix in de array.
-  // Backwards compat: oude tag 'Tweede Lente bot' wordt ook gedetecteerd.
+  // Detecteer freebie-bot leads via ingezette_tools.
+  //   'Freebie: <naam>' = ingetekend (gezet door intekening-vooraf)
+  //   'Vragenlijst ingevuld' = bot helemaal afgemaakt
+  // Backwards compat: oude tag 'Tweede Lente bot' = compleet (oude flow).
   const tools = (prospect.ingezette_tools ?? []) as string[];
   const freebieRaw = tools.find(
     (t) =>
@@ -70,11 +71,14 @@ function ProspectKaart({
       t === "Tweede Lente bot" ||
       t.endsWith(" bot"),
   );
-  const freebieBotTag = freebieRaw
+  const freebieBotNaam = freebieRaw
     ? freebieRaw.startsWith("Freebie:")
-      ? freebieRaw
-      : `Freebie: ${freebieRaw.replace(/ bot$/, "")}`
+      ? freebieRaw.replace(/^Freebie:\s*/, "")
+      : freebieRaw.replace(/ bot$/, "")
     : null;
+  const vragenlijstIngevuld =
+    tools.includes("Vragenlijst ingevuld") ||
+    freebieRaw === "Tweede Lente bot"; // oude flow was altijd compleet
   return (
     <div
       draggable
@@ -82,16 +86,33 @@ function ProspectKaart({
       onDragEnd={onDragEnd}
       onDragOver={(e) => onDragOverKaart(e, prospect.id)}
       onDrop={(e) => onDropOpKaart(e, prospect.id)}
-      className={`relative bg-cm-surface border ${freebieBotTag ? "border-rose-500/60 ring-1 ring-rose-500/20" : "border-cm-border"} rounded-xl p-3 space-y-2 hover:border-cm-gold-dim transition-all cursor-grab active:cursor-grabbing group select-none ${
+      className={`relative bg-cm-surface border ${freebieBotNaam ? "border-rose-500/60 ring-1 ring-rose-500/20" : "border-cm-border"} rounded-xl p-3 space-y-2 hover:border-cm-gold-dim transition-all cursor-grab active:cursor-grabbing group select-none ${
         isDragging ? "opacity-40 ring-2 ring-cm-gold" : nietActief ? "opacity-60" : "opacity-100"
       } ${dropIndicator === "boven" ? "border-t-2 border-t-cm-gold" : ""} ${dropIndicator === "onder" ? "border-b-2 border-b-cm-gold" : ""}`}
     >
-      {freebieBotTag && (
-        <div className="absolute -top-2 left-3 px-2 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-semibold uppercase tracking-wider shadow-sm">
-          🌷 {freebieBotTag}
+      {freebieBotNaam && (
+        <div className="absolute -top-2 left-3 flex items-center gap-1">
+          <div className="px-2 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-semibold uppercase tracking-wider shadow-sm">
+            🌷 Freebie: {freebieBotNaam}
+          </div>
+          {vragenlijstIngevuld ? (
+            <div
+              className="px-2 py-0.5 rounded-full bg-emerald-600 text-white text-[10px] font-semibold shadow-sm"
+              title="Vragenlijst helemaal afgemaakt"
+            >
+              ✓ ingevuld
+            </div>
+          ) : (
+            <div
+              className="px-2 py-0.5 rounded-full bg-amber-500 text-white text-[10px] font-semibold shadow-sm"
+              title="Ingetekend maar vragenlijst nog niet afgemaakt"
+            >
+              ⏳ wacht
+            </div>
+          )}
         </div>
       )}
-      <div className={`flex items-start justify-between ${freebieBotTag ? "pt-1" : ""}`}>
+      <div className={`flex items-start justify-between ${freebieBotNaam ? "pt-1" : ""}`}>
         <Link
           href={`/namenlijst/${prospect.id}`}
           className="font-semibold text-cm-white text-sm hover:text-cm-gold transition-colors flex-1"

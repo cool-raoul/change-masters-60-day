@@ -83,6 +83,7 @@ export function TweedeLenteFlow({
         )}
         {blok === "intekenen" && (
           <BlokIntekenenVooraf
+            token={token}
             memberVoornaam={memberVoornaam}
             onTerug={() => setBlok("intro")}
             onKlaar={(g) => {

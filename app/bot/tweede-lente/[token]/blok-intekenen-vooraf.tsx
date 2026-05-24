@@ -1,11 +1,9 @@
 // File: app/bot/tweede-lente/[token]/blok-intekenen-vooraf.tsx
 //
-// Nieuwe stap tussen intro en vragen: voornaam + achternaam + e-mail
-// + akkoord, vóór de vragen. Filter-effect: alleen vrouwen die serieus
-// genoeg zijn om gegevens te delen, doen de vragen.
-//
-// Data wordt in client-state bewaard tot het eind van de flow. Eén
-// API-call bij voltooiing met alle data tegelijk.
+// Stap tussen intro en vragen: voornaam + achternaam + e-mail + akkoord.
+// Roept direct /api/freebie-bot/intekening-vooraf aan zodat de prospect
+// al in de namenlijst van de member verschijnt VOORDAT de vragenlijst
+// gedaan is. Member ziet dus ook intekeners die later afhaken.
 
 "use client";
 
@@ -19,10 +17,12 @@ export type IntekenGegevens = {
 };
 
 export function BlokIntekenenVooraf({
+  token,
   memberVoornaam,
   onKlaar,
   onTerug,
 }: {
+  token: string;
   memberVoornaam: string;
   onKlaar: (g: IntekenGegevens) => void;
   onTerug: () => void;
@@ -31,6 +31,8 @@ export function BlokIntekenenVooraf({
   const [achternaam, setAchternaam] = useState("");
   const [email, setEmail] = useState("");
   const [toestemming, setToestemming] = useState(false);
+  const [bezig, setBezig] = useState(false);
+  const [fout, setFout] = useState<string | null>(null);
 
   const klaar =
     voornaam.trim().length > 1 &&
@@ -38,14 +40,48 @@ export function BlokIntekenenVooraf({
     /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) &&
     toestemming;
 
-  function verzend() {
+  async function verzend() {
     if (!klaar) return;
-    onKlaar({
-      voornaam: voornaam.trim(),
-      achternaam: achternaam.trim(),
-      email: email.trim(),
-      toestemming,
-    });
+    setBezig(true);
+    setFout(null);
+    try {
+      const r = await fetch("/api/freebie-bot/intekening-vooraf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token,
+          leadVoornaam: voornaam.trim(),
+          leadAchternaam: achternaam.trim(),
+          leadEmail: email.trim(),
+          toestemming,
+        }),
+      });
+      const data = await r.json();
+      if (!r.ok) {
+        // Niet blokkeren bij niet-kritieke fout: we kunnen alsnog door
+        // naar de vragen. Bij voltooien van de bot doet de opt-in-route
+        // een fallback-insert. Wel gebruiker informeren.
+        console.warn("Intekening-vooraf fout:", data.error);
+      }
+      onKlaar({
+        voornaam: voornaam.trim(),
+        achternaam: achternaam.trim(),
+        email: email.trim(),
+        toestemming,
+      });
+    } catch (e) {
+      // Netwerk-fout, ga toch door naar vragen (fallback bij opt-in)
+      console.warn("Intekening-vooraf netwerkfout:", e);
+      onKlaar({
+        voornaam: voornaam.trim(),
+        achternaam: achternaam.trim(),
+        email: email.trim(),
+        toestemming,
+      });
+      void fout;
+    } finally {
+      setBezig(false);
+    }
   }
 
   return (
@@ -119,17 +155,18 @@ export function BlokIntekenenVooraf({
         <button
           type="button"
           onClick={onTerug}
-          className="text-sm text-gray-500 hover:text-gray-700"
+          disabled={bezig}
+          className="text-sm text-gray-500 hover:text-gray-700 disabled:opacity-40"
         >
           ← Terug
         </button>
         <button
           type="button"
           onClick={verzend}
-          disabled={!klaar}
+          disabled={!klaar || bezig}
           className="rounded-full bg-gradient-to-r from-rose-600 to-pink-600 px-6 py-3 text-white text-base font-semibold shadow-md hover:shadow-lg disabled:from-gray-300 disabled:to-gray-300 disabled:shadow-none transition"
         >
-          Akkoord, start de vragen →
+          {bezig ? "Even bewaren..." : "Akkoord, start de vragen →"}
         </button>
       </div>
 
