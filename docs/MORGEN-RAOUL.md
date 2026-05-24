@@ -227,3 +227,81 @@ app/instellingen/standaardvragen/page.tsx
 ```
 
 Geen bestaande files gewijzigd buiten `docs/MORGEN-RAOUL.md` en `docs/superpowers/plans/2026-05-22-core-v6-fase-a.md`. Sprint blijft volledig intact.
+
+---
+
+## Tweede Lente bot, opgeleverd 2026-05-24
+
+**Status:** Skelet draait. Drie API-routes actief. Vier UI-blokken klaar.
+Token-mechanisme via `freebie_bot_member_tokens` werkt. SQL-migratie tegen
+live Supabase succesvol gedraaid.
+
+**Hoe testen:**
+1. Log in op live ELEVA (Vercel).
+2. Open `/instellingen/mijn-tracking-links` (nieuwe menu-item onder Bestellinks).
+3. Kopieer je persoonlijke tracking-link.
+4. Open de link in een incognito-tab. Doorloop:
+   - Warme intro-blok
+   - Zeven multi-choice vragen (vraag 2 = max 3 keuzes)
+   - AI-spiegel (OpenAI gpt-4o-mini met claim-vrije bewaker)
+   - Opt-in + drie producten + contact-aanbod + disclaimer
+5. Vul e-mail + naam, vink toestemming, klik "Schrijf mij in".
+6. Verifieer in Supabase: `freebie_opt_ins` heeft rij met `bot_antwoorden`
+   en `spiegel_tekst`, `klantomgeving_klanten` heeft rij met
+   `bron='freebie-opt-in'`.
+
+**Wat Gaby nog moet aanleveren:**
+- Definitieve openings-tekst voor Blok 1 (warme intro). Bestand:
+  `app/bot/tweede-lente/[token]/blok-intro.tsx`
+- Tien tot twaalf claim-vrije template-zinnen voor de drie aanpassingen.
+  Bestand: `lib/freebie-bots/tweede-lente-system-prompt.ts` (constante
+  `TEMPLATE_AANPASSINGEN`)
+- Vijf mail-templates van 200-300 woorden per stuk voor de 5-mail-reeks
+- Twee of drie korte anekdotes voor mails of bot-spiegel
+
+**Wat Raoul nog moet aanleveren:**
+- Definitieve webshop-URL's voor MenaPlus, Women's Gold, Vitamins D&K.
+  Bestand: `app/bot/tweede-lente/[token]/blok-opt-in.tsx` (constante
+  `PRODUCT_LINKS`)
+- Bevestiging of bestellinks-koppeling per member ipv statisch moet (in
+  pilot statisch, later kan dit member-specifiek)
+
+**Bekende open punten:**
+- 5-mail-reeks-versturing is nog NIET ingebouwd. Pilot bouwt alleen
+  opt-in-opslag. Volgende ronde: mail-versturing toevoegen (Resend of
+  Postmark integratie + per-opt-in mail-queue).
+- Push-notificatie naar member werkt alleen als er een actieve
+  push-subscription is voor die member.
+- `NEXT_PUBLIC_APP_URL` moet correct in Vercel staan zodat de
+  tracking-links de juiste domain hebben.
+
+**Hoofdbestanden ter referentie:**
+```
+supabase/migrations/2026-05-24-09-tweede-lente-bot.sql
+
+lib/freebie-bots/types.ts
+lib/freebie-bots/tweede-lente-vragen.ts
+lib/freebie-bots/tweede-lente-system-prompt.ts
+lib/freebie-bots/templatezinnen-bewaker.ts
+lib/freebie-bots/token.ts
+
+app/api/freebie-bot/maak-token/route.ts
+app/api/freebie-bot/start/route.ts
+app/api/freebie-bot/spiegel/route.ts
+app/api/freebie-bot/opt-in/route.ts
+
+app/bot/tweede-lente/page.tsx
+app/bot/tweede-lente/[token]/page.tsx
+app/bot/tweede-lente/[token]/tweede-lente-flow.tsx
+app/bot/tweede-lente/[token]/blok-intro.tsx
+app/bot/tweede-lente/[token]/blok-vragen.tsx
+app/bot/tweede-lente/[token]/blok-spiegel.tsx
+app/bot/tweede-lente/[token]/blok-opt-in.tsx
+
+app/instellingen/mijn-tracking-links/page.tsx
+app/instellingen/mijn-tracking-links/kopieer-knop.tsx
+```
+
+Pilot raakt geen Sprint-bestanden, geen Core-V6-bestanden. Alle nieuwe
+code zit in `lib/freebie-bots/`, `app/api/freebie-bot/`, `app/bot/`,
+`app/instellingen/mijn-tracking-links/`.
