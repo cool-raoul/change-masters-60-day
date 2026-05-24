@@ -324,3 +324,49 @@ Feature-flag of A/B om te testen of e-mail-opt-in als filter VOORAF beter werkt 
 **4. Inhoud Gaby:** definitieve openings-tekst, 10-12 template-zinnen, 5 mail-templates, anekdotes.
 
 **5. Member zelf:** hormoonbalans-bestellinks invullen op /instellingen/bestellinks (essential/plus/complete) voordat bot bruikbare productknoppen kan tonen.
+
+---
+
+## Nacht-bouw 2026-05-25, drie pakketten klaar
+
+**A) Freebie-stats op twee plekken**
+- `/instellingen/mijn-tracking-links`: compacte tellers per freebie boven de URL
+- `/statistieken`: nieuwe sectie '🎁 Mijn freebies' met volledige stats-blokken
+- Productadvies (voor iedereen): Verzonden / Ingevuld / Conversie %
+- Tweede Lente (Core + founder): Ingetekend / Afgemaakt / Contact / Conversie %
+
+**B) ManyChat-handleiding (uitklap-blok)**
+- Op `/instellingen/mijn-tracking-links` onderaan een 5-stappen-handleiding
+- Voor optionele Instagram-automatisering via ManyChat
+- Plus uitleg-blok 'Wat ELEVA voor jou doet (en wat ManyChat dus niet hoeft)'
+
+**C) 5-mail-sequence skelet (NIET ACTIEF)**
+
+Compleet ingebouwd, wachten alleen op:
+1. SQL-migratie draaien: `node scripts/run-migration.mjs 2026-05-25-01-freebie-mail-queue.sql`
+2. Gaby vult de 5 TODO-GABY-tags in `lib/freebie-bots/tweede-lente-mail-templates.ts`
+3. Vercel env vars: `RESEND_API_KEY`, `RESEND_FROM`, `CRON_SECRET`
+4. Vercel `vercel.json` cron-config:
+   ```json
+   { "crons": [{ "path": "/api/cron/freebie-mails", "schedule": "0 18 * * *" }] }
+   ```
+5. SQL: `UPDATE profiles SET freebie_mails_actief = true WHERE id IN (pilot-team-ids);`
+
+Tot dan: pilot draait door precies zoals nu. Mails worden niet verstuurd
+omdat de feature-flag op profile-niveau default false is. Ook al zou
+de migratie per ongeluk draaien, zonder flag-aan gebeurt er niets.
+
+**Files gemaakt in C:**
+```
+supabase/migrations/2026-05-25-01-freebie-mail-queue.sql
+lib/freebie-bots/mail-queue.ts (planMailSequence helper)
+lib/freebie-bots/tweede-lente-mail-templates.ts (5 templates met TODO-GABY)
+lib/mail/resend.ts (verstuurMail met dry-run fallback)
+app/api/cron/freebie-mails/route.ts (cron-eindpunt)
+app/api/freebie-bot/unsubscribe/route.ts (afmeld-link in mails)
+```
+
+Plus: `planMailSequence` wordt al aangeroepen vanuit `/api/freebie-bot/opt-in`,
+faalt veilig als de tabel nog niet bestaat. Zodra je de migratie draait
++ flag aan zet, beginnen er automatisch mails uit te gaan voor opt-ins
+die al in de DB staan (heeft Raoul Zeewijk eerst groen licht voor gegeven).
