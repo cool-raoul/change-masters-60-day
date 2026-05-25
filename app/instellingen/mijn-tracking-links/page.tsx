@@ -165,8 +165,9 @@ export default async function MijnTrackingLinksPagina() {
             </div>
           </div>
 
-          {/* Stats voor productadvies */}
-          <div className="mt-4 grid grid-cols-3 gap-2">
+          {/* Stats voor productadvies. Echte conversie = klant geworden,
+              niet alleen ingevuld. Voor diepere stats: link naar /statistieken. */}
+          <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2">
             <StatTegel
               label="Verzonden"
               waarde={productadviesStats.totaalVerzonden}
@@ -178,9 +179,16 @@ export default async function MijnTrackingLinksPagina() {
               kleur="emerald"
             />
             <StatTegel
-              label="Conversie"
-              waarde={`${productadviesStats.conversie}%`}
-              kleur="emerald"
+              label="Klant"
+              waarde={productadviesStats.klanten}
+              kleur="gold"
+              hint="Prospects via deze freebie die nu shopper of member zijn"
+            />
+            <StatTegel
+              label="Klant %"
+              waarde={`${productadviesStats.klantPct}%`}
+              kleur="gold"
+              hint="Echte conversie"
             />
           </div>
 
@@ -227,9 +235,11 @@ export default async function MijnTrackingLinksPagina() {
                   </div>
                 </div>
 
-                {/* Stats voor Tweede Lente */}
+                {/* Stats voor Tweede Lente. Echte conversie = klant
+                    geworden. Voor pipeline-spreiding + funnel-balk: link
+                    naar /statistieken. */}
                 {tweedeLenteStats && (
-                  <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  <div className="mt-4 grid grid-cols-2 sm:grid-cols-5 gap-2">
                     <StatTegel
                       label="Ingetekend"
                       waarde={tweedeLenteStats.totaalIngetekend}
@@ -246,9 +256,16 @@ export default async function MijnTrackingLinksPagina() {
                       kleur="rose"
                     />
                     <StatTegel
-                      label="Conversie"
-                      waarde={`${tweedeLenteStats.conversie}%`}
-                      kleur="emerald"
+                      label="Klant"
+                      waarde={tweedeLenteStats.klanten}
+                      kleur="gold"
+                      hint="Prospects die nu shopper of member zijn"
+                    />
+                    <StatTegel
+                      label="Klant %"
+                      waarde={`${tweedeLenteStats.klantPct}%`}
+                      kleur="gold"
+                      hint="Echte conversie"
                     />
                   </div>
                 )}
@@ -311,6 +328,23 @@ export default async function MijnTrackingLinksPagina() {
         }
         triggerVoorbeeld="TWEEDE-LENTE"
       />
+
+      <section className="mt-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-5">
+        <h3 className="text-base font-medium text-emerald-100">
+          📊 Volledige funnel en pipeline-spreiding
+        </h3>
+        <p className="mt-1 text-sm text-emerald-200/80 leading-relaxed">
+          Op{" "}
+          <a
+            href="/statistieken"
+            className="text-emerald-100 underline hover:text-white"
+          >
+            de statistieken-pagina
+          </a>
+          {" "}zie je per freebie de complete funnel (ingetekend → afgemaakt
+          → klant) en waar je leads NU staan in je pijplijn.
+        </p>
+      </section>
 
       <section className="mt-6 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5">
         <h3 className="text-base font-medium text-amber-100">
