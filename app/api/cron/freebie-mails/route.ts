@@ -19,7 +19,7 @@
 
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { templateVoorDag } from "@/lib/freebie-bots/tweede-lente";
+import { getBotConfig } from "@/lib/freebie-bots/registry";
 import { verstuurMail } from "@/lib/mail/resend";
 
 export const maxDuration = 60;
@@ -101,14 +101,15 @@ export async function GET(request: Request) {
       .eq("id", rij.opt_in_id)
       .maybeSingle();
 
-    // Bouw template
-    const template = templateVoorDag(rij.dag);
+    // Bouw template via registry op basis van bot-slug uit de rij
+    const botConfig = getBotConfig(rij.freebie_slug);
+    const template = botConfig?.templateVoorDag(rij.dag) ?? null;
     if (!template) {
       await supabase
         .from("freebie_mail_queue")
         .update({
           status: "mislukt",
-          foutmelding: `Geen template voor dag ${rij.dag}`,
+          foutmelding: `Geen template voor ${rij.freebie_slug} dag ${rij.dag}`,
           pogingen: rij.pogingen + 1,
         })
         .eq("id", rij.id);

@@ -1,22 +1,17 @@
 // File: app/api/freebie-bot/spiegel/route.ts
 //
 // POST /api/freebie-bot/spiegel
-// Body: { token: string, antwoorden: TweedeLenteAntwoorden }
+// Body: { token: string, antwoorden: object }
 // Response: SpiegelOutput
 //
-// PUBLIEKE route. Token-validatie eerst. Daarna OpenAI gpt-4o-mini
-// met strakke system-prompt. Output gaat door de bewaker en dan terug.
-// Geen DB-schrijven hier, dat gebeurt in opt-in-route bij e-mail-submit.
+// PUBLIEKE route. Generic over alle freebie-bots: kiest config uit
+// registry op basis van de bot_slug die bij de token hoort. Werkt
+// voor Tweede Lente, Tweede Wind, en latere bots zonder code-wijziging.
 
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { createAdminClient } from "@/lib/supabase/admin";
-import {
-  bouwTweedeLenteSysteemPrompt,
-  bouwTweedeLenteUserBericht,
-  bewaakSpiegelOutput,
-} from "@/lib/freebie-bots/tweede-lente";
-import type { TweedeLenteAntwoorden } from "@/lib/freebie-bots/types";
+import { getBotConfig } from "@/lib/freebie-bots/registry";
 
 export const maxDuration = 30;
 
@@ -32,19 +27,19 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json().catch(() => ({}));
     const token = body.token as string | undefined;
-    const antwoorden = body.antwoorden as TweedeLenteAntwoorden | undefined;
+    const antwoorden = body.antwoorden as Record<string, unknown> | undefined;
 
     if (!token || token.length !== 16) {
       return NextResponse.json({ error: "Ongeldige token" }, { status: 400 });
     }
-    if (!antwoorden || !antwoorden.fase) {
+    if (!antwoorden || typeof antwoorden !== "object") {
       return NextResponse.json(
         { error: "Antwoorden onvolledig" },
         { status: 400 },
       );
     }
 
-    // Token valideren
+    // Token valideren + bot-slug ophalen
     const supabase = createAdminClient();
     const { data: row } = await supabase
       .from("freebie_bot_member_tokens")
@@ -58,23 +53,31 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Compacte antwoord-string voor de prompt
-    const antwoordRegel = [
-      `Fase: ${antwoorden.fase}`,
-      `Valt op: ${antwoorden.watValtOp.join(", ")}`,
-      `Eet-ritme: ${antwoorden.eetRitme}`,
-      `Beweging: ${antwoorden.beweging}`,
-      `Rust: ${antwoorden.rust}`,
-      `Deelt met: ${antwoorden.deel}`,
-      `Zoekt: ${antwoorden.zoek}`,
-    ].join("\n");
+    const config = getBotConfig(row.bot_slug as string);
+    if (!config) {
+      return NextResponse.json(
+        { error: `Onbekende bot-slug: ${row.bot_slug}` },
+        { status: 400 },
+      );
+    }
+
+    // Compacte antwoord-string voor de prompt: alle velden plat dumpen
+    // werkt voor zowel Tweede Lente als Tweede Wind. AI ziet de kernen.
+    const antwoordRegel = Object.entries(antwoorden)
+      .map(([sleutel, waarde]) => {
+        const waardeStr = Array.isArray(waarde)
+          ? waarde.join(", ")
+          : String(waarde);
+        return `${sleutel}: ${waardeStr}`;
+      })
+      .join("\n");
 
     const openai = new OpenAI({ apiKey });
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        { role: "system", content: bouwTweedeLenteSysteemPrompt() },
-        { role: "user", content: bouwTweedeLenteUserBericht(antwoordRegel) },
+        { role: "system", content: config.bouwSysteemPrompt() },
+        { role: "user", content: config.bouwUserBericht(antwoordRegel) },
       ],
       temperature: 0.5,
       max_tokens: 600,
@@ -82,7 +85,7 @@ export async function POST(req: NextRequest) {
     });
 
     const raw = completion.choices[0]?.message?.content ?? "";
-    const spiegel = bewaakSpiegelOutput(raw);
+    const spiegel = config.bewaakSpiegelOutput(raw);
 
     return NextResponse.json(spiegel);
   } catch (e) {

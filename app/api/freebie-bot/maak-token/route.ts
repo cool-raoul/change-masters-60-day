@@ -13,7 +13,7 @@ import { createClient } from "@/lib/supabase/server";
 import { genereerBotToken } from "@/lib/freebie-bots/token";
 import type { BotSlug } from "@/lib/freebie-bots/types";
 
-const TOEGESTANE_SLUGS: BotSlug[] = ["tweede-lente"];
+const TOEGESTANE_SLUGS: BotSlug[] = ["tweede-lente", "tweede-wind"];
 
 export async function POST(req: NextRequest) {
   try {

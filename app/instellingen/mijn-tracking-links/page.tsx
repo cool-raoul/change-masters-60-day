@@ -22,6 +22,10 @@ import { KopieerKnop } from "./kopieer-knop";
 
 export const dynamic = "force-dynamic";
 
+// Feature-flag voor Tweede Wind. Standaard UIT tot Raoul groen licht geeft
+// (definitieve naam bevestigen, Gaby's content invullen, etc.).
+const TWEEDE_WIND_ZICHTBAAR = false;
+
 const FREEBIE_BOTS = [
   {
     slug: "tweede-lente",
@@ -30,6 +34,18 @@ const FREEBIE_BOTS = [
     triggerVoorbeeld: "TWEEDE-LENTE",
     iconEmoji: "🌷",
     coreOnly: true,
+    kleur: "rose" as const,
+    actief: true,
+  },
+  {
+    slug: "tweede-wind",
+    titel: "Tweede Wind",
+    ondertitel: "Persoonlijk overzicht voor energie en focus",
+    triggerVoorbeeld: "TWEEDE-WIND",
+    iconEmoji: "⚡",
+    coreOnly: false,
+    kleur: "sky" as const,
+    actief: TWEEDE_WIND_ZICHTBAAR,
   },
 ] as const;
 
@@ -64,9 +80,12 @@ export default async function MijnTrackingLinksPagina() {
     ((profile as { full_name?: string } | null)?.full_name ?? "")
       .split(" ")[0] || "jij";
 
-  // 1. Tokens ophalen / aanmaken voor de freebie-bots (waaronder Tweede Lente)
+  // 1. Tokens ophalen / aanmaken voor de freebie-bots. Filter op:
+  // - actief (feature-flag in code)
+  // - coreOnly + member-modus
   const tokensPerBot: Record<string, string> = {};
   for (const bot of FREEBIE_BOTS) {
+    if (!bot.actief) continue;
     if (bot.coreOnly && !ziet_tweede_lente) continue;
     const { data: bestaand } = await supabase
       .from("freebie_bot_member_tokens")
@@ -212,10 +231,14 @@ export default async function MijnTrackingLinksPagina() {
         </div>
       </section>
 
-      {/* Sectie 2, Freebie-bots (alleen voor Core + founders) */}
-      {ziet_tweede_lente && (
+      {/* Sectie 2, Freebie-bots (alleen voor Core + founders, of bots
+          die niet coreOnly zijn) */}
+      {FREEBIE_BOTS.some(
+        (b) => b.actief && (!b.coreOnly || ziet_tweede_lente),
+      ) && (
         <section className="mt-6 space-y-4">
           {FREEBIE_BOTS.map((bot) => {
+            if (!bot.actief) return null;
             if (bot.coreOnly && !ziet_tweede_lente) return null;
             const url = `${origin}/bot/${bot.slug}/${tokensPerBot[bot.slug]}`;
             return (
