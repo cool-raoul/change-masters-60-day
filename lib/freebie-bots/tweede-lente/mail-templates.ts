@@ -1,4 +1,4 @@
-// File: lib/freebie-bots/tweede-lente-mail-templates.ts
+// File: lib/freebie-bots/tweede-lente/mail-templates.ts
 //
 // Vijf mail-templates voor de Tweede Lente vervolg-sequence.
 // Worden door cron-route gerendered en verstuurd via Resend.
@@ -10,7 +10,7 @@
 // 'verbetert', 'ondersteunt klacht'). EFSA-goedgekeurde voedingsclaims
 // mogen wel letterlijk.
 
-import type { TweedeLenteAntwoorden } from "./types";
+import type { TweedeLenteAntwoorden } from "../types";
 
 export type MailTemplate = {
   dag: 1 | 2 | 3 | 4 | 5;

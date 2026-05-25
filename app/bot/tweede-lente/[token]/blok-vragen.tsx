@@ -24,7 +24,7 @@ import {
   VRAAG_RUST,
   VRAAG_DEEL,
   VRAAG_ZOEK,
-} from "@/lib/freebie-bots/tweede-lente-vragen";
+} from "@/lib/freebie-bots/tweede-lente";
 
 type Stap = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 

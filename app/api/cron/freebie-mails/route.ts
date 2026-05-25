@@ -19,7 +19,7 @@
 
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { templateVoorDag } from "@/lib/freebie-bots/tweede-lente-mail-templates";
+import { templateVoorDag } from "@/lib/freebie-bots/tweede-lente";
 import { verstuurMail } from "@/lib/mail/resend";
 
 export const maxDuration = 60;

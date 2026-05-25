@@ -14,8 +14,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import {
   bouwTweedeLenteSysteemPrompt,
   bouwTweedeLenteUserBericht,
-} from "@/lib/freebie-bots/tweede-lente-system-prompt";
-import { bewaakSpiegelOutput } from "@/lib/freebie-bots/templatezinnen-bewaker";
+  bewaakSpiegelOutput,
+} from "@/lib/freebie-bots/tweede-lente";
 import type { TweedeLenteAntwoorden } from "@/lib/freebie-bots/types";
 
 export const maxDuration = 30;

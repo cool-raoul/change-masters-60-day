@@ -1,4 +1,4 @@
-// File: lib/freebie-bots/tweede-lente-persoonlijk-advies.ts
+// File: lib/freebie-bots/tweede-lente/advies.ts
 //
 // Personalisatie-laag voor de Tweede Lente spiegel. De bot heeft 7
 // multi-choice vragen, elk antwoord taggt een set thema's (slaap,
@@ -12,7 +12,7 @@
 // Alle teksten zijn claim-vrij (EFSA + ACM-compliant). Nutriënt-claims
 // zijn EFSA-goedgekeurde health-claims (Verordening EU 1924/2006).
 
-import type { TweedeLenteAntwoorden } from "./types";
+import type { TweedeLenteAntwoorden } from "../types";
 
 // ============================================================
 // THEMA-TAGS

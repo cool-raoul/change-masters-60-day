@@ -1,4 +1,4 @@
-// File: lib/freebie-bots/tweede-lente-vragen.ts
+// File: lib/freebie-bots/tweede-lente/vragen.ts
 //
 // De 7 multi-choice vragen van de Tweede Lente bot. Statisch in code
 // voor pilot. Later kan dit naar DB als per-team-vrouw personalisatie
@@ -12,7 +12,7 @@ import type {
   TweedeLenteRust,
   TweedeLenteDeel,
   TweedeLenteZoek,
-} from "./types";
+} from "../types";
 
 export type VraagKeuze<T extends string> = {
   waarde: T;

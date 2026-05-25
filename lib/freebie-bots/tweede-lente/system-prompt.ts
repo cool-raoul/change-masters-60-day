@@ -1,4 +1,4 @@
-// File: lib/freebie-bots/tweede-lente-system-prompt.ts
+// File: lib/freebie-bots/tweede-lente/system-prompt.ts
 //
 // Claim-vrije system-prompt voor de AI-spiegel. De prompt bevat:
 //   1. Strakke begrenzing op stem, lengte en structuur

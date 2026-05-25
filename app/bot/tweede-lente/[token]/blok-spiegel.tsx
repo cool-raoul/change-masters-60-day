@@ -19,7 +19,7 @@ import {
   type AdviesPakket,
   type Anker,
   type Nutrient,
-} from "@/lib/freebie-bots/tweede-lente-persoonlijk-advies";
+} from "@/lib/freebie-bots/tweede-lente";
 
 // Tailwind-class mapping per kleur. We hardcoderen omdat Tailwind alleen
 // classes detecteert die letterlijk in de bron staan (purge-mechanisme).

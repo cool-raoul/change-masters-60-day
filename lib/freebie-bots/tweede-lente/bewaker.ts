@@ -1,4 +1,4 @@
-// File: lib/freebie-bots/templatezinnen-bewaker.ts
+// File: lib/freebie-bots/tweede-lente/bewaker.ts
 //
 // Bewaakt de AI-output. Drie lagen:
 //   1. JSON-parse: faalt als output geen valide JSON is.
@@ -7,11 +7,11 @@
 //   3. Verboden-vocabulaire-scan op opening + patroon + afsluiting:
 //      bij match wordt de zin vervangen door een veilige fallback.
 
-import type { SpiegelOutput } from "./types";
+import type { SpiegelOutput } from "../types";
 import {
   TEMPLATE_AANPASSINGEN,
   VERBODEN_WOORDEN,
-} from "./tweede-lente-system-prompt";
+} from "./system-prompt";
 
 const FALLBACK_OPENING =
   "Wat fijn dat je dit hebt ingevuld. Dit is een fase die veel vrouwen herkennen, en je staat er niet alleen in.";
