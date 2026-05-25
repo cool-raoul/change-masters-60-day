@@ -1,9 +1,36 @@
 // File: lib/freebie-bots/types.ts
 //
-// Type-definities voor freebie-bots (Tweede Lente is pilot, daarna
-// volgen Slaap-Loep, Energie-Loep, etc.).
+// Type-definities voor freebie-bots. Cross-bot generieke types en
+// bot-specifieke types. Bot-specifieke files staan onder
+// `lib/freebie-bots/<slug>/`.
 
-export type BotSlug = "tweede-lente";
+export type BotSlug = "tweede-lente" | "tweede-wind";
+
+/**
+ * SpiegelOutput is een gemeenschappelijke vorm: alle freebie-bots
+ * leveren dezelfde structuur op aan de UI. Dat houdt de spiegel-
+ * component cross-bot bruikbaar.
+ */
+export type SpiegelOutput = {
+  /** Eén openings-zin van ongeveer 2 regels in ELEVA-team-stem. */
+  opening: string;
+  /** Eén patroon-paragraaf, 3-4 regels. */
+  patroon: string;
+  /** Precies drie aanpassingen, elk een korte zin uit de template-whitelist. */
+  driAanpassingen: [string, string, string];
+  /** Eén afsluitings-zin die overgaat naar het opt-in-blok. */
+  afsluiting: string;
+};
+
+export type BotMemberContext = {
+  memberId: string;
+  memberVoornaam: string;
+  botSlug: BotSlug;
+};
+
+// ============================================================
+// TWEEDE LENTE (overgang)
+// ============================================================
 
 export type TweedeLenteFase =
   | "pre-overgang"
@@ -61,19 +88,66 @@ export type TweedeLenteAntwoorden = {
   zoek: TweedeLenteZoek;
 };
 
-export type SpiegelOutput = {
-  /** Eén openings-zin van ongeveer 2 regels in ELEVA-team-stem. */
-  opening: string;
-  /** Eén patroon-paragraaf, 3-4 regels. */
-  patroon: string;
-  /** Precies drie aanpassingen, elk een korte zin uit de template-whitelist. */
-  driAanpassingen: [string, string, string];
-  /** Eén afsluitings-zin die overgaat naar het opt-in-blok. */
-  afsluiting: string;
-};
+// ============================================================
+// TWEEDE WIND (energie en focus)
+// ============================================================
+// Werknaam, definitieve naam wordt door Raoul bevestigd.
 
-export type BotMemberContext = {
-  memberId: string;
-  memberVoornaam: string;
-  botSlug: BotSlug;
+export type TweedeWindEnergie =
+  | "stabiel-goed"
+  | "ochtend-piek-middag-dip"
+  | "doormodderen-tot-avond"
+  | "wisselend-onvoorspelbaar"
+  | "structureel-laag";
+
+export type TweedeWindFocusBreker =
+  | "afleiding-schermen"
+  | "te-veel-tegelijk"
+  | "stress-zorgen"
+  | "slecht-slapen"
+  | "geen-duidelijk-doel"
+  | "kort-van-geheugen"
+  | "moeilijk-beginnen";
+
+export type TweedeWindSlaap =
+  | "diep-en-genoeg"
+  | "moeite-met-inslapen"
+  | "vroeg-wakker"
+  | "onrustig-doorslapen"
+  | "te-weinig-tijd";
+
+export type TweedeWindEetRitme =
+  | "regelmatig-volwaardig"
+  | "veel-snelle-suikers"
+  | "weinig-eiwit"
+  | "skip-ontbijt"
+  | "wisselend";
+
+export type TweedeWindBeweging =
+  | "dagelijks-iets"
+  | "een-paar-keer-per-week"
+  | "wisselend"
+  | "weinig-tot-niets";
+
+export type TweedeWindHerstel =
+  | "echt-uitschakelen"
+  | "scherm-tot-bedtijd"
+  | "altijd-aan"
+  | "geen-tijd-voor-rust";
+
+export type TweedeWindDoel =
+  | "meer-energie-de-hele-dag"
+  | "scherper-kunnen-werken"
+  | "minder-stress"
+  | "beter-slapen"
+  | "weet-niet-precies";
+
+export type TweedeWindAntwoorden = {
+  energie: TweedeWindEnergie;
+  focusBrekers: TweedeWindFocusBreker[]; // 1-3 keuzes
+  slaap: TweedeWindSlaap;
+  eetRitme: TweedeWindEetRitme;
+  beweging: TweedeWindBeweging;
+  herstel: TweedeWindHerstel;
+  doel: TweedeWindDoel;
 };
