@@ -1,0 +1,372 @@
+# Morgen-Raoul, vragen-stack na de nacht-bouw
+
+> Verzameld tijdens nacht-bouw 2026-05-22 / 23. Loop door als je terug bent. Antwoorden in deze
+> file noteren of in chat, dan vul ik morgen verder.
+
+## OPENSTAANDE PUNTEN VOOR MORGEN (toegevoegd 2026-05-23 avond)
+
+**Sprint-fixes hebben we afgerond.** Zes verbeterpunten doorgevoerd op Sprint dag 3-21:
+1. "Voeg X namen toe" body op alle dagen (vier bronnen)
+2. Stories met drie onderwerp-richtingen
+3. Momentum-acties jargon uitgelegd (week 1 lang, later kort)
+4. Partner-check label "(nieuwe) partner(s)"
+5. Oude Eric-Worre 4-stappen-formule vervangen door vier bouwstenen + /scripts
+6. "Stuur X mensen eerste bericht (opener)" met body + voorbeelden + /scripts?cat=opener + Mentor
+
+**Plus deze gerelateerde toevoegingen:**
+- Nieuwe /scripts categorie "Opener" (10 opener-templates)
+- UitnodigHelpKnoppen variant prop (opener vs uitnodiging) zodat hulp-knoppen contextueel routen
+- Mentor-prompt: nieuwe sectie WERKWIJZE (OPENER-vraag) + verschil met DM-vraag uitgelegd
+- VraagType uitgebreid met "opener", regex herkent opener-vragen
+- Stories-substeps krijgen actieRoute naar /academy/social-media (klikbaar pijltje)
+
+**DOORTREKKEN NAAR CORE V6 (morgenochtend):**
+
+Deze 6 Sprint-fixes gelden 1-op-1 ook voor Core V6. Bij het oppakken van Core V6 morgenochtend
+meenemen in het stappenplan dat we eerder hadden:
+
+- **Voeg X namen toe**: Core V6 ankerstap-substeps die over naam-toevoegen gaan moeten dezelfde body krijgen
+- **Stories**: Core V6 stap 12 (Stories-ritme + freebie-aankondiging) gebruikt dezelfde drie onderwerp-richtingen + Academy-deeplink
+- **Momentum-acties**: Core V6 afsluit-substeps (momentumRadarStap-equivalent) krijgen dezelfde week-1-lange / later-korte uitleg
+- **Partner-check**: Core V6 afsluit-substeps krijgen "(nieuwe) partner(s)"-label
+- **4-stappen-formule -> vier bouwstenen**: Core V6 stap 4 (webshop-pivot) gebruikt al de vier bouwstenen, maar elke uitnodig-substep moet naar /scripts + Mentor verwijzen
+- **Openers**: Core V6 stap 9 (eerste warme uitnodigingen) en stap 6 (post-reacties) krijgen opener-substeps met /scripts?cat=opener verwijzing + Mentor-helper
+
+**Centrale aanknopingspunten in code:**
+- `namenToevoegenUitleg()`, `eersteBerichtUitleg()`, `uitnodigingenUitleg()`, `storiesStap()`, `momentumRadarStap()`, `partnerCheckStap()` in `lib/playbook/tempo-aware.ts` zijn allemaal HERBRUIKBAAR voor Core V6.
+- Core V6 substeps in `lib/playbook/core-dagen-v6.ts` kunnen dezelfde helpers gebruiken via dependency-injection of door eerst te importeren.
+
+**Daarnaast wachten:**
+- V6 structuur-review (open vragen 1-9 op /core-v6/structuur)
+- 21 ankerstap-watJeLeert + waaromWerktDit-teksten reviewen
+- DB-migraties draaien (6 SQL-bestanden in supabase/migrations/)
+
+---
+
+## Status nacht-bouw
+
+Wordt bijgewerkt onderweg. Per commit volgt hier een korte regel met wat is gebouwd.
+
+- Task 1: feature-flag `core_v6_actief` op profiles (SQL-migratie + lib helper). SQL nog niet gedraaid, ligt klaar in supabase/migrations/.
+- Task 2: Mentor-profiel datamodel + SQL + helpers. SQL ligt klaar in supabase/migrations/.
+- Task 3: Drie-laags Mentor Laag 1 (standaardvragen-bibliotheek). SQL + matcher klaar. Inhoud (30-50 vragen) nog leeg, wacht op Raoul-en-Gaby-input.
+- Task 4: Drie-laags Mentor Laag 2 (model-tier-router). analyseerSignalen + kiesModelTier + modelIdVoorTier. Nog niet gekoppeld aan /api/coach, dat is een latere Fase.
+- Task 5: Drie-laags Mentor Laag 3 (sponsor-escalatie). Tabel + log-functie + open-count helper. Push-notificatie naar sponsor nog niet, komt in latere Fase.
+- Task 6: Drie-laags Mentor unified API (lib/mentor/index.ts). Eén functie vraagAanMentor() routeert door alle drie lagen. Nog niet gekoppeld aan /api/coach route (latere Fase, want huidige route is Sprint-stabiel).
+- Task 7: Freebies datamodel + SQL + types + voorbeeld-toolkit. Vijf PLACEHOLDER-templates in code (energie / slaap / darm / sport / hormonen). TODO-GABY: claim-vrije inhoud per stuk schrijven.
+- Task 8: Klantomgeving datamodel + SQL + types + pulse-momenten. Vijf tijdlijn-pulsmomenten gedefinieerd (dag 0 / 5 / 14 / 28 / 56). Mentor-acties + member-seintjes per pulse staan klaar. Inhoud kan Gaby morgen aanscherpen.
+- Task 9: Core V6 21-ankerstappen-scaffold (lib/playbook/core-dagen-v6.ts). Mechanica + taken concreet, watJeLeert + waaromWerktDit zijn PLACEHOLDER met TODO-GABY-markers. Klaar voor schrijfsessie met Gaby.
+- Task 10: CompactDMOBlok (K1-anti-overwhelm). Default ingeklapt, header toont 'X van Y vandaag'. Klikbaar af te vinken per taak.
+- Task 11: KlantenTegel (K2-anti-overwhelm). Eén tegel op dashboard met aantal klanten + nieuwe signalen. Klik opent lijst /klant (route komt in Task 14).
+- Task 12: Anti-overwhelm UI-primitives. GeadviseerdPad (K3 prospect-kaart, één knop + alternatieven-dropdown). PulseSignaalBox (K4 maximaal 3 signalen per dag, prioriteit-gesorteerd). MentorCuratorVoorstel (K5 voorstel + akkoord/niet-nu, nooit stille acties).
+- Task 13: Founder-CMS shell /instellingen/freebies. Toont live DB-freebies + PLACEHOLDER-templates uit code. Edit-knoppen komen in latere Fase. Founder-only (role-check + redirect).
+- Task 14: Klantomgeving entry-routes /klant + /klant layout. Beschermd door feature-flag core_v6_actief (default false). Toont lijst klanten met status + laatste activiteit. Per-klant-detail komt in latere Fase.
+- Task 15: Core V6 vandaag-shell /core-v6. Beschermd door feature-flag (default false). Toont ankerstap bovenaan (K1 dominant blok), DMO compact ingeklapt (K1), KlantenTegel (K2 een tegel), PulseSignaalBox (K4 leeg in skelet). Ankerstap-positie uit profiles.core_v6_ankerstap (kolom moet nog komen via latere SQL-migratie, default 1 in code-fallback).
+- Task 16: Founder-CMS shell /instellingen/standaardvragen. Lees-overzicht standaardvragen per categorie (bezwaar/product/business/praktisch/persoonlijk). Edit + toevoegen komt in latere Fase. Founder-only.
+
+## Verhelderingsvragen voor jullie (Raoul + Gaby)
+
+### V6-content (kan ik niet zelf invullen)
+
+1. **Welke 5 tot 10 freebies leggen we klaar in de founder-toolkit?**
+   Onderwerpen die in V6 staan: energie, slaap, darmen, sport-prestatie, hormonen, immuniteit, ontstekings-remming.
+   Welke 5 voor pilot? Welke vormen (pdf / mini-mailreeks / mini-film / mini-test)?
+
+2. **De 21 Core-ankerstappen krijgen elke een `watJeLeert`-tekst en `doel`-zin in jullie stem.**
+   Welke stappen mag de Mentor concepten voorstellen, welke schrijven jullie zelf vanaf nul?
+   Voor pilot kan ik PLACEHOLDER zetten, maar voor live moet er content.
+
+3. **De drie verhalen (Stap 8): persoonlijk / product / business.**
+   Voorbeeld-verhalen in jullie stem als template voor members? Of laten we elke member zelf?
+
+4. **Eric Worre edification-zin over sponsor.** Heb je een eigen template-zin die we als startpunt
+   in de Mentor-prompt mogen zetten?
+
+5. **Drie-laags Mentor standaardvragen (Laag 1): welke 30 tot 50 vragen?**
+   Ik kan een eerste set van 20 voorstellen op basis van wat in de pilot is gevraagd, mag dat?
+
+### Beslissingen die naar bouw vragen
+
+6. **Klantomgeving 30-dagen-auto-delete.** Telt vanaf laatste klant-activiteit, of vanaf
+   bestelling, of vanaf opt-in? Ik kies vanaf laatste-activiteit tenzij je iets anders zegt.
+
+7. **Sponsor-escalatie opt-in.** Per escalatie vragen (telkens akkoord-knop) of één keer in
+   Core-onboarding (Stap 1) een vinkje? Ik kies één keer in onboarding tenzij je iets anders zegt.
+
+8. **Mentor-profiel rijke record.** Slaat als één JSON-blob op (snelle leesperformance, lastig
+   te queryen) of als losse rijen per profiel-veld (queryable, meer overhead). Ik kies JSON-blob
+   in `mentor_profielen.data` met getypeerde keys tenzij je anders zegt.
+
+9. **Core V6 routes.** Nieuwe `/core-v6` route bouwen naast bestaande `/welkom-core`, of vervang
+   ik de bestaande direct? Ik bouw NAAST (`/core-v6`) tenzij je iets anders zegt. Switch via
+   feature-flag `core_v6_actief` in `profiles`.
+
+### Open V6-vragen die in het document staan
+
+Deze staan in `OVERZICHT-CORE-V6.html` onderaan, hier alleen als checklist:
+
+- Hoe slaan we het Mentor-profiel op? (zie #8 hierboven)
+- Welke doel-types kunnen worden ingesteld?
+- Klantomgeving, hoe wordt-ie aangemaakt? (auto / handmatig / uitnodig-mail)
+- Wat als prospect klantomgeving-uitnodiging niet activeert?
+- Exacte zinnen verfijnen (Raoul-en-Gaby-toon)
+- Tempo-verschil, hoe communiceer je dat?
+- Mentor als les-curator, hoe veilig houden? (K5-kompas dekt dit deels)
+- Escalatie-trigger Mentor naar sponsor, wanneer precies?
+- DMO + ankerstap, hoe naast elkaar tonen op /vandaag? (K1-kompas dekt dit)
+- Freebie-toolkit, welke 5 tot 10 freebies?
+- Eigen-freebie-flow met Mentor, hoe zwaar?
+
+## Aannames die ik maak tijdens de nacht (om door te bouwen, kun je morgen omdraaien)
+
+- **Bouw alles als skelet naast bestaande code, niet in plaats van.** Sprint blijft 100% draaien.
+- **DB-migraties als SQL-files in `supabase/migrations/` met datum-prefix.** Niet uitvoeren, jij
+  draait ze morgen in Supabase SQL editor.
+- **Feature-flag `core_v6_actief` in `profiles`** beschermt nieuwe routes. Default false.
+- **PLACEHOLDER-content** waar Gaby moet schrijven, duidelijk gemarkeerd in code-comments.
+- **Anti-overwhelm-kompas K1 tot K5** als toets bij elke nieuwe UI.
+- **Geen content-changes aan bestaande Sprint-teksten.**
+- **`npm run build` moet groen blijven na elke commit.**
+
+## Beslissingen van Raoul (2026-05-22 avond)
+
+- **Klantomgeving auto-delete: 60 dagen na laatste activiteit** (NIET 30, zoals ik eerst had). Geldt voor klanten die geen activiteit meer laten zien. Cron-job komt in Fase B.
+- **Sponsor-escalatie opt-in: A voor BEIDE paden** (Core-member-zijde naar sponsor, klantomgeving-Mentor naar Core-member). Eén keer in onboarding, vinkje geldt tot wederopzegging. Inbouw komt in Fase B.
+- **Mentor-profiel als JSONB-blob**: bevestigd, al gebouwd, geen wijziging.
+- **Parallel pad**: bevestigd, al gebouwd. Raoul kan vergelijken via `/vandaag` (huidige Core) en `/core-v6` (nieuwe Core).
+- **Core V6 vandaag-pagina moet Sprint-rijkheid hebben** (film + uitleg + quote + afvinken + inline embeds), niet de mager-shell die ik vannacht bouwde. Plus per-stap-detailpagina.
+- **PLACEHOLDER-teksten in core-dagen-v6.ts**: Claude vult zelf in op basis van wat hij weet (ELEVA-stem, kennisbank, scripts, V6-document). Raoul reviewt achteraf.
+
+---
+
+## Hand-over voor morgen
+
+### Wat staat klaar (Fase A skelet compleet)
+
+Bestanden: zie task-status hierboven. Samenvatting per laag:
+
+- **Feature-flag**: `profiles.core_v6_actief` (SQL klaar, niet gedraaid).
+- **Mentor-profiel**: tabel + types + helpers (lees/patch).
+- **Drie-laags Mentor**: Laag 1 (standaardvragen-matcher) + Laag 2 (model-tier-router) + Laag 3 (sponsor-escalatie) + unified API `vraagAanMentor()`.
+- **Freebies**: tabel + opt-ins + types + 5 PLACEHOLDER-templates + founder-CMS-shell.
+- **Klantomgeving**: tabel klanten + pulses + types + 5 pulse-moment-definities + entry-route /klant.
+- **Core V6 21 ankerstappen**: scaffold in `lib/playbook/core-dagen-v6.ts`, PLACEHOLDER per stap.
+- **Anti-overwhelm UI-primitives**: CompactDMOBlok (K1) + KlantenTegel (K2) + GeadviseerdPad (K3) + PulseSignaalBox (K4) + MentorCuratorVoorstel (K5).
+- **Core V6 vandaag-shell**: `/core-v6` met de vier kompas-componenten boven elkaar.
+- **Standaardvragen-CMS-shell**: `/instellingen/standaardvragen`.
+
+### Wat moet jij doen om te activeren
+
+1. **Draai 6 SQL-migraties** in Supabase SQL Editor in deze volgorde:
+   - `supabase/migrations/2026-05-22-01-core-v6-feature-flag.sql`
+   - `supabase/migrations/2026-05-22-02-mentor-profielen.sql`
+   - `supabase/migrations/2026-05-22-03-standaardvragen.sql`
+   - `supabase/migrations/2026-05-22-04-mentor-escalaties.sql`
+   - `supabase/migrations/2026-05-22-05-freebies.sql`
+   - `supabase/migrations/2026-05-22-06-klantomgeving.sql`
+
+2. **Activeer de feature-flag voor jouw account** (alleen jij eerst, niet andere pilot-leden):
+   ```sql
+   update public.profiles set core_v6_actief = true where id = '<jouw-user-id>';
+   ```
+
+3. **Test smoke**: open `/core-v6` en kijk of de shell laadt zonder errors. Open `/klant` en kijk of de lijst-shell laadt. Open `/instellingen/freebies` en `/instellingen/standaardvragen` als founder.
+
+4. **Beslissingen die ik in #6 t/m #9 hierboven voor jou heb gemaakt** (klantomgeving-auto-delete, escalatie-opt-in, mentor-profiel JSONB, core-v6 routes). Bevestig of pas aan.
+
+5. **Schrijfsessie met Gaby** voor:
+   - 21 ankerstap-`watJeLeert`-teksten + `waaromWerktDit` quotes (zie `lib/playbook/core-dagen-v6.ts`, zoek op TODO-GABY)
+   - 5 freebie-inhouds-templates (zie `lib/freebies/voorbeeld-toolkit.ts`, zoek op TODO-GABY)
+   - Eerste 20 standaardvragen Laag 1 (na SQL-migratie via insert-statements)
+
+### Wat ik morgen voor je oppak (Fase B en later)
+
+- DMO-progressie aansluiten op `/core-v6` (DB-tabel `core_v6_dmo_voortgang` + helper)
+- Ankerstap-progressie verhogen na voltooien (kolom `profiles.core_v6_ankerstap`)
+- Cross-modus skip ook voor V6 stappen (verwijzen naar Sprint-equivalenten)
+- `/api/coach` route koppelen aan `vraagAanMentor()` voor Core-V6-leden
+- Klantomgeving per-klant-detail-pagina + pulse-engine cron-job
+- Freebies edit-knoppen in founder-CMS
+- Mentor-profiel auto-vullen na elke ankerstap (hook in voltooi-flow)
+- Privacy-statement update voor klantomgeving + sponsor-escalatie + freebies opt-in
+
+### Bestanden-index (alle nieuwe files)
+
+```
+supabase/migrations/2026-05-22-01-core-v6-feature-flag.sql
+supabase/migrations/2026-05-22-02-mentor-profielen.sql
+supabase/migrations/2026-05-22-03-standaardvragen.sql
+supabase/migrations/2026-05-22-04-mentor-escalaties.sql
+supabase/migrations/2026-05-22-05-freebies.sql
+supabase/migrations/2026-05-22-06-klantomgeving.sql
+
+lib/feature-flags/core-v6.ts
+lib/mentor-profiel/types.ts
+lib/mentor-profiel/helpers.ts
+lib/mentor/laag-1-standaardvragen.ts
+lib/mentor/laag-2-router.ts
+lib/mentor/laag-3-escalatie.ts
+lib/mentor/index.ts
+lib/freebies/types.ts
+lib/freebies/voorbeeld-toolkit.ts
+lib/klantomgeving/types.ts
+lib/klantomgeving/pulse-momenten.ts
+lib/playbook/core-dagen-v6.ts
+
+components/anti-overwhelm/CompactDMOBlok.tsx
+components/anti-overwhelm/GeadviseerdPad.tsx
+components/anti-overwhelm/KlantenTegel.tsx
+components/anti-overwhelm/PulseSignaalBox.tsx
+components/anti-overwhelm/MentorCuratorVoorstel.tsx
+
+app/core-v6/page.tsx
+app/klant/layout.tsx
+app/klant/page.tsx
+app/instellingen/freebies/page.tsx
+app/instellingen/standaardvragen/page.tsx
+```
+
+Geen bestaande files gewijzigd buiten `docs/MORGEN-RAOUL.md` en `docs/superpowers/plans/2026-05-22-core-v6-fase-a.md`. Sprint blijft volledig intact.
+
+---
+
+## Tweede Lente bot, opgeleverd 2026-05-24
+
+**Status:** Skelet draait. Drie API-routes actief. Vier UI-blokken klaar.
+Token-mechanisme via `freebie_bot_member_tokens` werkt. SQL-migratie tegen
+live Supabase succesvol gedraaid.
+
+**Hoe testen:**
+1. Log in op live ELEVA (Vercel).
+2. Open `/instellingen/mijn-tracking-links` (nieuwe menu-item onder Bestellinks).
+3. Kopieer je persoonlijke tracking-link.
+4. Open de link in een incognito-tab. Doorloop:
+   - Warme intro-blok
+   - Zeven multi-choice vragen (vraag 2 = max 3 keuzes)
+   - AI-spiegel (OpenAI gpt-4o-mini met claim-vrije bewaker)
+   - Opt-in + drie producten + contact-aanbod + disclaimer
+5. Vul e-mail + naam, vink toestemming, klik "Schrijf mij in".
+6. Verifieer in Supabase: `freebie_opt_ins` heeft rij met `bot_antwoorden`
+   en `spiegel_tekst`, `klantomgeving_klanten` heeft rij met
+   `bron='freebie-opt-in'`.
+
+**Wat Gaby nog moet aanleveren:**
+- Definitieve openings-tekst voor Blok 1 (warme intro). Bestand:
+  `app/bot/tweede-lente/[token]/blok-intro.tsx`
+- Tien tot twaalf claim-vrije template-zinnen voor de drie aanpassingen.
+  Bestand: `lib/freebie-bots/tweede-lente-system-prompt.ts` (constante
+  `TEMPLATE_AANPASSINGEN`)
+- Vijf mail-templates van 200-300 woorden per stuk voor de 5-mail-reeks
+- Twee of drie korte anekdotes voor mails of bot-spiegel
+
+**Wat Raoul nog moet aanleveren:**
+- Definitieve webshop-URL's voor MenaPlus, Women's Gold, Vitamins D&K.
+  Bestand: `app/bot/tweede-lente/[token]/blok-opt-in.tsx` (constante
+  `PRODUCT_LINKS`)
+- Bevestiging of bestellinks-koppeling per member ipv statisch moet (in
+  pilot statisch, later kan dit member-specifiek)
+
+**Bekende open punten:**
+- 5-mail-reeks-versturing is nog NIET ingebouwd. Pilot bouwt alleen
+  opt-in-opslag. Volgende ronde: mail-versturing toevoegen (Resend of
+  Postmark integratie + per-opt-in mail-queue).
+- Push-notificatie naar member werkt alleen als er een actieve
+  push-subscription is voor die member.
+- `NEXT_PUBLIC_APP_URL` moet correct in Vercel staan zodat de
+  tracking-links de juiste domain hebben.
+
+**Hoofdbestanden ter referentie:**
+```
+supabase/migrations/2026-05-24-09-tweede-lente-bot.sql
+
+lib/freebie-bots/types.ts
+lib/freebie-bots/tweede-lente-vragen.ts
+lib/freebie-bots/tweede-lente-system-prompt.ts
+lib/freebie-bots/templatezinnen-bewaker.ts
+lib/freebie-bots/token.ts
+
+app/api/freebie-bot/maak-token/route.ts
+app/api/freebie-bot/start/route.ts
+app/api/freebie-bot/spiegel/route.ts
+app/api/freebie-bot/opt-in/route.ts
+
+app/bot/tweede-lente/page.tsx
+app/bot/tweede-lente/[token]/page.tsx
+app/bot/tweede-lente/[token]/tweede-lente-flow.tsx
+app/bot/tweede-lente/[token]/blok-intro.tsx
+app/bot/tweede-lente/[token]/blok-vragen.tsx
+app/bot/tweede-lente/[token]/blok-spiegel.tsx
+app/bot/tweede-lente/[token]/blok-opt-in.tsx
+
+app/instellingen/mijn-tracking-links/page.tsx
+app/instellingen/mijn-tracking-links/kopieer-knop.tsx
+```
+
+Pilot raakt geen Sprint-bestanden, geen Core-V6-bestanden. Alle nieuwe
+code zit in `lib/freebie-bots/`, `app/api/freebie-bot/`, `app/bot/`,
+`app/instellingen/mijn-tracking-links/`.
+
+---
+
+## Tweede Lente, na-de-test parkeerlijst (2026-05-24)
+
+Items die expliciet zijn geparkeerd door Raoul voor NA de eerste pilot-test:
+
+**1. Dubbele-prospect-detectie op e-mailadres (bovenste prio)**
+Als een vrouw intekent met een e-mailadres dat al als prospect bij de member bestaat: aanvullen bestaande kaart, NIET nieuwe kaart maken. Bestand: `app/api/freebie-bot/opt-in/route.ts`. Match case-insensitive op `prospects.email` waar `user_id=member`. Bij match: notitie aanvullen met datum-prefix + nieuwe bot-antwoorden + spiegel, prioriteit omhoog naar 'hoog' als contactGewenst.
+
+**2. 5-mail-reeks-versturing**
+Pilot bouwt alleen opslag. Resend of Postmark integratie + per-opt-in mail-queue dag 1-5.
+
+**3. Test-knop opt-in vooraf vs achteraf**
+Feature-flag of A/B om te testen of e-mail-opt-in als filter VOORAF beter werkt dan na de spiegel.
+
+**4. Inhoud Gaby:** definitieve openings-tekst, 10-12 template-zinnen, 5 mail-templates, anekdotes.
+
+**5. Member zelf:** hormoonbalans-bestellinks invullen op /instellingen/bestellinks (essential/plus/complete) voordat bot bruikbare productknoppen kan tonen.
+
+---
+
+## Nacht-bouw 2026-05-25, drie pakketten klaar
+
+**A) Freebie-stats op twee plekken**
+- `/instellingen/mijn-tracking-links`: compacte tellers per freebie boven de URL
+- `/statistieken`: nieuwe sectie '🎁 Mijn freebies' met volledige stats-blokken
+- Productadvies (voor iedereen): Verzonden / Ingevuld / Conversie %
+- Tweede Lente (Core + founder): Ingetekend / Afgemaakt / Contact / Conversie %
+
+**B) ManyChat-handleiding (uitklap-blok)**
+- Op `/instellingen/mijn-tracking-links` onderaan een 5-stappen-handleiding
+- Voor optionele Instagram-automatisering via ManyChat
+- Plus uitleg-blok 'Wat ELEVA voor jou doet (en wat ManyChat dus niet hoeft)'
+
+**C) 5-mail-sequence skelet (NIET ACTIEF)**
+
+Compleet ingebouwd, wachten alleen op:
+1. SQL-migratie draaien: `node scripts/run-migration.mjs 2026-05-25-01-freebie-mail-queue.sql`
+2. Gaby vult de 5 TODO-GABY-tags in `lib/freebie-bots/tweede-lente-mail-templates.ts`
+3. Vercel env vars: `RESEND_API_KEY`, `RESEND_FROM`, `CRON_SECRET`
+4. Vercel `vercel.json` cron-config:
+   ```json
+   { "crons": [{ "path": "/api/cron/freebie-mails", "schedule": "0 18 * * *" }] }
+   ```
+5. SQL: `UPDATE profiles SET freebie_mails_actief = true WHERE id IN (pilot-team-ids);`
+
+Tot dan: pilot draait door precies zoals nu. Mails worden niet verstuurd
+omdat de feature-flag op profile-niveau default false is. Ook al zou
+de migratie per ongeluk draaien, zonder flag-aan gebeurt er niets.
+
+**Files gemaakt in C:**
+```
+supabase/migrations/2026-05-25-01-freebie-mail-queue.sql
+lib/freebie-bots/mail-queue.ts (planMailSequence helper)
+lib/freebie-bots/tweede-lente-mail-templates.ts (5 templates met TODO-GABY)
+lib/mail/resend.ts (verstuurMail met dry-run fallback)
+app/api/cron/freebie-mails/route.ts (cron-eindpunt)
+app/api/freebie-bot/unsubscribe/route.ts (afmeld-link in mails)
+```
+
+Plus: `planMailSequence` wordt al aangeroepen vanuit `/api/freebie-bot/opt-in`,
+faalt veilig als de tabel nog niet bestaat. Zodra je de migratie draait
++ flag aan zet, beginnen er automatisch mails uit te gaan voor opt-ins
+die al in de DB staan (heeft Raoul Zeewijk eerst groen licht voor gegeven).
