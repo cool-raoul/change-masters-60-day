@@ -96,8 +96,18 @@ const BOT_REGISTRY: Record<BotSlug, BotConfig> = {
     iconEmoji: "⚡",
     coreOnly: false,
     type: "score",
-    // Geen AI-functies (deterministische score-bot)
-    // Geen mail-templates (nog niet, kan later)
+  },
+  "hormonen-en-overgang": {
+    slug: "hormonen-en-overgang",
+    titel: "Hormonen & Overgang",
+    ondertitel:
+      "Score-vragenlijst over hormoon-signalen met uitgebreid leefstijl-advies",
+    beschrijving:
+      "Tien score-vragen, persoonlijke score per thema (hormoon-signalen, slaap, stemming, lichaam). Uitgebreid educatief advies, brug naar hormoonbalans-pakketten.",
+    triggerVoorbeeld: "OVERGANG",
+    iconEmoji: "🌸",
+    coreOnly: false,
+    type: "score",
   },
 };
 

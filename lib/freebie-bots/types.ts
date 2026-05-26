@@ -4,7 +4,11 @@
 // bot-specifieke types. Bot-specifieke files staan onder
 // `lib/freebie-bots/<slug>/`.
 
-export type BotSlug = "tweede-lente" | "tweede-wind" | "energie-en-focus";
+export type BotSlug =
+  | "tweede-lente"
+  | "tweede-wind"
+  | "energie-en-focus"
+  | "hormonen-en-overgang";
 
 /**
  * SpiegelOutput is een gemeenschappelijke vorm: alle freebie-bots

@@ -17,6 +17,7 @@ const TOEGESTANE_SLUGS: BotSlug[] = [
   "tweede-lente",
   "tweede-wind",
   "energie-en-focus",
+  "hormonen-en-overgang",
 ];
 
 export async function POST(req: NextRequest) {
