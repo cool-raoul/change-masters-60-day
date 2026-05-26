@@ -25,6 +25,8 @@ type IntekenGegevens = {
   voornaam: string;
   achternaam: string;
   email: string;
+  instagram: string;
+  facebook: string;
 };
 
 const TOTAAL_VRAGEN = EF_VRAGEN.length;
@@ -257,6 +259,10 @@ function Intekenen({
   const [voornaam, setVoornaam] = useState("");
   const [achternaam, setAchternaam] = useState("");
   const [email, setEmail] = useState("");
+  // Pre-fill Instagram/Facebook met URL-param als die meegegeven is
+  // (bv. via ManyChat). Member kan altijd nog handmatig invullen.
+  const [instagram, setInstagram] = useState(herkomst.instagram ?? "");
+  const [facebook, setFacebook] = useState(herkomst.facebook ?? "");
   const [toestemming, setToestemming] = useState(false);
   const [bezig, setBezig] = useState(false);
 
@@ -265,6 +271,10 @@ function Intekenen({
     achternaam.trim().length > 1 &&
     /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) &&
     toestemming;
+
+  // Strip @-prefix bij Instagram als gebruiker dat meeneemt
+  const igSchoon = instagram.trim().replace(/^@/, "").trim() || null;
+  const fbSchoon = facebook.trim() || null;
 
   async function verzend() {
     if (!klaar) return;
@@ -279,8 +289,8 @@ function Intekenen({
           leadAchternaam: achternaam.trim(),
           leadEmail: email.trim(),
           toestemming,
-          herkomstInstagram: herkomst.instagram,
-          herkomstFacebook: herkomst.facebook,
+          herkomstInstagram: igSchoon,
+          herkomstFacebook: fbSchoon,
           herkomstBron: herkomst.bron,
         }),
       });
@@ -288,6 +298,8 @@ function Intekenen({
         voornaam: voornaam.trim(),
         achternaam: achternaam.trim(),
         email: email.trim(),
+        instagram: igSchoon ?? "",
+        facebook: fbSchoon ?? "",
       });
     } catch (e) {
       console.warn("Intekening-vooraf fout:", e);
@@ -295,6 +307,8 @@ function Intekenen({
         voornaam: voornaam.trim(),
         achternaam: achternaam.trim(),
         email: email.trim(),
+        instagram: igSchoon ?? "",
+        facebook: fbSchoon ?? "",
       });
     } finally {
       setBezig(false);
@@ -358,6 +372,42 @@ function Intekenen({
             placeholder="naam@voorbeeld.nl"
           />
         </label>
+
+        {/* Optionele social-velden: handig zodat member ook zonder
+            telefoon contact kan opnemen via DM */}
+        <div className="rounded-xl bg-orange-50/40 border border-orange-100 p-3 space-y-3">
+          <p className="text-xs text-gray-600 italic">
+            Optioneel: laat hier je Instagram of Facebook achter zodat
+            {" "}{memberVoornaam} je ook via DM kan bereiken.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label className="block">
+              <span className="text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                📸 Instagram-naam
+              </span>
+              <input
+                type="text"
+                value={instagram}
+                onChange={(e) => setInstagram(e.target.value)}
+                className="mt-1 w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-gray-900 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 outline-none transition"
+                placeholder="jouw_handle"
+              />
+            </label>
+            <label className="block">
+              <span className="text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                👤 Facebook-naam
+              </span>
+              <input
+                type="text"
+                value={facebook}
+                onChange={(e) => setFacebook(e.target.value)}
+                className="mt-1 w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-gray-900 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 outline-none transition"
+                placeholder="je naam op Facebook"
+              />
+            </label>
+          </div>
+        </div>
+
         <label className="flex items-start gap-3 text-sm text-gray-700 rounded-xl bg-orange-50/60 p-3 border border-orange-100">
           <input
             type="checkbox"
@@ -612,8 +662,12 @@ function Uitkomst({
           antwoorden,
           spiegelTekst,
           contactGewenst,
-          herkomstInstagram: herkomst.instagram,
-          herkomstFacebook: herkomst.facebook,
+          // Voor opt-in gebruiken we wat in het formulier is ingevuld
+          // (overschrijft URL-param indien nodig). Strip @-prefix.
+          herkomstInstagram:
+            inteken.instagram || herkomst.instagram || null,
+          herkomstFacebook:
+            inteken.facebook || herkomst.facebook || null,
           herkomstBron: herkomst.bron,
         }),
       });
