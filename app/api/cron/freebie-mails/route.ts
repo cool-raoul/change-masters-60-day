@@ -103,7 +103,7 @@ export async function GET(request: Request) {
 
     // Bouw template via registry op basis van bot-slug uit de rij
     const botConfig = getBotConfig(rij.freebie_slug);
-    const template = botConfig?.templateVoorDag(rij.dag) ?? null;
+    const template = botConfig?.templateVoorDag?.(rij.dag) ?? null;
     if (!template) {
       await supabase
         .from("freebie_mail_queue")

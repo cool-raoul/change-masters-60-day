@@ -32,13 +32,16 @@ export type BotConfig = {
   iconEmoji: string;
   /** Toon alleen voor Core-members + founders. */
   coreOnly: boolean;
-  /** System-prompt en user-bericht builders voor de AI-spiegel. */
-  bouwSysteemPrompt: () => string;
-  bouwUserBericht: (antwoordRegel: string) => string;
-  /** Output-bewaker, vervangt verboden zinnen door fallback. */
-  bewaakSpiegelOutput: (raw: string) => SpiegelOutput;
-  /** Vind een mail-template op dag-nummer (cross-bot generic). */
-  templateVoorDag: (dag: number) => GenericMailTemplate | null;
+  /** Bot-type: 'ai-spiegel' gebruikt OpenAI + bewaker. 'score' is
+      deterministisch, geen AI. */
+  type: "ai-spiegel" | "score";
+  /** Alleen voor type='ai-spiegel': system-prompt builders. */
+  bouwSysteemPrompt?: () => string;
+  bouwUserBericht?: (antwoordRegel: string) => string;
+  bewaakSpiegelOutput?: (raw: string) => SpiegelOutput;
+  /** Vind een mail-template op dag-nummer (cross-bot generic). Optioneel
+      want score-bots hebben (nog) geen mail-sequence. */
+  templateVoorDag?: (dag: number) => GenericMailTemplate | null;
 };
 
 function wrapTemplateVoorDag(
@@ -61,6 +64,7 @@ const BOT_REGISTRY: Record<BotSlug, BotConfig> = {
     triggerVoorbeeld: "TWEEDE-LENTE",
     iconEmoji: "🌷",
     coreOnly: true,
+    type: "ai-spiegel",
     bouwSysteemPrompt: tweedeLente.bouwTweedeLenteSysteemPrompt,
     bouwUserBericht: tweedeLente.bouwTweedeLenteUserBericht,
     bewaakSpiegelOutput: tweedeLente.bewaakSpiegelOutput,
@@ -75,10 +79,25 @@ const BOT_REGISTRY: Record<BotSlug, BotConfig> = {
     triggerVoorbeeld: "TWEEDE-WIND",
     iconEmoji: "⚡",
     coreOnly: false,
+    type: "ai-spiegel",
     bouwSysteemPrompt: tweedeWind.bouwTweedeWindSysteemPrompt,
     bouwUserBericht: tweedeWind.bouwTweedeWindUserBericht,
     bewaakSpiegelOutput: tweedeWind.bewaakSpiegelOutput,
     templateVoorDag: wrapTemplateVoorDag(tweedeWind.templateVoorDag),
+  },
+  "energie-en-focus": {
+    slug: "energie-en-focus",
+    titel: "Energie & Focus",
+    ondertitel:
+      "Score-vragenlijst met uitgebreid leefstijl-advies",
+    beschrijving:
+      "Tien vragen met punten, persoonlijke score, uitgebreid educatief advies per thema (slaap, energie, focus, leefstijl). Geen AI-spiegel, wel diep leerstuk.",
+    triggerVoorbeeld: "ENERGIE",
+    iconEmoji: "⚡",
+    coreOnly: false,
+    type: "score",
+    // Geen AI-functies (deterministische score-bot)
+    // Geen mail-templates (nog niet, kan later)
   },
 };
 

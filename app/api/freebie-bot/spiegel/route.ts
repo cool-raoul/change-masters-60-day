@@ -61,6 +61,22 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Score-bots gebruiken deze API niet. Geef heldere fout-melding
+    // ipv null-check-crash op de optionele functies.
+    if (
+      config.type !== "ai-spiegel" ||
+      !config.bouwSysteemPrompt ||
+      !config.bouwUserBericht ||
+      !config.bewaakSpiegelOutput
+    ) {
+      return NextResponse.json(
+        {
+          error: `Bot '${row.bot_slug}' is geen AI-spiegel-bot, deze endpoint is niet van toepassing.`,
+        },
+        { status: 400 },
+      );
+    }
+
     // Compacte antwoord-string voor de prompt: alle velden plat dumpen
     // werkt voor zowel Tweede Lente als Tweede Wind. AI ziet de kernen.
     const antwoordRegel = Object.entries(antwoorden)
