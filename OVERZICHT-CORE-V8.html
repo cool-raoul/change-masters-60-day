@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8" />
+<title>Core V8 — Raoul-feedback verwerkt, side-flows vooraan, triggers vervangen ankerstappen</title>
+<style>
+  :root {
+    --bg: #15171b;
+    --card: #1c1f24;
+    --card2: #232730;
+    --gold: #c4a04a;
+    --gold-soft: #5d4a25;
+    --gold-light: #e0bc62;
+    --text: #e8e6e0;
+    --muted: #8a8b8e;
+    --warn: #d18b5c;
+    --new: #8ad15c;
+    --side: #5c9ad1;
+    --trigger: #c98ad1;
+    --kill: #d15c5c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+    padding: 24px 16px 80px;
+  }
+  main { max-width: 920px; margin: 0 auto; }
+  h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 28px;
+    margin: 0 0 4px;
+  }
+  h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    color: var(--gold);
+    font-size: 22px;
+    margin: 40px 0 12px;
+    border-bottom: 1px solid var(--gold-soft);
+    padding-bottom: 6px;
+  }
+  h3 { color: var(--gold-light); font-size: 17px; margin: 24px 0 8px; }
+  h4 { color: var(--gold); font-size: 15px; margin: 14px 0 6px; }
+  p, li { font-size: 14px; line-height: 1.65; }
+  .intro {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 6px;
+    vertical-align: middle;
+    font-weight: 600;
+  }
+  .badge-nieuw { background: rgba(138,209,92,0.15); color: var(--new); border: 1px solid rgba(138,209,92,0.35); }
+  .badge-verplaatst { background: rgba(209,139,92,0.15); color: var(--warn); border: 1px solid rgba(209,139,92,0.35); }
+  .badge-aangepast { background: rgba(196,160,74,0.15); color: var(--gold); border: 1px solid rgba(196,160,74,0.35); }
+  .badge-side { background: rgba(92,154,209,0.15); color: var(--side); border: 1px solid rgba(92,154,209,0.35); }
+  .badge-trigger { background: rgba(201,138,209,0.15); color: var(--trigger); border: 1px solid rgba(201,138,209,0.35); }
+  .badge-weg { background: rgba(209,92,92,0.15); color: var(--kill); border: 1px solid rgba(209,92,92,0.35); }
+
+  .wijz {
+    background: rgba(138,209,92,0.07);
+    border-left: 3px solid var(--new);
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin: 8px 0 16px;
+  }
+  .wijz-titel { font-weight: 600; color: var(--new); font-size: 13px; margin-bottom: 4px; }
+  .wijz-uitleg { font-size: 13px; color: var(--text); }
+
+  .stap {
+    background: var(--card);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 10px 0;
+    border-left: 3px solid var(--gold-soft);
+  }
+  details.stap { cursor: pointer; }
+  details.stap[open] { border-left-color: var(--gold); }
+  details.stap > summary {
+    list-style: none;
+    cursor: pointer;
+    position: relative;
+    padding-right: 28px;
+  }
+  details.stap > summary::-webkit-details-marker { display: none; }
+  details.stap > summary::after {
+    content: "▸";
+    position: absolute;
+    right: 0;
+    top: 2px;
+    color: var(--gold);
+    font-size: 14px;
+    transition: transform 0.15s ease;
+  }
+  details.stap[open] > summary::after { transform: rotate(90deg); }
+  .stap-num {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--bg);
+    font-weight: 700;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    text-align: center;
+    line-height: 26px;
+    font-size: 13px;
+    margin-right: 8px;
+  }
+  .stap-titel { font-weight: 600; color: var(--text); display: inline-block; }
+  .stap-doel { color: var(--muted); font-size: 13px; font-style: italic; margin-top: 4px; }
+  .stap-substeps {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: var(--card2);
+    border-radius: 6px;
+    border-left: 2px solid var(--gold-soft);
+  }
+  .stap-substeps-titel {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--gold);
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .stap-substeps ol {
+    margin: 0;
+    padding-left: 22px;
+    color: var(--text);
+    font-size: 13px;
+  }
+  .stap-substeps li { margin: 3px 0; }
+  .stap-substeps li small {
+    color: var(--muted);
+    font-style: italic;
+    margin-left: 4px;
+  }
+
+  .side-flow {
+    background: rgba(92,154,209,0.07);
+    border: 1px solid rgba(92,154,209,0.3);
+    border-left: 4px solid var(--side);
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin: 18px 0;
+  }
+  .side-flow h3 { color: var(--side); margin-top: 0; }
+  .side-flow ol { padding-left: 22px; }
+  .side-flow li { margin: 6px 0; }
+
+  .trigger-blok {
+    background: rgba(201,138,209,0.07);
+    border: 1px solid rgba(201,138,209,0.3);
+    border-left: 4px solid var(--trigger);
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin: 18px 0;
+  }
+  .trigger-blok h3 { color: var(--trigger); margin-top: 0; }
+  .trigger-blok h4 { color: var(--trigger); }
+
+  .pre-stap {
+    background: rgba(138,209,92,0.07);
+    border: 1px solid rgba(138,209,92,0.3);
+    border-left: 4px solid var(--new);
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin: 18px 0;
+  }
+  .pre-stap h3 { color: var(--new); margin-top: 0; }
+
+  .quote {
+    background: var(--card2);
+    border-left: 3px solid var(--gold);
+    padding: 10px 14px;
+    margin: 10px 0;
+    font-style: italic;
+    color: var(--gold-light);
+    font-size: 13px;
+    border-radius: 0 6px 6px 0;
+  }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--card2); vertical-align: top; }
+  th { color: var(--gold); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+
+  .footer {
+    margin-top: 60px;
+    padding: 20px;
+    background: var(--card);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  code { background: var(--card2); padding: 2px 6px; border-radius: 3px; font-size: 12px; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Core V8 — Raoul-feedback verwerkt</h1>
+<p class="intro">
+  Versie 8 herziet V7 op basis van een ronde feedback van Raoul (26 mei). Drie grote verschuivingen:
+  (1) <strong>pre-post + 21-dagen-post staan nu vooraan</strong> als laagdrempelige sidestep, vóór de top-20-namenlijst, want
+  die brengen mensen sneller in beweging dan de top-20-uitnodiging. (2) Ankerstappen die niet in een vaste positie horen
+  zijn vervangen door <strong>triggers</strong> (eerste shopper, klantomgeving-tijdlijn, side-flow-herstart). (3) <strong>Beelden-status</strong>
+  is het eerste expliciete doel, want via Beelden duplicateert je hele leerpad zich naar je team.
+</p>
+
+<h2>Wat is anders dan V7</h2>
+
+<div class="wijz">
+  <div class="wijz-titel">17 aanpassingen uit Raoul's feedback</div>
+  <div class="wijz-uitleg">
+    <ul>
+      <li><strong>WHY-substep weg uit stap 1.</strong> Staat al in onboarding, niet dubbel uitvragen.</li>
+      <li><strong>Pre-post + 21-dagen-post komen vóór top-20.</strong> Eerste sidestep, skippable, blijft als advies in zicht tot member zelf afrondt of afvinkt.</li>
+      <li><strong>Top-20 = product- én opportunity-mensen.</strong> Doel: 3 uitnodigingen mét sponsor + alle 20 zo snel mogelijk. Positie heroverwogen, hoort vlakbij webshop-pivot.</li>
+      <li><strong>Side-flow heeft stappenplan in het systeem.</strong> PDF is alleen ondersteunend. Filmpjes-uitleg per stap. Inclusief 3-soorten-mensen-DM-script (reacties, likes, info-vragers).</li>
+      <li><strong>Productkennis lichter.</strong> Mensen kijken zelf de prospect-filmpjes die ze gaan delen, en vertellen de Mentor wat zij persoonlijk gebruiken. "Welke producten verkoop je het meest" hoeft niet.</li>
+      <li><strong>Webshop-pivot vlakbij top-20.</strong> Want top-20 = doelgroep van webshop-uitnodigingen.</li>
+      <li><strong>Bezwaren + Mini-ELEVA-basis + 3-weg-basis in één vroeg cluster.</strong> Basis-begrip nodig zodra eerste reactie binnen kan komen.</li>
+      <li><strong>Stories/Reels/Freebie-post + social-media-basistraining.</strong> Stap 6 introduceert, stap 12 verdiept. Reels zonder uitleg = onmogelijk.</li>
+      <li><strong>Aanloop-opbrengst weg als aparte stap.</strong> Geabsorbeerd in de sidestep zelf, daar moet alles uitgemolken worden.</li>
+      <li><strong>Verdienmodel-basis vroeger + Beelden-doel als rode draad.</strong> Eerste doel = Beelden-status halen. Want Beelden = duplicatie = team groeit mee.</li>
+      <li><strong>DMO heroverwogen.</strong> Niet "elke dag 3 mensen uitnodigen", wel "alle reacties + likes oppakken als uitnodig-trigger". Pijplijn vullen via reactie-gericht werk.</li>
+      <li><strong>Stap 12 (eerste warme uitn. + Mini-ELEVA-intro) verwijderd.</strong> Was al gebeurd via sidestep + cluster 4-5.</li>
+      <li><strong>Stories-stap = vervolg op Brookes-stap.</strong> Niet een nieuw onderwerp later.</li>
+      <li><strong>Eerste shoppers GEEN ankerstap meer.</strong> Vervangen door <em>trigger</em>: zodra een prospect naar shopper-fase verschuift, popup "Gefeliciteerd met je shopper" + belangrijke stappen-sidestep.</li>
+      <li><strong>21-dagen-post-sidestep = trigger</strong> rond dag 21 na pre-post. Niet een geplande ankerstap.</li>
+      <li><strong>Edification-basics in cluster 4-5</strong> (sponsor introduceren), verdieping pas na 3-weg-praktijk.</li>
+      <li><strong>Klantomgeving-tijdlijn vragen = triggersysteem voor member.</strong> Popup/reminder op herkenbare plek: "Jouw productgebruiker [Naam] staat nu op dag 10. Ideaal moment om te praten over [X]. Zo doe je dat: [Y]."</li>
+    </ul>
+  </div>
+</div>
+
+<div class="wijz">
+  <div class="wijz-titel">Wat is GELIJK gebleven aan V7</div>
+  <div class="wijz-uitleg">
+    De 6 V6-uitgangspunten (webshop-frame, Mentor-leerprofiel, klantomgeving als parallel pad, twee scenario's, drie-laags Mentor,
+    freebies vanaf Core, DMO + ankerstap, anti-overwhelm-kompas K1-K5). Het side-flow-concept blijft (eigen omgeving + knop terug
+    naar dagflow). 21 ankerstappen blijft het frame, maar de inhoud is herschikt.
+  </div>
+</div>
+
+<div class="wijz">
+  <div class="wijz-titel">De rode draad in V8: Beelden-status</div>
+  <div class="wijz-uitleg">
+    Raoul: <em>"het eerste doel eigenlijk moet duidelijk gemaakt worden dat de persoon Beelden status moet halen, omdat als je dat dupliceert, andere wilden weet te maken, dan zijn alle stappen mogelijk."</em>
+    Vanaf stap 1 staat dit doel zichtbaar in het dashboard. Elke ankerstap die je doorloopt brengt je dichter bij Beelden, en
+    je leert tegelijk wat je later kunt overdragen. Pre-post + 21-dagen-post + top-20 + eerste 21 stappen samen = pad naar Beelden.
+  </div>
+</div>
+
+<h2>Onboarding-info wordt aangenomen</h2>
+
+<p>
+  In V8 wordt expliciet gerekend op wat de onboarding al heeft uitgevraagd. <strong>Niet opnieuw uitvragen:</strong>
+</p>
+<ul>
+  <li>WHY (jouw waarom)</li>
+  <li>Doel (welk doel sluit je af in deze ronde)</li>
+  <li>Tijd-investering (wat past in jouw week)</li>
+  <li>Termijn / scenario A of B (eigen resultaat al / begin samen)</li>
+</ul>
+<p>
+  Deze info dient als input voor de Mentor en voor het scenario-pad. Ankerstap 1 bouwt er direct op voort
+  in plaats van te dupliceren.
+</p>
+
+<h2>De pre-stap: pre-post of 21-dagen-post (vóór ankerstap 1) <span class="badge badge-nieuw">positie nieuw</span></h2>
+
+<div class="pre-stap">
+  <h3>Eerste sidestep, vóór de top-20-namenlijst</h3>
+  <p>
+    Raoul: <em>"de pre-post en de 21 dagen post veel verder naar voren te schuiven, dus nog voor de top 20 namenlijst.
+    Maar die stap is ook eventueel te skippen want sommige mensen vinden het te eng of hebben daar vooroordelen over."</em>
+  </p>
+  <p>
+    De pre-post / 21-dagen-post is het laagdrempeligste eerste actiepunt. Pre-post levert direct niet veel
+    productgebruikers op, 21-dagen-post bij sommige mensen wél direct. Beide brengen mensen in beweging.
+    Daarom: <strong>vóór de top-20</strong>, niet erna.
+  </p>
+
+  <h4>Drie keuzes voor de member</h4>
+  <ol>
+    <li><strong>Doe de pre-post nu</strong> (scenario B, geen eigen 21-dagen-resultaat nog) → side-flow B opent.</li>
+    <li><strong>Doe de 21-dagen-post nu</strong> (scenario A, je hebt al een eigen 21-dagen-resultaat) → side-flow A opent.</li>
+    <li><strong>Skip voor nu</strong> → ankerstap 1 wordt gestart. De sidestep blijft permanent zichtbaar als advies-tegel
+        op het dashboard tot de member 'm zelf afvinkt of doorloopt. Geen vinkje = blijft openliggen.</li>
+  </ol>
+
+  <p style="color: var(--muted); font-size: 13px;">
+    De skip-knop is bewust ruim toegankelijk. Sommige bouwers hebben eerst vertrouwen of teamervaring nodig
+    voor ze met social-posts beginnen. Maar de sidestep is en blijft de snelste route naar beweging, dus 'm
+    laten zien is belangrijker dan 'm verplichten.
+  </p>
+</div>
+
+<div class="side-flow">
+  <span class="badge badge-side">Side-flow B</span>
+  <h3>Pre-post side-flow, volledig in het systeem</h3>
+  <p>
+    Member zonder eigen resultaat. Pre-post = "ik begin vandaag aan X, ben benieuwd wat ik ga merken." Eerlijk, geen belofte.
+    Doel: aanwezigheid creëren, en voorbereiden op de 21-dagen-post die rond dag 21 als trigger terugkomt.
+  </p>
+
+  <h4>Substeps in de side-flow (stappenplan vervangt PDF-lezing)</h4>
+  <ol>
+    <li>
+      <strong>Mini-uitleg: wat is een pre-post?</strong>
+      Korte uitleg in het systeem (~2 min, met filmpje). PDF is download-optie, niet leesplicht.
+    </li>
+    <li>
+      <strong>Eigen 21-dagen-programma starten.</strong>
+      Bestellen of kiezen uit eigen pakket. Mentor helpt kiezen wat past bij jouw doel uit onboarding.
+    </li>
+    <li>
+      <strong>Pre-post tekst schrijven met de Mentor.</strong>
+      2-3 regels, jouw stem, voornemen delen. Mentor levert 3 versies, jij kiest of mengt.
+    </li>
+    <li>
+      <strong>Upline-check.</strong>
+      Stuur concept naar sponsor of upline. Wacht op akkoord voor je plaatst.
+    </li>
+    <li>
+      <strong>Plaatsen op Facebook en Instagram.</strong>
+      Klaar is klaar. Tijd noteren voor follow-up-timer.
+    </li>
+    <li>
+      <strong>3-soorten-mensen-DM-script klaarzetten</strong> <span class="badge badge-nieuw">nieuw</span>
+      <div style="margin-top: 6px; background: var(--card2); padding: 10px 14px; border-radius: 6px; font-size: 13px;">
+        Drie soorten reacties + likes komen op je post binnen. Naar <strong>iedereen</strong> stuur je een DM.
+        <ul style="margin: 8px 0 4px 18px;">
+          <li><strong>Mensen die vragen wat je doet</strong> → stuur info + film, daarna opvolgen.</li>
+          <li><strong>Mensen die "succes!" / iets aardigs schrijven</strong> → DM met onderstaand template.</li>
+          <li><strong>Mensen die alleen liken</strong> → DM met onderstaand template.</li>
+        </ul>
+        <div class="quote" style="margin-top: 8px;">
+          "Hey [naam], bedankt voor je reactie/like op mijn post. Ik ben hier zo blij mee dat ik heb besloten
+          om anderen hier ook mee te helpen. Ken jij mensen in jouw omgeving voor wie dit wat zou kunnen zijn?
+          En misschien is het ook wel wat voor jezelf. Ik voorzie jou of die personen graag vrijblijvend van
+          alle informatie."
+        </div>
+        <small style="color: var(--muted);">
+          Dit script staat als kant-en-klaar template in /scripts categorie "post-opvolging", per persoon
+          personaliseerbaar door de Mentor.
+        </small>
+      </div>
+    </li>
+    <li>
+      <strong>Reageer-routine.</strong>
+      Binnen 1 uur op iedere reactie. Mentor staat klaar voor on-the-fly opener-hulp bij DM's.
+    </li>
+    <li>
+      <strong>Geïnteresseerde prospects toevoegen aan Mini-ELEVA of 3-weg.</strong>
+      Beide paden al beschikbaar dankzij basis-uitleg in cluster 4-5.
+    </li>
+    <li>
+      <strong>Sidestep-opbrengst reflectie.</strong>
+      Welke gesprekken zijn ontstaan, welke staan klaar voor 3-weg, welke leads stil. Plus: trigger-instelling
+      voor 21-dagen-post-reminder over circa 21 dagen.
+    </li>
+    <li>
+      <strong>Afronden of openliggen?</strong>
+      Member kiest: "voltooid" (sidestep sluit) of "nog mee bezig" (sidestep blijft openliggen, reminder over X dagen).
+    </li>
+  </ol>
+</div>
+
+<div class="side-flow">
+  <span class="badge badge-side">Side-flow A</span>
+  <h3>21-dagen-resultaat-post side-flow, volledig in het systeem</h3>
+  <p>
+    Member met eigen 21-dagen-resultaat. Of: scenario-B member die 21 dagen na pre-post via trigger hier
+    landt. Resultaat-post brengt vaak direct productgebruikers binnen.
+  </p>
+
+  <h4>Substeps in de side-flow</h4>
+  <ol>
+    <li><strong>Mini-uitleg: wat is een 21-dagen-resultaat-post?</strong> (~2 min film). PDF optioneel.</li>
+    <li><strong>De 1 of 2 belangrijkste veranderingen kiezen.</strong> Mentor helpt focussen. Niet alles in één post.</li>
+    <li><strong>Tekst schrijven met de Mentor.</strong> Claim-vrij, jouw stem, webshop-anker. Drie iteraties max.</li>
+    <li><strong>Upline-check.</strong> Sponsor / upline akkoord.</li>
+    <li><strong>Plaatsen op FB + IG.</strong></li>
+    <li>
+      <strong>3-soorten-mensen-DM-script klaarzetten.</strong>
+      Zelfde script als pre-post-flow, klaar voor likes en reacties.
+    </li>
+    <li><strong>Reageer-routine.</strong> Binnen 1 uur, Mentor naast je voor opener-hulp.</li>
+    <li><strong>Geïnteresseerde prospects toevoegen aan Mini-ELEVA of 3-weg.</strong></li>
+    <li><strong>Sidestep-opbrengst reflectie.</strong></li>
+    <li><strong>Afronden of openliggen?</strong></li>
+  </ol>
+</div>
+
+<h2>De 21 ankerstappen V8</h2>
+
+<h3>Fundament (1 t/m 5)</h3>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">1</span>
+    <span class="stap-titel">🚀 Welkom + Beelden-doel + sponsor + scenario-bevestiging</span>
+    <span class="badge badge-aangepast">WHY weg</span>
+    <div class="stap-doel">Bevestigen wat de onboarding heeft opgehaald (doel + tijd + termijn + scenario), Beelden-status als rode draad neerzetten, sponsor in de loop. Geen herhaling van WHY-vraag.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps in deze ankerstap</div>
+    <ol>
+      <li>Mentor toont samenvatting van onboarding-input <small>(WHY + doel + tijd + scenario, ter bevestiging)</small></li>
+      <li>Beelden-status uitleg: wat is het, waarom is het je eerste doel, hoe kom je er <small>(~3 min film + dashboard-tegel)</small></li>
+      <li>Sponsor-melding "ik ben gestart in Core" <small>(inline sponsor-melding-knop)</small></li>
+      <li>Pre-stap zichtbaar: pre-post of 21-dagen-post nu doen, of voorlopig skippen <small>(blijft als advies-tegel)</small></li>
+      <li>Afsluit: sponsor-checkin / momentum-radar / partner-check</li>
+    </ol>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">2</span>
+    <span class="stap-titel">👥 Top-20-namenlijst + webshop-pivot + 3 uitnodigingen mét sponsor</span>
+    <span class="badge badge-aangepast">samengevoegd met webshop-pivot</span>
+    <div class="stap-doel">Top-20-lijst opzetten met zowel productgebruikers als opportunity-mensen. Webshop-pivot in dezelfde stap want je gaat top-20 met die uitnodigingen benaderen. Doel: 3 oefen-uitnodigingen samen met sponsor versturen, daarna alle 20 zo snel mogelijk.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps in deze ankerstap</div>
+    <ol>
+      <li>Voeg minimaal 20 namen toe <small>(productgebruikers + opportunity-mensen, geen filter)</small></li>
+      <li>Markeer je top-5 <small>(geen "wie zou kopen", wel "wie gun ik dit het meest")</small></li>
+      <li>Telefoonboek-upload als extra bron (optioneel)</li>
+      <li>Mentor licht webshop-frame + vier uitnodig-bouwstenen toe <small>(haakje, manier-gevonden-zin, hoe-werkt, permissie-vraag)</small></li>
+      <li>Plan kennismakings-call met sponsor (~30 min)</li>
+      <li>Verstuur samen met sponsor minimaal <strong>3 oefen-uitnodigingen</strong> <small>(Raoul-update: drie, niet één)</small></li>
+      <li>Streef ernaar de overige 17 zo snel mogelijk te versturen, eventueel ook met sponsor erbij</li>
+      <li>Afsluit: sponsor-checkin / momentum-radar / partner-check</li>
+    </ol>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">3</span>
+    <span class="stap-titel">📦 Productkennis-licht + jouw eigen gebruik in Mentor-profiel</span>
+    <span class="badge badge-aangepast">lichter dan V7</span>
+    <div class="stap-doel">Mensen kijken zelf de prospect-filmpjes die ze gaan delen, zodat ze weten wat ze sturen. En de Mentor leert welke producten of programma's de member persoonlijk heeft gedaan en gebruikt. Geen "welke 5 verkoop ik het meest" meer.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps in deze ankerstap</div>
+    <ol>
+      <li>Bekijk zelf de prospect-filmpjes die je gaat delen <small>(belangrijke basis: je weet altijd wat je verstuurt)</small></li>
+      <li>Bestel je eigen pakket als je dat nog niet hebt <small>(eigen ervaring = geloofwaardigheid)</small></li>
+      <li>Vertel de Mentor welke producten of programma's jij persoonlijk hebt gedaan en welke je nu gebruikt <small>(profiel-opbouw voor latere klant-suggesties)</small></li>
+      <li>Afsluit: sponsor-checkin / momentum-radar / partner-check</li>
+    </ol>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">4</span>
+    <span class="stap-titel">📝 Drie verhalen + jouw stem + edification-basics</span>
+    <span class="badge badge-aangepast">edification-basics toegevoegd</span>
+    <div class="stap-doel">Drie verhalen (persoonlijk / product / business) en je eigen webshop-zin schrijven. Plus: basis-begrip van edification (hoe noem je je sponsor in een gesprek?). Verdieping van edification later in stap 17.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps in deze ankerstap</div>
+    <ol>
+      <li>Schrijf je persoonlijke verhaal met de Mentor</li>
+      <li>Schrijf je product-verhaal vanuit webshop-frame</li>
+      <li>Schrijf je business-verhaal</li>
+      <li>Schrijf je eigen webshop-uitnodigingszin (3-4 regels) <small>(/mijn-zinnen)</small></li>
+      <li>Edification-basics: hoe noem je je sponsor in 1-2 zinnen? <small>(eerste hap, verdieping later)</small></li>
+      <li>Praat 5 min met de Mentor over je niche-zaadje + passies</li>
+      <li>Afsluit: sponsor-checkin / momentum-radar / partner-check</li>
+    </ol>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">5</span>
+    <span class="stap-titel">🛡️ Bezwaren-basis + 3-weg-basis + Mini-ELEVA-basis</span>
+    <span class="badge badge-aangepast">cluster, vroeg in zicht</span>
+    <div class="stap-doel">Drie basis-skills tegelijk: bezwaren omgaan, hoe een 3-weg werkt, hoe Mini-ELEVA werkt. Niet diepgaand, wel genoeg om iets klaar te zetten zodra eerste prospect reageert. Verdieping van elk komt later (3-weg-meesterclass = stap 9, FORM = stap 11, edification-verdieping = stap 17).</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps in deze ankerstap</div>
+    <ol>
+      <li>Mentor licht 4-stappen-methode + Feel-Felt-Found toe</li>
+      <li>10 min roleplay met de Mentor: 3 bezwaren uit top-21 <small>(externe + interne mix)</small></li>
+      <li>Mentor licht 3-weg-flow in hoofdlijnen toe (5 stappen) <small>(diepe duik later in stap 9)</small></li>
+      <li>Mentor licht Mini-ELEVA in hoofdlijnen toe <small>(wanneer Mini-ELEVA, wanneer 3-weg, beslis-boom)</small></li>
+      <li>Vraag je sponsor of 'ie deze week beschikbaar is voor jouw eerstvolgende 3-weg <small>(zodat het kan zodra het nodig is)</small></li>
+      <li>Afsluit: sponsor-checkin / momentum-radar / partner-check</li>
+    </ol>
+  </div>
+</details>
+
+<h3>In beweging (6 t/m 11)</h3>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">6</span>
+    <span class="stap-titel">📱 Social-media-basistraining + Brookes 3-stappen + eerste freebie</span>
+    <span class="badge badge-aangepast">+ basistraining</span>
+    <div class="stap-doel">Eén post leren maken volgens Waarde + Verhaal + Zachte uitnodiging, eerste freebie uit toolkit kiezen, en sociale-media-fundament leren (waarom hashtags, wat is een carrousel vs reel vs story, wat is een hook). Zonder die basis is een reel maken voor de meeste mensen niet haalbaar.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps in deze ankerstap</div>
+    <ol>
+      <li>Social-media-basis-films bekijken (~15 min totaal): hook, carrousel, reel, story, hashtags <small>(één keer leren, daarna terugkomen bij stap 12)</small></li>
+      <li>Open de freebie-toolkit en kies 1 freebie die bij jouw verhaal past <small>(/instellingen/freebies, gepersonaliseerd met jouw webshop-link)</small></li>
+      <li>Schrijf één post met de Brookes-formule, Mentor geeft feedback <small>(Waarde + Verhaal + Zachte uitnodiging)</small></li>
+      <li>Plaats de post met freebie-link in tekst of bio</li>
+      <li>24-48u-follow-up-regel leren: opvolgen wanneer prospect nog warm is</li>
+      <li>Reageer binnen 1 uur op iedere reactie <small>(3-soorten-mensen-DM-script herbruikbaar)</small></li>
+      <li>Afsluit: sponsor-checkin / momentum-radar / partner-check</li>
+    </ol>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">7</span>
+    <span class="stap-titel">💡 Verdienmodel-basics + Beelden-pad in beeld</span>
+    <span class="badge badge-verplaatst">van V7 stap 8 naar 7</span>
+    <div class="stap-doel">Begrijpen hoe je verdient + waar Beelden-status zit + wat dat voor jou betekent. Vlak voor de 3-weg-meesterclass, want prospects gaan vragen stellen. Beelden als concrete ankerlat van het eerste pad.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps in deze ankerstap</div>
+    <ol>
+      <li>Verdienmodel-film (~10 min)</li>
+      <li>3-vragen-quiz met de Mentor <small>(rank-ladder, commissies, team-volume)</small></li>
+      <li>Beelden-mijlpaal-overzicht: wat is er nodig, waar sta jij nu <small>(Mentor laat zien vanuit je dashboard)</small></li>
+      <li>Eén eigen vraag stellen aan de Mentor <small>(iets dat nog niet klopte)</small></li>
+      <li>Afsluit: sponsor-checkin / momentum-radar / partner-check</li>
+    </ol>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">8</span>
+    <span class="stap-titel">💪 3-weg-meesterclass, 5 stappen verdiept</span>
+    <span class="badge badge-verplaatst">van V7 stap 9 naar 8</span>
+    <div class="stap-doel">De 5 stappen van een 3-weg-gesprek volledig leren. Bezwaren uit stap 5 in zak, verdienmodel uit stap 7 in hoofd, edification-basics uit stap 4. Nu klaar voor diepte. Praktijk volgt direct in stap 9.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps in deze ankerstap</div>
+    <ol>
+      <li>Meesterclass-film 3-weg-gesprek (~10 min)</li>
+      <li>Mentor loopt 5 stappen door voor één specifieke prospect <small>(edification, intro, inhoud, vraag aan prospect, vervolgafspraak)</small></li>
+      <li>Open de 3-weg-scripts en kies welke variant past <small>(/scripts?cat=uitnodiging tag 3-weg)</small></li>
+      <li>Bevestig met je sponsor wanneer 'ie kan voor jouw eerstvolgende 3-weg deze week</li>
+      <li>Afsluit: sponsor-checkin / momentum-radar / partner-check</li>
+    </ol>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">9</span>
+    <span class="stap-titel">🤝 Je eerstvolgende 3-weg starten</span>
+    <span class="badge badge-verplaatst">van V7 stap 10 naar 9</span>
+    <div class="stap-doel">Een echte 3-weg met een warme prospect, samen met je sponsor. Werkt op iedereen die je via top-20 of via pre-/21-dagen-post-sidestep hebt binnengehaald.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps in deze ankerstap</div>
+    <ol>
+      <li>Kies 1 warme prospect die nog geen 3-weg heeft gehad</li>
+      <li>Stuur stap-1-introductie naar sponsor volgens script <small>(/scripts?cat=uitnodiging)</small></li>
+      <li>Plan de 3-weg in met sponsor + prospect, doorloop samen de 5 stappen</li>
+      <li>Reflectie met de Mentor: wat ging goed, wat onhandig <small>(input voor edification-verdieping in stap 17)</small></li>
+      <li>Afsluit: sponsor-checkin / momentum-radar / partner-check</li>
+    </ol>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">10</span>
+    <span class="stap-titel">🎙️ FORM-verdieping voor top-5</span>
+    <span class="badge badge-verplaatst">van V7 stap 11 naar 10</span>
+    <div class="stap-doel">FORM (Family, Occupation, Recreation, Money) als gespreks-anker. Pas NA de eerste 3-weg-praktijk, want dan weet je voor welke contacten FORM-context echt waardevol is.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps in deze ankerstap</div>
+    <ol>
+      <li>Mentor licht FORM toe <small>(geen interview-checklist, wel gesprek-anker)</small></li>
+      <li>Mentor loopt FORM-vragen door voor top-5 <small>(wat weet je al, wat ontbreekt)</small></li>
+      <li>De Mentor noteert per top-5-prospect de FORM-context in jouw profiel</li>
+      <li>Oefen FORM in een aankomende reguliere ontmoeting <small>(spontaan, geen interview-toon)</small></li>
+      <li>Afsluit: sponsor-checkin / momentum-radar / partner-check</li>
+    </ol>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">11</span>
+    <span class="stap-titel">📊 5 typen prospects + funnel-onderhoud</span>
+    <span class="badge badge-verplaatst">van V7 stap 18 naar 11</span>
+    <div class="stap-doel">Categoriseren van top-20 + freebie-leads in 5 typen, afspreken minimaal 5 nieuwe namen per week. Funnel als ritme.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps in deze ankerstap</div>
+    <ol>
+      <li>Categoriseer je top-20 + freebie-leads in 5 typen <small>(direct interesse / open maar voorzichtig / nieuwsgierig niet beschikbaar / vriendelijk niet bezig / niet voor jou)</small></li>
+      <li>Mentor noteert per type passende vervolgactie</li>
+      <li>Spreek met jezelf af: minimaal 5 nieuwe namen per week erbij <small>(lijst is nooit klaar)</small></li>
+      <li>Open je freebie-opt-in-lijst en kijk welke nieuwe leads je deze week kreeg</li>
+      <li>Afsluit: sponsor-checkin / momentum-radar / partner-check</li>
+    </ol>
+  </div>
+</details>
+
+<h3>Verdieping en businessritme (12 t/m 21)</h3>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">12</span>
+    <span class="stap-titel">📸 Stories + Reels + Freebie-aankondiging (verdieping van stap 6)</span>
+    <span class="badge badge-aangepast">verdieping</span>
+    <div class="stap-doel">Dagelijkse Stories oppakken, freebie zichtbaar maken via Stories + Reels. Drie onderwerp-richtingen. Voortbouwen op de social-media-basistraining uit stap 6.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps in deze ankerstap</div>
+    <ol>
+      <li>Plaats vandaag minimaal één Story <small>(richting: lifestyle / waarde / eigen verhaal)</small></li>
+      <li>Plaats een Story die je freebie aankondigt <small>(swipe-up of link-in-bio)</small></li>
+      <li>Plan een vast dagelijks Story-moment <small>(ochtend / lunch / avond)</small></li>
+      <li>Maak je eerste Reel met de Mentor <small>(Mentor levert script + structuur, jij filmt)</small></li>
+      <li>Reageer binnen 1 uur op DM's en stickers <small>(3-soorten-mensen-DM-script herbruikbaar)</small></li>
+      <li>Academy Stories-die-werken-module bekijken <small>(/academy/social-media#module-8)</small></li>
+      <li>Afsluit: sponsor-checkin / momentum-radar / partner-check</li>
+    </ol>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">13</span>
+    <span class="stap-titel">🔄 Tweede freebie + tweede freebie-bot uit toolkit</span>
+    <div class="stap-doel">Tweede freebie aanzetten naast je eerste, andere doelgroep aanspreken. Ervaring opdoen met meerdere parallelle bronnen.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps in deze ankerstap</div>
+    <ol>
+      <li>Kies tweede freebie uit de toolkit die complementair is aan je eerste</li>
+      <li>Plaats een post die deze tweede freebie ankert</li>
+      <li>Mentor laat zien hoe je via twee parallelle freebies verschillende doelgroepen kunt aanspreken</li>
+      <li>Pipeline-spreiding van eerste freebie even bekijken: waar staan die leads nu?</li>
+      <li>Afsluit: sponsor-checkin / momentum-radar / partner-check</li>
+    </ol>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">14</span>
+    <span class="stap-titel">👀 Builder-energie + ideale klant</span>
+    <div class="stap-doel">Onder klanten herkennen wie zelf een gratis webshop zou willen. Ideale-klant-profiel scherper maken op basis van eerste ervaring.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps in deze ankerstap</div>
+    <ol>
+      <li>Markeer in je namenlijst 2-3 klanten met Builder-energie <small>(ondernemend, mensen-mens, doorzettingsvermogen, leerbaar)</small></li>
+      <li>Praat 5 min met de Mentor: "voor wie kan ik het meest betekenen?" <small>(profielblok 'ideale klant')</small></li>
+      <li>Bereid voor 1 klant een webshop-versie van de uitnodiging voor <small>(klaarzetten, niet versturen)</small></li>
+      <li>Afsluit: sponsor-checkin / momentum-radar / partner-check</li>
+    </ol>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">15</span>
+    <span class="stap-titel">👋 Klantcontact + opvolg-routine als ritme</span>
+    <div class="stap-doel">Follow-up als ritme. Bestaande klanten via hercontact-berichten in beweging houden.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps in deze ankerstap</div>
+    <ol>
+      <li>Plan voor 3 prospects een opvolg-herinnering <small>(spreidt over de week)</small></li>
+      <li>Stuur 3 bestaande klanten een hercontact-bericht <small>("hoe gaat het sinds je producten?")</small></li>
+      <li>Stel een vast wekelijks follow-up-blok in je agenda in</li>
+      <li>Check welke klanten in de klantomgeving stil staan: bericht of laten liggen?</li>
+      <li>Afsluit: sponsor-checkin / momentum-radar / partner-check</li>
+    </ol>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">16</span>
+    <span class="stap-titel">🔁 Tweede 3-weg-iteratie + reflectie op patroon</span>
+    <div class="stap-doel">Tweede 3-weg, dit keer met meer eigen leiding. Reflectie op wat in twee 3-wegs constant is en wat per prospect verschilt.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps in deze ankerstap</div>
+    <ol>
+      <li>Kies nieuwe warme prospect voor tweede 3-weg</li>
+      <li>Plan + doorloop met sponsor</li>
+      <li>Reflectie met Mentor: wat zag je in beide 3-wegs hetzelfde? Wat anders? <small>(input voor edification-verdieping stap 17)</small></li>
+      <li>Afsluit: sponsor-checkin / momentum-radar / partner-check</li>
+    </ol>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">17</span>
+    <span class="stap-titel">✨ Edification-verdieping (zin die je sponsor laat schitteren)</span>
+    <span class="badge badge-verplaatst">basics in 4, verdieping hier</span>
+    <div class="stap-doel">Schrijf nu je eigen edification-zin op basis van wat je in 2 of meer 3-wegs hebt gemerkt. De basics zaten in stap 4, hier wordt het verfijnd.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps in deze ankerstap</div>
+    <ol>
+      <li>Reflectie met de Mentor: in jouw 3-wegs, hoe heb je je sponsor steeds geïntroduceerd?</li>
+      <li>Welke zinnen werkten? Welke voelden flauw? <small>(Mentor heeft notities uit alle 3-weg-reflecties)</small></li>
+      <li>Schrijf je eigen edification-zin <small>("Iemand die al X jaar mensen helpt met Y, en degene die mij heeft geholpen met Z")</small></li>
+      <li>Bewaar in /mijn-zinnen <small>(herbruikbaar in varianten)</small></li>
+      <li>Test 'm in eerstvolgende 3-weg, daarna reflectie</li>
+      <li>Afsluit: sponsor-checkin / momentum-radar / partner-check</li>
+    </ol>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">18</span>
+    <span class="stap-titel">🌟 Resultaat-post-iteratie</span>
+    <div class="stap-doel">Voor scenario A: nieuwe iteratie van resultaat-post (andere invalshoek of aanvullend resultaat). Voor scenario B: door trigger al 21-dagen-post gedaan, hier reflectie op opbrengst en plan voor tweede iteratie.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps in deze ankerstap</div>
+    <ol>
+      <li>Reflectie op vorige resultaat-post (alle leads, gesprekken, wat ga je anders doen)</li>
+      <li>Schrijf nieuwe iteratie met de Mentor</li>
+      <li>Pas Tijdlijn-moment 3 toe op minimaal 1 enthousiaste Shopper <small>(via klantomgeving-trigger, zie triggers-sectie)</small></li>
+      <li>Afsluit: sponsor-checkin / momentum-radar / partner-check</li>
+    </ol>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">19</span>
+    <span class="stap-titel">🔍 Pipeline-check + closingsvraag</span>
+    <div class="stap-doel">Per fase een check, grootste verstopping deze week ontstoppen. Plus moedige closingsvraag aan minstens 1 warme prospect.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps in deze ankerstap</div>
+    <ol>
+      <li>Open je namenlijst in pijplijn-weergave</li>
+      <li>Tel per fase hoeveel prospects er staan</li>
+      <li>Identificeer grootste verstopping <small>(bottleneck-fase)</small></li>
+      <li>Mentor stelt 1-2 concrete acties voor</li>
+      <li>Stel closingsvraag aan minstens 1 warme prospect <small>("Wat heb je nog nodig om te beslissen?")</small></li>
+      <li>Bekijk geaggregeerde freebie-opt-ins + Stories-views <small>(zit er ergens onnodige instroom?)</small></li>
+      <li>Afsluit: sponsor-checkin / momentum-radar / partner-check</li>
+    </ol>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">20</span>
+    <span class="stap-titel">🧭 Beelden-status-check + duplicatie-pad</span>
+    <span class="badge badge-nieuw">nieuw, vervangt V7-stap-20-onderdelen</span>
+    <div class="stap-doel">Hoe ver ben je van Beelden? Wat ontbreekt nog? En: wie in jouw team is bezig met hetzelfde pad, hoe kun je hen helpen versnellen?</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps in deze ankerstap</div>
+    <ol>
+      <li>Mentor toont jouw Beelden-status-dashboard <small>(wat heb je, wat ontbreekt)</small></li>
+      <li>Concrete actie voor deze week om dichter bij Beelden te komen</li>
+      <li>Identificeer 1-3 mensen in je team die op vergelijkbaar pad zitten</li>
+      <li>Plan kleine kennisdeling met sponsor/upline over wat in jouw eerste 20 stappen werkte</li>
+      <li>Afsluit: sponsor-checkin / momentum-radar / partner-check</li>
+    </ol>
+  </div>
+</details>
+
+<details class="stap">
+  <summary>
+    <span class="stap-num">21</span>
+    <span class="stap-titel">🏆 Klantomgeving-review + reflectie + talent + eerste 30-dagen-doel</span>
+    <div class="stap-doel">Bewuste blik op alle klantomgevingen, voelen dat duplicatie schaalbaar is. Eindreflectie, creator-talent benoemen, eerste 30-dagen-doel inschieten.</div>
+  </summary>
+  <div class="stap-substeps">
+    <div class="stap-substeps-titel">Substeps in deze ankerstap</div>
+    <ol>
+      <li>Open klantomgeving-overview in dashboard <small>(/klant)</small></li>
+      <li>Bekijk per klant: pulse-momenten, stand</li>
+      <li>Markeer 2 klanten waar je gevoel zegt: hier kan een uitnodiging naar Core / webshop passen</li>
+      <li>Vul de eindreflectie in (10 min)</li>
+      <li>Talent-vraag met de Mentor <small>(schrijver / spreker / filmer / DM-er)</small></li>
+      <li>Stel eerste 30-dagen-doel <small>(concreet meetbaar)</small></li>
+      <li>Plan een call met sponsor om voortgang te bespreken</li>
+      <li>Schets van Uitbreiding-module bekijken (optioneel)</li>
+      <li>Afsluit: sponsor-checkin / momentum-radar / partner-check</li>
+    </ol>
+  </div>
+</details>
+
+<h2>Triggers, geen ankerstappen <span class="badge badge-trigger">nieuw concept</span></h2>
+
+<p>
+  Drie momenten in V7 stonden als ankerstap maar horen feitelijk in een sidestep of popup die <em>op het moment zelf</em> opent.
+  In V8 zijn dit triggers, geactiveerd door wat er in de DB of in de klantomgeving gebeurt.
+</p>
+
+<div class="trigger-blok">
+  <h4>Trigger 1: Eerste shopper (en elke shopper daarna)</h4>
+  <p>
+    Een prospect verschuift naar pipeline-fase <code>shopper</code>, door het systeem of doordat de member zelf 'm versleept.
+    Direct trigger:
+  </p>
+  <ul>
+    <li><strong>Eerste shopper ooit:</strong> popup "Gefeliciteerd met je eerste shopper!" + sidestep met belangrijke vervolgstappen voor een eerste shopper.</li>
+    <li><strong>Tweede en verder:</strong> popup "Gefeliciteerd met je nieuwe shopper!" + sidestep met belangrijke stappen om met deze shopper te doen.</li>
+  </ul>
+  <h4>Sidestep-inhoud (kort)</h4>
+  <ol>
+    <li>Klantomgeving voor deze shopper bekijken</li>
+    <li>Persoonlijk "spullen binnen?"-bericht sturen <small>(Mentor heeft 'm al gevraagd, jij voegt menselijke laag toe)</small></li>
+    <li>Klant uitnodigen voor eerstvolgende info-avond of webinar (optioneel)</li>
+    <li>Builder-energie checken: zou deze persoon zelf een webshop willen?</li>
+    <li>Klantomgeving-tijdlijn-triggers AAN voor deze klant <small>(zie Trigger 3)</small></li>
+  </ol>
+</div>
+
+<div class="trigger-blok">
+  <h4>Trigger 2: 21-dagen-post na pre-post</h4>
+  <p>
+    Member heeft via side-flow B een pre-post gedaan. Rond dag 21 daarna (instelbaar door member) trigger:
+  </p>
+  <ul>
+    <li>Push-notificatie + dashboard-tegel: "Je pre-post was 21 dagen geleden, klaar voor je 21-dagen-resultaat-post?"</li>
+    <li>Klik opent side-flow A (zelfde substeps als scenario-A-member zou doen)</li>
+    <li>Member kan de trigger ook handmatig vooruit/achteruit zetten als dag 21 nog niet past</li>
+  </ul>
+</div>
+
+<div class="trigger-blok">
+  <h4>Trigger 3: Klantomgeving-tijdlijn-momenten</h4>
+  <p>
+    Raoul: <em>"Jouw productgebruiker [Naam] daarbij zit nu hier op de tijdlijn. Op dag tien een ideaal moment om nu te praten over [X] en zo doe je dat."</em>
+  </p>
+  <p>
+    Zodra een klant in de klantomgeving op een belangrijke tijdlijn-dag aankomt (bv. dag 10, dag 21), opent er voor de
+    member een popup of reminder op een herkenbare plek (dashboard of /klant). De popup zegt concreet wát te doen en
+    waarom dit het juiste moment is.
+  </p>
+  <h4>Voorbeeld-trigger</h4>
+  <div class="quote">
+    "Jouw productgebruiker Marleen staat nu op dag 10 in haar 21-dagen-programma.
+    Ideaal moment om te vragen hoe ze de eerste tien dagen heeft ervaren.
+    Tip: kort sturen, geen vragenlijst, één concrete vraag. Voorbeeld-zin:
+    'Hoe heb je de eerste tien dagen ervaren? Wat valt je op?'"
+  </div>
+  <h4>Triggers per tijdlijn-dag</h4>
+  <ul>
+    <li><strong>Dag 1-3:</strong> "spullen binnen"-check (al gedekt door Mentor + member)</li>
+    <li><strong>Dag 7:</strong> "hoe gaan de eerste dagen?"-vraag</li>
+    <li><strong>Dag 10:</strong> "ervaring tot nu toe"-vraag</li>
+    <li><strong>Dag 21:</strong> "resultaat-vraag" + Tijdlijn-moment 3 (gun je anderen dit ook)</li>
+    <li><strong>Dag 30+:</strong> hercontact-routine</li>
+  </ul>
+  <p style="color: var(--muted); font-size: 13px;">
+    Member kan instellen hoeveel triggers ze per week wil krijgen. Default: max 3 per week per klant om overweldiging
+    te voorkomen.
+  </p>
+</div>
+
+<h2>DMO heroverwogen</h2>
+
+<div class="wijz">
+  <div class="wijz-titel">Geen "elke dag 3 mensen uitnodigen"</div>
+  <div class="wijz-uitleg">
+    Raoul: <em>"ik probeer even te kijken wat het DMO is, anders wordt het denk ik heel vol om dan ook nog steeds elke dag 3 mensen uit te nodigen. Volgens mij is dit genoeg al focus om maximaal uit te halen."</em>
+    <br><br>
+    DMO in V8 is daarom <strong>reactie-gericht</strong>, niet quota-gericht:
+    <ul>
+      <li>Reageer binnen 1 uur op iedere reactie of like op je posts (3-soorten-mensen-DM-script)</li>
+      <li>Volg op binnen 24-48 uur op iedereen die op een freebie of test heeft ingetekend</li>
+      <li>Stuur deze week minimaal 1 nieuwe uitnodiging vanuit je top-20 of nieuwe naam</li>
+      <li>Houd je pijplijn vol: minimaal 5 nieuwe namen per week (stap 11)</li>
+    </ul>
+    Dit is geen schraal aantal: een actieve post-stroom + freebie-instroom levert vaak meer dan 3 nieuwe contacten per dag op,
+    maar dan vanuit reactie in plaats van vanuit forceren.
+  </div>
+</div>
+
+<h2>Vergelijking V7 vs V8 op een rij</h2>
+
+<table>
+<thead>
+<tr><th>Onderwerp</th><th>V7</th><th>V8</th><th>Reden</th></tr>
+</thead>
+<tbody>
+<tr>
+  <td>Pre-post + 21-dagen-post</td>
+  <td>Side-flow na stap 5</td>
+  <td>Pre-stap vóór ankerstap 1, skippable</td>
+  <td>Laagdrempeligste activiteit, brengt mensen snelst in beweging</td>
+</tr>
+<tr>
+  <td>WHY-substep</td>
+  <td>Stap 1 substep</td>
+  <td>Verwijderd</td>
+  <td>Al in onboarding</td>
+</tr>
+<tr>
+  <td>Top-20 + webshop-pivot</td>
+  <td>Stap 2 + stap 4 apart</td>
+  <td>Stap 2 samengevoegd</td>
+  <td>Top-20 is doelgroep van webshop-uitnodigingen</td>
+</tr>
+<tr>
+  <td>3 uitnodigingen mét sponsor</td>
+  <td>1 oefen-uitnodiging</td>
+  <td>3 uitnodigingen, daarna 17 z.s.m.</td>
+  <td>Sponsor-sessie-format van het team</td>
+</tr>
+<tr>
+  <td>Productkennis</td>
+  <td>"5 meest verkochte" + pakket + Mentor-info</td>
+  <td>Zelf filmpjes kijken + Mentor-info</td>
+  <td>Wat je verstuurt moet je zelf hebben gezien</td>
+</tr>
+<tr>
+  <td>Bezwaren / 3-weg / Mini-ELEVA basis</td>
+  <td>Verspreid over stap 5, 9, 12</td>
+  <td>Cluster in stap 5</td>
+  <td>Basis-begrip moet er zijn voor eerste reactie binnenkomt</td>
+</tr>
+<tr>
+  <td>Aanloop-stap na side-flow</td>
+  <td>Stap 7 apart</td>
+  <td>Geabsorbeerd in side-flow zelf</td>
+  <td>Side-flow moet zelfvoldoende uitmolken</td>
+</tr>
+<tr>
+  <td>Verdienmodel-basis</td>
+  <td>Stap 8</td>
+  <td>Stap 7 + Beelden-doel-introductie in stap 1</td>
+  <td>Beelden als rode draad vroeg in zicht</td>
+</tr>
+<tr>
+  <td>Eerste warme uitn. + Mini-ELEVA-intro</td>
+  <td>Stap 12</td>
+  <td>Verwijderd</td>
+  <td>Al in cluster 4-5 + side-flow gebeurt</td>
+</tr>
+<tr>
+  <td>Stories + Reels + Freebie</td>
+  <td>Stap 13 los van stap 6</td>
+  <td>Stap 12 als verdieping van stap 6</td>
+  <td>Bouwt voort op basistraining stap 6</td>
+</tr>
+<tr>
+  <td>Eerste shoppers</td>
+  <td>Stap 14 als ankerstap</td>
+  <td>Trigger-sidestep bij shopper-fase-overgang</td>
+  <td>Shopper kan al na dag 1 ontstaan, niet inplannen</td>
+</tr>
+<tr>
+  <td>Side-flow A herstart</td>
+  <td>Na ankerstap 14</td>
+  <td>Trigger rond dag 21 na pre-post</td>
+  <td>Gebeurt waar het hoort, niet op vaste plek</td>
+</tr>
+<tr>
+  <td>Edification</td>
+  <td>Stap 19 (alleen)</td>
+  <td>Basics in stap 4, verdieping in stap 17</td>
+  <td>Basics nodig voor eerste 3-weg, verdieping na ervaring</td>
+</tr>
+<tr>
+  <td>Klantomgeving-tijdlijn-vragen</td>
+  <td>Onduidelijk</td>
+  <td>Trigger-popup voor member op herkenbare plek</td>
+  <td>Simpel + actiegericht, niet "open de klantomgeving zelf"</td>
+</tr>
+<tr>
+  <td>DMO</td>
+  <td>"3 uitnodigingen per dag"</td>
+  <td>Reactie-gericht + 5 nieuwe namen per week</td>
+  <td>Anders te vol naast post-stroom + freebie-instroom</td>
+</tr>
+</tbody>
+</table>
+
+<h2>Open vragen voor jou en Gaby</h2>
+
+<div class="wijz">
+  <div class="wijz-titel">Vraag 1: pre-stap vóór ankerstap 1, klopt deze positie?</div>
+  <div class="wijz-uitleg">
+    De pre-post / 21-dagen-post komt nu vóór ankerstap 1 als skippable sidestep. Alternatief: maak 'm
+    onderdeel van ankerstap 1 zelf (subkeuze). Maar dan dwingt 'ie meer dan jij wilde. Klopt deze plek?
+  </div>
+</div>
+
+<div class="wijz">
+  <div class="wijz-titel">Vraag 2: cluster 4-5 (basis bezwaren + 3-weg + Mini-ELEVA), is dit te veel tegelijk?</div>
+  <div class="wijz-uitleg">
+    Drie basis-skills in stap 5 voelt vol. Alternatief: 5 = bezwaren-basis, 6a = 3-weg-basis, 6b = Mini-ELEVA-basis
+    (allemaal lichte stappen). Maar dan wordt het meer steppen. Liever drie in één?
+  </div>
+</div>
+
+<div class="wijz">
+  <div class="wijz-titel">Vraag 3: trigger-mechanisme voor klantomgeving-tijdlijn, max 3 per week per klant?</div>
+  <div class="wijz-uitleg">
+    Standaard is 3 triggers per klant per week. Te veel? Te weinig? Of wil je dat de member dat per klant
+    instelt? Wat is voor jouw team werkbaar?
+  </div>
+</div>
+
+<div class="wijz">
+  <div class="wijz-titel">Vraag 4: 3-soorten-mensen-DM-script, exact in deze vorm?</div>
+  <div class="wijz-uitleg">
+    De DM-tekst die jij dicteerde staat letterlijk in side-flow B en A. Wil je 'm zo, of moet 'ie aangepast
+    worden? Bv. zonder "ken jij anderen voor wie dit zou kunnen zijn" (kan dwingend voelen voor sommige relaties).
+  </div>
+</div>
+
+<div class="wijz">
+  <div class="wijz-titel">Vraag 5: Beelden-status-dashboard, hoe weergeven?</div>
+  <div class="wijz-uitleg">
+    "Wat heb je, wat ontbreekt voor Beelden" — heb jij een idee hoe dit visueel moet (voortgangsbalk?
+    checklist? piramide?). Of laat je dat aan mij om te ontwerpen?
+  </div>
+</div>
+
+<div class="wijz">
+  <div class="wijz-titel">Vraag 6: stap 13 (tweede freebie), past dit hier of liever later?</div>
+  <div class="wijz-uitleg">
+    Tweede freebie aanzetten staat nu op stap 13. Misschien hoort dit ergens later, of veel eerder
+    (direct na stap 6). Wat voelt het meest natuurlijk?
+  </div>
+</div>
+
+<div class="footer">
+  <strong>Status V8:</strong> klaar voor review door Raoul en Gaby. 17 wijzigingen uit Raoul's feedback verwerkt.
+  Drie nieuwe trigger-systemen geïntroduceerd (shopper-fase, 21-dagen-post-trigger, klantomgeving-tijdlijn).
+  Pre-stap met skippable side-flows vooraan.
+  <br><br>
+  Zodra V8 is goedgekeurd: (1) <code>lib/playbook/core-dagen-v8.ts</code> aanmaken,
+  (2) trigger-engine ontwerpen (DB-triggers + popup-systeem op dashboard),
+  (3) side-flow-stappenplan-componenten bouwen (vervangt PDF-leesplicht),
+  (4) Beelden-status-dashboard-tegel ontwerpen,
+  (5) v7-html in archive zetten als referentie.
+</div>
+
+</main>
+</body>
+</html>

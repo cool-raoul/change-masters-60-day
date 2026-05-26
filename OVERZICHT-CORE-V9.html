@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8" />
+<title>Core V9 — Raoul-feedback verwerkt + Builder-status + nieuwe side-flow-flow</title>
+<style>
+  :root {
+    --bg: #15171b;
+    --card: #1c1f24;
+    --card2: #232730;
+    --gold: #c4a04a;
+    --gold-soft: #5d4a25;
+    --gold-light: #e0bc62;
+    --text: #e8e6e0;
+    --muted: #8a8b8e;
+    --warn: #d18b5c;
+    --new: #8ad15c;
+    --side: #5c9ad1;
+    --trigger: #c98ad1;
+    --kill: #d15c5c;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.5; padding: 24px 16px 80px; }
+  main { max-width: 920px; margin: 0 auto; }
+  h1 { font-family: Georgia, serif; font-size: 28px; margin: 0 0 4px; }
+  h2 { font-family: Georgia, serif; color: var(--gold); font-size: 22px; margin: 40px 0 12px; border-bottom: 1px solid var(--gold-soft); padding-bottom: 6px; }
+  h3 { color: var(--gold-light); font-size: 17px; margin: 24px 0 8px; }
+  h4 { color: var(--gold); font-size: 15px; margin: 14px 0 6px; }
+  p, li { font-size: 14px; line-height: 1.65; }
+  .intro { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+  .badge { display: inline-block; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; padding: 2px 8px; border-radius: 4px; margin-left: 6px; vertical-align: middle; font-weight: 600; }
+  .badge-nieuw { background: rgba(138,209,92,0.15); color: var(--new); border: 1px solid rgba(138,209,92,0.35); }
+  .badge-verplaatst { background: rgba(209,139,92,0.15); color: var(--warn); border: 1px solid rgba(209,139,92,0.35); }
+  .badge-aangepast { background: rgba(196,160,74,0.15); color: var(--gold); border: 1px solid rgba(196,160,74,0.35); }
+  .badge-side { background: rgba(92,154,209,0.15); color: var(--side); border: 1px solid rgba(92,154,209,0.35); }
+  .badge-trigger { background: rgba(201,138,209,0.15); color: var(--trigger); border: 1px solid rgba(201,138,209,0.35); }
+  .badge-weg { background: rgba(209,92,92,0.15); color: var(--kill); border: 1px solid rgba(209,92,92,0.35); }
+  .wijz { background: rgba(138,209,92,0.07); border-left: 3px solid var(--new); padding: 12px 16px; border-radius: 4px; margin: 8px 0 16px; }
+  .wijz-titel { font-weight: 600; color: var(--new); font-size: 13px; margin-bottom: 4px; }
+  .wijz-uitleg { font-size: 13px; color: var(--text); }
+  .built { background: rgba(196,160,74,0.07); border: 1px solid var(--gold-soft); border-left: 4px solid var(--gold); border-radius: 8px; padding: 18px 22px; margin: 18px 0; }
+  .built h3 { color: var(--gold); margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--card2); vertical-align: top; }
+  th { color: var(--gold); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+  code { background: var(--card2); padding: 2px 6px; border-radius: 3px; font-size: 12px; }
+  .footer { margin-top: 60px; padding: 20px; background: var(--card); border-radius: 8px; font-size: 13px; color: var(--muted); }
+  .stap { background: var(--card); border-radius: 8px; padding: 14px 18px; margin: 10px 0; border-left: 3px solid var(--gold-soft); }
+  .stap-num { display: inline-block; background: var(--gold); color: var(--bg); font-weight: 700; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; font-size: 13px; margin-right: 8px; }
+  .stap-titel { font-weight: 600; color: var(--text); }
+  .stap-doel { color: var(--muted); font-size: 13px; font-style: italic; margin-top: 4px; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Core V9 — Raoul-feedback verwerkt + Builder-status</h1>
+<p class="intro">
+  V9 is opgebouwd in code, niet alleen op papier. <strong>21 ankerstappen + 2 side-flows + Builder-status-dashboard-tegel staan
+  klaar op /core-v9 voor de pilot.</strong> Raoul kan via founder-modus de teksten woord-voor-woord aanpassen + media toevoegen
+  per stap en per substep, zoals in Sprint.
+</p>
+
+<h2>Gebouwd, klaar voor review</h2>
+
+<div class="built">
+  <h3>📂 Bestanden</h3>
+  <ul>
+    <li><code>lib/playbook/core-dagen-v9.ts</code> — alle 21 ankerstappen met volledig uitgeschreven content</li>
+    <li><code>lib/playbook/core-sideflows-v9.ts</code> — pre-post + 21-dagen-post side-flow content + DM-scripts</li>
+    <li><code>lib/feature-flags/core-v9.ts</code> — feature-flag, founders zien V9 standaard</li>
+    <li><code>app/core-v9/page.tsx</code> — huidige-stap-view</li>
+    <li><code>app/core-v9/stap/[nummer]/page.tsx</code> — specifieke-stap-view</li>
+    <li><code>app/core-v9/structuur/page.tsx</code> — founder-overzicht alle 21</li>
+    <li><code>app/core-v9/sideflow/[slug]/page.tsx</code> — pre-post + 21-dagen-post side-flow rendering</li>
+    <li><code>app/core-v9/sideflow/[slug]/sideflow-view.tsx</code> — substep-vinklist + MediaBlokken per substep</li>
+    <li><code>app/api/core-v9/vink-substep/route.ts</code> — substep-voltooiing</li>
+    <li><code>app/api/core-v9/voltooi-ankerstap/route.ts</code> — ankerstap → volgende</li>
+  </ul>
+  <h3>🌐 Routes</h3>
+  <ul>
+    <li><code>/core-v9</code> — huidige stap voor de member</li>
+    <li><code>/core-v9/stap/1</code> t/m <code>/core-v9/stap/21</code> — direct naar een specifieke stap</li>
+    <li><code>/core-v9/structuur</code> — overzicht alle 21 ankerstappen voor founder</li>
+    <li><code>/core-v9/sideflow/pre-post</code> — pre-post side-flow</li>
+    <li><code>/core-v9/sideflow/21-dagen-post</code> — 21-dagen-resultaat-post side-flow</li>
+  </ul>
+  <h3>💾 DB</h3>
+  <p>
+    Hergebruikt <code>core_v6_substep_voltooiingen</code> (taak-IDs zijn uniek: <code>core-v9-stap...</code>).
+    Geen migratie nodig. Profile-velden <code>core_v9_actief</code> en <code>core_v9_ankerstap</code>
+    bestaan nog niet als kolom; bij ontbreken faalt 'ie stil terug naar default (founder ziet V9, anderen niet).
+    Voor pilot-uitrol bij andere users dan founders is een eenvoudige migratie nodig.
+  </p>
+</div>
+
+<h2>17 wijzigingen uit Raoul-feedback verwerkt</h2>
+
+<div class="wijz">
+  <div class="wijz-uitleg">
+    <ul>
+      <li><strong>1.</strong> WHY-substep weg uit stap 1 (al in onboarding)</li>
+      <li><strong>2.</strong> Pre-post/21-dagen-post-keuze ONDERDEEL van stap 1 (na voltooien stap 1 opent de sidestep)</li>
+      <li><strong>3.</strong> Top-20 = product- + opportunity-mensen, 3 uitnodigingen mét sponsor, daarna 17 z.s.m.</li>
+      <li><strong>4.</strong> Productkennis lichter: zelf filmpjes kijken + Mentor-info eigen gebruik. "Welke 5 verkoop ik het meest" weg.</li>
+      <li><strong>5.</strong> Stap 4 = drie verhalen + edification-basics (basis-zin schrijven)</li>
+      <li><strong>6.</strong> Stap 5 = cluster: bezwaren-basis + 3-weg-basis + Mini-ELEVA-basis</li>
+      <li><strong>7.</strong> Stap 6 = social-media-basistraining + Brookes + eerste freebie. Eerst basis (15 min films), dan post.</li>
+      <li><strong>8.</strong> Aanloop-opbrengst-stap weg, geabsorbeerd in side-flow zelf</li>
+      <li><strong>9.</strong> Stap 7 = verdienmodel + Builder-pad zichtbaar als dashboard-tegel</li>
+      <li><strong>10.</strong> Stap 9 = "je volgende 3-weg" (niet meer "eerste")</li>
+      <li><strong>11.</strong> Stap 13 = niche-aanscherping met Mentor (tweede freebie eruit, eerste freebie blijven gebruiken)</li>
+      <li><strong>12.</strong> Stap 14 = "members en netwerkers herkennen" (woord "builder-energie" eruit, want Builder is nu een status)</li>
+      <li><strong>13.</strong> Stap 19 = pipeline-check met Mentor-auto-knop (zoals Sprint heeft via funnel-analyse-embed)</li>
+      <li><strong>14.</strong> Stap 20 = Builder-status-check + duplicatie-pad</li>
+      <li><strong>15.</strong> Side-flow pre-post: "eigen 21-dagen-programma starten" eruit (al gebeurd), DM-script GEZELLIG-variant, copywriting moet "wat ga je doen?" uitlokken</li>
+      <li><strong>16.</strong> Side-flow 21-dagen-post: ALLE positieve veranderingen (niet 1-2), DM-script BLIJ-variant</li>
+      <li><strong>17.</strong> Beide side-flows: Mini-ELEVA + 3-weg basis HIER al uitleggen (cluster 4-5 komt later), zelf filmpjes kijken substep toegevoegd</li>
+    </ul>
+  </div>
+</div>
+
+<h2>De 21 ankerstappen V9</h2>
+
+<h3>Fundament (1 t/m 5)</h3>
+
+<div class="stap"><span class="stap-num">1</span><span class="stap-titel">🚀 Welkom + Builder-doel + sponsor + jouw eerste post-keuze</span><div class="stap-doel">Bevestigen onboarding-input, Builder-status uitleggen, sponsor in de loop, pre-post/21-dagen-post-keuze maken.</div></div>
+<div class="stap"><span class="stap-num">2</span><span class="stap-titel">👥 Top-20-namenlijst + webshop-pivot + 3 uitnodigingen mét sponsor</span><div class="stap-doel">Productgebruikers + opportunity-mensen. Webshop-bouwstenen leren. Halfuur met sponsor, 3 oefen-uitnodigingen, daarna 17 z.s.m.</div></div>
+<div class="stap"><span class="stap-num">3</span><span class="stap-titel">📦 Productkennis-licht, kijk zelf wat je doorstuurt</span><div class="stap-doel">Zelf prospect-filmpjes bekijken. Mentor weet welke producten/programma's jij persoonlijk doet en gebruikt.</div></div>
+<div class="stap"><span class="stap-num">4</span><span class="stap-titel">📝 Drie verhalen + jouw stem + edification-basics</span><div class="stap-doel">Persoonlijk, product- en business-verhaal schrijven. Edification-basis-zin maken. Verdieping in stap 17.</div></div>
+<div class="stap"><span class="stap-num">5</span><span class="stap-titel">🛡️ Bezwaren-basis + 3-weg-basis + Mini-ELEVA-basis</span><div class="stap-doel">Drie skills op basis-niveau zodat je klaarstaat zodra eerste reactie binnenkomt. Verdieping verspreid over stap 8, 10, 17.</div></div>
+
+<h3>In beweging (6 t/m 14)</h3>
+
+<div class="stap"><span class="stap-num">6</span><span class="stap-titel">📱 Social-media-basistraining + Brookes 3-stappen + eerste freebie</span><div class="stap-doel">15 min films over hook, carrousel, reel, story, hashtags. Daarna één post + freebie via Brookes-formule.</div></div>
+<div class="stap"><span class="stap-num">7</span><span class="stap-titel">💡 Verdienmodel + jouw Builder-pad zichtbaar</span><div class="stap-doel">Hoe je verdient + waar Builder zit. Dashboard-tegel met twee voorwaarden. Eerste IP-stand-invoer.</div></div>
+<div class="stap"><span class="stap-num">8</span><span class="stap-titel">💪 3-weg-meesterclass, de 5 stappen verdiept</span><div class="stap-doel">Edification → intro → inhoud → vraag → vervolgafspraak. Voor één specifieke prospect.</div></div>
+<div class="stap"><span class="stap-num">9</span><span class="stap-titel">🤝 Je volgende 3-weg starten (of inplannen)</span><div class="stap-doel">Echte 3-weg met sponsor + warme prospect. Reflectie met Mentor.</div></div>
+<div class="stap"><span class="stap-num">10</span><span class="stap-titel">🎙️ FORM-verdieping voor je top-5</span><div class="stap-doel">Family, Occupation, Recreation, Money. Mentor noteert per top-5-prospect in profiel.</div></div>
+<div class="stap"><span class="stap-num">11</span><span class="stap-titel">📊 5 typen prospects + funnel-onderhoud</span><div class="stap-doel">Categoriseren in 5 typen. Mentor noteert vervolgactie per type. 5 nieuwe namen per week.</div></div>
+<div class="stap"><span class="stap-num">12</span><span class="stap-titel">📸 Stories + Reels + Freebie-aankondiging (verdieping van stap 6)</span><div class="stap-doel">Dagelijkse Stories + eerste Reel met Mentor + freebie zichtbaar via Stories.</div></div>
+<div class="stap"><span class="stap-num">13</span><span class="stap-titel">🎯 Niche-aanscherping met de Mentor</span><div class="stap-doel">Op basis van wat Mentor al weet: waar ligt jouw natuurlijke niche? Voorbereiding op latere gerichte freebies.</div></div>
+<div class="stap"><span class="stap-num">14</span><span class="stap-titel">👀 Members en netwerkers herkennen + ideale klant</span><div class="stap-doel">Onder klanten herkennen wie zelf een webshop wil. Ideale-klant-profiel scherper. Webshop-uitnodiging voorbereiden voor 1 klant.</div></div>
+
+<h3>Business-ritme (15 t/m 21)</h3>
+
+<div class="stap"><span class="stap-num">15</span><span class="stap-titel">👋 Klantcontact + opvolg-routine als ritme</span><div class="stap-doel">Opvolg-herinneringen voor 3 prospects. Hercontact bestaande klanten. Vast wekelijks follow-up-blok.</div></div>
+<div class="stap"><span class="stap-num">16</span><span class="stap-titel">🔁 Tweede 3-weg-iteratie + reflectie op patroon</span><div class="stap-doel">Volgende 3-weg met meer eigen leiding. Mentor noteert wat constant is en wat per prospect verschilt.</div></div>
+<div class="stap"><span class="stap-num">17</span><span class="stap-titel">✨ Edification-verdieping (de zin die je sponsor laat schitteren)</span><div class="stap-doel">Op basis van 2+ 3-wegs: verfijnde edification-zin. Test in volgende 3-weg.</div></div>
+<div class="stap"><span class="stap-num">18</span><span class="stap-titel">🌟 Resultaat-post-iteratie (nieuwe invalshoek)</span><div class="stap-doel">Tweede resultaat-post met andere invalshoek. Plus: Tijdlijn-moment 3 op een enthousiaste klant.</div></div>
+<div class="stap"><span class="stap-num">19</span><span class="stap-titel">🔍 Pipeline-check + closingsvraag (met Mentor-analyse)</span><div class="stap-doel">Mentor-auto-knop leest cijfers, identificeert bottleneck, geeft 1-2 concrete acties. Closingsvraag aan minstens 1 warme prospect.</div></div>
+<div class="stap"><span class="stap-num">20</span><span class="stap-titel">🧭 Builder-status-check + duplicatie-pad</span><div class="stap-doel">Waar sta je richting Builder? Mentor bepaalt knelpunt (members of volume). Plus: 1-3 mensen in je team identificeren op vergelijkbaar pad.</div></div>
+<div class="stap"><span class="stap-num">21</span><span class="stap-titel">🏆 Klantomgeving-review + reflectie + talent + eerste 30-dagen-doel</span><div class="stap-doel">Eindreflectie, talent benoemen (schrijver/spreker/filmer/DM-er), 30-dagen-doel.</div></div>
+
+<h2>Builder-status, het centrale doel</h2>
+
+<div class="wijz">
+  <div class="wijz-titel">Definitie</div>
+  <div class="wijz-uitleg">
+    Builder-status (Lifeplus-rang) is bereikt wanneer:
+    <ol>
+      <li>In jouw eerste 3 levels samen is voor minimaal <strong>1500 IP</strong> besteld (jouw eigen bestelling telt mee)</li>
+      <li>In jouw team staan minimaal <strong>3 members</strong> met een bestelling vanaf 40 IP</li>
+    </ol>
+  </div>
+</div>
+
+<div class="wijz">
+  <div class="wijz-titel">Tracking-aanpak in V9</div>
+  <div class="wijz-uitleg">
+    Lifeplus Teams is niet rechtstreeks gekoppeld aan ELEVA, dus we doen het hybride:
+    <ul>
+      <li><strong>Voorwaarde 1 (1500 IP):</strong> handmatig bijwerken vanuit Lifeplus Teams. Member ziet een veld op de Builder-tegel op het dashboard. Mentor herinnert wekelijks.</li>
+      <li><strong>Voorwaarde 2 (3 members @ 40 IP):</strong> half-automatisch tellen via prospects-fase in ELEVA. Member kan handmatig bevestigen welke prospects member zijn geworden met IP-volume.</li>
+      <li><strong>Visueel:</strong> dashboard-tegel "Pad naar Builder" met twee progress-elementen. Bij dubbel ✓ confetti-bevestiging.</li>
+    </ul>
+    Voor de pilot is dit voldoende. Volgende fase kan automatische Lifeplus Teams-koppeling als jullie die data structureel beschikbaar krijgen.
+  </div>
+</div>
+
+<h2>Side-flows in V9</h2>
+
+<div class="wijz">
+  <div class="wijz-titel">Pre-post side-flow (skippable)</div>
+  <div class="wijz-uitleg">
+    11 substeps: mini-uitleg + zelf filmpjes kijken + copywriting-uitlokking + upline-check + plaatsen + 3-soorten-mensen-DM (GEZELLIG-variant) + Mini-ELEVA/3-weg-basis-uitleg + reageer-routine + prospects toevoegen + reflectie + afronden.
+    Eigen 21-dagen-programma-stap is verwijderd (al gebeurd).
+  </div>
+</div>
+
+<div class="wijz">
+  <div class="wijz-titel">21-dagen-post side-flow</div>
+  <div class="wijz-uitleg">
+    12 substeps: mini-uitleg + zelf filmpjes + alle positieve veranderingen inventariseren + tekst schrijven (claim-vrij) + upline-check + plaatsen + 3-soorten-mensen-DM (BLIJ-variant) + Mini-ELEVA/3-weg-basis + reageer + prospects + reflectie + afronden.
+    Niet 1-2 veranderingen maar ALLE, om meerdere doelgroepen te triggeren.
+  </div>
+</div>
+
+<h2>Wat Raoul nog wil veranderen (woord-voor-woord)</h2>
+
+<p>
+  Open <code>/core-v9</code> in founder-modus. Per stap zie je:
+</p>
+<ul>
+  <li>Een paragraaf-tekst (titel + faseDoel + watJeLeert) die je kunt aanpassen via founder-edit-modus</li>
+  <li>Substeps (vandaagDoen) als checkbox-rij, ook bewerkbaar</li>
+  <li>MediaBlokken per stap (boven en onder de tekst) waar je video/foto/PDF kunt droppen</li>
+  <li>MediaBlokken per substep (één per substep) voor specifieke uitleg-filmpjes</li>
+  <li>De waaromWerktDit-quote onderaan, bewerkbaar</li>
+</ul>
+
+<p>
+  Voor de side-flows: <code>/core-v9/sideflow/pre-post</code> en <code>/core-v9/sideflow/21-dagen-post</code>. Zelfde structuur: intro-tekst bewerkbaar, substeps bewerkbaar, MediaBlokken per substep, slot-tekst bewerkbaar.
+</p>
+
+<div class="footer">
+  <strong>Status V9:</strong> gebouwd in code, klaar voor founder-review. Build groen.
+  Volgende rondes: (1) Raoul leest door + past woorden aan via founder-modus,
+  (2) Gaby's media erbij per stap en per substep,
+  (3) Eventueel migratie voor andere users naast founders te zien geven,
+  (4) Builder-status-tegel UI op dashboard concreet bouwen,
+  (5) Klantomgeving-tijdlijn-triggers (popup voor member op dag 7/10/21).
+</div>
+
+</main>
+</body>
+</html>
