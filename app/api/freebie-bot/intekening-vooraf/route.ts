@@ -13,7 +13,7 @@
 // 2. Freebie-row ophalen of aanmaken
 // 3. Opt-in-rij aanmaken met status='intekening' (geen bot_antwoorden nog)
 // 4. Prospect aanmaken (of bestaande aanvullen) met tag
-//    'Freebie: Tweede Lente' en notitie 'INTEKENING'
+//    'Freebie: <Bot-titel>' en notitie 'INTEKENING'
 // 5. Push-notificatie naar member: 'X heeft net ingetekend, vragenlijst
 //    nog niet ingevuld'
 
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Freebie-rij ophalen of aanmaken op basis van bot-slug uit token
-    const botSlug = (tokenRow.bot_slug ?? "tweede-lente") as string;
+    const botSlug = (tokenRow.bot_slug ?? "energie-en-focus") as string;
     const botConfig = getBotConfig(botSlug);
     const botTitel =
       botConfig?.titel ??

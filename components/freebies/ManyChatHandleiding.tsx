@@ -6,13 +6,14 @@
 
 export function ManyChatHandleiding({
   voorbeeldLink,
-  triggerVoorbeeld = "TWEEDE-LENTE",
+  triggerVoorbeeld = "ENERGIE",
 }: {
   voorbeeldLink?: string;
   triggerVoorbeeld?: string;
 }) {
   const tonbeeldLink =
-    voorbeeldLink ?? "https://[jouw-domein]/bot/tweede-lente/[jouw-token]";
+    voorbeeldLink ??
+    "https://[jouw-domein]/bot/energie-en-focus/[jouw-token]";
 
   return (
     <details className="mt-6 rounded-2xl border border-sky-500/30 bg-sky-500/5 p-5">

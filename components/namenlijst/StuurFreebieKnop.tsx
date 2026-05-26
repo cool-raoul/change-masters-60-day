@@ -9,16 +9,21 @@
 // Beschikbare freebies:
 //   1. Productadvies-vragenlijst (voor iedereen) — genereert een prospect-
 //      gebonden unieke link via /api/productadvies-test/maak-aan
-//   2. Tweede Lente bot (alleen Core + founder) — gebruikt de member's
-//      eigen tracking-link. Bij intekening matcht de e-mail op deze
-//      prospect en wordt de prospect-kaart aangevuld.
+//   2. Score-bots (Energie & Focus, Hormonen & Overgang) — gebruiken
+//      member's eigen tracking-link. Bij intekening matcht de e-mail op
+//      deze prospect en wordt de prospect-kaart aangevuld.
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { DeelKnoppen } from "@/components/shared/DeelKnoppen";
 
+type FreebieKey =
+  | "productadvies"
+  | "energie-en-focus"
+  | "hormonen-en-overgang";
+
 type Freebie = {
-  key: "productadvies" | "tweede-lente";
+  key: FreebieKey;
   titel: string;
   icoon: string;
   beschrijving: string;
@@ -33,11 +38,18 @@ const FREEBIES: Freebie[] = [
     beschrijving: "Drie minuten, persoonlijk pakket-advies aan het eind.",
   },
   {
-    key: "tweede-lente",
-    titel: "Tweede Lente",
-    icoon: "🌷",
-    beschrijving: "Vijf-minuten persoonlijk overzicht voor in en rond de overgang.",
-    alleenCore: true,
+    key: "energie-en-focus",
+    titel: "Energie & Focus",
+    icoon: "⚡",
+    beschrijving:
+      "Vijf-minuten score-vragenlijst over energie, slaap, focus en leefstijl.",
+  },
+  {
+    key: "hormonen-en-overgang",
+    titel: "Hormonen & Overgang",
+    icoon: "🌸",
+    beschrijving:
+      "Vijf-minuten score-vragenlijst over hormoon-signalen, slaap, stemming en lichaam.",
   },
 ];
 
@@ -59,10 +71,10 @@ export function StuurFreebieKnop({
 
   const isFounder = memberRole === "founder";
   const isCore = memberModus === "core";
-  const ziet_tweede_lente = isFounder || isCore;
+  const ziet_core_only = isFounder || isCore;
 
   const beschikbaar = FREEBIES.filter(
-    (f) => !f.alleenCore || ziet_tweede_lente,
+    (f) => !f.alleenCore || ziet_core_only,
   );
 
   function kiesFreebie(freebie: Freebie) {
@@ -172,9 +184,11 @@ function FreebieDeelDialog({
           }
           setUrl(`${baseUrl}/test/${data.token}`);
           setBezig(false);
-        } else if (freebie.key === "tweede-lente") {
-          // Member's eigen tracking-link gebruiken. Bij intekening matcht
-          // de e-mail op deze prospect als die hetzelfde adres invult.
+        } else {
+          // Score-bot: member's eigen tracking-link gebruiken. Bij
+          // intekening matcht de e-mail op deze prospect als die
+          // hetzelfde adres invult.
+          const botSlug = freebie.key;
           const {
             data: { user },
           } = await supabase.auth.getUser();
@@ -187,15 +201,14 @@ function FreebieDeelDialog({
             .from("freebie_bot_member_tokens")
             .select("token")
             .eq("member_id", user.id)
-            .eq("bot_slug", "tweede-lente")
+            .eq("bot_slug", botSlug)
             .maybeSingle();
           let token = bestaand?.token as string | undefined;
           if (!token) {
-            // Genereer nieuwe via maak-token-endpoint
             const res = await fetch("/api/freebie-bot/maak-token", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ botSlug: "tweede-lente" }),
+              body: JSON.stringify({ botSlug }),
             });
             const data = await res.json();
             if (geannuleerd) return;
@@ -206,7 +219,7 @@ function FreebieDeelDialog({
             }
             token = data.token;
           }
-          setUrl(`${baseUrl}/bot/tweede-lente/${token}`);
+          setUrl(`${baseUrl}/bot/${botSlug}/${token}`);
           setBezig(false);
         }
       } catch (e) {
@@ -233,13 +246,22 @@ Klik hier: ${url ?? ""}
 
 Aan het eind krijg je een advies dat past bij wat jij aangeeft. Ik kijk daarna graag samen met je naar het resultaat 🥰`;
     }
-    return `Hé ${voornaam}!
+    if (freebie.key === "energie-en-focus") {
+      return `Hé ${voornaam}!
 
-Ik heb iets voor je dat je in 5 minuten een persoonlijk overzicht geeft voor wat speelt in en rond de overgang. Vijf-minuten, zeven vragen, en aan het eind handvatten + voedingsstoffen die in deze tijd vaak belangrijk worden.
+Ik heb iets voor je dat in vijf minuten een persoonlijk beeld geeft van waar het op het gebied van energie, slaap en focus voor jou loopt en waar het stroef gaat. Tien korte vragen, daarna een score plus concrete handvatten.
 
 Klik hier: ${url ?? ""}
 
-Je ontvangt het ook in je mail zodat je het rustig kunt nalezen 🌷`;
+Je ontvangt het ook in je mail zodat je het rustig kunt teruglezen ⚡`;
+    }
+    return `Hé ${voornaam}!
+
+Ik heb iets voor je dat in vijf minuten een persoonlijk beeld geeft van wat er speelt rond hormonen en de overgang. Tien korte vragen, daarna een score per thema plus concrete handvatten en voedingsstoffen die in deze fase vaak belangrijk worden.
+
+Klik hier: ${url ?? ""}
+
+Je ontvangt het ook in je mail zodat je het rustig kunt teruglezen 🌸`;
   })();
 
   return (
@@ -295,7 +317,7 @@ Je ontvangt het ook in je mail zodat je het rustig kunt nalezen 🌷`;
                 onderwerp={
                   freebie.key === "productadvies"
                     ? `Een korte vragenlijst voor jou, ${voornaam}`
-                    : `Tweede Lente, een persoonlijk overzicht voor jou, ${voornaam}`
+                    : `${freebie.titel}, een persoonlijk overzicht voor jou, ${voornaam}`
                 }
                 variant="donker"
                 prospectId={prospectId}
@@ -311,9 +333,9 @@ Je ontvangt het ook in je mail zodat je het rustig kunt nalezen 🌷`;
                 </div>
               </details>
 
-              {freebie.key === "tweede-lente" && (
+              {freebie.key !== "productadvies" && (
                 <p className="text-[11px] text-amber-300/80 leading-relaxed">
-                  Goed om te weten: Tweede Lente gebruikt jouw vaste
+                  Goed om te weten: {freebie.titel} gebruikt jouw vaste
                   tracking-link. Als {voornaam} zich intekent met haar
                   e-mailadres, wordt haar bot-resultaat automatisch
                   toegevoegd aan deze prospect-kaart, op basis van het

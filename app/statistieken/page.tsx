@@ -7,11 +7,11 @@ import { WekelijkseReviewFormulier } from "@/components/statistieken/WekelijkseR
 import { MentorStatsAnalyseKnop } from "@/components/statistieken/MentorStatsAnalyseKnop";
 import {
   ProductadviesStatsBlok,
-  TweedeLenteStatsBlok,
+  ScoreBotStatsBlok,
 } from "@/components/freebies/FreebieStatsBlok";
 import {
   haalProductadviesStats,
-  haalTweedeLenteStats,
+  haalScoreBotStats,
 } from "@/lib/freebie-bots/stats";
 import { startdatumVoorModus } from "@/lib/playbook/dag-teller";
 import { topbarLabelVoorModus } from "@/lib/playbook/dagen-voor-modus";
@@ -86,15 +86,21 @@ export default async function StatistiekenPagina() {
 
   const dagLabel = topbarLabelVoorModus(profielModus, dag);
 
-  // Freebie-stats: zichtbaar voor iedereen (productadvies-vragenlijst)
-  // en voor Core + founders (Tweede Lente bot).
+  // Freebie-stats: productadvies voor iedereen, score-bots ook voor
+  // iedereen (Energie & Focus, Hormonen & Overgang zijn niet coreOnly).
   const productadviesStats = await haalProductadviesStats(supabase, user.id);
-  const eigenRol = (profile as { role?: string | null } | null)?.role ?? null;
-  const ziet_tweede_lente =
-    eigenRol === "founder" || profielModus === "core";
-  const tweedeLenteStats = ziet_tweede_lente
-    ? await haalTweedeLenteStats(supabase, user.id)
-    : null;
+  const energieStats = await haalScoreBotStats(
+    supabase,
+    user.id,
+    "energie-en-focus",
+    "Energie & Focus",
+  );
+  const hormonenStats = await haalScoreBotStats(
+    supabase,
+    user.id,
+    "hormonen-en-overgang",
+    "Hormonen & Overgang",
+  );
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -132,8 +138,8 @@ export default async function StatistiekenPagina() {
       />
 
       {/* Freebie-stats: prestaties van de freebies die deze member
-          deelt. Productadvies-vragenlijst voor iedereen, Tweede Lente
-          bot alleen voor Core + founder. */}
+          deelt. Productadvies-vragenlijst en de twee score-bots zijn
+          voor iedereen zichtbaar. */}
       <section className="space-y-4">
         <div>
           <h2 className="text-xl font-display font-bold text-cm-white">
@@ -145,9 +151,18 @@ export default async function StatistiekenPagina() {
           </p>
         </div>
         <ProductadviesStatsBlok stats={productadviesStats} />
-        {tweedeLenteStats && (
-          <TweedeLenteStatsBlok stats={tweedeLenteStats} />
-        )}
+        <ScoreBotStatsBlok
+          stats={energieStats}
+          iconEmoji="⚡"
+          ondertitel="Score-vragenlijst met uitgebreid leefstijl-advies."
+          kleur="sky"
+        />
+        <ScoreBotStatsBlok
+          stats={hormonenStats}
+          iconEmoji="🌸"
+          ondertitel="Score-vragenlijst over hormoon-signalen met uitgebreid leefstijl-advies."
+          kleur="rose"
+        />
       </section>
     </div>
   );

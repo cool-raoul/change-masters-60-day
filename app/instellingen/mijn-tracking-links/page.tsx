@@ -6,7 +6,10 @@
 // Twee types freebies:
 // 1. Productadvies-vragenlijst (open-template) - voor IEDEREEN
 //    (Sprint, Core, Pro), bestaat al langer in ELEVA.
-// 2. Tweede Lente bot - alleen Core (+founder voor testen), pilot.
+// 2. Score-bots (Energie & Focus, Hormonen & Overgang) - voor iedereen,
+//    pilot voor de freebie-toolkit. Oude AI-spiegel-bots (Tweede Lente,
+//    Tweede Wind) zijn vervangen, oude tokens blijven in DB maar staan
+//    niet meer in deze lijst.
 
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
@@ -14,7 +17,7 @@ import { createClient } from "@/lib/supabase/server";
 import { genereerBotToken } from "@/lib/freebie-bots/token";
 import {
   haalProductadviesStats,
-  haalTweedeLenteStats,
+  haalScoreBotStats,
 } from "@/lib/freebie-bots/stats";
 import { StatTegel } from "@/components/freebies/FreebieStatsBlok";
 import { ManyChatHandleiding } from "@/components/freebies/ManyChatHandleiding";
@@ -23,30 +26,27 @@ import { KopieerKnop } from "./kopieer-knop";
 
 export const dynamic = "force-dynamic";
 
-// Feature-flag voor Tweede Wind. Standaard UIT tot Raoul groen licht geeft
-// (definitieve naam bevestigen, Gaby's content invullen, etc.).
-const TWEEDE_WIND_ZICHTBAAR = false;
-
 const FREEBIE_BOTS = [
   {
-    slug: "tweede-lente",
-    titel: "Tweede Lente",
-    ondertitel: "Persoonlijk overzicht voor wat speelt in en rond de overgang",
-    triggerVoorbeeld: "TWEEDE-LENTE",
-    iconEmoji: "🌷",
-    coreOnly: true,
-    kleur: "rose" as const,
-    actief: true,
-  },
-  {
-    slug: "tweede-wind",
-    titel: "Tweede Wind",
-    ondertitel: "Persoonlijk overzicht voor energie en focus",
-    triggerVoorbeeld: "TWEEDE-WIND",
+    slug: "energie-en-focus",
+    titel: "Energie & Focus",
+    ondertitel: "Score-vragenlijst met uitgebreid leefstijl-advies",
+    triggerVoorbeeld: "ENERGIE",
     iconEmoji: "⚡",
     coreOnly: false,
     kleur: "sky" as const,
-    actief: TWEEDE_WIND_ZICHTBAAR,
+    actief: true,
+  },
+  {
+    slug: "hormonen-en-overgang",
+    titel: "Hormonen & Overgang",
+    ondertitel:
+      "Score-vragenlijst over hormoon-signalen met uitgebreid leefstijl-advies",
+    triggerVoorbeeld: "OVERGANG",
+    iconEmoji: "🌸",
+    coreOnly: false,
+    kleur: "rose" as const,
+    actief: true,
   },
 ] as const;
 
@@ -76,7 +76,7 @@ export default async function MijnTrackingLinksPagina() {
 
   const isFounder = (profile as { role?: string } | null)?.role === "founder";
   const isCore = (profile as { modus?: string } | null)?.modus === "core";
-  const ziet_tweede_lente = isFounder || isCore;
+  const ziet_core_bots = isFounder || isCore;
   const memberVoornaam =
     ((profile as { full_name?: string } | null)?.full_name ?? "")
       .split(" ")[0] || "jij";
@@ -87,7 +87,7 @@ export default async function MijnTrackingLinksPagina() {
   const tokensPerBot: Record<string, string> = {};
   for (const bot of FREEBIE_BOTS) {
     if (!bot.actief) continue;
-    if (bot.coreOnly && !ziet_tweede_lente) continue;
+    if (bot.coreOnly && !ziet_core_bots) continue;
     const { data: bestaand } = await supabase
       .from("freebie_bot_member_tokens")
       .select("token")
@@ -153,11 +153,28 @@ export default async function MijnTrackingLinksPagina() {
 
   const productadviesUrl = `${origin}/test/${productadviesToken}`;
 
-  // Stats per freebie ophalen
+  // Stats per freebie ophalen. Voor elke score-bot apart, zodat de
+  // funnel-cijfers per bot zichtbaar zijn.
   const productadviesStats = await haalProductadviesStats(supabase, user.id);
-  const tweedeLenteStats = ziet_tweede_lente
-    ? await haalTweedeLenteStats(supabase, user.id)
-    : null;
+  const statsPerBot: Record<
+    string,
+    Awaited<ReturnType<typeof haalScoreBotStats>>
+  > = {};
+  for (const bot of FREEBIE_BOTS) {
+    if (!bot.actief) continue;
+    if (bot.coreOnly && !ziet_core_bots) continue;
+    statsPerBot[bot.slug] = await haalScoreBotStats(
+      supabase,
+      user.id,
+      bot.slug,
+      bot.titel,
+    );
+  }
+
+  // Eerste zichtbare bot voor de ManyChat-voorbeeldlink fallback
+  const eersteZichtbareBot = FREEBIE_BOTS.find(
+    (b) => b.actief && (!b.coreOnly || ziet_core_bots),
+  );
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-8 text-slate-100">
@@ -234,23 +251,31 @@ export default async function MijnTrackingLinksPagina() {
         </div>
       </section>
 
-      {/* Sectie 2, Freebie-bots (alleen voor Core + founders, of bots
-          die niet coreOnly zijn) */}
+      {/* Sectie 2, Score-bots */}
       {FREEBIE_BOTS.some(
-        (b) => b.actief && (!b.coreOnly || ziet_tweede_lente),
+        (b) => b.actief && (!b.coreOnly || ziet_core_bots),
       ) && (
         <section className="mt-6 space-y-4">
           {FREEBIE_BOTS.map((bot) => {
             if (!bot.actief) return null;
-            if (bot.coreOnly && !ziet_tweede_lente) return null;
+            if (bot.coreOnly && !ziet_core_bots) return null;
             const url = `${origin}/bot/${bot.slug}/${tokensPerBot[bot.slug]}`;
+            const stats = statsPerBot[bot.slug];
+            const randKleur =
+              bot.kleur === "sky"
+                ? "border-sky-500/40 bg-sky-500/5"
+                : "border-rose-500/40 bg-rose-500/5";
+            const cirkelKleur =
+              bot.kleur === "sky" ? "bg-sky-500/20" : "bg-rose-500/20";
             return (
               <div
                 key={bot.slug}
-                className="rounded-2xl border border-rose-500/40 bg-rose-500/5 p-5"
+                className={`rounded-2xl border ${randKleur} p-5`}
               >
                 <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-rose-500/20 text-xl">
+                  <div
+                    className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full ${cirkelKleur} text-xl`}
+                  >
                     {bot.iconEmoji}
                   </div>
                   <div className="flex-1">
@@ -261,35 +286,34 @@ export default async function MijnTrackingLinksPagina() {
                   </div>
                 </div>
 
-                {/* Stats voor Tweede Lente. Echte conversie = klant
-                    geworden. Voor pipeline-spreiding + funnel-balk: link
-                    naar /statistieken. */}
-                {tweedeLenteStats && (
+                {/* Stats per bot. Echte conversie = klant geworden. Voor
+                    pipeline-spreiding + funnel-balk: link naar /statistieken. */}
+                {stats && (
                   <div className="mt-4 grid grid-cols-2 sm:grid-cols-5 gap-2">
                     <StatTegel
                       label="Ingetekend"
-                      waarde={tweedeLenteStats.totaalIngetekend}
+                      waarde={stats.totaalIngetekend}
                       kleur="slate"
                     />
                     <StatTegel
                       label="Afgemaakt"
-                      waarde={tweedeLenteStats.vragenlijstAfgemaakt}
+                      waarde={stats.vragenlijstAfgemaakt}
                       kleur="emerald"
                     />
                     <StatTegel
                       label="Contact"
-                      waarde={tweedeLenteStats.contactGevraagd}
+                      waarde={stats.contactGevraagd}
                       kleur="rose"
                     />
                     <StatTegel
                       label="Klant"
-                      waarde={tweedeLenteStats.klanten}
+                      waarde={stats.klanten}
                       kleur="gold"
                       hint="Prospects die nu shopper of member zijn"
                     />
                     <StatTegel
                       label="Klant %"
-                      waarde={`${tweedeLenteStats.klantPct}%`}
+                      waarde={`${stats.klantPct}%`}
                       kleur="gold"
                       hint="Echte conversie"
                     />
@@ -308,9 +332,10 @@ export default async function MijnTrackingLinksPagina() {
                     Voorbeeld-zin voor social-post
                   </summary>
                   <p className="mt-2 text-xs leading-relaxed bg-slate-900/60 p-3 rounded-lg">
-                    &quot;Wil je vijf minuten naar je eigen ritme kijken
-                    rond de overgang? Reageer met {bot.triggerVoorbeeld}{" "}
-                    en {memberVoornaam} stuurt je de persoonlijke link.&quot;
+                    &quot;Wil je in vijf minuten je eigen score zien op{" "}
+                    {bot.titel.toLowerCase()}? Reageer met{" "}
+                    {bot.triggerVoorbeeld} en {memberVoornaam} stuurt je
+                    de persoonlijke link.&quot;
                   </p>
                   <p className="mt-2 text-xs">
                     De persoon reageert, jij stuurt via DM jouw link
@@ -323,16 +348,16 @@ export default async function MijnTrackingLinksPagina() {
         </section>
       )}
 
-      {/* Bestellinks-info, alleen tonen als Tweede Lente zichtbaar is */}
-      {ziet_tweede_lente && (
+      {/* Bestellinks-info, tonen als er minimaal één bot zichtbaar is */}
+      {eersteZichtbareBot && (
         <section className="mt-10 rounded-2xl border border-rose-500/30 bg-rose-500/5 p-5">
           <h3 className="text-base font-medium text-rose-100">
             Belangrijk: koppel je bestellinks
           </h3>
           <p className="mt-1 text-sm text-rose-200/80 leading-relaxed">
-            Tweede Lente toont drie pakket-niveaus voor hormoonbalans
-            (essential / plus / complete). Onder elk niveau verschijnt
-            jouw persoonlijke bestellink uit je{" "}
+            De score-bots tonen pakket-niveaus (essential / plus /
+            complete). Onder elk niveau verschijnt jouw persoonlijke
+            bestellink uit je{" "}
             <a
               href="/instellingen/bestellinks"
               className="text-rose-100 underline hover:text-white"
@@ -345,16 +370,18 @@ export default async function MijnTrackingLinksPagina() {
         </section>
       )}
 
-      {/* ManyChat-handleiding (uitklap-blok) voor optionele Instagram-
-          trigger-automatisering. Werkt voor alle freebies (productadvies
-          + Tweede Lente). Members hoeven dit niet, het is een extra. */}
+      {/* ManyChat-handleiding voor optionele Instagram-trigger-
+          automatisering. Voorbeeld-link is van de eerste zichtbare bot
+          (of de productadvies-link als geen bot zichtbaar is). */}
       <ManyChatHandleiding
         voorbeeldLink={
-          ziet_tweede_lente && tokensPerBot["tweede-lente"]
-            ? `${origin}/bot/tweede-lente/${tokensPerBot["tweede-lente"]}`
+          eersteZichtbareBot && tokensPerBot[eersteZichtbareBot.slug]
+            ? `${origin}/bot/${eersteZichtbareBot.slug}/${tokensPerBot[eersteZichtbareBot.slug]}`
             : productadviesUrl
         }
-        triggerVoorbeeld="TWEEDE-LENTE"
+        triggerVoorbeeld={
+          eersteZichtbareBot?.triggerVoorbeeld ?? "PRODUCTADVIES"
+        }
       />
 
       <section className="mt-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-5">
@@ -379,8 +406,8 @@ export default async function MijnTrackingLinksPagina() {
           Meer freebies komen later
         </h3>
         <p className="mt-1 text-sm text-amber-200/80">
-          Tweede Lente is de eerste bot-pilot. Daarna volgen Slaap-Loep,
-          Energie-Loep en andere onderwerpen, allemaal met dezelfde
+          Energie & Focus en Hormonen & Overgang zijn de eerste score-bots.
+          Daarna volgen andere onderwerpen, allemaal met dezelfde
           architectuur en claim-vrije bewaking.
         </p>
       </section>

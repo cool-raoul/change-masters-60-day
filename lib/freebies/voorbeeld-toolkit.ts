@@ -67,15 +67,28 @@ export const VOORBEELD_TOOLKIT: Omit<Freebie, "id" | "actief">[] = [
     duurMinuten: 12,
   },
   {
-    slug: "tweede-lente",
-    titel: "Tweede Lente",
-    ondertitel: "Een rustige spiegel voor jouw fase",
+    slug: "energie-en-focus",
+    titel: "Energie & Focus",
+    ondertitel: "Score-vragenlijst met uitgebreid leefstijl-advies",
+    vorm: "test",
+    onderwerp: "energie",
+    beschrijving:
+      "Vijf-minuten web-bot met tien score-vragen over energie, slaap, focus en leefstijl. Persoonlijke score per thema + uitgebreid educatief advies + opt-in voor mailreeks.",
+    inhoudTemplate:
+      "Bot-content staat in code (lib/freebie-bots/energie-en-focus/). TODO-GABY: 5 mail-templates aanleveren voor de 5-mail-reeks.",
+    duurMinuten: 5,
+  },
+  {
+    slug: "hormonen-en-overgang",
+    titel: "Hormonen & Overgang",
+    ondertitel:
+      "Score-vragenlijst over hormoon-signalen met uitgebreid leefstijl-advies",
     vorm: "test",
     onderwerp: "overgang",
     beschrijving:
-      "Vijf-minuten web-bot voor vrouwen in peri-, volle of post-overgang. Zeven vragen + een spiegel + opt-in voor vijf-mail-reeks. Pilot voor freebie-bot-architectuur.",
+      "Vijf-minuten web-bot met tien score-vragen over hormoon-signalen, slaap, stemming en lichaam. Persoonlijke score per thema + uitgebreid educatief advies + brug naar hormoonbalans-pakketten.",
     inhoudTemplate:
-      "Bot-content staat in code (lib/freebie-bots/tweede-lente-vragen.ts en tweede-lente-system-prompt.ts). TODO-GABY: 5 mail-templates aanleveren voor de 5-mail-reeks.",
+      "Bot-content staat in code (lib/freebie-bots/hormonen-en-overgang/). TODO-GABY: 5 mail-templates aanleveren voor de 5-mail-reeks.",
     duurMinuten: 5,
   },
 ];

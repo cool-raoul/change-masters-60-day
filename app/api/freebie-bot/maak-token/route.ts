@@ -13,9 +13,10 @@ import { createClient } from "@/lib/supabase/server";
 import { genereerBotToken } from "@/lib/freebie-bots/token";
 import type { BotSlug } from "@/lib/freebie-bots/types";
 
+// Alleen de actieve score-bots zijn toegestaan voor nieuwe tokens.
+// Legacy slugs (tweede-lente, tweede-wind) zijn buiten gebruik, oude
+// tokens blijven werken via de readonly DB-rijen.
 const TOEGESTANE_SLUGS: BotSlug[] = [
-  "tweede-lente",
-  "tweede-wind",
   "energie-en-focus",
   "hormonen-en-overgang",
 ];

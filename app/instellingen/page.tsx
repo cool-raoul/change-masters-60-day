@@ -215,9 +215,9 @@ export default async function InstellingenPagina() {
       </div>
 
       {/* Mijn freebies: persoonlijke links naar de productadvies-
-          vragenlijst (voor iedereen) en optioneel de Tweede Lente bot
-          (alleen Core + founder). Iedereen die via een link een freebie
-          doet komt automatisch op de namenlijst van de member. */}
+          vragenlijst en de score-bots (Energie & Focus, Hormonen &
+          Overgang). Iedereen die via een link een freebie doet komt
+          automatisch op de namenlijst van de member. */}
       <div className="card space-y-3">
         <EditableTekst
           namespace="instellingen"
@@ -232,7 +232,7 @@ export default async function InstellingenPagina() {
         <EditableBlok
           namespace="instellingen"
           sleutel="tracking_links.uitleg"
-          standaard="Persoonlijke links naar je freebies, zoals de productadvies-vragenlijst en (voor Core-members) de Tweede Lente bot. Wie via jouw link een freebie doet, komt als prospect op jouw namenlijst."
+          standaard="Persoonlijke links naar je freebies: de productadvies-vragenlijst en de score-bots Energie & Focus en Hormonen & Overgang. Wie via jouw link een freebie doet, komt als prospect op jouw namenlijst."
           overrides={overrides}
           isFounder={isFounder}
           as="p"

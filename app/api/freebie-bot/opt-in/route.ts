@@ -5,17 +5,16 @@
 //   token: string,
 //   leadNaam: string,
 //   leadEmail: string,
-//   antwoorden: TweedeLenteAntwoorden,
-//   spiegelTekst: string,
+//   antwoorden: object,
+//   spiegelTekst: string | null,
 //   contactGewenst: boolean
 // }
 // Response: { ok: true } of { error }
 //
-// 1. Token valideren
-// 2. Freebie-row voor 'tweede-lente' ophalen (slug), on-the-fly aanmaken
-//    als die nog niet bestaat (pilot, voorkomt blokkade tot Gaby content)
-// 3. Opt-in rij maken in freebie_opt_ins (met bot_antwoorden + spiegel_tekst)
-// 4. Klantomgeving-rij maken in klantomgeving_klanten (bron='freebie-opt-in')
+// 1. Token valideren + bot-slug ophalen
+// 2. Freebie-rij ophalen / on-the-fly aanmaken voor deze bot-slug
+// 3. Opt-in rij maken / aanvullen in freebie_opt_ins
+// 4. Prospect aanmaken / aanvullen in namenlijst van de member
 // 5. Bij contactGewenst: push-notificatie naar member sturen
 
 import { NextRequest, NextResponse } from "next/server";
@@ -23,7 +22,6 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { sendPushToUser } from "@/lib/push/sendPush";
 import { planMailSequence } from "@/lib/freebie-bots/mail-queue";
 import { getBotConfig } from "@/lib/freebie-bots/registry";
-import type { TweedeLenteAntwoorden } from "@/lib/freebie-bots/types";
 
 export async function POST(req: NextRequest) {
   try {
@@ -87,7 +85,7 @@ export async function POST(req: NextRequest) {
     // Freebie-row ophalen op basis van de bot-slug uit de token.
     // Wordt on-the-fly aangemaakt als die nog niet bestaat (voor
     // pilot, voorkomt blokkade bij eerste run van een nieuwe bot).
-    const botSlug = (tokenRow.bot_slug ?? "tweede-lente") as string;
+    const botSlug = (tokenRow.bot_slug ?? "energie-en-focus") as string;
     let freebieRij: { id: string } | null = null;
     const { data: bestaandeFreebie } = await supabase
       .from("freebies")
@@ -180,7 +178,7 @@ export async function POST(req: NextRequest) {
     // Freebie-leads zijn prospects (warm via bot).
     //
     // bron='social': prospects.bron heeft een check-constraint die alleen
-    // warm/social/doorverwijzing/koud accepteert. Tweede Lente komt via
+    // warm/social/doorverwijzing/koud accepteert. Freebie-bots komen via
     // social-trigger-woord, dus 'social' is natuurlijk. De specifieke bot
     // staat duidelijk bovenaan in de notities zodat het direct herkenbaar
     // is in /namenlijst.
@@ -192,7 +190,7 @@ export async function POST(req: NextRequest) {
         .map((w) => w[0].toUpperCase() + w.slice(1))
         .join(" ");
     // Generic notitie: alle antwoord-velden plat dumpen. Werkt voor
-    // Tweede Lente, Tweede Wind en latere bots zonder code-aanpassing.
+    // alle score-bots zonder code-aanpassing.
     const antwoordRegels = Object.entries(antwoorden).map(([k, v]) => {
       const w = Array.isArray(v) ? v.join(", ") : String(v);
       return `${k}: ${w}`;

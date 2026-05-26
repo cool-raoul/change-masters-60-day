@@ -9,6 +9,10 @@
 //   1. Het funnel-pad: ingetekend → afgemaakt → klant
 //   2. Pipeline-spreiding: waar zitten de leads NU in je pijplijn
 //   3. Twee conversies: 'ingevuld %' (operationeel) en 'klant %' (echt)
+//
+// Sinds 2026-05-26: één generieke haalScoreBotStats functie voor alle
+// score-bots (Energie & Focus, Hormonen & Overgang, latere bots). De
+// oude haalTweedeLenteStats is verdwenen samen met de oude bot.
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { PIPELINE_FASEN, type PipelineFase } from "@/lib/supabase/types";
@@ -44,17 +48,19 @@ export type ProductadviesStats = {
   totaalProspectsViaFreebie: number;
 };
 
-export type TweedeLenteStats = {
+export type ScoreBotStats = {
+  /** Bot-titel, voor labels in de UI. */
+  botTitel: string;
   totaalIngetekend: number;
   vragenlijstAfgemaakt: number;
-  /** Prospects met 'Freebie: Tweede Lente' tag die nu shopper/member zijn. */
+  /** Prospects met de freebie-tag die nu shopper/member zijn. */
   klanten: number;
   contactGevraagd: number;
   /** Afgemaakt als percentage van ingetekend. */
   afgemaaktPct: number;
   /** Klant als percentage van ingetekend (echte conversie). */
   klantPct: number;
-  /** Hoeveelheden per pipeline-fase voor leads via Tweede Lente. */
+  /** Hoeveelheden per pipeline-fase voor leads via deze bot. */
   pipelineSpreiding: PipelineSpreiding;
   /** Totaal aantal unieke prospects gekoppeld aan deze freebie. */
   totaalProspectsViaFreebie: number;
@@ -129,19 +135,27 @@ export async function haalProductadviesStats(
   };
 }
 
-export async function haalTweedeLenteStats(
+/**
+ * Generieke stats-haler voor één score-bot. Werkt voor alle bots die
+ * volgens de standaard opt-in-flow draaien: een freebie-rij met de bot-
+ * slug, freebie_opt_ins, en prospect-tags 'Freebie: <Bot-titel>'.
+ */
+export async function haalScoreBotStats(
   supabase: SupabaseClient,
   memberId: string,
-): Promise<TweedeLenteStats> {
-  // Freebie-id ophalen voor 'tweede-lente'
+  botSlug: string,
+  botTitel: string,
+): Promise<ScoreBotStats> {
+  // Freebie-id ophalen voor deze bot-slug
   const { data: freebie } = await supabase
     .from("freebies")
     .select("id")
-    .eq("slug", "tweede-lente")
+    .eq("slug", botSlug)
     .maybeSingle();
 
   if (!freebie) {
     return {
+      botTitel,
       totaalIngetekend: 0,
       vragenlijstAfgemaakt: 0,
       klanten: 0,
@@ -165,27 +179,19 @@ export async function haalTweedeLenteStats(
     .select("id", { count: "exact", head: true })
     .eq("member_id", memberId)
     .eq("freebie_id", (freebie as { id: string }).id)
-    .not("spiegel_tekst", "is", null);
+    .not("bot_antwoorden", "is", null);
 
   // Prospects via deze freebie: ingezette_tools bevat
-  // 'Freebie: Tweede Lente' (auto-gezet door opt-in-route). Backwards
-  // compat: oude 'Tweede Lente bot' tag wordt apart geteld en samengevoegd.
-  const { data: prospectsArrA } = await supabase
+  // 'Freebie: <Bot-Titel>' (auto-gezet door opt-in-route).
+  const tag = `Freebie: ${botTitel}`;
+  const { data: prospectsArr } = await supabase
     .from("prospects")
     .select("pipeline_fase, notities")
     .eq("user_id", memberId)
-    .contains("ingezette_tools", ["Freebie: Tweede Lente"]);
-  const { data: prospectsArrB } = await supabase
-    .from("prospects")
-    .select("pipeline_fase, notities")
-    .eq("user_id", memberId)
-    .contains("ingezette_tools", ["Tweede Lente bot"]);
+    .contains("ingezette_tools", [tag]);
 
   type ProspectRij = { pipeline_fase: string | null; notities: string | null };
-  const alleProspects = [
-    ...((prospectsArrA ?? []) as ProspectRij[]),
-    ...((prospectsArrB ?? []) as ProspectRij[]),
-  ];
+  const alleProspects = (prospectsArr ?? []) as ProspectRij[];
 
   const { spreiding, klanten, totaal } = bouwSpreiding(alleProspects);
 
@@ -197,6 +203,7 @@ export async function haalTweedeLenteStats(
   const t = totaalIngetekend ?? 0;
   const v = vragenlijstAfgemaakt ?? 0;
   return {
+    botTitel,
     totaalIngetekend: t,
     vragenlijstAfgemaakt: v,
     klanten,

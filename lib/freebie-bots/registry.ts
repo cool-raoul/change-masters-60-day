@@ -1,24 +1,21 @@
 // File: lib/freebie-bots/registry.ts
 //
 // Centrale registry van alle freebie-bots. API-routes en server-
-// components vinden via getBotConfig(slug) de juiste system-prompt,
-// bewaker, mail-templates etc.
+// components vinden via getBotConfig(slug) de juiste config.
 //
-// Toevoegen van een nieuwe bot vraagt drie stappen:
-//   1. Maak `lib/freebie-bots/<slug>/` folder met de bekende files
-//      (vragen, system-prompt, advies, bewaker, mail-templates, index)
+// LET OP (2026-05-26): Tweede Lente en Tweede Wind (AI-spiegel-bots) zijn
+// vervangen door score-bots Energie & Focus en Hormonen & Overgang. De
+// AI-spiegel-typing blijft staan voor het geval een latere bot wel AI
+// gebruikt, maar is nu nergens actief.
+//
+// Toevoegen van een nieuwe bot:
+//   1. Maak `lib/freebie-bots/<slug>/` folder met de bot-files
 //   2. Voeg een entry toe in BOT_REGISTRY hieronder
-//   3. (Optioneel) Voeg de slug toe aan ACTIEVE_BOTS in
-//      `/instellingen/mijn-tracking-links` voor zichtbaarheid in UI
+//   3. (Optioneel) Voeg de slug toe aan de zichtbare lijst in
+//      `/instellingen/mijn-tracking-links`
 
 import type { SpiegelOutput, BotSlug } from "./types";
-import {
-  alsGenericTemplate,
-  type GenericMailTemplate,
-} from "./mail-template-types";
-
-import * as tweedeLente from "./tweede-lente";
-import * as tweedeWind from "./tweede-wind";
+import type { GenericMailTemplate } from "./mail-template-types";
 
 export type BotConfig = {
   slug: BotSlug;
@@ -44,47 +41,10 @@ export type BotConfig = {
   templateVoorDag?: (dag: number) => GenericMailTemplate | null;
 };
 
-function wrapTemplateVoorDag(
-  fn: (dag: number) => { dag: 1 | 2 | 3 | 4 | 5; onderwerp: string; bouwHtml: (input: never) => string } | null,
-): (dag: number) => GenericMailTemplate | null {
-  return (dag: number) => {
-    const t = fn(dag);
-    return t ? alsGenericTemplate(t) : null;
-  };
-}
-
-const BOT_REGISTRY: Record<BotSlug, BotConfig> = {
-  "tweede-lente": {
-    slug: "tweede-lente",
-    titel: "Tweede Lente",
-    ondertitel:
-      "Persoonlijk overzicht voor wat speelt in en rond de overgang",
-    beschrijving:
-      "Vijf-minuten persoonlijk overzicht voor vrouwen in peri-, volle- of post-overgang. Zeven vragen, ankers, voedingsstoffen, pakket-richting.",
-    triggerVoorbeeld: "TWEEDE-LENTE",
-    iconEmoji: "🌷",
-    coreOnly: true,
-    type: "ai-spiegel",
-    bouwSysteemPrompt: tweedeLente.bouwTweedeLenteSysteemPrompt,
-    bouwUserBericht: tweedeLente.bouwTweedeLenteUserBericht,
-    bewaakSpiegelOutput: tweedeLente.bewaakSpiegelOutput,
-    templateVoorDag: wrapTemplateVoorDag(tweedeLente.templateVoorDag),
-  },
-  "tweede-wind": {
-    slug: "tweede-wind",
-    titel: "Tweede Wind",
-    ondertitel: "Persoonlijk overzicht voor energie en focus",
-    beschrijving:
-      "Vijf-minuten persoonlijk overzicht voor energie en focus. Zeven vragen, handvatten, voedingsstoffen, pakket-richting. Werknaam (Raoul bevestigt definitieve naam).",
-    triggerVoorbeeld: "TWEEDE-WIND",
-    iconEmoji: "⚡",
-    coreOnly: false,
-    type: "ai-spiegel",
-    bouwSysteemPrompt: tweedeWind.bouwTweedeWindSysteemPrompt,
-    bouwUserBericht: tweedeWind.bouwTweedeWindUserBericht,
-    bewaakSpiegelOutput: tweedeWind.bewaakSpiegelOutput,
-    templateVoorDag: wrapTemplateVoorDag(tweedeWind.templateVoorDag),
-  },
+// Alleen actieve bots staan in de registry. Legacy slugs (tweede-lente,
+// tweede-wind) zitten niet in deze map, dus getBotConfig() returnt null
+// voor die slugs en de aanroepers vallen op een veilige default terug.
+const BOT_REGISTRY: Partial<Record<BotSlug, BotConfig>> = {
   "energie-en-focus": {
     slug: "energie-en-focus",
     titel: "Energie & Focus",
@@ -112,24 +72,26 @@ const BOT_REGISTRY: Record<BotSlug, BotConfig> = {
 };
 
 /**
- * Vind bot-config voor een slug. Returnt null voor onbekende slugs.
+ * Vind bot-config voor een slug. Returnt null voor onbekende of
+ * legacy-only slugs.
  */
 export function getBotConfig(slug: string): BotConfig | null {
   return BOT_REGISTRY[slug as BotSlug] ?? null;
 }
 
 /**
- * Lijst van alle bot-configs. Volgorde matcht insert-volgorde van het
- * register. Gebruik in UI's die alle bots tonen.
+ * Lijst van alle actieve bot-configs. Volgorde matcht insert-volgorde van
+ * het register. Gebruik in UI's die alle bots tonen.
  */
 export function alleBots(): BotConfig[] {
-  return Object.values(BOT_REGISTRY);
+  return Object.values(BOT_REGISTRY).filter(
+    (b): b is BotConfig => b !== undefined,
+  );
 }
 
 /**
  * Lijst van bots die zichtbaar zijn voor deze member, op basis van
- * Core/founder-status. Tweede Wind is voor pilot voor IEDEREEN
- * zichtbaar (geen coreOnly), Tweede Lente alleen voor Core + founder.
+ * Core/founder-status.
  */
 export function zichtbareBots(opties: {
   isCore: boolean;

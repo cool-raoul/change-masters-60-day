@@ -11,7 +11,7 @@
 import {
   pipelineSpreidingZichtbaar,
   type ProductadviesStats,
-  type TweedeLenteStats,
+  type ScoreBotStats,
 } from "@/lib/freebie-bots/stats";
 
 type TegelKleur = "slate" | "emerald" | "rose" | "amber" | "gold";
@@ -274,26 +274,40 @@ export function ProductadviesStatsBlok({
 }
 
 /**
- * Volledig stats-blok voor de Tweede Lente bot freebie.
+ * Volledig stats-blok voor één score-bot (Energie & Focus, Hormonen &
+ * Overgang, latere bots). Generic, want alle score-bots tellen op
+ * dezelfde manier.
  */
-export function TweedeLenteStatsBlok({
+export function ScoreBotStatsBlok({
   stats,
+  iconEmoji,
+  ondertitel,
+  kleur = "rose",
 }: {
-  stats: TweedeLenteStats;
+  stats: ScoreBotStats;
+  iconEmoji: string;
+  ondertitel: string;
+  kleur?: "rose" | "sky";
 }) {
+  const randKleur =
+    kleur === "sky"
+      ? "border-sky-500/40 bg-sky-500/5"
+      : "border-rose-500/40 bg-rose-500/5";
+  const cirkelKleur =
+    kleur === "sky" ? "bg-sky-500/20" : "bg-rose-500/20";
   return (
-    <div className="rounded-2xl border border-rose-500/40 bg-rose-500/5 p-5 space-y-5">
+    <div className={`rounded-2xl border ${randKleur} p-5 space-y-5`}>
       <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-rose-500/20 text-xl">
-          🌷
+        <div
+          className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full ${cirkelKleur} text-xl`}
+        >
+          {iconEmoji}
         </div>
         <div className="flex-1">
           <h3 className="text-base font-semibold text-slate-100">
-            Tweede Lente
+            {stats.botTitel}
           </h3>
-          <p className="mt-0.5 text-xs text-slate-400">
-            Vijf-minuten persoonlijk overzicht voor in en rond de overgang.
-          </p>
+          <p className="mt-0.5 text-xs text-slate-400">{ondertitel}</p>
         </div>
       </div>
 

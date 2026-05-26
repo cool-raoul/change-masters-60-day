@@ -4,9 +4,11 @@
 // Body: { token: string, antwoorden: object }
 // Response: SpiegelOutput
 //
-// PUBLIEKE route. Generic over alle freebie-bots: kiest config uit
-// registry op basis van de bot_slug die bij de token hoort. Werkt
-// voor Tweede Lente, Tweede Wind, en latere bots zonder code-wijziging.
+// PUBLIEKE route voor AI-spiegel-bots. Generic over alle freebie-bots:
+// kiest config uit registry op basis van de bot_slug die bij de token
+// hoort. Score-bots gebruiken deze endpoint niet, die rekenen
+// deterministisch in de client. Endpoint geeft 400 als de bot-slug
+// geen AI-spiegel-bot is.
 
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
@@ -78,7 +80,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Compacte antwoord-string voor de prompt: alle velden plat dumpen
-    // werkt voor zowel Tweede Lente als Tweede Wind. AI ziet de kernen.
+    // werkt voor elke AI-spiegel-bot. AI ziet de kernen.
     const antwoordRegel = Object.entries(antwoorden)
       .map(([sleutel, waarde]) => {
         const waardeStr = Array.isArray(waarde)
