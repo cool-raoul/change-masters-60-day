@@ -20,6 +20,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendPushToUser } from "@/lib/push/sendPush";
+import { getBotConfig } from "@/lib/freebie-bots/registry";
 
 export async function POST(req: NextRequest) {
   try {
@@ -67,24 +68,33 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Freebie-rij ophalen of aanmaken
+    // Freebie-rij ophalen of aanmaken op basis van bot-slug uit token
+    const botSlug = (tokenRow.bot_slug ?? "tweede-lente") as string;
+    const botConfig = getBotConfig(botSlug);
+    const botTitel =
+      botConfig?.titel ??
+      botSlug
+        .split("-")
+        .map((w) => w[0].toUpperCase() + w.slice(1))
+        .join(" ");
+
     let freebieRij: { id: string } | null = null;
     const { data: bestaandeFreebie } = await supabase
       .from("freebies")
       .select("id")
-      .eq("slug", "tweede-lente")
+      .eq("slug", botSlug)
       .maybeSingle();
     freebieRij = (bestaandeFreebie as { id: string } | null) ?? null;
     if (!freebieRij) {
       const { data: nieuweFreebie } = await supabase
         .from("freebies")
         .insert({
-          slug: "tweede-lente",
-          titel: "Tweede Lente",
-          ondertitel: "Een korte spiegel voor jouw fase",
+          slug: botSlug,
+          titel: botTitel,
+          ondertitel: botConfig?.ondertitel ?? "Bot-pilot freebie",
           vorm: "test",
-          onderwerp: "overgang",
-          beschrijving: "Bot-pilot voor freebie-toolkit.",
+          onderwerp: botSlug,
+          beschrijving: botConfig?.beschrijving ?? `Bot-pilot (${botSlug}).`,
           actief: true,
         })
         .select("id")
@@ -131,7 +141,7 @@ export async function POST(req: NextRequest) {
           member_id: tokenRow.member_id,
           lead_naam: leadNaam,
           lead_email: leadEmail,
-          bron_kanaal: "tweede-lente-bot",
+          bron_kanaal: `${botSlug}-bot`,
           status: "nieuw",
         })
         .select("id")
@@ -148,12 +158,12 @@ export async function POST(req: NextRequest) {
 
     // Prospect aanmaken of aanvullen (zelfde logica als opt-in-route)
     const intekeningNotitie = [
-      `🌷 INTEKENING TWEEDE LENTE (${datum} ${tijd})`,
+      `🌷 INTEKENING ${botTitel.toUpperCase()} (${datum} ${tijd})`,
       `Net ingetekend, vragenlijst nog niet ingevuld.`,
-      `Member kan even afwachten of zij de bot afmaakt.`,
+      `Member kan even afwachten of de bot wordt afgemaakt.`,
     ].join("\n");
 
-    const NIEUWE_TAG = "Freebie: Tweede Lente";
+    const NIEUWE_TAG = `Freebie: ${botTitel}`;
 
     const { data: bestaandeProspect } = await supabase
       .from("prospects")
@@ -201,10 +211,10 @@ export async function POST(req: NextRequest) {
     // Push naar member
     try {
       await sendPushToUser(tokenRow.member_id, {
-        title: `${leadNaam} is ingetekend op Tweede Lente`,
+        title: `${leadNaam} is ingetekend op ${botTitel}`,
         body: "Vragenlijst nog niet ingevuld. Komt vanzelf bij voltooien, of blijft hangen op deze stap.",
         url: "/namenlijst",
-        tag: "tweede-lente-intekening",
+        tag: `${botSlug}-intekening`,
       });
     } catch (pushErr) {
       console.warn("Push intekening mislukt:", pushErr);

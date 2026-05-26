@@ -22,6 +22,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendPushToUser } from "@/lib/push/sendPush";
 import { planMailSequence } from "@/lib/freebie-bots/mail-queue";
+import { getBotConfig } from "@/lib/freebie-bots/registry";
 import type { TweedeLenteAntwoorden } from "@/lib/freebie-bots/types";
 
 export async function POST(req: NextRequest) {
@@ -39,7 +40,7 @@ export async function POST(req: NextRequest) {
         : leadNaamLegacy?.trim();
     const leadEmail = body.leadEmail as string | undefined;
     const leadTelefoon = body.leadTelefoon as string | null | undefined;
-    const antwoorden = body.antwoorden as TweedeLenteAntwoorden | undefined;
+    const antwoorden = body.antwoorden as Record<string, unknown> | undefined;
     const spiegelTekst = body.spiegelTekst as string | undefined;
     const contactGewenst = body.contactGewenst === true;
 
@@ -80,29 +81,31 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Freebie-row ophalen op slug. We mappen 'tweede-lente' bot naar
-    // de freebie met diezelfde slug (moet door SQL-import bestaan).
+    // Freebie-row ophalen op basis van de bot-slug uit de token.
+    // Wordt on-the-fly aangemaakt als die nog niet bestaat (voor
+    // pilot, voorkomt blokkade bij eerste run van een nieuwe bot).
+    const botSlug = (tokenRow.bot_slug ?? "tweede-lente") as string;
     let freebieRij: { id: string } | null = null;
     const { data: bestaandeFreebie } = await supabase
       .from("freebies")
       .select("id")
-      .eq("slug", "tweede-lente")
+      .eq("slug", botSlug)
       .maybeSingle();
     freebieRij = (bestaandeFreebie as { id: string } | null) ?? null;
 
     if (!freebieRij) {
-      // Freebie-row bestaat nog niet in DB. Voor pilot: rij on-the-fly
-      // aanmaken zodat opt-ins niet blokkeren tijdens Gaby's tekst-werk.
       const { data: nieuweFreebie, error: freebieErr } = await supabase
         .from("freebies")
         .insert({
-          slug: "tweede-lente",
-          titel: "Tweede Lente",
-          ondertitel: "Een korte spiegel voor jouw fase",
+          slug: botSlug,
+          titel: botSlug
+            .split("-")
+            .map((w) => w[0].toUpperCase() + w.slice(1))
+            .join(" "),
+          ondertitel: "Bot-pilot freebie",
           vorm: "test",
-          onderwerp: "overgang",
-          beschrijving:
-            "Bot-pilot voor freebie-toolkit. Vijf-minuten-spiegel + opt-in voor 5-mail-reeks.",
+          onderwerp: botSlug,
+          beschrijving: `Bot-pilot voor freebie-toolkit (${botSlug}).`,
           actief: true,
         })
         .select("id")
@@ -152,7 +155,7 @@ export async function POST(req: NextRequest) {
           member_id: tokenRow.member_id,
           lead_naam: leadNaam,
           lead_email: leadEmail,
-          bron_kanaal: "tweede-lente-bot",
+          bron_kanaal: `${botSlug}-bot`,
           status: "nieuw",
           bot_antwoorden: antwoorden,
           spiegel_tekst: spiegelTekst ?? null,
@@ -179,15 +182,21 @@ export async function POST(req: NextRequest) {
     // staat duidelijk bovenaan in de notities zodat het direct herkenbaar
     // is in /namenlijst.
     const datum = new Date().toLocaleDateString("nl-NL");
+    const botTitel =
+      getBotConfig(botSlug)?.titel ??
+      botSlug
+        .split("-")
+        .map((w) => w[0].toUpperCase() + w.slice(1))
+        .join(" ");
+    // Generic notitie: alle antwoord-velden plat dumpen. Werkt voor
+    // Tweede Lente, Tweede Wind en latere bots zonder code-aanpassing.
+    const antwoordRegels = Object.entries(antwoorden).map(([k, v]) => {
+      const w = Array.isArray(v) ? v.join(", ") : String(v);
+      return `${k}: ${w}`;
+    });
     const notitieRegels = [
-      `🌷 VIA TWEEDE LENTE BOT (${datum})`,
-      `Fase: ${antwoorden.fase}`,
-      `Valt op: ${antwoorden.watValtOp.join(", ")}`,
-      `Eet-ritme: ${antwoorden.eetRitme}`,
-      `Beweging: ${antwoorden.beweging}`,
-      `Rust: ${antwoorden.rust}`,
-      `Deelt met: ${antwoorden.deel}`,
-      `Zoekt: ${antwoorden.zoek}`,
+      `🌷 VIA ${botTitel.toUpperCase()} (${datum})`,
+      ...antwoordRegels,
       contactGewenst ? "⚡ VRAAGT PERSOONLIJK CONTACT" : "Mailreeks-opt-in",
       "",
       "Spiegel die ze zag:",
@@ -204,12 +213,12 @@ export async function POST(req: NextRequest) {
       .maybeSingle();
 
     // Tool-tags:
-    //   'Freebie: Tweede Lente' = ingetekend (zet door intekening-vooraf
+    //   'Freebie: <Bot-Titel>' = ingetekend (zet door intekening-vooraf
     //   of door deze route als legacy)
     //   'Vragenlijst ingevuld'  = bot helemaal afgemaakt (alleen door
     //   deze route)
     // Backwards compat: oude 'Tweede Lente bot' wordt vervangen.
-    const FREEBIE_TAG = "Freebie: Tweede Lente";
+    const FREEBIE_TAG = `Freebie: ${botTitel}`;
     const INGEVULD_TAG = "Vragenlijst ingevuld";
     const OUDE_TAG = "Tweede Lente bot";
     const huidigeTools = (bestaande?.ingezette_tools ?? []) as string[];
@@ -285,15 +294,15 @@ export async function POST(req: NextRequest) {
     try {
       const titel = contactGewenst
         ? `${leadNaam} vraagt persoonlijk contact`
-        : `${leadNaam} heeft Tweede Lente afgerond`;
+        : `${leadNaam} heeft ${botTitel} afgerond`;
       const omschrijving = contactGewenst
         ? "Wil een vrijblijvend gesprekje van een kwartier. Open haar prospect-kaart."
-        : "Vragenlijst en spiegel zijn klaar. Open haar prospect-kaart om de antwoorden te zien.";
+        : "Vragenlijst en overzicht zijn klaar. Open haar prospect-kaart om de antwoorden te zien.";
       await sendPushToUser(tokenRow.member_id, {
         title: titel,
         body: omschrijving,
         url: "/namenlijst",
-        tag: "tweede-lente-compleet",
+        tag: `${botSlug}-compleet`,
       });
     } catch (pushErr) {
       console.warn("Push-notificatie mislukt:", pushErr);
@@ -305,7 +314,7 @@ export async function POST(req: NextRequest) {
     // veilig opgeslagen.
     await planMailSequence(supabase, {
       optInId: optIn.id,
-      freebieSlug: "tweede-lente",
+      freebieSlug: botSlug,
       memberId: tokenRow.member_id,
       leadNaam,
       leadEmail,
