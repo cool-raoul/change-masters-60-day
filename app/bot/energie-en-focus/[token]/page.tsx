@@ -3,6 +3,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { leesHerkomstUitSearchParams } from "@/lib/freebie-bots/herkomst";
 import { EnergieEnFocusFlow } from "./flow";
 
 export const dynamic = "force-dynamic";
@@ -45,10 +46,14 @@ export async function generateMetadata({
 
 export default async function EnergieEnFocusTokenPagina({
   params,
+  searchParams,
 }: {
   params: Promise<{ token: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { token } = await params;
+  const sp = await searchParams;
+  const herkomst = leesHerkomstUitSearchParams(sp);
   const supabase = createAdminClient();
 
   const { data: row } = await supabase
@@ -110,6 +115,7 @@ export default async function EnergieEnFocusTokenPagina({
           memberId={row.member_id}
           memberVoornaam={memberVoornaam}
           bestellinks={linksMap}
+          herkomst={herkomst}
         />
       </div>
     </div>

@@ -18,6 +18,7 @@ import {
 } from "@/lib/freebie-bots/stats";
 import { StatTegel } from "@/components/freebies/FreebieStatsBlok";
 import { ManyChatHandleiding } from "@/components/freebies/ManyChatHandleiding";
+import { InstagramLinkBuilder } from "@/components/freebies/InstagramLinkBuilder";
 import { KopieerKnop } from "./kopieer-knop";
 
 export const dynamic = "force-dynamic";
@@ -216,6 +217,8 @@ export default async function MijnTrackingLinksPagina() {
           </div>
           <KopieerKnop tekst={productadviesUrl} />
 
+          <InstagramLinkBuilder basisUrl={productadviesUrl} />
+
           <details className="mt-4 text-sm text-slate-400">
             <summary className="cursor-pointer hover:text-slate-200">
               Hoe gebruik je deze link?
@@ -297,6 +300,8 @@ export default async function MijnTrackingLinksPagina() {
                   {url}
                 </div>
                 <KopieerKnop tekst={url} />
+
+                <InstagramLinkBuilder basisUrl={url} />
 
                 <details className="mt-4 text-sm text-slate-400">
                   <summary className="cursor-pointer hover:text-slate-200">

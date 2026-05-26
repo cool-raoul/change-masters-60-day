@@ -90,17 +90,34 @@ export function ManyChatHandleiding({
           <p>
             Schrijf een korte DM-tekst en plak jouw persoonlijke
             tracking-link erin. De link staat hierboven op deze pagina,
-            kopieer 'm met de kopieer-knop. Voorbeeld:
+            kopieer 'm met de kopieer-knop.
           </p>
+          <p className="mt-3 text-xs">
+            <strong className="text-amber-200">Bonus-tip:</strong> voeg{" "}
+            <code className="bg-slate-800 px-1 py-0.5 rounded text-amber-200">
+              ?ig=
+            </code>
+            <code className="bg-slate-800 px-1 py-0.5 rounded text-amber-200">
+              {"{{user_username}}"}
+            </code>
+            <code className="bg-slate-800 px-1 py-0.5 rounded text-amber-200">
+              &amp;via=instagram
+            </code>{" "}
+            toe aan het einde van de link. ManyChat vult de Instagram-naam
+            van degene die reageerde automatisch in, en ELEVA koppelt die
+            handle aan haar of zijn prospect-kaart. Handig: ook zonder
+            telefoonnummer kun je dan via Instagram-DM contact opnemen.
+          </p>
+          <p className="mt-2 text-xs">Voorbeeld DM-tekst:</p>
           <pre className="mt-2 p-3 bg-slate-900/80 border border-slate-700 rounded-lg text-xs text-slate-300 whitespace-pre-wrap font-sans">
             Hoi! Fijn dat je reageerde. Hier is mijn persoonlijke link
             naar de korte vragenlijst, vijf minuten van je tijd:
             <br />
             <br />
-            {tonbeeldLink}
+            {tonbeeldLink}?ig={"{{user_username}}"}&amp;via=instagram
             <br />
             <br />
-            Aan het eind krijg je een persoonlijk overzicht en vier
+            Aan het eind krijg je een persoonlijk overzicht en concrete
             handvatten die in deze tijd vaak rust geven. Veel succes 🌷
           </pre>
         </Stap>

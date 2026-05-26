@@ -16,6 +16,8 @@ import {
   type EFAntwoord,
   type EFUitkomst,
 } from "@/lib/freebie-bots/energie-en-focus";
+import type { HerkomstContext } from "@/lib/freebie-bots/herkomst";
+import { herkomstLabel } from "@/lib/freebie-bots/herkomst";
 
 type Stap = "intro" | "intekenen" | "vragen" | "uitkomst" | "klaar";
 
@@ -32,11 +34,13 @@ export function EnergieEnFocusFlow({
   memberId,
   memberVoornaam,
   bestellinks,
+  herkomst,
 }: {
   token: string;
   memberId: string;
   memberVoornaam: string;
   bestellinks: Record<string, string>;
+  herkomst: HerkomstContext;
 }) {
   void memberId;
   const [stap, setStap] = useState<Stap>("intro");
@@ -58,6 +62,7 @@ export function EnergieEnFocusFlow({
           <Intekenen
             token={token}
             memberVoornaam={memberVoornaam}
+            herkomst={herkomst}
             onTerug={() => setStap("intro")}
             onKlaar={(g) => {
               setInteken(g);
@@ -81,6 +86,7 @@ export function EnergieEnFocusFlow({
             inteken={inteken}
             memberVoornaam={memberVoornaam}
             bestellinks={bestellinks}
+            herkomst={herkomst}
             onKlaar={() => setStap("klaar")}
           />
         )}
@@ -238,11 +244,13 @@ function Intro({
 function Intekenen({
   token,
   memberVoornaam,
+  herkomst,
   onKlaar,
   onTerug,
 }: {
   token: string;
   memberVoornaam: string;
+  herkomst: HerkomstContext;
   onKlaar: (g: IntekenGegevens) => void;
   onTerug: () => void;
 }) {
@@ -271,6 +279,9 @@ function Intekenen({
           leadAchternaam: achternaam.trim(),
           leadEmail: email.trim(),
           toestemming,
+          herkomstInstagram: herkomst.instagram,
+          herkomstFacebook: herkomst.facebook,
+          herkomstBron: herkomst.bron,
         }),
       });
       onKlaar({
@@ -306,6 +317,11 @@ function Intekenen({
           Zo kan {memberVoornaam} je na de vragenlijst ook in je mail nog
           rustig de score plus het leefstijl-advies sturen.
         </p>
+        {herkomstLabel(herkomst) && (
+          <p className="mt-3 inline-block rounded-full bg-sky-50 border border-sky-200 px-3 py-1 text-xs text-sky-700">
+            🔗 {herkomstLabel(herkomst)}
+          </p>
+        )}
       </div>
 
       <div className="mt-6 rounded-2xl bg-white/80 backdrop-blur-sm border border-orange-100 shadow-sm p-5 space-y-4">
@@ -515,6 +531,7 @@ function Uitkomst({
   inteken,
   memberVoornaam,
   bestellinks,
+  herkomst,
   onKlaar,
 }: {
   token: string;
@@ -522,6 +539,7 @@ function Uitkomst({
   inteken: IntekenGegevens;
   memberVoornaam: string;
   bestellinks: Record<string, string>;
+  herkomst: HerkomstContext;
   onKlaar: () => void;
 }) {
   const uitkomst: EFUitkomst = useMemo(
@@ -594,6 +612,9 @@ function Uitkomst({
           antwoorden,
           spiegelTekst,
           contactGewenst,
+          herkomstInstagram: herkomst.instagram,
+          herkomstFacebook: herkomst.facebook,
+          herkomstBron: herkomst.bron,
         }),
       });
       const data = await r.json();

@@ -30,6 +30,12 @@ export async function POST(req: NextRequest) {
     const leadAchternaam = (body.leadAchternaam as string | undefined)?.trim();
     const leadEmail = (body.leadEmail as string | undefined)?.trim();
     const toestemming = body.toestemming === true;
+    // Optionele herkomst-context uit URL-parameters (ManyChat,
+    // Instagram, Facebook). Wordt opgeslagen op prospect-rij zodat
+    // member ook zonder telefoon contact kan opnemen.
+    const herkomstInstagram = (body.herkomstInstagram as string | undefined)?.trim() || null;
+    const herkomstFacebook = (body.herkomstFacebook as string | undefined)?.trim() || null;
+    const herkomstBron = (body.herkomstBron as string | undefined)?.trim() || null;
 
     if (!token || token.length !== 16) {
       return NextResponse.json({ error: "Ongeldige token" }, { status: 400 });
@@ -156,9 +162,18 @@ export async function POST(req: NextRequest) {
       optInId = nieuw.id;
     }
 
+    // Bouw herkomst-regels (optioneel) voor in notitie
+    const herkomstRegels: string[] = [];
+    if (herkomstBron) herkomstRegels.push(`Via: ${herkomstBron}`);
+    if (herkomstInstagram)
+      herkomstRegels.push(`Instagram: @${herkomstInstagram}`);
+    if (herkomstFacebook)
+      herkomstRegels.push(`Facebook: ${herkomstFacebook}`);
+
     // Prospect aanmaken of aanvullen (zelfde logica als opt-in-route)
     const intekeningNotitie = [
       `🌷 INTEKENING ${botTitel.toUpperCase()} (${datum} ${tijd})`,
+      ...herkomstRegels,
       `Net ingetekend, vragenlijst nog niet ingevuld.`,
       `Member kan even afwachten of de bot wordt afgemaakt.`,
     ].join("\n");
@@ -167,7 +182,7 @@ export async function POST(req: NextRequest) {
 
     const { data: bestaandeProspect } = await supabase
       .from("prospects")
-      .select("id, volledige_naam, notities, ingezette_tools, prioriteit, gearchiveerd")
+      .select("id, volledige_naam, notities, ingezette_tools, prioriteit, gearchiveerd, instagram, facebook")
       .eq("user_id", tokenRow.member_id)
       .ilike("email", leadEmail)
       .maybeSingle();
@@ -194,6 +209,15 @@ export async function POST(req: NextRequest) {
       if (leadNaam && oudeNaam && leadNaam.toLowerCase() !== oudeNaam.toLowerCase()) {
         updateData.volledige_naam = leadNaam;
       }
+      // Vul Instagram/Facebook aan als die ontbraken
+      if (herkomstInstagram && !bestaandeProspect.instagram) {
+        updateData.instagram = `https://instagram.com/${herkomstInstagram}`;
+      }
+      if (herkomstFacebook && !bestaandeProspect.facebook) {
+        updateData.facebook = herkomstFacebook.startsWith("http")
+          ? herkomstFacebook
+          : `https://facebook.com/${herkomstFacebook}`;
+      }
       await supabase.from("prospects").update(updateData).eq("id", bestaandeProspect.id);
     } else {
       await supabase.from("prospects").insert({
@@ -205,6 +229,14 @@ export async function POST(req: NextRequest) {
         prioriteit: "normaal",
         notities: intekeningNotitie,
         ingezette_tools: [NIEUWE_TAG],
+        instagram: herkomstInstagram
+          ? `https://instagram.com/${herkomstInstagram}`
+          : null,
+        facebook: herkomstFacebook
+          ? herkomstFacebook.startsWith("http")
+            ? herkomstFacebook
+            : `https://facebook.com/${herkomstFacebook}`
+          : null,
       });
     }
 

@@ -43,6 +43,9 @@ export async function POST(req: NextRequest) {
     const antwoorden = body.antwoorden as Record<string, unknown> | undefined;
     const spiegelTekst = body.spiegelTekst as string | undefined;
     const contactGewenst = body.contactGewenst === true;
+    const herkomstInstagram = (body.herkomstInstagram as string | undefined)?.trim() || null;
+    const herkomstFacebook = (body.herkomstFacebook as string | undefined)?.trim() || null;
+    const herkomstBron = (body.herkomstBron as string | undefined)?.trim() || null;
 
     if (!token || token.length !== 16) {
       return NextResponse.json({ error: "Ongeldige token" }, { status: 400 });
@@ -194,8 +197,16 @@ export async function POST(req: NextRequest) {
       const w = Array.isArray(v) ? v.join(", ") : String(v);
       return `${k}: ${w}`;
     });
+    const herkomstRegels: string[] = [];
+    if (herkomstBron) herkomstRegels.push(`Via: ${herkomstBron}`);
+    if (herkomstInstagram)
+      herkomstRegels.push(`Instagram: @${herkomstInstagram}`);
+    if (herkomstFacebook)
+      herkomstRegels.push(`Facebook: ${herkomstFacebook}`);
+
     const notitieRegels = [
       `🌷 VIA ${botTitel.toUpperCase()} (${datum})`,
+      ...herkomstRegels,
       ...antwoordRegels,
       contactGewenst ? "⚡ VRAAGT PERSOONLIJK CONTACT" : "Mailreeks-opt-in",
       "",
@@ -207,7 +218,7 @@ export async function POST(req: NextRequest) {
     // email-combinatie. Zo ja: aanvullen ipv dubbele kaart maken.
     const { data: bestaande } = await supabase
       .from("prospects")
-      .select("id, volledige_naam, notities, ingezette_tools, telefoon, prioriteit, gearchiveerd")
+      .select("id, volledige_naam, notities, ingezette_tools, telefoon, prioriteit, gearchiveerd, instagram, facebook")
       .eq("user_id", tokenRow.member_id)
       .ilike("email", leadEmail)
       .maybeSingle();
@@ -249,6 +260,16 @@ export async function POST(req: NextRequest) {
       if (leadTelefoon && !bestaande.telefoon) {
         updateData.telefoon = leadTelefoon;
       }
+      // Instagram/Facebook aanvullen vanuit herkomst-context, alleen
+      // als die nog leeg waren (oude waarde niet overschrijven)
+      if (herkomstInstagram && !bestaande.instagram) {
+        updateData.instagram = `https://instagram.com/${herkomstInstagram}`;
+      }
+      if (herkomstFacebook && !bestaande.facebook) {
+        updateData.facebook = herkomstFacebook.startsWith("http")
+          ? herkomstFacebook
+          : `https://facebook.com/${herkomstFacebook}`;
+      }
       // Naam updaten als de vrouw nu een andere (of vollediger) naam
       // doorgeeft. Vorige naam bewaren we niet apart, wel zichtbaar
       // bovenaan in notitie als 'eerder bekend als'.
@@ -280,6 +301,14 @@ export async function POST(req: NextRequest) {
           prioriteit: contactGewenst ? "hoog" : "normaal",
           notities: notitieRegels,
           ingezette_tools: nieuweTools,
+          instagram: herkomstInstagram
+            ? `https://instagram.com/${herkomstInstagram}`
+            : null,
+          facebook: herkomstFacebook
+            ? herkomstFacebook.startsWith("http")
+              ? herkomstFacebook
+              : `https://facebook.com/${herkomstFacebook}`
+            : null,
         });
 
       if (prospectErr) {
