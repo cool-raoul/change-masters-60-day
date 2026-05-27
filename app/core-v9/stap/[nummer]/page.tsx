@@ -44,22 +44,32 @@ export default async function CoreV9StapDetailPagina({
   const v6Actief = await isCoreV9Actief(user.id);
   if (!v6Actief) redirect("/vandaag");
 
+  // Veilige basis-query: alleen kolommen die zeker bestaan.
   const { data: profile } = await supabase
     .from("profiles")
-    .select("role, core_v9_ankerstap, full_name")
+    .select("role, full_name")
     .eq("id", user.id)
     .maybeSingle();
 
   const isFounder =
     (profile as { role?: string } | null)?.role === "founder";
 
-  const huidigeStap = Math.max(
-    1,
-    Math.min(
-      CORE_V9_AANTAL_STAPPEN,
-      (profile as { core_v9_ankerstap?: number } | null)?.core_v9_ankerstap ?? 1,
-    ),
-  );
+  // Optionele V9-progressie ophalen, fallback naar 1 als kolom nog niet bestaat.
+  let huidigeStap = 1;
+  try {
+    const { data: progressie } = await supabase
+      .from("profiles")
+      .select("core_v9_ankerstap")
+      .eq("id", user.id)
+      .maybeSingle();
+    const rawStap = (progressie as { core_v9_ankerstap?: number } | null)
+      ?.core_v9_ankerstap;
+    if (typeof rawStap === "number" && rawStap >= 1) {
+      huidigeStap = Math.min(CORE_V9_AANTAL_STAPPEN, rawStap);
+    }
+  } catch {
+    huidigeStap = 1;
+  }
   if (!isFounder && nummer > huidigeStap) {
     redirect(`/core-v9/stap/${huidigeStap}`);
   }
