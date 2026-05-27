@@ -46,11 +46,29 @@ Stem is altijd een combinatie van twee dingen die in spanning staan. Hier zijn j
 
 ## Sectie 2, Voorbeeld-passages (echte tekst van jullie)
 
+> ⚠️ **WAARSCHUWING (Raoul, 2026-05-27):** de kennisbank-passages hieronder (voorbeeld 1 en 2) zijn ZELF in eerste instantie door AI geschreven en daarna door jullie verbeterd. Ze zijn dus *afgeleid* van jullie stem, niet de pure bron. Ik gebruik ze als richting, maar ze zijn NIET het gouden anker. Daardoor schreef ik V9 nog te AI-achtig: ik kalibreerde op een AI-afgeleide bron.
+>
+> **De échte bronnen zijn rauw materiaal van jullie zelf**, dat NIET door AI is aangeraakt:
+
+### Rauwe bronnen, gerangschikt op puurheid
+
+1. **Gaby's voicememo's** — hoogste puurheid. Hoe ze écht praat, met stop-en-start, herhaling, gevoel. Transcribeer 3-5 voicememo's van 1-3 minuten elk en plak de ruwe transcriptie hieronder. Niet redigeren, niet polijsten. De rommeligheid IS de stem.
+2. **WhatsApp-broadcasts naar het team** die jullie zelf typten — zonder ChatGPT eroverheen. Liefst kort, in-the-moment, met emoji's op natuurlijke plekken.
+3. **DM-uitnodigingen die in praktijk werkten** — wat jullie hebben verstuurd toen je iemand wilde uitnodigen. Niet de generieke versie, wel een specifieke aan een specifieke persoon.
+4. **Opgenomen 3-weg-introductie van Gaby** — hoe ze haar sponsor of jullie team introduceert. Transcript van 2-3 min.
+5. **Een live gesprek met een prospect** die enthousiast werd — transcript.
+6. **Spontane WhatsApp-bemoediging** die jij naar een teamlid stuurde dat het even niet zag zitten.
+
+Plak hieronder ruw. Niet opmaken, niet corrigeren, niet structureren. Hoe rommeliger, hoe beter.
+
+---
+
 > **Format:** elk fragment 3-8 zinnen, in volle context. Daaronder: wat maakt dit raak? Welk woord, welke breuk, welk ritme?
 
-### Voorbeeld 1, Welkom-opening uit kennisbank
+### Voorbeeld 1, Welkom-opening uit kennisbank *(afgeleid-stem, niet pure bron)*
 
 **Bron:** `kennisbank/01-start-hier.md`, kaart "WELKOM START HIER"
+**Status:** AI-eerst-geschreven, jullie hebben 'm gepolijst. Gebruik als RICHTING, niet als gouden referentie.
 
 > Wat bijzonder dat je hier nu bent. Je bent niet zomaar binnengekomen. Dit is een keuze voor méér.
 >
@@ -70,9 +88,10 @@ Stem is altijd een combinatie van twee dingen die in spanning staan. Hier zijn j
 - Quote-zin als slot, niet een "tot zover de intro"
 - 💟 (hartje-emoji) op de juiste plek, niet versiering maar afronding
 
-### Voorbeeld 2, WHY-bepaling uit eerste-10-dagen
+### Voorbeeld 2, WHY-bepaling uit eerste-10-dagen *(afgeleid-stem, niet pure bron)*
 
 **Bron:** `kennisbank/02-eerste-10-dagen.md`, sectie "Je 'Why' & doelen bepalen"
+**Status:** AI-eerst-geschreven, jullie hebben 'm gepolijst. Gebruik als RICHTING.
 
 > Je WHY = de reden waarom je begonnen bent, je motivatie op de mindere dagen, je brandstof om door te zetten.
 >
@@ -273,9 +292,40 @@ Zodat ook Mentor-antwoorden aan members in jullie stem zijn, niet alleen content
 
 ## Hoe vul je dit document?
 
-- **Sectie 2 (voorbeelden):** verzamel 8 extra fragmenten. Per voorbeeld: 3-8 zinnen + jullie eigen annotatie over wat 'm raak maakt. Liefst variatie: openingen, uitleg, bemoediging, uitnodiging, viering, reflectie.
-- **Sectie 3 (anti-voorbeelden):** elke keer dat je AI-tekst tegenkomt die wringt, plak 'm hier. Geen oordeel, wel waarom 't voor jullie niet werkt.
-- **Sectie 5 (correcties):** dit groeit vanzelf zodra je in founder-modus dingen begint aan te passen. Laat 't gewoon vollopen.
+### Praktische werkmethode voor sectie 2 (de belangrijkste sectie)
+
+**Stap 1: Gaby praat, niet typt.**
+Open de voicememo-app op je telefoon. Druk op opnemen. Vraag Gaby (of jezelf): "Stel je voor, iemand komt net binnen bij Team Be The Change. Hoe zou je 'r persoonlijk welkom heten in een berichtje van een minuut?" Druk op stop. Doe dit voor 5 verschillende situaties:
+- Welkom heten van een nieuw lid
+- Uitnodigen van iemand voor een kop koffie (om het werk uit te leggen)
+- Bemoedigen van iemand die het even niet ziet zitten
+- Vieren dat iemand zijn eerste klant heeft
+- Uitleggen wat een 3-weg is in jullie eigen woorden
+
+5 voicememo's van 1-2 min elk. Samen 10 minuten werk.
+
+**Stap 2: transcribeer ruw.**
+WhatsApp Web heeft "transcriberen" voor voicememo's, of gebruik Google Recorder, of iPhone's spraakmemo's met transcript. Plak de **ruwe** transcriptie hieronder. NIET corrigeren, NIET inkorten, NIET "fixen". De stop-en-start, het "uhm", de herhaling, de zinnen die anders eindigen dan ze begonnen — dat IS jullie stem. Mijn AI-tendens is om dat glad te strijken. Laat 't ruw.
+
+**Stap 3: WhatsApp-broadcasts kopiëren.**
+Pak je telefoon, scroll door je team-broadcasts of -groep van de afgelopen 3 maanden. Kopieer er 5 die voor jou typisch voelen voor hoe jullie communiceren. Plak hieronder. Geen polish.
+
+**Stap 4: DM-uitnodigingen.**
+Scroll door je DM's. Vind 3 berichten waarmee je iemand hebt uitgenodigd voor een gesprek of een test, die in praktijk hebben gewerkt (de persoon zei ja of werd klant). Kopieer ruw.
+
+Samen heb je dan 13 rauwe stukjes. Daar werk ik mee.
+
+### Sectie 3 (anti-voorbeelden)
+
+Elke keer dat je AI-tekst tegenkomt die wringt — in V9-stappen, in een prompt-output van ChatGPT, ergens — plak de letterlijke zin hieronder. Geen oordeel, wel waarom 't voor jullie niet werkt. Eén per maand is genoeg.
+
+### Sectie 5 (correcties)
+
+Groeit vanzelf zodra je in founder-modus iets aanpast op /core-v9. Ik kan na elke editor-sessie zelf de diffs erbij plakken als je dat wil. Laat 't gewoon vollopen.
+
+### Waarom dit werkt
+
+Mijn taalmodel is getraind op miljarden teksten — overwegend door AI gepolijste teksten. Wanneer ik probeer jullie stem te imiteren op basis van AI-gepolijste bronnen (zoals de huidige kennisbank), produceer ik nog meer AI-tekst. Wanneer ik kalibreer op rauwe transcripten en spontane WhatsApp-berichten, voel ik het verschil. Dat is wat we nodig hebben.
 
 Daarna word ik veel scherper. En de Mentor ook.
 
