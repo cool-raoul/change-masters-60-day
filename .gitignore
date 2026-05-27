@@ -46,3 +46,11 @@ next-env.d.ts
 *mckee*.csv
 *mckee*.xlsx
 data/intern/
+
+# Recovery codes + auth-secrets - mogen NOOIT in git
+*ecovery*.docx
+*ecovery*.txt
+*ecovery*.pdf
+*recovery-codes*
+# Office-temp-files (~$ prefix)
+~$*
