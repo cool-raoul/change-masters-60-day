@@ -44,22 +44,40 @@ Stem is altijd een combinatie van twee dingen die in spanning staan. Hier zijn j
 
 ---
 
-## Sectie 2, Voorbeeld-passages (echte tekst van jullie)
+## Sectie 2, Rauw materiaal van jullie
 
-> ⚠️ **WAARSCHUWING (Raoul, 2026-05-27):** de kennisbank-passages hieronder (voorbeeld 1 en 2) zijn ZELF in eerste instantie door AI geschreven en daarna door jullie verbeterd. Ze zijn dus *afgeleid* van jullie stem, niet de pure bron. Ik gebruik ze als richting, maar ze zijn NIET het gouden anker. Daardoor schreef ik V9 nog te AI-achtig: ik kalibreerde op een AI-afgeleide bron.
+> ⚠️ **Belangrijk om vooraf vast te leggen (Raoul, 2026-05-27):**
 >
-> **De échte bronnen zijn rauw materiaal van jullie zelf**, dat NIET door AI is aangeraakt:
+> **Dit gaat over UITLEG-stem, niet DM-stem.** Korte berichtjes (DM's, uitnodigingen, bemoedigingen) heeft Claude al genoeg materiaal voor uit de conversatie-geschiedenis. Wat ontbreekt is hoe jullie een UITLEG schrijven — een paragraaf die iemand iets leert, een stap toelicht, een onderwerp helder maakt in 100-300 woorden. Dat is wat de systeem-content nodig heeft.
+>
+> **De kennisbank-passages hieronder (voorbeeld 1 en 2) zijn ZELF in eerste instantie door AI geschreven en daarna door jullie verbeterd.** Ze zijn dus afgeleid van jullie stem, niet de pure bron. Ik gebruik ze als richting, maar ze zijn NIET het gouden anker. Daardoor schreef ik V9 nog te AI-achtig: ik kalibreerde op een AI-afgeleide bron.
+>
+> **Opzettelijk inspreken is geen oplossing.** Geforceerde rauwheid voelt ook nep. Wat wel werkt: jullie plakken hier dingen die al BESTAAN en niet door AI zijn aangeraakt.
 
-### Rauwe bronnen, gerangschikt op puurheid
+### Open container — plak hier wat voor jullie typisch voelt
 
-1. **Gaby's voicememo's** — hoogste puurheid. Hoe ze écht praat, met stop-en-start, herhaling, gevoel. Transcribeer 3-5 voicememo's van 1-3 minuten elk en plak de ruwe transcriptie hieronder. Niet redigeren, niet polijsten. De rommeligheid IS de stem.
-2. **WhatsApp-broadcasts naar het team** die jullie zelf typten — zonder ChatGPT eroverheen. Liefst kort, in-the-moment, met emoji's op natuurlijke plekken.
-3. **DM-uitnodigingen die in praktijk werkten** — wat jullie hebben verstuurd toen je iemand wilde uitnodigen. Niet de generieke versie, wel een specifieke aan een specifieke persoon.
-4. **Opgenomen 3-weg-introductie van Gaby** — hoe ze haar sponsor of jullie team introduceert. Transcript van 2-3 min.
-5. **Een live gesprek met een prospect** die enthousiast werd — transcript.
-6. **Spontane WhatsApp-bemoediging** die jij naar een teamlid stuurde dat het even niet zag zitten.
+Plak ruw. Niet opmaken, niet corrigeren, niet structureren. Geen kop, geen "voorbeeld 3:". Gewoon ertussen plakken met een lege regel ervoor. Ik haal er de patronen uit.
 
-Plak hieronder ruw. Niet opmaken, niet corrigeren, niet structureren. Hoe rommeliger, hoe beter.
+**Bronnen die nuttig zijn voor UITLEG-stem** (niet DM-stem):
+- Een trainings-tekst of presentatie-onderdeel die jij of Gaby ooit zelf hebt geschreven (niet GPT)
+- Een blog-post of social-post waarin jullie iets uitleggen aan jullie volgers
+- Een uitleg die jullie aan een nieuw teamlid hebben geschreven over hoe iets werkt
+- Boards-app-kaart-tekst die NIET via AI is gegaan
+- Een welkomst-email of pre-onboarding-bericht van Gaby, helemaal zelf getypt
+- Een paragraaf uit eigen handgeschreven notities waar je je trots op voelt
+- Voice-tekst van Gaby (NIET opzettelijk opgenomen, wel een echte voicememo die ze ooit naar iemand stuurde over een onderwerp uit te leggen)
+
+Mocht er weinig zijn dat NIET door AI is aangeraakt: het hoeft niet allemaal AI-vrij. **Liever 5 stukjes "AI-eerst maar door ons stevig verbouwd" dan niets.** Geef wel kort aan welke status het is.
+
+---
+
+**Plak hieronder. Geen format, geen labels. Lege regel ertussen is genoeg.**
+
+---
+
+[Plek voor materiaal — Raoul vult]
+
+---
 
 ---
 
@@ -116,35 +134,6 @@ Plak hieronder ruw. Niet opmaken, niet corrigeren, niet structureren. Hoe rommel
 - Vragen in tweede persoon enkelvoud, persoonlijk
 - Twee quote-zinnen als rust-momenten ("Dit is de kern...", "Succes is geen toeval...")
 - Korte actie-instructie aan het eind, niet een proces-stappenplan
-
-### Voorbeeld 3, [TODO RAOUL/GABY: vul aan]
-
-> *Plak hier een passage uit een eigen WhatsApp-broadcast, voicememo-transcriptie, of post die voor jullie 1.0 is.*
-
-**Wat maakt dit raak:**
-- *Beschrijf 3-5 dingen die jullie eigen typeren in deze passage*
-
-### Voorbeeld 4, [TODO RAOUL/GABY: vul aan]
-
-> *Plak hier een passage waarmee jullie iemand hebben uitgenodigd voor een gesprek of een test. Iets dat in praktijk werkt.*
-
-**Wat maakt dit raak:**
-
-### Voorbeeld 5, [TODO RAOUL/GABY: vul aan]
-
-> *Plak hier een passage waarin jullie iemand bemoedigen die het even niet ziet zitten. Een teamlid-momentje.*
-
-**Wat maakt dit raak:**
-
-### Voorbeeld 6, [TODO RAOUL/GABY: vul aan]
-
-> *Plak hier een passage die iets concreets uitlegt (een aanpak, een methode, een principe) in jullie stem.*
-
-**Wat maakt dit raak:**
-
-### Voorbeeld 7-10, [TODO RAOUL/GABY: vul aan]
-
-> *Minimaal 10 fragmenten in totaal. Hoe meer, hoe scherper het DNA. Mix: openingen, uitleg, bemoediging, uitnodiging, viering, reflectie.*
 
 ---
 
@@ -292,28 +281,19 @@ Zodat ook Mentor-antwoorden aan members in jullie stem zijn, niet alleen content
 
 ## Hoe vul je dit document?
 
-### Praktische werkmethode voor sectie 2 (de belangrijkste sectie)
+### Aanpak voor sectie 2
 
-**Stap 1: Gaby praat, niet typt.**
-Open de voicememo-app op je telefoon. Druk op opnemen. Vraag Gaby (of jezelf): "Stel je voor, iemand komt net binnen bij Team Be The Change. Hoe zou je 'r persoonlijk welkom heten in een berichtje van een minuut?" Druk op stop. Doe dit voor 5 verschillende situaties:
-- Welkom heten van een nieuw lid
-- Uitnodigen van iemand voor een kop koffie (om het werk uit te leggen)
-- Bemoedigen van iemand die het even niet ziet zitten
-- Vieren dat iemand zijn eerste klant heeft
-- Uitleggen wat een 3-weg is in jullie eigen woorden
+Open dit document in je editor of via GitHub. Scroll naar de "Plek voor materiaal" in sectie 2. Plak ertussen wat voor jullie typisch voelt voor hoe jullie iets UITLEGGEN (geen DM's, geen korte uitnodigingen — dat heb ik al genoeg materiaal voor).
 
-5 voicememo's van 1-2 min elk. Samen 10 minuten werk.
+Drie soorten bronnen werken het beste:
 
-**Stap 2: transcribeer ruw.**
-WhatsApp Web heeft "transcriberen" voor voicememo's, of gebruik Google Recorder, of iPhone's spraakmemo's met transcript. Plak de **ruwe** transcriptie hieronder. NIET corrigeren, NIET inkorten, NIET "fixen". De stop-en-start, het "uhm", de herhaling, de zinnen die anders eindigen dan ze begonnen — dat IS jullie stem. Mijn AI-tendens is om dat glad te strijken. Laat 't ruw.
+1. **Bestaande uitleg-tekst van jullie zelf** — een blog-post, een uitleg in een team-presentatie, iets dat je naar een nieuw lid hebt geschreven, een Boards-kaart die NIET via ChatGPT is gegaan. Kopieer-plak ruw.
 
-**Stap 3: WhatsApp-broadcasts kopiëren.**
-Pak je telefoon, scroll door je team-broadcasts of -groep van de afgelopen 3 maanden. Kopieer er 5 die voor jou typisch voelen voor hoe jullie communiceren. Plak hieronder. Geen polish.
+2. **AI-afgeleide tekst die jullie stevig hebben verbouwd** — als je weet dat een bepaalde passage 'r is door GPT maar daarna zo gepolijst dat het echt jullie stem werd. Plak, en zet eronder "(AI-eerst, sterk verbouwd)". Dat is nog steeds nuttig, beter dan niets.
 
-**Stap 4: DM-uitnodigingen.**
-Scroll door je DM's. Vind 3 berichten waarmee je iemand hebt uitgenodigd voor een gesprek of een test, die in praktijk hebben gewerkt (de persoon zei ja of werd klant). Kopieer ruw.
+3. **Spontane voicememo van Gaby die toevallig over een onderwerp ging** — niet opzettelijk opgenomen voor dit document. Iets dat ze ooit naar iemand stuurde om iets uit te leggen. Transcribeer ruw.
 
-Samen heb je dan 13 rauwe stukjes. Daar werk ik mee.
+Geen aantal-quota. Liever 3 stukjes die echt raak zijn dan 10 die geforceerd voelen.
 
 ### Sectie 3 (anti-voorbeelden)
 
