@@ -860,6 +860,21 @@ Materiaal 2F.1: *"Als ik je een bestandje stuur..."*, *"Als ik je een video kan 
 
 **Wat wel:** specifiek zijn over WAT precies onhandig zal voelen, of WAT je gaat leren. Of beter: laat het weg en schrijf gewoon de actie.
 
+### Anti-pattern 5b, Markdown-opmaak in les-tekst (rendert letterlijk)
+
+De les-tekst in `core-dagen-v9.ts` (en Sprint) rendert als **platte tekst** (`whitespace-pre-line`), GEEN markdown-parsing. Deze tekens tonen dus LETTERLIJK aan de member:
+
+- ❌ `---` (scheidingslijn) → toont als drie losse streepjes met veel witruimte
+- ❌ `**vet**` → toont de sterretjes
+- ❌ `> quote` → toont de `>`
+- ❌ `#### kop` → toont de hekjes
+
+**Wat wel:** ALL-CAPS koppen op een eigen regel als sectie-markers (vallen op in platte tekst, herkenbaar). Quotes als gewone regel met aanhalingstekens. Geen scheidingslijnen, gewoon een lege regel tussen alinea's.
+
+**Adempauzes (..) binnen zinnen:** NIET gebruiken in lestekst. Raoul gebruikte die alleen in z'n eigen trainings-notities als plek om iets in te vullen. Echte ellipsis (...) in voorbeeld-zinnen mag wel.
+
+**Afsluitzinnen:** varieer per stap, niet elke keer dezelfde. Warm + kort, met 🥰 of 💪🏽.
+
 ### Anti-pattern 6, Drie-zinnen-rijtjes met identiek ritme
 
 ❌ "Posts worden makkelijker, niet moeilijker. DM's voelen natuurlijker, niet voorzichtiger. Stories worden warmer, niet stijver."
