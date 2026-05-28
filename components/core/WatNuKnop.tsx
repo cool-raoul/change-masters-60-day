@@ -55,6 +55,12 @@ const SITUATIES: Situatie[] = [
     route: "/scripts?cat=uitnodiging",
     hint: "3-weg-scripts + introductie naar je sponsor",
   },
+  {
+    emoji: "🌙",
+    label: "Iemand reageert niet meer",
+    route: "/scripts?cat=opener",
+    hint: "Hercontact-bericht, vrijblijvend en warm",
+  },
 ];
 
 export function WatNuKnop() {
@@ -70,9 +76,11 @@ export function WatNuKnop() {
         />
       )}
 
-      {/* Het menu */}
+      {/* Het menu, opent linksonder boven de knop. Spraakknop (VoiceFab)
+          zit rechtsonder, dus de "wat nu?"-knop staat links zodat ze
+          elkaar niet in de weg zitten, ook op mobiel. */}
       {open && (
-        <div className="fixed bottom-24 right-4 z-50 w-[min(92vw,360px)] rounded-2xl border border-cm-gold/40 bg-cm-surface-2 shadow-2xl overflow-hidden">
+        <div className="fixed bottom-36 lg:bottom-20 left-4 z-50 w-[min(92vw,360px)] rounded-2xl border border-cm-gold/40 bg-cm-surface-2 shadow-2xl overflow-hidden">
           <div className="px-4 py-3 border-b border-cm-border">
             <p className="text-cm-white font-semibold text-sm">
               🧰 Wat is er aan de hand?
@@ -114,11 +122,14 @@ export function WatNuKnop() {
         </div>
       )}
 
-      {/* De vaste knop */}
+      {/* De vaste knop, linksonder. Spiegelt de spraakknop (rechtsonder)
+          qua hoogte: mobiel bottom-20 (boven de bottom-nav), desktop
+          bottom-5. Rustiger gestyled (surface + gouden rand) zodat de
+          spraakknop de opvallende blijft. */}
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="fixed bottom-6 right-4 z-50 flex items-center gap-2 rounded-full bg-cm-gold text-cm-bg px-5 py-3 shadow-2xl font-semibold text-sm hover:opacity-90 transition-opacity"
+        className="fixed bottom-20 lg:bottom-5 left-5 z-40 flex items-center gap-2 rounded-full border border-cm-gold/50 bg-cm-surface-2/95 text-cm-gold px-4 py-3 shadow-2xl font-semibold text-sm hover:bg-cm-gold/10 transition-colors"
         aria-label="Wat nu? Hulp bij dit moment"
       >
         <span className="text-lg leading-none">🧰</span>
