@@ -24,6 +24,7 @@ import { EditableTekst, EditableBlok } from "@/components/cms/EditableTekst";
 import { useEditModus } from "@/components/cms/EditModeContext";
 import { SponsorMeldingKnop } from "@/components/vandaag/inline-embeds/SponsorMeldingKnop";
 import { PartnerCheckEmbed } from "@/components/vandaag/inline-embeds/PartnerCheckEmbed";
+import { WatNuKnop } from "@/components/core/WatNuKnop";
 
 const FASE_LABELS: Record<1 | 2 | 3 | 4, string> = {
   1: "Fundament",
@@ -272,6 +273,8 @@ export function CoreV9Flow({
             ? "Door naar je volgende substep →"
             : "Begin met substep 1 →"}
         </button>
+
+        <WatNuKnop />
       </main>
     );
   }
@@ -503,6 +506,8 @@ export function CoreV9Flow({
           )}
         </>
       )}
+
+      <WatNuKnop />
     </main>
   );
 }
