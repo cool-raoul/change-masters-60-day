@@ -83,9 +83,12 @@ Reden: een nieuwe bouwer moet snel een eerste succesje halen, anders zakt het mo
 
 ---
 
-## Open vragen voor Raoul
+## Beslissingen (Raoul, 2026-05-28)
 
-1. Tempo-mapping: zijn drie tempo's (snel / normaal / rustig) genoeg, of wil je fijnere stappen?
-2. Welke stappen zijn precies de momentum-ankers die altijd vroeg vallen? Voorstel nu: eerste post, eerste uitnodigingen, eerste 3-weg.
-3. Just-in-time-laag: liever via de Mentor ("vraag het de Mentor zodra het gebeurt"), of ook een vaste zichtbare "wat nu?"-knop op het scherm?
-4. Spreiding over 30 dagen: is 30 het richtgetal, of laten we de termijn uit DTT het volledig bepalen?
+1. **Tempo-mapping:** drie tempo's (snel / normaal / rustig) zijn goed. Geen fijnere stappen nodig.
+2. **Momentum-ankers:** twee, en die staan vast vroeg ongeacht tempo:
+   - Je eerste post (pre-post of resultatenpost)
+   - Je eerste 3-weg
+   De uitnodigingen zijn de brug daartussen, maar de twee resultaat-momenten zijn de post en de 3-weg.
+3. **Just-in-time-laag:** ja, een vaste "wat nu?"-knop op het scherm (rechtsonder), altijd zichtbaar. Plus situationele duwtjes: op kernmomenten (bv. zodra de eerste post live is) een korte hint dat de hulp er is. Bij tikken: een kort menu met herkenbare situaties (iemand reageerde / wil meer weten / twijfelt / hoe deel ik een filmpje / 3-weg inplannen) die naar de juiste skill, script of Mentor leiden. Doel: de member ontdekt dat de skills bestaan op het moment dat 't telt, zonder vooraf alles te hoeven lezen.
+4. **30 dagen + fase-principe:** 30 dagen is het richtgetal, maar het is vooral een principe, geen klok. Zachte fase-naampjes ("Je eerste stappen", "Je eerste week", "Je eerste maand") voor het vertrouwde gevoel, zonder harde tijdsloten. Het echte tempo komt uit DTT. De fase-naampjes dienen om te checken dat de ankers in het juiste raam vallen, niet om de member op de klok vast te zetten.
