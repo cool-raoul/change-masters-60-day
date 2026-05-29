@@ -745,9 +745,17 @@ Snap je het verschil? Een oprechte "hoe gaat het nu?" op het juiste moment werkt
     ],
     faseDoel: "Drie hercontact-berichten naar bestaande klanten verstuurd.",
     waarInEleva: [{ actie: "Naar je namenlijst", menupad: "Menu, Namenlijst", route: "/namenlijst" }],
-    watJeLeert: `Een tevreden klant die geen herhaalbestelling doet is geld dat op tafel ligt. Niet door te pushen, wel door op het juiste moment een persoonlijk berichtje te sturen: 'Hé, hoe gaat het nu?'.
+    watJeLeert: `Vandaag zorg je goed voor de mensen die al ja hebben gezegd 🥰
 
-ELEVA's namenlijst houdt voor je bij wie je een tijdje niet hebt gesproken. Vandaag pak je drie bestaande klanten en stuur je een rustig hercontact-bericht. Geen aanbod, wel oprechte aandacht.`,
+Een tevreden klant die niks meer van je hoort, vergeet je langzaam. Niet omdat ze ontevreden zijn, gewoon omdat het leven druk is. Met een beetje aandacht op het juiste moment blijft die band warm, en bestellen mensen vaker uit zichzelf.
+
+GEEN VERKOOP, WEL AANDACHT
+
+Vandaag pak je drie bestaande klanten en stuur je een rustig hercontact-berichtje. Geen aanbod, geen "wil je weer bestellen", wel een oprechte "hé, hoe gaat het nu, bevalt het nog?". ELEVA houdt voor je bij wie je een tijdje niet hebt gesproken, dus je hoeft niks te onthouden.
+
+WAAROM DIT ZICH TERUGBETAALT
+
+Snap je waarom dit zo waardevol is? Een klant die zich gezien voelt, blijft langer, bestelt vaker, en stuurt eerder anderen jouw kant op. Drie kleine berichtjes vandaag bouwen aan loyaliteit die maanden meegaat. Mooie, makkelijke stap 💪🏽`,
     waaromWerktDit: {
       tekst:
         "Hercontact zonder verkoop-doel bouwt loyaliteit. Klanten die zich gezien voelen, bestellen vaker uit zichzelf en sturen anderen jouw kant op.",
@@ -769,13 +777,17 @@ ELEVA's namenlijst houdt voor je bij wie je een tijdje niet hebt gesproken. Vand
     ],
     faseDoel: "Eerste testimonial-video staat klaar voor social.",
     waarInEleva: [],
-    watJeLeert: `Niets verkoopt zoals een echt verhaal. Vandaag deel je jouw eigen ervaring met een product dat jij gebruikt.
+    watJeLeert: `Vandaag laat je jouw eigen ervaring spreken 🥰
 
-WAT NIET: 'Dit product geneest X', 'Dit zorgt voor Y'. Medische of ziekte-claims zijn wettelijk verboden bij voedingssupplementen.
+Niets raakt mensen zo als een echt verhaal van iemand die ze vertrouwen. Vandaag maak je een korte video over jouw ervaring met een product dat je zelf gebruikt. Eerlijk, menselijk, en netjes binnen de grenzen.
 
-WAT WEL: 'Sinds ik dit gebruik voel ik...', 'Ik merk dat...', 'Wat ik anders ervaar is...'. Jouw subjectieve ervaring delen mag altijd, claims over wat het product DOET niet.
+WAT NIET, EN WAT WEL
 
-De Mentor en de Academy-training 'Spreken zoals het raakt' helpen je met formuleringen die raken zonder grenzen over te steken.`,
+Dit luistert nauw, dus even goed lezen. Wat niet mag: "dit product geneest X" of "dit zorgt voor Y". Medische of ziekte-claims zijn wettelijk verboden bij supplementen. Wat wel mag: "sinds ik dit gebruik voel ik...", "ik merk dat...", "wat ik anders ervaar is...". Jouw eigen ervaring delen mag altijd, een uitspraak over wat het product dóet niet.
+
+WAAROM DIT WERKT
+
+Snap je waarom een eerlijke ervaring meer opent dan een mooie productfoto? Mensen kopen mensen, geen ingrediënten. Jouw gezicht, jouw verhaal, jouw "dit merkte ik" is overtuigender dan elke specificatie. De Mentor helpt je met woorden die raken zonder een grens over te gaan 💪🏽`,
     waaromWerktDit: {
       tekst:
         "Een eerlijke testimonial-video opent 10x meer DM-gesprekken dan een product-foto met productspecs. Mensen kopen mensen, niet ingredienten.",
@@ -798,14 +810,17 @@ De Mentor en de Academy-training 'Spreken zoals het raakt' helpen je met formule
     ],
     faseDoel: "Twee tot drie klanten gemarkeerd als potentiele Builders.",
     waarInEleva: [{ actie: "Naar je namenlijst", menupad: "Menu, Namenlijst", route: "/namenlijst" }],
-    watJeLeert: `Niet elke klant wil zelf ondernemen, maar onder hen zitten ondernemende types die het wel zouden willen. Vandaag leer je signalen herkennen:
+    watJeLeert: `Vandaag krijg je oog voor een speciale groep in je kring 🥰
 
-- Iemand die geinteresseerd is in HOE jij het doet, niet alleen WAT je verkoopt
-- Iemand die zelf ook ondernemer-energie heeft (eigen praktijk, ZZP, vrije ziel)
-- Iemand die zegt 'misschien moet ik dit ook eens proberen'
-- Iemand die andere mensen om zich heen heeft die ze willen helpen
+Niet elke klant wil zelf ondernemen, en dat hoeft ook niet. Maar tussen je klanten zitten ondernemende types die het misschien wél zouden willen. Die leren herkennen is goud waard, want daar zit je toekomstige team.
 
-Markeer 2 of 3 van zulke klanten in je namenlijst. Morgen leer je hoe je ze een uitnodiging stuurt om zelf een webshop te openen.`,
+DE SIGNALEN
+
+Let op iemand die nieuwsgierig is naar HOE jij het doet, niet alleen naar wat je verkoopt. Iemand met eigen ondernemers-energie, een eigen praktijk, ZZP, een vrije geest. Iemand die zegt "misschien moet ik dit ook eens proberen". Of iemand die zelf veel mensen om zich heen heeft die ze graag helpt.
+
+VANDAAG ALLEEN MARKEREN
+
+Snap je waarom je vandaag nog niks stuurt? Eerst rustig kijken en markeren, zodat je morgen gericht en persoonlijk kunt zijn. Zet twee of drie van zulke klanten op je radar in de namenlijst. Morgen leer je hoe je ze uitnodigt om zelf een webshop te openen 💪🏽`,
     waaromWerktDit: {
       tekst:
         "Builder herkennen op tijd voorkomt dat je voor altijd alleen klanten heelt. Een Builder onder je verdrievoudigt je inkomsten zonder dat je meer hoeft te werken.",
@@ -828,13 +843,17 @@ Markeer 2 of 3 van zulke klanten in je namenlijst. Morgen leer je hoe je ze een 
     ],
     faseDoel: "Een script klaar voor jouw eerste duplicatie-gesprek.",
     waarInEleva: [{ actie: "Naar scripts", menupad: "Menu, Scripts", route: "/scripts" }],
-    watJeLeert: `Duplicatie is hoe je business groeit zonder dat jij meer uren werkt. Vandaag leer je hoe je een ontspannen voorstel doet aan iemand uit je klantkring:
+    watJeLeert: `Vandaag zet je de eerste stap naar duplicatie 🥰
 
-'Hé, ik zie dat jij hier energie in hebt, heb je er ooit aan gedacht zelf een webshop te openen?'
+Duplicatie is hoe je business groeit zonder dat jij meer uren maakt: mensen die naast je gaan bouwen in plaats van alleen kopen. Het begint met één ontspannen voorstel aan iemand met die ondernemers-energie van gisteren.
 
-Geen druk. Gewoon de optie aanbieden. Sommigen zeggen ja, sommigen zeggen niet-nu, sommigen zeggen nooit. Allemaal prima.
+HET VOORSTEL
 
-Bereid vandaag een script voor 1 specifieke klant. Wat weet je van hen? Hoe past het bij wat zij willen? Dat maakt je voorstel persoonlijk in plaats van generiek.`,
+Iets simpels als: "Hé, ik zie dat jij hier energie in hebt, heb je er ooit aan gedacht om zelf ook een webshop te openen?". Geen druk, je biedt gewoon de optie aan. Sommigen zeggen ja, sommigen niet nu, sommigen nooit, en dat is allemaal prima.
+
+MAAK HET PERSOONLIJK
+
+Snap je waarom je het vandaag eerst voorbereidt? Een persoonlijk voorstel raakt veel beter dan een algemene "wil jij ook?". Bereid het daarom voor één specifieke klant voor: wat weet je van haar, hoe past dit bij wat zij wil? Dat ene persoonlijke haakje maakt het verschil. Versturen mag, voorbereiden is genoeg voor vandaag 💪🏽`,
     waaromWerktDit: {
       tekst:
         "Een persoonlijk voorstel aan iemand met Builder-energie heeft een 10x hogere kans dan een algemene 'wil je ook?'-massaboodschap. Het persoonlijke is wat verschil maakt.",
@@ -856,13 +875,17 @@ Bereid vandaag een script voor 1 specifieke klant. Wat weet je van hen? Hoe past
     ],
     faseDoel: "Een warme prospect een echte beslissings-vraag gesteld.",
     waarInEleva: [],
-    watJeLeert: `Sommige prospects zijn al weken in je pipeline en hebben nog niets besloten. De moedigste vraag in dit vak is 'wat heb je nog nodig om te beslissen?'.
+    watJeLeert: `Vandaag leer je de moedigste vraag van het vak 🥰
 
-Deze vraag lost vrijwel altijd één van twee dingen op:
-- Je krijgt het laatste bezwaar boven tafel (vaak iets concreets dat je kunt wegnemen)
-- De prospect is rijp voor de volgende stap, en de vraag geeft hen toestemming om te kiezen
+Sommige prospects zitten al weken in je lijst zonder iets te beslissen. Niet omdat ze nee bedoelen, vaak omdat niemand ze helpt kiezen. Eén vraag doorbreekt dat: "wat heb je nog nodig om te beslissen?".
 
-Geen pushen, wel helpen kiezen. Veel mensen blijven hangen tussen ja en nee omdat niemand vraagt: wat houdt je tegen?`,
+WAT DEZE VRAAG DOET
+
+Snap je waarom dit zo goed werkt? Het antwoord lost bijna altijd een van twee dingen op. Of je krijgt het laatste bezwaar boven tafel, meestal iets concreets dat je kunt wegnemen. Of de prospect blijkt er klaar voor, en jouw vraag geeft 'm het zetje om te kiezen.
+
+GEEN DRUK, WEL HULP
+
+Dit is geen pushen, dit is helpen. Veel mensen blijven hangen tussen ja en nee, simpelweg omdat niemand vraagt wat hen tegenhoudt. Stel de vraag vandaag aan minstens één warme prospect, rustig en oprecht. Je zult merken hoeveel het losmaakt 💪🏽`,
     waaromWerktDit: {
       tekst:
         "Een closingsvraag in een warm gesprek lost meer beslissingen los dan 10 extra follow-ups. Mensen hebben soms iemand nodig die VRAAGT, niet die blijft delen.",
@@ -885,7 +908,9 @@ Geen pushen, wel helpen kiezen. Veel mensen blijven hangen tussen ja en nee omda
     ],
     faseDoel: "Top-20 prospects gecategoriseerd. Energie-budget voor volgende week gepland.",
     waarInEleva: [{ actie: "Naar je namenlijst", menupad: "Menu, Namenlijst", route: "/namenlijst" }],
-    watJeLeert: `Vijf types prospects (Eric Worre's classificatie):
+    watJeLeert: `Vandaag breng je rust en overzicht in je pipeline 🥰
+
+Niet iedereen op je lijst staat op hetzelfde punt, en niet iedereen verdient evenveel tijd. Met vijf types weet je in één oogopslag waar je energie het meeste oplevert. Dit is de classificatie van Eric Worre:
 
 1. ACTIEF ZOEKEND: zoeken nu naar iets nieuws. Direct presentatie of 3-weg, vandaag liefst. Hun moment is NU.
 2. OPEN: niet actief zoekend, wel nieuwsgierig als jij iets brengt. Rapport bouwen, 3 tot 5 contactmomenten.
@@ -895,7 +920,9 @@ Geen pushen, wel helpen kiezen. Veel mensen blijven hangen tussen ja en nee omda
 
 Energie-budget volgende week: 70% naar type 1+2, 20% naar type 3, 10% naar type 4. Type 5 = warmte, geen werk-tijd.
 
-Grootste fout: type 5 behandelen als type 2 ('ze gaat ooit ja zeggen'). Tweede fout: type 1 behandelen als type 4 ('ze heeft het druk, ik wacht'). Reageer snel op type 1.`,
+Grootste fout: type 5 behandelen als type 2 ('ze gaat ooit ja zeggen'). Tweede fout: type 1 behandelen als type 4 ('ze heeft het druk, ik wacht'). Reageer dus snel op type 1.
+
+Snap je waarom dit zoveel scheelt? Met dezelfde lijst haal je veel meer resultaat, gewoon door je tijd op de juiste mensen te zetten. Even sorteren vandaag, en je week wordt een stuk rustiger 💪🏽`,
     waaromWerktDit: {
       tekst:
         "Mensen die hun prospects categoriseren, halen 3 keer zoveel resultaat met dezelfde lijst. Niet door meer te doen, wel door op de juiste mensen tijd te zetten.",
@@ -936,16 +963,19 @@ Grootste fout: type 5 behandelen als type 2 ('ze gaat ooit ja zeggen'). Tweede f
       { actie: "Open statistieken", menupad: "Menu, Statistieken", route: "/statistieken" },
       { actie: "Plan sponsor-call", menupad: "Menu, Team", route: "/team" },
     ],
-    watJeLeert: `Je hebt nu het fundament. Een werkende webshop, een eigen ritme van content delen, een lijst klanten in opbouw, en de skills om mensen door je flow te leiden.
+    watJeLeert: `Wat een mijlpaal, je eerste 21 dagen zitten erop 🥰
 
-Dit is geen einde. Dit is je startpunt. De komende 19 dagen ga je VERANKEREN wat je hebt geleerd. Geen nieuwe content, wel het dagelijkse ritme volhouden. Op dag 40 ga je over naar lifetime DMO, en dan blijft het permanent draaien.
+Kijk eens terug naar waar je begon. Je hebt nu een werkende webshop, een eigen ritme van delen, een groeiende lijst klanten, en de skills om mensen rustig door je flow te leiden. Dat heb je zelf opgebouwd.
 
-Reflecteer eerlijk:
-- Wat werkte goed deze 21 dagen?
-- Wat liep niet soepel, en waarom?
-- Wat ga je de komende 19 dagen anders doen?
+DIT IS EEN STARTPUNT, GEEN EINDE
 
-Sponsor-call inplannen om dit samen door te lopen. Sponsor kan jouw blinde vlekken zien die jij niet ziet.`,
+De komende negentien dagen ga je verankeren wat je hebt geleerd. Geen nieuwe stof, wel het dagelijkse ritme volhouden tot het vanzelf gaat. Op dag 40 ga je over naar je lifetime-ritme, en dan blijft het permanent draaien.
+
+EVEN EERLIJK TERUGKIJKEN
+
+Wat werkte goed deze drie weken? Wat liep nog niet soepel, en waarom? Wat ga je de komende periode anders doen? Schrijf het eerlijk op, niet om streng te zijn maar om te groeien.
+
+Plan tot slot een call met je sponsor om dit samen door te lopen. Je sponsor ziet blinde vlekken die jij zelf lastig ziet. Wat ben je gegroeid, echt trots op je 🥰`,
     waaromWerktDit: {
       tekst:
         "Reflectie op een vast moment maakt het verschil tussen leren-door-doen en herhalen-van-fouten. Sponsors die mee-reflecteren versnellen jouw groei aanzienlijk.",
