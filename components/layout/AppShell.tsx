@@ -9,6 +9,7 @@ import { berekenHuidigeDag } from "@/lib/playbook/bereken-dag";
 import { TaalProvider } from "@/lib/i18n/TaalContext";
 import { Taal } from "@/lib/i18n/vertalingen";
 import { VoiceFab } from "@/components/voice/VoiceFab";
+import { WatNuKnop } from "@/components/core/WatNuKnop";
 import { Rondleiding } from "@/components/rondleiding/Rondleiding";
 import { type Rol } from "@/lib/features/registry";
 import { TerugNaarPlaybookBanner } from "@/components/playbook/TerugNaarPlaybookBanner";
@@ -165,6 +166,10 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
             BottomNav voor de top-4-acties + 'Meer' opent de sidebar-drawer. */}
         <BottomNav />
         <VoiceFab />
+        {/* "Wat nu?"-gereedschapskist: vaste knop linksonder, op elke
+            werk-pagina beschikbaar (Sprint en Core). De wegwijzer naar de
+            just-in-time kennislaag, zodat het leerpad licht kan blijven. */}
+        <WatNuKnop />
         <Rondleiding rol={rolVoorFeatures} />
         {/* Welkomstfilm: auto-pop-up bij eerste bezoek (localStorage-flag),
             altijd handmatig terug op te roepen via Topbar 🎬-knop. */}

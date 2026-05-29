@@ -6,7 +6,7 @@
 // linksonder (spraakknop VoiceFab zit rechtsonder). Bij tikken opent een
 // menu met zes inklapbare onderwerpen. Tik een onderwerp open, tik dan
 // een situatie: je gaat naar een volledige uitleg-pagina
-// (/core-v9/wat-nu/[slug]) met de hele uitleg en pas daar de knop naar
+// (/wat-nu/[slug]) met de hele uitleg en pas daar de knop naar
 // de tool. Het menu is dus kort; de diepte zit op de pagina.
 //
 // Data staat in lib/playbook/wat-nu-situaties.ts (gedeeld met de pagina's).
@@ -73,7 +73,7 @@ export function WatNuKnop() {
                       {groep.situaties.map((s) => (
                         <Link
                           key={s.slug}
-                          href={`/core-v9/wat-nu/${s.slug}`}
+                          href={`/wat-nu/${s.slug}`}
                           onClick={sluitAlles}
                           className="flex items-start gap-3 px-3 py-2 rounded-lg hover:bg-cm-gold/10 transition-colors"
                         >

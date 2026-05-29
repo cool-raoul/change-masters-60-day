@@ -1,4 +1,4 @@
-// File: app/core-v9/wat-nu/[slug]/page.tsx
+// File: app/wat-nu/[slug]/page.tsx
 //
 // Volledige uitleg-pagina per "wat nu?"-situatie. Het menu (WatNuKnop)
 // is de wegwijzer, deze pagina is de plek met de hele uitleg, en pas
@@ -11,7 +11,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
-import { isCoreV9Actief } from "@/lib/feature-flags/core-v9";
 import { vindSituatie } from "@/lib/playbook/wat-nu-situaties";
 import { haalPaginaBlokken } from "@/lib/cms/pagina-blokken";
 import type { Blok } from "@/lib/cms/pagina-blokken";
@@ -42,15 +41,18 @@ export default async function WatNuPagina({ params }: { params: Params }) {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const v9Actief = await isCoreV9Actief(user.id);
-  if (!v9Actief) redirect("/vandaag");
-
+  // Beschikbaar voor elke ingelogde member, Sprint én Core. De wat-nu-laag
+  // is modus-agnostisch (zie spec). Alleen "terug naar je stap" is
+  // modus-afhankelijk.
   const { data: profile } = await supabase
     .from("profiles")
-    .select("role")
+    .select("role, modus")
     .eq("id", user.id)
     .maybeSingle();
   const isFounder = (profile as { role?: string } | null)?.role === "founder";
+  const modus = (profile as { modus?: string } | null)?.modus ?? "sprint";
+  const stapRoute = modus === "core" ? "/core-v9" : "/vandaag";
+  const vanParam = modus === "core" ? "core-v9" : "vandaag";
 
   const mediaBlokkenMap = await haalPaginaBlokken(supabase, "wat-nu", slug);
   const blokkenPerPositie: Record<string, Blok[]> = {};
@@ -62,11 +64,21 @@ export default async function WatNuPagina({ params }: { params: Params }) {
 
   const blokjes = situatie.uitleg.split(/\n\n+/);
 
+  // De actie-knop. Route "/core-v9" betekent "je huidige stap", dus die
+  // wordt modus-bewust naar /core-v9 of /vandaag gestuurd. Andere routes
+  // krijgen een ?van=-spoor zodat je op de bestemming een terug-balk ziet.
+  const actieHref = situatie.actieRoute.startsWith("/core-v9")
+    ? stapRoute
+    : situatie.actieRoute +
+      (situatie.actieRoute.includes("?") ? "&" : "?") +
+      "van=" +
+      vanParam;
+
   return (
     <main className="mx-auto max-w-2xl px-4 py-6 text-cm-white">
       <div className="mb-4">
         <Link
-          href="/core-v9"
+          href={stapRoute}
           className="text-cm-muted text-sm hover:text-cm-white"
         >
           ← Terug naar je stap
@@ -128,13 +140,7 @@ export default async function WatNuPagina({ params }: { params: Params }) {
           Klaar om het te doen? Hier ga je verder:
         </p>
         <Link
-          href={
-            situatie.actieRoute.startsWith("/core-v9")
-              ? situatie.actieRoute
-              : situatie.actieRoute +
-                (situatie.actieRoute.includes("?") ? "&" : "?") +
-                "van=core-v9"
-          }
+          href={actieHref}
           className="inline-flex items-center gap-2 rounded-full bg-cm-gold text-cm-bg px-5 py-2.5 text-sm font-semibold hover:opacity-90 transition-opacity"
         >
           {situatie.actieLabel}
@@ -144,7 +150,7 @@ export default async function WatNuPagina({ params }: { params: Params }) {
 
       <div className="mt-6 text-center">
         <Link
-          href="/core-v9"
+          href={stapRoute}
           className="text-cm-muted text-xs hover:text-cm-white"
         >
           ↩ Terug naar je stap

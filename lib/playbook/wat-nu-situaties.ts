@@ -2,7 +2,7 @@
 //
 // Data voor de "wat nu?"-knop (gereedschapskist-laag). Gedeeld tussen het
 // menu (components/core/WatNuKnop.tsx) en de uitleg-pagina's
-// (app/core-v9/wat-nu/[slug]/page.tsx).
+// (app/wat-nu/[slug]/page.tsx).
 //
 // Raoul (2026-05-29): elke situatie verdient een HELE PAGINA uitleg, niet
 // een paar zinnen. Het menu is de wegwijzer (kort, via 'hint'), de pagina

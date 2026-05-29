@@ -48,7 +48,28 @@ export function TerugNaarPlaybookBanner() {
     );
   }
 
-  if (van !== "vandaag" || !dag) return null;
+  if (van !== "vandaag") return null;
+
+  // Vanuit de "wat nu?"-knop in Sprint: spoor terug naar je stap. Net als
+  // bij Core, maar dan zonder dag-nummer (de wat-nu-laag is modus-agnostisch
+  // en kent geen specifieke dag). Eén klik en je staat weer in je dag-flow.
+  if (!dag) {
+    return (
+      <div className="rounded-lg border border-cm-gold/40 bg-cm-gold/10 px-4 py-3 mb-4 flex items-center justify-between gap-3 flex-wrap">
+        <p className="text-sm text-cm-white">
+          Je kwam hier via{" "}
+          <strong className="text-cm-gold">Wat nu?</strong>. Klaar? Eén klik en
+          je staat weer in je dag-flow.
+        </p>
+        <Link
+          href="/vandaag"
+          className="text-xs px-3 py-1.5 rounded-full bg-cm-gold text-cm-black font-semibold hover:opacity-90 whitespace-nowrap"
+        >
+          ↩ Terug naar dag-flow
+        </Link>
+      </div>
+    );
+  }
 
   const dagNummer = Number(dag);
   if (!Number.isFinite(dagNummer) || dagNummer < 1 || dagNummer > 21) {
