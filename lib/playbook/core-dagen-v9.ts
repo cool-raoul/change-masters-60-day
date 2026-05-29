@@ -125,20 +125,22 @@ Wat fijn dat je er bent. We gaan samen 🥰`,
         verplicht: true,
         actieRoute: "/coach",
         uitleg:
-          "De Mentor laat zien wat 'ie heeft opgeslagen uit onboarding (WHY, doel, scenario). Klopt het nog? Pas aan waar je iets anders ziet.",
+          "De Mentor laat zien wat 'ie uit jouw onboarding heeft opgeslagen: je WHY, je doel, je tijd per week, je scenario. Loop het rustig even na, voelt het nog kloppend? In een paar weken kan er zomaar iets verschuiven, dat is normaal. Pas aan waar je iets anders ziet, dan staat je vertrekpunt voor Core helder op tafel. Eén of twee minuten werk, en je hoeft niet alles opnieuw te vertellen.",
       },
       {
         id: "core-v9-stap1-builder-uitleg",
         label: "Bekijk de korte Builder-status-uitleg",
         verplicht: true,
         uitleg:
-          "Wat is Builder, waarom is het je eerste doel, hoe kom je er. Eén kort filmpje van Raoul + Gaby (TODO: media toevoegen).",
+          "Builder is je eerste mijlpaal én de rode draad door alles wat hierna komt. Vandaag krijg je in een paar minuten te zien wat 'ie precies inhoudt, waarom dat zo belangrijk is, en wat er nodig is om 'm te halen. Twee voorwaarden: je eerste drie levels samen 1500 IP (jouw eigen bestelling telt mee), en minimaal drie members met een bestelling van 40 IP of meer. Snap je waarom dit jouw eerste anker is? Vanaf Builder gaat duplicatie werken, dus alles wat je hier leert kun jij straks doorgeven aan de drie of vier mensen die jou zijn gevolgd. (TODO: filmpje van Raoul + Gaby toevoegen op /vandaag stap 1)",
       },
       {
         id: "core-v9-stap1-sponsor",
         label: "Stuur je sponsor een berichtje: 'ik ben gestart in Core'",
         verplicht: true,
         inlineEmbed: "sponsor-melding",
+        uitleg:
+          "Laat je sponsor weten dat je gestart bent, meer hoeft echt niet. Geen lang verhaal, gewoon 'ik ben begonnen in Core'. Vanaf dat moment kijkt 'ie in ELEVA met je mee en ziet 'ie wanneer het loopt of wanneer je even iets nodig hebt. Die ene zin opent de deur, en je hoeft dit dus niet alleen te doen, en dat scheelt enorm. Tik de knop hieronder, jouw sponsor staat er klaar voor.",
       },
       {
         id: "core-v9-stap1-post-keuze",
@@ -146,7 +148,7 @@ Wat fijn dat je er bent. We gaan samen 🥰`,
         verplicht: true,
         inlineEmbed: "prepost-keuze",
         uitleg:
-          "Geen ervaring? Pre-post. Wel ervaring? 21-dagen-post. Beide brengen mensen in beweging. Skip blijft als advies op je dashboard.",
+          "Eén keuze die bepaalt waar je de komende dagen iets te delen hebt. Heb je al een product van Lifeplus geprobeerd en daar iets van gemerkt? Dan deel je dat eerlijk, en raakt het mensen. Nog geen ervaring? Dan deel je je voornemen, lokt 'wat ga je doen?' uit, en bouw je de komende drie weken je eigen ervaring op. Allebei werken, het is geen goed of fout. Twijfel je nog? Sla de keuze voor nu over, hij blijft op je dashboard staan tot je er klaar voor bent. Wat je kiest, opent meteen een aparte stap-voor-stap-flow waarin de Mentor je in jouw stem helpt met de tekst, de DM-scripts en de upline-check.",
       },
       ...afsluitStappenV9(1),
     ],
@@ -221,14 +223,15 @@ Gewoon doen, jij kan dit 💪🏽`,
         label: "Voeg minimaal 20 namen toe (productgebruikers + opportunity-mensen)",
         verplicht: true,
         actieRoute: "/namenlijst",
-        uitleg: namenToevoegenUitleg(20),
+        uitleg:
+          "Schrijf twintig namen op die spontaan in je hoofd opkomen, dat is je Top-20. Twee soorten door elkaar: mensen waarvan jij denkt dat ze baat zouden hebben bij een product (slecht slaapt, weinig energie, hormonen die schuiven), én mensen die het werk zelf misschien zouden willen doen (ondernemend, mensen-mens, iemand die je iets gunt). Geen filter, zet ook die ene erop waarvan je denkt 'die past nooit', want juist die verrast vaak. Loop je telefoon, je social en je dagelijkse omgeving even langs als je vastzit, dan komen de namen vanzelf. Lukt twintig niet in één keer? Geen probleem, je vult elke dag aan, je lijst is nooit af.",
       },
       {
         id: "core-v9-stap2-top5",
         label: "Markeer je top-5 binnen de top-20",
         verplicht: true,
         uitleg:
-          "Geen 'wie zou kopen', wel 'wie gun ik dit het meest'. Deze 5 zijn jouw kandidaten voor de oefen-uitnodigingen.",
+          "Kies binnen je twintig namen vijf mensen waar je echt iets aan zou willen doen. Geen 'wie zou kopen', wel 'wie gun ik dit het meest'. Het mogen klanten-types of opportunity-types zijn, het criterium is jouw gunfactor. Deze vijf zijn jouw kandidaten voor de drie oefen-uitnodigingen samen met je sponsor, dus kies mensen waar je je goed bij voelt om mee te beginnen. Twijfel je tussen mensen? Markeer ze allebei, je kunt later nog kiezen wie als eerste gaat.",
       },
       {
         id: "core-v9-stap2-vcard",
@@ -237,7 +240,7 @@ Gewoon doen, jij kan dit 💪🏽`,
         inlineEmbed: "vcard-upload",
         vereistMobiel: true,
         uitleg:
-          "Op je telefoon kun je je contacten als extra bron importeren, handig om namen te vinden die je anders vergeet. Helemaal optioneel, sla 'm gerust over.",
+          "Op je telefoon zet je met één klik je hele adresboek erbij, zodat je geen namen vergeet die je anders over het hoofd ziet. Je geeft ELEVA eenmalig toegang tot je contacten, en daarna vink je gewoon aan wie je herkent. Er wordt niks verstuurd of gedeeld, het is puur jouw eigen overzicht, geen belkostlijst en geen verkooplijst. Helemaal optioneel, sla 'm gerust over als je liever bij je twintig spontane namen blijft. Zit je nu op de computer? Doe 'm later even op je telefoon.",
       },
       {
         id: "core-v9-stap2-webshop-frame",
@@ -245,7 +248,7 @@ Gewoon doen, jij kan dit 💪🏽`,
         verplicht: true,
         actieRoute: "/coach",
         uitleg:
-          "Haakje, manier-gevonden-zin, hoe het werkt, permissie-vraag. Mentor oefent met jouw stem.",
+          "Vier bouwstenen vormen samen een uitnodiging die nooit als verkoop voelt. Eén: het haakje, een opener die persoonlijk is voor deze prospect, bijvoorbeeld hun naam, gedeelde geschiedenis of iets wat hen bezighoudt. Twee: de manier-gevonden-zin, 'ik heb een manier gevonden om online extra inkomsten op te bouwen, zonder investeringen en zonder risico'. Drie: hoe het werkt, in één of twee zinnen, geen lange uitleg. En vier: de permissie-vraag, concreet en niet open, 'mag ik je kort laten zien hoe het werkt? Helemaal vrijblijvend, als het niets voor je is is dat ook prima'. De Mentor oefent ze met je in jouw stem, zodat ze straks vanzelf bij je passen.",
       },
       {
         id: "core-v9-stap2-eigen-zin",
@@ -254,7 +257,7 @@ Gewoon doen, jij kan dit 💪🏽`,
         actieRoute: "/coach",
         actieRouteLabel: "Schrijf 'm met de Mentor →",
         uitleg:
-          "Schrijf 'm in jouw eigen stem, drie of vier regels. Zoals jij echt praat, dat is precies wat een uitnodiging anders maakt dan een standaard-berichtje. De Mentor scherpt 'm met je aan en onthoudt jouw stijl voor later.",
+          "Schrijf je eigen webshop-uitnodiging in jouw stem, drie of vier regels. Gebruik de vier bouwstenen van net (haakje, manier-gevonden-zin, hoe het werkt, permissie-vraag), en zorg dat het klinkt zoals jij echt praat, niet als een folder. Dat is precies wat 'm anders maakt dan een standaard-berichtje. De Mentor scherpt 'm met je aan, leert er jouw stijl van, en kan straks varianten maken voor specifieke prospects. Bewaar 'm, dan kun je 'm de komende dagen blijven gebruiken.",
         inlineActie: {
           type: "tekst",
           slug: "webshop-uitnodigingszin",
@@ -271,17 +274,15 @@ Gewoon doen, jij kan dit 💪🏽`,
         label: "Plan een halfuur met je sponsor + verstuur samen 3 uitnodigingen",
         verplicht: true,
         uitnodigHelpKnoppen: true,
-        uitleg: uitnodigingenUitleg(3, {
-          extraIntro:
-            "Drie uitnodigingen samen met je sponsor. Plan een halfuur, kies drie uit je top-5, en stuur ze in jullie stem. Sponsor schuift bij, geeft tips, en jij merkt direct hoe het voelt.",
-        }),
+        uitleg:
+          "Drie uitnodigingen samen met je sponsor, dat is een hele andere ervaring dan in je eentje beginnen. Plan een halfuur, kies drie mensen uit je top-5 die warm voelen, en stuur de uitnodigingen samen in jullie stem. Je sponsor schuift bij, geeft tips waar 't anders kan, en jij merkt direct hoe het voelt om 'm te versturen. De drempel zakt enorm, en je ziet meteen wat werkt en wat niet. Stuur 'm gewoon een berichtje om een moment te prikken, dat is de eerste stap.",
       },
       {
         id: "core-v9-stap2-rest-verzenden",
         label: "Verstuur de overige 17 uitnodigingen zo snel mogelijk",
         verplicht: false,
         uitleg:
-          "Mag alleen, mag opnieuw met sponsor erbij. Doel is dat alle 20 binnen een week zijn verstuurd.",
+          "De zeventien overige mensen uit je top-20 verstuur je zo snel mogelijk, het liefst deze week. Mag alleen, mag in een tweede ronde met je sponsor erbij, wat voor jou werkt. Gebruik dezelfde uitnodigingszin van net, en maak 'm telkens persoonlijk met één regel die alleen voor die ene persoon geldt. Niet te lang wachten, want hoe langer je wacht hoe groter het in je hoofd wordt. Doel is dat je hele top-20 binnen een week is benaderd, dan staat er momentum.",
       },
       ...afsluitStappenV9(2),
     ],
