@@ -218,7 +218,7 @@ Rustig opbouwen, jij komt er wel 💪🏽`,
         verplicht: true,
         actieRoute: "/mijn-zinnen",
         uitleg:
-          "Schrijf twee zinnen waarmee je natuurlijk vertelt wat je doet, voor als iemand vraagt 'wat doe jij eigenlijk?'. Eén zin over wat je doet, één over wat het je brengt. Bijvoorbeeld: 'Ik ben sinds kort gestart met hoogwaardige supplementen, en ik vind het leuk om te zien wat het mensen brengt.' Geen verkooppraat, gewoon hoe jij erover zou praten. De Mentor helpt 'm naar jouw stem te schrijven als je wil.",
+          "Schrijf twee zinnen waarmee je natuurlijk vertelt wat je doet, voor als iemand vraagt 'wat doe jij eigenlijk?'. Eén zin over wat je doet, één over wat het je brengt, meer hoeft niet. Bijvoorbeeld: 'Ik ben sinds kort gestart met hoogwaardige supplementen, en ik vind het leuk om te zien wat het mensen brengt.' Schrijf 'm zoals jij echt praat, niet zoals een folder. Het hoeft niet meteen perfect, je gaat 'm de komende dagen toch nog bijschaven. Twijfel je over de woorden? De Mentor helpt 'm naar jouw stem te schrijven.",
       },
       {
         id: "core-dag3-mentor-hulp",
@@ -226,7 +226,7 @@ Rustig opbouwen, jij komt er wel 💪🏽`,
         verplicht: false,
         actieRoute: "/coach",
         uitleg:
-          "Plak je twee zinnen bij de Mentor en laat 'm meedenken. Hij schaaft de woorden bij zonder dat het zijn taal wordt in plaats van die van jou. Het hoeft niet perfect, het moet vooral authentiek voelen, zodat het straks vanzelf uit je mond komt.",
+          "Plak je twee zinnen bij de Mentor en laat 'm meedenken. Hij schaaft de woorden bij en geeft je een paar varianten, zonder dat het zijn taal wordt in plaats van die van jou. Lees het daarna hardop terug: voelt het als iets dat jij echt zou zeggen? Zo niet, pas het aan tot het klopt. Het hoeft niet perfect, het moet vooral authentiek voelen, zodat het straks vanzelf uit je mond komt.",
       },
       ...afsluitStappen(3),
     ],
@@ -235,19 +235,25 @@ Rustig opbouwen, jij komt er wel 💪🏽`,
       { actie: "Naar je zinnen", menupad: "Menu, Mijn zinnen", route: "/mijn-zinnen" },
       { actie: "Open de Mentor", menupad: "Menu, Mentor", route: "/coach" },
     ],
-    watJeLeert: `Vandaag schrijf je een korte opener: twee zinnen die je natuurlijk kunt gebruiken als iemand vraagt 'wat doe jij eigenlijk?'. Geen verkoop-praat, gewoon hoe jij erover praat.
+    watJeLeert: `Vandaag schrijf je je eigen opener 🥰
 
-Je hoeft niet het volledige verhaal in twee zinnen te proppen. Eén zin over wat je doet, één zin over wat het je brengt. Bijvoorbeeld:
+Twee zinnen die je natuurlijk uit je mond rollen als iemand vraagt "wat doe jij eigenlijk?". Geen verkooppraatje, gewoon hoe jij erover vertelt. Dat moment komt vaker dan je denkt, en je wil dan niet staan haperen.
 
-"Ik ben sinds kort gestart met hoogwaardige supplementen. Vind het zelf leuk om te zien wat het mensen brengt."
+EÉN ZIN OVER WAT JE DOET, EÉN OVER WAT HET BRENGT
+
+Je hoeft je hele verhaal niet in twee zinnen te proppen. Eén zin over wat je doet, één over wat het je brengt. Bijvoorbeeld:
+
+"Ik ben sinds kort gestart met hoogwaardige supplementen, en ik vind het leuk om te zien wat het mensen brengt."
 
 Of:
 
-"Ik ben aan het opbouwen, naast m'n werk. Eigen webshop, mensen krijgen advies op maat."
+"Ik ben aan het opbouwen naast m'n werk, een eigen webshop waar mensen advies op maat krijgen."
 
-Beide werken. Het verschil zit in jouw stem. De ELEVA Mentor helpt 'm bijschaven, jij houdt 'm jouw.
+Allebei werken. Het verschil zit in jouw stem, niet in mooie woorden.
 
-Waarom dit voor dag 3 staat: zonder een opener loop je vast als iemand 't vraagt. Mét een opener komt het natuurlijk uit je mond. Vandaag werk je 'm uit, morgen ga je 'm in de praktijk testen.
+WAAROM JUIST NU
+
+Snap je waarom dit zo vroeg op je pad staat? Zonder opener loop je vast op het moment dat iemand het vraagt, en dan voelt het ongemakkelijk. Mét een opener komt het rustig en natuurlijk naar buiten. Vandaag werk je 'm uit en schaaft de Mentor 'm met je bij. Morgen ga je 'm gewoon eens gebruiken.
 
 Bouwen mag leuk zijn 💟`,
     waaromWerktDit: {
@@ -269,27 +275,33 @@ Bouwen mag leuk zijn 💟`,
         label: "Lees het korte commissieplan-overzicht",
         verplicht: true,
         uitleg:
-          "Lees het korte overzicht hieronder bij 'wat je leert', daar staat de rank-ladder van Builder tot Diamond met wat er per stap nodig is. Je hoeft het niet uit je hoofd te leren, wel een gevoel te krijgen van hoe je verdient en welke rank jij als eerste doel wil. Want als je weet waar je naartoe bouwt, worden je keuzes onderweg een stuk makkelijker. Vragen erover? De Mentor legt elk stukje rustig uit.",
+          "Lees het overzicht hieronder bij 'wat je leert' rustig door, daar staat de hele rang-ladder van Builder tot Diamond met wat er per stap nodig is. Je hoeft niks uit je hoofd te leren, het gaat erom dat je een gevoel krijgt van hoe je verdient. Kies daarna voor jezelf welke rang je als eerste doel wil, dan weet je waar je naartoe bouwt. Loop je ergens op vast of klinkt iets ingewikkeld? Stel het gewoon aan de Mentor, die legt elk stukje stap voor stap uit.",
       },
       ...afsluitStappen(4),
     ],
     faseDoel: "Basis-kennis van het commissieplan: welke rank wil jij?",
     waarInEleva: [],
-    watJeLeert: `Vandaag drie dingen: bestellinks koppelen, productadvies-test verkennen, en basis-kennis van het commission-plan.
+    watJeLeert: `Vandaag snap je hoe je eigenlijk verdient 🥰
 
-COMMISSION-PLAN IN 1 OOGOPSLAG:
+Je hoeft geen rekenwonder te worden, wel een helder beeld te krijgen van hoe het geld werkt en welke stap jij als eerste wil zetten. Want als je weet waar je naartoe bouwt, worden al je keuzes onderweg een stuk makkelijker.
 
-Builder (eigen IP 40, totaal 1500): bouwsteen, geen vast bedrag, sleutel tot duplicatie.
+DE RANG-LADDER IN ÉÉN OOGOPSLAG
+
+Builder (eigen IP 40, totaal 1500): je bouwsteen, geen vast bedrag, maar wel de sleutel tot duplicatie.
 Bronze (eigen IP 100, totaal 3000, 3 members): vanaf 300 tot 600 euro per maand.
 Silver (eigen IP 100, totaal 6000, 6 members): vanaf 600 euro per maand.
 Gold (eigen IP 150, totaal 9000, 9 members): vanaf 900 euro per maand.
 Diamond (eigen IP 150, totaal 15000, 12 members in verschillende lijnen): vanaf 1200 euro per maand.
 
-Totaal = wat er in je eerste 3 levels gebeurt (jouw bestelling + alle members + alle shoppers). Members hoeven niet per se in level 1 te zitten, ze kunnen ook dieper zitten.
+Met "totaal" bedoelen we wat er in je eerste drie levels gebeurt: jouw eigen bestelling, plus alle members en shoppers daaronder. Die members hoeven niet per se in level 1 te zitten, ze mogen ook dieper hangen.
 
-Belangrijk: deze bedragen zijn MINIMUM-VANAF, geen plafond. Een Diamond kan ook 4000 euro of meer verdienen afhankelijk van duplicatie-diepte.
+GEEN PLAFOND, WEL EEN VANAF
 
-Het complete plan met percentages per niveau staat in de kennisbank.`,
+Belangrijk om te onthouden: deze bedragen zijn een vanaf, geen plafond. Een Diamond kan ook ver boven die 1200 euro uitkomen, afhankelijk van hoe diep je team dupliceert. Het complete plan met alle percentages staat in de kennisbank, en de Mentor legt elk stukje rustig uit als iets niet helder is.
+
+Snap je waarom dit nu al belangrijk is? Mensen die vroeg snappen hoe ze verdienen, kiezen scherpere doelen en houden het langer vol. Niet weten hoe het werkt is juist een van de redenen waarom mensen in maand twee afhaken.
+
+Kies vandaag welke rang jouw eerste doel is 💪🏽`,
     waaromWerktDit: {
       tekst:
         "Mensen die het commission-plan op dag 4 snappen, kiezen scherpere doelen en houden langer vol. Onwetendheid over hoe je verdient is een van de top-3-redenen waarom mensen afhaken in maand 2.",
@@ -306,22 +318,32 @@ Het complete plan met percentages per niveau staat in de kennisbank.`,
         verplicht: false,
         actieRoute: "/coach",
         uitleg:
-          "Vraag de Mentor welke producten voor jou en jouw mensen het meest voor de hand liggen. Hij kent alle details, dus jij hoeft alleen een gevoel te krijgen van de hoofdcategorieën en voor wie ze passen. Zo weet je straks wat je noemt als iemand iets vraagt, zonder dat je een wandelende productencatalogus hoeft te zijn.",
+          "Vraag de Mentor welke vijf producten voor jou en jouw mensen het meest voor de hand liggen. Vertel 'm gerust wie er in jouw kring zitten (iemand met slaap, met energie, met iets hormonaals), dan denkt 'ie gericht mee. Hij kent alle details, dus jij hoeft alleen een gevoel te krijgen van de hoofdlijnen en voor wie ze passen. Zo weet je straks wat je noemt als iemand iets vraagt, zonder dat je alles paraat hoeft te hebben.",
       },
       {
         id: "core-dag5-eigen-pakket",
         label: "Bestel je eigen pakket als je dat nog niet hebt",
         verplicht: false,
         uitleg:
-          "Je eigen ervaring is je sterkste verhaal, want mensen voelen het verschil tussen iemand die iets zelf gebruikt en iemand die het van papier kent. Bestel een basis-supplement of een programma waar je nieuwsgierig naar bent, niet om te verkopen maar om te ervaren. En als bonus telt je eigen bestelling mee voor je volume. Heb je al een pakket? Dan vink je deze gewoon af.",
+          "Je eigen ervaring is je sterkste verhaal, want mensen voelen het verschil tussen iemand die iets zelf gebruikt en iemand die het van papier kent. Bestel een basis-supplement of een programma waar je zelf nieuwsgierig naar bent, niet om te verkopen maar om het echt te ervaren. Na een paar weken heb je je eigen verhaal: wat merk je, wat is er anders? En als bonus telt je eigen bestelling meteen mee voor je volume richting Builder. Heb je al een pakket? Dan vink je deze gewoon af.",
       },
       ...afsluitStappen(5),
     ],
     faseDoel: "Basis-overzicht van producten en voor wie ze passen.",
     waarInEleva: [{ actie: "Open de Mentor", menupad: "Menu, Mentor", route: "/coach" }],
-    watJeLeert: `Je hoeft niet alles uit je hoofd te kennen, maar wel een gevoel van de hoofdcategorieen. Basis-supplementen (dagelijkse aanvulling), omega-3, antioxidanten, en de programma's (Reset, darm-balans, stress-vermindering, hormonale balans, sport-herstel).
+    watJeLeert: `Vandaag krijg je grip op de producten, zonder dat je een wandelende catalogus hoeft te worden 🥰
 
-De ELEVA Mentor kent alle details, jij hoeft alleen te weten dat het bestaat en wanneer je het noemt. Eigen ervaring met minstens een paar producten geeft je de natuurlijke taal om erover te praten.`,
+Niemand verwacht dat je alles uit je hoofd kent. De Mentor kent elk detail. Wat jij wel wil, is een gevoel van de hoofdcategorieën, zodat je weet dat iets bestaat en wanneer je het noemt.
+
+DE HOOFDCATEGORIEËN
+
+Grofweg zijn er de basis-supplementen (je dagelijkse aanvulling), omega-3 en antioxidanten, en daarnaast de programma's: Reset, darm-balans, stress-vermindering, hormonale balans, sport-herstel. Je hoeft niet te weten wat er precies in zit, wel voor wie elk stukje interessant kan zijn.
+
+JOUW EIGEN ERVARING IS DE SLEUTEL
+
+Snap je waarom je eigen gebruik zoveel waard is? Mensen voelen het verschil tussen iemand die iets zelf gebruikt en iemand die het van papier kent. Eén of twee producten die jij zelf doet, geven je de natuurlijke taal om erover te praten, zonder dat het een verkooppraatje wordt.
+
+Heb je nog geen eigen pakket? Overweeg er vandaag een te bestellen, niet om te verkopen maar om te ervaren. En als bonus telt je eigen bestelling mee voor je volume 💪🏽`,
     waaromWerktDit: {
       tekst:
         "Mensen ruiken het verschil tussen iemand die uit eigen ervaring praat en iemand die uit een script praat. Jouw ervaring is je beste authenticiteit.",
@@ -338,7 +360,7 @@ De ELEVA Mentor kent alle details, jij hoeft alleen te weten dat het bestaat en 
         verplicht: true,
         actieRoute: "/mijn-zinnen",
         uitleg:
-          "Schrijf in drie of vier zinnen hoe je je webshop natuurlijk introduceert, zoals je het tegen iemand uit je kring zou zeggen. Bijvoorbeeld: 'Ik ben sinds kort gestart met hoogwaardige supplementen, ik heb m'n eigen webshop, ik stuur 'm je gerust door als je wil rondkijken.' Geen pitch, gewoon een uitnodiging om te kijken. De Mentor helpt 'm scherper te maken terwijl jij 'm jouw houdt.",
+          "Schrijf in drie of vier zinnen hoe je je webshop natuurlijk introduceert, zoals je het tegen iemand uit je kring zou zeggen. Bijvoorbeeld: 'Ik ben sinds kort gestart met hoogwaardige supplementen, ik heb m'n eigen webshop, ik stuur 'm je gerust door als je wil rondkijken.' Geen pitch, geen druk, gewoon een uitnodiging om te kijken. Denk aan één concrete persoon terwijl je 'm schrijft, dan komt de toon vanzelf goed. De Mentor helpt 'm scherper maken terwijl jij 'm jouw houdt.",
       },
       {
         id: "core-dag6-delen",
@@ -346,15 +368,25 @@ De ELEVA Mentor kent alle details, jij hoeft alleen te weten dat het bestaat en 
         verplicht: false,
         actieRoute: "/namenlijst",
         uitleg:
-          "Stuur je webshop naar twee mensen uit je lijst bij wie het natuurlijk voelt. Rustig, zonder pitch: 'ik dacht aan je, hier kun je rondkijken als je wil.' Het doel is niet verkopen vandaag, het doel is gewoon je eerste keer delen zodat de drempel eraf gaat. Twee is genoeg.",
+          "Stuur je net geschreven introductie naar twee mensen uit je lijst bij wie het natuurlijk voelt. Rustig en zonder pitch, iets als 'ik dacht aan je, hier kun je rondkijken als je wil'. Het doel is niet verkopen vandaag, het doel is je eerste keer delen zodat de drempel eraf gaat. Kies twee mensen waarbij je je op je gemak voelt, dan is die eerste keer meteen minder spannend. Twee is genoeg, morgen is er weer een dag.",
       },
       ...afsluitStappen(6),
     ],
     faseDoel: "Jouw natuurlijke webshop-introductie op papier en in praktijk.",
     waarInEleva: [{ actie: "Naar je zinnen", menupad: "Menu, Mijn zinnen", route: "/mijn-zinnen" }],
-    watJeLeert: `Je webshop delen is geen koud verkooppraatje. Het is een natuurlijk antwoord op vragen als 'waar haal jij je supplementen?' of 'wat doe jij voor je energie?'.
+    watJeLeert: `Vandaag leer je je webshop delen op een manier die nooit als verkoop voelt 🥰
 
-Vandaag schrijf je een korte introductie (3-4 zinnen) die past bij hoe jij met deze mensen praat. Niet perfect, wel jouw stem. De Mentor helpt 'm scherper te maken, jij houdt 'm authentiek.`,
+Je webshop delen is geen koud praatje. Het is een natuurlijk antwoord op een vraag die je vaker krijgt dan je denkt: "waar haal jij je supplementen?" of "wat doe jij voor je energie?". Op zulke momenten wil je niet zoeken naar woorden, je wil gewoon iets klaar hebben staan.
+
+JOUW INTRODUCTIE, IN JOUW STEM
+
+Vandaag schrijf je een korte introductie van drie of vier zinnen die past bij hoe jij met deze mensen praat. Bijvoorbeeld: "Ik ben sinds kort gestart met hoogwaardige supplementen, ik heb m'n eigen webshop, ik stuur 'm je gerust door als je wil rondkijken." Geen pitch, gewoon een uitnodiging om te kijken.
+
+EN DAN GEWOON EVEN DOEN
+
+Snap je waarom we 'm meteen ook delen? Een introductie die op papier blijft staan helpt niemand. Door 'm vandaag rustig naar twee mensen te sturen gaat de drempel eraf, en merk je dat het veel minder spannend is dan je dacht. De Mentor helpt 'm scherper maken, jij houdt 'm authentiek.
+
+Klein beginnen, dat is precies goed 💪🏽`,
     waaromWerktDit: {
       tekst:
         "Mensen die hun introductie eenmalig opschrijven, voelen zich daarna 4x rustiger als het gesprek er natuurlijk om vraagt. Geen 'wat zeg ik nu?', wel een vertrouwde paar zinnen klaar.",
@@ -371,7 +403,7 @@ Vandaag schrijf je een korte introductie (3-4 zinnen) die past bij hoe jij met d
         verplicht: true,
         actieRoute: "/coach",
         uitleg:
-          "Op dag 1 koos je tussen een pre-post (nog geen eigen resultaat) en een 21-dagen-post (wel ervaring). De Mentor weet jouw keuze en helpt je de post vanuit die richting te schrijven, in jouw stem. Doe een paar rondjes samen tot 'ie goed voelt, en denk aan een persoonlijk moment: wat raakte jou, wat trok je over de streep. Dat is waar mensen op reageren, niet de productfeiten.",
+          "Op dag 1 koos je tussen een pre-post (nog geen eigen resultaat) en een 21-dagen-post (wel ervaring). De Mentor weet jouw keuze en helpt je de post vanuit die richting te schrijven, in jouw stem. Doe een paar rondjes samen tot 'ie goed voelt, en bewaar 'm voor morgen, dan plaats je 'm. Denk aan dat ene persoonlijke moment: wat raakte jou, wat trok je over de streep? Dat is waar mensen op reageren, niet de productfeiten.",
       },
       {
         id: "core-dag7-reactie-script",
@@ -379,19 +411,29 @@ Vandaag schrijf je een korte introductie (3-4 zinnen) die past bij hoe jij met d
         verplicht: false,
         actieRoute: "/scripts",
         uitleg:
-          "Zodra je post live staat komen er reacties en likes, en dan wil je niet verrast worden met 'wat zeg ik nu?'. Zet daarom vooraf een korte reactie-zin klaar die je naar reageerders kunt sturen. Zo reageer je snel en rustig, en laat je geen opening liggen. De scripts-pagina geeft je een paar voorbeelden om uit te kiezen.",
+          "Zodra je post live staat komen er reacties en likes, en dan wil je niet verrast worden met 'wat zeg ik nu?'. Zet daarom nu vast een korte reactie-zin klaar die je naar reageerders kunt sturen. Elke reactie en zelfs elke like is een opening naar een gesprek, dus je wil er snel en rustig op kunnen reageren. De scripts-pagina geeft je een paar voorbeelden om uit te kiezen en in jouw stem te zetten.",
       },
       ...afsluitStappen(7),
     ],
     faseDoel: "Eerste post staat klaar om geplaatst te worden + reactie-script klaar.",
     waarInEleva: [{ actie: "Open de Mentor", menupad: "Menu, Mentor", route: "/coach" }],
-    watJeLeert: `Vandaag bereid je je eerste post voor. Twee paden, beide werken:
+    watJeLeert: `Vandaag bereid je je eerste post voor 🥰
 
-PRE-POST (als je nog geen eigen product-ervaring hebt): je deelt je VOORNEMEN. 'Ik begin aan iets, in 21 dagen vertel ik je wat ik heb gemerkt.' Geeft je 21 dagen om resultaat op te bouwen.
+Dit is de post die alles in beweging zet. Niet om iets te verkopen, wel om mensen nieuwsgierig te maken en een gesprek te openen. Twee paden, allebei werken, en je koos op dag 1 al welke bij jou past.
 
-21-DAGEN-POST (als je wel ervaring hebt): je deelt wat je hebt gemerkt. Eerlijk, claim-vrij, geen medische beloften. Wel: hoe je je voelt, wat anders is, wat je opvalt.
+PRE-POST, ALS JE NOG GEEN EIGEN ERVARING HEBT
 
-Beide types post werken het beste met een PERSOONLIJK MOMENT. Wat raakte jou? Wat trok je over de streep? Dat is wat anderen aanspreekt, niet de product-feiten.`,
+Je deelt je voornemen. "Ik begin vandaag aan iets, en over een paar weken vertel ik je wat ik heb gemerkt." Geen claim, wel spanning en openheid. Dat geeft jou de tijd om je eigen ervaring op te bouwen, en het lokt vanzelf de vraag uit: "wat ga je dan doen?".
+
+21-DAGEN-POST, ALS JE WEL ERVARING HEBT
+
+Je deelt wat je hebt gemerkt. Eerlijk en claim-vrij, dus geen medische beloften. Niet "dit geneest", wel "ik slaap dieper", "ik heb meer pit", "ik voel me lichter". Jouw echte verandering, in jouw woorden.
+
+HET PERSOONLIJKE MOMENT MAAKT HET VERSCHIL
+
+Snap je waarom dat zo werkt? Mensen reageren niet op productfeiten, ze reageren op jou. Wat raakte jou, wat trok je over de streep? Dat ene eerlijke moment is precies waar anderen op aanhaken.
+
+De Mentor schrijft 'm met je mee, vanuit de keuze die je op dag 1 maakte. Ga ervoor, dit is het leuke deel 💪🏽`,
     waaromWerktDit: {
       tekst:
         "Mensen reageren niet op product-claims, ze reageren op andere mensen. Een eerlijke pre-post of 21-dagen-post opent gesprekken die de rest van je 21 dagen voortborduren op.",
