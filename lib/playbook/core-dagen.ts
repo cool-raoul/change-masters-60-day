@@ -385,13 +385,15 @@ Beide types post werken het beste met een PERSOONLIJK MOMENT. Wat raakte jou? Wa
         label: "Plaats je eerste post op Instagram of Facebook",
         verplicht: true,
         uitleg:
-          "Vraag je sponsor of Mentor om 'm te checken vooraf. Niet perfect proberen, gewoon plaatsen.",
+          "Zet je eerste post live op Instagram of Facebook. Vraag je sponsor of de Mentor om 'm vooraf even te checken, dat geeft rust. Probeer 'm niet perfect te maken, gewoon plaatsen, want een geplaatste post werkt en een perfecte die er nooit komt niet. Vanaf nu ben je zichtbaar, en dat is precies de bedoeling.",
       },
       {
         id: "core-dag8-reageer-script",
         label: "Bewaar je reactie-script op /mijn-zinnen",
         verplicht: false,
         actieRoute: "/mijn-zinnen",
+        uitleg:
+          "Bewaar je reactie-zin bij je eigen zinnen, zodat 'ie klaarstaat als de eerste reacties binnenkomen. Zo hoef je niet naar woorden te zoeken op het moment dat het telt. Eén keer klaarzetten, daarna pak je 'm telkens terug.",
       },
       ...afsluitStappen(8),
     ],
@@ -419,7 +421,7 @@ Eric Worre zegt: 90% van je business gebeurt in DM's. Posts zijn de uitnodiging,
         label: "Schrijf een tweede post volgens Brookes-formule",
         verplicht: false,
         uitleg:
-          "Waarde (een tip of inzicht) + Verhaal (iets persoonlijks) + Uitnodiging ('DM me als je meer wilt weten'). Mentor helpt graag.",
+          "Schrijf een tweede post met de formule van Frazer Brookes: waarde, verhaal, uitnodiging. Eerst iets nuttigs (een tip of inzicht), dan iets persoonlijks (een moment of ervaring), en dan een zachte uitnodiging zoals 'stuur me een DM als je meer wil weten'. Niet meteen pitchen, eerst nieuwsgierig maken. De Mentor denkt graag mee tot 'ie lekker loopt.",
       },
       ...afsluitStappen(9),
     ],
@@ -445,18 +447,24 @@ Oefen vandaag de formule. Niet 'm in 1 dag perfectioneren, wel het patroon leren
         label: "Schrijf je persoonlijke verhaal (60 sec gesproken)",
         verplicht: false,
         actieRoute: "/mijn-zinnen",
+        uitleg:
+          "Vertel in zo'n zestig seconden wie je was, wat er veranderde, en wie je nu bent. Niet alle details, wel het hart van je verhaal. Dit is het verhaal dat mensen onthouden, veel meer dan welke productlijst dan ook. De Mentor helpt 'm rond te krijgen als je wil.",
       },
       {
         id: "core-dag10-product",
         label: "Schrijf je product-verhaal (60 sec)",
         verplicht: false,
         actieRoute: "/mijn-zinnen",
+        uitleg:
+          "Vertel kort wat de producten voor jóu doen, claim-vrij. Niet 'dit geneest', wel 'dit bracht me dit gevoel'. Wat merk je, wat is er anders sinds je begon? Eerlijk en in jouw woorden, dat raakt meer dan een opsomming van ingrediënten.",
       },
       {
         id: "core-dag10-business",
         label: "Schrijf je business-verhaal (60 sec)",
         verplicht: false,
         actieRoute: "/mijn-zinnen",
+        uitleg:
+          "Vertel waarom je dit doet en niet iets anders. Wat trok jou over de streep om een eigen webshop op te bouwen in plaats van een traditioneel pad? Eén of twee zinnen die je drijfveer laten voelen. Dit is wat mensen aanspreekt die zelf ook naar iets op zoek zijn.",
       },
       ...afsluitStappen(10),
     ],
@@ -485,14 +493,15 @@ Deze drie verhalen zijn jouw kapitaal voor de komende maanden. Je gebruikt ze in
         id: "core-dag11-kies",
         label: "Kies de freebie die past bij jouw doelgroep",
         verplicht: true,
-        uitleg: "Vraag je sponsor of de Mentor welke freebie het beste past.",
+        uitleg:
+          "Kies één freebie die past bij de mensen die jij wil bereiken. Twijfel je? Vraag je sponsor of de Mentor welke het beste aansluit bij jouw verhaal en doelgroep. Eén goede keuze is genoeg, je kunt later altijd wisselen.",
       },
       {
         id: "core-dag11-deel",
         label: "Deel je freebie-link in je posts (intekenplek)",
         verplicht: false,
         uitleg:
-          "Een freebie meelopen op een post werkt beter dan een losse 'gratis weggever'-post. Plak 'm op een natuurlijke plek in jouw social-ritme.",
+          "Plak je freebie-link op een natuurlijke plek in een post, niet als losse 'gratis weggever' maar meeliftend op iets waardevols. Zo komen mensen die meer willen direct in jouw ELEVA-systeem terecht, zonder omweg. Hoe vaak hangt af van je tempo, één keer per week is prima om mee te starten.",
       },
       ...afsluitStappen(11),
     ],
@@ -518,16 +527,22 @@ Hoe vaak een freebie? Afhankelijk van je tempo-bracket: bij Rustig 1x per week m
         label: "Stuur bericht 1 aan iemand uit je warme markt",
         verplicht: true,
         actieRoute: "/scripts",
+        uitleg:
+          "Stuur één zorgvuldig bericht aan iemand uit je warme markt die je al een tijdje wilde benaderen. Niet pushy uitnodigen voor 'een business', wel rustig delen wat je doet en aanbieden om iets te laten zien als ze nieuwsgierig zijn. De scripts en de Mentor helpen je aan de juiste woorden in jouw toon.",
       },
       {
         id: "core-dag12-bericht2",
         label: "Stuur bericht 2",
         verplicht: true,
+        uitleg:
+          "Nog één, naar een ander warm contact. Maak 'm persoonlijk, geen knip-en-plak. Eén regel die laat zien dat het echt aan deze persoon gericht is, doet het meeste werk.",
       },
       {
         id: "core-dag12-bericht3",
         label: "Stuur bericht 3",
         verplicht: true,
+        uitleg:
+          "En de derde. Drie rustige, persoonlijke berichten op één dag is genoeg. Krijg je niet meteen reactie? Helemaal niet erg, dat hoort erbij, gemiddeld reageert ongeveer één op de vijftien tot twintig. Het gaat om het ritme, niet om vandaag scoren.",
       },
       ...afsluitStappen(12),
     ],
@@ -554,7 +569,7 @@ Vanaf vandaag is het follow-up-onderdeel in je DMO-blok actief: prospects die he
         verplicht: true,
         actieRoute: "/coach",
         uitleg:
-          "De Mentor speelt een prospect met 'ik heb geen tijd', 'ik wil eerst nadenken', of 'het is te duur'. Jij oefent Feel-Felt-Found.",
+          "Oefen vijf minuten met de Mentor, die speelt een prospect met 'ik heb geen tijd', 'ik wil eerst nadenken' of 'het is te duur'. Jij oefent Feel-Felt-Found: erkennen, een andere kant laten zien, doorvragen. Doe een paar rondes in plaats van één keer, dan ga je het patroon voelen. Bezwaren zijn geen nee, het zijn vragen om geruststelling.",
       },
       ...afsluitStappen(13),
     ],
@@ -584,6 +599,8 @@ Oefen vandaag 5 minuten met de Mentor. Niet 1x, wel 3-4 rondes met verschillende
         label: "Plan voor 3 prospects een opvolg-herinnering in",
         verplicht: true,
         actieRoute: "/herinneringen",
+        uitleg:
+          "Stel voor drie warme prospects een opvolg-herinnering in, verspreid over de komende dagen. Op de juiste dag krijg je een seintje, dan stuur je een persoonlijk 'hoe gaat het nu?'. Zo verlies je niemand in de stilte, want het meeste gebeurt pas bij het vierde of vijfde contact. Niet pushen, wel aanwezig blijven.",
       },
       ...afsluitStappen(14),
     ],
@@ -609,6 +626,8 @@ Niet pushen, wel aanwezig blijven. Een 'hoe gaat het nu?' op de juiste dag werkt
         label: "Stuur 3 bestaande klanten een persoonlijk hercontact-bericht",
         verplicht: false,
         actieRoute: "/namenlijst",
+        uitleg:
+          "Stuur drie bestaande klanten een rustig 'hoe gaat het nu?'-berichtje. Geen aanbod, geen verkoop, gewoon oprechte aandacht. Een klant die zich gezien voelt bestelt vaker uit zichzelf en stuurt anderen jouw kant op. Pak er drie waar je een tijdje niks van hebt gehoord.",
       },
       ...afsluitStappen(15),
     ],
@@ -632,7 +651,7 @@ ELEVA's namenlijst houdt voor je bij wie je een tijdje niet hebt gesproken. Vand
         label: "Maak een korte video (60-90 sec) over jouw productervaring",
         verplicht: false,
         uitleg:
-          "Geen medische claims. Wel: wat deed het voor jou, wat veranderde, hoe lang gebruik je het al? Eerlijk en menselijk.",
+          "Maak een korte video van zestig tot negentig seconden over jouw eigen ervaring met een product. Geen medische claims: niet 'dit geneest', wel 'sinds ik dit gebruik merk ik...'. Vertel wat er voor jou veranderde, hoe je je voelt en hoe lang je het al gebruikt. Eerlijk en menselijk, want mensen kopen mensen, geen ingrediënten. De Mentor helpt je met woorden die raken zonder een grens over te gaan.",
       },
       ...afsluitStappen(16),
     ],
@@ -660,6 +679,8 @@ De Mentor en de Academy-training 'Spreken zoals het raakt' helpen je met formule
         label: "Markeer in je namenlijst 2 tot 3 klanten met Builder-energie",
         verplicht: false,
         actieRoute: "/namenlijst",
+        uitleg:
+          "Loop je namenlijst langs en markeer twee of drie klanten met Builder-energie. Dat herken je aan iemand die nieuwsgierig is naar HOE jij het doet, niet alleen naar wat je verkoopt, die zelf ondernemend is, of die zegt 'misschien moet ik dit ook eens proberen'. Je doet er vandaag nog niks mee, je zet ze gewoon op je radar. Morgen leer je hoe je ze een uitnodiging stuurt.",
       },
       ...afsluitStappen(17),
     ],
@@ -688,6 +709,8 @@ Markeer 2 of 3 van zulke klanten in je namenlijst. Morgen leer je hoe je ze een 
         label: "Bereid een script voor voor één klant met Builder-energie",
         verplicht: false,
         actieRoute: "/scripts",
+        uitleg:
+          "Bereid voor één klant met Builder-energie een persoonlijk voorstel voor. Iets ontspannens als 'ik zie dat jij hier energie in hebt, heb je er ooit aan gedacht zelf een webshop te openen?'. Geen druk, je biedt gewoon de optie aan. Gebruik wat je over die persoon weet zodat het persoonlijk voelt, niet als standaard-uitnodiging. Versturen mag, maar voorbereiden is genoeg voor vandaag.",
       },
       ...afsluitStappen(18),
     ],
@@ -715,7 +738,7 @@ Bereid vandaag een script voor 1 specifieke klant. Wat weet je van hen? Hoe past
         label: "Stel de closingsvraag aan minstens één warme prospect",
         verplicht: false,
         uitleg:
-          "'Wat heb je nog nodig om te beslissen?' Of: 'Wat is voor jou het belangrijkste punt om helder te krijgen?' Beide werken.",
+          "Stel aan minstens één warme prospect de moedigste vraag van dit vak: 'wat heb je nog nodig om te beslissen?'. Geen druk, je helpt ze gewoon kiezen. Of je krijgt het laatste bezwaar boven tafel (vaak iets concreets dat je kunt wegnemen), of je merkt dat ze klaar zijn voor de volgende stap. Veel mensen blijven hangen tussen ja en nee omdat niemand de vraag stelt.",
       },
       ...afsluitStappen(19),
     ],
@@ -743,6 +766,8 @@ Geen pushen, wel helpen kiezen. Veel mensen blijven hangen tussen ja en nee omda
         label: "Categoriseer je top-20 prospects in de 5 types",
         verplicht: false,
         actieRoute: "/namenlijst",
+        uitleg:
+          "Loop je top-20 langs en geef elke prospect een van de vijf types: actief zoekend, open, productkoper, niet-nu, of nooit. Zo zie je in één oogopslag waar je tijd het meeste oplevert. De meeste winst zit bij type 1 en 2, dus daar zet je je energie. Type 5 hou je warm als vriend, maar daar werk je niet op. Hieronder bij 'wat je leert' staan de vijf types uitgelegd.",
       },
       ...afsluitStappen(20),
     ],
@@ -774,17 +799,23 @@ Grootste fout: type 5 behandelen als type 2 ('ze gaat ooit ja zeggen'). Tweede f
         label: "Vul de eindreflectie in (10 min)",
         verplicht: false,
         actieRoute: "/statistieken",
+        uitleg:
+          "Neem tien minuten om terug te kijken op je eerste 21 dagen. Wat ging goed, wat verraste je, waar zat de meeste weerstand, en waar ben je trots op? Niet om streng voor jezelf te zijn, wel om te zien hoeveel je hebt opgebouwd. Wat je benoemt, onthoud je.",
       },
       {
         id: "core-dag21-doel",
         label: "Stel een doel voor de volgende 19 dagen verankering",
         verplicht: false,
         actieRoute: "/mijn-zinnen",
+        uitleg:
+          "Zet één doel voor de komende negentien dagen verankering. Geen nieuwe lijst met plannen, één heldere kop waar je naartoe werkt. Concreet en haalbaar, zodat je elke dag weet waarvoor je het doet. De Mentor helpt 'm scherp krijgen.",
       },
       {
         id: "core-dag21-call",
         label: "Plan een call met je sponsor om je voortgang te bespreken",
         verplicht: false,
+        uitleg:
+          "Plan een call met je sponsor om samen terug te kijken op je eerste 21 dagen en vooruit naar wat komt. Wat ging goed, waar wil je hulp, wat is je doel voor de verankering. Je sponsor ziet je groei van een afstand en kan meedenken waar jij dat zelf lastig vindt. Stuur 'm gewoon een berichtje om een moment te prikken.",
       },
       ...afsluitStappen(21),
     ],
