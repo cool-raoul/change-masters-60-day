@@ -140,7 +140,7 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
         inlineEmbed: "namen-form",
         inlineEmbedDoel: 20,
         uitleg:
-          "Schrijf twintig namen op die spontaan in je hoofd opkomen. Niet je beste klanten, gewoon de mensen die je kent: familie, vrienden, oud-collega's, sportmaatjes, ouders bij school, buren. Geen filter, en ook die ene waarvan je denkt 'die past nooit' zet je erop, want juist die verrast vaak. Filteren komt later, en dat doe je nooit voor een ander, want zij beslissen zelf. Kom je niet aan twintig? Loop dan even je telefoon en je social langs, dat helpt je geheugen op gang.",
+          "Schrijf twintig namen op die spontaan in je hoofd opkomen, dat is je Top-20. Niet per se je beste klanten, gewoon de mensen die je kent: familie, vrienden, oud-collega's, sportmaatjes, ouders bij school, buren. Zet ook die ene erop waarvan je denkt 'die past nooit', want juist die verrast vaak. Loop in gedachten je dag eens langs (wie spreek je, wie app je, wie kom je tegen), dan komen de namen vanzelf. Lukt twintig niet in één keer? Geen probleem, je vult elke dag aan, je lijst is nooit af. En onthoud: filteren doe je later, en nooit voor een ander, want zij beslissen zelf.",
       },
       {
         id: "core-dag2-telefoon-import",
@@ -149,7 +149,7 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
         vereistMobiel: true,
         inlineEmbed: "vcard-upload",
         uitleg:
-          "Op je telefoon zet je met één klik je hele adresboek erbij. Het is je netwerk in beeld, geen verkooplijst, en er wordt niks verstuurd of gedeeld. Zo vul je je lijst sneller aan zonder alles te hoeven typen, je vinkt gewoon aan wie je herkent. Zit je op de computer? Sla 'm over en doe 'm later op je telefoon.",
+          "Op je telefoon zet je met één klik je hele adresboek erbij, zodat je geen namen vergeet die je anders over het hoofd ziet. Je geeft ELEVA eenmalig toegang tot je contacten, en daarna vink je gewoon aan wie je herkent. Er wordt niks verstuurd en niks gedeeld, het is puur jouw eigen overzicht, geen belkostlijst en geen verkooplijst. Dat scheelt je een hoop typen. Zit je nu op de computer? Sla 'm dan over en doe 'm later even op je telefoon, dat werkt het makkelijkst.",
       },
       {
         id: "core-dag2-social-contacten",
@@ -157,14 +157,14 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
         verplicht: false,
         actieRoute: "/namenlijst",
         uitleg:
-          "Loop je Instagram en Facebook even langs en voeg drie mensen toe die je al een tijd niet gesproken hebt. Mensen die jou volgen, of die jij volgt, en waar een klik mee zat. Je hoeft ze nu nog niks te sturen, je zet ze gewoon op je lijst zodat ze in beeld blijven. Drie is genoeg voor vandaag.",
+          "Loop je Instagram en Facebook even langs en voeg drie mensen toe die je al een tijdje niet gesproken hebt. Denk aan mensen die jou volgen of die jij volgt, en waar ooit een klik mee zat. Je hoeft ze nu nog niks te sturen, je zet ze gewoon op je lijst zodat ze in beeld blijven voor later. Drie is genoeg voor vandaag, je kunt er elke week een paar bijzetten. Zo groeit je lijst rustig door zonder dat het werk wordt.",
       },
       {
         id: "core-dag2-sponsor-call",
         label: "Plan een kennismakings-call met je sponsor (30 min)",
         verplicht: true,
         uitleg:
-          "Plan een half uurtje met je sponsor om elkaar echt even te leren kennen. Geen verkoop, geen werving, gewoon kennismaken en samen naar je lijst kijken. Jullie kiezen samen één of twee mensen die je deze week als eerste wilt benaderen, zodat je niet in je eentje hoeft te bedenken waar je begint. Stuur 'm gewoon een berichtje om een moment te prikken, dat is de hele stap.",
+          "Plan een half uurtje met je sponsor om elkaar echt even te leren kennen. Dit is geen verkoopgesprek en geen toets, gewoon kennismaken en samen naar je lijst kijken. Jullie pakken er één of twee mensen uit die je deze week als eerste zou willen benaderen, en je sponsor denkt mee over hoe je dat het beste doet. Zo begin je niet vanaf nul in je eentje, maar met iemand naast je die het al een keer heeft gedaan. Stuur 'm gewoon een berichtje om een moment te prikken, dat is de hele stap.",
       },
       ...afsluitStappen(2),
     ],
@@ -173,11 +173,33 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       { actie: "Naar je namenlijst", menupad: "Menu, Namenlijst", route: "/namenlijst" },
       { actie: "Open je sponsor-chat", menupad: "Menu, Team", route: "/team" },
     ],
-    watJeLeert: `Voordat je je webshop op grote schaal kunt delen, wil je weten WIE er om je heen staat. Dit is geen verkoop-lijst, dit is een netwerk-overzicht. Familie, vrienden, oud-collega's, sportmaatjes, mensen die je via social volgt.
+    watJeLeert: `Vandaag breng je in beeld wie er eigenlijk om je heen staat 🥰
 
-In Core noemen we de eerste 20 namen die je spontaan opschrijft jouw 'Top-20 namenlijst'. Dat zijn niet je beste klanten, dat zijn de mensen die als eerste in je hoofd opkomen. Daarna importeer je je hele telefoon en voeg je social-contacten toe.
+Niet om iedereen meteen iets te sturen. Wel om te wéten wie er in je kring zit, want zonder dat overzicht ga je rondjes draaien tussen "wie zou ik nou benaderen?" en uiteindelijk niemand. Vandaag haal je het uit je hoofd en zet je het op een rij.
 
-In je DMO-blok hieronder zie je dat lijst-opbouw doorgaat. Elke dag mogen er meer bij.`,
+TWEE SOORTEN MENSEN OP JE LIJST
+
+Voor je begint, dit is goed om te snappen. Je Top-20 is geen lijstje van mensen aan wie jij iets wil verkopen. Het is een lijst van mensen die jij op de een of andere manier zou kunnen verrijken met wat jij nu zelf doet.
+
+Dat zijn eigenlijk twee soorten door elkaar. De eerste: mensen waarvan jij denkt dat ze baat zouden kunnen hebben bij een van de producten. Iemand die slecht slaapt, iemand die zich moe voelt, iemand die lekkerder in haar vel wil zitten. De tweede: mensen waarvan jij denkt dat ze het werk zelf misschien zouden willen doen. Een ondernemend type, een mensen-mens, iemand die wel iets extra's kan gebruiken.
+
+Allebei horen ze erop. Je gaat ze straks niet allemaal hetzelfde benaderen, maar je hebt ze nu wel allemaal in beeld nodig.
+
+EERST UITBREIDEN, DAN PAS FILTEREN
+
+De grootste valkuil? In je hoofd al gaan filteren. "Die past nooit", "die heeft geen geld", "die heeft het veel te druk". Stop daarmee 🥰 Dat is jouw oordeel over een ander, en je hebt geen idee wat er bij iemand speelt.
+
+Schrijf eerst gewoon door tot je op twintig namen zit. Familie, vrienden, oud-collega's, oud-klasgenoten, ouders bij school, je sportclub, je hobby, de mensen die je via social volgt. Kom je niet aan twintig? Loop je telefoon en je Instagram even langs, dat zet je geheugen op gang.
+
+Snap je waarom dit zo belangrijk is? Wij horen in ons team echt regelmatig dat juist die ene naam die iemand bijna had weggestreept, de eerste klant of de eerste teamgenoot werd. Filteren komt later, en dat doe je nooit voor een ander. Zij beslissen zelf.
+
+EN DAN JE SPONSOR ERBIJ
+
+Tot slot plan je een half uurtje met je sponsor. Geen verkoop, geen werving, gewoon even echt kennismaken en samen naar je lijst kijken. Jullie kiezen samen één of twee mensen die je deze week als eerste zou willen benaderen, zodat je niet in je eentje hoeft te bedenken waar je begint.
+
+Je hoeft dit namelijk niet alleen te doen. Dat is precies waarom je sponsor er is 🥰
+
+Rustig opbouwen, jij komt er wel 💪🏽`,
     waaromWerktDit: {
       tekst:
         "Een filter zetten op 'wie zou geinteresseerd zijn' is jouw oordeel over een ander. Filteren komt later, en doet jouzelf nooit voor iemand anders. Iedereen mag op de lijst, zij beslissen zelf.",
