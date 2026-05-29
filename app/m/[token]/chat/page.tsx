@@ -67,7 +67,7 @@ export default async function ProspectChatPagina({
 
       <MensChatVenster
         token={ctx.token}
-        uitlegregel={`${memberDeel}${sponsorDeel ? ` en ${sponsorDeel}` : ""} kr${sponsorDeel ? "ijgen" : "ijgt"} een seintje wanneer je iets stuurt. Schrijven, spraakberichten, alles mag — en je krijgt zelf ook een melding wanneer ze reageren.`}
+        uitlegregel={`${memberDeel}${sponsorDeel ? ` en ${sponsorDeel}` : ""} kr${sponsorDeel ? "ijgen" : "ijgt"} een seintje wanneer je iets stuurt. Schrijven, spraakberichten, alles mag, en je krijgt zelf ook een melding wanneer ze reageren.`}
         rolLabels={{
           prospect: ctx.prospectNaam.split(" ")[0],
           member: memberDeel,

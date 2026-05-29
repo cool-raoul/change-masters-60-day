@@ -205,7 +205,7 @@ export default async function MiniElevaLandingPagina({
             </h3>
             <p className="text-cm-white/60 text-xs leading-relaxed mt-0.5">
               Echt gesprek met mensen. Tekst- en spraakberichten. Reactie komt
-              wanneer ze tijd hebben — je krijgt een seintje op je telefoon.
+              wanneer ze tijd hebben, je krijgt een seintje op je telefoon.
             </p>
           </div>
           <span className="text-cm-gold">→</span>

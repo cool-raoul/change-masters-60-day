@@ -170,7 +170,7 @@ export function bouwblokkenVoorTempo(uren: CommitmentUren): Bouwblok[] {
         emoji: "🔄",
         naam: "Doe je openstaande follow-ups",
         beschrijving:
-          "Mensen die jouw uitnodiging hebben aangenomen en de film/one-pager/presentatie hebben gezien, wachten op opvolging. Geen vast getal — afhankelijk van wie er open staat. Per persoon kies je de aanpak: een 3-weg-gesprek samen met je sponsor (klassiek, persoonlijk) óf Mini-ELEVA waarbij iemand 14 dagen zelf kan rondkijken. Openingszin: 'Wat spreekt je hier het meeste in aan?' (niet 'wat vond je ervan?').",
+          "Mensen die jouw uitnodiging hebben aangenomen en de film/one-pager/presentatie hebben gezien, wachten op opvolging. Geen vast getal, afhankelijk van wie er open staat. Per persoon kies je de aanpak: een 3-weg-gesprek samen met je sponsor (klassiek, persoonlijk) óf Mini-ELEVA waarbij iemand 14 dagen zelf kan rondkijken. Openingszin: 'Wat spreekt je hier het meeste in aan?' (niet 'wat vond je ervan?').",
       },
       {
         emoji: "📱",
@@ -210,7 +210,7 @@ export function bouwblokkenVoorTempo(uren: CommitmentUren): Bouwblok[] {
         emoji: "🔄",
         naam: "Doe je openstaande follow-ups",
         beschrijving:
-          "Mensen die de film/one-pager/presentatie hebben gezien staan klaar voor opvolging. Geen vast getal per dag — afhankelijk van wie er klaar staat. Per prospect kies je in de namenlijst de aanpak: 3-weg-gesprek samen met sponsor of ervaren teamlid (klassiek, persoonlijk) óf Mini-ELEVA voor wie 14 dagen zelf wil verkennen. Iemand kan meerdere follow-up-momenten doorlopen. Openingszin: 'Wat spreekt je hier het meeste in aan?'.",
+          "Mensen die de film/one-pager/presentatie hebben gezien staan klaar voor opvolging. Geen vast getal per dag, afhankelijk van wie er klaar staat. Per prospect kies je in de namenlijst de aanpak: 3-weg-gesprek samen met sponsor of ervaren teamlid (klassiek, persoonlijk) óf Mini-ELEVA voor wie 14 dagen zelf wil verkennen. Iemand kan meerdere follow-up-momenten doorlopen. Openingszin: 'Wat spreekt je hier het meeste in aan?'.",
       },
       {
         emoji: "📱",
@@ -250,7 +250,7 @@ export function bouwblokkenVoorTempo(uren: CommitmentUren): Bouwblok[] {
       emoji: "🔄",
       naam: "Doe je openstaande follow-ups (strakke discipline)",
       beschrijving:
-        "Mensen die de film/one-pager/presentatie hebben gezien staan klaar voor opvolging. Geen vast getal — bij dit tempo loopt je pijplijn voller dus zijn het er vaak meerdere per dag. Per prospect kies je in de namenlijst: 3-weg-gesprek met sponsor (persoonlijk, kort) óf Mini-ELEVA (14 dagen zelf verkennen). Openingszin: 'Wat spreekt je hier het meeste in aan?'.",
+        "Mensen die de film/one-pager/presentatie hebben gezien staan klaar voor opvolging. Geen vast getal, bij dit tempo loopt je pijplijn voller dus zijn het er vaak meerdere per dag. Per prospect kies je in de namenlijst: 3-weg-gesprek met sponsor (persoonlijk, kort) óf Mini-ELEVA (14 dagen zelf verkennen). Openingszin: 'Wat spreekt je hier het meeste in aan?'.",
     },
     {
       emoji: "📱",

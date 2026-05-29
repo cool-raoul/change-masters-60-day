@@ -87,7 +87,7 @@ export function ScriptsOverview({
             </span>
             Klik op{" "}
             <span className="text-cm-gold">✍️ Bewerk voor iedereen</span> bij
-            een script om de tekst aan te passen — direct live voor alle
+            een script om de tekst aan te passen, direct live voor alle
             members.
           </p>
         </div>
@@ -210,7 +210,7 @@ function ScriptKaart({
         toast.error(data.error || "Opslaan mislukt");
         return;
       }
-      toast.success("✍️ Bewaard — direct zichtbaar voor alle members");
+      toast.success("✍️ Bewaard, direct zichtbaar voor alle members");
       setBewerken(false);
       router.refresh();
     } catch {
@@ -361,7 +361,7 @@ function ScriptKaart({
                   <button
                     type="button"
                     onClick={startBewerken}
-                    title="Founder-bewerken — wijzigingen gaan LIVE voor alle members"
+                    title="Founder-bewerken, wijzigingen gaan LIVE voor alle members"
                     className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full border border-cm-gold/60 text-cm-gold bg-cm-gold/5 hover:bg-cm-gold/15 hover:border-cm-gold transition-colors font-semibold whitespace-nowrap"
                   >
                     ✍️ Bewerk voor iedereen
