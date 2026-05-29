@@ -86,14 +86,14 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       label: "Mini-uitleg: wat is een pre-post en wat doet 'ie?",
       verplicht: true,
       uitleg:
-        "Korte uitleg in het systeem (~2 min, met filmpje). PDF 'Voorbereiding Pre Post Lancering' staat als download. (TODO: media)",
+        "Een korte uitleg in twee minuten: wat is een pre-post, wat doet 'ie, en wat ga je ermee bereiken? Eén filmpje van Gaby en Raoul plus een korte begeleidende tekst, zodat je voelt hoe deze flow eruitziet voor je 'm zelf gaat doen. Een pre-post brengt vaak veel reacties en likes binnen, en elke reactie is een opening naar een gesprek. De PDF 'Voorbereiding Pre Post Lancering' staat klaar om te downloaden als je 'm later wil teruglezen. (TODO: media toevoegen)",
     },
     {
       id: "core-v9-sideflow-prepost-2-filmpjes-zelf",
       label: "Bekijk zelf de prospect-filmpjes die je later wilt versturen",
       verplicht: true,
       uitleg:
-        "Zodat je weet wat erin zit als iemand vraagt 'wat ga je doen?' en je 'm wil versturen. (TODO: media-links)",
+        "Bekijk zelf de prospect-filmpjes die je straks naar info-vragers wil sturen. Niet om 'm uit je hoofd te leren, wel om te weten wat erin zit, hoe lang 'ie duurt, en in welke situatie 'ie past. Want zodra iemand straks vraagt 'wat ga je doen?', wil je niet een filmpje versturen dat je zelf nog niet hebt gezien. Dezelfde filmpjes gebruik je later ook bij de 21-dagen-resultaat-post-flow en in je algemeen prospect-werk. (TODO: media-links)",
     },
     {
       id: "core-v9-sideflow-prepost-3-copywriting",
@@ -101,20 +101,22 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       verplicht: true,
       actieRoute: "/coach",
       uitleg:
-        "2-3 regels, jouw stem, voornemen delen. Doel: mensen laten vragen wat je gaat doen. Mentor levert 3 versies, jij kiest of mengt.",
+        "Schrijf je pre-post in twee of drie regels, in jouw eigen stem, en deel je voornemen. Doel is mensen de vraag laten stellen 'wat ga je dan doen?'. Je vertelt dus NIET wat je gaat doen, je vertelt het verlangen of het voornemen, en laat ze vragen. De Mentor levert drie versies om uit te kiezen of te mengen, en bouwt 'm op basis van wat 'ie inmiddels over jouw stem weet. Het hoeft niet meteen perfect, drie rondjes en je hebt 'm rond.",
     },
     {
       id: "core-v9-sideflow-prepost-4-upline-check",
       label: "Upline-check, stuur concept naar sponsor voor akkoord",
       verplicht: true,
       inlineEmbed: "sponsor-melding",
-      uitleg: "Wacht op akkoord voor je plaatst.",
+      uitleg:
+        "Stuur je concept naar je sponsor voor een korte akkoord, voordat je 'm plaatst. Niet voor goedkeuring maar voor een tweede paar ogen, soms zie je zelf iets over het hoofd. Wacht op haar akkoord of een dag, en als 'r ondertussen geen reactie is plaats je 'm gewoon. Tik de knop hieronder om je sponsor te bereiken.",
     },
     {
       id: "core-v9-sideflow-prepost-5-plaatsen",
       label: "Plaats op Facebook én Instagram",
       verplicht: true,
-      uitleg: "Klaar is klaar. Tijd noteren voor follow-up-timer.",
+      uitleg:
+        "Plaats je pre-post op Facebook én Instagram. Klaar is klaar, ga niet meer terugkrabbelen of nog een keer bijschaven. Noteer voor jezelf hoe laat je 'm hebt geplaatst, dan kun je over een paar uur zien wie heeft gereageerd en weet je wanneer je follow-up-timer begint. Vanaf nu blijf je in de buurt om binnen het uur op reacties te kunnen reageren.",
     },
     {
       id: "core-v9-sideflow-prepost-6-dm-script",
@@ -138,14 +140,14 @@ Belangrijk: de tekst zegt NIET 'ik heb besloten anderen te helpen', want je hebt
       verplicht: true,
       actieRoute: "/coach",
       uitleg:
-        "Zodra een prospect interesse toont: kun je 'm naar Mini-ELEVA sturen (laagdrempelig) of een 3-weg met je sponsor inplannen. Mentor licht beide kort toe. Dit komt later uitgebreider in stap 5.",
+        "Zodra een prospect interesse toont, heb je twee opties: 'm naar Mini-ELEVA sturen (laagdrempelig, ze kunnen zelf kijken en vragen stellen aan de Mentor in jouw stem) of een 3-weg met je sponsor inplannen (persoonlijk gesprek). Welke kies je? Wil iemand graag een gesprek, dan een 3-weg. Wil iemand eerst zelf rondkijken, dan Mini-ELEVA. Twijfel je, begin met Mini-ELEVA, opschalen kan altijd. De Mentor licht beide in een paar minuten met je door, in stap 5 van Core volgt de uitgebreide versie.",
     },
     {
       id: "core-v9-sideflow-prepost-8-reageer-routine",
       label: "Binnen 1 uur op iedere reactie reageren (Mentor staat klaar)",
       verplicht: true,
       uitleg:
-        "Snelheid is alles. Mentor helpt met opener-zinnen bij DM's waar de gewone tekst niet past.",
+        "Reageer binnen een uur op iedere reactie, ook op een kale like. Elke reactie is een opening naar een gesprek, en hoe sneller je reageert hoe makkelijker het loopt. Het 3-soorten-mensen-DM-script van net heb je klaarstaan, gebruik dat als basis. Bij DM's waar het standaard-script niet helemaal past, vraag je de Mentor om een opener-zin op maat, daar staat 'ie voor klaar. Snelheid is alles in deze fase.",
     },
     {
       id: "core-v9-sideflow-prepost-9-prospects-toevoegen",
@@ -153,7 +155,7 @@ Belangrijk: de tekst zegt NIET 'ik heb besloten anderen te helpen', want je hebt
       verplicht: true,
       actieRoute: "/namenlijst",
       uitleg:
-        "Eén klik vanuit DM-flow voegt 'm toe als prospect. Mini-ELEVA opent een persoonlijke omgeving voor hen.",
+        "Geïnteresseerde prospects voeg je met één klik vanuit de DM-flow toe aan je namenlijst, zodat ze niet kwijtraken. Voor wie eerst zelf wil rondkijken open je Mini-ELEVA, dat is een persoonlijke omgeving waar de Mentor in jouw stem hun vragen kan beantwoorden. Beide stappen vandaag nog doen voor iedereen die heeft gereageerd, anders mis je er straks een paar. Eén klik per persoon, ben je in vijf minuten klaar.",
     },
     {
       id: "core-v9-sideflow-prepost-10-reflectie",
@@ -161,14 +163,14 @@ Belangrijk: de tekst zegt NIET 'ik heb besloten anderen te helpen', want je hebt
       verplicht: true,
       actieRoute: "/coach",
       uitleg:
-        "Hoeveel reacties, hoeveel DM's, hoeveel prospects. Plus: instellen wanneer je 21-dagen-resultaat-post-trigger wil ontvangen (default 21 dagen).",
+        "Korte sidestep-reflectie: hoeveel reacties heb je gehad, hoeveel DM's, hoeveel prospects zijn er bijgekomen? De Mentor noteert het voor je. Stel meteen in wanneer je over een paar weken de 21-dagen-resultaat-post-trigger wil ontvangen, default staat op 21 dagen na vandaag. Zo komt 'ie vanzelf in beeld wanneer je 't nodig hebt, in plaats van dat je 'm zelf moet onthouden.",
     },
     {
       id: "core-v9-sideflow-prepost-11-afronden",
       label: "Afronden of openliggen?",
       verplicht: true,
       uitleg:
-        "'Voltooid' = sidestep sluit, Core schuift door naar stap 2. 'Nog mee bezig' = sidestep blijft openliggen, reminder over X dagen.",
+        "Twee opties om deze sidestep af te ronden. 'Voltooid' betekent: sidestep sluit, Core schuift door naar ankerstap 2 (top-20 + webshop-pivot). 'Nog mee bezig' betekent: sidestep blijft openliggen, en je krijgt een reminder over een paar dagen om 'm af te ronden. Voel je nog ruimte voor follow-up of verwacht je nog reacties? Hou 'm dan rustig open. Klaar met deze ronde? Voltooid, en door naar het volgende anker.",
     },
   ],
 
@@ -220,14 +222,14 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       label: "Mini-uitleg: wat is een 21-dagen-resultaat-post?",
       verplicht: true,
       uitleg:
-        "Korte uitleg in het systeem (~2 min, met filmpje). PDF 'Voorbereiding 21 Dagen Post' staat als download. (TODO: media)",
+        "Een korte uitleg in twee minuten: wat is een 21-dagen-resultaat-post, wat doet 'ie, en wat ga je er straks mee bereiken? Eén filmpje van Gaby en Raoul plus een korte begeleidende tekst, zodat je weet hoe deze flow eruitziet voor je 'm zelf gaat doen. Een 21-dagen-post is bewezen sterk, en brengt vaak direct nieuwe productgebruikers binnen, soms zelfs meerdere op één dag. De PDF 'Voorbereiding 21 Dagen Post' staat klaar om te downloaden als je 'm later wil teruglezen. (TODO: media toevoegen)",
     },
     {
       id: "core-v9-sideflow-21dagen-2-filmpjes-zelf",
       label: "Bekijk zelf de prospect-filmpjes die je gaat versturen aan info-vragers",
       verplicht: true,
       uitleg:
-        "Zodat je weet wat erin zit. Dezelfde filmpjes gebruik je later in pre-post, 21-dagen-post en algemeen prospect-werk. (TODO: media-links)",
+        "Bekijk zelf de prospect-filmpjes die je straks naar info-vragers wil sturen. Niet om 'm uit je hoofd te leren, wel om te weten wat erin zit, hoe lang 'ie duurt, en in welke situatie 'ie past. Want zodra iemand straks vraagt 'wat heb je gedaan?', wil je niet een filmpje versturen dat je zelf nog niet hebt gezien. Dezelfde filmpjes gebruik je later ook bij algemeen prospect-werk en in opvolg-stappen. (TODO: media-links)",
     },
     {
       id: "core-v9-sideflow-21dagen-3-veranderingen-inventariseren",
@@ -235,7 +237,7 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       verplicht: true,
       actieRoute: "/coach",
       uitleg:
-        "Niet 1 of 2, maar ALLE. Slaap, energie, vel, stemming, lichaam, focus, opladen, verteren, alles waar je iets in voelt schuiven. Mentor stelt vragen, jij vertelt.",
+        "Inventariseer met de Mentor ALLE positieve veranderingen die je hebt gemerkt sinds je begon. Niet één of twee, maar alle: slaap, energie, vel, stemming, lichaam, focus, opladen, verteren, je humeur, alles waar je iets in voelt schuiven. De Mentor stelt vragen, jij vertelt rustig. Verschillende mensen worden door verschillende dingen geraakt, en hoe meer veranderingen je noemt hoe meer doelgroepen je triggert. Hou 'm wel claim-vrij, dus niet 'mijn slaap is genezen' maar 'ik slaap dieper'.",
     },
     {
       id: "core-v9-sideflow-21dagen-4-tekst-schrijven",
@@ -243,19 +245,22 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       verplicht: true,
       actieRoute: "/coach",
       uitleg:
-        "Alle veranderingen erin, jouw stem, webshop-anker. Doel: 'wat heb je gedaan?' uitlokken. Drie iteraties max.",
+        "Schrijf je 21-dagen-post met de Mentor, met alle veranderingen erin, in jouw stem, en met je webshop-anker erbij. Doel is mensen de vraag laten stellen 'wat heb je gedaan?'. Drie iteraties max, dan ben je klaar. Voorbeeld-richting: '21 dagen geleden begon ik aan iets, vandaag merk ik dieper slapen, meer pit overdag, ik voel me lichter, mijn vel ziet er rustiger uit, en ik ben minder snel chagrijnig in de avond. Wat heb ik precies gedaan? Reageer en ik vertel het je 💛'. Meerdere veranderingen, geen claim, eind met een uitnodiging om te reageren.",
     },
     {
       id: "core-v9-sideflow-21dagen-5-upline-check",
       label: "Upline-check, stuur concept naar sponsor voor akkoord",
       verplicht: true,
       inlineEmbed: "sponsor-melding",
+      uitleg:
+        "Stuur je concept naar je sponsor voor een korte akkoord, voordat je 'm plaatst. Een tweede paar ogen vangt soms wat jij over het hoofd ziet, vooral op claim-vrije formulering. Wacht op haar akkoord of een dag, en zonder reactie plaats je 'm gewoon. Tik de knop hieronder om je sponsor te bereiken.",
     },
     {
       id: "core-v9-sideflow-21dagen-6-plaatsen",
       label: "Plaats op Facebook + Instagram",
       verplicht: true,
-      uitleg: "Klaar is klaar.",
+      uitleg:
+        "Plaats je 21-dagen-post op Facebook én Instagram. Klaar is klaar, ga niet meer terugkrabbelen of nog een keer bijschaven. Noteer voor jezelf hoe laat je 'm hebt geplaatst, dan kun je over een paar uur zien wie heeft gereageerd. Vanaf nu blijf je in de buurt om binnen het uur op reacties te kunnen reageren.",
     },
     {
       id: "core-v9-sideflow-21dagen-7-dm-script",
@@ -279,18 +284,22 @@ Hier past 'ik heb besloten anderen hier ook mee te helpen' wel, want je hebt het
       verplicht: true,
       actieRoute: "/coach",
       uitleg:
-        "Zodra een prospect interesse toont: kun je 'm naar Mini-ELEVA sturen (laagdrempelig) of een 3-weg met je sponsor inplannen. Mentor licht beide kort toe. Verdieping volgt in stap 5.",
+        "Zodra een prospect interesse toont, heb je twee opties: 'm naar Mini-ELEVA sturen (laagdrempelig, ze kunnen zelf kijken en vragen stellen aan de Mentor in jouw stem) of een 3-weg met je sponsor inplannen (persoonlijk gesprek). Welke kies je? Wil iemand graag een gesprek, dan een 3-weg. Wil iemand eerst zelf rondkijken, dan Mini-ELEVA. Twijfel je, begin met Mini-ELEVA, opschalen kan altijd. De Mentor licht beide in een paar minuten met je door, in stap 5 van Core volgt de uitgebreide versie.",
     },
     {
       id: "core-v9-sideflow-21dagen-9-reageer-routine",
       label: "Binnen 1 uur op iedere reactie reageren (Mentor staat klaar)",
       verplicht: true,
+      uitleg:
+        "Reageer binnen een uur op iedere reactie, ook op een kale like. Elke reactie is een opening naar een gesprek, en hoe sneller je reageert hoe makkelijker het loopt. Het 3-soorten-mensen-DM-script van net heb je klaarstaan, gebruik dat als basis. Bij DM's waar het standaard-script niet helemaal past, vraag je de Mentor om een opener-zin op maat. Snelheid is alles in deze fase.",
     },
     {
       id: "core-v9-sideflow-21dagen-10-prospects-toevoegen",
       label: "Geïnteresseerde prospects toevoegen aan namenlijst + Mini-ELEVA",
       verplicht: true,
       actieRoute: "/namenlijst",
+      uitleg:
+        "Geïnteresseerde prospects voeg je met één klik vanuit de DM-flow toe aan je namenlijst, zodat ze niet kwijtraken. Voor wie eerst zelf wil rondkijken open je Mini-ELEVA, dat is een persoonlijke omgeving waar de Mentor in jouw stem hun vragen kan beantwoorden. Beide stappen vandaag nog doen voor iedereen die heeft gereageerd, eén klik per persoon, ben je in vijf minuten klaar.",
     },
     {
       id: "core-v9-sideflow-21dagen-11-reflectie",
@@ -298,14 +307,14 @@ Hier past 'ik heb besloten anderen hier ook mee te helpen' wel, want je hebt het
       verplicht: true,
       actieRoute: "/coach",
       uitleg:
-        "Reacties, DM's, prospects, klanten. Mentor noteert voor latere referentie + om vergelijking te maken bij stap 18 (resultaat-post-iteratie).",
+        "Korte sidestep-reflectie: hoeveel reacties heb je gehad, hoeveel DM's, hoeveel prospects en eerste klanten? De Mentor noteert het voor latere referentie. Daar heb je 't bij ankerstap 18 (resultaat-post-iteratie) hard nodig, want dan vergelijk je deze post met de tweede iteratie die je gaat maken. Niet vergeten kort op te schrijven, dat scheelt straks veel zoekwerk.",
     },
     {
       id: "core-v9-sideflow-21dagen-12-afronden",
       label: "Afronden of openliggen?",
       verplicht: true,
       uitleg:
-        "'Voltooid' = sidestep sluit, Core schuift door naar stap 2. 'Nog mee bezig' = sidestep blijft openliggen.",
+        "Twee opties om deze sidestep af te ronden. 'Voltooid' betekent: sidestep sluit, Core schuift door naar ankerstap 2 (top-20 + webshop-pivot). 'Nog mee bezig' betekent: sidestep blijft openliggen, en je krijgt een reminder over een paar dagen om 'm af te ronden. Voel je nog ruimte voor follow-up of verwacht je nog reacties? Hou 'm dan rustig open. Klaar met deze ronde? Voltooid, en door naar het volgende anker.",
     },
   ],
 
