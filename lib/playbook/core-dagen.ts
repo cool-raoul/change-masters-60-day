@@ -449,7 +449,7 @@ De Mentor schrijft 'm met je mee, vanuit de keuze die je op dag 1 maakte. Ga erv
         label: "Plaats je eerste post op Instagram of Facebook",
         verplicht: true,
         uitleg:
-          "Zet je eerste post live op Instagram of Facebook. Vraag je sponsor of de Mentor om 'm vooraf even te checken, dat geeft rust. Probeer 'm niet perfect te maken, gewoon plaatsen, want een geplaatste post werkt en een perfecte die er nooit komt niet. Vanaf nu ben je zichtbaar, en dat is precies de bedoeling.",
+          "Zet je eerste post live op Instagram of Facebook, de post die je gisteren met de Mentor hebt voorbereid. Vraag je sponsor of de Mentor om 'm vooraf nog even te checken, dat geeft rust. Probeer 'm niet perfect te maken, gewoon plaatsen, want een geplaatste post werkt en een perfecte die er nooit komt niet. Noteer voor jezelf hoe laat je 'm plaatste, dan weet je wanneer de eerste reacties kunnen komen. Vanaf nu ben je zichtbaar, en dat is precies de bedoeling.",
       },
       {
         id: "core-dag8-reageer-script",
@@ -457,19 +457,27 @@ De Mentor schrijft 'm met je mee, vanuit de keuze die je op dag 1 maakte. Ga erv
         verplicht: false,
         actieRoute: "/mijn-zinnen",
         uitleg:
-          "Bewaar je reactie-zin bij je eigen zinnen, zodat 'ie klaarstaat als de eerste reacties binnenkomen. Zo hoef je niet naar woorden te zoeken op het moment dat het telt. Eén keer klaarzetten, daarna pak je 'm telkens terug.",
+          "Bewaar je reactie-zin bij je eigen zinnen, zodat 'ie klaarstaat als de eerste reacties binnenkomen. Zo hoef je niet naar woorden te zoeken op het moment dat het telt, je pakt 'm gewoon terug. Reageer op iedereen die iets laat zien, ook op een kale like, want elke reactie is een opening. Maak 'm wel telkens persoonlijk: één woordje dat laat zien dat je echt naar die persoon kijkt doet wonderen.",
       },
       ...afsluitStappen(8),
     ],
     faseDoel: "Eerste post staat live. Reactief contact-onderdeel in je DMO-blok wordt vanaf nu actief.",
     waarInEleva: [{ actie: "Naar je zinnen", menupad: "Menu, Mijn zinnen", route: "/mijn-zinnen" }],
-    watJeLeert: `Vanaf vandaag ben je zichtbaar op socials. Twee dingen veranderen:
+    watJeLeert: `Vandaag word je zichtbaar, en dat is een mijlpaal 🥰
 
-1. Reacties + likes komen binnen. Het 'reactief social-contact'-onderdeel in je DMO-blok hieronder wordt actief. Reageer op iedereen die iets laat zien, voer DM-gesprekken, deel informatie waar gevraagd.
+Je eerste post gaat live. Vanaf nu ben je niet meer alleen aan het voorbereiden, je staat tussen de mensen. Twee dingen veranderen er, en het is goed om allebei te kennen.
 
-2. Social-post-ritme begint. Niet elke dag posten verplicht, wel het ritme van jouw bracket. Lifestyle, product-momenten, waarde-tips wisselen elkaar af.
+REACTIES EN LIKES KOMEN BINNEN
 
-Eric Worre zegt: 90% van je business gebeurt in DM's. Posts zijn de uitnodiging, gesprekken zijn waar het echte werk gebeurt.`,
+Zodra je post staat, komt er beweging: reacties, likes, soms een DM. Elke daarvan is een opening naar een gesprek. Reageer op iedereen die iets laat zien, ook op een simpele like, en gebruik je reactie-zin van gisteren. Het reactief-contact-onderdeel in je takenblok hieronder wordt hiervoor actief.
+
+EEN RUSTIG POST-RITME BEGINT
+
+Je hoeft niet elke dag te posten. Wel een ritme dat bij jouw tempo past: lifestyle, een productmoment, een waarde-tip, afgewisseld. Niet perfect, wel regelmatig, want zichtbaar blijven is wat telt.
+
+Snap je waar het echte werk zit? Posts zijn de uitnodiging, maar de gesprekken in de DM's zijn waar het gebeurt. Eric Worre zegt niet voor niets dat het grootste deel van je business in die persoonlijke berichten ontstaat.
+
+Plaats 'm, en blijf in de buurt om te reageren. Je staat nu echt op de kaart 💪🏽`,
     waaromWerktDit: {
       tekst:
         "Mensen die hun eerste post plaatsen en daarna actief reageren op alle interacties, openen meer warme leads in week 2 dan mensen die alleen blijven posten zonder DM-werk.",
@@ -491,11 +499,19 @@ Eric Worre zegt: 90% van je business gebeurt in DM's. Posts zijn de uitnodiging,
     ],
     faseDoel: "Tweede social-post live, Brookes-formule onder de knie.",
     waarInEleva: [{ actie: "Open de Mentor", menupad: "Menu, Mentor", route: "/coach" }],
-    watJeLeert: `Frazer Brookes leerde ons: een goede post bestaat uit drie delen. WAARDE (een tip, een inzicht, een les), VERHAAL (iets persoonlijks of een resultaat), en een ZACHTE UITNODIGING ('DM me als je meer wilt weten').
+    watJeLeert: `Vandaag leer je een formule die elke post sterker maakt 🥰
 
-Niet direct pitchen. Eerst nieuwsgierigheid wekken. Een post die alle drie elementen heeft, leest natuurlijker dan een post die alleen waarde of alleen verhaal of alleen verkoop is.
+Frazer Brookes vatte het mooi samen: een goede post bestaat uit drie delen. Als je die kent, hoef je nooit meer met een leeg hoofd voor je telefoon te zitten.
 
-Oefen vandaag de formule. Niet 'm in 1 dag perfectioneren, wel het patroon leren herkennen.`,
+DE DRIE DELEN
+
+Waarde: iets nuttigs voor de lezer, een tip, een inzicht, een herkenbaar gevoel. Verhaal: iets persoonlijks of een klein resultaat, eerlijk en in jouw woorden. En een zachte uitnodiging: geen "koop dit", wel iets als "stuur me een DM als je meer wil weten".
+
+WAAROM DE MIX WERKT
+
+Snap je waarom alle drie samen het verschil maken? Een post met alleen waarde voelt als een leraar, een post met alleen verkoop voelt als een marketeer, en daar scrollen mensen langs. De mix van helpen én menselijk zijn leest natuurlijk, en dat is wat aanzet tot reageren.
+
+Oefen vandaag gewoon de formule, je hoeft 'm niet in één keer te perfectioneren. Het gaat erom dat je het patroon leert herkennen. De Mentor denkt graag mee 💪🏽`,
     waaromWerktDit: {
       tekst:
         "Mensen scrollen voorbij waarde-only-posts (te leeraars) en verkoop-only-posts (te marketeers). Brookes' mix combineert helpen en menselijk zijn, dat geeft natuurlijke conversie.",
@@ -512,7 +528,7 @@ Oefen vandaag de formule. Niet 'm in 1 dag perfectioneren, wel het patroon leren
         verplicht: false,
         actieRoute: "/mijn-zinnen",
         uitleg:
-          "Vertel in zo'n zestig seconden wie je was, wat er veranderde, en wie je nu bent. Niet alle details, wel het hart van je verhaal. Dit is het verhaal dat mensen onthouden, veel meer dan welke productlijst dan ook. De Mentor helpt 'm rond te krijgen als je wil.",
+          "Vertel in zo'n zestig seconden wie je was, wat er veranderde, en wie je nu bent. Niet alle details, wel het hart van je verhaal, het stukje dat jou jou maakt. Schrijf het eerst gewoon op zoals je het zou vertellen, ook al is het nog rommelig. Dit is het verhaal dat mensen onthouden, veel meer dan welke productlijst dan ook. De Mentor helpt 'm rond te krijgen en in te korten als je wil.",
       },
       {
         id: "core-dag10-product",
@@ -520,7 +536,7 @@ Oefen vandaag de formule. Niet 'm in 1 dag perfectioneren, wel het patroon leren
         verplicht: false,
         actieRoute: "/mijn-zinnen",
         uitleg:
-          "Vertel kort wat de producten voor jóu doen, claim-vrij. Niet 'dit geneest', wel 'dit bracht me dit gevoel'. Wat merk je, wat is er anders sinds je begon? Eerlijk en in jouw woorden, dat raakt meer dan een opsomming van ingrediënten.",
+          "Vertel kort wat de producten voor jóu doen, claim-vrij. Niet 'dit geneest', wel 'sinds ik dit gebruik merk ik...'. Wat voel je, wat is er anders sinds je begon, hoe lang gebruik je het al? Eerlijk en in jouw woorden, dat raakt mensen meer dan een opsomming van ingrediënten. Twijfel je of een zin claim-vrij is? Leg 'm even langs de Mentor, die houdt de grens voor je in de gaten.",
       },
       {
         id: "core-dag10-business",
@@ -528,21 +544,29 @@ Oefen vandaag de formule. Niet 'm in 1 dag perfectioneren, wel het patroon leren
         verplicht: false,
         actieRoute: "/mijn-zinnen",
         uitleg:
-          "Vertel waarom je dit doet en niet iets anders. Wat trok jou over de streep om een eigen webshop op te bouwen in plaats van een traditioneel pad? Eén of twee zinnen die je drijfveer laten voelen. Dit is wat mensen aanspreekt die zelf ook naar iets op zoek zijn.",
+          "Vertel waarom je dit doet en niet iets anders. Wat trok jou over de streep om een eigen webshop op te bouwen naast of in plaats van een traditioneel pad? Denk aan de vrijheid, de mensen, of het gevoel dat er meer in zat. Een paar zinnen die je drijfveer laten voelen is genoeg. Dit is precies het verhaal dat mensen aanspreekt die zelf ook naar iets op zoek zijn.",
       },
       ...afsluitStappen(10),
     ],
     faseDoel: "Drie korte verhalen op papier, klaar voor social en gesprekken.",
     waarInEleva: [{ actie: "Naar je zinnen", menupad: "Menu, Mijn zinnen", route: "/mijn-zinnen" }],
-    watJeLeert: `Een goed verhaal verkoopt beter dan elke pitch. Vandaag schrijf je drie korte verhalen, 60 tot 90 seconden gesproken-tijd elk:
+    watJeLeert: `Vandaag bouw je je grootste kapitaal: jouw drie verhalen 🥰
 
-PERSOONLIJK VERHAAL: wie was je, wat veranderde, wie ben je nu? Niet alle details, wel het hart.
+Een goed verhaal raakt mensen meer dan welke pitch dan ook. Vandaag zet je er drie op papier, elk zo'n zestig tot negentig seconden als je het zou vertellen. Je gebruikt ze straks overal: in posts, in gesprekken, in stories, in je DM-antwoorden.
 
-PRODUCT-VERHAAL: welke producten doen wat voor jou? Claim-vrij: niet 'dit geneest', wel 'dit bracht me'. Wat voel je, wat is er anders?
+JE PERSOONLIJKE VERHAAL
 
-BUSINESS-VERHAAL: waarom doe je dit, en niet iets anders? Wat trok jou over de streep om een webshop op te zetten in plaats van iets traditioneels te kiezen?
+Wie was je, wat veranderde, wie ben je nu? Niet alle details, wel het hart ervan. Dit is het verhaal dat mensen onthouden.
 
-Deze drie verhalen zijn jouw kapitaal voor de komende maanden. Je gebruikt ze in posts, in gesprekken, in stories, in DM-antwoorden.`,
+JE PRODUCT-VERHAAL
+
+Welke producten doen wat voor jou? Claim-vrij: niet "dit geneest", wel "dit bracht me dit". Wat voel je, wat is er anders sinds je begon?
+
+JE BUSINESS-VERHAAL
+
+Waarom doe je dit, en niet iets anders? Wat trok jou over de streep om een eigen webshop op te bouwen in plaats van een traditioneel pad?
+
+Snap je waarom deze drie zo waardevol zijn? Mensen onthouden verhalen, geen feiten. Met deze drie op papier heb je genoeg voor het grootste deel van je content de komende maanden. De Mentor helpt ze rond te krijgen 💪🏽`,
     waaromWerktDit: {
       tekst:
         "Mensen onthouden verhalen, geen feiten. Drie verhalen op papier is alles wat je nodig hebt voor 80% van je content de komende maanden.",
@@ -558,24 +582,30 @@ Deze drie verhalen zijn jouw kapitaal voor de komende maanden. Je gebruikt ze in
         label: "Kies de freebie die past bij jouw doelgroep",
         verplicht: true,
         uitleg:
-          "Kies één freebie die past bij de mensen die jij wil bereiken. Twijfel je? Vraag je sponsor of de Mentor welke het beste aansluit bij jouw verhaal en doelgroep. Eén goede keuze is genoeg, je kunt later altijd wisselen.",
+          "Kies één freebie die past bij de mensen die jij wil bereiken, en bij het verhaal dat jij vertelt. Twijfel je tussen een paar? Vraag je sponsor of de Mentor welke het beste aansluit bij jouw doelgroep, die denken graag mee. Eén goede keuze is genoeg, je hoeft niet alles tegelijk in te zetten. En je kunt later altijd wisselen, dus kies gewoon waar je nu een goed gevoel bij hebt.",
       },
       {
         id: "core-dag11-deel",
         label: "Deel je freebie-link in je posts (intekenplek)",
         verplicht: false,
         uitleg:
-          "Plak je freebie-link op een natuurlijke plek in een post, niet als losse 'gratis weggever' maar meeliftend op iets waardevols. Zo komen mensen die meer willen direct in jouw ELEVA-systeem terecht, zonder omweg. Hoe vaak hangt af van je tempo, één keer per week is prima om mee te starten.",
+          "Plak je freebie-link op een natuurlijke plek in een post, niet als losse 'gratis weggever' maar meeliftend op iets waardevols dat je deelt. Bijvoorbeeld een tip of een herkenbaar verhaal, en dan 'wil je hier meer over? Mijn freebie staat in mijn bio'. Zo komen mensen die meer willen direct in jouw ELEVA-systeem terecht, zonder omweg. Eén keer per week is prima om mee te starten, je hoeft niks te forceren.",
       },
       ...afsluitStappen(11),
     ],
     faseDoel: "Een freebie gekoppeld aan je social-content. Eerste leads via socials.",
     waarInEleva: [{ actie: "Open de Mentor", menupad: "Menu, Mentor", route: "/coach" }],
-    watJeLeert: `Een freebie is een gratis weggever (een mini-test, korte film, recept-kaart, of zelftest) die jouw prospect helpt en tegelijk hun gegevens in jouw ELEVA-pipeline zet.
+    watJeLeert: `Vandaag zet je een freebie in als magneet voor nieuwe mensen 🥰
 
-In Core gebruiken we freebies als INTEKENPLEK op je social-posts: een post die waarde geeft + een freebie-link voor wie meer wil. Geen Manychat-omweg, mensen komen direct in je ELEVA-systeem.
+Een freebie is een gratis weggever die echt helpt: een mini-test, een korte film, een recept-kaart, een zelftest. Voor de ander is het waardevol, en voor jou komt diegene meteen netjes in je ELEVA-pipeline terecht.
 
-Hoe vaak een freebie? Afhankelijk van je tempo-bracket: bij Rustig 1x per week meeliftend op een post, bij Doorpakken 2-3x per week.`,
+FREEBIE ALS INTEKENPLEK
+
+In Core gebruiken we de freebie niet als losse "gratis weggever"-post, maar als intekenplek op een goede post: je geeft eerst waarde, en wie meer wil klikt op je freebie-link. Geen omweg via andere tools, mensen landen direct in jouw systeem. Zo bouw je vertrouwen én verzamel je leads, in één beweging.
+
+HOE VAAK?
+
+Snap je waarom we het rustig houden? Een freebie in elke post wordt al snel spammerig. Hoe vaak past bij jouw tempo: rustig is één keer per week meeliftend op een post, wie doorpakt doet er twee of drie. En één goede freebie die je vaker inzet werkt beter dan steeds iets nieuws. De Mentor helpt kiezen welke bij jou past 💪🏽`,
     waaromWerktDit: {
       tekst:
         "Een freebie-link op een goede post haalt 5 tot 10x zoveel leads als een losse 'gratis weggever'-post. Het waarde-moment bouwt vertrouwen, de freebie zet 'm om in lead.",
@@ -592,7 +622,7 @@ Hoe vaak een freebie? Afhankelijk van je tempo-bracket: bij Rustig 1x per week m
         verplicht: true,
         actieRoute: "/scripts",
         uitleg:
-          "Stuur één zorgvuldig bericht aan iemand uit je warme markt die je al een tijdje wilde benaderen. Niet pushy uitnodigen voor 'een business', wel rustig delen wat je doet en aanbieden om iets te laten zien als ze nieuwsgierig zijn. De scripts en de Mentor helpen je aan de juiste woorden in jouw toon.",
+          "Stuur één zorgvuldig bericht aan iemand uit je warme markt die je al een tijdje wilde benaderen. Begin persoonlijk, met iets dat alleen voor deze persoon geldt, en deel dan rustig wat je doet. Niet pushy uitnodigen voor 'een business', wel aanbieden om iets te laten zien als ze nieuwsgierig zijn. De scripts en de Mentor helpen je aan de juiste woorden in jouw toon, kies er een en maak 'm van jezelf.",
       },
       {
         id: "core-dag12-bericht2",
@@ -612,11 +642,19 @@ Hoe vaak een freebie? Afhankelijk van je tempo-bracket: bij Rustig 1x per week m
     ],
     faseDoel: "Drie warme-markt-uitnodigingen verstuurd. Follow-up-onderdeel in DMO actief.",
     waarInEleva: [{ actie: "Naar scripts", menupad: "Menu, Scripts", route: "/scripts" }],
-    watJeLeert: `Je warme markt is de plek waar je echt iets kunt doen. Niet pushy uitnodigen voor 'business', wel rustig delen wat je doet en aanbieden om iets te laten zien als ze geinteresseerd zijn.
+    watJeLeert: `Vandaag ga je je eerste echte uitnodigingen sturen 🥰
 
-Vandaag stuur je drie zorgvuldige berichten aan mensen die je kent. Niet aan iedereen tegelijk, wel 3 die je echt al een tijdje wilde benaderen. Mentor + scripts helpen je met de juiste woorden.
+Je warme markt is de plek waar het makkelijkst beweging ontstaat, want daar is al vertrouwen. Het gaat niet om pushy uitnodigen voor "een business", wel om rustig delen wat je doet en aanbieden om iets te laten zien als iemand nieuwsgierig is.
 
-Vanaf vandaag is het follow-up-onderdeel in je DMO-blok actief: prospects die hebben gereageerd of bekeken volg je systematisch op met herinneringen.`,
+DRIE ZORGVULDIGE BERICHTEN
+
+Vandaag stuur je drie berichten aan mensen die je kent. Niet de hele lijst tegelijk, wel drie die je eigenlijk al een tijdje wilde benaderen. Maak ze persoonlijk, want één regel die laat zien dat het echt aan die persoon gericht is, doet meer dan tien perfecte standaardzinnen. De scripts en de Mentor helpen je aan de juiste woorden in jouw toon.
+
+GEEN REACTIE? HOORT ERBIJ
+
+Snap je waarom je het rustig houdt op drie? Zo blijft elk bericht persoonlijk en raak je niet ontmoedigd. Krijg je niet meteen antwoord, dat is normaal, gemiddeld reageert ongeveer één op de vijftien tot twintig. Vanaf vandaag wordt het follow-up-onderdeel in je takenblok actief, zodat je niemand kwijtraakt in de stilte.
+
+Rustig en persoonlijk, zo werkt het 't beste 💪🏽`,
     waaromWerktDit: {
       tekst:
         "Drie kwalitatieve berichten naar warme contacten geven meestal 1 of 2 reacties. Geen reactie? Geen drama, dat hoort. De gemiddelde response-ratio is 1 op 15 tot 20 contacten.",
@@ -639,15 +677,19 @@ Vanaf vandaag is het follow-up-onderdeel in je DMO-blok actief: prospects die he
     ],
     faseDoel: "Feel-Felt-Found-techniek geoefend met de Mentor.",
     waarInEleva: [{ actie: "Roleplay met Mentor", menupad: "Menu, Mentor", route: "/coach" }],
-    watJeLeert: `Feel-Felt-Found in drie zinnen:
+    watJeLeert: `Vandaag leer je rustig blijven als er een bezwaar komt 🥰
 
-FEEL: "Ik begrijp dat je dat voelt."
-FELT: "Anderen voelden dat in het begin ook."
-FOUND: "Wat zij merkten was..."
+Een bezwaar voelt vaak als een nee, maar dat is het meestal niet. Het is een vraag om geruststelling. En met één simpele techniek hoef je nooit meer in discussie te gaan: Feel-Felt-Found.
 
-Deze techniek werkt omdat je niet in discussie gaat. Je geeft erkenning, dan toon je een andere kant van het verhaal, dan vraag je door. Bezwaren zijn geen afwijzingen, het zijn vragen om geruststelling.
+DE DRIE ZINNEN
 
-Oefen vandaag 5 minuten met de Mentor. Niet 1x, wel 3-4 rondes met verschillende bezwaren. Dan voel je het patroon.`,
+Feel: "Ik begrijp dat je dat zo voelt." Felt: "Anderen voelden dat in het begin ook." Found: "En wat zij merkten was...". Eerst erkenning, dan een andere kant van het verhaal, dan een vraag terug.
+
+WAAROM HET WERKT
+
+Snap je waarom dit de spanning eruit haalt? Je gaat niet tegenover iemand staan, je gaat ernaast staan. Je erkent het gevoel, je laat zien dat het normaal is, en je opent een nieuwe blik. Geen gevecht, wel een gesprek.
+
+Oefen vandaag vijf minuten met de Mentor, niet één keer maar drie of vier rondes met verschillende bezwaren. Dan ga je het patroon voelen en komt het er straks vanzelf uit 💪🏽`,
     waaromWerktDit: {
       tekst:
         "Mensen die FFF beheersen, raken nooit meer in een argumenten-strijd met prospects. Je antwoorden voelen kalm en menselijk, niet defensief, en dat haalt de spanning eruit.",
@@ -670,11 +712,17 @@ Oefen vandaag 5 minuten met de Mentor. Niet 1x, wel 3-4 rondes met verschillende
     ],
     faseDoel: "Drie herinneringen ingesteld voor warme prospects.",
     waarInEleva: [{ actie: "Open herinneringen", menupad: "Menu, Herinneringen", route: "/herinneringen" }],
-    watJeLeert: `80% van de business zit in de follow-up, niet in het eerste gesprek. Mensen hebben gemiddeld 4 tot 6 contactmomenten nodig voordat ze beslissen.
+    watJeLeert: `Vandaag bouw je de gewoonte die de meeste mensen overslaan: opvolgen 🥰
 
-ELEVA's herinneringen-systeem houdt voor je bij wie je een tijd niet hebt gesproken. Vandaag stel je voor 3 prospects een opvolg-herinnering in. Op de juiste dag krijg je een melding, dan stuur je een persoonlijk bericht.
+Het grootste deel van je resultaat zit niet in het eerste gesprek, maar in de follow-up. Mensen hebben gemiddeld vier tot zes contactmomenten nodig voordat ze beslissen. Wie alleen één keer iets stuurt en dan wacht, laat het meeste op tafel liggen.
 
-Niet pushen, wel aanwezig blijven. Een 'hoe gaat het nu?' op de juiste dag werkt vaak beter dan 5 verkoop-pogingen achter elkaar.`,
+JE HOEFT HET NIET TE ONTHOUDEN
+
+ELEVA houdt voor je bij wie je een tijd niet hebt gesproken. Vandaag stel je voor drie prospects een opvolg-herinnering in. Op de juiste dag krijg je een seintje, en dan stuur je een persoonlijk berichtje. Zo verdwijnt niemand in de stilte zonder dat jij het in je hoofd hoeft te houden.
+
+AANWEZIG, NIET PUSHERIG
+
+Snap je het verschil? Een oprechte "hoe gaat het nu?" op het juiste moment werkt beter dan vijf verkooppogingen achter elkaar. Je blijft gewoon in beeld op een manier die fijn voelt voor de ander. Dat is precies waar follow-up om draait 💪🏽`,
     waaromWerktDit: {
       tekst:
         "Mensen die herinneringen instellen verliezen geen prospects in de stilte. Mensen die 't niet doen, vergeten 80% van hun warmere contacten binnen 3 weken.",
