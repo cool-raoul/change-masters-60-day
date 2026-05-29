@@ -168,8 +168,10 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
         <VoiceFab />
         {/* "Wat nu?"-gereedschapskist: vaste knop linksonder, op elke
             werk-pagina beschikbaar (Sprint en Core). De wegwijzer naar de
-            just-in-time kennislaag, zodat het leerpad licht kan blijven. */}
-        <WatNuKnop />
+            just-in-time kennislaag, zodat het leerpad licht kan blijven.
+            metSidebar: deze routes hebben de vaste desktop-sidebar, dus de
+            knop schuift naar rechts zodat 'ie niet over het menu valt. */}
+        <WatNuKnop metSidebar />
         <Rondleiding rol={rolVoorFeatures} />
         {/* Welkomstfilm: auto-pop-up bij eerste bezoek (localStorage-flag),
             altijd handmatig terug op te roepen via Topbar 🎬-knop. */}

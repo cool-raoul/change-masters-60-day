@@ -6,6 +6,8 @@
 // text-cm-white, border-cm-border, btn-gold) pakken automatisch deze waarden
 // binnen Core V6, terwijl Sprint zijn donkere look behoudt.
 
+import { WatNuKnop } from "@/components/core/WatNuKnop";
+
 export default function CoreV9Layout({
   children,
 }: {
@@ -14,6 +16,9 @@ export default function CoreV9Layout({
   return (
     <div className="core-v9 min-h-screen bg-cm-black text-cm-white">
       {children}
+      {/* Volledig-scherm-flow zonder AppShell, dus de Wat nu?-knop hier
+          apart mounten. Geen sidebar, dus links in het vrije vlak. */}
+      <WatNuKnop />
     </div>
   );
 }

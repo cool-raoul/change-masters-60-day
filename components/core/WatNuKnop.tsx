@@ -15,7 +15,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { WAT_NU_GROEPEN } from "@/lib/playbook/wat-nu-situaties";
 
-export function WatNuKnop() {
+// metSidebar: op desktop-routes mét de vaste sidebar (AppShell) schuift de
+// knop naar rechts zodat 'ie niet over het menu valt. Op de volledige-
+// scherm-flows (/vandaag, /core-v9) is er geen sidebar, dan staat 'ie links
+// in het vrije vlak.
+export function WatNuKnop({ metSidebar = false }: { metSidebar?: boolean }) {
   const [open, setOpen] = useState(false);
   const [openGroep, setOpenGroep] = useState<string | null>(null);
 
@@ -23,6 +27,9 @@ export function WatNuKnop() {
     setOpen(false);
     setOpenGroep(null);
   }
+
+  const knopLinks = metSidebar ? "left-5 lg:left-[17rem]" : "left-5";
+  const menuLinks = metSidebar ? "left-4 lg:left-[17rem]" : "left-4";
 
   return (
     <>
@@ -33,7 +40,7 @@ export function WatNuKnop() {
 
       {/* Het menu, opent linksonder boven de knop. */}
       {open && (
-        <div className="fixed bottom-36 lg:bottom-20 left-4 z-50 w-[min(92vw,380px)] max-h-[72vh] flex flex-col rounded-2xl border border-cm-gold/40 bg-cm-surface-2 shadow-2xl overflow-hidden">
+        <div className={`fixed bottom-36 lg:bottom-20 ${menuLinks} z-50 w-[min(92vw,380px)] max-h-[72vh] flex flex-col rounded-2xl border border-cm-gold/40 bg-cm-surface-2 shadow-2xl overflow-hidden`}>
           <div className="px-4 py-3 border-b border-cm-border flex-shrink-0">
             <p className="text-cm-white font-semibold text-sm">
               🧰 Wat is er aan de hand?
@@ -114,7 +121,7 @@ export function WatNuKnop() {
       <button
         type="button"
         onClick={() => (open ? sluitAlles() : setOpen(true))}
-        className="fixed bottom-20 lg:bottom-5 left-5 z-40 flex items-center gap-2 rounded-full border border-cm-gold/50 bg-cm-surface-2/95 text-cm-gold px-4 py-3 shadow-2xl font-semibold text-sm hover:bg-cm-gold/10 transition-colors"
+        className={`fixed bottom-20 lg:bottom-5 ${knopLinks} z-40 flex items-center gap-2 rounded-full border border-cm-gold/50 bg-cm-surface-2/95 text-cm-gold px-4 py-3 shadow-2xl font-semibold text-sm hover:bg-cm-gold/10 transition-colors`}
         aria-label="Wat nu? Hulp bij dit moment"
       >
         <span className="text-lg leading-none">🧰</span>

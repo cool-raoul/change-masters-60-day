@@ -36,6 +36,7 @@ import { SetupPopup } from "@/components/setup/SetupPopup";
 import { haalTekstOverrides } from "@/lib/cms/tekst-overrides";
 import { dagVoorModus, startdatumVoorModus } from "@/lib/playbook/dag-teller";
 import { ModusSwitchBanner } from "@/components/vandaag/ModusSwitchBanner";
+import { WatNuKnop } from "@/components/core/WatNuKnop";
 
 // ============================================================
 // /vandaag, guided full-screen flow voor de huidige playbook-dag.
@@ -497,6 +498,9 @@ export default async function VandaagPagina({
         coreBracket={coreBracket}
         crossModusVoltooiingen={crossModusVoltooiingen}
       />
+      {/* Dag-flow draait zonder AppShell, dus de Wat nu?-knop hier apart
+          mounten. Geen sidebar in deze flow, dus links in het vrije vlak. */}
+      <WatNuKnop />
     </>
   );
 }
