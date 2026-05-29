@@ -424,7 +424,7 @@ export function CoreV9Flow({
                 href={huidigeTaak.actieRoute}
                 className="btn-outline inline-block"
               >
-                → Open {huidigeTaak.actieRoute}
+                {huidigeTaak.actieRouteLabel ?? `→ Open ${huidigeTaak.actieRoute}`}
               </Link>
             </div>
           )}

@@ -236,6 +236,8 @@ Gewoon doen, jij kan dit 💪🏽`,
         verplicht: false,
         inlineEmbed: "vcard-upload",
         vereistMobiel: true,
+        uitleg:
+          "Op je telefoon kun je je contacten als extra bron importeren, handig om namen te vinden die je anders vergeet. Helemaal optioneel, sla 'm gerust over.",
       },
       {
         id: "core-v9-stap2-webshop-frame",
@@ -249,6 +251,10 @@ Gewoon doen, jij kan dit 💪🏽`,
         id: "core-v9-stap2-eigen-zin",
         label: "Schrijf je eigen webshop-uitnodigingszin",
         verplicht: true,
+        actieRoute: "/coach",
+        actieRouteLabel: "Schrijf 'm met de Mentor →",
+        uitleg:
+          "Schrijf 'm in jouw eigen stem, drie of vier regels. Zoals jij echt praat, dat is precies wat een uitnodiging anders maakt dan een standaard-berichtje. De Mentor scherpt 'm met je aan en onthoudt jouw stijl voor later.",
         inlineActie: {
           type: "tekst",
           slug: "webshop-uitnodigingszin",
@@ -399,23 +405,33 @@ Neem er rustig de tijd voor 🥰`,
         label: "Schrijf je persoonlijke verhaal met de Mentor",
         verplicht: true,
         actieRoute: "/coach",
+        uitleg:
+          "Wie ben jij, en waar komt je drive vandaan om hiermee bezig te zijn? Geen heel CV, een paar zinnen die kloppen. Dit vertel je als iemand vraagt waarom jij dit doet.",
       },
       {
         id: "core-v9-stap4-product-verhaal",
         label: "Schrijf je product-verhaal vanuit het webshop-frame",
         verplicht: true,
         actieRoute: "/coach",
+        uitleg:
+          "Vanuit het webshop-frame: wat staat erop, en wat kun jij er vanuit je eigen ervaring over zeggen. Claim-vrij, gewoon een beeld dat klopt.",
       },
       {
         id: "core-v9-stap4-business-verhaal",
         label: "Schrijf je business-verhaal",
         verplicht: true,
         actieRoute: "/coach",
+        uitleg:
+          "Hoe het werkt, in het kort. Webshop, klanten, eventueel een team eronder, en hoe je er een inkomen mee opbouwt. In jouw woorden, niet de hele handleiding.",
       },
       {
         id: "core-v9-stap4-edification",
         label: "Schrijf je edification-basis-zin",
         verplicht: true,
+        actieRoute: "/coach",
+        actieRouteLabel: "Schrijf 'm met de Mentor →",
+        uitleg:
+          "Eén of twee zinnen die je sponsor laten schitteren: wie is 'ie, wat doet 'ie al een tijd, en hoe heeft 'ie jou geholpen. Dit is je basis-versie, in stap 17 maak je 'm scherper.",
         inlineActie: {
           type: "tekst",
           slug: "edification-zin",
@@ -507,6 +523,8 @@ Stap voor stap, jij komt er wel 💪🏽`,
         label: "Mentor licht de 4-stappen-methode + Feel-Felt-Found toe",
         verplicht: true,
         actieRoute: "/coach",
+        uitleg:
+          "Vier stappen die bijna altijd werken: erkennen, doorvragen, Feel-Felt-Found, en een concrete vervolgvraag. Niet elke aarzeling is een nee, vaak is het gewoon een vraag om ruimte.",
       },
       {
         id: "core-v9-stap5-bezwaren-roleplay",
@@ -528,6 +546,8 @@ Stap voor stap, jij komt er wel 💪🏽`,
         label: "Mentor licht Mini-ELEVA toe + beslis-boom (3-weg of Mini-ELEVA?)",
         verplicht: true,
         actieRoute: "/coach",
+        uitleg:
+          "Mini-ELEVA open je voor iemand die eerst rustig zelf wil kijken en vragen stellen. Wil een prospect liever een gesprek? Dan een 3-weg. Twijfel je? Begin met Mini-ELEVA, opschalen kan altijd.",
       },
       {
         id: "core-v9-stap5-sponsor-3weg-beschikbaar",
@@ -632,12 +652,16 @@ Have fun ermee, dit is het leuke deel 🥰`,
         id: "core-v9-stap6-post-plaatsen",
         label: "Plaats de post + freebie-link in tekst of bio",
         verplicht: true,
+        uitleg:
+          "Zet 'm live, met de freebie-link in de tekst of in je bio. Klaar is beter dan perfect, je kunt 'm altijd nog bijschaven.",
       },
       {
         id: "core-v9-stap6-follow-up-regel",
         label: "Leer de 24-48u-follow-up-regel (Mentor licht 'm kort toe)",
         verplicht: true,
         actieRoute: "/coach",
+        uitleg:
+          "Iemand die contact heeft gehad, volg je binnen 24 tot 48 uur op. De warmte zakt snel weg, dus op tijd zijn maakt het verschil. Fortuin zit in de follow-up.",
       },
       {
         id: "core-v9-stap6-reageer-routine",
@@ -720,6 +744,8 @@ Jouw doel staat nu op de kaart. Ga ervoor 💪🏽`,
         label: "Doe de 3-vragen-quiz met de Mentor",
         verplicht: true,
         actieRoute: "/coach",
+        uitleg:
+          "Drie korte vragen om te checken of de basis zit: rang-ladder, commissies, team-volume. Geen examen, gewoon even voelen of het klopt in je hoofd.",
       },
       {
         id: "core-v9-stap7-builder-tegel",
@@ -741,6 +767,8 @@ Jouw doel staat nu op de kaart. Ga ervoor 💪🏽`,
         label: "Stel de Mentor één eigen vraag over iets dat je nog niet duidelijk vond",
         verplicht: false,
         actieRoute: "/coach",
+        uitleg:
+          "Eén ding dat nog niet helemaal helder was? Stel het nu. Beter even vragen dan straks met een half antwoord een 3-weg in.",
       },
       ...afsluitStappenV9(7),
     ],
@@ -808,13 +836,16 @@ Morgen breng je 't in praktijk. Jij hebt dit 💪🏽`,
         id: "core-v9-stap8-meesterclass-film",
         label: "Bekijk de meesterclass-film over het 3-weg-gesprek (~10 min)",
         verplicht: true,
-        uitleg: "TODO: media op /core-v9/stap/8",
+        uitleg:
+          "De vijf stappen van het 3-weg-gesprek, per stap dieper. Edification, intro, inhoud, vraag aan de prospect, en de vervolgafspraak. (TODO: media op /core-v9/stap/8)",
       },
       {
         id: "core-v9-stap8-prospect-doorlopen",
         label: "Mentor loopt de 5 stappen door voor één specifieke prospect uit jouw lijst",
         verplicht: true,
         actieRoute: "/coach",
+        uitleg:
+          "Niet in het algemeen oefenen, wel voor één echte prospect uit jouw lijst. De Mentor loopt de vijf stappen met je door voor die ene persoon, zodat het concreet wordt.",
       },
       {
         id: "core-v9-stap8-3weg-scripts",
@@ -822,6 +853,8 @@ Morgen breng je 't in praktijk. Jij hebt dit 💪🏽`,
         verplicht: true,
         actieRoute: "/scripts?cat=uitnodiging",
         actieRouteLabel: "Open 3-weg-scripts →",
+        uitleg:
+          "Kies de variant die bij jou past, en maak 'm dan van jezelf. Niet woordelijk overnemen, wel als vertrekpunt voor je eigen woorden.",
       },
       {
         id: "core-v9-stap8-sponsor-bevestigen",
@@ -894,11 +927,15 @@ Gewoon doen, ook al kriebelt het. Jij hebt dit 💪🏽`,
         label: "Stuur stap-1-introductie naar sponsor + prospect volgens script",
         verplicht: true,
         actieRoute: "/scripts?cat=uitnodiging",
+        uitleg:
+          "Stuur de introductie naar je sponsor en je prospect. Het script geeft je de vorm, jij geeft 'm je eigen toon.",
       },
       {
         id: "core-v9-stap9-plan-en-doe",
         label: "Plan de 3-weg in + doorloop samen met sponsor de 5 stappen",
         verplicht: true,
+        uitleg:
+          "Zet 'm in de agenda met je sponsor en prospect, en doorloop samen de vijf stappen. Een beetje spanning hoort erbij, gewoon doen, jij kan dit.",
       },
       {
         id: "core-v9-stap9-reflectie",
@@ -961,6 +998,8 @@ Doe het op jouw manier, dat werkt het beste 🥰`,
         label: "Mentor licht FORM toe (Family, Occupation, Recreation, Money)",
         verplicht: true,
         actieRoute: "/coach",
+        uitleg:
+          "Family, Occupation, Recreation, Money. Vier onderwerpen die in een gewoon gesprek vanzelf langskomen. Geen interview, wel bewust luisteren en onthouden wat er gezegd wordt.",
       },
       {
         id: "core-v9-stap10-top5-doorlopen",
@@ -1045,6 +1084,8 @@ Lekker bezig, ga zo door 💪🏽`,
         label: "Open je freebie-opt-in-lijst en kijk welke nieuwe leads je deze week kreeg",
         verplicht: true,
         actieRoute: "/statistieken",
+        uitleg:
+          "Wie heeft sinds vorige week een freebie afgemaakt? Zet ze in beeld met het juiste type. Niet allemaal meteen benaderen, wel allemaal op de kaart.",
       },
       ...afsluitStappenV9(11),
     ],
@@ -1114,6 +1155,8 @@ Niet te perfect willen, gewoon doen 🥰`,
         id: "core-v9-stap12-freebie-story",
         label: "Plaats een Story die je freebie aankondigt (met link)",
         verplicht: true,
+        uitleg:
+          "Eén Story die je freebie aankondigt, met de link erbij. Mensen die je Stories volgen kijken vaak meer dan je posts, en een Story-link werkt heel direct.",
       },
       {
         id: "core-v9-stap12-vast-moment",
@@ -1132,12 +1175,16 @@ Niet te perfect willen, gewoon doen 🥰`,
         id: "core-v9-stap12-reageer-dms",
         label: "Reageer binnen 1 uur op DM's en sticker-reacties",
         verplicht: true,
+        uitleg:
+          "Reageer binnen een uur op DM's en reacties op je stickers. Hier zit het echte contact, en op tijd zijn houdt het warm. De Mentor staat klaar voor opener-hulp.",
       },
       {
         id: "core-v9-stap12-academy",
         label: "Bekijk de Stories-die-werken-module in de Academy",
         verplicht: false,
         actieRoute: "/academy/social-media#module-8",
+        uitleg:
+          "Verdieping over Stories die werken, in je eigen tempo. Handig als je er dieper in wil, niet verplicht.",
       },
       ...afsluitStappenV9(12),
     ],
@@ -1206,6 +1253,10 @@ Volg je gevoel hierin, dat klopt vaak het beste 🥰`,
         id: "core-v9-stap13-niche-vastleggen",
         label: "Leg je niche-richting vast in je profiel (mag later wijzigen)",
         verplicht: true,
+        actieRoute: "/coach",
+        actieRouteLabel: "Leg 'm vast met de Mentor →",
+        uitleg:
+          "Eén zin: waar wil je herkenbaar in zijn? Nog niet voor altijd, wel een vertrekpunt voor de komende stappen. Je mag later schuiven.",
         inlineActie: {
           type: "tekst",
           slug: "niche-richting",
@@ -1380,6 +1431,8 @@ Ritme boven losse acties. Daar zit de winst 💪🏽`,
         label: "Check welke klanten stil staan: bericht of laten liggen?",
         verplicht: false,
         actieRoute: "/klant",
+        uitleg:
+          "Mensen die ooit bestelden maar al een tijd stil zijn. Soms is loslaten beter, soms loont een persoonlijk berichtje. De Mentor helpt je kiezen wie je aantikt.",
       },
       {
         id: "core-v9-stap15-webshop-uitnodiging-versturen",
@@ -1453,6 +1506,8 @@ Je groeit hierin, echt. Op naar de volgende 💪🏽`,
         id: "core-v9-stap16-plan-en-doe",
         label: "Plan + doorloop de 3-weg met sponsor + prospect",
         verplicht: true,
+        uitleg:
+          "Zet 'm in de agenda met sponsor en prospect, en doorloop de vijf stappen. Dit keer neem jij iets meer ruimte dan in stap 9.",
       },
       {
         id: "core-v9-stap16-reflectie-patroon",
@@ -1517,11 +1572,17 @@ Kleine moeite, groot effect. Geniet ervan 🥰`,
         label: "Vraag de Mentor: wat heb jij in mijn 3-wegs gezien aan edification?",
         verplicht: true,
         actieRoute: "/coach",
+        uitleg:
+          "De Mentor laat je zien welke edification-zinnen je in je 3-wegs gebruikte, en hoe prospects erop reageerden. Daar bouw je samen een scherpere versie op.",
       },
       {
         id: "core-v9-stap17-verfijnde-zin",
         label: "Schrijf je verfijnde edification-zin",
         verplicht: true,
+        actieRoute: "/coach",
+        actieRouteLabel: "Schrijf 'm met de Mentor →",
+        uitleg:
+          "Je verfijnde versie, op basis van wat in praktijk werkte. Concreet, persoonlijk, en kort. Vanaf nu je standaard, die je per prospect een beetje aanpast.",
         inlineActie: {
           type: "tekst",
           slug: "edification-zin-v2",
@@ -1609,6 +1670,8 @@ Ga ervoor, jouw verhaal werkt 💪🏽`,
         label: "Schrijf nieuwe iteratie-post met de Mentor (andere invalshoek)",
         verplicht: true,
         actieRoute: "/coach",
+        uitleg:
+          "Een tweede iteratie met een andere invalshoek, zodat mensen die de eerste misten nu wel haken. De Mentor helpt schrijven, drie rondes max, dan plaatsen.",
       },
       {
         id: "core-v9-stap18-upline-check",
@@ -1690,6 +1753,8 @@ Eén actie op de juiste plek, dat is genoeg vandaag 🥰`,
         label: "Open je namenlijst in pijplijn-weergave",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "Je prospects per fase op een rij, van prospect tot member of shopper. Zo zie je in één oogopslag waar de meeste mensen vastzitten.",
       },
       {
         id: "core-v9-stap19-mentor-auto-analyse",
@@ -1702,6 +1767,8 @@ Eén actie op de juiste plek, dat is genoeg vandaag 🥰`,
         id: "core-v9-stap19-bottleneck-actie",
         label: "Voer de actie uit die de Mentor aanwijst voor je bottleneck-fase",
         verplicht: true,
+        uitleg:
+          "De Mentor wijst je grootste verstopping aan en geeft er een concrete actie bij. Jij hoeft 'm alleen uit te voeren, vandaag nog.",
       },
       {
         id: "core-v9-stap19-closing-vraag",
@@ -1780,6 +1847,8 @@ Zoek de hefboom, niet de hardere werkdag 💪🏽`,
         id: "core-v9-stap20-ip-stand-update",
         label: "Update je IP-stand uit Lifeplus Teams (als 'ie achterloopt)",
         verplicht: true,
+        uitleg:
+          "Pak Lifeplus Teams erbij, kijk naar het volume in je eerste drie levels, en werk je stand bij. Eén minuutje, en je Builder-tegel klopt weer.",
       },
       {
         id: "core-v9-stap20-knelpunt-bepalen",
@@ -1792,12 +1861,16 @@ Zoek de hefboom, niet de hardere werkdag 💪🏽`,
         id: "core-v9-stap20-concrete-actie",
         label: "Concrete actie voor deze week (Mentor stelt voor)",
         verplicht: true,
+        uitleg:
+          "De Mentor stelt één actie voor deze week voor, passend bij jouw knelpunt. Geen harder werken, wel de juiste hefboom pakken.",
       },
       {
         id: "core-v9-stap20-team-identificeren",
         label: "Identificeer 1-3 mensen in je team op vergelijkbaar pad",
         verplicht: false,
         actieRoute: "/team",
+        uitleg:
+          "Eén tot drie mensen in je team die op een vergelijkbaar pad zitten. Members van jou, of zelfs members van je members. Hoe zijn zij ermee bezig?",
       },
       {
         id: "core-v9-stap20-kennisdeling",
@@ -1885,12 +1958,16 @@ Wat ben je gegroeid. Trots op je 🥰`,
         label: "Open klantomgeving-overview + bekijk per klant",
         verplicht: true,
         actieRoute: "/klant",
+        uitleg:
+          "Per klant zie je welke pulse-momenten zijn geweest en hoe 'ie er nu voor staat. De Mentor laat zien wie actief is, wie stil, en wie interessant is voor de volgende stap.",
       },
       {
         id: "core-v9-stap21-twee-klanten-markeren",
         label: "Markeer 2 klanten waar een Core- of webshop-uitnodiging kan passen",
         verplicht: true,
         actieRoute: "/namenlijst",
+        uitleg:
+          "Twee klanten waar je gevoel zegt: hier past een uitnodiging naar Core of de webshop. Niet vijf of tien, twee. Een concrete intentie voor de volgende ronde.",
       },
       {
         id: "core-v9-stap21-eindreflectie",
@@ -1911,6 +1988,10 @@ Wat ben je gegroeid. Trots op je 🥰`,
         id: "core-v9-stap21-30-dagen-doel",
         label: "Stel je eerste 30-dagen-doel in",
         verplicht: true,
+        actieRoute: "/coach",
+        actieRouteLabel: "Maak 'm scherp met de Mentor →",
+        uitleg:
+          "Eén doel, concreet en meetbaar. Niet vijf dingen tegelijk, één heldere kop om de volgende ronde op te richten. De Mentor helpt 'm scherp krijgen.",
         inlineActie: {
           type: "tekst",
           slug: "30-dagen-doel",
