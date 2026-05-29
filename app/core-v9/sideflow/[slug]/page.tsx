@@ -41,8 +41,9 @@ export default async function CoreV9SideflowPagina({
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const v9Actief = await isCoreV9Actief(user.id);
-  if (!v9Actief) redirect("/vandaag");
+  // Sinds 2026-05-30 zijn V9-sideflows toegankelijk voor alle Core
+  // members (de live Core-dagflow op /vandaag verwijst hierheen vanuit
+  // de prepost-keuze op stap 1). Geen feature-flag-gate meer.
 
   const { data: profile } = await supabase
     .from("profiles")

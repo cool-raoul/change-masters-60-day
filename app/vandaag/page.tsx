@@ -18,10 +18,14 @@ import { berekenHuidigeDag } from "@/lib/playbook/bereken-dag";
 import { pasTempoToeOpDag } from "@/lib/playbook/tempo-aware";
 import { genereerWeekritmeDag } from "@/lib/playbook/weekritme";
 import {
-  CORE_DAGEN,
   genereerVerankeringsDag,
   genereerLifetimeDag,
 } from "@/lib/playbook/core-dagen";
+// Core member-flow draait sinds 2026-05-30 op V9. De live ankerstappen
+// (Builder als rode draad, side-flows, drie-soorten-DM-scripts, webshop-
+// pivot, FORM-verdieping, etc.) zitten in core-dagen-v9.ts. Verankering
+// (dag 22-40) en lifetime (41+) blijven uit core-dagen.ts.
+import { CORE_V9_STAPPEN } from "@/lib/playbook/core-dagen-v9";
 import { detecteerEnVierEerstePartner } from "@/lib/team/mijlpaal-detector";
 import { pakTopRadar, type ProspectInput } from "@/lib/radar/volgende-beste-actie";
 import { haalRadarAfvinkSets } from "@/lib/radar/carry-over";
@@ -268,9 +272,9 @@ export default async function VandaagPagina({
 
   let dagData;
   if (modus === "core") {
-    // Core: 21 skill-dagen + 19 verankering + lifetime daarna.
+    // Core: 21 V9-ankerstappen (skill-fase) + 19 verankering + lifetime.
     if (dag <= 21) {
-      dagData = CORE_DAGEN.find((d) => d.nummer === dag) ?? null;
+      dagData = CORE_V9_STAPPEN.find((s) => s.nummer === dag) ?? null;
     } else if (dag <= 40) {
       dagData = genereerVerankeringsDag(dag);
     } else {
@@ -281,15 +285,17 @@ export default async function VandaagPagina({
     // Voeg DMO-stappen toe als afvinkbare taken TUSSEN skill-stappen en
     // afsluit-stappen (sponsor-checkin/momentum-radar/partner-check).
     // Zo zijn DMO-acties echte stappen met actie-routes, niet alleen
-    // info in een uitklap-zone.
+    // info in een uitklap-zone. V9 gebruikt prefix "core-v9-stap${N}",
+    // verankering/lifetime gebruiken nog "core-dag${N}".
     const dmoTaken = genereerDMOStappen(dag, coreBracket, {
       bestellinksGekoppeld: dag >= 4,
       eersteKlantenStapVoorbij: dag >= 12,
     });
+    const corePrefix = dag <= 21 ? "core-v9-stap" : "core-dag";
     const afsluitPrefixen = [
-      `core-dag${dag}-sponsor-checkin`,
-      `core-dag${dag}-momentum-radar`,
-      `core-dag${dag}-partner-check`,
+      `${corePrefix}${dag}-sponsor-checkin`,
+      `${corePrefix}${dag}-momentum-radar`,
+      `${corePrefix}${dag}-partner-check`,
     ];
     const skillStappen = dagData.vandaagDoen.filter(
       (t) => !afsluitPrefixen.includes(t.id),
@@ -314,10 +320,16 @@ export default async function VandaagPagina({
 
   // Founder-overrides toepassen. BELANGRIJK: playbook_overrides en
   // de "sprint-dag" namespace zijn historisch alleen voor Sprint
-  // gebruikt. Core krijgt een eigen namespace "core-dag" zodat
-  // Sprint-edits niet over Core dag 1 heen schuiven (en omgekeerd).
-  // Pro werkt nu nog niet via deze route.
-  const dagNamespace = modus === "core" ? "core-dag" : "sprint-dag";
+  // gebruikt. Core skill-dagen (1-21) draaien sinds 2026-05-30 op V9
+  // en gebruiken namespace "core-v9-stap". Verankering/lifetime
+  // (dag 22+) blijven op "core-dag". Pro werkt nu nog niet via deze
+  // route.
+  const dagNamespace =
+    modus === "core"
+      ? dag <= 21
+        ? "core-v9-stap"
+        : "core-dag"
+      : "sprint-dag";
 
   if (modus !== "core") {
     // playbook_overrides is een platte tabel zonder modus-veld, dus
