@@ -334,14 +334,14 @@ Klein dingetje, groot verschil 🥰`,
         label: "Bekijk zelf de prospect-filmpjes die je naar prospects gaat sturen",
         verplicht: true,
         uitleg:
-          "De Mentor toont de meest-gedeelde filmpjes. Klik door, kijk de eerste 30 seconden, weet wat erin zit. Je gebruikt deze in pre-post-flow, 21-dagen-post-flow, en als opvolg-materiaal.",
+          "Elk filmpje dat jij straks naar een prospect stuurt, heb je zelf bekeken, dat is de afspraak met jezelf. Klinkt vanzelfsprekend, maar in praktijk slaan veel mensen dit over en dan staan ze met de mond vol tanden als een prospect iets vraagt. De Mentor laat je de meest-gedeelde filmpjes zien, klik per filmpje door en kijk de eerste dertig seconden tot een minuut. Je hoeft 'm niet uit je hoofd te leren, je wil weten wat erin zit, hoe lang 'ie duurt, en in welke situatie je 'm zou versturen. Diezelfde filmpjes kom je tegen in je pre-post of 21-dagen-post-flow, dus dit werk komt straks dubbel terug.",
       },
       {
         id: "core-v9-stap3-eigen-pakket",
         label: "Bestel je eigen pakket als je dat nog niet hebt",
         verplicht: false,
         uitleg:
-          "Eigen ervaring = geloofwaardigheid. Niet om te verkopen, om te ervaren. Telt mee voor jouw eigen Builder-IP.",
+          "Heb je nog geen eigen pakket besteld? Doe dat nu, niet om iets te verkopen maar om te ervaren. Mensen voelen het verschil tussen iemand die iets zelf gebruikt en iemand die het van papier kent. Eén basis-supplement of een programma waar je zelf nieuwsgierig naar bent is voldoende om mee te beginnen. En als bonus telt je eigen bestelling meteen mee voor je Builder-volume, dus je werkt er twee dingen tegelijk mee. Heb je al een pakket? Vink 'm gewoon af.",
       },
       {
         id: "core-v9-stap3-mentor-context",
@@ -349,7 +349,7 @@ Klein dingetje, groot verschil 🥰`,
         verplicht: true,
         actieRoute: "/coach",
         uitleg:
-          "Voor jouw Mentor-profiel. Helpt straks bij verhaal, zinnen, en aanbevelingen die kloppen met wat je echt doet.",
+          "Vertel de Mentor in een paar zinnen welke producten of programma's jij persoonlijk doet en gebruikt. Hij onthoudt het in jouw Mentor-profiel, en gebruikt het bij alle verhalen, zinnen en aanbevelingen die 'ie voor je opbouwt. Want zodra een prospect straks vraagt 'wat gebruik jij zelf?', weet de Mentor het en kan 'ie meedenken op een manier die klopt met wat je echt doet. Klein invoer-werkje vandaag, groot verschil straks in je gesprekken.",
       },
       ...afsluitStappenV9(3),
     ],
@@ -407,7 +407,7 @@ Neem er rustig de tijd voor 🥰`,
         verplicht: true,
         actieRoute: "/coach",
         uitleg:
-          "Wie ben jij, en waar komt je drive vandaan om hiermee bezig te zijn? Geen heel CV, een paar zinnen die kloppen. Dit vertel je als iemand vraagt waarom jij dit doet.",
+          "Wie ben jij, en waar komt je drive vandaan om hiermee bezig te zijn? Geen heel CV, een paar zinnen die kloppen. Vertel het als een verhaal, niet als een lijstje: wat heeft jou hier gebracht, wat zoek je voor jezelf? Dit is wat je deelt als iemand vraagt 'waarom doe jij dit?', en het hoeft niet meteen perfect, daar gaat de Mentor met je aan slijpen. Doe drie iteraties met 'm samen tot 'ie klopt, dan heb je 'm voor lang.",
       },
       {
         id: "core-v9-stap4-product-verhaal",
@@ -415,7 +415,7 @@ Neem er rustig de tijd voor 🥰`,
         verplicht: true,
         actieRoute: "/coach",
         uitleg:
-          "Vanuit het webshop-frame: wat staat erop, en wat kun jij er vanuit je eigen ervaring over zeggen. Claim-vrij, gewoon een beeld dat klopt.",
+          "Vertel kort wat de producten voor jou doen, vanuit het webshop-frame. Welke producten staan erop, en wat kun jij er vanuit je eigen ervaring over zeggen? Claim-vrij, dus niet 'dit geneest', wel 'sinds ik dit gebruik merk ik...'. Wat voel je, wat is er anders sinds je begon? Drie iteraties met de Mentor en je hebt 'm rond, eerlijk en in jouw woorden.",
       },
       {
         id: "core-v9-stap4-business-verhaal",
@@ -423,7 +423,7 @@ Neem er rustig de tijd voor 🥰`,
         verplicht: true,
         actieRoute: "/coach",
         uitleg:
-          "Hoe het werkt, in het kort. Webshop, klanten, eventueel een team eronder, en hoe je er een inkomen mee opbouwt. In jouw woorden, niet de hele handleiding.",
+          "Vertel in een paar zinnen hoe het werkt, in jouw woorden. Een webshop, klanten, eventueel een team eronder, en hoe je daar een inkomen mee opbouwt. Niet de hele Lifeplus-handleiding, wel een verhaal dat past bij hoe jij praat. Mensen voelen meteen het verschil tussen een ingestudeerd verhaal en een eerlijk eigen relaas. De Mentor helpt 'm korter te maken en de essentie te raken.",
       },
       {
         id: "core-v9-stap4-edification",
@@ -432,7 +432,7 @@ Neem er rustig de tijd voor 🥰`,
         actieRoute: "/coach",
         actieRouteLabel: "Schrijf 'm met de Mentor →",
         uitleg:
-          "Eén of twee zinnen die je sponsor laten schitteren: wie is 'ie, wat doet 'ie al een tijd, en hoe heeft 'ie jou geholpen. Dit is je basis-versie, in stap 17 maak je 'm scherper.",
+          "Eén of twee zinnen die je sponsor introduceren op een manier die haar laat schitteren. Drie elementen werken altijd: wie is je sponsor, wat doet 'ie al een tijd, en hoe heeft 'ie jou geholpen. Bijvoorbeeld 'ik werk samen met Gaby, ze helpt al ruim tien jaar mensen met dit, en heeft mij geholpen om te komen waar ik nu sta'. Wat niet werkt: 'mijn upline' of een lijstje rangen, dat klinkt zakelijk. In stap 17 maak je deze zin scherper op basis van wat in je 3-wegs blijkt te werken, voor nu is een basisversie genoeg.",
         inlineActie: {
           type: "tekst",
           slug: "edification-zin",
@@ -450,7 +450,7 @@ Neem er rustig de tijd voor 🥰`,
         verplicht: false,
         actieRoute: "/coach",
         uitleg:
-          "Wat trekt jou aan? Slaap, energie, hormonen, lifestyle, ondernemen? De Mentor onthoudt dit voor later in stap 13 (niche-aanscherping).",
+          "Praat vijf minuten met de Mentor over wat jou aantrekt: slaap, energie, hormonen, lifestyle, ondernemen, of iets anders dat in jouw vingers zit. Niet om nu vast te leggen, wel om te zaaien wat er ongeveer past bij jouw verhaal. De Mentor onthoudt dit en gebruikt het in stap 13 bij de niche-aanscherping, dan staat er al wat. Volg gewoon je gevoel hierin, dat klopt vaak het beste.",
       },
       ...afsluitStappenV9(4),
     ],
@@ -525,14 +525,15 @@ Stap voor stap, jij komt er wel 💪🏽`,
         verplicht: true,
         actieRoute: "/coach",
         uitleg:
-          "Vier stappen die bijna altijd werken: erkennen, doorvragen, Feel-Felt-Found, en een concrete vervolgvraag. Niet elke aarzeling is een nee, vaak is het gewoon een vraag om ruimte.",
+          "Vier stappen die bijna altijd werken bij een bezwaar: erkennen, doorvragen, Feel-Felt-Found, en een concrete vervolgvraag. De Mentor licht ze met je toe, kort en helder. Niet elke aarzeling is een 'nee', vaak is het gewoon een vraag om ruimte. Met deze vier paraat kun je rustig blijven als het moment komt, in plaats van te improviseren. Verdieping volgt in stap 8 en 17, dit is je basis om mee te kunnen werken.",
       },
       {
         id: "core-v9-stap5-bezwaren-roleplay",
         label: "Doe 10 min roleplay met de Mentor: 3 bezwaren uit de top-21",
         verplicht: true,
         actieRoute: "/coach",
-        uitleg: "Geen tijd, geen geld, ken al iemand. Externe + interne mix.",
+        uitleg:
+          "Tien minuten oefenen met de Mentor maakt echt iets los. Hij speelt een prospect met 'ik heb geen tijd', 'ik heb geen geld', of 'ik ken al iemand die dit doet'. Jij oefent de vier stappen, en gaat het patroon voelen onder je woorden. Externe en interne bezwaren door elkaar, want in praktijk komt het ook door elkaar. Niet één rondje, doe er drie of vier, dan zit het beter en kun je straks rustig blijven als het echte moment zich aandient.",
       },
       {
         id: "core-v9-stap5-3weg-uitleg",
@@ -540,7 +541,7 @@ Stap voor stap, jij komt er wel 💪🏽`,
         verplicht: true,
         actieRoute: "/coach",
         uitleg:
-          "Edification, intro, inhoud, vraag aan prospect, vervolgafspraak. Diepe duik in stap 8.",
+          "Vijf stappen op hoog niveau bij een 3-weg-gesprek: edification, intro, inhoud, vraag aan prospect, vervolgafspraak. De Mentor loopt ze met je door zodat je weet wat er ongeveer gebeurt als jij straks belt of zit. Jij introduceert je sponsor (dat is je edification-zin uit stap 4), je sponsor doet de inhoud, en jij sluit af met de vervolgafspraak. Tijdens stap 3 doe je vooral niets behalve actief luisteren, je sponsor leidt. Diepe duik volgt in stap 8, dit is om mee te kunnen als het moment zich aandient.",
       },
       {
         id: "core-v9-stap5-mini-eleva-uitleg",
@@ -548,13 +549,15 @@ Stap voor stap, jij komt er wel 💪🏽`,
         verplicht: true,
         actieRoute: "/coach",
         uitleg:
-          "Mini-ELEVA open je voor iemand die eerst rustig zelf wil kijken en vragen stellen. Wil een prospect liever een gesprek? Dan een 3-weg. Twijfel je? Begin met Mini-ELEVA, opschalen kan altijd.",
+          "Mini-ELEVA open je voor iemand die eerst rustig zelf wil kijken en vragen stellen, met de Mentor als gids in jouw stem. Wil een prospect liever een persoonlijk gesprek? Dan een 3-weg met je sponsor. Twijfel je tussen beide? Begin met Mini-ELEVA, opschalen naar 3-weg kan altijd. Drie minuten Mentor-uitleg en je hebt de beslisboom in je hoofd, klaar voor het eerste moment dat 't telt. Zo loop je nooit vast op 'wat doe ik nu?'.",
       },
       {
         id: "core-v9-stap5-sponsor-3weg-beschikbaar",
         label: "Vraag je sponsor of 'ie deze week beschikbaar is voor jouw eerstvolgende 3-weg",
         verplicht: true,
         inlineEmbed: "sponsor-melding",
+        uitleg:
+          "Vraag je sponsor of 'ie deze week beschikbaar is voor jouw eerstvolgende 3-weg. Geen specifieke prospect of moment vasthaken, gewoon checken of er ruimte in haar agenda zit. Zo staat het klaar zodra je het nodig hebt, in plaats van pas te gaan plannen wanneer een prospect ja zegt. Eén regeltje is genoeg, bijvoorbeeld 'is er deze week ergens een halfuurtje voor een 3-weg als ik 'm nodig heb?'. Tik de knop hieronder.",
       },
       ...afsluitStappenV9(5),
     ],
@@ -631,7 +634,7 @@ Have fun ermee, dit is het leuke deel 🥰`,
         label: "Bekijk de 5 social-media-basis-filmpjes (~15 min totaal)",
         verplicht: true,
         uitleg:
-          "Hook, carrousel, reel, story, hashtags. Eenmalig leren, daarna heb je de basis. (TODO: media toevoegen op /core-v9/stap/6)",
+          "Vijf korte filmpjes, ongeveer een kwartier in totaal. Hook (de eerste seconde van een Reel of Story), carrousel (slides die mensen blijven swipen), reel (korte video tot negentig seconden), story (vluchtig, 24 uur zichtbaar, hier gebeurt veel menselijk contact), en hashtags + bijschrift (hoe je ze gebruikt zonder spam te worden). Eén keer kijken, daarna heb je de basis paraat om de rest van Core mee uit de voeten te kunnen. In stap 12 verdiep je Stories en Reels nog verder. (TODO: media toevoegen op /vandaag stap 6)",
       },
       {
         id: "core-v9-stap6-freebie-kiezen",
@@ -639,7 +642,7 @@ Have fun ermee, dit is het leuke deel 🥰`,
         verplicht: true,
         actieRoute: "/instellingen/freebies",
         uitleg:
-          "Gepersonaliseerd met jouw webshop-link. Mentor helpt kiezen op basis van je verhalen uit stap 4.",
+          "Open de freebie-toolkit en kies één freebie die past bij jouw verhaal en jouw mensen. Heb je iets met energie en focus? Pak die. Iets met hormonen en overgang? Die. Iets meer algemeen rond productadvies? Ook prima. De Mentor helpt kiezen op basis van wat 'ie inmiddels over jou weet uit stap 4. Eén goede keuze is voldoende, je kunt later altijd wisselen. De link is gepersonaliseerd met jouw webshop-link, dus alles wat erop binnenkomt zit netjes in jouw ELEVA-systeem.",
       },
       {
         id: "core-v9-stap6-post-brookes",
@@ -647,14 +650,14 @@ Have fun ermee, dit is het leuke deel 🥰`,
         verplicht: true,
         actieRoute: "/coach",
         uitleg:
-          "Mentor geeft feedback voor je plaatst. Doe drie iteraties max, dan plaatsen.",
+          "Drie elementen vormen samen een sterke post: waarde, verhaal, zachte uitnodiging. Eerst iets nuttigs (een tip, een inzicht, een herkenbaar gevoel), dan iets persoonlijks (een moment of een ervaring uit jouw leven), en als slot een opening (geen 'koop dit', wel iets als 'reageer met X als je hier meer over wil weten' of 'mijn freebie staat in mijn bio'). De Mentor schrijft 'm met je mee, drie iteraties max, dan plaatsen. Niet alleen waarde, niet alleen verhaal, niet alleen verkoop, wel de mix die mensen aan het denken zet.",
       },
       {
         id: "core-v9-stap6-post-plaatsen",
         label: "Plaats de post + freebie-link in tekst of bio",
         verplicht: true,
         uitleg:
-          "Zet 'm live, met de freebie-link in de tekst of in je bio. Klaar is beter dan perfect, je kunt 'm altijd nog bijschaven.",
+          "Zet 'm live, met de freebie-link in de tekst of in je bio. Klaar is beter dan perfect, en een geplaatste post werkt, een perfecte die er nooit komt niet. Noteer voor jezelf hoe laat je 'm plaatste, dan weet je wanneer de eerste reacties kunnen komen. Vanaf nu ben je echt zichtbaar op socials, en dat is precies de bedoeling. Blijf in de buurt om binnen het uur op reacties te kunnen reageren.",
       },
       {
         id: "core-v9-stap6-follow-up-regel",
@@ -662,14 +665,14 @@ Have fun ermee, dit is het leuke deel 🥰`,
         verplicht: true,
         actieRoute: "/coach",
         uitleg:
-          "Iemand die contact heeft gehad, volg je binnen 24 tot 48 uur op. De warmte zakt snel weg, dus op tijd zijn maakt het verschil. Fortuin zit in de follow-up.",
+          "Iemand die contact heeft gehad, volg je binnen 24 tot 48 uur op. De warmte zakt snel weg, dus op tijd zijn maakt het verschil tussen een gesprek dat doorgaat en een gesprek dat doodbloedt. Mensen reageren vaak niet op je eerste bericht, wel op je tweede of derde, maar alleen als die op tijd komt en niet drie weken later. Dit principe wordt vast ritme in stap 15, maar wil ik nu al neerzetten zodat je 't meeneemt. Fortuin zit in de follow-up, zoals het cliché terecht luidt. De Mentor licht 'm kort met je toe, één minuut werk.",
       },
       {
         id: "core-v9-stap6-reageer-routine",
         label: "Reageer binnen 1 uur op iedere reactie (en like)",
         verplicht: true,
         uitleg:
-          "Gebruik het 3-soorten-mensen-DM-script uit de post-sidestep. Werkt hier ook.",
+          "Reageer binnen een uur op iedere reactie en zelfs op iedere like. Gebruik het 3-soorten-mensen-DM-script dat je in je pre-post of 21-dagen-post-sidestep hebt klaargezet, dat werkt hier ook. Drie soorten antwoorden: wie vraagt wat je doet krijgt info en een filmpje, wie alleen reageert of liket krijgt de DM-opener uit het script. Snelheid is alles, want elke reactie en elke like is een opening naar een gesprek. Eén woordje persoonlijk maken doet wonderen, gebruik haar naam of een verwijzing naar iets uit haar profiel.",
       },
       ...afsluitStappenV9(6),
     ],
@@ -738,7 +741,8 @@ Jouw doel staat nu op de kaart. Ga ervoor 💪🏽`,
         id: "core-v9-stap7-verdienmodel-film",
         label: "Bekijk de verdienmodel-film (~10 min)",
         verplicht: true,
-        uitleg: "Rang-ladder, commissies, team-volume in de basis. (TODO: media)",
+        uitleg:
+          "Een korte film van zo'n tien minuten over hoe je verdient: de rang-ladder van Builder tot Diamond, de commissies op verschillende niveaus, en het team-volume in je eerste drie levels. Je hoeft niks uit je hoofd te leren, je wil een gevoel krijgen van hoe het geld werkt. Want straks gaan prospects vragen stellen zodra je een 3-weg of Mini-ELEVA opent, en dan moet je kunnen uitleggen hoe het ongeveer in elkaar zit. Onwetendheid over hoe je verdient is een van de redenen waarom mensen in maand twee afhaken, dus dit kwartiertje is goed besteed. (TODO: media toevoegen op /vandaag stap 7)",
       },
       {
         id: "core-v9-stap7-quiz",
@@ -746,7 +750,7 @@ Jouw doel staat nu op de kaart. Ga ervoor 💪🏽`,
         verplicht: true,
         actieRoute: "/coach",
         uitleg:
-          "Drie korte vragen om te checken of de basis zit: rang-ladder, commissies, team-volume. Geen examen, gewoon even voelen of het klopt in je hoofd.",
+          "Drie korte vragen om te checken of de basis zit: rang-ladder, commissies, team-volume. Geen examen, gewoon even voelen of het klopt in je hoofd. De Mentor stelt de vragen één voor één en geeft direct uitleg waar het nog niet helemaal zit. Doe 'm rustig, je hoeft niet snel te zijn, het gaat om begrip. Loopt 'r iets stuk? Dan licht 'ie precies dat stukje opnieuw toe.",
       },
       {
         id: "core-v9-stap7-builder-tegel",
@@ -754,14 +758,14 @@ Jouw doel staat nu op de kaart. Ga ervoor 💪🏽`,
         verplicht: true,
         actieRoute: "/dashboard",
         uitleg:
-          "Twee voorwaarden zichtbaar. Voorwaarde 1 telt half-auto mee. Voorwaarde 2 werk je zelf wekelijks bij vanuit Lifeplus Teams.",
+          "Open je dashboard en kijk naar de Builder-status-tegel. Twee voorwaarden staan zichtbaar: minimaal drie members met een bestelling vanaf 40 IP (half-auto, telt mee zodra een prospect via jou member wordt en die bestelling plaatst), en je eerste drie levels samen 1500 IP of meer (handmatig, want we hebben geen rechtstreekse Teams-koppeling). Vanaf nu staat jouw doel op de kaart, en zie je in één oogopslag waar je staat. Zodra beide voorwaarden ✓ zijn, krijg je je Builder-bevestiging.",
       },
       {
         id: "core-v9-stap7-ip-stand-eerste-invoer",
         label: "Vul je huidige IP-stand in (vanuit Lifeplus Teams)",
         verplicht: true,
         uitleg:
-          "Pak je Lifeplus Teams-app erbij. Eerste 3 levels samen, hoeveel IP staat er nu? Vul in op dashboard-tegel.",
+          "Pak je Lifeplus Teams-app erbij en kijk hoeveel volume er nu in jouw eerste drie levels staat (jouw eigen bestelling telt mee). Vul dat getal in op de Builder-tegel op je dashboard, dat is je startpunt. Eén minuutje werk, en je tegel klopt. De Mentor herinnert je er wekelijks aan om 'm bij te werken, zodat 'ie meegroeit met je team. Omdat ELEVA geen rechtstreekse koppeling met Teams heeft, blijft dit een handmatig veldje, geen probleem.",
       },
       {
         id: "core-v9-stap7-eigen-vraag",
@@ -769,7 +773,7 @@ Jouw doel staat nu op de kaart. Ga ervoor 💪🏽`,
         verplicht: false,
         actieRoute: "/coach",
         uitleg:
-          "Eén ding dat nog niet helemaal helder was? Stel het nu. Beter even vragen dan straks met een half antwoord een 3-weg in.",
+          "Eén ding dat nog niet helemaal helder was? Stel het nu aan de Mentor, voordat het later in een gesprek opduikt en je staat te haperen. Beter even vragen dan straks met een half antwoord een 3-weg in. Doe er niet moeilijk over, ook 'wat is het verschil tussen Bronze en Silver eigenlijk' is een prima vraag. De Mentor antwoordt rustig en op jouw begrip-niveau, geen oordeel. En als 'ie je antwoord geeft dat niet helemaal landt, vraag gewoon nog een keer door.",
       },
       ...afsluitStappenV9(7),
     ],
