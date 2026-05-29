@@ -70,11 +70,11 @@ Een goede pre-post lokt de vraag uit: "wat ga je doen?". Dat is wat je probeert 
 
 Voorbeeld-richtingen om mee te starten:
 
-> "Vandaag begin ik aan iets dat ik al een tijd uitstel. Ik ben benieuwd wat ik over 21 dagen ga merken. Spannend!"
+"Vandaag begin ik aan iets dat ik al een tijd uitstel. Ik ben benieuwd wat ik over 21 dagen ga merken. Spannend!"
 
-> "Ik geef mezelf de komende 21 dagen om iets nieuws te proberen. Ik weet niet helemaal hoe het gaat lopen, maar ik wil het wel een eerlijke kans geven."
+"Ik geef mezelf de komende 21 dagen om iets nieuws te proberen. Ik weet niet helemaal hoe het gaat lopen, maar ik wil het wel een eerlijke kans geven."
 
-> "Drie weken vanaf nu. Eén ding waar ik nieuwsgierig naar ben. Doe me even na en je hoort het resultaat 😉"
+"Drie weken vanaf nu. Eén ding waar ik nieuwsgierig naar ben. Doe me even na en je hoort het resultaat 😉"
 
 Geen claim, geen belofte, wel een opening die mensen aan het denken zet. De Mentor helpt je om een versie te schrijven die past bij JOUW stem.
 
@@ -198,9 +198,9 @@ Een 21-dagen-post is bewezen sterk. Bij sommige mensen brengt deze post direct n
 
 ALLE POSITIEVE VERANDERINGEN, NIET ÉÉN OF TWEE
 
-In V7 stond hier "kies één of twee belangrijke veranderingen". In V9 doen we het anders: noem ALLE positieve veranderingen die je hebt gemerkt, claim-vrij geformuleerd. Reden: verschillende mensen worden door verschillende dingen geraakt. Iemand met slaapproblemen leest "ik slaap dieper". Iemand met laag-energie leest "ik heb meer pit". Iemand met overgewicht leest "ik voel me lichter".
+Noem alle positieve veranderingen die je hebt gemerkt, claim-vrij geformuleerd. Want verschillende mensen worden door verschillende dingen geraakt. Iemand met slaapproblemen leest "ik slaap dieper". Iemand met laag-energie leest "ik heb meer pit". Iemand met overgewicht leest "ik voel me lichter".
 
-Door meerdere veranderingen te noemen trigger je meerdere doelgroepen, en lokt je de vraag uit: "Wat is dat dan?" of "Wat heb je gedaan?".
+Snap je waarom dat zoveel meer losmaakt? Eén verandering raakt één persoon. Alle veranderingen samen raken iedereen die meeleest, en lokken de vraag uit: "Wat is dat dan?" of "Wat heb je gedaan?".
 
 CLAIM-VRIJ FORMULEREN
 
@@ -208,7 +208,7 @@ Niet wat het PRODUCT doet, wel wat JIJ hebt gemerkt. Geen "dit pakt slaap aan" m
 
 Voorbeeld-richting:
 
-> "21 dagen geleden begon ik aan iets. Vandaag merk ik: ik slaap dieper, ik heb meer pit overdag, ik voel me lichter, mijn vel ziet er rustiger uit, en ik ben minder snel chagrijnig in de avond. Wat heb ik precies gedaan? Reageer en ik vertel het je 💛"
+"21 dagen geleden begon ik aan iets. Vandaag merk ik: ik slaap dieper, ik heb meer pit overdag, ik voel me lichter, mijn vel ziet er rustiger uit, en ik ben minder snel chagrijnig in de avond. Wat heb ik precies gedaan? Reageer en ik vertel het je 💛"
 
 Vijf veranderingen genoemd, geen claim, eind met een uitnodiging om te reageren. De Mentor helpt je dit in JOUW stem te schrijven, met de veranderingen die JIJ specifiek hebt gemerkt.
 
