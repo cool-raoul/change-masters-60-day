@@ -62,7 +62,7 @@ export const CORE_DAGEN: Dag[] = [
         vereistMobiel: true,
         inlineEmbed: "vcard-upload",
         uitleg:
-          "Eén klik en je hele lijst is in beeld. Net als bij Sprint: dit is je netwerk-overzicht, geen verkooplijst.",
+          "Dit werkt op je telefoon: je geeft ELEVA eenmalig toegang tot je contacten en je hele adresboek staat in beeld. Er wordt niks verstuurd of gedeeld, het is puur voor jouw eigen overzicht. Zo hoef je straks niet alle namen met de hand te typen, je vinkt gewoon aan wie je herkent. Zit je nu op de computer? Sla 'm dan over en doe 'm later even op je telefoon.",
       },
       {
         id: "core-dag1-sponsor-bericht",
@@ -70,7 +70,7 @@ export const CORE_DAGEN: Dag[] = [
         verplicht: true,
         inlineEmbed: "sponsor-melding",
         uitleg:
-          "Geen lang verhaal, gewoon laten weten dat je vertrokken bent. Vanaf nu kijkt je sponsor in ELEVA mee.",
+          "Laat je sponsor kort weten dat je gestart bent, meer hoeft echt niet. Geen lang verhaal, gewoon 'ik ben begonnen'. Vanaf dat moment kijkt 'ie in ELEVA met je mee en ziet 'ie wanneer het loopt of wanneer je even iets nodig hebt. Je hoeft dit dus niet alleen te doen, en dat scheelt enorm.",
       },
       {
         id: "core-dag1-prepost",
@@ -78,7 +78,7 @@ export const CORE_DAGEN: Dag[] = [
         verplicht: true,
         inlineEmbed: "prepost-keuze",
         uitleg:
-          "Bepaalt of je dag 7-11 begint met pre-post (geen ervaring, je deelt je voornemen) of 21-dagen-post (wel ervaring, je deelt resultaat).",
+          "Eén keuze die bepaalt hoe jouw eerste post er straks uitziet. Heb je al een product van Lifeplus geprobeerd en daar iets van gemerkt? Dan deel je dat straks eerlijk, dat raakt mensen. Nog geen ervaring? Ook prima, dan deel je je voornemen en bouw je de komende weken je eigen verhaal op. Allebei werken, kies gewoon wat nu bij je past. Twijfel je? Dan sla je 'm voor nu over, de keuze blijft staan.",
       },
       {
         id: "core-dag1-eerste-contact",
@@ -86,7 +86,7 @@ export const CORE_DAGEN: Dag[] = [
         verplicht: true,
         actieRoute: "/namenlijst",
         uitleg:
-          "Niet pitchen, gewoon delen. Eén persoon uit je warme kring. Dit is je eerste win: vanaf dag 1 ben je al in actie, niet alleen aan het voorbereiden.",
+          "Wacht niet tot alles 'klaar' is, want dat moment komt nooit helemaal. Kies één warm iemand uit je kring en laat gewoon weten dat je ergens mee gestart bent. Niet pitchen, niet verkopen, gewoon delen zoals je dat bij een vriend zou doen. Dit is je eerste win: vanaf dag 1 ben je in beweging in plaats van alleen aan het voorbereiden. Eén berichtje is genoeg.",
       },
       ...afsluitStappen(1),
     ],
@@ -104,13 +104,13 @@ VANDAAG, EEN RUSTIG MAAR DUIDELIJK BEGIN
 
 Vier momenten staan open. Geen lange dag, wel een dag waarin je 'm écht zet.
 
-**Je telefoonboek importeren.** Eén klik en je hele lijst is in beeld. Geen verkooplijst, geen belkost-lijst. Gewoon je netwerk in overzicht, zodat je weet wie er om je heen staat. Familie, oude collega's, sportmaatjes, buren. Filteren komt later, en doe je nooit voor iemand anders.
+Je telefoonboek importeren. Eén klik en je hele lijst is in beeld. Geen verkooplijst, geen belkost-lijst. Gewoon je netwerk in overzicht, zodat je weet wie er om je heen staat. Familie, oude collega's, sportmaatjes, buren. Filteren komt later, en doe je nooit voor iemand anders.
 
-**Je sponsor inlichten.** Eén kort berichtje, "ik ben gestart". Geen lang verhaal nodig. Vanaf dat moment kijkt 'ie in ELEVA mee en weet 'ie wanneer het loopt of wanneer er even iets is.
+Je sponsor inlichten. Eén kort berichtje, "ik ben gestart". Geen lang verhaal nodig. Vanaf dat moment kijkt 'ie in ELEVA mee en weet 'ie wanneer het loopt of wanneer er even iets is.
 
-**Een keuze maken: pre-post of 21-dagen-post.** Heb je al een product van Lifeplus geprobeerd en iets gemerkt? Dan deel je dat eerlijk, en raakt het mensen. Heb je nog geen ervaring? Ook prima, dan deel je je voornemen en bouw je de komende 21 dagen je eigen ervaring op. Beide werken. Het verschil zit in welk soort post je dag 7 plaatst.
+Een keuze maken: pre-post of 21-dagen-post. Heb je al een product van Lifeplus geprobeerd en iets gemerkt? Dan deel je dat eerlijk, en raakt het mensen. Heb je nog geen ervaring? Ook prima, dan deel je je voornemen en bouw je de komende 21 dagen je eigen ervaring op. Beide werken. Het verschil zit in welk soort post je dag 7 plaatst.
 
-**Je eerste warm contact vandaag.** Niet wachten tot alles 'klaar' is, niet pitchen, niet verkopen. Gewoon één warm contact uit je kring een berichtje sturen dat je gestart bent. Eén persoon. Dat is je eerste win.
+Je eerste warm contact vandaag. Niet wachten tot alles 'klaar' is, niet pitchen, niet verkopen. Gewoon één warm contact uit je kring een berichtje sturen dat je gestart bent. Eén persoon. Dat is je eerste win.
 
 JIJ LAAT ZIEN, ZIJ BESLISSEN
 
@@ -140,7 +140,7 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
         inlineEmbed: "namen-form",
         inlineEmbedDoel: 20,
         uitleg:
-          "Familie, vrienden, kennissen, collega's, ouders bij school, sportclub, hobby's. Geen filter. Ook degenen waarvan je denkt 'die past nooit'. Vaak verrassen ze je.",
+          "Schrijf twintig namen op die spontaan in je hoofd opkomen. Niet je beste klanten, gewoon de mensen die je kent: familie, vrienden, oud-collega's, sportmaatjes, ouders bij school, buren. Geen filter, en ook die ene waarvan je denkt 'die past nooit' zet je erop, want juist die verrast vaak. Filteren komt later, en dat doe je nooit voor een ander, want zij beslissen zelf. Kom je niet aan twintig? Loop dan even je telefoon en je social langs, dat helpt je geheugen op gang.",
       },
       {
         id: "core-dag2-telefoon-import",
@@ -149,7 +149,7 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
         vereistMobiel: true,
         inlineEmbed: "vcard-upload",
         uitleg:
-          "Eén klik, je hele telefoonboek staat erin. Net als bij Sprint: dit is je netwerk-overzicht, geen verkoop-lijst.",
+          "Op je telefoon zet je met één klik je hele adresboek erbij. Het is je netwerk in beeld, geen verkooplijst, en er wordt niks verstuurd of gedeeld. Zo vul je je lijst sneller aan zonder alles te hoeven typen, je vinkt gewoon aan wie je herkent. Zit je op de computer? Sla 'm over en doe 'm later op je telefoon.",
       },
       {
         id: "core-dag2-social-contacten",
@@ -157,14 +157,14 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
         verplicht: false,
         actieRoute: "/namenlijst",
         uitleg:
-          "Mensen die jou volgen of die jij volgt en met wie je een tijd niet hebt gesproken. Zelfde patroon als Sprint dag 3.",
+          "Loop je Instagram en Facebook even langs en voeg drie mensen toe die je al een tijd niet gesproken hebt. Mensen die jou volgen, of die jij volgt, en waar een klik mee zat. Je hoeft ze nu nog niks te sturen, je zet ze gewoon op je lijst zodat ze in beeld blijven. Drie is genoeg voor vandaag.",
       },
       {
         id: "core-dag2-sponsor-call",
         label: "Plan een kennismakings-call met je sponsor (30 min)",
         verplicht: true,
         uitleg:
-          "In deze call leer je je sponsor kennen, kijk je samen naar je lijst en bespreek je 1 of 2 mensen die je deze week wilt benaderen.",
+          "Plan een half uurtje met je sponsor om elkaar echt even te leren kennen. Geen verkoop, geen werving, gewoon kennismaken en samen naar je lijst kijken. Jullie kiezen samen één of twee mensen die je deze week als eerste wilt benaderen, zodat je niet in je eentje hoeft te bedenken waar je begint. Stuur 'm gewoon een berichtje om een moment te prikken, dat is de hele stap.",
       },
       ...afsluitStappen(2),
     ],
@@ -196,7 +196,7 @@ In je DMO-blok hieronder zie je dat lijst-opbouw doorgaat. Elke dag mogen er mee
         verplicht: true,
         actieRoute: "/mijn-zinnen",
         uitleg:
-          "Voorbeeld: 'Ik ben sinds kort gestart met hoogwaardige supplementen. Ik vind het zelf leuk om te zien wat het mensen brengt.' De Mentor kan helpen om 'm naar jouw stem te schrijven.",
+          "Schrijf twee zinnen waarmee je natuurlijk vertelt wat je doet, voor als iemand vraagt 'wat doe jij eigenlijk?'. Eén zin over wat je doet, één over wat het je brengt. Bijvoorbeeld: 'Ik ben sinds kort gestart met hoogwaardige supplementen, en ik vind het leuk om te zien wat het mensen brengt.' Geen verkooppraat, gewoon hoe jij erover zou praten. De Mentor helpt 'm naar jouw stem te schrijven als je wil.",
       },
       {
         id: "core-dag3-mentor-hulp",
@@ -204,7 +204,7 @@ In je DMO-blok hieronder zie je dat lijst-opbouw doorgaat. Elke dag mogen er mee
         verplicht: false,
         actieRoute: "/coach",
         uitleg:
-          "Plak je twee zinnen, de Mentor schaaft 'm bij. Niet perfect, wel authentiek.",
+          "Plak je twee zinnen bij de Mentor en laat 'm meedenken. Hij schaaft de woorden bij zonder dat het zijn taal wordt in plaats van die van jou. Het hoeft niet perfect, het moet vooral authentiek voelen, zodat het straks vanzelf uit je mond komt.",
       },
       ...afsluitStappen(3),
     ],
@@ -247,7 +247,7 @@ Bouwen mag leuk zijn 💟`,
         label: "Lees het korte commissieplan-overzicht",
         verplicht: true,
         uitleg:
-          "Onder 'Wat je leert' staat de rank-ladder Builder/Bronze/Silver/Gold/Diamond met minimum-vereisten. Je weet daarna wat je moet doen om je rank-doel te halen.",
+          "Lees het korte overzicht hieronder bij 'wat je leert', daar staat de rank-ladder van Builder tot Diamond met wat er per stap nodig is. Je hoeft het niet uit je hoofd te leren, wel een gevoel te krijgen van hoe je verdient en welke rank jij als eerste doel wil. Want als je weet waar je naartoe bouwt, worden je keuzes onderweg een stuk makkelijker. Vragen erover? De Mentor legt elk stukje rustig uit.",
       },
       ...afsluitStappen(4),
     ],
@@ -283,14 +283,15 @@ Het complete plan met percentages per niveau staat in de kennisbank.`,
         label: "Vraag de Mentor: welke 5 producten verkoop ik het meest?",
         verplicht: false,
         actieRoute: "/coach",
-        uitleg: "De Mentor geeft je een korte productenkennis-onderwerping op maat.",
+        uitleg:
+          "Vraag de Mentor welke producten voor jou en jouw mensen het meest voor de hand liggen. Hij kent alle details, dus jij hoeft alleen een gevoel te krijgen van de hoofdcategorieën en voor wie ze passen. Zo weet je straks wat je noemt als iemand iets vraagt, zonder dat je een wandelende productencatalogus hoeft te zijn.",
       },
       {
         id: "core-dag5-eigen-pakket",
         label: "Bestel je eigen pakket als je dat nog niet hebt",
         verplicht: false,
         uitleg:
-          "Eigen ervaring is je beste verkooppraatje. Begin met een basis-supplement of een programma waar je in geinteresseerd bent.",
+          "Je eigen ervaring is je sterkste verhaal, want mensen voelen het verschil tussen iemand die iets zelf gebruikt en iemand die het van papier kent. Bestel een basis-supplement of een programma waar je nieuwsgierig naar bent, niet om te verkopen maar om te ervaren. En als bonus telt je eigen bestelling mee voor je volume. Heb je al een pakket? Dan vink je deze gewoon af.",
       },
       ...afsluitStappen(5),
     ],
@@ -315,13 +316,15 @@ De ELEVA Mentor kent alle details, jij hoeft alleen te weten dat het bestaat en 
         verplicht: true,
         actieRoute: "/mijn-zinnen",
         uitleg:
-          "Voorbeeld: 'Ik ben sinds kort gestart met hoogwaardige supplementen. Heb mijn eigen webshop, kan je rondsturen als je wilt zien wat er staat.' De Mentor kan helpen.",
+          "Schrijf in drie of vier zinnen hoe je je webshop natuurlijk introduceert, zoals je het tegen iemand uit je kring zou zeggen. Bijvoorbeeld: 'Ik ben sinds kort gestart met hoogwaardige supplementen, ik heb m'n eigen webshop, ik stuur 'm je gerust door als je wil rondkijken.' Geen pitch, gewoon een uitnodiging om te kijken. De Mentor helpt 'm scherper te maken terwijl jij 'm jouw houdt.",
       },
       {
         id: "core-dag6-delen",
         label: "Deel je webshop met 2 mensen uit je lijst (rustig, geen pitch)",
         verplicht: false,
         actieRoute: "/namenlijst",
+        uitleg:
+          "Stuur je webshop naar twee mensen uit je lijst bij wie het natuurlijk voelt. Rustig, zonder pitch: 'ik dacht aan je, hier kun je rondkijken als je wil.' Het doel is niet verkopen vandaag, het doel is gewoon je eerste keer delen zodat de drempel eraf gaat. Twee is genoeg.",
       },
       ...afsluitStappen(6),
     ],
@@ -346,7 +349,7 @@ Vandaag schrijf je een korte introductie (3-4 zinnen) die past bij hoe jij met d
         verplicht: true,
         actieRoute: "/coach",
         uitleg:
-          "Op dag 1 heb je gekozen tussen pre-post (geen eigen resultaat) en 21-dagen-post (wel ervaring). De Mentor weet jouw keuze en helpt je vanuit die track.",
+          "Op dag 1 koos je tussen een pre-post (nog geen eigen resultaat) en een 21-dagen-post (wel ervaring). De Mentor weet jouw keuze en helpt je de post vanuit die richting te schrijven, in jouw stem. Doe een paar rondjes samen tot 'ie goed voelt, en denk aan een persoonlijk moment: wat raakte jou, wat trok je over de streep. Dat is waar mensen op reageren, niet de productfeiten.",
       },
       {
         id: "core-dag7-reactie-script",
@@ -354,7 +357,7 @@ Vandaag schrijf je een korte introductie (3-4 zinnen) die past bij hoe jij met d
         verplicht: false,
         actieRoute: "/scripts",
         uitleg:
-          "Als je post live is, komen er reacties. Een korte reactie-zin klaarzetten voorkomt dat je 'verrast' wordt en niet weet wat te zeggen.",
+          "Zodra je post live staat komen er reacties en likes, en dan wil je niet verrast worden met 'wat zeg ik nu?'. Zet daarom vooraf een korte reactie-zin klaar die je naar reageerders kunt sturen. Zo reageer je snel en rustig, en laat je geen opening liggen. De scripts-pagina geeft je een paar voorbeelden om uit te kiezen.",
       },
       ...afsluitStappen(7),
     ],
