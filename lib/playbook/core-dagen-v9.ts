@@ -1428,20 +1428,22 @@ Ritme boven losse acties. Daar zit de winst 💪🏽`,
         label: "Plan voor 3 prospects een opvolg-herinnering deze week",
         verplicht: true,
         actieRoute: "/namenlijst",
-        uitleg: "Spreid over de week.",
+        uitleg:
+          "Plan voor drie prospects een opvolg-herinnering deze week. Spreid ze over de week, dus niet alle drie op dezelfde dag, dan houd je het ritme luchtig. Kies prospects met open contact: mensen die je iets hebt gestuurd of waarmee een 3-weg is geweest, en die nog niet hebben beslist. Op de dag van de herinnering stuur je een persoonlijk berichtje, geen verkooptekst. ELEVA stuurt je vanzelf het seintje, dus je hoeft niks in je hoofd te houden.",
       },
       {
         id: "core-v9-stap15-hercontact-klanten",
         label: "Stuur 3 bestaande klanten een persoonlijk hercontact-bericht",
         verplicht: true,
         uitleg:
-          "Geen verkoop. Wel 'hoe gaat het sinds je producten?' of vergelijkbaar.",
+          "Stuur drie bestaande klanten een persoonlijk hercontact-berichtje. Geen verkoop, geen 'wil je weer bestellen', wel een oprechte 'hé, hoe gaat het sinds je producten?' of 'ik dacht aan je, hoe loopt het bij jou?'. Eenvoud werkt hier het beste. Een klant die zich gezien voelt blijft langer, bestelt vaker uit zichzelf, en stuurt eerder anderen jouw kant op. Pak er drie waar je een tijdje niks van hebt gehoord.",
       },
       {
         id: "core-v9-stap15-vast-follow-up-blok",
         label: "Stel een vast wekelijks follow-up-blok in je agenda in",
         verplicht: true,
-        uitleg: "Bv. dinsdagmiddag een uur. Ritme is het ding.",
+        uitleg:
+          "Zet een vast wekelijks follow-up-blok in je agenda, bijvoorbeeld dinsdagmiddag een uur. Niet onderhandelen met jezelf, gewoon vastleggen. In ons team zien we het patroon: mensen met een vast blok doen follow-up, mensen die 'wel een keer' iets opvolgen doen het meestal niet. Ritme is het ding, niet de individuele inspanning. Eén uur per week is genoeg om je hele pijplijn warm te houden.",
       },
       {
         id: "core-v9-stap15-stille-klanten",
@@ -1449,14 +1451,15 @@ Ritme boven losse acties. Daar zit de winst 💪🏽`,
         verplicht: false,
         actieRoute: "/klant",
         uitleg:
-          "Mensen die ooit bestelden maar al een tijd stil zijn. Soms is loslaten beter, soms loont een persoonlijk berichtje. De Mentor helpt je kiezen wie je aantikt.",
+          "Check je klantomgeving op stille klanten: mensen die ooit hebben besteld maar al een tijd niets meer van zich laten horen. Soms is loslaten beter, want niet iedereen blijft klant en dat is prima. Soms loont juist een persoonlijk berichtje, omdat ze blij verrast zijn dat je nog aan ze denkt. De Mentor helpt je kiezen wie je aantikt en wie je rustig laat. Niet allemaal in één keer aanpakken, een paar per week is voldoende.",
       },
       {
         id: "core-v9-stap15-webshop-uitnodiging-versturen",
         label: "Verstuur de webshop-uitnodiging uit stap 14 (alleen als het natuurlijk voelt)",
         verplicht: false,
         actieRoute: "/coach",
-        uitleg: "Mentor checkt toon. Niet versturen bij twijfel, wachten tot het klopt.",
+        uitleg:
+          "Voelt de klant uit stap 14 nog steeds als een goede match? Dan stuur je de webshop-uitnodiging vandaag, na een korte toon-check met de Mentor. Niet versturen als je twijfelt, een geforceerd verstuurde uitnodiging voelt vaak ook geforceerd aan de andere kant. Liever wachten tot het natuurlijk voelt, dan voelt het bij de ander ook vanzelfsprekend. Een paar dagen of weken extra wachten is geen probleem, het moet kloppen.",
       },
       ...afsluitStappenV9(15),
     ],
@@ -1517,21 +1520,22 @@ Je groeit hierin, echt. Op naar de volgende 💪🏽`,
         label: "Kies een nieuwe warme prospect voor deze 3-weg",
         verplicht: true,
         uitleg:
-          "Uit top-5, freebie-leads, of reageerders op posts. Iemand die warm voelt.",
+          "Kies een nieuwe warme prospect voor deze tweede 3-weg, iemand bij wie je gevoel zegt: hier voelt het goed. Mag uit dezelfde top-5 zijn (een ander dan stap 9), mag een nieuwe lead zijn uit je freebie-instroom, mag iemand zijn die op een post heeft gereageerd. Zelfde criterium als de eerste keer: warm voelen, en jou iets gunnen. Schrijf even voor jezelf op waarom je deze persoon kiest, dan staat ze ook klaar in je hoofd.",
       },
       {
         id: "core-v9-stap16-plan-en-doe",
         label: "Plan + doorloop de 3-weg met sponsor + prospect",
         verplicht: true,
         uitleg:
-          "Zet 'm in de agenda met sponsor en prospect, en doorloop de vijf stappen. Dit keer neem jij iets meer ruimte dan in stap 9.",
+          "Zet 'm in de agenda met sponsor en prospect, en doorloop samen de vijf stappen. Dit keer neem jij iets meer ruimte dan in stap 9: je edification-zin mag je iets meer variëren op deze specifieke prospect, bij stap 3 (inhoud) mag je aanvullen vanuit je eigen verhaal in plaats van alleen luisteren, en aan het einde mag jij een eigen vraag aan de prospect stellen. Drie of vier 3-wegs verder doe je 'm grotendeels zelf, met je sponsor erbij voor de momenten die spannend zijn. Stap voor stap meer leiding nemen, dat is precies de bedoeling.",
       },
       {
         id: "core-v9-stap16-reflectie-patroon",
         label: "Reflectie met Mentor: wat zag je in beide 3-wegs hetzelfde? Wat anders?",
         verplicht: true,
         actieRoute: "/coach",
-        uitleg: "Voedt edification-verdieping stap 17.",
+        uitleg:
+          "Het belangrijkste onderdeel van vandaag komt na het gesprek. De Mentor stelt vier vragen: wat was in beide 3-wegs hetzelfde, wat was anders en waardoor kwam dat, welke zin van jouw edification werkte beter (of slechter) dan de eerste keer, en welke vraag van de prospect verraste je? Hij noteert je antwoorden, en je hebt 'r morgen bij de edification-verdieping in stap 17 hard wat aan. Een tweede 3-weg leert je in herhaling kijken waar het constante zit en waar het variabele.",
       },
       ...afsluitStappenV9(16),
     ],
@@ -1590,7 +1594,7 @@ Kleine moeite, groot effect. Geniet ervan 🥰`,
         verplicht: true,
         actieRoute: "/coach",
         uitleg:
-          "De Mentor laat je zien welke edification-zinnen je in je 3-wegs gebruikte, en hoe prospects erop reageerden. Daar bouw je samen een scherpere versie op.",
+          "De Mentor laat je zien welke edification-zinnen je in je twee 3-wegs hebt gebruikt, en hoe je prospects erop reageerden. Welke woorden bleven hangen, welke werkten zwakker, en wat zei je sponsor daarna anders dan je had verwacht? Die observaties zijn goud waard, want ze komen uit jouw eigen praktijk, niet uit een boek. Op basis daarvan bouw je samen één verfijnde versie op. Het hoeft niet groot anders, vaak is het juist één woord of één zinsbouw die het verschil maakt.",
       },
       {
         id: "core-v9-stap17-verfijnde-zin",
@@ -1599,7 +1603,7 @@ Kleine moeite, groot effect. Geniet ervan 🥰`,
         actieRoute: "/coach",
         actieRouteLabel: "Schrijf 'm met de Mentor →",
         uitleg:
-          "Je verfijnde versie, op basis van wat in praktijk werkte. Concreet, persoonlijk, en kort. Vanaf nu je standaard, die je per prospect een beetje aanpast.",
+          "Schrijf je verfijnde edification-zin, op basis van wat in praktijk werkte. Drie elementen werken in praktijk vaak het verschil te maken: iets concreets (niet 'ze is heel goed', wel 'ze helpt al X jaar mensen met Y'), iets persoonlijks (hoe heeft 'ie jou specifiek geholpen), en kort gehouden (één of twee zinnen, niet langer). Vanaf nu je standaard, die je per prospect een beetje aanpast als dat past. Bewaar 'm bij je eigen zinnen, dan staat 'ie klaar voor elke volgende 3-weg.",
         inlineActie: {
           type: "tekst",
           slug: "edification-zin-v2",
@@ -1615,7 +1619,8 @@ Kleine moeite, groot effect. Geniet ervan 🥰`,
         id: "core-v9-stap17-test-volgende-3weg",
         label: "Plan om de nieuwe versie te testen in je volgende 3-weg",
         verplicht: true,
-        uitleg: "Mentor reminder na 3-weg om te reflecteren.",
+        uitleg:
+          "Plan om je nieuwe verfijnde edification-zin te testen in je eerstvolgende 3-weg. De Mentor zet een herinnering klaar, en na afloop check je samen of het anders voelde: reageerde je sponsor anders, reageerde de prospect anders, kwam de zin lekkerder uit je mond? Verfijnen blijft een doorlopend proces, dit is een ijkpunt. Schrijf het kort op zodra het zover is, anders vergeet je de details binnen een uur.",
       },
       ...afsluitStappenV9(17),
     ],
@@ -1680,7 +1685,8 @@ Ga ervoor, jouw verhaal werkt 💪🏽`,
         label: "Reflectie op vorige resultaat-post: stats + opbrengst",
         verplicht: true,
         actieRoute: "/statistieken",
-        uitleg: "Hoeveel reacties, hoeveel prospects, klanten, members.",
+        uitleg:
+          "Vóór je begint te schrijven, eerst rustig terugkijken naar je vorige post. Hoeveel reacties had je? Hoeveel daarvan zijn nu prospects, klanten, of zelfs members geworden? Wie deed niets en is misschien interessant om opnieuw aan te tikken? De Mentor laat je zien wat 'ie uit je funnel ziet, en samen kun je patronen herkennen. Vijf minuten reflectie, en je weet beter wat je nieuwe invalshoek moet zijn.",
       },
       {
         id: "core-v9-stap18-nieuwe-post",
@@ -1688,20 +1694,23 @@ Ga ervoor, jouw verhaal werkt 💪🏽`,
         verplicht: true,
         actieRoute: "/coach",
         uitleg:
-          "Een tweede iteratie met een andere invalshoek, zodat mensen die de eerste misten nu wel haken. De Mentor helpt schrijven, drie rondes max, dan plaatsen.",
+          "Een tweede iteratie van je resultaat-post, met een andere invalshoek dan de eerste. Drie hoeken werken: aanvullend resultaat (je eerste post ging over X, je hebt inmiddels ook Y gemerkt), andere kant van hetzelfde verhaal (een twijfel die je had vóór je begon, of iets dat moeilijker bleek dan verwacht en toch goed kwam), of wat je inmiddels weet over de producten (claim-vrij, vanuit eigen gebruik). De Mentor helpt schrijven, drie rondes max, dan plaatsen na een korte upline-check. Zo bereik je mensen die de eerste hebben gemist of toen niet openstonden.",
       },
       {
         id: "core-v9-stap18-upline-check",
         label: "Upline-check, dan plaatsen",
         verplicht: true,
         inlineEmbed: "sponsor-melding",
+        uitleg:
+          "Stuur je nieuwe post-concept naar je sponsor voor een korte check, niet voor goedkeuring maar voor een tweede blik. Soms zie je zelf iets over het hoofd, en een verse paar ogen vangt het. Zodra je sponsor heeft gereageerd of een dag is voorbij, plaats je 'm. Niet eindeloos blijven wachten op feedback, klaar is beter dan perfect. Tik de knop hieronder voor het berichtje.",
       },
       {
         id: "core-v9-stap18-tijdlijn-moment-3",
         label: "Pas Tijdlijn-moment 3 toe op minstens 1 enthousiaste klant",
         verplicht: true,
         actieRoute: "/klant",
-        uitleg: "'Gun je anderen ook zo'n resultaat?' Trigger vanuit klantomgeving-popup.",
+        uitleg:
+          "Tijdlijn-moment 3 is de vraag aan een enthousiaste klant: 'gun je anderen ook zo'n resultaat?'. Geen directe uitnodiging tot inkomen, wel een opening richting netwerker-energie. Trigger komt automatisch via een klantomgeving-popup zodra een van jouw klanten op dag 21 in haar programma staat. Pas dit moment vandaag toe op minstens één enthousiaste klant. Klein, niet duwen, gewoon de vraag rustig stellen en kijken wat ze ermee doet.",
       },
       ...afsluitStappenV9(18),
     ],
@@ -1771,33 +1780,37 @@ Eén actie op de juiste plek, dat is genoeg vandaag 🥰`,
         verplicht: true,
         actieRoute: "/namenlijst",
         uitleg:
-          "Je prospects per fase op een rij, van prospect tot member of shopper. Zo zie je in één oogopslag waar de meeste mensen vastzitten.",
+          "Open je namenlijst in pijplijn-weergave: je prospects per fase op een rij, van prospect via in-gesprek, uitgenodigd, one-pager, presentatie, follow-up, tot member of shopper, en aan het einde not-yet. Zo zie je in één oogopslag waar de meeste mensen vastzitten. Vaak springt er één fase uit waar veel mensen blijven hangen, dat is je bottleneck. Vandaag breng je 'm in beeld, de Mentor analyseert 'm zo voor je en geeft je een concrete actie.",
       },
       {
         id: "core-v9-stap19-mentor-auto-analyse",
         label: "Druk op 'Mentor-analyse pipeline' en lees zijn observatie",
         verplicht: true,
         inlineEmbed: "funnel-analyse",
-        uitleg: "Mentor leest cijfers, identificeert grootste verstopping, geeft 1-2 concrete acties.",
+        uitleg:
+          "De Mentor leest je pipeline-cijfers, identificeert de grootste verstopping, en geeft één of twee concrete vervolgacties. Bijvoorbeeld 'je hebt 12 mensen in uitgenodigd staan, en maar 2 in one-pager, daar zit je verstopping, bekijk je laatste 5 uitnodigingen met me dan zoeken we het patroon, en stuur deze week aan minstens 3 mensen uit uitgenodigd een concrete vervolgvraag'. Cijfers vertellen je waar de blokkade zit, de Mentor maakt er een concrete actie van. Jij hoeft 'm alleen uit te voeren.",
       },
       {
         id: "core-v9-stap19-bottleneck-actie",
         label: "Voer de actie uit die de Mentor aanwijst voor je bottleneck-fase",
         verplicht: true,
         uitleg:
-          "De Mentor wijst je grootste verstopping aan en geeft er een concrete actie bij. Jij hoeft 'm alleen uit te voeren, vandaag nog.",
+          "Voer de actie uit die de Mentor je net heeft aangewezen voor je bottleneck-fase. Niet morgen, vandaag nog. Eén concrete stap is genoeg om de verstopping los te wrikken, en vaak merk je binnen een paar dagen al verschil. Het mooie aan dit ritme: één actie op de juiste plek geeft meer beweging dan tien losse acties verspreid over je hele lijst. Zo werk je gericht, in plaats van hard.",
       },
       {
         id: "core-v9-stap19-closing-vraag",
         label: "Stel de closingsvraag aan minstens 1 warme prospect",
         verplicht: true,
-        uitleg: "'Wat heb je nog nodig om te beslissen?' Geen druk, wel concreet.",
+        uitleg:
+          "Stel aan minstens één warme prospect (iemand die al wat heeft gezien en met wie je hebt gepraat) deze vraag: 'wat heb je nog nodig om te beslissen?'. Geen druk, wel concreet. Het antwoord vertelt je precies waar je nog mee kunt helpen, of het brengt het echte bezwaar naar boven waar je in stap 5 op hebt geoefend. Voel je de spanning? Hoort erbij, het is een moedige vraag, en juist daarom werkt 'ie zo goed. Veel mensen blijven hangen tussen ja en nee omdat niemand vraagt wat hen tegenhoudt.",
       },
       {
         id: "core-v9-stap19-freebie-instroom",
         label: "Bekijk geaggregeerde freebie-opt-ins + Stories-views",
         verplicht: false,
         actieRoute: "/statistieken",
+        uitleg:
+          "Bekijk je freebie-opt-ins en Stories-views sinds vorige week. Stroomt er nog instroom binnen, of is het stil? Dat helpt je bepalen of je vooral aan de instroom-kant moet werken (meer posts, meer freebie-Stories) of juist aan de doorstroom-kant (meer follow-up, meer 3-wegs). Geen drama als de cijfers laag zijn, je bent nog vroeg in je ritme. Maar wel een rustige check om scherp te blijven op waar je tijd in steekt.",
       },
       ...afsluitStappenV9(19),
     ],
@@ -1858,28 +1871,30 @@ Zoek de hefboom, niet de hardere werkdag 💪🏽`,
         label: "Open je Builder-status-tegel op het dashboard",
         verplicht: true,
         actieRoute: "/dashboard",
-        uitleg: "Twee voorwaarden zichtbaar, plus je IP-stand uit Lifeplus Teams.",
+        uitleg:
+          "Open je Builder-status-tegel op het dashboard en kijk waar je staat. Twee voorwaarden zichtbaar: minimaal drie members met een bestelling vanaf 40 IP (half-auto-teller op basis van je prospects-fase), en je eerste drie levels samen 1500 IP of meer (handmatig, jouw laatste update). Hoe ver ben je? Wat ontbreekt nog? Dat is je startpunt voor de actie van deze week.",
       },
       {
         id: "core-v9-stap20-ip-stand-update",
         label: "Update je IP-stand uit Lifeplus Teams (als 'ie achterloopt)",
         verplicht: true,
         uitleg:
-          "Pak Lifeplus Teams erbij, kijk naar het volume in je eerste drie levels, en werk je stand bij. Eén minuutje, en je Builder-tegel klopt weer.",
+          "Pak Lifeplus Teams erbij, kijk naar het volume in je eerste drie levels (jouw eigen bestelling telt mee), en werk je IP-stand op de Builder-tegel bij. Eén minuutje werk, en je tegel klopt weer. Loopt je laatste update achter? Dan zie je daarop ook of je dichterbij bent gekomen sinds vorige keer, dat is een fijne mini-bevestiging. Doe 'm voortaan elke week even, dan blijft je tegel meegroeien met je team.",
       },
       {
         id: "core-v9-stap20-knelpunt-bepalen",
         label: "Bepaal met de Mentor waar jouw grootste knelpunt zit",
         verplicht: true,
         actieRoute: "/coach",
-        uitleg: "Te weinig members, of te weinig IP-volume?",
+        uitleg:
+          "Bepaal samen met de Mentor waar jouw grootste knelpunt richting Builder zit: te weinig members (nul tot twee, en je zit vast), of te weinig IP-volume (wel members maar onvoldoende volume daaronder). Beide knelpunten vragen om een hele andere actie, dus dit onderscheid is belangrijk. Te weinig members? Dan ligt focus op netwerker-energie herkennen en webshop-uitnodigingen voorbereiden. Te weinig volume? Dan ligt focus op bestaande klanten activeren met hercontact en suggesties.",
       },
       {
         id: "core-v9-stap20-concrete-actie",
         label: "Concrete actie voor deze week (Mentor stelt voor)",
         verplicht: true,
         uitleg:
-          "De Mentor stelt één actie voor deze week voor, passend bij jouw knelpunt. Geen harder werken, wel de juiste hefboom pakken.",
+          "De Mentor stelt één concrete actie voor deze week voor, passend bij jouw knelpunt. Bijvoorbeeld 'loop stap 14 (netwerker-energie) opnieuw door voor twee of drie specifieke klanten en bereid een webshop-uitnodiging voor', of 'stuur drie bestaande bestellers een persoonlijke check met een productsuggestie op basis van hun ervaring'. Geen harder werken, wel de juiste hefboom pakken. Een doelgerichte actie deze week brengt je meer richting Builder dan tien losse pogingen.",
       },
       {
         id: "core-v9-stap20-team-identificeren",
@@ -1887,13 +1902,15 @@ Zoek de hefboom, niet de hardere werkdag 💪🏽`,
         verplicht: false,
         actieRoute: "/team",
         uitleg:
-          "Eén tot drie mensen in je team die op een vergelijkbaar pad zitten. Members van jou, of zelfs members van je members. Hoe zijn zij ermee bezig?",
+          "Identificeer één tot drie mensen in je team die op een vergelijkbaar pad als jij zitten. Mogen members van jou zijn, of zelfs members van je members (dieper in je lijnen). Hoe zijn zij ermee bezig, waar lopen ze tegenaan, wat hebben ze gedaan dat werkte? Niet om hen te beoordelen, wel om er straks samen iets aan te hebben. Dit wordt input voor wanneer jij JOUW eerste members coacht, en het is een mooie manier om verbinding te maken met mensen die hetzelfde pad lopen.",
       },
       {
         id: "core-v9-stap20-kennisdeling",
         label: "Plan een kleine kennisdeling met sponsor/upline (wat werkt voor jou)",
         verplicht: false,
         inlineEmbed: "sponsor-melding",
+        uitleg:
+          "Plan een kleine kennisdeling met je sponsor of upline: wat heeft in jouw eerste twintig stappen het meeste opgeleverd? Welke zinnen werken voor jou, welke aanpak past in jouw stijl? Niet 'ik weet het beter dan zij', wel 'dit heb ik geleerd, misschien helpt het jou of iemand uit je team'. Het is geen verplichting, het is een geschenkje. Tien minuten op een goed moment is genoeg.",
       },
       ...afsluitStappenV9(20),
     ],
@@ -1976,7 +1993,7 @@ Wat ben je gegroeid. Trots op je 🥰`,
         verplicht: true,
         actieRoute: "/klant",
         uitleg:
-          "Per klant zie je welke pulse-momenten zijn geweest en hoe 'ie er nu voor staat. De Mentor laat zien wie actief is, wie stil, en wie interessant is voor de volgende stap.",
+          "Open je klantomgeving-overview en bekijk per klant wat er is gebeurd. Welke pulse-momenten zijn geweest, hoe staat ze er nu voor, en wanneer was jullie laatste echte contact? De Mentor laat zien wie actief is in haar programma, wie stil is geworden, en wie interessant kan zijn voor een vervolgstap. Niet alles tegelijk willen aanpakken, eerst rustig kijken. Dit is je vertrekpunt voor de volgende ronde.",
       },
       {
         id: "core-v9-stap21-twee-klanten-markeren",
@@ -1984,7 +2001,7 @@ Wat ben je gegroeid. Trots op je 🥰`,
         verplicht: true,
         actieRoute: "/namenlijst",
         uitleg:
-          "Twee klanten waar je gevoel zegt: hier past een uitnodiging naar Core of de webshop. Niet vijf of tien, twee. Een concrete intentie voor de volgende ronde.",
+          "Markeer twee klanten waar je gevoel zegt: hier past een uitnodiging naar Core of de webshop. Niet vijf of tien, twee. Concreet en haalbaar, want een te lange lijst leidt vaak tot niks. Kies mensen waar je je het meest op je gemak voelt om dit gesprek mee te voeren. Dit zijn je concrete intenties voor de volgende ronde, je hoeft 'm vandaag nog niet te versturen.",
       },
       {
         id: "core-v9-stap21-eindreflectie",
@@ -1992,14 +2009,15 @@ Wat ben je gegroeid. Trots op je 🥰`,
         verplicht: true,
         actieRoute: "/coach",
         uitleg:
-          "Wat geleerd, wat verraste je, waar weerstand, waar trots op. Mentor noteert.",
+          "Tien minuten met de Mentor, vier vragen die je rustig beantwoordt: wat heb je geleerd dat je niet had verwacht, wat verraste je over jezelf, je netwerk, het werk, waar zat de meeste weerstand of moeite, en waar ben je trots op? Niet om streng voor jezelf te zijn, wel om te zien hoeveel je hebt opgebouwd. De Mentor noteert je antwoorden en geeft ze terug als bron voor de volgende ronde. Wat je benoemt, onthoud je.",
       },
       {
         id: "core-v9-stap21-talent",
         label: "Beantwoord de talent-vraag met de Mentor",
         verplicht: true,
         actieRoute: "/coach",
-        uitleg: "Schrijver, spreker, filmer, of DM-er? Eén primair talent helpt je kiezen.",
+        uitleg:
+          "De Mentor heeft je in actie gezien deze drie weken, en ziet vier mogelijke talenten: schrijver (je posts en berichten lopen lekker, mensen reageren op je tekst), spreker (in 3-wegs en Mini-ELEVA's zit jij comfortabel, jij praat liever dan typt), filmer (je Stories en Reels lopen, je hebt visueel oog), of DM-er (één-op-één contact via DM is jouw kracht, mensen voelen zich gezien). Niet één is beter dan een ander, en je kunt meerdere hebben. Maar één primair talent helpt je in de volgende ronde kiezen welk kanaal je extra aanzet.",
       },
       {
         id: "core-v9-stap21-30-dagen-doel",
@@ -2008,7 +2026,7 @@ Wat ben je gegroeid. Trots op je 🥰`,
         actieRoute: "/coach",
         actieRouteLabel: "Maak 'm scherp met de Mentor →",
         uitleg:
-          "Eén doel, concreet en meetbaar. Niet vijf dingen tegelijk, één heldere kop om de volgende ronde op te richten. De Mentor helpt 'm scherp krijgen.",
+          "Stel je eerste 30-dagen-doel in: concreet en meetbaar. Bijvoorbeeld 'drie nieuwe members met bestelling vanaf 40 IP', '500 euro extra inkomen via webshop', 'vijf nieuwe builders in mijn team starten Core', of 'tien nieuwe freebie-leads per week structureel'. Niet vijf doelen tegelijk, één heldere kop waar je naartoe werkt. De Mentor helpt 'm scherp krijgen en in jouw woorden zetten, zodat 'ie elke ochtend voor je leeft.",
         inlineActie: {
           type: "tekst",
           slug: "30-dagen-doel",
@@ -2024,12 +2042,15 @@ Wat ben je gegroeid. Trots op je 🥰`,
         label: "Plan een call met je sponsor om voortgang te bespreken (~30-45 min)",
         verplicht: true,
         inlineEmbed: "sponsor-melding",
+        uitleg:
+          "Plan een call van zo'n 30 tot 45 minuten met je sponsor om de eerste 21 stappen samen door te lopen. Wat ging goed, waar wil je hulp, wat is je 30-dagen-doel voor de volgende ronde. Je sponsor ziet je groeitraject van een afstand en kan reflecteren waar jij dat zelf lastig vindt. Dat externe oog is goud waard op dit moment, en je sponsor wil het echt graag doen. Tik de knop hieronder voor het berichtje.",
       },
       {
         id: "core-v9-stap21-uitbreiding-schets",
         label: "Bekijk de schets van de Uitbreiding-module (optioneel)",
         verplicht: false,
-        uitleg: "Start wanneer warme netwerk uitgemolken raakt. (TODO: media op /core-v9/stap/21)",
+        uitleg:
+          "Bekijk de schets van de Uitbreiding-module die straks naast Core gaat lopen. Niet om nu te starten, wel om alvast te weten wat het volgende pad voor je is. Je begint met de Uitbreiding zodra je merkt dat je warme netwerk uitgemolken raakt en je breder gaat zoeken. Een korte introductie van een paar minuten is genoeg om een gevoel te krijgen van wat eraan komt. (TODO: media toevoegen op /vandaag stap 21)",
       },
       ...afsluitStappenV9(21),
     ],
