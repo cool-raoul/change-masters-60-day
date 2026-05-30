@@ -159,22 +159,41 @@ export default async function MiniElevaLandingPagina({
           <span className="text-cm-gold">→</span>
         </Link>
 
-        {/* Placeholders voor latere fases. Tonen ze al zodat de prospect
-            weet wat eraan komt en de member kan zien dat er een
-            structuur is. */}
-        <div className="card flex items-center gap-3 opacity-50 cursor-not-allowed">
+        <Link
+          href={`/m/${ctx.token}/producten`}
+          className="card flex items-center gap-3 hover:border-cm-gold-dim transition-colors"
+        >
+          <span className="text-2xl">🌿</span>
+          <div className="flex-1">
+            <h3 className="text-cm-white font-semibold text-sm">
+              Producten en programma's
+            </h3>
+            <p className="text-cm-white/60 text-xs leading-relaxed mt-0.5">
+              Rustige rondleiding door de hoofdcategorieen en de programma's
+              zoals de Holistic Reset en Darmen in Balans. Claim-vrij, in
+              onze stem.
+            </p>
+          </div>
+          <span className="text-cm-gold">→</span>
+        </Link>
+
+        <Link
+          href={`/m/${ctx.token}/verhalen`}
+          className="card flex items-center gap-3 hover:border-cm-gold-dim transition-colors"
+        >
           <span className="text-2xl">📖</span>
           <div className="flex-1">
             <h3 className="text-cm-white font-semibold text-sm">
-              Succesverhalen
+              Verhalen van mensen die je voorgingen
             </h3>
             <p className="text-cm-white/60 text-xs leading-relaxed mt-0.5">
-              Korte verhalen van mensen die hetzelfde pad hebben gelopen. Komt
-              binnenkort.
+              Echte ervaringen rond slaap, energie, hormonen, lichter
+              voelen, rust en meer. Geen marketing, gewoon mensen die
+              vertellen wat zij hebben gemerkt.
             </p>
           </div>
-          <span className="text-cm-white/40">later</span>
-        </div>
+          <span className="text-cm-gold">→</span>
+        </Link>
 
         <Link
           href={`/m/${ctx.token}/mentor`}
