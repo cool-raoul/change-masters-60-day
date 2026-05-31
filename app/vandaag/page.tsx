@@ -41,7 +41,7 @@ import { haalTekstOverrides } from "@/lib/cms/tekst-overrides";
 import { dagVoorModus, startdatumVoorModus } from "@/lib/playbook/dag-teller";
 import { ModusSwitchBanner } from "@/components/vandaag/ModusSwitchBanner";
 import { WatNuKnop } from "@/components/core/WatNuKnop";
-import { SideflowBanner } from "@/components/vandaag/SideflowBanner";
+import { SideflowGate } from "@/components/vandaag/SideflowBanner";
 
 // ============================================================
 // /vandaag, guided full-screen flow voor de huidige playbook-dag.
@@ -566,31 +566,28 @@ export default async function VandaagPagina({
           overrides={setupPopupOverrides}
         />
       )}
-      {/* Side-flow keuze-banner (vanaf dag 2 voor Core members met
-          openstaande sideflow). Niet-blokkerend, dismiss-baar per
-          sessie. Zie SideflowBanner-component. */}
-      {sideflowAanRaad && (
-        <SideflowBanner
-          slug={sideflowAanRaad.slug}
-          titel={sideflowAanRaad.titel}
+      {/* Side-flow tussen-scherm. Vanaf dag 2 voor Core members met
+          openstaande sideflow blokkeert 'r de dag-content totdat 'r
+          een bewuste keuze wordt gemaakt (open of bewust overslaan).
+          Overslaan = sessionStorage-vlag, komt volgend bezoek terug. */}
+      <SideflowGate aanRaad={sideflowAanRaad}>
+        <VandaagFlow
+          dag={dagData}
+          voltooidIds={voltooidIds}
+          initialZinnen={initialZinnen}
+          voornaam={voornaam}
+          isFounder={isFounder}
+          uiOverrides={uiOverrides}
+          groetOverrides={groetOverrides}
+          paginaBlokken={paginaBlokken}
+          commitmentUren={commitmentUren}
+          radarItems={radarItems}
+          radarInitieelAfgevinkt={Array.from(afvinkSets.vandaagAfgevinkt)}
+          modus={modus}
+          coreBracket={coreBracket}
+          crossModusVoltooiingen={crossModusVoltooiingen}
         />
-      )}
-      <VandaagFlow
-        dag={dagData}
-        voltooidIds={voltooidIds}
-        initialZinnen={initialZinnen}
-        voornaam={voornaam}
-        isFounder={isFounder}
-        uiOverrides={uiOverrides}
-        groetOverrides={groetOverrides}
-        paginaBlokken={paginaBlokken}
-        commitmentUren={commitmentUren}
-        radarItems={radarItems}
-        radarInitieelAfgevinkt={Array.from(afvinkSets.vandaagAfgevinkt)}
-        modus={modus}
-        coreBracket={coreBracket}
-        crossModusVoltooiingen={crossModusVoltooiingen}
-      />
+      </SideflowGate>
       {/* Dag-flow draait zonder AppShell, dus de Wat nu?-knop hier apart
           mounten. Geen sidebar in deze flow, dus links in het vrije vlak. */}
       <WatNuKnop />
