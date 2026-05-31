@@ -59,33 +59,24 @@ export function PrePostKeuzeEmbed({ alVoltooid, opVoltooid }: Props) {
           ? "pre-post"
           : null;
     return (
-      <div className="rounded-lg border-2 border-emerald-500/60 bg-emerald-900/20 px-4 py-4 space-y-3">
-        <div>
-          <p className="text-emerald-300 font-semibold text-sm">
-            ✓ Keuze vastgelegd
-          </p>
-          {sideflowSlug && (
-            <p className="text-cm-white opacity-80 text-xs mt-1">
-              Na deze dag opent automatisch jouw{" "}
-              {sideflowSlug === "21-dagen-post"
-                ? "21-dagen-resultaat-post"
-                : "pre-post"}
-              -flow. Je kunt 'm hieronder ook direct openen om alvast te
-              kijken.
-            </p>
-          )}
-        </div>
-        {sideflowSlug && (
-          <Link
-            href={`/sideflow/${sideflowSlug}`}
-            className="btn-gold inline-block text-sm"
-          >
-            ➡️ Open je{" "}
+      <div className="rounded-lg border-2 border-emerald-500/60 bg-emerald-900/20 px-4 py-4">
+        <p className="text-emerald-300 font-semibold text-sm">
+          ✓ Keuze vastgelegd
+        </p>
+        {sideflowSlug ? (
+          <p className="text-cm-white opacity-80 text-xs mt-1">
+            Nadat je dag 1 hebt afgerond verschijnt jouw{" "}
             {sideflowSlug === "21-dagen-post"
               ? "21-dagen-resultaat-post"
               : "pre-post"}
-            -flow
-          </Link>
+            -flow als keuze-banner op /vandaag, dan kun je rustig kiezen
+            wanneer je 'm doet.
+          </p>
+        ) : (
+          <p className="text-cm-white opacity-80 text-xs mt-1">
+            Je advies blijft op je dashboard staan. Maak vandaag of
+            morgen alsnog je post-keuze als je 'r klaar voor bent.
+          </p>
         )}
       </div>
     );

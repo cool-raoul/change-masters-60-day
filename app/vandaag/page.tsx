@@ -41,6 +41,7 @@ import { haalTekstOverrides } from "@/lib/cms/tekst-overrides";
 import { dagVoorModus, startdatumVoorModus } from "@/lib/playbook/dag-teller";
 import { ModusSwitchBanner } from "@/components/vandaag/ModusSwitchBanner";
 import { WatNuKnop } from "@/components/core/WatNuKnop";
+import { SideflowBanner } from "@/components/vandaag/SideflowBanner";
 
 // ============================================================
 // /vandaag, guided full-screen flow voor de huidige playbook-dag.
@@ -241,31 +242,34 @@ export default async function VandaagPagina({
   }
 
   // ============================================================
-  // SIDE-FLOW GATE (Core V9, per 2026-05-31).
-  // Op stap 1 maakt de member een keuze (pre-post of 21-dagen-post)
-  // via de prepost-keuze-embed. Die keuze wordt opgeslagen op
-  // profiles.core_eigen_resultaat (boolean of null).
+  // SIDE-FLOW BANNER-LOGICA (Core V9, herzien 2026-05-31).
   //
-  // Zodra dag 1 voltooid is en de member doorgaat naar dag 2, moet
-  // 'r EERST de gekozen sideflow afronden. Side-flow afgerond =
-  // de laatste 'afronden'-substep voltooid in core_v6_substep_voltooiingen
-  // met ankerstap_nummer = 0.
+  // Op stap 1 maakt de member een post-keuze (pre-post of 21-dagen-
+  // resultaat-post) via de prepost-keuze-embed. Die keuze wordt
+  // opgeslagen op profiles.core_eigen_resultaat (boolean of null).
   //
-  // Voor pre-post-leden komt rond dag 14 nog een tweede gate: de
-  // 21-dagen-resultaat-post moet dan ook gedaan worden.
+  // Bewust GEEN hard-redirect meer: dag 1 mag niet onderbroken worden,
+  // en de member moet ook zelf kunnen kiezen wanneer 'r de sideflow
+  // doet (of voor nu wil overslaan).
   //
-  // Founder met ?dag=N override-param: skip de gate zodat 'ie elke
-  // dag los kan bekijken.
+  // In plaats daarvan: vanaf dag 2, als 'r een keuze is en de
+  // bijbehorende sideflow nog niet is afgerond, tonen we een
+  // keuze-banner bovenaan /vandaag met "open nu" + "sla over voor
+  // nu" (dismiss-knop, sessionStorage). Voor pre-post-leden komt
+  // vanaf dag 14 ook de 21-dagen-resultaat-post als banner.
   // ============================================================
-  if (modusVoorDagTeller === "core" && dag >= 2 && !dagOverride) {
+  let sideflowAanRaad: { slug: "pre-post" | "21-dagen-post"; titel: string } | null = null;
+  if (modusVoorDagTeller === "core" && dag >= 2) {
     const eigenResultaat = (profile as { core_eigen_resultaat?: boolean | null } | null)?.core_eigen_resultaat;
-
     if (eigenResultaat !== null && eigenResultaat !== undefined) {
-      const eersteSideflowSlug = eigenResultaat ? "21-dagen-post" : "pre-post";
+      const eersteSlug: "pre-post" | "21-dagen-post" = eigenResultaat
+        ? "21-dagen-post"
+        : "pre-post";
       const eersteAfrondTaakId = eigenResultaat
         ? "core-v9-sideflow-21dagen-12-afronden"
         : "core-v9-sideflow-prepost-11-afronden";
 
+      let eersteAfgerond = false;
       try {
         const { data: voltooidEerste } = await supabase
           .from("core_v6_substep_voltooiingen")
@@ -273,19 +277,21 @@ export default async function VandaagPagina({
           .eq("user_id", user.id)
           .eq("taak_id", eersteAfrondTaakId)
           .maybeSingle();
-
-        if (!voltooidEerste) {
-          redirect(`/sideflow/${eersteSideflowSlug}`);
-        }
+        eersteAfgerond = !!voltooidEerste;
       } catch {
-        // tabel kan nog niet bestaan op vroege omgevingen, gate dan over
+        // tabel bestaat misschien nog niet, sla 'r dan over
       }
 
-      // Dag 14+ tweede gate: pre-post-leden krijgen nu de 21-dagen-
-      // resultaat-post-sideflow als trigger (zij hebben inmiddels eigen
-      // ervaring opgebouwd). 21-dagen-leden hebben dat al gedaan op
-      // dag 1, dus die slaan we over.
-      if (!eigenResultaat && dag >= 14) {
+      if (!eersteAfgerond) {
+        sideflowAanRaad = {
+          slug: eersteSlug,
+          titel:
+            eersteSlug === "21-dagen-post"
+              ? "21-dagen-resultaat-post"
+              : "pre-post",
+        };
+      } else if (!eigenResultaat && dag >= 14) {
+        // Pre-post-leden krijgen vanaf dag 14 de tweede sideflow-trigger.
         try {
           const { data: voltooid21d } = await supabase
             .from("core_v6_substep_voltooiingen")
@@ -294,10 +300,13 @@ export default async function VandaagPagina({
             .eq("taak_id", "core-v9-sideflow-21dagen-12-afronden")
             .maybeSingle();
           if (!voltooid21d) {
-            redirect("/sideflow/21-dagen-post");
+            sideflowAanRaad = {
+              slug: "21-dagen-post",
+              titel: "21-dagen-resultaat-post",
+            };
           }
         } catch {
-          // ignore, idem
+          // ignore
         }
       }
     }
@@ -555,6 +564,15 @@ export default async function VandaagPagina({
           aantalOpen={adminOpen}
           isFounder={isFounder}
           overrides={setupPopupOverrides}
+        />
+      )}
+      {/* Side-flow keuze-banner (vanaf dag 2 voor Core members met
+          openstaande sideflow). Niet-blokkerend, dismiss-baar per
+          sessie. Zie SideflowBanner-component. */}
+      {sideflowAanRaad && (
+        <SideflowBanner
+          slug={sideflowAanRaad.slug}
+          titel={sideflowAanRaad.titel}
         />
       )}
       <VandaagFlow
