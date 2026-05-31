@@ -1,13 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 // ============================================================
 // Pre-post versus 21-dagen-post-vertakking op Core dag 1.
 // Bewaart profiles.core_eigen_resultaat (boolean).
+//
+// Sinds 2026-05-31: na keuze toont 'r een directe link naar de
+// bijbehorende sideflow zodat de member 'm meteen kan starten,
+// zonder te wachten op de auto-redirect na dag 1 voltooid.
 // ============================================================
 
 type Props = {
@@ -18,18 +23,70 @@ type Props = {
 export function PrePostKeuzeEmbed({ alVoltooid, opVoltooid }: Props) {
   const [bezig, setBezig] = useState(false);
   const [voltooid, setVoltooid] = useState(alVoltooid);
+  const [huidigeKeuze, setHuidigeKeuze] = useState<boolean | null>(null);
   const router = useRouter();
   const supabase = createClient();
 
+  // Bij mount: lees de bestaande keuze zodat we ook in 'voltooid'-state
+  // de juiste sideflow-link kunnen tonen.
+  useEffect(() => {
+    let levend = true;
+    (async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data } = await supabase
+        .from("profiles")
+        .select("core_eigen_resultaat")
+        .eq("id", user.id)
+        .maybeSingle();
+      if (!levend) return;
+      const v = (data as { core_eigen_resultaat?: boolean | null } | null)?.core_eigen_resultaat;
+      if (v !== null && v !== undefined) setHuidigeKeuze(v);
+    })();
+    return () => {
+      levend = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   if (voltooid) {
+    const sideflowSlug =
+      huidigeKeuze === true
+        ? "21-dagen-post"
+        : huidigeKeuze === false
+          ? "pre-post"
+          : null;
     return (
-      <div className="rounded-lg border-2 border-emerald-500/60 bg-emerald-900/20 px-4 py-4">
-        <p className="text-emerald-300 font-semibold text-sm">
-          ✓ Keuze vastgelegd
-        </p>
-        <p className="text-cm-white opacity-80 text-xs mt-1">
-          Vanaf dag 7 zie je de content die hierbij past.
-        </p>
+      <div className="rounded-lg border-2 border-emerald-500/60 bg-emerald-900/20 px-4 py-4 space-y-3">
+        <div>
+          <p className="text-emerald-300 font-semibold text-sm">
+            ✓ Keuze vastgelegd
+          </p>
+          {sideflowSlug && (
+            <p className="text-cm-white opacity-80 text-xs mt-1">
+              Na deze dag opent automatisch jouw{" "}
+              {sideflowSlug === "21-dagen-post"
+                ? "21-dagen-resultaat-post"
+                : "pre-post"}
+              -flow. Je kunt 'm hieronder ook direct openen om alvast te
+              kijken.
+            </p>
+          )}
+        </div>
+        {sideflowSlug && (
+          <Link
+            href={`/sideflow/${sideflowSlug}`}
+            className="btn-gold inline-block text-sm"
+          >
+            ➡️ Open je{" "}
+            {sideflowSlug === "21-dagen-post"
+              ? "21-dagen-resultaat-post"
+              : "pre-post"}
+            -flow
+          </Link>
+        )}
       </div>
     );
   }
@@ -57,11 +114,12 @@ export function PrePostKeuzeEmbed({ alVoltooid, opVoltooid }: Props) {
     }
 
     setVoltooid(true);
+    setHuidigeKeuze(eigenResultaat);
     opVoltooid();
     toast.success(
       eigenResultaat
-        ? "Top, je gaat dag 7 met 21-dagen-post-track beginnen"
-        : "Top, je gaat dag 7 met pre-post-track beginnen",
+        ? "Top, je 21-dagen-resultaat-post-flow staat klaar"
+        : "Top, je pre-post-flow staat klaar",
     );
     router.refresh();
     setBezig(false);

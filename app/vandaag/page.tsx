@@ -275,7 +275,7 @@ export default async function VandaagPagina({
           .maybeSingle();
 
         if (!voltooidEerste) {
-          redirect(`/core-v9/sideflow/${eersteSideflowSlug}`);
+          redirect(`/sideflow/${eersteSideflowSlug}`);
         }
       } catch {
         // tabel kan nog niet bestaan op vroege omgevingen, gate dan over
@@ -294,7 +294,7 @@ export default async function VandaagPagina({
             .eq("taak_id", "core-v9-sideflow-21dagen-12-afronden")
             .maybeSingle();
           if (!voltooid21d) {
-            redirect("/core-v9/sideflow/21-dagen-post");
+            redirect("/sideflow/21-dagen-post");
           }
         } catch {
           // ignore, idem
