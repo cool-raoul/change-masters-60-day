@@ -79,8 +79,8 @@ export function CoreV9SideflowView({
   }
 
   async function afronden() {
-    toast.success("Side-flow afgerond, terug naar Core");
-    router.push("/core-v9");
+    toast.success("Side-flow afgerond, terug naar je dag");
+    router.push("/vandaag");
   }
 
   return (
@@ -88,10 +88,10 @@ export function CoreV9SideflowView({
       {/* Header */}
       <div className="mb-2">
         <Link
-          href="/core-v9"
+          href="/vandaag"
           className="text-cm-muted text-sm hover:text-cm-white"
         >
-          ← Terug naar Core
+          ← Terug naar vandaag
         </Link>
       </div>
 
@@ -243,7 +243,7 @@ export function CoreV9SideflowView({
             onClick={afronden}
             className="mt-4 inline-flex items-center gap-2 rounded-full bg-cm-gold text-cm-bg px-5 py-2 text-sm font-semibold hover:opacity-90"
           >
-            ✓ Side-flow afronden, naar ankerstap 2
+            ✓ Side-flow afronden, naar dag 2
           </button>
         )}
         {!alleVerplichtKlaar && (
