@@ -196,6 +196,25 @@ export default async function MiniElevaLandingPagina({
         </Link>
 
         <Link
+          href={`/m/${ctx.token}/faq`}
+          className="card flex items-center gap-3 hover:border-cm-gold-dim transition-colors"
+        >
+          <span className="text-2xl">❓</span>
+          <div className="flex-1">
+            <h3 className="text-cm-white font-semibold text-sm">
+              Veelgestelde vragen
+            </h3>
+            <p className="text-cm-white/60 text-xs leading-relaxed mt-0.5">
+              De vragen die mensen meestal als eerste stellen. Over
+              producten en programma's, over hoe het werkt, en over wat
+              IP en de basis-afname betekenen. Klik open wat jouw
+              vraag is.
+            </p>
+          </div>
+          <span className="text-cm-gold">→</span>
+        </Link>
+
+        <Link
           href={`/m/${ctx.token}/mentor`}
           className="card flex items-center gap-3 hover:border-cm-gold-dim transition-colors"
         >

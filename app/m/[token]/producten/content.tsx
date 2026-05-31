@@ -271,9 +271,8 @@ export function MiniElevaProductenContent({
           />
         </section>
 
-        {/* ============================================================
-            VEELGESTELDE VRAGEN, PRODUCT-KANT
-            ============================================================ */}
+        {/* FAQ verhuisd naar /m/[token]/faq, eigen module op de landing. */}
+        {false && (
         <section className="card space-y-1">
           <h2 className="text-cm-gold text-base font-semibold flex items-center gap-2 mb-2">
             ❓ Veelgestelde vragen
@@ -516,6 +515,7 @@ export function MiniElevaProductenContent({
             isFounder={isFounder}
           />
         </section>
+        )}
 
         {/* ============================================================
             DOORVRAGEN

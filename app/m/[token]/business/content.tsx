@@ -83,13 +83,16 @@ export function MiniElevaBusinessContent({
           </p>
           <ul className="text-cm-white/80 text-sm leading-relaxed space-y-1.5 pl-1">
             <li>
-              <span className="text-cm-gold">·</span> Geen inkoop, geen
-              voorraad, geen startpakket dat je moet kopen. Geen investering
-              om mee te doen.
+              <span className="text-cm-gold">·</span> Geen inschrijfgeld
+              en geen startpakket dat je moet kopen om mee te doen. Geen
+              voorraad om aan anderen kwijt te raken.
             </li>
             <li>
-              <span className="text-cm-gold">·</span> Geen verplichte
-              maandelijkse afname om actief te blijven.
+              <span className="text-cm-gold">·</span> Wel doe je elke
+              maand minimaal 40 IP voor jezelf, een eigen basis-bestelling
+              (kort: 40 Internationale Punten, ongeveer een basis-pakket
+              aan supplementen, zie uitleg verderop). Dat is je eigen
+              afname, geen verkoopverplichting aan anderen.
             </li>
             <li>
               <span className="text-cm-gold">·</span> Je verdient pas iets
@@ -110,6 +113,39 @@ export function MiniElevaBusinessContent({
             blokken={blokken("hoe-het-werkt")}
             isFounder={isFounder}
           />
+        </section>
+
+        {/* ============================================================
+            IP-UITLEG (Internationale Punten)
+            ============================================================ */}
+        <section className="card border-l-4 border-cm-gold/60 space-y-3">
+          <h2 className="text-cm-gold text-base font-semibold flex items-center gap-2">
+            🔢 Wat is een IP eigenlijk?
+          </h2>
+          <p className="text-cm-white/85 text-sm leading-relaxed">
+            IP staat voor <strong>Internationale Punten</strong>. Het is de
+            eenheid waarin Lifeplus alle bestellingen meet. Elk product
+            heeft een IP-waarde, en die telt mee voor je volume, je rang
+            en eventuele commissies. IP is internationaal, dus een
+            bestelling in Nederland telt op dezelfde manier mee als eentje
+            in Duitsland of Engeland.
+          </p>
+          <p className="text-cm-white/85 text-sm leading-relaxed">
+            <strong className="text-cm-gold">Jouw minimale eigen afname:</strong>{" "}
+            40 IP per maand voor jezelf. Dat komt ongeveer overeen met een
+            basis-pakket aan supplementen. Dit is je eigen vaste afname,
+            geen verkoopverplichting aan anderen, en voor veel mensen is
+            het sowieso meerwaarde want het wordt hun eigen gezondheids-
+            basis. Zonder die 40 IP per maand kun je geen actief lid
+            blijven en geen commissies ontvangen.
+          </p>
+          <p className="text-cm-white/85 text-sm leading-relaxed">
+            <strong className="text-cm-gold">Voor je rang:</strong> in de
+            ladder hieronder zie je getallen als "1500 IP totaal", dat is
+            wat er in jouw eerste drie levels samen wordt besteld (jouw
+            eigen bestelling plus alle members en shoppers daaronder).
+            Daar tellen alle IP's bij elkaar op, in elke maand opnieuw.
+          </p>
         </section>
 
         {/* ============================================================
@@ -269,9 +305,8 @@ export function MiniElevaBusinessContent({
           />
         </section>
 
-        {/* ============================================================
-            VEELGESTELDE VRAGEN, BUSINESS-KANT
-            ============================================================ */}
+        {/* FAQ verhuisd naar /m/[token]/faq, eigen module op de landing. */}
+        {false && (
         <section className="card space-y-1">
           <h2 className="text-cm-gold text-base font-semibold flex items-center gap-2 mb-2">
             ❓ Veelgestelde vragen
@@ -302,12 +337,14 @@ export function MiniElevaBusinessContent({
               <span>Moet ik investeren om te starten?</span>
             </summary>
             <div className="text-cm-white/75 text-sm leading-relaxed pl-5 pb-2 pt-1">
-              Nee. Geen inschrijfgeld, geen startpakket dat je moet
-              kopen, geen voorraad om aan te schaffen, geen
-              verplichte maandelijkse afname. Wat veel mensen wel doen
-              is een eigen product proberen om te ervaren wat het
-              brengt, maar dat is een keuze voor jezelf, geen
-              voorwaarde om mee te doen.
+              Geen inschrijfgeld om mee te starten, geen startpakket dat
+              je moet kopen en geen voorraad om aan anderen te slijten.
+              Wel doe je elke maand minimaal 40 IP voor jezelf, dat is
+              je eigen basis-bestelling van rond een basis-pakket aan
+              supplementen. Geen targets en geen verkoopverplichting aan
+              anderen, wel een eigen vaste afname zodat je actief lid
+              blijft. Voor veel mensen is dat sowieso meerwaarde want
+              het wordt hun eigen gezondheidsbasis.
             </div>
           </details>
 
@@ -564,6 +601,7 @@ export function MiniElevaBusinessContent({
             isFounder={isFounder}
           />
         </section>
+        )}
 
         {/* ============================================================
             ALS JE NIEUWSGIERIG WORDT

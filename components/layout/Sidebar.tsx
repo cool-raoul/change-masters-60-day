@@ -229,6 +229,14 @@ export function Sidebar({
               <span>🩺</span> Diagnose
             </Link>
           )}
+          {isFounder && (
+            <Link
+              href="/instellingen/mini-eleva-preview"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
+            >
+              <span>🪴</span> Mini-ELEVA beheren
+            </Link>
+          )}
           <Link
             href="/over-eleva"
             className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"

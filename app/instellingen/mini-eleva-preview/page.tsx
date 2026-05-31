@@ -95,8 +95,27 @@ export default async function MiniElevaPreviewHub() {
               Business-uitleg (business-spoor)
             </h2>
             <p className="text-cm-white/60 text-xs leading-relaxed mt-0.5">
-              Verdienmodel, rang-ladder, hoe het werkt. Alleen zichtbaar
+              Verdienmodel, rang-ladder, hoe het werkt, plus de
+              IP-uitleg (40 IP minimale eigen afname). Alleen zichtbaar
               voor prospects die voor de business-kant zijn uitgenodigd.
+            </p>
+          </div>
+          <span className="text-cm-gold">→</span>
+        </Link>
+
+        <Link
+          href="/instellingen/mini-eleva-preview/faq"
+          className="card flex items-center gap-3 hover:border-cm-gold-dim transition-colors"
+        >
+          <span className="text-2xl">❓</span>
+          <div className="flex-1">
+            <h2 className="text-cm-white font-semibold text-sm">
+              Veelgestelde vragen
+            </h2>
+            <p className="text-cm-white/60 text-xs leading-relaxed mt-0.5">
+              Combinatie van product- en business-vragen, met de
+              IP-uitleg vooraan. MediaBlokken-slots per sectie voor
+              losse video-antwoorden.
             </p>
           </div>
           <span className="text-cm-gold">→</span>
