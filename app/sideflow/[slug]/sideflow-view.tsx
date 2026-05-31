@@ -1,11 +1,11 @@
 "use client";
 
-// File: app/core-v9/sideflow/[slug]/sideflow-view.tsx
+// File: app/sideflow/[slug]/sideflow-view.tsx
 //
 // Client-component die de side-flow toont: intro-tekst + substeps met
 // MediaBlokken + slot-tekst. Substeps zijn afvinkbaar, voortgang gaat
-// naar /api/core-v9/vink-substep met ankerstap_nummer = 0 (sideflow-
-// marker). Knop "Klaar met side-flow" sluit af en stuurt naar /core-v9.
+// naar /api/sideflow/vink-substep met ankerstap_nummer = 0 (sideflow-
+// marker). Knop "Klaar met side-flow" sluit af en stuurt naar /vandaag.
 
 import { useState } from "react";
 import Link from "next/link";
@@ -24,7 +24,7 @@ type Props = {
   blokkenPerPositie: Record<string, Blok[]>;
 };
 
-export function CoreV9SideflowView({
+export function SideflowView({
   sideflow,
   isFounder,
   initieelVoltooidIds,
@@ -51,11 +51,10 @@ export function CoreV9SideflowView({
   async function toggleSubstep(taakId: string, nu: boolean) {
     setBezig(true);
     try {
-      const res = await fetch("/api/core-v9/vink-substep", {
+      const res = await fetch("/api/sideflow/vink-substep", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ankerstap: 0, // sideflow-marker
           taakId,
           voltooid: !nu,
         }),
@@ -85,7 +84,6 @@ export function CoreV9SideflowView({
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-8 text-cm-white">
-      {/* Header */}
       <div className="mb-2">
         <Link
           href="/vandaag"
@@ -100,7 +98,6 @@ export function CoreV9SideflowView({
       </h1>
       <p className="text-cm-muted text-base mb-2">{sideflow.ondertitel}</p>
 
-      {/* Voortgang-bar */}
       <div className="mt-4 mb-6 flex items-center gap-3">
         <div className="flex-1 h-2 bg-cm-surface-2 rounded-full overflow-hidden">
           <div
@@ -115,7 +112,6 @@ export function CoreV9SideflowView({
         </span>
       </div>
 
-      {/* Media: bovenaan */}
       <MediaBlokken
         paginaNamespace="core-v9-sideflow"
         paginaId={sideflow.slug}
@@ -124,7 +120,6 @@ export function CoreV9SideflowView({
         isFounder={isFounder}
       />
 
-      {/* Intro-tekst */}
       <div className="prose prose-invert max-w-none">
         {sideflow.intro.split("\n\n").map((alinea, i) => (
           <p key={i} className="text-cm-white/85 leading-relaxed text-base">
@@ -133,7 +128,6 @@ export function CoreV9SideflowView({
         ))}
       </div>
 
-      {/* Media: tussen intro en substeps */}
       <MediaBlokken
         paginaNamespace="core-v9-sideflow"
         paginaId={sideflow.slug}
@@ -142,7 +136,6 @@ export function CoreV9SideflowView({
         isFounder={isFounder}
       />
 
-      {/* Substep-lijst */}
       <h2 className="mt-10 text-xl font-display font-bold text-cm-gold">
         Substeps in deze flow
       </h2>
@@ -218,7 +211,6 @@ export function CoreV9SideflowView({
                     </Link>
                   )}
 
-                  {/* MediaBlokken per substep, positie = substep-id */}
                   <MediaBlokken
                     paginaNamespace="core-v9-sideflow"
                     paginaId={sideflow.slug}
@@ -233,7 +225,6 @@ export function CoreV9SideflowView({
         })}
       </div>
 
-      {/* Slot-tekst */}
       <div className="mt-10 rounded-lg border border-cm-gold/40 bg-cm-gold/5 p-5">
         <p className="text-cm-white/85 whitespace-pre-line leading-relaxed">
           {sideflow.slotTekst}

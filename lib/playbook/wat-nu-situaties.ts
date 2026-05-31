@@ -557,7 +557,7 @@ Waarom begon je ook alweer? Dat is je brandstof. Pak 'm er even bij. Niet alleen
         label: "Wat moet ik nu doen?",
         hint: "Terug naar je huidige stap",
         actieLabel: "Naar je huidige stap",
-        actieRoute: "/core-v9",
+        actieRoute: "/vandaag",
         uitleg: `Je bent even het overzicht kwijt en weet niet waar je moet beginnen. Heel herkenbaar, zeker als je nieuw bent en er veel op je afkomt. Adem even uit. Het is simpeler dan het voelt.
 
 EEN DING TEGELIJK

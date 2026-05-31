@@ -17,8 +17,8 @@ import { WAT_NU_GROEPEN } from "@/lib/playbook/wat-nu-situaties";
 
 // metSidebar: op desktop-routes mét de vaste sidebar (AppShell) schuift de
 // knop naar rechts zodat 'ie niet over het menu valt. Op de volledige-
-// scherm-flows (/vandaag, /core-v9) is er geen sidebar, dan staat 'ie links
-// in het vrije vlak.
+// scherm-flow /vandaag is er geen sidebar, dan staat 'ie links in het
+// vrije vlak.
 export function WatNuKnop({ metSidebar = false }: { metSidebar?: boolean }) {
   const [open, setOpen] = useState(false);
   const [openGroep, setOpenGroep] = useState<string | null>(null);

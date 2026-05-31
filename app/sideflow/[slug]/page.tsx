@@ -17,7 +17,7 @@ import {
 } from "@/lib/playbook/core-sideflows-v9";
 import { haalPaginaBlokken } from "@/lib/cms/pagina-blokken";
 import type { Blok } from "@/lib/cms/pagina-blokken";
-import { CoreV9SideflowView } from "@/app/core-v9/sideflow/[slug]/sideflow-view";
+import { SideflowView } from "./sideflow-view";
 import { EditModeProvider } from "@/components/cms/EditModeContext";
 
 export const dynamic = "force-dynamic";
@@ -90,7 +90,7 @@ export default async function SideflowPagina({
 
   return (
     <EditModeProvider>
-      <CoreV9SideflowView
+      <SideflowView
         sideflow={sideflow}
         isFounder={isFounder}
         voornaam={voornaam}

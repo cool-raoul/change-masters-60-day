@@ -51,8 +51,10 @@ export default async function WatNuPagina({ params }: { params: Params }) {
     .maybeSingle();
   const isFounder = (profile as { role?: string } | null)?.role === "founder";
   const modus = (profile as { modus?: string } | null)?.modus ?? "sprint";
-  const stapRoute = modus === "core" ? "/core-v9" : "/vandaag";
-  const vanParam = modus === "core" ? "core-v9" : "vandaag";
+  // Zowel core als sprint draaien nu op /vandaag (V9 is sinds 2026-05-31
+  // de live member-Core via /vandaag).
+  const stapRoute = "/vandaag";
+  const vanParam = "vandaag";
 
   const mediaBlokkenMap = await haalPaginaBlokken(supabase, "wat-nu", slug);
   const blokkenPerPositie: Record<string, Blok[]> = {};
@@ -64,15 +66,17 @@ export default async function WatNuPagina({ params }: { params: Params }) {
 
   const blokjes = situatie.uitleg.split(/\n\n+/);
 
-  // De actie-knop. Route "/core-v9" betekent "je huidige stap", dus die
-  // wordt modus-bewust naar /core-v9 of /vandaag gestuurd. Andere routes
-  // krijgen een ?van=-spoor zodat je op de bestemming een terug-balk ziet.
-  const actieHref = situatie.actieRoute.startsWith("/core-v9")
-    ? stapRoute
-    : situatie.actieRoute +
-      (situatie.actieRoute.includes("?") ? "&" : "?") +
-      "van=" +
-      vanParam;
+  // De actie-knop. Routes naar de oude /core-v9-prefix mappen op /vandaag
+  // (V9 draait sinds 2026-05-31 op /vandaag). Andere routes krijgen een
+  // ?van=-spoor zodat je op de bestemming een terug-balk ziet.
+  const actieHref =
+    situatie.actieRoute.startsWith("/core-v9") ||
+    situatie.actieRoute === "/vandaag"
+      ? stapRoute
+      : situatie.actieRoute +
+        (situatie.actieRoute.includes("?") ? "&" : "?") +
+        "van=" +
+        vanParam;
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-6 text-cm-white">
