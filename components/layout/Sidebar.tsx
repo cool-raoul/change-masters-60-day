@@ -238,6 +238,12 @@ export function Sidebar({
             </Link>
           )}
           <Link
+            href="/uitnodigingen"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
+          >
+            <span>✨</span> Mini-ELEVA uitnodigingen
+          </Link>
+          <Link
             href="/over-eleva"
             className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
           >

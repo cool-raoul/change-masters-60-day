@@ -104,6 +104,25 @@ export default async function MiniElevaPreviewHub() {
         </Link>
 
         <Link
+          href="/instellingen/mini-eleva-preview/business-verhalen"
+          className="card flex items-center gap-3 hover:border-cm-gold-dim transition-colors"
+        >
+          <span className="text-2xl">🌟</span>
+          <div className="flex-1">
+            <h2 className="text-cm-white font-semibold text-sm">
+              Business-verhalen (business-spoor)
+            </h2>
+            <p className="text-cm-white/60 text-xs leading-relaxed mt-0.5">
+              Acht thema-secties met opbouw-ervaringen: eerste 3-weg,
+              eerste klanten, eerste member, bijverdienste, vrijheid,
+              sponsor, tegenslag, doorbraak. MediaBlokken-slot per
+              thema. Alleen zichtbaar op business-spoor.
+            </p>
+          </div>
+          <span className="text-cm-gold">→</span>
+        </Link>
+
+        <Link
           href="/instellingen/mini-eleva-preview/faq"
           className="card flex items-center gap-3 hover:border-cm-gold-dim transition-colors"
         >

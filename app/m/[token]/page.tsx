@@ -195,26 +195,47 @@ export default async function MiniElevaLandingPagina({
           <span className="text-cm-gold">→</span>
         </Link>
 
-        {/* Business-module: alleen voor business-spoor-prospects. */}
+        {/* Business-modules: alleen voor business-spoor-prospects. */}
         {ctx.soort === "business" && (
-          <Link
-            href={`/m/${ctx.token}/business`}
-            className="card flex items-center gap-3 hover:border-cm-gold-dim transition-colors"
-          >
-            <span className="text-2xl">💼</span>
-            <div className="flex-1">
-              <h3 className="text-cm-white font-semibold text-sm">
-                De business-kant
-              </h3>
-              <p className="text-cm-white/60 text-xs leading-relaxed mt-0.5">
-                Hoe het verdienmodel in elkaar zit, de rang-ladder van
-                Builder tot Diamond, en wat een rustige dag eruitziet.
-                Met de IP-uitleg en de minimale eigen afname duidelijk
-                op een rij.
-              </p>
-            </div>
-            <span className="text-cm-gold">→</span>
-          </Link>
+          <>
+            <Link
+              href={`/m/${ctx.token}/business`}
+              className="card flex items-center gap-3 hover:border-cm-gold-dim transition-colors"
+            >
+              <span className="text-2xl">💼</span>
+              <div className="flex-1">
+                <h3 className="text-cm-white font-semibold text-sm">
+                  De business-kant
+                </h3>
+                <p className="text-cm-white/60 text-xs leading-relaxed mt-0.5">
+                  Hoe het verdienmodel in elkaar zit, de rang-ladder
+                  van Builder tot Diamond, en wat een rustige dag
+                  eruitziet. Met de IP-uitleg en de minimale eigen
+                  afname duidelijk op een rij.
+                </p>
+              </div>
+              <span className="text-cm-gold">→</span>
+            </Link>
+
+            <Link
+              href={`/m/${ctx.token}/business-verhalen`}
+              className="card flex items-center gap-3 hover:border-cm-gold-dim transition-colors"
+            >
+              <span className="text-2xl">🌟</span>
+              <div className="flex-1">
+                <h3 className="text-cm-white font-semibold text-sm">
+                  Verhalen van mensen die met de business bouwen
+                </h3>
+                <p className="text-cm-white/60 text-xs leading-relaxed mt-0.5">
+                  Ervaringen rond de eerste 3-weg, eerste klanten,
+                  eerste member, bijverdienste, vrijheid, samen met je
+                  sponsor, tegenslag, en de doorbraak-momenten. Echte
+                  verhalen, geen succes-marketing.
+                </p>
+              </div>
+              <span className="text-cm-gold">→</span>
+            </Link>
+          </>
         )}
 
         <Link

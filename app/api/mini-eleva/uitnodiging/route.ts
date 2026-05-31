@@ -99,22 +99,62 @@ export async function POST(req: NextRequest) {
     // erbij verlengen als prospect tijd nodig had.
     const expires = new Date(nu.getTime() + 14 * 24 * 60 * 60 * 1000);
 
-    const { data: nieuw, error } = await supabase
-      .from("prospect_invitations")
-      .insert({
-        prospect_id: prospectId,
-        member_user_id: user.id,
-        sponsor_user_id: sponsorId,
-        token,
-        expires_at: expires.toISOString(),
-        status: "actief",
-        soort,
-      })
-      .select("id, token, expires_at")
-      .maybeSingle();
+    // Probeer eerst met soort-kolom (nieuw veld per 2026-05-31).
+    // Bestaat de kolom nog niet (migratie niet gedraaid), retry zonder
+    // zodat 'r in elk geval een uitnodiging gemaakt wordt. De
+    // resulterende rij krijgt dan de default 'business' zodra de
+    // migratie alsnog wordt uitgevoerd.
+    let nieuw:
+      | { id?: string; token?: string; expires_at?: string }
+      | null = null;
+    let error: { code?: string; message?: string } | null = null;
+
+    {
+      const res = await supabase
+        .from("prospect_invitations")
+        .insert({
+          prospect_id: prospectId,
+          member_user_id: user.id,
+          sponsor_user_id: sponsorId,
+          token,
+          expires_at: expires.toISOString(),
+          status: "actief",
+          soort,
+        })
+        .select("id, token, expires_at")
+        .maybeSingle();
+      nieuw = res.data;
+      error = res.error;
+    }
+
+    // Kolom niet gevonden? Retry zonder soort.
+    if (
+      error &&
+      (error.code === "PGRST204" ||
+        error.code === "42703" ||
+        error.message?.includes("soort"))
+    ) {
+      const res2 = await supabase
+        .from("prospect_invitations")
+        .insert({
+          prospect_id: prospectId,
+          member_user_id: user.id,
+          sponsor_user_id: sponsorId,
+          token,
+          expires_at: expires.toISOString(),
+          status: "actief",
+        })
+        .select("id, token, expires_at")
+        .maybeSingle();
+      nieuw = res2.data;
+      error = res2.error;
+    }
 
     if (error) {
-      if (error.code === "42P01" || error.message?.includes("does not exist")) {
+      if (
+        error.code === "42P01" ||
+        error.message?.includes("does not exist")
+      ) {
         return NextResponse.json(
           {
             error:

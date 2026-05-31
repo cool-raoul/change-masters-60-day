@@ -221,30 +221,10 @@ export function MiniElevaVerhalenContent({
           />
         </section>
 
-        {/* ============================================================
-            BUSINESS (alleen business-spoor)
-            ============================================================ */}
-        {spoor === "business" && (
-          <section className="card space-y-3">
-            <h2 className="text-cm-gold text-base font-semibold flex items-center gap-2">
-              💼 Mensen die met de business bezig zijn
-            </h2>
-            <p className="text-cm-white/85 text-sm leading-relaxed">
-              Verhalen van mensen die er ook iets mee zijn gaan doen aan de
-              business-kant. Sommigen bewust als kleine bijverdienste naast
-              hun werk, anderen die uitbouwen tot iets stevigers. Geen
-              bedragen-beloftes, wel een eerlijk beeld van wat ze hebben
-              opgebouwd en wat dat met hen heeft gedaan.
-            </p>
-            <MediaBlokken
-              paginaNamespace="mini-eleva-verhalen"
-              paginaId="overzicht"
-              positie="business"
-              blokken={blokken("business")}
-              isFounder={isFounder}
-            />
-          </section>
-        )}
+        {/* Business-verhalen leven nu op een eigen route
+            (/m/[token]/business-verhalen), zichtbaar als aparte
+            module-kaart op de landing voor business-spoor-prospects.
+            Hier geen business-blok meer, dit blijft puur product. */}
 
         {/* ============================================================
             AFSLUITEND
