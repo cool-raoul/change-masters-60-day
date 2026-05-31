@@ -382,7 +382,7 @@ export function CoreV9Flow({
               </p>
               <div className="grid sm:grid-cols-2 gap-3 pt-2">
                 <Link
-                  href="/core-v9/sideflow/pre-post"
+                  href="/sideflow/pre-post"
                   className="rounded-md border border-cm-border bg-cm-bg/60 hover:bg-cm-bg/80 px-4 py-3 text-left transition-colors"
                   onClick={() => vinkAf(huidigeTaak.id, true)}
                 >
@@ -395,7 +395,7 @@ export function CoreV9Flow({
                   </p>
                 </Link>
                 <Link
-                  href="/core-v9/sideflow/21-dagen-post"
+                  href="/sideflow/21-dagen-post"
                   className="rounded-md border border-cm-border bg-cm-bg/60 hover:bg-cm-bg/80 px-4 py-3 text-left transition-colors"
                   onClick={() => vinkAf(huidigeTaak.id, true)}
                 >
