@@ -220,18 +220,11 @@ Gewoon doen, jij kan dit 💪🏽`,
     vandaagDoen: [
       {
         id: "core-v9-stap2-namen",
-        label: "Voeg minimaal 20 namen toe (productgebruikers + opportunity-mensen)",
+        label: "Bouw je top-20 + markeer je top-5",
         verplicht: true,
         actieRoute: "/namenlijst",
         uitleg:
-          "Schrijf twintig namen op die spontaan in je hoofd opkomen, dat is je Top-20. Twee soorten door elkaar: mensen waarvan jij denkt dat ze baat zouden hebben bij een product (slecht slaapt, weinig energie, hormonen die schuiven), én mensen die het werk zelf misschien zouden willen doen (ondernemend, mensen-mens, iemand die je iets gunt). Geen filter, zet ook die ene erop waarvan je denkt 'die past nooit', want juist die verrast vaak. Loop je telefoon, je social en je dagelijkse omgeving even langs als je vastzit, dan komen de namen vanzelf. Lukt twintig niet in één keer? Geen probleem, je vult elke dag aan, je lijst is nooit af.",
-      },
-      {
-        id: "core-v9-stap2-top5",
-        label: "Markeer je top-5 binnen de top-20",
-        verplicht: true,
-        uitleg:
-          "Kies binnen je twintig namen vijf mensen waar je echt iets aan zou willen doen. Geen 'wie zou kopen', wel 'wie gun ik dit het meest'. Het mogen klanten-types of opportunity-types zijn, het criterium is jouw gunfactor. Deze vijf zijn jouw kandidaten voor de drie oefen-uitnodigingen samen met je sponsor, dus kies mensen waar je je goed bij voelt om mee te beginnen. Twijfel je tussen mensen? Markeer ze allebei, je kunt later nog kiezen wie als eerste gaat.",
+          "Schrijf twintig namen op die spontaan in je hoofd opkomen, dat is je Top-20. Twee soorten door elkaar: mensen waarvan jij denkt dat ze baat zouden hebben bij een product (slecht slaapt, weinig energie, hormonen die schuiven), én mensen die het werk zelf misschien zouden willen doen (ondernemend, mensen-mens, iemand die je iets gunt). Geen filter, zet ook die ene erop waarvan je denkt 'die past nooit', want juist die verrast vaak. Loop je telefoon, je social en je dagelijkse omgeving even langs als je vastzit, dan komen de namen vanzelf. Markeer daarna vijf binnen je twintig waar je gevoel zegt 'die gun ik dit het meest', dat zijn je kandidaten voor de drie oefen-uitnodigingen samen met je sponsor. Lukt twintig niet in één keer? Geen probleem, je vult elke dag aan, je lijst is nooit af.",
       },
       {
         id: "core-v9-stap2-vcard",
@@ -252,8 +245,8 @@ Gewoon doen, jij kan dit 💪🏽`,
       },
       {
         id: "core-v9-stap2-eigen-zin",
-        label: "Schrijf je eigen webshop-uitnodigingszin",
-        verplicht: true,
+        label: "Schrijf je eigen webshop-uitnodigingszin (optioneel, rijker maakt 'm 'm wel)",
+        verplicht: false,
         actieRoute: "/coach",
         actieRouteLabel: "Schrijf 'm met de Mentor →",
         uitleg:
@@ -1989,19 +1982,11 @@ Wat ben je gegroeid. Trots op je 🥰`,
     vandaagDoen: [
       {
         id: "core-v9-stap21-klantomgeving-review",
-        label: "Open klantomgeving-overview + bekijk per klant",
+        label: "Loop je klantomgeving door + markeer 2 vervolg-kandidaten",
         verplicht: true,
         actieRoute: "/klant",
         uitleg:
-          "Open je klantomgeving-overview en bekijk per klant wat er is gebeurd. Welke pulse-momenten zijn geweest, hoe staat ze er nu voor, en wanneer was jullie laatste echte contact? De Mentor laat zien wie actief is in haar programma, wie stil is geworden, en wie interessant kan zijn voor een vervolgstap. Niet alles tegelijk willen aanpakken, eerst rustig kijken. Dit is je vertrekpunt voor de volgende ronde.",
-      },
-      {
-        id: "core-v9-stap21-twee-klanten-markeren",
-        label: "Markeer 2 klanten waar een Core- of webshop-uitnodiging kan passen",
-        verplicht: true,
-        actieRoute: "/namenlijst",
-        uitleg:
-          "Markeer twee klanten waar je gevoel zegt: hier past een uitnodiging naar Core of de webshop. Niet vijf of tien, twee. Concreet en haalbaar, want een te lange lijst leidt vaak tot niks. Kies mensen waar je je het meest op je gemak voelt om dit gesprek mee te voeren. Dit zijn je concrete intenties voor de volgende ronde, je hoeft 'm vandaag nog niet te versturen.",
+          "Open je klantomgeving-overview en bekijk per klant wat er is gebeurd. Welke pulse-momenten zijn geweest, hoe staat ze er nu voor, en wanneer was jullie laatste echte contact? De Mentor laat zien wie actief is in haar programma, wie stil is geworden, en wie interessant kan zijn voor een vervolgstap. Markeer daarna twee mensen waar je gevoel zegt 'hier past straks een uitnodiging naar Core of de webshop'. Niet vijf of tien, twee, concreet en haalbaar. Dit zijn je intenties voor de volgende ronde, je hoeft 'm vandaag nog niet te versturen.",
       },
       {
         id: "core-v9-stap21-eindreflectie",
@@ -2013,8 +1998,8 @@ Wat ben je gegroeid. Trots op je 🥰`,
       },
       {
         id: "core-v9-stap21-talent",
-        label: "Beantwoord de talent-vraag met de Mentor",
-        verplicht: true,
+        label: "Beantwoord de talent-vraag met de Mentor (optioneel)",
+        verplicht: false,
         actieRoute: "/coach",
         uitleg:
           "De Mentor heeft je in actie gezien deze drie weken, en ziet vier mogelijke talenten: schrijver (je posts en berichten lopen lekker, mensen reageren op je tekst), spreker (in 3-wegs en Mini-ELEVA's zit jij comfortabel, jij praat liever dan typt), filmer (je Stories en Reels lopen, je hebt visueel oog), of DM-er (één-op-één contact via DM is jouw kracht, mensen voelen zich gezien). Niet één is beter dan een ander, en je kunt meerdere hebben. Maar één primair talent helpt je in de volgende ronde kiezen welk kanaal je extra aanzet.",
@@ -2039,8 +2024,8 @@ Wat ben je gegroeid. Trots op je 🥰`,
       },
       {
         id: "core-v9-stap21-sponsor-call-plannen",
-        label: "Plan een call met je sponsor om voortgang te bespreken (~30-45 min)",
-        verplicht: true,
+        label: "Plan een call met je sponsor om voortgang te bespreken (~30-45 min, optioneel)",
+        verplicht: false,
         inlineEmbed: "sponsor-melding",
         uitleg:
           "Plan een call van zo'n 30 tot 45 minuten met je sponsor om de eerste 21 stappen samen door te lopen. Wat ging goed, waar wil je hulp, wat is je 30-dagen-doel voor de volgende ronde. Je sponsor ziet je groeitraject van een afstand en kan reflecteren waar jij dat zelf lastig vindt. Dat externe oog is goud waard op dit moment, en je sponsor wil het echt graag doen. Tik de knop hieronder voor het berichtje.",
