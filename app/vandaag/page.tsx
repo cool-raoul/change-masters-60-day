@@ -240,6 +240,69 @@ export default async function VandaagPagina({
     redirect("/dashboard");
   }
 
+  // ============================================================
+  // SIDE-FLOW GATE (Core V9, per 2026-05-31).
+  // Op stap 1 maakt de member een keuze (pre-post of 21-dagen-post)
+  // via de prepost-keuze-embed. Die keuze wordt opgeslagen op
+  // profiles.core_eigen_resultaat (boolean of null).
+  //
+  // Zodra dag 1 voltooid is en de member doorgaat naar dag 2, moet
+  // 'r EERST de gekozen sideflow afronden. Side-flow afgerond =
+  // de laatste 'afronden'-substep voltooid in core_v6_substep_voltooiingen
+  // met ankerstap_nummer = 0.
+  //
+  // Voor pre-post-leden komt rond dag 14 nog een tweede gate: de
+  // 21-dagen-resultaat-post moet dan ook gedaan worden.
+  //
+  // Founder met ?dag=N override-param: skip de gate zodat 'ie elke
+  // dag los kan bekijken.
+  // ============================================================
+  if (modusVoorDagTeller === "core" && dag >= 2 && !dagOverride) {
+    const eigenResultaat = (profile as { core_eigen_resultaat?: boolean | null } | null)?.core_eigen_resultaat;
+
+    if (eigenResultaat !== null && eigenResultaat !== undefined) {
+      const eersteSideflowSlug = eigenResultaat ? "21-dagen-post" : "pre-post";
+      const eersteAfrondTaakId = eigenResultaat
+        ? "core-v9-sideflow-21dagen-12-afronden"
+        : "core-v9-sideflow-prepost-11-afronden";
+
+      try {
+        const { data: voltooidEerste } = await supabase
+          .from("core_v6_substep_voltooiingen")
+          .select("taak_id")
+          .eq("user_id", user.id)
+          .eq("taak_id", eersteAfrondTaakId)
+          .maybeSingle();
+
+        if (!voltooidEerste) {
+          redirect(`/core-v9/sideflow/${eersteSideflowSlug}`);
+        }
+      } catch {
+        // tabel kan nog niet bestaan op vroege omgevingen, gate dan over
+      }
+
+      // Dag 14+ tweede gate: pre-post-leden krijgen nu de 21-dagen-
+      // resultaat-post-sideflow als trigger (zij hebben inmiddels eigen
+      // ervaring opgebouwd). 21-dagen-leden hebben dat al gedaan op
+      // dag 1, dus die slaan we over.
+      if (!eigenResultaat && dag >= 14) {
+        try {
+          const { data: voltooid21d } = await supabase
+            .from("core_v6_substep_voltooiingen")
+            .select("taak_id")
+            .eq("user_id", user.id)
+            .eq("taak_id", "core-v9-sideflow-21dagen-12-afronden")
+            .maybeSingle();
+          if (!voltooid21d) {
+            redirect("/core-v9/sideflow/21-dagen-post");
+          }
+        } catch {
+          // ignore, idem
+        }
+      }
+    }
+  }
+
   // Tempo-aware vervanging: lees commitment_uren uit user_metadata
   // en pas tempo-specifieke taken toe.
   const ruwUren = Number(

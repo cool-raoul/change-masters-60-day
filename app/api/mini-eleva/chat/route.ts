@@ -121,6 +121,7 @@ export async function POST(req: NextRequest) {
       prospectVoornaam: ctx.prospectNaam.split(" ")[0],
       memberNaam: ctx.memberNaam,
       sponsorNaam: ctx.sponsorNaam,
+      spoor: ctx.soort,
     });
 
     // Mitigatie 2: MODEL-ROUTER. Standaard mini, alleen langer bericht

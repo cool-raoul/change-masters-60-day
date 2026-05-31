@@ -36,6 +36,10 @@ export function MiniElevaUitnodigKnop({ prospectId, prospectNaam }: Props) {
   const [gekozenSponsorId, setGekozenSponsorId] = useState<string | null>(
     null,
   );
+  // Welke kant nodig je deze prospect voor uit? Default = product (lichtste
+  // versie, geen business-content). Member kiest BEWUST 'business' als
+  // 'r ook geinteresseerd is in de opportunity-kant.
+  const [soort, setSoort] = useState<"product" | "business">("product");
 
   // Upline-keten ophalen voor sponsor-keuze. Default = niemand erbij;
   // member kan later in de chat zelf alsnog iemand toevoegen via de
@@ -69,6 +73,7 @@ export function MiniElevaUitnodigKnop({ prospectId, prospectNaam }: Props) {
         body: JSON.stringify({
           prospectId,
           sponsorUserId: gekozenSponsorId ?? undefined,
+          soort,
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -159,6 +164,59 @@ export function MiniElevaUitnodigKnop({ prospectId, prospectNaam }: Props) {
             en je sponsor.
           </p>
         </div>
+      </div>
+
+      {/* SOORT-KEUZE: voor welke kant nodig je uit? Belangrijk omdat de
+          inhoud verschilt. Product-kant verbergt verdienmodel, business-
+          uitleg en business-FAQ. */}
+      <div className="space-y-2">
+        <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
+          Voor welke kant nodig je {prospectNaam.split(" ")[0]} uit?
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={() => setSoort("product")}
+            disabled={bezig}
+            className={`text-left rounded-md border px-3 py-2 transition-colors ${
+              soort === "product"
+                ? "border-cm-gold bg-cm-gold/10"
+                : "border-cm-border bg-cm-bg/40 hover:bg-cm-bg/60"
+            }`}
+          >
+            <p className="text-cm-white font-semibold text-sm">
+              🌿 Product-kant
+            </p>
+            <p className="text-cm-white/60 text-xs leading-relaxed mt-0.5">
+              Voor wie nieuwsgierig is naar de producten of programma's.
+              Geen verdienmodel zichtbaar.
+            </p>
+          </button>
+          <button
+            type="button"
+            onClick={() => setSoort("business")}
+            disabled={bezig}
+            className={`text-left rounded-md border px-3 py-2 transition-colors ${
+              soort === "business"
+                ? "border-cm-gold bg-cm-gold/10"
+                : "border-cm-border bg-cm-bg/40 hover:bg-cm-bg/60"
+            }`}
+          >
+            <p className="text-cm-white font-semibold text-sm">
+              💼 Business + product
+            </p>
+            <p className="text-cm-white/60 text-xs leading-relaxed mt-0.5">
+              Voor wie ook nieuwsgierig is naar de opportunity-kant.
+              Beide kanten zichtbaar.
+            </p>
+          </button>
+        </div>
+        <p className="text-cm-white/40 text-[10px] leading-relaxed">
+          Kies bewust: een product-prospect die ineens business-content
+          ziet voelt zich vaak gepushed. Bij twijfel: begin met product-
+          kant, je kunt later altijd een nieuwe business-uitnodiging
+          sturen.
+        </p>
       </div>
 
       {/* Optionele sponsor-keuze BIJ AANMAKEN. Default = niemand, member

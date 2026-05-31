@@ -39,10 +39,6 @@ export default async function VerhalenPagina({
     blokkenPerPositie[positie] = lijst;
   });
 
-  // Default spoor 'business' totdat we het soort-veld op de invitation
-  // hebben. Op product-spoor verbergen we de business-sectie.
-  const spoor: "product" | "business" = "business";
-
   return (
     <MiniElevaVerhalenContent
       isFounder={false}
@@ -50,7 +46,7 @@ export default async function VerhalenPagina({
       memberNaam={ctx.memberNaam}
       terugHref={`/m/${ctx.token}`}
       blokkenPerPositie={blokkenPerPositie}
-      spoor={spoor}
+      spoor={ctx.soort}
     />
   );
 }

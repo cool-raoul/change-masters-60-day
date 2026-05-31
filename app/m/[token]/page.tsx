@@ -195,6 +195,28 @@ export default async function MiniElevaLandingPagina({
           <span className="text-cm-gold">→</span>
         </Link>
 
+        {/* Business-module: alleen voor business-spoor-prospects. */}
+        {ctx.soort === "business" && (
+          <Link
+            href={`/m/${ctx.token}/business`}
+            className="card flex items-center gap-3 hover:border-cm-gold-dim transition-colors"
+          >
+            <span className="text-2xl">💼</span>
+            <div className="flex-1">
+              <h3 className="text-cm-white font-semibold text-sm">
+                De business-kant
+              </h3>
+              <p className="text-cm-white/60 text-xs leading-relaxed mt-0.5">
+                Hoe het verdienmodel in elkaar zit, de rang-ladder van
+                Builder tot Diamond, en wat een rustige dag eruitziet.
+                Met de IP-uitleg en de minimale eigen afname duidelijk
+                op een rij.
+              </p>
+            </div>
+            <span className="text-cm-gold">→</span>
+          </Link>
+        )}
+
         <Link
           href={`/m/${ctx.token}/faq`}
           className="card flex items-center gap-3 hover:border-cm-gold-dim transition-colors"
@@ -206,9 +228,12 @@ export default async function MiniElevaLandingPagina({
             </h3>
             <p className="text-cm-white/60 text-xs leading-relaxed mt-0.5">
               De vragen die mensen meestal als eerste stellen. Over
-              producten en programma's, over hoe het werkt, en over wat
-              IP en de basis-afname betekenen. Klik open wat jouw
-              vraag is.
+              producten en programma's
+              {ctx.soort === "business"
+                ? ", over hoe de business werkt,"
+                : ""}{" "}
+              en over wat IP en de basis-afname betekenen. Klik open
+              wat jouw vraag is.
             </p>
           </div>
           <span className="text-cm-gold">→</span>

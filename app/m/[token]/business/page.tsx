@@ -4,9 +4,11 @@ import { haalPaginaBlokken } from "@/lib/cms/pagina-blokken";
 import type { Blok } from "@/lib/cms/pagina-blokken";
 import { MiniElevaBusinessContent } from "./content";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 // ============================================================
-// /m/[token]/business, alleen zichtbaar voor business-spoor-prospects.
+// /m/[token]/business, alleen voor business-spoor-prospects.
+// Product-spoor wordt vriendelijk teruggestuurd naar de landing.
 // Verdienmodel, rang-ladder, Builder-mijlpaal, plus MediaBlokken.
 // ============================================================
 
@@ -29,9 +31,12 @@ export default async function BusinessPagina({
     );
   }
 
-  // Zodra het soort-veld op de invitation bestaat: blokkeer product-spoor.
-  // Voor nu draait alles op default 'business', dus iedereen mag erin tot
-  // we de filter aanzetten.
+  // Product-spoor: deze pagina is niet voor jou bedoeld. Stuur terug
+  // naar de landing. Wie hier wel business-inhoud wil zien, vraagt de
+  // member om een nieuwe uitnodiging van soort 'business'.
+  if (ctx.soort === "product") {
+    redirect(`/m/${ctx.token}`);
+  }
 
   await logActiviteit(ctx.invitationId, "business", "business-pagina geopend");
 

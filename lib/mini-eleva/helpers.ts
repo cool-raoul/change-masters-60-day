@@ -22,6 +22,14 @@ export type MiniElevaContext = {
   status: "actief" | "verlopen" | "ja_starter" | "nee_dichtgeklapt";
   expiresAt: string;
   isVerlopen: boolean;
+  /**
+   * Voor welke kant is deze prospect uitgenodigd?
+   *   product  → alleen product/programma-inhoud, geen business
+   *   business → product + business-uitleg + verdienmodel
+   * Default 'business' voor backward-compat als de kolom in de DB
+   * nog niet bestaat of leeg is.
+   */
+  soort: "product" | "business";
 };
 
 export async function pakMiniElevaContext(
@@ -31,18 +39,10 @@ export async function pakMiniElevaContext(
 
   const admin = createAdminClient();
 
-  const { data: invitation, error } = await admin
-    .from("prospect_invitations")
-    .select(
-      "id, prospect_id, member_user_id, sponsor_user_id, token, status, expires_at",
-    )
-    .eq("token", token)
-    .maybeSingle();
-
-  if (error || !invitation) return null;
-
-  // Haal extra context op (prospect-naam, member-naam, sponsor-naam)
-  const inv = invitation as {
+  // Probeer eerst met soort-kolom (nieuw veld per 2026-05-31). Faalt
+  // de query, dan herhalen we zonder zodat dit blijft werken in een
+  // omgeving waar de migratie nog niet gedraaid is.
+  type InvitationRow = {
     id: string;
     prospect_id: string;
     member_user_id: string;
@@ -50,7 +50,39 @@ export async function pakMiniElevaContext(
     token: string;
     status: "actief" | "verlopen" | "ja_starter" | "nee_dichtgeklapt";
     expires_at: string;
+    soort?: string | null;
   };
+
+  let invitation: InvitationRow | null = null;
+
+  const eersteProbeer = await admin
+    .from("prospect_invitations")
+    .select(
+      "id, prospect_id, member_user_id, sponsor_user_id, token, status, expires_at, soort",
+    )
+    .eq("token", token)
+    .maybeSingle();
+
+  if (!eersteProbeer.error && eersteProbeer.data) {
+    invitation = eersteProbeer.data as unknown as InvitationRow;
+  } else if (eersteProbeer.error && eersteProbeer.error.code === "42703") {
+    // Kolom soort bestaat nog niet → fallback zonder
+    const tweedeProbeer = await admin
+      .from("prospect_invitations")
+      .select(
+        "id, prospect_id, member_user_id, sponsor_user_id, token, status, expires_at",
+      )
+      .eq("token", token)
+      .maybeSingle();
+    if (tweedeProbeer.data) {
+      invitation = tweedeProbeer.data as unknown as InvitationRow;
+    }
+  }
+
+  if (!invitation) return null;
+
+  // Haal extra context op (prospect-naam, member-naam, sponsor-naam)
+  const inv = invitation;
 
   const [prospectRes, memberRes, sponsorRes] = await Promise.all([
     admin
@@ -92,6 +124,7 @@ export async function pakMiniElevaContext(
     status: inv.status,
     expiresAt: inv.expires_at,
     isVerlopen,
+    soort: inv.soort === "product" ? "product" : "business",
   };
 }
 

@@ -40,9 +40,6 @@ export default async function FaqPagina({
     blokkenPerPositie[positie] = lijst;
   });
 
-  // Default 'business' tot het soort-veld op invitations bestaat.
-  const spoor: "product" | "business" = "business";
-
   return (
     <MiniElevaFaqContent
       isFounder={false}
@@ -50,7 +47,7 @@ export default async function FaqPagina({
       sponsorNaam={ctx.sponsorNaam}
       terugHref={`/m/${ctx.token}`}
       blokkenPerPositie={blokkenPerPositie}
-      spoor={spoor}
+      spoor={ctx.soort}
     />
   );
 }

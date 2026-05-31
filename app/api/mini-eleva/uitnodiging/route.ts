@@ -38,6 +38,11 @@ export async function POST(req: NextRequest) {
     const body = await req.json().catch(() => ({}));
     const prospectId = body.prospectId as string | undefined;
     const gekozenSponsorId = body.sponsorUserId as string | undefined;
+    // soort: 'product' (alleen productkant) of 'business' (product + business).
+    // Default 'business' = oude gedrag voor backward-compat.
+    const ruwSoort = body.soort as string | undefined;
+    const soort: "product" | "business" =
+      ruwSoort === "product" ? "product" : "business";
     if (!prospectId) {
       return NextResponse.json({ error: "prospectId vereist" }, { status: 400 });
     }
@@ -103,6 +108,7 @@ export async function POST(req: NextRequest) {
         token,
         expires_at: expires.toISOString(),
         status: "actief",
+        soort,
       })
       .select("id, token, expires_at")
       .maybeSingle();
