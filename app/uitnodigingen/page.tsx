@@ -96,7 +96,11 @@ export default async function UitnodigingenHubPagina() {
       soort:
         inv.soort === "product"
           ? ("product" as const)
-          : ("business" as const),
+          : inv.soort === "business"
+            ? ("business" as const)
+            : inv.token.startsWith("p-")
+              ? ("product" as const)
+              : ("business" as const),
       expiresAt: inv.expires_at,
       verlooptOver: isVerlopen
         ? null

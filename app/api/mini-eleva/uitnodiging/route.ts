@@ -18,11 +18,18 @@ import { createClient } from "@/lib/supabase/server";
 // uitnodiging kan maken.
 // ============================================================
 
-function genereerToken(): string {
-  // 32 hex-karakters via crypto.randomUUID() x2, ruim genoeg uniek
+function genereerToken(soort: "product" | "business"): string {
+  // 32 hex-karakters via crypto.randomUUID() x2, ruim genoeg uniek.
+  //
+  // Prefix 'p-' of 'b-' draagt de soort in het token zelf. Reden:
+  // de soort-kolom in prospect_invitations is optioneel (migratie hoeft
+  // niet te draaien om twee-spoor werkend te krijgen). Door de soort in
+  // het token te stoppen kan de prospect-pagina altijd de juiste
+  // ervaring serveren, ook in omgevingen waar de kolom nog niet bestaat.
   const a = crypto.randomUUID().replace(/-/g, "");
   const b = crypto.randomUUID().replace(/-/g, "");
-  return (a + b).substring(0, 40);
+  const prefix = soort === "product" ? "p-" : "b-";
+  return prefix + (a + b).substring(0, 38);
 }
 
 export async function POST(req: NextRequest) {
@@ -41,8 +48,13 @@ export async function POST(req: NextRequest) {
     // soort: 'product' (alleen productkant) of 'business' (product + business).
     // Default 'business' = oude gedrag voor backward-compat.
     const ruwSoort = body.soort as string | undefined;
-    const soort: "product" | "business" =
-      ruwSoort === "product" ? "product" : "business";
+    if (ruwSoort !== "product" && ruwSoort !== "business") {
+      return NextResponse.json(
+        { error: "soort vereist: 'product' of 'business'" },
+        { status: 400 },
+      );
+    }
+    const soort: "product" | "business" = ruwSoort;
     if (!prospectId) {
       return NextResponse.json({ error: "prospectId vereist" }, { status: 400 });
     }
@@ -92,7 +104,7 @@ export async function POST(req: NextRequest) {
       if (bevestigd) sponsorId = gekozenSponsorId;
     }
 
-    const token = genereerToken();
+    const token = genereerToken(soort);
     const nu = new Date();
     // 14 dagen geldigheid. Beslissingsmoment forceren, niet eindeloos
     // kauwen. Member kan via /api/mini-eleva/verleng later met 14 dagen

@@ -26,11 +26,20 @@ export type MiniElevaContext = {
    * Voor welke kant is deze prospect uitgenodigd?
    *   product  → alleen product/programma-inhoud, geen business
    *   business → product + business-uitleg + verdienmodel
-   * Default 'business' voor backward-compat als de kolom in de DB
-   * nog niet bestaat of leeg is.
+   *
+   * Bron: kolom prospect_invitations.soort als die bestaat, anders het
+   * prefix van het token zelf ('p-' = product, 'b-' = business). Oude
+   * tokens zonder prefix vallen terug op 'business' voor backward-
+   * compat (dat was de enige flow voor 2026-05-31).
    */
   soort: "product" | "business";
 };
+
+function soortUitToken(token: string): "product" | "business" {
+  if (token.startsWith("p-")) return "product";
+  if (token.startsWith("b-")) return "business";
+  return "business";
+}
 
 export async function pakMiniElevaContext(
   token: string,
@@ -124,7 +133,12 @@ export async function pakMiniElevaContext(
     status: inv.status,
     expiresAt: inv.expires_at,
     isVerlopen,
-    soort: inv.soort === "product" ? "product" : "business",
+    soort:
+      inv.soort === "product"
+        ? "product"
+        : inv.soort === "business"
+          ? "business"
+          : soortUitToken(inv.token),
   };
 }
 
