@@ -2,6 +2,10 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { haalPaginaBlokken } from "@/lib/cms/pagina-blokken";
 import type { Blok } from "@/lib/cms/pagina-blokken";
+import {
+  haalTekstOverridesMulti,
+  namespaceAlsRecord,
+} from "@/lib/cms/tekst-overrides";
 import { MiniElevaProductenContent } from "@/app/m/[token]/producten/content";
 import Link from "next/link";
 
@@ -33,6 +37,16 @@ export default async function FounderProductenPreview() {
     blokkenPerPositie[positie] = lijst;
   });
 
+  // Tekst-overrides: founder ziet hier exact wat prospects zien, met
+  // ✍️-knoppen om alles direct te bewerken.
+  const overridesPerNamespace = await haalTekstOverridesMulti(supabase, [
+    "mini-eleva-producten",
+  ]);
+  const tekstOverrides = namespaceAlsRecord(
+    overridesPerNamespace,
+    "mini-eleva-producten",
+  );
+
   const voornaam =
     ((profile as { full_name?: string } | null)?.full_name ?? "").split(" ")[0] ||
     "prospect";
@@ -61,6 +75,7 @@ export default async function FounderProductenPreview() {
         memberNaam="de member"
         terugHref="/instellingen/mini-eleva-preview"
         blokkenPerPositie={blokkenPerPositie}
+        tekstOverrides={tekstOverrides}
       />
     </div>
   );

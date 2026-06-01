@@ -2,6 +2,10 @@ import { pakMiniElevaContext, logActiviteit } from "@/lib/mini-eleva/helpers";
 import { createClient } from "@/lib/supabase/server";
 import { haalPaginaBlokken } from "@/lib/cms/pagina-blokken";
 import type { Blok } from "@/lib/cms/pagina-blokken";
+import {
+  haalTekstOverridesMulti,
+  namespaceAlsRecord,
+} from "@/lib/cms/tekst-overrides";
 import { MiniElevaProductenContent } from "./content";
 import Link from "next/link";
 
@@ -44,6 +48,16 @@ export default async function ProductenPagina({
     blokkenPerPositie[positie] = lijst;
   });
 
+  // Tekst-overrides: prospect leest hier de evt. founder-aangepaste versies.
+  // Edit-knoppen zijn voor prospect onzichtbaar (isFounder=false).
+  const overridesPerNamespace = await haalTekstOverridesMulti(supabase, [
+    "mini-eleva-producten",
+  ]);
+  const tekstOverrides = namespaceAlsRecord(
+    overridesPerNamespace,
+    "mini-eleva-producten",
+  );
+
   return (
     <MiniElevaProductenContent
       isFounder={false}
@@ -51,6 +65,7 @@ export default async function ProductenPagina({
       memberNaam={ctx.memberNaam}
       terugHref={`/m/${ctx.token}`}
       blokkenPerPositie={blokkenPerPositie}
+      tekstOverrides={tekstOverrides}
     />
   );
 }

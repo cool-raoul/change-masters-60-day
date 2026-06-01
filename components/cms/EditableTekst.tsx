@@ -64,7 +64,23 @@ type Props = {
   rows?: number;
   /** Hint over wat dit veld doet, getoond als label boven het edit-veld */
   hint?: string;
+  /**
+   * Optionele variabele-substitutie. Sleutels in de tekst als {sleutel}
+   * worden vervangen door de bijbehorende waarde bij het renderen.
+   * Bewerk-modus toont de literale {sleutel}, zodat founder het patroon
+   * behoudt. Gebruik bv. vars={{ voornaam: prospectNaam, member: memberNaam }}.
+   */
+  vars?: Record<string, string>;
 };
+
+function interpoleerVars(tekst: string, vars?: Record<string, string>): string {
+  if (!vars) return tekst;
+  let resultaat = tekst;
+  for (const [sleutel, waarde] of Object.entries(vars)) {
+    resultaat = resultaat.split(`{${sleutel}}`).join(waarde);
+  }
+  return resultaat;
+}
 
 export function EditableTekst({
   namespace,
@@ -78,6 +94,7 @@ export function EditableTekst({
   multiline = false,
   rows = 4,
   hint,
+  vars,
 }: Props) {
   const overrideWaarde = overrides[sleutel];
   const [actueleTekst, setActueleTekst] = useState(
@@ -237,7 +254,7 @@ export function EditableTekst({
   const Element = as as keyof JSX.IntrinsicElements;
   return (
     <Element className={className}>
-      {actueleTekst}
+      {interpoleerVars(actueleTekst, vars)}
       {isFounder && editModusAan && (
         <button
           type="button"
