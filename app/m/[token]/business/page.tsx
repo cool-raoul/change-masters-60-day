@@ -2,6 +2,10 @@ import { pakMiniElevaContext, logActiviteit } from "@/lib/mini-eleva/helpers";
 import { createClient } from "@/lib/supabase/server";
 import { haalPaginaBlokken } from "@/lib/cms/pagina-blokken";
 import type { Blok } from "@/lib/cms/pagina-blokken";
+import {
+  haalTekstOverridesMulti,
+  namespaceAlsRecord,
+} from "@/lib/cms/tekst-overrides";
 import { MiniElevaBusinessContent } from "./content";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -47,6 +51,14 @@ export default async function BusinessPagina({
     blokkenPerPositie[positie] = lijst;
   });
 
+  const overridesPerNamespace = await haalTekstOverridesMulti(supabase, [
+    "mini-eleva-business",
+  ]);
+  const tekstOverrides = namespaceAlsRecord(
+    overridesPerNamespace,
+    "mini-eleva-business",
+  );
+
   return (
     <MiniElevaBusinessContent
       isFounder={false}
@@ -55,6 +67,7 @@ export default async function BusinessPagina({
       sponsorNaam={ctx.sponsorNaam}
       terugHref={`/m/${ctx.token}`}
       blokkenPerPositie={blokkenPerPositie}
+      tekstOverrides={tekstOverrides}
     />
   );
 }
