@@ -2,6 +2,10 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { haalPaginaBlokken } from "@/lib/cms/pagina-blokken";
 import type { Blok } from "@/lib/cms/pagina-blokken";
+import {
+  haalTekstOverridesMulti,
+  namespaceAlsRecord,
+} from "@/lib/cms/tekst-overrides";
 import { MiniElevaBusinessVerhalenContent } from "@/app/m/[token]/business-verhalen/content";
 import Link from "next/link";
 
@@ -32,6 +36,14 @@ export default async function FounderBusinessVerhalenPreview() {
   blokkenMap.forEach((lijst, positie) => {
     blokkenPerPositie[positie] = lijst;
   });
+
+  const overridesPerNamespace = await haalTekstOverridesMulti(supabase, [
+    "mini-eleva-business-verhalen",
+  ]);
+  const tekstOverrides = namespaceAlsRecord(
+    overridesPerNamespace,
+    "mini-eleva-business-verhalen",
+  );
 
   const voornaam =
     ((profile as { full_name?: string } | null)?.full_name ?? "").split(" ")[0] ||
@@ -64,6 +76,7 @@ export default async function FounderBusinessVerhalenPreview() {
         sponsorNaam="de sponsor"
         terugHref="/instellingen/mini-eleva-preview"
         blokkenPerPositie={blokkenPerPositie}
+        tekstOverrides={tekstOverrides}
       />
     </div>
   );
