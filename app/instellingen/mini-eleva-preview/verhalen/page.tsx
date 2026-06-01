@@ -2,6 +2,10 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { haalPaginaBlokken } from "@/lib/cms/pagina-blokken";
 import type { Blok } from "@/lib/cms/pagina-blokken";
+import {
+  haalTekstOverridesMulti,
+  namespaceAlsRecord,
+} from "@/lib/cms/tekst-overrides";
 import { MiniElevaVerhalenContent } from "@/app/m/[token]/verhalen/content";
 import Link from "next/link";
 
@@ -33,6 +37,14 @@ export default async function FounderVerhalenPreview() {
     blokkenPerPositie[positie] = lijst;
   });
 
+  const overridesPerNamespace = await haalTekstOverridesMulti(supabase, [
+    "mini-eleva-verhalen",
+  ]);
+  const tekstOverrides = namespaceAlsRecord(
+    overridesPerNamespace,
+    "mini-eleva-verhalen",
+  );
+
   const voornaam =
     ((profile as { full_name?: string } | null)?.full_name ?? "").split(" ")[0] ||
     "prospect";
@@ -61,6 +73,7 @@ export default async function FounderVerhalenPreview() {
         memberNaam="de member"
         terugHref="/instellingen/mini-eleva-preview"
         blokkenPerPositie={blokkenPerPositie}
+        tekstOverrides={tekstOverrides}
         spoor="business"
       />
     </div>

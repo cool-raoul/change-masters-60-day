@@ -2,6 +2,10 @@ import { pakMiniElevaContext, logActiviteit } from "@/lib/mini-eleva/helpers";
 import { createClient } from "@/lib/supabase/server";
 import { haalPaginaBlokken } from "@/lib/cms/pagina-blokken";
 import type { Blok } from "@/lib/cms/pagina-blokken";
+import {
+  haalTekstOverridesMulti,
+  namespaceAlsRecord,
+} from "@/lib/cms/tekst-overrides";
 import { MiniElevaVerhalenContent } from "./content";
 import Link from "next/link";
 
@@ -39,6 +43,14 @@ export default async function VerhalenPagina({
     blokkenPerPositie[positie] = lijst;
   });
 
+  const overridesPerNamespace = await haalTekstOverridesMulti(supabase, [
+    "mini-eleva-verhalen",
+  ]);
+  const tekstOverrides = namespaceAlsRecord(
+    overridesPerNamespace,
+    "mini-eleva-verhalen",
+  );
+
   return (
     <MiniElevaVerhalenContent
       isFounder={false}
@@ -46,6 +58,7 @@ export default async function VerhalenPagina({
       memberNaam={ctx.memberNaam}
       terugHref={`/m/${ctx.token}`}
       blokkenPerPositie={blokkenPerPositie}
+      tekstOverrides={tekstOverrides}
       spoor={ctx.soort}
     />
   );
