@@ -2,6 +2,10 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { haalPaginaBlokken } from "@/lib/cms/pagina-blokken";
 import type { Blok } from "@/lib/cms/pagina-blokken";
+import {
+  haalTekstOverridesMulti,
+  namespaceAlsRecord,
+} from "@/lib/cms/tekst-overrides";
 import { MiniElevaFaqContent } from "@/app/m/[token]/faq/content";
 import Link from "next/link";
 
@@ -33,6 +37,14 @@ export default async function FounderFaqPreview() {
     blokkenPerPositie[positie] = lijst;
   });
 
+  const overridesPerNamespace = await haalTekstOverridesMulti(supabase, [
+    "mini-eleva-faq",
+  ]);
+  const tekstOverrides = namespaceAlsRecord(
+    overridesPerNamespace,
+    "mini-eleva-faq",
+  );
+
   return (
     <div className="space-y-4">
       <div className="card border-l-4 border-cm-gold/60 text-sm space-y-1">
@@ -59,6 +71,7 @@ export default async function FounderFaqPreview() {
         sponsorNaam="de sponsor"
         terugHref="/instellingen/mini-eleva-preview"
         blokkenPerPositie={blokkenPerPositie}
+        tekstOverrides={tekstOverrides}
         spoor="business"
       />
     </div>
