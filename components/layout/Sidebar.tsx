@@ -60,7 +60,10 @@ export function Sidebar({
     // /acties is gepensioneerd, vervangen door de Volgende-beste-actie-radar
     // op het dashboard zelf en /herinneringen voor het volledige overzicht.
     { href: "/namenlijst", labelKey: "nav.namenlijst", icoon: "👥" },
-    { href: "/zoeken", labelKey: "nav.zoeken", icoon: "🔍" },
+    // Herinneringen direct na namenlijst zodat alles rondom je mensen
+    // bij elkaar staat. Zoekfunctie zit op de namenlijst-pagina zelf,
+    // niet meer als aparte menu-link.
+    { href: "/herinneringen", labelKey: "nav.herinneringen", icoon: "🔔" },
     { href: "/scripts", labelKey: "nav.scripts", icoon: "📋" },
     { href: "/mijn-zinnen", labelKey: "nav.zinnen", icoon: "📝" },
     // ELEVA Academy: overkoepelende leeromgeving voor verdiepende
@@ -68,8 +71,9 @@ export function Sidebar({
     // (Frazer Brookes-principes). Wordt later uitgebreid met meer
     // trainingen (leiderschap, mindset, productkennis).
     { href: "/academy", labelKey: "nav.academy", icoon: "📚" },
-    { href: "/statistieken", labelKey: "nav.statistieken", icoon: "📊" },
-    { href: "/herinneringen", labelKey: "nav.herinneringen", icoon: "🔔" },
+    // Mini-ELEVA uitnodigingen in hoofdnav: dagelijkse actie. Statistieken
+    // is verschoven naar onderkant (analyse-moment, niet dagelijks).
+    { href: "/uitnodigingen", labelKey: "nav.uitnodigingen", icoon: "✨" },
     { href: "/team", labelKey: "nav.team", icoon: "🏆" },
   ];
 
@@ -203,18 +207,6 @@ export function Sidebar({
           >
             <span>⚙️</span> {v("nav.instellingen")}
           </Link>
-          <Link
-            href="/mijn-why"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
-          >
-            <span>🎯</span> {v("nav.mijn_why")}
-          </Link>
-          <Link
-            href="/spraak-commandos"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
-          >
-            <span>🎙️</span> Spraak-commando's
-          </Link>
           {/* Diagnose-link: alleen voor founders zichtbaar. Members
               zien 'm niet meer (push + voice werken). Founders kunnen
               'm gebruiken om iemand op afstand te debuggen of zelf te
@@ -237,11 +229,17 @@ export function Sidebar({
               <span>🪴</span> Mini-ELEVA beheren
             </Link>
           )}
+          {/* Statistieken hier in plaats van in hoofdnav: analyse-moment,
+              niet dagelijkse actie. Plek-wissel met Mini-ELEVA uitnodigingen. */}
           <Link
-            href="/uitnodigingen"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
+            href="/statistieken"
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
+              pathname.startsWith("/statistieken")
+                ? "bg-gold-subtle border border-gold-subtle text-cm-gold"
+                : "text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2"
+            }`}
           >
-            <span>✨</span> Mini-ELEVA uitnodigingen
+            <span>📊</span> {v("nav.statistieken")}
           </Link>
           <Link
             href="/over-eleva"
@@ -249,15 +247,6 @@ export function Sidebar({
           >
             <span>💡</span> Over ELEVA
           </Link>
-          <button
-            onClick={() => {
-              setMobielmenuOpen(false);
-              window.dispatchEvent(new CustomEvent("rondleiding:open"));
-            }}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors w-full text-left"
-          >
-            <span>🎓</span> Rondleiding
-          </button>
           <button
             onClick={uitloggen}
             className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:text-red-400 hover:bg-cm-surface-2 transition-colors w-full text-left"

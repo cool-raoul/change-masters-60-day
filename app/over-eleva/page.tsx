@@ -465,6 +465,23 @@ export default async function OverElevaPagina() {
         ))}
       </div>
 
+      <div className="card border-gold-subtle space-y-2">
+        <h2 className="text-cm-gold font-semibold text-sm uppercase tracking-wider">
+          🎙️ Alle spraak-commando's
+        </h2>
+        <p className="text-cm-white text-sm opacity-80">
+          Wil je weten wat je allemaal kunt inspreken met de gouden
+          microfoon? De volledige lijst staat op een aparte pagina,
+          handig om af en toe even doorheen te scrollen.
+        </p>
+        <Link
+          href="/spraak-commandos"
+          className="btn-secondary text-sm inline-block"
+        >
+          Bekijk alle spraak-commando's →
+        </Link>
+      </div>
+
       <div className="card border-gold-subtle text-center space-y-2">
         <p className="text-cm-white text-sm">
           Vragen, bug-rapporten, of woordkeus die niet lekker voelt?

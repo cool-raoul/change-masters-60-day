@@ -224,6 +224,10 @@ export const t: Vertalingen = {
     nl: "Sponsor: Mini-ELEVA", en: "Sponsor: Mini-ELEVA", fr: "Sponsor: Mini-ELEVA",
     es: "Sponsor: Mini-ELEVA", de: "Sponsor: Mini-ELEVA", pt: "Sponsor: Mini-ELEVA",
   },
+  "nav.uitnodigingen": {
+    nl: "Mini-ELEVA uitnodigingen", en: "Mini-ELEVA invitations", fr: "Invitations Mini-ELEVA",
+    es: "Invitaciones Mini-ELEVA", de: "Mini-ELEVA Einladungen", pt: "Convites Mini-ELEVA",
+  },
   "nav.zinnen": {
     nl: "Mijn zinnen", en: "My phrases", fr: "Mes phrases",
     es: "Mis frases", de: "Meine S\u00e4tze", pt: "Minhas frases",
