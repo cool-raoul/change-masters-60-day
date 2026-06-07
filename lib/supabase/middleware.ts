@@ -46,6 +46,9 @@ export async function updateSession(request: NextRequest) {
     // (coaches, therapeuten, beauty-pro's). Deelbaar via WhatsApp
     // of e-mail-link, geen account nodig.
     "/pro-uitnodiging",
+    // Project Meer Tijd en Vrijheid one-pager voor bouwers om te delen
+    // via WhatsApp/socials. Geen account nodig.
+    "/60-day-run",
   ];
   const isPublicRoute = publicRoutes.some((r) => pathname.startsWith(r));
 
