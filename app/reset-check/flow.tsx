@@ -162,11 +162,29 @@ export function ResetCheckFlow({
   }
 
   return (
-    <div className="min-h-screen" style={{ background: "linear-gradient(180deg, #f7f1e4 0%, #f0e8d2 100%)", color: "#1a1a1a" }}>
-      <div className="mx-auto max-w-3xl px-4 py-6 sm:py-10">
+    <div
+      className="relative min-h-screen overflow-hidden"
+      style={{
+        background:
+          "linear-gradient(180deg, #f7f1e4 0%, #f4ebd0 30%, #ead8a0 70%, #f0e8d2 100%)",
+        color: "#1a1a1a",
+      }}
+    >
+      {/* Decoratieve achtergrond emojis */}
+      <div aria-hidden className="pointer-events-none fixed top-12 -left-8 text-[180px] opacity-[0.04] rotate-12 select-none">
+        🌿
+      </div>
+      <div aria-hidden className="pointer-events-none fixed top-1/3 -right-12 text-[180px] opacity-[0.04] -rotate-12 select-none">
+        ✨
+      </div>
+      <div aria-hidden className="pointer-events-none fixed bottom-32 -left-6 text-[150px] opacity-[0.04] rotate-6 select-none">
+        🌱
+      </div>
+
+      <div className="relative mx-auto max-w-3xl px-4 py-6 sm:py-10">
         <ProgressBar huidige={stap} />
 
-        <div className="rounded-3xl bg-white/95 backdrop-blur-md shadow-lg p-6 sm:p-8 mt-6">
+        <div className="rounded-3xl bg-white/95 backdrop-blur-md shadow-2xl ring-1 ring-white/40 p-6 sm:p-10 mt-6 border border-[#ead8a0]/60">
           {stap === 1 && <StapWelkom teaserFilm={teaserFilm} ov={ov} isFounder={isFounder} onStart={() => naar(2)} />}
           {stap === 2 && (
             <StapVragen
@@ -229,17 +247,35 @@ export function ResetCheckFlow({
 // ============================================================
 function ProgressBar({ huidige }: { huidige: Stap }) {
   const idx = huidige === "bedank" ? 5 : huidige;
+  const labels = ["Welkom", "Vragen", "Check", "Gegevens", "Uitkomst"];
   return (
-    <div className="flex gap-1">
-      {[1, 2, 3, 4, 5].map((i) => (
-        <div
-          key={i}
-          className="flex-1 h-1 rounded-full"
-          style={{
-            background: i < idx ? "#0d0d0d" : i === idx ? "#c9a961" : "#e0d8bc",
-          }}
-        />
-      ))}
+    <div>
+      <div className="flex gap-1.5 mb-2">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div
+            key={i}
+            className="flex-1 h-1.5 rounded-full transition-all"
+            style={{
+              background:
+                i < idx ? "#0d0d0d" : i === idx ? "#c9a961" : "rgba(224, 216, 188, 0.6)",
+              boxShadow: i === idx ? "0 0 12px rgba(201, 169, 97, 0.5)" : "none",
+            }}
+          />
+        ))}
+      </div>
+      <div className="flex justify-between text-[10px] uppercase tracking-wider font-bold">
+        {labels.map((label, i) => (
+          <span
+            key={label}
+            className="flex-1 text-center"
+            style={{
+              color: i + 1 === idx ? "#1a1a1a" : i + 1 < idx ? "#6b5524" : "#a0936e",
+            }}
+          >
+            {label}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }
@@ -260,16 +296,24 @@ function StapWelkom({
 }) {
   return (
     <section>
-      <Tag>
-        <T sleutel="welkom.tag" standaard="Holistic Reset" overrides={ov} isFounder={isFounder} />
-      </Tag>
+      <div className="text-center mb-6">
+        <div className="relative mx-auto mb-3 h-20 w-20">
+          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#c9a961] to-[#ead8a0] blur-xl opacity-70" />
+          <div className="relative flex h-full w-full items-center justify-center rounded-full bg-gradient-to-br from-[#faf5e6] to-[#f0e8d2] text-4xl shadow-md ring-4 ring-white/70">
+            🌿
+          </div>
+        </div>
+        <Tag>
+          <T sleutel="welkom.tag" standaard="Holistic Reset" overrides={ov} isFounder={isFounder} />
+        </Tag>
+      </div>
       <T
         sleutel="welkom.titel"
         standaard="Klopt de Reset bij jou?"
         overrides={ov}
         isFounder={isFounder}
         as="h1"
-        className="text-2xl sm:text-3xl font-extrabold mt-2 mb-3"
+        className="block text-3xl sm:text-4xl font-extrabold text-center mb-4"
       />
       <T
         sleutel="welkom.intro1"
@@ -831,7 +875,14 @@ function StapBedank({ a, ov, isFounder }: { a: Antwoorden; ov: Record<string, st
 // ============================================================
 function Tag({ children }: { children: ReactNode }) {
   return (
-    <span className="inline-block bg-[#0d0d0d] text-[#c9a961] text-[10px] font-bold uppercase tracking-widest py-1 px-3 rounded-full mb-2">
+    <span
+      className="inline-block text-[10px] font-bold uppercase tracking-widest py-1.5 px-4 rounded-full mb-2 shadow-sm"
+      style={{
+        background: "linear-gradient(135deg, #0d0d0d 0%, #2a2110 100%)",
+        color: "#c9a961",
+        border: "1px solid rgba(201, 169, 97, 0.3)",
+      }}
+    >
       {children}
     </span>
   );
@@ -860,7 +911,12 @@ function KnopHoofd({ children, onClick, disabled }: { children: ReactNode; onCli
     <button
       onClick={onClick}
       disabled={disabled}
-      className="block bg-[#0d0d0d] text-[#c9a961] py-3 px-7 rounded-full font-bold text-base mt-4 transition-all hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed w-full sm:w-auto"
+      className="block py-3.5 px-8 rounded-full font-bold text-base mt-5 transition-all w-full sm:w-auto disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
+      style={{
+        background: "linear-gradient(135deg, #0d0d0d 0%, #2a2110 50%, #0d0d0d 100%)",
+        color: "#c9a961",
+        boxShadow: disabled ? "none" : "0 6px 20px rgba(13, 13, 13, 0.25), 0 0 0 1px rgba(201, 169, 97, 0.2)",
+      }}
     >
       {children}
     </button>
