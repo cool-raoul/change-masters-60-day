@@ -7,6 +7,7 @@
 // Email pas NA de vragen (sunk-cost werkt voor conversie).
 
 import { useState, type ReactNode } from "react";
+import { EditableTekst } from "@/components/cms/EditableTekst";
 import {
   VRAGEN,
   PROFIEL_VRAGEN,
@@ -33,7 +34,43 @@ type Props = {
   teaserFilm: ReactNode;
   verdiepingFilm: ReactNode;
   testimonialBlok: ReactNode;
+  tekstOverrides: Record<string, string>;
+  isFounder: boolean;
 };
+
+const NS = "reset-check";
+
+// Helper: bewerkbare tekst voor founders, vaste tekst voor members
+function T({
+  sleutel,
+  standaard,
+  overrides,
+  isFounder,
+  as = "span",
+  className,
+  multiline,
+}: {
+  sleutel: string;
+  standaard: string;
+  overrides: Record<string, string>;
+  isFounder: boolean;
+  as?: "h1" | "h2" | "h3" | "h4" | "p" | "div" | "span" | "li";
+  className?: string;
+  multiline?: boolean;
+}) {
+  return (
+    <EditableTekst
+      namespace={NS}
+      sleutel={sleutel}
+      standaard={standaard}
+      overrides={overrides}
+      isFounder={isFounder}
+      as={as}
+      className={className}
+      multiline={multiline}
+    />
+  );
+}
 
 const LEGE_ANTWOORDEN: Antwoorden = {
   voornaam: "",
@@ -48,7 +85,13 @@ const LEGE_ANTWOORDEN: Antwoorden = {
   medischVrij: "",
 };
 
-export function ResetCheckFlow({ teaserFilm, verdiepingFilm, testimonialBlok }: Props) {
+export function ResetCheckFlow({
+  teaserFilm,
+  verdiepingFilm,
+  testimonialBlok,
+  tekstOverrides: ov,
+  isFounder,
+}: Props) {
   const [stap, setStap] = useState<Stap>(1);
   const [a, setA] = useState<Antwoorden>(LEGE_ANTWOORDEN);
   const [bezig, setBezig] = useState(false);
@@ -124,7 +167,7 @@ export function ResetCheckFlow({ teaserFilm, verdiepingFilm, testimonialBlok }: 
         <ProgressBar huidige={stap} />
 
         <div className="rounded-3xl bg-white/95 backdrop-blur-md shadow-lg p-6 sm:p-8 mt-6">
-          {stap === 1 && <StapWelkom teaserFilm={teaserFilm} onStart={() => naar(2)} />}
+          {stap === 1 && <StapWelkom teaserFilm={teaserFilm} ov={ov} isFounder={isFounder} onStart={() => naar(2)} />}
           {stap === 2 && (
             <StapVragen
               a={a}
@@ -132,6 +175,8 @@ export function ResetCheckFlow({ teaserFilm, verdiepingFilm, testimonialBlok }: 
               kiesScore={kiesScore}
               kiesProfiel={kiesProfiel}
               klaar={vragenKlaar && profielKlaar}
+              ov={ov}
+              isFounder={isFounder}
               onTerug={() => naar(1)}
               onDoor={() => naar(3)}
             />
@@ -142,6 +187,8 @@ export function ResetCheckFlow({ teaserFilm, verdiepingFilm, testimonialBlok }: 
               toggleMedisch={toggleMedisch}
               setMedischVrij={(v) => setA((p) => ({ ...p, medischVrij: v }))}
               klaar={medischKlaar}
+              ov={ov}
+              isFounder={isFounder}
               onTerug={() => naar(2)}
               onDoor={() => naar(4)}
             />
@@ -150,7 +197,10 @@ export function ResetCheckFlow({ teaserFilm, verdiepingFilm, testimonialBlok }: 
             <StapIntekenen
               a={a}
               setA={setA}
+              testimonialBlok={testimonialBlok}
               klaar={intekenenKlaar}
+              ov={ov}
+              isFounder={isFounder}
               onTerug={() => naar(3)}
               onDoor={() => naar(5)}
             />
@@ -160,13 +210,14 @@ export function ResetCheckFlow({ teaserFilm, verdiepingFilm, testimonialBlok }: 
               a={a}
               setTelefoon={(t) => setA((p) => ({ ...p, telefoon: t }))}
               verdiepingFilm={verdiepingFilm}
-              testimonialBlok={testimonialBlok}
               bezig={bezig}
+              ov={ov}
+              isFounder={isFounder}
               onTerug={() => naar(4)}
               onSubmit={submit}
             />
           )}
-          {stap === "bedank" && <StapBedank a={a} />}
+          {stap === "bedank" && <StapBedank a={a} ov={ov} isFounder={isFounder} />}
         </div>
       </div>
     </div>
@@ -196,32 +247,91 @@ function ProgressBar({ huidige }: { huidige: Stap }) {
 // ============================================================
 // STAP 1: WELKOM
 // ============================================================
-function StapWelkom({ teaserFilm, onStart }: { teaserFilm: ReactNode; onStart: () => void }) {
+function StapWelkom({
+  teaserFilm,
+  ov,
+  isFounder,
+  onStart,
+}: {
+  teaserFilm: ReactNode;
+  ov: Record<string, string>;
+  isFounder: boolean;
+  onStart: () => void;
+}) {
   return (
     <section>
-      <Tag>Holistic Reset</Tag>
-      <h1 className="text-2xl sm:text-3xl font-extrabold mt-2 mb-3">Klopt de Reset bij jou?</h1>
-      <p className="mb-3">
-        Wat fijn dat je hier bent 🥰 De Holistic Reset is een traject van 65 dagen rondom voeding, ritme en begeleiding. Voor veel mensen is dit het bewuste startpunt geweest van een nieuwe leefstijl, eentje die ze wél vol konden houden, ook na al die keren dat het eerder niet lukte.
-      </p>
-      <p className="mb-4">In een paar minuutjes weet je of dit ook bij jou past, en wat voor jou een goede eerste stap zou zijn 👍🏽</p>
+      <Tag>
+        <T sleutel="welkom.tag" standaard="Holistic Reset" overrides={ov} isFounder={isFounder} />
+      </Tag>
+      <T
+        sleutel="welkom.titel"
+        standaard="Klopt de Reset bij jou?"
+        overrides={ov}
+        isFounder={isFounder}
+        as="h1"
+        className="text-2xl sm:text-3xl font-extrabold mt-2 mb-3"
+      />
+      <T
+        sleutel="welkom.intro1"
+        standaard="Wat fijn dat je hier bent 🥰 De Holistic Reset is een traject van 65 dagen rondom voeding, ritme en begeleiding. Voor veel mensen is dit het bewuste startpunt geweest van een nieuwe leefstijl, eentje die ze wél vol konden houden, ook na al die keren dat het eerder niet lukte."
+        overrides={ov}
+        isFounder={isFounder}
+        as="p"
+        multiline
+        className="mb-3"
+      />
+      <T
+        sleutel="welkom.intro2"
+        standaard="In een paar minuutjes weet je of dit ook bij jou past, en wat voor jou een goede eerste stap zou zijn 👍🏽"
+        overrides={ov}
+        isFounder={isFounder}
+        as="p"
+        multiline
+        className="mb-4"
+      />
 
       <div className="my-5">{teaserFilm}</div>
 
-      <InfoCard titel="Wat krijg je hier voor terug?">
-        <ul className="space-y-2 pl-1">
-          <li>📋 <strong>Direct na het invullen: jouw persoonlijke uitkomst</strong>, met inzichten en concrete tips die we vanuit onze praktijk kennen, afgestemd op wat jij zelf hebt gedeeld.</li>
-          <li>🔍 <strong>Diepgaande inzichten over de Holistic Reset</strong>, hoe het traject eruit ziet, voor wie het werkt en wat mensen die het hebben gedaan ons vertellen over hun ervaring.</li>
-          <li>🎬 <strong>Een verdiepende video</strong> aan het einde, waarin we het hele verhaal nog rustig uitleggen.</li>
-          <li>💌 <strong>Een korte mailserie met tips &amp; tricks</strong>, die je zo kunt toepassen, ook als je verder niks met de Reset doet. Op elk moment afmelden uiteraard.</li>
-          <li>📱 <strong>Helemaal vrijblijvend: een korte kennismaking</strong>, waarin we de Reset persoonlijk op jou afstemmen en je gelijk hoort wat de investering voor jou zou worden 🥰</li>
+      <div className="bg-[#faf5e6] border border-[#ead8a0] rounded-xl p-4 my-4">
+        <T
+          sleutel="welkom.lijstje.titel"
+          standaard="Wat krijg je hier voor terug?"
+          overrides={ov}
+          isFounder={isFounder}
+          as="h3"
+          className="font-bold text-[#6b5524] mb-2"
+        />
+        <ul className="space-y-2 pl-1 text-sm">
+          <li>📋 <T sleutel="welkom.lijstje.uitkomst" standaard="Direct na het invullen: jouw persoonlijke uitkomst, met inzichten en concrete tips die we vanuit onze praktijk kennen, afgestemd op wat jij zelf hebt gedeeld." overrides={ov} isFounder={isFounder} multiline /></li>
+          <li>🔍 <T sleutel="welkom.lijstje.inzichten" standaard="Diepgaande inzichten over de Holistic Reset, hoe het traject eruit ziet, voor wie het werkt en wat mensen die het hebben gedaan ons vertellen over hun ervaring." overrides={ov} isFounder={isFounder} multiline /></li>
+          <li>🎬 <T sleutel="welkom.lijstje.video" standaard="Een verdiepende video aan het einde, waarin we het hele verhaal nog rustig uitleggen." overrides={ov} isFounder={isFounder} multiline /></li>
+          <li>💌 <T sleutel="welkom.lijstje.mail" standaard="Een korte mailserie met tips & tricks, die je zo kunt toepassen, ook als je verder niks met de Reset doet. Op elk moment afmelden uiteraard." overrides={ov} isFounder={isFounder} multiline /></li>
+          <li>📱 <T sleutel="welkom.lijstje.gesprek" standaard="Helemaal vrijblijvend: een korte kennismaking, waarin we de Reset persoonlijk op jou afstemmen en je gelijk hoort wat de investering voor jou zou worden 🥰" overrides={ov} isFounder={isFounder} multiline /></li>
         </ul>
-        <p className="text-xs text-gray-600 mt-3">Je doorloopt nu wat korte vragen. Duurt 3 tot 5 minuten.</p>
-      </InfoCard>
+        <T
+          sleutel="welkom.lijstje.duur"
+          standaard="Je doorloopt nu wat korte vragen. Duurt 3 tot 5 minuten."
+          overrides={ov}
+          isFounder={isFounder}
+          as="p"
+          className="text-xs text-gray-600 mt-3"
+        />
+      </div>
 
-      <Privacy />
+      <div className="bg-[#f7f1e4] border-l-4 border-[#c9a961] p-3 my-4 rounded-r-lg text-sm">
+        <strong>Wat doen we met je antwoorden? </strong>
+        <T
+          sleutel="welkom.privacy"
+          standaard="We bewaren ze kort, zodat we ons gesprek met jou goed kunnen voorbereiden en je een persoonlijk advies kunnen geven. Daarna verwijderen we ze, uiterlijk na 30 dagen of zodra we elkaar gesproken hebben. Verder delen we niks met derden 🥰"
+          overrides={ov}
+          isFounder={isFounder}
+          multiline
+        />
+      </div>
 
-      <KnopHoofd onClick={onStart}>Start de check →</KnopHoofd>
+      <KnopHoofd onClick={onStart}>
+        <T sleutel="welkom.knop" standaard="Start de check →" overrides={ov} isFounder={isFounder} />
+      </KnopHoofd>
     </section>
   );
 }
@@ -235,6 +345,8 @@ function StapVragen({
   kiesScore,
   kiesProfiel,
   klaar,
+  ov,
+  isFounder,
   onTerug,
   onDoor,
 }: {
@@ -243,6 +355,8 @@ function StapVragen({
   kiesScore: (s: string, w: ScoreWaarde) => void;
   kiesProfiel: (s: string, w: string) => void;
   klaar: boolean;
+  ov: Record<string, string>;
+  isFounder: boolean;
   onTerug: () => void;
   onDoor: () => void;
 }) {
@@ -354,6 +468,8 @@ function StapMedisch({
   toggleMedisch,
   setMedischVrij,
   klaar,
+  ov,
+  isFounder,
   onTerug,
   onDoor,
 }: {
@@ -361,6 +477,8 @@ function StapMedisch({
   toggleMedisch: (s: string) => void;
   setMedischVrij: (v: string) => void;
   klaar: boolean;
+  ov: Record<string, string>;
+  isFounder: boolean;
   onTerug: () => void;
   onDoor: () => void;
 }) {
@@ -420,13 +538,19 @@ function StapMedisch({
 function StapIntekenen({
   a,
   setA,
+  testimonialBlok,
   klaar,
+  ov,
+  isFounder,
   onTerug,
   onDoor,
 }: {
   a: Antwoorden;
   setA: React.Dispatch<React.SetStateAction<Antwoorden>>;
+  testimonialBlok: ReactNode;
   klaar: boolean;
+  ov: Record<string, string>;
+  isFounder: boolean;
   onTerug: () => void;
   onDoor: () => void;
 }) {
@@ -435,6 +559,18 @@ function StapIntekenen({
   }
   return (
     <section>
+      {/* TESTIMONIALS bovenaan, vlak voor ze hun gegevens invullen */}
+      {testimonialBlok && (
+        <div className="mb-6 pb-6 border-b border-[#e0d8bc]">
+          <div className="text-center mb-4">
+            <Tag>Verhalen van mensen</Tag>
+            <h2 className="text-xl font-bold mt-2">Hoe is het voor anderen geweest?</h2>
+            <p className="text-sm text-gray-600">Echte verhalen van mensen die het traject hebben gedaan.</p>
+          </div>
+          {testimonialBlok}
+        </div>
+      )}
+
       <Tag>Bijna bij je uitkomst</Tag>
       <h1 className="text-2xl sm:text-3xl font-extrabold mt-2 mb-3">Nog één stapje, dan zie je je uitkomst</h1>
       <p className="mb-4">
@@ -472,16 +608,18 @@ function StapUitkomst({
   a,
   setTelefoon,
   verdiepingFilm,
-  testimonialBlok,
   bezig,
+  ov,
+  isFounder,
   onTerug,
   onSubmit,
 }: {
   a: Antwoorden;
   setTelefoon: (t: string) => void;
   verdiepingFilm: ReactNode;
-  testimonialBlok: ReactNode;
   bezig: boolean;
+  ov: Record<string, string>;
+  isFounder: boolean;
   onTerug: () => void;
   onSubmit: () => void;
 }) {
@@ -646,18 +784,6 @@ function StapUitkomst({
       </KnopHoofd>
       <KnopTerug onClick={onTerug}>← Terug</KnopTerug>
 
-      {/* TESTIMONIALS (mensen-verhalen, via MediaBlokken founder-edit) */}
-      {testimonialBlok && (
-        <div className="mt-10 pt-6 border-t border-[#e0d8bc]">
-          <div className="text-center mb-4">
-            <Tag>Verhalen van mensen</Tag>
-            <h2 className="text-xl font-bold mt-2">Hoe is het voor anderen geweest?</h2>
-            <p className="text-sm text-gray-600">Echte verhalen van mensen die het traject hebben gedaan.</p>
-          </div>
-          {testimonialBlok}
-        </div>
-      )}
-
       {/* VERDIEPENDE FILM HELEMAAL ONDERAAN (climax) */}
       <div className="mt-10 pt-6 border-t border-[#e0d8bc]">
         <div className="text-center mb-4">
@@ -674,7 +800,7 @@ function StapUitkomst({
 // ============================================================
 // BEDANK
 // ============================================================
-function StapBedank({ a }: { a: Antwoorden }) {
+function StapBedank({ a, ov, isFounder }: { a: Antwoorden; ov: Record<string, string>; isFounder: boolean }) {
   const heeftTel = a.telefoon.trim().length >= 8;
   return (
     <section>

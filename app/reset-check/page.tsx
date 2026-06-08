@@ -11,6 +11,10 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { haalPaginaBlokken, type Blok } from "@/lib/cms/pagina-blokken";
+import {
+  haalTekstOverridesMulti,
+  namespaceAlsRecord,
+} from "@/lib/cms/tekst-overrides";
 import { EditModeProvider } from "@/components/cms/EditModeContext";
 import { EditModeToggle } from "@/components/cms/EditModeToggle";
 import { MediaBlokken } from "@/components/cms/MediaBlokken";
@@ -59,6 +63,10 @@ export default async function ResetCheckPage() {
   const verdiepingBlokken = blokkenMap.get("verdieping") ?? [];
   const testimonialsBlokken = blokkenMap.get("testimonials") ?? [];
 
+  // Tekst-overrides voor founder-bewerkbare teksten
+  const overridesPerNamespace = await haalTekstOverridesMulti(supabase, [NAMESPACE]);
+  const tekstOverrides = namespaceAlsRecord(overridesPerNamespace, NAMESPACE);
+
   const teaserSlot = (
     <MediaSlot
       paginaNamespace={NAMESPACE}
@@ -104,6 +112,8 @@ export default async function ResetCheckPage() {
         teaserFilm={teaserSlot}
         verdiepingFilm={verdiepingSlot}
         testimonialBlok={testimonialSlot}
+        tekstOverrides={tekstOverrides}
+        isFounder={isFounder}
       />
     </EditModeProvider>
   );
