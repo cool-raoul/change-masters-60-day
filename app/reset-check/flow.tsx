@@ -815,6 +815,19 @@ function StapUitkomst({
 
       <hr className="my-6 border-[#e0d8bc]" />
 
+      {/* VERDIEPENDE FILM, vóór de telefoon-CTA zodat mensen 'm zien en
+          beslissen of ze contact willen op basis van wat ze hier horen. */}
+      <div className="my-6">
+        <div className="text-center mb-4">
+          <Tag>De diepte in</Tag>
+          <h2 className="text-xl font-bold mt-2">Wil je het hele verhaal horen?</h2>
+          <p className="text-sm text-gray-600">In deze video leggen we precies uit hoe de Reset eruit ziet, de fasen, en wat mensen ervaren. Fijn als je &apos;m kijkt voor ons gesprek 🥰</p>
+        </div>
+        {verdiepingFilm}
+      </div>
+
+      <hr className="my-6 border-[#e0d8bc]" />
+
       <Tag>Volgende stap</Tag>
       <h2 className="text-xl font-bold mt-2 mb-2">Wil je hier met ons over praten?</h2>
       <p className="mb-4">We bellen of appen je voor een korte, vrijblijvende kennismaking. Geen pitch, geen druk 🥰 We luisteren naar wat jij wil, stemmen de Reset persoonlijk op je af, en je hoort gelijk wat de investering voor jou zou worden. Daarna beslis je rustig zelf wat je doet.</p>
@@ -832,16 +845,6 @@ function StapUitkomst({
         {bezig ? "Bezig met versturen..." : "Stuur mijn aanmelding →"}
       </KnopHoofd>
       <KnopTerug onClick={onTerug}>← Terug</KnopTerug>
-
-      {/* VERDIEPENDE FILM HELEMAAL ONDERAAN (climax) */}
-      <div className="mt-10 pt-6 border-t border-[#e0d8bc]">
-        <div className="text-center mb-4">
-          <Tag>De diepte in</Tag>
-          <h2 className="text-xl font-bold mt-2">Wil je het hele verhaal horen?</h2>
-          <p className="text-sm text-gray-600">In deze video leggen we precies uit hoe de Reset eruit ziet, de fasen, en wat mensen ervaren. Fijn als je &apos;m kijkt voor ons gesprek 🥰</p>
-        </div>
-        {verdiepingFilm}
-      </div>
     </section>
   );
 }
