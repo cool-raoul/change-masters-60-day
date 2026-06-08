@@ -883,11 +883,23 @@ De les-tekst in `core-dagen-v9.ts` (en Sprint) rendert als **platte tekst** (`wh
 
 **Wat wel:** afwisseling. Korte zin, langere zin, vraag, statement. Geen vier maal hetzelfde patroon.
 
-### Anti-pattern 7, [TODO RAOUL/GABY: vul aan]
+### Anti-pattern 7, Em-dashes (—)
 
-> *Concrete zin uit AI-tekst die jullie heeft geërgerd. Liefst met de letterlijke zin erbij, plus een korte uitleg waarom.*
+**Voorbeeld:** *"Daar hebben wij — als team binnen een Europees bedrijf dat al 35 jaar met deze producten werkt — de Holistic Reset voor."*
 
-### Anti-pattern 8-10, [TODO RAOUL/GABY: vul aan]
+**Waarom dit niet werkt:** Em-dashes zijn een AI-stempel-vermoeden van het hoogste niveau. Raoul en Gaby gebruiken ze nergens, in geen enkel rauw materiaal. Komma's, punten of haakjes doen prima wat een em-dash zou doen, en ze lezen menselijker.
+
+**Correctie:** *"Daar hebben wij, als team binnen een Europees bedrijf dat al 35 jaar met deze producten werkt, de Holistic Reset voor."*
+
+### Anti-pattern 8, "en," als overbruggings-aanloop
+
+**Voorbeeld:** *"Dat is iets wat je elke dag voelt, in je werk, je gezin, je rust. En het kost je vaak meer energie dan je zelf in de gaten hebt."* Of: *"We luisteren naar wat jij wil, en, stemmen de Reset persoonlijk op je af, en, je hoort gelijk wat de investering wordt."*
+
+**Waarom dit niet werkt:** Claude bruggt eindeloos door met "En," aan het begin van een vervolg-zin, of zet "en," tussen elementen van een opsomming alsof het adempauzes zijn. Het leest als doorlopend-aaneengeplakt. Gaby/Raoul zetten vaker een punt en beginnen vers, of gebruiken "…" als adempauze, of laten een element gewoon volgen zonder "en".
+
+**Correctie:** Punt + vers beginnen, of "…" als adempauze, of opsomming met alleen komma's afsluitend op "en" voor het laatste element. *"Dat is iets wat je elke dag voelt, in je werk, je gezin, je rust. Het kost je vaak meer energie dan je zelf in de gaten hebt 🥰"*
+
+### Anti-pattern 9-10, [TODO RAOUL/GABY: vul aan]
 
 > *Verzamel ze als jullie ze tegenkomen. Eén per maand is genoeg, het document groeit organisch.*
 
