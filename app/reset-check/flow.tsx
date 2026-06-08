@@ -8,6 +8,7 @@
 
 import { useState, type ReactNode } from "react";
 import { EditableTekst } from "@/components/cms/EditableTekst";
+import { useEditModus } from "@/components/cms/EditModeContext";
 import {
   VRAGEN,
   PROFIEL_VRAGEN,
@@ -40,7 +41,9 @@ type Props = {
 
 const NS = "reset-check";
 
-// Helper: bewerkbare tekst voor founders, vaste tekst voor members
+// Helper: bewerkbare tekst voor founders, vaste tekst voor members.
+// Leest editModusAan uit context zodat de ✍️-knop pas verschijnt
+// als de toggle rechtsboven is aangezet.
 function T({
   sleutel,
   standaard,
@@ -58,6 +61,7 @@ function T({
   className?: string;
   multiline?: boolean;
 }) {
+  const { editModusAan } = useEditModus();
   return (
     <EditableTekst
       namespace={NS}
@@ -65,6 +69,7 @@ function T({
       standaard={standaard}
       overrides={overrides}
       isFounder={isFounder}
+      editModusAan={editModusAan}
       as={as}
       className={className}
       multiline={multiline}
