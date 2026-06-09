@@ -163,14 +163,6 @@ export function ShowcaseClient({
         <section className="max-w-7xl mx-auto px-6 pt-16 pb-24 sm:pt-24 sm:pb-32">
           <div className="text-center max-w-4xl mx-auto">
             <T
-              sleutel="hero.tag"
-              standaard="Project Meer Tijd en Vrijheid"
-              overrides={ov}
-              isFounder={isFounder}
-              as="div"
-              className="inline-block text-[10px] font-bold uppercase tracking-[0.25em] text-[#c9a961] mb-6 px-4 py-1.5 rounded-full border border-[#c9a961]/30"
-            />
-            <T
               sleutel="hero.titel"
               standaard="ELEVA, het aanbevelingsmarketing-systeem van de toekomst"
               overrides={ov}
