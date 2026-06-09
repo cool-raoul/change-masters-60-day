@@ -66,6 +66,18 @@ export const FEATURES: Feature[] = [
     ],
   },
   {
+    sleutel: "dmo",
+    emoji: "🎯",
+    titel: "DMO, je dagelijkse motor",
+    pitch:
+      "Daily Method of Operation, de vijf bewegingen die je elke dag herhaalt. Niet meer raden of je vandaag de juiste dingen hebt gedaan. Wel een ritme dat dragend wordt, vanzelf 🥰",
+    bullets: [
+      { term: "Vijf vaste bewegingen", uitleg: "Lijst-acties, uitnodigingen, follow-ups, eigen ontwikkeling en zichtbaarheid. Klein, herhaalbaar, doenbaar." },
+      { term: "DMO is de motor", uitleg: "Niet 'wanneer komt mijn doorbraak?', wel 'heb ik vandaag mijn bewegingen gedaan?'. Resultaten zijn de uitkomst, niet het mikpunt." },
+      { term: "End-of-day-check", uitleg: "Een momentum-radar die je aan het einde van je dag laat zien wat je echt hebt geraakt, en wat morgen aandacht vraagt." },
+    ],
+  },
+  {
     sleutel: "mentor",
     emoji: "🤖",
     titel: "ELEVA Mentor, je coach in je broekzak",
