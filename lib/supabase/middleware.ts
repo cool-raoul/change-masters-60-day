@@ -56,6 +56,9 @@ export async function updateSession(request: NextRequest) {
     // hormonen-en-overgang, reset-check). Prospects vullen 'm in zonder
     // account, lead komt in pijplijn van de member.
     "/bot/",
+    // Publieke feature-showcase voor ELEVA, om aan team / prospects /
+    // partners te laten zien wat er allemaal mogelijk is.
+    "/ontdek-eleva",
   ];
   const isPublicRoute = publicRoutes.some((r) => pathname.startsWith(r));
 
