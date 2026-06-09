@@ -64,6 +64,19 @@ const SCREENSHOTS = [
     titel: "Push-meldingen (placeholder)",
     alt: "Telefoon-mockup met vier ELEVA-push-meldingen: nieuwe lead, video kijken, follow-up, team-mijlpaal",
   },
+  { bestand: "core.png", positie: "screenshot-core", titel: "Core (placeholder)", alt: "Core dag-tracker met 21-dagen-progress" },
+  { bestand: "pro.png", positie: "screenshot-pro", titel: "Pro (placeholder)", alt: "Pro 15-stappen-leerpad" },
+  { bestand: "onboarding.png", positie: "screenshot-onboarding", titel: "Onboarding (placeholder)", alt: "Onboarding welkom met 3 modus-keuzes" },
+  { bestand: "dmo.png", positie: "screenshot-dmo", titel: "DMO (placeholder)", alt: "DMO 5 bewegingen check-list" },
+  { bestand: "mentor.png", positie: "screenshot-mentor", titel: "Mentor (placeholder)", alt: "Mentor chat-interface" },
+  { bestand: "namenlijst.png", positie: "screenshot-namenlijst", titel: "Namenlijst (placeholder)", alt: "Pipeline kanban-view" },
+  { bestand: "mini-eleva.png", positie: "screenshot-mini-eleva", titel: "Mini-ELEVA (placeholder)", alt: "Welkom met video en 3-way chat" },
+  { bestand: "film-tracking.png", positie: "screenshot-film-tracking", titel: "Film-tracking (placeholder)", alt: "Video player met activity feed" },
+  { bestand: "scripts.png", positie: "screenshot-scripts", titel: "Scripts (placeholder)", alt: "Script-stack voor 3 fases" },
+  { bestand: "academy.png", positie: "screenshot-academy", titel: "Academy (placeholder)", alt: "Audio-player Academy" },
+  { bestand: "voice.png", positie: "screenshot-voice", titel: "Voice (placeholder)", alt: "Voice-recording UI" },
+  { bestand: "stats.png", positie: "screenshot-stats", titel: "Stats (placeholder)", alt: "Funnel-overzicht" },
+  { bestand: "team.png", positie: "screenshot-team", titel: "Team (placeholder)", alt: "TeamBoom visualisatie" },
 ];
 
 const NAMESPACE = "ontdek-eleva";
