@@ -11,9 +11,45 @@ import Image from "next/image";
 import Link from "next/link";
 import { EditableTekst } from "@/components/cms/EditableTekst";
 import { useEditModus } from "@/components/cms/EditModeContext";
-import { FEATURES } from "./features";
+import { FEATURES, PAIN_CARDS, FAQ_ITEMS } from "./features";
+import { useState } from "react";
 
 const NS = "ontdek-eleva";
+
+function FaqLijst({ items }: { items: typeof FAQ_ITEMS }) {
+  const [open, setOpen] = useState<number | null>(null);
+  return (
+    <div className="space-y-3">
+      {items.map((item, i) => {
+        const isOpen = open === i;
+        return (
+          <div
+            key={i}
+            className="bg-[#1a1a1a]/40 border border-[#c9a961]/15 rounded-xl overflow-hidden hover:border-[#c9a961]/30 transition"
+          >
+            <button
+              onClick={() => setOpen(isOpen ? null : i)}
+              className="w-full text-left px-5 py-4 flex items-center justify-between gap-3"
+            >
+              <span className="text-sm sm:text-base font-bold">{item.vraag}</span>
+              <span
+                className={`text-[#c9a961] text-xl transition-transform flex-shrink-0 ${isOpen ? "rotate-45" : ""}`}
+                aria-hidden
+              >
+                +
+              </span>
+            </button>
+            {isOpen && (
+              <div className="px-5 pb-5 text-sm sm:text-base text-[#f5f5f5]/75 leading-relaxed whitespace-pre-line">
+                {item.antwoord}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 function T({
   sleutel,
@@ -88,7 +124,10 @@ export function ShowcaseClient({
             </Link>
             <div className="flex items-center gap-5 text-xs text-[#f5f5f5]/60">
               <Link href="#features" className="hover:text-[#c9a961] transition">
-                Features
+                Wat zit erin
+              </Link>
+              <Link href="#faq" className="hover:text-[#c9a961] transition">
+                Vragen
               </Link>
               <Link href="#cta" className="hover:text-[#c9a961] transition">
                 Aan de slag
@@ -110,7 +149,7 @@ export function ShowcaseClient({
             />
             <T
               sleutel="hero.titel"
-              standaard="Het complete bouw-systeem voor je netwerk-business"
+              standaard="Alles wat je nodig hebt om rustig en bewust te bouwen"
               overrides={ov}
               isFounder={isFounder}
               as="h1"
@@ -119,7 +158,7 @@ export function ShowcaseClient({
             />
             <T
               sleutel="hero.subtitel"
-              standaard="Sprint, Core, Pro. ELEVA Mentor. Namenlijst, pijplijn, freebies, scripts, Academy. Alles wat jij en je team nodig hebben, in één plek, in jullie stem 🥰"
+              standaard="Een systeem dat je dagelijks bij de hand neemt, in jouw eigen tempo. Met scripts in onze stem, een coach in je broekzak, en alles wat je team nodig heeft. Zonder dat het overweldigt 🥰"
               overrides={ov}
               isFounder={isFounder}
               as="p"
@@ -153,6 +192,43 @@ export function ShowcaseClient({
           </div>
         </section>
 
+        {/* ============ PAIN-CARDS ============ */}
+        <section className="max-w-7xl mx-auto px-6 py-16">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <T
+              sleutel="pain.tag"
+              standaard="Klinkt het bekend?"
+              overrides={ov}
+              isFounder={isFounder}
+              as="div"
+              className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#c9a961] mb-4"
+            />
+            <T
+              sleutel="pain.titel"
+              standaard="Drie dingen waar bijna iedereen tegenaan loopt"
+              overrides={ov}
+              isFounder={isFounder}
+              as="h2"
+              className="block text-3xl sm:text-4xl font-extrabold leading-tight tracking-tight"
+            />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {PAIN_CARDS.map((p, i) => (
+              <div
+                key={i}
+                className="bg-[#1a1a1a]/60 border border-[#c9a961]/20 rounded-2xl p-6 sm:p-7 hover:border-[#c9a961]/40 transition"
+              >
+                <div className="text-4xl mb-4">{p.emoji}</div>
+                <h3 className="text-lg font-extrabold mb-3 leading-snug">{p.titel}</h3>
+                <p className="text-sm text-[#f5f5f5]/70 leading-relaxed mb-5">{p.uitleg}</p>
+                <blockquote className="text-sm text-[#c9a961] italic leading-relaxed border-l-2 border-[#c9a961]/40 pl-3">
+                  &ldquo;{p.citaat}&rdquo;
+                </blockquote>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* ============ FEATURES INTRO ============ */}
         <section id="features" className="max-w-7xl mx-auto px-6 py-16 sm:py-24">
           <div className="text-center max-w-3xl mx-auto mb-16">
@@ -166,7 +242,7 @@ export function ShowcaseClient({
             />
             <T
               sleutel="features.titel"
-              standaard="15 features die samen één systeem zijn"
+              standaard="Alles wat je nodig hebt, op één plek"
               overrides={ov}
               isFounder={isFounder}
               as="h2"
@@ -174,7 +250,7 @@ export function ShowcaseClient({
             />
             <T
               sleutel="features.subtitel"
-              standaard="Geen losse losse tools. Wel een samenhangend ritme, van eerste stap tot duurzaam team. Hieronder zie je elke laag, met een korte uitleg waarvoor het er is."
+              standaard="Geen losse tools die je aan elkaar moet plakken. Wel een samenhangend ritme, van je eerste stap tot een duurzaam team."
               overrides={ov}
               isFounder={isFounder}
               as="p"
@@ -219,23 +295,21 @@ export function ShowcaseClient({
                       overrides={ov}
                       isFounder={isFounder}
                       as="p"
-                      className="block text-base sm:text-lg text-[#f5f5f5]/75 leading-relaxed mb-4"
+                      className="block text-base sm:text-lg text-[#f5f5f5]/75 leading-relaxed mb-5"
                       multiline
                     />
-                    <div className="mt-6 pl-4 border-l-2 border-[#c9a961]/40">
-                      <div className="text-[10px] font-bold uppercase tracking-widest text-[#c9a961] mb-2">
-                        Waarom dit anders is
-                      </div>
-                      <T
-                        sleutel={`feature.${feature.sleutel}.waarom`}
-                        standaard={feature.waarom}
-                        overrides={ov}
-                        isFounder={isFounder}
-                        as="p"
-                        className="block text-sm sm:text-base text-[#f5f5f5]/70 leading-relaxed italic"
-                        multiline
-                      />
-                    </div>
+                    <ul className="space-y-3">
+                      {feature.bullets.map((b, bi) => (
+                        <li key={bi} className="flex gap-3">
+                          <span className="text-[#c9a961] mt-1.5 flex-shrink-0">●</span>
+                          <div className="text-sm sm:text-base text-[#f5f5f5]/80 leading-relaxed">
+                            <strong className="text-[#f5f5f5]">{b.term}</strong>
+                            <span className="text-[#f5f5f5]/60">, </span>
+                            {b.uitleg}
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
 
                   {/* Screenshot */}
@@ -305,8 +379,42 @@ export function ShowcaseClient({
           </div>
         </section>
 
+        {/* ============ FAQ ============ */}
+        <section id="faq" className="max-w-5xl mx-auto px-6 py-16 sm:py-24">
+          <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-10">
+            <div>
+              <T
+                sleutel="faq.tag"
+                standaard="Veelgestelde vragen"
+                overrides={ov}
+                isFounder={isFounder}
+                as="div"
+                className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#c9a961] mb-3"
+              />
+              <T
+                sleutel="faq.titel"
+                standaard="Misschien speelt dit ook bij jou"
+                overrides={ov}
+                isFounder={isFounder}
+                as="h2"
+                className="block text-2xl sm:text-3xl font-extrabold leading-tight mb-4"
+              />
+              <T
+                sleutel="faq.subtitel"
+                standaard="Vraag je niet zien staan? Stuur ons gerust een DM op Instagram, dan kijken we even samen 🥰"
+                overrides={ov}
+                isFounder={isFounder}
+                as="p"
+                className="block text-sm text-[#f5f5f5]/60 leading-relaxed"
+                multiline
+              />
+            </div>
+            <FaqLijst items={FAQ_ITEMS} />
+          </div>
+        </section>
+
         {/* Footer */}
-        <footer className="border-t border-[#c9a961]/10 py-8 mt-16">
+        <footer className="border-t border-[#c9a961]/10 py-8 mt-8">
           <div className="max-w-7xl mx-auto px-6 text-center text-xs text-[#f5f5f5]/40">
             ELEVA · Change Masters · {new Date().getFullYear()}
           </div>
