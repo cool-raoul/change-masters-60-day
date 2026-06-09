@@ -29,10 +29,10 @@ const ROOT = resolve(__dirname, "..");
 // Mapping: bestand → (positie, titel)
 const SCREENSHOTS = [
   {
-    bestand: "60-day-run.png",
+    bestand: "sprint.png",
     positie: "screenshot-sprint",
-    titel: "Sprint, 60 Day Run one-pager",
-    alt: "ELEVA Sprint, 60 Day Run one-pager met grid van pijlers en mechaniek",
+    titel: "Sprint (placeholder)",
+    alt: "Telefoon-mockup met Sprint dag 23/60 progress + 4 dagelijkse ankers",
   },
   {
     bestand: "reset-check.png",
