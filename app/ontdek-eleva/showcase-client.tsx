@@ -168,7 +168,7 @@ export function ShowcaseClient({
               overrides={ov}
               isFounder={isFounder}
               as="h1"
-              className="block text-4xl sm:text-6xl lg:text-7xl font-extrabold leading-[1.05] tracking-tight mb-6 bg-gradient-to-br from-white via-[#f5e9c4] to-[#c9a961] bg-clip-text text-transparent"
+              className="block text-3xl sm:text-5xl lg:text-7xl font-extrabold leading-[1.1] tracking-tight mb-6 bg-gradient-to-br from-white via-[#f5e9c4] to-[#c9a961] bg-clip-text text-transparent break-words [overflow-wrap:anywhere] hyphens-auto"
               multiline
             />
             <T
