@@ -142,8 +142,8 @@ export function ShowcaseClient({
 
         {/* ============ NAV ============ */}
         <nav className="sticky top-0 z-40 backdrop-blur-md bg-[#0a0a0a]/80 border-b border-[#c9a961]/10">
-          <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2 hover:opacity-90 transition">
+          <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-center sm:justify-start">
+            <Link href="#" className="flex items-center gap-2 hover:opacity-90 transition">
               <Image
                 src="/eleva-icon.png"
                 alt="ELEVA"
@@ -156,17 +156,6 @@ export function ShowcaseClient({
                 ELEVA
               </span>
             </Link>
-            <div className="flex items-center gap-5 text-xs text-[#f5f5f5]/60">
-              <Link href="#features" className="hover:text-[#c9a961] transition">
-                Wat zit erin
-              </Link>
-              <Link href="#faq" className="hover:text-[#c9a961] transition">
-                Vragen
-              </Link>
-              <Link href="#cta" className="hover:text-[#c9a961] transition">
-                Aan de slag
-              </Link>
-            </div>
           </div>
         </nav>
 
