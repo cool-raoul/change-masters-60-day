@@ -116,6 +116,7 @@ export const FEATURES: Feature[] = [
       { term: "Heat-score per lead", uitleg: "Je ziet meteen wie heet is, lauw, koel of koud. Begin bij de heetsten." },
       { term: "Automatisch in pijplijn", uitleg: "Inzending komt direct in je namenlijst, met push-melding op je telefoon." },
       { term: "Mailserie", uitleg: "5 mails met tips & tricks die je relatie warm houden, ook als ze niet meteen beslissen." },
+      { term: "Koppeling met ManyChat", uitleg: "Leads die via Instagram of Facebook DM binnenkomen via ManyChat, vallen automatisch in je ELEVA-pijplijn. Iedereen komt op één plek samen, ongeacht via welk kanaal ze binnenkomen." },
     ],
   },
   {
