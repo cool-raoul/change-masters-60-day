@@ -172,7 +172,7 @@ export function ShowcaseClient({
             />
             <T
               sleutel="hero.titel"
-              standaard="Alles wat je nodig hebt om een succesvolle business te bouwen."
+              standaard="ELEVA, het aanbevelingsmarketing-systeem van de toekomst"
               overrides={ov}
               isFounder={isFounder}
               as="h1"
