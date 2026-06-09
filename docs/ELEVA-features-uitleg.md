@@ -110,7 +110,7 @@ Tijdens de pilot komt feedback over woorden, toon, voorbeelden. Jij past het dir
 ## 🤖 ELEVA Mentor
 
 **Wat is het?**
-Een AI-coach die je kent. Hij weet welke dag je zit, kent je WHY, kent je sponsor, en kent alle technieken (4-stappen-uitnodiging, Feel-Felt-Found, edification, FORM, Doel-Tijd-Termijn). Hij schrijft DM's, helpt bij bezwaren, doet roleplay, geeft productadvies.
+Een AI-mentor die je kent. Hij weet welke dag je zit, kent je WHY, kent je sponsor, en kent alle technieken (4-stappen-uitnodiging, Feel-Felt-Found, edification, FORM, Doel-Tijd-Termijn). Hij schrijft DM's, helpt bij bezwaren, doet roleplay, geeft productadvies.
 
 **Wat heb je eraan?**
 Je hoeft niet te bedenken wát je moet zeggen. Je vraagt de mentor en krijgt een antwoord in jouw stijl, klaar om te kopiëren of door te sturen. Werkt 24/7.
@@ -126,7 +126,7 @@ Je hoeft niet te bedenken wát je moet zeggen. Je vraagt de mentor en krijgt een
 **Wat is het?**
 Founders kunnen vraag-antwoord-voorbeelden uit echte WhatsApp-gesprekken toevoegen aan de Mentor. Een prospect stelt een vraag, de member-of-founder antwoordt, founder kopieert beide en plakt het in `/instellingen/mentor-trainen`. De Mentor gebruikt die voorbeelden vanaf dat moment als context bij vergelijkbare vragen.
 
-Voorbeeldvragen worden getagd voor doelgroep `member`, `prospect` of `beide` (default), zodat het ene voorbeeld zowel de huidige Mentor als de toekomstige programma-coach voor prospects voedt.
+Voorbeeldvragen worden getagd voor doelgroep `member`, `prospect` of `beide` (default), zodat het ene voorbeeld zowel de huidige Mentor als de toekomstige programma-mentor voor prospects voedt.
 
 **Wat heb je eraan?**
 De Mentor wordt scherper met elke pilot-week, zonder developer-loop, zonder herstart. Members in Maastricht leren van gesprekken die in Dordrecht hebben gewerkt. Het hele systeem leert uit jouw praktijk.
@@ -430,7 +430,7 @@ Je hoeft niet bang te zijn dat je per ongeluk iets fout zegt. Het systeem houdt 
 ## Korte samenvatting voor de pilot
 
 - **Dagelijks gebruik:** dashboard → playbook-tegel → klik-en-doen
-- **Bij twijfel:** ELEVA Mentor (AI-coach)
+- **Bij twijfel:** ELEVA Mentor (AI-mentor)
 - **Voor 3-wegs:** prospect-kaart → "💬 3-weg gesprek scripts"
 - **Voor productadvies:** prospect-kaart → "Stuur productadvies-test"
 - **Voor films naar prospects:** prospect-kaart → "Stuur film"

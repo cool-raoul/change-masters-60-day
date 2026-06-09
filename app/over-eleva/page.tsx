@@ -97,7 +97,7 @@ const FEATURES: Feature[] = [
     emoji: "🤖",
     titel: "ELEVA Mentor",
     watIsHet:
-      "Een AI-coach die je kent. Hij weet welke dag je zit, kent je WHY, kent alle technieken (4-stappen-uitnodiging, Feel-Felt-Found, edification, FORM, Doel-Tijd-Termijn). Hij schrijft DM's, helpt bij bezwaren, doet roleplay, geeft productadvies.",
+      "Een AI-mentor die je kent. Hij weet welke dag je zit, kent je WHY, kent alle technieken (4-stappen-uitnodiging, Feel-Felt-Found, edification, FORM, Doel-Tijd-Termijn). Hij schrijft DM's, helpt bij bezwaren, doet roleplay, geeft productadvies.",
     watHebJeEraan:
       "Je hoeft niet te bedenken wát je moet zeggen. Vraag de mentor en krijg antwoord in jouw stijl, klaar om te kopiëren of door te sturen. Werkt 24/7.",
     waar: "Menu → ELEVA Mentor",
@@ -399,7 +399,7 @@ export default async function OverElevaPagina() {
             klik-en-doen
           </li>
           <li>
-            <strong>Bij twijfel:</strong> ELEVA Mentor (AI-coach)
+            <strong>Bij twijfel:</strong> ELEVA Mentor (AI-mentor)
           </li>
           <li>
             <strong>Voor 3-wegs:</strong> prospect-kaart → "💬 3-weg gesprek

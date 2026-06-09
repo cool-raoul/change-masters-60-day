@@ -741,7 +741,7 @@ export function ChatVenster({
                       Pakket-advies
                     </span>
                     <span className="text-[10px] text-cm-white opacity-60 -mt-1">
-                      Handmatig samenstellen samen met de coach
+                      Handmatig samenstellen samen met de mentor
                     </span>
                     <ProductadviesKnop
                       prospectId={prospect.id}
@@ -769,7 +769,7 @@ export function ChatVenster({
                 </div>
                 <p className="text-[11px] text-cm-white opacity-50 mt-2 italic">
                   Het verschil: bij <strong>Pakket-advies</strong> kies jij
-                  samen met de coach welk pakket past. Bij{" "}
+                  samen met de mentor welk pakket past. Bij{" "}
                   <strong>Vragenlijst</strong> beantwoordt de prospect zelf 30
                   korte vragen en krijgt automatisch een advies.
                 </p>

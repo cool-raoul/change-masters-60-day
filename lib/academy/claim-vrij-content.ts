@@ -118,7 +118,7 @@ Elke post, elke story, elke DM is een steentje. Tien jaar lang elke dag een stee
 
 **3. Een team dat hetzelfde fundament hanteert**
 
-Hier ligt de echte legacy-laag. Als jij in gevoel-taal communiceert maar jouw 50 teamleden in productclaims, is het bouwwerk niet veilig. Daarom hebben we ELEVA's Mentor: zodat IEDEREEN in jouw team toegang heeft tot dezelfde scherpe communicatie-coach. Daar komen we in module 5 op terug.
+Hier ligt de echte legacy-laag. Als jij in gevoel-taal communiceert maar jouw 50 teamleden in productclaims, is het bouwwerk niet veilig. Daarom hebben we ELEVA's Mentor: zodat IEDEREEN in jouw team toegang heeft tot dezelfde scherpe communicatie-mentor. Daar komen we in module 5 op terug.
 
 **Het mooiste inzicht**
 
@@ -1030,7 +1030,7 @@ Hij doet niet:
 - Specifiek juridisch advies voor uniek-complexe situaties
 - Garanderen dat élke claim-categorie ter wereld wordt opgevangen
 
-Voor 95-98% van publieke posts is hij echter een uitstekende veiligheidsnet, en bovendien een uitstekende copywriting-coach.
+Voor 95-98% van publieke posts is hij echter een uitstekende veiligheidsnet, en bovendien een uitstekende copywriting-mentor.
 
 **Hoe vraag je het beste?**
 
@@ -1066,7 +1066,7 @@ Hij geeft je een beoordeling met uitleg. Bij twijfel zal hij conservatief advise
 
 **Een groot voordeel voor je teamlijn**
 
-De Mentor is beschikbaar voor IEDEREEN in jouw team, niet alleen voor jou. Dat betekent: jouw teamleden hebben dezelfde veiligheidsnet en dezelfde copywriting-coach als jij. Hun posts worden GEHOLPEN voordat ze online gaan. Dat beschermt je hele organisatie tegen claim-fouten EN tilt iedereen op in hun copywriting-kwaliteit.
+De Mentor is beschikbaar voor IEDEREEN in jouw team, niet alleen voor jou. Dat betekent: jouw teamleden hebben dezelfde veiligheidsnet en dezelfde copywriting-mentor als jij. Hun posts worden GEHOLPEN voordat ze online gaan. Dat beschermt je hele organisatie tegen claim-fouten EN tilt iedereen op in hun copywriting-kwaliteit.
 
 In de volgende les gaan we praktisch aan de slag met een resultaat-post laten schrijven door de Mentor.
 

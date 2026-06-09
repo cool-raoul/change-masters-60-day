@@ -73,7 +73,7 @@ export function NieuwGesprekKnop({ userId, prospects }: Props) {
             ))}
           </select>
           <p className="text-cm-white text-xs mt-1">
-            Als je een prospect selecteert, weet de coach direct hun situatie.
+            Als je een prospect selecteert, weet de mentor direct hun situatie.
           </p>
         </div>
 

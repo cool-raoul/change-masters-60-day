@@ -173,7 +173,7 @@ export function ShowcaseClient({
             />
             <T
               sleutel="hero.subtitel"
-              standaard="Een AI gedreven systeem dat je dagelijks bij de hand neemt, in jouw eigen tempo. Met scripts in jouw stem, een coach in je broekzak, en alles wat je team nodig heeft. Zonder dat het overweldigt. Werken met AI terwijl je authenticiteit behoudt."
+              standaard="Een AI gedreven systeem dat je dagelijks bij de hand neemt, in jouw eigen tempo. Met scripts in jouw stem, een mentor in je broekzak, en alles wat je team nodig heeft. Zonder dat het overweldigt. Werken met AI terwijl je authenticiteit behoudt."
               overrides={ov}
               isFounder={isFounder}
               as="p"

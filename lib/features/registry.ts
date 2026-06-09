@@ -160,7 +160,7 @@ export const FEATURES: Feature[] = [
   {
     id: "coach",
     emoji: "🤖",
-    titel: "ELEVA Mentor, 24/7 coach in je broekzak",
+    titel: "ELEVA Mentor, 24/7 mentor in je broekzak",
     lead: "Een AI-mentor die jouw methodiek kent en altijd tijd heeft.",
     bullets: [
       "Vraag alles: bezwaren pareren, uitnodigings-tekst, 3-wegen gesprek voorbereiden, closing, mindset",

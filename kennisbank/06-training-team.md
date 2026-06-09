@@ -103,9 +103,9 @@ Vier varianten, oplopend van kort naar diep-emotioneel.
 ## Implicaties voor ELEVA
 
 - **Training-uitnodigingen als DM-flow**: ELEVA kan een dedicated flow bieden voor "ik ga iemand uitnodigen voor een training-event", teamlid kiest variant (kort/middel/persoonlijk), ELEVA personaliseert op naam en relatie.
-- **Schaarste-trigger is systeem-breed**: "Ik mag maar 3 plekjes" is een vaste techniek, ELEVA coach kan dit als framing bevestigen maar nooit als manipulatie-script presenteren.
+- **Schaarste-trigger is systeem-breed**: "Ik mag maar 3 plekjes" is een vaste techniek, ELEVA mentor kan dit als framing bevestigen maar nooit als manipulatie-script presenteren.
 - **De 3 experts zijn het "gezicht" van de training**: voedingsdeskundige + psychotherapeut + hypnotherapeute. ELEVA-scripts kunnen hierop voortbouwen als geloofwaardigheidsbasis.
-- **Business-inkomen zit in variant 3**: de langste variant weeft de verdiencomponent subtiel in ("je kunt dit ook met anderen delen en iets verdienen"). ELEVA coach kan uitleggen wanneer dit past (warm contact vs. prospect met oog op business).
+- **Business-inkomen zit in variant 3**: de langste variant weeft de verdiencomponent subtiel in ("je kunt dit ook met anderen delen en iets verdienen"). ELEVA mentor kan uitleggen wanneer dit past (warm contact vs. prospect met oog op business).
 - **Video-leadership content**: Omgaan met Bezwaren + Power of Stories + Erkenningsdiner zijn trainingen die teamleden kijken. ELEVA kan hiernaar verwijzen als leermateriaal (Skill-van-de-dag), maar niet de inhoud reproduceren (video-only).
 - **12:00 webinar als ankerpunt**: de dinsdagavond teamtraining (uit STAP 5) is de interne training; de 12:00-sessies zijn externe webinars voor prospects/shoppers. ELEVA kan beide als aparte reminder-triggers behandelen.
 - **Doelgroep scripts = vrouwen**: toon en thema's (hormonen, rust, zelfliefde, energieverlies) zijn expliciet op vrouwen gericht. ELEVA toon-aanpassing mogelijk per geslacht van de prospect.

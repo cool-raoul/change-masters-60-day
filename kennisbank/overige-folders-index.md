@@ -103,7 +103,7 @@ Structuur van de kaart:
 
 ### Implicaties ELEVA
 - De **week tracker** is een fysiek PDF. ELEVA's namenlijst + dashboard vervangen dit digitaal.
-- **Bezwaren/Closingsvragen werkdocument** is waardevolle inhoud voor de DM-coach, indien toegankelijk, inhoud ophalen voor de kennisbank.
+- **Bezwaren/Closingsvragen werkdocument** is waardevolle inhoud voor de DM-mentor, indien toegankelijk, inhoud ophalen voor de kennisbank.
 - **One Pager** en **Powerpoint** zijn presentatiematerialen voor driewegsgesprekken, ELEVA verwijst hiernaar (human-first: mensen gebruiken de tools zelf).
 
 ---

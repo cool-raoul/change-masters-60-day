@@ -251,7 +251,7 @@ const COMMANDOS: Commando[] = [
     categorie: "Navigatie",
     icoon: "🧭",
     titel: "Ga naar een pagina",
-    wat: "Spraak → direct openen van dashboard, kaarten, coach, etc.",
+    wat: "Spraak → direct openen van dashboard, kaarten, mentor, etc.",
     voorbeelden: [
       { zin: "\"Ga naar dashboard.\"" },
       { zin: "\"Open de kaart van Petra.\"" },

@@ -537,7 +537,7 @@ Boards beschikbaar in: Nederlands · Engels · Duits · Spaans · Portugees (en 
 
 2. **De 100 namenlijst = 25 warm + 75 opwarmen** is een concreet datamodel. De bestaande `/namenlijst` (kanban met 6 fases) moet waarschijnlijk een 7ᵉ status erbij krijgen: *"opwarmen"* (pre-uitnodiging). Of: een split 25/75 badge op het kanban-overzicht.
 
-3. **L.O.R.D.-principe** (Location, Occupation, Recreation, Dreams) is letterlijk het prompt-raamwerk voor de opwarm-fase. De DM-coach kan hier conversatie-prompts op genereren, één vraag per dag bijvoorbeeld, wisselend per L-O-R-D.
+3. **L.O.R.D.-principe** (Location, Occupation, Recreation, Dreams) is letterlijk het prompt-raamwerk voor de opwarm-fase. De DM-mentor kan hier conversatie-prompts op genereren, één vraag per dag bijvoorbeeld, wisselend per L-O-R-D.
 
 4. **WHY = jouw haakje**: zowel voor eigen motivatie (onboarding) als voor het noteren van prospect-WHYs. De `/namenlijst/[id]` detailpagina zou een eigen WHY-veld moeten hebben per prospect (dat is goud bij uitnodigen). Dit is een **directe feature-kandidaat**.
 
@@ -545,7 +545,7 @@ Boards beschikbaar in: Nederlands · Engels · Duits · Spaans · Portugees (en 
 
 6. **3-way call** is de standaard onboarding-tool. De sponsor is altijd erbij. Past perfect bij de human-first filter: **AI vervangt dit niet**. ELEVA helpt alleen met voorbereiding (WHY-koppeling, gesprek-agenda, follow-up).
 
-7. **Hot Market ≠ cold market**: natuurlijk blijven is de kernregel. De DM-coach mag geen robot-taal suggereren, maar de toon van de user zelf mirroren. Past bij de feedback-memory "menselijkheid-filter".
+7. **Hot Market ≠ cold market**: natuurlijk blijven is de kernregel. De DM-mentor mag geen robot-taal suggereren, maar de toon van de user zelf mirroren. Past bij de feedback-memory "menselijkheid-filter".
 
 8. **Dinsdagavond teamtraining** is het wekelijkse momentum-moment. ELEVA kan hier op haken (herinnering + recap + actie-item).
 

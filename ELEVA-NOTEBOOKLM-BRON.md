@@ -19,7 +19,7 @@ ELEVA combineert vier dingen:
 
 1. **Een dagelijks gestructureerd opstart-pad** (Core 21 stappen of Pro 14 stappen)
 2. **Tools voor prospect-werving** (Mini-ELEVA, 3-weg-gesprek, productadvies-test)
-3. **Een AI-coach (ELEVA Mentor)** voor scripts, bezwaren en follow-ups
+3. **Een AI-mentor (ELEVA Mentor)** voor scripts, bezwaren en follow-ups
 4. **Een sprint-modus (60-Day Run)** voor groepsritme
 
 Iemand die ELEVA gebruikt is altijd één van drie rollen:
@@ -397,9 +397,9 @@ oplevert, met aansluitend pakket-suggestie.
 **Core:** kan de test gebruiken om prospects te kwalificeren of om
 productinteresse boven tafel te krijgen voor de juiste Mini-ELEVA-route.
 
-### 6.4 ELEVA Mentor (AI-coach voor de member)
+### 6.4 ELEVA Mentor (AI-mentor voor de member)
 
-De AI-coach voor de member zelf, niet voor prospects. Helpt met scripts
+De AI-mentor voor de member zelf, niet voor prospects. Helpt met scripts
 schrijven, bezwaren behandelen, follow-ups formuleren, productadvies
 geven. Beschikbaar 24/7 onder "ELEVA Mentor" in het hoofdmenu.
 
@@ -780,7 +780,7 @@ echte flow uitgerold met nieuwe leden.
 
 **Edification** — manier om sponsor te introduceren in een 3-weg-gesprek ("zij heeft mij geholpen met...")
 
-**ELEVA Mentor** — AI-coach voor de member, helpt met scripts en bezwaren
+**ELEVA Mentor** — AI-mentor voor de member, helpt met scripts en bezwaren
 
 **Feel-Felt-Found** — bezwaar-techniek: erken het gevoel, normaliseer, herframen
 
@@ -837,7 +837,7 @@ ELEVA
 │   │   └── Smaak 3: Pro cliënt
 │   ├── 3-weg-gesprek (5 stappen)
 │   ├── Productadvies-test (vragenlijst)
-│   └── ELEVA Mentor (AI-coach)
+│   └── ELEVA Mentor (AI-mentor)
 │
 ├── 60-Day Run-flow
 │   ├── WhisperCampaign (optioneel, 2 weken)

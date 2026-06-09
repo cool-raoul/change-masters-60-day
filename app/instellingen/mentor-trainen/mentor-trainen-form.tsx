@@ -161,10 +161,10 @@ export function MentorTrainenForm() {
             className="input-cm w-full text-sm"
           >
             <option value="beide">
-              ✅ Beide (Mentor + programma-coach)
+              ✅ Beide (Mentor + programma-mentor)
             </option>
             <option value="member">👤 Alleen member-Mentor</option>
-            <option value="prospect">🎯 Alleen prospect-coach</option>
+            <option value="prospect">🎯 Alleen prospect-mentor</option>
           </select>
           <p className="text-cm-white opacity-50 text-[11px] mt-1 leading-snug">
             'Beide' is meestal goed (productvragen, Lifeplus, mindset).

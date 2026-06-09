@@ -399,7 +399,7 @@ export const t: Vertalingen = {
   "coach.placeholder": {
     nl: "Stel je vraag aan de ELEVA Mentor...", en: "Ask the ELEVA Mentor a question...",
     fr: "Pose ta question à ELEVA Mentor...", es: "Haz tu pregunta al ELEVA Mentor...",
-    de: "Stelle dem ELEVA Mentor eine Frage...", pt: "Fa\u00e7a sua pergunta ao coach...",
+    de: "Stelle dem ELEVA Mentor eine Frage...", pt: "Fa\u00e7a sua pergunta ao mentor...",
   },
   "coach.stel_vraag": {
     nl: "Stel je vraag aan de ELEVA Mentor of kies een snelle vraag hieronder.",
@@ -420,12 +420,12 @@ export const t: Vertalingen = {
     de: "\u2014 Allgemeines Gespr\u00e4ch \u2014", pt: "\u2014 Conversa geral \u2014",
   },
   "coach.prospect_info": {
-    nl: "Als je een prospect selecteert, weet de coach direct hun situatie.",
-    en: "If you select a prospect, the coach will know their situation.",
-    fr: "Si tu s\u00e9lectionnes un prospect, le coach conna\u00eetra sa situation.",
-    es: "Si seleccionas un prospecto, el coach conocer\u00e1 su situaci\u00f3n.",
-    de: "Wenn du einen Kontakt ausw\u00e4hlst, kennt der Coach die Situation.",
-    pt: "Se voc\u00ea selecionar um prospecto, o coach saber\u00e1 a situa\u00e7\u00e3o.",
+    nl: "Als je een prospect selecteert, weet de mentor direct hun situatie.",
+    en: "If you select a prospect, the mentor will know their situation.",
+    fr: "Si tu s\u00e9lectionnes un prospect, le mentor conna\u00eetra sa situation.",
+    es: "Si seleccionas un prospecto, el mentor conocer\u00e1 su situaci\u00f3n.",
+    de: "Wenn du einen Kontakt ausw\u00e4hlst, kennt der Mentor die Situation.",
+    pt: "Se voc\u00ea selecionar um prospecto, o mentor saber\u00e1 a situa\u00e7\u00e3o.",
   },
   "coach.start_gesprek": {
     nl: "Start gesprek", en: "Start conversation", fr: "D\u00e9marrer la conversation",
@@ -618,10 +618,10 @@ export const t: Vertalingen = {
   "why.wat_gebeurt_uitleg": {
     nl: "De ELEVA Mentor stelt je een paar vragen over jouw situatie, je dromen en wat je echt drijft. Wees eerlijk \u2014 hoe opener je bent, hoe krachtiger je WHY wordt. Het duurt ongeveer 5 tot 10 minuten.",
     en: "The ELEVA Mentor will ask you a few questions about your situation, your dreams and what truly drives you. Be honest \u2014 the more open you are, the more powerful your WHY becomes. It takes about 5 to 10 minutes.",
-    fr: "Le coach IA te posera quelques questions sur ta situation, tes r\u00eaves et ce qui te motive vraiment. Sois honn\u00eate \u2014 plus tu es ouvert, plus ton POURQUOI sera puissant. Cela prend environ 5 \u00e0 10 minutes.",
-    es: "El coach IA te har\u00e1 unas preguntas sobre tu situaci\u00f3n, tus sue\u00f1os y lo que realmente te impulsa. S\u00e9 honesto \u2014 cuanto m\u00e1s abierto seas, m\u00e1s poderoso ser\u00e1 tu POR QU\u00c9. Toma unos 5 a 10 minutos.",
-    de: "Der KI-Coach stellt dir ein paar Fragen zu deiner Situation, deinen Tr\u00e4umen und was dich wirklich antreibt. Sei ehrlich \u2014 je offener du bist, desto kraftvoller wird dein WARUM. Es dauert etwa 5 bis 10 Minuten.",
-    pt: "O coach IA far\u00e1 algumas perguntas sobre sua situa\u00e7\u00e3o, seus sonhos e o que realmente te motiva. Seja honesto \u2014 quanto mais aberto voc\u00ea for, mais poderoso ser\u00e1 seu PORQU\u00ca. Leva cerca de 5 a 10 minutos.",
+    fr: "Le mentor IA te posera quelques questions sur ta situation, tes r\u00eaves et ce qui te motive vraiment. Sois honn\u00eate \u2014 plus tu es ouvert, plus ton POURQUOI sera puissant. Cela prend environ 5 \u00e0 10 minutes.",
+    es: "El mentor IA te har\u00e1 unas preguntas sobre tu situaci\u00f3n, tus sue\u00f1os y lo que realmente te impulsa. S\u00e9 honesto \u2014 cuanto m\u00e1s abierto seas, m\u00e1s poderoso ser\u00e1 tu POR QU\u00c9. Toma unos 5 a 10 minutos.",
+    de: "Der KI-Mentor stellt dir ein paar Fragen zu deiner Situation, deinen Tr\u00e4umen und was dich wirklich antreibt. Sei ehrlich \u2014 je offener du bist, desto kraftvoller wird dein WARUM. Es dauert etwa 5 bis 10 Minuten.",
+    pt: "O mentor IA far\u00e1 algumas perguntas sobre sua situa\u00e7\u00e3o, seus sonhos e o que realmente te motiva. Seja honesto \u2014 quanto mais aberto voc\u00ea for, mais poderoso ser\u00e1 seu PORQU\u00ca. Leva cerca de 5 a 10 minutos.",
   },
   "why.start": {
     nl: "Start het gesprek", en: "Start the conversation", fr: "D\u00e9marrer la conversation",
@@ -787,8 +787,8 @@ export const t: Vertalingen = {
   "prospect.herinnering": { nl: "🔔 Herinnering:", en: "🔔 Reminder:", fr: "🔔 Rappel :", es: "🔔 Recordatorio:", de: "🔔 Erinnerung:", pt: "🔔 Lembrete:" },
   "prospect.coach_gesprekken": { nl: "🌟 ELEVA Mentor gesprekken", en: "🌟 ELEVA Mentor conversations", fr: "🌟 Conversations ELEVA Mentor", es: "🌟 Conversaciones ELEVA Mentor", de: "🌟 ELEVA Mentor Gespräche", pt: "🌟 Conversas ELEVA Mentor" },
   "prospect.nieuw_gesprek": { nl: "+ Nieuw gesprek", en: "+ New conversation", fr: "+ Nouvelle conversation", es: "+ Nueva conversación", de: "+ Neues Gespräch", pt: "+ Nova conversa" },
-  "prospect.geen_gesprekken": { nl: "Nog geen coach gesprekken over dit contact.", en: "No coach conversations about this contact yet.", fr: "Pas encore de conversations coach à propos de ce contact.", es: "Aún no hay conversaciones de coach sobre este contacto.", de: "Noch keine Coach-Gespräche über diesen Kontakt.", pt: "Ainda não há conversas de coach sobre este contato." },
-  "prospect.coach_gesprek": { nl: "Coach gesprek", en: "Coach conversation", fr: "Conversation coach", es: "Conversación de coach", de: "Coach-Gespräch", pt: "Conversa de coach" },
+  "prospect.geen_gesprekken": { nl: "Nog geen mentor gesprekken over dit contact.", en: "No mentor conversations about this contact yet.", fr: "Pas encore de conversations mentor à propos de ce contact.", es: "Aún no hay conversaciones de mentor sobre este contacto.", de: "Noch keine Mentor-Gespräche über diesen Kontakt.", pt: "Ainda não há conversas de mentor sobre este contato." },
+  "prospect.coach_gesprek": { nl: "Mentor gesprek", en: "Mentor conversation", fr: "Conversation mentor", es: "Conversación de mentor", de: "Mentor-Gespräch", pt: "Conversa de mentor" },
 
   // ===== SCRIPTS =====
   "scripts.titel": { nl: "Scriptbibliotheek", en: "Script Library", fr: "Bibliothèque de scripts", es: "Biblioteca de guiones", de: "Skriptbibliothek", pt: "Biblioteca de scripts" },
@@ -829,9 +829,9 @@ export const t: Vertalingen = {
   "zoeken.niets": { nl: "Niets gevonden", en: "Nothing found", fr: "Rien trouvé", es: "Nada encontrado", de: "Nichts gefunden", pt: "Nada encontrado" },
   "zoeken.andere": { nl: "Probeer een andere zoekterm", en: "Try a different search term", fr: "Essaie un autre terme de recherche", es: "Intenta con otro término de búsqueda", de: "Versuche einen anderen Suchbegriff", pt: "Tente outro termo de pesquisa" },
   "zoeken.type": { nl: "Type een naam of zoekterm", en: "Type a name or search term", fr: "Tape un nom ou un terme de recherche", es: "Escribe un nombre o término de búsqueda", de: "Gib einen Namen oder Suchbegriff ein", pt: "Digite um nome ou termo de pesquisa" },
-  "zoeken.zoekt_in": { nl: "Zoekt in contacten, notities, telefoonnummers en coach gesprekken", en: "Searches in contacts, notes, phone numbers and coach conversations", fr: "Recherche dans les contacts, notes, numéros et conversations", es: "Busca en contactos, notas, teléfonos y conversaciones", de: "Sucht in Kontakten, Notizen, Telefonnummern und Coach-Gesprächen", pt: "Pesquisa em contatos, notas, telefones e conversas" },
+  "zoeken.zoekt_in": { nl: "Zoekt in contacten, notities, telefoonnummers en mentor gesprekken", en: "Searches in contacts, notes, phone numbers and mentor conversations", fr: "Recherche dans les contacts, notes, numéros et conversations", es: "Busca en contactos, notas, teléfonos y conversaciones", de: "Sucht in Kontakten, Notizen, Telefonnummern und Mentor-Gesprächen", pt: "Pesquisa em contatos, notas, telefones e conversas" },
   "zoeken.contacten": { nl: "Contacten", en: "Contacts", fr: "Contacts", es: "Contactos", de: "Kontakte", pt: "Contatos" },
-  "zoeken.gesprekken": { nl: "Coach gesprekken", en: "Coach conversations", fr: "Conversations coach", es: "Conversaciones de coach", de: "Coach-Gespräche", pt: "Conversas de coach" },
+  "zoeken.gesprekken": { nl: "Mentor gesprekken", en: "Mentor conversations", fr: "Conversations mentor", es: "Conversaciones de mentor", de: "Mentor-Gespräche", pt: "Conversas de mentor" },
 
   // ===== ACTIE FORM =====
   "actie.bijhouden": { nl: "Bijhouden wat besproken", en: "Track what was discussed", fr: "Suivi de ce qui a été discuté", es: "Registrar lo discutido", de: "Erfassen was besprochen wurde", pt: "Registrar o que foi discutido" },
@@ -957,7 +957,7 @@ export const t: Vertalingen = {
   "coach.kan_followup": { nl: "Follow up berichten formuleren", en: "Write follow-up messages", fr: "Formuler des messages de suivi", es: "Formular mensajes de seguimiento", de: "Follow-up Nachrichten formulieren", pt: "Formular mensagens de acompanhamento" },
   "coach.kan_closing": { nl: "De Doel-Tijd-Termijn closing toepassen", en: "Apply the Goal-Time-Deadline closing", fr: "Appliquer la clôture Objectif-Temps-Délai", es: "Aplicar el cierre Objetivo-Tiempo-Plazo", de: "Die Ziel-Zeit-Termin-Abschluss anwenden", pt: "Aplicar o fechamento Meta-Tempo-Prazo" },
   "coach.kan_strategie": { nl: "Strategisch advies per pipeline-fase", en: "Strategic advice per pipeline phase", fr: "Conseils stratégiques par phase pipeline", es: "Consejos estratégicos por fase de pipeline", de: "Strategische Beratung pro Pipeline-Phase", pt: "Conselhos estratégicos por fase do pipeline" },
-  "coach.kan_mindset": { nl: "Mindset coaching en motivatie", en: "Mindset coaching and motivation", fr: "Coaching mindset et motivation", es: "Coaching de mentalidad y motivación", de: "Mindset-Coaching und Motivation", pt: "Coaching de mentalidade e motivação" },
+  "coach.kan_mindset": { nl: "Mindset-begeleiding en motivatie", en: "Mindset mentoring and motivation", fr: "Accompagnement mindset et motivation", es: "Acompañamiento mental y motivación", de: "Mindset-Begleitung und Motivation", pt: "Acompanhamento de mentalidade e motivação" },
   "coach.kan_accountability": { nl: "Accountability, houd jij je aan jouw dagelijkse acties?", en: "Accountability, are you keeping up with your daily actions?", fr: "Responsabilité, respectes-tu tes actions quotidiennes ?", es: "Responsabilidad, ¿cumples con tus acciones diarias?", de: "Accountability, hältst du deine täglichen Aktionen ein?", pt: "Responsabilidade, você está cumprindo suas ações diárias?" },
   "coach.kan_drieweg": { nl: "3-weg gesprek opzetten met sponsor (stap-voor-stap scripts + geslacht keuze)", en: "Set up a 3-way conversation with sponsor (step-by-step scripts + gender selection)", fr: "Mettre en place une conversation à 3 avec le sponsor (scripts étape par étape)", es: "Organizar conversación a 3 con el sponsor (scripts paso a paso)", de: "3-Wege-Gespräch mit Sponsor einrichten (Schritt-für-Schritt-Skripte)", pt: "Organizar conversa a 3 com o sponsor (scripts passo a passo)" },
   "coach.snel.drieweg": { nl: "3-weg gesprek", en: "3-way chat", fr: "Chat à 3", es: "Chat a 3", de: "3-Wege-Chat", pt: "Chat a 3" },

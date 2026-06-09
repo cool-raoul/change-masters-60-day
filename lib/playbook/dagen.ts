@@ -392,7 +392,7 @@ NIET GELIJK PITCHEN, wat wel: reageer terug op hun content. Vraag iets. Bouw rap
         route: "/scripts",
       },
       {
-        actie: "Coach helpt met een persoonlijke uitnodiging",
+        actie: "Mentor helpt met een persoonlijke uitnodiging",
         menupad: "Menu → ELEVA Mentor",
         spraak: "Schrijf een uitnodiging voor [naam] die [context]",
         route: "/coach",
@@ -543,7 +543,7 @@ Op je prospect-kaart kun je de keuze maken via de knop "🧭 Welke aanpak past b
       "Week 1 (dag 1-7): deze week 2 one-pager-momenten gepland of bekeken krijgen.",
     waarInEleva: [
       {
-        actie: "Coach helpt bij een specifiek bezwaar",
+        actie: "Mentor helpt bij een specifiek bezwaar",
         menupad: "Menu → ELEVA Mentor",
         spraak: "Hoe ga ik om met het bezwaar [bezwaar]",
         route: "/coach",
@@ -656,7 +656,7 @@ VEELGEMAAKTE FOUTEN:
         route: "/herinneringen",
       },
       {
-        actie: "Coach helpt met een specifieke follow-up",
+        actie: "Mentor helpt met een specifieke follow-up",
         menupad: "Menu → ELEVA Mentor",
         spraak: "Help me met een follow-up voor [naam] die [situatie]",
         route: "/coach",
@@ -856,7 +856,7 @@ DEZE REVIEW KAN JE DELEN MET JE SPONSOR (zelfde keuze maak je aan het eind van h
         route: "/scripts",
       },
       {
-        actie: "Coach helpt bij volume zonder spam-gevoel",
+        actie: "Mentor helpt bij volume zonder spam-gevoel",
         menupad: "Menu → ELEVA Mentor",
         route: "/coach",
         prefillTemplate:
@@ -949,7 +949,7 @@ Verdeel je uitnodigingen ongeveer half warm (mensen die je goed kent) en half la
         route: "/namenlijst",
       },
       {
-        actie: "Coach legt 3-weg uit voor jouw situatie",
+        actie: "Mentor legt 3-weg uit voor jouw situatie",
         menupad: "Menu → ELEVA Mentor",
         spraak: "Leg 3-weg gesprek uit voor [naam prospect]",
         route: "/coach",
@@ -1064,7 +1064,7 @@ VANDAAG: lees de scripts in een prospect-kaart door, zodat je voor je eerstvolge
         route: "/namenlijst",
       },
       {
-        actie: "Coach helpt bij een specifieke 3-weg-situatie",
+        actie: "Mentor helpt bij een specifieke 3-weg-situatie",
         menupad: "Menu → ELEVA Mentor",
         route: "/coach",
         prefillTemplate:
@@ -1153,7 +1153,7 @@ Doel deze week: minimaal 1 3-weg starten. Heb je 'm op dag 4 al gehad? Top, plan
         route: "/namenlijst",
       },
       {
-        actie: "Coach helpt met de overgang naar presentatie",
+        actie: "Mentor helpt met de overgang naar presentatie",
         menupad: "Menu → ELEVA Mentor",
         spraak: "Hoe zet ik [naam] van one-pager naar presentatie?",
         route: "/coach",
@@ -1240,7 +1240,7 @@ KIJK VANDAAG NAAR JE PIPELINE: hoeveel mensen op "Uitgenodigd"? Hoeveel op "One-
         label:
           "Als iemand 'nee' zei op business: probeer een product-pivot vandaag",
         uitleg:
-          "Maak via de coach een pivot-bericht: 'Helemaal goed, geen probleem. Ken je iemand die last heeft van X? Of wil je het zelf eens een maand proberen?' Zet ze dan op pipeline-fase Shopper.",
+          "Maak via de mentor een pivot-bericht: 'Helemaal goed, geen probleem. Ken je iemand die last heeft van X? Of wil je het zelf eens een maand proberen?' Zet ze dan op pipeline-fase Shopper.",
         verplicht: false,
         actieRoute: "/namenlijst",
       },
@@ -1263,7 +1263,7 @@ KIJK VANDAAG NAAR JE PIPELINE: hoeveel mensen op "Uitgenodigd"? Hoeveel op "One-
       "Week 2 (dag 8-14): 3 tot 5 presentatie-momenten in de agenda deze week.",
     waarInEleva: [
       {
-        actie: "Coach schrijft een product-pivot bericht",
+        actie: "Mentor schrijft een product-pivot bericht",
         menupad: "Menu → ELEVA Mentor",
         spraak: "Geef me een product-pivot bericht voor [naam]",
         route: "/coach",
@@ -1325,7 +1325,7 @@ VEELGEMAAKTE FOUTEN:
 ✗ Tegen Shopper de business pas weer aankaarten → laat het BIJ ZICHZELF komen, niet jij weer met de pitch.
 
 WAT JE VANDAAG DOET:
-1. Heb je iemand die deze week "nee" zei op business? Stuur een pivot-bericht (Coach helpt).
+1. Heb je iemand die deze week "nee" zei op business? Stuur een pivot-bericht (Mentor helpt).
 2. Pas de pipeline-fase aan in ELEVA: Shopper.
 3. Maak een herinnering aan voor +21 dagen: "[naam], hoe bevallen de producten?"
 4. Stop de business-vraag voor minstens 3 maanden, laat ze het ervaren.
@@ -1393,7 +1393,7 @@ EXTRA WAARDE: zeg nee tegen drammen, ja tegen warmte. Een Shopper die jou over e
       "Week 2 (dag 8-14): 3 tot 5 presentatie-momenten in de agenda deze week.",
     waarInEleva: [
       {
-        actie: "Coach helpt met FORM-vragen voor jouw situatie",
+        actie: "Mentor helpt met FORM-vragen voor jouw situatie",
         menupad: "Menu → ELEVA Mentor",
         spraak: "Leg FORM uit en geef voorbeelden",
         route: "/coach",
@@ -1541,7 +1541,7 @@ VANDAAG: kies 1 specifieke prospect, plan een 5-min check-in (DM of telefoon) en
         route: "/namenlijst",
       },
       {
-        actie: "Coach helpt patronen herkennen",
+        actie: "Mentor helpt patronen herkennen",
         menupad: "Menu → ELEVA Mentor",
         route: "/coach",
         prefillTemplate:
@@ -1631,7 +1631,7 @@ VAN HIER UIT IS HET KILOMETER-WERK. Geen nieuwe technieken meer, alleen oefenen 
         route: "/herinneringen",
       },
       {
-        actie: "Coach schrijft een follow-up voor jou",
+        actie: "Mentor schrijft een follow-up voor jou",
         menupad: "Menu → ELEVA Mentor",
         spraak: "Schrijf een follow-up voor [naam] die [situatie]",
         route: "/coach",
@@ -1663,7 +1663,7 @@ DE GOLD QUESTION, werkt op vrijwel iedereen:
 1. Open je Herinneringen-lijst, sorteer op vervaldatum.
 2. Per persoon: kijk waar ze in de pipeline staan (Uitgenodigd / One-pager / Presentatie / Shopper / Not-yet).
 3. Stuur het juiste fase-bericht (zie dag 6 voor de 5-fasen flow).
-4. Niet langer dan 1-2 minuten per persoon, als je niet weet wat te schrijven, vraag de Coach.
+4. Niet langer dan 1-2 minuten per persoon, als je niet weet wat te schrijven, vraag de Mentor.
 5. Update herinnering: nieuwe vervaldatum (3-7 dagen verder) of vink af.
 
 WAT NIET WERKT:
@@ -1741,7 +1741,7 @@ Een nee NU is geen nee voor altijd. Iemand op "Not-yet" zetten is geen verlies. 
         route: "/namenlijst",
       },
       {
-        actie: "Coach helpt bij type-bepaling van een specifieke prospect",
+        actie: "Mentor helpt bij type-bepaling van een specifieke prospect",
         menupad: "Menu → ELEVA Mentor",
         spraak: "Welk type prospect is [naam]?",
         route: "/coach",
@@ -1867,7 +1867,7 @@ VANDAAG, categoriseer je top-20:
       "Week 3 (dag 15-21): minimaal 2 beslissingen binnen: member, shopper of not-yet.",
     waarInEleva: [
       {
-        actie: "Coach helpt met closing voor specifieke prospect",
+        actie: "Mentor helpt met closing voor specifieke prospect",
         menupad: "Menu → ELEVA Mentor",
         spraak: "Help me met closing voor [naam]",
         route: "/coach",
@@ -2121,7 +2121,7 @@ Wat je vandaag doet: 5 minuten investeren in JOUW vaste zin. Schrijf 'm op, bewa
         route: "/statistieken",
       },
       {
-        actie: "Coach helpt analyseren waar je lek zit",
+        actie: "Mentor helpt analyseren waar je lek zit",
         menupad: "Menu → ELEVA Mentor",
         route: "/coach",
         prefillTemplate:
@@ -2168,7 +2168,7 @@ Oefening: stap 1 = volume opvoeren. Geen techniek-fix.
 WAT JE VANDAAG DOET:
 1. Open Statistieken in ELEVA, schrijf je 4 fase-aantallen op.
 2. Identificeer je bottleneck (waar valt je conversie het sterkst weg?).
-3. Vraag de Coach om analyse + concrete oefening voor de komende 40 dagen.
+3. Vraag de Mentor om analyse + concrete oefening voor de komende 40 dagen.
 4. Schrijf op: 1 specifieke oefening voor 40-dagen-blok.
 
 EERLIJKHEID, DIT IS HET LEER-MOMENT VAN DE 21 DAGEN:
@@ -2227,7 +2227,7 @@ Statistieken zijn je leermeester, niet je rechter. Slechte cijfers betekenen nie
       "Week 3 (dag 15-21): minimaal 2 beslissingen binnen: member, shopper of not-yet.",
     waarInEleva: [
       {
-        actie: "Coach helpt jou de beslissing vragen",
+        actie: "Mentor helpt jou de beslissing vragen",
         menupad: "Menu → ELEVA Mentor",
         spraak: "Hoe vraag ik de beslissing aan [naam]?",
         route: "/coach",
@@ -2353,7 +2353,7 @@ VANDAAG: kies 1 prospect die meer dan 3 exposures heeft gehad zonder beslissing.
         route: "/statistieken",
       },
       {
-        actie: "Coach helpt 40-dagen-doel scherp stellen",
+        actie: "Mentor helpt 40-dagen-doel scherp stellen",
         menupad: "Menu → ELEVA Mentor",
         route: "/coach",
         prefillTemplate:

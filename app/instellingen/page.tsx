@@ -414,7 +414,7 @@ export default async function InstellingenPagina() {
           <EditableBlok
             namespace="instellingen"
             sleutel="mentor_trainen.uitleg"
-            standaard="Voeg vraag-antwoord-voorbeelden toe uit echte WhatsApp-gesprekken. De Mentor leert direct van jouw aanpak en gebruikt ze bij vergelijkbare vragen van members. Werkt voor de huidige Mentor en straks ook voor de programma-coach (prospect-zijde)."
+            standaard="Voeg vraag-antwoord-voorbeelden toe uit echte WhatsApp-gesprekken. De Mentor leert direct van jouw aanpak en gebruikt ze bij vergelijkbare vragen van members. Werkt voor de huidige Mentor en straks ook voor de programma-mentor (prospect-zijde)."
             overrides={overrides}
             isFounder={isFounder}
             as="p"

@@ -67,7 +67,7 @@ Geen 'heb je 'm bekeken?'-appjes meer. Je weet het.
 
 ### 5. De Mentor, 24/7 in je broekzak
 
-Een AI-coach getraind op Eric Worre's 4-stappen-uitnodiging, Feel-Felt-Found, FORM, edification en Doel-Tijd-Termijn. Hij weet welke dag je zit, kent je WHY, kent je sponsor.
+Een AI-mentor getraind op Eric Worre's 4-stappen-uitnodiging, Feel-Felt-Found, FORM, edification en Doel-Tijd-Termijn. Hij weet welke dag je zit, kent je WHY, kent je sponsor.
 
 > *"Maria zegt: ik heb er geen geld voor, wat zeg ik?"*
 
@@ -100,7 +100,7 @@ We zijn streng geweest in wat we wel en niet bouwen. Een paar dingen die ELEVA b
 
 | Voor je dag | Voor je gesprekken | Voor je team |
 |---|---|---|
-| 21-daags playbook met dag-tegel | ELEVA Mentor (AI-coach 24/7) | Sponsor-pushes bij activiteit |
+| 21-daags playbook met dag-tegel | ELEVA Mentor (AI-mentor 24/7) | Sponsor-pushes bij activiteit |
 | Dashboard-radar met top-3 prospects | Scripts voor uitnodigen, bezwaar, follow-up | Online-stip op teamleden |
 | Spraak-FAB (gouden mic), overal | 4-stappen-uitnodiging via spraak | Wekelijkse review (dag 7-14-21) |
 | Verzendtimer + herinneringen | 3-weg gesprek-tool stap-voor-stap | Stilte-nudge naar sponsor bij 2+ dagen stilte |

@@ -48,7 +48,7 @@ function getTitel(gesprek: Gesprek): string {
   if (gesprek.prospect?.volledige_naam) {
     return `Over ${gesprek.prospect.volledige_naam}`;
   }
-  return "Coach gesprek";
+  return "Mentor gesprek";
 }
 
 function getPreview(gesprek: Gesprek): string {
@@ -118,7 +118,7 @@ export function GesprekkenLijst({ gesprekken }: { gesprekken: Gesprek[] }) {
     return (
       <div className="card text-center py-12">
         <div className="text-4xl mb-3">💬</div>
-        <p className="text-cm-white">Nog geen gesprekken. Start een nieuw gesprek met de coach!</p>
+        <p className="text-cm-white">Nog geen gesprekken. Start een nieuw gesprek met de mentor!</p>
       </div>
     );
   }

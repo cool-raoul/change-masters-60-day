@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "ELEVA, het aanbevelingsmarketing-systeem van de toekomst",
   description:
-    "Een AI gedreven systeem dat je dagelijks bij de hand neemt, in jouw eigen tempo. Met scripts in jouw stem, een coach in je broekzak, en alles wat je team nodig heeft.",
+    "Een AI gedreven systeem dat je dagelijks bij de hand neemt, in jouw eigen tempo. Met scripts in jouw stem, een mentor in je broekzak, en alles wat je team nodig heeft.",
   openGraph: {
     type: "website",
     url: `${SITE_URL}/ontdek-eleva`,

@@ -7,7 +7,7 @@ export const SCRIPTS_DATA = [
   // =============================================
   // Top-5 webshop-uitnodig-scripts vooraan (2026-05-21). Vervangen de
   // oude 4 '60-Dagen'-scripts die nog op de oude "ben je in of uit"-
-  // framing draaiden zonder webshop-anker en zonder WHY-coach-zin.
+  // framing draaiden zonder webshop-anker en zonder WHY-mentor-zin.
   // De andere 9 webshop-varianten (lead-magnet, social, familie, etc.)
   // staan verderop in deze file onder een eigen sectie. Meer varianten
   // via /scripts (Uitnodigingen-tabblad, filter op tag 'webshop').

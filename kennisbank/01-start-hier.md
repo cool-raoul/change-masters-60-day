@@ -83,8 +83,8 @@ Je hoeft het wiel niet uit te vinden. Alles staat klaar:
 
 Hoe dit START-HIER-materiaal de app moet voeden:
 
-- **De 7 waarden** zijn de tone-of-voice-ankers voor alle AI-coach-uitingen. Geen "sales-speak", wel integriteit, eigenaarschap, lef, verbinding.
-- **"Vrijheid & inkomen" vs. "mensen helpen" vs. "ontdekken wat er meer in mij zit"** zijn de drie **WHY-ingangen**. De WHY-coach (`/mijn-why`) moet deze drie herkennen en daarop kunnen doorvragen, dat zijn de dominante mentale modellen waarmee nieuwe leden binnenkomen.
+- **De 7 waarden** zijn de tone-of-voice-ankers voor alle AI-mentor-uitingen. Geen "sales-speak", wel integriteit, eigenaarschap, lef, verbinding.
+- **"Vrijheid & inkomen" vs. "mensen helpen" vs. "ontdekken wat er meer in mij zit"** zijn de drie **WHY-ingangen**. De WHY-mentor (`/mijn-why`) moet deze drie herkennen en daarop kunnen doorvragen, dat zijn de dominante mentale modellen waarmee nieuwe leden binnenkomen.
 - **"Je hoeft het wiel niet uit te vinden, alles staat klaar"** is de centrale belofte. Het dashboard moet dat waarmaken: op Dag 1 weet het lid exact wat de volgende stap is. → Sluit naadloos aan bij retentie-pilaar 4 ("ik weet wat ik doe en waarom").
 - **"Bouwen mag leuk zijn"** (waarde 7) → UX-toon: vieren van kleine wins (retentie-pilaar 3).
 - **Community-kanalen** die al bestaan: WhatsApp teamgroep, Boards, FB-groep Reset/Darm. ELEVA **vervangt** deze niet, het **bundelt** en **verwijst door**. (Human-first: de mens blijft het contactpunt.)
