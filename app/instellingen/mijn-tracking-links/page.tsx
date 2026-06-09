@@ -48,6 +48,17 @@ const FREEBIE_BOTS = [
     kleur: "rose" as const,
     actief: true,
   },
+  {
+    slug: "reset-check",
+    titel: "Klopt de Reset bij jou?",
+    ondertitel:
+      "Holistic Reset persoonlijke check, met heat-score per lead en investerings-filter",
+    triggerVoorbeeld: "RESET",
+    iconEmoji: "🌿",
+    coreOnly: false,
+    kleur: "emerald" as const,
+    actief: true,
+  },
 ] as const;
 
 function genereerOpenToken(): string {
@@ -264,9 +275,15 @@ export default async function MijnTrackingLinksPagina() {
             const randKleur =
               bot.kleur === "sky"
                 ? "border-sky-500/40 bg-sky-500/5"
-                : "border-rose-500/40 bg-rose-500/5";
+                : bot.kleur === "rose"
+                  ? "border-rose-500/40 bg-rose-500/5"
+                  : "border-emerald-500/40 bg-emerald-500/5";
             const cirkelKleur =
-              bot.kleur === "sky" ? "bg-sky-500/20" : "bg-rose-500/20";
+              bot.kleur === "sky"
+                ? "bg-sky-500/20"
+                : bot.kleur === "rose"
+                  ? "bg-rose-500/20"
+                  : "bg-emerald-500/20";
             return (
               <div
                 key={bot.slug}

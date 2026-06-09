@@ -1,14 +1,17 @@
 "use client";
 
-// File: app/reset-check/flow.tsx
+// File: app/bot/reset-check/[token]/flow.tsx
 //
-// Publieke quiz-flow voor de Holistic Reset check.
-// 5 stappen: welkom -> vragen -> medisch -> intekenen -> uitkomst (+ bedank).
-// Email pas NA de vragen (sunk-cost werkt voor conversie).
+// Token-flow voor de Holistic Reset check. Submit gaat naar de
+// bestaande /api/freebie-bot/intekening-vooraf en /api/freebie-bot/opt-in,
+// zodat de inzending in freebie_opt_ins + namenlijst van de member komt
+// en de bestaande pijplijn-architectuur werkt.
 
 import { useState, type ReactNode } from "react";
 import { EditableTekst } from "@/components/cms/EditableTekst";
 import { useEditModus } from "@/components/cms/EditModeContext";
+import type { HerkomstContext } from "@/lib/freebie-bots/herkomst";
+import { herkomstLabel } from "@/lib/freebie-bots/herkomst";
 import {
   VRAGEN,
   PROFIEL_VRAGEN,
@@ -24,6 +27,7 @@ import {
   berekenThemaScores,
   bepaalUitkomstCategorie,
   combinatieInzicht,
+  berekenHeat,
   type Antwoorden,
   type ScoreWaarde,
   type Thema,
@@ -32,6 +36,10 @@ import {
 type Stap = 1 | 2 | 3 | 4 | 5 | "bedank";
 
 type Props = {
+  token: string;
+  memberId: string;
+  memberVoornaam: string;
+  herkomst: HerkomstContext;
   teaserFilm: ReactNode;
   verdiepingFilm: ReactNode;
   testimonialBlok: ReactNode;
@@ -91,6 +99,10 @@ const LEGE_ANTWOORDEN: Antwoorden = {
 };
 
 export function ResetCheckFlow({
+  token,
+  memberId: _memberId,
+  memberVoornaam: _memberVoornaam,
+  herkomst,
   teaserFilm,
   verdiepingFilm,
   testimonialBlok,
@@ -146,17 +158,70 @@ export function ResetCheckFlow({
   const profielKlaar = PROFIEL_VRAGEN.every((v) => a.profiel[v.sleutel as keyof typeof a.profiel]);
   const medischKlaar = a.medisch.length > 0;
 
+  // Intekening-vooraf: na stap 4 (intekenen) → vóór de uitkomst
+  async function intekenenVooraf() {
+    try {
+      await fetch("/api/freebie-bot/intekening-vooraf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token,
+          leadVoornaam: a.voornaam.trim(),
+          leadAchternaam: a.achternaam.trim() || a.voornaam.trim(),
+          leadEmail: a.email.trim(),
+          toestemming: true,
+          herkomstInstagram: a.instagram.trim().replace(/^@/, "") || herkomst.instagram || null,
+          herkomstFacebook: a.facebook.trim() || herkomst.facebook || null,
+          herkomstBron: herkomst.bron,
+        }),
+      });
+    } catch (e) {
+      console.warn("intekening-vooraf fout", e);
+    }
+  }
+
+  // Submit final: heat-info + thema-scores → spiegelTekst
   async function submit() {
     setBezig(true);
     try {
-      const res = await fetch("/api/reset-check/submit", {
+      const heat = berekenHeat(a);
+      const themaScores = berekenThemaScores(a);
+      const contactGewenst = a.telefoon.trim().length >= 8;
+
+      const spiegelTekst = [
+        `${heat.label} (heat-score ${heat.score}/10)`,
+        `Profiel: ${a.profiel.geslacht_leeftijd ?? "?"} · afval-wens ${a.profiel.afvalwens ?? "?"} · investering ${a.profiel.investering ?? "?"} · afval-pogingen ${a.profiel.afvalpogingen ?? "?"}`,
+        "",
+        "Thema-scores:",
+        ...themaScores.map((t) => `  ${THEMA_LABELS[t.thema]}: ${t.totaal}/${t.max} (${Math.round(t.pct)}%, ${t.niveau})`),
+        "",
+        a.medisch.length > 0
+          ? `Medische punten: ${a.medisch.filter((m) => m !== "geen").join(", ") || "geen"}`
+          : "Medisch: niets aangegeven",
+        a.medischVrij ? `Toelichting: "${a.medischVrij}"` : "",
+      ]
+        .filter(Boolean)
+        .join("\n");
+
+      const r = await fetch("/api/freebie-bot/opt-in", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(a),
+        body: JSON.stringify({
+          token,
+          leadVoornaam: a.voornaam.trim(),
+          leadAchternaam: a.achternaam.trim() || a.voornaam.trim(),
+          leadEmail: a.email.trim(),
+          leadTelefoon: contactGewenst ? a.telefoon.trim() : null,
+          antwoorden: a,
+          spiegelTekst,
+          contactGewenst,
+          herkomstInstagram: a.instagram.trim().replace(/^@/, "") || herkomst.instagram || null,
+          herkomstFacebook: a.facebook.trim() || herkomst.facebook || null,
+          herkomstBron: herkomst.bron,
+        }),
       });
-      if (!res.ok) {
-        // niet blokkeren, gewoon doorgaan naar bedank
-        console.error("submit failed", res.status);
+      if (!r.ok) {
+        console.error("opt-in failed", r.status, await r.text().catch(() => ""));
       }
     } catch (e) {
       console.error(e);
@@ -225,7 +290,13 @@ export function ResetCheckFlow({
               ov={ov}
               isFounder={isFounder}
               onTerug={() => naar(3)}
-              onDoor={() => naar(5)}
+              onDoor={async () => {
+                // Push naar pijplijn vlak vóór de uitkomst, zodat de
+                // member ook leads in z'n namenlijst krijgt die uiteindelijk
+                // niet door de hele uitkomst klikken.
+                await intekenenVooraf();
+                naar(5);
+              }}
             />
           )}
           {stap === 5 && (

@@ -69,23 +69,6 @@ export default async function FreebiesAdminPagina() {
     (v) => !bestaandeFreebies.some((b) => b.slug === v.slug),
   );
 
-  // Tel leads voor Reset-check zodat we 'm met badge kunnen tonen
-  let resetCheckLeads = 0;
-  let resetCheckHeet = 0;
-  try {
-    const { count: totaal } = await supabase
-      .from("reset_check_submissions")
-      .select("id", { count: "exact", head: true });
-    resetCheckLeads = totaal ?? 0;
-    const { count: heet } = await supabase
-      .from("reset_check_submissions")
-      .select("id", { count: "exact", head: true })
-      .eq("heat_categorie", "heet");
-    resetCheckHeet = heet ?? 0;
-  } catch {
-    // tabel bestaat nog niet, prima
-  }
-
   return (
     <main className="mx-auto max-w-3xl px-4 py-8 text-slate-100">
       <h1 className="text-2xl font-semibold">🎁 Freebies-toolkit (founder)</h1>
@@ -95,20 +78,24 @@ export default async function FreebiesAdminPagina() {
         templates in code wachten op claim-vrije inhoud van Raoul en Gaby.
       </p>
 
-      {/* PUBLIEKE FREEBIES (zonder per-member tokens, één URL voor podcast/social) */}
+      {/* PUBLIEKE FREEBIES — one-pagers en podcast-landings zonder per-member tracking */}
       <section className="mt-8">
         <h2 className="text-lg font-medium">Publieke freebies (podcast / socials)</h2>
         <p className="mt-1 text-xs text-slate-500">
-          Eén vaste URL die overal gedeeld wordt. Geen tracking per member. Voor podcast-link in show-notes en social-posts.
+          Score-bots zoals de Reset-check delen members als persoonlijke link via{" "}
+          <Link href="/instellingen/mijn-tracking-links" className="text-cm-gold underline">
+            /instellingen/mijn-tracking-links
+          </Link>
+          . Leads komen automatisch in hun namenlijst.
         </p>
         <div className="mt-3 space-y-3">
           <PubliekeFreebieKaart
             emoji="🌿"
             titel="Klopt de Reset bij jou?"
-            ondertitel="Holistic Reset persoonlijke check, met heat-score per lead"
+            ondertitel="Holistic Reset persoonlijke check. Podcast-link gaat naar founder-account, member-links via tracking-links."
             url="/reset-check"
-            beheerLabel={`📊 ${resetCheckLeads} lead${resetCheckLeads === 1 ? "" : "s"}${resetCheckHeet > 0 ? `, 🔥 ${resetCheckHeet} heet` : ""}`}
-            beheerHref="/instellingen/reset-check-leads"
+            beheerLabel="📋 Pijplijn open"
+            beheerHref="/instellingen/mijn-tracking-links"
           />
           <PubliekeFreebieKaart
             emoji="📄"

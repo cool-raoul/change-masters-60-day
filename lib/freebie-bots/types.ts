@@ -13,6 +13,7 @@
 export type BotSlug =
   | "energie-en-focus"
   | "hormonen-en-overgang"
+  | "reset-check"
   // Legacy, alleen voor lezen van oude data
   | "tweede-lente"
   | "tweede-wind";

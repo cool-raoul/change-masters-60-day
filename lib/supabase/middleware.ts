@@ -49,11 +49,13 @@ export async function updateSession(request: NextRequest) {
     // Project Meer Tijd en Vrijheid one-pager voor bouwers om te delen
     // via WhatsApp/socials. Geen account nodig.
     "/60-day-run",
-    // Holistic Reset persoonlijke check — freebie via podcast/socials.
-    // Geen account nodig om de quiz te doen.
+    // Holistic Reset persoonlijke check — landing voor podcast/socials,
+    // redirect naar /bot/reset-check/<founder-token>.
     "/reset-check",
-    // Submit-API voor reset-check inzendingen.
-    "/api/reset-check",
+    // Per-member token-routes voor de score-bots (energie-en-focus,
+    // hormonen-en-overgang, reset-check). Prospects vullen 'm in zonder
+    // account, lead komt in pijplijn van de member.
+    "/bot/",
   ];
   const isPublicRoute = publicRoutes.some((r) => pathname.startsWith(r));
 

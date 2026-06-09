@@ -69,6 +69,18 @@ const BOT_REGISTRY: Partial<Record<BotSlug, BotConfig>> = {
     coreOnly: false,
     type: "score",
   },
+  "reset-check": {
+    slug: "reset-check",
+    titel: "Klopt de Reset bij jou?",
+    ondertitel:
+      "Holistic Reset persoonlijke check, met heat-score per lead en investerings-filter",
+    beschrijving:
+      "13 score-vragen (waarvan 2 conditional voor vrouwen 35+), profiel-vragen rondom afvallen en investerings-bereidheid, medische zelf-check, en een rijke uitkomst met kennis-gap. Inclusief MediaBlokken voor teaser-video, testimonials en verdiepende film.",
+    triggerVoorbeeld: "RESET",
+    iconEmoji: "🌿",
+    coreOnly: false,
+    type: "score",
+  },
 };
 
 /**
