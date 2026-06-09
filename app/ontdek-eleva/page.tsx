@@ -18,22 +18,24 @@ import { EditModeProvider } from "@/components/cms/EditModeContext";
 import { EditModeToggle } from "@/components/cms/EditModeToggle";
 import { MediaBlokken } from "@/components/cms/MediaBlokken";
 import { ShowcaseClient } from "./showcase-client";
+import { VerseShareKnop } from "./VerseShareKnop";
 import { FEATURES } from "./features";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const SITE_URL = "https://change-masters-60-day-q25o.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Ontdek ELEVA — alles wat het systeem voor jou doet",
+  title: "ELEVA, het aanbevelingsmarketing-systeem van de toekomst",
   description:
-    "Het complete bouw-systeem voor je netwerk: Sprint, Core, Pro, ELEVA Mentor, pijplijn, freebies, scripts, Academy. Eén overzicht van alles wat al klaarstaat.",
+    "Een AI gedreven systeem dat je dagelijks bij de hand neemt, in jouw eigen tempo. Met scripts in jouw stem, een coach in je broekzak, en alles wat je team nodig heeft.",
   openGraph: {
     type: "website",
     url: `${SITE_URL}/ontdek-eleva`,
-    title: "Ontdek ELEVA",
-    description: "Het complete bouw-systeem voor je netwerk, in één overzicht.",
+    title: "ELEVA, het aanbevelingsmarketing-systeem van de toekomst",
+    description: "Een AI gedreven systeem dat je dagelijks bij de hand neemt, in jouw eigen tempo. Werken met AI terwijl je authenticiteit behoudt.",
     siteName: "ELEVA",
     locale: "nl_NL",
   },
@@ -103,7 +105,10 @@ export default async function OntdekElevaPagina() {
             <span className="text-purple-200 text-xs font-semibold uppercase tracking-wider">
               👑 Founder
             </span>
-            <EditModeToggle isFounder={true} />
+            <div className="flex items-center gap-3 flex-wrap">
+              <VerseShareKnop />
+              <EditModeToggle isFounder={true} />
+            </div>
           </div>
         </div>
       )}
