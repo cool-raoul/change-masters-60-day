@@ -97,16 +97,21 @@ export default async function OntdekElevaPagina() {
 
   return (
     <EditModeProvider>
-      {isFounder && (
-        <div className="bg-purple-950/90 border-b border-purple-700/40 px-4 py-2 sticky top-0 z-50 backdrop-blur-md">
-          <div className="max-w-7xl mx-auto flex items-center gap-3 flex-wrap justify-between">
-            <span className="text-purple-200 text-xs font-semibold uppercase tracking-wider">
-              👑 Founder
-            </span>
-            <EditModeToggle isFounder={true} />
-          </div>
+      {/* DEBUG-banner, tijdelijk, laat altijd zien wat de server ziet */}
+      <div className="bg-yellow-900/90 border-b border-yellow-600/40 px-4 py-2 text-yellow-100 text-xs font-mono">
+        <div className="max-w-7xl mx-auto">
+          DEBUG · user-id: {user?.id ?? "<niet ingelogd>"} · isFounder: {String(isFounder)}
         </div>
-      )}
+      </div>
+      {/* Toggle ALTIJD zichtbaar nu, om te checken of de render-pad werkt */}
+      <div className="bg-purple-950/90 border-b border-purple-700/40 px-4 py-2 sticky top-0 z-50 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto flex items-center gap-3 flex-wrap justify-between">
+          <span className="text-purple-200 text-xs font-semibold uppercase tracking-wider">
+            👑 Founder {!isFounder && "(forced visible voor debug)"}
+          </span>
+          <EditModeToggle isFounder={true} />
+        </div>
+      </div>
       <ShowcaseClient
         tekstOverrides={tekstOverrides}
         isFounder={isFounder}
