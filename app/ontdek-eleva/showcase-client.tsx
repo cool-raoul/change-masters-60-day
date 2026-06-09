@@ -128,6 +128,18 @@ export function ShowcaseClient({
 
       <div className="relative">
 
+        {/* ============ PILOT-TEASER BANNER ============ */}
+        <div className="bg-gradient-to-r from-amber-900/60 via-yellow-900/60 to-amber-900/60 border-b border-[#c9a961]/30 text-center py-2 px-4">
+          <T
+            sleutel="banner.teaser"
+            standaard="🚧 Pilot-teaser, dit is een voorvertoning van wat ELEVA wordt"
+            overrides={ov}
+            isFounder={isFounder}
+            as="span"
+            className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-[#f5e9c4]"
+          />
+        </div>
+
         {/* ============ NAV ============ */}
         <nav className="sticky top-0 z-40 backdrop-blur-md bg-[#0a0a0a]/80 border-b border-[#c9a961]/10">
           <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -171,7 +183,7 @@ export function ShowcaseClient({
             />
             <T
               sleutel="hero.titel"
-              standaard="Alles wat je nodig hebt om rustig en bewust te bouwen"
+              standaard="Alles wat je nodig hebt om een succesvolle business te bouwen."
               overrides={ov}
               isFounder={isFounder}
               as="h1"
@@ -180,7 +192,7 @@ export function ShowcaseClient({
             />
             <T
               sleutel="hero.subtitel"
-              standaard="Een systeem dat je dagelijks bij de hand neemt, in jouw eigen tempo. Met scripts in onze stem, een coach in je broekzak, en alles wat je team nodig heeft. Zonder dat het overweldigt 🥰"
+              standaard="Een AI gedreven systeem dat je dagelijks bij de hand neemt, in jouw eigen tempo. Met scripts in jouw stem, een coach in je broekzak, en alles wat je team nodig heeft. Zonder dat het overweldigt. Werken met AI terwijl je authenticiteit behoudt."
               overrides={ov}
               isFounder={isFounder}
               as="p"
@@ -188,17 +200,17 @@ export function ShowcaseClient({
               multiline
             />
             <div className="flex flex-wrap items-center justify-center gap-3">
-              <Link
-                href="/registreer"
-                className="inline-block px-6 py-3 rounded-full font-bold text-sm transition-all hover:-translate-y-0.5 hover:shadow-2xl"
+              <span
+                className="inline-block px-6 py-3 rounded-full font-bold text-sm cursor-not-allowed opacity-70"
                 style={{
                   background: "linear-gradient(135deg, #c9a961 0%, #ead8a0 50%, #c9a961 100%)",
                   color: "#0a0a0a",
                   boxShadow: "0 8px 24px rgba(201, 169, 97, 0.3)",
                 }}
+                title="Pilot-versie, knop nog niet actief"
               >
-                <T sleutel="hero.knop" standaard="Start nu →" overrides={ov} isFounder={isFounder} />
-              </Link>
+                <T sleutel="hero.knop" standaard="🚧 Binnenkort live" overrides={ov} isFounder={isFounder} />
+              </span>
               <Link
                 href="#features"
                 className="inline-block px-6 py-3 rounded-full font-bold text-sm border border-[#c9a961]/40 text-[#f5f5f5]/90 hover:bg-[#c9a961]/10 transition"
@@ -268,7 +280,7 @@ export function ShowcaseClient({
             />
             <T
               sleutel="features.subtitel"
-              standaard="Geen losse tools die je aan elkaar moet plakken. Wel een samenhangend ritme, van je eerste stap tot een duurzaam team."
+              standaard="Geen losse tools die je aan elkaar moet plakken. Wel een samenhangend geheel, van je eerste stap tot een duurzaam team."
               overrides={ov}
               isFounder={isFounder}
               as="p"
@@ -419,7 +431,7 @@ export function ShowcaseClient({
               />
               <T
                 sleutel="faq.subtitel"
-                standaard="Vraag je niet zien staan? Stuur ons gerust een DM op Instagram, dan kijken we even samen 🥰"
+                standaard="Zie je je vraag niet erbij staan? Stel hem aan de persoon waar je door bent uitgenodigd 🥰"
                 overrides={ov}
                 isFounder={isFounder}
                 as="p"

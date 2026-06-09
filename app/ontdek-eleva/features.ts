@@ -4,13 +4,16 @@
 // hoofdpaden eerst (Core, Pro, Sprint), dan onboarding (cruciaal),
 // dan de ondersteunende lagen. Founder-CMS staat NIET in deze lijst,
 // dat is intern werk waar prospects/team niets aan hebben.
+//
+// Teksten: Raoul's eigen overrides als standaard ingehard
+// (2026-06-09 batch), plus alle resterende pitches doorgehaald op
+// GPT-isms en in stem-DNA herschreven.
 
 export type Feature = {
   sleutel: string;
   emoji: string;
   titel: string;
   pitch: string;
-  /** Bullet-lijst zoals Saga: korte vetgedrukte term met uitleg. */
   bullets: { term: string; uitleg: string }[];
   /** Toont 'BINNENKORT'-badge en gestippelde rand. Visie-laag, nog niet live. */
   binnenkort?: boolean;
@@ -20,13 +23,13 @@ export const FEATURES: Feature[] = [
   {
     sleutel: "core",
     emoji: "🌱",
-    titel: "Core, voor wie rustig en bewust wil bouwen",
+    titel: "Core, de route voor het bouwen van een team voor maximale schaalbaarheid",
     pitch:
-      "Het meest gekozen pad. 21 dagen waarin je je fundament neerlegt op je eigen tempo, daarna groei je vanuit dat fundament door 🥰",
+      "Het meest gekozen pad. Dagelijkse stappen waarin je je fundament neerlegt in je eigen gekozen tempo, daarna groei je vanuit dat fundament door 🥰",
     bullets: [
-      { term: "Dag 1 tot 21", uitleg: "Een helder pad zonder dat het overweldigt. Elke dag een stukje fundament." },
-      { term: "Eigen tempo", uitleg: "Niet alles in één keer. Je gaat zo snel als jij wil, en pakt op wat past." },
-      { term: "Webshop-business", uitleg: "Een ondernemerschap dat naast je leven past, niet erbovenop." },
+      { term: "Eigen tempo", uitleg: "Niet alles in één keer. Jij bepaalt de snelheid, het systeem past zich aan." },
+      { term: "Dagelijkse stappen", uitleg: "Helder pad zonder dat het overweldigt. Elke dag een stukje fundament." },
+      { term: "Schaalbaarheid in je DNA", uitleg: "Een team bouwen dat zichzelf draagt, niet één dat aan jou blijft hangen." },
     ],
   },
   {
@@ -34,7 +37,7 @@ export const FEATURES: Feature[] = [
     emoji: "💎",
     titel: "Pro, voor professionals met cliënten",
     pitch:
-      "Coaches, therapeuten en beauty-pro's met een eigen praktijk. Een eigen route die past bij wat je al doet, zonder dat het voelt als verkopen.",
+      "Coaches, (personal) trainers, therapeuten en beauty-pro's, sport-professionals met een eigen praktijk. Een eigen route die eenvoudig te implementeren is bij wat je al doet, zonder dat het voelt als verkopen.",
     bullets: [
       { term: "15-stappen-leerpad", uitleg: "Eigen tempo, eigen ritme, in lijn met je bestaande agenda." },
       { term: "Productadvies-test", uitleg: "Een tool die je aan je cliënten geeft, zij vullen 'm in, jij krijgt het overzicht." },
@@ -44,9 +47,9 @@ export const FEATURES: Feature[] = [
   {
     sleutel: "sprint",
     emoji: "🚀",
-    titel: "Sprint, voor wie volle bak gaat",
+    titel: "Sprint, voor wie volle bak wil gaan!",
     pitch:
-      "Niet voor iedereen, wel voor de doorzetters. 60 dagen waarin je elke dag iets bouwt, samen met je sponsor, naar je eerste team.",
+      "Niet voor iedereen, wel voor de go-getters en doorzetters. Je gaat 60 dagen voluit in een versneld tempo dat jij kiest, waarin je elke dag bouwt naar je eerste of volgende GROEP NIEUWE TEAMLEDEN. Je bouwt op deze manier een stevige fundering waar je lange tijd de vruchten van plukt.",
     bullets: [
       { term: "60 dagen, elke dag een anker", uitleg: "Geen 'wat moet ik vandaag doen?' meer. Het playbook leidt je." },
       { term: "Sponsor-checkin", uitleg: "Dagelijks even, wekelijks dieper, plus drie-weg-gesprekken op leerdagen." },
@@ -58,7 +61,7 @@ export const FEATURES: Feature[] = [
     emoji: "🚪",
     titel: "Slimme onboarding, stap voor stap, dag voor dag",
     pitch:
-      "Je vergeet nooit waar je was. Sprint-bouwer, Core-instromer, Pro-cliënt-coach, iedereen krijgt het juiste pad vanaf dag 1, en wisselen kan altijd 🥰",
+      "Je vergeet nooit waar je was. Elke modus krijgt het pad dat erbij past, en wisselen kan altijd. Je voortgang gaat met je mee 🥰",
     bullets: [
       { term: "Modus-bewust", uitleg: "Jouw pad past bij waarom jij hier bent, niet bij wat het systeem standaard doet." },
       { term: "Cross-modus skip", uitleg: "Wat je in een ander pad al hebt gedaan, vragen we niet opnieuw." },
@@ -70,11 +73,11 @@ export const FEATURES: Feature[] = [
     emoji: "🎯",
     titel: "DMO, je dagelijkse motor",
     pitch:
-      "Daily Method of Operation, de vijf bewegingen die je elke dag herhaalt. Niet meer raden of je vandaag de juiste dingen hebt gedaan. Wel een ritme dat dragend wordt, vanzelf 🥰",
+      "Daily Method of Operation. De vaste bewegingen die je elke dag herhaalt. Een ritme dat dragend wordt, vanzelf 🥰",
     bullets: [
-      { term: "Vijf vaste bewegingen", uitleg: "Lijst-acties, uitnodigingen, follow-ups, eigen ontwikkeling en zichtbaarheid. Klein, herhaalbaar, doenbaar." },
-      { term: "DMO is de motor", uitleg: "Niet 'wanneer komt mijn doorbraak?', wel 'heb ik vandaag mijn bewegingen gedaan?'. Resultaten zijn de uitkomst, niet het mikpunt." },
-      { term: "End-of-day-check", uitleg: "Een momentum-radar die je aan het einde van je dag laat zien wat je echt hebt geraakt, en wat morgen aandacht vraagt." },
+      { term: "Vaste bewegingen", uitleg: "Lijst-acties, uitnodigingen, follow-ups, eigen ontwikkeling en zichtbaarheid. Klein, herhaalbaar, doenbaar." },
+      { term: "DMO is de motor", uitleg: "Niet wachten op een doorbraak, gewoon vandaag je bewegingen doen. Resultaten zijn de uitkomst, niet het mikpunt." },
+      { term: "End-of-day-check", uitleg: "Een momentum-radar die je aan het einde van je dag laat zien wat je echt hebt geraakt." },
     ],
   },
   {
@@ -82,11 +85,13 @@ export const FEATURES: Feature[] = [
     emoji: "🤖",
     titel: "ELEVA Mentor, je coach in je broekzak",
     pitch:
-      "Een coach die altijd antwoord heeft, in jullie stem, claim-vrij, en up-to-date over alle features. Voor wanneer je vastloopt of een script nodig hebt.",
+      "Een coach die altijd antwoord heeft, in onze stem, claim-vrij, en up-to-date over alle features. Of het nu gaat om een gesprek dat je niet weet hoe te starten, een twijfel die je tegenhoudt, een script dat je moet schrijven of een vraag over voeding of een product, Mentor denkt mee 🥰",
     bullets: [
-      { term: "Script-hulp", uitleg: "Niet meer staren naar een lege WhatsApp, samen je versie schrijven van wat je wilt zeggen." },
-      { term: "Bezwaar-coaching", uitleg: "Iemand twijfelt, jij weet niet wat te zeggen, Mentor helpt je rustig het echte gesprek aangaan." },
-      { term: "Partner-check", uitleg: "Of een nieuw lid bij je past, of je hem beter naar iemand anders doorverwijst." },
+      { term: "Gespreks-coaching", uitleg: "Hoe begin je het gesprek, hoe ga je om met een afwijzing, wat zeg je bij een bezwaar." },
+      { term: "Schrijfwerk in jouw stem", uitleg: "Uitnodigingen, opvolg-berichten, voorbereidende mails. Mentor schetst, jij maakt het eigen." },
+      { term: "Educatie en claim-vrije content", uitleg: "Over producten, programma's, leefstijl. Altijd EFSA-veilig, ook als je het zelf even niet weet." },
+      { term: "Twijfels en weerstand", uitleg: "Als je vastzit in je eigen hoofd, helpt Mentor je rustig terug naar wat je echt wilt." },
+      { term: "Dagelijkse vragen", uitleg: "Van DMO-vragen tot strategie. Mentor leest mee met je voortgang en denkt mee waar nodig." },
     ],
   },
   {
@@ -106,11 +111,11 @@ export const FEATURES: Feature[] = [
     emoji: "🎁",
     titel: "Freebie-bots met heat-score",
     pitch:
-      "Drie score-bots staan klaar: Energie & Focus, Hormonen & Overgang, en de Holistic Reset-check. Jij deelt de link, de bot doet het filter-werk.",
+      "Drie score-bots staan klaar: Energie & Focus, Hormonen & Overgang, en de Holistic Reset-check. Jij deelt de link, de bot doet het filter-werk 🥰",
     bullets: [
       { term: "Heat-score per lead", uitleg: "Je ziet meteen wie heet is, lauw, koel of koud. Begin bij de heetsten." },
       { term: "Automatisch in pijplijn", uitleg: "Inzending komt direct in je namenlijst, met push-melding op je telefoon." },
-      { term: "Mailserie", uitleg: "5 mails met tips & tricks, die je relatie warm houden, ook als ze niet meteen beslissen." },
+      { term: "Mailserie", uitleg: "5 mails met tips & tricks die je relatie warm houden, ook als ze niet meteen beslissen." },
     ],
   },
   {
@@ -130,23 +135,23 @@ export const FEATURES: Feature[] = [
     emoji: "🎥",
     titel: "Real-time film-tracking",
     pitch:
-      "Je deelt een film met een prospect, en je weet meteen of ze 'm aanzetten. Geen meer 'heeft ze 'm al gezien?' raden in het wilde weg.",
+      "Je deelt een film met een prospect en je weet meteen of ze 'm aanzetten. Niet meer raden of die persoon je film al heeft gezien.",
     bullets: [
       { term: "Live notificatie", uitleg: "Je telefoon trilt zodra iemand de film opent of doorklikt naar een volgende sectie." },
       { term: "Kijk-percentage", uitleg: "Je ziet hoever ze zijn gekomen, en welke stukken ze hebben overgeslagen." },
-      { term: "Timing-gevoel", uitleg: "Je weet wanneer het moment rijp is om je vervolg-bericht te sturen, niet té vroeg en niet té laat." },
+      { term: "Timing-gevoel", uitleg: "Je weet wanneer het moment rijp is om je vervolg-bericht te sturen." },
     ],
   },
   {
     sleutel: "scripts",
     emoji: "✍️",
-    titel: "Scripts-bibliotheek, in jullie stem",
+    titel: "Scripts-bibliotheek",
     pitch:
-      "Aansluiten, uitnodigen, opvolgen, dienstverlening. Voor elke fase de juiste woorden, claim-vrij, in Raoul en Gaby's toon.",
+      "Aansluiten, uitnodigen, opvolgen, dienstverlening. Voor elke fase de juiste woorden, claim-vrij, zoals het in het team geleerd wordt.",
     bullets: [
-      { term: "Per fase", uitleg: "Verschillende scripts voor of je nog aan het aansluiten bent of al een gesprek hebt gehad." },
+      { term: "Per fase", uitleg: "Andere scripts voor of je nog aan het aansluiten bent of al een gesprek hebt gehad." },
       { term: "Jouw versie", uitleg: "Kopiëren, jouw woorden erin schuiven, versturen. Geen sjabloon-gevoel meer." },
-      { term: "Geen verkooppraat", uitleg: "Niemand voelt zich onder druk. Wel een vriendelijke uitnodiging om iets met jou te delen." },
+      { term: "Geen verkooppraat", uitleg: "Niemand voelt zich onder druk, wel een vriendelijke uitnodiging om iets te delen." },
     ],
   },
   {
@@ -156,10 +161,10 @@ export const FEATURES: Feature[] = [
     pitch:
       "ELEVA Mentor helpt je je eigen niche te bepalen en schrijft samen met jou je posts en reels. In jouw stem, claim-vrij, zonder dat het verkooppraat wordt 🥰",
     bullets: [
-      { term: "Niche-bepaling", uitleg: "Samen ontdekken waar jouw verhaal raakt en welke mensen zich aangesproken voelen. Niet een algemene niche, wel jouw eigen plek." },
-      { term: "Posts en reels schrijven", uitleg: "Mentor schetst het concept en de structuur, jij geeft het je eigen draai. Snel, persoonlijk, en herkenbaar." },
-      { term: "Claim-vrij denken", uitleg: "EFSA-richtlijnen automatisch ingebouwd. Niet zeggen wat een product DOET, wel wat het je BRENGT. Geen risico op problemen, ook bij groei." },
-      { term: "Spreken-zoals-het-raakt", uitleg: "Geen verkooppraat, wel content die echt voelt. Mensen scrollen niet door, omdat ze zich herkennen in wat jij deelt." },
+      { term: "Niche-bepaling", uitleg: "Samen ontdekken waar jouw verhaal raakt en welke mensen zich aangesproken voelen." },
+      { term: "Posts en reels schrijven", uitleg: "Mentor schetst het concept en de structuur, jij geeft het je eigen draai." },
+      { term: "Claim-vrij denken", uitleg: "EFSA-richtlijnen automatisch ingebouwd. Niet zeggen wat een product DOET, wel wat het je BRENGT." },
+      { term: "Spreken-zoals-het-raakt", uitleg: "Geen verkooppraat, wel content die echt voelt. Mensen scrollen niet door, omdat ze zich herkennen." },
     ],
   },
   {
@@ -167,9 +172,9 @@ export const FEATURES: Feature[] = [
     emoji: "🎓",
     titel: "Academy, leren onderweg",
     pitch:
-      "DMO-mindset, spreken-zoals-het-raakt, claim-vrije communicatie. Audio-lessen die je luistert in de auto, op de fiets, of onder de afwas.",
+      "DMO-mindset, spreken-zoals-het-raakt, claim-vrije communicatie. Audio-lessen die je luistert in de auto, op de fiets, of onder de afwas 🥰",
     bullets: [
-      { term: "Just-in-time", uitleg: "Geen vooraf-cursus van 4 uur. Wel een 10-minuten-stuk wanneer het past." },
+      { term: "Just-in-time", uitleg: "Geen vooraf-cursus van vier uur, wel een 10-minuten-stuk wanneer het past." },
       { term: "Audio-onderweg", uitleg: "Net als een podcast, behalve dat het direct over jouw bouwwerk gaat." },
       { term: "Praktijk-inzichten", uitleg: "Niet abstract, wel direct toepasbaar op je volgende gesprek of post." },
     ],
@@ -195,7 +200,7 @@ export const FEATURES: Feature[] = [
     bullets: [
       { term: "Funnel-overzicht", uitleg: "Vier cijfers die alles zeggen: ingetekend, afgemaakt, contact, klant." },
       { term: "Persoonlijke URL", uitleg: "Jouw eigen deel-link voor podcast, social media of WhatsApp. Iedereen komt in jouw pijplijn." },
-      { term: "Klant-percentage", uitleg: "Niet schatten meer hoe goed je doet, wel echte cijfers waar je op kan bijsturen." },
+      { term: "Klant-percentage", uitleg: "Geen schatten meer, wel echte cijfers waar je op kan bijsturen." },
     ],
   },
   {
@@ -203,11 +208,11 @@ export const FEATURES: Feature[] = [
     emoji: "🔔",
     titel: "Push-meldingen & herinneringen",
     pitch:
-      "Iemand vult een freebie in, je telefoon trilt. Een follow-up wacht, je krijgt een ping. Geen gemiste kansen meer.",
+      "Iemand vult een freebie in, je telefoon trilt. Een follow-up wacht, je krijgt een ping. Op het juiste moment de juiste actie 🥰",
     bullets: [
-      { term: "Direct bij actie", uitleg: "Niet pas avonds een mail, wel meteen een melding zodat je kunt reageren." },
-      { term: "Slimme timing", uitleg: "Niet midden in de nacht, wel als jij actief bent." },
-      { term: "Een tap, en je bent erin", uitleg: "Vanaf de melding direct naar het juiste scherm in ELEVA, geen klik-werk meer." },
+      { term: "Direct bij actie", uitleg: "Niet pas 's avonds een mail. Wel meteen een melding zodat je kunt reageren." },
+      { term: "Slimme timing", uitleg: "Niet midden in de nacht. Wel als jij actief bent." },
+      { term: "Eén tap, en je bent erin", uitleg: "Vanaf de melding direct naar het juiste scherm in ELEVA, geen klik-werk meer." },
     ],
   },
   {
@@ -215,10 +220,10 @@ export const FEATURES: Feature[] = [
     emoji: "🌳",
     titel: "TeamBoom, je team in één oogopslag",
     pitch:
-      "Wie heeft wie gesponsord, wie zit op welke fase, wie heeft hulp nodig. Een visuele boom met directe acties per teamlid.",
+      "Wie heeft wie gesponsord, wie zit op welke fase, wie heeft hulp nodig. Een visuele boom met directe acties per teamlid 🥰",
     bullets: [
       { term: "Visueel overzicht", uitleg: "Zien wie wie heeft binnengebracht, zonder lijsten te scrollen." },
-      { term: "Status per lid", uitleg: "Op welke fase ze zitten, hoeveel tijd ze nog hebben, en waar ze stil staan." },
+      { term: "Status per lid", uitleg: "Op welke fase ze zitten, hoeveel tijd ze nog hebben, en waar ze stilstaan." },
       { term: "Eén-klik-hulp", uitleg: "Een teamlid dat vastloopt? Direct vanuit de boom een gesprek inplannen of een script delen." },
     ],
   },
@@ -227,7 +232,7 @@ export const FEATURES: Feature[] = [
     emoji: "💖",
     titel: "Klant-begeleiding, dat zij niet verloren raken",
     pitch:
-      "Zodra iemand klant wordt en aan zijn eigen programma begint, krijgt hij ondersteuning. Een eigen klant-Mentor, een helder stappenplan, en aandacht voor wat hem helpt om door te gaan 🥰 Want een klant die zich gezien voelt en weet waar hij staat, blijft.",
+      "Zodra iemand klant wordt en aan zijn eigen programma begint, krijgt hij ondersteuning. Een eigen klant-Mentor, een helder stappenplan, en aandacht voor wat hem helpt door te gaan 🥰 Want een klant die zich gezien voelt en weet waar hij staat, blijft.",
     bullets: [
       { term: "Eigen klant-Mentor", uitleg: "Klanten krijgen ondersteuning vanuit ELEVA Mentor en jou samen, gericht op hun programma en hun ritme." },
       { term: "Helder stappenplan", uitleg: "Niet verloren raken na de eerste bestelling. Wel een rustig pad door hun programma, met de juiste stap op het juiste moment." },
@@ -266,7 +271,7 @@ export const PAIN_CARDS = [
     uitleg:
       "Wat moet ik zeggen, en hoe? Hoe vermijd ik dat het voelt als verkopen? Iedere keer als ik een DM begin, blijf ik hangen.",
     citaat:
-      "De scripts zijn in jullie taal, niet die verkooppraat van standaard-tools. Ik kopieer, maak het eigen, en stuur. Klaar.",
+      "De scripts zijn zoals het in het team geleerd wordt, niet die verkooppraat van standaard-tools. Ik kopieer, maak het eigen, en stuur. Klaar.",
   },
   {
     emoji: "🌪️",
@@ -274,7 +279,7 @@ export const PAIN_CARDS = [
     uitleg:
       "Vandaag tien gesprekken, gisteren vijf. Wie wachtte op antwoord? Wie vroeg om iets toegestuurd te krijgen? Mijn hoofd kan dit niet meer.",
     citaat:
-      "Namenlijst doet het werk voor mij. Push-meldingen, herinneringen, alles staat op het juiste moment klaar.",
+      "Namenlijst doet het werk voor mij. Push-meldingen, herinneringen, alles staat op het juiste moment klaar 🥰",
   },
 ];
 
@@ -283,31 +288,31 @@ export const FAQ_ITEMS = [
   {
     vraag: "Heb ik technische kennis nodig om met ELEVA te werken?",
     antwoord:
-      "Nee, helemaal niet. Het systeem werkt op je telefoon, op je laptop, waar je maar wilt. Eén keer registreren, daarna word je door alle stappen begeleid 🥰",
+      "Nee, helemaal niet. Het systeem werkt op je telefoon, op je laptop, waar je maar wilt. Eén keer registreren, daarna word je door alle stappen begeleid en leer je stap voor stap met het systeem werken. Ook worden er aparte trainingen verzorgd specifiek hoe strategisch hiermee te werken. Er is hier ook plek voor technische vragen te stellen 🥰",
   },
   {
     vraag: "Hoe snel zie ik resultaten?",
     antwoord:
-      "Dat ligt aan jou, eerlijk gezegd. Sommige bouwers hebben binnen 2 weken hun eerste gesprek. Anderen leggen eerst rustig hun fundament en bouwen vanaf maand twee door. Het systeem werkt voor beide aanpakken.",
+      "Dat ligt aan jou, eerlijk gezegd. Sommige bouwers hebben binnen enkele minuten of uren hun eerste gesprek. Anderen hebben meer tijd nodig om tot hun eerste resultaten te komen. Het systeem werkt voor een ieder die een lange-termijn-visie heeft en bereid is om alle stappen ook echt consistent te doen.",
   },
   {
     vraag: "Wat als ik niet weet wat ik moet zeggen?",
     antwoord:
-      "Daar is de scripts-bibliotheek voor, en de ELEVA Mentor. Alles in onze stem, claim-vrij, klaar om te gebruiken. Kopieer, maak het je eigen, en stuur het.",
+      "Daar is de scripts-bibliotheek voor, en de ELEVA Mentor. Alles zoals het in het team wordt geleerd, claim-vrij, klaar om te gebruiken. Kopieer, maak het je eigen, en stuur het.",
   },
   {
     vraag: "Moet ik elke dag iets doen?",
     antwoord:
-      "Het helpt om elke dag iets klein te doen, alleen het systeem dwingt je nergens toe. Mis je een dag, dan pak je 'm gewoon weer op. De voortgang gaat met je mee.",
+      "Het helpt om elke dag iets kleins te doen, alleen het systeem dwingt je nergens toe. Mis je een dag, dan pak je 'm gewoon weer op. De voortgang gaat met je mee. Het systeem werkt voor een ieder die een lange-termijn-visie heeft en bereid is om alle stappen ook echt consistent te doen.",
   },
   {
     vraag: "Werkt dit ook voor mensen die introvert zijn?",
     antwoord:
-      "Zeker. Veel van de mensen die met ons bouwen, zijn juist meer rustig en bedachtzaam. De aanpak is niet pushen, wel uitnodigen. Dat past juist bij introverten.",
+      "Zeker. Veel van de mensen die met ons bouwen, zijn juist meer rustig en bedachtzaam. De aanpak is niet pushen, wel uitnodigen. Dat past juist bij introverten. Wel zien we dat introverten door de samenwerking een persoonlijke ontwikkeling doormaken, waardoor ze allerlei makkelijker aanleren.",
   },
   {
     vraag: "Wat als ik vastloop of vragen heb?",
     antwoord:
-      "Dan is er je sponsor, ELEVA Mentor en het hele team. Plus je community in de FB-groep met meer dan 20.000 leden. Je staat er nooit alleen voor 🥰",
+      "Dan is er je sponsor, ELEVA Mentor en het hele team. Plus je community met vele andere leden die elkaar ondersteunen. Je staat er nooit alleen voor 🥰",
   },
 ];
