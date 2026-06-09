@@ -224,9 +224,14 @@ export function ResetCheckFlow({
         }),
       });
       if (!r.ok) {
-        console.error("opt-in failed", r.status, await r.text().catch(() => ""));
+        const body = await r.json().catch(() => ({}) as Record<string, unknown>);
+        const apiFout =
+          (body as { error?: string }).error ||
+          (await r.text().catch(() => "")) ||
+          `HTTP ${r.status}`;
+        console.error("opt-in failed", r.status, apiFout);
         setSubmitFout(
-          `Er ging iets mis met versturen (status ${r.status}). Probeer opnieuw, of stuur ons een DM op Instagram als het blijft falen.`,
+          `Versturen mislukt (status ${r.status}): ${apiFout}. Stuur deze regel aan ons door als je 'm meermaals ziet.`,
         );
         setBezig(false);
         return;
