@@ -210,6 +210,19 @@ export const FEATURES: Feature[] = [
     ],
   },
   {
+    sleutel: "klant-zorg",
+    emoji: "💖",
+    titel: "Klant-begeleiding, dat zij niet verloren raken",
+    pitch:
+      "Zodra iemand klant wordt en aan zijn eigen programma begint, krijgt hij ondersteuning. Een eigen klant-Mentor, een helder stappenplan, en aandacht voor wat hem helpt om door te gaan 🥰 Want een klant die zich gezien voelt en weet waar hij staat, blijft.",
+    bullets: [
+      { term: "Eigen klant-Mentor", uitleg: "Klanten krijgen ondersteuning vanuit ELEVA Mentor en jou samen, gericht op hun programma en hun ritme." },
+      { term: "Helder stappenplan", uitleg: "Niet verloren raken na de eerste bestelling. Wel een rustig pad door hun programma, met de juiste stap op het juiste moment." },
+      { term: "Aandacht voor klantbehoud", uitleg: "Lange-termijn-resultaat is de echte uitkomst. Het systeem helpt jou om klanten betrokken te houden, zonder dat het voelt als pushen." },
+      { term: "Samen met jou", uitleg: "ELEVA Mentor doet het denkwerk, jij blijft de menselijke laag eromheen. Klanten weten dat ze niet alleen met een systeem werken, wel met jou." },
+    ],
+  },
+  {
     sleutel: "leiderschap",
     emoji: "👑",
     titel: "Leiderschapsrollen en -ontwikkeling",
