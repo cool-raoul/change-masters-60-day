@@ -98,8 +98,13 @@ export default async function OntdekElevaPagina() {
   return (
     <EditModeProvider>
       {isFounder && (
-        <div className="fixed top-4 right-4 z-50">
-          <EditModeToggle isFounder={true} />
+        <div className="bg-purple-950/90 border-b border-purple-700/40 px-4 py-2 sticky top-0 z-50 backdrop-blur-md">
+          <div className="max-w-7xl mx-auto flex items-center gap-3 flex-wrap justify-between">
+            <span className="text-purple-200 text-xs font-semibold uppercase tracking-wider">
+              👑 Founder
+            </span>
+            <EditModeToggle isFounder={true} />
+          </div>
         </div>
       )}
       <ShowcaseClient

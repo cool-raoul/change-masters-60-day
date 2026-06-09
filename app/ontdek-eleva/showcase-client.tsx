@@ -75,13 +75,16 @@ export function ShowcaseClient({
           <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2 hover:opacity-90 transition">
               <Image
-                src="/eleva-logo.svg"
+                src="/eleva-icon.png"
                 alt="ELEVA"
-                width={120}
+                width={36}
                 height={36}
                 priority
-                className="h-9 w-auto"
+                className="h-9 w-9 rounded-lg"
               />
+              <span className="text-[#f5f5f5] font-bold tracking-wider text-sm">
+                ELEVA
+              </span>
             </Link>
             <div className="flex items-center gap-5 text-xs text-[#f5f5f5]/60">
               <Link href="#features" className="hover:text-[#c9a961] transition">
