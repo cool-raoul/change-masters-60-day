@@ -58,6 +58,12 @@ const SCREENSHOTS = [
     titel: "Social Media-ondersteuning (placeholder)",
     alt: "Social Media-feature met quote over claim-vrij denken",
   },
+  {
+    bestand: "push.png",
+    positie: "screenshot-push",
+    titel: "Push-meldingen (placeholder)",
+    alt: "Telefoon-mockup met vier ELEVA-push-meldingen: nieuwe lead, video kijken, follow-up, team-mijlpaal",
+  },
 ];
 
 const NAMESPACE = "ontdek-eleva";

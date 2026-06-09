@@ -394,17 +394,17 @@ export function ShowcaseClient({
                 className="block text-base sm:text-lg text-[#f5f5f5]/75 leading-relaxed mb-8 max-w-2xl mx-auto"
                 multiline
               />
-              <Link
-                href="/60-day-run"
-                className="inline-block px-8 py-4 rounded-full font-bold text-base transition-all hover:-translate-y-0.5"
+              <span
+                className="inline-block px-8 py-4 rounded-full font-bold text-base cursor-not-allowed opacity-70"
                 style={{
                   background: "linear-gradient(135deg, #c9a961 0%, #ead8a0 50%, #c9a961 100%)",
                   color: "#0a0a0a",
                   boxShadow: "0 12px 32px rgba(201, 169, 97, 0.4)",
                 }}
+                title="Pilot-versie, link nog niet actief"
               >
-                Lees het hele verhaal →
-              </Link>
+                <T sleutel="cta.knop" standaard="🚧 Binnenkort live" overrides={ov} isFounder={isFounder} />
+              </span>
             </div>
           </div>
         </section>
