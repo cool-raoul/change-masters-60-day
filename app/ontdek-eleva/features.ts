@@ -188,11 +188,16 @@ export const FEATURES: Feature[] = [
     emoji: "🎙️",
     titel: "Voice, spraak werkt overal",
     pitch:
-      "Een microfoon-knop op elke pagina. Vertel ELEVA wat je net hebt gedaan, gehoord of gezien, en je systeem update vanzelf 🥰",
+      "Een microfoon-knop op elke pagina. Vertel ELEVA wat je net hebt gedaan, gehoord, gezien of nog wilt doen. Het systeem begrijpt de context en zet het op de juiste plek voor je 🥰",
     bullets: [
-      { term: "Inspreken tussendoor", uitleg: "Geen tijd om te typen tussen gesprekken, wel even inspreken op de fiets." },
-      { term: "Slim begrijpen", uitleg: "Het systeem weet of het een nieuwe naam, een herinnering of een notitie is." },
-      { term: "Geen scherm-vermoeidheid", uitleg: "Praten gaat sneller dan typen, en voelt natuurlijker als je net iets hebt meegemaakt." },
+      { term: "Nieuwe namen inspreken", uitleg: "\"Voeg Anna toe aan mijn namenlijst, ze had een goed gesprek over slaap.\" Klaar, ze staat in je pijplijn." },
+      { term: "Herinneringen instellen", uitleg: "\"Herinner me om Tom morgen om 14u te bellen.\" Verschijnt op het juiste moment in je dag." },
+      { term: "Status van een prospect updaten", uitleg: "\"Linda gaat naar 'in gesprek', ze wil deze week iets afspreken.\" De pipeline-fase verschuift mee." },
+      { term: "Notities bij een contact", uitleg: "\"Bij Eva een notitie: ze wil eerst de wintervakantie afwachten.\" Komt direct bij haar kaart." },
+      { term: "Voortgang loggen", uitleg: "\"Vandaag 3 gesprekken gevoerd en 2 uitnodigingen gestuurd.\" Voor jezelf, voor je stats, voor je DMO-check." },
+      { term: "Vraag aan ELEVA Mentor", uitleg: "\"Hoe ga ik om met een prospect die twijfelt over de prijs?\" Mentor antwoordt direct, in onze stem." },
+      { term: "Slim begrijpen", uitleg: "Het systeem weet of het een nieuwe naam is, een herinnering, een vraag of een statuswijziging. Geen menu's, geen knoppen." },
+      { term: "Werkt op elke pagina", uitleg: "Geen aparte modus of speciale taal. Druk de microfoon-knop en praat, waar je ook bent in het systeem." },
     ],
   },
   {
