@@ -186,10 +186,6 @@ export function ShowcaseClient({
             </div>
           </div>
 
-          {/* Hero-screenshot */}
-          <div className="mt-16 sm:mt-24 max-w-5xl mx-auto">
-            {heroSlot}
-          </div>
         </section>
 
         {/* ============ PAIN-CARDS ============ */}
