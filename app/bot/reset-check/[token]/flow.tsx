@@ -180,9 +180,12 @@ export function ResetCheckFlow({
     }
   }
 
+  const [submitFout, setSubmitFout] = useState<string | null>(null);
+
   // Submit final: heat-info + thema-scores → spiegelTekst
   async function submit() {
     setBezig(true);
+    setSubmitFout(null);
     try {
       const heat = berekenHeat(a);
       const themaScores = berekenThemaScores(a);
@@ -221,14 +224,24 @@ export function ResetCheckFlow({
         }),
       });
       if (!r.ok) {
-        console.error("opt-in failed", r.status, await r.text().catch(() => ""));
+        const txt = await r.text().catch(() => "");
+        console.error("opt-in failed", r.status, txt);
+        setSubmitFout(
+          `Er ging iets mis met versturen (${r.status}). Probeer opnieuw, of stuur ons een DM op Instagram als het blijft falen.`,
+        );
+        setBezig(false);
+        return;
       }
     } catch (e) {
       console.error(e);
-    } finally {
+      setSubmitFout(
+        "Verbinding gestoord. Probeer opnieuw, of stuur ons een DM op Instagram als het blijft falen.",
+      );
       setBezig(false);
-      naar("bedank");
+      return;
     }
+    setBezig(false);
+    naar("bedank");
   }
 
   return (
@@ -305,6 +318,7 @@ export function ResetCheckFlow({
               setTelefoon={(t) => setA((p) => ({ ...p, telefoon: t }))}
               verdiepingFilm={verdiepingFilm}
               bezig={bezig}
+              submitFout={submitFout}
               ov={ov}
               isFounder={isFounder}
               onTerug={() => naar(4)}
@@ -729,6 +743,7 @@ function StapUitkomst({
   setTelefoon,
   verdiepingFilm,
   bezig,
+  submitFout,
   ov,
   isFounder,
   onTerug,
@@ -738,6 +753,7 @@ function StapUitkomst({
   setTelefoon: (t: string) => void;
   verdiepingFilm: ReactNode;
   bezig: boolean;
+  submitFout: string | null;
   ov: Record<string, string>;
   isFounder: boolean;
   onTerug: () => void;
@@ -911,6 +927,12 @@ function StapUitkomst({
         placeholder="06 12345678"
         hint="Vul je nummer in als je een kennismaking wilt. Hoeft niet hoor, je krijgt sowieso de mail-serie met tips."
       />
+
+      {submitFout && (
+        <div className="my-4 rounded-xl border-2 border-red-400 bg-red-50 p-4 text-sm text-red-900">
+          ⚠️ {submitFout}
+        </div>
+      )}
 
       <KnopHoofd onClick={onSubmit} disabled={bezig}>
         {bezig ? "Bezig met versturen..." : "Stuur mijn aanmelding →"}
