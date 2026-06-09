@@ -35,7 +35,99 @@ export default function DiagnosePagina() {
 
       <PushSectie />
       <VoiceSectie />
+      <ResetCheckSectie />
     </div>
+  );
+}
+
+// ============================================================
+// RESET-CHECK SECTIE
+// ============================================================
+
+function ResetCheckSectie() {
+  const [bezig, setBezig] = useState(false);
+  const [resultaat, setResultaat] = useState<{
+    ok: boolean;
+    conclusie?: string;
+    submit_status?: number;
+    stappen?: { stap: string; status: "OK" | "FOUT" | "INFO"; details: string }[];
+    fout?: string;
+  } | null>(null);
+
+  async function testReset() {
+    setBezig(true);
+    setResultaat(null);
+    try {
+      const r = await fetch("/api/diagnose/reset-check-test", { method: "POST" });
+      const data = await r.json();
+      setResultaat(data);
+    } catch (e) {
+      setResultaat({
+        ok: false,
+        fout: `Verbinding mislukt: ${String(e)}`,
+      });
+    } finally {
+      setBezig(false);
+    }
+  }
+
+  return (
+    <section className="rounded-2xl border border-cm-gold/30 bg-cm-surface/40 p-5">
+      <h2 className="text-cm-white text-lg font-medium">🌿 Reset-check pijplijn</h2>
+      <p className="text-cm-white/60 text-sm mt-1">
+        Test of een ingevulde Reset-check daadwerkelijk in jouw namenlijst
+        terechtkomt. Doet automatisch: token aanmaken (als nog niet), test-submit
+        sturen, checken of opt-in + prospect zijn aangemaakt, en alles weer
+        opruimen. Geen rommel achteraf in jouw lijst.
+      </p>
+
+      <button
+        onClick={testReset}
+        disabled={bezig}
+        className="mt-4 rounded-full bg-cm-gold text-cm-black font-semibold text-sm px-5 py-2.5 hover:bg-cm-gold/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {bezig ? "Bezig met testen..." : "🧪 Test mijn Reset-check pijplijn"}
+      </button>
+
+      {resultaat && (
+        <div className="mt-5 space-y-3">
+          <div
+            className={`rounded-lg border p-3 text-sm ${
+              resultaat.ok
+                ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-100"
+                : "border-red-500/40 bg-red-500/10 text-red-100"
+            }`}
+          >
+            <strong>{resultaat.ok ? "✅" : "❌"} Conclusie:</strong>{" "}
+            {resultaat.conclusie ?? resultaat.fout ?? "Onbekend"}
+          </div>
+
+          {resultaat.stappen && (
+            <div className="rounded-lg border border-cm-white/10 bg-cm-black/30 p-3 space-y-2 text-xs font-mono">
+              {resultaat.stappen.map((s, i) => (
+                <div key={i} className="flex items-start gap-2">
+                  <span
+                    className={`flex-shrink-0 font-bold ${
+                      s.status === "OK"
+                        ? "text-emerald-300"
+                        : s.status === "FOUT"
+                          ? "text-red-300"
+                          : "text-amber-300"
+                    }`}
+                  >
+                    {s.status === "OK" ? "✓" : s.status === "FOUT" ? "✗" : "ℹ"}
+                  </span>
+                  <div className="flex-1">
+                    <div className="text-cm-white">{s.stap}</div>
+                    <div className="text-cm-white/60 mt-0.5 break-all">{s.details}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </section>
   );
 }
 

@@ -186,7 +186,6 @@ export function ResetCheckFlow({
   async function submit() {
     setBezig(true);
     setSubmitFout(null);
-    console.info("[reset-check] submit starten, token:", token);
     try {
       const heat = berekenHeat(a);
       const themaScores = berekenThemaScores(a);
@@ -224,22 +223,18 @@ export function ResetCheckFlow({
           herkomstBron: herkomst.bron,
         }),
       });
-      console.info("[reset-check] opt-in response status:", r.status);
       if (!r.ok) {
-        const txt = await r.text().catch(() => "");
-        console.error("[reset-check] opt-in FAILED", r.status, txt);
+        console.error("opt-in failed", r.status, await r.text().catch(() => ""));
         setSubmitFout(
           `Er ging iets mis met versturen (status ${r.status}). Probeer opnieuw, of stuur ons een DM op Instagram als het blijft falen.`,
         );
         setBezig(false);
         return;
       }
-      const data = await r.json().catch(() => ({}));
-      console.info("[reset-check] opt-in success:", data);
     } catch (e) {
-      console.error("[reset-check] submit exception:", e);
+      console.error(e);
       setSubmitFout(
-        `Verbinding gestoord (${String(e)}). Probeer opnieuw, of stuur ons een DM op Instagram als het blijft falen.`,
+        "Verbinding gestoord. Probeer opnieuw, of stuur ons een DM op Instagram als het blijft falen.",
       );
       setBezig(false);
       return;
