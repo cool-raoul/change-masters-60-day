@@ -41,10 +41,22 @@ const SCREENSHOTS = [
     alt: "Freebie-bot Holistic Reset-check, welkom-pagina met kop, tags en CTA",
   },
   {
-    bestand: "ontdek-eleva.png",
-    positie: "hero",
-    titel: "ELEVA showcase hero",
-    alt: "ELEVA feature-overzicht met hero, gradient-typografie en CTA",
+    bestand: "leiderschap.png",
+    positie: "screenshot-leiderschap",
+    titel: "Leiderschap dat opstaat (placeholder)",
+    alt: "Visie-feature leiderschap, gradient-card met goud en paars",
+  },
+  {
+    bestand: "klant-zorg.png",
+    positie: "screenshot-klant-zorg",
+    titel: "Klant-begeleiding (placeholder)",
+    alt: "Klant-begeleiding feature met pillen voor stappenplan, klant-Mentor en klantbehoud",
+  },
+  {
+    bestand: "social-media.png",
+    positie: "screenshot-social-media",
+    titel: "Social Media-ondersteuning (placeholder)",
+    alt: "Social Media-feature met quote over claim-vrij denken",
   },
 ];
 

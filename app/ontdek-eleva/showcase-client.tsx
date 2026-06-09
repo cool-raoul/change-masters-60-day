@@ -16,7 +16,15 @@ import { useState } from "react";
 
 const NS = "ontdek-eleva";
 
-function FaqLijst({ items }: { items: typeof FAQ_ITEMS }) {
+function FaqLijst({
+  items,
+  ov,
+  isFounder,
+}: {
+  items: typeof FAQ_ITEMS;
+  ov: Record<string, string>;
+  isFounder: boolean;
+}) {
   const [open, setOpen] = useState<number | null>(null);
   return (
     <div className="space-y-3">
@@ -27,21 +35,35 @@ function FaqLijst({ items }: { items: typeof FAQ_ITEMS }) {
             key={i}
             className="bg-[#1a1a1a]/40 border border-[#c9a961]/15 rounded-xl overflow-hidden hover:border-[#c9a961]/30 transition"
           >
-            <button
-              onClick={() => setOpen(isOpen ? null : i)}
-              className="w-full text-left px-5 py-4 flex items-center justify-between gap-3"
-            >
-              <span className="text-sm sm:text-base font-bold">{item.vraag}</span>
-              <span
-                className={`text-[#c9a961] text-xl transition-transform flex-shrink-0 ${isOpen ? "rotate-45" : ""}`}
-                aria-hidden
+            <div className="w-full px-5 py-4 flex items-center justify-between gap-3">
+              <T
+                sleutel={`faq.${i}.vraag`}
+                standaard={item.vraag}
+                overrides={ov}
+                isFounder={isFounder}
+                as="span"
+                className="text-sm sm:text-base font-bold flex-1"
+              />
+              <button
+                onClick={() => setOpen(isOpen ? null : i)}
+                aria-label={isOpen ? "Inklappen" : "Uitklappen"}
+                className="text-[#c9a961] text-xl flex-shrink-0 cursor-pointer hover:scale-110 transition"
               >
-                +
-              </span>
-            </button>
+                <span className={`inline-block transition-transform ${isOpen ? "rotate-45" : ""}`}>
+                  +
+                </span>
+              </button>
+            </div>
             {isOpen && (
-              <div className="px-5 pb-5 text-sm sm:text-base text-[#f5f5f5]/75 leading-relaxed whitespace-pre-line">
-                {item.antwoord}
+              <div className="px-5 pb-5 text-sm sm:text-base text-[#f5f5f5]/75 leading-relaxed">
+                <T
+                  sleutel={`faq.${i}.antwoord`}
+                  standaard={item.antwoord}
+                  overrides={ov}
+                  isFounder={isFounder}
+                  as="div"
+                  multiline
+                />
               </div>
             )}
           </div>
@@ -118,7 +140,7 @@ export function ShowcaseClient({
                 priority
                 className="h-9 w-9 rounded-lg"
               />
-              <span className="text-[#f5f5f5] font-bold tracking-wider text-sm">
+              <span className="text-[#c9a961] font-bold tracking-wider text-sm">
                 ELEVA
               </span>
             </Link>
@@ -175,7 +197,7 @@ export function ShowcaseClient({
                   boxShadow: "0 8px 24px rgba(201, 169, 97, 0.3)",
                 }}
               >
-                Start je 60 Day Run →
+                <T sleutel="hero.knop" standaard="Start nu →" overrides={ov} isFounder={isFounder} />
               </Link>
               <Link
                 href="#features"
@@ -405,7 +427,7 @@ export function ShowcaseClient({
                 multiline
               />
             </div>
-            <FaqLijst items={FAQ_ITEMS} />
+            <FaqLijst items={FAQ_ITEMS} ov={ov} isFounder={isFounder} />
           </div>
         </section>
 
