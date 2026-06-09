@@ -11,6 +11,7 @@ import { createClient } from "@/lib/supabase/server";
 import { VOORBEELD_TOOLKIT } from "@/lib/freebies/voorbeeld-toolkit";
 import type { Freebie } from "@/lib/freebies/types";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -68,6 +69,23 @@ export default async function FreebiesAdminPagina() {
     (v) => !bestaandeFreebies.some((b) => b.slug === v.slug),
   );
 
+  // Tel leads voor Reset-check zodat we 'm met badge kunnen tonen
+  let resetCheckLeads = 0;
+  let resetCheckHeet = 0;
+  try {
+    const { count: totaal } = await supabase
+      .from("reset_check_submissions")
+      .select("id", { count: "exact", head: true });
+    resetCheckLeads = totaal ?? 0;
+    const { count: heet } = await supabase
+      .from("reset_check_submissions")
+      .select("id", { count: "exact", head: true })
+      .eq("heat_categorie", "heet");
+    resetCheckHeet = heet ?? 0;
+  } catch {
+    // tabel bestaat nog niet, prima
+  }
+
   return (
     <main className="mx-auto max-w-3xl px-4 py-8 text-slate-100">
       <h1 className="text-2xl font-semibold">🎁 Freebies-toolkit (founder)</h1>
@@ -76,6 +94,31 @@ export default async function FreebiesAdminPagina() {
         van de toolkit: welke freebies live staan in de DB, en welke PLACEHOLDER-
         templates in code wachten op claim-vrije inhoud van Raoul en Gaby.
       </p>
+
+      {/* PUBLIEKE FREEBIES (zonder per-member tokens, één URL voor podcast/social) */}
+      <section className="mt-8">
+        <h2 className="text-lg font-medium">Publieke freebies (podcast / socials)</h2>
+        <p className="mt-1 text-xs text-slate-500">
+          Eén vaste URL die overal gedeeld wordt. Geen tracking per member. Voor podcast-link in show-notes en social-posts.
+        </p>
+        <div className="mt-3 space-y-3">
+          <PubliekeFreebieKaart
+            emoji="🌿"
+            titel="Klopt de Reset bij jou?"
+            ondertitel="Holistic Reset persoonlijke check, met heat-score per lead"
+            url="/reset-check"
+            beheerLabel={`📊 ${resetCheckLeads} lead${resetCheckLeads === 1 ? "" : "s"}${resetCheckHeet > 0 ? `, 🔥 ${resetCheckHeet} heet` : ""}`}
+            beheerHref="/instellingen/reset-check-leads"
+          />
+          <PubliekeFreebieKaart
+            emoji="📄"
+            titel="Project Meer Tijd en Vrijheid"
+            ondertitel="One-pager voor bouwers om te delen via WhatsApp en social"
+            url="/60-day-run"
+            beheerLabel="Geen leads, info-pagina"
+          />
+        </div>
+      </section>
 
       <section className="mt-8">
         <h2 className="text-lg font-medium">Live in DB ({bestaandeFreebies.length})</h2>
@@ -137,5 +180,45 @@ export default async function FreebiesAdminPagina() {
         </ul>
       </section>
     </main>
+  );
+}
+
+function PubliekeFreebieKaart({
+  emoji,
+  titel,
+  ondertitel,
+  url,
+  beheerLabel,
+  beheerHref,
+}: {
+  emoji: string;
+  titel: string;
+  ondertitel: string;
+  url: string;
+  beheerLabel: string;
+  beheerHref?: string;
+}) {
+  return (
+    <div className="rounded-md border border-emerald-500/30 bg-emerald-500/5 p-3">
+      <div className="flex items-start gap-3 flex-wrap">
+        <div className="text-2xl">{emoji}</div>
+        <div className="flex-1 min-w-[200px]">
+          <div className="text-sm font-medium text-emerald-100">{titel}</div>
+          <div className="text-xs text-emerald-200/80 mt-0.5">{ondertitel}</div>
+          <div className="text-xs mt-2 flex items-center gap-3 flex-wrap">
+            <Link href={url} className="text-cm-gold hover:underline" target="_blank">
+              🔗 {url} →
+            </Link>
+            {beheerHref ? (
+              <Link href={beheerHref} className="text-emerald-300 hover:underline">
+                {beheerLabel} →
+              </Link>
+            ) : (
+              <span className="text-slate-400">{beheerLabel}</span>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
