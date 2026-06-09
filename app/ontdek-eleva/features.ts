@@ -109,14 +109,15 @@ export const FEATURES: Feature[] = [
   {
     sleutel: "freebies",
     emoji: "🎁",
-    titel: "Freebie-bots met heat-score",
+    titel: "Freebies met heat-score",
     pitch:
-      "Drie score-bots staan klaar: Energie & Focus, Hormonen & Overgang, en de Holistic Reset-check. Jij deelt de link, de bot doet het filter-werk 🥰",
+      "Meerdere freebies staan klaar: Energie & Focus, Hormonen & Overgang, Holistic Reset-check, en er komen er steeds meer bij. Jij deelt de link, de bot doet het filter-werk 🥰",
     bullets: [
       { term: "Heat-score per lead", uitleg: "Je ziet meteen wie heet is, lauw, koel of koud. Begin bij de heetsten." },
-      { term: "Automatisch in pijplijn", uitleg: "Inzending komt direct in je namenlijst, met push-melding op je telefoon." },
+      { term: "Automatisch in je pipeline", uitleg: "Inzending komt direct in je namenlijst met de juiste pipeline-fase, en het systeem werkt zelfstandig door naar de volgende stap. Geen handmatig overzetten meer." },
+      { term: "Push-melding op je telefoon", uitleg: "Je weet meteen wanneer iemand klaar is voor contact, zonder je in te hoeven loggen." },
       { term: "Mailserie", uitleg: "5 mails met tips & tricks die je relatie warm houden, ook als ze niet meteen beslissen." },
-      { term: "Koppeling met ManyChat", uitleg: "Leads die via Instagram of Facebook DM binnenkomen via ManyChat, vallen automatisch in je ELEVA-pijplijn. Iedereen komt op één plek samen, ongeacht via welk kanaal ze binnenkomen." },
+      { term: "Koppeling met ManyChat", uitleg: "Leads die via Instagram of Facebook DM binnenkomen via ManyChat, vallen automatisch in je ELEVA-pipeline. Iedereen komt op één plek samen, ongeacht via welk kanaal ze binnenkomen." },
     ],
   },
   {
@@ -124,11 +125,13 @@ export const FEATURES: Feature[] = [
     emoji: "💌",
     titel: "Mini-ELEVA, prospects warm ontvangen",
     pitch:
-      "Een persoonlijke link voor je prospect met films, verhalen, FAQ en jouw why. Ze ervaren ELEVA voordat jij iets uitlegt 🥰",
+      "Een persoonlijke link voor je prospect met videos, verhalen, FAQ en jouw why. Ze ervaren ELEVA voordat jij iets uitlegt 🥰",
     bullets: [
       { term: "Twee sporen", uitleg: "Product-spoor (gezondheid) of business-spoor (eigen onderneming), jij kiest welke." },
-      { term: "Foundervideo's", uitleg: "Films van Raoul of Gaby die het verhaal vertellen, jij hoeft niet alles zelf te zeggen." },
+      { term: "Videos", uitleg: "Videos die het verhaal vertellen, jij hoeft niet alles zelf uit te leggen." },
       { term: "Activiteits-tracking", uitleg: "Je ziet wanneer je prospect aan het kijken is, en welke onderdelen ze openen." },
+      { term: "Aparte chat-omgeving", uitleg: "Een directe persoonlijke chat met je prospect, zonder dat het tussen je andere berichten verdwijnt." },
+      { term: "3-way chat", uitleg: "Je sponsor of upline erbij halen in het gesprek met je prospect, voor extra ondersteuning en kennis op het juiste moment." },
     ],
   },
   {
@@ -250,7 +253,7 @@ export const FEATURES: Feature[] = [
     bullets: [
       { term: "Train-the-trainer", uitleg: "Leer je eerste teamleden in jouw eigen toon, niet via Mentor-copy." },
       { term: "Leider-cockpit", uitleg: "Team-flow-overzicht naast je eigen dag-flow, één plek voor jouw leiderschap." },
-      { term: "Coach-track na 21 dagen", uitleg: "Een vervolg-pad voor wanneer Core af is en je klaar bent om anderen te dragen." },
+      { term: "Functies bij team-mijlpalen", uitleg: "Zodra je team een bepaalde grootte bereikt, openen zich nieuwe leider-functies in het systeem die je verder helpen bij het dragen van een groeiende groep." },
     ],
     binnenkort: true,
   },
