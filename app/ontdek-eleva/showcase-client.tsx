@@ -7,6 +7,7 @@
 // als React-nodes per feature.
 
 import type { ReactNode } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { EditableTekst } from "@/components/cms/EditableTekst";
 import { useEditModus } from "@/components/cms/EditModeContext";
@@ -70,15 +71,19 @@ export function ShowcaseClient({
       <div className="relative">
 
         {/* ============ NAV ============ */}
-        <nav className="sticky top-0 z-40 backdrop-blur-md bg-[#0a0a0a]/70 border-b border-[#c9a961]/10">
+        <nav className="sticky top-0 z-40 backdrop-blur-md bg-[#0a0a0a]/80 border-b border-[#c9a961]/10">
           <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">✨</span>
-              <span className="text-[#c9a961] font-bold tracking-wider text-sm uppercase">
-                ELEVA
-              </span>
-            </div>
-            <div className="flex items-center gap-4 text-xs text-[#f5f5f5]/60">
+            <Link href="/" className="flex items-center gap-2 hover:opacity-90 transition">
+              <Image
+                src="/eleva-logo.svg"
+                alt="ELEVA"
+                width={120}
+                height={36}
+                priority
+                className="h-9 w-auto"
+              />
+            </Link>
+            <div className="flex items-center gap-5 text-xs text-[#f5f5f5]/60">
               <Link href="#features" className="hover:text-[#c9a961] transition">
                 Features
               </Link>

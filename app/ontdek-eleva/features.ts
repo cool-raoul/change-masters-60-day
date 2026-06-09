@@ -14,22 +14,13 @@ export type Feature = {
 
 export const FEATURES: Feature[] = [
   {
-    sleutel: "sprint",
-    emoji: "🚀",
-    titel: "Sprint, 60 dagen tot je eerste team",
-    pitch:
-      "Een dagelijks playbook van 60 dagen dat je stap voor stap naar je eerste team begeleidt. Dagindeling, taken, scripts, alles staat klaar.",
-    waarom:
-      "Geen meer 'wat moet ik vandaag doen?' Elke dag een helder anker, een actie, en een sponsor-checkin.",
-  },
-  {
     sleutel: "core",
     emoji: "🌱",
     titel: "Core, 21 dagen fundament leggen",
     pitch:
-      "Voor wie eerst rustig wil bouwen. Eigen-tempo-systeem met dag 1-21 als fundament, dan groei vanaf daar.",
+      "Voor wie rustig wil bouwen vanuit eigen tempo. Dag 1-21 als helder fundament, daarna groei vanaf je eigen ritme. Het meest gekozen pad.",
     waarom:
-      "Past bij wie geen 60-dagen-sprint wil maar wel een gestructureerd pad zoekt naar een eigen webshop-business.",
+      "Past bij wie een gestructureerd pad zoekt naar een eigen webshop-business, zonder de hoge intensiteit van een 60-dagen-sprint.",
   },
   {
     sleutel: "pro",
@@ -39,6 +30,15 @@ export const FEATURES: Feature[] = [
       "15-stappen-leerpad voor coaches, therapeuten en beauty-pro's. Productadvies-test als tool voor hun cliënten, business-laag eronder.",
     waarom:
       "Een eigen track die past bij hun bestaande praktijk, zonder hen in een verkoop-rol te dwingen.",
+  },
+  {
+    sleutel: "sprint",
+    emoji: "🚀",
+    titel: "Sprint, 60 dagen tot je eerste team",
+    pitch:
+      "Een dagelijks playbook van 60 dagen voor wie volle bak wil. Exclusief voor de doorzetters die in 60 dagen hun eerste team neerzetten.",
+    waarom:
+      "Niet voor iedereen, wel voor wie deze intensiteit zoekt. Elke dag een helder anker, een actie, en een sponsor-checkin.",
   },
   {
     sleutel: "mentor",
