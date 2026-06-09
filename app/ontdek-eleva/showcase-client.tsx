@@ -194,11 +194,16 @@ export function ShowcaseClient({
                 >
                   {/* Tekst */}
                   <div className={omgekeerd ? "lg:order-2" : ""}>
-                    <div className="inline-flex items-center gap-2 mb-4">
+                    <div className="inline-flex items-center gap-2 mb-4 flex-wrap">
                       <span className="text-3xl">{feature.emoji}</span>
                       <span className="text-[10px] font-bold uppercase tracking-widest text-[#c9a961]">
                         Feature {String(i + 1).padStart(2, "0")}
                       </span>
+                      {feature.binnenkort && (
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-purple-200 bg-purple-700/40 border border-purple-500/50 rounded-full px-2.5 py-0.5">
+                          🚧 Binnenkort
+                        </span>
+                      )}
                     </div>
                     <T
                       sleutel={`feature.${feature.sleutel}.titel`}

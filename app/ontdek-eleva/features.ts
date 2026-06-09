@@ -10,6 +10,8 @@ export type Feature = {
   titel: string;
   pitch: string;
   waarom: string;
+  /** Toont 'BINNENKORT'-badge en gestippelde rand. Visie-laag, nog niet live. */
+  binnenkort?: boolean;
 };
 
 export const FEATURES: Feature[] = [
@@ -147,5 +149,15 @@ export const FEATURES: Feature[] = [
       "Sprint-bouwer, Core-instromer, Pro-cliënt-coach, elk krijgt het juiste pad vanaf dag 1. Wisselen kan altijd, voortgang gaat mee.",
     waarom:
       "Niemand zit vast in een pad dat niet past. Plus cross-modus skip zodat dingen die je al hebt gedaan niet opnieuw vragen.",
+  },
+  {
+    sleutel: "leiderschap",
+    emoji: "👑",
+    titel: "Leiderschapsrollen en -ontwikkeling",
+    pitch:
+      "Wanneer jij niet alleen bouwt, maar je team ook bouwt. Leider-cockpit naast je eigen dag-flow, train-the-trainer voor je eerste teamleden, en een coach-track na de eerste 21 dagen.",
+    waarom:
+      "Een sterk volgers-systeem werkt, maar duplicatie vraagt om leiders die opstaan. Een eigen-stem-spoor, niet meer Mentor-copy van je sponsor. Vanaf het moment dat jij voelt: ik wil mijn team dragen.",
+    binnenkort: true,
   },
 ];
