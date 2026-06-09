@@ -150,6 +150,19 @@ export const FEATURES: Feature[] = [
     ],
   },
   {
+    sleutel: "social-media",
+    emoji: "📱",
+    titel: "Social Media-ondersteuning, je eigen stem online",
+    pitch:
+      "ELEVA Mentor helpt je je eigen niche te bepalen en schrijft samen met jou je posts en reels. In jouw stem, claim-vrij, zonder dat het verkooppraat wordt 🥰",
+    bullets: [
+      { term: "Niche-bepaling", uitleg: "Samen ontdekken waar jouw verhaal raakt en welke mensen zich aangesproken voelen. Niet een algemene niche, wel jouw eigen plek." },
+      { term: "Posts en reels schrijven", uitleg: "Mentor schetst het concept en de structuur, jij geeft het je eigen draai. Snel, persoonlijk, en herkenbaar." },
+      { term: "Claim-vrij denken", uitleg: "EFSA-richtlijnen automatisch ingebouwd. Niet zeggen wat een product DOET, wel wat het je BRENGT. Geen risico op problemen, ook bij groei." },
+      { term: "Spreken-zoals-het-raakt", uitleg: "Geen verkooppraat, wel content die echt voelt. Mensen scrollen niet door, omdat ze zich herkennen in wat jij deelt." },
+    ],
+  },
+  {
     sleutel: "academy",
     emoji: "🎓",
     titel: "Academy, leren onderweg",
