@@ -65,6 +65,9 @@ export default function SpraakMentorClient() {
   const [vertaalt, setVertaalt] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioMaakt, setAudioMaakt] = useState(false);
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [videoMaakt, setVideoMaakt] = useState(false);
+  const [videoStatus, setVideoStatus] = useState<string>("");
   const [transcribeert, setTranscribeert] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -165,6 +168,70 @@ export default function SpraakMentorClient() {
     }
   }
 
+  async function maakVideo() {
+    const bron = vertaling.trim() || tekst.trim();
+    if (!bron) {
+      toast.info("Eerst tekst inspreken of typen");
+      return;
+    }
+    setVideoMaakt(true);
+    setVideoUrl(null);
+    setVideoStatus("Audio renderen...");
+    try {
+      // UI feedback simuleren tijdens de polling-loop op de server (15-45s).
+      const statusInterval = setInterval(() => {
+        setVideoStatus((huidig) => {
+          if (huidig.startsWith("Audio")) return "Avatar animeren...";
+          if (huidig.startsWith("Avatar")) return "Laatste hand...";
+          return "Bijna klaar...";
+        });
+      }, 8000);
+
+      const res = await fetch("/api/talking-video", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tekst: bron,
+          stem,
+          snelheid,
+          avatar,
+        }),
+      });
+      clearInterval(statusInterval);
+      const data = await res.json();
+      if (!res.ok || !data.videoUrl) {
+        toast.error(data.fout || "Video maken mislukt", { duration: 8000 });
+        setVideoStatus("");
+        return;
+      }
+      setVideoUrl(data.videoUrl);
+      setVideoStatus("");
+      toast.success("Pratende video klaar 🎬");
+    } catch (e: any) {
+      toast.error(e?.message || "Video maken mislukt");
+      setVideoStatus("");
+    } finally {
+      setVideoMaakt(false);
+    }
+  }
+
+  async function downloadVideo() {
+    if (!videoUrl) return;
+    try {
+      const res = await fetch(videoUrl);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `eleva-mentor-${taalUit}-${stem}.mp4`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+    } catch {
+      // CORS fallback: open in nieuw tabblad
+      window.open(videoUrl, "_blank");
+    }
+  }
+
   function downloadAudio() {
     if (!audioUrl) return;
     const a = document.createElement("a");
@@ -257,6 +324,8 @@ export default function SpraakMentorClient() {
     setTekst("");
     setVertaling("");
     setAudioUrl(null);
+    setVideoUrl(null);
+    setVideoStatus("");
     setSpeelt(false);
   }
 
@@ -500,14 +569,27 @@ export default function SpraakMentorClient() {
           <div className="flex flex-wrap gap-2 justify-center">
             <button
               onClick={maakAudio}
-              disabled={audioMaakt || (!tekst.trim() && !vertaling.trim())}
+              disabled={audioMaakt || videoMaakt || (!tekst.trim() && !vertaling.trim())}
               className="btn-gold px-6"
             >
-              {audioMaakt ? "Audio maken..." : audioUrl ? "Opnieuw maken" : "🎧 Maak audio"}
+              {audioMaakt ? "Audio maken..." : audioUrl ? "Audio opnieuw" : "🎧 Maak audio"}
+            </button>
+            <button
+              onClick={maakVideo}
+              disabled={videoMaakt || audioMaakt || (!tekst.trim() && !vertaling.trim())}
+              className="px-6 py-2 rounded-lg font-semibold text-sm bg-gradient-to-br from-purple-600 to-pink-600 text-white hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Maakt een pratende avatar-video via D-ID. Duurt 15-45 seconden."
+            >
+              {videoMaakt ? "🎬 Bezig..." : videoUrl ? "Video opnieuw" : "🎬 Pratende video"}
             </button>
             {audioUrl && (
               <button onClick={downloadAudio} className="btn-secondary">
-                ⬇ Download mp3
+                ⬇ Audio mp3
+              </button>
+            )}
+            {videoUrl && (
+              <button onClick={downloadVideo} className="btn-secondary">
+                ⬇ Video mp4
               </button>
             )}
             <button onClick={reset} className="btn-secondary">
@@ -515,7 +597,35 @@ export default function SpraakMentorClient() {
             </button>
           </div>
 
-          {audioUrl && (
+          {videoMaakt && (
+            <div className="bg-cm-surface border border-purple-500/40 rounded-xl px-4 py-3 max-w-lg w-full">
+              <div className="flex items-center gap-3">
+                <div className="w-5 h-5 border-2 border-purple-400 border-t-transparent rounded-full animate-spin flex-shrink-0" />
+                <div className="flex-1">
+                  <p className="text-cm-white text-sm font-semibold">
+                    {videoStatus || "Video wordt gemaakt..."}
+                  </p>
+                  <p className="text-cm-white/60 text-xs">
+                    D-ID synchroniseert mond en gezicht met je audio, dit duurt 15-45 seconden.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {videoUrl && (
+            <video
+              src={videoUrl}
+              controls
+              autoPlay
+              className="w-full max-w-lg rounded-xl border border-cm-gold/30"
+              onPlay={() => setSpeelt(true)}
+              onPause={() => setSpeelt(false)}
+              onEnded={() => setSpeelt(false)}
+            />
+          )}
+
+          {audioUrl && !videoUrl && (
             <audio
               ref={audioRef}
               src={audioUrl}
