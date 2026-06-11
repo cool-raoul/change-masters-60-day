@@ -31,15 +31,17 @@ const STEMMEN: {
   { code: "onyx", label: "Onyx", karakter: "Mannelijk, diep, gezaghebbend", geslacht: "man" },
 ];
 
-// Royalty-free Unsplash portretten, premium-look. Vervangbaar later
-// door eigen merk-foto's of AI-gegenereerde ELEVA-avatars.
+// Avatars wonen in onze eigen Supabase Storage zodat D-ID ze accepteert
+// (D-ID eist URLs die eindigen op .jpg/.jpeg/.png, Unsplash heeft query-
+// strings dus voldoet niet). Vervangbaar later door eigen merk-foto's of
+// AI-gegenereerde ELEVA-avatars.
 const AVATARS: Record<Avatar, { foto: string; alt: string }> = {
   vrouw: {
-    foto: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=800&h=800&fit=crop&crop=faces&q=85",
+    foto: "https://qwwhsoewajefainleajo.supabase.co/storage/v1/object/public/talking-temp/avatars/vrouw.jpg",
     alt: "ELEVA Mentor, vrouwelijke avatar",
   },
   man: {
-    foto: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=800&h=800&fit=crop&crop=faces&q=85",
+    foto: "https://qwwhsoewajefainleajo.supabase.co/storage/v1/object/public/talking-temp/avatars/man.jpg",
     alt: "ELEVA Mentor, mannelijke avatar",
   },
 };

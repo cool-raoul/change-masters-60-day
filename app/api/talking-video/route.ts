@@ -30,10 +30,12 @@ const TOEGESTANE_STEMMEN = [
   "shimmer",
 ] as const;
 
+// D-ID eist URLs die eindigen op .jpg/.jpeg/.png. Unsplash-URLs hebben
+// query-strings dus we hosten de avatars in onze eigen Supabase Storage.
 const AVATAR_URLS: Record<string, string> = {
   vrouw:
-    "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=800&h=800&fit=crop&crop=faces&q=85",
-  man: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=800&h=800&fit=crop&crop=faces&q=85",
+    "https://qwwhsoewajefainleajo.supabase.co/storage/v1/object/public/talking-temp/avatars/vrouw.jpg",
+  man: "https://qwwhsoewajefainleajo.supabase.co/storage/v1/object/public/talking-temp/avatars/man.jpg",
 };
 
 function didAuthHeader(key: string): string {
