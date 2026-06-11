@@ -211,9 +211,11 @@ export default function SpraakMentorClient() {
       const talkId = submitData.talkId;
       setVideoStatus("Avatar animeren...");
 
-      // 2. Poll status elke 2s, max 60 pogingen (2 min) — D-ID is meestal
-      // binnen 30s klaar, dit is een ruime marge.
-      for (let i = 0; i < 60; i++) {
+      // 2. Poll status elke 2s, max 180 pogingen (6 min). D-ID is meestal
+      // binnen 20-30s klaar voor de vrouwelijke avatar, maar gezichten met
+      // meer detail (bril, krullen) zoals onze mannelijke avatar kunnen
+      // soms 2-4 min duren. 6 min geeft ruime marge.
+      for (let i = 0; i < 180; i++) {
         await new Promise((r) => setTimeout(r, 2000));
         const pollRes = await fetch(
           `/api/talking-video?id=${encodeURIComponent(talkId)}`,
@@ -248,8 +250,13 @@ export default function SpraakMentorClient() {
         }
         if (i === 5) setVideoStatus("Laatste hand...");
         if (i === 15) setVideoStatus("Bijna klaar...");
+        if (i === 60) setVideoStatus("D-ID werkt nog, geduld...");
+        if (i === 120) setVideoStatus("Bijna klaar, D-ID heeft soms langer...");
       }
-      toast.error("Video duurde te lang (2 min). Probeer opnieuw of kortere tekst.");
+      toast.error(
+        "D-ID is nog niet klaar na 6 minuten. Soms duurt het langer tijdens drukte. Probeer over een paar minuten opnieuw.",
+        { duration: 12000 },
+      );
       setVideoStatus("");
       setVideoMaakt(false);
     } catch (e: any) {
