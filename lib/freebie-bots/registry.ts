@@ -16,6 +16,7 @@
 
 import type { SpiegelOutput, BotSlug } from "./types";
 import type { GenericMailTemplate } from "./mail-template-types";
+import { resetCheckTemplateVoorDag } from "@/lib/reset-check/mails";
 
 export type BotConfig = {
   slug: BotSlug;
@@ -80,6 +81,9 @@ const BOT_REGISTRY: Partial<Record<BotSlug, BotConfig>> = {
     iconEmoji: "🌿",
     coreOnly: false,
     type: "score",
+    // 5-mail-vervolgsequence (tips + mini-ELEVA), zie lib/reset-check/mails.ts.
+    // Versturen blijft achter de feature-flag profiles.freebie_mails_actief.
+    templateVoorDag: resetCheckTemplateVoorDag,
   },
 };
 

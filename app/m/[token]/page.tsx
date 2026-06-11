@@ -30,8 +30,10 @@ export const dynamic = "force-dynamic";
 
 export default async function MiniElevaLandingPagina({
   params,
+  searchParams,
 }: {
   params: { token: string };
+  searchParams?: { bron?: string };
 }) {
   const ctx = await pakMiniElevaContext(params.token);
 
@@ -74,8 +76,15 @@ export default async function MiniElevaLandingPagina({
   // ie 'm dubbel
   const eersteKeer = await isEersteBezoek(ctx.invitationId);
 
-  // Log dat de prospect het welkomscherm heeft geopend
-  await logActiviteit(ctx.invitationId, "welkom", "landing geopend");
+  // Log dat de prospect het welkomscherm heeft geopend. Bron-stempel
+  // (?bron=mail-d2 etc.) maakt zichtbaar dat een sequence-mail de
+  // lead naar binnen bracht.
+  const bron = searchParams?.bron?.slice(0, 40);
+  await logActiviteit(
+    ctx.invitationId,
+    "welkom",
+    bron ? `landing geopend via ${bron}` : "landing geopend",
+  );
 
   // Bij eerste bezoek: notificeer member + sponsor (push + in-app)
   if (eersteKeer) {

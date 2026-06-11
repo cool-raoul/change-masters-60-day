@@ -11,6 +11,18 @@ export type GenericMailInput = {
   /** Bot-specifieke antwoorden, opaak in cross-bot context. */
   antwoorden: unknown;
   unsubscribeUrl: string;
+  /**
+   * Deelbare mini-ELEVA-URL van deze lead (zonder query-params), of null
+   * als er (nog) geen actieve uitnodiging bestaat. Templates voegen zelf
+   * een ?bron=mail-dN stempel toe zodat het bezoek herleidbaar is.
+   */
+  miniElevaUrl: string | null;
+  /**
+   * True zodra de lead al minstens één keer in de mini-ELEVA is geweest
+   * (activiteit op de uitnodiging). Templates tonen dan een korte
+   * verwijzing in plaats van het volledige introductie-blok.
+   */
+  alInMiniEleva: boolean;
 };
 
 export type GenericMailTemplate = {

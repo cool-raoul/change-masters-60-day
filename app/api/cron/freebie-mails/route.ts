@@ -124,12 +124,53 @@ export async function GET(request: Request) {
       ? `${origin}/api/freebie-bot/unsubscribe?token=${rij.unsubscribe_token}`
       : `${origin}/`;
 
+    // Mini-ELEVA-status van deze lead bepalen op verzend-moment:
+    // 1. prospect van deze member met dit e-mailadres
+    // 2. actieve, niet-verlopen uitnodiging voor die prospect
+    // 3. al activiteit op die uitnodiging? → korte verwijzing ipv
+    //    vol introductie-blok in de mail
+    let miniElevaUrl: string | null = null;
+    let alInMiniEleva = false;
+    try {
+      const { data: prospect } = await supabase
+        .from("prospects")
+        .select("id")
+        .eq("user_id", rij.member_id)
+        .ilike("email", rij.lead_email)
+        .maybeSingle();
+      if (prospect?.id) {
+        const { data: invitation } = await supabase
+          .from("prospect_invitations")
+          .select("id, token")
+          .eq("prospect_id", prospect.id)
+          .eq("status", "actief")
+          .gt("expires_at", new Date().toISOString())
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        if (invitation?.token) {
+          miniElevaUrl = `${origin}/m/${invitation.token}`;
+          const { count } = await supabase
+            .from("mini_eleva_activiteit")
+            .select("id", { count: "exact", head: true })
+            .eq("invitation_id", invitation.id);
+          alInMiniEleva = (count ?? 0) > 0;
+        }
+      }
+    } catch (e) {
+      // Mini-ELEVA-info is verrijking, geen vereiste. Mail gaat door
+      // zonder omgeving-blok als dit faalt.
+      console.warn("[freebie-mails cron] mini-eleva lookup faalde:", e);
+    }
+
     const html = template.bouwHtml({
       leadVoornaam: rij.lead_naam.split(" ")[0] || "jij",
       memberVoornaam,
       spiegelTekst: (optIn?.spiegel_tekst as string) ?? null,
       antwoorden: (optIn?.bot_antwoorden as never) ?? null,
       unsubscribeUrl,
+      miniElevaUrl,
+      alInMiniEleva,
     });
 
     const resultaat = await verstuurMail({
