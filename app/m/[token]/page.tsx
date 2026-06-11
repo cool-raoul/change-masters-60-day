@@ -148,12 +148,11 @@ export default async function MiniElevaLandingPagina({
           <span className="text-2xl">👋</span>
           <div className="flex-1">
             <h3 className="text-cm-white font-semibold text-sm">
-              Welkomstvideo's
+              Maak even kennis
             </h3>
             <p className="text-cm-white/60 text-xs leading-relaxed mt-0.5">
-              Een korte introductie van {ctx.memberNaam ?? "de member"}
-              {ctx.sponsorNaam ? ` en ${ctx.sponsorNaam}` : ""}, zodat je weet
-              wie je voor je hebt.
+              Een persoonlijk welkom van {ctx.memberNaam ?? "de member"} en
+              een korte film om mee te beginnen.
             </p>
           </div>
           <span className="text-cm-gold">→</span>
