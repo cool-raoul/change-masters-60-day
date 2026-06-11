@@ -2,95 +2,94 @@
 
 Levend overzicht. Claude houdt dit bij. Raoul kan hier altijd zien waar we staan zonder context te verzamelen.
 
-Laatst bijgewerkt: 2026-05-20
+Laatst bijgewerkt: 2026-06-12
+
+---
+
+## 🎯 Pilot-status (review 2026-06-12)
+
+Volledige codebase-review gedaan tegen het einddoel. Conclusie: het systeem
+is inhoudelijk verder dan het operationeel was. Content, stem en flows zijn
+pilot-waardig; de gaten zaten in de dunne laag werkend-in-de-echte-wereld.
+
+| Gat uit review | Status |
+|---|---|
+| 🔴 Hourly reminders kapot sinds ~9 mei (CRON_SECRET) | ✅ Gefixt 2026-06-12, run #424 groen |
+| 🔴 Dubbel Vercel-project failure-mails | ✅ Oude projecten al losgekoppeld, mails stoppen door reminders-fix |
+| 🟠 Mini-ELEVA welkom-pagina Fase-6a placeholders | ✅ Pilot-waardig gemaakt 2026-06-12 |
+| 🟠 Freebie-funnel eindigt dood (geen mails) | ☐ Raoul koos: alleen Reset-check sequence, rest handmatig nabellen |
+| 🟡 Film-blokken leeg op dag-pagina's | ☐ Raoul koos: minimale set opnemen (welkomst + dag 1-7), lijstje volgt |
+| 🟡 Sponsor-koppeling fragiel (?ref= zonder validatie) | ☐ Pilot-instructie: exacte registratie-links gebruiken |
+| 🟢 Gebroken routes + 2 ChatGPT-isms | ✅ Gefixt 2026-06-12 |
+
+---
+
+## 🛠 Werk in uitvoering (volgorde met Raoul afgestemd 2026-06-12)
+
+### 1. Reset-check mail-sequence (alleen deze bot)
+- [ ] 5-mail-sequence schrijven in Raoul's stem (skelet bestaat uit Tweede-Lente-ronde)
+- [ ] `templateVoorDag` voor reset-check vullen + cron/feature-flag aanzetten
+- Energie & Focus + Hormonen & Overgang blijven handmatig nabellen (bewuste keuze)
+
+### 2. Film-opname-lijstje voor Raoul
+- [ ] Welkomstfilm + dag 1-7: per film de plek, het doel en een script-suggestie in Raoul's stem
+- Raoul neemt op, vult zelf via edit-modus / Films-CMS
+
+### 3. Sprint-specifieke uitnodig-scripts (uit parkeerlijst mei)
+- [ ] Her-brainstorm, daarna Core- en Pro-specifiek (na Core-content ronde)
+
+### 4. Core-content ronde
+- [ ] Brainstorm op basis van `OVERZICHT-CORE-V5.html` (project-root)
 
 ---
 
 ## ✅ Recent afgerond
 
-- **2026-05-20** Founder-overrides overzicht-pagina `/instellingen/tekst-overrides` gebouwd. Founder ziet nu alle actieve tekst-aanpassingen per namespace met reset-knop.
-- **2026-05-20** Sprint-issue verificatie tegen huidige code: 4 van 5 parkeerlijst-items bleken al gefixt of werken in werkelijkheid niet als gedacht (first-win, dag 6, sponsor-rol). Week 3 rode draad geparkeerd onder DMO-Academy update.
-- **2026-05-20** Dag 2 vs dag 4 timing-mismatch opgelost: aanpak-keuze geïntegreerd in follow-up uitleg (drie FOLLOWUP_UITLEG-constanten), niet als aparte taak. Plus volgorde: aanpak-keuze + sponsor-checkin nu logisch.
-- **2026-05-20** Scripts-set polish + uitbreiding: 21 nieuwe scripts in lib/scripts-data.ts (5 Aansluiten in_gesprek + 8 Uitnodigen uitgenodigd + 5 Opvolgen Informeren followup + 3 Opvolgen Dienstverlening followup), allemaal claim-vrij + zonder em-dashes + zonder "wat vond je ervan", in ELEVA-stem. Memory eleva-stem-uitnodigen vastgelegd.
-- **2026-05-20** Mentor-prompt update: claim-vrij niveau 2 nu altijd in prompt (was alleen bij `social`/`motivatie` vraagtypes, miste bv. "21-dagen-Reset post"). Mentor doet zelf publieke-uiting-check op signaalwoorden. Academy uitgebreid met DMO + Spreken-zoals-het-raakt. Partner-check + Momentum-radar awareness: verwijst naar ELEVA-tool ipv zelf scripts genereren.
-- **2026-05-20** Films-CMS volledig opgeruimd. Alleen Welkomstfilm + Modus-welkomstfilms + 10 Prospect-films over. Principe vastgelegd: MediaBlokken voor pagina-specifieke media, Films-CMS voor pop-ups en hergebruikte films.
-- **2026-05-20** Fase 3c cross-modus skip versterking, alle 5 bugs live (B1+B2+B3+B5+B7). Centrale taak-cross-modus mapping, ITEM_SLUGS-constanten, NamenForm DB-count check.
-- **2026-05-20** Founder-strip compact op mobiel (FounderTopStrip + TesterToolbar + EditModeToggle nu één regel op telefoon)
-- **2026-05-20** Films-CMS verduidelijkt + Sprint-dag-films redundantie weg (per-dag film via Films-CMS verwijderd uit vandaag-flow, MediaBlokken edit-modus blijft enige weg voor Sprint-dag-video's). Films-CMS blijft actief voor welkomst, prospect, leerpaden, academy.
-- **2026-05-20** Em-dashes bulk-fix in member-facing content (142 vervangingen in 8 bestanden, resterende 15 zijn code-comments)
-- **2026-05-20** Veiligheidsslagen: git tag `v-pilot-werkend-2026-05-20`, smoke-test checklist, ROADMAP, risico-categorie regel
-- **2026-05-20** "Administratieve stappen" rename + /setup/[slug] founder-bewerkbaar (titel, uitleg, eigen-film-URL, film-uitleg)
-- **2026-05-19** Fase 3b onboarding-flow opschoning (K1+K2+K3+B6 opgelost, atomaire opslag, sessie-refresh)
-- **2026-05-19** Fase 3a modus-bewust foundation (topbar, dashboard, stats, team via centrale helpers)
-- **2026-05-18** Onboarding-redesign fase 2 (pre-day-1 gedeeld Sprint+Core, admin-rail /setup, per-modus dag-teller, cross-modus skip)
-
----
-
-## 🛠 Werk in uitvoering
-
-Volgorde-akkoord van Raoul op 2026-05-20:
-
-### 1. Opruim-werk (klein, eerst)
-- [x] ~~Em-dashes bulk-fix in member-facing content~~ (afgerond 2026-05-20, 142 vervangingen)
-- [x] ~~Films CMS verduidelijkt en Sprint-dag-redundantie weg~~ (afgerond 2026-05-20)
-
-### 2. Fase 3c cross-modus skip versterking
-- [x] ~~B1, B2, B3, B5, B7 uit oorspronkelijke audit~~ (afgerond 2026-05-20)
-  - app-geinstalleerd + push-aan markering toegevoegd in gaNaarStap
-  - ITEM_SLUGS overal geïmporteerd waar relevant
-  - Centrale taak-cross-modus mapping in lib/onboarding/taak-cross-modus.ts
-  - NamenForm doel-check via DB-count
-
-### 3. Mentor-prompt update
-- [x] ~~Claim-vrij niveau 2 altijd in prompt, Mentor doet zelf publieke-uiting-check~~ (afgerond 2026-05-20)
-- [x] ~~Sprint/Core/Pro-framing~~ (al eerder gedaan, padBeschrijving regel 89-101)
-- [x] ~~Partner-check + Momentum-radar awareness~~ (afgerond 2026-05-20)
-- [x] ~~Academy uitgebreid met DMO + Spreken-zoals-het-raakt~~ (afgerond 2026-05-20)
-- [ ] **Nieuwe uitnodig-stijl** (wacht op #4 uitnodig-scripts her-brainstorm)
-
-### 4. Uitnodig-scripts her-brainstorm
-- [x] ~~Algemene scripts gepolisht en live~~ (21 stuks, afgerond 2026-05-20)
-- [ ] **Sprint-specifieke scripts** ← agenda 2026-05-21, eerste blok
-- [ ] **Core-specifieke scripts** (na Core-content brainstorm, niet eerder)
-- [ ] **Pro-specifieke scripts** (na Core)
-- Plekken om aan te passen na modus-specifieke brainstorm:
-  - `lib/scripts-data.ts:9-115` (oude 4 Sprint-werving-scripts, framing herzien)
-  - `lib/playbook/dagen.ts:159` + `:449-466`
-  - `lib/academy/dmo-content.ts:419-494`
-  - `lib/prompts/coach-systeem-prompt.ts` (uitnodig-stijl in Mentor)
-
-### 5. Core-content ronde
-- [ ] **Brainstorm op basis van** `OVERZICHT-CORE-V5.html` (lokale file in project-root, laatste brainstorm-versie van Raoul). Start agenda 2026-05-21, tweede blok.
-- [ ] Dag 2, dag 5 t/m 21 + verankering + lifetime templates schrijven na brainstorm-akkoord
-- Stem-anker: kennisbank pagina's (zie [[raoul-stem-anker]])
-
-### 6. Sprint-structurele issues
-- [x] ~~Eric Worre first-win op dag 1~~ (vervalt 2026-05-20, dag 2 doet dit al via 3 uitnodigingen + sponsor-call)
-- [x] ~~Dag 2 vs dag 4 timing-mismatch~~ (afgerond 2026-05-20)
-- [x] ~~Dag 6 overloaded~~ (vervalt 2026-05-20, FFF/5-fasen zijn al gelaagd over dag 5/6)
-- [x] ~~Sponsor-rol oscillatie~~ (vervalt 2026-05-20, structuur al gelaagd: dagelijks-checkin / wekelijks-call / tip / 3-weg)
-- [ ] ~~Week 3 rode draad~~ → geparkeerd onder DMO-Academy update (faseDoelen kloppen niet meer met tempo-aware, DMO-mindset thuishoort in Academy)
+- **2026-06-12** Pilot-review met Fable 5: 4-sporen codebase-doorlichting, gaten geprioriteerd, bouw-loop afgesproken (klein zichtbaar stuk → live → kijken → verwerken)
+- **2026-06-12** CRON_SECRET-fix: hourly reminders + stilte-nudges draaien weer (kapot sinds ~9 mei), GitHub run #424 groen, foutmail-stroom stopt
+- **2026-06-12** Mini-ELEVA welkom-pagina pilot-waardig: video-placeholders vervangen door persoonlijk member-bericht + echte start-film per spoor (product/business) + team-context-blok
+- **2026-06-12** Kleine fixes: 3× `/test-pakket-bouwer` → `/instellingen/mijn-tracking-links`, 2 ChatGPT-isms herschreven (ontdek-eleva mentor-pitch, wat-nu uitnodigen)
+- **2026-06-11** Spraak-mentor proeftuin live op /founder/spraak-mentor: inspreken → transcript → vertalen (6 talen) → mentor-stem (6 stemmen) → mp3. D-ID pratende-video gebouwd maar geparkeerd (zie memory spraak-mentor-parkeerlijst)
+- **2026-06-09/10** Coach → Mentor rename codebase-breed (86 strings, 23 files + DB-overrides). RLS-fix: tekst_overrides anon-leesbaar zodat WhatsApp-ontvangers founder-edits zien. VoiceFab + WatNuKnop scroll-aware en verborgen op chat-routes.
+- **2026-06-08/09** /ontdek-eleva publieke showcase (19 features, pain-cards, FAQ, founder-bewerkbaar, OG-tags, verse-share-link). Reset-check freebie omgebouwd naar score-bot-architectuur (standing rule: freebie-bot-architectuur-regel).
+- **2026-05-31** Core V9 live op /vandaag voor dag 1-21. Pilot-launch-plan: pilot week 1, live week 3. Mini-ELEVA twee-spoor (p-/b- tokens).
+- **2026-05-26** Score-bots-pivot: Tweede Lente + Tweede Wind vervangen door Energie & Focus + Hormonen & Overgang.
+- **2026-05-20** Em-dashes bulk-fix (142×), scripts-set 21 nieuw, Mentor-prompt claim-vrij niveau 2, Films-CMS opgeruimd, fase 3c bugs, git-tag `v-pilot-werkend-2026-05-20`.
+- Ouder: zie git-history en memory-index.
 
 ---
 
 ## 📦 Geparkeerd, lichte triggers
 
-- **ChatGPT-isms herschrijven** (top 7 sterk verdacht, 8 mild), losse polish-ronde
+- **Spraak-mentor pratende video** (D-ID): één regel terughalen, zie memory spraak-mentor-parkeerlijst
+- **Mail-sequences Energie & Focus + Hormonen & Overgang** (handmatig nabellen in pilot)
+- **Member-video-upload mini-ELEVA welkom** (persoonlijk bericht + film is de pilot-versie)
 - **Profielfoto's in /team TeamBoom**, aparte ronde
 - **Mentor-kennisbank vrijschakelen** (2017 CSV ingeladen, wacht op claims-grens-ontwerp)
 - **Lifeplus IP en pakketten herziening** (wachten op Raoul+Gaby)
-- **Supabase Pro PITR upgrade** (€25/m, geparkeerd 2026-05-20, gratis alternatief via docs/wekelijkse-data-export.md)
+- **Vertalingen EN/FR/DE/ES/PT + i18n coach.* keys hernoemen** (NL eerst, dan EN)
+- **Drie Core-versies opruimen** (core-dagen.ts/v6/v9 naast elkaar, V9 is live, hygiëne)
+- **Twee oude Vercel-projecten verwijderen** (losgekoppeld, doen niets, netheid)
+- **Supabase Pro PITR upgrade** (€25/m, gratis alternatief via docs/wekelijkse-data-export.md)
 
 ---
 
 ## 🚫 Buiten scope voor nu
 
-- Pro-content schrijven (15 stappen, na Core gereed)
-- Sprint-team gedeelde overview (nieuwe feature, na Core+Pro)
-- Mini-ELEVA vervolgvisie buckets (na Core+Pro)
+- Leader-track (train-the-trainer, leader-cockpit), na pilot-validatie
+- Pro-content verdieping (na Core gereed)
+- Sprint-team gedeelde overview
+- Mini-ELEVA vervolgvisie buckets (rename, content-films, vragen-bib, train-mentor)
+- Eigen-freebie-maker (met claim-vrije bewaker)
 
 ---
 
-## Werkwijze
+## Werkwijze (bouw-loop, afgesproken 2026-06-12)
 
-Bij elke afgeronde taak commit ik óók een update van dit bestand. Bij elke nieuwe taak op het bordje hangt 'ie hier vóór ik begin. Als Raoul vraagt "waar zijn we", begin ik bij de bovenste open ☐ in sectie 🛠.
+1. Doel kiezen (Raoul geeft het, of hoogste open gat)
+2. Claude vertaalt naar kleinste zichtbare stuk + meldt risico-categorie
+   (UI/tekst direct bouwen, DB/auth/RLS eerst spec + akkoord)
+3. Bouwen → push → live-URL + kijklijstje van max 3 punten
+4. Raoul kijkt op live, feedback mag voice/rommelig
+5. Nieuwe ideeën → parkeerlijst, niet de bouwbank
+6. Doel af → ROADMAP-commit. Elke sessie eindigt met actueel overzicht.
