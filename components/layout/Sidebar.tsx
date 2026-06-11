@@ -229,6 +229,14 @@ export function Sidebar({
               <span>🪴</span> Mini-ELEVA beheren
             </Link>
           )}
+          {isFounder && (
+            <Link
+              href="/founder/spraak-mentor"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
+            >
+              <span>🤖</span> Spraak naar Mentor
+            </Link>
+          )}
           {/* Statistieken hier in plaats van in hoofdnav: analyse-moment,
               niet dagelijkse actie. Plek-wissel met Mini-ELEVA uitnodigingen. */}
           <Link
