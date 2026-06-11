@@ -27,8 +27,14 @@ pilot-waardig; de gaten zaten in de dunne laag werkend-in-de-echte-wereld.
 ## 🛠 Werk in uitvoering (volgorde met Raoul afgestemd 2026-06-12)
 
 ### 1. Reset-check mail-sequence (alleen deze bot)
-- [ ] 5-mail-sequence schrijven in Raoul's stem (skelet bestaat uit Tweede-Lente-ronde)
-- [ ] `templateVoorDag` voor reset-check vullen + cron/feature-flag aanzetten
+- [x] ~~5-mail-sequence geschreven + gebouwd~~ (2026-06-12: tips als ruggengraat,
+      koopmotieven als ondertoon, getoetst aan echte Reset-opbouw 4 fasen)
+- [x] ~~Mini-ELEVA-keten~~ (2026-06-12: auto-uitnodiging bij opt-in, adaptieve
+      knop in elke mail, bron-tracking ?bron=mail-dN)
+- [ ] Raoul keurt mails goed op /founder/mail-preview
+- [ ] Optioneel: echt ervaringsverhaal van Raoul in mail 2 (generieke versie staat)
+- [ ] ACTIVATIE (pas na akkoord): profiles.freebie_mails_actief op true +
+      cron-config in vercel.json + RESEND_API_KEY check
 - Energie & Focus + Hormonen & Overgang blijven handmatig nabellen (bewuste keuze)
 
 ### 2. Film-opname-lijstje voor Raoul
