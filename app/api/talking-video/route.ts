@@ -1,17 +1,16 @@
-// Talking-video endpoint: genereert een pratende avatar-video via D-ID.
-// Flow:
-//   1. Server genereert audio via OpenAI TTS (zelfde stem als in /api/tts).
-//   2. Upload mp3 naar Supabase Storage bucket 'talking-temp' (publiek).
-//   3. POST aan D-ID Talks API met source_url (avatar-foto) + audio_url.
-//   4. Poll D-ID elke 2s tot status === 'done', max ~50s (binnen Vercel
-//      function-timeout 60s).
-//   5. Return result_url (MP4).
+// Talking-video endpoint: 2 calls voor async polling vanuit de client,
+// zodat we niet boven de Vercel function-timeout uitkomen.
 //
-// Founder-only, want D-ID is duur en buiten scope voor members.
+// POST /api/talking-video
+//   - Genereer audio (OpenAI TTS), upload naar Supabase Storage
+//   - Submit aan D-ID Talks API
+//   - Return { talkId } direct (~2-4 sec)
 //
-// Vereiste env:
-//   - OPENAI_API_KEY (al aanwezig voor TTS)
-//   - DID_API_KEY (toevoegen in Vercel, anders nette 503-melding)
+// GET /api/talking-video?id=<talkId>
+//   - Poll D-ID status één keer
+//   - Return { status, videoUrl?, fout? }
+//
+// Client polled GET elke 2 sec tot status === 'done' of error.
 
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
@@ -20,7 +19,7 @@ import { createClient as createDirectSupabase } from "@supabase/supabase-js";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 60;
+export const maxDuration = 30;
 
 const TOEGESTANE_STEMMEN = [
   "alloy",
@@ -37,20 +36,30 @@ const AVATAR_URLS: Record<string, string> = {
   man: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=800&h=800&fit=crop&crop=faces&q=85",
 };
 
+function didAuthHeader(key: string): string {
+  return `Basic ${Buffer.from(key + ":").toString("base64")}`;
+}
+
+async function checkFounder() {
+  const supabase = await createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { ok: false as const, fout: "Niet ingelogd", status: 401 };
+  const { data: profiel } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .maybeSingle();
+  if ((profiel as { role?: string } | null)?.role !== "founder") {
+    return { ok: false as const, fout: "Alleen founders", status: 403 };
+  }
+  return { ok: true as const, userId: user.id };
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const supabase = await createServerSupabase();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      return NextResponse.json({ fout: "Niet ingelogd" }, { status: 401 });
-    }
-    const { data: profiel } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .maybeSingle();
-    if ((profiel as { role?: string } | null)?.role !== "founder") {
-      return NextResponse.json({ fout: "Alleen founders" }, { status: 403 });
+    const auth = await checkFounder();
+    if (!auth.ok) {
+      return NextResponse.json({ fout: auth.fout }, { status: auth.status });
     }
 
     const didKey = process.env.DID_API_KEY;
@@ -58,7 +67,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           fout:
-            "DID_API_KEY ontbreekt. Maak een D-ID account op d-id.com, kopieer je API-key en zet die in Vercel als env-variabele DID_API_KEY.",
+            "DID_API_KEY ontbreekt in Vercel env. Voeg 'm toe en redeploy.",
         },
         { status: 503 },
       );
@@ -90,19 +99,26 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 1. Audio genereren
+    // 1. Audio renderen
     const openai = new OpenAI({ apiKey: openaiKey });
-    const ttsResponse = await openai.audio.speech.create({
-      model: "tts-1",
-      voice: gekozenStem as any,
-      input: tekst,
-      speed: Math.max(0.25, Math.min(4, snelheid)),
-      response_format: "mp3",
-    });
-    const audioBuf = Buffer.from(await ttsResponse.arrayBuffer());
+    let audioBuf: Buffer;
+    try {
+      const ttsResponse = await openai.audio.speech.create({
+        model: "tts-1",
+        voice: gekozenStem as any,
+        input: tekst,
+        speed: Math.max(0.25, Math.min(4, snelheid)),
+        response_format: "mp3",
+      });
+      audioBuf = Buffer.from(await ttsResponse.arrayBuffer());
+    } catch (e: any) {
+      return NextResponse.json(
+        { fout: `OpenAI TTS faalde: ${e?.message || "onbekend"}` },
+        { status: 502 },
+      );
+    }
 
-    // 2. Upload naar talking-temp (publieke bucket). Pad-prefix met user-id
-    // zodat we makkelijk per-user kunnen schoonmaken later.
+    // 2. Upload publieke audio
     const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     const supaUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     if (!serviceKey || !supaUrl) {
@@ -112,7 +128,7 @@ export async function POST(req: NextRequest) {
       );
     }
     const sbAdmin = createDirectSupabase(supaUrl, serviceKey);
-    const pad = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.mp3`;
+    const pad = `${auth.userId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.mp3`;
     const { error: upErr } = await sbAdmin.storage
       .from("talking-temp")
       .upload(pad, audioBuf, {
@@ -131,70 +147,101 @@ export async function POST(req: NextRequest) {
     const audioUrl = pubUrlData.publicUrl;
 
     // 3. Submit aan D-ID
-    const authHeader = `Basic ${Buffer.from(didKey + ":").toString("base64")}`;
-    const submitRes = await fetch("https://api.d-id.com/talks", {
-      method: "POST",
-      headers: {
-        Authorization: authHeader,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        source_url: sourceUrl,
-        script: {
-          type: "audio",
-          audio_url: audioUrl,
+    let submitData: any = {};
+    try {
+      const submitRes = await fetch("https://api.d-id.com/talks", {
+        method: "POST",
+        headers: {
+          Authorization: didAuthHeader(didKey),
+          "Content-Type": "application/json",
         },
-        config: {
-          stitch: true,
-          result_format: "mp4",
-        },
-      }),
-    });
-    const submitData = await submitRes.json();
-    if (!submitRes.ok || !submitData.id) {
-      return NextResponse.json(
-        {
-          fout: `D-ID weigerde de opdracht: ${submitData.description || submitData.message || JSON.stringify(submitData)}`,
-        },
-        { status: 502 },
-      );
-    }
-    const talkId = submitData.id;
-
-    // 4. Poll tot done. Max ~25 pogingen × 2s = 50s.
-    let resultUrl: string | null = null;
-    let laatsteStatus = "";
-    for (let i = 0; i < 25; i++) {
-      await new Promise((r) => setTimeout(r, 2000));
-      const pollRes = await fetch(`https://api.d-id.com/talks/${talkId}`, {
-        headers: { Authorization: authHeader },
+        body: JSON.stringify({
+          source_url: sourceUrl,
+          script: {
+            type: "audio",
+            audio_url: audioUrl,
+          },
+          config: {
+            stitch: true,
+            result_format: "mp4",
+          },
+        }),
       });
-      const pollData = await pollRes.json();
-      laatsteStatus = pollData.status || "";
-      if (pollData.status === "done" && pollData.result_url) {
-        resultUrl = pollData.result_url;
-        break;
-      }
-      if (pollData.status === "error" || pollData.status === "rejected") {
+      const ruwe = await submitRes.text();
+      try {
+        submitData = JSON.parse(ruwe);
+      } catch {
         return NextResponse.json(
           {
-            fout: `D-ID rendering mislukt: ${pollData.error?.description || pollData.error?.kind || "onbekend"}`,
+            fout: `D-ID gaf onparseerbare response (HTTP ${submitRes.status}): ${ruwe.slice(0, 200)}`,
           },
           { status: 502 },
         );
       }
-    }
-
-    if (!resultUrl) {
+      if (!submitRes.ok || !submitData.id) {
+        return NextResponse.json(
+          {
+            fout: `D-ID weigerde de opdracht: ${submitData.description || submitData.message || submitData.kind || JSON.stringify(submitData)}`,
+          },
+          { status: 502 },
+        );
+      }
+    } catch (e: any) {
       return NextResponse.json(
-        {
-          fout: `Video-rendering duurde te lang (status: ${laatsteStatus}). Probeer opnieuw of een kortere tekst.`,
-        },
-        { status: 504 },
+        { fout: `D-ID submit faalde: ${e?.message || "onbekend"}` },
+        { status: 502 },
       );
     }
 
-    return NextResponse.json({ videoUrl: resultUrl, talkId });
+    return NextResponse.json({ talkId: submitData.id, audioUrl });
+  } catch (err: any) {
+    return NextResponse.json(
+      { fout: err?.message || "Onbekende fout" },
+      { status: 500 },
+    );
+  }
+}
+
+export async function GET(req: NextRequest) {
+  try {
+    const auth = await checkFounder();
+    if (!auth.ok) {
+      return NextResponse.json({ fout: auth.fout }, { status: auth.status });
+    }
+    const didKey = process.env.DID_API_KEY;
+    if (!didKey) {
+      return NextResponse.json(
+        { fout: "DID_API_KEY ontbreekt" },
+        { status: 503 },
+      );
+    }
+    const talkId = req.nextUrl.searchParams.get("id");
+    if (!talkId) {
+      return NextResponse.json({ fout: "id ontbreekt" }, { status: 400 });
+    }
+    const pollRes = await fetch(`https://api.d-id.com/talks/${talkId}`, {
+      headers: { Authorization: didAuthHeader(didKey) },
+    });
+    const ruwe = await pollRes.text();
+    let data: any = {};
+    try {
+      data = JSON.parse(ruwe);
+    } catch {
+      return NextResponse.json(
+        { fout: `D-ID gaf onparseerbare response: ${ruwe.slice(0, 200)}` },
+        { status: 502 },
+      );
+    }
+    if (data.status === "done" && data.result_url) {
+      return NextResponse.json({ status: "done", videoUrl: data.result_url });
+    }
+    if (data.status === "error" || data.status === "rejected") {
+      return NextResponse.json({
+        status: data.status,
+        fout: data.error?.description || data.error?.kind || "onbekend",
+      });
+    }
+    return NextResponse.json({ status: data.status || "pending" });
   } catch (err: any) {
     return NextResponse.json(
       { fout: err?.message || "Onbekende fout" },

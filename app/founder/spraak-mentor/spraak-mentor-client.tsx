@@ -177,40 +177,82 @@ export default function SpraakMentorClient() {
     setVideoMaakt(true);
     setVideoUrl(null);
     setVideoStatus("Audio renderen...");
-    try {
-      // UI feedback simuleren tijdens de polling-loop op de server (15-45s).
-      const statusInterval = setInterval(() => {
-        setVideoStatus((huidig) => {
-          if (huidig.startsWith("Audio")) return "Avatar animeren...";
-          if (huidig.startsWith("Avatar")) return "Laatste hand...";
-          return "Bijna klaar...";
-        });
-      }, 8000);
 
-      const res = await fetch("/api/talking-video", {
+    async function leesAlsJsonOfTekst(res: Response) {
+      const ruwe = await res.text();
+      try {
+        return { json: JSON.parse(ruwe) as any, ruwe };
+      } catch {
+        return { json: null as any, ruwe };
+      }
+    }
+
+    try {
+      // 1. Submit: server maakt TTS + upload + D-ID submit, returnt talkId
+      const submitRes = await fetch("/api/talking-video", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          tekst: bron,
-          stem,
-          snelheid,
-          avatar,
-        }),
+        body: JSON.stringify({ tekst: bron, stem, snelheid, avatar }),
       });
-      clearInterval(statusInterval);
-      const data = await res.json();
-      if (!res.ok || !data.videoUrl) {
-        toast.error(data.fout || "Video maken mislukt", { duration: 8000 });
+      const { json: submitData, ruwe: submitRuwe } =
+        await leesAlsJsonOfTekst(submitRes);
+      if (!submitRes.ok || !submitData?.talkId) {
+        toast.error(
+          submitData?.fout ||
+            `Submit mislukt (HTTP ${submitRes.status}): ${submitRuwe.slice(0, 200)}`,
+          { duration: 12000 },
+        );
         setVideoStatus("");
+        setVideoMaakt(false);
         return;
       }
-      setVideoUrl(data.videoUrl);
+      const talkId = submitData.talkId;
+      setVideoStatus("Avatar animeren...");
+
+      // 2. Poll status elke 2s, max 60 pogingen (2 min) — D-ID is meestal
+      // binnen 30s klaar, dit is een ruime marge.
+      for (let i = 0; i < 60; i++) {
+        await new Promise((r) => setTimeout(r, 2000));
+        const pollRes = await fetch(
+          `/api/talking-video?id=${encodeURIComponent(talkId)}`,
+        );
+        const { json: pollData, ruwe: pollRuwe } =
+          await leesAlsJsonOfTekst(pollRes);
+        if (!pollRes.ok) {
+          toast.error(
+            pollData?.fout ||
+              `Polling mislukt (HTTP ${pollRes.status}): ${pollRuwe.slice(0, 200)}`,
+            { duration: 12000 },
+          );
+          setVideoStatus("");
+          setVideoMaakt(false);
+          return;
+        }
+        if (pollData?.status === "done" && pollData.videoUrl) {
+          setVideoUrl(pollData.videoUrl);
+          setVideoStatus("");
+          setVideoMaakt(false);
+          toast.success("Pratende video klaar 🎬");
+          return;
+        }
+        if (pollData?.status === "error" || pollData?.status === "rejected") {
+          toast.error(
+            `D-ID rendering mislukt: ${pollData.fout || "onbekend"}`,
+            { duration: 12000 },
+          );
+          setVideoStatus("");
+          setVideoMaakt(false);
+          return;
+        }
+        if (i === 5) setVideoStatus("Laatste hand...");
+        if (i === 15) setVideoStatus("Bijna klaar...");
+      }
+      toast.error("Video duurde te lang (2 min). Probeer opnieuw of kortere tekst.");
       setVideoStatus("");
-      toast.success("Pratende video klaar 🎬");
+      setVideoMaakt(false);
     } catch (e: any) {
       toast.error(e?.message || "Video maken mislukt");
       setVideoStatus("");
-    } finally {
       setVideoMaakt(false);
     }
   }
