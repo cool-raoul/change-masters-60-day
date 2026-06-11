@@ -6,6 +6,7 @@ import { gebruikSpraak } from "@/components/voice/gebruikSpraak";
 
 type Taal = "nl" | "en" | "fr" | "de" | "es" | "pt";
 type Stem = "alloy" | "echo" | "fable" | "onyx" | "nova" | "shimmer";
+type Avatar = "vrouw" | "man";
 
 const TALEN: { code: Taal; label: string; vlag: string }[] = [
   { code: "nl", label: "Nederlands", vlag: "🇳🇱" },
@@ -16,20 +17,49 @@ const TALEN: { code: Taal; label: string; vlag: string }[] = [
   { code: "pt", label: "Português", vlag: "🇵🇹" },
 ];
 
-const STEMMEN: { code: Stem; label: string; karakter: string }[] = [
-  { code: "nova", label: "Nova", karakter: "Warm, vrouwelijk, vriendelijk" },
-  { code: "shimmer", label: "Shimmer", karakter: "Helder, vrouwelijk, kalm" },
-  { code: "alloy", label: "Alloy", karakter: "Neutraal, evenwichtig" },
-  { code: "fable", label: "Fable", karakter: "Mannelijk, verhalend" },
-  { code: "echo", label: "Echo", karakter: "Mannelijk, rustig" },
-  { code: "onyx", label: "Onyx", karakter: "Mannelijk, diep, gezaghebbend" },
+const STEMMEN: {
+  code: Stem;
+  label: string;
+  karakter: string;
+  geslacht: Avatar;
+}[] = [
+  { code: "nova", label: "Nova", karakter: "Warm, vrouwelijk, vriendelijk", geslacht: "vrouw" },
+  { code: "shimmer", label: "Shimmer", karakter: "Helder, vrouwelijk, kalm", geslacht: "vrouw" },
+  { code: "alloy", label: "Alloy", karakter: "Neutraal, evenwichtig", geslacht: "vrouw" },
+  { code: "fable", label: "Fable", karakter: "Mannelijk, verhalend", geslacht: "man" },
+  { code: "echo", label: "Echo", karakter: "Mannelijk, rustig", geslacht: "man" },
+  { code: "onyx", label: "Onyx", karakter: "Mannelijk, diep, gezaghebbend", geslacht: "man" },
 ];
+
+// Royalty-free Unsplash portretten, premium-look. Vervangbaar later
+// door eigen merk-foto's of AI-gegenereerde ELEVA-avatars.
+const AVATARS: Record<Avatar, { foto: string; alt: string }> = {
+  vrouw: {
+    foto: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=800&h=800&fit=crop&crop=faces&q=85",
+    alt: "ELEVA Mentor, vrouwelijke avatar",
+  },
+  man: {
+    foto: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=800&h=800&fit=crop&crop=faces&q=85",
+    alt: "ELEVA Mentor, mannelijke avatar",
+  },
+};
 
 export default function SpraakMentorClient() {
   const [taalIn, setTaalIn] = useState<Taal>("nl");
   const [taalUit, setTaalUit] = useState<Taal>("nl");
   const [stem, setStem] = useState<Stem>("nova");
+  const [avatar, setAvatar] = useState<Avatar>("vrouw");
+  const [avatarHandmatig, setAvatarHandmatig] = useState(false);
   const [snelheid, setSnelheid] = useState(1);
+
+  // Auto-pair avatar met stem, tenzij gebruiker zelf wisselt.
+  useEffect(() => {
+    if (avatarHandmatig) return;
+    const stemRij = STEMMEN.find((s) => s.code === stem);
+    if (stemRij && stemRij.geslacht !== avatar) {
+      setAvatar(stemRij.geslacht);
+    }
+  }, [stem, avatar, avatarHandmatig]);
   const [tekst, setTekst] = useState("");
   const [vertaling, setVertaling] = useState("");
   const [vertaalt, setVertaalt] = useState(false);
@@ -399,39 +429,65 @@ export default function SpraakMentorClient() {
         </h2>
 
         <div className="flex flex-col items-center gap-5 py-4">
+          {/* Avatar-keuze, wisselt automatisch mee met stem-geslacht
+              tenzij founder hier zelf klikt. */}
+          <div className="flex gap-2">
+            {(["vrouw", "man"] as Avatar[]).map((a) => (
+              <button
+                key={a}
+                onClick={() => {
+                  setAvatar(a);
+                  setAvatarHandmatig(true);
+                }}
+                className={`px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider border transition-all ${
+                  avatar === a
+                    ? "border-cm-gold bg-cm-gold/15 text-cm-gold"
+                    : "border-cm-border text-cm-white/60 hover:border-cm-gold/40"
+                }`}
+              >
+                {a === "vrouw" ? "♀ Vrouwelijk" : "♂ Mannelijk"}
+              </button>
+            ))}
+          </div>
+
           <div
-            className={`relative w-44 h-44 rounded-full flex items-center justify-center ${
-              speelt ? "animate-pulse" : ""
-            }`}
+            className={`relative w-48 h-48 md:w-56 md:h-56 rounded-full overflow-hidden ${
+              speelt ? "scale-[1.02]" : ""
+            } transition-transform duration-300`}
             style={{
-              background:
-                "radial-gradient(circle at 30% 30%, #f5e9c4 0%, #c9a961 40%, #6b4f1a 90%)",
-              boxShadow:
-                "0 0 60px rgba(201,169,97,0.45), 0 0 30px rgba(245,233,196,0.3) inset",
+              boxShadow: speelt
+                ? "0 0 80px rgba(201,169,97,0.7), 0 0 40px rgba(245,233,196,0.45), 0 0 0 4px rgba(201,169,97,0.55) inset"
+                : "0 0 40px rgba(201,169,97,0.35), 0 0 0 3px rgba(201,169,97,0.4) inset",
             }}
           >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={AVATARS[avatar].foto}
+              alt={AVATARS[avatar].alt}
+              className="w-full h-full object-cover"
+              draggable={false}
+            />
             <div
-              className="absolute inset-2 rounded-full bg-black/85 flex items-center justify-center"
+              className="absolute inset-0 rounded-full pointer-events-none"
               style={{
-                boxShadow: "inset 0 0 30px rgba(201,169,97,0.4)",
+                background:
+                  "radial-gradient(circle at 50% 110%, rgba(201,169,97,0.35) 0%, transparent 60%)",
               }}
-            >
-              <div className="text-center">
-                <div className="text-5xl mb-1">🤖</div>
-                <p className="text-cm-gold text-[10px] tracking-widest uppercase font-bold">
-                  ELEVA Mentor
-                </p>
-              </div>
-            </div>
+            />
             {speelt && (
               <div
-                className="absolute inset-0 rounded-full"
+                className="absolute inset-0 rounded-full pointer-events-none"
                 style={{
-                  boxShadow: "0 0 80px 20px rgba(201,169,97,0.5)",
+                  boxShadow: "0 0 100px 25px rgba(201,169,97,0.55)",
                   animation: "pulse 1.5s ease-in-out infinite",
                 }}
               />
             )}
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/70 backdrop-blur px-2.5 py-0.5 rounded-full">
+              <p className="text-cm-gold text-[9px] tracking-widest uppercase font-bold">
+                ELEVA Mentor
+              </p>
+            </div>
           </div>
 
           <canvas
