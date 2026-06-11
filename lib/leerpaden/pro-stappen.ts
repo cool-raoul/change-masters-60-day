@@ -116,7 +116,7 @@ export const PRO_LEERPAD: Leerpad = {
           label: "Doe zelf de productadvies-test (~3 min)",
           uitleg:
             "Door 'm zelf te doen weet je hoe je cliënten 'm ervaren en wat eruit kan komen.",
-          actieRoute: "/test-pakket-bouwer",
+          actieRoute: "/instellingen/mijn-tracking-links",
         },
       ],
     },
@@ -163,7 +163,7 @@ export const PRO_LEERPAD: Leerpad = {
         {
           id: "pro7-stuur",
           label: "Stuur de test aan één bestaande cliënt",
-          actieRoute: "/test-pakket-bouwer",
+          actieRoute: "/instellingen/mijn-tracking-links",
         },
         {
           id: "pro7-mentor",

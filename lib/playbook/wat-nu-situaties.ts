@@ -176,7 +176,7 @@ Dan laat je het even rusten. Zet een herinnering om over een paar weken of een m
         hint: "Uitnodig-scripts + webshop-frame",
         actieLabel: "Open de uitnodig-scripts",
         actieRoute: "/scripts?cat=uitnodiging",
-        uitleg: `Je wil iemand uitnodigen. Mooi. En het mooie is: je hoeft niemand iets te verkopen. Je nodigt iemand uit om te kijken. Zij beslissen.
+        uitleg: `Je wil iemand uitnodigen. Mooi. Onthoud dan: je hoeft niemand iets te verkopen. Je nodigt iemand uit om te kijken. Zij beslissen.
 
 HET WEBSHOP-FRAME
 

@@ -85,7 +85,7 @@ export const FEATURES: Feature[] = [
     emoji: "🤖",
     titel: "ELEVA Mentor, je mentor in je broekzak",
     pitch:
-      "Een mentor die altijd antwoord heeft, in onze stem, claim-vrij, en up-to-date over alle features. Of het nu gaat om een gesprek dat je niet weet hoe te starten, een twijfel die je tegenhoudt, een script dat je moet schrijven of een vraag over voeding of een product, Mentor denkt mee 🥰",
+      "Een mentor die altijd antwoord heeft, in onze stem, claim-vrij, en up-to-date over alle features. Een gesprek dat je niet weet te starten, een twijfel die je tegenhoudt, een script dat je moet schrijven of een vraag over voeding of een product: Mentor denkt mee 🥰",
     bullets: [
       { term: "Gespreks-begeleiding", uitleg: "Hoe begin je het gesprek, hoe ga je om met een afwijzing, wat zeg je bij een bezwaar." },
       { term: "Schrijfwerk in jouw stem", uitleg: "Uitnodigingen, opvolg-berichten, voorbereidende mails. Mentor schetst, jij maakt het eigen." },

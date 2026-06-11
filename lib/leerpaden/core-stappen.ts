@@ -125,7 +125,7 @@ export const CORE_LEERPAD: Leerpad = {
           label: "Doe zelf de productadvies-test (~3 min)",
           uitleg:
             "Door de test zelf te doen, weet je hoe je prospects de test ervaren en welk advies eruit kan komen.",
-          actieRoute: "/test-pakket-bouwer",
+          actieRoute: "/instellingen/mijn-tracking-links",
         },
       ],
     },
