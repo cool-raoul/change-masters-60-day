@@ -190,11 +190,32 @@ export default function SpraakMentorClient() {
     }
 
     try {
-      // 1. Submit: server maakt TTS + upload + D-ID submit, returnt talkId
+      // 1a. Audio renderen (TTS + upload), aparte korte call < 10s
+      setVideoStatus("Audio renderen...");
+      const audioRes = await fetch("/api/talking-video/audio", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tekst: bron, stem, snelheid }),
+      });
+      const { json: audioData, ruwe: audioRuwe } =
+        await leesAlsJsonOfTekst(audioRes);
+      if (!audioRes.ok || !audioData?.audioUrl) {
+        toast.error(
+          audioData?.fout ||
+            `Audio mislukt (HTTP ${audioRes.status}): ${audioRuwe.slice(0, 200)}`,
+          { duration: 12000 },
+        );
+        setVideoStatus("");
+        setVideoMaakt(false);
+        return;
+      }
+
+      // 1b. D-ID submit met de audioUrl, korte call < 10s
+      setVideoStatus("D-ID opdracht versturen...");
       const submitRes = await fetch("/api/talking-video", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tekst: bron, stem, snelheid, avatar }),
+        body: JSON.stringify({ audioUrl: audioData.audioUrl, avatar }),
       });
       const { json: submitData, ruwe: submitRuwe } =
         await leesAlsJsonOfTekst(submitRes);

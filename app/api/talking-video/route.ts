@@ -1,34 +1,23 @@
-// Talking-video endpoint: 2 calls voor async polling vanuit de client,
-// zodat we niet boven de Vercel function-timeout uitkomen.
+// Talking-video pipeline gesplitst in 3 stappen om binnen de 10s Vercel
+// Hobby function-timeout te blijven:
 //
-// POST /api/talking-video
-//   - Genereer audio (OpenAI TTS), upload naar Supabase Storage
-//   - Submit aan D-ID Talks API
-//   - Return { talkId } direct (~2-4 sec)
+//   1. POST /api/talking-video/audio
+//      Genereert audio (OpenAI TTS) en upload naar Supabase Storage.
+//      Return { audioUrl }. Duurt ~3-5s.
 //
-// GET /api/talking-video?id=<talkId>
-//   - Poll D-ID status één keer
-//   - Return { status, videoUrl?, fout? }
+//   2. POST /api/talking-video  (deze file)
+//      Submit aan D-ID Talks API met audioUrl + avatar.
+//      Return { talkId }. Duurt ~1-2s.
 //
-// Client polled GET elke 2 sec tot status === 'done' of error.
+//   3. GET /api/talking-video?id=<talkId>
+//      Poll D-ID status één keer. Return { status, videoUrl?, fout? }.
+//      Client polled deze elke 2s tot status === 'done' of error.
 
 import { NextRequest, NextResponse } from "next/server";
-import OpenAI from "openai";
 import { createClient as createServerSupabase } from "@/lib/supabase/server";
-import { createClient as createDirectSupabase } from "@supabase/supabase-js";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 30;
-
-const TOEGESTANE_STEMMEN = [
-  "alloy",
-  "echo",
-  "fable",
-  "onyx",
-  "nova",
-  "shimmer",
-] as const;
 
 // D-ID eist URLs die eindigen op .jpg/.jpeg/.png. Unsplash-URLs hebben
 // query-strings dus we hosten de avatars in onze eigen Supabase Storage.
@@ -76,79 +65,18 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json().catch(() => ({}));
-    const tekst = String(body.tekst ?? "").trim();
-    const stem = String(body.stem ?? "nova");
-    const snelheid = Number(body.snelheid ?? 1);
+    const audioUrl = String(body.audioUrl ?? "").trim();
     const avatarKeuze = String(body.avatar ?? "vrouw");
     const sourceUrl = AVATAR_URLS[avatarKeuze] || AVATAR_URLS.vrouw;
 
-    if (!tekst) return NextResponse.json({ fout: "Geen tekst" }, { status: 400 });
-    if (tekst.length > 4000)
+    if (!audioUrl) {
       return NextResponse.json(
-        { fout: "Tekst te lang, max 4000 tekens" },
+        { fout: "audioUrl ontbreekt (eerst /api/talking-video/audio aanroepen)" },
         { status: 400 },
       );
-
-    const gekozenStem = (TOEGESTANE_STEMMEN as readonly string[]).includes(stem)
-      ? stem
-      : "nova";
-
-    const openaiKey = process.env.OPENAI_API_KEY;
-    if (!openaiKey) {
-      return NextResponse.json(
-        { fout: "OPENAI_API_KEY ontbreekt" },
-        { status: 500 },
-      );
     }
 
-    // 1. Audio renderen
-    const openai = new OpenAI({ apiKey: openaiKey });
-    let audioBuf: Buffer;
-    try {
-      const ttsResponse = await openai.audio.speech.create({
-        model: "tts-1",
-        voice: gekozenStem as any,
-        input: tekst,
-        speed: Math.max(0.25, Math.min(4, snelheid)),
-        response_format: "mp3",
-      });
-      audioBuf = Buffer.from(await ttsResponse.arrayBuffer());
-    } catch (e: any) {
-      return NextResponse.json(
-        { fout: `OpenAI TTS faalde: ${e?.message || "onbekend"}` },
-        { status: 502 },
-      );
-    }
-
-    // 2. Upload publieke audio
-    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    const supaUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    if (!serviceKey || !supaUrl) {
-      return NextResponse.json(
-        { fout: "Supabase service-key ontbreekt" },
-        { status: 500 },
-      );
-    }
-    const sbAdmin = createDirectSupabase(supaUrl, serviceKey);
-    const pad = `${auth.userId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.mp3`;
-    const { error: upErr } = await sbAdmin.storage
-      .from("talking-temp")
-      .upload(pad, audioBuf, {
-        contentType: "audio/mpeg",
-        upsert: false,
-      });
-    if (upErr) {
-      return NextResponse.json(
-        { fout: `Audio-upload faalde: ${upErr.message}` },
-        { status: 500 },
-      );
-    }
-    const { data: pubUrlData } = sbAdmin.storage
-      .from("talking-temp")
-      .getPublicUrl(pad);
-    const audioUrl = pubUrlData.publicUrl;
-
-    // 3. Submit aan D-ID
+    // Submit aan D-ID
     let submitData: any = {};
     try {
       const submitRes = await fetch("https://api.d-id.com/talks", {
