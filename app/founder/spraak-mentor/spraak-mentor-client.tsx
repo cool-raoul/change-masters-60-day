@@ -4,6 +4,13 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import { gebruikSpraak } from "@/components/voice/gebruikSpraak";
 
+// Feature-flag, op false geparkeerd 2026-06-11. D-ID-integratie werkt
+// technisch maar verbruikt veel credits, Vercel Hobby 10s timeout maakt
+// de pipeline broos en de waarde voor de pilot is beperkt zonder Pro-
+// plan. Audio-only flow blijft live. Zet op true om de knop terug te
+// halen, code blijft intact. Zie memory: spraak-mentor-parkeerlijst.
+const PRATENDE_VIDEO_ENABLED = false;
+
 type Taal = "nl" | "en" | "fr" | "de" | "es" | "pt";
 type Stem = "alloy" | "echo" | "fable" | "onyx" | "nova" | "shimmer";
 type Avatar = "vrouw" | "man";
@@ -646,20 +653,22 @@ export default function SpraakMentorClient() {
             >
               {audioMaakt ? "Audio maken..." : audioUrl ? "Audio opnieuw" : "🎧 Maak audio"}
             </button>
-            <button
-              onClick={maakVideo}
-              disabled={videoMaakt || audioMaakt || (!tekst.trim() && !vertaling.trim())}
-              className="px-6 py-2 rounded-lg font-semibold text-sm bg-gradient-to-br from-purple-600 to-pink-600 text-white hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
-              title="Maakt een pratende avatar-video via D-ID. Duurt 15-45 seconden."
-            >
-              {videoMaakt ? "🎬 Bezig..." : videoUrl ? "Video opnieuw" : "🎬 Pratende video"}
-            </button>
+            {PRATENDE_VIDEO_ENABLED && (
+              <button
+                onClick={maakVideo}
+                disabled={videoMaakt || audioMaakt || (!tekst.trim() && !vertaling.trim())}
+                className="px-6 py-2 rounded-lg font-semibold text-sm bg-gradient-to-br from-purple-600 to-pink-600 text-white hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Maakt een pratende avatar-video via D-ID. Duurt 15-45 seconden."
+              >
+                {videoMaakt ? "🎬 Bezig..." : videoUrl ? "Video opnieuw" : "🎬 Pratende video"}
+              </button>
+            )}
             {audioUrl && (
               <button onClick={downloadAudio} className="btn-secondary">
                 ⬇ Audio mp3
               </button>
             )}
-            {videoUrl && (
+            {PRATENDE_VIDEO_ENABLED && videoUrl && (
               <button onClick={downloadVideo} className="btn-secondary">
                 ⬇ Video mp4
               </button>
@@ -669,7 +678,7 @@ export default function SpraakMentorClient() {
             </button>
           </div>
 
-          {videoMaakt && (
+          {PRATENDE_VIDEO_ENABLED && videoMaakt && (
             <div className="bg-cm-surface border border-purple-500/40 rounded-xl px-4 py-3 max-w-lg w-full">
               <div className="flex items-center gap-3">
                 <div className="w-5 h-5 border-2 border-purple-400 border-t-transparent rounded-full animate-spin flex-shrink-0" />
@@ -685,7 +694,7 @@ export default function SpraakMentorClient() {
             </div>
           )}
 
-          {videoUrl && (
+          {PRATENDE_VIDEO_ENABLED && videoUrl && (
             <video
               src={videoUrl}
               controls
@@ -697,7 +706,7 @@ export default function SpraakMentorClient() {
             />
           )}
 
-          {audioUrl && !videoUrl && (
+          {audioUrl && (!PRATENDE_VIDEO_ENABLED || !videoUrl) && (
             <audio
               ref={audioRef}
               src={audioUrl}
