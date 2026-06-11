@@ -300,13 +300,18 @@ export function VoiceFab() {
   // die veroorzaakte juist iOS stuck-scroll na sluiten (touchAction="none"
   // werd niet altijd correct herberekend).
 
-  // Verberg op auth/onboarding pagina's
+  // Verberg op auth/onboarding pagina's, plus op routes met een
+  // eigen, prominente mic-knop in de input (Mentor-chat, mini-ELEVA chat,
+  // mentor-trainen-form). Anders is verwarrend welke je moet gebruiken.
   const verbergen =
     pathname?.startsWith("/login") ||
     pathname?.startsWith("/registreer") ||
     pathname?.startsWith("/welkom") ||
     pathname?.startsWith("/onboarding") ||
-    pathname?.startsWith("/mijn-why");
+    pathname?.startsWith("/mijn-why") ||
+    pathname?.startsWith("/coach") ||
+    pathname?.startsWith("/m/") ||
+    pathname?.startsWith("/instellingen/mentor-trainen");
 
   if (verbergen) return null;
 

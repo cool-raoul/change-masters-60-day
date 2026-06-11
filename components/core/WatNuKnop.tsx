@@ -11,8 +11,9 @@
 //
 // Data staat in lib/playbook/wat-nu-situaties.ts (gedeeld met de pagina's).
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { WAT_NU_GROEPEN } from "@/lib/playbook/wat-nu-situaties";
 
 // metSidebar: op desktop-routes mét de vaste sidebar (AppShell) schuift de
@@ -20,8 +21,65 @@ import { WAT_NU_GROEPEN } from "@/lib/playbook/wat-nu-situaties";
 // scherm-flow /vandaag is er geen sidebar, dan staat 'ie links in het
 // vrije vlak.
 export function WatNuKnop({ metSidebar = false }: { metSidebar?: boolean }) {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [openGroep, setOpenGroep] = useState<string | null>(null);
+
+  // Scroll-aware: bij scroll-down verbergen, bij scroll-up weer tonen.
+  // Zo zit de knop niet in de weg van content of input-velden onderaan.
+  // Zelfde patroon als VoiceFab gebruikt.
+  const [zichtbaar, setZichtbaar] = useState(true);
+  const laatsteScrollRef = useRef(0);
+  const scrollTimerRef = useRef<any>(null);
+
+  useEffect(() => {
+    const main = document.querySelector("main");
+    const target: HTMLElement | Window =
+      main instanceof HTMLElement ? main : window;
+
+    function huidigeScroll() {
+      return target instanceof Window
+        ? window.scrollY
+        : (target as HTMLElement).scrollTop;
+    }
+    laatsteScrollRef.current = huidigeScroll();
+
+    function onScroll() {
+      const nu = huidigeScroll();
+      const delta = nu - laatsteScrollRef.current;
+      if (Math.abs(delta) < 8) return;
+      if (nu < 40) {
+        setZichtbaar(true);
+      } else if (delta > 0) {
+        setZichtbaar(false);
+      } else {
+        setZichtbaar(true);
+      }
+      laatsteScrollRef.current = nu;
+      if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
+      scrollTimerRef.current = setTimeout(() => setZichtbaar(true), 1500);
+    }
+
+    target.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      target.removeEventListener("scroll", onScroll);
+      if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
+    };
+  }, [pathname]);
+
+  // Op routes met eigen Mentor-chat of een specifieke focus-flow (auth,
+  // onboarding, why-coach) is "wat nu?" niet zinvol en verwart 'ie alleen.
+  const verbergen =
+    pathname?.startsWith("/login") ||
+    pathname?.startsWith("/registreer") ||
+    pathname?.startsWith("/welkom") ||
+    pathname?.startsWith("/onboarding") ||
+    pathname?.startsWith("/mijn-why") ||
+    pathname?.startsWith("/coach") ||
+    pathname?.startsWith("/m/") ||
+    pathname?.startsWith("/instellingen/mentor-trainen");
+
+  if (verbergen) return null;
 
   function sluitAlles() {
     setOpen(false);
@@ -30,6 +88,10 @@ export function WatNuKnop({ metSidebar = false }: { metSidebar?: boolean }) {
 
   const knopLinks = metSidebar ? "left-5 lg:left-[17rem]" : "left-5";
   const menuLinks = metSidebar ? "left-4 lg:left-[17rem]" : "left-4";
+
+  // Knop altijd in de DOM houden, alleen via CSS verbergen tijdens
+  // scroll-down. Voorkomt iOS Safari position:fixed repaint-glitches.
+  const knopVerborgen = !open && !zichtbaar;
 
   return (
     <>
@@ -117,12 +179,26 @@ export function WatNuKnop({ metSidebar = false }: { metSidebar?: boolean }) {
 
       {/* De vaste knop, linksonder. Spiegelt de spraakknop (rechtsonder)
           qua hoogte: mobiel bottom-20 (boven de bottom-nav), desktop
-          bottom-5. Rustiger gestyled zodat de spraakknop de opvallende blijft. */}
+          bottom-5. Rustiger gestyled zodat de spraakknop de opvallende blijft.
+          Glijdt naar onder weg bij scroll-down, schuift terug bij scroll-up. */}
       <button
         type="button"
         onClick={() => (open ? sluitAlles() : setOpen(true))}
-        className={`fixed bottom-20 lg:bottom-5 ${knopLinks} z-40 flex items-center gap-2 rounded-full border border-cm-gold/50 bg-cm-surface-2/95 text-cm-gold px-4 py-3 shadow-2xl font-semibold text-sm hover:bg-cm-gold/10 transition-colors`}
+        className={`fixed bottom-20 lg:bottom-5 ${knopLinks} z-40 flex items-center gap-2 rounded-full border border-cm-gold/50 bg-cm-surface-2/95 text-cm-gold px-4 py-3 shadow-2xl font-semibold text-sm hover:bg-cm-gold/10 transition-all duration-200`}
+        style={{
+          opacity: knopVerborgen ? 0 : 1,
+          transform: knopVerborgen
+            ? "translate3d(0, 96px, 0)"
+            : "translate3d(0, 0, 0)",
+          pointerEvents: knopVerborgen ? "none" : "auto",
+          WebkitTransform: knopVerborgen
+            ? "translate3d(0, 96px, 0)"
+            : "translate3d(0, 0, 0)",
+          willChange: "transform, opacity",
+        }}
         aria-label="Wat nu? Hulp bij dit moment"
+        aria-hidden={knopVerborgen}
+        tabIndex={knopVerborgen ? -1 : 0}
       >
         <span className="text-lg leading-none">🧰</span>
         {open ? "Sluiten" : "Wat nu?"}
