@@ -34,12 +34,19 @@ export function Reveal({
   richting = "up",
   delay = 0,
   className = "",
+  herhaal = false,
 }: {
   children: React.ReactNode;
   richting?: Richting;
   /** Vertraging in ms, voor stagger-effect in lijsten (bv. i * 75). */
   delay?: number;
   className?: string;
+  /**
+   * true: animatie speelt opnieuw telkens als het element terug in
+   * beeld scrolt (voor showcase/prospect-pagina's). false (default):
+   * één keer, daarna blijft alles staan (voor werk-pagina's, rust).
+   */
+  herhaal?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [zichtbaar, setZichtbaar] = useState(false);
@@ -60,18 +67,26 @@ export function Reveal({
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.1) {
             setZichtbaar(true);
-            observer.disconnect();
+            if (!herhaal) observer.disconnect();
+          } else if (herhaal && !entry.isIntersecting) {
+            // Pas resetten als het element écht volledig uit beeld is.
+            // Tussen 0% en 10% gebeurt niets (hysterese), dus kleine
+            // scroll-bewegingen op de rand flikkeren niet. Bij echte
+            // terugkomst speelt de animatie opnieuw.
+            setZichtbaar(false);
           }
         }
       },
-      // Trigger iets vóór het element echt in beeld is, voelt vloeiender
-      { threshold: 0.1, rootMargin: "0px 0px -32px 0px" },
+      // Trigger iets vóór het element echt in beeld is, voelt vloeiender.
+      // Dubbele threshold geeft hysterese voor de herhaal-modus: tonen
+      // bij 10% zichtbaar, pas verbergen bij 0% zichtbaar.
+      { threshold: herhaal ? [0, 0.1] : 0.1, rootMargin: "0px 0px -32px 0px" },
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [herhaal]);
 
   return (
     <div

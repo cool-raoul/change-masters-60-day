@@ -48,7 +48,7 @@ export function MiniElevaVerhalenContent({
           ← Terug
         </Link>
 
-        <Reveal richting="fade">
+        <Reveal herhaal richting="fade">
         <div>
           <EditableTekst
             namespace={NS}
@@ -93,7 +93,7 @@ export function MiniElevaVerhalenContent({
         />
 
         {/* SLAAP */}
-        <Reveal delay={75}>
+        <Reveal herhaal delay={75}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -127,7 +127,7 @@ export function MiniElevaVerhalenContent({
         </Reveal>
 
         {/* ENERGIE */}
-        <Reveal delay={150}>
+        <Reveal herhaal delay={150}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -161,7 +161,7 @@ export function MiniElevaVerhalenContent({
         </Reveal>
 
         {/* HORMONEN EN OVERGANG */}
-        <Reveal delay={225}>
+        <Reveal herhaal delay={225}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -195,7 +195,7 @@ export function MiniElevaVerhalenContent({
         </Reveal>
 
         {/* VEL */}
-        <Reveal delay={300}>
+        <Reveal herhaal delay={300}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -229,7 +229,7 @@ export function MiniElevaVerhalenContent({
         </Reveal>
 
         {/* LICHTER */}
-        <Reveal delay={375}>
+        <Reveal herhaal delay={375}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -263,7 +263,7 @@ export function MiniElevaVerhalenContent({
         </Reveal>
 
         {/* RUST */}
-        <Reveal delay={450}>
+        <Reveal herhaal delay={450}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -297,7 +297,7 @@ export function MiniElevaVerhalenContent({
         </Reveal>
 
         {/* DARMEN */}
-        <Reveal delay={525}>
+        <Reveal herhaal delay={525}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}

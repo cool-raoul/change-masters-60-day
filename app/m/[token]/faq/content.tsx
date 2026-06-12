@@ -102,7 +102,7 @@ export function MiniElevaFaqContent({
           ← Terug
         </Link>
 
-        <Reveal richting="fade">
+        <Reveal herhaal richting="fade">
         <div>
           <EditableTekst
             namespace={NS}
@@ -148,7 +148,7 @@ export function MiniElevaFaqContent({
         />
 
         {/* IP-UITLEG */}
-        <Reveal delay={75}>
+        <Reveal herhaal delay={75}>
         <section className="card border-l-4 border-cm-gold/60 space-y-2">
           <EditableTekst
             namespace={NS}
@@ -186,7 +186,7 @@ export function MiniElevaFaqContent({
         </Reveal>
 
         {/* PRODUCT-FAQ */}
-        <Reveal delay={150}>
+        <Reveal herhaal delay={150}>
         <section className="card space-y-1">
           <EditableTekst
             namespace={NS}
@@ -332,7 +332,7 @@ export function MiniElevaFaqContent({
 
         {/* BUSINESS-FAQ (alleen business-spoor) */}
         {spoor === "business" && (
-          <Reveal delay={225}>
+          <Reveal herhaal delay={225}>
           <section className="card space-y-1">
             <EditableTekst
               namespace={NS}
@@ -494,7 +494,7 @@ export function MiniElevaFaqContent({
         )}
 
         {/* DOORVRAGEN */}
-        <Reveal delay={300}>
+        <Reveal herhaal delay={300}>
         <section className="card border-l-4 border-cm-gold/60 space-y-2">
           <EditableBlok
             namespace={NS}

@@ -162,7 +162,7 @@ export function ShowcaseClient({
 
         {/* ============ HERO ============ */}
         <section className="max-w-7xl mx-auto px-6 pt-16 pb-24 sm:pt-24 sm:pb-32">
-          <Reveal richting="fade">
+          <Reveal herhaal richting="fade">
           <div className="text-center max-w-4xl mx-auto">
             <T
               sleutel="hero.titel"
@@ -208,7 +208,7 @@ export function ShowcaseClient({
 
         {/* ============ PAIN-CARDS ============ */}
         <section className="max-w-7xl mx-auto px-6 py-16">
-          <Reveal>
+          <Reveal herhaal>
           <div className="text-center max-w-3xl mx-auto mb-12">
             <T
               sleutel="pain.tag"
@@ -230,7 +230,7 @@ export function ShowcaseClient({
           </Reveal>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {PAIN_CARDS.map((p, i) => (
-              <Reveal key={i} delay={i * 75}>
+              <Reveal herhaal key={i} delay={i * 75}>
                 <div className="h-full bg-[#1a1a1a]/60 border border-[#c9a961]/20 rounded-2xl p-6 sm:p-7 hover:border-[#c9a961]/40 transition">
                   <div className="text-4xl mb-4">{p.emoji}</div>
                   <h3 className="text-lg font-extrabold mb-3 leading-snug">{p.titel}</h3>
@@ -246,7 +246,7 @@ export function ShowcaseClient({
 
         {/* ============ FEATURES INTRO ============ */}
         <section id="features" className="max-w-7xl mx-auto px-6 py-16 sm:py-24">
-          <Reveal>
+          <Reveal herhaal>
           <div className="text-center max-w-3xl mx-auto mb-16">
             <T
               sleutel="features.tag"
@@ -287,7 +287,7 @@ export function ShowcaseClient({
                 >
                   {/* Tekst */}
                   <div className={omgekeerd ? "lg:order-2" : ""}>
-                    <Reveal richting={omgekeerd ? "right" : "left"}>
+                    <Reveal herhaal richting={omgekeerd ? "right" : "left"}>
                     <div className="inline-flex items-center gap-2 mb-4 flex-wrap">
                       <span className="text-3xl">{feature.emoji}</span>
                       <span className="text-[10px] font-bold uppercase tracking-widest text-[#c9a961]">
@@ -333,7 +333,7 @@ export function ShowcaseClient({
 
                   {/* Screenshot */}
                   <div className={omgekeerd ? "lg:order-1" : ""}>
-                    <Reveal richting={omgekeerd ? "left" : "right"}>
+                    <Reveal herhaal richting={omgekeerd ? "left" : "right"}>
                       {screenshotsPerFeature[feature.sleutel]}
                     </Reveal>
                   </div>
@@ -345,7 +345,7 @@ export function ShowcaseClient({
 
         {/* ============ CTA ============ */}
         <section id="cta" className="max-w-5xl mx-auto px-6 py-24">
-          <Reveal richting="scale">
+          <Reveal herhaal richting="scale">
           <div
             className="relative rounded-3xl overflow-hidden p-10 sm:p-16 text-center"
             style={{
@@ -406,7 +406,7 @@ export function ShowcaseClient({
         <section id="faq" className="max-w-5xl mx-auto px-6 py-16 sm:py-24">
           <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-10">
             <div>
-              <Reveal richting="left">
+              <Reveal herhaal richting="left">
               <T
                 sleutel="faq.tag"
                 standaard="Veelgestelde vragen"
@@ -434,7 +434,7 @@ export function ShowcaseClient({
               />
               </Reveal>
             </div>
-            <Reveal richting="right" delay={100}>
+            <Reveal herhaal richting="right" delay={100}>
               <FaqLijst items={FAQ_ITEMS} ov={ov} isFounder={isFounder} />
             </Reveal>
           </div>

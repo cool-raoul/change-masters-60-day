@@ -71,7 +71,7 @@ export default async function WelkomPagina({
         ← Terug
       </Link>
 
-      <Reveal richting="fade">
+      <Reveal herhaal richting="fade">
         <div>
           <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
             Maak even kennis
@@ -83,7 +83,7 @@ export default async function WelkomPagina({
       </Reveal>
 
       {/* Persoonlijk welkomst-bericht van de member */}
-      <Reveal delay={100}>
+      <Reveal herhaal delay={100}>
       <div className="card space-y-3">
         <h2 className="text-cm-gold text-sm font-semibold flex items-center gap-2">
           👋 Bericht van {ctx.memberNaam ?? "je contactpersoon"}
@@ -108,7 +108,7 @@ export default async function WelkomPagina({
 
       {/* Start-film uit het Films-CMS, passend bij het spoor */}
       {embedUrl && film && (
-        <Reveal delay={200} richting="scale">
+        <Reveal herhaal delay={200} richting="scale">
         <div className="card space-y-3">
           <h2 className="text-cm-gold text-sm font-semibold flex items-center gap-2">
             🎬 Een goed begin: deze korte film
@@ -134,7 +134,7 @@ export default async function WelkomPagina({
 
       {/* Team-context: prospect weet dat er meer mensen achter staan */}
       {ctx.sponsorNaam && (
-        <Reveal richting="left">
+        <Reveal herhaal richting="left">
         <div className="card space-y-2">
           <h2 className="text-cm-gold text-sm font-semibold flex items-center gap-2">
             🤝 Je staat er nooit alleen voor

@@ -52,7 +52,7 @@ export function MiniElevaBusinessContent({
           ← Terug
         </Link>
 
-        <Reveal richting="fade">
+        <Reveal herhaal richting="fade">
         <div>
           <EditableTekst
             namespace={NS}
@@ -98,7 +98,7 @@ export function MiniElevaBusinessContent({
         />
 
         {/* HOE HET WERKT */}
-        <Reveal delay={75}>
+        <Reveal herhaal delay={75}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -194,7 +194,7 @@ export function MiniElevaBusinessContent({
         </Reveal>
 
         {/* IP-UITLEG */}
-        <Reveal delay={150}>
+        <Reveal herhaal delay={150}>
         <section className="card border-l-4 border-cm-gold/60 space-y-3">
           <EditableTekst
             namespace={NS}
@@ -243,7 +243,7 @@ export function MiniElevaBusinessContent({
         </Reveal>
 
         {/* RANG-LADDER */}
-        <Reveal delay={225}>
+        <Reveal herhaal delay={225}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -422,7 +422,7 @@ export function MiniElevaBusinessContent({
         </Reveal>
 
         {/* BUILDER */}
-        <Reveal delay={300}>
+        <Reveal herhaal delay={300}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -504,7 +504,7 @@ export function MiniElevaBusinessContent({
         </Reveal>
 
         {/* DAG-RITME */}
-        <Reveal delay={375}>
+        <Reveal herhaal delay={375}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -549,7 +549,7 @@ export function MiniElevaBusinessContent({
         </Reveal>
 
         {/* AFSLUITEND */}
-        <Reveal delay={450}>
+        <Reveal herhaal delay={450}>
         <section className="card border-l-4 border-cm-gold/60 space-y-2">
           <EditableTekst
             namespace={NS}

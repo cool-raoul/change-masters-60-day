@@ -119,7 +119,7 @@ export default function ZestigDagRunPagina() {
       <div className="mx-auto max-w-6xl px-4 py-8 sm:py-12 lg:py-16">
 
         {/* HEADER */}
-        <Reveal richting="fade">
+        <Reveal herhaal richting="fade">
         <header className="rounded-2xl bg-[#0d0d0d] px-6 py-7 text-center text-white sm:px-10 sm:py-9">
           <div className="text-xs font-bold uppercase tracking-[0.25em] text-[#c9a961] sm:text-sm">
             Project Meer Tijd en Vrijheid
@@ -137,7 +137,7 @@ export default function ZestigDagRunPagina() {
         {/* 6 INFO-BLOKKEN */}
         <section className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {BLOKKEN.map((b, i) => (
-            <Reveal key={b.titel} richting="up" delay={Math.min(i * 75, 600)} className="h-full">
+            <Reveal herhaal key={b.titel} richting="up" delay={Math.min(i * 75, 600)} className="h-full">
             <article
               className="h-full rounded-xl border border-[#c9a961] bg-white p-5 shadow-sm"
             >
@@ -158,7 +158,7 @@ export default function ZestigDagRunPagina() {
         </section>
 
         {/* MECHANIEK */}
-        <Reveal richting="up">
+        <Reveal herhaal richting="up">
         <section className="mt-6 rounded-xl border border-[#c9a961] bg-white p-5 sm:p-7">
           <h3 className="border-b border-[#c9a961] pb-2 text-base font-extrabold sm:text-lg">
             Hoe het Vergoedingsplan werkt: de mechaniek
@@ -199,7 +199,7 @@ export default function ZestigDagRunPagina() {
         </Reveal>
 
         {/* CTA + FOOTER */}
-        <Reveal richting="up">
+        <Reveal herhaal richting="up">
         <section className="mt-6 rounded-t-xl bg-[#0d0d0d] px-6 py-5 text-center text-white sm:px-10 sm:py-7">
           <h3 className="text-base font-extrabold leading-snug sm:text-lg">
             Bouw samen intensief aan je fundament en pluk nog jarenlang de vruchten.

@@ -111,7 +111,7 @@ export default async function MiniElevaLandingPagina({
       <PWAInstallPrompt memberNaam={ctx.memberNaam} />
 
       {/* Hero / welkom */}
-      <Reveal richting="fade">
+      <Reveal herhaal richting="fade">
         <div className="text-center space-y-2">
           <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
             Welkom in je eigen omgeving
@@ -130,7 +130,7 @@ export default async function MiniElevaLandingPagina({
       {/* Intro-tour: bij eerste bezoek prominent open, daarna ingeklapt
           met een 'Wat is mini-ELEVA?'-knopje. Legt uit wat er in zit,
           hoe 't werkt, en wat privé blijft. */}
-      <Reveal delay={100}>
+      <Reveal herhaal delay={100}>
         <MiniElevaIntroTour
           token={ctx.token}
           prospectVoornaam={ctx.prospectNaam.split(" ")[0]}
@@ -140,7 +140,7 @@ export default async function MiniElevaLandingPagina({
       </Reveal>
 
       {/* Status-balk: verlooptijd */}
-      <Reveal delay={150} richting="left">
+      <Reveal herhaal delay={150} richting="left">
         <div className="card border-l-4 border-cm-gold/60 text-sm">
           <p className="text-cm-white">
             ⏳ Je toegang is{" "}
@@ -153,13 +153,13 @@ export default async function MiniElevaLandingPagina({
 
       {/* Modules-overzicht */}
       <div className="space-y-3">
-        <Reveal delay={200}>
+        <Reveal herhaal delay={200}>
           <h2 className="text-cm-gold text-sm font-semibold uppercase tracking-wider">
             Wat kun je hier?
           </h2>
         </Reveal>
 
-        <Reveal delay={250}>
+        <Reveal herhaal delay={250}>
           <Link
             href={`/m/${ctx.token}/welkom`}
             className="card group flex items-center gap-3 transition-all duration-300 hover:border-cm-gold/60 hover:-translate-y-1 hover:shadow-gold"
@@ -178,7 +178,7 @@ export default async function MiniElevaLandingPagina({
           </Link>
         </Reveal>
 
-        <Reveal delay={325}>
+        <Reveal herhaal delay={325}>
           <Link
             href={`/m/${ctx.token}/producten`}
             className="card group flex items-center gap-3 transition-all duration-300 hover:border-cm-gold/60 hover:-translate-y-1 hover:shadow-gold"
@@ -198,7 +198,7 @@ export default async function MiniElevaLandingPagina({
           </Link>
         </Reveal>
 
-        <Reveal delay={400}>
+        <Reveal herhaal delay={400}>
           <Link
             href={`/m/${ctx.token}/verhalen`}
             className="card group flex items-center gap-3 transition-all duration-300 hover:border-cm-gold/60 hover:-translate-y-1 hover:shadow-gold"
@@ -221,7 +221,7 @@ export default async function MiniElevaLandingPagina({
         {/* Business-modules: alleen voor business-spoor-prospects. */}
         {ctx.soort === "business" && (
           <>
-            <Reveal delay={475}>
+            <Reveal herhaal delay={475}>
               <Link
                 href={`/m/${ctx.token}/business`}
                 className="card group flex items-center gap-3 transition-all duration-300 hover:border-cm-gold/60 hover:-translate-y-1 hover:shadow-gold"
@@ -242,7 +242,7 @@ export default async function MiniElevaLandingPagina({
               </Link>
             </Reveal>
 
-            <Reveal delay={550}>
+            <Reveal herhaal delay={550}>
               <Link
                 href={`/m/${ctx.token}/business-verhalen`}
                 className="card group flex items-center gap-3 transition-all duration-300 hover:border-cm-gold/60 hover:-translate-y-1 hover:shadow-gold"
@@ -265,7 +265,7 @@ export default async function MiniElevaLandingPagina({
           </>
         )}
 
-        <Reveal delay={ctx.soort === "business" ? 625 : 475}>
+        <Reveal herhaal delay={ctx.soort === "business" ? 625 : 475}>
           <Link
             href={`/m/${ctx.token}/faq`}
             className="card group flex items-center gap-3 transition-all duration-300 hover:border-cm-gold/60 hover:-translate-y-1 hover:shadow-gold"
@@ -289,7 +289,7 @@ export default async function MiniElevaLandingPagina({
           </Link>
         </Reveal>
 
-        <Reveal delay={ctx.soort === "business" ? 700 : 550}>
+        <Reveal herhaal delay={ctx.soort === "business" ? 700 : 550}>
           <Link
             href={`/m/${ctx.token}/mentor`}
             className="card group flex items-center gap-3 transition-all duration-300 hover:border-cm-gold/60 hover:-translate-y-1 hover:shadow-gold"
@@ -308,7 +308,7 @@ export default async function MiniElevaLandingPagina({
           </Link>
         </Reveal>
 
-        <Reveal delay={ctx.soort === "business" ? 775 : 625}>
+        <Reveal herhaal delay={ctx.soort === "business" ? 775 : 625}>
           <Link
             href={`/m/${ctx.token}/chat`}
             className="card group flex items-center gap-3 transition-all duration-300 hover:border-cm-gold/60 hover:-translate-y-1 hover:shadow-gold"
@@ -331,7 +331,7 @@ export default async function MiniElevaLandingPagina({
 
       {/* Privacy-strook, AVG-transparantie. Prospect moet weten wat
           er gedeeld wordt en wat niet. */}
-      <Reveal>
+      <Reveal herhaal>
       <div className="bg-cm-surface-2/40 rounded-lg p-3 text-xs text-cm-white/60 leading-relaxed space-y-1.5 mt-2">
         <p className="text-cm-white/80 font-semibold">🔒 Wat blijft privé?</p>
         <p>

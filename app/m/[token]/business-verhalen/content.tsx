@@ -52,7 +52,7 @@ export function MiniElevaBusinessVerhalenContent({
           ← Terug
         </Link>
 
-        <Reveal richting="fade">
+        <Reveal herhaal richting="fade">
         <div>
           <EditableTekst
             namespace={NS}
@@ -97,7 +97,7 @@ export function MiniElevaBusinessVerhalenContent({
         />
 
         {/* EERSTE 3-WEG */}
-        <Reveal delay={75}>
+        <Reveal herhaal delay={75}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -131,7 +131,7 @@ export function MiniElevaBusinessVerhalenContent({
         </Reveal>
 
         {/* EERSTE KLANTEN */}
-        <Reveal delay={150}>
+        <Reveal herhaal delay={150}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -165,7 +165,7 @@ export function MiniElevaBusinessVerhalenContent({
         </Reveal>
 
         {/* EERSTE MEMBER */}
-        <Reveal delay={225}>
+        <Reveal herhaal delay={225}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -199,7 +199,7 @@ export function MiniElevaBusinessVerhalenContent({
         </Reveal>
 
         {/* BIJVERDIENSTE */}
-        <Reveal delay={300}>
+        <Reveal herhaal delay={300}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -233,7 +233,7 @@ export function MiniElevaBusinessVerhalenContent({
         </Reveal>
 
         {/* VRIJHEID */}
-        <Reveal delay={375}>
+        <Reveal herhaal delay={375}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -267,7 +267,7 @@ export function MiniElevaBusinessVerhalenContent({
         </Reveal>
 
         {/* SPONSOR */}
-        <Reveal delay={450}>
+        <Reveal herhaal delay={450}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -301,7 +301,7 @@ export function MiniElevaBusinessVerhalenContent({
         </Reveal>
 
         {/* TEGENSLAG */}
-        <Reveal delay={525}>
+        <Reveal herhaal delay={525}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
