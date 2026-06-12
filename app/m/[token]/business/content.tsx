@@ -3,6 +3,7 @@ import { MediaBlokken } from "@/components/cms/MediaBlokken";
 import type { Blok } from "@/lib/cms/pagina-blokken";
 import { EditModeProvider } from "@/components/cms/EditModeContext";
 import { EditableTekst, EditableBlok } from "@/components/cms/EditableTekst";
+import { Reveal } from "@/components/ui/Reveal";
 
 // ============================================================
 // Business-uitleg, alleen zichtbaar voor prospects die zijn
@@ -51,6 +52,7 @@ export function MiniElevaBusinessContent({
           ← Terug
         </Link>
 
+        <Reveal richting="fade">
         <div>
           <EditableTekst
             namespace={NS}
@@ -85,6 +87,7 @@ export function MiniElevaBusinessContent({
             hint="Intro-paragraaf onder de titel"
           />
         </div>
+        </Reveal>
 
         <MediaBlokken
           paginaNamespace={NS}
@@ -95,6 +98,7 @@ export function MiniElevaBusinessContent({
         />
 
         {/* HOE HET WERKT */}
+        <Reveal delay={75}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -187,8 +191,10 @@ export function MiniElevaBusinessContent({
             isFounder={isFounder}
           />
         </section>
+        </Reveal>
 
         {/* IP-UITLEG */}
+        <Reveal delay={150}>
         <section className="card border-l-4 border-cm-gold/60 space-y-3">
           <EditableTekst
             namespace={NS}
@@ -234,8 +240,10 @@ export function MiniElevaBusinessContent({
             hint="Derde paragraaf IP, rang-context"
           />
         </section>
+        </Reveal>
 
         {/* RANG-LADDER */}
+        <Reveal delay={225}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -411,8 +419,10 @@ export function MiniElevaBusinessContent({
             isFounder={isFounder}
           />
         </section>
+        </Reveal>
 
         {/* BUILDER */}
+        <Reveal delay={300}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -491,8 +501,10 @@ export function MiniElevaBusinessContent({
             isFounder={isFounder}
           />
         </section>
+        </Reveal>
 
         {/* DAG-RITME */}
+        <Reveal delay={375}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -534,8 +546,10 @@ export function MiniElevaBusinessContent({
             isFounder={isFounder}
           />
         </section>
+        </Reveal>
 
         {/* AFSLUITEND */}
+        <Reveal delay={450}>
         <section className="card border-l-4 border-cm-gold/60 space-y-2">
           <EditableTekst
             namespace={NS}
@@ -574,6 +588,7 @@ export function MiniElevaBusinessContent({
             </Link>
           </div>
         </section>
+        </Reveal>
 
         <Link
           href={terugHref}

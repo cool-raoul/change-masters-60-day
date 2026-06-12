@@ -6,6 +6,7 @@
 // in WhatsApp en LinkedIn.
 
 import type { Metadata } from "next";
+import { Reveal } from "@/components/ui/Reveal";
 
 export const dynamic = "force-static";
 
@@ -118,6 +119,7 @@ export default function ZestigDagRunPagina() {
       <div className="mx-auto max-w-6xl px-4 py-8 sm:py-12 lg:py-16">
 
         {/* HEADER */}
+        <Reveal richting="fade">
         <header className="rounded-2xl bg-[#0d0d0d] px-6 py-7 text-center text-white sm:px-10 sm:py-9">
           <div className="text-xs font-bold uppercase tracking-[0.25em] text-[#c9a961] sm:text-sm">
             Project Meer Tijd en Vrijheid
@@ -130,13 +132,14 @@ export default function ZestigDagRunPagina() {
             Er ligt een compleet systeem klaar. Met support, tools, training en begeleiding.
           </p>
         </header>
+        </Reveal>
 
         {/* 6 INFO-BLOKKEN */}
         <section className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {BLOKKEN.map((b) => (
+          {BLOKKEN.map((b, i) => (
+            <Reveal key={b.titel} richting="up" delay={Math.min(i * 75, 600)} className="h-full">
             <article
-              key={b.titel}
-              className="rounded-xl border border-[#c9a961] bg-white p-5 shadow-sm"
+              className="h-full rounded-xl border border-[#c9a961] bg-white p-5 shadow-sm"
             >
               <h3 className="border-b border-[#c9a961] pb-2 text-base font-extrabold">
                 {b.titel}
@@ -150,10 +153,12 @@ export default function ZestigDagRunPagina() {
                 ))}
               </ul>
             </article>
+            </Reveal>
           ))}
         </section>
 
         {/* MECHANIEK */}
+        <Reveal richting="up">
         <section className="mt-6 rounded-xl border border-[#c9a961] bg-white p-5 sm:p-7">
           <h3 className="border-b border-[#c9a961] pb-2 text-base font-extrabold sm:text-lg">
             Hoe het Vergoedingsplan werkt: de mechaniek
@@ -191,8 +196,10 @@ export default function ZestigDagRunPagina() {
             </p>
           </div>
         </section>
+        </Reveal>
 
         {/* CTA + FOOTER */}
+        <Reveal richting="up">
         <section className="mt-6 rounded-t-xl bg-[#0d0d0d] px-6 py-5 text-center text-white sm:px-10 sm:py-7">
           <h3 className="text-base font-extrabold leading-snug sm:text-lg">
             Bouw samen intensief aan je fundament en pluk nog jarenlang de vruchten.
@@ -211,6 +218,7 @@ export default function ZestigDagRunPagina() {
         <div className="rounded-b-xl bg-[#0d0d0d] px-6 py-3 text-center text-[10px] italic leading-relaxed text-gray-500 sm:px-10 sm:text-xs">
           Er worden geen garanties of toezeggingen gedaan over inkomen. Resultaat hangt af van persoonlijke inzet, het aantal actieve klanten en partners in je groep, het Vergoedingsplan, en marktomstandigheden. Alle inkomsten zijn het resultaat van de verkoop van producten. Geen inkoop, geen verkoopdruk, geen investeringen of gegarandeerde resultaten. De producten zijn voedingssupplementen, geen geneesmiddelen. Geen medische claims.
         </div>
+        </Reveal>
 
       </div>
     </div>

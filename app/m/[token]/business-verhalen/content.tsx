@@ -3,6 +3,7 @@ import { MediaBlokken } from "@/components/cms/MediaBlokken";
 import type { Blok } from "@/lib/cms/pagina-blokken";
 import { EditModeProvider } from "@/components/cms/EditModeContext";
 import { EditableTekst, EditableBlok } from "@/components/cms/EditableTekst";
+import { Reveal } from "@/components/ui/Reveal";
 
 // ============================================================
 // Business-verhalen: ervaringen van mensen die je voorgingen met de
@@ -51,6 +52,7 @@ export function MiniElevaBusinessVerhalenContent({
           ← Terug
         </Link>
 
+        <Reveal richting="fade">
         <div>
           <EditableTekst
             namespace={NS}
@@ -84,6 +86,7 @@ export function MiniElevaBusinessVerhalenContent({
             hint="Intro-paragraaf onder de titel"
           />
         </div>
+        </Reveal>
 
         <MediaBlokken
           paginaNamespace={NS}
@@ -94,6 +97,7 @@ export function MiniElevaBusinessVerhalenContent({
         />
 
         {/* EERSTE 3-WEG */}
+        <Reveal delay={75}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -124,8 +128,10 @@ export function MiniElevaBusinessVerhalenContent({
             isFounder={isFounder}
           />
         </section>
+        </Reveal>
 
         {/* EERSTE KLANTEN */}
+        <Reveal delay={150}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -156,8 +162,10 @@ export function MiniElevaBusinessVerhalenContent({
             isFounder={isFounder}
           />
         </section>
+        </Reveal>
 
         {/* EERSTE MEMBER */}
+        <Reveal delay={225}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -188,8 +196,10 @@ export function MiniElevaBusinessVerhalenContent({
             isFounder={isFounder}
           />
         </section>
+        </Reveal>
 
         {/* BIJVERDIENSTE */}
+        <Reveal delay={300}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -220,8 +230,10 @@ export function MiniElevaBusinessVerhalenContent({
             isFounder={isFounder}
           />
         </section>
+        </Reveal>
 
         {/* VRIJHEID */}
+        <Reveal delay={375}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -252,8 +264,10 @@ export function MiniElevaBusinessVerhalenContent({
             isFounder={isFounder}
           />
         </section>
+        </Reveal>
 
         {/* SPONSOR */}
+        <Reveal delay={450}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -284,8 +298,10 @@ export function MiniElevaBusinessVerhalenContent({
             isFounder={isFounder}
           />
         </section>
+        </Reveal>
 
         {/* TEGENSLAG */}
+        <Reveal delay={525}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -316,6 +332,7 @@ export function MiniElevaBusinessVerhalenContent({
             isFounder={isFounder}
           />
         </section>
+        </Reveal>
 
         {/* DOORBRAAK */}
         <section className="card space-y-3">

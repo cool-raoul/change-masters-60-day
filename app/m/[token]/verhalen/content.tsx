@@ -3,6 +3,7 @@ import { MediaBlokken } from "@/components/cms/MediaBlokken";
 import type { Blok } from "@/lib/cms/pagina-blokken";
 import { EditModeProvider } from "@/components/cms/EditModeContext";
 import { EditableTekst, EditableBlok } from "@/components/cms/EditableTekst";
+import { Reveal } from "@/components/ui/Reveal";
 
 // ============================================================
 // Gedeelde content-component voor de succesverhalen-bibliotheek.
@@ -47,6 +48,7 @@ export function MiniElevaVerhalenContent({
           ← Terug
         </Link>
 
+        <Reveal richting="fade">
         <div>
           <EditableTekst
             namespace={NS}
@@ -80,6 +82,7 @@ export function MiniElevaVerhalenContent({
             hint="Intro-paragraaf onder de titel"
           />
         </div>
+        </Reveal>
 
         <MediaBlokken
           paginaNamespace={NS}
@@ -90,6 +93,7 @@ export function MiniElevaVerhalenContent({
         />
 
         {/* SLAAP */}
+        <Reveal delay={75}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -120,8 +124,10 @@ export function MiniElevaVerhalenContent({
             isFounder={isFounder}
           />
         </section>
+        </Reveal>
 
         {/* ENERGIE */}
+        <Reveal delay={150}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -152,8 +158,10 @@ export function MiniElevaVerhalenContent({
             isFounder={isFounder}
           />
         </section>
+        </Reveal>
 
         {/* HORMONEN EN OVERGANG */}
+        <Reveal delay={225}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -184,8 +192,10 @@ export function MiniElevaVerhalenContent({
             isFounder={isFounder}
           />
         </section>
+        </Reveal>
 
         {/* VEL */}
+        <Reveal delay={300}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -216,8 +226,10 @@ export function MiniElevaVerhalenContent({
             isFounder={isFounder}
           />
         </section>
+        </Reveal>
 
         {/* LICHTER */}
+        <Reveal delay={375}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -248,8 +260,10 @@ export function MiniElevaVerhalenContent({
             isFounder={isFounder}
           />
         </section>
+        </Reveal>
 
         {/* RUST */}
+        <Reveal delay={450}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -280,8 +294,10 @@ export function MiniElevaVerhalenContent({
             isFounder={isFounder}
           />
         </section>
+        </Reveal>
 
         {/* DARMEN */}
+        <Reveal delay={525}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -312,6 +328,7 @@ export function MiniElevaVerhalenContent({
             isFounder={isFounder}
           />
         </section>
+        </Reveal>
 
         {/* AFSLUITEND */}
         <section className="card border-l-4 border-cm-gold/60 space-y-2">

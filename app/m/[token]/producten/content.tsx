@@ -3,6 +3,7 @@ import { MediaBlokken } from "@/components/cms/MediaBlokken";
 import type { Blok } from "@/lib/cms/pagina-blokken";
 import { EditModeProvider } from "@/components/cms/EditModeContext";
 import { EditableTekst, EditableBlok } from "@/components/cms/EditableTekst";
+import { Reveal } from "@/components/ui/Reveal";
 
 // ============================================================
 // Gedeelde content-component voor /m/[token]/producten (prospect-view,
@@ -53,6 +54,7 @@ export function MiniElevaProductenContent({
           ← Terug
         </Link>
 
+        <Reveal richting="fade">
         <div>
           <EditableTekst
             namespace={NS}
@@ -87,6 +89,7 @@ export function MiniElevaProductenContent({
             hint="Intro-paragraaf direct onder de titel"
           />
         </div>
+        </Reveal>
 
         <MediaBlokken
           paginaNamespace={NS}
@@ -97,6 +100,7 @@ export function MiniElevaProductenContent({
         />
 
         {/* BASIS-SUPPLEMENTEN */}
+        <Reveal delay={75}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -150,8 +154,10 @@ export function MiniElevaProductenContent({
             isFounder={isFounder}
           />
         </section>
+        </Reveal>
 
         {/* OMEGA EN ANTIOXIDANTEN */}
+        <Reveal delay={150}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -193,8 +199,10 @@ export function MiniElevaProductenContent({
             isFounder={isFounder}
           />
         </section>
+        </Reveal>
 
         {/* EIWIT EN SHAKES */}
+        <Reveal delay={225}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -236,8 +244,10 @@ export function MiniElevaProductenContent({
             isFounder={isFounder}
           />
         </section>
+        </Reveal>
 
         {/* METABOLISME EN LICHTER VOELEN */}
+        <Reveal delay={300}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -280,8 +290,10 @@ export function MiniElevaProductenContent({
             isFounder={isFounder}
           />
         </section>
+        </Reveal>
 
         {/* PROGRAMMA'S */}
+        <Reveal delay={375}>
         <section className="card space-y-3">
           <EditableTekst
             namespace={NS}
@@ -433,8 +445,10 @@ export function MiniElevaProductenContent({
             isFounder={isFounder}
           />
         </section>
+        </Reveal>
 
         {/* DOORVRAGEN */}
+        <Reveal delay={450}>
         <section className="card border-l-4 border-cm-gold/60 space-y-2">
           <EditableTekst
             namespace={NS}
@@ -473,6 +487,7 @@ export function MiniElevaProductenContent({
             </Link>
           </div>
         </section>
+        </Reveal>
 
         <Link
           href={terugHref}

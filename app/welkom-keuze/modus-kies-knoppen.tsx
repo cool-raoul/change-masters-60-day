@@ -4,6 +4,7 @@ import { useState, ReactNode, Children, isValidElement } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
+import { Reveal } from "@/components/ui/Reveal";
 
 // ============================================================
 // ModusKiesKnoppen, drie grote keuze-tegels (Sprint / Core / Pro) op
@@ -68,59 +69,65 @@ export function ModusKiesKnoppen({ userId, children }: Props) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <Reveal richting="up" delay={0} className="h-full">
       <button
         type="button"
         onClick={() => kies("sprint")}
         disabled={!!bezig}
-        className="card text-left border-cm-border hover:border-cm-gold-dim hover:glow-gold-soft transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
+        className="card w-full h-full text-left border-cm-border hover:glow-gold-soft group transition-all duration-300 hover:border-cm-gold/60 hover:-translate-y-1 hover:shadow-gold disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <div className="text-4xl mb-3">🚀</div>
+        <div className="text-4xl mb-3 origin-left transition-transform duration-300 group-hover:scale-110">🚀</div>
         <h2 className="font-serif-warm text-cm-gold text-xl mb-2 leading-snug">
           {slots["sprint-titel"]}
         </h2>
         <div className="text-cm-white/80 text-sm leading-relaxed mb-4">
           {slots["sprint-uitleg"]}
         </div>
-        <span className="text-cm-gold text-sm font-medium group-hover:translate-x-1 inline-block transition-transform">
+        <span className="text-cm-gold text-sm font-medium group-hover:translate-x-1.5 inline-block transition-transform duration-300">
           {bezig === "sprint" ? "Bezig..." : "Kies deze route →"}
         </span>
       </button>
+      </Reveal>
 
+      <Reveal richting="up" delay={75} className="h-full">
       <button
         type="button"
         onClick={() => kies("core")}
         disabled={!!bezig}
-        className="card text-left border-cm-border hover:border-cm-gold-dim hover:glow-gold-soft transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
+        className="card w-full h-full text-left border-cm-border hover:glow-gold-soft group transition-all duration-300 hover:border-cm-gold/60 hover:-translate-y-1 hover:shadow-gold disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <div className="text-4xl mb-3">🚶</div>
+        <div className="text-4xl mb-3 origin-left transition-transform duration-300 group-hover:scale-110">🚶</div>
         <h2 className="font-serif-warm text-cm-gold text-xl mb-2 leading-snug">
           {slots["core-titel"]}
         </h2>
         <div className="text-cm-white/80 text-sm leading-relaxed mb-4">
           {slots["core-uitleg"]}
         </div>
-        <span className="text-cm-gold text-sm font-medium group-hover:translate-x-1 inline-block transition-transform">
+        <span className="text-cm-gold text-sm font-medium group-hover:translate-x-1.5 inline-block transition-transform duration-300">
           {bezig === "core" ? "Bezig..." : "Kies deze route →"}
         </span>
       </button>
+      </Reveal>
 
+      <Reveal richting="up" delay={150} className="h-full">
       <button
         type="button"
         onClick={() => kies("pro")}
         disabled={!!bezig}
-        className="card text-left border-cm-border hover:border-cm-gold-dim hover:glow-gold-soft transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
+        className="card w-full h-full text-left border-cm-border hover:glow-gold-soft group transition-all duration-300 hover:border-cm-gold/60 hover:-translate-y-1 hover:shadow-gold disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <div className="text-4xl mb-3">💼</div>
+        <div className="text-4xl mb-3 origin-left transition-transform duration-300 group-hover:scale-110">💼</div>
         <h2 className="font-serif-warm text-cm-gold text-xl mb-2 leading-snug">
           {slots["pro-titel"]}
         </h2>
         <div className="text-cm-white/80 text-sm leading-relaxed mb-4">
           {slots["pro-uitleg"]}
         </div>
-        <span className="text-cm-gold text-sm font-medium group-hover:translate-x-1 inline-block transition-transform">
+        <span className="text-cm-gold text-sm font-medium group-hover:translate-x-1.5 inline-block transition-transform duration-300">
           {bezig === "pro" ? "Bezig..." : "Kies deze route →"}
         </span>
       </button>
+      </Reveal>
     </div>
   );
 }

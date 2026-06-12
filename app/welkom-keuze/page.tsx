@@ -6,6 +6,7 @@ import { haalTekstOverrides } from "@/lib/cms/tekst-overrides";
 import { MODUS_WELKOMSTFILM_SLUGS } from "@/lib/films/embed";
 import { ModusKiesKnoppen } from "./modus-kies-knoppen";
 import { MediaBlokkenClient } from "@/components/cms/MediaBlokkenClient";
+import { Reveal } from "@/components/ui/Reveal";
 
 // ============================================================
 // /welkom-keuze, eenmalige route-keuze voor nieuwe gebruikers
@@ -91,6 +92,7 @@ export default async function WelkomKeuzePagina() {
         isFounder={isFounder}
       />
 
+      <Reveal richting="fade">
       <div>
         <p className="text-cm-white/60 text-sm italic">
           {naam ? `Mooi dat je er bent, ${naam},` : "Mooi dat je er bent,"}
@@ -119,6 +121,7 @@ export default async function WelkomKeuzePagina() {
           hint="Korte introductie boven de twee keuze-tegels."
         />
       </div>
+      </Reveal>
 
       <ModusKiesKnoppen userId={user.id}>
         <div data-slot="sprint-titel">
@@ -195,6 +198,7 @@ export default async function WelkomKeuzePagina() {
         </div>
       </ModusKiesKnoppen>
 
+      <Reveal delay={300}>
       <div className="card border-gold-subtle text-center">
         <EditableTekst
           namespace="welkom-keuze"
@@ -209,6 +213,7 @@ export default async function WelkomKeuzePagina() {
           hint="Geruststellende tekst onderaan voor wie twijfelt."
         />
       </div>
+      </Reveal>
     </div>
   );
 }

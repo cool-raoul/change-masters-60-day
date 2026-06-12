@@ -4,6 +4,7 @@ import KopieerLink from "@/components/team/KopieerLink";
 import { TeamBoom } from "@/components/team/TeamBoom";
 import { PremiumToggleKnop } from "@/components/team/PremiumToggleKnop";
 import { RolToggleKnop } from "@/components/team/RolToggleKnop";
+import { Reveal } from "@/components/ui/Reveal";
 import Link from "next/link";
 import { getServerTaal, v } from "@/lib/i18n/server";
 import { startdatumVoorModus } from "@/lib/playbook/dag-teller";
@@ -212,23 +213,27 @@ export default async function TeamPagina({ searchParams }: { searchParams: { lid
       <Link href="/dashboard" className="text-cm-white opacity-60 hover:opacity-100 text-sm flex items-center gap-1 mb-4">
         {v("algemeen.terug", taal)}
       </Link>
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-display font-bold text-cm-white">
-            {v("team.titel", taal)}
-          </h1>
-          <p className="text-cm-white mt-1">{dagLabel}</p>
+      <Reveal richting="fade">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-display font-bold text-cm-white">
+              {v("team.titel", taal)}
+            </h1>
+            <p className="text-cm-white mt-1">{dagLabel}</p>
+          </div>
         </div>
-      </div>
+      </Reveal>
 
       {/* Uitnodigingslink */}
-      <div className="card border-gold-subtle">
-        <h2 className="text-cm-gold font-semibold mb-2">{v("team.uitnodigen", taal)}</h2>
-        <p className="text-cm-white text-sm mb-3">
-          {v("team.uitnodiging_subtitel", taal)}
-        </p>
-        <KopieerLink userId={user.id} />
-      </div>
+      <Reveal delay={75}>
+        <div className="card border-gold-subtle">
+          <h2 className="text-cm-gold font-semibold mb-2">{v("team.uitnodigen", taal)}</h2>
+          <p className="text-cm-white text-sm mb-3">
+            {v("team.uitnodiging_subtitel", taal)}
+          </p>
+          <KopieerLink userId={user.id} />
+        </div>
+      </Reveal>
 
       {/* Leider bevoegdheden */}
       {isLeider && (
@@ -261,6 +266,7 @@ export default async function TeamPagina({ searchParams }: { searchParams: { lid
 
       {/* Statistieken */}
       {totaalLeden > 0 && (
+        <Reveal delay={150}>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div className="card text-center">
             <div className="text-2xl font-bold text-cm-gold">{teamboom.length}</div>
@@ -281,10 +287,12 @@ export default async function TeamPagina({ searchParams }: { searchParams: { lid
             <div className="text-xs text-cm-white mt-1">{v("team.duplicatie", taal)}</div>
           </div>
         </div>
+        </Reveal>
       )}
 
       {/* ONBOARDING VOORTGANG PER TEAMLID */}
       {directeLeden.length > 0 && (
+        <Reveal delay={225}>
         <div className="card">
           <h2 className="text-sm font-semibold text-cm-gold uppercase tracking-wider mb-4">
             📋 Onboarding voortgang, direct team
@@ -434,10 +442,12 @@ export default async function TeamPagina({ searchParams }: { searchParams: { lid
             />
           )}
         </div>
+        </Reveal>
       )}
 
       {/* Level overzicht */}
       {aantalLevels > 0 && (
+        <Reveal delay={300}>
         <div className="card">
           <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider mb-3">
             {v("team.per_level", taal)}
@@ -459,10 +469,12 @@ export default async function TeamPagina({ searchParams }: { searchParams: { lid
             ))}
           </div>
         </div>
+        </Reveal>
       )}
 
       {/* Team statistieken vandaag */}
       {isLeider && teamStats.length > 0 && (
+        <Reveal delay={375}>
         <div className="card">
           <h2 className="text-sm font-semibold text-cm-gold uppercase tracking-wider mb-4">
             📈 Team activiteit vandaag
@@ -503,26 +515,31 @@ export default async function TeamPagina({ searchParams }: { searchParams: { lid
             ))}
           </div>
         </div>
+        </Reveal>
       )}
 
       {/* Stamboom */}
       {totaalLeden === 0 ? (
-        <div className="card text-center py-16">
-          <div className="text-5xl mb-4">👥</div>
-          <p className="text-cm-white font-semibold mb-2">
-            {v("team.geen_leden", taal)}
-          </p>
-          <p className="text-cm-white text-sm">
-            {v("team.geen_uitleg", taal)}
-          </p>
-        </div>
+        <Reveal delay={150}>
+          <div className="card text-center py-16">
+            <div className="text-5xl mb-4">👥</div>
+            <p className="text-cm-white font-semibold mb-2">
+              {v("team.geen_leden", taal)}
+            </p>
+            <p className="text-cm-white text-sm">
+              {v("team.geen_uitleg", taal)}
+            </p>
+          </div>
+        </Reveal>
       ) : (
+        <Reveal delay={450}>
         <div className="card">
           <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider mb-4">
             {v("team.structuur", taal)}
           </h2>
           <TeamBoom leden={teamboom} />
         </div>
+        </Reveal>
       )}
     </div>
   );

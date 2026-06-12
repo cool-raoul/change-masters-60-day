@@ -29,6 +29,7 @@ import { TijdslijnStrip } from "@/components/layout/TijdslijnStrip";
 import { MijlpaalDetector } from "@/components/celebrations/MijlpaalDetector";
 import { EerstePartnerVieringTegel } from "@/components/dashboard/EerstePartnerVieringTegel";
 import { AvatarFoto } from "@/components/ui/AvatarFoto";
+import { Reveal } from "@/components/ui/Reveal";
 
 const DATE_LOCALES: Record<string, Locale> = { nl, en: enUS, fr, es, de, pt };
 
@@ -543,6 +544,7 @@ export default async function DashboardPagina({
       />
       {/* Persoonlijke welkom in mockup-4 stijl: italic groet + serif heading
           met dag-nummer. Daaronder de datum, dempler. */}
+      <Reveal richting="fade">
       <div>
         <p className="text-cm-white/60 text-sm italic">
           {dag === 1
@@ -574,6 +576,7 @@ export default async function DashboardPagina({
           {format(new Date(), "EEEE d MMMM yyyy", { locale: datumLocale })}
         </p>
       </div>
+      </Reveal>
 
       {/* Eerste-partner-viering: eenmalige tegel die verschijnt zodra
           de member zijn eerste directe partner heeft, met confetti
@@ -591,6 +594,7 @@ export default async function DashboardPagina({
           + naam wie jouw sponsor is. Geen 'kijkt mee'-tekst, dat voelde als
           surveillance. Klik = naar team-pagina. */}
       {sponsorNaamDash && (
+        <Reveal richting="left" delay={75}>
         <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-cm-border bg-cm-surface-2/40 glow-gold-soft">
           <AvatarFoto naam={sponsorNaamDash} fotoUrl={sponsorFotoDash} maat="sm" />
           <div className="flex-1 min-w-0 text-cm-white/80 text-sm leading-snug">
@@ -598,10 +602,12 @@ export default async function DashboardPagina({
             <span className="text-cm-white/60">is je sponsor.</span>
           </div>
         </div>
+        </Reveal>
       )}
 
       {/* Voortgang als subtiele tijdslijn-strip. Sprint: 60 dagen.
           Core: 40 dagen opstart (lifetime daarna heeft geen einde). */}
+      <Reveal delay={150}>
       {huidigeModus === "core" ? (
         <div>
           <TijdslijnStrip
@@ -633,11 +639,13 @@ export default async function DashboardPagina({
           </div>
         </div>
       )}
+      </Reveal>
 
       {/* Reminder-tegel: open admin-stappen van VORIGE dagen die nog
           niet zijn afgevinkt. Verschijnt elke dag opnieuw zolang er
           nog admin-werk te doen is. */}
       {openAdminReminders.length > 0 && (
+        <Reveal delay={225}>
         <div className="card border-l-4 border-amber-500">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-semibold text-amber-300 uppercase tracking-wider flex items-center gap-2">
@@ -669,6 +677,7 @@ export default async function DashboardPagina({
             ))}
           </div>
         </div>
+        </Reveal>
       )}
 
       {/* Auto-redirect bij eerste bezoek per dag → /vandaag (guided
@@ -687,10 +696,11 @@ export default async function DashboardPagina({
           taken hebt gedaan. Verbergt automatisch als alles voltooid. */}
       {huidigeDagData &&
         huidigeDagVoltooidIds.length < huidigeDagData.vandaagDoen.length && (
+          <Reveal richting="scale" delay={300}>
           <div className="space-y-2">
             <Link
               href="/vandaag"
-              className="block rounded-xl bg-gradient-to-br from-cm-gold/20 to-cm-gold/5 border-2 border-cm-gold/40 px-5 py-4 hover:border-cm-gold transition-colors"
+              className="block rounded-xl bg-gradient-to-br from-cm-gold/20 to-cm-gold/5 border-2 border-cm-gold/40 px-5 py-4 group transition-all duration-300 hover:border-cm-gold hover:-translate-y-1 hover:shadow-gold"
             >
               <div className="flex items-center justify-between gap-3 flex-wrap">
                 <div>
@@ -706,7 +716,7 @@ export default async function DashboardPagina({
                     stap voor stap →
                   </p>
                 </div>
-                <span className="text-cm-gold font-bold text-lg">→</span>
+                <span className="text-cm-gold font-bold text-lg transition-transform duration-300 group-hover:translate-x-1.5">→</span>
               </div>
             </Link>
             <div className="flex justify-end">
@@ -717,6 +727,7 @@ export default async function DashboardPagina({
               />
             </div>
           </div>
+          </Reveal>
         )}
 
       {/* Academy-tegel: pas zichtbaar NA dag 21. Idee (afspraak Raoul,
@@ -727,10 +738,10 @@ export default async function DashboardPagina({
       {dag > 21 && (
         <Link
           href="/academy/social-media"
-          className="block rounded-xl bg-gradient-to-br from-purple-900/30 to-cm-surface border-2 border-purple-500/40 px-5 py-4 hover:border-purple-400/60 transition-colors"
+          className="block rounded-xl bg-gradient-to-br from-purple-900/30 to-cm-surface border-2 border-purple-500/40 px-5 py-4 group transition-all duration-300 hover:border-purple-400/60 hover:-translate-y-1 hover:shadow-gold"
         >
           <div className="flex items-start gap-3">
-            <span className="text-3xl flex-shrink-0">📚</span>
+            <span className="text-3xl flex-shrink-0 transition-transform duration-300 group-hover:scale-110">📚</span>
             <div className="flex-1">
               <p className="text-purple-300 text-xs font-semibold uppercase tracking-wider">
                 Klaar voor verdieping?
@@ -743,7 +754,7 @@ export default async function DashboardPagina({
                 aanwezigheid op socials, vind nieuwe mensen zonder pitches.
               </p>
             </div>
-            <span className="text-purple-300 font-bold text-lg self-center">→</span>
+            <span className="text-purple-300 font-bold text-lg self-center transition-transform duration-300 group-hover:translate-x-1.5">→</span>
           </div>
         </Link>
       )}
@@ -764,6 +775,7 @@ export default async function DashboardPagina({
       {/* Streak + mijlpaal-vieringen. Compact, alleen zichtbaar bij
           relevante getallen (geen lege tegels). */}
       {(streak >= 2 || week1Klaar || week2Klaar || week3Klaar) && (
+        <Reveal>
         <div className="flex flex-wrap gap-2">
           {streak >= 2 && (
             <div className="flex-1 min-w-[160px] rounded-lg border border-orange-500/40 bg-orange-900/20 px-3 py-2.5">
@@ -806,6 +818,7 @@ export default async function DashboardPagina({
             </div>
           ) : null}
         </div>
+        </Reveal>
       )}
 
       {/* Tester-toolbar zit nu bovenaan in FounderTopStrip (zie AppShell),
@@ -846,6 +859,7 @@ export default async function DashboardPagina({
           automatisch gevuld door pipeline-veranderingen ipv handmatig
           tellen op het dashboard. */}
 
+      <Reveal>
       <div className="space-y-4">
           {/* WHY kaart, ingeklapt (details/summary), user klapt uit om te lezen */}
           {why?.why_samenvatting && (
@@ -932,14 +946,16 @@ export default async function DashboardPagina({
             )}
           </div>
       </div>
+      </Reveal>
 
       {/* Instellingen, compacte status-regel. Eén bron van waarheid (/instellingen). */}
+      <Reveal>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 opacity-60 hover:opacity-100 transition-opacity">
         <Link
           href="/instellingen"
-          className="card flex items-center gap-3 py-3 hover:border-cm-gold-dim transition-colors"
+          className="card flex items-center gap-3 py-3 group transition-all duration-300 hover:border-cm-gold/60 hover:-translate-y-1 hover:shadow-gold"
         >
-          <span className="text-lg">🔔</span>
+          <span className="text-lg transition-transform duration-300 group-hover:scale-110">🔔</span>
           <div className="flex-1 min-w-0">
             <p className="text-cm-white font-semibold text-sm">
               {v("push.master_label", taal)}
@@ -950,22 +966,23 @@ export default async function DashboardPagina({
                 : v("algemeen.uit", taal)}
             </p>
           </div>
-          <span className="text-cm-gold text-xs">→</span>
+          <span className="text-cm-gold text-xs transition-transform duration-300 group-hover:translate-x-1.5">→</span>
         </Link>
         <Link
           href="/instellingen"
-          className="card flex items-center gap-3 py-3 hover:border-cm-gold-dim transition-colors"
+          className="card flex items-center gap-3 py-3 group transition-all duration-300 hover:border-cm-gold/60 hover:-translate-y-1 hover:shadow-gold"
         >
-          <span className="text-lg">📧</span>
+          <span className="text-lg transition-transform duration-300 group-hover:scale-110">📧</span>
           <div className="flex-1 min-w-0">
             <p className="text-cm-white font-semibold text-sm">E-mail herinneringen</p>
             <p className="text-cm-gold text-xs">
               Instellen via Instellingen
             </p>
           </div>
-          <span className="text-cm-gold text-xs">→</span>
+          <span className="text-cm-gold text-xs transition-transform duration-300 group-hover:translate-x-1.5">→</span>
         </Link>
       </div>
+      </Reveal>
     </div>
   );
 }

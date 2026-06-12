@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getServerTaal, v } from "@/lib/i18n/server";
+import { Reveal } from "@/components/ui/Reveal";
 import { StatsOverzicht } from "@/components/statistieken/StatsOverzicht";
 import { WekelijkseReviewFormulier } from "@/components/statistieken/WekelijkseReviewFormulier";
 import { MentorStatsAnalyseKnop } from "@/components/statistieken/MentorStatsAnalyseKnop";
@@ -111,19 +112,23 @@ export default async function StatistiekenPagina() {
         {v("algemeen.terug", taal)}
       </Link>
 
-      <div>
-        <h1 className="text-2xl font-display font-bold text-cm-white">
-          {v("stats.titel", taal)}
-        </h1>
-        <p className="text-cm-white mt-1 opacity-70">
-          {v("stats.subtitel", taal)}, {dagLabel}
-        </p>
-      </div>
+      <Reveal richting="fade">
+        <div>
+          <h1 className="text-2xl font-display font-bold text-cm-white">
+            {v("stats.titel", taal)}
+          </h1>
+          <p className="text-cm-white mt-1 opacity-70">
+            {v("stats.subtitel", taal)}, {dagLabel}
+          </p>
+        </div>
+      </Reveal>
 
       {/* Mentor-analyse-knop: prominentste plek, bovenaan. Haalt
           alle cijfers op + bouwt rijke prompt naar Mentor voor
           diepgaande analyse + concreet advies. */}
-      <MentorStatsAnalyseKnop />
+      <Reveal delay={75}>
+        <MentorStatsAnalyseKnop />
+      </Reveal>
 
       {/* Wekelijkse review-formulier, drie vragen + sponsor-deel-keuze.
           Week-nummer berekend op basis van de huidige run-dag (dag 7,
@@ -131,15 +136,18 @@ export default async function StatistiekenPagina() {
           op andere dagen mag de member 'm gebruiken). */}
       <WekelijkseReviewFormulier weekNummer={Math.max(1, Math.ceil(dag / 7))} />
 
-      <StatsOverzicht
-        alleStats={alleStats || []}
-        pipelineCounts={pipelineCounts}
-        dag={dag}
-      />
+      <Reveal richting="fade" delay={150}>
+        <StatsOverzicht
+          alleStats={alleStats || []}
+          pipelineCounts={pipelineCounts}
+          dag={dag}
+        />
+      </Reveal>
 
       {/* Freebie-stats: prestaties van de freebies die deze member
           deelt. Productadvies-vragenlijst en de twee score-bots zijn
           voor iedereen zichtbaar. */}
+      <Reveal delay={225}>
       <section className="space-y-4">
         <div>
           <h2 className="text-xl font-display font-bold text-cm-white">
@@ -164,6 +172,7 @@ export default async function StatistiekenPagina() {
           kleur="rose"
         />
       </section>
+      </Reveal>
     </div>
   );
 }

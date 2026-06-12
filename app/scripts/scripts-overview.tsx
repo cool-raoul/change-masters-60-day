@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useTaal } from "@/lib/i18n/TaalContext";
+import { Reveal } from "@/components/ui/Reveal";
 import type { ScriptMetMeta } from "@/lib/scripts/overrides";
 
 // ============================================================
@@ -72,12 +73,14 @@ export function ScriptsOverview({
       >
         {v("algemeen.terug")}
       </Link>
-      <div>
-        <h1 className="text-2xl font-display font-bold text-cm-white">
-          {v("scripts.titel")}
-        </h1>
-        <p className="text-cm-white mt-1">{v("scripts.subtitel")}</p>
-      </div>
+      <Reveal richting="fade">
+        <div>
+          <h1 className="text-2xl font-display font-bold text-cm-white">
+            {v("scripts.titel")}
+          </h1>
+          <p className="text-cm-white mt-1">{v("scripts.subtitel")}</p>
+        </div>
+      </Reveal>
 
       {isFounder && (
         <div className="rounded-lg border border-cm-gold/40 bg-cm-gold/5 px-4 py-3">
@@ -103,23 +106,26 @@ export function ScriptsOverview({
       />
 
       {/* Categorie filters */}
-      <div className="flex gap-2 flex-wrap">
-        {Object.entries(CATEGORIE_LABELS).map(([cat, label]) => (
-          <button
-            key={cat}
-            onClick={() => setActieveCategorie(cat)}
-            className={`text-sm px-4 py-2 rounded-lg transition-colors ${
-              actieveCategorie === cat
-                ? "bg-cm-gold text-cm-black font-semibold"
-                : "border border-cm-border text-cm-white hover:text-cm-white hover:border-cm-gold-dim"
-            }`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+      <Reveal delay={75}>
+        <div className="flex gap-2 flex-wrap">
+          {Object.entries(CATEGORIE_LABELS).map(([cat, label]) => (
+            <button
+              key={cat}
+              onClick={() => setActieveCategorie(cat)}
+              className={`text-sm px-4 py-2 rounded-lg transition-colors ${
+                actieveCategorie === cat
+                  ? "bg-cm-gold text-cm-black font-semibold"
+                  : "border border-cm-border text-cm-white hover:text-cm-white hover:border-cm-gold-dim"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </Reveal>
 
       {/* Scripts */}
+      <Reveal delay={150}>
       <div className="space-y-4">
         {gefilterd.length === 0 ? (
           <div className="card text-center py-12">
@@ -139,6 +145,7 @@ export function ScriptsOverview({
           ))
         )}
       </div>
+      </Reveal>
     </div>
   );
 }

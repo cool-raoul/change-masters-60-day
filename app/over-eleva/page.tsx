@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { Reveal } from "@/components/ui/Reveal";
 
 // ============================================================
 // /over-eleva, features-overzicht in jip-en-janneketaal.
@@ -378,17 +379,20 @@ export default async function OverElevaPagina() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-3xl font-display font-bold text-cm-white">
-          ELEVA, wat zit erin en wat heb je eraan?
-        </h1>
-        <p className="text-cm-white opacity-70 mt-2 leading-relaxed">
-          Alle functies van ELEVA op een rij, in normale taal. Zodat je weet
-          wat het systeem voor je doet en waar je wat kunt vinden, handig
-          voor de pilot.
-        </p>
-      </div>
+      <Reveal richting="fade">
+        <div>
+          <h1 className="text-3xl font-display font-bold text-cm-white">
+            ELEVA, wat zit erin en wat heb je eraan?
+          </h1>
+          <p className="text-cm-white opacity-70 mt-2 leading-relaxed">
+            Alle functies van ELEVA op een rij, in normale taal. Zodat je weet
+            wat het systeem voor je doet en waar je wat kunt vinden, handig
+            voor de pilot.
+          </p>
+        </div>
+      </Reveal>
 
+      <Reveal delay={75}>
       <div className="card border-gold-subtle">
         <h2 className="text-cm-gold font-semibold text-sm uppercase tracking-wider mb-2">
           Korte samenvatting
@@ -431,7 +435,9 @@ export default async function OverElevaPagina() {
           )}
         </ul>
       </div>
+      </Reveal>
 
+      <Reveal delay={150}>
       <div className="space-y-3">
         {zichtbareFeatures.map((f, i) => (
           <div key={i} className="card space-y-2">
@@ -464,7 +470,9 @@ export default async function OverElevaPagina() {
           </div>
         ))}
       </div>
+      </Reveal>
 
+      <Reveal>
       <div className="card border-gold-subtle space-y-2">
         <h2 className="text-cm-gold font-semibold text-sm uppercase tracking-wider">
           🎙️ Alle spraak-commando's
@@ -481,7 +489,9 @@ export default async function OverElevaPagina() {
           Bekijk alle spraak-commando's →
         </Link>
       </div>
+      </Reveal>
 
+      <Reveal delay={75}>
       <div className="card border-gold-subtle text-center space-y-2">
         <p className="text-cm-white text-sm">
           Vragen, bug-rapporten, of woordkeus die niet lekker voelt?
@@ -491,6 +501,7 @@ export default async function OverElevaPagina() {
           systeem live up-to-date.
         </p>
       </div>
+      </Reveal>
 
       <div className="text-center pt-2">
         <Link href="/dashboard" className="btn-secondary text-sm">
