@@ -67,6 +67,17 @@ pilot-waardig; de gaten zaten in de dunne laag werkend-in-de-echte-wereld.
 
 ---
 
+## ✨ Dynamiek-uitrol (Reveal-animaties, akkoord 2026-06-12)
+
+- [x] ~~Proef mini-ELEVA~~ + ~~ronde 2-5: ontdek-eleva, dashboard,
+      welkom-keuze, 60-day-run, mini-ELEVA subpagina's, academy,
+      scripts, team, statistieken, over-eleva~~ (15 files)
+- [ ] /vandaag + /onboarding: bewust overgeslagen (stateful flows),
+      eigen voorzichtige ronde als Raoul het wil
+- [ ] Namenlijst (drag/drop) + chat-interfaces: blijven statisch by design
+
+---
+
 ## 📦 Geparkeerd, lichte triggers
 
 - **Spraak-mentor pratende video** (D-ID): één regel terughalen, zie memory spraak-mentor-parkeerlijst
