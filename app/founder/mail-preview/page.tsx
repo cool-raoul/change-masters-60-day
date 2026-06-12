@@ -13,11 +13,41 @@ import { resetCheckTemplateVoorDag } from "@/lib/reset-check/mails";
 
 export const dynamic = "force-dynamic";
 
+// Dummy-antwoorden met energie als sterkste signaal, zodat het
+// gepersonaliseerde future-self-blok in mail 4 zichtbaar is in de
+// preview (zelfde shape als echte bot_antwoorden).
+const DUMMY_ANTWOORDEN = {
+  voornaam: "Sandra",
+  achternaam: "Voorbeeld",
+  email: "voorbeeld@eleva.app",
+  instagram: "",
+  facebook: "",
+  telefoon: "",
+  scores: {
+    spijsvertering: 1,
+    stoelgang: 0,
+    darmcomfort: 1,
+    gewichtsgevoel: 1,
+    eetpatroon: 1,
+    energie_dag: 3,
+    energie_avond: 3,
+    slaap: 1,
+    voeding_bewust: 1,
+    intentie: 2,
+  },
+  profiel: {
+    geslacht_leeftijd: "vrouw_35plus",
+    investering: "misschien",
+  },
+  medisch: [],
+  medischVrij: "",
+};
+
 const DUMMY = {
   leadVoornaam: "Sandra",
   memberVoornaam: "Raoul",
   spiegelTekst: null,
-  antwoorden: null,
+  antwoorden: DUMMY_ANTWOORDEN,
   unsubscribeUrl: "#afmelden-voorbeeld",
   miniElevaUrl: "https://voorbeeld.eleva.app/m/p-voorbeeldtoken",
 };

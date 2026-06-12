@@ -25,6 +25,10 @@
 // gezondheidsbeloftes.
 
 import type { GenericMailInput, GenericMailTemplate } from "@/lib/freebie-bots/mail-template-types";
+import type { Antwoorden } from "./types";
+import { berekenThemaScores } from "./score";
+import { THEMA_LABELS } from "./vragen";
+import { NU_PER_THEMA, HEEN_PER_THEMA } from "./content";
 
 // ============================================================
 // HTML-bouwstenen, mail-veilig (inline styles, één kolom)
@@ -69,6 +73,37 @@ function groet(memberVoornaam: string): string {
 
 function knop(url: string, label: string): string {
   return `<p style="margin:20px 0;"><a href="${url}" style="display:inline-block;background:${GOUD};color:#ffffff;text-decoration:none;padding:13px 26px;border-radius:8px;font-family:Arial,sans-serif;font-size:15px;font-weight:bold;">${label}</a></p>`;
+}
+
+/**
+ * Gepersonaliseerd future-self-blok voor mail 4: het hoogste thema uit
+ * de check terugspiegelen met de nu/heen-frases die de lead ook in de
+ * uitslag zag. Hun eigen verlangen, in hun eigen check-taal.
+ * Faalt veilig: bij onparseerbare antwoorden een generieke zin.
+ */
+function futureSelfBlok(antwoorden: unknown): string {
+  try {
+    const a = antwoorden as Antwoorden;
+    if (a && typeof a === "object" && a.scores && a.profiel) {
+      const scores = berekenThemaScores(a);
+      const hoogste = [...scores].sort((x, y) => y.pct - x.pct)[0];
+      if (hoogste && hoogste.pct >= 33) {
+        const label = THEMA_LABELS[hoogste.thema]?.toLowerCase() ?? hoogste.thema;
+        const nu = NU_PER_THEMA[hoogste.thema];
+        const heen = HEEN_PER_THEMA[hoogste.thema];
+        if (nu && heen) {
+          return p(
+            `Even terug naar jouw check. Je sterkste signaal zat op ${label}. Waar je nu staat: <strong>${nu}</strong>. En waar je naartoe wilt: <strong>${heen}</strong>. Dat verschil overbrug je niet met tips, dat schreef ik je al. Wel met een aanpak waarin alles voor je is uitgedacht, en waar je je over een paar maanden dankbaar voor bent.`,
+          );
+        }
+      }
+    }
+  } catch {
+    // val door naar generiek
+  }
+  return p(
+    `In de check gaf je aan waar je naartoe wilt. Hoe je je over een paar maanden voelt, wordt bepaald door wat je déze weken beslist.`,
+  );
 }
 
 /**
@@ -135,6 +170,9 @@ const mail1: GenericMailTemplate = {
         p(
           `Probeer het morgen eens. En lukt het? Stuur me gerust een berichtje, ik lees alles zelf.`,
         ) +
+        p(
+          `Kleine spoiler alvast: dit ene principe, één keer beslissen in plaats van de hele dag onderhandelen met jezelf, is precies waar de Holistic Reset op gebouwd is. Daarover later deze week meer.`,
+        ) +
         miniElevaBlok(input, 1) +
         groet(input.memberVoornaam) +
         p(
@@ -162,6 +200,9 @@ const mail2: GenericMailTemplate = {
         p(
           `Een week kijken zonder ingrijpen. Het klinkt als niks doen. Het is het eerlijkste begin dat er is.`,
         ) +
+        p(
+          `En nu ik het toch over meten heb. De mensen die het traject deden en met meten begonnen, vertellen ons achteraf vaak hetzelfde: dat de cijfers na een paar weken een ander verhaal vertelden. Kleding die anders zit, een middag die niet meer inzakt, rustiger wakker worden. Ieder lichaam reageert anders, dus beloftes doe ik je niet. Maar hun verhalen mag je gewoon lezen, die staan in je omgeving.`,
+        ) +
         miniElevaBlok(input, 2) +
         groet(input.memberVoornaam),
       input.unsubscribeUrl,
@@ -184,7 +225,10 @@ const mail3: GenericMailTemplate = {
           `Een duidelijk kader met een begin en een eind werkt anders. Even helemaal duidelijk, mét een einddatum. Dan valt er niks te onderhandelen, en juist dat geeft rust.`,
         ) +
         p(
-          `Zo is de Holistic Reset ook gebouwd. Geen vaag "let een beetje op": vier duidelijke fasen over 65 dagen. Eerst een korte aanloop, dan drie weken écht duidelijk, dan stap voor stap weer opbouwen, en de laatste drie weken leer je het 80/20-ritme dat je daarna zelf vasthoudt. Je weet elke dag precies waar je aan toe bent. En je hoeft het nooit alleen te doen: we stemmen 'm vooraf samen op jou af.`,
+          `Zo is de Holistic Reset ook gebouwd. Geen vaag "let een beetje op": vier duidelijke fasen over 65 dagen. Eerst een korte aanloop, dan drie weken écht duidelijk, dan stap voor stap weer opbouwen, en de laatste drie weken leer je het 80/20-ritme dat je daarna zelf vasthoudt. Je weet elke dag precies waar je aan toe bent.`,
+        ) +
+        p(
+          `En misschien wel het belangrijkste: je doet het niet alleen. We stemmen 'm vooraf samen op jou af, en je hebt het hele traject iemand naast je die het zelf heeft gedaan. Elke fase, elke vraag. Je zit nergens aan vast door erover te praten.`,
         ) +
         miniElevaBlok(input, 3) +
         groet(input.memberVoornaam),
@@ -207,8 +251,9 @@ const mail4: GenericMailTemplate = {
           `Vijf minuten daglicht, binnen een half uur na het opstaan. Gewoon even buiten, het balkon telt ook. Je lichaam weet dan: dít is het begin van de dag. En het rekent vanaf dat moment zelf uit wanneer de avond hoort te vallen.`,
         ) +
         p(
-          `Wat je 's ochtends doet, bepaalt hoe je avond voelt. En eerlijk? Zo werkt het met meer dingen. In de check gaf je aan waar je naartoe wilt. Hoe je je over een paar maanden voelt, wordt bepaald door wat je déze weken beslist.`,
+          `Wat je 's ochtends doet, bepaalt hoe je avond voelt. En eerlijk? Zo werkt het met meer dingen.`,
         ) +
+        futureSelfBlok(input.antwoorden) +
         p(
           `Wil je eens kijken wat de Reset in jouw situatie zou betekenen? Stuur me een berichtje, dan stemmen we 'm samen op jou af. En weet je eigenlijk al genoeg en wil je gewoon starten? Zeg het me, dan zet ik alles voor je klaar.`,
         ) +
@@ -233,6 +278,9 @@ const mail5: GenericMailTemplate = {
         p(`En nu iets eerlijks.`) +
         p(
           `Dit was tip vijf. Maar tips waren nooit jouw probleem. Je wist er al genoeg toen je de check deed. De mensen die het traject doen weten niet méér dan jij. Ze hebben één ding anders gedaan: één keer beslissen, zodat ze het niet elke dag opnieuw hoeven te doen.`,
+        ) +
+        p(
+          `Over drie maanden ben je hoe dan ook drie maanden verder. De enige vraag is of je dan op dezelfde plek staat, of ergens anders.`,
         ) +
         p(
           `Dit is mijn laatste mail in deze reeks, hierna laat ik je met rust. De deur blijft gewoon open. Wil je het gesprek? Stuur me een berichtje, dan kijken we samen of de Reset bij jou past. En is het antwoord nee, of nu even niet? Ook helemaal prima 🥰`,
