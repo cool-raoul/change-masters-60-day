@@ -22,10 +22,10 @@ import { useEffect, useRef, useState } from "react";
 type Richting = "up" | "left" | "right" | "scale" | "fade";
 
 const START_KLASSEN: Record<Richting, string> = {
-  up: "translate-y-6 opacity-0",
-  left: "-translate-x-6 opacity-0",
-  right: "translate-x-6 opacity-0",
-  scale: "scale-[0.96] opacity-0",
+  up: "translate-y-12 opacity-0",
+  left: "-translate-x-12 opacity-0",
+  right: "translate-x-12 opacity-0",
+  scale: "scale-[0.92] opacity-0",
   fade: "opacity-0",
 };
 
@@ -70,11 +70,18 @@ export function Reveal({
           if (entry.isIntersecting && entry.intersectionRatio >= 0.1) {
             setZichtbaar(true);
             if (!herhaal) observer.disconnect();
-          } else if (herhaal && !entry.isIntersecting) {
-            // Pas resetten als het element écht volledig uit beeld is.
-            // Tussen 0% en 10% gebeurt niets (hysterese), dus kleine
-            // scroll-bewegingen op de rand flikkeren niet. Bij echte
-            // terugkomst speelt de animatie opnieuw.
+          } else if (
+            herhaal &&
+            !entry.isIntersecting &&
+            entry.boundingClientRect.top > 0
+          ) {
+            // Alleen resetten als het element ONDER de viewport uit
+            // beeld verdwijnt (= gebruiker scrolde omhoog voorbij dit
+            // element). Dan vliegt 'ie bij de volgende neerwaartse
+            // scroll opnieuw binnen. Verdwijnt het element boven de
+            // viewport (gebruiker scrolde verder naar beneden), dan
+            // blijft het staan: omhoog terugscrollen hoort rustig te
+            // zijn, geen re-animatie.
             setZichtbaar(false);
           }
         }
@@ -91,7 +98,7 @@ export function Reveal({
   return (
     <div
       ref={ref}
-      className={`transition-all duration-500 ease-out will-change-transform ${
+      className={`transition-all duration-700 ease-out will-change-transform ${
         zichtbaar
           ? "translate-x-0 translate-y-0 scale-100 opacity-100"
           : START_KLASSEN[richting]
