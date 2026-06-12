@@ -1,6 +1,7 @@
 import { pakMiniElevaContext, logActiviteit } from "@/lib/mini-eleva/helpers";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { normaliseerNaarEmbed } from "@/lib/films/embed";
+import { Reveal } from "@/components/ui/Reveal";
 import Link from "next/link";
 
 // ============================================================
@@ -70,16 +71,19 @@ export default async function WelkomPagina({
         ← Terug
       </Link>
 
-      <div>
-        <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
-          Maak even kennis
-        </p>
-        <h1 className="font-serif-warm text-2xl text-cm-white leading-tight mt-1">
-          Welkom, {voornaam}
-        </h1>
-      </div>
+      <Reveal richting="fade">
+        <div>
+          <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
+            Maak even kennis
+          </p>
+          <h1 className="font-serif-warm text-2xl text-cm-white leading-tight mt-1">
+            Welkom, {voornaam}
+          </h1>
+        </div>
+      </Reveal>
 
       {/* Persoonlijk welkomst-bericht van de member */}
+      <Reveal delay={100}>
       <div className="card space-y-3">
         <h2 className="text-cm-gold text-sm font-semibold flex items-center gap-2">
           👋 Bericht van {ctx.memberNaam ?? "je contactpersoon"}
@@ -100,9 +104,11 @@ export default async function WelkomPagina({
           <p className="text-cm-white/60">Groetjes, {memberVoornaam}</p>
         </div>
       </div>
+      </Reveal>
 
       {/* Start-film uit het Films-CMS, passend bij het spoor */}
       {embedUrl && film && (
+        <Reveal delay={200} richting="scale">
         <div className="card space-y-3">
           <h2 className="text-cm-gold text-sm font-semibold flex items-center gap-2">
             🎬 Een goed begin: deze korte film
@@ -123,10 +129,12 @@ export default async function WelkomPagina({
             </p>
           )}
         </div>
+        </Reveal>
       )}
 
       {/* Team-context: prospect weet dat er meer mensen achter staan */}
       {ctx.sponsorNaam && (
+        <Reveal richting="left">
         <div className="card space-y-2">
           <h2 className="text-cm-gold text-sm font-semibold flex items-center gap-2">
             🤝 Je staat er nooit alleen voor
@@ -138,6 +146,7 @@ export default async function WelkomPagina({
             iemand klaar die het wel weet.
           </p>
         </div>
+        </Reveal>
       )}
 
       <Link
