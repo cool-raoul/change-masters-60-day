@@ -38,8 +38,10 @@ pilot-waardig; de gaten zaten in de dunne laag werkend-in-de-echte-wereld.
 - Energie & Focus + Hormonen & Overgang blijven handmatig nabellen (bewuste keuze)
 
 ### 2. Film-opname-lijstje voor Raoul
-- [ ] Welkomstfilm + dag 1-7: per film de plek, het doel en een script-suggestie in Raoul's stem
-- Raoul neemt op, vult zelf via edit-modus / Films-CMS
+- [x] ~~Lijstje gemaakt~~ (2026-06-12: docs/film-opname-lijstje.md, 10 films
+      in 3 blokken met plek + doel + spreek-ankers)
+- [ ] Raoul neemt op (volgorde: dag 1 eerst, dan dag 2, dan rest),
+      vult zelf via edit-modus / Films-CMS
 
 ### 3. Sprint-specifieke uitnodig-scripts (uit parkeerlijst mei)
 - [ ] Her-brainstorm, daarna Core- en Pro-specifiek (na Core-content ronde)
