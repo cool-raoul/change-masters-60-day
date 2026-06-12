@@ -1,15 +1,18 @@
 // File: app/founder/mail-preview/page.tsx
 //
-// Founder-only preview van de Reset-check mail-sequence. Rendert alle
-// 5 mails server-side met dummy-data, in beide varianten (lead nog
-// niet / al wel in mini-ELEVA geweest), zodat Raoul de mails kan ZIEN
-// voordat de feature-flag aan gaat.
+// Founder-only preview van mail-sequences. Drie niveaus uitklapbaar
+// (native <details>, geen client-JS):
+//   1. de sequence ("Reset-check mail-sequence")
+//   2. de mail (1 t/m 5, met onderwerp)
+//   3. de variant (A: nog niet in mini-ELEVA / B: al wel binnen)
 //
-// Verstuurt niets, schrijft niets. Puur kijken.
+// Nieuwe sequences (andere bots, andere mail-soorten) komen hier als
+// extra <SequenceBlok> onder. Verstuurt niets, schrijft niets.
 
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { resetCheckTemplateVoorDag } from "@/lib/reset-check/mails";
+import type { GenericMailInput } from "@/lib/freebie-bots/mail-template-types";
 
 export const dynamic = "force-dynamic";
 
@@ -43,7 +46,7 @@ const DUMMY_ANTWOORDEN = {
   medischVrij: "",
 };
 
-const DUMMY = {
+const DUMMY: Omit<GenericMailInput, "alInMiniEleva"> = {
   leadVoornaam: "Sandra",
   memberVoornaam: "Raoul",
   spiegelTekst: null,
@@ -51,6 +54,83 @@ const DUMMY = {
   unsubscribeUrl: "#afmelden-voorbeeld",
   miniElevaUrl: "https://voorbeeld.eleva.app/m/p-voorbeeldtoken",
 };
+
+function VariantBlok({
+  label,
+  toelichting,
+  html,
+}: {
+  label: string;
+  toelichting: string;
+  html: string;
+}) {
+  return (
+    <details className="group rounded-lg border border-cm-border bg-cm-surface overflow-hidden">
+      <summary className="cursor-pointer select-none px-4 py-3 flex items-center justify-between gap-3 hover:bg-cm-gold/5 transition-colors">
+        <span>
+          <span className="text-cm-white text-sm font-semibold">{label}</span>
+          <span className="text-cm-white/50 text-xs block mt-0.5">
+            {toelichting}
+          </span>
+        </span>
+        <span className="text-cm-gold text-xs transition-transform group-open:rotate-180">
+          ▼
+        </span>
+      </summary>
+      <div
+        className="border-t border-cm-border bg-white"
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
+    </details>
+  );
+}
+
+function MailBlok({
+  dag,
+  onderwerp,
+  variantA,
+  variantB,
+}: {
+  dag: number;
+  onderwerp: string;
+  variantA: string;
+  variantB: string;
+}) {
+  return (
+    <details className="group rounded-xl border border-cm-border bg-cm-surface-2 overflow-hidden">
+      <summary className="cursor-pointer select-none px-4 py-3.5 flex items-center justify-between gap-3 hover:bg-cm-gold/5 transition-colors">
+        <span className="flex items-center gap-3 min-w-0">
+          <span className="flex-shrink-0 w-8 h-8 rounded-full bg-cm-gold/15 border border-cm-gold/40 text-cm-gold text-sm font-bold flex items-center justify-center">
+            {dag}
+          </span>
+          <span className="min-w-0">
+            <span className="text-cm-white text-sm font-semibold block truncate">
+              Mail {dag}
+            </span>
+            <span className="text-cm-white/55 text-xs block truncate">
+              Onderwerp: {onderwerp}
+            </span>
+          </span>
+        </span>
+        <span className="text-cm-gold text-xs flex-shrink-0 transition-transform group-open:rotate-180">
+          ▼
+        </span>
+      </summary>
+      <div className="border-t border-cm-border p-3 space-y-2">
+        <VariantBlok
+          label="Variant A · vol omgeving-blok"
+          toelichting="Lead is nog niet in de mini-ELEVA geweest"
+          html={variantA}
+        />
+        <VariantBlok
+          label="Variant B · korte verwijzing"
+          toelichting="Lead is al binnen geweest"
+          html={variantB}
+        />
+      </div>
+    </details>
+  );
+}
 
 export default async function MailPreviewPagina() {
   const supabase = await createClient();
@@ -65,64 +145,74 @@ export default async function MailPreviewPagina() {
     redirect("/dashboard");
   }
 
-  const dagen = [1, 2, 3, 4, 5];
+  const mails = [1, 2, 3, 4, 5]
+    .map((dag) => {
+      const template = resetCheckTemplateVoorDag(dag);
+      if (!template) return null;
+      return {
+        dag,
+        onderwerp: template.onderwerp,
+        variantA: template.bouwHtml({ ...DUMMY, alInMiniEleva: false }),
+        variantB: template.bouwHtml({ ...DUMMY, alInMiniEleva: true }),
+      };
+    })
+    .filter(Boolean) as Array<{
+    dag: number;
+    onderwerp: string;
+    variantA: string;
+    variantB: string;
+  }>;
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8 pb-16">
+    <div className="max-w-3xl mx-auto space-y-6 pb-16">
       <header className="space-y-1 pt-2">
         <p className="text-xs tracking-widest uppercase text-cm-gold/80">
           Founder-preview
         </p>
         <h1 className="text-2xl md:text-3xl font-bold text-cm-white">
-          Reset-check mail-sequence
+          Mail-preview
         </h1>
         <p className="text-cm-white/60 text-sm leading-relaxed">
-          Alle 5 mails zoals een lead ze ontvangt. Per mail twee varianten:
-          de lead is nog niet in de mini-ELEVA geweest (vol introductie-blok)
-          of al wel (korte verwijzing). Er wordt hier niets verstuurd; de
-          echte verzending blijft uit tot de feature-flag aan staat.
+          Alle mail-sequences zoals leads ze ontvangen. Klik een sequence
+          open, dan een mail, dan een variant. Er wordt hier niets
+          verstuurd; echte verzending blijft uit tot de feature-flag aan
+          staat.
         </p>
       </header>
 
-      {dagen.map((dag) => {
-        const template = resetCheckTemplateVoorDag(dag);
-        if (!template) return null;
-        const nogNiet = template.bouwHtml({
-          ...DUMMY,
-          alInMiniEleva: false,
-        });
-        const alWel = template.bouwHtml({
-          ...DUMMY,
-          alInMiniEleva: true,
-        });
-        return (
-          <section key={dag} className="space-y-4">
-            <div className="border-b border-cm-gold/30 pb-2">
-              <h2 className="text-cm-gold font-bold text-lg">
-                Mail {dag} · onderwerp: {template.onderwerp}
-              </h2>
-            </div>
-            <div className="space-y-2">
-              <p className="text-cm-white/70 text-xs font-semibold uppercase tracking-wider">
-                Variant A · lead was nog niet in mini-ELEVA
-              </p>
-              <div
-                className="rounded-xl overflow-hidden border border-cm-border bg-white"
-                dangerouslySetInnerHTML={{ __html: nogNiet }}
-              />
-            </div>
-            <div className="space-y-2">
-              <p className="text-cm-white/70 text-xs font-semibold uppercase tracking-wider">
-                Variant B · lead is al binnen geweest
-              </p>
-              <div
-                className="rounded-xl overflow-hidden border border-cm-border bg-white"
-                dangerouslySetInnerHTML={{ __html: alWel }}
-              />
-            </div>
-          </section>
-        );
-      })}
+      {/* ===== Sequence: Reset-check ===== */}
+      <details className="group rounded-2xl border border-cm-gold/40 bg-cm-surface-2 overflow-hidden" open>
+        <summary className="cursor-pointer select-none px-5 py-4 flex items-center justify-between gap-3 hover:bg-cm-gold/5 transition-colors">
+          <span className="flex items-center gap-3">
+            <span className="text-2xl">🌿</span>
+            <span>
+              <span className="text-cm-white font-bold block">
+                Reset-check mail-sequence
+              </span>
+              <span className="text-cm-white/55 text-xs block mt-0.5">
+                5 mails · verse tip per dag + koopmotief + mini-ELEVA-knop
+              </span>
+            </span>
+          </span>
+          <span className="text-cm-gold text-sm transition-transform group-open:rotate-180">
+            ▼
+          </span>
+        </summary>
+        <div className="border-t border-cm-gold/20 p-4 space-y-3">
+          {mails.map((m) => (
+            <MailBlok
+              key={m.dag}
+              dag={m.dag}
+              onderwerp={m.onderwerp}
+              variantA={m.variantA}
+              variantB={m.variantB}
+            />
+          ))}
+        </div>
+      </details>
+
+      {/* Volgende sequences (Energie & Focus, Hormonen & Overgang, ...)
+          komen hier als extra <details>-blokken zodra ze bestaan. */}
     </div>
   );
 }
