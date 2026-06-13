@@ -132,7 +132,7 @@ Wat fijn dat je er bent. We gaan samen 🥰`,
         label: "Bekijk de korte Builder-status-uitleg",
         verplicht: true,
         uitleg:
-          "Builder is je eerste mijlpaal én de rode draad door alles wat hierna komt. Vandaag krijg je in een paar minuten te zien wat 'ie precies inhoudt, waarom dat zo belangrijk is, en wat er nodig is om 'm te halen. Twee voorwaarden: je eerste drie levels samen 1500 IP (jouw eigen bestelling telt mee), en minimaal drie members met een bestelling van 40 IP of meer. Snap je waarom dit jouw eerste anker is? Vanaf Builder gaat duplicatie werken, dus alles wat je hier leert kun jij straks doorgeven aan de drie of vier mensen die jou zijn gevolgd. (TODO: filmpje van Raoul + Gaby toevoegen op /vandaag stap 1)",
+          "Builder is je eerste mijlpaal én de rode draad door alles wat hierna komt. Vandaag krijg je in een paar minuten te zien wat 'ie precies inhoudt, waarom dat zo belangrijk is, en wat er nodig is om 'm te halen. Twee voorwaarden: je eerste drie levels samen 1500 IP (jouw eigen bestelling telt mee), en minimaal drie members met een bestelling van 40 IP of meer. Snap je waarom dit jouw eerste anker is? Vanaf Builder gaat duplicatie werken, dus alles wat je hier leert kun jij straks doorgeven aan de drie of vier mensen die jou zijn gevolgd.",
       },
       {
         id: "core-v9-stap1-sponsor",
@@ -627,7 +627,7 @@ Have fun ermee, dit is het leuke deel 🥰`,
         label: "Bekijk de 5 social-media-basis-filmpjes (~15 min totaal)",
         verplicht: true,
         uitleg:
-          "Vijf korte filmpjes, ongeveer een kwartier in totaal. Hook (de eerste seconde van een Reel of Story), carrousel (slides die mensen blijven swipen), reel (korte video tot negentig seconden), story (vluchtig, 24 uur zichtbaar, hier gebeurt veel menselijk contact), en hashtags + bijschrift (hoe je ze gebruikt zonder spam te worden). Eén keer kijken, daarna heb je de basis paraat om de rest van Core mee uit de voeten te kunnen. In stap 12 verdiep je Stories en Reels nog verder. (TODO: media toevoegen op /vandaag stap 6)",
+          "Vijf korte filmpjes, ongeveer een kwartier in totaal. Hook (de eerste seconde van een Reel of Story), carrousel (slides die mensen blijven swipen), reel (korte video tot negentig seconden), story (vluchtig, 24 uur zichtbaar, hier gebeurt veel menselijk contact), en hashtags + bijschrift (hoe je ze gebruikt zonder spam te worden). Eén keer kijken, daarna heb je de basis paraat om de rest van Core mee uit de voeten te kunnen. In stap 12 verdiep je Stories en Reels nog verder.",
       },
       {
         id: "core-v9-stap6-freebie-kiezen",
@@ -735,7 +735,7 @@ Jouw doel staat nu op de kaart. Ga ervoor 💪🏽`,
         label: "Bekijk de verdienmodel-film (~10 min)",
         verplicht: true,
         uitleg:
-          "Een korte film van zo'n tien minuten over hoe je verdient: de rang-ladder van Builder tot Diamond, de commissies op verschillende niveaus, en het team-volume in je eerste drie levels. Je hoeft niks uit je hoofd te leren, je wil een gevoel krijgen van hoe het geld werkt. Want straks gaan prospects vragen stellen zodra je een 3-weg of Mini-ELEVA opent, en dan moet je kunnen uitleggen hoe het ongeveer in elkaar zit. Onwetendheid over hoe je verdient is een van de redenen waarom mensen in maand twee afhaken, dus dit kwartiertje is goed besteed. (TODO: media toevoegen op /vandaag stap 7)",
+          "Een korte film van zo'n tien minuten over hoe je verdient: de rang-ladder van Builder tot Diamond, de commissies op verschillende niveaus, en het team-volume in je eerste drie levels. Je hoeft niks uit je hoofd te leren, je wil een gevoel krijgen van hoe het geld werkt. Want straks gaan prospects vragen stellen zodra je een 3-weg of Mini-ELEVA opent, en dan moet je kunnen uitleggen hoe het ongeveer in elkaar zit. Onwetendheid over hoe je verdient is een van de redenen waarom mensen in maand twee afhaken, dus dit kwartiertje is goed besteed.",
       },
       {
         id: "core-v9-stap7-quiz",
@@ -835,7 +835,7 @@ Morgen breng je 't in praktijk. Jij hebt dit 💪🏽`,
         label: "Bekijk de meesterclass-film over het 3-weg-gesprek (~10 min)",
         verplicht: true,
         uitleg:
-          "De vijf stappen van het 3-weg-gesprek, per stap dieper bekeken: edification, intro, inhoud, vraag aan de prospect, en de vervolgafspraak. In stap 5 zag je het in vogelvlucht, hier krijg je per stap echt feeling met wat er gebeurt en waarom. Tien minuten kijken is genoeg, je leert van het zien hoe het loopt en wat de Mentor van elke stap maakt. Dit is je voorbereiding op de praktijk van morgen. (TODO: media toevoegen op /vandaag stap 8)",
+          "De vijf stappen van het 3-weg-gesprek, per stap dieper bekeken: edification, intro, inhoud, vraag aan de prospect, en de vervolgafspraak. In stap 5 zag je het in vogelvlucht, hier krijg je per stap echt feeling met wat er gebeurt en waarom. Tien minuten kijken is genoeg, je leert van het zien hoe het loopt en wat de Mentor van elke stap maakt. Dit is je voorbereiding op de praktijk van morgen.",
       },
       {
         id: "core-v9-stap8-prospect-doorlopen",
@@ -2035,7 +2035,7 @@ Wat ben je gegroeid. Trots op je 🥰`,
         label: "Bekijk de schets van de Uitbreiding-module (optioneel)",
         verplicht: false,
         uitleg:
-          "Bekijk de schets van de Uitbreiding-module die straks naast Core gaat lopen. Niet om nu te starten, wel om alvast te weten wat het volgende pad voor je is. Je begint met de Uitbreiding zodra je merkt dat je warme netwerk uitgemolken raakt en je breder gaat zoeken. Een korte introductie van een paar minuten is genoeg om een gevoel te krijgen van wat eraan komt. (TODO: media toevoegen op /vandaag stap 21)",
+          "Bekijk de schets van de Uitbreiding-module die straks naast Core gaat lopen. Niet om nu te starten, wel om alvast te weten wat het volgende pad voor je is. Je begint met de Uitbreiding zodra je merkt dat je warme netwerk uitgemolken raakt en je breder gaat zoeken. Een korte introductie van een paar minuten is genoeg om een gevoel te krijgen van wat eraan komt.",
       },
       ...afsluitStappenV9(21),
     ],
