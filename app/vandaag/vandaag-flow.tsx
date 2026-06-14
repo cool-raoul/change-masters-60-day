@@ -192,76 +192,11 @@ function VandaagFlowInner({
     }
   }, [stap, taakIndex, dag.nummer]);
 
-  // Splits de dag-taken. Kern-taken (verplicht) lopen door de genummerde
-  // wizard en bepalen 'Stap X van Y', voortgang en het vuurwerk. Optionele
-  // taken (incl. de vaste dag-afsluiters momentum-radar, partner-check en
-  // sponsor-checkin die op élke dag terugkomen) staan apart in een rustig
-  // 'Extra'-blok en tellen NIET mee. Zo voelt een dag niet voller dan 'ie
-  // is: de afronding hangt aan de echte leerstappen, niet aan de extra's.
-  const alleTaken = dag.vandaagDoen;
-  const taken = alleTaken.filter((t) => t.verplicht !== false);
-  const extraTaken = alleTaken.filter((t) => t.verplicht === false);
+  const taken = dag.vandaagDoen;
   const totaal = taken.length;
   const huidigeTaak: ControllableTaak | undefined = taken[taakIndex];
   const aantalVoltooid = taken.filter((t) => voltooidIds.has(t.id)).length;
   const procent = totaal === 0 ? 0 : Math.round((aantalVoltooid / totaal) * 100);
-
-  // Rustig 'Extra'-blok, hergebruikt op het overzicht en de klaar-stap.
-  // Elke extra is afvinkbaar (vinkAf) en linkt door naar z'n actieRoute
-  // als die er is. Geen nummering, geen 'optioneel'-geschreeuw, gewoon
-  // een zachte uitnodiging die je ook kunt laten staan.
-  const extraBlok =
-    extraTaken.length > 0 ? (
-      <div className="card text-left space-y-3 border-cm-border/60 bg-cm-surface-2/20">
-        <div>
-          <p className="text-cm-white/70 text-xs font-semibold uppercase tracking-wider">
-            🌱 Extra, als je tijd hebt
-          </p>
-          <p className="text-cm-white/45 text-xs mt-0.5">
-            Niet nodig om je dag af te ronden. Pak op wat past, of laat staan.
-          </p>
-        </div>
-        <ul className="space-y-2.5">
-          {extraTaken.map((t) => {
-            const done = voltooidIds.has(t.id);
-            return (
-              <li key={t.id} className="flex items-start gap-2.5">
-                <button
-                  type="button"
-                  onClick={() => vinkAf(t.id, !done)}
-                  disabled={bezigIds.has(t.id)}
-                  className={`mt-0.5 w-5 h-5 rounded-md border flex-shrink-0 flex items-center justify-center text-[11px] transition-colors ${
-                    done
-                      ? "bg-emerald-500/20 border-emerald-400 text-emerald-300"
-                      : "border-cm-border text-transparent hover:border-cm-gold/50"
-                  }`}
-                  aria-label={done ? "Gedaan, klik om terug te zetten" : "Markeer als gedaan"}
-                >
-                  ✓
-                </button>
-                <div className="flex-1 min-w-0">
-                  <p
-                    className={`text-sm leading-snug ${
-                      done ? "text-cm-white/40 line-through" : "text-cm-white/85"
-                    }`}
-                  >
-                    {t.label}
-                  </p>
-                  {t.actieRoute && !done && (
-                    <Link
-                      href={t.actieRoute}
-                      className="text-cm-gold/80 text-xs hover:underline"
-                    >
-                      {t.actieRouteLabel || "Openen →"}
-                    </Link>
-                  )}
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    ) : null;
 
   const groet =
     DAG_GROETEN[dag.nummer] || pakDagdeelGroetMetNaam(voornaam);
@@ -618,9 +553,6 @@ function VandaagFlowInner({
                 label="Even niet nu, herinner me later vandaag"
               />
             </div>
-
-            {/* Optionele extra's, rustig onderaan, niet meegeteld */}
-            {extraBlok}
           </div>
         )}
 
@@ -1044,9 +976,6 @@ function VandaagFlowInner({
                 ))}
               </ul>
             </div>
-
-            {/* Optionele extra's, ook hier rustig beschikbaar */}
-            {extraBlok}
 
             {/* Media-blok positie 5: op klaar-stap, vóór dashboard-knop */}
             <MediaBlokken
