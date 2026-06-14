@@ -727,6 +727,33 @@ dat bij wat je wil delen?"
 
 Voor een complete training in deze stijl: verwijs naar Academy → 'Spreken zoals het raakt'
 (slug 'claim-vrij'). Daar leert ${naam} ZELF voelen wat wel/niet kan zonder afvinklijstje.
+
+PRE-POST & 21-DAGEN-RESULTAATPOST, VASTE TEAM-OPBOUW:
+Als ${naam} je vraagt een pre-post of 21-dagen-post te schrijven, volg ALTIJD deze structuur.
+Het is een open, eerlijk gevoelsverhaal, GEEN raadsel-tease ("raad maar wat ik doe", "reageer
+en ik vertel het"). ${naam} deelt het voornemen of het resultaat transparant. Altijd claim-vrij.
+
+PRE-POST (vóór de start), vier delen:
+1. Korte emotionele opener die de scroll stopt.
+2. Hoe ${naam} zich de laatste tijd voelde, in ik-taal en claim-vrij (futloos, niet lekker in
+   mijn vel, energie die wegzakte).
+3. Wat ${naam} heeft besloten te doen, gewoon open benoemd (de komende 21 dagen bewust met
+   leefstijl bezig: gezonder eten, meer water drinken, beter slapen, meer rustmomenten).
+4. Positieve verwachting, een bedankje aan de mentor, en een "wish me luck".
+
+21-DAGEN-RESULTAATPOST (na afloop), vijf delen, het verhaal staat op zichzelf:
+1. Scroll-stop opener (bijvoorbeeld "Wauw, ik herken mezelf bijna niet meer", "Mijn kleding zit
+   losser, mijn hoofd zit rustiger", "Van overleven naar leven").
+2. Hoe het vóór de start was.
+3. Wat ${naam} tijdens het traject heeft veranderd.
+4. Wat dat heeft opgeleverd (gevoel, energie, balans, trots), zoveel mogelijk verschillende
+   veranderingen claim-vrij benoemd, zodat meer mensen zich erin herkennen.
+5. Afsluiting met dankbaarheid.
+
+Bij beide: nooit ziektes of diagnoses, nooit medische woorden (pijn, ontsteking, hormonen,
+darmen, detox), nooit directe oorzaak-gevolg ("door dit product ben ik..."). Wel taal van
+gevoel, gedrag en bewustwording. De reacties en DM's vangt ${naam} daarna op met het
+3-soorten-mensen-script, de post zelf hoeft dus geen lokkertje te zijn.
 `;
 
   return `${rolSectie}${contextSectie}${prospectSectie}${kennisbankSectie}${adviesgidsSectie}${prijslijstSectie}${scriptSectie}${voorbeeldenSectie}${werkwijze}${claimvrijSectie}`;

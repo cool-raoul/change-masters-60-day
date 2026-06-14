@@ -97,11 +97,11 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
     },
     {
       id: "core-v9-sideflow-prepost-3-copywriting",
-      label: "Schrijf je pre-post met de Mentor (uitlokking: 'wat ga je doen?')",
+      label: "Schrijf je pre-post met de Mentor (jouw eerlijke voornemen)",
       verplicht: true,
       actieRoute: "/coach",
       uitleg:
-        "Schrijf je pre-post in twee of drie regels, in jouw eigen stem, en deel je voornemen. Doel is mensen de vraag laten stellen 'wat ga je dan doen?'. Je vertelt dus NIET wat je gaat doen, je vertelt het verlangen of het voornemen, en laat ze vragen. De Mentor levert drie versies om uit te kiezen of te mengen, en bouwt 'm op basis van wat 'ie inmiddels over jouw stem weet. Het hoeft niet meteen perfect, drie rondjes en je hebt 'm rond.",
+        "Schrijf je pre-post als een kort, eerlijk gevoelsverhaal in jouw stem, volgens de vaste opbouw die we als team gebruiken (staat in de claimvrije-communicatie). Vier delen: 1) een korte emotionele opener die de scroll stopt, 2) hoe je je de laatste tijd voelde, in ik-taal en claim-vrij (bijvoorbeeld 'futloos, niet lekker in mijn vel, energie die vaak wegzakte'), 3) wat je hebt besloten te doen, gewoon open benoemd (de komende 21 dagen bewust aan de slag met je leefstijl: gezonder eten, meer water, beter slapen, meer rustmomenten), en 4) je positieve verwachting, een bedankje aan je mentor en een 'wish me luck'. Je houdt dus niks achter en maakt er geen raadsel van, je deelt je voornemen open en eerlijk. De Mentor bouwt 'm met je op in precies deze structuur, drie rondjes en 'm staat. Claim-vrij: geen ziektes, geen medische woorden, geen 'door dit product', wel gevoel, gedrag en bewustwording.",
     },
     {
       id: "core-v9-sideflow-prepost-4-upline-check",
@@ -245,7 +245,7 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       verplicht: true,
       actieRoute: "/coach",
       uitleg:
-        "Schrijf je 21-dagen-post met de Mentor, met alle veranderingen erin, in jouw stem, en met je webshop-anker erbij. Doel is mensen de vraag laten stellen 'wat heb je gedaan?'. Drie iteraties max, dan ben je klaar. Voorbeeld-richting: '21 dagen geleden begon ik aan iets, vandaag merk ik dieper slapen, meer pit overdag, ik voel me lichter, mijn vel ziet er rustiger uit, en ik ben minder snel chagrijnig in de avond. Wat heb ik precies gedaan? Reageer en ik vertel het je 💛'. Meerdere veranderingen, geen claim, eind met een uitnodiging om te reageren.",
+        "Schrijf je 21-dagen-post als een compleet verhaal dat op zichzelf staat, in jouw stem, volgens de vaste team-opbouw (claimvrije-communicatie). Vijf delen: 1) een scroll-stop opener (er staan er tien klaar, bijvoorbeeld 'Wauw, ik herken mezelf bijna niet meer' of 'Mijn kleding zit losser, mijn hoofd zit rustiger'), 2) hoe het vóór de start was, 3) wat je tijdens de drie weken hebt veranderd, 4) wat het je heeft gebracht, met alle veranderingen die je net hebt geïnventariseerd (gevoel, energie, balans, trots, en hoe meer je er noemt hoe meer mensen zich erin herkennen), en 5) een afsluiting met dankbaarheid. Het verhaal vertelt zichzelf, je hoeft het niet als raadsel te brengen, de reacties en DM's vang je daarna op met je 3-soorten-mensen-script. Claim-vrij: niet 'mijn slaap is genezen' maar 'ik slaap dieper', niet 'door dit product' maar vanuit jouw gevoel en keuzes. Drie iteraties met de Mentor en 'm staat.",
     },
     {
       id: "core-v9-sideflow-21dagen-5-upline-check",
