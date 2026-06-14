@@ -148,7 +148,7 @@ Wat fijn dat je er bent. We gaan samen 🥰`,
         verplicht: true,
         inlineEmbed: "prepost-keuze",
         uitleg:
-          "Eén keuze die bepaalt waar je de komende dagen iets te delen hebt. Heb je al een product van Lifeplus geprobeerd en daar iets van gemerkt? Dan deel je dat eerlijk, en raakt het mensen. Nog geen ervaring? Dan deel je je voornemen, lokt 'wat ga je doen?' uit, en bouw je de komende drie weken je eigen ervaring op. Allebei werken, het is geen goed of fout. Twijfel je nog? Sla de keuze voor nu over, hij blijft op je dashboard staan tot je er klaar voor bent. Wat je kiest, opent meteen een aparte stap-voor-stap-flow waarin de Mentor je in jouw stem helpt met de tekst, de DM-scripts en de upline-check.",
+          "Eén keuze die bepaalt waar je de komende dagen iets te delen hebt. Heb je al een product van Lifeplus geprobeerd en daar iets van gemerkt? Dan deel je dat eerlijk, en raakt het mensen. Nog geen ervaring? Dan deel je je voornemen open en eerlijk, en bouw je de komende drie weken je eigen ervaring op. Allebei werken, het is geen goed of fout. Twijfel je nog? Sla de keuze voor nu over, hij blijft op je dashboard staan tot je er klaar voor bent. Wat je kiest, opent meteen een aparte stap-voor-stap-flow waarin de Mentor je in jouw stem helpt met de tekst, de DM-scripts en de upline-check.",
       },
       ...afsluitStappenV9(1),
     ],

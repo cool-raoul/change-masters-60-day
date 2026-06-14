@@ -1,12 +1,14 @@
 // File: lib/playbook/core-sideflows-v9.ts
 //
 // Core V9 side-flows: pre-post (scenario B) en 21-dagen-resultaat-post
-// (scenario A). Beide flows zijn substep-georiënteerd, met copywriting-
-// uitlokking en 3-soorten-mensen-DM-scripts.
+// (scenario A). Beide flows zijn substep-georiënteerd. De posts volgen
+// de vaste team-opbouw uit docs/claimvrije-communicatie.md sectie 7: een
+// open, eerlijk gevoelsverhaal (geen raadsel-tease). Plus de
+// 3-soorten-mensen-DM-scripts voor de opvolging.
 //
 // Wijzigingen tov V7 op basis van Raoul-feedback (26 mei 2026):
 //   - Pre-post: geen "eigen 21-dagen programma starten" meer (al gebeurd)
-//   - Pre-post: copywriting moet uitlokken "wat ga je doen?"
+//   - Pre-post: post volgens claimvrije-opbouw, open voornemen (geen tease)
 //   - Pre-post: DM-script GEZELLIG-variant (niet de BLIJ-variant)
 //   - 21-dagen-post: ALLE positieve veranderingen, niet 1-2
 //   - Beide: Mini-ELEVA + 3-weg basis HIER al uitleggen (cluster 4-5
@@ -64,19 +66,26 @@ WAT DEZE FLOW GAAT DOEN
 
 Een pre-post brengt direct misschien nog geen productgebruikers, maar wel veel reacties en likes. Die zijn goud waard, want elke reactie en elke like is een opening naar een gesprek. Het 3-soorten-mensen-DM-script onderaan helpt je om die openingen niet te laten liggen.
 
-DE COPYWRITING-TRUC
+DE OPBOUW, ZOALS WE 'M ALS TEAM MAKEN
 
-Een goede pre-post lokt de vraag uit: "wat ga je doen?". Dat is wat je probeert te triggeren. Je vertelt niet WAT je gaat doen, je vertelt het verlangen of het voornemen, en je laat mensen vragen.
+Een pre-post is een open, eerlijk gevoelsverhaal. Je houdt niks achter en maakt er geen raadsel van, je deelt gewoon je voornemen. Vier delen:
 
-Voorbeeld-richtingen om mee te starten:
+1. Een korte emotionele opener die de scroll stopt.
+2. Hoe je je de laatste tijd voelde, claim-vrij (futloos, niet lekker in je vel, energie die vaak wegzakte).
+3. Wat je hebt besloten te doen, gewoon open benoemd (de komende 21 dagen bewust met je leefstijl bezig: gezonder eten, meer water drinken, beter slapen, meer rustmomenten).
+4. Je positieve verwachting, een bedankje aan je mentor, en een "wish me luck".
 
-"Vandaag begin ik aan iets dat ik al een tijd uitstel. Ik ben benieuwd wat ik over 21 dagen ga merken. Spannend!"
+Voorbeeld in deze opbouw:
 
-"Ik geef mezelf de komende 21 dagen om iets nieuws te proberen. Ik weet niet helemaal hoe het gaat lopen, maar ik wil het wel een eerlijke kans geven."
+"YES, HET ROER GAAT OM 🙌
+De laatste tijd voelde ik me futloos, zat niet lekker in mijn vel en merkte dat mijn energie vaak wegzakte.
+Toen ik zag wat een verschil het maakte bij [naam], wist ik: dit wil ik ook proberen.
+De komende 21 dagen ga ik bewust aan de slag met mijn leefstijl: gezonder eten, meer water drinken, beter slapen en meer rustmomenten nemen.
+Ik ben benieuwd wat dit me gaat brengen!
+[Naam mentor], bedankt voor je support 💛
+Wish me luck."
 
-"Drie weken vanaf nu. Eén ding waar ik nieuwsgierig naar ben. Doe me even na en je hoort het resultaat 😉"
-
-Geen claim, geen belofte, wel een opening die mensen aan het denken zet. De Mentor helpt je om een versie te schrijven die past bij JOUW stem.
+Geen claim, geen belofte, wel een open verhaal dat mensen raakt. De Mentor helpt je om een versie te schrijven die past bij JOUW stem.
 
 Niet alleen. Bouwen mag leuk zijn 💟`,
 
@@ -86,14 +95,14 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       label: "Mini-uitleg: wat is een pre-post en wat doet 'ie?",
       verplicht: true,
       uitleg:
-        "Een korte uitleg in twee minuten: wat is een pre-post, wat doet 'ie, en wat ga je ermee bereiken? Eén filmpje van Gaby en Raoul plus een korte begeleidende tekst, zodat je voelt hoe deze flow eruitziet voor je 'm zelf gaat doen. Een pre-post brengt vaak veel reacties en likes binnen, en elke reactie is een opening naar een gesprek. De PDF 'Voorbereiding Pre Post Lancering' staat klaar om te downloaden als je 'm later wil teruglezen. (TODO: media toevoegen)",
+        "Een korte uitleg in twee minuten: wat is een pre-post, wat doet 'ie, en wat ga je ermee bereiken? Eén filmpje van Gaby en Raoul plus een korte begeleidende tekst, zodat je voelt hoe deze flow eruitziet voor je 'm zelf gaat doen. Een pre-post brengt vaak veel reacties en likes binnen, en elke reactie is een opening naar een gesprek. De PDF 'Voorbereiding Pre Post Lancering' staat klaar om te downloaden als je 'm later wil teruglezen.",
     },
     {
       id: "core-v9-sideflow-prepost-2-filmpjes-zelf",
       label: "Bekijk zelf de prospect-filmpjes die je later wilt versturen",
       verplicht: true,
       uitleg:
-        "Bekijk zelf de prospect-filmpjes die je straks naar info-vragers wil sturen. Niet om 'm uit je hoofd te leren, wel om te weten wat erin zit, hoe lang 'ie duurt, en in welke situatie 'ie past. Want zodra iemand straks vraagt 'wat ga je doen?', wil je niet een filmpje versturen dat je zelf nog niet hebt gezien. Dezelfde filmpjes gebruik je later ook bij de 21-dagen-resultaat-post-flow en in je algemeen prospect-werk. (TODO: media-links)",
+        "Bekijk zelf de prospect-filmpjes die je straks naar info-vragers wil sturen. Niet om 'm uit je hoofd te leren, wel om te weten wat erin zit, hoe lang 'ie duurt, en in welke situatie 'ie past. Want zodra iemand straks meer wil weten, wil je niet een filmpje versturen dat je zelf nog niet hebt gezien. Dezelfde filmpjes gebruik je later ook bij de 21-dagen-resultaat-post-flow en in je algemeen prospect-werk.",
     },
     {
       id: "core-v9-sideflow-prepost-3-copywriting",
@@ -202,17 +211,27 @@ ALLE POSITIEVE VERANDERINGEN, NIET ÉÉN OF TWEE
 
 Noem alle positieve veranderingen die je hebt gemerkt, claim-vrij geformuleerd. Want verschillende mensen worden door verschillende dingen geraakt. Iemand met slaapproblemen leest "ik slaap dieper". Iemand met laag-energie leest "ik heb meer pit". Iemand met overgewicht leest "ik voel me lichter".
 
-Snap je waarom dat zoveel meer losmaakt? Eén verandering raakt één persoon. Alle veranderingen samen raken iedereen die meeleest, en lokken de vraag uit: "Wat is dat dan?" of "Wat heb je gedaan?".
+Snap je waarom dat zoveel meer losmaakt? Eén verandering raakt één persoon. Alle veranderingen samen raken iedereen die meeleest.
 
-CLAIM-VRIJ FORMULEREN
+DE OPBOUW, ZOALS WE 'M ALS TEAM MAKEN
 
-Niet wat het PRODUCT doet, wel wat JIJ hebt gemerkt. Geen "dit pakt slaap aan" maar "ik slaap dieper". Geen "ondersteunt je energie" maar "ik heb meer energie".
+Een 21-dagen-post is een compleet verhaal dat op zichzelf staat. Vijf delen:
 
-Voorbeeld-richting:
+1. Een scroll-stop opener (bijvoorbeeld "Wauw, ik herken mezelf bijna niet meer" of "Mijn kleding zit losser, mijn hoofd zit rustiger").
+2. Hoe het vóór de start was.
+3. Wat je tijdens de drie weken hebt veranderd.
+4. Wat dat je heeft gebracht, met alle veranderingen die je hebt gemerkt, claim-vrij. Niet wat het PRODUCT doet, wel wat JIJ hebt gemerkt: geen "dit pakt slaap aan" maar "ik slaap dieper".
+5. Een afsluiting met dankbaarheid.
 
-"21 dagen geleden begon ik aan iets. Vandaag merk ik: ik slaap dieper, ik heb meer pit overdag, ik voel me lichter, mijn vel ziet er rustiger uit, en ik ben minder snel chagrijnig in de avond. Wat heb ik precies gedaan? Reageer en ik vertel het je 💛"
+Voorbeeld in deze opbouw:
 
-Vijf veranderingen genoemd, geen claim, eind met een uitnodiging om te reageren. De Mentor helpt je dit in JOUW stem te schrijven, met de veranderingen die JIJ specifiek hebt gemerkt.
+"Wauw, ik herken mezelf bijna niet meer ✨
+21 dagen geleden voelde ik me futloos, zat niet lekker in mijn vel en zakte mijn energie elke middag weg.
+Ik besloot er bewust iets aan te doen: gezonder eten, meer water, beter slapen en meer rust nemen.
+En nu? Ik slaap dieper, ik heb meer pit overdag, ik voel me lichter, mijn vel ziet er rustiger uit, en ik sta veel positiever in mijn dag.
+Wat ben ik blij dat ik die keuze heb gemaakt. [Naam mentor], bedankt dat je met me meeliep 💛"
+
+Meerdere veranderingen genoemd, claim-vrij, en het verhaal staat op zichzelf. Je hoeft het niet als raadsel te brengen, de reacties en DM's vang je daarna op met je 3-soorten-mensen-script. De Mentor helpt je dit in JOUW stem te schrijven, met de veranderingen die JIJ specifiek hebt gemerkt.
 
 Niet alleen. Bouwen mag leuk zijn 💟`,
 
@@ -222,14 +241,14 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       label: "Mini-uitleg: wat is een 21-dagen-resultaat-post?",
       verplicht: true,
       uitleg:
-        "Een korte uitleg in twee minuten: wat is een 21-dagen-resultaat-post, wat doet 'ie, en wat ga je er straks mee bereiken? Eén filmpje van Gaby en Raoul plus een korte begeleidende tekst, zodat je weet hoe deze flow eruitziet voor je 'm zelf gaat doen. Een 21-dagen-post is bewezen sterk, en brengt vaak direct nieuwe productgebruikers binnen, soms zelfs meerdere op één dag. De PDF 'Voorbereiding 21 Dagen Post' staat klaar om te downloaden als je 'm later wil teruglezen. (TODO: media toevoegen)",
+        "Een korte uitleg in twee minuten: wat is een 21-dagen-resultaat-post, wat doet 'ie, en wat ga je er straks mee bereiken? Eén filmpje van Gaby en Raoul plus een korte begeleidende tekst, zodat je weet hoe deze flow eruitziet voor je 'm zelf gaat doen. Een 21-dagen-post is bewezen sterk, en brengt vaak direct nieuwe productgebruikers binnen, soms zelfs meerdere op één dag. De PDF 'Voorbereiding 21 Dagen Post' staat klaar om te downloaden als je 'm later wil teruglezen.",
     },
     {
       id: "core-v9-sideflow-21dagen-2-filmpjes-zelf",
       label: "Bekijk zelf de prospect-filmpjes die je gaat versturen aan info-vragers",
       verplicht: true,
       uitleg:
-        "Bekijk zelf de prospect-filmpjes die je straks naar info-vragers wil sturen. Niet om 'm uit je hoofd te leren, wel om te weten wat erin zit, hoe lang 'ie duurt, en in welke situatie 'ie past. Want zodra iemand straks vraagt 'wat heb je gedaan?', wil je niet een filmpje versturen dat je zelf nog niet hebt gezien. Dezelfde filmpjes gebruik je later ook bij algemeen prospect-werk en in opvolg-stappen. (TODO: media-links)",
+        "Bekijk zelf de prospect-filmpjes die je straks naar info-vragers wil sturen. Niet om 'm uit je hoofd te leren, wel om te weten wat erin zit, hoe lang 'ie duurt, en in welke situatie 'ie past. Want zodra iemand straks meer wil weten, wil je niet een filmpje versturen dat je zelf nog niet hebt gezien. Dezelfde filmpjes gebruik je later ook bij algemeen prospect-werk en in opvolg-stappen.",
     },
     {
       id: "core-v9-sideflow-21dagen-3-veranderingen-inventariseren",

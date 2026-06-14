@@ -423,7 +423,7 @@ Dit is de post die alles in beweging zet. Niet om iets te verkopen, wel om mense
 
 PRE-POST, ALS JE NOG GEEN EIGEN ERVARING HEBT
 
-Je deelt je voornemen. "Ik begin vandaag aan iets, en over een paar weken vertel ik je wat ik heb gemerkt." Geen claim, wel spanning en openheid. Dat geeft jou de tijd om je eigen ervaring op te bouwen, en het lokt vanzelf de vraag uit: "wat ga je dan doen?".
+Je deelt je voornemen open en eerlijk, volgens de vaste opbouw: hoe je je de laatste tijd voelde, wat je hebt besloten te doen, en je positieve verwachting. Geen claim, wel een echt verhaal. Dat geeft jou de tijd om je eigen ervaring op te bouwen, en het raakt mensen omdat het oprecht is, niet omdat het een raadsel is.
 
 21-DAGEN-POST, ALS JE WEL ERVARING HEBT
 

@@ -75,37 +75,74 @@ function telTier(taken: ControllableTaak[], tier: Tier): number {
   return taken.filter((t) => tierVan(t).tier === tier).length;
 }
 
+// Mensentaal-vertaling van plekken in de app, zodat Gaby en Jaimie geen
+// technische paden hoeven te lezen.
+function plekNaam(route: string): string {
+  const basis = route.split("?")[0].split("#")[0];
+  const map: Record<string, string> = {
+    "/coach": "de ELEVA Mentor (de AI-mentor)",
+    "/dashboard": "het dashboard (startscherm)",
+    "/namenlijst": "de namenlijst",
+    "/scripts": "de scripts-bibliotheek",
+    "/statistieken": "het statistieken-scherm",
+    "/team": "het team-overzicht",
+    "/klant": "de klantomgeving",
+    "/instellingen/freebies": "de freebie-toolkit",
+    "/instellingen/mijn-tracking-links": "de eigen deel-links",
+    "/mijn-zinnen": "de eigen bewaarde zinnen",
+    "/academy/social-media": "de Academy, social-media-training",
+  };
+  return map[basis] ?? basis;
+}
+
+// Mensentaal-uitleg van de inline-widgets die in een stap kunnen verschijnen.
+function widgetUitleg(embed: string): string {
+  const map: Record<string, string> = {
+    "sponsor-melding":
+      "Hier verschijnt een knop waarmee je met één tik een berichtje naar je sponsor stuurt.",
+    "momentum-radar":
+      "Hier verschijnt je momentum-radar: een lijstje van de mensen waar nu de meeste beweging in zit.",
+    "partner-check":
+      "Hier verschijnt een overzichtje van je eigen teamleden, om even te checken hoe het met ze gaat.",
+    "funnel-analyse":
+      "Hier verschijnt de Mentor-analyse van je pijplijn: waar blijven mensen hangen, en wat is je volgende actie.",
+    "vcard-upload":
+      "Hier verschijnt een knop om je telefoonboek te importeren als extra namen-bron.",
+    "prepost-keuze":
+      "Hier kies je tussen een pre-post of een 21-dagen-post, en opent de bijbehorende aparte mini-flow.",
+  };
+  return map[embed] ?? `Hier verschijnt een speciaal onderdeel in de stap (${embed}).`;
+}
+
 function renderTaak(t: ControllableTaak, idx: number): string {
   const tier = tierVan(t).tier;
 
   const extras: string[] = [];
   if (t.actieRoute) {
     extras.push(
-      `<span class="extra-route">➡ route: <code>${esc(t.actieRoute)}</code>${
-        t.actieRouteLabel ? ` <em>("${esc(t.actieRouteLabel)}")</em>` : ""
-      }</span>`,
+      `<span class="extra-route">👉 Deze stap brengt je naar <strong>${esc(plekNaam(t.actieRoute))}</strong>${
+        t.actieRouteLabel ? `, via de knop "${esc(t.actieRouteLabel)}"` : ""
+      }.</span>`,
     );
   }
   if (t.inlineEmbed) {
-    extras.push(
-      `<span class="extra-embed">📦 inline-embed: <code>${esc(t.inlineEmbed)}</code></span>`,
-    );
+    extras.push(`<span class="extra-embed">🔧 ${esc(widgetUitleg(t.inlineEmbed))}</span>`);
   }
   if (t.inlineActie) {
     extras.push(
-      `<span class="extra-actie">✏️ schrijf-veld: <code>${esc(t.inlineActie.slug)}</code> ("${esc(t.inlineActie.label)}")</span>`,
+      `<span class="extra-actie">✏️ Hier schrijf en bewaar je iets in eigen woorden: "${esc(t.inlineActie.label)}".</span>`,
     );
   }
   if (t.uitnodigHelpKnoppen) {
     extras.push(
-      `<span class="extra-help">🆘 uitnodig-help-knoppen actief</span>`,
+      `<span class="extra-help">🆘 Hier staan hulp-knoppen klaar met voorbeeld-uitnodigingen om uit te kiezen.</span>`,
     );
   }
   if (t.vereistMobiel) {
-    extras.push(`<span class="extra-mobiel">📱 vereist mobiel</span>`);
+    extras.push(`<span class="extra-mobiel">📱 Deze stap doe je op je telefoon.</span>`);
   }
   if (t.filmSlug) {
-    extras.push(`<span class="extra-film">🎬 film: <code>${esc(t.filmSlug)}</code></span>`);
+    extras.push(`<span class="extra-film">🎬 Hier komt een filmpje te staan.</span>`);
   }
 
   return `
@@ -146,17 +183,17 @@ function renderDag(d: Dag): string {
         <h3>📖 Wat je leert (teaching)</h3>
         <div class="wat-je-leert">${nl2html(d.watJeLeert)}</div>
 
-        <h3>✅ Vandaag doen, ${d.vandaagDoen.length} substeps</h3>
+        <h3>✅ Wat je deze dag doet, ${d.vandaagDoen.length} stappen</h3>
         <ol class="taken-lijst">
           ${d.vandaagDoen.map((t, i) => renderTaak(t, i)).join("")}
         </ol>
 
-        <h3>📍 Waar in ELEVA</h3>
+        <h3>📍 Waar in ELEVA je dit doet</h3>
         <ul class="eleva-paden">
           ${d.waarInEleva
             .map(
               (p) =>
-                `<li><strong>${esc(p.actie)}</strong>${p.route ? ` → <code>${esc(p.route)}</code>` : ""}${p.menupad ? ` <em>(${esc(p.menupad)})</em>` : ""}</li>`,
+                `<li><strong>${esc(p.actie)}</strong>${p.route ? ` → ${esc(plekNaam(p.route))}` : ""}${p.menupad ? ` <em>(${esc(p.menupad)})</em>` : ""}</li>`,
             )
             .join("")}
         </ul>
@@ -178,7 +215,7 @@ function renderSideflow(sf: Sideflow): string {
   return `
     <details class="sideflow">
       <summary>
-        <span class="sideflow-nr">Sideflow</span>
+        <span class="sideflow-nr">Mini-flow</span>
         <span class="dag-titel">${esc(sf.titel)}</span>
         <span class="dag-meta">
           <span class="badge sideflow-badge">${esc(sf.slug)}</span>
@@ -195,7 +232,7 @@ function renderSideflow(sf: Sideflow): string {
         <h3>📖 Intro</h3>
         <div class="wat-je-leert">${nl2html(sf.intro)}</div>
 
-        <h3>✅ Substeps, ${sf.substeps.length} stuks</h3>
+        <h3>✅ Stappen in deze mini-flow, ${sf.substeps.length} stuks</h3>
         <ol class="taken-lijst">
           ${sf.substeps.map((t, i) => renderTaak(t, i)).join("")}
         </ol>
@@ -521,7 +558,7 @@ const html = `<!doctype html>
     <p>Gegenereerd op ${datum} uit <code>lib/playbook/core-dagen-v9.ts</code>.</p>
     <div class="stats">
       <span>21 dagen</span>
-      <span><strong>${totaalSubsteps}</strong> substeps totaal</span>
+      <span><strong>${totaalSubsteps}</strong> stappen totaal</span>
       <span><strong>${totaalKern}</strong> kern</span>
       <span>${totaalAangeraden} aangeraden</span>
       <span>${totaalVoorwaardelijk} voorwaardelijk</span>
@@ -530,7 +567,7 @@ const html = `<!doctype html>
   </header>
 
   <div class="instructie">
-    <p style="margin:0"><strong>Klik op een dag</strong> om de volledige inhoud te zien: fase-doel, teaching, alle substeps (met tag + uitleg), waar-in-ELEVA-paden en het waarom-dit-werkt-principe.</p>
+    <p style="margin:0"><strong>Klik op een dag</strong> om de volledige inhoud te zien: het doel van de fase, de uitleg-tekst, alle stappen (met tag + uitleg), waar in ELEVA je het doet, en waarom het werkt.</p>
     <p style="margin:12px 0 4px"><strong>Wat de tags betekenen:</strong></p>
     <p style="margin:4px 0 0; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
       <span class="taak-status-pill pill-kern">Kern · niet overslaan</span>
@@ -554,7 +591,10 @@ const html = `<!doctype html>
   <h2 class="sectie-kop">21 ankerstappen</h2>
   ${CORE_V9_STAPPEN.map(renderDag).join("")}
 
-  <h2 class="sectie-kop">Sideflows (los van de 21 ankerstappen)</h2>
+  <h2 class="sectie-kop">Mini-flows (starten op na een keuze, los van de 21 dagen)</h2>
+  <div class="instructie" style="margin-bottom:12px">
+    <p style="margin:0">Een mini-flow is een apart stappenpad dat opent zodra de member een keuze maakt. In dit geval: kiest iemand op dag 1 voor een pre-post of een 21-dagen-resultaat-post, dan opent de bijbehorende mini-flow met de stappen om die post te maken, te plaatsen en op te volgen. Het zit dus niet in de dagelijkse dag-flow, maar verschijnt alleen als de member ervoor kiest.</p>
+  </div>
   ${Object.values(CORE_V9_SIDEFLOWS).map(renderSideflow).join("")}
 
 </div>
