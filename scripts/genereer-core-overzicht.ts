@@ -13,6 +13,7 @@
 import * as fs from "fs";
 import { CORE_V9_STAPPEN } from "../lib/playbook/core-dagen-v9";
 import { CORE_V9_SIDEFLOWS } from "../lib/playbook/core-sideflows-v9";
+import { genereerDMOStappen } from "../lib/dtt/dmo-stappen";
 import type { Dag, ControllableTaak } from "../lib/playbook/types";
 import type { Sideflow } from "../lib/playbook/core-sideflows-v9";
 
@@ -183,10 +184,26 @@ function renderDag(d: Dag): string {
         <h3>📖 Wat je leert (teaching)</h3>
         <div class="wat-je-leert">${nl2html(d.watJeLeert)}</div>
 
-        <h3>✅ Wat je deze dag doet, ${d.vandaagDoen.length} stappen</h3>
+        <h3>✅ Wat je deze dag leert en doet, ${d.vandaagDoen.length} stappen</h3>
         <ol class="taken-lijst">
           ${d.vandaagDoen.map((t, i) => renderTaak(t, i)).join("")}
         </ol>
+
+        ${(() => {
+          const dmo = genereerDMOStappen(d.nummer, "gestaag", {
+            bestellinksGekoppeld: d.nummer >= 4,
+            eersteKlantenStapVoorbij: d.nummer >= 12,
+          });
+          if (dmo.length === 0) return "";
+          return `
+        <h3>🔁 Dagelijks ritme (DMO), komt hier elke dag bovenop</h3>
+        <div class="instructie" style="margin:0 0 8px">
+          <p style="margin:0">Dit zijn de dagelijkse-actie-stappen (opener-berichten sturen, opvolgen, op social reageren, je pijplijn bijwerken). Ze verschijnen <strong>elke dag</strong> in de echte flow, tussen de leerstappen. Let op: ze staan nu nog NIET in de dag-content zelf, ze worden los toegevoegd, en daarom zag je ze niet in dit overzicht. De aantallen hangen af van het gekozen tempo (hier getoond voor tempo 'Gestaag', 3 contacten + 2 opvolgingen per dag). Op dit moment zijn ze allemaal 'Aangeraden' (overslaanbaar), en opvolgen begint pas vanaf dag 12.</p>
+        </div>
+        <ol class="taken-lijst">
+          ${dmo.map((t, i) => renderTaak(t, i)).join("")}
+        </ol>`;
+        })()}
 
         <h3>📍 Waar in ELEVA je dit doet</h3>
         <ul class="eleva-paden">

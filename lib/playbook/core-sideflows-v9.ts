@@ -55,10 +55,10 @@ export const DM_SCRIPT_BLIJ = `Hey [naam], bedankt voor je reactie / like op mij
 
 export const PRE_POST_SIDEFLOW: Sideflow = {
   slug: "pre-post",
-  titel: "🌱 Pre-post side-flow",
+  titel: "🌱 Je pre-post maken",
   ondertitel:
     "Je gaat beginnen, deelt je voornemen, en bouwt aanwezigheid op",
-  intro: `Welkom in de pre-post side-flow 💟
+  intro: `Welkom bij het maken van je pre-post 💟
 
 Je hebt nog geen eigen resultaat met de producten. Geen probleem: je gaat beginnen, en je gebruikt deze start als startschot om mensen erbij te betrekken. Dat is precies wat een pre-post is.
 
@@ -168,26 +168,26 @@ Belangrijk: de tekst zegt NIET 'ik heb besloten anderen te helpen', want je hebt
     },
     {
       id: "core-v9-sideflow-prepost-10-reflectie",
-      label: "Sidestep-opbrengst reflectie + 21-dagen-trigger instellen",
+      label: "Korte terugblik + je 21-dagen-post inplannen",
       verplicht: true,
       actieRoute: "/coach",
       uitleg:
-        "Korte sidestep-reflectie: hoeveel reacties heb je gehad, hoeveel DM's, hoeveel prospects zijn er bijgekomen? De Mentor noteert het voor je. Stel meteen in wanneer je over een paar weken de 21-dagen-resultaat-post-trigger wil ontvangen, default staat op 21 dagen na vandaag. Zo komt 'ie vanzelf in beeld wanneer je 't nodig hebt, in plaats van dat je 'm zelf moet onthouden.",
+        "Korte terugblik op je pre-post: hoeveel reacties heb je gehad, hoeveel DM's, hoeveel prospects zijn er bijgekomen? De Mentor noteert het voor je. Plan meteen in over hoeveel weken je een herinnering wil om je 21-dagen-resultaat-post te maken (standaard 21 dagen na vandaag). Dan krijg je er vanzelf een seintje over wanneer het zover is, in plaats van dat je 't zelf moet onthouden.",
     },
     {
       id: "core-v9-sideflow-prepost-11-afronden",
       label: "Afronden of openliggen?",
       verplicht: true,
       uitleg:
-        "Twee opties om deze sidestep af te ronden. 'Voltooid' betekent: sidestep sluit, Core schuift door naar ankerstap 2 (top-20 + webshop-pivot). 'Nog mee bezig' betekent: sidestep blijft openliggen, en je krijgt een reminder over een paar dagen om 'm af te ronden. Voel je nog ruimte voor follow-up of verwacht je nog reacties? Hou 'm dan rustig open. Klaar met deze ronde? Voltooid, en door naar het volgende anker.",
+        "Twee opties om deze post-reeks af te ronden. 'Voltooid' betekent: deze reeks sluit, en je gaat verder met dag 2 (je top-20-namenlijst + webshop-uitnodigingen). 'Nog mee bezig' betekent: de reeks blijft openstaan, en je krijgt over een paar dagen een herinnering om 'm af te ronden. Verwacht je nog reacties of wil je nog opvolgen? Hou 'm dan rustig open. Klaar met deze ronde? Kies Voltooid en ga door naar dag 2.",
     },
   ],
 
-  slotTekst: `Klaar met de pre-post-flow? Goed gedaan 💟
+  slotTekst: `Klaar met je pre-post? Goed gedaan 💟
 
-Vanaf hier opent ankerstap 2 (top-20-namenlijst + webshop-pivot). De prospects die je via deze post hebt binnengehaald zitten al in je lijst, samen met de mensen uit je top-20 ga je daar straks mee verder.
+Vanaf hier ga je verder met dag 2 (je top-20-namenlijst + webshop-uitnodigingen). De prospects die je via deze post hebt binnengehaald zitten al in je lijst, samen met de mensen uit je top-20 ga je daar straks mee verder.
 
-En over ongeveer 21 dagen krijg je via trigger een uitnodiging om de 21-dagen-resultaat-post side-flow te starten. Tegen die tijd heb je wél eigen ervaring om over te delen.`,
+En over ongeveer 21 dagen krijg je automatisch een uitnodiging om je 21-dagen-resultaat-post te maken. Tegen die tijd heb je wél eigen ervaring om over te delen.`,
 };
 
 // ============================================================
@@ -196,10 +196,10 @@ En over ongeveer 21 dagen krijg je via trigger een uitnodiging om de 21-dagen-re
 
 export const VEERTIEN_DAGEN_POST_SIDEFLOW: Sideflow = {
   slug: "21-dagen-post",
-  titel: "🌟 21-dagen-resultaat-post side-flow",
+  titel: "🌟 Je 21-dagen-resultaat-post maken",
   ondertitel:
     "Je deelt wat je hebt ervaren, claim-vrij en eerlijk, en brengt mensen in beweging",
-  intro: `Welkom in de 21-dagen-resultaat-post side-flow 💟
+  intro: `Welkom bij het maken van je 21-dagen-resultaat-post 💟
 
 Je hebt ervaring met de producten. Inmiddels merk je wat er anders is geworden in jouw lichaam, je stemming, je energie, je slaap, je vel. Vandaag deel je dat op een manier die mensen aan het denken zet zonder dat je een belofte doet.
 
@@ -322,26 +322,26 @@ Hier past 'ik heb besloten anderen hier ook mee te helpen' wel, want je hebt het
     },
     {
       id: "core-v9-sideflow-21dagen-11-reflectie",
-      label: "Sidestep-opbrengst reflectie",
+      label: "Korte terugblik op je post",
       verplicht: true,
       actieRoute: "/coach",
       uitleg:
-        "Korte sidestep-reflectie: hoeveel reacties heb je gehad, hoeveel DM's, hoeveel prospects en eerste klanten? De Mentor noteert het voor latere referentie. Daar heb je 't bij ankerstap 18 (resultaat-post-iteratie) hard nodig, want dan vergelijk je deze post met de tweede iteratie die je gaat maken. Niet vergeten kort op te schrijven, dat scheelt straks veel zoekwerk.",
+        "Korte terugblik op je post: hoeveel reacties heb je gehad, hoeveel DM's, hoeveel prospects en eerste klanten? De Mentor noteert het voor later. Op dag 18 (als je je tweede resultaat-post maakt) heb je dit nodig, want dan vergelijk je deze post met die tweede. Even kort opschrijven dus, dat scheelt straks veel zoekwerk.",
     },
     {
       id: "core-v9-sideflow-21dagen-12-afronden",
       label: "Afronden of openliggen?",
       verplicht: true,
       uitleg:
-        "Twee opties om deze sidestep af te ronden. 'Voltooid' betekent: sidestep sluit, Core schuift door naar ankerstap 2 (top-20 + webshop-pivot). 'Nog mee bezig' betekent: sidestep blijft openliggen, en je krijgt een reminder over een paar dagen om 'm af te ronden. Voel je nog ruimte voor follow-up of verwacht je nog reacties? Hou 'm dan rustig open. Klaar met deze ronde? Voltooid, en door naar het volgende anker.",
+        "Twee opties om deze post-reeks af te ronden. 'Voltooid' betekent: deze reeks sluit, en je gaat verder met dag 2 (je top-20-namenlijst + webshop-uitnodigingen). 'Nog mee bezig' betekent: de reeks blijft openstaan, en je krijgt over een paar dagen een herinnering om 'm af te ronden. Verwacht je nog reacties of wil je nog opvolgen? Hou 'm dan rustig open. Klaar met deze ronde? Kies Voltooid en ga door naar dag 2.",
     },
   ],
 
-  slotTekst: `Klaar met de 21-dagen-post-flow? Wat een mooi moment 💟
+  slotTekst: `Klaar met je 21-dagen-post? Wat een mooi moment 💟
 
-Vanaf hier opent ankerstap 2 (top-20-namenlijst + webshop-pivot). De prospects die je via deze post hebt binnengehaald zitten al in je lijst.
+Vanaf hier ga je verder met dag 2 (je top-20-namenlijst + webshop-uitnodigingen). De prospects die je via deze post hebt binnengehaald zitten al in je lijst.
 
-In stap 18 maak je een tweede iteratie van deze post, met een andere invalshoek of aanvullende veranderingen.`,
+Op dag 18 maak je een tweede versie van deze post, met een andere invalshoek of aanvullende veranderingen.`,
 };
 
 // ============================================================
