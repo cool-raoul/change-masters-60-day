@@ -14,8 +14,7 @@ import { Stap4ModusKeuze } from "@/components/onboarding/Stap4ModusKeuze";
 import { NamenForm } from "@/components/vandaag/inline-embeds/NamenForm";
 import type { Modus } from "@/lib/onboarding/voltooiingen";
 import { ITEM_SLUGS } from "@/lib/onboarding/sleutels";
-
-const SPONSOR_TEL = "https://wa.me/31612345678"; // fallback, wordt dynamisch geladen
+import { waLinkNaar } from "@/lib/util/wa-nummer";
 
 // De oude Stap4NamenlijstInline (5 namen verplicht in onboarding) is per
 // 2026-05-13 weggehaald. Dat dubbelde met dag 1 + dag 2 in het 21-daagse
@@ -121,14 +120,20 @@ export default function OnboardingPagina() {
       if (profData.sponsor_id) {
         const { data: sponsor } = await supabase
           .from("profiles")
-          .select("full_name, email")
+          .select("full_name, email, telefoon")
           .eq("id", profData.sponsor_id)
           .single();
         if (sponsor) {
-          const s = sponsor as { full_name: string };
+          const s = sponsor as { full_name: string; telefoon?: string | null };
           setSponsorNaam(s.full_name);
+          // Met sponsor-nummer opent WhatsApp DIRECT bij de sponsor (geen
+          // contact-zoeker). Zonder nummer valt 'ie terug op tekst-only.
+          const voornaam = s.full_name.split(" ")[0];
           setSponsorWaLink(
-            `https://wa.me/?text=Hoi%20${encodeURIComponent(s.full_name)}%2C%20ik%20heb%20een%20vraag%20over%20de%20setup`,
+            waLinkNaar(
+              s.telefoon,
+              `Hoi ${voornaam}, ik heb een vraag over de setup`,
+            ),
           );
         }
       }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { waLinkNaar } from "@/lib/util/wa-nummer";
 
 // ============================================================
 // SponsorMeldingKnop, inline-embed voor /vandaag dag 1 'sponsor-melding'
@@ -198,6 +199,7 @@ function pakTitel(taakId: string | undefined): string {
 
 type Sponsor = {
   naam: string | null;
+  telefoon: string | null;
 };
 
 export function SponsorMeldingKnop({ opVoltooid, alVoltooid, taakId }: Props) {
@@ -216,23 +218,39 @@ export function SponsorMeldingKnop({ opVoltooid, alVoltooid, taakId }: Props) {
         if (actief) setLaden(false);
         return;
       }
-      const sponsorId = (user.user_metadata as { sponsor_id?: string } | undefined)
+      let sponsorId = (user.user_metadata as { sponsor_id?: string } | undefined)
         ?.sponsor_id;
+      // Fallback: sponsor_id uit het eigen profiel als de metadata leeg is.
+      if (!sponsorId) {
+        const { data: eigen } = await supabase
+          .from("profiles")
+          .select("sponsor_id")
+          .eq("id", user.id)
+          .maybeSingle();
+        sponsorId =
+          (eigen as { sponsor_id?: string | null } | null)?.sponsor_id ??
+          undefined;
+      }
       if (!sponsorId) {
         if (actief) {
-          setSponsor({ naam: null });
+          setSponsor({ naam: null, telefoon: null });
           setLaden(false);
         }
         return;
       }
       const { data } = await supabase
         .from("profiles")
-        .select("full_name")
+        .select("full_name, telefoon")
         .eq("id", sponsorId)
         .maybeSingle();
       if (actief) {
-        const sp = data as { full_name?: string | null } | null;
-        setSponsor({ naam: sp?.full_name ?? null });
+        const sp = data as
+          | { full_name?: string | null; telefoon?: string | null }
+          | null;
+        setSponsor({
+          naam: sp?.full_name ?? null,
+          telefoon: sp?.telefoon ?? null,
+        });
         setLaden(false);
       }
     }
@@ -246,9 +264,10 @@ export function SponsorMeldingKnop({ opVoltooid, alVoltooid, taakId }: Props) {
   const bericht = pakBericht(taakId, sponsorVoornaam);
   const titel = pakTitel(taakId);
 
-  // WhatsApp zonder nummer → opent een contact-picker. Profiles in
-  // ELEVA hebben (nog) geen telefoonkolom, dus dit is de schoonste route.
-  const waLink = `https://wa.me/?text=${encodeURIComponent(bericht)}`;
+  // Met sponsor-nummer opent WhatsApp DIRECT bij de sponsor (geen
+  // contact-zoeker). Zonder nummer valt 'ie terug op de tekst-only versie.
+  const heeftNummer = !!sponsor?.telefoon;
+  const waLink = waLinkNaar(sponsor?.telefoon, bericht);
 
   if (bevestigd) {
     return (
@@ -280,7 +299,10 @@ export function SponsorMeldingKnop({ opVoltooid, alVoltooid, taakId }: Props) {
         </h4>
         <p className="text-cm-white opacity-80 text-xs leading-relaxed">
           We hebben een korte tekst voor je voorgeschreven, pas 'm aan naar
-          je eigen toon, of stuur 'm zoals 'ie is. Eén klik en WhatsApp opent.
+          je eigen toon, of stuur 'm zoals 'ie is.{" "}
+          {heeftNummer && sponsorVoornaam
+            ? `Eén klik en WhatsApp opent direct bij ${sponsorVoornaam}.`
+            : "Eén klik en WhatsApp opent."}
         </p>
       </div>
 
@@ -288,10 +310,12 @@ export function SponsorMeldingKnop({ opVoltooid, alVoltooid, taakId }: Props) {
         "{bericht}"
       </div>
 
-      <p className="text-xs text-cm-white opacity-60">
-        ℹ️ WhatsApp opent een contact-zoeker, kies daar je sponsor of de
-        persoon die jou heeft uitgenodigd.
-      </p>
+      {!heeftNummer && (
+        <p className="text-xs text-cm-white opacity-60">
+          ℹ️ WhatsApp opent een contact-zoeker, kies daar je sponsor of de
+          persoon die jou heeft uitgenodigd.
+        </p>
+      )}
 
       <div className="flex flex-col sm:flex-row gap-2">
         <a
@@ -300,7 +324,9 @@ export function SponsorMeldingKnop({ opVoltooid, alVoltooid, taakId }: Props) {
           rel="noopener noreferrer"
           className="btn-gold flex-1 py-3 text-sm font-semibold text-center inline-block"
         >
-          📱 Open WhatsApp met dit bericht
+          {heeftNummer && sponsorVoornaam
+            ? `📱 Open WhatsApp naar ${sponsorVoornaam}`
+            : "📱 Open WhatsApp met dit bericht"}
         </a>
         <button
           type="button"
