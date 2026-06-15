@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { InstellingenForm } from "@/components/InstellingenForm";
 import { ProfielFotoUpload } from "@/components/instellingen/ProfielFotoUpload";
 import { CoreTempoSectie } from "@/components/instellingen/CoreTempoSectie";
+import { RouteWisselen } from "@/components/instellingen/RouteWisselen";
 import { PresenceToggle } from "@/components/presence/PresenceToggle";
 import { SocialAccountsForm } from "@/components/instellingen/SocialAccountsForm";
 import { TempoSectie } from "@/components/instellingen/TempoSectie";
@@ -102,6 +103,17 @@ export default async function InstellingenPagina() {
           }
         />
       )}
+
+      {/* Van route wisselen (Sprint / Core / Pro). De officiele member-
+          facing switch: /welkom-keuze belooft dat je altijd later kunt
+          wisselen via je instellingen, hier maak je dat waar. Wisselen is
+          non-destructief, voortgang blijft per route bewaard. */}
+      <RouteWisselen
+        userId={user.id}
+        huidigeModus={
+          (profile as { modus?: string | null } | null)?.modus ?? null
+        }
+      />
 
       {/* Social-profielen, gebruikt door /vandaag taken die naar
           Facebook / Instagram / LinkedIn verwijzen. */}
