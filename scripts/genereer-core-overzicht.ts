@@ -633,10 +633,17 @@ const html = `<!doctype html>
 const outputPad =
   "C:/Users/raoul/OneDrive/Bureaublad/CLAUDE/60 day run/CORE-V9-OVERZICHT.html";
 
+// Tweede kopie in de publieke map, zodat Vercel 'm als deelbare web-link
+// serveert op /core-overzicht.html (door te sturen naar Gaby + Jaimie).
+const publiekPad =
+  "C:/Users/raoul/OneDrive/Bureaublad/CLAUDE/60 day run/change-masters/public/core-overzicht.html";
+
 fs.writeFileSync(outputPad, html, "utf8");
+fs.writeFileSync(publiekPad, html, "utf8");
 
 console.log("Klaar.");
-console.log("Output: " + outputPad);
+console.log("Output (bureaublad): " + outputPad);
+console.log("Output (web): " + publiekPad);
 console.log(
   `Stats: 21 dagen, ${totaalSubsteps} substeps (${totaalKern} kern, ${totaalAangeraden} aangeraden, ${totaalVoorwaardelijk} voorwaardelijk), ${Object.keys(CORE_V9_SIDEFLOWS).length} sideflows.`,
 );
