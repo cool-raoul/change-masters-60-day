@@ -89,7 +89,15 @@ function CoreBlock({
           .select("modus, core_startdatum")
           .eq("id", user.id)
           .maybeSingle();
-        const profielUpdates: Record<string, unknown> = {};
+        // onboarding_klaar ALTIJD true bij het afronden van deze laatste
+        // stap. Voorheen werd dit alleen in /mijn-why gezet (na het WHY-
+        // gesprek). De founder slaat dat gesprek over (founder-skip in
+        // stap 2), dus bleef onboarding_klaar=false → middleware kaatste
+        // /vandaag eindeloos terug naar /onboarding ("blijft hangen op
+        // de DTT-stap, gaat niet door naar dag 1").
+        const profielUpdates: Record<string, unknown> = {
+          onboarding_klaar: true,
+        };
         if (!(prof as { modus?: string | null } | null)?.modus) {
           profielUpdates.modus = "core";
         }
@@ -207,7 +215,12 @@ function SprintTempoBlock({
           .select("modus, sprint_startdatum")
           .eq("id", user.id)
           .maybeSingle();
-        const profielUpdates: Record<string, unknown> = {};
+        // onboarding_klaar ALTIJD true bij het afronden van deze laatste
+        // stap (zie toelichting in CoreBlock): voorkomt de redirect-loop
+        // wanneer het WHY-gesprek is overgeslagen (o.a. founder-skip).
+        const profielUpdates: Record<string, unknown> = {
+          onboarding_klaar: true,
+        };
         if (!(prof as { modus?: string | null } | null)?.modus) {
           profielUpdates.modus = "sprint";
         }
