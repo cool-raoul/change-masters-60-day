@@ -40,6 +40,14 @@ export default async function ModusTestPagina() {
 
   if (role !== "founder" && !isTester) redirect("/dashboard");
 
+  // Volledige (destructieve) reset is alleen voor founders + specifieke
+  // test-accounts. Gewone testers bouwen echte lijsten en mogen niet
+  // resetten. Moet matchen met RESET_ALLOWLIST in /api/test/reset.
+  const RESET_ALLOWLIST = ["livingwithlv@outlook.com"];
+  const kanVolledigResetten =
+    role === "founder" ||
+    (!!user.email && RESET_ALLOWLIST.includes(user.email.toLowerCase()));
+
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <Link
@@ -72,7 +80,11 @@ export default async function ModusTestPagina() {
         </div>
       </div>
 
-      <ModusSwitchKnoppen userId={user.id} huidigeModus={huidigeModus} />
+      <ModusSwitchKnoppen
+        userId={user.id}
+        huidigeModus={huidigeModus}
+        kanVolledigResetten={kanVolledigResetten}
+      />
 
       <div className="card border-l-4 border-amber-500">
         <h2 className="text-amber-300 font-semibold text-sm flex items-center gap-2 mb-2">
@@ -87,10 +99,16 @@ export default async function ModusTestPagina() {
             normale modus, kies dan opnieuw &quot;Sprint&quot; (jullie testers-modus).
           </li>
           <li>
-            • Bij &quot;Reset naar nieuwe gebruiker&quot; wordt je modus op leeg gezet
-            en zie je de keuzepagina alsof je net hebt ingelogd. Je voortgang
-            (namen, prospects, etc.) blijft bewaard.
+            • &quot;Naar keuzepagina&quot; maakt alleen je modus leeg, je voortgang
+            (namen, prospects, etc.) blijft bewaard. Dat is bewust zo voor
+            normale gebruikers die van modus wisselen.
           </li>
+          {kanVolledigResetten && (
+            <li>
+              • De rode &quot;Volledige reset&quot; wist ALLES en begint opnieuw.
+              Alleen voor jouw test-account, gewone gebruikers kunnen dit niet.
+            </li>
+          )}
         </ul>
       </div>
     </div>
