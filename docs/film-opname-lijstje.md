@@ -37,7 +37,23 @@ punten die de film moet raken).
     je er stap voor stap doorheen.
   - Loop je vast, dan is er de Mentor, en anders ben ik er.
 
-### 2. Welkomstfilm checken (bestaat al)
+### 2. WHY-uitleg op de WHY-pagina ⭐ (filmblok staat klaar)
+- **Plek:** /mijn-why, media-blok **boven-titel** (open /mijn-why, zet
+  edit-modus aan, plak de URL in het blok boven het uitleg-kaartje).
+- **Doel:** uitleggen WAT een WHY is en WAAROM je 'm maakt, vlak voordat
+  iemand het WHY-gesprek met de Mentor start. De geschreven uitleg staat
+  er al onder, dit filmpje is jouw stem erbij.
+- **Duur:** 60-90 sec
+- **Spreek-ankers:**
+  - Je WHY is de reden waarom je begonnen bent. Je brandstof op de
+    mindere dagen.
+  - Mensen haken niet aan op een product of een bedrijf, ze haken aan op
+    jouw persoonlijke verhaal. Daarom doen we dit eerst.
+  - Zo meteen stelt de Mentor je een paar vragen. Wees eerlijk, hoe
+    opener je bent hoe sterker je WHY wordt.
+  - Hij hoeft niet meteen perfect, je mag 'm altijd bijschaven.
+
+### 3. Welkomstfilm checken (bestaat al)
 - **Plek:** Films-CMS slug `intro-welkom`, heeft al een URL
 - **Actie:** kijk 'm één keer terug. Klopt 'ie nog na alle
   verbouwingen (Core/Sprint/Pro-keuze, Mentor ipv coach)? Zo ja:

@@ -7,6 +7,9 @@ import { ChatBericht } from "@/lib/supabase/types";
 import { toast } from "sonner";
 import { useTaal } from "@/lib/i18n/TaalContext";
 import { VoiceInputKnop } from "@/components/voice/VoiceInputKnop";
+import { WatIsJouwWhy } from "@/components/why/WatIsJouwWhy";
+import { EditModeProvider } from "@/components/cms/EditModeContext";
+import { EditModeToggle } from "@/components/cms/EditModeToggle";
 
 export default function MijnWhyPagina() {
   const { v, taal } = useTaal();
@@ -21,6 +24,7 @@ export default function MijnWhyPagina() {
   const [volledigeAntwoord, setVolledigeAntwoord] = useState("");
   const [bestaandeWhy, setBestaandeWhy] = useState<string | null>(null);
   const [isPreview, setIsPreview] = useState(false);
+  const [isFounder, setIsFounder] = useState(false);
   const chatEindRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   // Waar gaan we naartoe na opslag/terug? Default = dashboard. Maar als
@@ -61,6 +65,15 @@ export default function MijnWhyPagina() {
           const why = data?.why_samenvatting;
           if (why && why.replace(/\*/g, "").trim().length > 20) {
             setBestaandeWhy(why.replace(/\*+/g, "").trim());
+          }
+          // Founder-rol bepalen, zodat het WHY-filmblok bewerkbaar is.
+          const { data: prof } = await supabase
+            .from("profiles")
+            .select("role")
+            .eq("id", user.id)
+            .maybeSingle();
+          if ((prof as { role?: string | null } | null)?.role === "founder") {
+            setIsFounder(true);
           }
         }
       } catch (err) {
@@ -322,6 +335,7 @@ export default function MijnWhyPagina() {
   }
 
   return (
+    <EditModeProvider>
     <div className="min-h-screen bg-cm-black flex flex-col">
       {/* Preview banner */}
       {isPreview && (
@@ -353,6 +367,13 @@ export default function MijnWhyPagina() {
         <div className="text-cm-gold text-2xl">✦</div>
       </div>
 
+      {/* Founder edit-modus toggle (voor o.a. het WHY-filmblok) */}
+      {isFounder && (
+        <div className="px-4 pt-3 max-w-2xl mx-auto w-full">
+          <EditModeToggle isFounder={isFounder} />
+        </div>
+      )}
+
       {/* Chat venster */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 max-w-2xl mx-auto w-full">
 
@@ -365,6 +386,14 @@ export default function MijnWhyPagina() {
               <div className="w-3 h-3 bg-cm-gold rounded-full animate-bounce delay-200" />
             </div>
           </div>
+        )}
+
+        {/* Uitgebreide WHY-uitleg + filmblok. Zichtbaar zolang het
+            gesprek nog niet gestart is: zowel voor nieuwe gebruikers als
+            voor wie z'n bestaande WHY herbekijkt. Verdwijnt tijdens het
+            gesprek zelf. */}
+        {!paginaLaden && !gestartMetCoach && (
+          <WatIsJouwWhy isFounder={isFounder} />
         )}
 
         {/* Bestaande WHY tonen als er al één is */}
@@ -406,16 +435,9 @@ export default function MijnWhyPagina() {
               {v("why.welkom")} {gebruikersnaam || "teamlid"}!
             </h2>
 
-            {/* Uitleg wat een WHY is */}
-            <div className="text-left w-full mb-6">
-              <h3 className="text-cm-gold font-semibold mb-2">{v("why.wat_is")}</h3>
-              <p className="text-cm-white text-sm leading-relaxed">
-                {v("why.uitleg1")}
-              </p>
-              <p className="text-cm-white text-sm leading-relaxed mt-2">
-                {v("why.uitleg2")}
-              </p>
-            </div>
+            {/* De uitleg "wat is een WHY" staat nu in het uitgebreide
+                WatIsJouwWhy-blok hierboven (zichtbaar voor iedereen die
+                de pagina opent), dus hier niet meer herhalen. */}
 
             {/* Voorbeeld WHY */}
             <div className="w-full bg-gold-subtle border border-gold-subtle rounded-xl p-4 mb-6 text-left">
@@ -572,5 +594,6 @@ export default function MijnWhyPagina() {
         </div>
       )}
     </div>
+    </EditModeProvider>
   );
 }
