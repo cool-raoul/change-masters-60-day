@@ -14,6 +14,10 @@ import * as fs from "fs";
 import { CORE_V9_STAPPEN } from "../lib/playbook/core-dagen-v9";
 import { CORE_V9_SIDEFLOWS } from "../lib/playbook/core-sideflows-v9";
 import { genereerDMOStappen } from "../lib/dtt/dmo-stappen";
+import {
+  genereerVerankeringsDag,
+  genereerLifetimeDag,
+} from "../lib/playbook/core-dagen";
 import type { Dag, ControllableTaak } from "../lib/playbook/types";
 import type { Sideflow } from "../lib/playbook/core-sideflows-v9";
 
@@ -607,6 +611,14 @@ const html = `<!doctype html>
 
   <h2 class="sectie-kop">21 ankerstappen</h2>
   ${CORE_V9_STAPPEN.map(renderDag).join("")}
+
+  <h2 class="sectie-kop">Na dag 21: het dagelijkse ritme (geen nieuwe leerstof meer)</h2>
+  <div class="instructie" style="margin-bottom:12px">
+    <p style="margin:0"><strong>Dit is belangrijk om te zien:</strong> na de 21 leer-dagen komt er geen nieuwe lesstof meer. Vanaf dag 22 is élke dag het dagelijkse ritme (de DMO): mensen aanspreken, opvolgen, op social reageren en posten, je pijplijn bijwerken. Dit is wat een Core-member in maand 2, 3, 4 en verder elke dag doet.</p>
+    <p style="margin:8px 0 0"><strong>Dag 22 t/m 40 — "Ritme verankeren":</strong> je oefent het dagelijkse ritme in tot het automatisch gaat. <strong>Dag 41 en verder — "Lifetime ritme":</strong> hetzelfde ritme, permanent. Hieronder zie je hoe zo'n dag eruitziet (voorbeeld dag 22 en dag 41).</p>
+  </div>
+  ${renderDag(genereerVerankeringsDag(22))}
+  ${renderDag(genereerLifetimeDag(41))}
 
   <h2 class="sectie-kop">Mini-flows (starten op na een keuze, los van de 21 dagen)</h2>
   <div class="instructie" style="margin-bottom:12px">
