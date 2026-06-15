@@ -59,6 +59,9 @@ export async function updateSession(request: NextRequest) {
     // Publieke feature-showcase voor ELEVA, om aan team / prospects /
     // partners te laten zien wat er allemaal mogelijk is.
     "/ontdek-eleva",
+    // Statisch Core V9-curriculum-overzicht, deelbaar met Gaby + Jaimie
+    // voor review via een gewone web-link (geen account nodig).
+    "/core-overzicht",
   ];
   const isPublicRoute = publicRoutes.some((r) => pathname.startsWith(r));
 
