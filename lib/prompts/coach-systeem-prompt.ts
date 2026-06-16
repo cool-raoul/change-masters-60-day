@@ -448,7 +448,7 @@ Benadruk dat fase 1 het specifieke probleem aanpakt, maar dat blijvende gezondhe
     const mp = mentorProfiel;
     const r: string[] = [];
     if (mp.situatie) r.push(`Situatie: ${mp.situatie}`);
-    if (mp.historieNotitie) r.push(`JOUW WEG TOT NU TOE: ${mp.historieNotitie}`);
+    if (mp.historieNotitie) r.push(`JOUW WEG TOT NU TOE: ${mp.historieNotitie.slice(0, 280)}`);
     if (mp.nicheZaadje) r.push(`Niche: ${mp.nicheZaadje}`);
     if (mp.passies && mp.passies.length) r.push(`Passies: ${mp.passies.join(", ")}`);
     if (mp.idealeKlant) r.push(`Ideale klant: ${mp.idealeKlant}`);
@@ -456,16 +456,17 @@ Benadruk dat fase 1 het specifieke probleem aanpakt, maar dat blijvende gezondhe
       r.push(`Gebruikt zelf: ${mp.eigenProducten.join(", ")}`);
     if (mp.talent) r.push(`Talent: ${mp.talent}`);
     if (mp.drieVerhalen) {
-      if (mp.drieVerhalen.persoonlijk) r.push(`Persoonlijk verhaal: ${mp.drieVerhalen.persoonlijk}`);
-      if (mp.drieVerhalen.product) r.push(`Product-verhaal: ${mp.drieVerhalen.product}`);
-      if (mp.drieVerhalen.business) r.push(`Business-verhaal: ${mp.drieVerhalen.business}`);
+      // In de prompt compact (kosten); de volledige tekst staat in het profiel.
+      if (mp.drieVerhalen.persoonlijk) r.push(`Persoonlijk verhaal: ${mp.drieVerhalen.persoonlijk.slice(0, 280)}`);
+      if (mp.drieVerhalen.product) r.push(`Product-verhaal: ${mp.drieVerhalen.product.slice(0, 280)}`);
+      if (mp.drieVerhalen.business) r.push(`Business-verhaal: ${mp.drieVerhalen.business.slice(0, 280)}`);
     }
     if (mp.eersteDoel)
       r.push(`Eigen doel: ${mp.eersteDoel.waarde} ${mp.eersteDoel.type} in ${mp.eersteDoel.termijn_dagen} dagen`);
     if (mp.stemVoorbeelden && mp.stemVoorbeelden.length) {
       const voorbeelden = mp.stemVoorbeelden
         .slice(-4)
-        .map((s) => `  "${s}"`)
+        .map((s) => `  "${s.slice(0, 200)}"`)
         .join("\n");
       r.push(`STEM-VOORBEELDEN (zo schrijft ${naam} zelf, neem deze toon en persoonlijkheid over, ook als je in een andere taal schrijft):\n${voorbeelden}`);
     }

@@ -42,7 +42,8 @@ export function parseProfielBlok(
   let data: Record<string, unknown>;
   try {
     data = JSON.parse(match[1].trim());
-  } catch {
+  } catch (err) {
+    console.warn("[PROFIEL] JSON parse mislukt:", match[1]?.slice(0, 200), err);
     return null;
   }
   if (!data || typeof data !== "object") return null;
@@ -112,7 +113,8 @@ export function parseProspectBlok(tekst: string): ProspectFormContext | null {
   let data: Record<string, unknown>;
   try {
     data = JSON.parse(match[1].trim());
-  } catch {
+  } catch (err) {
+    console.warn("[PROSPECT] JSON parse mislukt:", match[1]?.slice(0, 200), err);
     return null;
   }
   if (!data || typeof data !== "object") return null;

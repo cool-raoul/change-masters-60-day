@@ -275,23 +275,20 @@ export async function POST(request: Request) {
               }
             }
           }
-          controller.close();
-
           // Het zichtbare antwoord = alles vóór het eerste systeem-blok.
           const zichtbaarAntwoord = zichtbaarTotMarker(volledigAntwoord).trimEnd();
 
+          // De opslag gebeurt VÓÓR controller.close() en wordt geawait. Op
+          // serverless (Vercel) kan de functie na de close bevriezen, waardoor
+          // fire-and-forget writes verloren zouden gaan. Elke write is apart
+          // ge-try-catcht zodat één fout de andere writes en de close niet breekt.
+
           // Mentor-profiel bijwerken als de Mentor een [PROFIEL]-blok meegaf.
-          // Fire-and-forget, faalt stil zodat het gesprek nooit hapert.
           try {
             const patch = parseProfielBlok(volledigAntwoord, mentorProfiel);
-            if (patch) {
-              Promise.resolve(patchMentorProfiel(user.id, patch)).catch(
-                (err: any) =>
-                  console.error("mentor-profiel patch fout:", err),
-              );
-            }
+            if (patch) await patchMentorProfiel(user.id, patch);
           } catch (err) {
-            console.warn("profiel-parse mislukt:", err);
+            console.warn("mentor-profiel opslaan mislukt:", err);
           }
 
           // FORM-context op de prospect-kaart bijwerken als de Mentor een
@@ -304,18 +301,14 @@ export async function POST(request: Request) {
                   ((prospect as { form_context?: Record<string, string> | null })
                     .form_context as Record<string, string> | null) ?? {};
                 const merged = { ...huidigeForm, ...form };
-                Promise.resolve(
-                  supabase
-                    .from("prospects")
-                    .update({ form_context: merged })
-                    .eq("id", prospectId)
-                    .eq("user_id", user.id),
-                ).catch((err: any) =>
-                  console.error("prospect form_context update fout:", err),
-                );
+                await supabase
+                  .from("prospects")
+                  .update({ form_context: merged })
+                  .eq("id", prospectId)
+                  .eq("user_id", user.id);
               }
             } catch (err) {
-              console.warn("prospect-parse mislukt:", err);
+              console.warn("prospect form_context opslaan mislukt:", err);
             }
           }
 
@@ -330,8 +323,7 @@ export async function POST(request: Request) {
             }
           }
 
-          // Sla het zichtbare antwoord op in DB (fire-and-forget), zonder
-          // het [PROFIEL]-blok.
+          // Sla het zichtbare antwoord op in DB, zonder de systeem-blokken.
           if (gesprekId && zichtbaarAntwoord) {
             const nieuwBericht: ChatBericht = {
               role: "assistant",
@@ -339,17 +331,22 @@ export async function POST(request: Request) {
               timestamp: new Date().toISOString(),
             };
             const alleBerichten = [...berichten, nieuwBericht];
-            Promise.resolve(
-              supabase
+            try {
+              await supabase
                 .from("ai_gesprekken")
                 .update({
                   berichten: alleBerichten,
                   updated_at: new Date().toISOString(),
                 })
                 .eq("id", gesprekId)
-                .eq("user_id", user.id)
-            ).catch((err: any) => console.error("DB save fout:", err));
+                .eq("user_id", user.id);
+            } catch (err) {
+              console.error("DB save fout:", err);
+            }
           }
+
+          // Alles opgeslagen, nu pas de stream sluiten.
+          controller.close();
         } catch (err: any) {
           const foutMsg = err?.message || JSON.stringify(err) || "onbekend";
           console.error("Stream fout:", foutMsg);
