@@ -702,7 +702,7 @@ Het hele DM-bericht zit ALTIJD tussen [STUUR] en [/STUUR] tags.`;
   // mag je 't woord "afvallen" gewoon gebruiken, want zij zei 't zelf.
   // Wat ALTIJD verboden blijft is een PRODUCT iets laten beloven.
   const isPubliekeUitingVraag =
-    vraagType === "social" || vraagType === "motivatie";
+    vraagType === "social" || vraagType === "motivatie" || vraagType === "reel";
   const claimvrijSectie = `
 
 ## CLAIMVRIJE COMMUNICATIE — EFSA + ACM-COMPLIANT
@@ -764,6 +764,10 @@ de signaalwoorden uit "CHECK JEZELF EERST" hierboven. Bij twijfel of de tekst pu
 gedeeld: hanteer NIVEAU 2 onverkort. Beter een keer voorzichtig dan een boete.`}
 
 VOLLEDIG VERMIJDEN in publieke uitingen:
+- De BEDRIJFSNAAM (Lifeplus) en specifieke PRODUCTNAMEN (zoals Daily BioBasics, OmeGold). In een
+  publieke post noem je het bedrijf of een product NOOIT bij naam. Je deelt je eigen verhaal en
+  je gevoel, en je maakt mensen nieuwsgierig. Wát het precies is en van welk bedrijf, vertel je
+  pas in een 1-op-1 gesprek als iemand reageert of je een DM stuurt.
 - Medische taal: hormonen, darmen, darmflora, cholesterol, bloeddruk, bloedsuiker,
   ontstekingen, vetverbranding, metabolisme, immuunsysteem, weerstand, slapeloosheid,
   stress (als symptoom), pijn, klachten, ziekte, genezen, herstellen, detoxen, ontgiften,
@@ -786,10 +790,15 @@ VERTAAL-VOORBEELDEN voor publieke uitingen, gebruik deze 1-op-1:
 - "iedereen kan dit" → "iedereen die openstaat voor groei kan dit leren"
 - "financieel vrij worden" → "meer keuzevrijheid creëren in hoe ik leef en werk"
 - "passief inkomen" → "extra inkomstenstroom door bewuste inzet"
+- "dankzij Lifeplus / door [product]" → "dankzij een bewuste keuze die ik maakte / sinds ik iets
+  voor mezelf ben gaan doen" (noem het bedrijf of product NIET, maak nieuwsgierig)
 
 VERPLICHT bij publieke uitingen:
 - Schrijf in IK-TAAL en beleving ("Ik voel me energieker", "Voor mij betekent dit...")
 - Koppel resultaten aan GEDRAG / leefstijl ("door mijn bewuste keuzes"), nooit aan product
+- Maak nieuwsgierig ZONDER het bedrijf of een product te noemen. Algemeen mag wel: dat je een
+  manier hebt gevonden, aanbevelingsmarketing, of je eigen (gratis) webshop. Laat mensen reageren
+  of je een DM sturen, dáár vertel je pas het "wat" en "wie".
 - Bij inkomenspraat altijd nuanceren met "resultaten verschillen per persoon"
 
 ALS DE MEMBER VRAAGT OM EEN CLAIM-TEKST VOOR PUBLIEK:
