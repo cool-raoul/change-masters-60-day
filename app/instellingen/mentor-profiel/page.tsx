@@ -87,6 +87,23 @@ export default function MentorProfielPagina() {
         </p>
       </div>
 
+      <Link
+        href={`/coach?prefill=${encodeURIComponent(
+          "Maak een reel op maat voor mij, in mijn stem en mijn niche.",
+        )}`}
+        className="card flex items-center justify-between gap-3 border-cm-gold/40 hover:border-cm-gold transition-colors"
+      >
+        <div>
+          <p className="text-cm-gold font-semibold text-sm">
+            🎬 Vraag de Mentor om een reel op maat
+          </p>
+          <p className="text-cm-white/70 text-sm mt-0.5">
+            Hij gebruikt je stem en je niche van hieronder.
+          </p>
+        </div>
+        <span className="text-cm-gold text-lg flex-shrink-0">→</span>
+      </Link>
+
       <div className="card space-y-4">
         <Veld label="Je situatie" hint="In het kort: wie ben je, wat doe je.">
           <textarea
