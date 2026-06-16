@@ -13,14 +13,14 @@ type Onderwerp = {
 };
 
 const ONDERWERPEN: Onderwerp[] = [
-  { emoji: "✍️", label: "Een post schrijven", prefill: "Schrijf een social post voor me, in mijn eigen stem." },
-  { emoji: "🎬", label: "Een reel op maat", prefill: "Maak een reel op maat voor mij, in mijn stem en mijn niche." },
-  { emoji: "📨", label: "Een uitnodiging schrijven", prefill: "Help me een uitnodiging schrijven in mijn stem." },
-  { emoji: "🛡️", label: "Een bezwaar oefenen", prefill: "Speel een prospect met een bezwaar en oefen mijn antwoord met me." },
-  { emoji: "💬", label: "Een 3-weg voorbereiden", prefill: "Help me een 3-weg-gesprek voorbereiden." },
-  { emoji: "🔁", label: "Een follow-up aanscherpen", prefill: "Help me mijn follow-up aanscherpen." },
-  { emoji: "🎯", label: "Productadvies", prefill: "Ik wil productadvies, help me het juiste kiezen.", alleenProductadvies: true },
-  { emoji: "💪", label: "Even sparren", prefill: "Ik wil even sparren over waar ik nu sta en wat mijn volgende stap is." },
+  { emoji: "✍️", label: "Een post schrijven", prefill: "Ik wil een social post schrijven in mijn eigen stem. Vraag me eerst waar 'ie over moet gaan." },
+  { emoji: "🎬", label: "Een reel op maat", prefill: "Ik wil een reel maken in mijn stem en mijn niche. Vraag me eerst wat het onderwerp wordt." },
+  { emoji: "📨", label: "Een uitnodiging schrijven", prefill: "Ik wil een uitnodiging schrijven in mijn stem. Vraag me eerst voor wie en hoe ik die persoon ken." },
+  { emoji: "🛡️", label: "Een bezwaar oefenen", prefill: "Ik wil een bezwaar oefenen. Vraag me welk bezwaar ik krijg en speel dan de prospect zodat ik kan oefenen." },
+  { emoji: "💬", label: "Een 3-weg voorbereiden", prefill: "Ik wil een 3-weg-gesprek voorbereiden. Vraag me wie de prospect is en wat ik nog nodig heb." },
+  { emoji: "🔁", label: "Een follow-up aanscherpen", prefill: "Ik wil mijn follow-up aanscherpen. Vraag me om wie het gaat en wat ons laatste contact was." },
+  { emoji: "🎯", label: "Productadvies", prefill: "Ik wil productadvies. Vraag me voor wie het is en wat hun doel of klacht is.", alleenProductadvies: true },
+  { emoji: "💪", label: "Even sparren", prefill: "Ik wil even sparren over waar ik nu sta. Stel me een paar vragen om me op weg te helpen." },
 ];
 
 export function MentorSnelstart({
@@ -46,7 +46,7 @@ export function MentorSnelstart({
         {items.map((o) => (
           <Link
             key={o.label}
-            href={`/coach?prefill=${encodeURIComponent(o.prefill)}`}
+            href={`/coach?prefill=${encodeURIComponent(o.prefill)}&submit=1`}
             className="flex items-center gap-2.5 rounded-xl border border-cm-border bg-cm-surface-2/40 px-3 py-2.5 text-left hover:border-cm-gold/50 hover:bg-cm-surface-2 transition-colors"
           >
             <span className="text-xl flex-shrink-0">{o.emoji}</span>

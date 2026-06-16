@@ -714,7 +714,7 @@ export function ChatVenster({
         ref={chatScrollRef}
         className="flex-1 overflow-y-auto overscroll-contain space-y-4 mb-4 pr-1"
       >
-        {berichten.length === 0 && (
+        {berichten.length === 0 && !initialInvoer && (
           <div className="text-center py-8">
             <div className="text-5xl mb-4">🌟</div>
             <p className="text-cm-white mb-6">
