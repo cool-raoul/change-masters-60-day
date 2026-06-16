@@ -138,6 +138,23 @@ export default async function InstellingenPagina() {
         }
       />
 
+      {/* Mentor-profiel: wat de Mentor over je weet */}
+      <Link
+        href="/instellingen/mentor-profiel"
+        className="card flex items-center justify-between gap-3 hover:border-cm-gold-dim transition-colors"
+      >
+        <div>
+          <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider flex items-center gap-2">
+            🧠 Wat de Mentor over je weet
+          </h2>
+          <p className="text-cm-white opacity-70 text-sm mt-1">
+            Je stem, je niche en je verhalen, die de Mentor gebruikt om in jouw
+            stem te schrijven. Bekijk en pas aan.
+          </p>
+        </div>
+        <span className="text-cm-gold text-lg flex-shrink-0">→</span>
+      </Link>
+
       {/* Transparantie: wat ziet mijn sponsor van mij */}
       <Link
         href="/instellingen/wat-ziet-mijn-sponsor"

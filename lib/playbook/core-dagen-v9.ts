@@ -81,11 +81,9 @@ Wat jouw ingang ook is, hier ben je welkom 🥰
 
 JE VERTREKPUNT
 
-De Mentor weet inmiddels al heel wat van je. WHY, doel, hoeveel tijd je per week kunt vrijmaken, scenario. Dat heb je in de onboarding gedaan, en ik ga je niet vragen om dat opnieuw te doen.
+De Mentor kent je al. Je WHY, je doel, hoeveel tijd je per week vrijmaakt, dat heb je in de onboarding helder gemaakt en dat staat. Wil je er later iets aan bijschaven, dan kan dat altijd in je instellingen. Vandaag hoef je dat niet 🥰
 
-Bekijk wel even wat ie heeft opgeslagen. Klopt het nog? Is er iets verschoven? Pas aan wat anders ligt dan je toen voelde. Dat is je vertrekpunt 👍🏽
-
-Daarna stuur je je sponsor een berichtje. "Ik ben gestart." Verder niks. Vanaf nu kijkt ie mee, en weet ie wanneer het loopt of wanneer er iets is.
+Je eerste zetje is klein. Je stuurt je sponsor een berichtje. "Ik ben gestart." Verder niks. Vanaf nu kijkt ie mee, en weet ie wanneer het loopt of wanneer er iets is.
 
 Heel klein, ja. Maar belangrijk. Want je hoeft dit niet alleen te doen 🥰
 
@@ -119,14 +117,6 @@ Je staat hier niet alleen. Je sponsor, de Mentor, het team, we lopen mee, en we 
 
 Wat fijn dat je er bent. We gaan samen 🥰`,
     vandaagDoen: [
-      {
-        id: "core-v9-stap1-onboarding-bevestig",
-        label: "Bevestig je onboarding-input met de Mentor",
-        verplicht: true,
-        actieRoute: "/coach",
-        uitleg:
-          "De Mentor laat zien wat 'ie uit jouw onboarding heeft opgeslagen: je WHY, je doel, je tijd per week, je scenario. Loop het rustig even na, voelt het nog kloppend? In een paar weken kan er zomaar iets verschuiven, dat is normaal. Pas aan waar je iets anders ziet, dan staat je vertrekpunt voor Core helder op tafel. Eén of twee minuten werk, en je hoeft niet alles opnieuw te vertellen.",
-      },
       {
         id: "core-v9-stap1-builder-uitleg",
         label: "Bekijk de korte Builder-status-uitleg",
