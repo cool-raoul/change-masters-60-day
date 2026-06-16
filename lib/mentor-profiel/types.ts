@@ -38,6 +38,10 @@ export type EersteDoel = {
 export type MentorProfiel = {
   why?: string;
   situatie?: string;
+  /** Korte lopende samenvatting van waar deze persoon staat in hun reis.
+      De Mentor werkt 'm bij, zodat hij kan terugblikken ("ik heb je zien
+      groeien") zonder alle eerdere gesprekken in te laden. */
+  historieNotitie?: string;
   formContexts?: FormContext[];
   eigenProducten?: string[];
   stemVoorbeelden?: string[];

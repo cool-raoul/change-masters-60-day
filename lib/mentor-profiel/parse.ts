@@ -58,6 +58,9 @@ export function parseProfielBlok(
   if (typeof data.situatie === "string" && data.situatie.trim()) {
     patch.situatie = data.situatie.trim().slice(0, 600);
   }
+  if (typeof data.historieNotitie === "string" && data.historieNotitie.trim()) {
+    patch.historieNotitie = data.historieNotitie.trim().slice(0, 800);
+  }
   if (
     typeof data.talent === "string" &&
     GELDIGE_TALENTEN.includes(data.talent as Talent)
@@ -88,4 +91,50 @@ export function parseProfielBlok(
   }
 
   return Object.keys(patch).length > 0 ? patch : null;
+}
+
+// ============================================================
+// FORM-context per prospect (Family, Occupation, Recreation, Money). Door de
+// Mentor genoteerd wanneer er een prospect in context is. Wordt op de
+// prospect-kaart getoond en weer meegegeven bij die prospect.
+// ============================================================
+
+export type ProspectFormContext = {
+  family?: string;
+  occupation?: string;
+  recreation?: string;
+  money?: string;
+};
+
+export function parseProspectBlok(tekst: string): ProspectFormContext | null {
+  const match = tekst.match(/\[PROSPECT\]([\s\S]*?)\[\/PROSPECT\]/i);
+  if (!match) return null;
+  let data: Record<string, unknown>;
+  try {
+    data = JSON.parse(match[1].trim());
+  } catch {
+    return null;
+  }
+  if (!data || typeof data !== "object") return null;
+  const out: ProspectFormContext = {};
+  for (const k of ["family", "occupation", "recreation", "money"] as const) {
+    if (typeof data[k] === "string" && (data[k] as string).trim()) {
+      out[k] = (data[k] as string).trim().slice(0, 500);
+    }
+  }
+  return Object.keys(out).length > 0 ? out : null;
+}
+
+/**
+ * Het zichtbare deel van een Mentor-antwoord = alles vóór het eerste
+ * systeem-blok ([PROFIEL] of [PROSPECT]). Zo ziet de gebruiker de opslag-JSON
+ * nooit, ongeacht welk blok de Mentor meestuurt.
+ */
+export function zichtbaarTotMarker(tekst: string): string {
+  let eind = tekst.length;
+  for (const m of ["[PROFIEL]", "[PROSPECT]"]) {
+    const i = tekst.indexOf(m);
+    if (i !== -1 && i < eind) eind = i;
+  }
+  return tekst.slice(0, eind);
 }

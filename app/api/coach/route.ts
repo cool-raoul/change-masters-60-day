@@ -10,7 +10,11 @@ import {
 } from "@/lib/coach/voorbeelden";
 import { ChatBericht } from "@/lib/supabase/types";
 import { leesMentorProfiel, patchMentorProfiel } from "@/lib/mentor-profiel/helpers";
-import { parseProfielBlok } from "@/lib/mentor-profiel/parse";
+import {
+  parseProfielBlok,
+  parseProspectBlok,
+  zichtbaarTotMarker,
+} from "@/lib/mentor-profiel/parse";
 
 // Verleng Vercel timeout
 export const maxDuration = 60;
@@ -259,10 +263,10 @@ export async function POST(request: Request) {
             const text = chunk.choices[0]?.delta?.content || "";
             if (text) {
               volledigAntwoord += text;
-              // Het [PROFIEL]-blok (en alles erna) houden we ACHTER, zodat de
-              // gebruiker de opslag-JSON nooit ziet. We streamen alleen het
-              // zichtbare deel vóór het blok.
-              const zichtbaar = volledigAntwoord.split("[PROFIEL]")[0];
+              // De systeem-blokken ([PROFIEL] / [PROSPECT]) en alles erna
+              // houden we ACHTER, zodat de gebruiker de opslag-JSON nooit ziet.
+              // We streamen alleen het zichtbare deel vóór het eerste blok.
+              const zichtbaar = zichtbaarTotMarker(volledigAntwoord);
               if (zichtbaar.length > verzondenLengte) {
                 controller.enqueue(
                   encoder.encode(zichtbaar.slice(verzondenLengte)),
@@ -273,10 +277,8 @@ export async function POST(request: Request) {
           }
           controller.close();
 
-          // Het zichtbare antwoord = alles vóór het [PROFIEL]-blok.
-          const zichtbaarAntwoord = volledigAntwoord
-            .split("[PROFIEL]")[0]
-            .trimEnd();
+          // Het zichtbare antwoord = alles vóór het eerste systeem-blok.
+          const zichtbaarAntwoord = zichtbaarTotMarker(volledigAntwoord).trimEnd();
 
           // Mentor-profiel bijwerken als de Mentor een [PROFIEL]-blok meegaf.
           // Fire-and-forget, faalt stil zodat het gesprek nooit hapert.
@@ -290,6 +292,31 @@ export async function POST(request: Request) {
             }
           } catch (err) {
             console.warn("profiel-parse mislukt:", err);
+          }
+
+          // FORM-context op de prospect-kaart bijwerken als de Mentor een
+          // [PROSPECT]-blok meegaf én er een prospect in context was.
+          if (prospectId && prospect) {
+            try {
+              const form = parseProspectBlok(volledigAntwoord);
+              if (form) {
+                const huidigeForm =
+                  ((prospect as { form_context?: Record<string, string> | null })
+                    .form_context as Record<string, string> | null) ?? {};
+                const merged = { ...huidigeForm, ...form };
+                Promise.resolve(
+                  supabase
+                    .from("prospects")
+                    .update({ form_context: merged })
+                    .eq("id", prospectId)
+                    .eq("user_id", user.id),
+                ).catch((err: any) =>
+                  console.error("prospect form_context update fout:", err),
+                );
+              }
+            } catch (err) {
+              console.warn("prospect-parse mislukt:", err);
+            }
           }
 
           // Compliance-scan op het zichtbare antwoord. PASSIEF, we

@@ -63,11 +63,13 @@ export async function POST(req: NextRequest) {
 
   // Bouw de nieuwe data: systeem-velden behouden, bewerkbare velden vervangen.
   const data: MentorProfiel = {
-    // Niet door de member bewerkbaar hier, behouden:
+    // Niet door de member bewerkbaar hier, behouden (systeem-velden die de
+    // Mentor zelf bijhoudt):
     why: huidig.why,
     formContexts: huidig.formContexts,
     eersteDoel: huidig.eersteDoel,
     curatorVoorstellen: huidig.curatorVoorstellen,
+    historieNotitie: huidig.historieNotitie,
     // Bewerkbaar (authoritatief uit het formulier):
     situatie: schoonTekst(inp.situatie, 600),
     nicheZaadje: schoonTekst(inp.nicheZaadje, 400),

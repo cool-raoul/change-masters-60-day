@@ -104,6 +104,20 @@ export default function MentorProfielPagina() {
         <span className="text-cm-gold text-lg flex-shrink-0">→</span>
       </Link>
 
+      {p.historieNotitie && (
+        <div className="card border-cm-gold/30">
+          <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider mb-1">
+            Jouw weg tot nu toe
+          </p>
+          <p className="text-cm-white/85 text-sm leading-relaxed">
+            {p.historieNotitie}
+          </p>
+          <p className="text-cm-white/40 text-xs mt-2 italic">
+            Dit houdt de Mentor zelf bij terwijl je werkt.
+          </p>
+        </div>
+      )}
+
       <div className="card space-y-4">
         <Veld label="Je situatie" hint="In het kort: wie ben je, wat doe je.">
           <textarea

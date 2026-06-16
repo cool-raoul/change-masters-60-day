@@ -448,6 +448,7 @@ Benadruk dat fase 1 het specifieke probleem aanpakt, maar dat blijvende gezondhe
     const mp = mentorProfiel;
     const r: string[] = [];
     if (mp.situatie) r.push(`Situatie: ${mp.situatie}`);
+    if (mp.historieNotitie) r.push(`JOUW WEG TOT NU TOE: ${mp.historieNotitie}`);
     if (mp.nicheZaadje) r.push(`Niche: ${mp.nicheZaadje}`);
     if (mp.passies && mp.passies.length) r.push(`Passies: ${mp.passies.join(", ")}`);
     if (mp.idealeKlant) r.push(`Ideale klant: ${mp.idealeKlant}`);
@@ -466,7 +467,7 @@ Benadruk dat fase 1 het specifieke probleem aanpakt, maar dat blijvende gezondhe
         .slice(-4)
         .map((s) => `  "${s}"`)
         .join("\n");
-      r.push(`STEM-VOORBEELDEN (zo schrijft ${naam} zelf, neem deze toon over, niet je eigen):\n${voorbeelden}`);
+      r.push(`STEM-VOORBEELDEN (zo schrijft ${naam} zelf, neem deze toon en persoonlijkheid over, ook als je in een andere taal schrijft):\n${voorbeelden}`);
     }
     if (r.length > 0) {
       mentorProfielSectie = `\n\nWIE IS ${naam} (gebruik dit om in hun stem en hun niche te schrijven):\n${r.join("\n")}`;
@@ -483,6 +484,26 @@ Benadruk dat fase 1 het specifieke probleem aanpakt, maar dat blijvende gezondhe
     };
     prospectSectie = `\nPROSPECT: ${prospect.volledige_naam} (${faseLabels[prospect.pipeline_fase] || prospect.pipeline_fase})`;
     if (prospect.notities) prospectSectie += ` | ${prospect.notities}`;
+
+    // FORM-context die de Mentor eerder over deze prospect noteerde.
+    const pf = (
+      prospect as {
+        form_context?: {
+          family?: string;
+          occupation?: string;
+          recreation?: string;
+          money?: string;
+        } | null;
+      }
+    ).form_context;
+    if (pf && (pf.family || pf.occupation || pf.recreation || pf.money)) {
+      const delen: string[] = [];
+      if (pf.family) delen.push(`Gezin: ${pf.family}`);
+      if (pf.occupation) delen.push(`Werk: ${pf.occupation}`);
+      if (pf.recreation) delen.push(`Vrije tijd: ${pf.recreation}`);
+      if (pf.money) delen.push(`Geld/tijd: ${pf.money}`);
+      prospectSectie += `\nFORM (eerder genoteerd): ${delen.join(" | ")}`;
+    }
 
     const logLimiet = contextNiveau === "full" ? 10 : 2;
     if (prospect.recenteLogs && prospect.recenteLogs.length > 0) {
@@ -822,11 +843,25 @@ gevoel, gedrag en bewustwording. De reacties en DM's vangt ${naam} daarna op met
 PROFIEL BIJWERKEN
 Wordt in dit gesprek iets duidelijk dat de moeite waard is om te onthouden over ${naam} zelf (hun niche, hun ideale klant, een product dat ze zelf gebruiken, een van hun drie verhalen, hun talent, of een typische eigen zin als stem-voorbeeld), voeg dan HELEMAAL AAN HET EIND van je antwoord een blok toe in dit exacte formaat:
 [PROFIEL]
-{ "nicheZaadje": "...", "idealeKlant": "...", "eigenProducten": ["..."], "talent": "schrijver", "stemVoorbeelden": ["..."], "drieVerhalen": { "persoonlijk": "...", "product": "...", "business": "..." } }
+{ "nicheZaadje": "...", "idealeKlant": "...", "eigenProducten": ["..."], "talent": "schrijver", "stemVoorbeelden": ["..."], "historieNotitie": "...", "drieVerhalen": { "persoonlijk": "...", "product": "...", "business": "..." } }
 [/PROFIEL]
-Neem alleen de velden op die echt aan de orde zijn, laat de rest weg. talent mag alleen "schrijver", "spreker", "filmer" of "DM-er" zijn. Het blok is voor het systeem, niet voor ${naam}: houd je gewone antwoord erboven normaal en warm en noem het blok niet. Doe dit alleen als er echt iets nieuws of beters te bewaren is, niet bij elk berichtje.`;
+Neem alleen de velden op die echt aan de orde zijn, laat de rest weg. talent mag alleen "schrijver", "spreker", "filmer" of "DM-er" zijn. Gebruik historieNotitie voor een korte, lopende samenvatting van waar ${naam} staat in hun reis (wat ze al gedaan hebben, waar ze tegenaan lopen, wat groeit), zodat je later kunt terugblikken. Houd 'm kort en werk 'm bij, niet aanvullen tot een lange lijst. Het blok is voor het systeem, niet voor ${naam}: houd je gewone antwoord erboven normaal en warm en noem het blok niet. Doe dit alleen als er echt iets nieuws of beters te bewaren is, niet bij elk berichtje.`;
 
-  return `${rolSectie}${contextSectie}${mentorProfielSectie}${prospectSectie}${reelSectie}${kennisbankSectie}${adviesgidsSectie}${prijslijstSectie}${scriptSectie}${voorbeeldenSectie}${werkwijze}${profielOpslagSectie}${claimvrijSectie}`;
+  // Alleen als er een prospect in beeld is: de Mentor mag FORM-context (Family,
+  // Occupation, Recreation, Money) over die prospect noteren via een
+  // [PROSPECT]-blok. De coach-route schrijft dat naar de prospect-kaart.
+  const prospectOpslagSectie = prospect
+    ? `
+
+FORM BIJWERKEN
+Er is nu een prospect in beeld. Leer je in dit gesprek iets over deze prospect op het vlak van FORM (Family, Occupation, Recreation, Money), voeg dan HELEMAAL AAN HET EIND van je antwoord een blok toe in dit formaat:
+[PROSPECT]
+{ "family": "...", "occupation": "...", "recreation": "...", "money": "..." }
+[/PROSPECT]
+Alleen de velden die echt aan de orde zijn. Dit komt op de prospect-kaart te staan zodat ${naam} het kan gebruiken bij een 3-weg of uitnodiging. Het blok is voor het systeem, noem het niet in je gewone antwoord.`
+    : "";
+
+  return `${rolSectie}${contextSectie}${mentorProfielSectie}${prospectSectie}${reelSectie}${kennisbankSectie}${adviesgidsSectie}${prijslijstSectie}${scriptSectie}${voorbeeldenSectie}${werkwijze}${profielOpslagSectie}${prospectOpslagSectie}${claimvrijSectie}`;
 }
 
 // WHY Coach system prompt (ongewijzigd)

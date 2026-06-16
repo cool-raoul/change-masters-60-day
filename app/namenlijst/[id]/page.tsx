@@ -26,6 +26,7 @@ import { VoiceUitnodigingKnop } from "@/components/namenlijst/VoiceUitnodigingKn
 import { FilmKijkOverzicht } from "@/components/namenlijst/FilmKijkOverzicht";
 import { RealtimeProspectsRefresh } from "@/components/namenlijst/RealtimeProspectsRefresh";
 import { ActiefToggle } from "@/components/namenlijst/ActiefToggle";
+import { ProspectFormBlok } from "@/components/namenlijst/ProspectFormBlok";
 import { HerinneringenOpKaart } from "@/components/namenlijst/HerinneringenOpKaart";
 import { ProductBestellingenLijst } from "@/components/namenlijst/ProductBestellingenLijst";
 // productadviesBeschikbaar wordt gebruikt door de Coach (mentor); niet meer
@@ -209,6 +210,22 @@ export default async function ProspectDetailPagina({
             </div>
           </div>
         )}
+
+        {/* FORM-context: wat de Mentor over deze prospect noteerde. */}
+        <ProspectFormBlok
+          formContext={
+            (
+              prospect as {
+                form_context?: {
+                  family?: string;
+                  occupation?: string;
+                  recreation?: string;
+                  money?: string;
+                } | null;
+              }
+            ).form_context ?? null
+          }
+        />
 
         {/* Actie-rij, links: ELEVA Mentor (hoofdactie). Rechts: vragenlijst-
             chips + verwijder-prospect (secundair). De losse Productadvies-knop
