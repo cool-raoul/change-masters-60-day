@@ -9,6 +9,8 @@ import {
   bouwVoorbeeldenPromptSectie,
 } from "@/lib/coach/voorbeelden";
 import { ChatBericht } from "@/lib/supabase/types";
+import { leesMentorProfiel, patchMentorProfiel } from "@/lib/mentor-profiel/helpers";
+import { parseProfielBlok } from "@/lib/mentor-profiel/parse";
 
 // Verleng Vercel timeout
 export const maxDuration = 60;
@@ -113,6 +115,11 @@ export async function POST(request: Request) {
       .eq("user_id", user.id)
       .maybeSingle();
 
+    // Haal Mentor-profiel op (stem, niche, verhalen, producten, etc.). Dit is
+    // wat de Mentor het teamlid persoonlijk laat kennen. Faalt graceful naar
+    // leeg profiel als de tabel nog niet bestaat.
+    const mentorProfiel = await leesMentorProfiel(user.id);
+
     // Haal prospect op (indien meegegeven)
     let prospect = null;
     if (prospectId) {
@@ -173,7 +180,7 @@ export async function POST(request: Request) {
 
     // Bouw system prompt (alleen relevante secties)
     let systeemPrompt = bouwCoachSysteemPrompt(
-      profile, whyProfile, prospect, taal || "nl", vraagType, niveau
+      profile, whyProfile, prospect, taal || "nl", vraagType, niveau, mentorProfiel
     );
 
     // Gevalideerde product-ervarings-kennis (Dr. McKee + jarenlange
@@ -232,7 +239,8 @@ export async function POST(request: Request) {
     // - rest         : gpt-4o-mini (bezwaar/followup/closing/algemeen, kort + snel)
     const zwaarModel = vraagType === "productadvies"
       || vraagType === "dm"
-      || vraagType === "drieweg";
+      || vraagType === "drieweg"
+      || vraagType === "reel";
     const stream = await openai.chat.completions.create({
       model: zwaarModel ? "gpt-4o" : "gpt-4o-mini",
       max_tokens: vraagType === "productadvies" ? 2000 : zwaarModel ? 1200 : 800,
@@ -246,21 +254,48 @@ export async function POST(request: Request) {
     const readable = new ReadableStream({
       async start(controller) {
         try {
+          let verzondenLengte = 0;
           for await (const chunk of stream) {
             const text = chunk.choices[0]?.delta?.content || "";
             if (text) {
               volledigAntwoord += text;
-              controller.enqueue(encoder.encode(text));
+              // Het [PROFIEL]-blok (en alles erna) houden we ACHTER, zodat de
+              // gebruiker de opslag-JSON nooit ziet. We streamen alleen het
+              // zichtbare deel vóór het blok.
+              const zichtbaar = volledigAntwoord.split("[PROFIEL]")[0];
+              if (zichtbaar.length > verzondenLengte) {
+                controller.enqueue(
+                  encoder.encode(zichtbaar.slice(verzondenLengte)),
+                );
+                verzondenLengte = zichtbaar.length;
+              }
             }
           }
           controller.close();
 
-          // Compliance-scan op het volledige antwoord. PASSIEF, we
-          // blokkeren niets, we loggen alleen. Als de prompt goed werkt
-          // blijft dit stil; als er toch iets doorheen glipt zien we
-          // dat hier en kunnen we de prompt aanscherpen.
-          if (volledigAntwoord && vraagType === "productadvies") {
-            const compliance = checkCompliance(volledigAntwoord);
+          // Het zichtbare antwoord = alles vóór het [PROFIEL]-blok.
+          const zichtbaarAntwoord = volledigAntwoord
+            .split("[PROFIEL]")[0]
+            .trimEnd();
+
+          // Mentor-profiel bijwerken als de Mentor een [PROFIEL]-blok meegaf.
+          // Fire-and-forget, faalt stil zodat het gesprek nooit hapert.
+          try {
+            const patch = parseProfielBlok(volledigAntwoord, mentorProfiel);
+            if (patch) {
+              Promise.resolve(patchMentorProfiel(user.id, patch)).catch(
+                (err: any) =>
+                  console.error("mentor-profiel patch fout:", err),
+              );
+            }
+          } catch (err) {
+            console.warn("profiel-parse mislukt:", err);
+          }
+
+          // Compliance-scan op het zichtbare antwoord. PASSIEF, we
+          // blokkeren niets, we loggen alleen.
+          if (zichtbaarAntwoord && vraagType === "productadvies") {
+            const compliance = checkCompliance(zichtbaarAntwoord);
             if (!compliance.ok) {
               console.warn(
                 `[COACH-COMPLIANCE] user=${user.id} prospect=${prospectId || "n/a"} flags=${vatFlagsSamen(compliance.flags)}`
@@ -268,11 +303,12 @@ export async function POST(request: Request) {
             }
           }
 
-          // Sla antwoord op in DB (fire-and-forget)
-          if (gesprekId && volledigAntwoord) {
+          // Sla het zichtbare antwoord op in DB (fire-and-forget), zonder
+          // het [PROFIEL]-blok.
+          if (gesprekId && zichtbaarAntwoord) {
             const nieuwBericht: ChatBericht = {
               role: "assistant",
-              content: volledigAntwoord,
+              content: zichtbaarAntwoord,
               timestamp: new Date().toISOString(),
             };
             const alleBerichten = [...berichten, nieuwBericht];

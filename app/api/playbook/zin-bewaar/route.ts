@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { leesMentorProfiel, patchMentorProfiel } from "@/lib/mentor-profiel/helpers";
 
 // ============================================================
 // POST /api/playbook/zin-bewaar
@@ -76,6 +77,25 @@ export async function POST(req: NextRequest) {
         { error: "Opslaan mislukt: " + upsertErr.message },
         { status: 500 },
       );
+    }
+
+    // Stem-capture: een eigen zin is een echt stem-voorbeeld. Voeg 'm toe aan
+    // het Mentor-profiel (append, dedupe, cap 6), zodat de Mentor voortaan in
+    // de eigen stem van de member kan schrijven. Niet fataal bij fout.
+    try {
+      if (trimmed.length <= 600) {
+        const huidig = await leesMentorProfiel(user.id);
+        const bestaand = Array.isArray(huidig.stemVoorbeelden)
+          ? huidig.stemVoorbeelden
+          : [];
+        const gezien = new Set(bestaand.map((s) => s.trim().toLowerCase()));
+        if (!gezien.has(trimmed.toLowerCase())) {
+          const nieuw = [...bestaand, trimmed].slice(-6);
+          await patchMentorProfiel(user.id, { stemVoorbeelden: nieuw });
+        }
+      }
+    } catch (e) {
+      console.warn("stem-capture mislukt (niet fataal):", e);
     }
 
     // Optioneel: vink de bijhorende playbook-taak af. Member hoeft dan

@@ -4,7 +4,7 @@
 // Bronnen: Eric Worre (Go Pro + 90 Day Run) + Fraser Brookes
 // ============================================================
 
-export type VraagType = "dm" | "opener" | "bezwaar" | "followup" | "closing" | "motivatie" | "accountability" | "social" | "drieweg" | "productadvies" | "algemeen";
+export type VraagType = "dm" | "opener" | "bezwaar" | "followup" | "closing" | "motivatie" | "accountability" | "social" | "drieweg" | "productadvies" | "reel" | "algemeen";
 
 // Patronen voor specifieke (niet-productadvies) vraagtypen. Apart geplaatst
 // zodat ze hergebruikt kunnen worden voor de "eerste-vraag-sticky"-logica
@@ -12,6 +12,7 @@ export type VraagType = "dm" | "opener" | "bezwaar" | "followup" | "closing" | "
 // (anders pakt "stuur dit groepje-bericht" verkeerd dm ipv drieweg, en
 // "opener voor X" verkeerd dm ipv opener).
 const SPECIFIEKE_PATRONEN: Array<{ type: VraagType; regex: RegExp }> = [
+  { type: "reel",           regex: /\b(reel|reels|video[- ]?script|script voor (een|m'?n|mijn)? ?(reel|video|filmpje)|filmpje voor (insta|social|tiktok)|tiktok[- ]?video|korte video)\b/ },
   { type: "drieweg",        regex: /\b(3.?weg|drieweg|groepje|aanmaken|sponsor koppel|introduceer|edif\w*|edification|aankondig|presentatie.*groep|groep.*presentatie|sponsor (laten )?(presenteren|introduce|opvoeren))\b/ },
   { type: "opener",         regex: /\b(opener|eerste bericht|gesprek openen|gesprek starten|warm[- ]?starten|hoe begin ik|hoe start ik|hoe open ik|in.gesprek.brengen)\b/ },
   { type: "dm",             regex: /\b(dm|bericht|schrij|tekst|uitnodig|whatsapp|instagram|sturen)\b/ },
@@ -110,6 +111,29 @@ Duplicatie: als het niet te dupliceren is, doe het niet.`;
 
 // Secties per vraagtype (~300-500 tokens elk)
 const SECTIES: Record<string, string> = {
+  reel: `
+### REEL (KORTE VIDEO) OP MAAT
+
+Je levert een kant-en-klaar reel-script, klaar om op te nemen. Altijd claim-vrij:
+taal van gevoel en gedrag, nooit ziektes, geen medische woorden, geen
+oorzaak-gevolg-beloftes.
+
+OPBOUW (kort houden, 20 tot 40 seconden spreektijd):
+1. HOOK (eerste 2 seconden): één scroll-stoppende zin. Een herkenbaar gevoel of
+   een open vraag, niet "hoi ik ben...". Bijvoorbeeld "Ik dacht echt dat dit niets
+   voor mij was."
+2. KERN: één gedachte, één verhaal of één inzicht. Niet drie tips proppen. Vanuit
+   eigen ervaring en eigen woorden.
+3. EINDE: een zachte uitnodiging, geen harde verkoop. "Stuur me een berichtje als
+   je benieuwd bent", of "ik vertel je er graag meer over".
+
+LEVER ALTIJD:
+- Het gesproken script (wat je letterlijk zegt, in spreektaal).
+- Een korte hook-tekst voor in beeld (on-screen tekst).
+- Een caption met een paar passende hashtags.
+
+Houd het in de stem en de niche van de member (zie het WIE IS-blok hierboven).
+Liever klein en echt dan glad en algemeen.`,
   dm: `
 ### DM & UITNODIGEN
 

@@ -1,6 +1,7 @@
 import { Profile, WhyProfile, Prospect, ContactLog } from "@/lib/supabase/types";
 import { SCRIPTS_DATA } from "@/lib/scripts-data";
 import { VraagType, getKennisbankVoorVraag } from "@/lib/knowledge/coach-boeken";
+import type { MentorProfiel } from "@/lib/mentor-profiel/types";
 import { bouwAdviesgidsPromptSectie } from "@/lib/lifeplus/adviesgids";
 import { bouwPrijslijstPromptSectie } from "@/lib/lifeplus/prijslijst";
 import { differenceInDays } from "date-fns";
@@ -29,6 +30,7 @@ const VRAAG_NAAR_SCRIPT_CATEGORIE: Record<VraagType, string[]> = {
   social: [],
   drieweg: ["edification"],
   productadvies: [],
+  reel: [],
   algemeen: ["opener", "uitnodiging", "edification", "bezwaar", "followup", "sluiting"],
 };
 
@@ -69,7 +71,8 @@ export function bouwCoachSysteemPrompt(
     | null,
   taal: string = "nl",
   vraagType: VraagType = "algemeen",
-  contextNiveau: "light" | "full" = "light"
+  contextNiveau: "light" | "full" = "light",
+  mentorProfiel: MentorProfiel | null = null
 ): string {
   const dag = getDagVanRun(profile.run_startdatum);
   const fase = getFaseVanRun(dag);
@@ -421,6 +424,54 @@ Benadruk dat fase 1 het specifieke probleem aanpakt, maar dat blijvende gezondhe
   if (whyProfile?.financieel_doel_maand) {
     contextSectie += `\nDoel: €${whyProfile.financieel_doel_maand}/mnd, ${whyProfile.financieel_doel_termijn || "?"}mnd, ${whyProfile.beschikbare_uren || "?"}u/week`;
   }
+  // Core Doel-Tijd-Termijn (uit onboarding). Stond voorheen NIET in de prompt,
+  // waardoor de Mentor het concrete doel/tempo/termijn van een Core-member niet
+  // kende. Nu wel, zodat de dag-1-belofte en alle DTT-verwijzingen kloppen.
+  const dtt = (
+    profile as {
+      core_dtt?: {
+        doel_per_maand?: number;
+        uren_per_week?: number;
+        termijn_maanden?: number;
+      } | null;
+    }
+  ).core_dtt;
+  if (dtt && (dtt.doel_per_maand || dtt.uren_per_week || dtt.termijn_maanden)) {
+    contextSectie += `\nDoel-Tijd-Termijn: €${dtt.doel_per_maand ?? "?"}/mnd, ${dtt.uren_per_week ?? "?"}u/week, binnen ${dtt.termijn_maanden ?? "?"} mnd`;
+  }
+
+  // Mentor-profiel: wie is deze persoon, in hun eigen stem en niche. Compact
+  // gehouden (kosten), alleen niet-lege velden. Dit is de kern van een Mentor
+  // die het teamlid echt kent.
+  let mentorProfielSectie = "";
+  if (mentorProfiel && Object.keys(mentorProfiel).length > 0) {
+    const mp = mentorProfiel;
+    const r: string[] = [];
+    if (mp.situatie) r.push(`Situatie: ${mp.situatie}`);
+    if (mp.nicheZaadje) r.push(`Niche: ${mp.nicheZaadje}`);
+    if (mp.passies && mp.passies.length) r.push(`Passies: ${mp.passies.join(", ")}`);
+    if (mp.idealeKlant) r.push(`Ideale klant: ${mp.idealeKlant}`);
+    if (mp.eigenProducten && mp.eigenProducten.length)
+      r.push(`Gebruikt zelf: ${mp.eigenProducten.join(", ")}`);
+    if (mp.talent) r.push(`Talent: ${mp.talent}`);
+    if (mp.drieVerhalen) {
+      if (mp.drieVerhalen.persoonlijk) r.push(`Persoonlijk verhaal: ${mp.drieVerhalen.persoonlijk}`);
+      if (mp.drieVerhalen.product) r.push(`Product-verhaal: ${mp.drieVerhalen.product}`);
+      if (mp.drieVerhalen.business) r.push(`Business-verhaal: ${mp.drieVerhalen.business}`);
+    }
+    if (mp.eersteDoel)
+      r.push(`Eigen doel: ${mp.eersteDoel.waarde} ${mp.eersteDoel.type} in ${mp.eersteDoel.termijn_dagen} dagen`);
+    if (mp.stemVoorbeelden && mp.stemVoorbeelden.length) {
+      const voorbeelden = mp.stemVoorbeelden
+        .slice(-4)
+        .map((s) => `  "${s}"`)
+        .join("\n");
+      r.push(`STEM-VOORBEELDEN (zo schrijft ${naam} zelf, neem deze toon over, niet je eigen):\n${voorbeelden}`);
+    }
+    if (r.length > 0) {
+      mentorProfielSectie = `\n\nWIE IS ${naam} (gebruik dit om in hun stem en hun niche te schrijven):\n${r.join("\n")}`;
+    }
+  }
 
   // Sectie C: Prospect (alleen als geselecteerd)
   let prospectSectie = "";
@@ -756,7 +807,26 @@ gevoel, gedrag en bewustwording. De reacties en DM's vangt ${naam} daarna op met
 3-soorten-mensen-script, de post zelf hoeft dus geen lokkertje te zijn.
 `;
 
-  return `${rolSectie}${contextSectie}${prospectSectie}${kennisbankSectie}${adviesgidsSectie}${prijslijstSectie}${scriptSectie}${voorbeeldenSectie}${werkwijze}${claimvrijSectie}`;
+  // Reel: korte extra nadruk om in de eigen stem en niche te leveren. Het
+  // vakmanschap zelf zit al in de kennisbank-sectie (SECTIES.reel).
+  const reelSectie =
+    vraagType === "reel"
+      ? `\n\nDeze vraag gaat om een REEL. Lever een kant-en-klaar script in de stem en de niche van ${naam} (zie het WIE IS-blok). Volg de reel-opbouw uit de kennis hierboven. Altijd claim-vrij.`
+      : "";
+
+  // Conversationele opslag: de Mentor mag voorstellen iets te bewaren in het
+  // Mentor-profiel. De coach-route vangt het [PROFIEL]-blok op en slaat het op
+  // via patchMentorProfiel. Zo groeit het profiel vanzelf uit de gesprekken.
+  const profielOpslagSectie = `
+
+PROFIEL BIJWERKEN
+Wordt in dit gesprek iets duidelijk dat de moeite waard is om te onthouden over ${naam} zelf (hun niche, hun ideale klant, een product dat ze zelf gebruiken, een van hun drie verhalen, hun talent, of een typische eigen zin als stem-voorbeeld), voeg dan HELEMAAL AAN HET EIND van je antwoord een blok toe in dit exacte formaat:
+[PROFIEL]
+{ "nicheZaadje": "...", "idealeKlant": "...", "eigenProducten": ["..."], "talent": "schrijver", "stemVoorbeelden": ["..."], "drieVerhalen": { "persoonlijk": "...", "product": "...", "business": "..." } }
+[/PROFIEL]
+Neem alleen de velden op die echt aan de orde zijn, laat de rest weg. talent mag alleen "schrijver", "spreker", "filmer" of "DM-er" zijn. Het blok is voor het systeem, niet voor ${naam}: houd je gewone antwoord erboven normaal en warm en noem het blok niet. Doe dit alleen als er echt iets nieuws of beters te bewaren is, niet bij elk berichtje.`;
+
+  return `${rolSectie}${contextSectie}${mentorProfielSectie}${prospectSectie}${reelSectie}${kennisbankSectie}${adviesgidsSectie}${prijslijstSectie}${scriptSectie}${voorbeeldenSectie}${werkwijze}${profielOpslagSectie}${claimvrijSectie}`;
 }
 
 // WHY Coach system prompt (ongewijzigd)
