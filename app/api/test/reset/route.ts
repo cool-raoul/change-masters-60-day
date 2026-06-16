@@ -83,22 +83,38 @@ export async function POST() {
   }
 
   // Profiel terug naar 'nieuwe gebruiker', zonder de identiteit te raken
-  // (naam, e-mail, rol, sponsor, push-instellingen blijven staan).
+  // (naam, e-mail, rol, sponsor, push-instellingen blijven staan). We zetten
+  // alleen de velden die de huidige (V9) flow sturen + de startdatums/DTT die
+  // bij her-onboarding vers gezet worden. run_startdatum en de core_v6_*
+  // velden zijn legacy NOT NULL-kolommen: die laten we met rust (null zetten
+  // faalt op de NOT NULL-constraint en ze raken de V9-flow niet). Dit was de
+  // oorzaak van 'Reset mislukt (profiles)'.
   const { error: profErr } = await admin
     .from("profiles")
     .update({
       modus: null,
       onboarding_klaar: false,
-      run_startdatum: null,
       sprint_startdatum: null,
       core_startdatum: null,
       core_dtt: null,
-      core_eigen_resultaat: null,
-      core_v6_actief: false,
-      core_v6_ankerstap: null,
     })
     .eq("id", user.id);
   if (profErr) mislukt["profiles"] = profErr.message;
+
+  // onboarding_stap terug naar 1 (rest van user_metadata behouden), anders
+  // kaatst een al-afgeronde gebruiker na de routekeuze door naar /vandaag
+  // i.p.v. opnieuw de onboarding vanaf stap 1.
+  const { data: authUser, error: authErr } =
+    await admin.auth.admin.getUserById(user.id);
+  if (authErr) {
+    mislukt["auth"] = authErr.message;
+  } else {
+    const bestaandeMeta = authUser?.user?.user_metadata ?? {};
+    const { error: updErr } = await admin.auth.admin.updateUserById(user.id, {
+      user_metadata: { ...bestaandeMeta, onboarding_stap: 1 },
+    });
+    if (updErr) mislukt["auth"] = updErr.message;
+  }
 
   return NextResponse.json({
     ok: Object.keys(mislukt).length === 0,
