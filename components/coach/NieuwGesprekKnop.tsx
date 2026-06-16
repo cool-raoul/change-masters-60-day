@@ -53,7 +53,7 @@ export function NieuwGesprekKnop({ userId, prospects }: Props) {
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
       <div className="bg-cm-surface border border-cm-border rounded-2xl p-6 max-w-md w-full space-y-4">
         <h2 className="text-xl font-display font-bold text-cm-white">
-          Nieuw coach gesprek
+          Nieuw gesprek met de Mentor
         </h2>
 
         <div>
@@ -73,7 +73,8 @@ export function NieuwGesprekKnop({ userId, prospects }: Props) {
             ))}
           </select>
           <p className="text-cm-white text-xs mt-1">
-            Als je een prospect selecteert, weet de mentor direct hun situatie.
+            Als je een prospect selecteert, weet de Mentor direct hun situatie.
+            Of typ gewoon je eigen vraag, de Mentor herkent het onderwerp zelf.
           </p>
         </div>
 

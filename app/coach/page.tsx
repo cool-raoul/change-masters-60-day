@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { NieuwGesprekKnop } from "@/components/coach/NieuwGesprekKnop";
+import { MentorSnelstart } from "@/components/coach/MentorSnelstart";
 import { GesprekkenLijst } from "@/components/coach/GesprekkenLijst";
 import { ProductadviesAlgemeenKnop } from "@/components/coach/ProductadviesAlgemeenKnop";
 import { productadviesBeschikbaar } from "@/lib/features/productadvies";
@@ -110,25 +111,8 @@ export default async function CoachPagina({
         </div>
       </div>
 
-      {/* Info kaart */}
-      <div className="card border-gold-subtle">
-        <div className="flex gap-4">
-          <div className="text-4xl">🎓</div>
-          <div>
-            <h2 className="text-cm-white font-semibold mb-2">{v("coach.wat_kan", taal)}</h2>
-            <ul className="text-cm-white text-sm space-y-1">
-              <li>✓ {v("coach.kan_drieweg", taal)}</li>
-              <li>✓ {v("coach.kan_dm", taal)}</li>
-              <li>✓ {v("coach.kan_bezwaar", taal)}</li>
-              <li>✓ {v("coach.kan_followup", taal)}</li>
-              <li>✓ {v("coach.kan_closing", taal)}</li>
-              <li>✓ {v("coach.kan_strategie", taal)}</li>
-              <li>✓ {v("coach.kan_mindset", taal)}</li>
-              <li>✓ {v("coach.kan_accountability", taal)}</li>
-            </ul>
-          </div>
-        </div>
-      </div>
+      {/* Snelstart: klikbare onderwerpen die meteen het juiste gesprek openen. */}
+      <MentorSnelstart toonProductadvies={toonProductadvies} />
 
       {/* Eerdere gesprekken */}
       <div>
