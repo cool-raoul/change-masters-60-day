@@ -23,6 +23,8 @@ import { sendPushToUser } from "@/lib/push/sendPush";
 import { planMailSequence } from "@/lib/freebie-bots/mail-queue";
 import { getBotConfig } from "@/lib/freebie-bots/registry";
 import { zorgVoorMiniElevaInvitation } from "@/lib/mini-eleva/auto-invitation";
+import { bouwUitkomstMail } from "@/lib/freebie-bots/uitkomst-mail";
+import { verstuurMail } from "@/lib/mail/resend";
 
 export async function POST(req: NextRequest) {
   try {
@@ -354,10 +356,10 @@ export async function POST(req: NextRequest) {
       console.warn("Push-notificatie mislukt:", pushErr);
     }
 
-    // Plan de 5-mail-vervolgreeks in de queue. Cron pakt ze later op
-    // mits member's freebie_mails_actief op true staat. Faalt veilig
-    // als de migratie nog niet is gedraaid: log + ga door, opt-in is
-    // veilig opgeslagen.
+    // Plan de 5-mail-vervolgreeks in de queue. Cron pakt ze later op zodra
+    // het teamlid een eigen Resend-sleutel heeft. Faalt veilig als de
+    // migratie nog niet is gedraaid: log + ga door, opt-in is veilig
+    // opgeslagen.
     await planMailSequence(supabase, {
       optInId: optIn.id,
       freebieSlug: botSlug,
@@ -365,6 +367,42 @@ export async function POST(req: NextRequest) {
       leadNaam,
       leadEmail,
     });
+
+    // Direct de persoonlijke uitkomst mailen (transactioneel), via het EIGEN
+    // Resend-account van het teamlid. Zo klopt de belofte "je uitkomst is
+    // verstuurd naar je mail". Faalt veilig: de opt-in is al opgeslagen, en
+    // zonder sleutel slaan we 'm gewoon over (de lead zag de uitkomst al op
+    // het scherm).
+    if (spiegelTekst && spiegelTekst.trim()) {
+      try {
+        const { data: member } = await supabase
+          .from("profiles")
+          .select("resend_api_key, notificatie_email, email")
+          .eq("id", tokenRow.member_id)
+          .maybeSingle();
+        const memberKey = (member as { resend_api_key?: string | null } | null)
+          ?.resend_api_key;
+        if (memberKey) {
+          const mail = bouwUitkomstMail({
+            leadVoornaam: leadNaam.split(" ")[0] || "jij",
+            spiegelTekst,
+          });
+          await verstuurMail({
+            naar: leadEmail,
+            onderwerp: mail.onderwerp,
+            html: mail.html,
+            apiKey: memberKey,
+            replyTo:
+              (member as { notificatie_email?: string | null } | null)
+                ?.notificatie_email ??
+              (member as { email?: string | null } | null)?.email ??
+              undefined,
+          });
+        }
+      } catch (mailErr) {
+        console.warn("uitkomst-mail versturen mislukt (niet fataal):", mailErr);
+      }
+    }
 
     return NextResponse.json({ ok: true, optInId: optIn.id });
   } catch (e) {

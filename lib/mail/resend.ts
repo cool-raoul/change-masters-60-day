@@ -32,16 +32,25 @@ export type MailRequest = {
   html: string;
   /** Optioneel: reply-to-adres, bijvoorbeeld member's eigen e-mail. */
   replyTo?: string;
+  /**
+   * Optioneel: de Resend-API-key van het teamlid zelf (profiles.resend_api_key).
+   * Zo wordt elke freebie-mail verstuurd vanuit het eigen Resend-account van de
+   * member, net als de e-mail-herinneringen. Valt terug op de globale env-key
+   * als 'ie niet is meegegeven.
+   */
+  apiKey?: string;
+  /** Optioneel: from-adres. Valt terug op RESEND_FROM of de default. */
+  van?: string;
 };
 
-const VAN_DEFAULT = "team@mail.eleva.app";
+const VAN_DEFAULT = "ELEVA <onboarding@resend.dev>";
 
 /**
  * Verstuur een mail via Resend. Bij ontbrekende API-key: dry-run.
  */
 export async function verstuurMail(req: MailRequest): Promise<MailResultaat> {
-  const apiKey = process.env.RESEND_API_KEY;
-  const van = process.env.RESEND_FROM ?? VAN_DEFAULT;
+  const apiKey = req.apiKey ?? process.env.RESEND_API_KEY;
+  const van = req.van ?? process.env.RESEND_FROM ?? VAN_DEFAULT;
 
   if (!apiKey) {
     console.log("[resend dry-run]", {

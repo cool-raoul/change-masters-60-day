@@ -4,18 +4,15 @@
 // Pikt rijen op waar gepland_op < now() en status = 'wacht', rendert
 // de juiste template, verstuurt via Resend, update de rij.
 //
-// FEATURE-FLAG: alle versturingen worden overgeslagen tenzij de
-// member.freebie_mails_actief op true staat. Dat houdt de pilot
-// veilig totdat we content + Resend hebben.
+// DREMPEL: een mail wordt alleen verstuurd als het teamlid (eigenaar van de
+// freebie) een eigen Resend-sleutel heeft geplakt in de instellingen
+// (profiles.resend_api_key). Zo zet elk teamlid het zelf aan, net als bij de
+// e-mail-herinneringen. Geen sleutel = nog niet versturen.
 //
-// CRON-CONFIG: in vercel.json toevoegen wanneer flag aan moet:
-//   {
-//     "crons": [
-//       { "path": "/api/cron/freebie-mails", "schedule": "0 18 * * *" }
-//     ]
-//   }
-// Schedule = dagelijks om 18:00 UTC (= 19:00/20:00 NL). Mails komen
-// dus 's avonds aan, passend bij Eleva-toon.
+// CRON-CONFIG: staat in vercel.json:
+//   { "path": "/api/cron/freebie-mails", "schedule": "0 18 * * *" }
+// Schedule = dagelijks om 18:00 UTC (= 19:00/20:00 NL). Mails komen dus
+// 's avonds aan, passend bij Eleva-toon.
 
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -77,15 +74,16 @@ export async function GET(request: Request) {
       continue;
     }
 
-    // Check feature-flag op member-niveau
+    // Live zodra het teamlid zijn eigen Resend-sleutel heeft geplakt in de
+    // instellingen (zelfde patroon als de e-mail-herinneringen). Geen sleutel
+    // = nog niet versturen, wel de poging-teller ophogen zodat we niet
+    // eindeloos blijven proberen.
     const { data: memberProfiel } = await supabase
       .from("profiles")
-      .select("freebie_mails_actief, full_name")
+      .select("resend_api_key, notificatie_email, email, full_name")
       .eq("id", rij.member_id)
       .maybeSingle();
-    if (!memberProfiel?.freebie_mails_actief) {
-      // Flag uit, niet versturen. Wel poging-teller verhogen zodat we
-      // niet eindeloos blijven proberen na bv. een week.
+    if (!memberProfiel?.resend_api_key) {
       await supabase
         .from("freebie_mail_queue")
         .update({ pogingen: rij.pogingen + 1 })
@@ -177,6 +175,9 @@ export async function GET(request: Request) {
       naar: rij.lead_email,
       onderwerp: template.onderwerp,
       html,
+      apiKey: memberProfiel.resend_api_key,
+      replyTo:
+        memberProfiel.notificatie_email ?? memberProfiel.email ?? undefined,
     });
 
     if (resultaat.ok) {
