@@ -4,10 +4,13 @@
 // Pikt rijen op waar gepland_op < now() en status = 'wacht', rendert
 // de juiste template, verstuurt via Resend, update de rij.
 //
-// DREMPEL: een mail wordt alleen verstuurd als het teamlid (eigenaar van de
-// freebie) een eigen Resend-sleutel heeft geplakt in de instellingen
-// (profiles.resend_api_key). Zo zet elk teamlid het zelf aan, net als bij de
-// e-mail-herinneringen. Geen sleutel = nog niet versturen.
+// VERSTUREN: via het GEDEELDE ELEVA-Resend-account (één geverifieerd domein
+// voor het hele team), gepersonaliseerd met de naam van het teamlid als
+// afzender + hun e-mail als reply-to. Master-schakelaar = RESEND_API_KEY in de
+// Vercel-env: zonder dat blijft alles dry-run (geen echte verzending). Env:
+//   RESEND_API_KEY     = sleutel van het ELEVA-Resend-account
+//   RESEND_FROM_EMAIL  = afzender-adres op het geverifieerde domein
+//                        (bv. team@mail.eleva.app)
 //
 // CRON-CONFIG: staat in vercel.json:
 //   { "path": "/api/cron/freebie-mails", "schedule": "0 18 * * *" }
@@ -74,21 +77,21 @@ export async function GET(request: Request) {
       continue;
     }
 
-    // Live zodra het teamlid zijn eigen Resend-sleutel heeft geplakt in de
-    // instellingen (zelfde patroon als de e-mail-herinneringen). Geen sleutel
-    // = nog niet versturen, wel de poging-teller ophogen zodat we niet
-    // eindeloos blijven proberen.
+    // Freebie-mails gaan via het GEDEELDE ELEVA-Resend-account (één
+    // geverifieerd domein voor het hele team), gepersonaliseerd met de naam
+    // van het teamlid als afzender + hun e-mail als reply-to. Master-schakelaar
+    // is RESEND_API_KEY in de env: zonder dat blijft verstuurMail dry-run.
     const { data: memberProfiel } = await supabase
       .from("profiles")
-      .select("resend_api_key, notificatie_email, email, full_name")
+      .select("full_name, email, notificatie_email")
       .eq("id", rij.member_id)
       .maybeSingle();
-    if (!memberProfiel?.resend_api_key) {
+    if (!memberProfiel) {
       await supabase
         .from("freebie_mail_queue")
-        .update({ pogingen: rij.pogingen + 1 })
+        .update({ status: "mislukt", foutmelding: "Member niet gevonden" })
         .eq("id", rij.id);
-      overgeslagen++;
+      mislukt++;
       continue;
     }
 
@@ -171,11 +174,12 @@ export async function GET(request: Request) {
       alInMiniEleva,
     });
 
+    const fromEmail = process.env.RESEND_FROM_EMAIL ?? "team@mail.eleva.app";
     const resultaat = await verstuurMail({
       naar: rij.lead_email,
       onderwerp: template.onderwerp,
       html,
-      apiKey: memberProfiel.resend_api_key,
+      van: `${memberVoornaam} <${fromEmail}>`,
       replyTo:
         memberProfiel.notificatie_email ?? memberProfiel.email ?? undefined,
     });

@@ -377,28 +377,27 @@ export async function POST(req: NextRequest) {
       try {
         const { data: member } = await supabase
           .from("profiles")
-          .select("resend_api_key, notificatie_email, email")
+          .select("full_name, notificatie_email, email")
           .eq("id", tokenRow.member_id)
           .maybeSingle();
-        const memberKey = (member as { resend_api_key?: string | null } | null)
-          ?.resend_api_key;
-        if (memberKey) {
-          const mail = bouwUitkomstMail({
-            leadVoornaam: leadNaam.split(" ")[0] || "jij",
-            spiegelTekst,
-          });
-          await verstuurMail({
-            naar: leadEmail,
-            onderwerp: mail.onderwerp,
-            html: mail.html,
-            apiKey: memberKey,
-            replyTo:
-              (member as { notificatie_email?: string | null } | null)
-                ?.notificatie_email ??
-              (member as { email?: string | null } | null)?.email ??
-              undefined,
-          });
-        }
+        const m = member as {
+          full_name?: string | null;
+          notificatie_email?: string | null;
+          email?: string | null;
+        } | null;
+        const fromEmail = process.env.RESEND_FROM_EMAIL ?? "team@mail.eleva.app";
+        const memberVoornaam = (m?.full_name ?? "").split(" ")[0] || "ELEVA";
+        const mail = bouwUitkomstMail({
+          leadVoornaam: leadNaam.split(" ")[0] || "jij",
+          spiegelTekst,
+        });
+        await verstuurMail({
+          naar: leadEmail,
+          onderwerp: mail.onderwerp,
+          html: mail.html,
+          van: `${memberVoornaam} <${fromEmail}>`,
+          replyTo: m?.notificatie_email ?? m?.email ?? undefined,
+        });
       } catch (mailErr) {
         console.warn("uitkomst-mail versturen mislukt (niet fataal):", mailErr);
       }
