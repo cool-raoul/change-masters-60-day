@@ -130,7 +130,11 @@ export async function GET(request: Request) {
     // 2. actieve, niet-verlopen uitnodiging voor die prospect
     // 3. al activiteit op die uitnodiging? → korte verwijzing ipv
     //    vol introductie-blok in de mail
-    let miniElevaUrl: string | null = null;
+    // Standaard wijst de omgeving-knop naar de aanvraag-link: pas als de
+    // PROSPECT daarop klikt, wordt haar mini-ELEVA aangemaakt (niet vooraf).
+    // Bestaat er al een actieve omgeving, dan linken we direct daarheen.
+    let miniElevaUrl: string | null =
+      `${origin}/api/mini-eleva/aanvraag?optin=${rij.opt_in_id}&dag=${rij.dag}`;
     let alInMiniEleva = false;
     try {
       const { data: prospect } = await supabase
@@ -160,7 +164,7 @@ export async function GET(request: Request) {
       }
     } catch (e) {
       // Mini-ELEVA-info is verrijking, geen vereiste. Mail gaat door
-      // zonder omgeving-blok als dit faalt.
+      // met de aanvraag-link als dit faalt.
       console.warn("[freebie-mails cron] mini-eleva lookup faalde:", e);
     }
 

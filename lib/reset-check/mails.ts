@@ -114,7 +114,10 @@ function futureSelfBlok(antwoorden: unknown): string {
  */
 function miniElevaBlok(input: GenericMailInput, dag: number): string {
   if (!input.miniElevaUrl) return "";
-  const url = `${input.miniElevaUrl}?bron=mail-d${dag}`;
+  // De omgeving-URL kan al query-params hebben (de aanvraag-link), dus
+  // bron netjes met ? of & aanhaken.
+  const scheiding = input.miniElevaUrl.includes("?") ? "&" : "?";
+  const url = `${input.miniElevaUrl}${scheiding}bron=mail-d${dag}`;
 
   if (input.alInMiniEleva) {
     const kort: Record<number, string> = {
