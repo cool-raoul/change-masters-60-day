@@ -267,7 +267,7 @@ export function MiniElevaProspectChat({
           {!kanSchrijven && (
             <div className="bg-cm-surface-2/60 rounded-lg p-2 text-xs text-cm-white/60">
               Geen actieve mini-ELEVA voor {prospectVoornaam}. De chat is
-              read-only — maak een nieuwe uitnodiging of verleng om te kunnen
+              alleen-lezen. Maak een nieuwe uitnodiging of verleng om te kunnen
               reageren.
             </div>
           )}

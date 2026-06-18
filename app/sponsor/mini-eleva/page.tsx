@@ -152,7 +152,7 @@ export default async function SponsorMiniElevaOverzicht() {
         </h1>
         <p className="text-cm-white/70 text-sm mt-2 leading-relaxed">
           Hier zie je alle prospects die jouw members via mini-ELEVA hebben
-          uitgenodigd. Klik op een chat om te reageren — jij bent de tweede
+          uitgenodigd. Klik op een chat om te reageren. Jij bent de tweede
           mens in dat gesprek.
         </p>
       </div>

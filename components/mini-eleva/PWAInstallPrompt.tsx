@@ -110,7 +110,7 @@ export function PWAInstallPrompt({ memberNaam }: { memberNaam: string | null }) 
             Zet ELEVA op je beginscherm
           </h3>
           <p className="text-cm-white/80 text-xs leading-relaxed">
-            Dan kun je makkelijk terugkomen om rustig rond te kijken — net als
+            Dan kun je makkelijk terugkomen om rustig rond te kijken, net als
             een gewone app. Zo mis je niets en heb je 't sneller open.
             {memberDeel && ` ${memberDeel} krijgt ook een seintje als je actief bent, zodat ze je kan helpen.`}
           </p>

@@ -105,7 +105,7 @@ export function MentorFunnelAnalyseKnop({ opVoltooid, alVoltooid }: Props) {
           ✓ Analyse opgepakt
         </p>
         <p className="text-cm-white opacity-80 text-xs">
-          Top. Open Mentor opnieuw als je nog dieper wilt — je analyse staat
+          Top. Open Mentor opnieuw als je nog dieper wilt kijken. Je analyse staat
           in je chat-geschiedenis.
         </p>
       </div>
@@ -171,7 +171,7 @@ export function MentorFunnelAnalyseKnop({ opVoltooid, alVoltooid }: Props) {
       ) : (
         <div className="rounded-md bg-cm-bg/60 border border-cm-border px-3 py-2">
           <p className="text-cm-white opacity-70 text-xs">
-            Nog geen prospects geregistreerd. Geen probleem — de Mentor kan
+            Nog geen prospects geregistreerd. Geen probleem. De Mentor kan
             ook helpen op basis van je dagelijkse acties.
           </p>
         </div>

@@ -265,7 +265,7 @@ export function PushResyncBanner() {
         <div className="flex items-center gap-3">
           <span className="text-2xl flex-shrink-0">⏳</span>
           <p className="text-cm-white/80 text-sm">
-            Even bezig met activeren — duurt 2 seconden...
+            Even bezig met activeren, duurt 2 seconden...
           </p>
         </div>
       )}
@@ -291,7 +291,7 @@ export function PushResyncBanner() {
                 <p className="text-cm-white/80 text-sm mb-2">{foutMelding}</p>
               )}
               <p className="text-cm-white/60 text-xs">
-                Geen zorg — Raoul helpt je verder. Klik op de knop hieronder, dan
+                Geen zorg. Raoul helpt je verder. Klik op de knop hieronder, dan
                 opent je mail-app met een kant-en-klare hulpvraag.
               </p>
             </div>

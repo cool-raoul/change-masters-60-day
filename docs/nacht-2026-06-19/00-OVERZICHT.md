@@ -8,7 +8,7 @@ stem, founder-tekst of de database raakt, heb ik laten staan als voorstel.
 ## Status van de 4 rondes
 - [x] **Ronde 1 — Reset-check funnel** → `01-resetcheck-funnel-audit.md`
 - [x] **Ronde 2 — Core 21 dagen pilot-klaar scan** → `02-core-21-dagen.md`
-- [ ] Ronde 3 — Em-dashes + AI-isms codebreed → `03-emdash-ai-isms.md`
+- [x] **Ronde 3 — Em-dashes + AI-isms codebreed** → `03-emdash-ai-isms.md`
 - [ ] Ronde 4 — Brede gezondheids-audit → `04-brede-audit.md`
 
 ---
@@ -49,7 +49,23 @@ Ik heb hier **niks** aangepast (jouw tekst). Alles staat per dag in
 
 **Daarna (jouw stem):** een korte claim-vrij/tijds-prognose-pass (dag 1/7/9/19 +
 sideflows) en wat AI-ism/slogan-polish (dag 8/13/18/19/20/21). Sluit aan op de
-`content.ts`-tijdsbeloftes uit ronde 1 — handig samen te doen.
+`content.ts`-tijdsbeloftes uit ronde 1, handig samen te doen.
+
+---
+
+## Ronde 3 — Em-dashes + AI-isms (samenvatting)
+
+**Gefixt + gepusht:** 11 em-dashes in member-facing UI-chrome (intro-tour,
+push-banner, PWA-prompt, Mentor-knop, sponsor-chat). De echte content
+(Core + Reset-check) had al **nul** em-dashes.
+
+**Twee dingen die opvielen, in `03-emdash-ai-isms.md`:**
+1. **Voor Gaby (urgent vóór de bots live gaan):** de energie- & hormonen-bots
+   staan vol medische taal + 3 harde claims ("letterlijk levensreddend", "lichte
+   vergif", "30% productiviteit"). Medisch→beleving-vertaalslag nodig.
+2. **Mentor-prompt:** lijkt geen expliciet verbod op em-dashes/AI-isms + geen
+   harde stem/claim-vrij-richtlijn te hebben. Eén kleine toevoeging dekt alle
+   Mentor-output. Laat ik aan jou (raakt het hart van de Mentor).
 
 ---
 

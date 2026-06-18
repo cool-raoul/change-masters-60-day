@@ -114,7 +114,7 @@ export function MiniElevaIntroTour({
             <div>
               <strong className="text-cm-white">Welkomstvideo's</strong>
               <span className="text-cm-white/70">
-                {" "}— korte intro van {memberDeel}
+                : korte intro van {memberDeel}
                 {sponsorDeel ? ` en ${sponsorDeel}` : ""}, zodat je weet wie je
                 voor je hebt.
               </span>
@@ -125,7 +125,7 @@ export function MiniElevaIntroTour({
             <div>
               <strong className="text-cm-white">ELEVA-mentor</strong>
               <span className="text-cm-white/70">
-                {" "}— een AI die jouw vragen 24/7 beantwoordt. Over producten,
+                : een AI die jouw vragen 24/7 beantwoordt. Over producten,
                 het verdienmodel, hoe het werkt, wat het niet is. Eerlijk, ook
                 over wat 'ie niet weet.
               </span>
@@ -139,7 +139,7 @@ export function MiniElevaIntroTour({
                 {sponsorDeel ? ` + ${sponsorDeel}` : ""}
               </strong>
               <span className="text-cm-white/70">
-                {" "}— echte gesprekken met echte mensen. Tekst- of
+                : echte gesprekken met echte mensen. Tekst- of
                 spraakberichten. Reactie komt wanneer ze tijd hebben, je krijgt
                 vanzelf een seintje.
               </span>
@@ -150,7 +150,7 @@ export function MiniElevaIntroTour({
             <div>
               <strong className="text-cm-white">Wat er nog komt</strong>
               <span className="text-cm-white/70">
-                {" "}— succesverhalen van mensen die hetzelfde pad liepen,
+                : succesverhalen van mensen die hetzelfde pad liepen,
                 video's van Lifeplus-events, een kijkje in de fabriek, en
                 productinformatie. Dit wordt steeds verder gevuld.
               </span>
