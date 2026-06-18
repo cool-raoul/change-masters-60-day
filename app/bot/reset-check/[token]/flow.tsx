@@ -2,12 +2,13 @@
 
 // File: app/bot/reset-check/[token]/flow.tsx
 //
-// Token-flow voor de Holistic Reset check. Submit gaat naar de
-// bestaande /api/freebie-bot/intekening-vooraf en /api/freebie-bot/opt-in,
-// zodat de inzending in freebie_opt_ins + namenlijst van de member komt
-// en de bestaande pijplijn-architectuur werkt.
+// Token-flow voor de Holistic Reset check. De vangst gaat naar
+// /api/freebie-bot/opt-in (bij het invullen van de e-mail, stap 4) en
+// /api/freebie-bot/contact (na het achterlaten van een telefoonnummer,
+// stap 5), zodat de inzending in freebie_opt_ins + de namenlijst van de
+// member komt en de bestaande pijplijn-architectuur werkt.
 
-import { useState, type ReactNode } from "react";
+import { useState, useRef, type ReactNode } from "react";
 import { EditableTekst } from "@/components/cms/EditableTekst";
 import { useEditModus } from "@/components/cms/EditModeContext";
 import type { HerkomstContext } from "@/lib/freebie-bots/herkomst";
@@ -155,7 +156,15 @@ export function ResetCheckFlow({
   // antwoorden in de namenlijst, de 5-mail-serie gepland en de uitkomst-mail
   // eruit. Het telefoon-/contact-stuk komt pas na stap 5 (zie submit). De
   // vragen (stap 2-3) zijn hier al ingevuld, dus de spiegel kan al berekend.
+  //
+  // In-flight guard (vangBezigRef): voorkomt dat een dubbelklik of
+  // terug-en-vooruit twee gelijktijdige vangst-calls afvuurt (dubbele
+  // prospect-kaart + dubbele uitkomst-mail). keepalive houdt de request in
+  // leven als de prospect meteen na de klik het tabblad sluit.
+  const vangBezigRef = useRef(false);
   async function vangProspect() {
+    if (vangBezigRef.current) return;
+    vangBezigRef.current = true;
     try {
       const heat = berekenHeat(a);
       const themaScores = berekenThemaScores(a);
@@ -176,6 +185,7 @@ export function ResetCheckFlow({
 
       await fetch("/api/freebie-bot/opt-in", {
         method: "POST",
+        keepalive: true,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           token,
@@ -193,6 +203,8 @@ export function ResetCheckFlow({
       });
     } catch (e) {
       console.warn("vangProspect fout", e);
+    } finally {
+      vangBezigRef.current = false;
     }
   }
 

@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { getStripe } from "@/lib/stripe/client";
 import { NextResponse } from "next/server";
+import { SITE_URL } from "@/lib/site";
 
 export const maxDuration = 30;
 
@@ -23,10 +24,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const origin =
-      request.headers.get("origin") ||
-      process.env.NEXT_PUBLIC_APP_URL ||
-      "https://app.eleva.nl";
+    const origin = request.headers.get("origin") || SITE_URL;
 
     // Haal bestaande customer op als die er al is
     const { data: profile } = await supabase

@@ -47,11 +47,16 @@ export async function GET(req: NextRequest) {
     if (!optIn?.member_id || !optIn?.lead_email) return naarHome();
 
     // 2. Prospect van deze member met dit e-mailadres
+    // .order+limit ipv kale maybeSingle: een member kan twee prospect-
+    // kaarten met hetzelfde e-mailadres hebben; maybeSingle zou dan met een
+    // fout terugvallen naar home. Nu pakken we netjes de nieuwste.
     const { data: prospect } = await admin
       .from("prospects")
       .select("id")
       .eq("user_id", optIn.member_id)
       .ilike("email", optIn.lead_email)
+      .order("created_at", { ascending: false })
+      .limit(1)
       .maybeSingle();
     if (!prospect?.id) return naarHome();
 

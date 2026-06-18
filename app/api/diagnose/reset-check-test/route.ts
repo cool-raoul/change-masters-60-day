@@ -104,7 +104,7 @@ export async function POST() {
 
     // We doen de fetch via volledig URL want server-fetch naar relatieve
     // route werkt niet vanuit een API-route.
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || SITE_URL;
+    const baseUrl = SITE_URL;
 
     let resStatus = 0;
     let resBody: unknown = null;
