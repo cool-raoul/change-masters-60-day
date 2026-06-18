@@ -10,7 +10,7 @@
 // Vercel-env: zonder dat blijft alles dry-run (geen echte verzending). Env:
 //   RESEND_API_KEY     = sleutel van het ELEVA-Resend-account
 //   RESEND_FROM_EMAIL  = afzender-adres op het geverifieerde domein
-//                        (bv. team@mail.eleva.app)
+//                        (bv. team@mail.my-eleva.com)
 //
 // CRON-CONFIG: staat in vercel.json:
 //   { "path": "/api/cron/freebie-mails", "schedule": "0 18 * * *" }
@@ -21,6 +21,7 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getBotConfig } from "@/lib/freebie-bots/registry";
 import { verstuurMail } from "@/lib/mail/resend";
+import { SITE_URL } from "@/lib/site";
 
 export const maxDuration = 60;
 
@@ -120,7 +121,7 @@ export async function GET(request: Request) {
 
     const memberVoornaam =
       ((memberProfiel.full_name ?? "") as string).split(" ")[0] || "team";
-    const origin = process.env.NEXT_PUBLIC_APP_URL ?? "https://eleva.app";
+    const origin = SITE_URL;
     const unsubscribeUrl = rij.unsubscribe_token
       ? `${origin}/api/freebie-bot/unsubscribe?token=${rij.unsubscribe_token}`
       : `${origin}/`;
@@ -178,7 +179,7 @@ export async function GET(request: Request) {
       alInMiniEleva,
     });
 
-    const fromEmail = process.env.RESEND_FROM_EMAIL ?? "team@mail.eleva.app";
+    const fromEmail = process.env.RESEND_FROM_EMAIL ?? "team@mail.my-eleva.com";
     const resultaat = await verstuurMail({
       naar: rij.lead_email,
       onderwerp: template.onderwerp,

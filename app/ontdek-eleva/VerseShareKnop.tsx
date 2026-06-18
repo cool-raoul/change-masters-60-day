@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { SITE_URL } from "@/lib/site";
 
 export function VerseShareKnop() {
   const [status, setStatus] = useState<"idle" | "kopieerd" | "fout">("idle");
@@ -10,7 +11,7 @@ export function VerseShareKnop() {
       const versie = `v${Date.now().toString(36)}`;
       const basis = typeof window !== "undefined"
         ? `${window.location.origin}/ontdek-eleva`
-        : "https://change-masters-60-day-q25o.vercel.app/ontdek-eleva";
+        : `${SITE_URL}/ontdek-eleva`;
       const verseLink = `${basis}?${versie}`;
 
       if (navigator.clipboard) {

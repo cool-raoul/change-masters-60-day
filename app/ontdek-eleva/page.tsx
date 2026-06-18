@@ -20,11 +20,10 @@ import { MediaBlokken } from "@/components/cms/MediaBlokken";
 import { ShowcaseClient } from "./showcase-client";
 import { VerseShareKnop } from "./VerseShareKnop";
 import { FEATURES } from "./features";
+import { SITE_URL } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
-
-const SITE_URL = "https://change-masters-60-day-q25o.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

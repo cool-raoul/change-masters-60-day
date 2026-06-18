@@ -2,6 +2,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { Resend } from "resend";
 import { NextResponse } from "next/server";
 import { sendPushToUser } from "@/lib/push/sendPush";
+import { SITE_URL } from "@/lib/site";
 
 // Wordt ELK UUR op het hele uur aangeroepen via Vercel Cron.
 // Schedule: "0 * * * *". Per user checken we of het NU het gewenste lokale uur
@@ -183,7 +184,7 @@ export async function GET(request: Request) {
                 `).join("")}
               </div>
 
-              <a href="https://change-masters-60-day-q25o.vercel.app/herinneringen"
+              <a href="${SITE_URL}/herinneringen"
                  style="background: #C9A84C; color: #000; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">
                 Bekijk herinneringen →
               </a>

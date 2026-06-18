@@ -393,7 +393,7 @@ export async function POST(req: NextRequest) {
               email?: string | null;
             } | null;
             const fromEmail =
-              process.env.RESEND_FROM_EMAIL ?? "team@mail.eleva.app";
+              process.env.RESEND_FROM_EMAIL ?? "team@mail.my-eleva.com";
             const memberVoornaam =
               (m?.full_name ?? "").split(" ")[0] || "ELEVA";
             await verstuurMail({

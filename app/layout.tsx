@@ -8,8 +8,10 @@ import {
   themeInlineScript,
 } from "@/components/theme/ThemeContext";
 import { ModusBodyClass } from "@/components/theme/ModusBodyClass";
+import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "ELEVA",
   description: "Jouw persoonlijke aanbevelingsmarketing systeem voor Project Meer Tijd en Vrijheid",
   manifest: "/manifest.json",

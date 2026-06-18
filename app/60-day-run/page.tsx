@@ -7,10 +7,9 @@
 
 import type { Metadata } from "next";
 import { Reveal } from "@/components/ui/Reveal";
+import { SITE_URL } from "@/lib/site";
 
 export const dynamic = "force-static";
-
-const SITE_URL = "https://change-masters-60-day-q25o.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

@@ -12,7 +12,7 @@
 //   ?via=instagram  -> Bron-platform (instagram, facebook, mailing, etc.)
 //
 // Voorbeeld ManyChat-DM-template:
-//   https://eleva.app/bot/energie-en-focus/<token>?ig={{user_username}}&via=instagram
+//   https://my-eleva.com/bot/energie-en-focus/<token>?ig={{user_username}}&via=instagram
 
 export type HerkomstContext = {
   instagram: string | null;

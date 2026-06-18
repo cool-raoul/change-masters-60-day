@@ -28,7 +28,7 @@ jobs:
       - name: Ping reminders endpoint
         env:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
-          ENDPOINT: https://change-masters-60-day-q25o.vercel.app/api/reminders/send
+          ENDPOINT: https://my-eleva.com/api/reminders/send
         run: |
           set -euo pipefail
           echo "Calling $ENDPOINT"
@@ -43,7 +43,7 @@ jobs:
       - name: Ping stilte-reminders endpoint
         env:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
-          ENDPOINT: https://change-masters-60-day-q25o.vercel.app/api/reminders/stilte
+          ENDPOINT: https://my-eleva.com/api/reminders/stilte
         run: |
           set -euo pipefail
           echo "Calling $ENDPOINT"

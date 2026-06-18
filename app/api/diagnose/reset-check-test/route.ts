@@ -13,6 +13,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { genereerBotToken } from "@/lib/freebie-bots/token";
+import { SITE_URL } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -103,8 +104,7 @@ export async function POST() {
 
     // We doen de fetch via volledig URL want server-fetch naar relatieve
     // route werkt niet vanuit een API-route.
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ||
-      "https://change-masters-60-day-q25o.vercel.app";
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || SITE_URL;
 
     let resStatus = 0;
     let resBody: unknown = null;

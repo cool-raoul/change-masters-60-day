@@ -23,7 +23,7 @@ export const dynamic = "force-dynamic";
 const DUMMY_ANTWOORDEN = {
   voornaam: "Sandra",
   achternaam: "Voorbeeld",
-  email: "voorbeeld@eleva.app",
+  email: "voorbeeld@my-eleva.com",
   instagram: "",
   facebook: "",
   telefoon: "",
@@ -53,7 +53,7 @@ const DUMMY: Omit<GenericMailInput, "alInMiniEleva"> = {
   spiegelTekst: null,
   antwoorden: DUMMY_ANTWOORDEN,
   unsubscribeUrl: "#afmelden-voorbeeld",
-  miniElevaUrl: "https://voorbeeld.eleva.app/m/p-voorbeeldtoken",
+  miniElevaUrl: "https://my-eleva.com/m/p-voorbeeldtoken",
 };
 
 function VariantBlok({

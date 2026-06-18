@@ -10,9 +10,9 @@
 //
 // Activeren in productie:
 //   1. Maak Resend-account aan op resend.com
-//   2. Verifieer een 'from'-domein (bv. mail.eleva.app)
+//   2. Verifieer een 'from'-domein (bv. mail.my-eleva.com)
 //   3. Voeg RESEND_API_KEY toe aan Vercel env vars
-//   4. Voeg RESEND_FROM (bv. 'team@mail.eleva.app') toe
+//   4. Voeg RESEND_FROM (bv. 'team@mail.my-eleva.com') toe
 //   5. Zet feature-flag freebie_mails_actief op true voor pilot-leden
 //   6. Cron-route /api/cron/freebie-mails wordt door Vercel ingeschakeld
 
