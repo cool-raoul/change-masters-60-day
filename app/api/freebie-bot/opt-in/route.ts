@@ -23,7 +23,6 @@ import { sendPushToUser } from "@/lib/push/sendPush";
 import { planMailSequence } from "@/lib/freebie-bots/mail-queue";
 import { getBotConfig } from "@/lib/freebie-bots/registry";
 import { zorgVoorMiniElevaInvitation } from "@/lib/mini-eleva/auto-invitation";
-import { bouwUitkomstMail } from "@/lib/freebie-bots/uitkomst-mail";
 import { verstuurMail } from "@/lib/mail/resend";
 
 export async function POST(req: NextRequest) {
@@ -368,36 +367,50 @@ export async function POST(req: NextRequest) {
       leadEmail,
     });
 
-    // Direct de persoonlijke uitkomst mailen (transactioneel), via het EIGEN
-    // Resend-account van het teamlid. Zo klopt de belofte "je uitkomst is
-    // verstuurd naar je mail". Faalt veilig: de opt-in is al opgeslagen, en
-    // zonder sleutel slaan we 'm gewoon over (de lead zag de uitkomst al op
-    // het scherm).
-    if (spiegelTekst && spiegelTekst.trim()) {
+    // Direct de PROSPECT-uitkomst mailen (transactioneel), via het gedeelde
+    // ELEVA-Resend-account, gepersonaliseerd met de naam van het teamlid als
+    // afzender + hun e-mail als reply-to. Zo klopt de belofte "je uitkomst is
+    // verstuurd naar je mail".
+    //
+    // BELANGRIJK: we mailen de PROSPECT-uitkomst (een spiegeling van wat ze op
+    // het scherm zag), NOOIT de spiegel-tekst. Die spiegel-tekst is member-intel
+    // (heat-score, profiel, medische punten) en blijft alleen in de prospect-
+    // kaart van het teamlid staan. De mail wordt per bot opgebouwd via
+    // bouwUitkomstMail in de registry; heeft een bot die (nog) niet, dan gaat er
+    // bewust geen directe mail uit (dan lekt er ook niks).
+    //
+    // Faalt veilig: de opt-in is al opgeslagen, en zonder Resend-sleutel valt
+    // verstuurMail terug op dry-run (de lead zag de uitkomst al op het scherm).
+    const uitkomstBouwer = getBotConfig(botSlug)?.bouwUitkomstMail;
+    if (uitkomstBouwer) {
       try {
-        const { data: member } = await supabase
-          .from("profiles")
-          .select("full_name, notificatie_email, email")
-          .eq("id", tokenRow.member_id)
-          .maybeSingle();
-        const m = member as {
-          full_name?: string | null;
-          notificatie_email?: string | null;
-          email?: string | null;
-        } | null;
-        const fromEmail = process.env.RESEND_FROM_EMAIL ?? "team@mail.eleva.app";
-        const memberVoornaam = (m?.full_name ?? "").split(" ")[0] || "ELEVA";
-        const mail = bouwUitkomstMail({
+        const mail = uitkomstBouwer({
           leadVoornaam: leadNaam.split(" ")[0] || "jij",
-          spiegelTekst,
+          antwoorden,
         });
-        await verstuurMail({
-          naar: leadEmail,
-          onderwerp: mail.onderwerp,
-          html: mail.html,
-          van: `${memberVoornaam} <${fromEmail}>`,
-          replyTo: m?.notificatie_email ?? m?.email ?? undefined,
-        });
+        if (mail) {
+          const { data: member } = await supabase
+            .from("profiles")
+            .select("full_name, notificatie_email, email")
+            .eq("id", tokenRow.member_id)
+            .maybeSingle();
+          const m = member as {
+            full_name?: string | null;
+            notificatie_email?: string | null;
+            email?: string | null;
+          } | null;
+          const fromEmail =
+            process.env.RESEND_FROM_EMAIL ?? "team@mail.eleva.app";
+          const memberVoornaam =
+            (m?.full_name ?? "").split(" ")[0] || "ELEVA";
+          await verstuurMail({
+            naar: leadEmail,
+            onderwerp: mail.onderwerp,
+            html: mail.html,
+            van: `${memberVoornaam} <${fromEmail}>`,
+            replyTo: m?.notificatie_email ?? m?.email ?? undefined,
+          });
+        }
       } catch (mailErr) {
         console.warn("uitkomst-mail versturen mislukt (niet fataal):", mailErr);
       }

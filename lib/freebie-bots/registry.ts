@@ -17,6 +17,7 @@
 import type { SpiegelOutput, BotSlug } from "./types";
 import type { GenericMailTemplate } from "./mail-template-types";
 import { resetCheckTemplateVoorDag } from "@/lib/reset-check/mails";
+import { bouwResetUitkomstMail } from "@/lib/reset-check/uitkomst-mail";
 
 export type BotConfig = {
   slug: BotSlug;
@@ -40,6 +41,17 @@ export type BotConfig = {
   /** Vind een mail-template op dag-nummer (cross-bot generic). Optioneel
       want score-bots hebben (nog) geen mail-sequence. */
   templateVoorDag?: (dag: number) => GenericMailTemplate | null;
+  /** Bouw de transactionele "hier is jouw uitkomst"-mail die de PROSPECT
+      direct na het invullen krijgt, op basis van de rauwe antwoorden.
+      Een mail-veilige spiegeling van wat ze op het scherm zag, ZONDER
+      member-intel (heat-score, profiel, medische punten). Geeft null
+      terug bij onbruikbare antwoorden. Bots ZONDER deze bouwer sturen
+      geen directe uitkomst-mail, zodat de member-spiegel nooit per
+      ongeluk naar de prospect lekt. */
+  bouwUitkomstMail?: (params: {
+    leadVoornaam: string;
+    antwoorden: unknown;
+  }) => { onderwerp: string; html: string } | null;
 };
 
 // Alleen actieve bots staan in de registry. Legacy slugs (tweede-lente,
@@ -84,6 +96,8 @@ const BOT_REGISTRY: Partial<Record<BotSlug, BotConfig>> = {
     // 5-mail-vervolgsequence (tips + mini-ELEVA), zie lib/reset-check/mails.ts.
     // Versturen blijft achter de feature-flag profiles.freebie_mails_actief.
     templateVoorDag: resetCheckTemplateVoorDag,
+    // Directe prospect-uitkomst-mail (spiegelt het scherm, geen member-intel).
+    bouwUitkomstMail: bouwResetUitkomstMail,
   },
 };
 

@@ -12,6 +12,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { resetCheckTemplateVoorDag } from "@/lib/reset-check/mails";
+import { bouwResetUitkomstMail } from "@/lib/reset-check/uitkomst-mail";
 import type { GenericMailInput } from "@/lib/freebie-bots/mail-template-types";
 
 export const dynamic = "force-dynamic";
@@ -163,6 +164,13 @@ export default async function MailPreviewPagina() {
     variantB: string;
   }>;
 
+  // De directe uitkomst-mail die de prospect meteen na het invullen krijgt:
+  // een spiegeling van haar scherm, zonder member-intel.
+  const uitkomstMail = bouwResetUitkomstMail({
+    leadVoornaam: "Sandra",
+    antwoorden: DUMMY_ANTWOORDEN,
+  });
+
   return (
     <div className="max-w-3xl mx-auto space-y-6 pb-16">
       <header className="space-y-1 pt-2">
@@ -179,6 +187,36 @@ export default async function MailPreviewPagina() {
           staat.
         </p>
       </header>
+
+      {/* ===== Directe uitkomst-mail (meteen na invullen) ===== */}
+      {uitkomstMail && (
+        <details className="group rounded-2xl border border-cm-gold/40 bg-cm-surface-2 overflow-hidden" open>
+          <summary className="cursor-pointer select-none px-5 py-4 flex items-center justify-between gap-3 hover:bg-cm-gold/5 transition-colors">
+            <span className="flex items-center gap-3">
+              <span className="text-2xl">📩</span>
+              <span>
+                <span className="text-cm-white font-bold block">
+                  Directe uitkomst-mail (Reset-check)
+                </span>
+                <span className="text-cm-white/55 text-xs block mt-0.5">
+                  Krijgt de prospect meteen na het invullen · Onderwerp:{" "}
+                  {uitkomstMail.onderwerp}
+                </span>
+              </span>
+            </span>
+            <span className="text-cm-gold text-sm transition-transform group-open:rotate-180">
+              ▼
+            </span>
+          </summary>
+          <div className="border-t border-cm-gold/20 p-4">
+            <VariantBlok
+              label="Prospect-uitkomst · zoals ze 'm op het scherm zag"
+              toelichting="Banner, het verschil dat we zien, uitkomst per thema, inzicht en 4 tips. Geen heat-score, profiel of medische punten."
+              html={uitkomstMail.html}
+            />
+          </div>
+        </details>
+      )}
 
       {/* ===== Sequence: Reset-check ===== */}
       <details className="group rounded-2xl border border-cm-gold/40 bg-cm-surface-2 overflow-hidden" open>
