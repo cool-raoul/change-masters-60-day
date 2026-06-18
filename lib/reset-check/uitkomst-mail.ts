@@ -3,37 +3,18 @@
 // De transactionele "hier is jouw persoonlijke uitkomst"-mail die de
 // PROSPECT direct na het invullen van de Reset-check ontvangt.
 //
-// BELANGRIJK: deze mail is een mail-veilige spiegeling van wat de
-// prospect op haar scherm zag (StapUitkomst in
-// app/bot/reset-check/[token]/flow.tsx). Hij bevat NOOIT de member-intel
-// (heat-score, profiel-dump, ruwe thema-scores, medische punten). Die
-// "spiegel-tekst" is alleen voor het teamlid, in de prospect-kaart.
+// Deze mail rendert PUUR uit het gedeelde uitkomst-model
+// (lib/reset-check/uitkomst-model.ts). Datzelfde model voedt het scherm
+// (StapUitkomst in flow.tsx). Alle TEKST en LOGICA zit in het model;
+// hier zit alleen de mail-veilige WEERGAVE (inline-styles, één kolom).
+// Pas je een tekst aan in het model of in content.ts, dan verandert deze
+// mail automatisch mee. Geen tweede plek waar teksten kunnen afwijken.
 //
-// De inhoud komt 1-op-1 uit dezelfde bronnen als het scherm:
-//   - berekenThemaScores / combinatieInzicht (lib/reset-check/score.ts)
-//   - THEMA_BLOKKEN / TIPS_PER_THEMA / NU_PER_THEMA / HEEN_PER_THEMA /
-//     AFVAL_WENS_TEKST / BRUG_TEKST (lib/reset-check/content.ts)
-//   - THEMA_LABELS (lib/reset-check/vragen.ts)
-// Layout wijkt af (mail-veilige inline-styles, één kolom), de teksten
-// niet. Pas je het scherm aan, loop dan ook deze mail even na.
-//
-// Stem: Raoul. Claim-vrij, geen tijds- of gezondheidsbeloftes.
+// Bevat NOOIT member-intel (heat-score, profiel, medische punten): het
+// model levert die simpelweg niet.
 
-import type { Antwoorden } from "./types";
-import {
-  berekenThemaScores,
-  bepaalUitkomstCategorie,
-  combinatieInzicht,
-} from "./score";
-import { THEMA_LABELS } from "./vragen";
-import {
-  THEMA_BLOKKEN,
-  TIPS_PER_THEMA,
-  NU_PER_THEMA,
-  HEEN_PER_THEMA,
-  AFVAL_WENS_TEKST,
-  BRUG_TEKST,
-} from "./content";
+import type { Antwoorden, ThemaNiveau } from "./types";
+import { bouwUitkomstModel, type BannerKleur } from "./uitkomst-model";
 
 // ============================================================
 // Mail-veilige kleuren (matchen de on-brand uitkomst op het scherm)
@@ -52,6 +33,16 @@ function esc(s: string): string {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
+}
+
+function bannerKleuren(kleur: BannerKleur): { bg: string; rand: string } {
+  return kleur === "warm"
+    ? { bg: "#fce8e8", rand: CORAL }
+    : { bg: "#e8f5ec", rand: GROEN };
+}
+
+function balkKleur(niveau: ThemaNiveau): string {
+  return niveau === "laag" ? GROEN : niveau === "midden" ? GOUD_ZACHT : CORAL;
 }
 
 // ============================================================
@@ -117,54 +108,11 @@ export function bouwResetUitkomstMail(params: {
 
   const voornaam = (params.leadVoornaam || "").trim() || "jij";
 
-  // ---- Afgeleiden, exact zoals StapUitkomst (flow.tsx) ----
-  const themaScores = berekenThemaScores(a);
-  if (themaScores.length === 0) return null;
+  // Eén bron van waarheid: hetzelfde model als het scherm.
+  const m = bouwUitkomstModel(a);
+  if (m.themas.length === 0) return null;
 
-  const categorie = bepaalUitkomstCategorie(a);
-  const heeftMedisch = a.medisch.some((s) => s !== "zwanger" && s !== "geen");
-  const combi = combinatieInzicht(themaScores);
-  const top2 = [...themaScores]
-    .sort((x, y) => y.pct - x.pct)
-    .slice(0, 2)
-    .map((t) => t.thema);
-
-  // Banner
-  let bannerEmoji = "🌱";
-  let bannerTitel = "De Reset kan goed bij jou passen";
-  let bannerTekst =
-    "Op basis van wat je hebt gedeeld, stemmen we in ons gesprek de Reset persoonlijk op jou af. Je hoort gelijk wat de investering voor jou zou worden, zonder dat je hoeft te beslissen of je iets gaat doen. Helemaal vrijblijvend dus, jij beslist rustig zelf 🥰";
-  let bannerBg = "#e8f5ec";
-  let bannerRand = GROEN;
-
-  if (categorie === "warm") {
-    bannerEmoji = "🌷";
-    bannerTitel = "Wat een mooie fase";
-    bannerTekst =
-      "Zwanger of borstvoeding gevend, wat een mooie fase 🥰 We kijken samen wat past bij jou en je kindje, en wat een goed moment zou zijn om straks de Reset op te pakken. In ons gesprek stemmen we het persoonlijk op je af en hoor je gelijk wat de investering voor jou zou worden. Helemaal vrijblijvend natuurlijk, jij beslist.";
-    bannerBg = "#fce8e8";
-    bannerRand = CORAL;
-  } else if (heeftMedisch) {
-    bannerTekst =
-      "Wat fijn dat je die gezondheidspunten met ons hebt gedeeld, daar hebben we wat aan 🥰 Veel mensen met zo'n punt doen de Reset uiteindelijk wel, mits we het samen goed afstemmen en, waar nodig, met je arts mee laten kijken. In ons gesprek stemmen we het persoonlijk op jou af en hoor je gelijk wat de investering zou zijn. Helemaal vrijblijvend uiteraard.";
-  }
-
-  // Kennis-gap
-  const nuPunten = top2
-    .filter((t) => (themaScores.find((s) => s.thema === t)?.pct ?? 0) >= 33)
-    .map((t) => NU_PER_THEMA[t]);
-  const heenPunten = top2
-    .filter((t) => (themaScores.find((s) => s.thema === t)?.pct ?? 0) >= 33)
-    .map((t) => HEEN_PER_THEMA[t]);
-  const afvalTekst = a.profiel.afvalwens
-    ? AFVAL_WENS_TEKST[a.profiel.afvalwens]
-    : null;
-  const intentieStaart =
-    (a.scores.intentie ?? 0) >= 2
-      ? "Plus dat gevoel van: ja, dit is wat ik wil 🥰"
-      : "Een rustig gevoel ook, van hier zou het naartoe mogen.";
-  const heenZinnen = [...heenPunten];
-  if (afvalTekst) heenZinnen.push(afvalTekst);
+  const bk = bannerKleuren(m.banner.kleur);
 
   // ---- HTML opbouwen ----
   const intro =
@@ -176,102 +124,88 @@ export function bouwResetUitkomstMail(params: {
   // Banner-blok
   const bannerBlok =
     `<div style="text-align:center;margin:0 0 18px;">
-       <div style="font-size:42px;line-height:1;margin:0 0 6px;">${bannerEmoji}</div>
-       <h1 style="font-size:22px;line-height:1.3;margin:0 0 6px;font-weight:bold;">${esc(bannerTitel)}</h1>
-       <p style="margin:0;font-size:13px;color:${GRIJS};font-family:Arial,sans-serif;">Hieronder lees je jouw uitkomst per thema, plus inzichten en concrete tips uit onze praktijk.</p>
+       <div style="font-size:42px;line-height:1;margin:0 0 6px;">${m.banner.emoji}</div>
+       <h1 style="font-size:22px;line-height:1.3;margin:0 0 6px;font-weight:bold;">${esc(m.banner.titel)}</h1>
+       <p style="margin:0;font-size:13px;color:${GRIJS};font-family:Arial,sans-serif;">${esc(m.introSub)}</p>
      </div>` +
-    `<div style="background:${bannerBg};border:2px solid ${bannerRand};border-radius:12px;padding:14px 18px;margin:0 0 24px;">
-       <div style="font-weight:bold;margin:0 0 6px;">Voor jouw situatie specifiek</div>
-       <p style="margin:0;font-size:14px;">${esc(bannerTekst)}</p>
+    `<div style="background:${bk.bg};border:2px solid ${bk.rand};border-radius:12px;padding:14px 18px;margin:0 0 24px;">
+       <div style="font-weight:bold;margin:0 0 6px;">${esc(m.situatieKop)}</div>
+       <p style="margin:0;font-size:14px;">${esc(m.banner.tekst)}</p>
      </div>`;
 
   // Kennis-gap-blok
-  const nuTekst =
-    nuPunten.length > 0
-      ? `Je gaf aan dat je vooral last hebt van ${esc(nuPunten.join(", en "))}. Dat is iets wat je elke dag voelt, in je werk, je gezin, je rust… het kost je vaak meer energie dan je zelf in de gaten hebt 🥰`
-      : "Je antwoorden laten zien dat je nu best stabiel staat. Hier en daar nog wat kleine signalen die om aandacht vragen, niks ernstigs hoor, wel iets om bewust van te zijn.";
-
-  const heenTekst =
-    heenZinnen.length > 0
-      ? `Stel je een dag voor, eentje met ${esc(heenZinnen.join(", en "))}. ${esc(intentieStaart)}`
-      : `Een dag waarin je lichaam meewerkt, in plaats van tegen je in. ${esc(intentieStaart)}`;
-
   const heenLijst = `<ul style="margin:0 0 10px;padding:0 0 0 2px;list-style:none;font-size:14px;line-height:1.6;">
-      <li style="margin:0 0 6px;">🌅 <strong>Wakker worden met zin in de dag</strong>, niet eerst een uur opwarmen op de koffie</li>
-      <li style="margin:0 0 6px;">👕 <strong>Kleren die over je heen glijden</strong> in plaats van eraan vast te zitten</li>
-      <li style="margin:0 0 6px;">⚡ <strong>Halverwege de middag nog energie</strong> over, ook zonder dat tweede bakkie</li>
-      <li style="margin:0 0 6px;">🏃 <strong>Plotseling zin in bewegen of sporten</strong>, niet meer omdat het moet, gewoon omdat je dat wilt</li>
-      <li style="margin:0 0 6px;">🌙 <strong>'s Avonds nog tijd en zin</strong> om iets leuks te doen, niet alleen overleven op de bank</li>
-      <li style="margin:0;">🧠 <strong>Een rustig hoofd</strong>, helderder denken, en het gevoel: ja, dit klopt 🥰</li>
+      ${m.kennisGap.heenBelevingen
+        .map(
+          (b, i, arr) =>
+            `<li style="margin:0 0 ${i === arr.length - 1 ? "0" : "6px"};">${b.emoji} <strong>${esc(b.sterk)}</strong>${esc(b.rest)}</li>`,
+        )
+        .join("")}
     </ul>`;
 
   const kennisGap =
     `<div style="background:${CREME_KADER};border:1px solid ${CREME_RAND};border-radius:16px;padding:18px;margin:0 0 24px;">
-       <h2 style="text-align:center;font-size:18px;font-weight:bold;margin:0 0 2px;">Het verschil dat we voor je zien</h2>
-       <p style="text-align:center;font-size:12px;font-style:italic;color:#6b5524;margin:0 0 14px;">Tussen waar je nu staat, en waar je heen wilt 🥰</p>` +
+       <h2 style="text-align:center;font-size:18px;font-weight:bold;margin:0 0 2px;">${esc(m.kennisGap.kop)}</h2>
+       <p style="text-align:center;font-size:12px;font-style:italic;color:#6b5524;margin:0 0 14px;">${esc(m.kennisGap.sub)}</p>` +
     witKaart(
       CORAL,
-      label("Waar je nu staat", "#b34a1f") +
-        `<div style="font-weight:bold;margin:0 0 4px;">Wat je elke dag voelt</div>` +
-        `<p style="margin:0;font-size:14px;">${nuTekst}</p>`,
+      label(m.kennisGap.nuLabel, "#b34a1f") +
+        `<div style="font-weight:bold;margin:0 0 4px;">${esc(m.kennisGap.nuKop)}</div>` +
+        `<p style="margin:0;font-size:14px;">${esc(m.kennisGap.nuTekst)}</p>`,
     ) +
     pijl() +
     witKaart(
       GROEN,
-      label("Waar je heen wilt", "#1f6b35") +
-        `<div style="font-weight:bold;margin:0 0 8px;">Hoe het ook kan voelen</div>` +
-        `<p style="margin:0 0 10px;font-size:14px;">${heenTekst}</p>` +
-        `<p style="margin:0 0 8px;font-size:14px;">Heel veel mensen die het traject doen, vertellen ons over een soort lichtere versie van zichzelf die ze niet hadden zien aankomen. Een paar van de dingen die ze beschrijven:</p>` +
+      label(m.kennisGap.heenLabel, "#1f6b35") +
+        `<div style="font-weight:bold;margin:0 0 8px;">${esc(m.kennisGap.heenKop)}</div>` +
+        `<p style="margin:0 0 10px;font-size:14px;">${esc(m.kennisGap.heenTekst)}</p>` +
+        `<p style="margin:0 0 8px;font-size:14px;">${esc(m.kennisGap.heenIntro)}</p>` +
         heenLijst +
-        `<p style="margin:10px 0 0;font-size:12px;font-style:italic;color:${GRIJS};">Niet morgen, niet over een week. Wel gaandeweg, tijdens en na het traject. Voor sommigen krachtiger in de eerste weken, voor anderen pas later. Voor iedereen anders.</p>`,
+        `<p style="margin:10px 0 0;font-size:12px;font-style:italic;color:${GRIJS};">${esc(m.kennisGap.heenDisclaimer)}</p>`,
     ) +
     pijl() +
     donkerKaart(
-      label("En wat ertussen zit", GOUD_ZACHT) +
-        `<div style="font-weight:bold;color:#ffffff;margin:0 0 6px;">Daar hebben wij wat voor</div>` +
-        `<p style="margin:0;font-size:14px;">${BRUG_TEKST.replace(/\n\n/g, "<br/><br/>")}</p>`,
+      label(m.kennisGap.brugLabel, GOUD_ZACHT) +
+        `<div style="font-weight:bold;color:#ffffff;margin:0 0 6px;">${esc(m.kennisGap.brugKop)}</div>` +
+        `<p style="margin:0;font-size:14px;">${m.kennisGap.brugTekst.replace(/\n\n/g, "<br/><br/>")}</p>`,
     ) +
     `</div>`;
 
   // Thema-scores
-  const themaKaarten = themaScores
+  const themaKaarten = m.themas
     .map((ts) => {
-      const blok = THEMA_BLOKKEN[ts.thema][ts.niveau];
-      const balkKleur =
-        ts.niveau === "laag" ? GROEN : ts.niveau === "midden" ? GOUD_ZACHT : CORAL;
       const breedte = Math.max(0, Math.min(100, Math.round(ts.pct)));
       return `<div style="background:#ffffff;border:1px solid #e0d8bc;border-radius:12px;padding:14px 16px;margin:0 0 12px;">
         <table role="presentation" width="100%" style="border-collapse:collapse;margin:0 0 8px;"><tr>
-          <td style="font-weight:bold;font-size:15px;">${esc(THEMA_LABELS[ts.thema] ?? ts.thema)}</td>
+          <td style="font-weight:bold;font-size:15px;">${esc(ts.label)}</td>
           <td style="text-align:right;font-size:12px;font-weight:bold;color:${GOUD};font-family:Arial,sans-serif;">${ts.totaal} / ${ts.max}</td>
         </tr></table>
         <div style="height:8px;background:#e0d8bc;border-radius:6px;overflow:hidden;margin:0 0 10px;">
-          <div style="height:8px;width:${breedte}%;background:${balkKleur};border-radius:6px;font-size:1px;line-height:8px;">&nbsp;</div>
+          <div style="height:8px;width:${breedte}%;background:${balkKleur(ts.niveau)};border-radius:6px;font-size:1px;line-height:8px;">&nbsp;</div>
         </div>
-        <p style="margin:0 0 10px;font-size:14px;"><strong>${esc(blok.titel)}.</strong> ${esc(blok.tekst)}</p>
+        <p style="margin:0 0 10px;font-size:14px;"><strong>${esc(ts.titel)}.</strong> ${esc(ts.tekst)}</p>
         <div style="background:#f7f1e4;border-left:4px solid ${GOUD_ZACHT};border-radius:6px;padding:8px 12px;font-size:13px;">
-          <strong>Uit onze praktijk:</strong> ${esc(blok.praktijk)}
+          <strong>${esc(m.praktijkLabel)}</strong> ${esc(ts.praktijk)}
         </div>
       </div>`;
     })
     .join("");
 
   const themaSectie =
-    `<h2 style="font-size:18px;font-weight:bold;margin:26px 0 12px;">Jouw uitkomst per thema</h2>` +
+    `<h2 style="font-size:18px;font-weight:bold;margin:26px 0 12px;">${esc(m.themaSectieKop)}</h2>` +
     themaKaarten;
 
   // Combi-inzicht (combi.tekst bevat bewust <em>-opmaak, dus niet escapen)
-  const combiSectie = combi
+  const combiSectie = m.combi
     ? donkerKaart(
-        label("Wat valt op aan jouw antwoorden", GOUD_ZACHT) +
-          `<div style="color:#ffffff;font-size:17px;font-weight:bold;margin:0 0 8px;">${esc(combi.titel)}</div>` +
-          `<p style="margin:0;font-size:14px;line-height:1.6;">${combi.tekst}</p>`,
+        label(m.combiLabel, GOUD_ZACHT) +
+          `<div style="color:#ffffff;font-size:17px;font-weight:bold;margin:0 0 8px;">${esc(m.combi.titel)}</div>` +
+          `<p style="margin:0;font-size:14px;line-height:1.6;">${m.combi.tekst}</p>`,
       )
     : "";
 
   // Tips
-  const tipItems = top2
-    .flatMap((t) => TIPS_PER_THEMA[t] ?? [])
+  const tipItems = m.tips
     .map(
       (tip) =>
         `<li style="margin:0 0 8px;"><strong>${esc(tip.titel)}.</strong> ${esc(tip.uitleg)}</li>`,
@@ -279,11 +213,8 @@ export function bouwResetUitkomstMail(params: {
     .join("");
 
   const tipsSectie =
-    `<h2 style="font-size:18px;font-weight:bold;margin:26px 0 8px;">4 dingen die jij vandaag kunt starten</h2>` +
-    p(
-      "Gericht op jouw top-2 thema's. Geen generieke tips, dingen die we in de praktijk zien werken.",
-      "font-size:14px;",
-    ) +
+    `<h2 style="font-size:18px;font-weight:bold;margin:26px 0 8px;">${esc(m.tipsSectieKop)}</h2>` +
+    p(esc(m.tipsSectieIntro), "font-size:14px;") +
     `<div style="background:${CREME_KADER};border:1px solid ${CREME_RAND};border-radius:12px;padding:14px 18px;margin:0 0 24px;">
        <ol style="margin:0;padding:0 0 0 20px;font-size:14px;line-height:1.6;">${tipItems}</ol>
      </div>`;
@@ -295,7 +226,7 @@ export function bouwResetUitkomstMail(params: {
       "Wil je hier eens rustig over praten? Reageer gewoon op deze mail, dan kijken we samen of de Reset bij je past. Geen pitch, geen druk 🥰",
     ) +
     p(
-      `<span style="font-size:13px;color:${GRIJS};font-style:italic;">Deze check is geen medisch advies en geen diagnose. Resultaten van de Reset verschillen per persoon en hangen af van levensstijl en uitgangssituatie. Bij twijfel altijd in overleg met je arts.</span>`,
+      `<span style="font-size:13px;color:${GRIJS};font-style:italic;">${esc(m.disclaimer)}</span>`,
     );
 
   const html = omhulsel(

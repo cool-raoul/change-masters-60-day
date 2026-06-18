@@ -18,16 +18,9 @@ import {
   MEDISCHE_PUNTEN,
   THEMA_LABELS,
   geldigeVragen,
-  THEMA_BLOKKEN,
-  TIPS_PER_THEMA,
-  NU_PER_THEMA,
-  HEEN_PER_THEMA,
-  AFVAL_WENS_TEKST,
-  BRUG_TEKST,
   berekenThemaScores,
-  bepaalUitkomstCategorie,
-  combinatieInzicht,
   berekenHeat,
+  bouwUitkomstModel,
   type Antwoorden,
   type ScoreWaarde,
   type Thema,
@@ -763,146 +756,105 @@ function StapUitkomst({
   onTerug: () => void;
   onSubmit: () => void;
 }) {
-  const themaScores = berekenThemaScores(a);
-  const categorie = bepaalUitkomstCategorie(a);
-  const heeftMedisch = a.medisch.some((s) => s !== "zwanger" && s !== "geen");
-  const combi = combinatieInzicht(themaScores);
-  const top2 = [...themaScores].sort((x, y) => y.pct - x.pct).slice(0, 2).map((t) => t.thema);
-
-  let bannerEmoji = "🌱";
-  let bannerTitel = "De Reset kan goed bij jou passen";
-  let bannerTekst = `Op basis van wat je hebt gedeeld, stemmen we in ons gesprek de Reset persoonlijk op jou af. Je hoort gelijk wat de investering voor jou zou worden, zonder dat je hoeft te beslissen of je iets gaat doen. Helemaal vrijblijvend dus, jij beslist rustig zelf 🥰`;
-  let bannerBg = "bg-[#e8f5ec] border-[#2d8f4f]";
-
-  if (categorie === "warm") {
-    bannerEmoji = "🌷";
-    bannerTitel = "Wat een mooie fase";
-    bannerTekst = `Zwanger of borstvoeding gevend, wat een mooie fase 🥰 We kijken samen wat past bij jou en je kindje, en wat een goed moment zou zijn om straks de Reset op te pakken. In ons gesprek stemmen we het persoonlijk op je af en hoor je gelijk wat de investering voor jou zou worden. Helemaal vrijblijvend natuurlijk, jij beslist.`;
-    bannerBg = "bg-[#fce8e8] border-[#d97757]";
-  } else if (heeftMedisch) {
-    bannerTekst = `Wat fijn dat je die gezondheidspunten met ons hebt gedeeld, daar hebben we wat aan 🥰 Veel mensen met zo'n punt doen de Reset uiteindelijk wel, mits we het samen goed afstemmen en, waar nodig, met je arts mee laten kijken. In ons gesprek stemmen we het persoonlijk op jou af en hoor je gelijk wat de investering zou zijn. Helemaal vrijblijvend uiteraard.`;
-  }
-
-  // Kennis-gap
-  const nuPunten = top2
-    .filter((t) => (themaScores.find((s) => s.thema === t)?.pct ?? 0) >= 33)
-    .map((t) => NU_PER_THEMA[t]);
-  const heenPunten = top2
-    .filter((t) => (themaScores.find((s) => s.thema === t)?.pct ?? 0) >= 33)
-    .map((t) => HEEN_PER_THEMA[t]);
-  const afvalTekst = a.profiel.afvalwens ? AFVAL_WENS_TEKST[a.profiel.afvalwens] : null;
-  const intentieStaart =
-    (a.scores.intentie ?? 0) >= 2
-      ? "Plus dat gevoel van: ja, dit is wat ik wil 🥰"
-      : "Een rustig gevoel ook, van hier zou het naartoe mogen.";
-
-  const heenZinnen = [...heenPunten];
-  if (afvalTekst) heenZinnen.push(afvalTekst);
+  // Eén bron van waarheid: hetzelfde model voedt ook de uitkomst-mail
+  // (lib/reset-check/uitkomst-model.ts). Pas je daar of in content.ts een
+  // tekst aan, dan verandert scherm én mail automatisch mee.
+  const m = bouwUitkomstModel(a);
+  const bannerBg =
+    m.banner.kleur === "warm"
+      ? "bg-[#fce8e8] border-[#d97757]"
+      : "bg-[#e8f5ec] border-[#2d8f4f]";
 
   return (
     <section>
       <div className="text-center mb-6">
-        <div className="text-5xl mb-2">{bannerEmoji}</div>
-        <h1 className="text-2xl font-extrabold mb-1">{bannerTitel}</h1>
-        <p className="text-sm text-gray-600">Hieronder lees je jouw uitkomst per thema, plus inzichten en concrete tips uit onze praktijk.</p>
+        <div className="text-5xl mb-2">{m.banner.emoji}</div>
+        <h1 className="text-2xl font-extrabold mb-1">{m.banner.titel}</h1>
+        <p className="text-sm text-gray-600">{m.introSub}</p>
       </div>
 
       <div className={`${bannerBg} border-2 rounded-xl p-4 my-5`}>
-        <h3 className="font-bold mb-2">Voor jouw situatie specifiek</h3>
-        <p className="text-sm">{bannerTekst}</p>
+        <h3 className="font-bold mb-2">{m.situatieKop}</h3>
+        <p className="text-sm">{m.banner.tekst}</p>
       </div>
 
       {/* KENNIS-GAP */}
       <div className="rounded-2xl p-5 my-5" style={{ background: "linear-gradient(135deg, #faf5e6 0%, #f0e8d2 100%)", border: "1px solid #ead8a0" }}>
-        <h3 className="text-center font-extrabold text-lg">Het verschil dat we voor je zien</h3>
-        <p className="text-center text-xs italic text-[#6b5524] mb-4">Tussen waar je nu staat, en waar je heen wilt 🥰</p>
+        <h3 className="text-center font-extrabold text-lg">{m.kennisGap.kop}</h3>
+        <p className="text-center text-xs italic text-[#6b5524] mb-4">{m.kennisGap.sub}</p>
 
         <div className="bg-white rounded-xl p-4 border-2 border-[#d97757] mb-3">
-          <div className="text-[10px] uppercase tracking-widest font-bold text-[#b34a1f] mb-1">Waar je nu staat</div>
-          <h4 className="font-bold">Wat je elke dag voelt</h4>
-          <p className="text-sm">
-            {nuPunten.length > 0
-              ? `Je gaf aan dat je vooral last hebt van ${nuPunten.join(", en ")}. Dat is iets wat je elke dag voelt, in je werk, je gezin, je rust… het kost je vaak meer energie dan je zelf in de gaten hebt 🥰`
-              : "Je antwoorden laten zien dat je nu best stabiel staat. Hier en daar nog wat kleine signalen die om aandacht vragen, niks ernstigs hoor, wel iets om bewust van te zijn."}
-          </p>
+          <div className="text-[10px] uppercase tracking-widest font-bold text-[#b34a1f] mb-1">{m.kennisGap.nuLabel}</div>
+          <h4 className="font-bold">{m.kennisGap.nuKop}</h4>
+          <p className="text-sm">{m.kennisGap.nuTekst}</p>
         </div>
 
         <div className="text-center text-2xl text-[#c9a961]">↓</div>
 
         <div className="bg-white rounded-xl p-4 border-2 border-[#2d8f4f] my-3">
-          <div className="text-[10px] uppercase tracking-widest font-bold text-[#1f6b35] mb-1">Waar je heen wilt</div>
-          <h4 className="font-bold mb-2">Hoe het ook kan voelen</h4>
-          <p className="text-sm mb-3">
-            {heenZinnen.length > 0
-              ? `Stel je een dag voor, eentje met ${heenZinnen.join(", en ")}. ${intentieStaart}`
-              : `Een dag waarin je lichaam meewerkt, in plaats van tegen je in. ${intentieStaart}`}
-          </p>
-          <p className="text-sm mb-2">Heel veel mensen die het traject doen, vertellen ons over een soort lichtere versie van zichzelf die ze niet hadden zien aankomen. Een paar van de dingen die ze beschrijven:</p>
+          <div className="text-[10px] uppercase tracking-widest font-bold text-[#1f6b35] mb-1">{m.kennisGap.heenLabel}</div>
+          <h4 className="font-bold mb-2">{m.kennisGap.heenKop}</h4>
+          <p className="text-sm mb-3">{m.kennisGap.heenTekst}</p>
+          <p className="text-sm mb-2">{m.kennisGap.heenIntro}</p>
           <ul className="text-sm space-y-1.5 list-none pl-0">
-            <li>🌅 <strong>Wakker worden met zin in de dag</strong>, niet eerst een uur opwarmen op de koffie</li>
-            <li>👕 <strong>Kleren die over je heen glijden</strong> in plaats van eraan vast te zitten</li>
-            <li>⚡ <strong>Halverwege de middag nog energie</strong> over, ook zonder dat tweede bakkie</li>
-            <li>🏃 <strong>Plotseling zin in bewegen of sporten</strong>, niet meer omdat het moet, gewoon omdat je dat wilt</li>
-            <li>🌙 <strong>&apos;s Avonds nog tijd en zin</strong> om iets leuks te doen, niet alleen overleven op de bank</li>
-            <li>🧠 <strong>Een rustig hoofd</strong>, helderder denken, en het gevoel: ja, dit klopt 🥰</li>
+            {m.kennisGap.heenBelevingen.map((b, i) => (
+              <li key={i}>{b.emoji} <strong>{b.sterk}</strong>{b.rest}</li>
+            ))}
           </ul>
-          <p className="text-xs italic text-gray-600 mt-3">Niet morgen, niet over een week. Wel gaandeweg, tijdens en na het traject. Voor sommigen krachtiger in de eerste weken, voor anderen pas later. Voor iedereen anders.</p>
+          <p className="text-xs italic text-gray-600 mt-3">{m.kennisGap.heenDisclaimer}</p>
         </div>
 
         <div className="text-center text-2xl text-[#c9a961]">↓</div>
 
         <div className="rounded-xl p-4 border-2 border-[#c9a961] my-3" style={{ background: "linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%)", color: "#f0e8d2" }}>
-          <div className="text-[10px] uppercase tracking-widest font-bold text-[#c9a961] mb-1">En wat ertussen zit</div>
-          <h4 className="font-bold text-white">Daar hebben wij wat voor</h4>
-          <p className="text-sm whitespace-pre-line" dangerouslySetInnerHTML={{ __html: BRUG_TEKST.replace(/\n\n/g, "<br/><br/>") }} />
+          <div className="text-[10px] uppercase tracking-widest font-bold text-[#c9a961] mb-1">{m.kennisGap.brugLabel}</div>
+          <h4 className="font-bold text-white">{m.kennisGap.brugKop}</h4>
+          <p className="text-sm whitespace-pre-line" dangerouslySetInnerHTML={{ __html: m.kennisGap.brugTekst.replace(/\n\n/g, "<br/><br/>") }} />
         </div>
       </div>
 
       {/* THEMA-SCORES */}
-      <h2 className="text-lg font-bold mt-6 mb-3">Jouw uitkomst per thema</h2>
-      {themaScores.map((ts) => {
-        const blok = THEMA_BLOKKEN[ts.thema][ts.niveau];
+      <h2 className="text-lg font-bold mt-6 mb-3">{m.themaSectieKop}</h2>
+      {m.themas.map((ts) => {
         const balkColor = ts.niveau === "laag" ? "#2d8f4f" : ts.niveau === "midden" ? "#c9a961" : "#d97757";
         return (
           <div key={ts.thema} className="bg-white rounded-xl p-4 my-3 border border-[#e0d8bc]">
             <div className="flex justify-between items-baseline mb-2">
-              <div className="font-bold">{THEMA_LABELS[ts.thema]}</div>
+              <div className="font-bold">{ts.label}</div>
               <div className="text-xs font-bold text-[#c9a961]">{ts.totaal} / {ts.max}</div>
             </div>
             <div className="h-2 bg-[#e0d8bc] rounded overflow-hidden mb-2">
               <div className="h-full rounded" style={{ width: `${ts.pct}%`, background: balkColor }} />
             </div>
-            <p className="text-sm mb-2"><strong>{blok.titel}.</strong> {blok.tekst}</p>
+            <p className="text-sm mb-2"><strong>{ts.titel}.</strong> {ts.tekst}</p>
             <div className="bg-[#f7f1e4] border-l-4 border-[#c9a961] p-2 rounded text-xs">
-              <strong>Uit onze praktijk:</strong> {blok.praktijk}
+              <strong>{m.praktijkLabel}</strong> {ts.praktijk}
             </div>
           </div>
         );
       })}
 
       {/* COMBI */}
-      {combi && (
+      {m.combi && (
         <div className="rounded-xl p-5 my-4" style={{ background: "linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%)", color: "#f0e8d2" }}>
-          <div className="text-[10px] uppercase tracking-widest font-bold text-[#c9a961] mb-1">Wat valt op aan jouw antwoorden</div>
-          <h3 className="text-white text-lg font-bold mb-2">{combi.titel}</h3>
-          <p className="text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: combi.tekst }} />
+          <div className="text-[10px] uppercase tracking-widest font-bold text-[#c9a961] mb-1">{m.combiLabel}</div>
+          <h3 className="text-white text-lg font-bold mb-2">{m.combi.titel}</h3>
+          <p className="text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: m.combi.tekst }} />
         </div>
       )}
 
       {/* TIPS */}
-      <h2 className="text-lg font-bold mt-6 mb-3">4 dingen die jij vandaag kunt starten</h2>
-      <p className="text-sm mb-3">Gericht op jouw top-2 thema&apos;s. Geen generieke tips, dingen die we in de praktijk zien werken.</p>
+      <h2 className="text-lg font-bold mt-6 mb-3">{m.tipsSectieKop}</h2>
+      <p className="text-sm mb-3">{m.tipsSectieIntro}</p>
       <div className="bg-[#faf5e6] border border-[#ead8a0] rounded-xl p-4">
         <ol className="list-decimal pl-5 space-y-2 text-sm">
-          {top2.flatMap((t) => TIPS_PER_THEMA[t] ?? []).map((tip, i) => (
+          {m.tips.map((tip, i) => (
             <li key={i}><strong>{tip.titel}.</strong> {tip.uitleg}</li>
           ))}
         </ol>
       </div>
 
-      <p className="text-xs italic text-center text-gray-500 my-5">
-        Deze check is geen medisch advies en geen diagnose. Resultaten van de Reset verschillen per persoon en hangen af van levensstijl en uitgangssituatie. Bij twijfel altijd in overleg met je arts.
-      </p>
+      <p className="text-xs italic text-center text-gray-500 my-5">{m.disclaimer}</p>
 
       <hr className="my-6 border-[#e0d8bc]" />
 
