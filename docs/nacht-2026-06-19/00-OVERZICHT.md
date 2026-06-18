@@ -5,11 +5,27 @@ bovenaan de dingen die jouw beslissing vragen. Elke ronde heeft een eigen
 rapport in deze map. Veilige fixes heb ik al gedaan + gepusht; alles wat jouw
 stem, founder-tekst of de database raakt, heb ik laten staan als voorstel.
 
+## 🔴 EERST DIT — twee pilot-blokkers (uit ronde 4)
+
+1. **Core-members blijven eeuwig op dag 1.** De dag-voortgang leest de oude
+   `CORE_DAGEN`-taak-id's, maar /vandaag bewaart de V9-id's. Ze matchen nergens,
+   dus een echte recruit komt nooit voorbij dag 1 (founders/testers merken het
+   niet → kalender-modus). **Door mij geverifieerd.** Exacte 1-regel-fix +
+   test-instructie in `04-brede-audit.md`. Ik heb 'm bewust niet zelf gedeployed
+   (dag-voortgang op de live flow, wil ik niet ongetest pushen).
+2. **Registratie kan doodlopen** als Supabase "Confirm email" AAN staat. Even
+   verifiëren dat 'ie UIT staat + één keer signup end-to-end testen. Details in
+   `04-brede-audit.md`.
+
+Beide moeten vóór 1 juli geregeld zijn. Verder is de fundering gezond.
+
+---
+
 ## Status van de 4 rondes
 - [x] **Ronde 1 — Reset-check funnel** → `01-resetcheck-funnel-audit.md`
 - [x] **Ronde 2 — Core 21 dagen pilot-klaar scan** → `02-core-21-dagen.md`
 - [x] **Ronde 3 — Em-dashes + AI-isms codebreed** → `03-emdash-ai-isms.md`
-- [ ] Ronde 4 — Brede gezondheids-audit → `04-brede-audit.md`
+- [x] **Ronde 4 — Brede gezondheids-audit** → `04-brede-audit.md`
 
 ---
 
@@ -69,4 +85,31 @@ push-banner, PWA-prompt, Mentor-knop, sponsor-chat). De echte content
 
 ---
 
-*Dit document wordt door de nacht aangevuld na elke ronde.*
+## Ronde 4 — Brede audit (samenvatting)
+
+Naast de twee blokkers bovenaan: de fundering is gezond (auth, RLS, cron-secrets,
+Stripe-signatuur allemaal in orde). Aandachtspunten die geen blokker zijn maar
+wel op de 1-juli-lijst horen: de uitkomst-mail/push ontkoppelen van de
+mail-queue (ook ronde 1), Stripe-webhook + env verifiëren, alle migraties in
+productie checken, schema-drift (role-CHECK kent geen 'founder'), en de
+DB-uniciteit voor de funnel. Plus een paar content-taken (films opnemen, Gaby's
+bot-herschrijf). Alles staat in `04-brede-audit.md`.
+
+---
+
+## Wat ik vannacht zélf heb gedaan + gepusht (veilige fixes)
+- **r1:** in-flight guard + keepalive op de vangst (lead niet kwijt bij
+  dubbelklik/tabsluiten), mini-ELEVA-aanvraag crasht niet bij dubbele kaart,
+  Stripe-fout-domein → my-eleva.com, diagnose-env opgeschoond.
+- **r3:** 11 em-dashes uit member-facing UI-chrome.
+
+## Wat ik bewust heb laten liggen (voor jou / samen)
+- Alles wat jouw **stem** of **founder-tekst** raakt (Core-polish, claim-vrij/
+  tijds-prognoses, scripts, Mentor-prompt).
+- Alles wat de **database/auth** of de **live dag-/vangst-logica** raakt
+  (de twee blokkers, mail-gate-ontkoppeling, DB-indexen, migratie-checks).
+- De **energie/hormonen-bot-content** (voor Gaby's stem+claim-ronde vóór ze
+  live gaan).
+
+Niets dat live de pilot kan breken is zonder jouw blik gedeployed. Slaap lekker
+uitgeslapen, dit ligt klaar wanneer je wakker bent. 🌿
