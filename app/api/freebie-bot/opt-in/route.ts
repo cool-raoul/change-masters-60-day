@@ -22,7 +22,6 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { sendPushToUser } from "@/lib/push/sendPush";
 import { planMailSequence } from "@/lib/freebie-bots/mail-queue";
 import { getBotConfig } from "@/lib/freebie-bots/registry";
-import { zorgVoorMiniElevaInvitation } from "@/lib/mini-eleva/auto-invitation";
 import { verstuurMail } from "@/lib/mail/resend";
 
 export async function POST(req: NextRequest) {
@@ -241,10 +240,7 @@ export async function POST(req: NextRequest) {
       ? metFreebie
       : [...metFreebie, INGEVULD_TAG];
 
-    let prospectId: string | null = null;
-
     if (bestaande) {
-      prospectId = bestaande.id as string;
       // Update bestaande prospect: notitie aanvullen, tool-tag toevoegen,
       // telefoon zetten als die ontbrak, prioriteit omhoog bij contact.
       const aangevuldeNotitie =
@@ -292,7 +288,7 @@ export async function POST(req: NextRequest) {
       }
     } else {
       // Nieuwe prospect-rij
-      const { data: nieuweProspect, error: prospectErr } = await supabase
+      const { error: prospectErr } = await supabase
         .from("prospects")
         .insert({
           user_id: tokenRow.member_id,
@@ -312,27 +308,18 @@ export async function POST(req: NextRequest) {
               ? herkomstFacebook
               : `https://facebook.com/${herkomstFacebook}`
             : null,
-        })
-        .select("id")
-        .single();
+        });
 
       if (prospectErr) {
         console.error("Prospect-rij niet aangemaakt:", prospectErr);
-      } else {
-        prospectId = (nieuweProspect as { id: string } | null)?.id ?? null;
       }
     }
 
-    // Mini-ELEVA-uitnodiging (product-spoor) klaarzetten zodat de
-    // mail-sequence vanaf dag 1 een werkende omgeving-knop heeft.
-    // Hergebruikt een bestaande actieve uitnodiging als die er al is.
-    // Faalt veilig: zonder uitnodiging laten de mails het blok weg.
-    if (prospectId) {
-      await zorgVoorMiniElevaInvitation(supabase, {
-        prospectId,
-        memberUserId: tokenRow.member_id,
-      });
-    }
+    // Mini-ELEVA-uitnodiging wordt hier BEWUST niet automatisch aangemaakt.
+    // Een eigen omgeving ontstaat alleen als de prospect die via het mail-
+    // proces aanvraagt, of als het teamlid 'm zelf aanmaakt vanuit de
+    // prospect-kaart. Zolang er geen uitnodiging is, laat de mail-sequence
+    // het omgeving-blok stilletjes weg.
 
     // Push-notificatie naar member: bot is afgerond (vragenlijst klaar).
     // De eerdere 'intekening'-push is al gestuurd door
