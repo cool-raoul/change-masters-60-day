@@ -151,39 +151,14 @@ export function ResetCheckFlow({
   const profielKlaar = PROFIEL_VRAGEN.every((v) => a.profiel[v.sleutel as keyof typeof a.profiel]);
   const medischKlaar = a.medisch.length > 0;
 
-  // Intekening-vooraf: na stap 4 (intekenen) → vóór de uitkomst
-  async function intekenenVooraf() {
-    try {
-      await fetch("/api/freebie-bot/intekening-vooraf", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          token,
-          leadVoornaam: a.voornaam.trim(),
-          leadAchternaam: a.achternaam.trim() || a.voornaam.trim(),
-          leadEmail: a.email.trim(),
-          toestemming: true,
-          herkomstInstagram: a.instagram.trim().replace(/^@/, "") || herkomst.instagram || null,
-          herkomstFacebook: a.facebook.trim() || herkomst.facebook || null,
-          herkomstBron: herkomst.bron,
-        }),
-      });
-    } catch (e) {
-      console.warn("intekening-vooraf fout", e);
-    }
-  }
-
-  const [submitFout, setSubmitFout] = useState<string | null>(null);
-
-  // Submit final: heat-info + thema-scores → spiegelTekst
-  async function submit() {
-    setBezig(true);
-    setSubmitFout(null);
+  // Volledige vangst zodra de e-mail is ingevuld (stap 4): prospect mét
+  // antwoorden in de namenlijst, de 5-mail-serie gepland en de uitkomst-mail
+  // eruit. Het telefoon-/contact-stuk komt pas na stap 5 (zie submit). De
+  // vragen (stap 2-3) zijn hier al ingevuld, dus de spiegel kan al berekend.
+  async function vangProspect() {
     try {
       const heat = berekenHeat(a);
       const themaScores = berekenThemaScores(a);
-      const contactGewenst = a.telefoon.trim().length >= 8;
-
       const spiegelTekst = [
         `${heat.label} (heat-score ${heat.score}/10)`,
         `Profiel: ${a.profiel.geslacht_leeftijd ?? "?"} · afval-wens ${a.profiel.afvalwens ?? "?"} · investering ${a.profiel.investering ?? "?"} · afval-pogingen ${a.profiel.afvalpogingen ?? "?"}`,
@@ -199,7 +174,7 @@ export function ResetCheckFlow({
         .filter(Boolean)
         .join("\n");
 
-      const r = await fetch("/api/freebie-bot/opt-in", {
+      await fetch("/api/freebie-bot/opt-in", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -207,27 +182,56 @@ export function ResetCheckFlow({
           leadVoornaam: a.voornaam.trim(),
           leadAchternaam: a.achternaam.trim() || a.voornaam.trim(),
           leadEmail: a.email.trim(),
-          leadTelefoon: contactGewenst ? a.telefoon.trim() : null,
+          leadTelefoon: null,
           antwoorden: a,
           spiegelTekst,
-          contactGewenst,
+          contactGewenst: false,
           herkomstInstagram: a.instagram.trim().replace(/^@/, "") || herkomst.instagram || null,
           herkomstFacebook: a.facebook.trim() || herkomst.facebook || null,
           herkomstBron: herkomst.bron,
         }),
       });
-      if (!r.ok) {
-        const body = await r.json().catch(() => ({}) as Record<string, unknown>);
-        const apiFout =
-          (body as { error?: string }).error ||
-          (await r.text().catch(() => "")) ||
-          `HTTP ${r.status}`;
-        console.error("opt-in failed", r.status, apiFout);
-        setSubmitFout(
-          `Versturen mislukt (status ${r.status}): ${apiFout}. Stuur deze regel aan ons door als je 'm meermaals ziet.`,
-        );
-        setBezig(false);
-        return;
+    } catch (e) {
+      console.warn("vangProspect fout", e);
+    }
+  }
+
+  const [submitFout, setSubmitFout] = useState<string | null>(null);
+
+  // Stap 5 (na de uitkomst): alleen het contact-stuk. De volledige vangst is
+  // al gebeurd bij het invullen van de e-mail (vangProspect). Liet de prospect
+  // een telefoonnummer achter, dan sturen we nu de contact-trigger naar de
+  // member. Zonder nummer hoeft er niks meer en gaan we direct naar bedankt.
+  async function submit() {
+    setBezig(true);
+    setSubmitFout(null);
+    try {
+      const heeftTel = a.telefoon.trim().length >= 8;
+      if (heeftTel) {
+        const r = await fetch("/api/freebie-bot/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            token,
+            leadVoornaam: a.voornaam.trim(),
+            leadAchternaam: a.achternaam.trim() || a.voornaam.trim(),
+            leadEmail: a.email.trim(),
+            leadTelefoon: a.telefoon.trim(),
+          }),
+        });
+        if (!r.ok) {
+          const body = await r.json().catch(() => ({}) as Record<string, unknown>);
+          const apiFout =
+            (body as { error?: string }).error ||
+            (await r.text().catch(() => "")) ||
+            `HTTP ${r.status}`;
+          console.error("contact failed", r.status, apiFout);
+          setSubmitFout(
+            `Versturen mislukt (status ${r.status}): ${apiFout}. Stuur deze regel aan ons door als je 'm meermaals ziet.`,
+          );
+          setBezig(false);
+          return;
+        }
       }
     } catch (e) {
       console.error(e);
@@ -300,11 +304,12 @@ export function ResetCheckFlow({
               ov={ov}
               isFounder={isFounder}
               onTerug={() => naar(3)}
-              onDoor={async () => {
-                // Push naar pijplijn vlak vóór de uitkomst, zodat de
-                // member ook leads in z'n namenlijst krijgt die uiteindelijk
-                // niet door de hele uitkomst klikken.
-                await intekenenVooraf();
+              onDoor={() => {
+                // Volledige vangst zodra de e-mail er is (op de achtergrond):
+                // de member krijgt de lead + de mail-serie start, ook als de
+                // prospect niet door de hele uitkomst klikt. De uitkomst zelf
+                // is client-side, dus we tonen 'm direct zonder te wachten.
+                void vangProspect();
                 naar(5);
               }}
             />

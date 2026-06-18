@@ -39,6 +39,23 @@ export async function planMailSequence(
   },
 ): Promise<{ ok: boolean; aangemaakt: number; fout?: string }> {
   try {
+    // Idempotent: bestaan er al queue-rijen voor deze opt-in, dan niet
+    // opnieuw plannen. Zo kan de capture veilig vanuit meerdere momenten
+    // (intekening + opt-in) of bij terug-en-vooruit-klikken aangeroepen
+    // worden zonder dubbele mails. Faalt de telling (tabel ontbreekt), dan
+    // gaan we gewoon door en laat de insert het netjes vallen.
+    try {
+      const { count } = await supabase
+        .from("freebie_mail_queue")
+        .select("id", { count: "exact", head: true })
+        .eq("opt_in_id", args.optInId);
+      if ((count ?? 0) > 0) {
+        return { ok: true, aangemaakt: 0 };
+      }
+    } catch {
+      // door naar insert
+    }
+
     const nu = new Date();
     const verzendUur = 18; // UTC, ca. 19-20u Nederland
     const eersteDag = new Date(nu);

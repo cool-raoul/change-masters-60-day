@@ -325,81 +325,88 @@ export async function POST(req: NextRequest) {
     // De eerdere 'intekening'-push is al gestuurd door
     // /api/freebie-bot/intekening-vooraf. Deze melding markeert het
     // moment dat de prospect-kaart compleet is.
-    try {
-      const titel = contactGewenst
-        ? `${leadNaam} vraagt persoonlijk contact`
-        : `${leadNaam} heeft ${botTitel} afgerond`;
-      const omschrijving = contactGewenst
-        ? "Wil een vrijblijvend gesprekje van een kwartier. Open haar prospect-kaart."
-        : "Vragenlijst en overzicht zijn klaar. Open haar prospect-kaart om de antwoorden te zien.";
-      await sendPushToUser(tokenRow.member_id, {
-        title: titel,
-        body: omschrijving,
-        url: "/namenlijst",
-        tag: `${botSlug}-compleet`,
-      });
-    } catch (pushErr) {
-      console.warn("Push-notificatie mislukt:", pushErr);
-    }
-
-    // Plan de 5-mail-vervolgreeks in de queue. Cron pakt ze later op zodra
-    // het teamlid een eigen Resend-sleutel heeft. Faalt veilig als de
-    // migratie nog niet is gedraaid: log + ga door, opt-in is veilig
-    // opgeslagen.
-    await planMailSequence(supabase, {
+    // Plan de 5-mail-vervolgreeks (idempotent). 'aangemaakt > 0' betekent:
+    // dit is de EERSTE volledige vangst van deze lead. Bij een herhaalde
+    // aanroep (terug-en-vooruit klikken, of een tweede capture-moment) staan
+    // de rijen er al en doen we de eenmalige neveneffecten niet opnieuw.
+    const planResultaat = await planMailSequence(supabase, {
       optInId: optIn.id,
       freebieSlug: botSlug,
       memberId: tokenRow.member_id,
       leadNaam,
       leadEmail,
     });
+    const eersteCapture = planResultaat.aangemaakt > 0;
 
-    // Direct de PROSPECT-uitkomst mailen (transactioneel), via het gedeelde
-    // ELEVA-Resend-account, gepersonaliseerd met de naam van het teamlid als
-    // afzender + hun e-mail als reply-to. Zo klopt de belofte "je uitkomst is
-    // verstuurd naar je mail".
-    //
-    // BELANGRIJK: we mailen de PROSPECT-uitkomst (een spiegeling van wat ze op
-    // het scherm zag), NOOIT de spiegel-tekst. Die spiegel-tekst is member-intel
-    // (heat-score, profiel, medische punten) en blijft alleen in de prospect-
-    // kaart van het teamlid staan. De mail wordt per bot opgebouwd via
-    // bouwUitkomstMail in de registry; heeft een bot die (nog) niet, dan gaat er
-    // bewust geen directe mail uit (dan lekt er ook niks).
-    //
-    // Faalt veilig: de opt-in is al opgeslagen, en zonder Resend-sleutel valt
-    // verstuurMail terug op dry-run (de lead zag de uitkomst al op het scherm).
-    const uitkomstBouwer = getBotConfig(botSlug)?.bouwUitkomstMail;
-    if (uitkomstBouwer) {
+    if (eersteCapture) {
+      // Push naar member: de lead is binnen + de vragenlijst is ingevuld.
+      // NB: de 'wil persoonlijk contact'-melding doet de aparte route
+      // /api/freebie-bot/contact, pas als er een telefoonnummer is
+      // achtergelaten. Hier dus de neutrale 'ingevuld'-melding.
       try {
-        const mail = uitkomstBouwer({
-          leadVoornaam: leadNaam.split(" ")[0] || "jij",
-          antwoorden,
+        const titel = contactGewenst
+          ? `${leadNaam} vraagt persoonlijk contact`
+          : `${leadNaam} heeft ${botTitel} ingevuld`;
+        const omschrijving = contactGewenst
+          ? "Wil een vrijblijvend gesprekje van een kwartier. Open haar prospect-kaart."
+          : "Vragenlijst en overzicht zijn klaar. Open haar prospect-kaart om de antwoorden te zien.";
+        await sendPushToUser(tokenRow.member_id, {
+          title: titel,
+          body: omschrijving,
+          url: "/namenlijst",
+          tag: `${botSlug}-compleet`,
         });
-        if (mail) {
-          const { data: member } = await supabase
-            .from("profiles")
-            .select("full_name, notificatie_email, email")
-            .eq("id", tokenRow.member_id)
-            .maybeSingle();
-          const m = member as {
-            full_name?: string | null;
-            notificatie_email?: string | null;
-            email?: string | null;
-          } | null;
-          const fromEmail =
-            process.env.RESEND_FROM_EMAIL ?? "team@mail.eleva.app";
-          const memberVoornaam =
-            (m?.full_name ?? "").split(" ")[0] || "ELEVA";
-          await verstuurMail({
-            naar: leadEmail,
-            onderwerp: mail.onderwerp,
-            html: mail.html,
-            van: `${memberVoornaam} <${fromEmail}>`,
-            replyTo: m?.notificatie_email ?? m?.email ?? undefined,
+      } catch (pushErr) {
+        console.warn("Push-notificatie mislukt:", pushErr);
+      }
+
+      // Direct de PROSPECT-uitkomst mailen (transactioneel), via het gedeelde
+      // ELEVA-Resend-account, gepersonaliseerd met de naam van het teamlid als
+      // afzender + hun e-mail als reply-to. Zo klopt de belofte "je uitkomst is
+      // verstuurd naar je mail".
+      //
+      // BELANGRIJK: we mailen de PROSPECT-uitkomst (een spiegeling van wat ze op
+      // het scherm zag), NOOIT de spiegel-tekst. Die spiegel-tekst is member-intel
+      // (heat-score, profiel, medische punten) en blijft alleen in de prospect-
+      // kaart van het teamlid staan. De mail wordt per bot opgebouwd via
+      // bouwUitkomstMail in de registry; heeft een bot die (nog) niet, dan gaat er
+      // bewust geen directe mail uit (dan lekt er ook niks).
+      //
+      // Faalt veilig: de opt-in is al opgeslagen, en zonder Resend-sleutel valt
+      // verstuurMail terug op dry-run (de lead zag de uitkomst al op het scherm).
+      const uitkomstBouwer = getBotConfig(botSlug)?.bouwUitkomstMail;
+      if (uitkomstBouwer) {
+        try {
+          const mail = uitkomstBouwer({
+            leadVoornaam: leadNaam.split(" ")[0] || "jij",
+            antwoorden,
           });
+          if (mail) {
+            const { data: member } = await supabase
+              .from("profiles")
+              .select("full_name, notificatie_email, email")
+              .eq("id", tokenRow.member_id)
+              .maybeSingle();
+            const m = member as {
+              full_name?: string | null;
+              notificatie_email?: string | null;
+              email?: string | null;
+            } | null;
+            const fromEmail =
+              process.env.RESEND_FROM_EMAIL ?? "team@mail.eleva.app";
+            const memberVoornaam =
+              (m?.full_name ?? "").split(" ")[0] || "ELEVA";
+            await verstuurMail({
+              naar: leadEmail,
+              onderwerp: mail.onderwerp,
+              html: mail.html,
+              van: `${memberVoornaam} <${fromEmail}>`,
+              replyTo: m?.notificatie_email ?? m?.email ?? undefined,
+            });
+          }
+        } catch (mailErr) {
+          console.warn("uitkomst-mail versturen mislukt (niet fataal):", mailErr);
         }
-      } catch (mailErr) {
-        console.warn("uitkomst-mail versturen mislukt (niet fataal):", mailErr);
       }
     }
 
