@@ -19,7 +19,7 @@ export const THEMA_BLOKKEN: ThemaBlokken = {
     midden: {
       titel: "Een paar signaaltjes uit je darmen",
       tekst: "Je darmen geven nu en dan een seintje, dat hoort erbij. Vaak heeft het te maken met wat je eet, hoe snel je eet, en hoeveel rust je tussen je maaltijden hebt. Goed nieuws, dit zijn meestal dingen die je gewoon kunt aanpakken zonder grote omwentelingen.",
-      praktijk: "Wij zien zo vaak dat mensen al binnen 7 tot 10 dagen verschil voelen door 2 hele simpele dingetjes: een ontbijt met eiwit (geen brood dus) en minstens 2 uur tussen je avondeten en bedtijd. Dat zijn geen Reset-tips, dat is gewoon hoe je darmen werken 🥰",
+      praktijk: "Wij zien zo vaak dat mensen verschil gaan voelen door 2 hele simpele dingetjes: een ontbijt met eiwit (geen brood dus) en minstens 2 uur tussen je avondeten en bedtijd. Dat zijn geen Reset-tips, dat is gewoon hoe je darmen werken 🥰",
     },
     hoog: {
       titel: "Je darmen vragen wat liefde",
@@ -53,7 +53,7 @@ export const THEMA_BLOKKEN: ThemaBlokken = {
     midden: {
       titel: "Een paar energie-dipjes door je dag",
       tekst: "Niet onhoudbaar, wel merkbaar. Vaak komt het door schommelingen in je bloedsuiker, en dat begint vaak al bij je ontbijt. Een snelle koolhydraat-ontbijt geeft je rond 11u nog een boost, en rond 14u de afhakker.",
-      praktijk: "Probeer eens een weekje, vervang je ontbijt door iets met 20-25g eiwit. Twee eieren, een grote kwark met noten, of een goede shake. Heel veel mensen merken al binnen 4 of 5 dagen dat hun middagdip kleiner wordt 👍🏽",
+      praktijk: "Probeer eens een weekje, vervang je ontbijt door iets met 20-25g eiwit. Twee eieren, een grote kwark met noten, of een goede shake. Heel veel mensen merken dat hun middagdip kleiner wordt 👍🏽",
     },
     hoog: {
       titel: "Je energie is een dagelijks gevecht",
@@ -75,7 +75,7 @@ export const THEMA_BLOKKEN: ThemaBlokken = {
     hoog: {
       titel: "Je slaap heeft echt aandacht nodig",
       tekst: "Slecht inslapen of vaak wakker worden, dat beïnvloedt echt alles wat overdag gebeurt: je energie, je humeur, je keuzes rond voeding. Vaak zit je zenuwstelsel 's avonds nog in vlucht-stand van wat overdag is gebeurd. Je bent hier niet alleen in 🥰",
-      praktijk: "Bij hardnekkige slaapproblemen is een gesprek met je arts altijd verstandig. Wat heel veel mensen die het traject doen ons vertellen: rustiger inslapen vanaf week 2, en met meer scherpte wakker worden. Niet door iets dat specifiek 'voor slaap' is, gewoon doordat voeding en ritme zich anders zetten.",
+      praktijk: "Bij hardnekkige slaapproblemen is een gesprek met je arts altijd verstandig. Wat heel veel mensen die het traject doen ons vertellen: rustiger inslapen, en met meer scherpte wakker worden. Niet door iets dat specifiek 'voor slaap' is, gewoon doordat voeding en ritme zich anders zetten.",
     },
   },
   voeding: {
