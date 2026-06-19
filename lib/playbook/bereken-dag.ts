@@ -1,6 +1,6 @@
 import { differenceInDays } from "date-fns";
 import { DAGEN } from "@/lib/playbook/dagen";
-import { CORE_DAGEN } from "@/lib/playbook/core-dagen";
+import { CORE_V9_STAPPEN } from "@/lib/playbook/core-dagen-v9";
 import type { Modus } from "@/lib/onboarding/voltooiingen";
 
 // ============================================================
@@ -53,7 +53,11 @@ export function berekenHuidigeDag(
   }
 
   // ========== MEMBERS: voortgang-modus ==========
-  const dagenArray = modus === "core" ? CORE_DAGEN : DAGEN;
+  // Core leest de V9-stappen (core-v9-stapX-*), exact de array die /vandaag
+  // toont en als voltooiing opslaat. Eerder stond hier de oude CORE_DAGEN
+  // (core-dagX-*); die id's matchten nergens, waardoor een Core-member nooit
+  // voorbij dag 1 kwam. De loop is alleen dag 1-21; daarna kalenderdag.
+  const dagenArray = modus === "core" ? CORE_V9_STAPPEN : DAGEN;
 
   // Bouw set van voltooide taken per dag.
   const voltooidPerDag = new Map<number, Set<string>>();

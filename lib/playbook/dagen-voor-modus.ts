@@ -1,10 +1,10 @@
 import type { Modus } from "@/lib/onboarding/voltooiingen";
 import { DAGEN } from "./dagen";
 import {
-  CORE_DAGEN,
   genereerVerankeringsDag,
   genereerLifetimeDag,
 } from "./core-dagen";
+import { CORE_V9_STAPPEN } from "./core-dagen-v9";
 import type { Dag } from "./types";
 
 // ============================================================
@@ -27,7 +27,9 @@ export function dagVoorModusEnNummer(
 ): Dag | null {
   if (modus === "core") {
     if (dagNummer <= 21) {
-      return CORE_DAGEN.find((d) => d.nummer === dagNummer) ?? null;
+      // V9-stappen: dezelfde array die /vandaag toont (consistent met de
+      // voortgang-berekening in bereken-dag.ts).
+      return CORE_V9_STAPPEN.find((d) => d.nummer === dagNummer) ?? null;
     }
     if (dagNummer <= 40) return genereerVerankeringsDag(dagNummer);
     return genereerLifetimeDag(dagNummer);
