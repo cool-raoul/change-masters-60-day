@@ -13,8 +13,9 @@ import { ZinKaart } from "./zin-kaart";
 // - elke opgeslagen zin met titel + waarde + 'hoort bij dag X'-link
 // - bewerk-knop per zin → in-place textarea + bewaren
 // - preview van slugs die nog NIET opgeslagen zijn (uit het playbook)
-//   met een "Schrijf 'm op dag X" call-to-action zodat ze niet
-//   verdwijnen in de tijd
+//   als rustige "komt op dag X"-info, ZONDER vooruit-sprong: de zin
+//   verschijnt vanzelf zodra de member die dag bereikt. Wil iemand 'm
+//   eerder, dan loopt dat via de "Wat nu?"-knop (just-in-time).
 // ============================================================
 
 export const dynamic = "force-dynamic";
@@ -111,22 +112,19 @@ export default async function MijnZinnenPagina() {
             {niveauNogTeSchrijven.map((ctx) => (
               <div
                 key={ctx.slug}
-                className="card flex items-center justify-between gap-3 flex-wrap border-dashed opacity-80"
+                className="card flex items-center justify-between gap-3 flex-wrap border-dashed opacity-70"
               >
                 <div>
                   <p className="text-cm-white text-sm font-semibold">
                     {ctx.label}
                   </p>
                   <p className="text-cm-white opacity-50 text-xs">
-                    Hoort bij dag {ctx.dagNummer}
+                    Komt aan bod op dag {ctx.dagNummer}
                   </p>
                 </div>
-                <Link
-                  href={`/playbook?dag=${ctx.dagNummer}`}
-                  className="text-cm-gold text-xs hover:underline"
-                >
-                  Naar dag {ctx.dagNummer} →
-                </Link>
+                <span className="text-cm-white/40 text-xs whitespace-nowrap">
+                  verschijnt vanzelf
+                </span>
               </div>
             ))}
           </div>
