@@ -234,7 +234,7 @@ export default async function DashboardPagina({
   const dag = berekenHuidigeDag(
     (dagVoltooiingen as Array<{ dag_nummer: number; taak_id: string }>) || [],
     dashboardModusStartIso ? dashboardModusStartIso.toISOString().slice(0, 10) : null,
-    { isTester: isTester || isFounder },
+    { isTester: isTester || isFounder, modus: dashboardModus },
   );
 
   const stats = vandaagStats as DagelijkseStat | null;

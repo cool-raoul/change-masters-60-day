@@ -233,7 +233,7 @@ export default async function VandaagPagina({
       (alleVoltooiingen as Array<{ dag_nummer: number; taak_id: string }>) ||
         [],
       modusStartIso,
-      { isTester: isTester || isFounder },
+      { isTester: isTester || isFounder, modus: modusVoorDagTeller },
     );
 
   // Buiten dag 1-60 → terug naar dashboard

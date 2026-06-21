@@ -99,7 +99,9 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
   const huidigeDag = berekenHuidigeDag(
     (voltooiingen ?? []) as { dag_nummer: number; taak_id: string }[],
     modusStartIsoString,
-    { isTester: isFounderOfTester },
+    // Pro heeft geen dag-flow → veilig op sprint laten (ongewijzigd gedrag);
+    // alleen Core moet de V9-stappen lezen i.p.v. de Sprint-array.
+    { isTester: isFounderOfTester, modus: huidigeModus === "core" ? "core" : "sprint" },
   );
 
   // Sponsor-naam voor de mens-eerst-strip onderin de sidebar.
