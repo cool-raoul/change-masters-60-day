@@ -40,6 +40,24 @@ jobs:
             -H "Authorization: Bearer ${CRON_SECRET}" \
             "$ENDPOINT"
 
+      - name: Ping freebie-mails endpoint
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          ENDPOINT: https://my-eleva.com/api/cron/freebie-mails
+        run: |
+          set -euo pipefail
+          echo "Calling $ENDPOINT"
+          # Freebie 5-mail-sequence. De endpoint stuurt alleen rijen waarvan
+          # gepland_op (18:00 UTC + N dagen) al voorbij is, dus uurlijks pingen
+          # is veilig: een dag-mail gaat 's avonds uit, de andere uren no-op.
+          # Bewust hier i.p.v. Vercel-cron (Hobby is onbetrouwbaar) en single
+          # source zodat mails niet dubbel verstuurd worden.
+          curl -fsS \
+            --retry 3 --retry-delay 5 --retry-connrefused \
+            --max-time 60 \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            "$ENDPOINT"
+
       - name: Ping stilte-reminders endpoint
         env:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
