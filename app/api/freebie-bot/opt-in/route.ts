@@ -125,7 +125,7 @@ export async function POST(req: NextRequest) {
     // als die er nog niet was (backwards compat met legacy clients).
     const { data: bestaandeOptIn } = await supabase
       .from("freebie_opt_ins")
-      .select("id")
+      .select("id, bot_antwoorden")
       .eq("member_id", tokenRow.member_id)
       .eq("freebie_id", freebieRij.id)
       .ilike("lead_email", leadEmail)
@@ -325,18 +325,27 @@ export async function POST(req: NextRequest) {
     // De eerdere 'intekening'-push is al gestuurd door
     // /api/freebie-bot/intekening-vooraf. Deze melding markeert het
     // moment dat de prospect-kaart compleet is.
-    // Plan de 5-mail-vervolgreeks (idempotent). 'aangemaakt > 0' betekent:
-    // dit is de EERSTE volledige vangst van deze lead. Bij een herhaalde
-    // aanroep (terug-en-vooruit klikken, of een tweede capture-moment) staan
-    // de rijen er al en doen we de eenmalige neveneffecten niet opnieuw.
-    const planResultaat = await planMailSequence(supabase, {
+    // Eerste volledige vangst = de antwoorden waren er nog niet vóór deze
+    // call (bestaandeOptIn zonder bot_antwoorden, of helemaal geen opt-in).
+    // Bewust LOSGEKOPPELD van de mail-queue: de uitkomst-mail + push gaan ook
+    // uit als de freebie_mail_queue-tabel (nog) niet bestaat of de insert
+    // faalt. Eerder hing dit aan planMailSequence.aangemaakt > 0, waardoor een
+    // ontbrekende queue-tabel de uitkomst-mail STIL liet wegvallen. Werkt voor
+    // alle bots: intekening-vooraf maakt de opt-in zonder antwoorden, dus de
+    // opt-in-call (waar de antwoorden binnenkomen) is de eerste vangst.
+    const eersteCapture = !(
+      bestaandeOptIn as { bot_antwoorden?: unknown } | null
+    )?.bot_antwoorden;
+
+    // Plan de 5-mail-vervolgreeks (idempotent; faalt veilig als de
+    // queue-tabel ontbreekt). Losgekoppeld van de uitkomst-mail-gate.
+    await planMailSequence(supabase, {
       optInId: optIn.id,
       freebieSlug: botSlug,
       memberId: tokenRow.member_id,
       leadNaam,
       leadEmail,
     });
-    const eersteCapture = planResultaat.aangemaakt > 0;
 
     if (eersteCapture) {
       // Push naar member: de lead is binnen + de vragenlijst is ingevuld.
