@@ -66,6 +66,10 @@ export function Sidebar({
     { href: "/herinneringen", labelKey: "nav.herinneringen", icoon: "🔔" },
     { href: "/scripts", labelKey: "nav.scripts", icoon: "📋" },
     { href: "/mijn-zinnen", labelKey: "nav.zinnen", icoon: "📝" },
+    // Lessen: terug naar eerdere lessen uit je playbook. Achteruit-only
+    // (dag 1 t/m je huidige dag); vooruit blijft dicht om het ritme te
+    // bewaren. Just-in-time vooruit-vragen lopen via "Wat nu?".
+    { href: "/lessen", labelKey: "nav.lessen", icoon: "📖" },
     // ELEVA Academy: overkoepelende leeromgeving voor verdiepende
     // trainingen. Eerste training is 'Social Media Strategie'
     // (Frazer Brookes-principes). Wordt later uitgebreid met meer
