@@ -172,10 +172,27 @@ export async function POST(req: NextRequest) {
       const heeftAlNieuw = bestaandeIngezetTools.includes(
         "Productadvies-vragenlijst",
       );
+      // Freebie-lead (open testlink) krijgt ook de "Vragenlijst ingevuld"-tag,
+      // zodat het 🌷-balletje op "afgemaakt" staat, net als bij de score-bots.
+      // Een handmatig door de member verstuurde test (geen "Freebie:"-tag)
+      // krijgt die niet.
+      const isFreebieLead = bestaandeIngezetTools.some((t) =>
+        t.startsWith("Freebie:"),
+      );
+      const tagsToeTeVoegen: string[] = [];
       if (!heeftAlOud && !heeftAlNieuw) {
+        tagsToeTeVoegen.push("Productadvies-vragenlijst");
+      }
+      if (
+        isFreebieLead &&
+        !bestaandeIngezetTools.includes("Vragenlijst ingevuld")
+      ) {
+        tagsToeTeVoegen.push("Vragenlijst ingevuld");
+      }
+      if (tagsToeTeVoegen.length > 0) {
         updates.ingezette_tools = [
           ...bestaandeIngezetTools,
-          "Productadvies-vragenlijst",
+          ...tagsToeTeVoegen,
         ];
       }
       if (Object.keys(updates).length > 0) {
@@ -204,7 +221,7 @@ export async function POST(req: NextRequest) {
         user_id: test.member_id,
         prospect_id: test.prospect_id,
         titel: `Productadvies-vragenlijst ingevuld: ${uitslag.categorieLabel}`,
-        type: "followup",
+        herinnering_type: "followup",
         vervaldatum: new Date(Date.now() + 24 * 60 * 60 * 1000)
           .toISOString()
           .split("T")[0],

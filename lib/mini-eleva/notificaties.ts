@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendPushToUser } from "@/lib/push/sendPush";
+import { warmNaarOpvolgen } from "@/lib/prospect/warm-naar-opvolgen";
 
 // ============================================================
 // Mini-ELEVA notificatie-helper.
@@ -52,6 +53,19 @@ export async function notifeerVoorUitnodiging(args: Args): Promise<void> {
       sponsor_user_id: string | null;
       prospect_id: string;
     };
+
+    // Mini-ELEVA-activiteit (alles behalve het eerste bezoek) is een warm
+    // signaal: schuif de prospect naar Opvolgen + maak een opvolg-herinnering
+    // voor de member. Het eerste bezoek blijft bewust alleen een melding.
+    if (args.type !== "eerste-bezoek") {
+      await warmNaarOpvolgen({
+        admin,
+        prospectId: inv.prospect_id,
+        memberId: inv.member_user_id,
+        reden: args.titel,
+        beschrijving: args.detail ?? null,
+      });
+    }
 
     const ontvangers: string[] = [inv.member_user_id];
     if (inv.sponsor_user_id) ontvangers.push(inv.sponsor_user_id);

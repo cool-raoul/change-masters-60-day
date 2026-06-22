@@ -18,6 +18,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendPushToUser } from "@/lib/push/sendPush";
 import { getBotConfig } from "@/lib/freebie-bots/registry";
+import { warmNaarOpvolgen } from "@/lib/prospect/warm-naar-opvolgen";
 
 export async function POST(req: NextRequest) {
   try {
@@ -94,6 +95,16 @@ export async function POST(req: NextRequest) {
       if (updErr) {
         console.error("contact prospect-update mislukt:", updErr);
       }
+
+      // Warm geworden: telefoonnummer achtergelaten / contact gevraagd →
+      // schuif naar Opvolgen + maak een opvolg-herinnering.
+      await warmNaarOpvolgen({
+        admin: supabase,
+        prospectId: prospect.id,
+        memberId: tokenRow.member_id,
+        reden: `${leadNaam} vraagt persoonlijk contact`,
+        beschrijving: `Liet een telefoonnummer achter (${leadTelefoon}). Tijd om persoonlijk op te volgen.`,
+      });
     }
 
     // Push naar member: deze lead wil gebeld/geappt worden.

@@ -23,6 +23,7 @@ import { sendPushToUser } from "@/lib/push/sendPush";
 import { planMailSequence } from "@/lib/freebie-bots/mail-queue";
 import { getBotConfig } from "@/lib/freebie-bots/registry";
 import { verstuurMail } from "@/lib/mail/resend";
+import { warmNaarOpvolgen } from "@/lib/prospect/warm-naar-opvolgen";
 
 export async function POST(req: NextRequest) {
   try {
@@ -240,6 +241,10 @@ export async function POST(req: NextRequest) {
       ? metFreebie
       : [...metFreebie, INGEVULD_TAG];
 
+    // Prospect-id over beide takken heen onthouden, zodat we bij een
+    // contact-verzoek de warm-naar-opvolgen-trigger kunnen aanroepen.
+    let prospectId: string | null = bestaande?.id ?? null;
+
     if (bestaande) {
       // Update bestaande prospect: notitie aanvullen, tool-tag toevoegen,
       // telefoon zetten als die ontbrak, prioriteit omhoog bij contact.
@@ -288,7 +293,7 @@ export async function POST(req: NextRequest) {
       }
     } else {
       // Nieuwe prospect-rij
-      const { error: prospectErr } = await supabase
+      const { data: nieuweProspect, error: prospectErr } = await supabase
         .from("prospects")
         .insert({
           user_id: tokenRow.member_id,
@@ -308,11 +313,29 @@ export async function POST(req: NextRequest) {
               ? herkomstFacebook
               : `https://facebook.com/${herkomstFacebook}`
             : null,
-        });
+        })
+        .select("id")
+        .single();
 
       if (prospectErr) {
         console.error("Prospect-rij niet aangemaakt:", prospectErr);
       }
+      prospectId = nieuweProspect?.id ?? null;
+    }
+
+    // Warm geworden: prospect liet bij de opt-in een contact-intentie achter
+    // (telefoon / "ik wil contact") → naar Opvolgen + opvolg-herinnering.
+    // Lichte freebies; de zware productadvies-lijst regelt z'n eigen
+    // opvolging bij het invullen.
+    if (contactGewenst && prospectId) {
+      await warmNaarOpvolgen({
+        admin: supabase,
+        prospectId,
+        memberId: tokenRow.member_id,
+        reden: `${leadNaam} vraagt persoonlijk contact`,
+        beschrijving:
+          "Liet contactgegevens achter via een freebie. Tijd om persoonlijk op te volgen.",
+      });
     }
 
     // Mini-ELEVA-uitnodiging wordt hier BEWUST niet automatisch aangemaakt.

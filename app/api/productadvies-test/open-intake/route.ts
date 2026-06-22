@@ -80,6 +80,9 @@ export async function POST(req: NextRequest) {
         prioriteit: "normaal",
         bron: "social",
         notities: "Aangemaakt via open testlink (vragenlijst)",
+        // Markeer als freebie-lead, zodat de namenlijst hetzelfde 🌷-balletje
+        // toont als bij de score-bots (PipelineKanban herkent "Freebie:"-tags).
+        ingezette_tools: ["Freebie: Productadvies-vragenlijst"],
       })
       .select("id")
       .single();
