@@ -62,6 +62,11 @@ export async function updateSession(request: NextRequest) {
     // hormonen-en-overgang, reset-check). Prospects vullen 'm in zonder
     // account, lead komt in pijplijn van de member.
     "/bot/",
+    // Mini-ELEVA prospect-omgeving via /m/<token>. Token-gebaseerd, geen
+    // login nodig (de pagina valideert de token zelf). Zonder deze regel
+    // stuurt de middleware de uitgelogde prospect naar /login, waardoor de
+    // omgeving-knop in de freebie-mail op een inlogscherm uitkwam.
+    "/m/",
     // Publieke feature-showcase voor ELEVA, om aan team / prospects /
     // partners te laten zien wat er allemaal mogelijk is.
     "/ontdek-eleva",
