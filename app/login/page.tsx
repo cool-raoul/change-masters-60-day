@@ -2,6 +2,7 @@
 
 import { Suspense, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { useTaal } from "@/lib/i18n/TaalContext";
@@ -113,6 +114,15 @@ function LoginInhoud() {
               {laden ? v("login.knop_laden") : v("login.knop")}
             </button>
           </form>
+
+          <div className="mt-4 text-center">
+            <Link
+              href="/wachtwoord-vergeten"
+              className="text-sm text-cm-white/60 hover:text-cm-white"
+            >
+              {v("login.wachtwoord_vergeten")}
+            </Link>
+          </div>
 
         </div>
       </div>

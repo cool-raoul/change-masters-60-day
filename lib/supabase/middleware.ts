@@ -36,6 +36,12 @@ export async function updateSession(request: NextRequest) {
   // /sandbox is een debug-tool zonder DB-koppeling.
   const publicRoutes = [
     "/login",
+    // Wachtwoord-herstel. Beide publiek: de uitgelogde gebruiker vraagt een
+    // reset aan, en de herstel-pagina moet bereikbaar blijven ook al vestigt
+    // de recovery-link een (tijdelijke) sessie, anders stuurt de onboarding-
+    // redirect haar weg vóór ze een nieuw wachtwoord kan instellen.
+    "/wachtwoord-vergeten",
+    "/wachtwoord-herstellen",
     "/registreer",
     "/auth/callback",
     "/test/",
