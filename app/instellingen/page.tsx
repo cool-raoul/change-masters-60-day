@@ -243,36 +243,9 @@ export default async function InstellingenPagina() {
         </Link>
       </div>
 
-      {/* Mijn freebies: persoonlijke links naar de productadvies-
-          vragenlijst en de score-bots (Energie & Focus, Hormonen &
-          Overgang). Iedereen die via een link een freebie doet komt
-          automatisch op de namenlijst van de member. */}
-      <div className="card space-y-3">
-        <EditableTekst
-          namespace="instellingen"
-          sleutel="tracking_links.titel"
-          standaard="🎁 Mijn freebies"
-          overrides={overrides}
-          isFounder={isFounder}
-          as="h2"
-          className="text-sm font-semibold text-cm-white uppercase tracking-wider"
-          hint="Titel van de freebies-sectie"
-        />
-        <EditableBlok
-          namespace="instellingen"
-          sleutel="tracking_links.uitleg"
-          standaard="Persoonlijke links naar je freebies: de productadvies-vragenlijst en de score-bots Energie & Focus en Hormonen & Overgang. Wie via jouw link een freebie doet, komt als prospect op jouw namenlijst."
-          overrides={overrides}
-          isFounder={isFounder}
-          as="p"
-          className="text-cm-white text-sm opacity-60"
-          rows={2}
-          hint="Uitleg van de freebies-sectie"
-        />
-        <Link href="/instellingen/mijn-tracking-links" className="btn-secondary text-sm inline-block">
-          Open mijn freebies →
-        </Link>
-      </div>
+      {/* "Mijn freebies" is verplaatst naar het hoofdmenu (🎁 Mijn freebies)
+          voor betere vindbaarheid; daarom hier weggehaald. De pagina zelf
+          blijft op /instellingen/mijn-tracking-links. */}
 
       {/* Film-CMS, alleen voor leiders/founders.
           Sinds 2026-05-20 is Films-CMS NIET meer voor Sprint-dag-films

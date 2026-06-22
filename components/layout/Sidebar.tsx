@@ -78,6 +78,9 @@ export function Sidebar({
     // Mini-ELEVA uitnodigingen in hoofdnav: dagelijkse actie. Statistieken
     // is verschoven naar onderkant (analyse-moment, niet dagelijks).
     { href: "/uitnodigingen", labelKey: "nav.uitnodigingen", icoon: "✨" },
+    // Mijn freebies: de eigen deel-links per freebie (lead-gen). Verplaatst
+    // uit Instellingen naar het hoofdmenu voor betere vindbaarheid.
+    { href: "/instellingen/mijn-tracking-links", labelKey: "nav.freebies", icoon: "🎁" },
     { href: "/team", labelKey: "nav.team", icoon: "🏆" },
   ];
 

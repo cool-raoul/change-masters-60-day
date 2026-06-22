@@ -236,6 +236,10 @@ export const t: Vertalingen = {
     nl: "Lessen", en: "Lessons", fr: "Le\u00e7ons",
     es: "Lecciones", de: "Lektionen", pt: "Li\u00e7\u00f5es",
   },
+  "nav.freebies": {
+    nl: "Mijn freebies", en: "My freebies", fr: "Mes freebies",
+    es: "Mis freebies", de: "Meine Freebies", pt: "Meus freebies",
+  },
   "nav.instellingen": {
     nl: "Instellingen", en: "Settings", fr: "Param\u00e8tres",
     es: "Ajustes", de: "Einstellungen", pt: "Configura\u00e7\u00f5es",
