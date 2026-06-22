@@ -12,7 +12,7 @@
 //    niet meer in deze lijst.
 
 import { redirect } from "next/navigation";
-import { headers } from "next/headers";
+import { SITE_URL } from "@/lib/site";
 import { createClient } from "@/lib/supabase/server";
 import { genereerBotToken } from "@/lib/freebie-bots/token";
 import {
@@ -152,15 +152,9 @@ export default async function MijnTrackingLinksPagina() {
     }
   }
 
-  // Bouw volledige origin met fallback
-  const headersList = await headers();
-  const host = headersList.get("host") ?? "";
-  const protocol =
-    headersList.get("x-forwarded-proto") ??
-    (host.includes("localhost") ? "http" : "https");
-  const origin =
-    process.env.NEXT_PUBLIC_APP_URL ||
-    (host ? `${protocol}://${host}` : "");
+  // Canonieke app-URL (my-eleva.com) voor alle deel-links, zodat ze nooit
+  // de oude Vercel-URL of de request-host bevatten. Zie lib/site.ts.
+  const origin = SITE_URL;
 
   const productadviesUrl = `${origin}/test/${productadviesToken}`;
 
