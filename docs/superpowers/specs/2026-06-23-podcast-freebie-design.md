@@ -92,9 +92,32 @@ waar passend (zij heet welkom).
 6. Mooie link `/jouw-gezonde-start`. ✓
 7. Alle teksten in DNA-stem. ✓
 
+## ALGEMEEN + zichtbaarheid + eigen welkomstfilm (update Raoul 2026-06-23)
+- **Algemene freebie**, NIET Sandy-only. Normale per-member freebie-bot (eigen
+  token per lid). Iedereen kan 'm straks gebruiken.
+- **Zichtbaarheid nu beperkt:** alleen founders + Sandy zien 'm in
+  /instellingen/mijn-tracking-links. Vrijgave-flag `vrijgegeven` (default false)
+  → later op true = voor iedereen. Sandy via een kleine pre-release-allowlist
+  (member-id/email) of haar directe token-link.
+- **Welkomstfilm = twee lagen:**
+  1. **Algemene welkomstfilm** (gedeelde default, voor iedereen die niks eigen
+     heeft ingesteld).
+  2. **Eigen welkomstfilm per lid:** lid kan de algemene wegklikken en z'n EIGEN
+     film **uploaden vanaf de computer** (NIET via YouTube). De algemene blijft
+     op de achtergrond bestaan.
+- **NIEUW STUK INFRA:** video-upload-vanaf-computer = Supabase Storage-bucket +
+  upload-UI + eigen <video>-speler + per-member video-record. Onze huidige
+  film-blokken (MediaBlokken) werken met YouTube/Vimeo-URLs, dus dit is apart
+  te bouwen.
+
 ## Bouw in fasen (na go)
-- Fase 1 (skelet om op te schieten): bot registreren + flow met Sandy-video +
-  gegevens + contact-knop + darm-vragen + darm-uitkomst.
-- Fase 2: doel-vraag + profiel + medische zelf-check (client-side) + rijkere
-  uitkomst (darm + Reset-vervolg).
-- Fase 3: informatie-film + video-watch-trigger.
+- **Fase 1 (skelet om op te schieten):** de ALGEMENE freebie-flow registreren +
+  mooie link + gegevens (e-mail+telefoon verplicht, IG/FB optioneel) + darm-
+  vragen + darm-advies-uitkomst (altijd-een-route + Sandy/lid kijkt mee) +
+  contact-knop. Zichtbaarheid: founders + Sandy. Welkomstfilm: placeholder-slot
+  (komt in fase 2).
+- **Fase 2 (de nieuwe infra):** video-upload-vanaf-computer (Supabase Storage):
+  algemene welkomstfilm + per-lid eigen film (vervangen/wegklikken).
+- **Fase 3:** doel-vraag + afval-routing + medische zelf-check (opslaan + 30d-wis)
+  + rijkere uitkomst (darm + Reset) + informatie-film + video-watch-trigger.
+- **Fase 4:** vrijgave voor iedereen (flag op true).
