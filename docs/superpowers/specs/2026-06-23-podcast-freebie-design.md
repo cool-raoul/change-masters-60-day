@@ -23,25 +23,48 @@ met de Reset als grotere vervolg-reis. Contact-knop voor persoonlijk advies.
 5. Informatie-film (MediaBlokken `verdieping`).
 6. Contact-knop (persoonlijk advies).
 
+## Naam + link
+- Titel: **"Jouw gezonde start"**. Slug: `jouw-gezonde-start`. GEEN ManyChat-
+  trigger-woord nodig (komt via de podcast-link, niet via een comment-trigger).
+- **Mooie publieke link** (onder de podcast-video gedeeld): schone redirect-
+  pagina `my-eleva.com/jouw-gezonde-start` die doorstuurt naar
+  `/bot/jouw-gezonde-start/<token>`. Zelfde patroon als `/reset-check`. Pad in
+  middleware-publicRoutes. Token = Sandy's (leads → Sandy's namenlijst);
+  wordt gekoppeld zodra Sandy's account + bot-token bestaan (tot dan founder-
+  token als placeholder).
+
+## Stem (VERPLICHT)
+Alle teksten in de freebie in onze DNA-stem (zie docs/stem-DNA.md +
+docs/claimvrije-communicatie.md): warm + krachtig, ik-taal/beleving, geen
+em-dashes, geen tijdsbeloftes, geen AI-isms, vrijblijvend. Sandy-perspectief
+waar passend (zij heet welkom).
+
 ## Vragen
 - **Darm (kern, scoort):** hergebruik `lib/zelftest/darm-vragen.ts` (15 vragen,
-  drempel 20 → "basis" = Darm in balans / "plus" = Darm in balans plus).
-- **Doel-vraag (nieuw, claimvrij):** "Wat zou je positief willen veranderen?"
-  opties: meer energie · wat lichter worden · beter slapen · meer rust/balans ·
-  comfortabeler vanbinnen · fitter & sterker · anders (vrij veld).
-- **Profiel:** geslacht + leeftijd, afval-wens (uit reset-check).
-- **Medisch:** reset-check `MEDISCHE_PUNTEN` (zelf-check + disclaimer).
-- **ANTI-OVERWHELM:** NIET alle 13 reset-score-vragen er ook nog bovenop. De
-  darm-vragen zijn de scorende kern; reset wordt als vervolg benoemd.
+  drempel 20). Levert de score die het kuur-ADVIES bepaalt (zie Uitkomst).
+- **Doel-vraag (nieuw, claimvrij — het is de eigen wens van de prospect, mag):**
+  "Wat zou je positief willen veranderen?" (meerkeuze) opties:
+  meer energie · afvallen · beter slapen · meer innerlijke rust en balans ·
+  fitter & sterker · helderder kunnen denken · meer zin om te sporten ·
+  libido · je huid verbeteren · anders (vrij veld).
+- **Afval-wens (alleen tonen als 'afvallen' gekozen is):** hoeveel kg (uit
+  reset-check). Routeert: tot ~3 kg kan met een darm-kuur; 5 kg of meer →
+  de Reset is dan de weg.
+- **Profiel:** geslacht + leeftijd (lichte context voor Sandy).
+- **Medisch:** reset-check `MEDISCHE_PUNTEN` (zelf-check + disclaimer). Doel:
+  contra-indicaties helder krijgen.
+- **ANTI-OVERWHELM:** NIET alle 13 reset-score-vragen erbovenop. Darm = de
+  scorende kern; een paar gerichte vragen (doel, afval-wens, geslacht/leeftijd).
 
 ## AVG (privacy-by-design)
-- **Medische antwoorden: ALLEEN client-side.** Worden NIET meegestuurd naar de
-  opt-in → nooit opgeslagen. Gebruikt voor de veiligheids-disclaimer + om in de
-  uitkomst te sturen ("bespreek dit even met Sandy voor je start"). Sandy hoort
-  de details in het persoonlijke gesprek (natuurlijk gesprek, niet opslaan).
-- **Darm:** alleen de uitkomst-bucket opslaan (zoals productadvies-darmtest),
-  niet de losse antwoorden.
-- **Doel + profiel:** in `antwoorden` zoals gebruikelijk (geen medische data).
+- **Medische antwoorden: WEL opslaan, met 30-dagen-auto-wis** (zelfde patroon
+  als reset-check; verifiëren/implementeren). Sandy moet de contra-indicaties
+  in het gesprek kunnen zien, zodat de prospect ze niet opnieuw hoeft te
+  vertellen. Nooit terug naar de prospect (niet in mail/scherm), alleen
+  member-zicht. Na 30 dagen automatisch gewist.
+- **Darm:** alleen de uitkomst-bucket + score opslaan (zoals productadvies-
+  darmtest), niet de losse antwoorden.
+- **Doel + profiel:** in `antwoorden` zoals gebruikelijk.
 
 ## Koppeling aan de warm-trigger-funnel (gisteren gebouwd)
 - **Lead → namenlijst:** automatisch via `/api/freebie-bot/opt-in` + 🌷-marker.
@@ -51,13 +74,23 @@ met de Reset als grotere vervolg-reis. Contact-knop voor persoonlijk advies.
   prospect-film / mini-eleva-film) → melding + `warmNaarOpvolgen`. NIEUWE
   koppeling in deze freebie.
 
-## Open keuzes voor Raoul (vóór bouw)
-1. Slug + bot-titel + ManyChat-trigger-woord.
-2. Doel-vraag-opties akkoord?
-3. Medisch NIET opslaan akkoord (let op spanning: "meer info" vs "niks opslaan";
-   voorstel = client-side + via gesprek, niet opslaan).
-4. Uitkomst-focus: darm-kuur primair + Reset als vervolg, akkoord?
-5. Anti-overwhelm: darm als scorende kern, NIET alle reset-vragen erbij, akkoord?
+## Uitkomst-filosofie (Raoul 2026-06-23)
+- De darm-kuur is **advies, geen vonnis**. Laag scoren = niet per se nodig,
+  wel raadzaam (Darm in balans als zachte start). Hoger (20+) = Darm in balans
+  plus. Wie 5 kg+ wil afvallen → de Reset is de weg.
+- **Er is altijd een route.** Past geen van beide programma's, dan zijn er
+  andere "aanvliegroutes". Juist daarom is persoonlijk meekijken belangrijk →
+  de uitkomst leidt warm naar de contact-knop ("Sandy kijkt met je mee").
+- Niet prescriptief/streng; warm, claimvrij, vrijblijvend.
+
+## Keuzes (vastgelegd)
+1. Titel "Jouw gezonde start", slug `jouw-gezonde-start`, geen trigger-woord. ✓
+2. Doel-vraag-opties: zie Vragen. ✓
+3. Medisch WEL opslaan + 30-dagen-auto-wis (Sandy ziet contra-indicaties). ✓
+4. Uitkomst = advies, darm + Reset-routing + altijd-een-route + persoonlijk. ✓
+5. Anti-overwhelm: darm = scorende kern, geen 13 reset-vragen erbij. ✓
+6. Mooie link `/jouw-gezonde-start`. ✓
+7. Alle teksten in DNA-stem. ✓
 
 ## Bouw in fasen (na go)
 - Fase 1 (skelet om op te schieten): bot registreren + flow met Sandy-video +
