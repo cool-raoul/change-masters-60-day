@@ -30,10 +30,9 @@ Laatst bijgewerkt: 2026-06-23
 - [ ] VSCode/Claude Code openen in `C:\Users\raoul\projects\change-masters`; oude OneDrive-map weggooien zodra alles goed voelt
 
 ## 🎬 Podcast-funnel (Sandy) — in wording
-- **Welkomstfilm-script** gemaakt: `docs/scripts/welkomstfilmpje-sandy.md` (claimvrij, ± 3 min)
-- Wacht op: Sandy vult haar persoonlijke stukjes in + neemt op
-- Raoul maakt een aparte VERKORTE vragenlijst-/info-versie (NIET de bestaande Reset-freebie)
-- Daarna: filmpje + verkorte versie koppelen als de podcast-landing
+- **Welkomstfilm-script** gemaakt: `docs/scripts/welkomstfilmpje-sandy.md` (claimvrij, ± 3 min). Wacht op: Sandy vult persoonlijke stukjes in + neemt op.
+- **Podcast-freebie** (de verkorte versie): ONTWERP klaar → `docs/superpowers/specs/2026-06-23-podcast-freebie-design.md`. WACHT OP RAOUL'S GO + keuzes (slug, doel-vraag, medisch-niet-opslaan, uitkomst-focus). Daarna bouwen in 3 fasen.
+- Darm-vragen → kuur-score (Darm in balans / plus) hergebruikt; medisch NIET opslaan (AVG); contact-knop + video-watch → warm-trigger.
 
 ## ⏸️ Bewust geparkeerd (geen los eindje, later met opzet)
 - **Filter-per-freebie** op de namenlijst ("laat me alleen leads van freebie X zien" + bulk-actie). Spec: docs/superpowers/specs/2026-06-23-freebie-funnel-warm-trigger-design.md
