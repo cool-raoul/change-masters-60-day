@@ -23,6 +23,7 @@ import { StatTegel } from "@/components/freebies/FreebieStatsBlok";
 import { ManyChatHandleiding } from "@/components/freebies/ManyChatHandleiding";
 import { InstagramLinkBuilder } from "@/components/freebies/InstagramLinkBuilder";
 import { KopieerKnop } from "./kopieer-knop";
+import { WelkomstfilmKiezer } from "@/components/freebies/WelkomstfilmKiezer";
 
 export const dynamic = "force-dynamic";
 
@@ -34,6 +35,7 @@ const FREEBIE_BOTS = [
     triggerVoorbeeld: "ENERGIE",
     iconEmoji: "⚡",
     coreOnly: false,
+    preRelease: false,
     kleur: "sky" as const,
     actief: true,
   },
@@ -45,6 +47,7 @@ const FREEBIE_BOTS = [
     triggerVoorbeeld: "OVERGANG",
     iconEmoji: "🌸",
     coreOnly: false,
+    preRelease: false,
     kleur: "rose" as const,
     actief: true,
   },
@@ -56,7 +59,20 @@ const FREEBIE_BOTS = [
     triggerVoorbeeld: "RESET",
     iconEmoji: "🌿",
     coreOnly: false,
+    preRelease: false,
     kleur: "emerald" as const,
+    actief: true,
+  },
+  {
+    slug: "jouw-gezonde-start",
+    titel: "Jouw gezonde start",
+    ondertitel:
+      "Podcast-freebie: welkomstfilm + korte check + persoonlijk start-advies",
+    triggerVoorbeeld: "START",
+    iconEmoji: "🌱",
+    coreOnly: false,
+    preRelease: true,
+    kleur: "amber" as const,
     actief: true,
   },
 ] as const;
@@ -81,13 +97,18 @@ export default async function MijnTrackingLinksPagina() {
   // wordt apart bepaald of die zichtbaar is op basis van modus / rol.
   const { data: profile } = await supabase
     .from("profiles")
-    .select("modus, role, full_name")
+    .select("modus, role, full_name, email")
     .eq("id", user.id)
     .maybeSingle();
 
   const isFounder = (profile as { role?: string } | null)?.role === "founder";
   const isCore = (profile as { modus?: string } | null)?.modus === "core";
   const ziet_core_bots = isFounder || isCore;
+  // Pre-release freebies (bv. Jouw gezonde start): nu alleen founders + Sandy.
+  const eigenEmail = (
+    (profile as { email?: string } | null)?.email ?? ""
+  ).toLowerCase();
+  const magPreRelease = isFounder || eigenEmail === "sandy@wrsparkling.com";
   const memberVoornaam =
     ((profile as { full_name?: string } | null)?.full_name ?? "")
       .split(" ")[0] || "jij";
@@ -96,18 +117,31 @@ export default async function MijnTrackingLinksPagina() {
   // - actief (feature-flag in code)
   // - coreOnly + member-modus
   const tokensPerBot: Record<string, string> = {};
+  const welkomstfilmPerBot: Record<
+    string,
+    { soort: string | null; url: string | null }
+  > = {};
   for (const bot of FREEBIE_BOTS) {
     if (!bot.actief) continue;
     if (bot.coreOnly && !ziet_core_bots) continue;
+    if (bot.preRelease && !magPreRelease) continue;
     const { data: bestaand } = await supabase
       .from("freebie_bot_member_tokens")
-      .select("token")
+      .select("token, welkomstfilm_soort, welkomstfilm_url")
       .eq("member_id", user.id)
       .eq("bot_slug", bot.slug)
       .maybeSingle();
 
     if (bestaand?.token) {
       tokensPerBot[bot.slug] = bestaand.token;
+      welkomstfilmPerBot[bot.slug] = {
+        soort:
+          (bestaand as { welkomstfilm_soort?: string | null })
+            .welkomstfilm_soort ?? null,
+        url:
+          (bestaand as { welkomstfilm_url?: string | null }).welkomstfilm_url ??
+          null,
+      };
       continue;
     }
 
@@ -258,12 +292,16 @@ export default async function MijnTrackingLinksPagina() {
 
       {/* Sectie 2, Score-bots */}
       {FREEBIE_BOTS.some(
-        (b) => b.actief && (!b.coreOnly || ziet_core_bots),
+        (b) =>
+          b.actief &&
+          (!b.coreOnly || ziet_core_bots) &&
+          (!b.preRelease || magPreRelease),
       ) && (
         <section className="mt-6 space-y-4">
           {FREEBIE_BOTS.map((bot) => {
             if (!bot.actief) return null;
             if (bot.coreOnly && !ziet_core_bots) return null;
+            if (bot.preRelease && !magPreRelease) return null;
             const url = `${origin}/bot/${bot.slug}/${tokensPerBot[bot.slug]}`;
             const stats = statsPerBot[bot.slug];
             const randKleur =
@@ -271,13 +309,17 @@ export default async function MijnTrackingLinksPagina() {
                 ? "border-sky-500/40 bg-sky-500/5"
                 : bot.kleur === "rose"
                   ? "border-rose-500/40 bg-rose-500/5"
-                  : "border-emerald-500/40 bg-emerald-500/5";
+                  : bot.kleur === "amber"
+                    ? "border-amber-500/40 bg-amber-500/5"
+                    : "border-emerald-500/40 bg-emerald-500/5";
             const cirkelKleur =
               bot.kleur === "sky"
                 ? "bg-sky-500/20"
                 : bot.kleur === "rose"
                   ? "bg-rose-500/20"
-                  : "bg-emerald-500/20";
+                  : bot.kleur === "amber"
+                    ? "bg-amber-500/20"
+                    : "bg-emerald-500/20";
             return (
               <div
                 key={bot.slug}
@@ -337,6 +379,24 @@ export default async function MijnTrackingLinksPagina() {
                 <KopieerKnop tekst={url} />
 
                 <InstagramLinkBuilder basisUrl={url} />
+
+                {bot.slug === "jouw-gezonde-start" && (
+                  <div className="mt-4 border-t border-white/10 pt-4">
+                    <p className="text-xs font-semibold text-slate-300 mb-2">
+                      🎬 Welkomstfilm — stel jouw eigen film in. Als founder is dit
+                      meteen de algemene film voor iedereen.
+                    </p>
+                    <WelkomstfilmKiezer
+                      botSlug="jouw-gezonde-start"
+                      huidigeSoort={
+                        welkomstfilmPerBot["jouw-gezonde-start"]?.soort ?? null
+                      }
+                      huidigeUrl={
+                        welkomstfilmPerBot["jouw-gezonde-start"]?.url ?? null
+                      }
+                    />
+                  </div>
+                )}
 
                 <details className="mt-4 text-sm text-slate-400">
                   <summary className="cursor-pointer hover:text-slate-200">

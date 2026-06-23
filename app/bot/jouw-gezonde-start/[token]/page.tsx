@@ -105,7 +105,7 @@ export default async function GezondeStartTokenPagina({
       <WelkomstfilmSpeler soort={welkomSoort} url={welkomUrl} />
       {isEigenaar && (
         <Link
-          href="/instellingen/welkomstfilm"
+          href="/instellingen/mijn-tracking-links"
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#8a6d1f] hover:text-[#5a4710] transition-colors"
         >
           ✏️ Welkomstfilm instellen of wijzigen →
