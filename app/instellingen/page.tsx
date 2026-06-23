@@ -247,6 +247,25 @@ export default async function InstellingenPagina() {
           voor betere vindbaarheid; daarom hier weggehaald. De pagina zelf
           blijft op /instellingen/mijn-tracking-links. */}
 
+      {/* Welkomstfilm voor de freebie "Jouw gezonde start". Founder zet hier de
+          algemene default-film; leden hun eigen. Nu founder-zichtbaar. */}
+      {magFilmsBeheren && (
+        <div className="card space-y-3 border-gold-subtle">
+          <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
+            🌱 Welkomstfilm — Jouw gezonde start
+          </h2>
+          <p className="text-cm-white text-sm opacity-60">
+            Stel de welkomstfilm in voor de freebie &quot;Jouw gezonde start&quot;:
+            de algemene film die voor iedereen geldt (als jij &apos;m zet als
+            founder), of je eigen film. Via een YouTube/Vimeo-link of een upload
+            vanaf je computer of telefoon.
+          </p>
+          <Link href="/instellingen/welkomstfilm" className="btn-secondary text-sm inline-block">
+            Welkomstfilm instellen →
+          </Link>
+        </div>
+      )}
+
       {/* Film-CMS, alleen voor leiders/founders.
           Sinds 2026-05-20 is Films-CMS NIET meer voor Sprint-dag-films
           (die staan nu direct op /vandaag via ✏️ MediaBlokken edit-
