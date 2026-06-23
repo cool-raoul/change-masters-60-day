@@ -33,8 +33,8 @@ Laatst bijgewerkt: 2026-06-23
 - **Welkomstfilm-script** gemaakt: `docs/scripts/welkomstfilmpje-sandy.md` (claimvrij, ± 3 min). Wacht op: Sandy vult persoonlijke stukjes in + neemt op.
 - **Podcast-freebie "Jouw gezonde start"** (algemene freebie): spec in `docs/superpowers/specs/2026-06-23-podcast-freebie-design.md`.
   - ✅ **Fase 1 GEBOUWD + live** (te testen): mooie link `/jouw-gezonde-start` → flow (welkom-film-slot → gegevens e-mail+tel verplicht, IG/FB optioneel → darm-vragen → advies-uitkomst Darm in Balans / + → contact-knop). Komt in namenlijst + contact-knop = warm-trigger. Nu founder-token als placeholder (later Sandy).
-  - ⏳ Fase 2: eigen welkomstfilm per lid (YouTube/Vimeo-link + computer-upload via Supabase Storage) + algemene default + wegklikken/vervangen.
-  - ⏳ Fase 3: doel-vraag + afval-routing + medische check (opslaan + 30d-wis) + info-film + video-watch-trigger.
+  - ✅ **Fase 2 GEBOUWD + live** (te testen): eigen welkomstfilm per lid via `/instellingen/welkomstfilm` (founders+Sandy) — YouTube/Vimeo-link of upload vanaf computer/telefoon (Supabase Storage, max 200MB). Bot toont eigen film, anders algemene default. Premium freebie-look (crème-goud) staat ook live.
+  - ⏳ Fase 3: **doel-vraag** ("wat wil je positief veranderen?" + opties) + **gepersonaliseerde gap-uitkomst** (hun stand → behoefte → wat Reset/Darm hierin biedt, passend bij hun antwoorden, NIET één standaardverhaal) + afval-routing + medische check (opslaan + 30d-wis) + info-film + video-watch-trigger. KEUZE: AI-bot vs vaste claim-vrije blokken (aanbeveling: blokken, zie chat).
   - ⏳ Fase 4: vrijgave voor iedereen (+ zichtbaarheid in tracking-links, nu nog niet zichtbaar voor leden).
 
 ## ⏸️ Bewust geparkeerd (geen los eindje, later met opzet)
