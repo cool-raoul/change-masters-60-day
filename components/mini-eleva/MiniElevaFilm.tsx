@@ -1,17 +1,65 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef } from "react";
 
 // ============================================================
-// MiniElevaFilm — video-blok voor binnen de prospect-omgeving (/m/[token]).
+// MiniElevaFilm — video-blok binnen de prospect-omgeving (/m/[token]).
 //
-// Prospect heeft geen account, dus de tracking gaat token-gebaseerd (niet
-// via film_views, dat vereist auth). Als de prospect op "Klaar met kijken"
-// klikt, melden we dat aan de member via /api/mini-eleva/film-afgekeken.
-// Dat event verschuift de prospect automatisch naar Opvolgen + maakt een
-// opvolg-herinnering (de warm-trigger). Herbruikbaar voor élke video die
-// in mini-ELEVA staat.
+// Net als de stuur-video's (prospect-film) gebeurt de "afgekeken"-detectie
+// AUTOMATISCH op kijk-percentage via de YouTube IFrame API, niet via een
+// knop. Zodra de prospect ~90% heeft gekeken (of de video eindigt) melden
+// we dat token-gebaseerd aan /api/mini-eleva/film-afgekeken. Dat event
+// notificeert de member én vuurt de warm-trigger (prospect → Opvolgen +
+// herinnering). Herbruikbaar voor elke YouTube-video in mini-ELEVA.
+//
+// Pilot: alleen YouTube krijgt auto-tracking (Raoul embedt alles via
+// YouTube). Andere providers spelen gewoon af zonder auto-trigger.
 // ============================================================
+
+declare global {
+  interface Window {
+    YT?: {
+      Player: new (
+        idOrElement: string | HTMLElement,
+        opts: {
+          events?: {
+            onReady?: (e: { target: YTPlayer }) => void;
+            onStateChange?: (e: { target: YTPlayer; data: number }) => void;
+          };
+        },
+      ) => YTPlayer;
+      PlayerState: {
+        ENDED: number;
+        PLAYING: number;
+        PAUSED: number;
+        BUFFERING: number;
+        CUED: number;
+      };
+    };
+    onYouTubeIframeAPIReady?: () => void;
+  }
+}
+
+type YTPlayer = {
+  getCurrentTime: () => number;
+  getDuration: () => number;
+};
+
+const POLL_MS = 5_000;
+// Net als de stuur-video's: bij ~90% behandelen we 'm als afgekeken.
+const AFGEKEKEN_DREMPEL_PCT = 90;
+
+function isYouTubeUrl(url: string): boolean {
+  return /youtube\.com\/embed\//.test(url);
+}
+
+function metJsApi(url: string): string {
+  if (url.includes("enablejsapi=1")) return url;
+  const sep = url.includes("?") ? "&" : "?";
+  const origin =
+    typeof window !== "undefined" ? `&origin=${window.location.origin}` : "";
+  return `${url}${sep}enablejsapi=1${origin}`;
+}
 
 export function MiniElevaFilm({
   token,
@@ -26,25 +74,111 @@ export function MiniElevaFilm({
   beschrijving?: string | null;
   kopje?: string;
 }) {
-  const [afgekeken, setAfgekeken] = useState(false);
-  const [bezig, setBezig] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+  const playerRef = useRef<YTPlayer | null>(null);
+  const pollIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const afgekekenVerstuurdRef = useRef(false);
 
-  async function markeerAfgekeken() {
-    if (afgekeken || bezig) return;
-    setBezig(true);
-    try {
-      await fetch("/api/mini-eleva/film-afgekeken", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, filmTitel: titel }),
-        keepalive: true,
-      });
-    } catch {
-      // Stil falen: de prospect mag hier nooit een fout zien.
+  useEffect(() => {
+    if (!isYouTubeUrl(embedUrl)) return;
+    let cancelled = false;
+
+    async function meldAfgekeken() {
+      if (afgekekenVerstuurdRef.current) return;
+      afgekekenVerstuurdRef.current = true;
+      try {
+        await fetch("/api/mini-eleva/film-afgekeken", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token, filmTitel: titel }),
+          keepalive: true,
+        });
+      } catch {
+        // Stil falen: tracking mag de prospect nooit storen.
+      }
     }
-    setAfgekeken(true);
-    setBezig(false);
-  }
+
+    function stopPolling() {
+      if (pollIntervalRef.current) {
+        clearInterval(pollIntervalRef.current);
+        pollIntervalRef.current = null;
+      }
+    }
+
+    function startPolling() {
+      if (pollIntervalRef.current) return;
+      pollIntervalRef.current = setInterval(() => {
+        const player = playerRef.current;
+        if (!player) return;
+        try {
+          const cur = player.getCurrentTime();
+          const dur = player.getDuration();
+          if (!dur) return;
+          const pct = Math.round((cur / dur) * 100);
+          if (pct >= AFGEKEKEN_DREMPEL_PCT) {
+            stopPolling();
+            void meldAfgekeken();
+          }
+        } catch {
+          // negeer
+        }
+      }, POLL_MS);
+    }
+
+    function init() {
+      if (cancelled || !iframeRef.current || !window.YT) return;
+      try {
+        playerRef.current = new window.YT.Player(iframeRef.current, {
+          events: {
+            onStateChange: (event) => {
+              if (!window.YT) return;
+              const PS = window.YT.PlayerState;
+              if (event.data === PS.PLAYING) {
+                startPolling();
+              } else if (
+                event.data === PS.PAUSED ||
+                event.data === PS.BUFFERING
+              ) {
+                stopPolling();
+              } else if (event.data === PS.ENDED) {
+                stopPolling();
+                void meldAfgekeken();
+              }
+            },
+          },
+        });
+      } catch {
+        // iframe blijft gewoon werken zonder tracking
+      }
+    }
+
+    if (window.YT && window.YT.Player) {
+      init();
+    } else {
+      const bestaand = document.querySelector(
+        'script[src*="youtube.com/iframe_api"]',
+      );
+      if (!bestaand) {
+        const tag = document.createElement("script");
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.head.appendChild(tag);
+      }
+      const vorige = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = () => {
+        try {
+          vorige?.();
+        } catch {}
+        init();
+      };
+    }
+
+    return () => {
+      cancelled = true;
+      stopPolling();
+    };
+  }, [embedUrl, token, titel]);
+
+  const finalEmbedUrl = isYouTubeUrl(embedUrl) ? metJsApi(embedUrl) : embedUrl;
 
   return (
     <div className="card space-y-3">
@@ -53,7 +187,8 @@ export function MiniElevaFilm({
       </h2>
       <div className="aspect-video bg-black rounded-lg overflow-hidden border border-cm-border">
         <iframe
-          src={embedUrl}
+          ref={iframeRef}
+          src={finalEmbedUrl}
           className="w-full h-full"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
@@ -63,19 +198,6 @@ export function MiniElevaFilm({
       </div>
       {beschrijving && (
         <p className="text-cm-white/60 text-xs leading-relaxed">{beschrijving}</p>
-      )}
-      {afgekeken ? (
-        <p className="text-emerald-400 text-sm font-medium">
-          ✓ Fijn dat je hebt gekeken
-        </p>
-      ) : (
-        <button
-          onClick={markeerAfgekeken}
-          disabled={bezig}
-          className="btn-secondary text-sm"
-        >
-          {bezig ? "Bezig..." : "Klaar met kijken ✓"}
-        </button>
       )}
     </div>
   );
