@@ -2,23 +2,24 @@
 //
 // Per-member token-route voor "Jouw gezonde start" (algemene podcast-freebie).
 // Leads komen automatisch in de pijplijn van het lid (/namenlijst).
+//
+// Twee films:
+//  - Welkomstfilm: per lid in te stellen (eigen film, anders de algemene).
+//  - Informatiefilm (in de uitkomst): één algemene film voor iedereen,
+//    alleen door de founder in te stellen. Komt van het default-account.
 
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
-import { haalPaginaBlokken, type Blok } from "@/lib/cms/pagina-blokken";
-import { EditModeProvider } from "@/components/cms/EditModeContext";
-import { EditModeToggle } from "@/components/cms/EditModeToggle";
-import { MediaBlokken } from "@/components/cms/MediaBlokken";
 import { WelkomstfilmSpeler } from "@/components/freebies/WelkomstfilmSpeler";
 import { GezondeStartFlow } from "./flow";
 
 export const dynamic = "force-dynamic";
 
 const NAMESPACE = "jouw-gezonde-start";
-const PAGINA_ID = "publiek";
+const DEFAULT_ACCOUNT_EMAIL = "raoulzeewijk@hotmail.com";
 
 export async function generateMetadata(): Promise<Metadata> {
   const titel = "Jouw gezonde start";
@@ -31,6 +32,13 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: { card: "summary", title: titel, description: beschrijving },
   };
 }
+
+type FilmRij = {
+  welkomstfilm_soort?: string | null;
+  welkomstfilm_url?: string | null;
+  informatiefilm_soort?: string | null;
+  informatiefilm_url?: string | null;
+};
 
 export default async function GezondeStartTokenPagina({
   params,
@@ -52,13 +60,12 @@ export default async function GezondeStartTokenPagina({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, role")
+    .select("full_name")
     .eq("id", row.member_id)
     .maybeSingle();
 
   const memberVoornaam =
     ((profile?.full_name ?? "") as string).split(" ")[0] || "iemand";
-  const isFounder = (profile as { role?: string } | null)?.role === "founder";
 
   // Is de ingelogde bezoeker de eigenaar van deze freebie (lid/founder)? Dan
   // tonen we een knop om de welkomstfilm in te stellen. Prospects (niet
@@ -69,36 +76,37 @@ export default async function GezondeStartTokenPagina({
   } = await sessieClient.auth.getUser();
   const isEigenaar = !!ingelogd && ingelogd.id === row.member_id;
 
-  // Welkomstfilm: eigen film van dit lid, anders de algemene default
-  // (= de welkomstfilm van het default-account / de podcast-landing).
-  let welkomSoort =
-    (row as { welkomstfilm_soort?: string | null }).welkomstfilm_soort ?? null;
-  let welkomUrl =
-    (row as { welkomstfilm_url?: string | null }).welkomstfilm_url ?? null;
-  if (!welkomUrl) {
-    const { data: def } = await supabase
-      .from("profiles")
-      .select("id")
-      .eq("email", "raoulzeewijk@hotmail.com")
+  // Algemene films komen van het default-account (de podcast-landing / founder).
+  const { data: def } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("email", DEFAULT_ACCOUNT_EMAIL)
+    .maybeSingle();
+
+  let defWelkomSoort: string | null = null;
+  let defWelkomUrl: string | null = null;
+  let infoSoort: string | null = null;
+  let infoUrl: string | null = null;
+  if (def?.id) {
+    const { data: defTok } = await supabase
+      .from("freebie_bot_member_tokens")
+      .select(
+        "welkomstfilm_soort, welkomstfilm_url, informatiefilm_soort, informatiefilm_url",
+      )
+      .eq("member_id", def.id)
+      .eq("bot_slug", NAMESPACE)
       .maybeSingle();
-    if (def?.id && def.id !== row.member_id) {
-      const { data: defTok } = await supabase
-        .from("freebie_bot_member_tokens")
-        .select("welkomstfilm_soort, welkomstfilm_url")
-        .eq("member_id", def.id)
-        .eq("bot_slug", NAMESPACE)
-        .maybeSingle();
-      welkomSoort =
-        (defTok as { welkomstfilm_soort?: string | null } | null)
-          ?.welkomstfilm_soort ?? null;
-      welkomUrl =
-        (defTok as { welkomstfilm_url?: string | null } | null)
-          ?.welkomstfilm_url ?? null;
-    }
+    const t = (defTok as FilmRij | null) ?? null;
+    defWelkomSoort = t?.welkomstfilm_soort ?? null;
+    defWelkomUrl = t?.welkomstfilm_url ?? null;
+    infoSoort = t?.informatiefilm_soort ?? null;
+    infoUrl = t?.informatiefilm_url ?? null;
   }
 
-  const blokkenMap = await haalPaginaBlokken(supabase, NAMESPACE, PAGINA_ID);
-  const infoBlokken = blokkenMap.get("info") ?? [];
+  // Welkomstfilm: eigen film van dit lid, anders de algemene default.
+  const welkomSoort =
+    (row as FilmRij).welkomstfilm_soort ?? defWelkomSoort;
+  const welkomUrl = (row as FilmRij).welkomstfilm_url ?? defWelkomUrl;
 
   const welkomFilm = (
     <div className="space-y-2">
@@ -114,63 +122,18 @@ export default async function GezondeStartTokenPagina({
     </div>
   );
 
-  const infoFilm = (
-    <MediaSlot
-      paginaNamespace={NAMESPACE}
-      paginaId={PAGINA_ID}
-      positie="info"
-      blokken={infoBlokken}
-      isFounder={isFounder}
-      lege="Hier komt straks de informatie-film"
-    />
-  );
+  // Informatiefilm: alleen tonen als de founder er één heeft ingesteld.
+  // Prospects zien geen lege placeholder.
+  const infoFilm = infoUrl ? (
+    <WelkomstfilmSpeler soort={infoSoort} url={infoUrl} />
+  ) : null;
 
   return (
-    <EditModeProvider>
-      {isFounder && (
-        <div className="fixed top-4 right-4 z-50">
-          <EditModeToggle isFounder={true} />
-        </div>
-      )}
-      <GezondeStartFlow
-        token={token}
-        memberVoornaam={memberVoornaam}
-        welkomFilm={welkomFilm}
-        infoFilm={infoFilm}
-      />
-    </EditModeProvider>
-  );
-}
-
-function MediaSlot({
-  paginaNamespace,
-  paginaId,
-  positie,
-  blokken,
-  isFounder,
-  lege,
-}: {
-  paginaNamespace: string;
-  paginaId: string;
-  positie: string;
-  blokken: Blok[];
-  isFounder: boolean;
-  lege: string;
-}) {
-  if (blokken.length === 0 && !isFounder) {
-    return (
-      <div className="bg-[#1c1c1c] text-[#c9a961] rounded-xl aspect-video flex items-center justify-center text-center p-4 text-sm">
-        🎬 {lege}
-      </div>
-    );
-  }
-  return (
-    <MediaBlokken
-      paginaNamespace={paginaNamespace}
-      paginaId={paginaId}
-      positie={positie}
-      blokken={blokken}
-      isFounder={isFounder}
+    <GezondeStartFlow
+      token={token}
+      memberVoornaam={memberVoornaam}
+      welkomFilm={welkomFilm}
+      infoFilm={infoFilm}
     />
   );
 }

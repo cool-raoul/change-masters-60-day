@@ -121,13 +121,19 @@ export default async function MijnTrackingLinksPagina() {
     string,
     { soort: string | null; url: string | null }
   > = {};
+  const infofilmPerBot: Record<
+    string,
+    { soort: string | null; url: string | null }
+  > = {};
   for (const bot of FREEBIE_BOTS) {
     if (!bot.actief) continue;
     if (bot.coreOnly && !ziet_core_bots) continue;
     if (bot.preRelease && !magPreRelease) continue;
     const { data: bestaand } = await supabase
       .from("freebie_bot_member_tokens")
-      .select("token, welkomstfilm_soort, welkomstfilm_url")
+      .select(
+        "token, welkomstfilm_soort, welkomstfilm_url, informatiefilm_soort, informatiefilm_url",
+      )
       .eq("member_id", user.id)
       .eq("bot_slug", bot.slug)
       .maybeSingle();
@@ -141,6 +147,14 @@ export default async function MijnTrackingLinksPagina() {
         url:
           (bestaand as { welkomstfilm_url?: string | null }).welkomstfilm_url ??
           null,
+      };
+      infofilmPerBot[bot.slug] = {
+        soort:
+          (bestaand as { informatiefilm_soort?: string | null })
+            .informatiefilm_soort ?? null,
+        url:
+          (bestaand as { informatiefilm_url?: string | null })
+            .informatiefilm_url ?? null,
       };
       continue;
     }
@@ -393,6 +407,31 @@ export default async function MijnTrackingLinksPagina() {
                       }
                       huidigeUrl={
                         welkomstfilmPerBot["jouw-gezonde-start"]?.url ?? null
+                      }
+                    />
+                  </div>
+                )}
+
+                {bot.slug === "jouw-gezonde-start" && isFounder && (
+                  <div className="mt-4 border-t border-amber-500/20 pt-4">
+                    <p className="text-xs font-semibold text-amber-200/90 mb-1">
+                      🎬 Informatiefilm — alleen jij als founder, geldt voor het
+                      hele team
+                    </p>
+                    <p className="text-[11px] text-slate-400 mb-2">
+                      De uitleg-film die mensen ná de check te zien krijgen. Eén
+                      algemene film voor iedereen.
+                    </p>
+                    <WelkomstfilmKiezer
+                      botSlug="jouw-gezonde-start"
+                      veld="info"
+                      naam="informatiefilm"
+                      metFallback={false}
+                      huidigeSoort={
+                        infofilmPerBot["jouw-gezonde-start"]?.soort ?? null
+                      }
+                      huidigeUrl={
+                        infofilmPerBot["jouw-gezonde-start"]?.url ?? null
                       }
                     />
                   </div>

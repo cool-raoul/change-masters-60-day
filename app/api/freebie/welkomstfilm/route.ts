@@ -27,6 +27,10 @@ export async function POST(req: NextRequest) {
     const botSlug = (body.botSlug as string | undefined)?.trim();
     const soort = (body.soort as string | null | undefined) ?? null;
     const url = ((body.url as string | null | undefined) ?? "").toString().trim() || null;
+    // veld: 'welkomst' (per lid) of 'info' (founder-only, algemene info-film).
+    const veld = (body.veld as string | undefined) === "info" ? "info" : "welkomst";
+    const soortKol = veld === "info" ? "informatiefilm_soort" : "welkomstfilm_soort";
+    const urlKol = veld === "info" ? "informatiefilm_url" : "welkomstfilm_url";
 
     if (!botSlug) {
       return NextResponse.json({ error: "botSlug ontbreekt" }, { status: 400 });
@@ -52,14 +56,14 @@ export async function POST(req: NextRequest) {
         member_id: user.id,
         bot_slug: botSlug,
         token: genereerBotToken(),
-        welkomstfilm_soort: soort,
-        welkomstfilm_url: url,
+        [soortKol]: soort,
+        [urlKol]: url,
       });
       if (error) throw error;
     } else {
       const { error } = await admin
         .from("freebie_bot_member_tokens")
-        .update({ welkomstfilm_soort: soort, welkomstfilm_url: url })
+        .update({ [soortKol]: soort, [urlKol]: url })
         .eq("member_id", user.id)
         .eq("bot_slug", botSlug);
       if (error) throw error;

@@ -19,10 +19,18 @@ export function WelkomstfilmKiezer({
   botSlug,
   huidigeSoort,
   huidigeUrl,
+  veld = "welkomst",
+  naam = "welkomstfilm",
+  metFallback = true,
 }: {
   botSlug: string;
   huidigeSoort?: string | null;
   huidigeUrl?: string | null;
+  /** 'welkomst' = per lid; 'info' = founder-only, algemene info-film. */
+  veld?: "welkomst" | "info";
+  naam?: string;
+  /** true: leeg = algemene film; false (info): leeg = geen film. */
+  metFallback?: boolean;
 }) {
   const [soort, setSoort] = useState<string | null>(huidigeSoort ?? null);
   const [url, setUrl] = useState<string | null>(huidigeUrl ?? null);
@@ -39,7 +47,7 @@ export function WelkomstfilmKiezer({
     const res = await fetch("/api/freebie/welkomstfilm", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ botSlug, soort: nieuwSoort, url: nieuwUrl }),
+      body: JSON.stringify({ botSlug, veld, soort: nieuwSoort, url: nieuwUrl }),
     });
     if (!res.ok) {
       toast.error("Opslaan mislukt. Probeer het opnieuw.");
@@ -78,7 +86,8 @@ export function WelkomstfilmKiezer({
         return;
       }
       const ext = (file.name.split(".").pop() || "mp4").toLowerCase();
-      const pad = `${user.id}/welkomstfilm-${Date.now()}.${ext}`;
+      const prefix = veld === "info" ? "informatiefilm" : "welkomstfilm";
+      const pad = `${user.id}/${prefix}-${Date.now()}.${ext}`;
       const { error: upErr } = await supabase.storage
         .from(BUCKET)
         .upload(pad, file, { upsert: true, contentType: file.type });
@@ -103,7 +112,11 @@ export function WelkomstfilmKiezer({
     setBezig(false);
     if (ok) {
       setLinkInput("");
-      toast.success("Je eigen film is weg. De algemene welkomstfilm staat weer aan.");
+      toast.success(
+        metFallback
+          ? "Je eigen film is weg. De algemene staat weer aan."
+          : "De film is weggehaald.",
+      );
     }
   }
 
@@ -119,8 +132,12 @@ export function WelkomstfilmKiezer({
       <div>
         <p className="text-xs text-cm-white/60 mb-1.5">
           {soort
-            ? "Dit is jouw eigen welkomstfilm:"
-            : "Nu staat de algemene welkomstfilm aan. Stel hieronder je eigen in."}
+            ? metFallback
+              ? `Dit is jouw eigen ${naam}:`
+              : `Dit is de huidige ${naam}:`
+            : metFallback
+              ? `Nu staat de algemene ${naam} aan. Stel hieronder je eigen in.`
+              : `Er staat nog geen ${naam}. Stel 'm hieronder in.`}
         </p>
         <WelkomstfilmSpeler soort={soort} url={url} />
         {soort && (
@@ -129,7 +146,7 @@ export function WelkomstfilmKiezer({
             disabled={bezig}
             className="mt-2 text-xs text-cm-white/60 hover:text-rose-300 underline"
           >
-            Eigen film weghalen (terug naar de algemene)
+            {metFallback ? "Eigen film weghalen (terug naar de algemene)" : "Film weghalen"}
           </button>
         )}
       </div>
