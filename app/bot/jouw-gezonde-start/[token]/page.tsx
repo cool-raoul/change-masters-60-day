@@ -10,6 +10,7 @@ import { haalPaginaBlokken, type Blok } from "@/lib/cms/pagina-blokken";
 import { EditModeProvider } from "@/components/cms/EditModeContext";
 import { EditModeToggle } from "@/components/cms/EditModeToggle";
 import { MediaBlokken } from "@/components/cms/MediaBlokken";
+import { WelkomstfilmSpeler } from "@/components/freebies/WelkomstfilmSpeler";
 import { GezondeStartFlow } from "./flow";
 
 export const dynamic = "force-dynamic";
@@ -39,7 +40,7 @@ export default async function GezondeStartTokenPagina({
 
   const { data: row } = await supabase
     .from("freebie_bot_member_tokens")
-    .select("member_id, bot_slug")
+    .select("member_id, bot_slug, welkomstfilm_soort, welkomstfilm_url")
     .eq("token", token)
     .maybeSingle();
 
@@ -57,20 +58,38 @@ export default async function GezondeStartTokenPagina({
     ((profile?.full_name ?? "") as string).split(" ")[0] || "iemand";
   const isFounder = (profile as { role?: string } | null)?.role === "founder";
 
+  // Welkomstfilm: eigen film van dit lid, anders de algemene default
+  // (= de welkomstfilm van het default-account / de podcast-landing).
+  let welkomSoort =
+    (row as { welkomstfilm_soort?: string | null }).welkomstfilm_soort ?? null;
+  let welkomUrl =
+    (row as { welkomstfilm_url?: string | null }).welkomstfilm_url ?? null;
+  if (!welkomUrl) {
+    const { data: def } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("email", "raoulzeewijk@hotmail.com")
+      .maybeSingle();
+    if (def?.id && def.id !== row.member_id) {
+      const { data: defTok } = await supabase
+        .from("freebie_bot_member_tokens")
+        .select("welkomstfilm_soort, welkomstfilm_url")
+        .eq("member_id", def.id)
+        .eq("bot_slug", NAMESPACE)
+        .maybeSingle();
+      welkomSoort =
+        (defTok as { welkomstfilm_soort?: string | null } | null)
+          ?.welkomstfilm_soort ?? null;
+      welkomUrl =
+        (defTok as { welkomstfilm_url?: string | null } | null)
+          ?.welkomstfilm_url ?? null;
+    }
+  }
+
   const blokkenMap = await haalPaginaBlokken(supabase, NAMESPACE, PAGINA_ID);
-  const welkomBlokken = blokkenMap.get("welkom") ?? [];
   const infoBlokken = blokkenMap.get("info") ?? [];
 
-  const welkomFilm = (
-    <MediaSlot
-      paginaNamespace={NAMESPACE}
-      paginaId={PAGINA_ID}
-      positie="welkom"
-      blokken={welkomBlokken}
-      isFounder={isFounder}
-      lege="Hier komt straks de welkomstfilm"
-    />
-  );
+  const welkomFilm = <WelkomstfilmSpeler soort={welkomSoort} url={welkomUrl} />;
 
   const infoFilm = (
     <MediaSlot
