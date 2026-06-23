@@ -17,7 +17,10 @@ import {
   DARM_SCHAAL_LABELS,
   type DarmAntwoord,
 } from "@/lib/zelftest/darm-vragen";
-import { bouwGezondeStartUitkomst } from "@/lib/freebie-bots/jouw-gezonde-start/uitkomst";
+import {
+  bouwGezondeStartUitkomst,
+  GEZONDE_START_UITKOMST_FRAGMENTEN,
+} from "@/lib/freebie-bots/jouw-gezonde-start/uitkomst";
 import {
   DOEL_OPTIES,
   AFVAL_OPTIES,
@@ -176,6 +179,7 @@ export function GezondeStartFlow({
     doelen,
     afvalWens,
     voornaam,
+    overrides: tekstOverrides,
   });
   const heat = bouwGezondeStartHeat({
     darmTotaal: uitslag.totaal,
@@ -189,6 +193,20 @@ export function GezondeStartFlow({
     setStap(s);
     if (typeof window !== "undefined")
       window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // Founder-preview: vul een representatief voorbeeld en spring naar de uitslag
+  // om de bouwsteen-teksten te kunnen bewerken.
+  function springNaarUitslag() {
+    const voorbeeld: Record<string, DarmAntwoord> = {};
+    DARM_VRAGEN.forEach((v) => {
+      voorbeeld[v.id] = 2 as DarmAntwoord;
+    });
+    setDarm(voorbeeld);
+    setDoelen(["energie", "afvallen"]);
+    setAfvalWens("vijf_tien");
+    setInvestering("altijd");
+    naar("uitkomst");
   }
 
   function gaNaarVragen() {
@@ -287,6 +305,17 @@ export function GezondeStartFlow({
 
         <div className="relative mx-auto max-w-2xl px-4 py-6 sm:py-10">
           <ProgressBar nr={STAP_NR[stap]} />
+
+          {editModusAan && isFounder && stap !== "uitkomst" && (
+            <div className="mt-3 text-center">
+              <button
+                onClick={springNaarUitslag}
+                className="text-xs font-semibold text-amber-800 bg-amber-100 border border-amber-300 rounded-full px-4 py-1.5 hover:bg-amber-200"
+              >
+                ⤵ Spring naar de uitslag (om die te bewerken)
+              </button>
+            </div>
+          )}
 
           <div className="rounded-3xl bg-white/95 backdrop-blur-md shadow-2xl ring-1 ring-white/40 p-6 sm:p-9 mt-6 border border-[#ead8a0]/60">
             {stap === "welkom" && (
@@ -542,10 +571,28 @@ export function GezondeStartFlow({
                     ))}
                   </div>
                   {editModusAan && isFounder && (
-                    <div className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-xs text-amber-800">
-                      De uitkomst-teksten zijn opgebouwd uit losse bouwstenen
-                      (per doel, per score). Die worden binnenkort hier
-                      bewerkbaar (stap 2).
+                    <div className="rounded-xl border border-amber-300 bg-amber-50 p-3 space-y-3">
+                      <p className="text-xs font-bold text-amber-900">
+                        ✏️ Uitslag-bouwstenen — pas elke zin aan (geldt voor
+                        iedereen). Hierboven zie je een voorbeeld; de juiste zin
+                        wordt automatisch gekozen op basis van de antwoorden.
+                      </p>
+                      {GEZONDE_START_UITKOMST_FRAGMENTEN.map((f) => (
+                        <div key={f.key}>
+                          <p className="text-[11px] font-semibold text-amber-800 mb-0.5">
+                            {f.label}
+                          </p>
+                          <T
+                            sleutel={f.key}
+                            standaard={f.standaard}
+                            multiline={f.multiline}
+                            rows={3}
+                            hint={f.hint}
+                            as="div"
+                            className="text-sm text-[#3a3526]"
+                          />
+                        </div>
+                      ))}
                     </div>
                   )}
                   {infoFilmUrl && (
