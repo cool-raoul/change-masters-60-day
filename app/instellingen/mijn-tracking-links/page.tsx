@@ -394,6 +394,20 @@ export default async function MijnTrackingLinksPagina() {
 
                 <InstagramLinkBuilder basisUrl={url} />
 
+                {bot.slug === "jouw-gezonde-start" && isFounder && (
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 flex items-center justify-center gap-2 rounded-lg border border-amber-400/60 bg-amber-500/10 px-4 py-2.5 text-sm font-semibold text-amber-200 hover:bg-amber-500/20 transition-colors"
+                  >
+                    ✏️ Teksten van deze freebie aanpassen
+                    <span className="text-xs font-normal text-amber-200/70">
+                      (opent ingelogd · zet rechtsboven &quot;Founder&quot; aan)
+                    </span>
+                  </a>
+                )}
+
                 {bot.slug === "jouw-gezonde-start" && (
                   <div className="mt-4 border-t border-white/10 pt-4">
                     <p className="text-xs font-semibold text-slate-300 mb-2">
