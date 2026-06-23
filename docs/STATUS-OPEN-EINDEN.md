@@ -35,8 +35,13 @@ Laatst bijgewerkt: 2026-06-23
   - ✅ **Fase 1 GEBOUWD + live** (te testen): mooie link `/jouw-gezonde-start` → flow (welkom-film-slot → gegevens e-mail+tel verplicht, IG/FB optioneel → darm-vragen → advies-uitkomst Darm in Balans / + → contact-knop). Komt in namenlijst + contact-knop = warm-trigger. Nu founder-token als placeholder (later Sandy).
   - ✅ **Fase 2 GEBOUWD + live** (te testen): eigen welkomstfilm per lid via `/instellingen/welkomstfilm` (founders+Sandy) — YouTube/Vimeo-link of upload vanaf computer/telefoon (Supabase Storage, max 200MB). Bot toont eigen film, anders algemene default. Premium freebie-look (crème-goud) staat ook live.
   - ✅ **Fase 3a GEBOUWD + live** (te testen): doel-vraag (meerkeuze) + afval-wens-routing + **verhalende, gepersonaliseerde uitkomst** (vaste claimvrije blokken, geweven uit hun antwoorden; "wat we vaak zien bij mensen...", voelbare gap, geen ik-proef, geen standaardverhaal). DNA-stem.
-  - ⏳ Fase 3b: medische zelf-check (opslaan + 30d-wis, contra-indicaties voor het gesprek) + info-film-koppeling + video-watch-trigger op de info-film.
-  - ⏳ Fase 4: vrijgave voor iedereen (+ zichtbaarheid in tracking-links, nu nog niet zichtbaar voor leden).
+  - ✅ **Fase 3b deels GEBOUWD + live** (te testen):
+    - Freebie zichtbaar in **Mijn freebies** (founders + Sandy) met de welkomstfilm-instelling in de freebie-kaart (founder = algemene film voor iedereen, leden = eigen film).
+    - **Founder-only informatiefilm**: één algemene uitleg-film voor het hele team, ingesteld via Mijn freebies (alleen founder ziet die instelling).
+    - **Investerings-vraag** ("Ben je bereid te investeren in je gezondheid?", nee/misschien/altijd) → warm/lauw/koud-signaal in de spiegel-notitie op de prospect-kaart.
+    - **Watch-trigger op de informatiefilm** (YouTube/Vimeo/upload): ~90% of einde → prospect naar Opvolgen + herinnering + push naar het lid (eenmalig).
+  - ⏳ Fase 3b rest: medische zelf-check (opslaan + 30-dagen-wis, contra-indicaties voor het gesprek).
+  - ⏳ Fase 4: vrijgave voor iedereen (nu nog founder + Sandy via pre-release-gate).
 
 ## ⏸️ Bewust geparkeerd (geen los eindje, later met opzet)
 - **Filter-per-freebie** op de namenlijst ("laat me alleen leads van freebie X zien" + bulk-actie). Spec: docs/superpowers/specs/2026-06-23-freebie-funnel-warm-trigger-design.md
