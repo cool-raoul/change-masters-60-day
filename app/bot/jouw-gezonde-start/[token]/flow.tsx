@@ -9,6 +9,12 @@ import {
   type DarmAntwoord,
 } from "@/lib/zelftest/darm-vragen";
 import { bouwGezondeStartUitkomst } from "@/lib/freebie-bots/jouw-gezonde-start/uitkomst";
+import {
+  DOEL_OPTIES,
+  AFVAL_OPTIES,
+  type DoelId,
+  type AfvalId,
+} from "@/lib/freebie-bots/jouw-gezonde-start/vragen";
 
 // ============================================================
 // "Jouw gezonde start" — clientflow (fase 1).
@@ -25,14 +31,15 @@ const KNOP =
 const GOUD =
   "linear-gradient(135deg, #c9a961 0%, #ead8a0 100%)";
 
-type Stap = "welkom" | "gegevens" | "vragen" | "uitkomst" | "bedankt";
+type Stap = "welkom" | "gegevens" | "vragen" | "doel" | "uitkomst" | "bedankt";
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 const STAP_NR: Record<Stap, number> = {
   welkom: 1,
   gegevens: 2,
   vragen: 3,
-  uitkomst: 4,
-  bedankt: 4,
+  doel: 4,
+  uitkomst: 5,
+  bedankt: 5,
 };
 
 export function GezondeStartFlow({
@@ -54,12 +61,19 @@ export function GezondeStartFlow({
   const [instagram, setInstagram] = useState("");
   const [facebook, setFacebook] = useState("");
   const [darm, setDarm] = useState<Record<string, DarmAntwoord>>({});
+  const [doelen, setDoelen] = useState<DoelId[]>([]);
+  const [afvalWens, setAfvalWens] = useState<AfvalId | null>(null);
   const [bezig, setBezig] = useState(false);
   const optInGedaanRef = useRef(false);
 
   const aantal = Object.keys(darm).length;
   const alleBeantwoord = aantal === DARM_VRAGEN.length;
-  const uitslag = bouwGezondeStartUitkomst(darm, voornaam);
+  const uitslag = bouwGezondeStartUitkomst({
+    darmAntwoorden: darm,
+    doelen,
+    afvalWens,
+    voornaam,
+  });
 
   function naar(s: Stap) {
     setStap(s);
@@ -87,8 +101,13 @@ export function GezondeStartFlow({
           leadAchternaam: achternaam.trim(),
           leadEmail: email.trim(),
           leadTelefoon: telefoon.trim() || null,
-          antwoorden: { darmTotaal: uitslag.totaal, darmBucket: uitslag.bucket },
-          spiegelTekst: `🌱 Jouw gezonde start\nDarm-score: ${uitslag.totaal}/${uitslag.max} → advies: ${uitslag.bucketLabel}`,
+          antwoorden: {
+            darmTotaal: uitslag.totaal,
+            darmBucket: uitslag.bucket,
+            doelen,
+            afvalWens,
+          },
+          spiegelTekst: `🌱 Jouw gezonde start\nDoel: ${doelen.map((d) => DOEL_OPTIES.find((o) => o.id === d)?.label).filter(Boolean).join(", ") || "-"}\nDarm-score: ${uitslag.totaal}/${uitslag.max} → advies: ${uitslag.programmaLabel}`,
           contactGewenst: false,
           herkomstInstagram: instagram.trim().replace(/^@/, "") || null,
           herkomstFacebook: facebook.trim() || null,
@@ -100,8 +119,13 @@ export function GezondeStartFlow({
     }
   }
 
+  function gaNaarDoel() {
+    if (!alleBeantwoord) return toast.error("Beantwoord nog even alle vragen.");
+    naar("doel");
+  }
+
   function toonUitkomst() {
-    if (!alleBeantwoord) return toast.error("Beantwoord nog even alle vragen, dan krijg je je advies.");
+    if (doelen.length === 0) return toast.error("Kies nog even waar je naar verlangt.");
     void vangProspect();
     naar("uitkomst");
   }
@@ -225,7 +249,78 @@ export function GezondeStartFlow({
                 </div>
                 <div className="flex items-center gap-3 pt-1">
                   <TerugKnop onClick={() => naar("gegevens")} />
-                  <GoudKnop onClick={toonUitkomst} disabled={!alleBeantwoord}>Toon mijn advies</GoudKnop>
+                  <GoudKnop onClick={gaNaarDoel} disabled={!alleBeantwoord}>Verder</GoudKnop>
+                </div>
+              </section>
+            </Reveal>
+          )}
+
+          {stap === "doel" && (
+            <Reveal richting="fade">
+              <section className="space-y-5">
+                <div className="text-center space-y-2">
+                  <Tag>Bijna klaar</Tag>
+                  <h2 className="text-2xl sm:text-3xl font-extrabold">
+                    Wat zou je het liefst positief veranderen?
+                  </h2>
+                  <p className="text-sm text-[#6b6450]">Kies wat voor jou speelt. Meerdere mag.</p>
+                </div>
+                <div className="grid grid-cols-2 gap-2.5">
+                  {DOEL_OPTIES.map((o) => {
+                    const actief = doelen.includes(o.id);
+                    return (
+                      <button
+                        key={o.id}
+                        onClick={() =>
+                          setDoelen((d) =>
+                            d.includes(o.id) ? d.filter((x) => x !== o.id) : [...d, o.id],
+                          )
+                        }
+                        className="text-sm font-semibold rounded-xl py-3 px-3 text-left transition-all active:scale-[0.98]"
+                        style={
+                          actief
+                            ? { background: KNOP, color: "#f0e8d2", boxShadow: "0 4px 14px rgba(0,0,0,0.18)" }
+                            : { background: "#fff", color: "#5a5440", border: "1px solid #e7dcb8" }
+                        }
+                      >
+                        {o.label}
+                      </button>
+                    );
+                  })}
+                </div>
+                {doelen.includes("afvallen") && (
+                  <Reveal richting="up">
+                    <div className="rounded-2xl border border-[#ead8a0]/70 bg-[#fdfaf0] p-4 space-y-2.5">
+                      <p className="text-sm font-semibold text-[#5a5440]">
+                        Hoeveel zou je het liefst willen afvallen?
+                      </p>
+                      <div className="grid grid-cols-2 gap-2">
+                        {AFVAL_OPTIES.map((o) => {
+                          const actief = afvalWens === o.id;
+                          return (
+                            <button
+                              key={o.id}
+                              onClick={() => setAfvalWens(o.id)}
+                              className="text-xs font-semibold rounded-lg py-2.5 px-2 transition-all"
+                              style={
+                                actief
+                                  ? { background: KNOP, color: "#f0e8d2" }
+                                  : { background: "#fff", color: "#8a7f5e", border: "1px solid #e7dcb8" }
+                              }
+                            >
+                              {o.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </Reveal>
+                )}
+                <div className="flex items-center gap-3 pt-1">
+                  <TerugKnop onClick={() => naar("vragen")} />
+                  <GoudKnop onClick={toonUitkomst} disabled={doelen.length === 0}>
+                    Toon mijn advies
+                  </GoudKnop>
                 </div>
               </section>
             </Reveal>
@@ -239,12 +334,18 @@ export function GezondeStartFlow({
                   <Tag>Jouw persoonlijke advies</Tag>
                   <h2 className="text-2xl sm:text-3xl font-extrabold leading-tight">{uitslag.kop}</h2>
                 </div>
-                <div className="rounded-2xl p-5 text-[15px] leading-relaxed" style={{ background: "linear-gradient(135deg, #faf5e6 0%, #f0e8d2 100%)", border: "1px solid #ead8a0", color: "#3a3526" }}>
-                  {uitslag.advies}
+                <div
+                  className="rounded-2xl p-5 sm:p-6 space-y-3.5 text-[15px] leading-relaxed"
+                  style={{ background: "linear-gradient(135deg, #faf5e6 0%, #f0e8d2 100%)", border: "1px solid #ead8a0", color: "#3a3526" }}
+                >
+                  {uitslag.narratief.map((p, i) => (
+                    <p key={i}>{p}</p>
+                  ))}
                 </div>
                 {infoFilm}
-                <p className="text-[15px] leading-relaxed text-[#6b6450]">{uitslag.meekijken}</p>
-                <GoudKnop onClick={vraagContact} disabled={bezig}>{bezig ? "Bezig..." : "Ja, kijk persoonlijk met me mee"}</GoudKnop>
+                <GoudKnop onClick={vraagContact} disabled={bezig}>
+                  {bezig ? "Bezig..." : "Ja, kijk persoonlijk met me mee"}
+                </GoudKnop>
               </section>
             </Reveal>
           )}
@@ -276,7 +377,7 @@ export function GezondeStartFlow({
 function ProgressBar({ nr }: { nr: number }) {
   return (
     <div className="flex gap-1.5">
-      {[1, 2, 3, 4].map((i) => (
+      {[1, 2, 3, 4, 5].map((i) => (
         <div
           key={i}
           className="flex-1 h-1.5 rounded-full transition-all duration-500"
