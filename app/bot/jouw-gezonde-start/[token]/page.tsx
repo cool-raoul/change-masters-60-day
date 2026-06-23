@@ -11,6 +11,10 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
+import { haalTekstOverrides } from "@/lib/cms/tekst-overrides";
+import { EditModeProvider } from "@/components/cms/EditModeContext";
+import { EditModeToggle } from "@/components/cms/EditModeToggle";
 import { WelkomstfilmSpeler } from "@/components/freebies/WelkomstfilmSpeler";
 import { GezondeStartFlow } from "./flow";
 
@@ -99,15 +103,40 @@ export default async function GezondeStartTokenPagina({
 
   const welkomFilm = <WelkomstfilmSpeler soort={welkomSoort} url={welkomUrl} />;
 
+  // Founder die de pagina bekijkt mag elke tekst aanpassen (voor iedereen).
+  const sessie = await createClient();
+  const {
+    data: { user: viewer },
+  } = await sessie.auth.getUser();
+  let isFounder = false;
+  if (viewer) {
+    const { data: vp } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", viewer.id)
+      .maybeSingle();
+    isFounder = (vp as { role?: string } | null)?.role === "founder";
+  }
+  const tekstOverrides = await haalTekstOverrides(supabase, NAMESPACE);
+
   // Informatiefilm: alleen tonen als de founder er één heeft ingesteld
   // (de flow rendert 'm watch-aware en vuurt de "film-bekeken"-trigger).
   return (
-    <GezondeStartFlow
-      token={token}
-      memberVoornaam={memberVoornaam}
-      welkomFilm={welkomFilm}
-      infoFilmSoort={infoSoort}
-      infoFilmUrl={infoUrl}
-    />
+    <EditModeProvider>
+      {isFounder && (
+        <div className="fixed top-4 right-4 z-50">
+          <EditModeToggle isFounder={true} />
+        </div>
+      )}
+      <GezondeStartFlow
+        token={token}
+        memberVoornaam={memberVoornaam}
+        welkomFilm={welkomFilm}
+        infoFilmSoort={infoSoort}
+        infoFilmUrl={infoUrl}
+        tekstOverrides={tekstOverrides}
+        isFounder={isFounder}
+      />
+    </EditModeProvider>
   );
 }

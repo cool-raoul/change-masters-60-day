@@ -1,9 +1,17 @@
 "use client";
 
-import { useRef, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { toast } from "sonner";
 import { Reveal } from "@/components/ui/Reveal";
 import { InfoFilmSpeler } from "@/components/freebies/InfoFilmSpeler";
+import { EditableTekst } from "@/components/cms/EditableTekst";
+import { useEditModus } from "@/components/cms/EditModeContext";
 import {
   DARM_VRAGEN,
   DARM_SCHAAL_LABELS,
@@ -23,19 +31,22 @@ import {
 import { bouwGezondeStartHeat } from "@/lib/freebie-bots/jouw-gezonde-start/heat";
 
 // ============================================================
-// "Jouw gezonde start" — clientflow (fase 1).
+// "Jouw gezonde start" — clientflow.
 // Premium crème-goud freebie-stijl met zachte animaties.
-// welkom → gegevens → darm-check → advies → bedankt.
-// Capture via /api/freebie-bot/opt-in, contact via /api/freebie-bot/contact
-// (die vuurt de warm-trigger). Welkom-/info-film zijn nu placeholder-slots.
+// welkom → gegevens → darm-check → doel + investering → advies → bedankt.
+//
+// FOUNDER-EDIT: elke tekst is aanpasbaar (voor iedereen) via het
+// tekst_overrides-systeem. Blok-teksten krijgen een inline-potlood (<T>);
+// knop-/optie-/pill-teksten blijven klikbaar en krijgen in edit-modus een
+// compact editor-veldje ernaast (<EditNaast>), zodat de flow bruikbaar blijft.
 // ============================================================
+
+const NS = "jouw-gezonde-start";
 
 const BG =
   "linear-gradient(180deg, #f7f1e4 0%, #f4ebd0 30%, #ead8a0 70%, #f0e8d2 100%)";
-const KNOP =
-  "linear-gradient(135deg, #0d0d0d 0%, #2a2110 50%, #0d0d0d 100%)";
-const GOUD =
-  "linear-gradient(135deg, #c9a961 0%, #ead8a0 100%)";
+const KNOP = "linear-gradient(135deg, #0d0d0d 0%, #2a2110 50%, #0d0d0d 100%)";
+const GOUD = "linear-gradient(135deg, #c9a961 0%, #ead8a0 100%)";
 
 type Stap = "welkom" | "gegevens" | "vragen" | "doel" | "uitkomst" | "bedankt";
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
@@ -48,19 +59,98 @@ const STAP_NR: Record<Stap, number> = {
   bedankt: 5,
 };
 
+type AsTag = "h1" | "h2" | "h3" | "h4" | "p" | "div" | "span" | "li";
+
+// Founder-context: overrides + of edit-modus aan staat + of je founder bent.
+const FreebieCtx = createContext<{
+  overrides: Record<string, string>;
+  isFounder: boolean;
+  editModusAan: boolean;
+}>({ overrides: {}, isFounder: false, editModusAan: false });
+
+// Inline bewerkbare blok-tekst (potlood naast de tekst in edit-modus).
+function T({
+  sleutel,
+  standaard,
+  as,
+  className,
+  multiline,
+  rows,
+  hint,
+  vars,
+}: {
+  sleutel: string;
+  standaard: string;
+  as?: AsTag;
+  className?: string;
+  multiline?: boolean;
+  rows?: number;
+  hint?: string;
+  vars?: Record<string, string>;
+}) {
+  const { overrides, isFounder, editModusAan } = useContext(FreebieCtx);
+  return (
+    <EditableTekst
+      namespace={NS}
+      sleutel={sleutel}
+      standaard={standaard}
+      overrides={overrides}
+      isFounder={isFounder}
+      editModusAan={editModusAan}
+      as={as}
+      className={className}
+      multiline={multiline}
+      rows={rows}
+      hint={hint}
+      vars={vars}
+    />
+  );
+}
+
+// Compact editor-veldje naast een knop/optie/pill (alleen in edit-modus).
+function EditNaast({
+  sleutel,
+  standaard,
+  hint,
+  multiline,
+}: {
+  sleutel: string;
+  standaard: string;
+  hint?: string;
+  multiline?: boolean;
+}) {
+  const { isFounder, editModusAan } = useContext(FreebieCtx);
+  if (!isFounder || !editModusAan) return null;
+  return (
+    <T
+      sleutel={sleutel}
+      standaard={standaard}
+      as="div"
+      className="mt-1 text-xs"
+      hint={hint}
+      multiline={multiline}
+    />
+  );
+}
+
 export function GezondeStartFlow({
   token,
   memberVoornaam,
   welkomFilm,
   infoFilmSoort,
   infoFilmUrl,
+  tekstOverrides,
+  isFounder,
 }: {
   token: string;
   memberVoornaam: string;
   welkomFilm: ReactNode;
   infoFilmSoort: string | null;
   infoFilmUrl: string | null;
+  tekstOverrides: Record<string, string>;
+  isFounder: boolean;
 }) {
+  const { editModusAan } = useEditModus();
   const [stap, setStap] = useState<Stap>("welkom");
   const [voornaam, setVoornaam] = useState("");
   const [achternaam, setAchternaam] = useState("");
@@ -74,6 +164,10 @@ export function GezondeStartFlow({
   const [investering, setInvestering] = useState<InvesteringId | null>(null);
   const [bezig, setBezig] = useState(false);
   const optInGedaanRef = useRef(false);
+
+  // Resolver voor knop-/optie-/pill-teksten (toont override of standaard).
+  const t = (sleutel: string, standaard: string) =>
+    tekstOverrides[sleutel] ?? standaard;
 
   const aantal = Object.keys(darm).length;
   const alleBeantwoord = aantal === DARM_VRAGEN.length;
@@ -93,13 +187,19 @@ export function GezondeStartFlow({
 
   function naar(s: Stap) {
     setStap(s);
-    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+    if (typeof window !== "undefined")
+      window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function gaNaarVragen() {
-    if (!voornaam.trim() || !achternaam.trim()) return toast.error("Vul je voor- en achternaam in.");
-    if (!EMAIL_RE.test(email)) return toast.error("Vul een geldig e-mailadres in.");
-    if (telefoon.trim().length < 8) return toast.error("Vul je telefoonnummer in, dan kan ik persoonlijk meekijken.");
+    if (!voornaam.trim() || !achternaam.trim())
+      return toast.error("Vul je voor- en achternaam in.");
+    if (!EMAIL_RE.test(email))
+      return toast.error("Vul een geldig e-mailadres in.");
+    if (telefoon.trim().length < 8)
+      return toast.error(
+        "Vul je telefoonnummer in, dan kan ik persoonlijk meekijken.",
+      );
     naar("vragen");
   }
 
@@ -144,8 +244,10 @@ export function GezondeStartFlow({
   }
 
   function toonUitkomst() {
-    if (doelen.length === 0) return toast.error("Kies nog even waar je naar verlangt.");
-    if (!investering) return toast.error("Beantwoord nog even de laatste vraag.");
+    if (doelen.length === 0)
+      return toast.error("Kies nog even waar je naar verlangt.");
+    if (!investering)
+      return toast.error("Beantwoord nog even de laatste vraag.");
     void vangProspect();
     naar("uitkomst");
   }
@@ -172,259 +274,329 @@ export function GezondeStartFlow({
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden" style={{ background: BG, color: "#1a1a1a" }}>
-      <div aria-hidden className="pointer-events-none fixed top-10 -left-8 text-[170px] opacity-[0.04] rotate-12 select-none">🌱</div>
-      <div aria-hidden className="pointer-events-none fixed top-1/3 -right-12 text-[170px] opacity-[0.04] -rotate-12 select-none">✨</div>
-      <div aria-hidden className="pointer-events-none fixed bottom-24 -left-6 text-[150px] opacity-[0.04] rotate-6 select-none">🌿</div>
+    <FreebieCtx.Provider
+      value={{ overrides: tekstOverrides, isFounder, editModusAan }}
+    >
+      <div
+        className="relative min-h-screen overflow-hidden"
+        style={{ background: BG, color: "#1a1a1a" }}
+      >
+        <div aria-hidden className="pointer-events-none fixed top-10 -left-8 text-[170px] opacity-[0.04] rotate-12 select-none">🌱</div>
+        <div aria-hidden className="pointer-events-none fixed top-1/3 -right-12 text-[170px] opacity-[0.04] -rotate-12 select-none">✨</div>
+        <div aria-hidden className="pointer-events-none fixed bottom-24 -left-6 text-[150px] opacity-[0.04] rotate-6 select-none">🌿</div>
 
-      <div className="relative mx-auto max-w-2xl px-4 py-6 sm:py-10">
-        <ProgressBar nr={STAP_NR[stap]} />
+        <div className="relative mx-auto max-w-2xl px-4 py-6 sm:py-10">
+          <ProgressBar nr={STAP_NR[stap]} />
 
-        <div className="rounded-3xl bg-white/95 backdrop-blur-md shadow-2xl ring-1 ring-white/40 p-6 sm:p-9 mt-6 border border-[#ead8a0]/60">
-          {stap === "welkom" && (
-            <Reveal richting="fade">
-              <section className="space-y-6">
-                <div className="text-center space-y-3">
-                  <Orb emoji="🌱" />
-                  <Tag>Jouw gezonde start</Tag>
-                  <h1 className="text-3xl sm:text-4xl font-extrabold leading-tight">Welkom, fijn dat je er bent</h1>
-                </div>
-                {welkomFilm}
-                <div className="text-[15px] leading-relaxed text-[#3a3526] space-y-3">
-                  <p>Leuk dat je hier bent. Waarschijnlijk omdat iets je raakte en je nieuwsgierig werd. In een paar minuten doe je een korte check, en je krijgt meteen een persoonlijk advies waar een fijne start voor jou zou kunnen liggen.</p>
-                  <p>Daarna kijk ik graag samen met jou wat echt bij je past. Helemaal vrijblijvend, en op je eigen tempo.</p>
-                </div>
-                <GoudKnop onClick={() => naar("gegevens")}>Ja, ik wil de check doen</GoudKnop>
-              </section>
-            </Reveal>
-          )}
-
-          {stap === "gegevens" && (
-            <Reveal richting="fade">
-              <section className="space-y-5">
-                <div className="text-center space-y-2">
-                  <Tag>Stap 1 van 2</Tag>
-                  <h2 className="text-2xl sm:text-3xl font-extrabold">Vertel me even kort wie je bent</h2>
-                  <p className="text-sm text-[#6b6450]">Zo kan ik je je uitkomst sturen en, als je dat fijn vindt, persoonlijk met je meekijken.</p>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <Veld label="Voornaam" value={voornaam} onChange={setVoornaam} />
-                  <Veld label="Achternaam" value={achternaam} onChange={setAchternaam} />
-                </div>
-                <Veld label="E-mailadres" value={email} onChange={setEmail} type="email" placeholder="jouw@email.nl" />
-                <Veld label="Telefoonnummer" value={telefoon} onChange={setTelefoon} type="tel" placeholder="06..." />
-                <div className="grid grid-cols-2 gap-3">
-                  <Veld label="Instagram" sub="optioneel" value={instagram} onChange={setInstagram} placeholder="@jouwnaam" />
-                  <Veld label="Facebook" sub="optioneel" value={facebook} onChange={setFacebook} placeholder="je naam of link" />
-                </div>
-                <div className="flex items-center gap-3 pt-1">
-                  <TerugKnop onClick={() => naar("welkom")} />
-                  <GoudKnop onClick={gaNaarVragen}>Verder naar de check</GoudKnop>
-                </div>
-              </section>
-            </Reveal>
-          )}
-
-          {stap === "vragen" && (
-            <Reveal richting="fade">
-              <section className="space-y-5">
-                <div className="text-center space-y-2">
-                  <Tag>Stap 2 van 2</Tag>
-                  <h2 className="text-2xl sm:text-3xl font-extrabold">Hoe herken je dit bij jezelf?</h2>
-                  <p className="text-sm text-[#6b6450]">Geen goed of fout, alleen jouw eerlijke gevoel.</p>
-                  <div className="mx-auto max-w-xs">
-                    <div className="h-1.5 rounded-full bg-[#e7dcb8] overflow-hidden">
-                      <div className="h-full rounded-full transition-all duration-500" style={{ width: `${(aantal / DARM_VRAGEN.length) * 100}%`, background: GOUD }} />
-                    </div>
-                    <p className="text-[11px] text-[#a0936e] mt-1.5 font-semibold">{aantal} van {DARM_VRAGEN.length}</p>
+          <div className="rounded-3xl bg-white/95 backdrop-blur-md shadow-2xl ring-1 ring-white/40 p-6 sm:p-9 mt-6 border border-[#ead8a0]/60">
+            {stap === "welkom" && (
+              <Reveal richting="fade">
+                <section className="space-y-6">
+                  <div className="text-center space-y-3">
+                    <Orb emoji="🌱" />
+                    <Tag>{t("welkom.tag", "Jouw gezonde start")}</Tag>
+                    <EditNaast sleutel="welkom.tag" standaard="Jouw gezonde start" hint="Label-pill bovenaan" />
+                    <T as="h1" sleutel="welkom.titel" standaard="Welkom, fijn dat je er bent" className="text-3xl sm:text-4xl font-extrabold leading-tight" />
                   </div>
-                </div>
-                <div className="space-y-4">
-                  {DARM_VRAGEN.map((v, i) => (
-                    <Reveal key={v.id} richting="up" delay={Math.min(i * 35, 250)}>
-                      <div className="rounded-2xl border border-[#ead8a0]/70 bg-[#fdfaf0] p-4">
-                        <p className="text-[15px] text-[#2a2616] mb-3">{v.tekst}</p>
-                        <div className="grid grid-cols-4 gap-1.5">
-                          {([0, 1, 2, 3] as DarmAntwoord[]).map((w) => {
-                            const actief = darm[v.id] === w;
-                            return (
-                              <button
-                                key={w}
-                                onClick={() => setDarm((d) => ({ ...d, [v.id]: w }))}
-                                className="text-[11px] sm:text-xs font-semibold rounded-xl py-2.5 px-1 transition-all active:scale-95"
-                                style={
-                                  actief
-                                    ? { background: KNOP, color: "#f0e8d2", boxShadow: "0 4px 14px rgba(0,0,0,0.18)" }
-                                    : { background: "#fff", color: "#8a7f5e", border: "1px solid #e7dcb8" }
-                                }
-                              >
-                                {DARM_SCHAAL_LABELS[w]}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    </Reveal>
-                  ))}
-                </div>
-                <div className="flex items-center gap-3 pt-1">
-                  <TerugKnop onClick={() => naar("gegevens")} />
-                  <GoudKnop onClick={gaNaarDoel} disabled={!alleBeantwoord}>Verder</GoudKnop>
-                </div>
-              </section>
-            </Reveal>
-          )}
+                  {welkomFilm}
+                  <div className="text-[15px] leading-relaxed text-[#3a3526] space-y-3">
+                    <T as="p" multiline rows={4} sleutel="welkom.p1" standaard="Leuk dat je hier bent. Waarschijnlijk omdat iets je raakte en je nieuwsgierig werd. In een paar minuten doe je een korte check, en je krijgt meteen een persoonlijk advies waar een fijne start voor jou zou kunnen liggen." />
+                    <T as="p" multiline rows={3} sleutel="welkom.p2" standaard="Daarna kijk ik graag samen met jou wat echt bij je past. Helemaal vrijblijvend, en op je eigen tempo." />
+                  </div>
+                  <div>
+                    <GoudKnop onClick={() => naar("gegevens")}>{t("welkom.knop", "Ja, ik wil de check doen")}</GoudKnop>
+                    <EditNaast sleutel="welkom.knop" standaard="Ja, ik wil de check doen" hint="Tekst op de knop" />
+                  </div>
+                </section>
+              </Reveal>
+            )}
 
-          {stap === "doel" && (
-            <Reveal richting="fade">
-              <section className="space-y-5">
-                <div className="text-center space-y-2">
-                  <Tag>Bijna klaar</Tag>
-                  <h2 className="text-2xl sm:text-3xl font-extrabold">
-                    Wat zou je het liefst positief veranderen?
-                  </h2>
-                  <p className="text-sm text-[#6b6450]">Kies wat voor jou speelt. Meerdere mag.</p>
-                </div>
-                <div className="grid grid-cols-2 gap-2.5">
-                  {DOEL_OPTIES.map((o) => {
-                    const actief = doelen.includes(o.id);
-                    return (
-                      <button
-                        key={o.id}
-                        onClick={() =>
-                          setDoelen((d) =>
-                            d.includes(o.id) ? d.filter((x) => x !== o.id) : [...d, o.id],
-                          )
-                        }
-                        className="text-sm font-semibold rounded-xl py-3 px-3 text-left transition-all active:scale-[0.98]"
-                        style={
-                          actief
-                            ? { background: KNOP, color: "#f0e8d2", boxShadow: "0 4px 14px rgba(0,0,0,0.18)" }
-                            : { background: "#fff", color: "#5a5440", border: "1px solid #e7dcb8" }
-                        }
-                      >
-                        {o.label}
-                      </button>
-                    );
-                  })}
-                </div>
-                {doelen.includes("afvallen") && (
-                  <Reveal richting="up">
-                    <div className="rounded-2xl border border-[#ead8a0]/70 bg-[#fdfaf0] p-4 space-y-2.5">
-                      <p className="text-sm font-semibold text-[#5a5440]">
-                        Hoeveel zou je het liefst willen afvallen?
-                      </p>
-                      <div className="grid grid-cols-2 gap-2">
-                        {AFVAL_OPTIES.map((o) => {
-                          const actief = afvalWens === o.id;
-                          return (
-                            <button
-                              key={o.id}
-                              onClick={() => setAfvalWens(o.id)}
-                              className="text-xs font-semibold rounded-lg py-2.5 px-2 transition-all"
-                              style={
-                                actief
-                                  ? { background: KNOP, color: "#f0e8d2" }
-                                  : { background: "#fff", color: "#8a7f5e", border: "1px solid #e7dcb8" }
-                              }
-                            >
-                              {o.label}
-                            </button>
-                          );
-                        })}
-                      </div>
+            {stap === "gegevens" && (
+              <Reveal richting="fade">
+                <section className="space-y-5">
+                  <div className="text-center space-y-2">
+                    <Tag>{t("gegevens.tag", "Stap 1 van 2")}</Tag>
+                    <EditNaast sleutel="gegevens.tag" standaard="Stap 1 van 2" hint="Pill" />
+                    <T as="h2" sleutel="gegevens.titel" standaard="Vertel me even kort wie je bent" className="text-2xl sm:text-3xl font-extrabold" />
+                    <T as="p" multiline rows={2} sleutel="gegevens.sub" standaard="Zo kan ik je je uitkomst sturen en, als je dat fijn vindt, persoonlijk met je meekijken." className="text-sm text-[#6b6450]" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Veld labelSleutel="gegevens.label.voornaam" labelStandaard="Voornaam" value={voornaam} onChange={setVoornaam} />
+                    <Veld labelSleutel="gegevens.label.achternaam" labelStandaard="Achternaam" value={achternaam} onChange={setAchternaam} />
+                  </div>
+                  <Veld labelSleutel="gegevens.label.email" labelStandaard="E-mailadres" value={email} onChange={setEmail} type="email" placeholder="jouw@email.nl" />
+                  <Veld labelSleutel="gegevens.label.telefoon" labelStandaard="Telefoonnummer" value={telefoon} onChange={setTelefoon} type="tel" placeholder="06..." />
+                  <div className="grid grid-cols-2 gap-3">
+                    <Veld labelSleutel="gegevens.label.instagram" labelStandaard="Instagram" sub="optioneel" value={instagram} onChange={setInstagram} placeholder="@jouwnaam" />
+                    <Veld labelSleutel="gegevens.label.facebook" labelStandaard="Facebook" sub="optioneel" value={facebook} onChange={setFacebook} placeholder="je naam of link" />
+                  </div>
+                  <div className="flex items-center gap-3 pt-1">
+                    <TerugKnop onClick={() => naar("welkom")} />
+                    <div className="flex-1">
+                      <GoudKnop onClick={gaNaarVragen}>{t("gegevens.knop", "Verder naar de check")}</GoudKnop>
+                      <EditNaast sleutel="gegevens.knop" standaard="Verder naar de check" hint="Knop" />
                     </div>
-                  </Reveal>
-                )}
+                  </div>
+                </section>
+              </Reveal>
+            )}
 
-                <div className="rounded-2xl border border-[#ead8a0]/70 bg-[#fdfaf0] p-4 space-y-2.5">
-                  <p className="text-sm font-semibold text-[#5a5440]">
-                    Ben je bereid om te investeren in je gezondheid?
-                  </p>
-                  <p className="text-xs text-[#a0936e] -mt-1">
-                    Een eerlijk antwoord helpt, zo weet ik hoe ik je het beste kan
-                    helpen.
-                  </p>
-                  <div className="space-y-2">
-                    {INVESTERING_OPTIES.map((o) => {
-                      const actief = investering === o.id;
+            {stap === "vragen" && (
+              <Reveal richting="fade">
+                <section className="space-y-5">
+                  <div className="text-center space-y-2">
+                    <Tag>{t("vragen.tag", "Stap 2 van 2")}</Tag>
+                    <EditNaast sleutel="vragen.tag" standaard="Stap 2 van 2" hint="Pill" />
+                    <T as="h2" sleutel="vragen.titel" standaard="Hoe herken je dit bij jezelf?" className="text-2xl sm:text-3xl font-extrabold" />
+                    <T as="p" multiline rows={2} sleutel="vragen.sub" standaard="Geen goed of fout, alleen jouw eerlijke gevoel." className="text-sm text-[#6b6450]" />
+                    <div className="mx-auto max-w-xs">
+                      <div className="h-1.5 rounded-full bg-[#e7dcb8] overflow-hidden">
+                        <div className="h-full rounded-full transition-all duration-500" style={{ width: `${(aantal / DARM_VRAGEN.length) * 100}%`, background: GOUD }} />
+                      </div>
+                      <p className="text-[11px] text-[#a0936e] mt-1.5 font-semibold">{aantal} van {DARM_VRAGEN.length}</p>
+                    </div>
+                  </div>
+
+                  {editModusAan && isFounder && (
+                    <div className="rounded-xl border border-amber-300 bg-amber-50/80 p-3 space-y-1">
+                      <p className="text-xs font-bold text-amber-800">✏️ Antwoord-schaal (geldt voor alle vragen)</p>
+                      {([0, 1, 2, 3] as DarmAntwoord[]).map((w) => (
+                        <T key={w} sleutel={`schaal.${w}`} standaard={DARM_SCHAAL_LABELS[w]} as="div" className="text-sm text-[#5a5440]" />
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="space-y-4">
+                    {DARM_VRAGEN.map((v, i) => (
+                      <Reveal key={v.id} richting="up" delay={Math.min(i * 35, 250)}>
+                        <div className="rounded-2xl border border-[#ead8a0]/70 bg-[#fdfaf0] p-4">
+                          <T as="p" multiline rows={2} sleutel={`darm.${v.id}`} standaard={v.tekst} className="text-[15px] text-[#2a2616] mb-3" />
+                          <div className="grid grid-cols-4 gap-1.5">
+                            {([0, 1, 2, 3] as DarmAntwoord[]).map((w) => {
+                              const actief = darm[v.id] === w;
+                              return (
+                                <button
+                                  key={w}
+                                  onClick={() => setDarm((d) => ({ ...d, [v.id]: w }))}
+                                  className="text-[11px] sm:text-xs font-semibold rounded-xl py-2.5 px-1 transition-all active:scale-95"
+                                  style={
+                                    actief
+                                      ? { background: KNOP, color: "#f0e8d2", boxShadow: "0 4px 14px rgba(0,0,0,0.18)" }
+                                      : { background: "#fff", color: "#8a7f5e", border: "1px solid #e7dcb8" }
+                                  }
+                                >
+                                  {t(`schaal.${w}`, DARM_SCHAAL_LABELS[w])}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </Reveal>
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-3 pt-1">
+                    <TerugKnop onClick={() => naar("gegevens")} />
+                    <div className="flex-1">
+                      <GoudKnop onClick={gaNaarDoel} disabled={!alleBeantwoord}>{t("vragen.knop", "Verder")}</GoudKnop>
+                      <EditNaast sleutel="vragen.knop" standaard="Verder" hint="Knop" />
+                    </div>
+                  </div>
+                </section>
+              </Reveal>
+            )}
+
+            {stap === "doel" && (
+              <Reveal richting="fade">
+                <section className="space-y-5">
+                  <div className="text-center space-y-2">
+                    <Tag>{t("doel.tag", "Bijna klaar")}</Tag>
+                    <EditNaast sleutel="doel.tag" standaard="Bijna klaar" hint="Pill" />
+                    <T as="h2" sleutel="doel.titel" standaard="Wat zou je het liefst positief veranderen?" className="text-2xl sm:text-3xl font-extrabold" />
+                    <T as="p" multiline rows={2} sleutel="doel.sub" standaard="Kies wat voor jou speelt. Meerdere mag." className="text-sm text-[#6b6450]" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-2.5">
+                    {DOEL_OPTIES.map((o) => {
+                      const actief = doelen.includes(o.id);
                       return (
                         <button
                           key={o.id}
-                          onClick={() => setInvestering(o.id)}
-                          className="w-full text-sm font-semibold rounded-xl py-3 px-3 text-left transition-all active:scale-[0.99]"
+                          onClick={() =>
+                            setDoelen((d) =>
+                              d.includes(o.id) ? d.filter((x) => x !== o.id) : [...d, o.id],
+                            )
+                          }
+                          className="text-sm font-semibold rounded-xl py-3 px-3 text-left transition-all active:scale-[0.98]"
                           style={
                             actief
                               ? { background: KNOP, color: "#f0e8d2", boxShadow: "0 4px 14px rgba(0,0,0,0.18)" }
                               : { background: "#fff", color: "#5a5440", border: "1px solid #e7dcb8" }
                           }
                         >
-                          {o.label}
+                          {t(`doel.optie.${o.id}`, o.label)}
                         </button>
                       );
                     })}
                   </div>
-                </div>
+                  {editModusAan && isFounder && (
+                    <div className="rounded-xl border border-amber-300 bg-amber-50/80 p-3 space-y-1">
+                      <p className="text-xs font-bold text-amber-800">✏️ Doel-opties</p>
+                      {DOEL_OPTIES.map((o) => (
+                        <T key={o.id} sleutel={`doel.optie.${o.id}`} standaard={o.label} as="div" className="text-sm text-[#5a5440]" />
+                      ))}
+                    </div>
+                  )}
 
-                <div className="flex items-center gap-3 pt-1">
-                  <TerugKnop onClick={() => naar("vragen")} />
-                  <GoudKnop onClick={toonUitkomst} disabled={doelen.length === 0 || !investering}>
-                    Toon mijn advies
-                  </GoudKnop>
-                </div>
-              </section>
-            </Reveal>
-          )}
+                  {doelen.includes("afvallen") && (
+                    <Reveal richting="up">
+                      <div className="rounded-2xl border border-[#ead8a0]/70 bg-[#fdfaf0] p-4 space-y-2.5">
+                        <T as="p" sleutel="afval.titel" standaard="Hoeveel zou je het liefst willen afvallen?" className="text-sm font-semibold text-[#5a5440]" />
+                        <div className="grid grid-cols-2 gap-2">
+                          {AFVAL_OPTIES.map((o) => {
+                            const actief = afvalWens === o.id;
+                            return (
+                              <button
+                                key={o.id}
+                                onClick={() => setAfvalWens(o.id)}
+                                className="text-xs font-semibold rounded-lg py-2.5 px-2 transition-all"
+                                style={
+                                  actief
+                                    ? { background: KNOP, color: "#f0e8d2" }
+                                    : { background: "#fff", color: "#8a7f5e", border: "1px solid #e7dcb8" }
+                                }
+                              >
+                                {t(`afval.optie.${o.id}`, o.label)}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        {editModusAan && isFounder && (
+                          <div className="rounded-lg border border-amber-300 bg-amber-50/80 p-2 space-y-1">
+                            <p className="text-[11px] font-bold text-amber-800">✏️ Afval-opties</p>
+                            {AFVAL_OPTIES.map((o) => (
+                              <T key={o.id} sleutel={`afval.optie.${o.id}`} standaard={o.label} as="div" className="text-xs text-[#5a5440]" />
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </Reveal>
+                  )}
 
-          {stap === "uitkomst" && (
-            <Reveal richting="scale">
-              <section className="space-y-6">
-                <div className="text-center space-y-3">
-                  <Orb emoji="🌿" />
-                  <Tag>Jouw persoonlijke advies</Tag>
-                  <h2 className="text-2xl sm:text-3xl font-extrabold leading-tight">{uitslag.kop}</h2>
-                </div>
-                <div
-                  className="rounded-2xl p-5 sm:p-6 space-y-3.5 text-[15px] leading-relaxed"
-                  style={{ background: "linear-gradient(135deg, #faf5e6 0%, #f0e8d2 100%)", border: "1px solid #ead8a0", color: "#3a3526" }}
-                >
-                  {uitslag.narratief.map((p, i) => (
-                    <p key={i}>{p}</p>
-                  ))}
-                </div>
-                {infoFilmUrl && (
-                  <InfoFilmSpeler
-                    soort={infoFilmSoort}
-                    url={infoFilmUrl}
-                    token={token}
-                    leadEmail={email}
+                  <div className="rounded-2xl border border-[#ead8a0]/70 bg-[#fdfaf0] p-4 space-y-2.5">
+                    <T as="p" sleutel="investering.titel" standaard="Ben je bereid om te investeren in je gezondheid?" className="text-sm font-semibold text-[#5a5440]" />
+                    <T as="p" multiline rows={2} sleutel="investering.sub" standaard="Een eerlijk antwoord helpt, zo weet ik hoe ik je het beste kan helpen." className="text-xs text-[#a0936e]" />
+                    <div className="space-y-2">
+                      {INVESTERING_OPTIES.map((o) => {
+                        const actief = investering === o.id;
+                        return (
+                          <button
+                            key={o.id}
+                            onClick={() => setInvestering(o.id)}
+                            className="w-full text-sm font-semibold rounded-xl py-3 px-3 text-left transition-all active:scale-[0.99]"
+                            style={
+                              actief
+                                ? { background: KNOP, color: "#f0e8d2", boxShadow: "0 4px 14px rgba(0,0,0,0.18)" }
+                                : { background: "#fff", color: "#5a5440", border: "1px solid #e7dcb8" }
+                            }
+                          >
+                            {t(`investering.optie.${o.id}`, o.label)}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {editModusAan && isFounder && (
+                      <div className="rounded-lg border border-amber-300 bg-amber-50/80 p-2 space-y-1">
+                        <p className="text-[11px] font-bold text-amber-800">✏️ Investerings-opties</p>
+                        {INVESTERING_OPTIES.map((o) => (
+                          <T key={o.id} sleutel={`investering.optie.${o.id}`} standaard={o.label} as="div" className="text-xs text-[#5a5440]" />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-3 pt-1">
+                    <TerugKnop onClick={() => naar("vragen")} />
+                    <div className="flex-1">
+                      <GoudKnop onClick={toonUitkomst} disabled={doelen.length === 0 || !investering}>{t("doel.knop", "Toon mijn advies")}</GoudKnop>
+                      <EditNaast sleutel="doel.knop" standaard="Toon mijn advies" hint="Knop" />
+                    </div>
+                  </div>
+                </section>
+              </Reveal>
+            )}
+
+            {stap === "uitkomst" && (
+              <Reveal richting="scale">
+                <section className="space-y-6">
+                  <div className="text-center space-y-3">
+                    <Orb emoji="🌿" />
+                    <Tag>{t("uitkomst.tag", "Jouw persoonlijke advies")}</Tag>
+                    <EditNaast sleutel="uitkomst.tag" standaard="Jouw persoonlijke advies" hint="Pill" />
+                    <h2 className="text-2xl sm:text-3xl font-extrabold leading-tight">{uitslag.kop}</h2>
+                  </div>
+                  <div
+                    className="rounded-2xl p-5 sm:p-6 space-y-3.5 text-[15px] leading-relaxed"
+                    style={{ background: "linear-gradient(135deg, #faf5e6 0%, #f0e8d2 100%)", border: "1px solid #ead8a0", color: "#3a3526" }}
+                  >
+                    {uitslag.narratief.map((p, i) => (
+                      <p key={i}>{p}</p>
+                    ))}
+                  </div>
+                  {editModusAan && isFounder && (
+                    <div className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-xs text-amber-800">
+                      De uitkomst-teksten zijn opgebouwd uit losse bouwstenen
+                      (per doel, per score). Die worden binnenkort hier
+                      bewerkbaar (stap 2).
+                    </div>
+                  )}
+                  {infoFilmUrl && (
+                    <InfoFilmSpeler
+                      soort={infoFilmSoort}
+                      url={infoFilmUrl}
+                      token={token}
+                      leadEmail={email}
+                    />
+                  )}
+                  <div>
+                    <GoudKnop onClick={vraagContact} disabled={bezig}>
+                      {bezig ? "Bezig..." : t("uitkomst.knop", "Ja, kijk persoonlijk met me mee")}
+                    </GoudKnop>
+                    <EditNaast sleutel="uitkomst.knop" standaard="Ja, kijk persoonlijk met me mee" hint="Knop" />
+                  </div>
+                </section>
+              </Reveal>
+            )}
+
+            {stap === "bedankt" && (
+              <Reveal richting="scale">
+                <section className="text-center space-y-4 py-2">
+                  <Orb emoji="🌱" />
+                  <T as="h2" sleutel="bedankt.titel" standaard="Fijn, ik neem snel contact met je op" className="text-2xl sm:text-3xl font-extrabold" />
+                  <T
+                    as="p"
+                    multiline
+                    rows={3}
+                    sleutel="bedankt.body"
+                    standaard="Dankjewel, {naam}. Ik kijk persoonlijk even met je mee, zodat je de start kunt kiezen die het beste bij je past. Tot snel."
+                    vars={{ naam: voornaam.trim() || "fijn dat je er was" }}
+                    className="text-[15px] leading-relaxed text-[#3a3526] max-w-md mx-auto"
                   />
-                )}
-                <GoudKnop onClick={vraagContact} disabled={bezig}>
-                  {bezig ? "Bezig..." : "Ja, kijk persoonlijk met me mee"}
-                </GoudKnop>
-              </section>
-            </Reveal>
-          )}
+                </section>
+              </Reveal>
+            )}
+          </div>
 
-          {stap === "bedankt" && (
-            <Reveal richting="scale">
-              <section className="text-center space-y-4 py-2">
-                <Orb emoji="🌱" />
-                <h2 className="text-2xl sm:text-3xl font-extrabold">Fijn, ik neem snel contact met je op</h2>
-                <p className="text-[15px] leading-relaxed text-[#3a3526] max-w-md mx-auto">
-                  Dankjewel, {voornaam.trim() || "fijn dat je er was"}. Ik kijk persoonlijk even met je mee, zodat je de start kunt kiezen die het beste bij je past. Tot snel.
-                </p>
-              </section>
-            </Reveal>
-          )}
+          <div className="text-center mt-5">
+            <T
+              as="p"
+              sleutel="footer.klaargezet"
+              standaard="Klaargezet door {naam} en het team"
+              vars={{ naam: memberVoornaam }}
+              className="text-[11px] text-[#a0936e] tracking-wide"
+            />
+          </div>
         </div>
-
-        <p className="text-center text-[11px] text-[#a0936e] mt-5 tracking-wide">
-          Klaargezet door {memberVoornaam} en het team
-        </p>
       </div>
-    </div>
+    </FreebieCtx.Provider>
   );
 }
 
@@ -504,14 +676,16 @@ function TerugKnop({ onClick }: { onClick: () => void }) {
 }
 
 function Veld({
-  label,
+  labelSleutel,
+  labelStandaard,
   sub,
   value,
   onChange,
   type = "text",
   placeholder,
 }: {
-  label: string;
+  labelSleutel: string;
+  labelStandaard: string;
   sub?: string;
   value: string;
   onChange: (v: string) => void;
@@ -520,9 +694,10 @@ function Veld({
 }) {
   return (
     <div>
-      <label className="block text-[13px] font-semibold text-[#5a5440] mb-1.5">
-        {label} {sub && <span className="font-normal text-[#a0936e]">· {sub}</span>}
-      </label>
+      <div className="text-[13px] font-semibold text-[#5a5440] mb-1.5">
+        <T as="span" sleutel={labelSleutel} standaard={labelStandaard} />
+        {sub && <span className="font-normal text-[#a0936e]"> · {sub}</span>}
+      </div>
       <input
         type={type}
         value={value}
