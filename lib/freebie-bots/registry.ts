@@ -82,6 +82,18 @@ const BOT_REGISTRY: Partial<Record<BotSlug, BotConfig>> = {
     coreOnly: false,
     type: "score",
   },
+  "jouw-gezonde-start": {
+    slug: "jouw-gezonde-start",
+    titel: "Jouw gezonde start",
+    ondertitel:
+      "Korte check (darm-signalen) met een persoonlijk start-advies en de warme route naar een gesprek",
+    beschrijving:
+      "Algemene podcast-freebie: welkomstfilm + gegevens + korte darm-vragenlijst → advies welk programma een fijne start is (Darmen in Balans / +), met de Reset als grotere reis. Altijd een route, en persoonlijk meekijken via de contact-knop. Nu alleen voor founders + Sandy; later vrij te geven.",
+    triggerVoorbeeld: "START",
+    iconEmoji: "🌱",
+    coreOnly: false,
+    type: "score",
+  },
   "reset-check": {
     slug: "reset-check",
     titel: "Klopt de Reset bij jou?",

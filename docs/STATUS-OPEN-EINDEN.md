@@ -31,8 +31,11 @@ Laatst bijgewerkt: 2026-06-23
 
 ## 🎬 Podcast-funnel (Sandy) — in wording
 - **Welkomstfilm-script** gemaakt: `docs/scripts/welkomstfilmpje-sandy.md` (claimvrij, ± 3 min). Wacht op: Sandy vult persoonlijke stukjes in + neemt op.
-- **Podcast-freebie** (de verkorte versie): ONTWERP klaar → `docs/superpowers/specs/2026-06-23-podcast-freebie-design.md`. WACHT OP RAOUL'S GO + keuzes (slug, doel-vraag, medisch-niet-opslaan, uitkomst-focus). Daarna bouwen in 3 fasen.
-- Darm-vragen → kuur-score (Darm in balans / plus) hergebruikt; medisch NIET opslaan (AVG); contact-knop + video-watch → warm-trigger.
+- **Podcast-freebie "Jouw gezonde start"** (algemene freebie): spec in `docs/superpowers/specs/2026-06-23-podcast-freebie-design.md`.
+  - ✅ **Fase 1 GEBOUWD + live** (te testen): mooie link `/jouw-gezonde-start` → flow (welkom-film-slot → gegevens e-mail+tel verplicht, IG/FB optioneel → darm-vragen → advies-uitkomst Darm in Balans / + → contact-knop). Komt in namenlijst + contact-knop = warm-trigger. Nu founder-token als placeholder (later Sandy).
+  - ⏳ Fase 2: eigen welkomstfilm per lid (YouTube/Vimeo-link + computer-upload via Supabase Storage) + algemene default + wegklikken/vervangen.
+  - ⏳ Fase 3: doel-vraag + afval-routing + medische check (opslaan + 30d-wis) + info-film + video-watch-trigger.
+  - ⏳ Fase 4: vrijgave voor iedereen (+ zichtbaarheid in tracking-links, nu nog niet zichtbaar voor leden).
 
 ## ⏸️ Bewust geparkeerd (geen los eindje, later met opzet)
 - **Filter-per-freebie** op de namenlijst ("laat me alleen leads van freebie X zien" + bulk-actie). Spec: docs/superpowers/specs/2026-06-23-freebie-funnel-warm-trigger-design.md

@@ -116,8 +116,11 @@ waar passend (zij heet welkom).
   vragen + darm-advies-uitkomst (altijd-een-route + Sandy/lid kijkt mee) +
   contact-knop. Zichtbaarheid: founders + Sandy. Welkomstfilm: placeholder-slot
   (komt in fase 2).
-- **Fase 2 (de nieuwe infra):** video-upload-vanaf-computer (Supabase Storage):
-  algemene welkomstfilm + per-lid eigen film (vervangen/wegklikken).
+- **Fase 2 (de nieuwe infra):** eigen welkomstfilm per lid via MEERDERE opties
+  (kostenbewust, Raoul 2026-06-23): YouTube-link + Vimeo-link (gratis
+  bandbreedte) + direct uploaden vanaf computer (Supabase Storage, voor wie geen
+  YouTube/Vimeo heeft). Zo draagt Supabase alleen de paar directe uploads, niet
+  alle views. Plus de algemene default-film + vervangen/wegklikken.
 - **Fase 3:** doel-vraag + afval-routing + medische zelf-check (opslaan + 30d-wis)
   + rijkere uitkomst (darm + Reset) + informatie-film + video-watch-trigger.
 - **Fase 4:** vrijgave voor iedereen (flag op true).

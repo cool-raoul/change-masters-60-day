@@ -58,6 +58,9 @@ export async function updateSession(request: NextRequest) {
     // Holistic Reset persoonlijke check — landing voor podcast/socials,
     // redirect naar /bot/reset-check/<founder-token>.
     "/reset-check",
+    // "Jouw gezonde start" — mooie podcast-link, redirect naar
+    // /bot/jouw-gezonde-start/<token>.
+    "/jouw-gezonde-start",
     // Per-member token-routes voor de score-bots (energie-en-focus,
     // hormonen-en-overgang, reset-check). Prospects vullen 'm in zonder
     // account, lead komt in pijplijn van de member.
