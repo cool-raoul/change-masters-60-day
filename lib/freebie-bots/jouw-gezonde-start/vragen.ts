@@ -68,3 +68,19 @@ export const DOEL_ASPIRATIE: Record<DoelId, string> = {
   huid: "frisser, met een huid die meer straalt",
   anders: "lichter en meer in balans",
 };
+
+// Investerings-bereidheid → bepaalt mede of een lead warm, lauw of koud is
+// (zelfde idee als de reset-check). Eerlijk antwoord stuurt de opvolging.
+export type InvesteringId = "nee" | "misschien" | "altijd";
+
+export const INVESTERING_OPTIES: { id: InvesteringId; label: string }[] = [
+  { id: "nee", label: "Nee, op dit moment nog niet" },
+  { id: "misschien", label: "Misschien, het hangt er een beetje van af" },
+  { id: "altijd", label: "Ja, dat doe ik sowieso al voor mezelf 🌱" },
+];
+
+export const INVESTERING_LABEL: Record<InvesteringId, string> = {
+  nee: "nu nog niet",
+  misschien: "misschien, hangt ervan af",
+  altijd: "ja, doet dat al voor zichzelf",
+};

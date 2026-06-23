@@ -12,9 +12,14 @@ import { bouwGezondeStartUitkomst } from "@/lib/freebie-bots/jouw-gezonde-start/
 import {
   DOEL_OPTIES,
   AFVAL_OPTIES,
+  INVESTERING_OPTIES,
+  INVESTERING_LABEL,
+  afvalVraagtReset,
   type DoelId,
   type AfvalId,
+  type InvesteringId,
 } from "@/lib/freebie-bots/jouw-gezonde-start/vragen";
+import { bouwGezondeStartHeat } from "@/lib/freebie-bots/jouw-gezonde-start/heat";
 
 // ============================================================
 // "Jouw gezonde start" — clientflow (fase 1).
@@ -63,6 +68,7 @@ export function GezondeStartFlow({
   const [darm, setDarm] = useState<Record<string, DarmAntwoord>>({});
   const [doelen, setDoelen] = useState<DoelId[]>([]);
   const [afvalWens, setAfvalWens] = useState<AfvalId | null>(null);
+  const [investering, setInvestering] = useState<InvesteringId | null>(null);
   const [bezig, setBezig] = useState(false);
   const optInGedaanRef = useRef(false);
 
@@ -73,6 +79,13 @@ export function GezondeStartFlow({
     doelen,
     afvalWens,
     voornaam,
+  });
+  const heat = bouwGezondeStartHeat({
+    darmTotaal: uitslag.totaal,
+    darmMax: uitslag.max,
+    doelenCount: doelen.length,
+    afvalReset: afvalVraagtReset(afvalWens),
+    investering,
   });
 
   function naar(s: Stap) {
@@ -106,8 +119,11 @@ export function GezondeStartFlow({
             darmBucket: uitslag.bucket,
             doelen,
             afvalWens,
+            investering,
+            warmte: heat.categorie,
+            warmteScore: heat.score,
           },
-          spiegelTekst: `🌱 Jouw gezonde start\nDoel: ${doelen.map((d) => DOEL_OPTIES.find((o) => o.id === d)?.label).filter(Boolean).join(", ") || "-"}\nDarm-score: ${uitslag.totaal}/${uitslag.max} → advies: ${uitslag.programmaLabel}`,
+          spiegelTekst: `🌱 Jouw gezonde start\n${heat.label} (warmte ${heat.score}/10)\nInvesteren in gezondheid: ${investering ? INVESTERING_LABEL[investering] : "?"}\nDoel: ${doelen.map((d) => DOEL_OPTIES.find((o) => o.id === d)?.label).filter(Boolean).join(", ") || "-"}\nDarm-score: ${uitslag.totaal}/${uitslag.max} → advies: ${uitslag.programmaLabel}`,
           contactGewenst: false,
           herkomstInstagram: instagram.trim().replace(/^@/, "") || null,
           herkomstFacebook: facebook.trim() || null,
@@ -126,6 +142,7 @@ export function GezondeStartFlow({
 
   function toonUitkomst() {
     if (doelen.length === 0) return toast.error("Kies nog even waar je naar verlangt.");
+    if (!investering) return toast.error("Beantwoord nog even de laatste vraag.");
     void vangProspect();
     naar("uitkomst");
   }
@@ -316,9 +333,39 @@ export function GezondeStartFlow({
                     </div>
                   </Reveal>
                 )}
+
+                <div className="rounded-2xl border border-[#ead8a0]/70 bg-[#fdfaf0] p-4 space-y-2.5">
+                  <p className="text-sm font-semibold text-[#5a5440]">
+                    Ben je bereid om te investeren in je gezondheid?
+                  </p>
+                  <p className="text-xs text-[#a0936e] -mt-1">
+                    Een eerlijk antwoord helpt, zo weet ik hoe ik je het beste kan
+                    helpen.
+                  </p>
+                  <div className="space-y-2">
+                    {INVESTERING_OPTIES.map((o) => {
+                      const actief = investering === o.id;
+                      return (
+                        <button
+                          key={o.id}
+                          onClick={() => setInvestering(o.id)}
+                          className="w-full text-sm font-semibold rounded-xl py-3 px-3 text-left transition-all active:scale-[0.99]"
+                          style={
+                            actief
+                              ? { background: KNOP, color: "#f0e8d2", boxShadow: "0 4px 14px rgba(0,0,0,0.18)" }
+                              : { background: "#fff", color: "#5a5440", border: "1px solid #e7dcb8" }
+                          }
+                        >
+                          {o.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
                 <div className="flex items-center gap-3 pt-1">
                   <TerugKnop onClick={() => naar("vragen")} />
-                  <GoudKnop onClick={toonUitkomst} disabled={doelen.length === 0}>
+                  <GoudKnop onClick={toonUitkomst} disabled={doelen.length === 0 || !investering}>
                     Toon mijn advies
                   </GoudKnop>
                 </div>
