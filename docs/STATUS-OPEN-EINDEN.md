@@ -29,6 +29,12 @@ Laatst bijgewerkt: 2026-06-23
 - [ ] Herstelmail markeren als "geen ongewenste e-mail" (+ pilot-team vragen)
 - [ ] VSCode/Claude Code openen in `C:\Users\raoul\projects\change-masters`; oude OneDrive-map weggooien zodra alles goed voelt
 
+## 🎬 Podcast-funnel (Sandy) — in wording
+- **Welkomstfilm-script** gemaakt: `docs/scripts/welkomstfilmpje-sandy.md` (claimvrij, ± 3 min)
+- Wacht op: Sandy vult haar persoonlijke stukjes in + neemt op
+- Raoul maakt een aparte VERKORTE vragenlijst-/info-versie (NIET de bestaande Reset-freebie)
+- Daarna: filmpje + verkorte versie koppelen als de podcast-landing
+
 ## ⏸️ Bewust geparkeerd (geen los eindje, later met opzet)
 - **Filter-per-freebie** op de namenlijst ("laat me alleen leads van freebie X zien" + bulk-actie). Spec: docs/superpowers/specs/2026-06-23-freebie-funnel-warm-trigger-design.md
 - **Mini-ELEVA video-auto-trigger voor niet-YouTube** (Vimeo e.d.): nu alleen YouTube. Raoul embedt via YouTube, dus geen blokker.
