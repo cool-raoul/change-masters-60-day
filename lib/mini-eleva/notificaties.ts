@@ -18,7 +18,8 @@ type NotificatieType =
   | "eerste-bezoek"
   | "haal-erbij"
   | "mijlpaal-vragen"
-  | "mentor-bezoek";
+  | "mentor-bezoek"
+  | "film-bekeken";
 
 type Args = {
   invitationId: string;

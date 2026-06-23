@@ -2,6 +2,7 @@ import { pakMiniElevaContext, logActiviteit } from "@/lib/mini-eleva/helpers";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { normaliseerNaarEmbed } from "@/lib/films/embed";
 import { Reveal } from "@/components/ui/Reveal";
+import { MiniElevaFilm } from "@/components/mini-eleva/MiniElevaFilm";
 import Link from "next/link";
 
 // ============================================================
@@ -109,26 +110,12 @@ export default async function WelkomPagina({
       {/* Start-film uit het Films-CMS, passend bij het spoor */}
       {embedUrl && film && (
         <Reveal herhaal delay={200} richting="scale">
-        <div className="card space-y-3">
-          <h2 className="text-cm-gold text-sm font-semibold flex items-center gap-2">
-            🎬 Een goed begin: deze korte film
-          </h2>
-          <div className="aspect-video bg-black rounded-lg overflow-hidden border border-cm-border">
-            <iframe
-              src={embedUrl}
-              className="w-full h-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              loading="lazy"
-              title={film.titel}
-            />
-          </div>
-          {film.beschrijving && (
-            <p className="text-cm-white/60 text-xs leading-relaxed">
-              {film.beschrijving}
-            </p>
-          )}
-        </div>
+          <MiniElevaFilm
+            token={params.token}
+            embedUrl={embedUrl}
+            titel={film.titel}
+            beschrijving={film.beschrijving}
+          />
         </Reveal>
       )}
 
