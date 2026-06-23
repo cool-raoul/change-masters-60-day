@@ -4,8 +4,10 @@
 // Leads komen automatisch in de pijplijn van het lid (/namenlijst).
 
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import type { Metadata } from "next";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 import { haalPaginaBlokken, type Blok } from "@/lib/cms/pagina-blokken";
 import { EditModeProvider } from "@/components/cms/EditModeContext";
 import { EditModeToggle } from "@/components/cms/EditModeToggle";
@@ -58,6 +60,15 @@ export default async function GezondeStartTokenPagina({
     ((profile?.full_name ?? "") as string).split(" ")[0] || "iemand";
   const isFounder = (profile as { role?: string } | null)?.role === "founder";
 
+  // Is de ingelogde bezoeker de eigenaar van deze freebie (lid/founder)? Dan
+  // tonen we een knop om de welkomstfilm in te stellen. Prospects (niet
+  // ingelogd) zien alleen de film.
+  const sessieClient = await createClient();
+  const {
+    data: { user: ingelogd },
+  } = await sessieClient.auth.getUser();
+  const isEigenaar = !!ingelogd && ingelogd.id === row.member_id;
+
   // Welkomstfilm: eigen film van dit lid, anders de algemene default
   // (= de welkomstfilm van het default-account / de podcast-landing).
   let welkomSoort =
@@ -89,7 +100,19 @@ export default async function GezondeStartTokenPagina({
   const blokkenMap = await haalPaginaBlokken(supabase, NAMESPACE, PAGINA_ID);
   const infoBlokken = blokkenMap.get("info") ?? [];
 
-  const welkomFilm = <WelkomstfilmSpeler soort={welkomSoort} url={welkomUrl} />;
+  const welkomFilm = (
+    <div className="space-y-2">
+      <WelkomstfilmSpeler soort={welkomSoort} url={welkomUrl} />
+      {isEigenaar && (
+        <Link
+          href="/instellingen/welkomstfilm"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#8a6d1f] hover:text-[#5a4710] transition-colors"
+        >
+          ✏️ Welkomstfilm instellen of wijzigen →
+        </Link>
+      )}
+    </div>
+  );
 
   const infoFilm = (
     <MediaSlot
