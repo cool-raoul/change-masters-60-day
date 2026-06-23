@@ -3,6 +3,7 @@
 import { useRef, useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { Reveal } from "@/components/ui/Reveal";
+import { InfoFilmSpeler } from "@/components/freebies/InfoFilmSpeler";
 import {
   DARM_VRAGEN,
   DARM_SCHAAL_LABELS,
@@ -51,12 +52,14 @@ export function GezondeStartFlow({
   token,
   memberVoornaam,
   welkomFilm,
-  infoFilm,
+  infoFilmSoort,
+  infoFilmUrl,
 }: {
   token: string;
   memberVoornaam: string;
   welkomFilm: ReactNode;
-  infoFilm: ReactNode;
+  infoFilmSoort: string | null;
+  infoFilmUrl: string | null;
 }) {
   const [stap, setStap] = useState<Stap>("welkom");
   const [voornaam, setVoornaam] = useState("");
@@ -389,7 +392,14 @@ export function GezondeStartFlow({
                     <p key={i}>{p}</p>
                   ))}
                 </div>
-                {infoFilm}
+                {infoFilmUrl && (
+                  <InfoFilmSpeler
+                    soort={infoFilmSoort}
+                    url={infoFilmUrl}
+                    token={token}
+                    leadEmail={email}
+                  />
+                )}
                 <GoudKnop onClick={vraagContact} disabled={bezig}>
                   {bezig ? "Bezig..." : "Ja, kijk persoonlijk met me mee"}
                 </GoudKnop>

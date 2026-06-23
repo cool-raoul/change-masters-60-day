@@ -122,18 +122,15 @@ export default async function GezondeStartTokenPagina({
     </div>
   );
 
-  // Informatiefilm: alleen tonen als de founder er één heeft ingesteld.
-  // Prospects zien geen lege placeholder.
-  const infoFilm = infoUrl ? (
-    <WelkomstfilmSpeler soort={infoSoort} url={infoUrl} />
-  ) : null;
-
+  // Informatiefilm: alleen tonen als de founder er één heeft ingesteld
+  // (de flow rendert 'm watch-aware en vuurt de "film-bekeken"-trigger).
   return (
     <GezondeStartFlow
       token={token}
       memberVoornaam={memberVoornaam}
       welkomFilm={welkomFilm}
-      infoFilm={infoFilm}
+      infoFilmSoort={infoSoort}
+      infoFilmUrl={infoUrl}
     />
   );
 }
