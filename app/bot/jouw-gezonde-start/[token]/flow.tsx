@@ -3,6 +3,7 @@
 import {
   createContext,
   useContext,
+  useEffect,
   useRef,
   useState,
   type ReactNode,
@@ -195,9 +196,31 @@ export function GezondeStartFlow({
 
   function naar(s: Stap) {
     setStap(s);
-    if (typeof window !== "undefined")
+    if (typeof window !== "undefined") {
+      window.history.pushState({ gezondeStartStap: s }, "");
       window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   }
+
+  function terug() {
+    if (typeof window !== "undefined") window.history.back();
+  }
+
+  // Browser-terug (en de in-page terug-knoppen) gaan één stap terug in de flow,
+  // met behoud van wat al is ingevuld, in plaats van de pagina te verlaten.
+  useEffect(() => {
+    window.history.replaceState({ gezondeStartStap: "welkom" }, "");
+    function onPop(e: PopStateEvent) {
+      const s = (e.state as { gezondeStartStap?: Stap } | null)
+        ?.gezondeStartStap;
+      if (s) {
+        setStap(s);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
 
   // Founder-preview: vul een representatief voorbeeld en spring naar de uitslag
   // om de bouwsteen-teksten te kunnen bewerken.
@@ -386,7 +409,7 @@ export function GezondeStartFlow({
                     </a>
                   </div>
                   <div className="flex items-center gap-3 pt-1">
-                    <TerugKnop onClick={() => naar("doel")} />
+                    <TerugKnop onClick={terug} />
                     <div className="flex-1">
                       <GoudKnop onClick={bekijkUitslag}>{t("gegevens.knop", "Bekijk mijn uitslag")}</GoudKnop>
                       <EditNaast sleutel="gegevens.knop" standaard="Bekijk mijn uitslag" hint="Knop" />
@@ -450,7 +473,7 @@ export function GezondeStartFlow({
                     ))}
                   </div>
                   <div className="flex items-center gap-3 pt-1">
-                    <TerugKnop onClick={() => naar("welkom")} />
+                    <TerugKnop onClick={terug} />
                     <div className="flex-1">
                       <GoudKnop onClick={gaNaarDoel} disabled={!alleBeantwoord}>{t("vragen.knop", "Verder")}</GoudKnop>
                       <EditNaast sleutel="vragen.knop" standaard="Verder" hint="Knop" />
@@ -569,7 +592,7 @@ export function GezondeStartFlow({
                   </div>
 
                   <div className="flex items-center gap-3 pt-1">
-                    <TerugKnop onClick={() => naar("vragen")} />
+                    <TerugKnop onClick={terug} />
                     <div className="flex-1">
                       <GoudKnop onClick={gaNaarGegevens} disabled={doelen.length === 0 || !investering}>{t("doel.knop", "Verder")}</GoudKnop>
                       <EditNaast sleutel="doel.knop" standaard="Verder" hint="Knop" />
@@ -582,6 +605,12 @@ export function GezondeStartFlow({
             {stap === "uitkomst" && (
               <Reveal richting="scale">
                 <section className="space-y-6">
+                  <button
+                    onClick={terug}
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-[#8a7f5e] hover:text-[#5a4710] transition-colors"
+                  >
+                    ← Terug
+                  </button>
                   <div className="text-center space-y-3">
                     <Orb emoji="🌿" />
                     <Tag>{t("uitkomst.tag", "Jouw persoonlijke advies")}</Tag>
