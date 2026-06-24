@@ -287,8 +287,8 @@ export const t: Vertalingen = {
     pt: "N\u00e3o foi poss\u00edvel salvar. Tente novamente ou solicite um novo link.",
   },
   "login.subtitel": {
-    nl: "Project Meer Tijd en Vrijheid", en: "Project More Time and Freedom", fr: "Projet Plus de Temps et de Libert\u00e9",
-    es: "Proyecto M\u00e1s Tiempo y Libertad", de: "Projekt Mehr Zeit und Freiheit", pt: "Projeto Mais Tempo e Liberdade",
+    nl: "Het AI-driven systeem om te groeien in Gezondheid, Gezamenlijkheid & Gezonde financi\u00ebn!", en: "The AI-driven system to grow in Health, Togetherness & Healthy finances!", fr: "Le syst\u00e8me bas\u00e9 sur l'IA pour grandir en Sant\u00e9, Communaut\u00e9 & Finances saines !",
+    es: "El sistema impulsado por IA para crecer en Salud, Comunidad y Finanzas sanas", de: "Das KI-gest\u00fctzte System f\u00fcr Wachstum in Gesundheit, Gemeinschaft & gesunden Finanzen", pt: "O sistema baseado em IA para crescer em Sa\u00fade, Comunidade e Finan\u00e7as saud\u00e1veis",
   },
 
   // ===== SIDEBAR NAVIGATIE =====
