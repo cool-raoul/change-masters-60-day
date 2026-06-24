@@ -41,7 +41,8 @@ Laatst bijgewerkt: 2026-06-23
     - **Investerings-vraag** ("Ben je bereid te investeren in je gezondheid?", nee/misschien/altijd) → warm/lauw/koud-signaal in de spiegel-notitie op de prospect-kaart.
     - **Watch-trigger op de informatiefilm** (YouTube/Vimeo/upload): ~90% of einde → prospect naar Opvolgen + herinnering + push naar het lid (eenmalig).
     - **Founder-edit voor álle teksten** (voor iedereen, via "✍️ Founder"-toggle + tekst_overrides): de hele flow (welkom, 15 testvragen, antwoord-schaal, doel-/afval-/investerings-vraag + opties, knoppen, labels, bedankt, footer) ÉN de uitslag-bouwstenen (koppen, herkenning per score, verlangen, social-proof, programma-/reset-zinnen, afsluiter, per-doel-zinnen). Founder-ingang "✏️ Teksten aanpassen" in Mijn freebies; in edit-modus een "Spring naar de uitslag"-knop + bouwsteen-paneel. Werkt voor Raoul + Gaby (beiden founder).
-  - ⏳ Fase 3b rest: medische zelf-check (opslaan + 30-dagen-wis, contra-indicaties voor het gesprek).
+    - **Lage-drempel-flow + AVG**: volgorde omgedraaid (eerst de check, pas daarna naam + e-mail om de uitslag te zien; telefoon pas bij "kijk persoonlijk mee"). AVG-privacyzin onder het formulier + echte **/privacybeleid**-pagina, gelinkt vanuit de freebie. YouTube-embed met rel=0 (geen vreemde filmpjes na afloop).
+  - ⏳ Fase 3b rest: medische zelf-check (opslaan + 30-dagen-wis). Privacybeleid: officiële verantwoordelijke + contact-gegevens (bedrijfsnaam/e-mail/evt. KvK) nog door Raoul te bevestigen.
   - ⏳ Fase 4: vrijgave voor iedereen (nu nog founder + Sandy via pre-release-gate).
 
 ## ⏸️ Bewust geparkeerd (geen los eindje, later met opzet)

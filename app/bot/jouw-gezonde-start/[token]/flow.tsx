@@ -55,9 +55,9 @@ type Stap = "welkom" | "gegevens" | "vragen" | "doel" | "uitkomst" | "bedankt";
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 const STAP_NR: Record<Stap, number> = {
   welkom: 1,
-  gegevens: 2,
-  vragen: 3,
-  doel: 4,
+  vragen: 2,
+  doel: 3,
+  gegevens: 4,
   uitkomst: 5,
   bedankt: 5,
 };
@@ -210,12 +210,13 @@ export function GezondeStartFlow({
     naar("uitkomst");
   }
 
-  function gaNaarVragen() {
+  function bekijkUitslag() {
     if (!voornaam.trim() || !achternaam.trim())
       return toast.error("Vul je voor- en achternaam in.");
     if (!EMAIL_RE.test(email))
       return toast.error("Vul een geldig e-mailadres in.");
-    naar("vragen");
+    void vangProspect();
+    naar("uitkomst");
   }
 
   async function vangProspect() {
@@ -258,13 +259,12 @@ export function GezondeStartFlow({
     naar("doel");
   }
 
-  function toonUitkomst() {
+  function gaNaarGegevens() {
     if (doelen.length === 0)
       return toast.error("Kies nog even waar je naar verlangt.");
     if (!investering)
       return toast.error("Beantwoord nog even de laatste vraag.");
-    void vangProspect();
-    naar("uitkomst");
+    naar("gegevens");
   }
 
   async function vraagContact() {
@@ -334,7 +334,7 @@ export function GezondeStartFlow({
                     <T as="p" multiline rows={3} sleutel="welkom.p2" standaard="Daarna kijk ik graag samen met jou wat echt bij je past. Helemaal vrijblijvend, en op je eigen tempo." />
                   </div>
                   <div>
-                    <GoudKnop onClick={() => naar("gegevens")}>{t("welkom.knop", "Ja, ik wil de check doen")}</GoudKnop>
+                    <GoudKnop onClick={() => naar("vragen")}>{t("welkom.knop", "Ja, ik wil de check doen")}</GoudKnop>
                     <EditNaast sleutel="welkom.knop" standaard="Ja, ik wil de check doen" hint="Tekst op de knop" />
                   </div>
                 </section>
@@ -345,10 +345,10 @@ export function GezondeStartFlow({
               <Reveal richting="fade">
                 <section className="space-y-5">
                   <div className="text-center space-y-2">
-                    <Tag>{t("gegevens.tag", "Stap 1 van 2")}</Tag>
-                    <EditNaast sleutel="gegevens.tag" standaard="Stap 1 van 2" hint="Pill" />
-                    <T as="h2" sleutel="gegevens.titel" standaard="Vertel me even kort wie je bent" className="text-2xl sm:text-3xl font-extrabold" />
-                    <T as="p" multiline rows={2} sleutel="gegevens.sub" standaard="Zo kan ik je je uitkomst sturen en, als je dat fijn vindt, persoonlijk met je meekijken." className="text-sm text-[#6b6450]" />
+                    <Tag>{t("gegevens.tag", "Laatste stap")}</Tag>
+                    <EditNaast sleutel="gegevens.tag" standaard="Laatste stap" hint="Pill" />
+                    <T as="h2" sleutel="gegevens.titel" standaard="Wil je je persoonlijke uitslag zien?" className="text-2xl sm:text-3xl font-extrabold" />
+                    <T as="p" multiline rows={2} sleutel="gegevens.sub" standaard="Laat je naam en e-mail achter, dan laat ik 'm je meteen zien en stuur ik 'm je ook toe." className="text-sm text-[#6b6450]" />
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <Veld labelSleutel="gegevens.label.voornaam" labelStandaard="Voornaam" value={voornaam} onChange={setVoornaam} />
@@ -359,20 +359,30 @@ export function GezondeStartFlow({
                     <Veld labelSleutel="gegevens.label.instagram" labelStandaard="Instagram" sub="optioneel" value={instagram} onChange={setInstagram} placeholder="@jouwnaam" />
                     <Veld labelSleutel="gegevens.label.facebook" labelStandaard="Facebook" sub="optioneel" value={facebook} onChange={setFacebook} placeholder="je naam of link" />
                   </div>
-                  <T
-                    as="p"
-                    multiline
-                    rows={3}
-                    sleutel="gegevens.privacy"
-                    standaard="Je gegevens komen alleen bij {naam} terecht, om je je uitkomst te sturen en het persoonlijk met je af te stemmen. We delen niks met derden en je kunt je altijd afmelden."
-                    vars={{ naam: memberVoornaam }}
-                    className="text-[11px] text-[#a0936e] leading-relaxed"
-                  />
+                  <div className="space-y-1">
+                    <T
+                      as="p"
+                      multiline
+                      rows={3}
+                      sleutel="gegevens.privacy"
+                      standaard="Je gegevens komen alleen bij {naam} terecht, om je je uitkomst te sturen en het persoonlijk met je af te stemmen. We delen niks met derden en je kunt je altijd afmelden."
+                      vars={{ naam: memberVoornaam }}
+                      className="text-[11px] text-[#a0936e] leading-relaxed"
+                    />
+                    <a
+                      href="/privacybeleid"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block text-[11px] underline text-[#8a7f5e] hover:text-[#5a4710]"
+                    >
+                      Lees ons privacybeleid
+                    </a>
+                  </div>
                   <div className="flex items-center gap-3 pt-1">
-                    <TerugKnop onClick={() => naar("welkom")} />
+                    <TerugKnop onClick={() => naar("doel")} />
                     <div className="flex-1">
-                      <GoudKnop onClick={gaNaarVragen}>{t("gegevens.knop", "Verder naar de check")}</GoudKnop>
-                      <EditNaast sleutel="gegevens.knop" standaard="Verder naar de check" hint="Knop" />
+                      <GoudKnop onClick={bekijkUitslag}>{t("gegevens.knop", "Bekijk mijn uitslag")}</GoudKnop>
+                      <EditNaast sleutel="gegevens.knop" standaard="Bekijk mijn uitslag" hint="Knop" />
                     </div>
                   </div>
                 </section>
@@ -383,8 +393,8 @@ export function GezondeStartFlow({
               <Reveal richting="fade">
                 <section className="space-y-5">
                   <div className="text-center space-y-2">
-                    <Tag>{t("vragen.tag", "Stap 2 van 2")}</Tag>
-                    <EditNaast sleutel="vragen.tag" standaard="Stap 2 van 2" hint="Pill" />
+                    <Tag>{t("vragen.tag", "De check")}</Tag>
+                    <EditNaast sleutel="vragen.tag" standaard="De check" hint="Pill" />
                     <T as="h2" sleutel="vragen.titel" standaard="Hoe herken je dit bij jezelf?" className="text-2xl sm:text-3xl font-extrabold" />
                     <T as="p" multiline rows={2} sleutel="vragen.sub" standaard="Geen goed of fout, alleen jouw eerlijke gevoel." className="text-sm text-[#6b6450]" />
                     <div className="mx-auto max-w-xs">
@@ -433,7 +443,7 @@ export function GezondeStartFlow({
                     ))}
                   </div>
                   <div className="flex items-center gap-3 pt-1">
-                    <TerugKnop onClick={() => naar("gegevens")} />
+                    <TerugKnop onClick={() => naar("welkom")} />
                     <div className="flex-1">
                       <GoudKnop onClick={gaNaarDoel} disabled={!alleBeantwoord}>{t("vragen.knop", "Verder")}</GoudKnop>
                       <EditNaast sleutel="vragen.knop" standaard="Verder" hint="Knop" />
@@ -554,8 +564,8 @@ export function GezondeStartFlow({
                   <div className="flex items-center gap-3 pt-1">
                     <TerugKnop onClick={() => naar("vragen")} />
                     <div className="flex-1">
-                      <GoudKnop onClick={toonUitkomst} disabled={doelen.length === 0 || !investering}>{t("doel.knop", "Toon mijn advies")}</GoudKnop>
-                      <EditNaast sleutel="doel.knop" standaard="Toon mijn advies" hint="Knop" />
+                      <GoudKnop onClick={gaNaarGegevens} disabled={doelen.length === 0 || !investering}>{t("doel.knop", "Verder")}</GoudKnop>
+                      <EditNaast sleutel="doel.knop" standaard="Verder" hint="Knop" />
                     </div>
                   </div>
                 </section>
