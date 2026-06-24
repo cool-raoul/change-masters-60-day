@@ -165,6 +165,7 @@ export function GezondeStartFlow({
   const [doelen, setDoelen] = useState<DoelId[]>([]);
   const [afvalWens, setAfvalWens] = useState<AfvalId | null>(null);
   const [investering, setInvestering] = useState<InvesteringId | null>(null);
+  const [toonTelefoon, setToonTelefoon] = useState(false);
   const [bezig, setBezig] = useState(false);
   const optInGedaanRef = useRef(false);
 
@@ -214,10 +215,6 @@ export function GezondeStartFlow({
       return toast.error("Vul je voor- en achternaam in.");
     if (!EMAIL_RE.test(email))
       return toast.error("Vul een geldig e-mailadres in.");
-    if (telefoon.trim().length < 8)
-      return toast.error(
-        "Vul je telefoonnummer in, dan kan ik persoonlijk meekijken.",
-      );
     naar("vragen");
   }
 
@@ -271,6 +268,10 @@ export function GezondeStartFlow({
   }
 
   async function vraagContact() {
+    if (telefoon.trim().length < 8)
+      return toast.error(
+        "Vul je telefoonnummer in, dan kan ik persoonlijk met je meekijken.",
+      );
     setBezig(true);
     try {
       await fetch("/api/freebie-bot/contact", {
@@ -354,11 +355,19 @@ export function GezondeStartFlow({
                     <Veld labelSleutel="gegevens.label.achternaam" labelStandaard="Achternaam" value={achternaam} onChange={setAchternaam} />
                   </div>
                   <Veld labelSleutel="gegevens.label.email" labelStandaard="E-mailadres" value={email} onChange={setEmail} type="email" placeholder="jouw@email.nl" />
-                  <Veld labelSleutel="gegevens.label.telefoon" labelStandaard="Telefoonnummer" value={telefoon} onChange={setTelefoon} type="tel" placeholder="06..." />
                   <div className="grid grid-cols-2 gap-3">
                     <Veld labelSleutel="gegevens.label.instagram" labelStandaard="Instagram" sub="optioneel" value={instagram} onChange={setInstagram} placeholder="@jouwnaam" />
                     <Veld labelSleutel="gegevens.label.facebook" labelStandaard="Facebook" sub="optioneel" value={facebook} onChange={setFacebook} placeholder="je naam of link" />
                   </div>
+                  <T
+                    as="p"
+                    multiline
+                    rows={3}
+                    sleutel="gegevens.privacy"
+                    standaard="Je gegevens komen alleen bij {naam} terecht, om je je uitkomst te sturen en het persoonlijk met je af te stemmen. We delen niks met derden en je kunt je altijd afmelden."
+                    vars={{ naam: memberVoornaam }}
+                    className="text-[11px] text-[#a0936e] leading-relaxed"
+                  />
                   <div className="flex items-center gap-3 pt-1">
                     <TerugKnop onClick={() => naar("welkom")} />
                     <div className="flex-1">
@@ -603,12 +612,44 @@ export function GezondeStartFlow({
                       leadEmail={email}
                     />
                   )}
-                  <div>
-                    <GoudKnop onClick={vraagContact} disabled={bezig}>
-                      {bezig ? "Bezig..." : t("uitkomst.knop", "Ja, kijk persoonlijk met me mee")}
-                    </GoudKnop>
-                    <EditNaast sleutel="uitkomst.knop" standaard="Ja, kijk persoonlijk met me mee" hint="Knop" />
-                  </div>
+                  {!toonTelefoon ? (
+                    <div>
+                      <GoudKnop onClick={() => setToonTelefoon(true)}>
+                        {t("uitkomst.knop", "Ja, kijk persoonlijk met me mee")}
+                      </GoudKnop>
+                      <EditNaast sleutel="uitkomst.knop" standaard="Ja, kijk persoonlijk met me mee" hint="Knop" />
+                    </div>
+                  ) : (
+                    <div className="space-y-3 rounded-2xl border border-[#ead8a0] bg-[#fdfaf0] p-4">
+                      <T
+                        as="p"
+                        multiline
+                        rows={2}
+                        sleutel="uitkomst.telefoon.titel"
+                        standaard="Fijn! Laat je telefoonnummer achter, dan kijk ik persoonlijk even met je mee."
+                        className="text-sm font-semibold text-[#5a5440]"
+                      />
+                      <T
+                        as="p"
+                        multiline
+                        rows={2}
+                        sleutel="uitkomst.telefoon.uitleg"
+                        standaard="Ik gebruik je nummer alleen om persoonlijk contact met je op te nemen over je uitkomst, niet voor spam. Je kunt je altijd afmelden."
+                        className="text-xs text-[#a0936e] leading-relaxed"
+                      />
+                      <input
+                        type="tel"
+                        value={telefoon}
+                        onChange={(e) => setTelefoon(e.target.value)}
+                        placeholder="06..."
+                        className="w-full rounded-xl border border-[#ddd0a8] bg-white px-4 py-3 text-[15px] text-[#1a1a1a] placeholder-[#bcae86] outline-none transition focus:border-[#c9a961] focus:ring-2 focus:ring-[#c9a961]/30"
+                      />
+                      <GoudKnop onClick={vraagContact} disabled={bezig}>
+                        {bezig ? "Bezig..." : t("uitkomst.telefoon.knop", "Versturen, en kijk met me mee")}
+                      </GoudKnop>
+                      <EditNaast sleutel="uitkomst.telefoon.knop" standaard="Versturen, en kijk met me mee" hint="Knop" />
+                    </div>
+                  )}
                 </section>
               </Reveal>
             )}
