@@ -74,17 +74,25 @@ export function normaliseerNaarEmbed(url: string | null | undefined): string | n
 }
 
 /**
- * Voegt opties toe aan een YouTube-embed zodat na de film GEEN vreemde
- * gerelateerde video's getoond worden (rel=0 beperkt de suggesties tot het
- * eigen kanaal), met minder YouTube-branding en inline afspelen op mobiel.
- * Niet-YouTube embeds (Vimeo e.d.) blijven ongemoeid. Idempotent: voegt niets
- * dubbel toe als er al een rel-parameter staat.
+ * Maakt een embed zo "schoon" mogelijk zodat mensen in het systeem blijven:
+ *  - YouTube: rel=0 (geen vreemde gerelateerde video's na afloop),
+ *    modestbranding en inline afspelen op mobiel.
+ *  - Vimeo: titel/byline/portret verborgen (zo min mogelijk dat naar vimeo.com
+ *    leidt) + do-not-track.
+ * Idempotent, en laat onbekende URLs ongemoeid.
  */
-export function youtubeEmbedMetOpties(embedUrl: string): string {
-  if (!/youtube\.com\/embed\//.test(embedUrl)) return embedUrl;
-  if (/[?&]rel=/.test(embedUrl)) return embedUrl;
-  const sep = embedUrl.includes("?") ? "&" : "?";
-  return `${embedUrl}${sep}rel=0&modestbranding=1&playsinline=1`;
+export function embedMetOpties(embedUrl: string): string {
+  if (/youtube\.com\/embed\//.test(embedUrl)) {
+    if (/[?&]rel=/.test(embedUrl)) return embedUrl;
+    const sep = embedUrl.includes("?") ? "&" : "?";
+    return `${embedUrl}${sep}rel=0&modestbranding=1&playsinline=1`;
+  }
+  if (/player\.vimeo\.com\/video\//.test(embedUrl)) {
+    if (/[?&]title=/.test(embedUrl)) return embedUrl;
+    const sep = embedUrl.includes("?") ? "&" : "?";
+    return `${embedUrl}${sep}title=0&byline=0&portrait=0&dnt=1`;
+  }
+  return embedUrl;
 }
 
 /**

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { normaliseerNaarEmbed, youtubeEmbedMetOpties } from "@/lib/films/embed";
+import { normaliseerNaarEmbed, embedMetOpties } from "@/lib/films/embed";
 
 // Watch-aware informatiefilm-speler voor de freebie. Detecteert wanneer de
 // prospect de film ~90% / tot het einde heeft bekeken en vuurt dan EENMALIG de
@@ -77,7 +77,7 @@ export function InfoFilmSpeler({
   }
 
   const basis = url && soort !== "upload" ? normaliseerNaarEmbed(url) : null;
-  const embed = basis ? youtubeEmbedMetOpties(basis) : undefined;
+  const embed = basis ? embedMetOpties(basis) : undefined;
   const finalEmbed = embed && isYouTube(embed) ? metJsApi(embed) : embed;
 
   // YouTube IFrame API

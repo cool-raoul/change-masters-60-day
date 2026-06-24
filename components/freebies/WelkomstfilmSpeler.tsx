@@ -1,4 +1,4 @@
-import { normaliseerNaarEmbed, youtubeEmbedMetOpties } from "@/lib/films/embed";
+import { normaliseerNaarEmbed, embedMetOpties } from "@/lib/films/embed";
 
 // Speelt de welkomstfilm af in de freebie. Drie bronnen:
 //   - youtube / vimeo → iframe-embed (gratis bandbreedte van hun kant)
@@ -35,7 +35,7 @@ export function WelkomstfilmSpeler({
   }
 
   const basis = normaliseerNaarEmbed(url);
-  const embed = basis ? youtubeEmbedMetOpties(basis) : undefined;
+  const embed = basis ? embedMetOpties(basis) : undefined;
   return (
     <div className="aspect-video w-full rounded-2xl overflow-hidden border border-[#ead8a0] bg-black shadow-md">
       <iframe
