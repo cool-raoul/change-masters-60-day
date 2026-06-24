@@ -321,6 +321,12 @@ export default async function MijnTrackingLinksPagina() {
             if (bot.coreOnly && !ziet_core_bots) return null;
             if (bot.preRelease && !magPreRelease) return null;
             const url = `${origin}/bot/${bot.slug}/${tokensPerBot[bot.slug]}`;
+            const slug = slugPerBot[bot.slug] ?? null;
+            // Toon de leesbare link als die er is, anders de token-link.
+            const weergaveUrl =
+              bot.slug === "jouw-gezonde-start" && slug
+                ? `${origin}/gezonde-start/${slug}`
+                : url;
             const stats = statsPerBot[bot.slug];
             const randKleur =
               bot.kleur === "sky"
@@ -392,21 +398,22 @@ export default async function MijnTrackingLinksPagina() {
                 )}
 
                 <div className="mt-4 rounded-lg bg-slate-800 px-3 py-2 text-xs text-slate-300 break-all">
-                  {url}
+                  {weergaveUrl}
                 </div>
-                <KopieerKnop tekst={url} />
+                <KopieerKnop tekst={weergaveUrl} />
 
-                <InstagramLinkBuilder basisUrl={url} />
+                <InstagramLinkBuilder basisUrl={weergaveUrl} />
 
                 {bot.slug === "jouw-gezonde-start" && (
                   <div className="mt-4 border-t border-white/10 pt-4">
-                    <p className="text-xs font-semibold text-slate-300 mb-2">
-                      ✨ Leesbare link (makkelijk te onthouden en te delen)
+                    <p className="text-xs font-semibold text-slate-300 mb-1">
+                      ✨ Eigen leesbaar woord voor je link
                     </p>
-                    <SlugKiezer
-                      huidigeSlug={slugPerBot["jouw-gezonde-start"] ?? null}
-                      origin={SITE_URL}
-                    />
+                    <p className="text-[11px] text-slate-400 mb-2">
+                      Kies een woord, dan wordt dát je link hierboven (in plaats
+                      van de lange code).
+                    </p>
+                    <SlugKiezer huidigeSlug={slug} origin={origin} />
                   </div>
                 )}
 

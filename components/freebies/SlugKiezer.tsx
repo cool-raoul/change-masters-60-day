@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 // Lid kiest een leesbaar woord voor zijn freebie-link:
-// my-eleva.com/gezonde-start/<woord>. Uniek over alle leden.
+// my-eleva.com/gezonde-start/<woord>. Uniek over alle leden. Dit veldje toont
+// GEEN tweede link; de link hierboven in de kaart past zich er na opslaan op aan.
 
 export function SlugKiezer({
   huidigeSlug,
@@ -13,14 +15,11 @@ export function SlugKiezer({
   huidigeSlug: string | null;
   origin: string;
 }) {
+  const router = useRouter();
   const [slug, setSlug] = useState(huidigeSlug ?? "");
-  const [opgeslagen, setOpgeslagen] = useState<string | null>(
-    huidigeSlug ?? null,
-  );
   const [bezig, setBezig] = useState(false);
 
   const host = origin.replace(/^https?:\/\//, "");
-  const link = opgeslagen ? `${origin}/gezonde-start/${opgeslagen}` : "";
 
   async function opslaan() {
     setBezig(true);
@@ -35,11 +34,12 @@ export function SlugKiezer({
         toast.error(data.error ?? "Opslaan mislukt.");
         return;
       }
-      setOpgeslagen(data.slug ?? null);
       setSlug(data.slug ?? "");
       toast.success(
         data.slug ? "Je leesbare link staat klaar." : "Leesbare link verwijderd.",
       );
+      // Herlaad de server-render zodat de link bovenaan de kaart meteen klopt.
+      router.refresh();
     } catch {
       toast.error("Er ging iets mis.");
     } finally {
@@ -47,30 +47,8 @@ export function SlugKiezer({
     }
   }
 
-  async function kopieer() {
-    try {
-      await navigator.clipboard.writeText(link);
-      toast.success("Link gekopieerd.");
-    } catch {
-      /* negeer */
-    }
-  }
-
   return (
-    <div className="space-y-2">
-      {link && (
-        <div className="flex items-center gap-2">
-          <div className="flex-1 rounded-lg bg-slate-800 px-3 py-2 text-xs text-emerald-300 break-all">
-            {link}
-          </div>
-          <button
-            onClick={kopieer}
-            className="shrink-0 rounded-lg border border-slate-600 px-3 py-2 text-xs font-semibold text-slate-300 hover:text-white"
-          >
-            Kopieer
-          </button>
-        </div>
-      )}
+    <div className="space-y-1.5">
       <div className="flex items-center gap-1.5">
         <span className="whitespace-nowrap text-xs text-slate-400">
           {host}/gezonde-start/
