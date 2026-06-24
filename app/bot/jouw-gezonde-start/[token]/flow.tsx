@@ -616,6 +616,9 @@ export function GezondeStartFlow({
                     <Tag>{t("uitkomst.tag", "Jouw persoonlijke advies")}</Tag>
                     <EditNaast sleutel="uitkomst.tag" standaard="Jouw persoonlijke advies" hint="Pill" />
                     <h2 className="text-2xl sm:text-3xl font-extrabold leading-tight">{uitslag.kop}</h2>
+                    <div className="text-5xl" aria-hidden>
+                      🎬
+                    </div>
                   </div>
                   <div
                     className="rounded-2xl p-5 sm:p-6 space-y-3.5 text-[15px] leading-relaxed"
