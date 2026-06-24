@@ -172,6 +172,9 @@ export function GezondeStartFlow({
   // Resolver voor knop-/optie-/pill-teksten (toont override of standaard).
   const t = (sleutel: string, standaard: string) =>
     tekstOverrides[sleutel] ?? standaard;
+  // Tweede knop op de uitslag (meer info + resultaten). Founder-instelbare link
+  // (bv. Facebookgroep, later Mini-ELEVA). Leeg = knop verborgen.
+  const fbResultatenUrl = t("uitkomst.resultaten.url", "").trim();
 
   const aantal = Object.keys(darm).length;
   const alleBeantwoord = aantal === DARM_VRAGEN.length;
@@ -622,12 +625,43 @@ export function GezondeStartFlow({
                       leadEmail={email}
                     />
                   )}
+
+                  <T
+                    as="p"
+                    multiline
+                    rows={4}
+                    sleutel="uitkomst.waarom"
+                    standaard="Online vind je eindeloos veel tips en adviezen, van het hele internet tot ChatGPT aan toe. En toch lukt het zo vaak net niet, omdat algemene info niet op jóu is afgestemd. Daarom zetten we persoonlijke aandacht voorop: dat er echt met je wordt meegekeken, op jouw situatie. Dat maakt het verschil, en het helpt je om het ook echt vol te houden."
+                    className="text-[14px] leading-relaxed text-[#3a3526] bg-[#faf5e6] border border-[#ead8a0] rounded-2xl p-4"
+                  />
+
                   {!toonTelefoon ? (
-                    <div>
-                      <GoudKnop onClick={() => setToonTelefoon(true)}>
-                        {t("uitkomst.knop", "Ja, kijk persoonlijk met me mee")}
-                      </GoudKnop>
-                      <EditNaast sleutel="uitkomst.knop" standaard="Ja, kijk persoonlijk met me mee" hint="Knop" />
+                    <div className="space-y-2.5">
+                      <div>
+                        <GoudKnop onClick={() => setToonTelefoon(true)}>
+                          {t("uitkomst.knop", "Ja, kijk persoonlijk met me mee")}
+                        </GoudKnop>
+                        <EditNaast sleutel="uitkomst.knop" standaard="Ja, kijk persoonlijk met me mee" hint="Knop 1 (persoonlijk contact)" />
+                      </div>
+                      {fbResultatenUrl && (
+                        <a
+                          href={fbResultatenUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-center w-full py-3 px-6 rounded-full font-semibold text-sm border border-[#c9a961] text-[#8a6d1f] bg-white/70 hover:bg-[#faf5e6] transition-all"
+                        >
+                          {t("uitkomst.resultaten.knop", "Ik wil meer info en resultaten zien")}
+                        </a>
+                      )}
+                      {editModusAan && isFounder && (
+                        <div className="rounded-xl border border-amber-300 bg-amber-50/80 p-3 space-y-1.5 text-left">
+                          <p className="text-[11px] font-bold text-amber-800">
+                            ✏️ Tweede knop (meer info + resultaten)
+                          </p>
+                          <T sleutel="uitkomst.resultaten.knop" standaard="Ik wil meer info en resultaten zien" as="div" className="text-sm text-[#5a5440]" />
+                          <T sleutel="uitkomst.resultaten.url" standaard="" as="div" className="text-sm text-[#5a5440] break-all" hint="Plak hier de link (bv. naar je Facebookgroep). Leeg laten = de knop is verborgen." />
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <div className="space-y-3 rounded-2xl border border-[#ead8a0] bg-[#fdfaf0] p-4">
