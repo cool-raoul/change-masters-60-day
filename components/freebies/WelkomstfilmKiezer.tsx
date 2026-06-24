@@ -183,10 +183,15 @@ export function WelkomstfilmKiezer({
               className="block w-full text-sm text-cm-white/80 file:mr-3 file:rounded-lg file:border-0 file:bg-cm-gold/20 file:px-4 file:py-2 file:text-cm-gold file:font-semibold hover:file:bg-cm-gold/30"
             />
           </label>
+          {bezig && uploadPct !== null && (
+            <p className="text-xs font-semibold text-cm-gold">
+              ⏳ Bezig met uploaden, dit kan bij een grotere video even duren.
+              Houd dit tabblad open, je film verschijnt zodra het klaar is.
+            </p>
+          )}
           <p className="text-[11px] text-cm-white/50 leading-relaxed">
             Tip: neem op in 1080p (niet 4K) en houd 'm kort, een paar minuten is
             perfect. Op je telefoon kun je ook meteen een nieuwe opnemen. Max 200 MB.
-            {bezig && uploadPct !== null ? " Bezig met uploaden..." : ""}
           </p>
         </div>
       ) : (

@@ -411,8 +411,10 @@ export default async function MijnTrackingLinksPagina() {
                 {bot.slug === "jouw-gezonde-start" && (
                   <div className="mt-4 border-t border-white/10 pt-4">
                     <p className="text-xs font-semibold text-slate-300 mb-2">
-                      🎬 Welkomstfilm — stel jouw eigen film in. Als founder is dit
-                      meteen de algemene film voor iedereen.
+                      🎬 Welkomstfilm — stel hier je eigen welkomstfilm in.
+                      {isFounder
+                        ? " Als founder is dit meteen de algemene film voor iedereen."
+                        : ""}
                     </p>
                     <WelkomstfilmKiezer
                       botSlug="jouw-gezonde-start"
