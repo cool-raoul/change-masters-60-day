@@ -74,6 +74,20 @@ export function normaliseerNaarEmbed(url: string | null | undefined): string | n
 }
 
 /**
+ * Voegt opties toe aan een YouTube-embed zodat na de film GEEN vreemde
+ * gerelateerde video's getoond worden (rel=0 beperkt de suggesties tot het
+ * eigen kanaal), met minder YouTube-branding en inline afspelen op mobiel.
+ * Niet-YouTube embeds (Vimeo e.d.) blijven ongemoeid. Idempotent: voegt niets
+ * dubbel toe als er al een rel-parameter staat.
+ */
+export function youtubeEmbedMetOpties(embedUrl: string): string {
+  if (!/youtube\.com\/embed\//.test(embedUrl)) return embedUrl;
+  if (/[?&]rel=/.test(embedUrl)) return embedUrl;
+  const sep = embedUrl.includes("?") ? "&" : "?";
+  return `${embedUrl}${sep}rel=0&modestbranding=1&playsinline=1`;
+}
+
+/**
  * Detecteert provider, handig voor analytics-config later.
  */
 export function detecteerProvider(url: string | null | undefined): "youtube" | "vimeo" | "anders" | null {
