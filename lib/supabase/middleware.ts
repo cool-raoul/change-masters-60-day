@@ -61,6 +61,10 @@ export async function updateSession(request: NextRequest) {
     // "Jouw gezonde start" — mooie podcast-link, redirect naar
     // /bot/jouw-gezonde-start/<token>.
     "/jouw-gezonde-start",
+    // Leesbare, persoonlijke freebie-link my-eleva.com/gezonde-start/<woord>.
+    // Prospect (uitgelogd) opent 'm zonder account; ook de link-preview-bots
+    // van WhatsApp/socials moeten de echte freebie-pagina kunnen ophalen.
+    "/gezonde-start/",
     // Per-member token-routes voor de score-bots (energie-en-focus,
     // hormonen-en-overgang, reset-check). Prospects vullen 'm in zonder
     // account, lead komt in pijplijn van de member.
