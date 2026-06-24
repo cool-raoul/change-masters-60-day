@@ -669,7 +669,7 @@ export function GezondeStartFlow({
                     <div className="space-y-3 rounded-2xl border border-[#ead8a0] bg-[#fdfaf0] p-4">
                       <button
                         onClick={() => setToonTelefoon(false)}
-                        className="inline-flex items-center gap-1 text-xs font-semibold text-[#8a7f5e] hover:text-[#5a4710] transition-colors"
+                        className="inline-flex items-center gap-1.5 rounded-full border border-[#ddd0a8] bg-white px-4 py-2 text-xs font-semibold text-[#5a5440] hover:bg-[#faf5e6] transition-colors"
                       >
                         ← Terug naar de keuze
                       </button>
