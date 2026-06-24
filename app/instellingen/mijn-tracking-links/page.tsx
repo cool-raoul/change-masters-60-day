@@ -24,6 +24,7 @@ import { ManyChatHandleiding } from "@/components/freebies/ManyChatHandleiding";
 import { InstagramLinkBuilder } from "@/components/freebies/InstagramLinkBuilder";
 import { KopieerKnop } from "./kopieer-knop";
 import { WelkomstfilmKiezer } from "@/components/freebies/WelkomstfilmKiezer";
+import { SlugKiezer } from "@/components/freebies/SlugKiezer";
 
 export const dynamic = "force-dynamic";
 
@@ -125,6 +126,7 @@ export default async function MijnTrackingLinksPagina() {
     string,
     { soort: string | null; url: string | null }
   > = {};
+  const slugPerBot: Record<string, string | null> = {};
   for (const bot of FREEBIE_BOTS) {
     if (!bot.actief) continue;
     if (bot.coreOnly && !ziet_core_bots) continue;
@@ -132,7 +134,7 @@ export default async function MijnTrackingLinksPagina() {
     const { data: bestaand } = await supabase
       .from("freebie_bot_member_tokens")
       .select(
-        "token, welkomstfilm_soort, welkomstfilm_url, informatiefilm_soort, informatiefilm_url",
+        "token, welkomstfilm_soort, welkomstfilm_url, informatiefilm_soort, informatiefilm_url, publieke_slug",
       )
       .eq("member_id", user.id)
       .eq("bot_slug", bot.slug)
@@ -140,6 +142,8 @@ export default async function MijnTrackingLinksPagina() {
 
     if (bestaand?.token) {
       tokensPerBot[bot.slug] = bestaand.token;
+      slugPerBot[bot.slug] =
+        (bestaand as { publieke_slug?: string | null }).publieke_slug ?? null;
       welkomstfilmPerBot[bot.slug] = {
         soort:
           (bestaand as { welkomstfilm_soort?: string | null })
@@ -393,6 +397,18 @@ export default async function MijnTrackingLinksPagina() {
                 <KopieerKnop tekst={url} />
 
                 <InstagramLinkBuilder basisUrl={url} />
+
+                {bot.slug === "jouw-gezonde-start" && (
+                  <div className="mt-4 border-t border-white/10 pt-4">
+                    <p className="text-xs font-semibold text-slate-300 mb-2">
+                      ✨ Leesbare link (makkelijk te onthouden en te delen)
+                    </p>
+                    <SlugKiezer
+                      huidigeSlug={slugPerBot["jouw-gezonde-start"] ?? null}
+                      origin={SITE_URL}
+                    />
+                  </div>
+                )}
 
                 {bot.slug === "jouw-gezonde-start" && isFounder && (
                   <a
