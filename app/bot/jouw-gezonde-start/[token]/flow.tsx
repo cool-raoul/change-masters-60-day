@@ -198,7 +198,6 @@ export function GezondeStartFlow({
     setStap(s);
     if (typeof window !== "undefined") {
       window.history.pushState({ gezondeStartStap: s }, "");
-      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }
 
@@ -213,14 +212,17 @@ export function GezondeStartFlow({
     function onPop(e: PopStateEvent) {
       const s = (e.state as { gezondeStartStap?: Stap } | null)
         ?.gezondeStartStap;
-      if (s) {
-        setStap(s);
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
+      if (s) setStap(s);
     }
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
   }, []);
+
+  // Bij elke staps-wissel betrouwbaar naar de bovenkant (ná de render, zonder
+  // smooth-animatie die op telefoons kan haperen of onderaan blijft hangen).
+  useEffect(() => {
+    if (typeof window !== "undefined") window.scrollTo(0, 0);
+  }, [stap]);
 
   // Founder-preview: vul een representatief voorbeeld en spring naar de uitslag
   // om de bouwsteen-teksten te kunnen bewerken.

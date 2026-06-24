@@ -13,7 +13,10 @@ import { SITE_URL } from "@/lib/site";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "ELEVA",
-  description: "Jouw persoonlijke aanbevelingsmarketing systeem voor Project Meer Tijd en Vrijheid",
+  // Neutrale, niet-onthullende standaard-omschrijving: dit is wat in een
+  // link-preview valt voor elke pagina ZONDER eigen OG (bv. gedeelde freebie-
+  // landings). Freebie-flow-pagina's zetten hun eigen claimvrije titel/omschrijving.
+  description: "Jouw persoonlijke ELEVA-omgeving.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
