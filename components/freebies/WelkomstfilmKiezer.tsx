@@ -10,7 +10,7 @@ import { WelkomstfilmSpeler } from "./WelkomstfilmSpeler";
 //   - uploaden vanaf computer of telefoon → Supabase Storage (max 200 MB)
 // Wie niks eigen instelt, valt terug op de algemene welkomstfilm.
 
-const MAX_BYTES = 200 * 1024 * 1024; // 200 MB
+const MAX_BYTES = 250 * 1024 * 1024; // 250 MB
 const BUCKET = "welkomstfilms";
 
 type Soort = "youtube" | "vimeo" | "upload";
@@ -70,7 +70,7 @@ export function WelkomstfilmKiezer({
   async function uploadBestand(file: File) {
     if (file.size > MAX_BYTES) {
       toast.error(
-        "Deze video is te groot (max 200 MB). Neem 'm korter of in 1080p op, of zet 'm op YouTube/Vimeo en plak de link.",
+        "Deze video is te groot (max 250 MB). Neem 'm korter of in 1080p op, of zet 'm op YouTube/Vimeo en plak de link.",
       );
       return;
     }
@@ -123,7 +123,7 @@ export function WelkomstfilmKiezer({
   const TABS: { id: Soort; label: string }[] = [
     { id: "youtube", label: "YouTube-link" },
     { id: "vimeo", label: "Vimeo-link" },
-    { id: "upload", label: "Uploaden" },
+    { id: "upload", label: "Uploaden van je apparaat" },
   ];
 
   return (
@@ -191,7 +191,7 @@ export function WelkomstfilmKiezer({
           )}
           <p className="text-[11px] text-cm-white/50 leading-relaxed">
             Tip: neem op in 1080p (niet 4K) en houd 'm kort, een paar minuten is
-            perfect. Op je telefoon kun je ook meteen een nieuwe opnemen. Max 200 MB.
+            perfect. Op je telefoon kun je ook meteen een nieuwe opnemen. Max 250 MB.
           </p>
         </div>
       ) : (
