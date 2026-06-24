@@ -412,6 +412,8 @@ export function GezondeStartFlow({
                     </div>
                   </div>
 
+                  <GeenArtsDisclaimer />
+
                   {editModusAan && isFounder && (
                     <div className="rounded-xl border border-amber-300 bg-amber-50/80 p-3 space-y-1">
                       <p className="text-xs font-bold text-amber-800">✏️ Antwoord-schaal (geldt voor alle vragen)</p>
@@ -725,6 +727,8 @@ export function GezondeStartFlow({
                       <EditNaast sleutel="uitkomst.telefoon.knop" standaard="Versturen, en kijk met me mee" hint="Knop" />
                     </div>
                   )}
+
+                  <GeenArtsDisclaimer />
                 </section>
               </Reveal>
             )}
@@ -766,6 +770,24 @@ export function GezondeStartFlow({
 // ============================================================
 // Sub-componenten
 // ============================================================
+// Medische disclaimer, exact zoals bij de reset-check ("Klopt de Reset bij
+// jou?"). Claimvrij + AVG-vriendelijk; bewust niet bewerkbaar zodat de
+// compliance-tekst overal gelijk blijft.
+function GeenArtsDisclaimer() {
+  return (
+    <div className="rounded-2xl bg-[#fdf3e3] border border-[#e3c98f] p-4">
+      <p className="mb-1.5 text-sm font-bold text-[#8a6d1f]">Wij zijn geen arts</p>
+      <p className="text-xs leading-relaxed text-[#6b6450]">
+        We stellen geen diagnose en behandelen geen aandoeningen. Deze paar
+        vragen helpen ons om in ons gesprek de juiste aanpak met jou te
+        bespreken, meer niet. Heb je klachten of sta je onder behandeling van een
+        arts? Blijf je altijd onder die behandeling. We werken graag mét je arts
+        mee, niet eromheen 🥰
+      </p>
+    </div>
+  );
+}
+
 function ProgressBar({ nr }: { nr: number }) {
   return (
     <div className="flex gap-1.5">
