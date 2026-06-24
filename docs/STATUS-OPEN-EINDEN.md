@@ -45,6 +45,12 @@ Laatst bijgewerkt: 2026-06-23
   - ⏳ Fase 3b rest: medische zelf-check (opslaan + 30-dagen-wis). Privacybeleid: officiële verantwoordelijke + contact-gegevens (bedrijfsnaam/e-mail/evt. KvK) nog door Raoul te bevestigen.
   - ⏳ Fase 4: vrijgave voor iedereen (nu nog founder + Sandy via pre-release-gate).
 
+## 🔁 Generaliseren naar ALLE freebies (Raoul, 2026-06-25)
+Alles wat we voor "Jouw gezonde start" maakten moet ook bij de andere freebies kunnen (energie-en-focus, hormonen-en-overgang, reset-check, productadvies). Niet steeds opnieuw tegen hetzelfde aanlopen.
+- ✅ **Link-preview + publieke route**: root-default is nu neutraal (geen "aanbevelingsmarketing" meer in previews) en geldt direct voor álle freebies; de flow-pagina's hebben eigen OG. STANDING RULE staat in memory (freebie-publiek-en-preview): nieuwe freebie = publicRoute + eigen OG.
+- ⏳ **Leesbare persoonlijke link** (`/<freebie>/<woord>`, slug per lid) — nu alleen `/gezonde-start/<woord>`. Generaliseren naar een gedeeld slug-mechanisme per freebie.
+- ⏳ **Founder-edit van álle teksten**, **welkomst-/informatiefilm per lid + founder-algemeen**, **twee uitslag-knoppen (contact + resultaten)**, **officiële disclaimer onderaan**, **terug-navigatie + scroll-naar-boven**: nu alleen in de jouw-gezonde-start-flow. Score-bots/reset-check hebben eigen flows; uitrol vergt per freebie werk of een gedeeld flow-framework. Eerst bepalen: gedeeld framework vs. per-freebie kopiëren. Focus-ronde waard.
+
 ## ⏸️ Bewust geparkeerd (geen los eindje, later met opzet)
 - **Filter-per-freebie** op de namenlijst ("laat me alleen leads van freebie X zien" + bulk-actie). Spec: docs/superpowers/specs/2026-06-23-freebie-funnel-warm-trigger-design.md
 - **Mini-ELEVA video-auto-trigger voor niet-YouTube** (Vimeo e.d.): nu alleen YouTube. Raoul embedt via YouTube, dus geen blokker.
