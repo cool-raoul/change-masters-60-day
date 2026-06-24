@@ -166,15 +166,15 @@ export function GezondeStartFlow({
   const [afvalWens, setAfvalWens] = useState<AfvalId | null>(null);
   const [investering, setInvestering] = useState<InvesteringId | null>(null);
   const [toonTelefoon, setToonTelefoon] = useState(false);
+  const [contactReden, setContactReden] = useState<
+    "persoonlijk" | "resultaten"
+  >("persoonlijk");
   const [bezig, setBezig] = useState(false);
   const optInGedaanRef = useRef(false);
 
   // Resolver voor knop-/optie-/pill-teksten (toont override of standaard).
   const t = (sleutel: string, standaard: string) =>
     tekstOverrides[sleutel] ?? standaard;
-  // Tweede knop op de uitslag (meer info + resultaten). Founder-instelbare link
-  // (bv. Facebookgroep, later Mini-ELEVA). Leeg = knop verborgen.
-  const fbResultatenUrl = t("uitkomst.resultaten.url", "").trim();
 
   const aantal = Object.keys(darm).length;
   const alleBeantwoord = aantal === DARM_VRAGEN.length;
@@ -286,6 +286,10 @@ export function GezondeStartFlow({
           leadVoornaam: voornaam.trim(),
           leadAchternaam: achternaam.trim(),
           leadTelefoon: telefoon.trim(),
+          reden:
+            contactReden === "resultaten"
+              ? "Wil meer info + in de resultaten-groep (voeg toe aan Facebookgroep)"
+              : "Wil persoonlijk meekijken",
         }),
       });
     } catch {
@@ -638,49 +642,70 @@ export function GezondeStartFlow({
                   {!toonTelefoon ? (
                     <div className="space-y-2.5">
                       <div>
-                        <GoudKnop onClick={() => setToonTelefoon(true)}>
+                        <GoudKnop
+                          onClick={() => {
+                            setContactReden("persoonlijk");
+                            setToonTelefoon(true);
+                          }}
+                        >
                           {t("uitkomst.knop", "Ja, kijk persoonlijk met me mee")}
                         </GoudKnop>
                         <EditNaast sleutel="uitkomst.knop" standaard="Ja, kijk persoonlijk met me mee" hint="Knop 1 (persoonlijk contact)" />
                       </div>
-                      {fbResultatenUrl && (
-                        <a
-                          href={fbResultatenUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                      <div>
+                        <button
+                          onClick={() => {
+                            setContactReden("resultaten");
+                            setToonTelefoon(true);
+                          }}
                           className="flex items-center justify-center w-full py-3 px-6 rounded-full font-semibold text-sm border border-[#c9a961] text-[#8a6d1f] bg-white/70 hover:bg-[#faf5e6] transition-all"
                         >
-                          {t("uitkomst.resultaten.knop", "Ik wil meer info en resultaten zien")}
-                        </a>
-                      )}
-                      {editModusAan && isFounder && (
-                        <div className="rounded-xl border border-amber-300 bg-amber-50/80 p-3 space-y-1.5 text-left">
-                          <p className="text-[11px] font-bold text-amber-800">
-                            ✏️ Tweede knop (meer info + resultaten)
-                          </p>
-                          <T sleutel="uitkomst.resultaten.knop" standaard="Ik wil meer info en resultaten zien" as="div" className="text-sm text-[#5a5440]" />
-                          <T sleutel="uitkomst.resultaten.url" standaard="" as="div" className="text-sm text-[#5a5440] break-all" hint="Plak hier de link (bv. naar je Facebookgroep). Leeg laten = de knop is verborgen." />
-                        </div>
-                      )}
+                          {t("uitkomst.resultaten.knop", "Ik wil graag meer info en resultaten zien")}
+                        </button>
+                        <EditNaast sleutel="uitkomst.resultaten.knop" standaard="Ik wil graag meer info en resultaten zien" hint="Knop 2 (meer info + resultaten)" />
+                      </div>
                     </div>
                   ) : (
                     <div className="space-y-3 rounded-2xl border border-[#ead8a0] bg-[#fdfaf0] p-4">
-                      <T
-                        as="p"
-                        multiline
-                        rows={2}
-                        sleutel="uitkomst.telefoon.titel"
-                        standaard="Fijn! Laat je telefoonnummer achter, dan kijk ik persoonlijk even met je mee."
-                        className="text-sm font-semibold text-[#5a5440]"
-                      />
-                      <T
-                        as="p"
-                        multiline
-                        rows={2}
-                        sleutel="uitkomst.telefoon.uitleg"
-                        standaard="Ik gebruik je nummer alleen om persoonlijk contact met je op te nemen over je uitkomst, niet voor spam. Je kunt je altijd afmelden."
-                        className="text-xs text-[#a0936e] leading-relaxed"
-                      />
+                      {contactReden === "resultaten" ? (
+                        <>
+                          <T
+                            as="p"
+                            multiline
+                            rows={2}
+                            sleutel="uitkomst.resultaten.titel"
+                            standaard="Leuk! Laat je telefoonnummer achter, dan voeg ik je toe en stuur ik je meer info en de resultaten."
+                            className="text-sm font-semibold text-[#5a5440]"
+                          />
+                          <T
+                            as="p"
+                            multiline
+                            rows={2}
+                            sleutel="uitkomst.resultaten.uitleg"
+                            standaard="Voor onze groep met ervaringen en resultaten voeg ik je persoonlijk toe, daarom heb ik even je nummer nodig. Geen spam, en je kunt je altijd afmelden."
+                            className="text-xs text-[#a0936e] leading-relaxed"
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <T
+                            as="p"
+                            multiline
+                            rows={2}
+                            sleutel="uitkomst.telefoon.titel"
+                            standaard="Fijn! Laat je telefoonnummer achter, dan kijk ik persoonlijk even met je mee."
+                            className="text-sm font-semibold text-[#5a5440]"
+                          />
+                          <T
+                            as="p"
+                            multiline
+                            rows={2}
+                            sleutel="uitkomst.telefoon.uitleg"
+                            standaard="Ik gebruik je nummer alleen om persoonlijk contact met je op te nemen over je uitkomst, niet voor spam. Je kunt je altijd afmelden."
+                            className="text-xs text-[#a0936e] leading-relaxed"
+                          />
+                        </>
+                      )}
                       <input
                         type="tel"
                         value={telefoon}

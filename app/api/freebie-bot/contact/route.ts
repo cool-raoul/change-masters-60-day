@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
     const leadVoornaam = (body.leadVoornaam as string | undefined)?.trim();
     const leadAchternaam = (body.leadAchternaam as string | undefined)?.trim();
     const leadTelefoon = (body.leadTelefoon as string | undefined)?.trim();
+    const reden = (body.reden as string | undefined)?.trim();
 
     if (!token || token.length !== 16) {
       return NextResponse.json({ error: "Ongeldige token" }, { status: 400 });
@@ -77,7 +78,7 @@ export async function POST(req: NextRequest) {
 
     if (prospect?.id) {
       const datum = new Date().toLocaleDateString("nl-NL");
-      const contactNotitie = `⚡ VRAAGT PERSOONLIJK CONTACT (${datum}) · tel ${leadTelefoon}`;
+      const contactNotitie = `⚡ VRAAGT PERSOONLIJK CONTACT (${datum}) · tel ${leadTelefoon}${reden ? ` · ${reden}` : ""}`;
       const aangevuldeNotitie =
         (prospect.notities ? `${prospect.notities}\n\n` : "") + contactNotitie;
       const updateData: Record<string, unknown> = {
@@ -111,7 +112,9 @@ export async function POST(req: NextRequest) {
     try {
       await sendPushToUser(tokenRow.member_id, {
         title: `${leadNaam} vraagt persoonlijk contact`,
-        body: "Liet een telefoonnummer achter voor een vrijblijvend gesprek. Open haar prospect-kaart.",
+        body: reden
+          ? `${reden}. Open de prospect-kaart.`
+          : "Liet een telefoonnummer achter voor een vrijblijvend gesprek. Open haar prospect-kaart.",
         url: "/namenlijst",
         tag: `${botSlug}-contact`,
       });
