@@ -347,8 +347,8 @@ export function GezondeStartFlow({
                   <div className="text-center space-y-2">
                     <Tag>{t("gegevens.tag", "Laatste stap")}</Tag>
                     <EditNaast sleutel="gegevens.tag" standaard="Laatste stap" hint="Pill" />
-                    <T as="h2" sleutel="gegevens.titel" standaard="Wil je je persoonlijke uitslag zien?" className="text-2xl sm:text-3xl font-extrabold" />
-                    <T as="p" multiline rows={2} sleutel="gegevens.sub" standaard="Laat je naam en e-mail achter, dan laat ik 'm je meteen zien en stuur ik 'm je ook toe." className="text-sm text-[#6b6450]" />
+                    <T as="h2" sleutel="gegevens.titel" standaard="Je persoonlijke uitslag staat voor je klaar" className="text-2xl sm:text-3xl font-extrabold" />
+                    <T as="p" multiline rows={4} sleutel="gegevens.sub" standaard="Laat je naam en e-mail achter, dan zie je meteen je uitslag. En in een korte film neem ik je rustig mee in wat de programma's inhouden en wat ze voor jou zouden kunnen betekenen, zodat je een compleet beeld krijgt en ik je echt verder kan helpen." className="text-sm text-[#6b6450]" />
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <Veld labelSleutel="gegevens.label.voornaam" labelStandaard="Voornaam" value={voornaam} onChange={setVoornaam} />
