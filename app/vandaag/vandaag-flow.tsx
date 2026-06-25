@@ -7,7 +7,6 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { FilmInBlok } from "@/components/film/FilmInBlok";
-import { ContextKaart } from "@/components/ui/ContextKaart";
 import { UitnodigHelpKnoppen } from "@/components/vandaag/UitnodigHelpKnoppen";
 import { SocialPlatformKnoppen } from "@/components/vandaag/SocialPlatformKnoppen";
 import { HerinnerLaterKnop } from "@/components/playbook/HerinnerLaterKnop";
@@ -466,33 +465,31 @@ function VandaagFlowInner({
             />
 
             {/* 2. DAN DE LES, volledig, geen afkapping. */}
-            <ContextKaart context="vandaag" rechts={`Dag ${dag.nummer}`}>
-              <div className="space-y-2">
-                <EditableTekst
-                  namespace="sprint-ui"
-                  sleutel="intro.les-header"
-                  standaard="📖 Les van vandaag"
-                  overrides={uiOverrides}
-                  isFounder={isFounder}
-                  editModusAan={editModusAan}
-                  as="h3"
-                  className="text-cm-gold font-semibold text-sm uppercase tracking-wider"
-                  hint="Header boven de les, geldt voor ALLE 60 dagen"
-                />
-                <EditableBlok
-                  namespace="sprint-dag"
-                  sleutel={`dag${dag.nummer}.watJeLeert`}
-                  standaard={dag.watJeLeert}
-                  overrides={{}}
-                  isFounder={isFounder}
-                  editModusAan={editModusAan}
-                  as="div"
-                  className="text-cm-white text-sm leading-relaxed whitespace-pre-line"
-                  rows={10}
-                  hint={`Les voor dag ${dag.nummer}`}
-                />
-              </div>
-            </ContextKaart>
+            <div className="card border-l-4 border-cm-gold/60 space-y-2">
+              <EditableTekst
+                namespace="sprint-ui"
+                sleutel="intro.les-header"
+                standaard="📖 Les van vandaag"
+                overrides={uiOverrides}
+                isFounder={isFounder}
+                editModusAan={editModusAan}
+                as="h3"
+                className="text-cm-gold font-semibold text-sm uppercase tracking-wider"
+                hint="Header boven de les, geldt voor ALLE 60 dagen"
+              />
+              <EditableBlok
+                namespace="sprint-dag"
+                sleutel={`dag${dag.nummer}.watJeLeert`}
+                standaard={dag.watJeLeert}
+                overrides={{}}
+                isFounder={isFounder}
+                editModusAan={editModusAan}
+                as="div"
+                className="text-cm-white text-sm leading-relaxed whitespace-pre-line"
+                rows={10}
+                hint={`Les voor dag ${dag.nummer}`}
+              />
+            </div>
 
             {/* Media-blok positie 3: tussen les en taken-overzicht */}
             <MediaBlokken

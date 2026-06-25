@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ELEVA — wegwijzing-stijlen</title>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --panel: #15171c;
+    --gold: #c9a961;
+    --gold-soft: rgba(201,160,97,0.14);
+    --cream: #f5e9c4;
+    --ink: #ececdc;
+    --ink-dim: rgba(236,234,220,0.55);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(900px 500px at 50% -10%, rgba(201,160,97,0.08), transparent 70%),
+      var(--bg);
+    color: var(--ink);
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.5;
+    padding: 40px 20px 80px;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; }
+  .kop { text-align: center; margin-bottom: 8px; }
+  .kop h1 {
+    font-size: 28px; font-weight: 800; margin: 0 0 6px;
+    background: linear-gradient(135deg, #fff, var(--cream) 50%, var(--gold));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .kop p { color: var(--ink-dim); font-size: 14px; margin: 0 auto; max-width: 620px; }
+  .uitleg {
+    margin: 22px auto 36px; max-width: 720px;
+    background: var(--panel); border: 1px solid var(--gold-soft);
+    border-radius: 14px; padding: 16px 18px; font-size: 13.5px; color: var(--ink-dim);
+  }
+  .uitleg b { color: var(--ink); }
+
+  .stijl { margin-bottom: 40px; }
+  .stijl-kop { display: flex; align-items: baseline; gap: 10px; margin: 0 0 14px; }
+  .letter {
+    width: 30px; height: 30px; flex: none; border-radius: 9px;
+    display: grid; place-items: center; font-weight: 800; font-size: 14px;
+    color: #0a0a0a; background: linear-gradient(135deg, var(--gold), var(--cream));
+  }
+  .stijl-kop h2 { font-size: 16px; margin: 0; font-weight: 700; }
+  .stijl-kop .desc { font-size: 13px; color: var(--ink-dim); margin-top: 2px; }
+  .rij { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 620px) { .rij { grid-template-columns: 1fr; } }
+
+  /* ---- Basis-tegel (luxe) ---- */
+  .tegel {
+    --ctx: var(--gold);
+    --ctx-soft: var(--gold-soft);
+    position: relative; overflow: hidden;
+    background: var(--panel);
+    border: 1px solid var(--gold-soft);
+    border-radius: 14px; padding: 16px 18px;
+  }
+  .tegel .label {
+    font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--gold); display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+  }
+  .tegel .titel { font-size: 16px; font-weight: 700; color: var(--ink); margin: 0 0 3px; }
+  .tegel .sub { font-size: 12.5px; color: var(--ink-dim); }
+  .tegel .ic { font-size: 14px; line-height: 1; }
+
+  /* per-context kleur (zacht/ingetogen) */
+  .v { --ctx: #6fae8e; --ctx-soft: rgba(111,174,142,0.16); }
+  .k { --ctx: #7fa6cf; --ctx-soft: rgba(127,166,207,0.16); }
+
+  /* ====== STIJL A — alleen label + icoon (mono-goud, geen kleur) ====== */
+  /* gebruikt de basis zoals hierboven, label blijft goud */
+
+  /* ====== STIJL B — gekleurd icoon-chip ====== */
+  .b .ic {
+    display: inline-grid; place-items: center; width: 24px; height: 24px;
+    border-radius: 7px; background: var(--ctx-soft); color: var(--ctx); font-size: 13px;
+  }
+
+  /* ====== STIJL C — dun gekleurd accent-lijntje + gekleurd icoon ====== */
+  .c { border-left: 3px solid var(--ctx); }
+  .c .ic { color: var(--ctx); }
+
+  /* ====== STIJL D — diepe donkere tint (whisper of kleur) ====== */
+  .d.v { background: linear-gradient(150deg, #13201a 0%, var(--panel) 62%); }
+  .d.k { background: linear-gradient(150deg, #131d28 0%, var(--panel) 62%); }
+  .d .label { color: var(--ctx); }
+
+  /* ====== STIJL E — watermerk-icoon in de hoek ====== */
+  .e .wm {
+    position: absolute; right: -8px; bottom: -22px; font-size: 96px; line-height: 1;
+    opacity: 0.05; pointer-events: none;
+  }
+
+  /* ====== STIJL F — subtiele kleur-gradient (de huidige, te veel) ====== */
+  .f.v { background: linear-gradient(135deg, rgba(111,174,142,0.20), rgba(111,174,142,0.05)); border-color: rgba(111,174,142,0.4); }
+  .f.k { background: linear-gradient(135deg, rgba(127,166,207,0.20), rgba(127,166,207,0.05)); border-color: rgba(127,166,207,0.4); }
+  .f .label { color: var(--ctx); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="kop">
+    <h1>ELEVA — wegwijzing-stijlen</h1>
+    <p>Doel: dat je weet wáár je zit (welke context), zonder de luxe goud-op-zwart-uitstraling te verliezen. Per stijl zie je dezelfde twee voorbeelden: een <b>Vandaag</b>-tegel en een <b>Klant</b>-tegel.</p>
+  </div>
+
+  <div class="uitleg">
+    Loop ze rustig langs. <b>A t/m E</b> houden de kleur heel ingetogen (goud blijft de baas, kleur is hooguit een klein accent). <b>F</b> is de variant die we net hadden, met de meeste kleur, ter vergelijking. Pik er gerust een paar uit, of combineer (bijvoorbeeld "het lijntje van C met het chip-icoon van B").
+  </div>
+
+  <!-- A -->
+  <section class="stijl">
+    <div class="stijl-kop">
+      <div class="letter">A</div>
+      <div>
+        <h2>Alleen label + icoon — geen kleur, puur goud</h2>
+        <div class="desc">Je herkent de context aan het icoon + het woordje. Meest luxe, geen extra kleur.</div>
+      </div>
+    </div>
+    <div class="rij">
+      <div class="tegel v">
+        <div class="label"><span class="ic">🌱</span> Vandaag · Dag 11</div>
+        <div class="titel">5 typen prospects + funnel als ritme</div>
+        <div class="sub">0 van 6 stappen klaar</div>
+      </div>
+      <div class="tegel k">
+        <div class="label"><span class="ic">👤</span> Klant</div>
+        <div class="titel">Sandra de Vries</div>
+        <div class="sub">Fase: opvolgen · 2 open acties</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- B -->
+  <section class="stijl">
+    <div class="stijl-kop">
+      <div class="letter">B</div>
+      <div>
+        <h2>Gekleurd icoon-chip</h2>
+        <div class="desc">Alleen het icoon zit in een klein gekleurd vakje; de rest blijft goud-luxe.</div>
+      </div>
+    </div>
+    <div class="rij">
+      <div class="tegel v b">
+        <div class="label"><span class="ic">🌱</span> Vandaag · Dag 11</div>
+        <div class="titel">5 typen prospects + funnel als ritme</div>
+        <div class="sub">0 van 6 stappen klaar</div>
+      </div>
+      <div class="tegel k b">
+        <div class="label"><span class="ic">👤</span> Klant</div>
+        <div class="titel">Sandra de Vries</div>
+        <div class="sub">Fase: opvolgen · 2 open acties</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- C -->
+  <section class="stijl">
+    <div class="stijl-kop">
+      <div class="letter">C</div>
+      <div>
+        <h2>Dun gekleurd lijntje links + gekleurd icoon</h2>
+        <div class="desc">Een fijn streepje aan de zijkant in de contextkleur. Subtiel, maar je ziet het meteen.</div>
+      </div>
+    </div>
+    <div class="rij">
+      <div class="tegel v c">
+        <div class="label"><span class="ic">🌱</span> Vandaag · Dag 11</div>
+        <div class="titel">5 typen prospects + funnel als ritme</div>
+        <div class="sub">0 van 6 stappen klaar</div>
+      </div>
+      <div class="tegel k c">
+        <div class="label"><span class="ic">👤</span> Klant</div>
+        <div class="titel">Sandra de Vries</div>
+        <div class="sub">Fase: opvolgen · 2 open acties</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- D -->
+  <section class="stijl">
+    <div class="stijl-kop">
+      <div class="letter">D</div>
+      <div>
+        <h2>Diepe, donkere tint (whisper)</h2>
+        <div class="desc">Een héél donkere zweem kleur in de achtergrond, bijna zwart. Voelt als een tint, niet als "een kleur".</div>
+      </div>
+    </div>
+    <div class="rij">
+      <div class="tegel v d">
+        <div class="label"><span class="ic">🌱</span> Vandaag · Dag 11</div>
+        <div class="titel">5 typen prospects + funnel als ritme</div>
+        <div class="sub">0 van 6 stappen klaar</div>
+      </div>
+      <div class="tegel k d">
+        <div class="label"><span class="ic">👤</span> Klant</div>
+        <div class="titel">Sandra de Vries</div>
+        <div class="sub">Fase: opvolgen · 2 open acties</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- E -->
+  <section class="stijl">
+    <div class="stijl-kop">
+      <div class="letter">E</div>
+      <div>
+        <h2>Watermerk-icoon in de hoek</h2>
+        <div class="desc">Een groot, heel vaag icoon op de achtergrond. Geen kleur nodig, wel meteen herkenbaar.</div>
+      </div>
+    </div>
+    <div class="rij">
+      <div class="tegel v e">
+        <div class="wm">🌱</div>
+        <div class="label"><span class="ic">🌱</span> Vandaag · Dag 11</div>
+        <div class="titel">5 typen prospects + funnel als ritme</div>
+        <div class="sub">0 van 6 stappen klaar</div>
+      </div>
+      <div class="tegel k e">
+        <div class="wm">👤</div>
+        <div class="label"><span class="ic">👤</span> Klant</div>
+        <div class="titel">Sandra de Vries</div>
+        <div class="sub">Fase: opvolgen · 2 open acties</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- F -->
+  <section class="stijl">
+    <div class="stijl-kop">
+      <div class="letter">F</div>
+      <div>
+        <h2>Subtiele kleur-gradient — de variant van net (meeste kleur)</h2>
+        <div class="desc">Ter vergelijking. Dit vond je te veel kleur / te veel speeltuin.</div>
+      </div>
+    </div>
+    <div class="rij">
+      <div class="tegel v f">
+        <div class="label"><span class="ic">🌱</span> Vandaag · Dag 11</div>
+        <div class="titel">5 typen prospects + funnel als ritme</div>
+        <div class="sub">0 van 6 stappen klaar</div>
+      </div>
+      <div class="tegel k f">
+        <div class="label"><span class="ic">👤</span> Klant</div>
+        <div class="titel">Sandra de Vries</div>
+        <div class="sub">Fase: opvolgen · 2 open acties</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
