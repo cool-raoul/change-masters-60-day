@@ -4,7 +4,6 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { nl, enUS, fr, es, de, pt } from "date-fns/locale";
 import { PIPELINE_FASEN } from "@/lib/supabase/types";
-import { ContextKaart } from "@/components/ui/ContextKaart";
 import { ProspectActieForm } from "@/components/namenlijst/ProspectActieForm";
 import { ContactLogLijst } from "@/components/namenlijst/ContactLogLijst";
 import { ContactgegevensForm } from "@/components/namenlijst/ContactgegevensForm";
@@ -169,7 +168,7 @@ export default async function ProspectDetailPagina({
           >
             ←
           </Link>
-          <ContextKaart context="klanten" className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0">
             <h1 className="font-serif-warm text-2xl sm:text-3xl text-cm-white break-words leading-tight">
               {prospect.volledige_naam}
             </h1>
@@ -196,7 +195,7 @@ export default async function ProspectDetailPagina({
                 </span>
               )}
             </div>
-          </ContextKaart>
+          </div>
         </div>
 
         {/* Sponsor-info-strip, neutrale weergave (geen 'kijkt mee'-vibe). */}
