@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ELEVA — wegwijzing via structuur (goud, geen kleur)</title>
+<style>
+  :root{
+    --bg:#0a0a0a; --panel:#15171c; --panel2:#1b1e25;
+    --gold:#c9a961; --gold-soft:rgba(201,160,97,.14); --cream:#f5e9c4;
+    --ink:#ececdc; --dim:rgba(236,234,220,.55);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:radial-gradient(900px 480px at 50% -12%, rgba(201,160,97,.07), transparent 70%), var(--bg);
+       color:var(--ink); font-family:Inter,system-ui,"Segoe UI",sans-serif; line-height:1.5; padding:36px 18px 80px;}
+  .wrap{max-width:1000px; margin:0 auto;}
+  .kop{text-align:center; margin-bottom:8px;}
+  .kop h1{font-size:26px; font-weight:800; margin:0 0 6px;
+    background:linear-gradient(135deg,#fff,var(--cream) 50%,var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .kop p{color:var(--dim); font-size:14px; max-width:640px; margin:0 auto;}
+  .legenda{margin:22px auto 30px; max-width:720px; background:var(--panel); border:1px solid var(--gold-soft); border-radius:14px; padding:14px 18px; font-size:13px; color:var(--dim);}
+  .legenda b{color:var(--ink);}
+  .legenda .pin{color:var(--gold); font-weight:700;}
+
+  .scherm-label{font-size:11px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--dim); margin:34px 0 10px;}
+
+  /* App-frame */
+  .app{display:grid; grid-template-columns:210px 1fr; border:1px solid var(--gold-soft); border-radius:18px; overflow:hidden; background:#0c0d11;}
+  @media (max-width:680px){ .app{grid-template-columns:1fr;} .side{display:none;} }
+
+  .side{background:#0b0c10; border-right:1px solid var(--gold-soft); padding:16px 12px;}
+  .brand{display:flex; align-items:center; gap:9px; padding:4px 8px 16px;}
+  .brand .logo{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--gold),var(--cream));}
+  .brand .nm{font-weight:800; letter-spacing:.14em; font-size:13px; color:var(--cream);}
+  .nav a{display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; color:var(--dim); text-decoration:none; font-size:13.5px; font-weight:600; border-left:3px solid transparent; margin-bottom:2px;}
+  .nav a .i{width:18px; text-align:center;}
+  .nav a.actief{color:var(--gold); background:rgba(201,160,97,.10); border-left-color:var(--gold);}
+
+  .main{padding:22px 22px 26px;}
+
+  /* DE SCHERMKOP — het "je bent hier" */
+  .schermkop{padding-bottom:14px; border-bottom:1px solid var(--gold-soft); margin-bottom:18px;}
+  .schermkop .rij{display:flex; align-items:center; gap:12px;}
+  .schermkop .ic{font-size:26px; line-height:1;}
+  .schermkop h2{margin:0; font-size:24px; font-weight:800;
+    background:linear-gradient(135deg,#fff,var(--cream) 55%,var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .schermkop .sub{color:var(--dim); font-size:13px; margin-top:4px;}
+
+  /* Kaarten met gouden kop (zoals de VANDAAG IS DAG 11-tegel) */
+  .kaart{background:var(--panel); border:1px solid var(--gold-soft); border-radius:14px; padding:15px 17px; margin-bottom:14px;}
+  .kaart .kkop{font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); display:flex; align-items:center; gap:7px; margin-bottom:9px;}
+  .kaart .kkop .meta{margin-left:auto; color:var(--dim); font-weight:600; letter-spacing:.04em; text-transform:none;}
+  .kaart .titel{font-size:16px; font-weight:700; color:var(--ink); margin:0 0 4px;}
+  .kaart .tekst{font-size:13.5px; color:var(--dim);}
+  .kaart .naam{font-size:22px; font-weight:700; color:var(--ink); font-family:Georgia,"Times New Roman",serif; margin:2px 0 8px;}
+  .chips{display:flex; gap:8px; flex-wrap:wrap;}
+  .chip{font-size:11px; font-weight:600; padding:3px 9px; border-radius:999px; background:var(--panel2); border:1px solid var(--gold-soft); color:var(--dim);}
+  .stap{display:flex; gap:9px; align-items:flex-start; font-size:13.5px; color:var(--ink); padding:5px 0;}
+  .stap .b{color:var(--gold);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="kop">
+    <h1>Wegwijzing via structuur — goud, geen kleur</h1>
+    <p>Je weet altijd waar je bent via drie dingen, allemaal in het bestaande goud-luxe: een duidelijke <b>schermkop</b>, het <b>oplichtende menu-item</b>, en herkenbare <b>kaart-koppen</b> per soort. Hieronder twee schermen ter vergelijking.</p>
+  </div>
+
+  <div class="legenda">
+    Let op de <span class="pin">drie wegwijzers</span>: <b>1)</b> de grote kop bovenaan met icoon + sectienaam + het gouden lijntje, <b>2)</b> in het menu links staat het actieve item in goud opgelicht, <b>3)</b> elke kaart heeft z'n eigen gouden kop-labeltje (zoals je "VANDAAG IS DAG 11"-tegel). Geen enkele nieuwe kleur, puur goud-op-zwart.
+  </div>
+
+  <!-- SCHERM 1: VANDAAG -->
+  <div class="scherm-label">Scherm 1 — Vandaag</div>
+  <div class="app">
+    <aside class="side">
+      <div class="brand"><div class="logo"></div><div class="nm">ELEVA</div></div>
+      <nav class="nav">
+        <a href="#"><span class="i">⚡</span> Dashboard</a>
+        <a href="#" class="actief"><span class="i">🌱</span> Vandaag</a>
+        <a href="#"><span class="i">🤖</span> ELEVA Mentor</a>
+        <a href="#"><span class="i">💬</span> Mijn chats</a>
+        <a href="#"><span class="i">👥</span> Namenlijst</a>
+        <a href="#"><span class="i">🔔</span> Herinneringen</a>
+        <a href="#"><span class="i">📋</span> Scripts</a>
+        <a href="#"><span class="i">📚</span> Academy</a>
+      </nav>
+    </aside>
+    <section class="main">
+      <div class="schermkop">
+        <div class="rij"><span class="ic">🌱</span><h2>Vandaag</h2></div>
+        <div class="sub">Dag 11 van je 60-dagen-ritme · 0 van 6 stappen klaar</div>
+      </div>
+
+      <div class="kaart">
+        <div class="kkop">📖 Les van vandaag <span class="meta">Dag 11</span></div>
+        <div class="titel">5 typen prospects + funnel als ritme</div>
+        <div class="tekst">Vandaag leer je je mensen in te delen in vijf typen, zodat je weet wie je wanneer benadert en de funnel een rustig ritme krijgt.</div>
+      </div>
+
+      <div class="kaart">
+        <div class="kkop">✅ Nu ga je doen <span class="meta">6 stappen</span></div>
+        <div class="stap"><span class="b">1.</span> Pak je namenlijst erbij en kies 5 mensen.</div>
+        <div class="stap"><span class="b">2.</span> Deel ze in bij een van de vijf typen.</div>
+        <div class="stap"><span class="b">3.</span> Nodig de eerste twee uit voor een gesprek.</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- SCHERM 2: KLANTEN -->
+  <div class="scherm-label">Scherm 2 — Klanten (zelfde stijl, andere sectie)</div>
+  <div class="app">
+    <aside class="side">
+      <div class="brand"><div class="logo"></div><div class="nm">ELEVA</div></div>
+      <nav class="nav">
+        <a href="#"><span class="i">⚡</span> Dashboard</a>
+        <a href="#"><span class="i">🌱</span> Vandaag</a>
+        <a href="#"><span class="i">🤖</span> ELEVA Mentor</a>
+        <a href="#"><span class="i">💬</span> Mijn chats</a>
+        <a href="#" class="actief"><span class="i">👥</span> Namenlijst</a>
+        <a href="#"><span class="i">🔔</span> Herinneringen</a>
+        <a href="#"><span class="i">📋</span> Scripts</a>
+        <a href="#"><span class="i">📚</span> Academy</a>
+      </nav>
+    </aside>
+    <section class="main">
+      <div class="schermkop">
+        <div class="rij"><span class="ic">👥</span><h2>Klanten</h2></div>
+        <div class="sub">Jouw mensen en hun opvolging</div>
+      </div>
+
+      <div class="kaart">
+        <div class="kkop">👤 Klant <span class="meta">opvolgen</span></div>
+        <div class="naam">Sandra de Vries</div>
+        <div class="chips">
+          <span class="chip">Fase: opvolgen</span>
+          <span class="chip">2 open acties</span>
+          <span class="chip">Hoge prioriteit</span>
+        </div>
+      </div>
+
+      <div class="kaart">
+        <div class="kkop">📞 Volgende stap</div>
+        <div class="tekst">Bel of app Sandra over haar uitkomst van "Jouw gezonde start". Herinnering staat klaar voor morgen.</div>
+      </div>
+    </section>
+  </div>
+
+</div>
+</body>
+</html>
