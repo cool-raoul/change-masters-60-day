@@ -1,10 +1,12 @@
 // Eén bron van waarheid voor de context-kleuren (visuele wegwijzing).
-// Per context: label, icoon en de kleur-classes voor de kopbalk.
 //
-// Kleur omruilen = hier één regel aanpassen. De banden zijn ingetogen
-// jewel-tones (diepe, verfijnde gradients) zodat het luxe blijft, en ze
-// werken op zowel de donkere als de lichte kaart-body (die past zich via de
-// cm-surface-variabele aan het gekozen thema aan).
+// Stijl: exact zoals de bestaande dashboard-tegel ("VANDAAG IS DAG 11") —
+// een SUBTIELE gekleurde gradient over de tegel + een zachte gekleurde rand +
+// een klein gekleurd icoon-label. Geen balk, geen felle kleuren. Per context
+// z'n eigen zachte kleur, in dezelfde luxe dark+gold-stijl.
+//
+// Kleur omruilen = hier één regel. Body-tekst blijft cm-white en past zich aan
+// het thema (dark/light) aan; de gradient is themaonafhankelijk en zacht.
 //
 // Let op: dit bestand staat bewust in components/ (niet lib/), want Tailwind
 // scant alleen ./app en ./components voor class-namen.
@@ -19,41 +21,46 @@ export type ContextId =
 export type ContextKleur = {
   label: string;
   icoon: string;
-  /** Kopbalk: achtergrond-gradient + tekstkleur. */
-  band: string;
-  /** Optioneel gekleurd randje links (voor lichtere accenten). */
-  randLinks: string;
+  /** Subtiele gekleurde gradient + zachte rand (zoals de dashboard-tegel). */
+  tegel: string;
+  /** Zachte kleur voor het kleine icoon-label bovenin. */
+  accent: string;
 };
 
 export const CONTEXT_KLEUREN: Record<ContextId, ContextKleur> = {
   vandaag: {
     label: "Vandaag",
     icoon: "🌱",
-    band: "bg-gradient-to-r from-emerald-800 to-emerald-600 text-white",
-    randLinks: "border-emerald-500",
+    tegel:
+      "bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 border border-emerald-500/40",
+    accent: "text-emerald-300",
   },
   klanten: {
     label: "Klant",
     icoon: "👥",
-    band: "bg-gradient-to-r from-sky-800 to-sky-600 text-white",
-    randLinks: "border-sky-500",
+    tegel:
+      "bg-gradient-to-br from-sky-500/20 to-sky-500/5 border border-sky-500/40",
+    accent: "text-sky-300",
   },
   leren: {
     label: "Leren",
     icoon: "📚",
-    band: "bg-gradient-to-r from-violet-800 to-violet-600 text-white",
-    randLinks: "border-violet-500",
+    tegel:
+      "bg-gradient-to-br from-violet-500/20 to-violet-500/5 border border-violet-500/40",
+    accent: "text-violet-300",
   },
   herinneringen: {
     label: "Herinnering",
     icoon: "🔔",
-    band: "bg-gradient-to-r from-rose-700 to-rose-500 text-white",
-    randLinks: "border-rose-400",
+    tegel:
+      "bg-gradient-to-br from-rose-500/20 to-rose-500/5 border border-rose-500/40",
+    accent: "text-rose-300",
   },
   mentor: {
     label: "Mentor",
     icoon: "🤖",
-    band: "bg-gradient-gold text-cm-on-gold",
-    randLinks: "border-cm-gold",
+    tegel:
+      "bg-gradient-to-br from-cm-gold/20 to-cm-gold/5 border border-cm-gold/40",
+    accent: "text-cm-gold",
   },
 };
