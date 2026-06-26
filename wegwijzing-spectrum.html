@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ELEVA — hoeveel kleur? (schuifregelaar)</title>
+<style>
+  :root{
+    --bg:#0a0a0a; --panel:#15171c; --panel2:#1b1e25;
+    --gold:#c9a961; --gold-soft:rgba(201,160,97,.16); --cream:#f5e9c4;
+    --ink:#ececdc; --dim:rgba(236,234,220,.55);
+    /* edelsteen-smaragd (diep, luxe, niet fel) */
+    --jade:#3fa37e; --jade-deep:34,120,90;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:radial-gradient(900px 480px at 50% -12%, rgba(201,160,97,.07), transparent 70%), var(--bg);
+       color:var(--ink); font-family:Inter,system-ui,"Segoe UI",sans-serif; line-height:1.5; padding:36px 18px 80px;}
+  .wrap{max-width:960px; margin:0 auto;}
+  .kop{text-align:center; margin-bottom:8px;}
+  .kop h1{font-size:25px; font-weight:800; margin:0 0 6px;
+    background:linear-gradient(135deg,#fff,var(--cream) 50%,var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .kop p{color:var(--dim); font-size:14px; max-width:600px; margin:0 auto;}
+  .leg{margin:20px auto 28px; max-width:680px; background:var(--panel); border:1px solid var(--gold-soft); border-radius:14px; padding:14px 18px; font-size:13px; color:var(--dim); text-align:center;}
+  .leg b{color:var(--ink);}
+
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  @media (max-width:680px){ .grid{grid-template-columns:1fr;} }
+
+  .blok .lab{font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); margin:0 0 3px;}
+  .blok .desc{font-size:12.5px; color:var(--dim); margin:0 0 10px;}
+
+  /* basis-tegel */
+  .tg{position:relative; overflow:hidden; background:var(--panel); border:1px solid var(--gold-soft); border-radius:14px; padding:15px 17px;}
+  .tg .kk{font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; display:flex; align-items:center; gap:7px; margin-bottom:9px; color:var(--gold);}
+  .tg .kk .meta{margin-left:auto; color:var(--dim); font-weight:600; letter-spacing:.03em; text-transform:none;}
+  .tg .titel{font-size:16px; font-weight:700; color:var(--ink); margin:0 0 4px;}
+  .tg .tekst{font-size:13.5px; color:var(--dim);}
+
+  /* L1 — goud, rustigst (geen kleur) : basis */
+
+  /* L2 — hint smaragd: icoon + label in jade, fijne lijn boven */
+  .l2{border-top:2px solid var(--jade);}
+  .l2 .kk{color:var(--jade);}
+
+  /* L3 — smaragd-accent: diepe tint in de kaart + jade label */
+  .l3{background:linear-gradient(150deg, rgba(var(--jade-deep),.16) 0%, var(--panel) 68%);}
+  .l3 .kk{color:var(--jade);}
+
+  /* L4 — smaragd + goud (duidelijkst, sieraad-gevoel) */
+  .l4{background:linear-gradient(150deg, rgba(var(--jade-deep),.30) 0%, rgba(var(--jade-deep),.05) 75%); border-color:rgba(var(--jade-deep),.5);}
+  .l4 .kk{color:var(--jade);}
+  .l4 .wm{position:absolute; right:-6px; bottom:-18px; font-size:84px; opacity:.06; pointer-events:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="kop">
+    <h1>Hoeveel kleur voelt goed?</h1>
+    <p>Dezelfde "Vandaag"-tegel, van rustig (alleen goud) naar duidelijker (smaragd + goud). De kleur is een diepe edelsteen-tint, geen fel groen, zodat het luxe blijft.</p>
+  </div>
+  <div class="leg">
+    Wijs gewoon de tegel aan die voor jou klopt: <b>net genoeg dat je 'm herkent, niet zo veel dat de luxe weggaat.</b> Dat niveau gebruik ik dan voor álle contexten (elk z'n eigen diepe edelsteen-kleur).
+  </div>
+
+  <div class="grid">
+
+    <div class="blok">
+      <div class="lab">Niveau 1 — alleen goud</div>
+      <div class="desc">Rustigst. Herkenning via icoon + woordje. (= het vorige voorstel)</div>
+      <div class="tg">
+        <div class="kk">🌱 Vandaag <span class="meta">Dag 11</span></div>
+        <div class="titel">5 typen prospects + funnel als ritme</div>
+        <div class="tekst">Vandaag leer je je mensen in te delen in vijf typen, zodat de funnel een rustig ritme krijgt.</div>
+      </div>
+    </div>
+
+    <div class="blok">
+      <div class="lab">Niveau 2 — hint smaragd</div>
+      <div class="desc">Een fijn gekleurd lijntje boven + het label in smaragd. Heel subtiel.</div>
+      <div class="tg l2">
+        <div class="kk">🌱 Vandaag <span class="meta">Dag 11</span></div>
+        <div class="titel">5 typen prospects + funnel als ritme</div>
+        <div class="tekst">Vandaag leer je je mensen in te delen in vijf typen, zodat de funnel een rustig ritme krijgt.</div>
+      </div>
+    </div>
+
+    <div class="blok">
+      <div class="lab">Niveau 3 — smaragd-accent</div>
+      <div class="desc">Een diepe edelsteen-tint in de kaart. Duidelijk, maar nog ingetogen.</div>
+      <div class="tg l3">
+        <div class="kk">🌱 Vandaag <span class="meta">Dag 11</span></div>
+        <div class="titel">5 typen prospects + funnel als ritme</div>
+        <div class="tekst">Vandaag leer je je mensen in te delen in vijf typen, zodat de funnel een rustig ritme krijgt.</div>
+      </div>
+    </div>
+
+    <div class="blok">
+      <div class="lab">Niveau 4 — smaragd + goud</div>
+      <div class="desc">Duidelijkst, sieraad-gevoel (edelsteen + goud) + vaag watermerk.</div>
+      <div class="tg l4">
+        <div class="wm">🌱</div>
+        <div class="kk">🌱 Vandaag <span class="meta">Dag 11</span></div>
+        <div class="titel">5 typen prospects + funnel als ritme</div>
+        <div class="tekst">Vandaag leer je je mensen in te delen in vijf typen, zodat de funnel een rustig ritme krijgt.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>
