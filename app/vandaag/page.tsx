@@ -192,7 +192,7 @@ export default async function VandaagPagina({
   // Founder mag via ?dag=N elke dag bekijken zonder z'n eigen voortgang
   // aan te raken. Member negeert de query-param (security).
   const dagParam =
-    isFounder && sp.dag ? Number.parseInt(sp.dag, 10) : NaN;
+    (isFounder || isTester) && sp.dag ? Number.parseInt(sp.dag, 10) : NaN;
   const dagOverride =
     Number.isFinite(dagParam) && dagParam >= 1 && dagParam <= 60
       ? dagParam
@@ -577,6 +577,7 @@ export default async function VandaagPagina({
           initialZinnen={initialZinnen}
           voornaam={voornaam}
           isFounder={isFounder}
+          isTester={isTester}
           uiOverrides={uiOverrides}
           groetOverrides={groetOverrides}
           paginaBlokken={paginaBlokken}

@@ -133,6 +133,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
         <div className="flex-1 flex flex-col min-h-0 min-w-0">
           <FounderTopStrip
             isFounder={profielData.role === "founder"}
+            magSpringen={isFounderOfTester}
             huidigeDag={huidigeDag}
           />
           <Topbar

@@ -67,6 +67,7 @@ type Props = {
   voornaam: string;
   /** Toont de founder-bewerk-banner bovenaan de flow als true. */
   isFounder?: boolean;
+  isTester?: boolean;
   /** Per-namespace tekst-overrides geladen op de server. */
   uiOverrides?: Record<string, string>;
   groetOverrides?: Record<string, string>;
@@ -126,6 +127,7 @@ function VandaagFlowInner({
   initialZinnen,
   voornaam,
   isFounder = false,
+  isTester = false,
   uiOverrides = {},
   groetOverrides = {},
   paginaBlokken = {},
@@ -354,10 +356,10 @@ function VandaagFlowInner({
       <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
         {/* Founder-toolbar: dag-spring + edit-modus toggle. Geen aparte
             /playbook?preview-link meer nodig — bewerken kan direct hier. */}
-        {isFounder && (
+        {(isFounder || isTester) && (
           <div className="space-y-2">
             <TesterToolbar huidigeDag={dag.nummer} urlModus="queryparam" />
-            <EditModeToggle isFounder={isFounder} />
+            {isFounder && <EditModeToggle isFounder={isFounder} />}
           </div>
         )}
 
