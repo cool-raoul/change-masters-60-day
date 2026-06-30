@@ -27,7 +27,15 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { transcript: ruwTranscript, taal }: { transcript: string; taal?: string } = body;
+    const {
+      transcript: ruwTranscript,
+      taal,
+      actieve_prospect_id: actieveProspectId,
+    }: {
+      transcript: string;
+      taal?: string;
+      actieve_prospect_id?: string | null;
+    } = body;
 
     if (!ruwTranscript || ruwTranscript.trim().length < 3) {
       return new Response(JSON.stringify({ fout: "Geen transcript" }), {
@@ -53,6 +61,18 @@ export async function POST(request: Request) {
     const namenLijst = (bestaandeProspects || [])
       .map((p) => `- ${p.volledige_naam} (id: ${p.id}, fase: ${p.pipeline_fase})`)
       .join("\n");
+
+    // Kaart-context: spreek je op een klantenkaart in, dan is dat standaard de
+    // persoon waar notitie/taak/bestelling/status bij horen als er geen andere
+    // naam genoemd wordt. Lost de "verkeerd verstane naam = verdwenen notitie"
+    // op wanneer je gewoon op de kaart zelf inspreekt.
+    const actieveProspect =
+      actieveProspectId && bestaandeProspects
+        ? bestaandeProspects.find((p) => p.id === actieveProspectId)
+        : null;
+    const actieveKaartContext = actieveProspect
+      ? `\nACTIEVE KAART (je staat NU op de klantenkaart van deze persoon):\n- ${actieveProspect.volledige_naam} (id: ${actieveProspect.id}, fase: ${actieveProspect.pipeline_fase})\nNotitie/taak/bestelling/status die de gebruiker inspreekt ZONDER een andere naam te noemen, hoort bij DEZE persoon. Gebruik dan prospect_naam: "${actieveProspect.volledige_naam}" (id ${actieveProspect.id}). Noemt de gebruiker wél duidelijk een andere bestaande naam, dan gaat het over die ander.`
+      : "";
 
     // Ook gearchiveerde prospects meesturen, zodat "herstel" / "haal terug" werkt
     const { data: gearchiveerdeProspects } = await supabase
@@ -95,6 +115,7 @@ Taal van transcript: ${taalLabel}
 
 BESTAANDE PROSPECTS / MEMBERS IN DE LIJST:
 ${namenLijst || "(nog geen prospects)"}
+${actieveKaartContext}
 
 GEARCHIVEERDE PROSPECTS (voor herstel / "haal terug uit archief"):
 ${archiefLijst || "(geen gearchiveerd)"}
@@ -331,6 +352,8 @@ Signaalwoorden die ALTIJD product_bestelling vereisen:
 - "heeft ingeschreven als klant met [product]"
 - "starterpakket / basispakket / welk product dan ook"
 - "heeft vandaag/gisteren/op [datum] [product] genomen"
+- "memberbestelling gedaan", "bestelling/order geplaatst", "member gedaan"
+- "start(en) met het [X]-programma", "begint met [pakket/programma]", "pakket meegegeven / in de hand gegeven"
 
 Datum: als gebruiker zegt "vandaag" → vandaag. "Gisteren" → -1 dag. "Vorige week" → -7 dagen. Geen datum genoemd → vandaag.
 
@@ -392,8 +415,10 @@ Spraak is vrij en creatief. De gebruiker kan commando's op veel manieren verwoor
 - "Verzet X naar vrijdag" (bestaande herinnering) → update_herinnering
 Wees soepel in interpretatie maar wees strikt in identificatie: als de naam niet matcht met de lijst, gebruik dan "onduidelijk" i.p.v. gokken.
 
-REGEL 8, TAAK-ACTIE ALLEEN BIJ EXPLICIETE HERINNER-TRIGGER
-Maak ALLEEN een { "type": "taak" } actie als de gebruiker zelf om een reminder/todo vraagt. Expliciete triggers:
+REGEL 8, TAAK-ACTIE BIJ EEN HERINNER-VRAAG OF EEN CONCRETE OPVOLG-AFSPRAAK
+Maak een { "type": "taak" } actie in TWEE gevallen:
+
+(a) De gebruiker vraagt zelf om een reminder/todo. Triggers:
 - "herinner me (om) ..."
 - "zet op mijn lijst ..."
 - "vergeet niet dat ik ..."
@@ -401,10 +426,16 @@ Maak ALLEEN een { "type": "taak" } actie als de gebruiker zelf om een reminder/t
 - "ik moet X (nog) bellen / opvolgen / spreken / mailen"
 - "maak een herinnering om ..."
 
+(b) De gebruiker noemt een CONCRETE OPVOLG-ACTIE die HIJZELF gaat doen, MET een (expliciete of relatieve) datum, OOK zonder de woorden "herinner me". Maak dan PER opvolgmoment een aparte taak met die datum als vervaldatum. Voorbeelden:
+- "opvolgafspraak op 3 juli om te checken of de producten binnen zijn" → taak { titel: "Checken of producten binnen zijn", vervaldatum: 3 juli }
+- "opvolgen op 21 juli welke producten ze wil voor de maand erna" → taak { titel: "...", vervaldatum: 21 juli }
+- "in september bellen", "volgende week checken", "over een maand terugkomen" → taak met die datum
+Twee opvolgmomenten in één verhaal = TWEE aparte taken. Een "opvolgafspraak / opvolgmoment / terugkoppeling op [datum]" is ALTIJD een taak, ook zonder "herinner me".
+
 GEEN taak aanmaken bij:
-- Feiten over een prospect ("X komt zaterdag", "X heeft besteld", "X heeft afgezegd") → dit is een fase-verandering of contact_log, NIET een taak.
+- Feiten over een prospect ("X heeft besteld", "X heeft afgezegd") → fase-verandering of contact_log, NIET een taak.
 - Plannen of acties van de prospect zelf ("hij gaat volgende week beginnen") → notitie.
-- Agenda-afspraken die al vastliggen ("vrijdag heb ik een gesprek met X") zonder expliciete herinner-vraag → optioneel notitie, geen taak.
+- Een afspraak waar de PROSPECT naartoe komt ("vrijdag komt X naar de presentatie") → fase "uitgenodigd", geen taak. Het verschil: een opvolg-actie die JIJ doet = taak; een afspraak die de PROSPECT heeft = fase/notitie.
 
 Voorbeeld FOUT → GOED:
 Transcript: "Kees komt zaterdag naar de presentatie"
@@ -413,6 +444,9 @@ Transcript: "Kees komt zaterdag naar de presentatie"
 
 Transcript: "Herinner me om Maria donderdag te bellen"
 → GOED: taak { prospect_naam: "Maria", titel: "Maria bellen", vervaldatum: eerstvolgende donderdag }
+
+Transcript: "Opvolgafspraak 3 juli of de producten binnen zijn, en 21 juli welke ze wil"
+→ GOED: TWEE taken: { titel: "Checken of producten binnen zijn", vervaldatum: 3 juli } EN { titel: "Checken welke producten ze wil", vervaldatum: 21 juli }
 
 STANDAARD REGELS:
 - Altijd lege arrays retourneren als er niks is, MAAR: als acties leeg is EN coach_bericht null, vul dan ALTIJD "onduidelijk" met een uitleg (zie REGEL 6)

@@ -438,10 +438,18 @@ export function VoiceFab() {
   async function verwerk(tekst: string) {
     setFase("verwerken");
     try {
+      // Kaart-context: spreek je op /namenlijst/[id], dan weet de parser
+      // standaard over wie het gaat, ook als je de naam niet (goed) noemt.
+      const kaartMatch = pathname?.match(/\/namenlijst\/([0-9a-fA-F-]{36})/);
+      const actieveProspectId = kaartMatch ? kaartMatch[1] : null;
       const res = await fetch("/api/voice-parse", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ transcript: tekst, taal }),
+        body: JSON.stringify({
+          transcript: tekst,
+          taal,
+          actieve_prospect_id: actieveProspectId,
+        }),
       });
       if (!res.ok) {
         const err = await res.text();
