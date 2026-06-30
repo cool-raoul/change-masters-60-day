@@ -12,6 +12,11 @@
 //   - "[dd-m-jjjj] ..."-stempel      -> aparte regel met die datum
 //   - de overige vrije tekst          -> één regel op created_at
 //
+// Ontdubbeling:
+//   - identieke segmenten binnen één kaart worden 1 regel
+//   - een segment dat (qua tekst) al als bestaande contact-log op de
+//     kaart staat wordt overgeslagen (geen kopie van wat er al is)
+//
 // Idempotent: elke aangemaakte regel krijgt script_gebruikt =
 // 'migratie-notitieboekje'. Een prospect die zo'n regel al heeft
 // wordt overgeslagen, dus dubbel draaien kan geen kwaad.
@@ -32,16 +37,17 @@ const MARKER = "migratie-notitieboekje";
 const DOEL_EMAILS = ["gabyvijfs@gmail.com", "raoulzeewijk@hotmail.com"];
 
 function isoVan(d, m, y, offsetMin = 0) {
-  // dd-m-jjjj -> ISO timestamp op 12:00 + offset (volgorde binnen dag behouden)
-  const dt = new Date(
-    Number(y),
-    Number(m) - 1,
-    Number(d),
-    12,
-    offsetMin,
-    0,
-  );
+  const dt = new Date(Number(y), Number(m) - 1, Number(d), 12, offsetMin, 0);
   return dt.toISOString();
+}
+
+// Normaliseer tekst voor ontdubbeling (kleine letters, alleen letters/cijfers).
+function norm(t) {
+  return String(t)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .slice(0, 160);
 }
 
 // Splitst één notities-tekst in gedateerde segmenten.
@@ -73,7 +79,6 @@ function splitsNotities(notities, createdAtIso) {
   }
   flush();
 
-  // datums afronden + volgorde-offset binnen dezelfde dag
   segmenten.forEach((s, i) => {
     if (s.soort === "intake" && !s.datum) {
       const t = s.regels.join("\n");
@@ -81,12 +86,16 @@ function splitsNotities(notities, createdAtIso) {
       if (m) s.datum = isoVan(m[1], m[2], m[3], i);
     }
     if (!s.datum) {
-      // algemeen + fallback: op created_at (met kleine offset voor volgorde)
       const base = new Date(createdAtIso);
       base.setSeconds(base.getSeconds() + i);
       s.datum = base.toISOString();
     }
-    s.tekst = s.regels.join("\n").trim();
+    let tekst = s.regels.join("\n").trim();
+    // De "[dd-m-jjjj]"-stempel weghalen: de regel is nu zelf gedateerd.
+    if (s.soort === "gedateerd") {
+      tekst = tekst.replace(/^\s*\[\d{1,2}-\d{1,2}-\d{4}\]\s*/, "");
+    }
+    s.tekst = tekst;
   });
 
   return segmenten;
@@ -102,17 +111,10 @@ function splitsNotities(notities, createdAtIso) {
 
   let users;
   if (ALLE) {
-    users = (
-      await c.query(
-        "select id, email, full_name from profiles order by full_name",
-      )
-    ).rows;
+    users = (await c.query("select id, email, full_name from profiles order by full_name")).rows;
   } else {
     users = (
-      await c.query(
-        "select id, email, full_name from profiles where email = any($1)",
-        [DOEL_EMAILS],
-      )
+      await c.query("select id, email, full_name from profiles where email = any($1)", [DOEL_EMAILS])
     ).rows;
   }
 
@@ -123,7 +125,8 @@ function splitsNotities(notities, createdAtIso) {
 
   let totProspects = 0,
     totSegmenten = 0,
-    totOvergeslagen = 0;
+    totOvergeslagen = 0,
+    totDubbel = 0;
   const voorbeelden = [];
 
   for (const u of users) {
@@ -139,7 +142,6 @@ function splitsNotities(notities, createdAtIso) {
       uOver = 0;
 
     for (const p of prospects) {
-      // idempotent: al gemigreerd?
       const al = await c.query(
         "select 1 from contact_logs where prospect_id=$1 and script_gebruikt=$2 limit 1",
         [p.id, MARKER],
@@ -149,19 +151,37 @@ function splitsNotities(notities, createdAtIso) {
         continue;
       }
 
-      const segmenten = splitsNotities(p.notities, p.created_at.toISOString());
+      // Bestaande (niet-gemigreerde) logs: hun tekst niet opnieuw kopiëren.
+      const bestaand = await c.query(
+        "select notities from contact_logs where prospect_id=$1 and (script_gebruikt is distinct from $2)",
+        [p.id, MARKER],
+      );
+      const gezien = new Set();
+      for (const b of bestaand.rows) if (b.notities) gezien.add(norm(b.notities));
+
+      const ruw = splitsNotities(p.notities, p.created_at.toISOString());
+      const segmenten = [];
+      for (const s of ruw) {
+        const key = norm(s.tekst);
+        if (!key || gezien.has(key)) {
+          totDubbel++;
+          continue;
+        }
+        gezien.add(key);
+        segmenten.push(s);
+      }
       if (segmenten.length === 0) continue;
 
       uProspects++;
       uSegmenten += segmenten.length;
 
-      if (voorbeelden.length < 6) {
+      if (voorbeelden.length < 8) {
         voorbeelden.push({
           naam: p.volledige_naam,
           segmenten: segmenten.map((s) => ({
             soort: s.soort,
             datum: s.datum.slice(0, 10),
-            kop: s.tekst.replace(/\s+/g, " ").slice(0, 70),
+            kop: s.tekst.replace(/\s+/g, " ").slice(0, 64),
           })),
         });
       }
@@ -177,7 +197,7 @@ function splitsNotities(notities, createdAtIso) {
     }
 
     console.log(
-      `${u.full_name}: ${uProspects} kaarten -> ${uSegmenten} regels${uOver ? ` (${uOver} al gemigreerd, overgeslagen)` : ""}`,
+      `${u.full_name}: ${uProspects} kaarten -> ${uSegmenten} regels${uOver ? ` (${uOver} al gemigreerd)` : ""}`,
     );
     totProspects += uProspects;
     totSegmenten += uSegmenten;
@@ -185,7 +205,7 @@ function splitsNotities(notities, createdAtIso) {
   }
 
   console.log(
-    `\nTOTAAL: ${totProspects} kaarten -> ${totSegmenten} regels${totOvergeslagen ? `, ${totOvergeslagen} overgeslagen` : ""}`,
+    `\nTOTAAL: ${totProspects} kaarten -> ${totSegmenten} regels (${totDubbel} dubbele overgeslagen${totOvergeslagen ? `, ${totOvergeslagen} kaarten al gemigreerd` : ""})`,
   );
 
   console.log("\n--- VOORBEELDEN (hoe het splitst) ---");
@@ -197,9 +217,7 @@ function splitsNotities(notities, createdAtIso) {
   }
 
   if (!COMMIT)
-    console.log(
-      "\n(DRY-RUN: er is niets weggeschreven. Draai met --commit om het echt te doen.)",
-    );
+    console.log("\n(DRY-RUN: er is niets weggeschreven. Draai met --commit om het echt te doen.)");
 
   await c.end();
 })().catch((e) => {
