@@ -7,7 +7,6 @@ import { PIPELINE_FASEN } from "@/lib/supabase/types";
 import { ProspectActieForm } from "@/components/namenlijst/ProspectActieForm";
 import { ContactLogLijst } from "@/components/namenlijst/ContactLogLijst";
 import { ContactgegevensForm } from "@/components/namenlijst/ContactgegevensForm";
-import { OnboardingChecklist } from "@/components/namenlijst/OnboardingChecklist";
 import { IngezetteTools } from "@/components/namenlijst/IngezetteTools";
 import { DriewegGesprekInklapbaar } from "@/components/namenlijst/DriewegGesprek";
 import { MiniElevaUitnodigKnop } from "@/components/namenlijst/MiniElevaUitnodigKnop";
@@ -320,9 +319,6 @@ export default async function ProspectDetailPagina({
             prospectId={id}
             ingezet={prospect.ingezette_tools || []}
           />
-
-          {/* Onboarding checklist, helemaal onderaan (alleen zichtbaar bij members) */}
-          <OnboardingChecklist prospect={prospect} />
         </div>
 
         {/* Acties + contactlog */}

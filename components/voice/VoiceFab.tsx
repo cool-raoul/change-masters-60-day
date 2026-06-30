@@ -235,6 +235,10 @@ export function VoiceFab() {
   const [fase, setFase] = useState<Fase>("dicht");
   const [resultaat, setResultaat] = useState<ParseResultaat | null>(null);
   const [acties, setActies] = useState<Actie[]>([]);
+  // Controle-scherm: zelf een gemiste notitie toevoegen.
+  const [toevoegOpen, setToevoegOpen] = useState(false);
+  const [toevoegNaam, setToevoegNaam] = useState("");
+  const [toevoegTekst, setToevoegTekst] = useState("");
   const [bewerkTekst, setBewerkTekst] = useState("");
   const [coachProspectId, setCoachProspectId] = useState<string | null>(null);
   const [coachProspectNaam, setCoachProspectNaam] = useState<string | null>(null);
@@ -1166,6 +1170,41 @@ export function VoiceFab() {
     setActies((prev) => prev.filter((_, i) => i !== idx));
   }
 
+  // Naam-controle: corrigeer een (verkeerd verstane) naam en pas die overal
+  // door in de bijbehorende acties, zodat een notitie/taak/bestelling aan de
+  // juiste persoon blijft hangen.
+  function wijzigNaamOveral(oudeNaam: string, nieuweNaam: string) {
+    const oud = oudeNaam.trim().toLowerCase();
+    setActies((prev) =>
+      prev.map((a: any) => {
+        const kopie = { ...a };
+        if (
+          typeof kopie.volledige_naam === "string" &&
+          kopie.volledige_naam.trim().toLowerCase() === oud
+        )
+          kopie.volledige_naam = nieuweNaam;
+        if (
+          typeof kopie.prospect_naam === "string" &&
+          kopie.prospect_naam.trim().toLowerCase() === oud
+        )
+          kopie.prospect_naam = nieuweNaam;
+        return kopie;
+      }),
+    );
+  }
+
+  function voegNotitieToe() {
+    const tekst = toevoegTekst.trim();
+    if (!tekst) return;
+    setActies((prev) => [
+      ...prev,
+      { type: "notitie", prospect_naam: toevoegNaam.trim(), notitie: tekst } as Actie,
+    ]);
+    setToevoegNaam("");
+    setToevoegTekst("");
+    setToevoegOpen(false);
+  }
+
   function formatTijd(s: number): string {
     const m = Math.floor(s / 60);
     const sec = s % 60;
@@ -1447,10 +1486,57 @@ export function VoiceFab() {
                       Wat ELEVA gaat vastleggen:
                     </p>
                     {acties.map((a, i) => (
-                      <ActieKaart key={i} actie={a} onVerwijder={() => verwijderActie(i)} />
+                      <ActieKaart
+                        key={i}
+                        actie={a}
+                        onVerwijder={() => verwijderActie(i)}
+                        onWijzigNaam={wijzigNaamOveral}
+                      />
                     ))}
                   </div>
                 )}
+
+                {/* Zelf een gemiste notitie toevoegen (dubbele controle). */}
+                {resultaat.intentie !== "coach" &&
+                  (toevoegOpen ? (
+                    <div className="card bg-cm-surface-2 space-y-2">
+                      <input
+                        value={toevoegNaam}
+                        onChange={(e) => setToevoegNaam(e.target.value)}
+                        placeholder="Naam (bij wie hoort het?)"
+                        className="input-cm text-sm"
+                      />
+                      <textarea
+                        value={toevoegTekst}
+                        onChange={(e) => setToevoegTekst(e.target.value)}
+                        placeholder="Notitie…"
+                        className="textarea-cm text-sm"
+                        rows={2}
+                      />
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => setToevoegOpen(false)}
+                          className="btn-secondary text-xs flex-1"
+                        >
+                          Annuleren
+                        </button>
+                        <button
+                          onClick={voegNotitieToe}
+                          disabled={!toevoegTekst.trim()}
+                          className="btn-gold text-xs flex-1 disabled:opacity-40"
+                        >
+                          Toevoegen
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => setToevoegOpen(true)}
+                      className="w-full text-cm-gold text-sm border border-dashed border-cm-gold/30 rounded-xl py-2 hover:bg-cm-gold/5 transition-colors"
+                    >
+                      ➕ Zelf een notitie toevoegen
+                    </button>
+                  ))}
 
                 {resultaat.coach_bericht && (() => {
                   // Zoek een nieuwe_prospect in de acties wiens voornaam in het coach_bericht voorkomt
@@ -1574,13 +1660,30 @@ export function VoiceFab() {
   );
 }
 
-function ActieKaart({ actie, onVerwijder }: { actie: Actie; onVerwijder: () => void }) {
+function ActieKaart({
+  actie,
+  onVerwijder,
+  onWijzigNaam,
+}: {
+  actie: Actie;
+  onVerwijder: () => void;
+  onWijzigNaam: (oude: string, nieuwe: string) => void;
+}) {
   const content = beschrijfActie(actie);
   const isVerwijder =
     actie.type === "verwijder_prospect" ||
     actie.type === "verwijder_herinnering" ||
     actie.type === "wis_notities";
   const isNavigatie = actie.type === "navigeer" || actie.type === "zoek";
+
+  // Naam-controle: bij persoon-gebonden acties tonen we de naam apart en
+  // corrigeerbaar. Een verkeerd verstane naam mag nooit een verdwenen
+  // notitie opleveren.
+  const persoonNaam: string | null =
+    (actie as any).volledige_naam ?? (actie as any).prospect_naam ?? null;
+  const isNieuweNaam = actie.type === "nieuwe_prospect";
+  const [naamBewerk, setNaamBewerk] = useState(false);
+  const [naamWaarde, setNaamWaarde] = useState(persoonNaam ?? "");
 
   return (
     <div
@@ -1598,6 +1701,51 @@ function ActieKaart({ actie, onVerwijder }: { actie: Actie; onVerwijder: () => v
         {content.details.map((d, i) => (
           <p key={i} className="text-cm-white text-xs opacity-70 mt-0.5">{d}</p>
         ))}
+        {persoonNaam !== null && (
+          <div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
+            {naamBewerk ? (
+              <>
+                <input
+                  value={naamWaarde}
+                  onChange={(e) => setNaamWaarde(e.target.value)}
+                  className="input-cm text-xs py-1 flex-1 min-w-0"
+                  autoFocus
+                />
+                <button
+                  onClick={() => {
+                    const nw = naamWaarde.trim();
+                    if (nw && nw !== persoonNaam) onWijzigNaam(persoonNaam, nw);
+                    setNaamBewerk(false);
+                  }}
+                  className="text-cm-gold text-xs font-semibold px-1"
+                >
+                  ok
+                </button>
+              </>
+            ) : (
+              <>
+                <span
+                  className={`text-xs ${
+                    isNieuweNaam ? "text-yellow-400" : "text-cm-white/60"
+                  }`}
+                >
+                  {isNieuweNaam ? "⚠️ nieuwe kaart: " : "👤 "}
+                  {persoonNaam || "(geen naam)"}
+                </span>
+                <button
+                  onClick={() => {
+                    setNaamWaarde(persoonNaam);
+                    setNaamBewerk(true);
+                  }}
+                  className="text-cm-gold/70 hover:text-cm-gold text-xs"
+                  title="Naam aanpassen"
+                >
+                  ✏️
+                </button>
+              </>
+            )}
+          </div>
+        )}
       </div>
       <button
         onClick={onVerwijder}
