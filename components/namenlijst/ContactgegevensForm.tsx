@@ -124,29 +124,20 @@ export function ContactgegevensForm({ prospect }: Props) {
             naar beneden scrollen). Default INGEKLAPT zodat de pagina
             rustig opent, klik op het kopje om uit te klappen. Sectie
             verbergt zich helemaal als beide velden leeg zijn. */}
-        {(prospect.notities || prospect.situatie_kort) && (
+        {/* De aantekeningen staan nu in het notitieboekje (de tijdlijn).
+            Hier alleen nog de korte situatie-zin voor het 3-weg-script. */}
+        {prospect.situatie_kort && (
           <details className="group rounded-lg bg-cm-surface-2/40 border border-cm-border overflow-hidden">
             <summary className="cursor-pointer list-none flex items-center justify-between px-3 py-2 hover:bg-cm-surface-2/60 transition-colors">
               <span className="text-xs font-semibold text-cm-white/70 uppercase tracking-wider">
-                Aantekeningen
+                Situatie (3-weg)
               </span>
               <span className="text-cm-gold/60 text-xs transition-transform group-open:rotate-180">
                 ▼
               </span>
             </summary>
             <div className="px-3 pb-3 pt-1 space-y-3">
-              {prospect.notities && (
-                <div>
-                  <p className="text-xs text-cm-white opacity-60">{v("namenlijst.aantekeningen")}</p>
-                  <p className="text-cm-white text-sm whitespace-pre-line">{prospect.notities}</p>
-                </div>
-              )}
-              {prospect.situatie_kort && (
-                <div>
-                  <p className="text-xs text-cm-white opacity-60">Situatie (kort, voor 3-weg)</p>
-                  <p className="text-cm-white text-sm">{prospect.situatie_kort}</p>
-                </div>
-              )}
+              <p className="text-cm-white text-sm">{prospect.situatie_kort}</p>
             </div>
           </details>
         )}

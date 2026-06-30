@@ -31,6 +31,9 @@ function LogItem({ log, index, totaal, v, datumLocale }: { log: ContactLog; inde
   const [bezigMetVerwijderen, setBezigMetVerwijderen] = useState(false);
   const heeftNotes = !!(log.notities && log.notities.trim().length > 0);
   const isLang = heeftNotes && log.notities!.length > 80;
+  // Intake-regels (uit een freebie) herkennen we aan het 🌷-blok, zodat ze
+  // een eigen icoon + label krijgen in de tijdlijn.
+  const isIntake = heeftNotes && log.notities!.includes("🌷");
   const supabase = createClient();
   const router = useRouter();
 
@@ -61,7 +64,7 @@ function LogItem({ log, index, totaal, v, datumLocale }: { log: ContactLog; inde
 
       {/* Icoon */}
       <div className="absolute left-0 top-0 w-5 h-5 rounded-full bg-cm-surface-2 border border-white/30 flex items-center justify-center text-xs">
-        {CONTACT_TYPE_ICONEN[log.contact_type] || "📌"}
+        {isIntake ? "🌷" : CONTACT_TYPE_ICONEN[log.contact_type] || "📌"}
       </div>
 
       <div
@@ -72,7 +75,7 @@ function LogItem({ log, index, totaal, v, datumLocale }: { log: ContactLog; inde
       >
         <div className="flex items-center justify-between mb-1">
           <span className="text-cm-white text-xs font-semibold">
-            {v(`contactlog.${log.contact_type}`) || log.contact_type}
+            {isIntake ? "Intake" : v(`contactlog.${log.contact_type}`) || log.contact_type}
           </span>
           <div className="flex items-center gap-2">
             <span className="text-cm-white text-xs opacity-60">
@@ -118,7 +121,8 @@ function LogItem({ log, index, totaal, v, datumLocale }: { log: ContactLog; inde
 export function ContactLogLijst({ contactLogs }: Props) {
   const { v, taal } = useTaal();
   const datumLocale = DATE_LOCALES[taal] || nl;
-  const [open, setOpen] = useState(false);
+  // Het notitieboekje staat standaard open: het is hét overzicht van de klant.
+  const [open, setOpen] = useState(true);
 
   if (contactLogs.length === 0) {
     return (
@@ -139,7 +143,7 @@ export function ContactLogLijst({ contactLogs }: Props) {
         className="w-full flex items-center justify-between text-left"
       >
         <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
-          {v("contactlog.titel")} ({contactLogs.length})
+          📓 Notitieboekje ({contactLogs.length})
         </h2>
         <span
           className={`text-cm-gold text-lg transition-transform ${open ? "rotate-180" : ""}`}
@@ -149,7 +153,7 @@ export function ContactLogLijst({ contactLogs }: Props) {
       </button>
 
       {open && (
-        <div className="space-y-3">
+        <div className="space-y-3 max-h-[520px] overflow-y-auto pr-1">
           {contactLogs.map((log, i) => (
             <LogItem key={log.id} log={log} index={i} totaal={contactLogs.length} v={v} datumLocale={datumLocale} />
           ))}
