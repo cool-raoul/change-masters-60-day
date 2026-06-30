@@ -246,6 +246,9 @@ export function VoiceFab() {
   const [spraakFoutDebug, setSpraakFoutDebug] = useState<string>("");
   const [bewerkenTranscribeert, setBewerkenTranscribeert] = useState(false);
   const bewerkTextareaRef = useRef<HTMLTextAreaElement | null>(null);
+  // True terwijl je vanuit het controle-scherm extra inspreekt: de nieuwe
+  // acties worden dan AAN de lijst toegevoegd i.p.v. alles te vervangen.
+  const toevoegModusRef = useRef(false);
   const bewerkCursorRef = useRef<number>(0);
 
   // Scroll-aware: verbergen bij scroll-down, tonen bij scroll-up of aan top.
@@ -320,8 +323,22 @@ export function VoiceFab() {
   if (verbergen) return null;
 
   function openen() {
+    toevoegModusRef.current = false;
     setFase("opname");
     spraak.reset();
+    setTimeout(() => spraak.start(), 50);
+  }
+
+  // Vanuit het controle-scherm extra inspreken. De opname loopt door de
+  // normale trechter (verwerkHuidig), maar verwerk() plakt de nieuwe acties
+  // aan de bestaande lijst i.p.v. te vervangen.
+  function startToevoegInspreken() {
+    toevoegModusRef.current = true;
+    setToevoegOpen(false);
+    setSpraakFoutTekst("");
+    setSpraakFoutDebug("");
+    spraak.reset();
+    setFase("opname");
     setTimeout(() => spraak.start(), 50);
   }
 
@@ -357,6 +374,13 @@ export function VoiceFab() {
       return;
     }
     setBewerkTekst(tekst);
+    // Toevoeg-modus: ingesproken toevoeging gaat direct door de parser en
+    // wordt aan de bestaande lijst geplakt (geen aparte bewerk-stap nodig;
+    // je ziet het resultaat in het controle-scherm).
+    if (toevoegModusRef.current) {
+      await verwerk(tekst);
+      return;
+    }
     setFase("bewerken");
   }
 
@@ -462,6 +486,14 @@ export function VoiceFab() {
         return;
       }
       const data: ParseResultaat = await res.json();
+      // Toevoeg-modus: plak de nieuwe acties aan de bestaande lijst en houd
+      // het bestaande controle-scherm vast (vervang niet alles).
+      if (toevoegModusRef.current) {
+        toevoegModusRef.current = false;
+        setActies((prev) => [...prev, ...data.acties]);
+        setFase("preview");
+        return;
+      }
       setResultaat(data);
       setActies(data.acties);
       setCoachProspectId(data.coach_prospect_id || null);
@@ -1156,6 +1188,7 @@ export function VoiceFab() {
 
   function sluit() {
     spraak.reset();
+    toevoegModusRef.current = false;
     setFase("dicht");
     setResultaat(null);
     setActies([]);
@@ -1170,27 +1203,38 @@ export function VoiceFab() {
     setActies((prev) => prev.filter((_, i) => i !== idx));
   }
 
-  // Naam-controle: corrigeer een (verkeerd verstane) naam en pas die overal
-  // door in de bijbehorende acties, zodat een notitie/taak/bestelling aan de
-  // juiste persoon blijft hangen.
-  function wijzigNaamOveral(oudeNaam: string, nieuweNaam: string) {
-    const oud = oudeNaam.trim().toLowerCase();
-    setActies((prev) =>
-      prev.map((a: any) => {
+  // Per-actie bewerken (✏️ in het controle-scherm): vervang de actie op idx
+  // door de aangepaste versie. Wijzigt de naam mee, dan propageert die naar
+  // alle gekoppelde acties, zodat notitie/taak/bestelling aan de juiste
+  // persoon blijven hangen.
+  function wijzigActie(idx: number, nieuwe: Actie) {
+    setActies((prev) => {
+      const oude: any = prev[idx];
+      const oudeNaam = String(oude?.volledige_naam ?? oude?.prospect_naam ?? "")
+        .trim()
+        .toLowerCase();
+      const nieuweNaam = String(
+        (nieuwe as any)?.volledige_naam ?? (nieuwe as any)?.prospect_naam ?? "",
+      ).trim();
+      const naamGewijzigd =
+        !!oudeNaam && !!nieuweNaam && oudeNaam !== nieuweNaam.toLowerCase();
+      return prev.map((a: any, i) => {
+        if (i === idx) return nieuwe;
+        if (!naamGewijzigd) return a;
         const kopie = { ...a };
         if (
           typeof kopie.volledige_naam === "string" &&
-          kopie.volledige_naam.trim().toLowerCase() === oud
+          kopie.volledige_naam.trim().toLowerCase() === oudeNaam
         )
           kopie.volledige_naam = nieuweNaam;
         if (
           typeof kopie.prospect_naam === "string" &&
-          kopie.prospect_naam.trim().toLowerCase() === oud
+          kopie.prospect_naam.trim().toLowerCase() === oudeNaam
         )
           kopie.prospect_naam = nieuweNaam;
         return kopie;
-      }),
-    );
+      });
+    });
   }
 
   function voegNotitieToe() {
@@ -1490,7 +1534,7 @@ export function VoiceFab() {
                         key={i}
                         actie={a}
                         onVerwijder={() => verwijderActie(i)}
-                        onWijzigNaam={wijzigNaamOveral}
+                        onWijzig={(nw) => wijzigActie(i, nw)}
                       />
                     ))}
                   </div>
@@ -1530,12 +1574,20 @@ export function VoiceFab() {
                       </div>
                     </div>
                   ) : (
-                    <button
-                      onClick={() => setToevoegOpen(true)}
-                      className="w-full text-cm-gold text-sm border border-dashed border-cm-gold/30 rounded-xl py-2 hover:bg-cm-gold/5 transition-colors"
-                    >
-                      ➕ Zelf een notitie toevoegen
-                    </button>
+                    <div className="flex flex-col gap-1.5">
+                      <button
+                        onClick={startToevoegInspreken}
+                        className="w-full text-cm-gold text-sm border border-dashed border-cm-gold/40 rounded-xl py-2.5 hover:bg-cm-gold/5 transition-colors font-medium"
+                      >
+                        🎙️ Inspreken om iets toe te voegen
+                      </button>
+                      <button
+                        onClick={() => setToevoegOpen(true)}
+                        className="text-cm-white/50 text-xs hover:text-cm-white/80 self-center"
+                      >
+                        of typ het zelf
+                      </button>
+                    </div>
                   ))}
 
                 {resultaat.coach_bericht && (() => {
@@ -1660,14 +1712,51 @@ export function VoiceFab() {
   );
 }
 
+// Per actie-type: welke velden mag je in het controle-scherm met ✏️ aanpassen.
+const BEWERKBARE_VELDEN: Record<
+  string,
+  { key: string; label: string; meerregelig?: boolean; datum?: boolean }[]
+> = {
+  nieuwe_prospect: [
+    { key: "volledige_naam", label: "Naam" },
+    { key: "notities", label: "Notitie", meerregelig: true },
+  ],
+  notitie: [
+    { key: "prospect_naam", label: "Naam" },
+    { key: "notitie", label: "Notitie", meerregelig: true },
+  ],
+  taak: [
+    { key: "prospect_naam", label: "Naam" },
+    { key: "titel", label: "Titel" },
+    { key: "vervaldatum", label: "Datum", datum: true },
+  ],
+  product_bestelling: [
+    { key: "prospect_naam", label: "Naam" },
+    { key: "product_omschrijving", label: "Product" },
+    { key: "besteldatum", label: "Datum", datum: true },
+  ],
+  contact_log: [
+    { key: "prospect_naam", label: "Naam" },
+    { key: "notities", label: "Notitie", meerregelig: true },
+  ],
+  update_prospect: [
+    { key: "notities_toevoegen", label: "Notitie", meerregelig: true },
+  ],
+  update_herinnering: [
+    { key: "nieuwe_titel", label: "Titel" },
+    { key: "nieuwe_vervaldatum", label: "Datum", datum: true },
+  ],
+  hernoem_prospect: [{ key: "nieuwe_naam", label: "Nieuwe naam" }],
+};
+
 function ActieKaart({
   actie,
   onVerwijder,
-  onWijzigNaam,
+  onWijzig,
 }: {
   actie: Actie;
   onVerwijder: () => void;
-  onWijzigNaam: (oude: string, nieuwe: string) => void;
+  onWijzig: (nieuwe: Actie) => void;
 }) {
   const content = beschrijfActie(actie);
   const isVerwijder =
@@ -1675,15 +1764,11 @@ function ActieKaart({
     actie.type === "verwijder_herinnering" ||
     actie.type === "wis_notities";
   const isNavigatie = actie.type === "navigeer" || actie.type === "zoek";
-
-  // Naam-controle: bij persoon-gebonden acties tonen we de naam apart en
-  // corrigeerbaar. Een verkeerd verstane naam mag nooit een verdwenen
-  // notitie opleveren.
-  const persoonNaam: string | null =
-    (actie as any).volledige_naam ?? (actie as any).prospect_naam ?? null;
   const isNieuweNaam = actie.type === "nieuwe_prospect";
-  const [naamBewerk, setNaamBewerk] = useState(false);
-  const [naamWaarde, setNaamWaarde] = useState(persoonNaam ?? "");
+
+  const velden = BEWERKBARE_VELDEN[actie.type] || [];
+  const [bewerk, setBewerk] = useState(false);
+  const [concept, setConcept] = useState<any>(actie);
 
   return (
     <div
@@ -1697,63 +1782,92 @@ function ActieKaart({
     >
       <span className="text-2xl">{content.icoon}</span>
       <div className="flex-1 min-w-0">
-        <p className="text-cm-white font-semibold text-sm">{content.titel}</p>
-        {content.details.map((d, i) => (
-          <p key={i} className="text-cm-white text-xs opacity-70 mt-0.5">{d}</p>
-        ))}
-        {persoonNaam !== null && (
-          <div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
-            {naamBewerk ? (
-              <>
-                <input
-                  value={naamWaarde}
-                  onChange={(e) => setNaamWaarde(e.target.value)}
-                  className="input-cm text-xs py-1 flex-1 min-w-0"
-                  autoFocus
-                />
-                <button
-                  onClick={() => {
-                    const nw = naamWaarde.trim();
-                    if (nw && nw !== persoonNaam) onWijzigNaam(persoonNaam, nw);
-                    setNaamBewerk(false);
-                  }}
-                  className="text-cm-gold text-xs font-semibold px-1"
-                >
-                  ok
-                </button>
-              </>
-            ) : (
-              <>
-                <span
-                  className={`text-xs ${
-                    isNieuweNaam ? "text-yellow-400" : "text-cm-white/60"
-                  }`}
-                >
-                  {isNieuweNaam ? "⚠️ nieuwe kaart: " : "👤 "}
-                  {persoonNaam || "(geen naam)"}
-                </span>
-                <button
-                  onClick={() => {
-                    setNaamWaarde(persoonNaam);
-                    setNaamBewerk(true);
-                  }}
-                  className="text-cm-gold/70 hover:text-cm-gold text-xs"
-                  title="Naam aanpassen"
-                >
-                  ✏️
-                </button>
-              </>
-            )}
+        {bewerk ? (
+          <div className="space-y-2">
+            {velden.map((vd) => (
+              <div key={vd.key}>
+                <label className="block text-[11px] uppercase tracking-wider text-cm-white/50 mb-0.5">
+                  {vd.label}
+                </label>
+                {vd.meerregelig ? (
+                  <textarea
+                    value={concept[vd.key] ?? ""}
+                    onChange={(e) =>
+                      setConcept((c: any) => ({ ...c, [vd.key]: e.target.value }))
+                    }
+                    className="textarea-cm text-xs"
+                    rows={2}
+                  />
+                ) : (
+                  <input
+                    type={vd.datum ? "date" : "text"}
+                    value={concept[vd.key] ?? ""}
+                    onChange={(e) =>
+                      setConcept((c: any) => ({ ...c, [vd.key]: e.target.value }))
+                    }
+                    className="input-cm text-xs py-1"
+                  />
+                )}
+              </div>
+            ))}
+            <div className="flex gap-2 pt-0.5">
+              <button
+                onClick={() => {
+                  setConcept(actie);
+                  setBewerk(false);
+                }}
+                className="btn-secondary text-xs flex-1"
+              >
+                Annuleren
+              </button>
+              <button
+                onClick={() => {
+                  onWijzig(concept as Actie);
+                  setBewerk(false);
+                }}
+                className="btn-gold text-xs flex-1"
+              >
+                Opslaan
+              </button>
+            </div>
           </div>
+        ) : (
+          <>
+            <p className="text-cm-white font-semibold text-sm">{content.titel}</p>
+            {content.details.map((d, i) => (
+              <p key={i} className="text-cm-white text-xs opacity-70 mt-0.5">{d}</p>
+            ))}
+            {isNieuweNaam && (
+              <p className="text-[11px] text-yellow-400 mt-1">
+                ⚠️ nieuwe kaart, check de naam met ✏️
+              </p>
+            )}
+          </>
         )}
       </div>
-      <button
-        onClick={onVerwijder}
-        className="text-red-400 hover:text-red-300 text-sm"
-        title="Verwijder deze actie"
-      >
-        ✕
-      </button>
+      {!bewerk && (
+        <div className="flex flex-col gap-2 items-center">
+          {velden.length > 0 && (
+            <button
+              onClick={() => {
+                setConcept(actie);
+                setBewerk(true);
+              }}
+              className="text-cm-gold/70 hover:text-cm-gold text-sm"
+              title="Aanpassen"
+            >
+              ✏️
+            </button>
+          )}
+          <button
+            onClick={onVerwijder}
+            className="text-red-400 hover:text-red-300 text-sm"
+            title="Verwijder deze actie"
+          >
+            ✕
+          </button>
+        </div>
+      )}
     </div>
   );
 }
