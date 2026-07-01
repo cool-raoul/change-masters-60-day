@@ -136,7 +136,7 @@ export function DailyFocusModal({ dag, voltooidAantal }: Props) {
             Aan de slag! →
           </button>
           <Link
-            href={`/playbook?dag=${dag.nummer}`}
+            href="/vandaag"
             onClick={sluit}
             className="btn-secondary flex-1 py-3 text-center text-sm font-semibold"
           >

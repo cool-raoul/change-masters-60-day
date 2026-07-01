@@ -34,6 +34,14 @@ export default async function PlaybookDagPagina({
     redirect("/dashboard");
   }
 
+  // De losse per-dag playbook-tegel is vervangen door de volledige dag-flow op
+  // /vandaag. Deeplinks (pushes, oude reminders) sturen we daarheen zodat
+  // niemand meer op de verouderde tegel landt. De preview-modus blijft bestaan
+  // voor founders die vanuit /instellingen de dagteksten bekijken/bewerken.
+  if (!isPreview) {
+    redirect("/vandaag");
+  }
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {

@@ -145,7 +145,7 @@ export async function GET(request: Request) {
       const res = await sendPushToUser(rij.id, {
         title: titel,
         body,
-        url: `/playbook?dag=${dagNummer}`,
+        url: "/vandaag",
         tag: `stilte-${rij.id}`,
       });
       if (res.success) {
