@@ -62,14 +62,23 @@ export function taakVoor(vraagType: string): MentorTaak {
 }
 
 /**
- * Vangnet naast de vraagtype-detectie: als de gebruiker herkenbaar om een
- * POST vraagt (lanceerweek, pre-post, resultaten-post, week-plan, "schrijf
- * iets voor op Facebook/Instagram"), behandel het als post-taak, ook al
- * viel de detectie op "algemeen" of "social". Dit voorkomt dat publiek
- * schrijfwerk op het goedkope model landt.
+ * Vangnet naast de vraagtype-detectie: als de gebruiker herkenbaar vraagt om
+ * het SCHRIJVEN van een post/reel/caption, behandel het als post-taak, ook
+ * al viel de detectie ergens anders op. Vereist schrijf-intentie ("schrijf/
+ * maak/help/wil een...") naast het post-woord, zodat "iemand reageerde op
+ * mijn post" NIET als schrijfverzoek telt.
+ *
+ * Geef hier de VOLLEDIGE user-tekst van het gesprek aan mee (alle user-
+ * berichten samen): het verzoek valt vaak in het eerste bericht, terwijl de
+ * beurten daarna alleen interview-antwoorden zijn.
  */
 export function isPostVerzoek(tekst: string): boolean {
-  return /\b(post(je)?s?|pre[\s-]?post|resultaten?[\s-]?post|21[\s-]?dagen[\s-]?post|lanceer|launch|facebook|instagram|linkedin|tijdlijn|feed|story|stories|caption|onderschrift|week(content|planning|posts)|contentweek)\b/i.test(
-    tekst,
-  );
+  const t = String(tekst).toLowerCase();
+  const lanceer = /\b(lanceer|launch|pre[\s-]?post|resultaten?[\s-]?post|21[\s-]?dagen[\s-]?post)\b/;
+  if (lanceer.test(t)) return true;
+  const schrijfIntent =
+    /\b(schrijf|schrijven|maak|maken|opstellen|opzetten|help( me| mij)?|wil (een|graag|mijn)|kun je (een|mijn|iets)|kan je (een|mijn|iets))\b/;
+  const postWoord =
+    /\b(post(je)?s?|caption|onderschrift|story|stories|reel(s)?|contentweek|week(content|planning|posts)|(iets|bericht) voor (op )?(facebook|instagram|linkedin))\b/;
+  return schrijfIntent.test(t) && postWoord.test(t);
 }

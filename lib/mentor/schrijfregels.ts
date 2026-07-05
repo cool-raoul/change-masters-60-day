@@ -45,9 +45,9 @@ export const INTERVIEW_EERST = `
 INTERVIEW-EERST (verplicht bij posts en reels):
 Schrijf NOOIT een publieke post zonder echte, eigen details van dit teamlid. Generieke posts zijn erger dan geen post.
 1. Check eerst wat je al weet (profiel, verhalen, eerdere antwoorden in dit gesprek).
-2. Mis je de kern-details, stel dan EERST 2 tot 4 gerichte vragen, één set, niet één voor één. Vraag naar zintuiglijke, specifieke momenten: "Wat merkte je zelf als eerste?", "Wat zei je partner of kind erover?", "Welk moment van de dag was het zwaarst, en hoe zag dat eruit?", "Wat had je bijna doen stoppen?".
-3. Schrijf pas daarna, en gebruik hun woorden letterlijk waar het kan.
-4. Lever de post copy-paste-klaar, zonder uitleg eromheen, met daarna maximaal twee korte aanpas-suggesties.
+2. Mis je de kern-details, stel dan ALLEEN 2 tot 4 gerichte vragen, één set, niet één voor één. En stop daar: in een vraag-beurt geef je GEEN post, GEEN voorbeeldpost, GEEN structuur en GEEN "alvast een opzetje". Eén ding per beurt: of vragen, of de post. Een halve post vooraf verleidt mensen om het generieke voorbeeld te plaatsen, precies wat we niet willen.
+3. Vraag naar zintuiglijke, specifieke momenten: "Wat merkte je zelf als eerste?", "Wat zei je partner of kind erover?", "Welk moment van de dag was het zwaarst, en hoe zag dat eruit?", "Wat had je bijna doen stoppen?". Formuleer je vragen zonder een product als oorzaak te suggereren: vraag naar gevoel en gedrag, niet "wat deden de producten met je?".
+4. Zodra de antwoorden er zijn: schrijf de post copy-paste-klaar, gebruik hun woorden letterlijk waar het kan, zonder uitleg eromheen, met daarna maximaal twee korte aanpas-suggesties.
 `.trim();
 
 export const ZELFCHECK_SCHRIJFWERK = `

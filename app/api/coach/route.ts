@@ -188,13 +188,17 @@ export async function POST(request: Request) {
     const laatsteUserBericht =
       [...berichten].reverse().find((b) => b.role === "user")?.content ?? "";
 
-    // Taak-register bepaalt model + bewaking. Post-vangnet: een herkenbaar
-    // post-verzoek dat als "algemeen"/"social" is gedetecteerd behandelen we
-    // als post-taak, zodat publiek schrijfwerk nooit op het snelle model
-    // landt (dat was de gok waar Raoul eerder tegenaan liep).
+    // Taak-register bepaalt model + bewaking. Post-vangnet over ALLE user-
+    // berichten van het gesprek: het schrijfverzoek valt vaak in het eerste
+    // bericht, terwijl de beurten daarna interview-antwoorden zijn zonder
+    // het woord "post". Zonder gesprek-brede check zou de schrijf-beurt
+    // terugvallen op het snelle model zonder schrijfregels.
+    const alleUserTekst = berichten
+      .filter((b) => b.role === "user")
+      .map((b) => b.content)
+      .join("\n");
     const taakId =
-      isPostVerzoek(laatsteUserBericht) &&
-      (vraagType === "algemeen" || vraagType === "social")
+      isPostVerzoek(alleUserTekst) && !taakVoor(vraagType).schrijfwerk
         ? "post"
         : vraagType;
     const taak = taakVoor(taakId);
