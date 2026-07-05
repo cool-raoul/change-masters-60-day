@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { genereerBotToken } from "@/lib/freebie-bots/token";
 
 // POST /api/freebie/slug
 // Body: { slug }
@@ -61,17 +62,39 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { error } = await admin
+    const { data: bijgewerkt, error } = await admin
       .from("freebie_bot_member_tokens")
       .update({ publieke_slug: ruw })
       .eq("member_id", user.id)
-      .eq("bot_slug", BOT);
+      .eq("bot_slug", BOT)
+      .select("bot_slug");
     if (error) {
       // Bv. een race op de unieke index.
       return NextResponse.json(
         { error: "Dit woord is al bezet, kies een ander." },
         { status: 409 },
       );
+    }
+
+    // Geen rij geraakt = dit lid heeft nog geen token-rij voor deze bot.
+    // Maak 'm dan aan, anders krijgt de gebruiker een valse succes-melding
+    // terwijl de slug nergens is opgeslagen.
+    if (!bijgewerkt || bijgewerkt.length === 0) {
+      const { error: insertFout } = await admin
+        .from("freebie_bot_member_tokens")
+        .insert({
+          member_id: user.id,
+          bot_slug: BOT,
+          token: genereerBotToken(),
+          publieke_slug: ruw,
+        });
+      if (insertFout) {
+        // Bv. een race op de unieke index.
+        return NextResponse.json(
+          { error: "Dit woord is al bezet, kies een ander." },
+          { status: 409 },
+        );
+      }
     }
 
     return NextResponse.json({ ok: true, slug: ruw });

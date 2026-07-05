@@ -9,13 +9,11 @@
 
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { DEFAULT_FREEBIE_ACCOUNT_EMAIL } from "@/lib/freebie-bots/default-account";
 import { genereerBotToken } from "@/lib/freebie-bots/token";
 
 export const dynamic = "force-dynamic";
 
-// Default-account voor de publieke podcast-link. TODO: omzetten naar Sandy
-// zodra haar account + bot-token bestaan. Tot dan founder als placeholder.
-const DEFAULT_EMAIL = "raoulzeewijk@hotmail.com";
 const BOT_SLUG = "jouw-gezonde-start";
 
 export default async function GezondeStartLanding({
@@ -29,7 +27,7 @@ export default async function GezondeStartLanding({
   const { data: account } = await supabase
     .from("profiles")
     .select("id")
-    .eq("email", DEFAULT_EMAIL)
+    .eq("email", DEFAULT_FREEBIE_ACCOUNT_EMAIL)
     .maybeSingle();
 
   if (!account?.id) {

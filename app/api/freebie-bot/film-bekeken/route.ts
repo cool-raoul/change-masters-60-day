@@ -64,14 +64,32 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true, alGevuurd: true });
     }
 
-    // Markeer (eenmalig) + verschuif + push.
-    await admin
+    // De kolom kan NULL zijn; dan matcht het NOT-contains-filter hieronder
+    // nooit (SQL NULL-semantiek). Eerst race-veilig normaliseren naar [].
+    if (!Array.isArray(prospect.ingezette_tools)) {
+      await admin
+        .from("prospects")
+        .update({ ingezette_tools: [] })
+        .eq("id", prospect.id)
+        .is("ingezette_tools", null);
+    }
+
+    // Markeer atomair: alleen de call waarvan de update echt een rij raakt
+    // (marker was er nog niet) mag verschuiven + pushen. Zo winnen twee
+    // gelijktijdige calls nooit allebei.
+    const { data: geclaimd } = await admin
       .from("prospects")
       .update({
         ingezette_tools: [...tools, MARKER],
         updated_at: new Date().toISOString(),
       })
-      .eq("id", prospect.id);
+      .eq("id", prospect.id)
+      .not("ingezette_tools", "cs", `{"${MARKER}"}`)
+      .select("id");
+    if (!geclaimd || geclaimd.length === 0) {
+      // Een parallelle call was ons voor; die doet de push + herinnering al.
+      return NextResponse.json({ ok: true, alGevuurd: true });
+    }
 
     const naam = (prospect.volledige_naam || "Iemand").split(" ")[0];
 

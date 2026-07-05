@@ -80,6 +80,22 @@ export async function POST(req: NextRequest) {
 
     const admin = createAdminClient();
 
+    // De algemene informatiefilm ('info') geldt voor het hele team en mag
+    // daarom alleen door de founder worden gezet.
+    if (veld === "info") {
+      const { data: prof } = await admin
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .maybeSingle();
+      if ((prof as { role?: string } | null)?.role !== "founder") {
+        return NextResponse.json(
+          { error: "Alleen de founder kan de informatiefilm aanpassen" },
+          { status: 403 },
+        );
+      }
+    }
+
     const { data: bestaand } = await admin
       .from("freebie_bot_member_tokens")
       .select("token")

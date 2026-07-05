@@ -224,6 +224,21 @@ export function GezondeStartFlow({
     if (typeof window !== "undefined") window.scrollTo(0, 0);
   }, [stap]);
 
+  // Vangnet: is de opt-in-POST eerder mislukt (bv. haperend mobiel netwerk),
+  // probeer 'm bij de volgende staps-wissel stil opnieuw zodra de gegevens
+  // compleet zijn. De prospect merkt hier niets van.
+  useEffect(() => {
+    if (
+      !optInGedaanRef.current &&
+      voornaam.trim() &&
+      achternaam.trim() &&
+      EMAIL_RE.test(email)
+    ) {
+      void vangProspect();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stap]);
+
   // Founder-preview: vul een representatief voorbeeld en spring naar de uitslag
   // om de bouwsteen-teksten te kunnen bewerken.
   function springNaarUitslag() {
@@ -249,9 +264,11 @@ export function GezondeStartFlow({
 
   async function vangProspect() {
     if (optInGedaanRef.current) return;
+    // Claim direct zodat parallelle aanroepen niet dubbel posten; bij een
+    // mislukking geven we de claim hieronder weer terug.
     optInGedaanRef.current = true;
     try {
-      await fetch("/api/freebie-bot/opt-in", {
+      const res = await fetch("/api/freebie-bot/opt-in", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         keepalive: true,
@@ -277,8 +294,15 @@ export function GezondeStartFlow({
           herkomstBron: "podcast",
         }),
       });
+      if (!res.ok) {
+        // Mislukt (bv. haperend mobiel netwerk): claim teruggeven zodat een
+        // volgende staps-wissel het stil opnieuw probeert. Geen foutmelding
+        // richting de prospect.
+        optInGedaanRef.current = false;
+      }
     } catch {
-      /* stil */
+      /* stil, maar wel opnieuw proberen bij de volgende staps-wissel */
+      optInGedaanRef.current = false;
     }
   }
 
