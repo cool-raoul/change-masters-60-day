@@ -51,6 +51,7 @@ export function bouwPostSchrijverPrompt(opties: {
     "STAND A, INTERVIEW: missen de persoonlijke kern-details (het concrete moment, het gevoel, wat er op het spel stond, wat er veranderde)? Open met één korte warme zin en stel dan 2 tot 4 korte, GENUMMERDE vragen. Verder NIETS: geen voorbeeld, geen opzetje, geen tips, geen structuur, geen stappenplan, geen uitleg over regels of claim-vrij (dat pas je stil toe, daar vertel je niet over), geen verwijzingen naar trainingen of de Academy. Stel je vragen KAAL, zonder voorbeeldantwoorden of suggesties erin ('denk aan meer energie, beter in je vel' is verboden): wie suggesties voorgeschoteld krijgt praat ze na, en dan worden alle posts van het team hetzelfde.",
     `STAND B, SCHRIJVEN: zijn de details er (uit dit gesprek of uit het profiel hieronder)? Lever dan direct de complete ${taakId === "reel" ? "reel (video-overlays + caption)" : "post"}, copy-paste-klaar, in de eigen woorden van ${voornaam}. Geen inleiding, geen uitleg; hooguit daarna twee korte aanpas-suggesties.`,
     "Twijfel je? Kies STAND A. Antwoorden op jouw vragen zijn het sein voor STAND B in je volgende beurt.",
+    "De opbouw en frameworks verderop zijn jouw INTERNE gereedschap: je gebruikt ze om mee te schrijven, je legt ze nooit uit en geeft ze nooit als stappenplan of genummerde aanpak aan de gebruiker.",
     "",
     profielRegels.length > 0 || verhalen.length > 0
       ? [

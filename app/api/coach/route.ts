@@ -198,8 +198,13 @@ export async function POST(request: Request) {
       .filter((b) => b.role === "user")
       .map((b) => b.content)
       .join("\n");
+    // Een herkenbaar post-verzoek gaat ALTIJD naar de schrijver-taak,
+    // ongeacht wat de vraagtype-detectie gokte (Raoul's test bewees:
+    // "ik wil een post schrijven..." classificeert als "social", en dan
+    // kreeg de coach-rol de copywriting-kennis en gaf die als lesje terug).
+    // Alleen "reel" blijft reel: dat is al een schrijver-taak.
     const taakId =
-      isPostVerzoek(alleUserTekst) && !taakVoor(vraagType).schrijfwerk
+      vraagType !== "reel" && isPostVerzoek(alleUserTekst)
         ? "post"
         : vraagType;
     const taak = taakVoor(taakId);
