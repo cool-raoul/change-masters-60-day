@@ -32,9 +32,19 @@ LET OP (verschil met de Amerikaanse voorbeelden): geen medische inzet, geen ziek
 export const CTA_REGELS = `
 CALL-TO-ACTION-REGELS:
 - Primair: codewoord in de comments ("Reageer met WAKKER"). Laagste drempel, voedt het algoritme, en wie reageert geeft toestemming voor een berichtje.
+- Het codewoord ontgrendelt het HOE, nooit "mijn verhaal" (het verhaal staat al in de post). Goed: "Wil je weten wat ik precies heb aangepast? Reageer met WAKKER." Fout: "Reageer en ik stuur je mijn verhaal toe."
 - Secundair, altijd erbij: "liever privé? Stuur me een berichtje."
 - Nooit: link in de post, productnaam, "koop", "schrijf je in", urgentie-trucs ("nog 3 plekken").
 - Bij de opvolging na een reactie geldt de vaste toon: helemaal vrijblijvend, als het niets voor je is is dat ook prima.
+`.trim();
+
+export const TOPCOPY_LESSEN = `
+TOP-COPYWRITER-LESSEN (dit scheidt een 7 van een 9):
+- DOOD ELK CLICHÉ: "reddende engel", "wereld van verschil", "wat een verschil!", "nieuw hoofdstuk", "de oude ik". Als je het beeld al duizend keer gelezen hebt, schrap het. Het echte detail van de gebruiker is altijd sterker.
+- GEEN META-AANKONDIGINGEN: "voordat ik aan mijn verandering begon", "ik wil mijn verhaal delen". Stap midden in de scène, vertel het verhaal in plaats van het aan te kondigen.
+- LATEN ZIEN, NIET BEOORDELEN: geen superlatieven over je eigen verhaal ("echt bizar!", "ongelooflijk"). Het detail doet het werk; de lezer trekt zelf de conclusie.
+- ÉÉN VERHAAL, ÉÉN EMOTIE: bouw de hele post rond het STERKSTE ene detail van de gebruiker en laat de rest weg. Alles erin proppen maakt de post vlak.
+- SPREEKTAAL-RITME: lees 'm hardop in je hoofd. Elke zin die je nooit tegen een vriendin zou zeggen, herschrijven.
 `.trim();
 
 export const PRE_POST_STRUCTUUR = `
@@ -103,6 +113,8 @@ export function bouwCopywritingSectie(): string {
     HOOK_TYPES,
     "",
     CTA_REGELS,
+    "",
+    TOPCOPY_LESSEN,
     "",
     PRE_POST_STRUCTUUR,
     "",
