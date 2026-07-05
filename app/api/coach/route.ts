@@ -5,6 +5,7 @@ import { detecteerVraagType } from "@/lib/knowledge/coach-boeken";
 import { taakVoor, isPostVerzoek } from "@/lib/mentor/taak-register";
 import { bouwSchrijfregelsSectie } from "@/lib/mentor/schrijfregels";
 import { bouwCopywritingSectie } from "@/lib/mentor/copywriting";
+import { bouwPostSchrijverPrompt } from "@/lib/mentor/post-schrijver-prompt";
 import { productadviesBeschikbaar } from "@/lib/features/productadvies";
 import { checkCompliance, vatFlagsSamen } from "@/lib/coach/compliance-check";
 import {
@@ -203,52 +204,67 @@ export async function POST(request: Request) {
         : vraagType;
     const taak = taakVoor(taakId);
 
-    // Bouw system prompt (alleen relevante secties)
-    let systeemPrompt = bouwCoachSysteemPrompt(
-      profile, whyProfile, prospect, taal || "nl", vraagType, niveau, mentorProfiel
-    );
+    // Bouw system prompt. Schrijftaken (post/reel) krijgen een EIGEN,
+    // compacte schrijver-rol: de brede coach-rol ("uitleggen en begeleiden")
+    // vocht met de schrijfregels en won, waardoor leden schrijf-TIPS kregen
+    // in plaats van een interview + kant-en-klare post.
+    const isSchrijfPrompt = taak.id === "post" || taak.id === "reel";
+    let systeemPrompt = isSchrijfPrompt
+      ? bouwPostSchrijverPrompt({
+          voornaam: (profile.full_name || "").split(" ")[0] || "daar",
+          taal: taal || "nl",
+          mentorProfiel,
+          taakId: taak.id,
+        })
+      : bouwCoachSysteemPrompt(
+          profile, whyProfile, prospect, taal || "nl", vraagType, niveau, mentorProfiel
+        );
 
     // Gevalideerde product-ervarings-kennis (Dr. McKee + jarenlange
     // teamervaring, validated by founder). Faalt stil bij fout zodat
     // coach blijft werken. Voor performance: alleen ophalen wanneer
     // er gevalideerde rijen zijn.
-    try {
-      const { haalGevalideerdeKennis, formatKennisVoorPrompt } = await import(
-        "@/lib/cms/mentor-kennis"
-      );
-      const kennisRijen = await haalGevalideerdeKennis();
-      if (kennisRijen.length > 0) {
-        systeemPrompt += formatKennisVoorPrompt(kennisRijen);
+    if (!isSchrijfPrompt) {
+      try {
+        const { haalGevalideerdeKennis, formatKennisVoorPrompt } = await import(
+          "@/lib/cms/mentor-kennis"
+        );
+        const kennisRijen = await haalGevalideerdeKennis();
+        if (kennisRijen.length > 0) {
+          systeemPrompt += formatKennisVoorPrompt(kennisRijen);
+        }
+      } catch (e) {
+        console.warn("mentor-kennis ophalen mislukt:", e);
       }
-    } catch (e) {
-      console.warn("mentor-kennis ophalen mislukt:", e);
     }
 
     // Train-de-Mentor: voeg relevante founder-voorbeelden toe als
     // few-shot context. Faalt stilletjes als de tabel nog niet bestaat
     // (migratie nog niet gerund) zodat coach gewoon blijft werken.
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const voorbeelden = await pakRelevanteVoorbeelden(
-        supabase as any,
-        vraagType,
-        laatsteUserBericht,
-        5,
-      );
-      if (voorbeelden.length > 0) {
-        systeemPrompt += bouwVoorbeeldenPromptSectie(voorbeelden);
+    if (!isSchrijfPrompt) {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const voorbeelden = await pakRelevanteVoorbeelden(
+          supabase as any,
+          vraagType,
+          laatsteUserBericht,
+          5,
+        );
+        if (voorbeelden.length > 0) {
+          systeemPrompt += bouwVoorbeeldenPromptSectie(voorbeelden);
+        }
+      } catch (e) {
+        console.warn("coach-voorbeelden ophalen mislukt:", e);
       }
-    } catch (e) {
-      console.warn("coach-voorbeelden ophalen mislukt:", e);
     }
 
-    // Mentor-brein: bij schrijfwerk dat (mogelijk) publiek gaat, gaan de
-    // schrijfregels (stem-DNA + claim-vrij + interview-eerst + zelfcheck)
-    // verplicht mee; bij post/reel/social ook de copywriting-motor.
-    if (taak.schrijfwerk) {
+    // Mentor-brein: bij overige schrijftaken (dm/drieweg/opener/social) gaan
+    // de schrijfregels mee bovenop de coach-rol. Post/reel hebben hierboven
+    // al hun eigen schrijver-prompt waar dit alles al in zit.
+    if (taak.schrijfwerk && !isSchrijfPrompt) {
       systeemPrompt += "\n\n" + bouwSchrijfregelsSectie();
     }
-    if (taak.id === "post" || taak.id === "reel" || taak.id === "social") {
+    if (taak.id === "social" && !isSchrijfPrompt) {
       systeemPrompt += "\n\n" + bouwCopywritingSectie();
     }
 

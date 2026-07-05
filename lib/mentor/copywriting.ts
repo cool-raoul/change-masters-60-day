@@ -86,6 +86,13 @@ INSTROOM 3, doorbouwer (heeft eerder al pre-post en resultaten-post gedaan, GEEN
 WEEKRITME NA DE LANCEERWEEK (rotatie, 15 min per dag): ma aanzetje-vraag, di verhaal van een klant, wo iets leren/waarde, do lifestyle-inkijkje, vr persoonlijk verhaal, za video/reel.
 `.trim();
 
+export const REELS_FRAMEWORK = `
+REELS (voor wie niet wil praten op camera, B-roll + tekst werkt bewezen):
+- Video: gewoon beeld uit je dag (B-roll) met tekst-overlays: 1) aandacht-hook gericht op de doelgroep, 2) verdieping van het probleem in ik-vorm, 3) "lees de caption" als afsluiter.
+- Caption in 7 delen: tweede hook (zichtbaar vóór "meer lezen"), mini-transformatieverhaal in 1-3 zinnen, harde waarheid ("ik dacht dat het X was... het bleek Y"), 3-5 concrete tips die op zichzelf waardevol zijn (zo goed dat mensen 'm opslaan), waarom alleen-zelf-uitzoeken meer tijd en gedoe kost, de brug ("wat mij hielp", zonder naam), codewoord-CTA.
+- Product en bedrijf nooit in beeld en nooit bij naam.
+`.trim();
+
 /** Alle copywriting-kennis in één blok, voor injectie bij post/reel-taken. */
 export function bouwCopywritingSectie(): string {
   return [
@@ -99,6 +106,8 @@ export function bouwCopywritingSectie(): string {
     PRE_POST_STRUCTUUR,
     "",
     RESULTAAT_POST_STRUCTUUR,
+    "",
+    REELS_FRAMEWORK,
     "",
     LANCEERWEEK_BOGEN,
   ].join("\n");
