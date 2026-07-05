@@ -52,11 +52,22 @@ export default async function PlaybookDagPagina({
   // krijgt voor de founder.
   const { data: profielRow } = await supabase
     .from("profiles")
-    .select("role")
+    .select("role, is_tester")
     .eq("id", user.id)
     .maybeSingle();
-  const isFounder =
-    (profielRow as { role?: string | null } | null)?.role === "founder";
+  const profiel = profielRow as {
+    role?: string | null;
+    is_tester?: boolean | null;
+  } | null;
+  const isFounder = profiel?.role === "founder";
+
+  // Preview (vooruit bladeren door alle 21 dagen) is niet voor gewone
+  // members: dat botst met het achteruit-only/anti-overwhelm-principe.
+  const magPreview =
+    isFounder || profiel?.role === "leider" || profiel?.is_tester === true;
+  if (!magPreview) {
+    redirect("/vandaag");
+  }
 
   let dagData = DAGEN.find((d) => d.nummer === dagParam);
   if (!dagData) {

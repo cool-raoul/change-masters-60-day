@@ -59,7 +59,11 @@ export function ProspectActieForm({ prospect, userId }: Props) {
       // 12:00 UTC zodat tijdweergave consistent is in elke tijdzone
       contactLogData.created_at = `${aantekeningDatum}T12:00:00.000Z`;
     }
-    await supabase.from("contact_logs").insert(contactLogData);
+    // Dit is hét schrijfpad van het notitieboekje: fouten mogen niet
+    // stil wegvallen achter een vrolijke succes-toast.
+    const { error: logFout } = await supabase
+      .from("contact_logs")
+      .insert(contactLogData);
 
     // Update prospect, laatste_contact = gekozen datum (niet per se vandaag)
     const updates: Partial<Prospect> = {
@@ -68,12 +72,13 @@ export function ProspectActieForm({ prospect, userId }: Props) {
       updated_at: new Date().toISOString(),
     };
 
+    let herinneringFout = false;
     if (volgendeDatum) {
       updates.volgende_actie_datum = volgendeDatum;
       updates.volgende_actie_notitie = volgendeNotitie;
 
       // Maak herinnering aan
-      await supabase.from("herinneringen").insert({
+      const { error: hFout } = await supabase.from("herinneringen").insert({
         user_id: userId,
         prospect_id: prospect.id,
         herinnering_type: "followup",
@@ -81,6 +86,7 @@ export function ProspectActieForm({ prospect, userId }: Props) {
         beschrijving: volgendeNotitie || `Opvolgen van ${prospect.volledige_naam}`,
         vervaldatum: volgendeDatum,
       });
+      herinneringFout = !!hFout;
     }
 
     const { error } = await supabase
@@ -88,7 +94,7 @@ export function ProspectActieForm({ prospect, userId }: Props) {
       .update(updates)
       .eq("id", prospect.id);
 
-    if (error) {
+    if (error || logFout || herinneringFout) {
       toast.error(v("actie.fout"));
     } else {
       toast.success(v("actie.opgeslagen"));

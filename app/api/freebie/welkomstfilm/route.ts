@@ -42,6 +42,42 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Geen video gekozen" }, { status: 400 });
     }
 
+    // Server-side URL-check: wat hier wordt opgeslagen belandt in een
+    // <iframe>/<video> op een publieke pagina. Alleen https + bekende hosts,
+    // anders is stored XSS mogelijk (bv. een javascript:-URL).
+    if (url) {
+      let hostOk = false;
+      try {
+        const u = new URL(url);
+        const host = u.hostname.toLowerCase();
+        const toegestaan = [
+          "www.youtube.com",
+          "youtube.com",
+          "youtu.be",
+          "www.youtube-nocookie.com",
+          "vimeo.com",
+          "www.vimeo.com",
+          "player.vimeo.com",
+        ];
+        let supabaseHost: string | null = null;
+        try {
+          supabaseHost = new URL(
+            process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+          ).hostname.toLowerCase();
+        } catch {
+          supabaseHost = null;
+        }
+        hostOk =
+          u.protocol === "https:" &&
+          (toegestaan.includes(host) || (!!supabaseHost && host === supabaseHost));
+      } catch {
+        hostOk = false;
+      }
+      if (!hostOk) {
+        return NextResponse.json({ error: "Ongeldige video-URL" }, { status: 400 });
+      }
+    }
+
     const admin = createAdminClient();
 
     const { data: bestaand } = await admin

@@ -482,7 +482,9 @@ export function VoiceFab() {
       if (!res.ok) {
         const err = await res.text();
         toast.error("Verwerken mislukt: " + err);
-        setFase("dicht");
+        // In toevoeg-modus het bestaande controle-scherm niet weggooien.
+        setFase(toevoegModusRef.current ? "preview" : "dicht");
+        toevoegModusRef.current = false;
         return;
       }
       const data: ParseResultaat = await res.json();
@@ -501,7 +503,8 @@ export function VoiceFab() {
       setFase("preview");
     } catch (err: any) {
       toast.error("Fout: " + (err?.message || "onbekend"));
-      setFase("dicht");
+      setFase(toevoegModusRef.current ? "preview" : "dicht");
+      toevoegModusRef.current = false;
     }
   }
 
@@ -610,6 +613,16 @@ export function VoiceFab() {
       setFase("opslaan");
       const resultaatUit = await voerActiesUit();
       naamNaarId = resultaatUit.naamNaarId;
+      // Fouten niet verzwijgen: de acties zijn (deels) uitgevoerd, dus de
+      // gebruiker moet weten wat er niet is opgeslagen.
+      if (resultaatUit.fouten.length > 0) {
+        toast.error(
+          resultaatUit.fouten.length === 1
+            ? resultaatUit.fouten[0]
+            : `${resultaatUit.fouten.length} acties niet opgeslagen:\n• ${resultaatUit.fouten.join("\n• ")}`,
+          { duration: 8000 },
+        );
+      }
     }
 
     const {
@@ -617,6 +630,7 @@ export function VoiceFab() {
     } = await supabase.auth.getUser();
     if (!user) {
       toast.error("Niet ingelogd");
+      setFase("preview");
       return;
     }
 
@@ -660,6 +674,8 @@ export function VoiceFab() {
 
     if (error || !nieuw) {
       toast.error("Kon gesprek niet starten");
+      // Terug naar het controle-scherm i.p.v. eeuwig op de spinner blijven.
+      setFase("preview");
       return;
     }
 
@@ -870,12 +886,20 @@ export function VoiceFab() {
           .select("pipeline_fase")
           .eq("id", id)
           .single();
+        // DB CHECK-constraint kent alleen deze types; het LLM kan vrijere
+        // labels teruggeven ("whatsapp", "app"). Onbekend type wordt notitie,
+        // anders faalt de insert en is het contactmoment weg.
+        const veiligType = ["dm", "bel", "presentatie", "followup", "notitie"].includes(
+          a.contact_type,
+        )
+          ? a.contact_type
+          : "notitie";
         const { data: log, error: logErr } = await supabase
           .from("contact_logs")
           .insert({
             prospect_id: id,
             user_id: user.id,
-            contact_type: a.contact_type,
+            contact_type: veiligType,
             notities: a.notities || null,
             fase_voor: huidig?.pipeline_fase || null,
             fase_na: a.nieuwe_fase || huidig?.pipeline_fase || null,
@@ -907,7 +931,7 @@ export function VoiceFab() {
           .eq("stat_datum", datum)
           .maybeSingle();
 
-        await supabase.from("dagelijkse_stats").upsert(
+        const { error: statsErr } = await supabase.from("dagelijkse_stats").upsert(
           {
             user_id: user.id,
             stat_datum: datum,
@@ -920,6 +944,7 @@ export function VoiceFab() {
           },
           { onConflict: "user_id,stat_datum" }
         );
+        check("Dagstats bijwerken", statsErr);
       }
     }
     for (const a of acties) {
@@ -1064,7 +1089,7 @@ export function VoiceFab() {
           .eq("user_id", user.id)
           .eq("stat_datum", datum)
           .maybeSingle();
-        await supabase.from("dagelijkse_stats").upsert(
+        const { error: statsSetErr } = await supabase.from("dagelijkse_stats").upsert(
           {
             user_id: user.id,
             stat_datum: datum,
@@ -1077,6 +1102,7 @@ export function VoiceFab() {
           },
           { onConflict: "user_id,stat_datum" }
         );
+        check("Dagstats corrigeren", statsSetErr);
       }
     }
     for (const a of acties) {
@@ -1159,7 +1185,7 @@ export function VoiceFab() {
           const nieuweNotitie = huidig?.notities
             ? `${huidig.notities}\n\n${stempel}`
             : stempel;
-          await supabase
+          const { error: bulkUpdErr } = await supabase
             .from("prospects")
             .update({
               notities: nieuweNotitie,
@@ -1168,7 +1194,8 @@ export function VoiceFab() {
             })
             .eq("id", id)
             .eq("user_id", user.id);
-          const { data: log } = await supabase
+          check("Bulk-notitie bij prospect", bulkUpdErr);
+          const { data: log, error: bulkLogErr } = await supabase
             .from("contact_logs")
             .insert({
               prospect_id: id,
@@ -1178,6 +1205,7 @@ export function VoiceFab() {
             })
             .select("id")
             .single();
+          check("Bulk-notitie in notitieboekje", bulkLogErr);
           if (log) gemaakt.push({ tabel: "contact_logs", id: log.id });
         }
       }

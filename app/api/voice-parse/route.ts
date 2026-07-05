@@ -4,6 +4,12 @@ import { PRODUCT_CATALOGUS_COMPACT } from "@/lib/lifeplus/producten";
 
 export const maxDuration = 45;
 
+// Escape regex-metatekens in namen ("Petra (sportschool)") zodat een
+// dynamische RegExp nooit de hele parse laat crashen met een 500.
+function regexEscape(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 export async function POST(request: Request) {
   try {
     const apiKey = process.env.OPENAI_API_KEY;
@@ -54,7 +60,7 @@ export async function POST(request: Request) {
     // Haal bestaande prospects op voor naam-matching
     const { data: bestaandeProspects } = await supabase
       .from("prospects")
-      .select("id, volledige_naam, pipeline_fase, notities")
+      .select("id, volledige_naam, pipeline_fase")
       .eq("user_id", user.id)
       .eq("gearchiveerd", false);
 
@@ -355,6 +361,11 @@ Signaalwoorden die ALTIJD product_bestelling vereisen:
 - "memberbestelling gedaan", "bestelling/order geplaatst", "member gedaan"
 - "start(en) met het [X]-programma", "begint met [pakket/programma]", "pakket meegegeven / in de hand gegeven"
 
+GEEN bestelling (dus GEEN product_bestelling actie):
+- Adviesvragen: "welk product past bij X?", "wat raden we X aan?", "welk pakket zou goed zijn voor X?" → dit is een coach-vraag, geen aankoop.
+- Voornemens/twijfel: "X wil misschien bestellen", "X denkt na over het pakket" → notitie of taak, geen bestelling.
+Een product_bestelling vereist een VOLTOOIDE aankoop of een concreet gestart programma, nooit een vraag of voornemen.
+
 Datum: als gebruiker zegt "vandaag" → vandaag. "Gisteren" → -1 dag. "Vorige week" → -7 dagen. Geen datum genoemd → vandaag.
 
 REGEL 1, PIPELINE_FASE VERANDER JE ALLEEN BIJ EXPLICIETE SIGNALEN
@@ -528,7 +539,7 @@ BELANGRIJK: Begin altijd met de "redenatie" stap. Dit dwingt je om te denken vó
     const weekdagSignalen = /\b(maandag|dinsdag|woensdag|donderdag|vrijdag|zaterdag|zondag)\b/i;
     const lengte = transcript.trim().length;
     const aantalNamen = (bestaandeProspects || []).filter((p: any) =>
-      new RegExp(`\\b${p.volledige_naam.split(" ")[0]}\\b`, "i").test(transcript)
+      new RegExp(`\\b${regexEscape(p.volledige_naam.split(" ")[0])}\\b`, "i").test(transcript)
     ).length;
     const gebruikMini =
       lengte < 140 &&
@@ -708,7 +719,7 @@ BELANGRIJK: Begin altijd met de "redenatie" stap. Dit dwingt je om te denken vó
           beste = { id: p.id, naam: p.volledige_naam, score: 1 };
           break;
         }
-        if (new RegExp(`\\b${voornaam}\\b`, "i").test(tekstOmTeScannen)) {
+        if (new RegExp(`\\b${regexEscape(voornaam)}\\b`, "i").test(tekstOmTeScannen)) {
           const score = similarity(normaliseer(voornaam), normaliseer(tekstOmTeScannen.slice(0, 80)));
           if (!beste || score > beste.score) beste = { id: p.id, naam: p.volledige_naam, score };
         }

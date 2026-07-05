@@ -220,7 +220,8 @@ export async function POST(req: NextRequest) {
       .from("prospects")
       .select("id, volledige_naam, notities, ingezette_tools, telefoon, prioriteit, gearchiveerd, instagram, facebook")
       .eq("user_id", tokenRow.member_id)
-      .ilike("email", leadEmail)
+      // Escape LIKE-wildcards: anders matcht "%@%" andermans prospect-kaart
+      .ilike("email", leadEmail.replace(/([\\%_])/g, "\\$1"))
       .maybeSingle();
 
     // Tool-tags:

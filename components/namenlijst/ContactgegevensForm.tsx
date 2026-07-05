@@ -329,18 +329,10 @@ export function ContactgegevensForm({ prospect }: Props) {
         />
       </div>
 
-      <div>
-        <label className="block text-xs text-cm-white opacity-60 mb-1">
-          {v("namenlijst.aantekeningen")}
-        </label>
-        <textarea
-          value={notities}
-          onChange={(e) => setNotities(e.target.value)}
-          placeholder={v("contact.extra_info")}
-          className="textarea-cm text-sm"
-          rows={3}
-        />
-      </div>
+      {/* Het vrije aantekeningen-veld is hier bewust weggehaald: notities
+          leven nu in het notitieboekje op de kaart (contact_logs). Dit veld
+          schreef naar prospects.notities, dat nergens meer getoond wordt,
+          waardoor tekst onzichtbaar zou verdwijnen. */}
 
       {/* Korte situatie-zin voor 3-weg-script. Apart van de aantekeningen,
           want de [situatie]-placeholder in stap 2 leest dit letterlijk

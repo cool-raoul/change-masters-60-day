@@ -52,7 +52,9 @@ export async function GET(request: Request) {
   const authHeader = request.headers.get("authorization");
   const cronSecret = process.env.CRON_SECRET;
 
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+  // Fail-closed: zonder geconfigureerd secret weigeren, anders zou een
+  // vergeten env-var deze route publiek aanroepbaar maken (mail/push-spam).
+  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: "Niet geautoriseerd" }, { status: 401 });
   }
 

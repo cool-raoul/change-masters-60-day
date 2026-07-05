@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { NextResponse } from "next/server";
 import { sendPushToUser } from "@/lib/push/sendPush";
+import { startdatumVoorModus } from "@/lib/playbook/dag-teller";
 
 // ============================================================
 // /api/reminders/stilte
@@ -48,7 +49,9 @@ function urenGeleden(d: Date | null): number {
 export async function GET(request: Request) {
   const authHeader = request.headers.get("authorization");
   const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+  // Fail-closed: zonder geconfigureerd secret weigeren, anders zou een
+  // vergeten env-var deze route publiek aanroepbaar maken (push-spam).
+  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: "Niet geautoriseerd" }, { status: 401 });
   }
 
@@ -58,9 +61,8 @@ export async function GET(request: Request) {
   const { data: profielen } = await supabase
     .from("profiles")
     .select(
-      "id, full_name, run_startdatum, sponsor_id, stilte_reminder_aan, sponsor_stilte_push_aan, laatste_stilte_reminder_op, dagelijkse_push_uur, tijdzone, dagelijkse_push_aan",
-    )
-    .not("run_startdatum", "is", null);
+      "id, full_name, run_startdatum, sprint_startdatum, core_startdatum, created_at, modus, sponsor_id, stilte_reminder_aan, sponsor_stilte_push_aan, laatste_stilte_reminder_op, dagelijkse_push_uur, tijdzone, dagelijkse_push_aan",
+    );
 
   if (!profielen || profielen.length === 0) {
     return NextResponse.json({ message: "Geen actieve members", verzonden: 0 });
@@ -69,7 +71,11 @@ export async function GET(request: Request) {
   type Profiel = {
     id: string;
     full_name: string | null;
-    run_startdatum: string;
+    run_startdatum: string | null;
+    sprint_startdatum: string | null;
+    core_startdatum: string | null;
+    created_at: string | null;
+    modus: string | null;
     sponsor_id: string | null;
     stilte_reminder_aan: boolean | null;
     sponsor_stilte_push_aan: boolean | null;
@@ -94,10 +100,24 @@ export async function GET(request: Request) {
     const dagelijkseAan = rij.dagelijkse_push_aan ?? true;
     if (!dagelijkseAan) continue;
 
-    // 3) Bepaal welke run-dag de member nu zit. Buiten dag 2-21 → skip:
-    //    - dag 1 (vandaag is startdag, nog niets verwacht)
-    //    - dag > 21 (run zit in blok 2/3 zonder dagtegels)
-    const start = new Date(rij.run_startdatum + "T00:00:00Z");
+    // 3) Bepaal welke dag de member nu zit, MODUS-BEWUST. Nieuwe members
+    //    hebben alleen sprint_/core_startdatum (run_startdatum is legacy),
+    //    dus we ankeren via startdatumVoorModus, zelfde patroon als
+    //    AppShell//vandaag. Buiten dag 2-21 → skip (dag 1 nog niets
+    //    verwacht; Pro heeft geen dag-flow).
+    const modus =
+      rij.modus === "core" ? "core" : rij.modus === "pro" ? "pro" : "sprint";
+    if (modus === "pro") continue;
+    const start = startdatumVoorModus(
+      {
+        sprint_startdatum: rij.sprint_startdatum,
+        core_startdatum: rij.core_startdatum,
+        run_startdatum: rij.run_startdatum,
+        created_at: rij.created_at,
+      },
+      modus,
+    );
+    if (!start) continue;
     const dagNummer = dagenTussen(start, new Date()) + 1;
     if (dagNummer < 2 || dagNummer > 21) continue;
 

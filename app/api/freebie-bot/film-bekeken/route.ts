@@ -40,7 +40,8 @@ export async function POST(req: NextRequest) {
       .from("prospects")
       .select("id, volledige_naam, ingezette_tools")
       .eq("user_id", tokenRow.member_id)
-      .ilike("email", leadEmail)
+      // Escape LIKE-wildcards: anders matcht "%@%" andermans prospect-kaart
+      .ilike("email", leadEmail.replace(/([\\%_])/g, "\\$1"))
       .eq("gearchiveerd", false)
       .order("updated_at", { ascending: false })
       .limit(1);
