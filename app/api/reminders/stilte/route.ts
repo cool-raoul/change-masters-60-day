@@ -35,6 +35,23 @@ function huidigUurInTijdzone(tz: string): number | null {
   }
 }
 
+// Bereken YYYY-MM-DD in een IANA-tijdzone (zelfde aanpak als de send-route):
+// zonder dit valt de dag-berekening tussen 00:00 en ~02:00 lokale tijd één
+// dag te vroeg uit (UTC-anker).
+function vandaagInTijdzone(tz: string): string {
+  try {
+    const fmt = new Intl.DateTimeFormat("en-CA", {
+      timeZone: tz,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+    return fmt.format(new Date());
+  } catch {
+    return new Date().toISOString().split("T")[0];
+  }
+}
+
 function dagenTussen(vroeger: Date, later: Date): number {
   const ms = later.getTime() - vroeger.getTime();
   return Math.floor(ms / (1000 * 60 * 60 * 24));
@@ -118,7 +135,11 @@ export async function GET(request: Request) {
       modus,
     );
     if (!start) continue;
-    const dagNummer = dagenTussen(start, new Date()) + 1;
+    // Dag bepalen op de lokale kalenderdag van de member (12:00 UTC-anker
+    // voorkomt afrondingsranden rond middernacht/zomertijd).
+    const vandaagLokaal = vandaagInTijdzone(tz);
+    const dagNummer =
+      dagenTussen(start, new Date(vandaagLokaal + "T12:00:00Z")) + 1;
     if (dagNummer < 2 || dagNummer > 21) continue;
 
     // 4) Pak laatste activiteit uit dag_voltooiingen
@@ -218,14 +239,22 @@ export async function GET(request: Request) {
       });
       if (sponsorRes.success) {
         sponsorPushes++;
-        await supabase.from("sponsor_stilte_pushes").upsert(
-          {
-            sponsor_id: rij.sponsor_id,
-            member_id: rij.id,
-            laatst_op: new Date().toISOString(),
-          },
-          { onConflict: "sponsor_id,member_id" },
-        );
+        const { error: guardErr } = await supabase
+          .from("sponsor_stilte_pushes")
+          .upsert(
+            {
+              sponsor_id: rij.sponsor_id,
+              member_id: rij.id,
+              laatst_op: new Date().toISOString(),
+            },
+            { onConflict: "sponsor_id,member_id" },
+          );
+        // Zonder werkende guard zou de sponsor elke dag een push krijgen.
+        if (guardErr) {
+          fouten.push(
+            `sponsor-guard ${rij.sponsor_id} → ${rij.id}: ${guardErr.message}`,
+          );
+        }
       } else if (sponsorRes.reason) {
         fouten.push(`sponsor ${rij.sponsor_id} → ${rij.id}: ${sponsorRes.reason}`);
       }

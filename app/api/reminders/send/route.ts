@@ -1,5 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import { Resend } from "resend";
+import { verstuurMail } from "@/lib/mail/resend";
 import { NextResponse } from "next/server";
 import { sendPushToUser } from "@/lib/push/sendPush";
 import { SITE_URL } from "@/lib/site";
@@ -66,7 +66,7 @@ export async function GET(request: Request) {
     supabase
       .from("profiles")
       .select(
-        "id, full_name, email, resend_api_key, dagelijkse_push_uur, tijdzone, dagelijkse_push_aan"
+        "id, full_name, email, resend_api_key, dagelijkse_push_uur, tijdzone, dagelijkse_push_aan, laatste_dagelijkse_push_op"
       )
       .not("resend_api_key", "is", null)
       .neq("resend_api_key", ""),
@@ -84,6 +84,7 @@ export async function GET(request: Request) {
     dagelijkse_push_uur: number | null;
     tijdzone: string | null;
     dagelijkse_push_aan: boolean | null;
+    laatste_dagelijkse_push_op: string | null;
   };
 
   const userMap = new Map<string, UserRij>();
@@ -96,7 +97,7 @@ export async function GET(request: Request) {
     const { data: extra } = await supabase
       .from("profiles")
       .select(
-        "id, full_name, email, resend_api_key, dagelijkse_push_uur, tijdzone, dagelijkse_push_aan"
+        "id, full_name, email, resend_api_key, dagelijkse_push_uur, tijdzone, dagelijkse_push_aan, laatste_dagelijkse_push_op"
       )
       .in("id", ontbrekendePushUsers);
     for (const u of (extra || []) as UserRij[]) {
@@ -128,6 +129,18 @@ export async function GET(request: Request) {
   const fouten: string[] = [];
 
   for (const gebruiker of gebruikers) {
+    // Idempotentie: een her-run van de cron binnen hetzelfde uur (GitHub-
+    // retry of handmatige workflow_dispatch) mag geen dubbele ochtend-
+    // bundel sturen. 20 uur marge zodat een verschoven voorkeurstijd de
+    // volgende dag gewoon weer werkt.
+    if (gebruiker.laatste_dagelijkse_push_op) {
+      const urenSindsVorige =
+        (Date.now() -
+          new Date(gebruiker.laatste_dagelijkse_push_op).getTime()) /
+        (1000 * 60 * 60);
+      if (urenSindsVorige < 20) continue;
+    }
+
     // "Vandaag" moet in de tijdzone van de gebruiker bepaald worden.
     // anders zou een user in Azië zijn vandaag-herinneringen pas de dag
     // erna binnenkrijgen. Zonder tijdzone val je terug op UTC-vandaag.
@@ -144,6 +157,10 @@ export async function GET(request: Request) {
       .order("vervaldatum", { ascending: true });
 
     if (!herinneringen || herinneringen.length === 0) continue;
+
+    // Houdt bij of er in deze run echt iets bij deze gebruiker is bezorgd,
+    // zodat we de idempotentie-marker alleen dan zetten.
+    let ietsVerstuurd = false;
 
     // Bouw de e-mail inhoud op
     const herinneringenRegels = herinneringen.map((h) => {
@@ -165,15 +182,14 @@ export async function GET(request: Request) {
 
     // E-mail alleen sturen als gebruiker een Resend key heeft
     if (gebruiker.resend_api_key) {
-      try {
-        const stuurNaar = gebruiker.email;
-        const resend = new Resend(gebruiker.resend_api_key);
-
-        await resend.emails.send({
-          from: "ELEVA 60 Dagen Run <onboarding@resend.dev>",
-          to: stuurNaar,
-          subject: onderwerp,
-          html: `
+      // Verzenden via het gedeelde ELEVA-domein: het per-user resend.dev-
+      // sandbox-adres leverde alleen aan de key-eigenaar zelf en was
+      // off-brand. De eigen key blijft puur de e-mail-opt-in-marker.
+      const mailResultaat = await verstuurMail({
+        naar: gebruiker.email,
+        onderwerp,
+        van: process.env.RESEND_FROM || "ELEVA <team@mail.my-eleva.com>",
+        html: `
             <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; padding: 24px;">
               <h2 style="color: #C9A84C; margin-bottom: 8px;">Goedemorgen ${voornaam}! ☀️</h2>
               <p style="color: #888; margin-bottom: 24px;">Je hebt ${herinneringen.length} openstaande herinnering${herinneringen.length > 1 ? "en" : ""} vandaag:</p>
@@ -196,12 +212,13 @@ export async function GET(request: Request) {
               </p>
             </div>
           `,
-          text: `Goedemorgen ${voornaam}!\n\nJe hebt ${herinneringen.length} openstaande herinnering${herinneringen.length > 1 ? "en" : ""} vandaag:\n\n${herinneringenRegels.join("\n")}\n\nLog in op je dashboard om ze af te vinken.\n\nSucces!\nELEVA 60 Dagen Run`,
-        });
+      });
 
+      if (mailResultaat.ok && !mailResultaat.dryRun) {
         verzonden++;
-      } catch (e: any) {
-        const fout = `${gebruiker.email} (email): ${e?.message || "onbekende fout"}`;
+        ietsVerstuurd = true;
+      } else if (!mailResultaat.ok) {
+        const fout = `${gebruiker.email} (email): ${mailResultaat.fout || "onbekende fout"}`;
         console.error("Fout bij verzenden:", fout);
         fouten.push(fout);
       }
@@ -231,6 +248,16 @@ export async function GET(request: Request) {
 
     if (pushResultaat.success) {
       pushVerzonden++;
+      ietsVerstuurd = true;
+    }
+
+    // Idempotentie-marker pas zetten als er echt iets bezorgd is; bij een
+    // volledige mislukking probeert het volgende cron-uur het gewoon opnieuw.
+    if (ietsVerstuurd) {
+      await supabase
+        .from("profiles")
+        .update({ laatste_dagelijkse_push_op: new Date().toISOString() })
+        .eq("id", gebruiker.id);
     }
   }
 
