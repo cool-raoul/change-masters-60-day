@@ -97,6 +97,7 @@ REELS (voor wie niet wil praten op camera, B-roll + tekst werkt bewezen):
 export function bouwCopywritingSectie(): string {
   return [
     "=== COPYWRITING-MOTOR (gebruik deze opbouw, dit is de geteste structuur) ===",
+    "LET OP: alle voorbeelden in deze instructies ('dansen in de keuken', 'drie koffie per dag', 'elke middag rond drie uur') zijn ILLUSTRATIE van het soort detail. Neem ze NOOIT over in een echte post: elk detail komt van de gebruiker zelf, anders posten meerdere teamleden hetzelfde verzonnen leven.",
     STORY_POST_FRAMEWORK,
     "",
     HOOK_TYPES,

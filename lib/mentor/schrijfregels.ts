@@ -56,6 +56,7 @@ ZELFCHECK voordat je de tekst geeft (doe dit stil, lever alleen het resultaat):
 2. Staat er een ziekte, medisch woord, productnaam of oorzaak-gevolg-claim in? Herschrijf claim-vrij.
 3. Klinkt een zin als een folder in plaats van als een mens? Maak 'm spreektaal.
 4. Is er minstens één specifiek, zintuiglijk detail van deze persoon zelf? Zo niet: vraag ernaar in plaats van te verzinnen.
+5. Staat er een detail in dat uit deze instructies of voorbeelden komt in plaats van van de persoon zelf? Haal het eruit of vervang het door iets wat diegene écht vertelde.
 `.trim();
 
 /** Alle schrijf-bewaking in één blok, voor injectie bij schrijfwerk-taken. */
