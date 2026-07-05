@@ -2,6 +2,9 @@ import OpenAI from "openai";
 import { createClient } from "@/lib/supabase/server";
 import { bouwCoachSysteemPrompt } from "@/lib/prompts/coach-systeem-prompt";
 import { detecteerVraagType } from "@/lib/knowledge/coach-boeken";
+import { taakVoor, isPostVerzoek } from "@/lib/mentor/taak-register";
+import { bouwSchrijfregelsSectie } from "@/lib/mentor/schrijfregels";
+import { bouwCopywritingSectie } from "@/lib/mentor/copywriting";
 import { productadviesBeschikbaar } from "@/lib/features/productadvies";
 import { checkCompliance, vatFlagsSamen } from "@/lib/coach/compliance-check";
 import {
@@ -182,6 +185,20 @@ export async function POST(request: Request) {
       vraagType = "algemeen";
     }
 
+    const laatsteUserBericht =
+      [...berichten].reverse().find((b) => b.role === "user")?.content ?? "";
+
+    // Taak-register bepaalt model + bewaking. Post-vangnet: een herkenbaar
+    // post-verzoek dat als "algemeen"/"social" is gedetecteerd behandelen we
+    // als post-taak, zodat publiek schrijfwerk nooit op het snelle model
+    // landt (dat was de gok waar Raoul eerder tegenaan liep).
+    const taakId =
+      isPostVerzoek(laatsteUserBericht) &&
+      (vraagType === "algemeen" || vraagType === "social")
+        ? "post"
+        : vraagType;
+    const taak = taakVoor(taakId);
+
     // Bouw system prompt (alleen relevante secties)
     let systeemPrompt = bouwCoachSysteemPrompt(
       profile, whyProfile, prospect, taal || "nl", vraagType, niveau, mentorProfiel
@@ -207,8 +224,6 @@ export async function POST(request: Request) {
     // few-shot context. Faalt stilletjes als de tabel nog niet bestaat
     // (migratie nog niet gerund) zodat coach gewoon blijft werken.
     try {
-      const laatsteUserBericht =
-        [...berichten].reverse().find((b) => b.role === "user")?.content ?? "";
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const voorbeelden = await pakRelevanteVoorbeelden(
         supabase as any,
@@ -221,6 +236,16 @@ export async function POST(request: Request) {
       }
     } catch (e) {
       console.warn("coach-voorbeelden ophalen mislukt:", e);
+    }
+
+    // Mentor-brein: bij schrijfwerk dat (mogelijk) publiek gaat, gaan de
+    // schrijfregels (stem-DNA + claim-vrij + interview-eerst + zelfcheck)
+    // verplicht mee; bij post/reel/social ook de copywriting-motor.
+    if (taak.schrijfwerk) {
+      systeemPrompt += "\n\n" + bouwSchrijfregelsSectie();
+    }
+    if (taak.id === "post" || taak.id === "reel" || taak.id === "social") {
+      systeemPrompt += "\n\n" + bouwCopywritingSectie();
     }
 
     // History trimming: max 8 berichten meesturen
@@ -236,18 +261,12 @@ export async function POST(request: Request) {
       })),
     ];
 
-    // OpenAI streaming, model-router op basis van vraagtype:
-    // - productadvies: gpt-4o (uitgebreid redeneren, fase-plan, basis-stack)
-    // - dm + drieweg : gpt-4o (samenhangende NL-output, geen Engelse mengelmoes
-    //                  die mini-versie maakt, edification-formule beter aangehouden)
-    // - rest         : gpt-4o-mini (bezwaar/followup/closing/algemeen, kort + snel)
-    const zwaarModel = vraagType === "productadvies"
-      || vraagType === "dm"
-      || vraagType === "drieweg"
-      || vraagType === "reel";
+    // Model + ruimte komen uit het taak-register (lib/mentor/taak-register):
+    // publiek schrijfwerk krijgt ALTIJD het sterke model, en modellen
+    // wisselen kan voortaan op die ene plek.
     const stream = await openai.chat.completions.create({
-      model: zwaarModel ? "gpt-4o" : "gpt-4o-mini",
-      max_tokens: vraagType === "productadvies" ? 2000 : zwaarModel ? 1200 : 800,
+      model: taak.model,
+      max_tokens: taak.maxTokens,
       messages: apiMessages,
       stream: true,
     });
