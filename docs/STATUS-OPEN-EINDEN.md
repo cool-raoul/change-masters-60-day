@@ -4,7 +4,7 @@ Levende lijst die Claude bijhoudt. Afspraak: nieuw werk komt hier eerst op,
 en we maken iets ÉCHT af (gebouwd → getest → bevestigd) voordat we iets
 nieuws beginnen. Bijwerken zodra een item van status verandert.
 
-Laatst bijgewerkt: 2026-06-23
+Laatst bijgewerkt: 2026-07-05
 
 ---
 
@@ -54,6 +54,50 @@ Alles wat we voor "Jouw gezonde start" maakten moet ook bij de andere freebies k
 ## ⏸️ Bewust geparkeerd (geen los eindje, later met opzet)
 - **Filter-per-freebie** op de namenlijst ("laat me alleen leads van freebie X zien" + bulk-actie). Spec: docs/superpowers/specs/2026-06-23-freebie-funnel-warm-trigger-design.md
 - **Mini-ELEVA video-auto-trigger voor niet-YouTube** (Vimeo e.d.): nu alleen YouTube. Raoul embedt via YouTube, dus geen blokker.
+
+## 🔍 Restpunten uit de Fable-code-review (2026-07-05)
+Twee review-agenten hebben al het recente Opus-werk doorgelicht (38 bevindingen).
+De 17 belangrijkste zijn DIRECT gefixt en live (commit a93a9fb): eerlijke
+foutmeldingen in de hele spraak-flow, contact_type-whitelist, regex-crash,
+adviesvraag-is-geen-bestelling, onzichtbaar notities-veld weg, stilte-nudge
+modus-bewust (deed niets voor nieuwe leden!), cron fail-closed, e-mail-wildcard-
+escaping op publieke freebie-routes, welkomstfilm-URL-allowlist (XSS dicht),
+/playbook-preview alleen founder/leider/tester. Rest hieronder, op prioriteit:
+
+**Belangrijk (eerstvolgende fix-ronde):**
+- [ ] Ochtend-reminder idempotent maken (kolom `laatste_dagelijkse_push_op`;
+      GitHub-retry binnen het uur = nu dubbele mail+push). DB-wijziging, eerst
+      akkoord Raoul.
+- [ ] Voice: server-side validatie van LLM-acties op één plek (fase-guard op
+      álle fase-dragende types, onbekende actie-types niet stil overslaan,
+      dubbele namen markeren i.p.v. gokken).
+- [ ] Freebie-flow: `vangProspect` heeft geen retry; netwerkfout bij prospect
+      = lead stil verloren. Retry bij volgende stap inbouwen.
+- [ ] Reminder-mail afzender: `onboarding@resend.dev` (sandbox, levert alleen
+      aan key-eigenaar) → `team@mail.my-eleva.com`.
+- [ ] Datum-anker "vandaag" overal Europe/Amsterdam i.p.v. UTC (00:00-02:00
+      randgevallen in stats/besteldatum/taken + stilte-dagberekening).
+
+**Kleiner (verzamelen tot een onderhoudsronde):**
+- [ ] Voice-parse payload snoeien bij grote namenlijsten (alleen fuzzy-
+      kandidaten meesturen; scheelt kosten + snelheid).
+- [ ] 120s-opnamelimiet tijdens bij-spreken in bewerk-modus overschrijft de
+      tekst i.p.v. invoegen.
+- [ ] i18n: hele voice-flow + notitieboekje-labels zijn hardcoded NL (app
+      ondersteunt 6 talen).
+- [ ] ActieKaart stabiele keys (index-keys + bewerk-state kan verkeerde actie
+      overschrijven); undo-scope eerlijk benoemen; VoiceFab opsplitsen.
+- [ ] sponsor_stilte_pushes upsert-error checken (anders dagelijkse sponsor-
+      push bij kapotte guard); film-bekeken dubbel-push race.
+- [ ] `veld=info` in welkomstfilm-API founder-check; freebie-tokens via
+      crypto i.p.v. Math.random; slug-route rowcount checken.
+- [ ] render.tsx (gezonde start): 5-6 sequentiële queries per publieke
+      page-view → Promise.all + default-films cachen; default-account-email
+      één constante.
+- [ ] Afvallen-zinnen in vragen.ts/uitkomst.ts nog eens langs claimvrije-
+      communicatie sectie 7 leggen.
+- [ ] Verifiëren na deploy: stilte-nudge vuurt nu wél voor een Core-account
+      (Jaimie/testaccount) op het ingestelde uur.
 
 ## ❓ Te bevestigen / in de gaten houden
 - Deliverability herstelmail naar Outlook/Hotmail: nieuw domein, warmt op met "geen ongewenst"-kliks. Even volgen of het verbetert.
