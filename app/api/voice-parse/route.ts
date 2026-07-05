@@ -80,15 +80,27 @@ export async function POST(request: Request) {
       ? `\nACTIEVE KAART (je staat NU op de klantenkaart van deze persoon):\n- ${actieveProspect.volledige_naam} (id: ${actieveProspect.id}, fase: ${actieveProspect.pipeline_fase})\nNotitie/taak/bestelling/status die de gebruiker inspreekt ZONDER een andere naam te noemen, hoort bij DEZE persoon. Gebruik dan prospect_naam: "${actieveProspect.volledige_naam}" (id ${actieveProspect.id}). Noemt de gebruiker wél duidelijk een andere bestaande naam, dan gaat het over die ander.`
       : "";
 
-    // Ook gearchiveerde prospects meesturen, zodat "herstel" / "haal terug" werkt
-    const { data: gearchiveerdeProspects } = await supabase
-      .from("prospects")
-      .select("id, volledige_naam, pipeline_fase")
-      .eq("user_id", user.id)
-      .eq("gearchiveerd", true)
-      .limit(200);
+    // Gearchiveerde prospects alleen meesturen als het transcript herstel-
+    // taal bevat ("haal terug", "archief"): anders is dat tot 200 rijen
+    // extra prompt-tokens per spraakcommando voor niets.
+    const archiefNodig =
+      /\b(herstel|haal|terug|archief|teruggezet)\w*/i.test(transcript);
+    let gearchiveerdeProspects: Array<{
+      id: string;
+      volledige_naam: string;
+      pipeline_fase: string;
+    }> = [];
+    if (archiefNodig) {
+      const { data } = await supabase
+        .from("prospects")
+        .select("id, volledige_naam, pipeline_fase")
+        .eq("user_id", user.id)
+        .eq("gearchiveerd", true)
+        .limit(200);
+      gearchiveerdeProspects = (data as typeof gearchiveerdeProspects) || [];
+    }
 
-    const archiefLijst = (gearchiveerdeProspects || [])
+    const archiefLijst = gearchiveerdeProspects
       .map((p) => `- ${p.volledige_naam} (id: ${p.id}, fase: ${p.pipeline_fase})`)
       .join("\n");
 
@@ -105,7 +117,14 @@ export async function POST(request: Request) {
       .map((h) => `- id:${h.id} "${h.titel}" (${h.vervaldatum})`)
       .join("\n");
 
-    const vandaag = new Date().toISOString().split("T")[0];
+    // Europe/Amsterdam-anker: UTC zou tussen 00:00 en 02:00 NL-tijd het LLM
+    // een verkeerd "vandaag" geven voor datums/weekdagen.
+    const vandaag = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Europe/Amsterdam",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(new Date());
     const weekdagenNL = ["zondag", "maandag", "dinsdag", "woensdag", "donderdag", "vrijdag", "zaterdag"];
     // Anker op noon UTC van vandaag, zodat de weekdag altijd matcht met de vandaag-datum
     const huidigeWeekdag = weekdagenNL[new Date(vandaag + "T12:00:00Z").getUTCDay()];

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { vandaagNL } from "@/lib/util/datum-nl";
 import { useRouter, usePathname } from "next/navigation";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
@@ -535,7 +536,11 @@ export function VoiceFab() {
             label: "Ongedaan maken",
             onClick: async () => {
               await undoGemaakteActies(gemaakt);
-              toast.info(`${gemaakt.length} actie(s) ongedaan gemaakt`);
+              // Eerlijk over de reikwijdte: alleen nieuw-aangemaakte rijen
+              // worden verwijderd; fase-wijzigingen en tellingen blijven.
+              toast.info(
+                `${gemaakt.length} nieuwe item(s) verwijderd. Gewijzigde fases of tellingen zet je zelf terug.`,
+              );
               router.refresh();
             },
           },
@@ -757,7 +762,7 @@ export function VoiceFab() {
         const bestaandeNotitie = huidig?.notities || "";
         const updates: any = {
           updated_at: new Date().toISOString(),
-          laatste_contact: new Date().toISOString().split("T")[0],
+          laatste_contact: vandaagNL(),
         };
         if (a.pipeline_fase) updates.pipeline_fase = a.pipeline_fase;
         if (a.notities_toevoegen) {
@@ -811,7 +816,7 @@ export function VoiceFab() {
           .update({
             notities: nieuweNotitie,
             updated_at: new Date().toISOString(),
-            laatste_contact: new Date().toISOString().split("T")[0],
+            laatste_contact: vandaagNL(),
           })
           .eq("id", id)
           .eq("user_id", user.id);
@@ -909,7 +914,7 @@ export function VoiceFab() {
         check(`Contact-log voor "${a.prospect_naam}"`, logErr);
         if (log) gemaakt.push({ tabel: "contact_logs", id: log.id });
         const prospectUpdate: any = {
-          laatste_contact: new Date().toISOString().split("T")[0],
+          laatste_contact: vandaagNL(),
           updated_at: new Date().toISOString(),
         };
         if (a.nieuwe_fase) prospectUpdate.pipeline_fase = a.nieuwe_fase;
@@ -923,7 +928,7 @@ export function VoiceFab() {
     }
     for (const a of acties) {
       if (a.type === "stats_increment") {
-        const datum = a.datum || new Date().toISOString().split("T")[0];
+        const datum = a.datum || vandaagNL();
         const { data: huidig } = await supabase
           .from("dagelijkse_stats")
           .select("*")
@@ -968,7 +973,7 @@ export function VoiceFab() {
           fouten.push(`Bestelling voor "${a.prospect_naam}" niet opgeslagen, naam niet gevonden`);
           continue;
         }
-        const besteldatum = a.besteldatum || new Date().toISOString().split("T")[0];
+        const besteldatum = a.besteldatum || vandaagNL();
         const { data: pb, error: pbErr } = await supabase
           .from("product_bestellingen")
           .insert({
@@ -988,7 +993,7 @@ export function VoiceFab() {
           .eq("id", id)
           .single();
         const faseUpdate: any = {
-          laatste_contact: new Date().toISOString().split("T")[0],
+          laatste_contact: vandaagNL(),
           updated_at: new Date().toISOString(),
         };
         if (huidig?.pipeline_fase !== "shopper" && huidig?.pipeline_fase !== "member") {
@@ -1082,7 +1087,7 @@ export function VoiceFab() {
     }
     for (const a of acties) {
       if (a.type === "stats_set") {
-        const datum = a.datum || new Date().toISOString().split("T")[0];
+        const datum = a.datum || vandaagNL();
         const { data: huidig } = await supabase
           .from("dagelijkse_stats")
           .select("*")
@@ -1190,7 +1195,7 @@ export function VoiceFab() {
             .update({
               notities: nieuweNotitie,
               updated_at: new Date().toISOString(),
-              laatste_contact: new Date().toISOString().split("T")[0],
+              laatste_contact: vandaagNL(),
             })
             .eq("id", id)
             .eq("user_id", user.id);
@@ -1797,6 +1802,14 @@ function ActieKaart({
   const velden = BEWERKBARE_VELDEN[actie.type] || [];
   const [bewerk, setBewerk] = useState(false);
   const [concept, setConcept] = useState<any>(actie);
+
+  // De lijst gebruikt index-keys: wordt een kaart erboven verwijderd, dan
+  // schuift de actie onder deze component door. Sluit dan de bewerk-modus
+  // zodat "Opslaan" nooit per ongeluk de verkeerde actie overschrijft.
+  useEffect(() => {
+    setBewerk(false);
+    setConcept(actie);
+  }, [actie]);
 
   return (
     <div

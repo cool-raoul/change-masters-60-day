@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { celebrate } from "@/lib/celebrate";
 import { useTaal } from "@/lib/i18n/TaalContext";
+import { vandaagNL } from "@/lib/util/datum-nl";
 
 interface Props {
   prospect: Prospect;
@@ -32,12 +33,12 @@ export function ProspectActieForm({ prospect, userId }: Props) {
   const [contactNotitie, setContactNotitie] = useState("");
   // Datum van de aantekening zelf, default vandaag, user kan terug in de tijd
   const [aantekeningDatum, setAantekeningDatum] = useState(
-    new Date().toISOString().split("T")[0]
+    vandaagNL()
   );
 
   // Bestelling form
   const [besteldatum, setBesteldatum] = useState(
-    new Date().toISOString().split("T")[0]
+    vandaagNL()
   );
   const [productOmschrijving, setProductOmschrijving] = useState("");
 
@@ -46,7 +47,7 @@ export function ProspectActieForm({ prospect, userId }: Props) {
     setLaden(true);
 
     // Log het contact, override created_at als user een eerdere datum koos
-    const vandaag = new Date().toISOString().split("T")[0];
+    const vandaag = vandaagNL();
     const contactLogData: any = {
       prospect_id: prospect.id,
       user_id: userId,
@@ -264,7 +265,7 @@ export function ProspectActieForm({ prospect, userId }: Props) {
               value={aantekeningDatum}
               onChange={(e) => setAantekeningDatum(e.target.value)}
               className="input-cm text-sm [&::-webkit-calendar-picker-indicator]:invert"
-              max={new Date().toISOString().split("T")[0]}
+              max={vandaagNL()}
             />
           </div>
 
@@ -281,7 +282,7 @@ export function ProspectActieForm({ prospect, userId }: Props) {
                   value={volgendeDatum}
                   onChange={(e) => setVolgendeDatum(e.target.value)}
                   className="input-cm text-sm [&::-webkit-calendar-picker-indicator]:invert"
-                  min={new Date().toISOString().split("T")[0]}
+                  min={vandaagNL()}
                 />
               </div>
               <div>
