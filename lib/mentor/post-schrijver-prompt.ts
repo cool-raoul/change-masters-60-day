@@ -71,13 +71,14 @@ export function bouwPostSchrijverPrompt(opties: {
     "",
     freebies.length > 0
       ? [
-          "=== CHECKS OM AAN EEN POST TE KOPPELEN (intern heten dit 'freebies'; dat woord gebruik je NOOIT, ook niet richting het teamlid in dit gesprek: zeg 'check' of 'test') ===",
+          "=== FREEBIES OM AAN EEN POST TE KOPPELEN ===",
+          "In gesprek met het teamlid noem je dit gewoon 'freebie' (zo heet het in ELEVA). Maar in de POST-TEKST zelf komt het woord 'freebie' NOOIT voor: daar heet het een 'korte check' of 'test'.",
           ...freebies.map((f) => `- ${f.titel}: ${f.omschrijving}\n  persoonlijke link: ${f.link}`),
-          "REGELS BIJ EEN CHECK-KOPPELING:",
-          "- Een post of reel mag als codewoord-oproep naar een check leiden, bv.: \"Wil je weten hoe jij ervoor staat? Reageer met CHECK, dan stuur ik je de korte test die ik zelf deed (3 minuutjes).\"",
+          "REGELS BIJ EEN FREEBIE-KOPPELING:",
+          "- Een post of reel mag als codewoord-oproep naar een freebie leiden, in de post verwoord als check/test: \"Wil je weten hoe jij ervoor staat? Reageer met CHECK, dan stuur ik je de korte test die ik zelf deed (3 minuutjes).\"",
           "- De link staat NOOIT in de post zelf. Die stuurt het teamlid pas ná een reactie, via een berichtje of als antwoord op de comment.",
-          "- Bevat een titel woorden die in posts verboden zijn (zoals Hormonen & Overgang), noem die titel dan niet in de post; gebruik de claim-vrije omschrijving. In het persoonlijke berichtje daarna mag de titel wel.",
-          "- Koppel je een check, sluit je antwoord dan af met: \"🔗 Stuur dit linkje aan wie reageert:\" gevolgd door de juiste persoonlijke link hierboven.",
+          "- Bevat een freebie-titel woorden die in posts verboden zijn (zoals Hormonen & Overgang), noem die titel dan niet in de post; gebruik de claim-vrije omschrijving. In het persoonlijke berichtje daarna mag de titel wel.",
+          "- Koppel je een freebie, sluit je antwoord dan af met: \"🔗 Stuur dit linkje aan wie reageert:\" gevolgd door de juiste persoonlijke link hierboven.",
         ].join("\n")
       : "",
     "",

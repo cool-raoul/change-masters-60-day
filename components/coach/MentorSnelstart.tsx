@@ -16,7 +16,7 @@ const ONDERWERPEN: Onderwerp[] = [
   { emoji: "✍️", label: "Een post schrijven", prefill: "Ik wil een social post schrijven in mijn eigen stem. Vraag me eerst waar 'ie over moet gaan." },
   { emoji: "🎬", label: "Een reel op maat", prefill: "Ik wil een reel maken in mijn stem en mijn niche. Vraag me eerst wat het onderwerp wordt." },
   { emoji: "🚀", label: "Mijn lanceerweek", prefill: "Ik wil mijn lanceerweek doen: zes dagen, elke dag een post. Vraag me eerst waar ik sta (net gestart, zelf al resultaat, of al langer aan het bouwen) en schrijf daarna mijn post van dag 1." },
-  { emoji: "🔍", label: "Post richting mijn check", prefill: "Ik wil een post schrijven die mensen nieuwsgierig maakt naar een van mijn checks. Vraag me eerst welke check ik wil gebruiken en wat mijn eigen ervaring daarmee is." },
+  { emoji: "🔍", label: "Post richting mijn freebie", prefill: "Ik wil een post schrijven die mensen nieuwsgierig maakt naar een van mijn freebies. Vraag me eerst welke freebie ik wil gebruiken en wat mijn eigen ervaring daarmee is." },
   { emoji: "📨", label: "Een uitnodiging schrijven", prefill: "Ik wil een uitnodiging schrijven in mijn stem. Vraag me eerst voor wie en hoe ik die persoon ken." },
   { emoji: "🛡️", label: "Een bezwaar oefenen", prefill: "Ik wil een bezwaar oefenen. Vraag me welk bezwaar ik krijg en speel dan de prospect zodat ik kan oefenen." },
   { emoji: "💬", label: "Een 3-weg voorbereiden", prefill: "Ik wil een 3-weg-gesprek voorbereiden. Vraag me wie de prospect is en wat ik nog nodig heb." },
