@@ -7,6 +7,7 @@ import { bouwSchrijfregelsSectie } from "@/lib/mentor/schrijfregels";
 import { bouwCopywritingSectie } from "@/lib/mentor/copywriting";
 import { bouwPostSchrijverPrompt } from "@/lib/mentor/post-schrijver-prompt";
 import { haalMentorFreebies } from "@/lib/mentor/freebie-context";
+import { bouwProspectExtraSectie } from "@/lib/mentor/context-motor";
 import { productadviesBeschikbaar } from "@/lib/features/productadvies";
 import { checkCompliance, vatFlagsSamen } from "@/lib/coach/compliance-check";
 import {
@@ -272,6 +273,18 @@ export async function POST(request: Request) {
         }
       } catch (e) {
         console.warn("coach-voorbeelden ophalen mislukt:", e);
+      }
+    }
+
+    // Context-motor: tags, freebie-check-uitslagen en film-kijkgedrag van
+    // de gekozen prospect gaan mee het gesprek in (bleef eerder buiten de
+    // prompt). Alleen voor coach-gesprekken; de post-schrijver werkt over
+    // het lid zelf.
+    if (!isSchrijfPrompt && prospect) {
+      try {
+        systeemPrompt += await bouwProspectExtraSectie(supabase, user.id, prospect);
+      } catch (e) {
+        console.warn("prospect-extra-context mislukt:", e);
       }
     }
 
