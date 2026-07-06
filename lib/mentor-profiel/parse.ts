@@ -134,7 +134,9 @@ export function parseProspectBlok(tekst: string): ProspectFormContext | null {
  */
 export function zichtbaarTotMarker(tekst: string): string {
   let eind = tekst.length;
-  for (const m of ["[PROFIEL]", "[PROSPECT]"]) {
+  // [POST] is de markering van de schrijf-leer-lus (mentor_posts); net als
+  // de profiel-blokken onzichtbaar voor de gebruiker.
+  for (const m of ["[PROFIEL]", "[PROSPECT]", "[POST]"]) {
     const i = tekst.indexOf(m);
     if (i !== -1 && i < eind) eind = i;
   }

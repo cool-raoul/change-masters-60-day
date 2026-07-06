@@ -381,6 +381,26 @@ export async function POST(request: Request) {
             }
           }
 
+          // Leer-lus (blok 4): een geleverde post/reel vastleggen zodat de
+          // Mentor er later op kan terugkomen ("kreeg je post reacties?")
+          // en goed scorende posts voorbeelden kunnen worden.
+          if (isSchrijfPrompt && volledigAntwoord.includes("[POST]") && zichtbaarAntwoord) {
+            try {
+              const codewoord =
+                /reageer met\s+([A-ZÀ-Ü]{2,20})/i.exec(zichtbaarAntwoord)?.[1] ??
+                null;
+              await supabase.from("mentor_posts").insert({
+                user_id: user.id,
+                gesprek_id: gesprekId || null,
+                taak: taak.id,
+                tekst: zichtbaarAntwoord,
+                codewoord,
+              });
+            } catch (err) {
+              console.warn("mentor_posts opslaan mislukt:", err);
+            }
+          }
+
           // Compliance-scan op het zichtbare antwoord. PASSIEF, we
           // blokkeren niets, we loggen alleen.
           if (zichtbaarAntwoord && vraagType === "productadvies") {
