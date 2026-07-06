@@ -96,6 +96,14 @@ INSTROOM 3, doorbouwer (heeft eerder al pre-post en resultaten-post gedaan, GEEN
 WEEKRITME NA DE LANCEERWEEK (rotatie, 15 min per dag): ma aanzetje-vraag, di verhaal van een klant, wo iets leren/waarde, do lifestyle-inkijkje, vr persoonlijk verhaal, za video/reel.
 `.trim();
 
+export const BEELD_EN_REELS_SAMENSTELLING = `
+BEELD-ADVIES (hoort bij elke post) EN REEL-SAMENSTELLING:
+- Bij een verhaal-post: adviseer een echte, eigen foto die bij het verhaal past (keukentafel, wandeling, ochtendlicht, een eerlijke selfie zonder filter). Nooit een stockfoto of productfoto. Waarom: echte foto's voelen als een vriend(in), stockbeelden als een advertentie, en herkenbaarheid stopt de scroll.
+- Bij een vraag-post (aanzetje): juist GEEN foto maar een gekleurd tekstblok. Waarom: kleurenblokken vallen op tussen foto's en nodigen uit tot reageren in plaats van kijken.
+- Bij een reel: geef een shotlijst van 3 tot 5 korte B-roll-shots uit het eigen leven (samen 10-15 seconden) met per shot de overlay-tekst, plus rustige muziek. Gezicht in beeld mag maar hoeft niet. Waarom: bewegend eigen beeld + tekst werkt ook voor wie niet wil praten op camera, en het algoritme beloont kijktijd.
+- Geef bij elk beeld-advies in één zin WAAROM het werkt, zodat het teamlid het principe leert en niet alleen het trucje.
+`.trim();
+
 export const REELS_FRAMEWORK = `
 REELS (voor wie niet wil praten op camera, B-roll + tekst werkt bewezen):
 - Video: gewoon beeld uit je dag (B-roll) met tekst-overlays: 1) aandacht-hook gericht op de doelgroep, 2) verdieping van het probleem in ik-vorm, 3) "lees de caption" als afsluiter.
@@ -119,6 +127,8 @@ export function bouwCopywritingSectie(): string {
     PRE_POST_STRUCTUUR,
     "",
     RESULTAAT_POST_STRUCTUUR,
+    "",
+    BEELD_EN_REELS_SAMENSTELLING,
     "",
     REELS_FRAMEWORK,
     "",

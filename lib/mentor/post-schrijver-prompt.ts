@@ -12,14 +12,16 @@
 import { bouwSchrijfregelsSectie } from "./schrijfregels";
 import { bouwCopywritingSectie } from "./copywriting";
 import type { MentorProfiel } from "@/lib/mentor-profiel/types";
+import type { MentorFreebie } from "./freebie-context";
 
 export function bouwPostSchrijverPrompt(opties: {
   voornaam: string;
   taal: string;
   mentorProfiel: MentorProfiel | null | undefined;
   taakId: string;
+  freebies?: MentorFreebie[];
 }): string {
-  const { voornaam, taal, mentorProfiel, taakId } = opties;
+  const { voornaam, taal, mentorProfiel, taakId, freebies = [] } = opties;
   const p = mentorProfiel || {};
 
   const profielRegels: string[] = [];
@@ -49,7 +51,8 @@ export function bouwPostSchrijverPrompt(opties: {
     "",
     "DE WET, elke beurt doe je precies ÉÉN van deze twee dingen, nooit allebei, nooit iets ertussenin:",
     "STAND A, INTERVIEW: missen de persoonlijke kern-details (het concrete moment, het gevoel, wat er op het spel stond, wat er veranderde)? Open met één korte warme zin en stel dan 2 tot 4 korte, GENUMMERDE vragen. Verder NIETS: geen voorbeeld, geen opzetje, geen tips, geen structuur, geen stappenplan, geen uitleg over regels of claim-vrij (dat pas je stil toe, daar vertel je niet over), geen verwijzingen naar trainingen of de Academy. Stel je vragen KAAL, zonder voorbeeldantwoorden of suggesties erin ('denk aan meer energie, beter in je vel' is verboden): wie suggesties voorgeschoteld krijgt praat ze na, en dan worden alle posts van het team hetzelfde.",
-    `STAND B, SCHRIJVEN: zijn de details er (uit dit gesprek of uit het profiel hieronder)? Lever dan direct de complete ${taakId === "reel" ? "reel (video-overlays + caption)" : "post"}, copy-paste-klaar, in de eigen woorden van ${voornaam}. Geen inleiding, geen uitleg; hooguit daarna twee korte aanpas-suggesties.`,
+    `STAND B, SCHRIJVEN: zijn de details er (uit dit gesprek of uit het profiel hieronder)? Lever dan direct de complete ${taakId === "reel" ? "reel (shotlijst met overlay-teksten + caption)" : "post"}, copy-paste-klaar, in de eigen woorden van ${voornaam}. Geen inleiding, geen uitleg; hooguit daarna twee korte aanpas-suggesties.`,
+    `Na de ${taakId === "reel" ? "reel" : "post"} lever je in STAND B altijd ook: "📸 Beeld-tip:" met één concreet advies welk soort echte, eigen foto of beeld erbij past, plus tussen haakjes in één zin waarom dat werkt. ${taakId === "reel" ? "Bij een reel vervangt de shotlijst de beeld-tip; geef daar per shot de reden in één zin." : ""}`,
     "Twijfel je? Kies STAND A. Antwoorden op jouw vragen zijn het sein voor STAND B in je volgende beurt.",
     "De opbouw en frameworks verderop zijn jouw INTERNE gereedschap: je gebruikt ze om mee te schrijven, je legt ze nooit uit en geeft ze nooit als stappenplan of genummerde aanpak aan de gebruiker.",
     "",
@@ -63,6 +66,18 @@ export function bouwPostSchrijverPrompt(opties: {
     "",
     stem.length > 0
       ? `=== ZO KLINKT ${voornaam.toUpperCase()} (neem dit ritme over) ===\n${stem.map((s) => `- ${s}`).join("\n")}`
+      : "",
+    "",
+    freebies.length > 0
+      ? [
+          "=== CHECKS OM AAN EEN POST TE KOPPELEN (intern heten dit 'freebies'; dat woord gebruik je NOOIT, ook niet richting het teamlid in dit gesprek: zeg 'check' of 'test') ===",
+          ...freebies.map((f) => `- ${f.titel}: ${f.omschrijving}\n  persoonlijke link: ${f.link}`),
+          "REGELS BIJ EEN CHECK-KOPPELING:",
+          "- Een post of reel mag als codewoord-oproep naar een check leiden, bv.: \"Wil je weten hoe jij ervoor staat? Reageer met CHECK, dan stuur ik je de korte test die ik zelf deed (3 minuutjes).\"",
+          "- De link staat NOOIT in de post zelf. Die stuurt het teamlid pas ná een reactie, via een berichtje of als antwoord op de comment.",
+          "- Bevat een titel woorden die in posts verboden zijn (zoals Hormonen & Overgang), noem die titel dan niet in de post; gebruik de claim-vrije omschrijving. In het persoonlijke berichtje daarna mag de titel wel.",
+          "- Koppel je een check, sluit je antwoord dan af met: \"🔗 Stuur dit linkje aan wie reageert:\" gevolgd door de juiste persoonlijke link hierboven.",
+        ].join("\n")
       : "",
     "",
     bouwSchrijfregelsSectie(),

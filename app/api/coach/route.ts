@@ -6,6 +6,7 @@ import { taakVoor, isPostVerzoek } from "@/lib/mentor/taak-register";
 import { bouwSchrijfregelsSectie } from "@/lib/mentor/schrijfregels";
 import { bouwCopywritingSectie } from "@/lib/mentor/copywriting";
 import { bouwPostSchrijverPrompt } from "@/lib/mentor/post-schrijver-prompt";
+import { haalMentorFreebies } from "@/lib/mentor/freebie-context";
 import { productadviesBeschikbaar } from "@/lib/features/productadvies";
 import { checkCompliance, vatFlagsSamen } from "@/lib/coach/compliance-check";
 import {
@@ -214,12 +215,23 @@ export async function POST(request: Request) {
     // vocht met de schrijfregels en won, waardoor leden schrijf-TIPS kregen
     // in plaats van een interview + kant-en-klare post.
     const isSchrijfPrompt = taak.id === "post" || taak.id === "reel";
+    // Deelbare checks (freebies) van dit lid, zodat de schrijver een post
+    // aan een check kan koppelen ("reageer met CHECK") met de juiste link.
+    let mentorFreebies: Awaited<ReturnType<typeof haalMentorFreebies>> = [];
+    if (isSchrijfPrompt) {
+      try {
+        mentorFreebies = await haalMentorFreebies(supabase, user.id);
+      } catch (e) {
+        console.warn("freebie-context ophalen mislukt:", e);
+      }
+    }
     let systeemPrompt = isSchrijfPrompt
       ? bouwPostSchrijverPrompt({
           voornaam: (profile.full_name || "").split(" ")[0] || "daar",
           taal: taal || "nl",
           mentorProfiel,
           taakId: taak.id,
+          freebies: mentorFreebies,
         })
       : bouwCoachSysteemPrompt(
           profile, whyProfile, prospect, taal || "nl", vraagType, niveau, mentorProfiel
