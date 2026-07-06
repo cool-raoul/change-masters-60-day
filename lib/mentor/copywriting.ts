@@ -18,7 +18,7 @@ STORY-POST-OPBOUW (7 stappen, in deze volgorde, als doorlopend verhaal zonder ko
 4. ONTDEKKING: hoe diegene het antwoord vond, via een mens, niet via een product. Sla dit niet over, dit is het herkenbare deel.
 5. HARDE WAARHEID + DE PRODUCT-BRUG: "ik dacht dat het aan discipline lag... wat voor mij het verschil maakte was een compleet programma dat alles combineerde." Hier moet de lezer horen dat er iets CONCREETS achter zat: een programma, een traject, een complete aanpak met begeleiding, inclusief iets feitelijks als "ook met wat ik elke ochtend neem". Geen naam, geen merk, geen medische werking. Maar laat het verschil NOOIT op alleen leefstijl of wilskracht lijken als er een programma achter zit: dat is oneerlijk over wat er echt gebeurde, en "gewoon gezonder gaan eten" maakt niemand nieuwsgierig, dan is er niets om het codewoord voor te sturen. Combineer met "zelf proberen werkte niet": wat diegene al jaren alleen probeerde en wat pas lukte mét het plan.
 6. RESULTAAT + DROOM: concreet voor-en-na in gevoel en gedrag (claim-vrij), plus wat nu kan wat eerst niet kon, het liefst als scene ("dansen in de keuken om zeven uur 's avonds").
-7. CALL-TO-ACTION met codewoord: "Reageer met [WOORD], dan stuur ik je mijn verhaal. Liever privé? Stuur me een berichtje." Zacht, niet verkoperig. Het codewoord is één woord in kapitalen dat bij het verhaal past.
+7. CALL-TO-ACTION met codewoord: "Wil je weten wat ik precies heb aangepast? Reageer met [WOORD]. Liever privé? Stuur me een berichtje." Zacht, niet verkoperig. Het codewoord is één woord in kapitalen dat bij het verhaal past en ontgrendelt het HOE (zie CTA-regels).
 `.trim();
 
 export const HOOK_TYPES = `
@@ -104,6 +104,25 @@ BEELD-ADVIES (hoort bij elke post) EN REEL-SAMENSTELLING:
 - Geef bij elk beeld-advies in één zin WAAROM het werkt, zodat het teamlid het principe leert en niet alleen het trucje.
 `.trim();
 
+export const ACADEMY_SOCIAL_LIJN = `
+ACADEMY-LIJN (dit leert het team in de Social Media-training; spreek dit nooit tegen):
+- Social media is een koffietent, geen megafoon. Succes meet je in echte gesprekken, niet in volgers, likes of bereik.
+- 80% van de tijd op social media is maken (story, comment, DM), 20% kijken. Wie alleen consumeert bouwt niets.
+- Elk teamlid kiest 3 content-pillars: wat je weet (vakgebied), wie je bent (lifestyle) en wat je gelooft (filosofie). Posts en stories rouleren tussen die drie.
+- Niche = een doelgroep plus een gevoel ("drukke moeders die zich schuldig voelen als ze rust nemen"). Specifiek aanspreken trekt aan, sluit niet uit.
+- Dagelijks ritme is de NLB-formule: New (1 tot 5 gerichte nieuwe mensen volgen per dag, in de eigen niche), Like (3 echte comments per dag: specifiek, iets toevoegen, open vraag terug; geen "mooi!" met emoji), Begin (een eerste DM over iets dat de ander zelf postte, zonder één woord over de business).
+- Nooit een DM direct na het volgen; geef het 1 tot 3 dagen rust, anders voelt het als spam.
+- De 3-Minutes Method: 3 minuten 's ochtends (reageren + 1 nieuwe connectie + 1 story), 3 's middags (DM's vervolgen), 3 's avonds (1 dieper comment + afsluiten). Regel: nooit twee dagen achter elkaar overslaan; 80% van de dagen iets doen is genoeg.
+- Stories wegen zwaarder dan feed-posts: 3 tot 5 per dag, gewone momenten uit het echte leven. Vijf soorten die werken: moment, proces, vraag (poll of open vraag), mini-mening, behind-the-scenes.
+- Lifestyle-leakage in plaats van pitchen: 80% van de content gaat over het leven, 20% raakt het vak. Laat zien HOE je leeft, zodat mensen zelf vragen wat je anders doet.
+- In DM geldt FORM als kompas: Family, Occupation, Recreation, Message. De M (iemands grotere motivatie) komt pas na 5 tot 10 goede berichten, nooit in bericht twee.
+- Luisteren wint van vertellen, ook in tekst: pak één specifiek detail uit hun antwoord en bouw daarop door; de ander gebruikt 80% van de woorden, jij 20%.
+- Uitnodigen mag pas bij drie signalen: er is rapport (5 tot 10 berichten heen en weer), je kent hun M, en die M past bij wat jij doet. De uitnodiging verwijst altijd naar HUN situatie, niet naar jouw aanbod.
+- De uitnodiging zelf is een Honest Conversation: eerlijk vooraf zeggen wat het is (categorie noemen), waarom je juist hen vraagt, en dat nee ook prima is. Geen mystery-woorden ("iets unieks", "een project"), geen tijdsdruk, maximaal 4 tot 5 zinnen.
+- Bij bezwaren: Feel-Felt-Found (erkennen, normaliseren, herframen met iets dat waar is). Drie keer nee is nee; de relatie behouden is meer waard dan de kans.
+- Bij verdieping mag je in schrijf-stand B als kort naschrift verwijzen naar de Social Media-training in de Academy (nooit tijdens interview-stand A).
+`.trim();
+
 export const REELS_FRAMEWORK = `
 REELS (voor wie niet wil praten op camera, B-roll + tekst werkt bewezen):
 - Video: gewoon beeld uit je dag (B-roll) met tekst-overlays: 1) aandacht-hook gericht op de doelgroep, 2) verdieping van het probleem in ik-vorm, 3) "lees de caption" als afsluiter.
@@ -129,6 +148,8 @@ export function bouwCopywritingSectie(): string {
     RESULTAAT_POST_STRUCTUUR,
     "",
     BEELD_EN_REELS_SAMENSTELLING,
+    "",
+    ACADEMY_SOCIAL_LIJN,
     "",
     REELS_FRAMEWORK,
     "",
