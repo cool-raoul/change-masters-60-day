@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ELEVA — anti-overwhelm layout-voorstellen (desktop + telefoon)</title>
+<style>
+  :root{
+    --bg:#0a0a0c; --panel:#15171c; --panel2:#1b1e25; --rail:#0d0f13;
+    --gold:#c9a961; --gold-soft:rgba(201,160,97,.16); --cream:#f5e9c4;
+    --ink:#ececdc; --dim:rgba(236,234,220,.55); --dim2:rgba(236,234,220,.35);
+    --groen:#5db98c;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:radial-gradient(1000px 500px at 50% -10%, rgba(201,160,97,.06), transparent 70%), var(--bg);
+       color:var(--ink); font-family:Inter,system-ui,"Segoe UI",sans-serif; line-height:1.5; padding:36px 16px 90px;}
+  .wrap{max-width:1120px; margin:0 auto;}
+  h1{font-size:26px; font-weight:800; margin:0 0 6px; text-align:center;
+    background:linear-gradient(135deg,#fff,var(--cream) 50%,var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .sub{color:var(--dim); font-size:14px; text-align:center; max-width:760px; margin:0 auto 28px;}
+  h2{font-size:19px; font-weight:800; color:var(--cream); margin:46px 0 4px;}
+  .h2sub{color:var(--dim); font-size:13.5px; margin:0 0 18px; max-width:880px;}
+
+  .principes{display:flex; gap:10px; flex-wrap:wrap;}
+  .pr{flex:1 1 190px; background:var(--panel); border:1px solid var(--gold-soft); border-radius:13px; padding:13px 15px;}
+  .pr b{color:var(--cream); font-size:13.5px; display:block; margin-bottom:3px;}
+  .pr span{font-size:12.5px; color:var(--dim);}
+
+  /* laptop-frame */
+  .laptop{border:1px solid var(--gold-soft); border-radius:16px; overflow:hidden; background:#0c0d11; box-shadow:0 30px 80px rgba(0,0,0,.55);}
+  .app{display:grid; grid-template-columns:216px 1fr; min-height:520px;}
+  .app.smal{grid-template-columns:76px 1fr;}
+  @media (max-width:760px){ .app{grid-template-columns:1fr;} .rail{display:none;} }
+
+  .rail{background:var(--rail); border-right:1px solid var(--gold-soft); padding:16px 12px; display:flex; flex-direction:column;}
+  .brand{display:flex; align-items:center; gap:9px; padding:2px 8px 18px;}
+  .brand .logo{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--gold),var(--cream)); flex:0 0 26px;}
+  .brand .nm{font-weight:800; letter-spacing:.14em; font-size:13px; color:var(--cream);}
+  .nav a{display:flex; align-items:center; gap:11px; padding:10px 10px; border-radius:10px; color:var(--dim); text-decoration:none; font-size:13.5px; font-weight:600; border-left:3px solid transparent; margin-bottom:3px;}
+  .nav a .i{width:20px; text-align:center; font-size:16px;}
+  .nav a.actief{color:var(--gold); background:rgba(201,160,97,.10); border-left-color:var(--gold);}
+  .nav .sectie{font-size:10px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:var(--dim2); padding:14px 10px 5px;}
+  .railvoet{margin-top:auto; padding:10px; font-size:11.5px; color:var(--dim2); border-top:1px solid rgba(255,255,255,.05);}
+  .app.smal .nav a{justify-content:center; padding:12px 0;}
+  .app.smal .nav a .lbl{display:none;}
+  .app.smal .brand .nm{display:none;}
+
+  .main{padding:26px 30px 30px;}
+  .schermkop{display:flex; align-items:baseline; gap:12px; padding-bottom:14px; border-bottom:1px solid var(--gold-soft); margin-bottom:20px;}
+  .schermkop .ic{font-size:22px;}
+  .schermkop h3{margin:0; font-size:21px; font-weight:800; font-family:Georgia,serif;
+    background:linear-gradient(135deg,#fff,var(--cream) 55%,var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .schermkop .rechts{margin-left:auto; font-size:12px; color:var(--dim);}
+
+  .dagkaart{background:linear-gradient(160deg, rgba(201,160,97,.10), var(--panel) 55%); border:1px solid rgba(201,160,97,.35); border-radius:18px; padding:22px 24px; margin-bottom:18px;}
+  .dagkaart .k{font-size:11px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:var(--gold); margin-bottom:6px;}
+  .dagkaart h4{margin:0 0 6px; font-size:20px; font-family:Georgia,serif; color:var(--ink); font-weight:700;}
+  .dagkaart p{margin:0 0 14px; font-size:13px; color:var(--dim);}
+  .dagkaart .cta{display:inline-block; background:linear-gradient(135deg,var(--gold),#dcc084); color:#231c08; font-weight:800; font-size:13.5px; border-radius:11px; padding:10px 22px;}
+  .dagkaart .voortgang{height:5px; background:rgba(255,255,255,.07); border-radius:99px; margin-top:16px; overflow:hidden;}
+  .dagkaart .voortgang i{display:block; height:100%; width:53%; background:linear-gradient(90deg,var(--gold),var(--cream)); border-radius:99px;}
+
+  .aandacht{background:var(--panel); border:1px solid rgba(255,255,255,.06); border-radius:15px; padding:15px 17px;}
+  .aandacht .k{font-size:10.5px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); margin-bottom:9px;}
+  .arij{display:flex; gap:10px; align-items:center; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.045); font-size:13px;}
+  .arij:last-child{border-bottom:none;}
+  .arij .em{flex:0 0 20px; text-align:center;}
+  .arij .naar{margin-left:auto; color:var(--gold); font-size:12px; white-space:nowrap;}
+  .stil{margin-top:14px; font-size:12px; color:var(--dim2); text-align:center;}
+
+  /* phone-frame */
+  .duo{display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap;}
+  .duo .laptop{flex:1 1 560px;}
+  .phone{flex:0 0 250px; margin:0 auto; background:#0c0d11; border:1px solid var(--gold-soft); border-radius:30px; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,.55);}
+  .ph-scherm{padding:16px 14px 8px; min-height:430px; display:flex; flex-direction:column;}
+  .ph-kop{display:flex; align-items:center; gap:8px; margin-bottom:12px;}
+  .ph-kop .t{font-size:15px; font-weight:800; font-family:Georgia,serif; color:var(--cream);}
+  .ph-kop .r{margin-left:auto; font-size:10px; color:var(--dim);}
+  .ph-dag{background:linear-gradient(160deg, rgba(201,160,97,.12), var(--panel) 60%); border:1px solid rgba(201,160,97,.35); border-radius:15px; padding:14px;}
+  .ph-dag .k{font-size:9.5px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--gold);}
+  .ph-dag h5{margin:4px 0 4px; font-size:14.5px; font-family:Georgia,serif; color:var(--ink);}
+  .ph-dag p{margin:0 0 10px; font-size:11px; color:var(--dim);}
+  .ph-dag .cta{display:block; text-align:center; background:linear-gradient(135deg,var(--gold),#dcc084); color:#231c08; font-weight:800; font-size:12px; border-radius:9px; padding:9px;}
+  .ph-aandacht{background:var(--panel); border:1px solid rgba(255,255,255,.06); border-radius:13px; padding:11px 12px; margin-top:11px;}
+  .ph-aandacht .k{font-size:9px; font-weight:800; letter-spacing:.13em; text-transform:uppercase; color:var(--dim); margin-bottom:6px;}
+  .ph-rij{display:flex; gap:7px; align-items:center; font-size:11px; padding:5px 0; border-bottom:1px solid rgba(255,255,255,.045);}
+  .ph-rij:last-child{border-bottom:none;}
+  .ph-nav{margin-top:auto; display:flex; border-top:1px solid rgba(255,255,255,.07); padding:8px 2px 4px;}
+  .ph-nav div{flex:1; text-align:center; font-size:9px; color:var(--dim2);}
+  .ph-nav div .e{display:block; font-size:16px; margin-bottom:2px;}
+  .ph-nav div.act{color:var(--gold);}
+
+  /* tabs (mensen-hub + kaart) */
+  .tabs{display:flex; gap:6px; margin-bottom:14px;}
+  .tab{font-size:12px; font-weight:700; padding:7px 15px; border-radius:99px; border:1px solid rgba(255,255,255,.08); color:var(--dim);}
+  .tab.act{border-color:rgba(201,160,97,.5); color:var(--gold); background:rgba(201,160,97,.08);}
+  .lijstrij{display:flex; gap:11px; align-items:center; background:var(--panel); border:1px solid rgba(255,255,255,.05); border-radius:12px; padding:11px 13px; margin-bottom:8px; font-size:13px;}
+  .avatar{width:30px; height:30px; border-radius:50%; background:var(--panel2); border:1px solid var(--gold-soft); display:flex; align-items:center; justify-content:center; font-size:13px; flex:0 0 30px;}
+  .lijstrij .sub2{font-size:11.5px; color:var(--dim);}
+  .lijstrij .badge{margin-left:auto; font-size:10.5px; font-weight:700; color:var(--gold); border:1px solid rgba(201,160,97,.35); border-radius:99px; padding:2px 9px; white-space:nowrap;}
+
+  table{width:100%; border-collapse:collapse; font-size:13px; margin-top:6px;}
+  th{font-size:10.5px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); text-align:left; padding:8px 10px; border-bottom:1px solid var(--gold-soft);}
+  td{padding:8px 10px; border-bottom:1px solid rgba(255,255,255,.05); vertical-align:top;}
+  td.oud{color:var(--dim); width:40%;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>ELEVA anti-overwhelm, drie layout-voorstellen</h1>
+  <p class="sub">Gebaseerd op de volledige doorlichting van het huidige systeem. Kern: van 12+ menu-items naar 5 domeinen, één startpunt in plaats van twee, en rust door structuur en witruimte in plaats van meer kleur.</p>
+
+  <div class="principes">
+    <div class="pr"><b>1 · Eén startpunt</b><span>Vandaag ís het thuis-scherm. Geen dashboard én vandaag naast elkaar.</span></div>
+    <div class="pr"><b>2 · Vijf domeinen</b><span>Vandaag, Mensen, Mentor, Leren, Meer. Alles heeft één logisch huis.</span></div>
+    <div class="pr"><b>3 · Verbergen tot nodig</b><span>Wat vandaag geen aandacht vraagt, is niet zichtbaar. Max 3 aandachtspunten.</span></div>
+    <div class="pr"><b>4 · Eén goud-accent per zone</b><span>Goud markeert de ene belangrijke actie, nooit vijf dingen tegelijk.</span></div>
+    <div class="pr"><b>5 · Eén kaartstijl</b><span>Zelfde randen, zelfde hoeken, zelfde koppen. Overal.</span></div>
+  </div>
+
+  <h2>Voorstel 1 · "Rustig thuis" (desktop + telefoon)</h2>
+  <p class="h2sub">Het startscherm is voortaan je dag: één grote dag-kaart met één gouden knop, daaronder maximaal drie dingen die vandaag aandacht vragen. Meer niet. Het menu links: vijf domeinen met daaronder pas de verdieping. Herinneringen, streaks, WHY en statistieken schreeuwen niet meer om aandacht; ze zijn er als jij ze zoekt.</p>
+
+  <div class="duo">
+    <div class="laptop">
+      <div class="app">
+        <aside class="rail">
+          <div class="brand"><div class="logo"></div><div class="nm">ELEVA</div></div>
+          <nav class="nav">
+            <a class="actief"><span class="i">🏠</span><span class="lbl">Vandaag</span></a>
+            <a><span class="i">👥</span><span class="lbl">Mensen</span></a>
+            <a><span class="i">🤖</span><span class="lbl">Mentor</span></a>
+            <a><span class="i">📚</span><span class="lbl">Leren</span></a>
+            <a><span class="i">⚙️</span><span class="lbl">Meer</span></a>
+          </nav>
+          <div class="railvoet">Je sponsor: Gaby 🥰</div>
+        </aside>
+        <section class="main">
+          <div class="schermkop"><span class="ic">🏠</span><h3>Goedemorgen, Raoul</h3><span class="rechts">di 7 juli · dag 12</span></div>
+          <div class="dagkaart">
+            <div class="k">Vandaag · dag 12 · nog 2 stappen · ± 20 min</div>
+            <h4>💬 Open en eerlijk over het bouwen</h4>
+            <p>Je business-boog sluit vandaag af. De Mentor staat klaar om je post mee te schrijven.</p>
+            <span class="cta">Start je dag →</span>
+            <div class="voortgang"><i></i></div>
+          </div>
+          <div class="aandacht">
+            <div class="k">Vraagt vandaag je aandacht</div>
+            <div class="arij"><span class="em">🔔</span> Follow-up met <b>&nbsp;Luana&nbsp;</b> staat voor vandaag <span class="naar">Open kaart →</span></div>
+            <div class="arij"><span class="em">🎬</span> <b>Rudi&nbsp;</b> keek je film helemaal af <span class="naar">Bel vandaag →</span></div>
+            <div class="arij"><span class="em">💬</span> 2 nieuwe reacties met je codewoord <span class="naar">Beantwoord →</span></div>
+          </div>
+          <div class="stil">Meer is er vandaag niet. 🔥 6 dagen op rij · je WHY en je cijfers staan onder Meer.</div>
+        </section>
+      </div>
+    </div>
+
+    <div class="phone">
+      <div class="ph-scherm">
+        <div class="ph-kop"><div class="t">Goedemorgen, Raoul</div><div class="r">dag 12</div></div>
+        <div class="ph-dag">
+          <div class="k">Vandaag · nog 2 stappen · ± 20 min</div>
+          <h5>💬 Open en eerlijk over het bouwen</h5>
+          <p>De Mentor schrijft je post mee.</p>
+          <span class="cta">Start je dag →</span>
+        </div>
+        <div class="ph-aandacht">
+          <div class="k">Vraagt je aandacht</div>
+          <div class="ph-rij">🔔 Follow-up met Luana, vandaag</div>
+          <div class="ph-rij">🎬 Rudi keek je film helemaal af</div>
+          <div class="ph-rij">💬 2 codewoord-reacties open</div>
+        </div>
+        <div class="ph-nav">
+          <div class="act"><span class="e">🏠</span>Vandaag</div>
+          <div><span class="e">👥</span>Mensen</div>
+          <div><span class="e">🤖</span>Mentor</div>
+          <div><span class="e">📚</span>Leren</div>
+          <div><span class="e">⋯</span>Meer</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Voorstel 2 · "Ultra-focus" (out of the box)</h2>
+  <p class="h2sub">Nog een stap verder: het menu wordt een smalle icoon-rail (labels verschijnen bij aanwijzen), en het scherm is bijna leeg. Eén ademend dag-moment in het midden, één zin over wat er verder speelt. Dit is maximale rust: het systeem voelt als een stille butler die klaarstaat, niet als een kantoor vol mappen. Alles bestaat nog, maar niets dringt zich op.</p>
+
+  <div class="laptop">
+    <div class="app smal">
+      <aside class="rail">
+        <div class="brand"><div class="logo"></div></div>
+        <nav class="nav">
+          <a class="actief"><span class="i">🏠</span></a>
+          <a><span class="i">👥</span></a>
+          <a><span class="i">🤖</span></a>
+          <a><span class="i">📚</span></a>
+          <a><span class="i">⚙️</span></a>
+        </nav>
+      </aside>
+      <section class="main" style="display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; min-height:520px;">
+        <div style="font-size:11px; font-weight:800; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin-bottom:10px;">Dinsdag 7 juli · dag 12</div>
+        <div style="font-family:Georgia,serif; font-size:30px; font-weight:700; color:var(--ink); max-width:430px; line-height:1.25; margin-bottom:10px;">Open en eerlijk<br/>over het bouwen</div>
+        <div style="font-size:13px; color:var(--dim); margin-bottom:22px;">Nog 2 stappen · ongeveer 20 minuten · de Mentor schrijft mee</div>
+        <span class="cta" style="display:inline-block; background:linear-gradient(135deg,var(--gold),#dcc084); color:#231c08; font-weight:800; font-size:14px; border-radius:12px; padding:12px 30px;">Start je dag →</span>
+        <div style="margin-top:34px; font-size:12.5px; color:var(--dim);">Verder vandaag: follow-up met Luana · Rudi keek je film af · <span style="color:var(--gold);">bekijk 3 punten →</span></div>
+      </section>
+    </div>
+  </div>
+
+  <h2>Voorstel 3 · De Mensen-hub en de rustige klantenkaart</h2>
+  <p class="h2sub">Alle mensen-dingen (namenlijst, chats, Mini-ELEVA-uitnodigingen, team) worden één huis met tabbladen: nooit meer twijfelen waar je moet zijn. En de klantenkaart, nu 10+ blokken onder elkaar, krijgt drie rustige tabbladen: wie is het, wat speelt er, wat is er gebeurd.</p>
+
+  <div class="laptop">
+    <div class="app">
+      <aside class="rail">
+        <div class="brand"><div class="logo"></div><div class="nm">ELEVA</div></div>
+        <nav class="nav">
+          <a><span class="i">🏠</span><span class="lbl">Vandaag</span></a>
+          <a class="actief"><span class="i">👥</span><span class="lbl">Mensen</span></a>
+          <a><span class="i">🤖</span><span class="lbl">Mentor</span></a>
+          <a><span class="i">📚</span><span class="lbl">Leren</span></a>
+          <a><span class="i">⚙️</span><span class="lbl">Meer</span></a>
+        </nav>
+        <div class="railvoet">Je sponsor: Gaby 🥰</div>
+      </aside>
+      <section class="main">
+        <div class="schermkop"><span class="ic">👥</span><h3>Mensen</h3><span class="rechts">23 in je lijst · 2 chats open</span></div>
+        <div class="tabs">
+          <span class="tab act">Namenlijst</span>
+          <span class="tab">Chats <b style="color:var(--gold);">·2</b></span>
+          <span class="tab">Uitnodigingen</span>
+          <span class="tab">Team</span>
+        </div>
+        <div class="lijstrij"><div class="avatar">L</div><div><b>Luana de Wit</b><div class="sub2">Opvolgen · check gedaan (16) · film 100%</div></div><span class="badge">🔥 warm</span></div>
+        <div class="lijstrij"><div class="avatar">R</div><div><b>Rudi Jansen</b><div class="sub2">In gesprek · reageerde op je verhaal-post</div></div><span class="badge">vandaag bellen</span></div>
+        <div class="lijstrij"><div class="avatar">S</div><div><b>Sandra Mol</b><div class="sub2">Prospect · codewoord ZIN gisteren</div></div><span class="badge">stuur linkje</span></div>
+
+        <div style="margin-top:22px;" class="aandacht">
+          <div class="k">Zo wordt de klantenkaart (drie tabbladen in plaats van 10 blokken)</div>
+          <div class="tabs" style="margin:10px 0 8px;">
+            <span class="tab act">Overzicht</span>
+            <span class="tab">Volgende stap</span>
+            <span class="tab">📓 Notitieboekje</span>
+          </div>
+          <div style="font-size:12.5px; color:var(--dim); line-height:1.7;">
+            <b style="color:var(--cream);">Overzicht</b>: naam, fase, contactgegevens, tags, check-uitslag.
+            <b style="color:var(--cream);">Volgende stap</b>: de ene aanbevolen actie (Mentor-advies) + de knoppen (film, freebie, Mini-ELEVA, 3-weg, voice) op één rij.
+            <b style="color:var(--cream);">Notitieboekje</b>: de volledige tijdlijn + herinneringen + bestellingen.
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <h2>Waar elk huidig menu-item naartoe gaat</h2>
+  <table>
+    <tr><th>Nu (12+ items)</th><th>Straks (5 domeinen)</th></tr>
+    <tr><td class="oud">Dashboard + Vandaag (twee startpunten)</td><td>🏠 <b>Vandaag</b>, één thuis-scherm: dag-kaart + max 3 aandachtspunten</td></tr>
+    <tr><td class="oud">Namenlijst · Mijn chats · Mini-ELEVA uitnodigingen · Team</td><td>👥 <b>Mensen</b>, één hub met vier tabbladen</td></tr>
+    <tr><td class="oud">ELEVA Mentor · Scripts · Mijn zinnen</td><td>🤖 <b>Mentor</b>, met "mijn bibliotheek" (zinnen + scripts) als tabblad erin</td></tr>
+    <tr><td class="oud">Lessen · Academy</td><td>📚 <b>Leren</b>, één plek: je dag-lessen terugkijken + Academy-trainingen</td></tr>
+    <tr><td class="oud">Herinneringen (eigen menu-item)</td><td>Verhuist naar 🏠 Vandaag ("vraagt je aandacht") + de klantenkaart; volledige lijst één tik dieper</td></tr>
+    <tr><td class="oud">Mijn freebies · Statistieken · Premium · Instellingen · Over ELEVA</td><td>⚙️ <b>Meer</b>, netjes gegroepeerd (founder-tools alleen voor founders)</td></tr>
+  </table>
+
+</div>
+</body>
+</html>
