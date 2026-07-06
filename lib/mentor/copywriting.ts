@@ -93,7 +93,10 @@ INSTROOM 3, doorbouwer (heeft eerder al pre-post en resultaten-post gedaan, GEEN
 - Dag 5 Ander medium of nieuwe invalshoek (andere niche mag).
 - Dag 6 Open en eerlijk over het bouwen: waarom je dit doet, extra inkomstenstroom-taal.
 
-WEEKRITME NA DE LANCEERWEEK (rotatie, 15 min per dag): ma aanzetje-vraag, di verhaal van een klant, wo iets leren/waarde, do lifestyle-inkijkje, vr persoonlijk verhaal, za video/reel.
+WEEKRITME NA DE LANCEERWEEK (Academy-lijn: stories dragen het dagelijkse ritme, de feed is voor positie-content):
+- Dagelijks 3 tot 5 stories (moment, proces, vraag, mini-mening, behind-the-scenes), kost 15 min per dag.
+- Plus 1 à 2 feed-posts per week, rouleren over: aanzetje-vraag, verhaal van een klant, iets leren/waarde, lifestyle-inkijkje, persoonlijk verhaal, video/reel.
+- De lanceerweek zelf (6 posts in 6 dagen) is de bewuste uitzondering; daarna geldt: liever één sterke feed-post dan drie middelmatige.
 `.trim();
 
 export const BEELD_EN_REELS_SAMENSTELLING = `
@@ -104,6 +107,10 @@ BEELD-ADVIES (hoort bij elke post) EN REEL-SAMENSTELLING:
 - Geef bij elk beeld-advies in één zin WAAROM het werkt, zodat het teamlid het principe leert en niet alleen het trucje.
 `.trim();
 
+// LET OP: dit is een destillaat van lib/academy/social-media-content.ts
+// (stand 2026-07-06). Wordt de Academy-training aangescherpt of vervangen
+// (bv. de nieuwe Fraser Brookes-training), draai de destillatie dan
+// opnieuw zodat Mentor en Academy één waarheid blijven spreken.
 export const ACADEMY_SOCIAL_LIJN = `
 ACADEMY-LIJN (dit leert het team in de Social Media-training; spreek dit nooit tegen):
 - Social media is een koffietent, geen megafoon. Succes meet je in echte gesprekken, niet in volgers, likes of bereik.
@@ -127,7 +134,7 @@ export const REELS_FRAMEWORK = `
 REELS (voor wie niet wil praten op camera, B-roll + tekst werkt bewezen):
 - Video: gewoon beeld uit je dag (B-roll) met tekst-overlays: 1) aandacht-hook gericht op de doelgroep, 2) verdieping van het probleem in ik-vorm, 3) "lees de caption" als afsluiter.
 - Caption in 7 delen: tweede hook (zichtbaar vóór "meer lezen"), mini-transformatieverhaal in 1-3 zinnen, harde waarheid ("ik dacht dat het X was... het bleek Y"), 3-5 concrete tips die op zichzelf waardevol zijn (zo goed dat mensen 'm opslaan), waarom alleen-zelf-uitzoeken meer tijd en gedoe kost, de brug ("wat mij hielp", zonder naam), codewoord-CTA.
-- Product en bedrijf nooit in beeld en nooit bij naam.
+- In feed-posts en reels (bereiken ook koud publiek): product en bedrijf nooit in beeld en nooit bij naam. In stories naar je warme volgers mag een product terloops in leefcontext voorkomen (in je hand bij het ontbijt, zonder naam-closeup en zonder verkoopzin), dat is de Academy-lijn.
 `.trim();
 
 /** Alle copywriting-kennis in één blok, voor injectie bij post/reel-taken. */

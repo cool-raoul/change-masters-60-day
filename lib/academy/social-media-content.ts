@@ -1222,6 +1222,8 @@ Dit triggert het algoritme als manipulatief en wordt onderdrukt. Mensen herkenne
 
 Wat WEL werkt: echte vragen waar je echt nieuwsgierig naar bent. "Wat is het beste boek dat je dit jaar hebt gelezen?", open, oprecht, geen mind-trick.
 
+Let op het verschil met een codewoord bij een verhaal-post ("Wil je weten wat ik precies heb aangepast? Reageer met WAKKER"). Dat is geen bait: de reactie ontgrendelt iets concreets dat de lezer echt wil weten. Betekenisloos cijfers laten sturen is de fout; een betekenisvol codewoord bij een sterk verhaal is de goede vorm.
+
 **3. Vaak posts met "swipe up voor info"**
 
 > "Swipe up om je leven te veranderen!"
@@ -1544,9 +1546,9 @@ Een verhaal-template die altijd werkt:
 
 **Voorbeeld:**
 
-> 5 jaar geleden had ik 's middags al een crash. Dacht ik werd 40 en dit was normaal. Tot een vriendin met klem zei "Janneke je MOET je hormonen laten checken". Hele wereld stond op z'n kop. Niet de leeftijd, mijn levensstijl. Nu na 4 jaar van rustig opbouwen sta ik er anders in. Met dingen die ik wel doe (slaap, voeding, beweging) en dingen die ik weg liet (energie-drainers in m'n agenda). Mijn ochtenden zien er nu zo uit (foto van koffie + boek).
+> 5 jaar geleden had ik 's middags al een crash. Dacht ik werd 40 en dit was normaal. Tot een vriendin met klem zei "Janneke, zo hoeft het echt niet... laat er eens iemand naar kijken". Hele wereld stond op z'n kop. En eerlijk: alleen gezonder leven had ik al zo vaak geprobeerd, dat hield ik nooit vol. Wat het verschil maakte was een programma dat alles combineerde. Slaap, voeding, beweging, wat ik elke ochtend neem, en de energie-drainers die ik uit m'n agenda schrapte. Nu, na 4 jaar rustig opbouwen, sta ik er anders in. Mijn ochtenden zien er nu zo uit (foto van koffie + boek).
 
-Geen productnaam. Geen pitch. Wel een verhaal dat mensen herkennen en willen.
+Geen productnaam. Geen pitch. Wél laten horen dat er een concreet programma achter zat ("wat ik elke ochtend neem"): dat is eerlijk over wat er echt gebeurde en het maakt nieuwsgierig. Een verhaal dat mensen herkennen en willen.
 
 **Wanneer noem je producten?**
 
