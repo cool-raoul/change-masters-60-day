@@ -79,7 +79,7 @@ export default async function DashboardPagina({
     { data: testsRecent },
     { data: openHerinneringenAlle },
   ] = await Promise.all([
-    supabase.from("profiles").select("full_name, run_startdatum, sprint_startdatum, core_startdatum, created_at, modus, role, is_tester, dagelijkse_push_aan, dagelijkse_push_uur, sponsor_id").eq("id", user.id).maybeSingle(),
+    supabase.from("profiles").select("full_name, run_startdatum, sprint_startdatum, core_startdatum, created_at, modus, role, is_tester, dagelijkse_push_aan, dagelijkse_push_uur, sponsor_id, nieuwe_layout").eq("id", user.id).maybeSingle(),
     supabase.from("why_profiles").select("*").eq("user_id", user.id).maybeSingle(),
     supabase.from("dagelijkse_stats").select("*").eq("user_id", user.id).eq("stat_datum", vandaagStr).maybeSingle(),
     supabase.from("herinneringen").select("*, prospect:prospects(id, volledige_naam)").eq("user_id", user.id).lte("vervaldatum", vandaagStr).eq("voltooid", false).order("vervaldatum", { ascending: true }).limit(5),
@@ -132,6 +132,18 @@ export default async function DashboardPagina({
   const isLeider = (profile as any)?.role === "leider";
   const isFounder = (profile as any)?.role === "founder";
   const isTester = (profile as any)?.is_tester === true;
+
+  // Nieuwe layout aan? Dan is /nieuw het thuis-scherm. Alle oude
+  // "terug naar dashboard"-links (vandaag-flow, banners, pushes) landen
+  // hier en worden zo automatisch naar het juiste thuis gestuurd.
+  // Terug naar de oude layout kan altijd via de toggle in /nieuw/meer.
+  if (
+    (profile as { nieuwe_layout?: boolean | null } | null)?.nieuwe_layout ===
+      true &&
+    (isFounder || isTester)
+  ) {
+    redirect("/nieuw");
+  }
   const pushAan = (profile as any)?.dagelijkse_push_aan ?? false;
   const pushUur = (profile as any)?.dagelijkse_push_uur ?? 7;
 
