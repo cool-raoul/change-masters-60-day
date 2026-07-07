@@ -137,6 +137,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
           <Sidebar
             isLeider={(profile as any)?.role === "leider"}
             isFounder={(profile as any)?.role === "founder"}
+            isTester={profielData.is_tester === true}
             sponsorNaam={sponsorNaamSidebar}
           />
         )}

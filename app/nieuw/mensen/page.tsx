@@ -33,7 +33,7 @@ const TABS = [
 
 export default function NieuwMensen() {
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 max-w-3xl mx-auto">
       <div className="flex items-baseline gap-3 border-b border-cm-gold/20 pb-4">
         <h1 className="font-serif-warm text-2xl text-cm-white">👥 Mensen</h1>
         <span className="ml-auto text-xs text-cm-white/50">

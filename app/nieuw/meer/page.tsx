@@ -28,6 +28,8 @@ const FOUNDER: Item[] = [
   { emoji: "🎓", label: "Mentor trainen", href: "/instellingen/mentor-trainen" },
   { emoji: "📝", label: "Mijn aanpassingen (teksten)", href: "/instellingen/tekst-overrides" },
   { emoji: "💊", label: "Mentor product-kennis", href: "/instellingen/mentor-kennis" },
+  { emoji: "🪴", label: "Mini-ELEVA beheren", href: "/instellingen/mini-eleva-preview" },
+  { emoji: "🎙️", label: "Spraak naar Mentor", href: "/founder/spraak-mentor" },
   { emoji: "🧪", label: "Modus-test", href: "/instellingen/modus-test" },
   { emoji: "🚀", label: "Core 2.0 preview", href: "/core-v10" },
   { emoji: "📧", label: "Mail-preview", href: "/founder/mail-preview" },
@@ -81,7 +83,7 @@ export default async function NieuwMeer() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 max-w-3xl mx-auto">
       <div className="flex items-baseline gap-3 border-b border-cm-gold/20 pb-4">
         <h1 className="font-serif-warm text-2xl text-cm-white">⚙️ Meer</h1>
         <span className="ml-auto text-xs text-cm-white/50">

@@ -17,7 +17,16 @@ const DOMEINEN = [
     emoji: "🏠",
     label: "Vandaag",
     href: "/nieuw",
-    routes: ["/nieuw", "/vandaag", "/dashboard", "/herinneringen", "/mijn-why"],
+    routes: [
+      "/nieuw",
+      "/vandaag",
+      "/dashboard",
+      "/herinneringen",
+      "/mijn-why",
+      "/zoeken",
+      "/playbook",
+      "/welkom",
+    ],
   },
   {
     emoji: "👥",
@@ -70,7 +79,7 @@ export function NieuweRail({ sponsorNaam }: { sponsorNaam: string | null }) {
   const pathname = usePathname() || "";
   const actief = actiefDomein(pathname);
   return (
-    <aside className="hidden lg:flex w-56 flex-shrink-0 flex-col border-r border-cm-border bg-cm-black/60 px-3 py-5">
+    <aside className="hidden lg:flex w-64 flex-shrink-0 flex-col border-r border-cm-border bg-cm-black/60 px-3 py-5">
       <Link href="/nieuw" className="flex items-center gap-2.5 px-2 pb-6">
         <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-cm-gold to-cm-gold-light" />
         <span className="font-bold tracking-[0.14em] text-sm text-cm-white">ELEVA</span>
@@ -102,7 +111,10 @@ export function NieuweBottomNav() {
   const pathname = usePathname() || "";
   const actief = actiefDomein(pathname);
   return (
-    <nav className="lg:hidden fixed bottom-0 inset-x-0 z-40 border-t border-cm-border bg-cm-black/95 backdrop-blur flex">
+    <nav
+      className="lg:hidden fixed bottom-0 inset-x-0 z-40 border-t border-cm-border bg-cm-black/95 backdrop-blur flex"
+      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+    >
       {DOMEINEN.map((d) => (
         <Link
           key={d.href}

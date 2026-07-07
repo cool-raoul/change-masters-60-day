@@ -4,8 +4,10 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { startdatumVoorModus } from "@/lib/playbook/dag-teller";
+import { berekenHuidigeDag } from "@/lib/playbook/bereken-dag";
 import { CORE_V9_STAPPEN } from "@/lib/playbook/core-dagen-v9";
 import { DAGEN } from "@/lib/playbook/dagen";
+import { pakDagdeelGroetMetNaam } from "@/lib/util/dagdeel-groet";
 import { NieuweLayoutToggle } from "@/components/layout/NieuweLayoutToggle";
 
 export const dynamic = "force-dynamic";
@@ -20,7 +22,7 @@ export default async function NieuwThuis() {
   const { data: profile } = await supabase
     .from("profiles")
     .select(
-      "full_name, modus, sprint_startdatum, core_startdatum, run_startdatum, created_at, nieuwe_layout",
+      "full_name, modus, sprint_startdatum, core_startdatum, run_startdatum, created_at, nieuwe_layout, role, is_tester",
     )
     .eq("id", user.id)
     .maybeSingle();
@@ -45,15 +47,27 @@ export default async function NieuwThuis() {
     },
     modus,
   );
-  const dag = start
-    ? Math.max(
-        1,
-        Math.floor((Date.now() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1,
-      )
-    : 1;
+  // Zelfde dag-berekening als de Topbar/dashboard (voortgang-bewust), zodat
+  // het thuis-scherm nooit een ander dagnummer toont dan de rest.
+  const { data: voltooiingen } = await supabase
+    .from("dag_voltooiingen")
+    .select("dag_nummer, taak_id")
+    .eq("user_id", user.id);
+  const pAny = profile as { role?: string | null; is_tester?: boolean | null } | null;
+  const isFounderOfTester =
+    pAny?.role === "founder" || pAny?.is_tester === true;
+  const dag = berekenHuidigeDag(
+    (voltooiingen ?? []) as { dag_nummer: number; taak_id: string }[],
+    start ? start.toISOString().slice(0, 10) : null,
+    { isTester: isFounderOfTester, modus: modus === "core" ? "core" : "sprint" },
+  );
   const dagenSet = modus === "core" ? CORE_V9_STAPPEN : DAGEN;
+  // Na dag 21 geen dag-titel uit de 21-daagse set lenen: dan draait het
+  // weekritme en tonen we een eerlijke ritme-kaart.
   const dagInfo =
-    modus === "pro" ? null : dagenSet.find((d) => d.nummer === Math.min(dag, 21));
+    modus === "pro" || dag > 21
+      ? null
+      : dagenSet.find((d) => d.nummer === dag);
 
   // Vandaag vraagt aandacht: max 3 herinneringen (vandaag of verlopen).
   const vandaagStr = new Intl.DateTimeFormat("en-CA", {
@@ -89,6 +103,14 @@ export default async function NieuwThuis() {
 
   return (
     <div className="space-y-5 max-w-3xl mx-auto">
+      <div className="flex items-baseline gap-3 border-b border-cm-gold/20 pb-4">
+        <h1 className="font-serif-warm text-2xl text-cm-white">
+          {pakDagdeelGroetMetNaam(voornaam)}
+        </h1>
+        <span className="ml-auto text-xs text-cm-white/50">
+          {datumLabel} · dag {dag}
+        </span>
+      </div>
       {!layoutAan && (
         <div className="card border-cm-gold/40 bg-cm-gold/5 flex items-center gap-4 flex-wrap">
           <p className="text-sm text-cm-white flex-1 min-w-[200px]">
@@ -98,14 +120,6 @@ export default async function NieuwThuis() {
           <NieuweLayoutToggle aan={false} />
         </div>
       )}
-      <div className="flex items-baseline gap-3 border-b border-cm-gold/20 pb-4">
-        <h1 className="font-serif-warm text-2xl text-cm-white">
-          Goedemorgen, {voornaam}
-        </h1>
-        <span className="ml-auto text-xs text-cm-white/50">
-          {datumLabel} · dag {dag}
-        </span>
-      </div>
 
       {/* De dag-kaart: één gouden actie. */}
       <div className="rounded-2xl border border-cm-gold/40 bg-gradient-to-br from-cm-gold/10 to-cm-surface p-6">
@@ -114,12 +128,18 @@ export default async function NieuwThuis() {
           {modus === "pro" ? " · jouw leerpad" : ""}
         </p>
         <h2 className="font-serif-warm text-xl text-cm-white mb-2">
-          {dagInfo ? dagInfo.titel : "Jouw volgende stap staat klaar"}
+          {dagInfo
+            ? dagInfo.titel
+            : modus === "pro"
+              ? "Jouw volgende stap staat klaar"
+              : "📅 Je ritme van vandaag"}
         </h2>
         <p className="text-sm text-cm-white/60 mb-5">
           {dagInfo
             ? "Je stappen van vandaag staan klaar, de Mentor helpt waar nodig."
-            : "Open je pad en pak de volgende stap."}
+            : modus === "pro"
+              ? "Open je pad en pak de volgende stap."
+              : "Stories, je gesprekken en het weekritme staan voor je klaar."}
         </p>
         <Link
           href={modus === "pro" ? "/welkom-pro" : "/vandaag"}

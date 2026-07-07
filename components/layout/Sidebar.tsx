@@ -10,11 +10,14 @@ import { useTaal } from "@/lib/i18n/TaalContext";
 export function Sidebar({
   isLeider = false,
   isFounder = false,
+  isTester = false,
   sponsorNaam = "",
 }: {
   isLeider?: boolean;
   /** Founders zien een paar extra menu-items (zoals Diagnose-link). */
   isFounder?: boolean;
+  /** Testers zien de nieuwe-layout-ingang (preview-groep). */
+  isTester?: boolean;
   sponsorNaam?: string;
 }) {
   const pathname = usePathname();
@@ -214,10 +217,10 @@ export function Sidebar({
           >
             <span>⚙️</span> {v("nav.instellingen")}
           </Link>
-          {/* Nieuwe layout-preview: alleen founders (testers bereiken 'm
-              via de directe /nieuw-link). Eén klik in /nieuw/meer zet de
-              nieuwe schil aan voor het hele account. */}
-          {isFounder && (
+          {/* Nieuwe layout-preview: founders én testers (de preview-groep).
+              Eén klik in /nieuw/meer zet de nieuwe schil aan voor het
+              hele account; terugwisselen kan daar ook. */}
+          {(isFounder || isTester) && (
             <Link
               href="/nieuw"
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-gold opacity-90 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
