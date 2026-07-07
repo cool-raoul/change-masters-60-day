@@ -21,6 +21,7 @@ import { CelebrationLayer } from "@/components/celebrations/CelebrationLayer";
 import { PushResyncBanner } from "@/components/push/PushResyncBanner";
 import { ScrollToTopOnNavigation } from "@/components/layout/ScrollToTopOnNavigation";
 import { FounderTopStrip } from "@/components/layout/FounderTopStrip";
+import { NieuweRail, NieuweBottomNav } from "@/components/layout/NieuweNav";
 import { startdatumVoorModus } from "@/lib/playbook/dag-teller";
 import { differenceInDays } from "date-fns";
 import { PRO_LEERPAD } from "@/lib/leerpaden/pro-stappen";
@@ -36,7 +37,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
   const { data: profile } = await supabase
     .from("profiles")
     .select(
-      "full_name, onboarding_klaar, role, run_startdatum, sprint_startdatum, core_startdatum, created_at, modus, is_tester, sponsor_id, foto_url",
+      "full_name, onboarding_klaar, role, run_startdatum, sprint_startdatum, core_startdatum, created_at, modus, is_tester, sponsor_id, foto_url, nieuwe_layout",
     )
     .eq("id", user.id)
     .single();
@@ -64,6 +65,11 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
   };
   const isFounderOfTester =
     profielData.role === "founder" || profielData.is_tester === true;
+  // Nieuwe anti-overwhelm-schil: per account aan te zetten (preview-groep:
+  // founders/testers). Wisselen = één klik via de toggle in /nieuw/meer.
+  const nieuweSchil =
+    (profile as { nieuwe_layout?: boolean | null } | null)?.nieuwe_layout ===
+      true && isFounderOfTester;
   // Rol voor de features-registry. Members en lege/onbekende rollen krijgen
   // 'member' (standaard, restrictiefste view). Zo ziet niemand per ongeluk
   // founder-features waar 'ie geen rechten op heeft.
@@ -125,11 +131,15 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
             "te gek dat je er bent" + WHY-knop hoort niet meer in de
             nieuwe flow waarin /welkom-keuze + /onboarding stap 2 (WHY)
             de gebruiker netjes door 't pad leiden. */}
-        <Sidebar
-          isLeider={(profile as any)?.role === "leider"}
-          isFounder={(profile as any)?.role === "founder"}
-          sponsorNaam={sponsorNaamSidebar}
-        />
+        {nieuweSchil ? (
+          <NieuweRail sponsorNaam={sponsorNaamSidebar} />
+        ) : (
+          <Sidebar
+            isLeider={(profile as any)?.role === "leider"}
+            isFounder={(profile as any)?.role === "founder"}
+            sponsorNaam={sponsorNaamSidebar}
+          />
+        )}
         <div className="flex-1 flex flex-col min-h-0 min-w-0">
           <FounderTopStrip
             isFounder={profielData.role === "founder"}
@@ -167,7 +177,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
         {/* Mobile bottom-nav (lg:hidden), naast de continu-zichtbare
             desktop-Sidebar. Op mobile zijn ze allebei beschikbaar:
             BottomNav voor de top-4-acties + 'Meer' opent de sidebar-drawer. */}
-        <BottomNav />
+        {nieuweSchil ? <NieuweBottomNav /> : <BottomNav />}
         <VoiceFab />
         {/* "Wat nu?"-gereedschapskist: vaste knop linksonder, op elke
             werk-pagina beschikbaar (Sprint en Core). De wegwijzer naar de

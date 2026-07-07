@@ -3,6 +3,7 @@
 
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { NieuweLayoutToggle } from "@/components/layout/NieuweLayoutToggle";
 
 export const dynamic = "force-dynamic";
 
@@ -64,13 +65,19 @@ export default async function NieuwMeer() {
     data: { user },
   } = await supabase.auth.getUser();
   let isFounder = false;
+  let layoutAan = false;
   if (user) {
     const { data: profiel } = await supabase
       .from("profiles")
-      .select("role")
+      .select("role, nieuwe_layout")
       .eq("id", user.id)
       .maybeSingle();
-    isFounder = (profiel as { role?: string | null } | null)?.role === "founder";
+    const p = profiel as {
+      role?: string | null;
+      nieuwe_layout?: boolean | null;
+    } | null;
+    isFounder = p?.role === "founder";
+    layoutAan = p?.nieuwe_layout === true;
   }
 
   return (
@@ -80,6 +87,14 @@ export default async function NieuwMeer() {
         <span className="ml-auto text-xs text-cm-white/50">
           alles bereikbaar, niets opdringerig
         </span>
+      </div>
+      <div className="card border-cm-gold/40 bg-cm-gold/5 flex items-center gap-4 flex-wrap">
+        <p className="text-sm text-cm-white flex-1 min-w-[200px]">
+          {layoutAan
+            ? "✨ De nieuwe layout staat aan voor jouw account. Terug naar de oude kan altijd."
+            : "✨ Zet de nieuwe layout aan voor je hele account (alleen jij ziet dit)."}
+        </p>
+        <NieuweLayoutToggle aan={layoutAan} />
       </div>
       <Groep titel="Voor je business" items={BUSINESS} />
       <Groep titel="Jouw account" items={ACCOUNT} />

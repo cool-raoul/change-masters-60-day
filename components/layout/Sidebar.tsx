@@ -214,6 +214,17 @@ export function Sidebar({
           >
             <span>⚙️</span> {v("nav.instellingen")}
           </Link>
+          {/* Nieuwe layout-preview: alleen founders (testers bereiken 'm
+              via de directe /nieuw-link). Eén klik in /nieuw/meer zet de
+              nieuwe schil aan voor het hele account. */}
+          {isFounder && (
+            <Link
+              href="/nieuw"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-gold opacity-90 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
+            >
+              <span>✨</span> Nieuwe layout
+            </Link>
+          )}
           {/* Diagnose-link: alleen voor founders zichtbaar. Members
               zien 'm niet meer (push + voice werken). Founders kunnen
               'm gebruiken om iemand op afstand te debuggen of zelf te

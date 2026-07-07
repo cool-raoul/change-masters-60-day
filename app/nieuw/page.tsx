@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { startdatumVoorModus } from "@/lib/playbook/dag-teller";
 import { CORE_V9_STAPPEN } from "@/lib/playbook/core-dagen-v9";
 import { DAGEN } from "@/lib/playbook/dagen";
+import { NieuweLayoutToggle } from "@/components/layout/NieuweLayoutToggle";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +20,7 @@ export default async function NieuwThuis() {
   const { data: profile } = await supabase
     .from("profiles")
     .select(
-      "full_name, modus, sprint_startdatum, core_startdatum, run_startdatum, created_at",
+      "full_name, modus, sprint_startdatum, core_startdatum, run_startdatum, created_at, nieuwe_layout",
     )
     .eq("id", user.id)
     .maybeSingle();
@@ -82,8 +83,21 @@ export default async function NieuwThuis() {
     month: "long",
   }).format(new Date());
 
+  const layoutAan =
+    (profile as { nieuwe_layout?: boolean | null } | null)?.nieuwe_layout ===
+    true;
+
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 max-w-3xl mx-auto">
+      {!layoutAan && (
+        <div className="card border-cm-gold/40 bg-cm-gold/5 flex items-center gap-4 flex-wrap">
+          <p className="text-sm text-cm-white flex-1 min-w-[200px]">
+            ✨ Dit is het nieuwe thuis-scherm. Zet de nieuwe navigatie aan voor
+            je hele account; terugwisselen kan altijd met één klik.
+          </p>
+          <NieuweLayoutToggle aan={false} />
+        </div>
+      )}
       <div className="flex items-baseline gap-3 border-b border-cm-gold/20 pb-4">
         <h1 className="font-serif-warm text-2xl text-cm-white">
           Goedemorgen, {voornaam}
