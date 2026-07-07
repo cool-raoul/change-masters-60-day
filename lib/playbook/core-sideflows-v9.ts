@@ -108,7 +108,11 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       id: "core-v9-sideflow-prepost-3-copywriting",
       label: "Schrijf je pre-post met de Mentor (jouw eerlijke voornemen)",
       verplicht: true,
-      actieRoute: "/coach",
+      // Prefill + submit=1: het gesprek start meteen in de schrijver-stand
+      // (het woord "pre-post" activeert het post-vangnet in de coach-route),
+      // dus de Mentor begint direct met z'n interview-vragen.
+      actieRoute: `/coach?prefill=${encodeURIComponent("Ik wil mijn pre-post schrijven.")}&submit=1`,
+      actieRouteLabel: "✍️ Schrijf 'm met de Mentor →",
       uitleg:
         "Schrijf je pre-post als een kort, eerlijk gevoelsverhaal in jouw stem, volgens de vaste opbouw die we als team gebruiken (staat in de claimvrije-communicatie). Vier delen: 1) een korte emotionele opener die de scroll stopt, 2) hoe je je de laatste tijd voelde, in ik-taal en claim-vrij (bijvoorbeeld 'futloos, niet lekker in mijn vel, energie die vaak wegzakte'), 3) wat je hebt besloten te doen, gewoon open benoemd (de komende 21 dagen bewust aan de slag met je leefstijl: gezonder eten, meer water, beter slapen, meer rustmomenten), en 4) je positieve verwachting, een bedankje aan je mentor en een 'wish me luck'. Je houdt dus niks achter en maakt er geen raadsel van, je deelt je voornemen open en eerlijk. De Mentor bouwt 'm met je op in precies deze structuur, drie rondjes en 'm staat. Claim-vrij: geen ziektes, geen medische woorden, geen 'door dit product', wel gevoel, gedrag en bewustwording.",
     },
@@ -140,6 +144,8 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
 "${DM_SCRIPT_GEZELLIG}"
 
 3. LIKERS (alleen een like, geen reactie) → Stuur dezelfde DM als bij reageerders.
+
+4. CODEWOORD-REAGEERDERS → Heeft de Mentor een codewoord in je post gezet (bijvoorbeeld "Reageer met CHECK")? Dan stuur je aan iedereen die dat woord reageert meteen wat je beloofde: het linkje of de info die de Mentor bij je post meegaf. Dit is je warmste groep, die heeft letterlijk om meer gevraagd.
 
 Belangrijk: de tekst zegt NIET 'ik heb besloten anderen te helpen', want je hebt het zelf nog niet gedaan. Wel 'ik zoek mensen die gezellig met mij meedoen'. Dat past wel.`,
     },
@@ -254,7 +260,8 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       id: "core-v9-sideflow-21dagen-3-veranderingen-inventariseren",
       label: "Inventariseer met de Mentor ALLE positieve veranderingen die je hebt gemerkt",
       verplicht: true,
-      actieRoute: "/coach",
+      actieRoute: `/coach?prefill=${encodeURIComponent("Help me alle positieve veranderingen op een rij te zetten die ik heb gemerkt sinds ik begon.")}&submit=1`,
+      actieRouteLabel: "📝 Inventariseer met de Mentor →",
       uitleg:
         "Inventariseer met de Mentor ALLE positieve veranderingen die je hebt gemerkt sinds je begon. Niet één of twee, maar alle: slaap, energie, vel, stemming, lichaam, focus, opladen, verteren, je humeur, alles waar je iets in voelt schuiven. De Mentor stelt vragen, jij vertelt rustig. Verschillende mensen worden door verschillende dingen geraakt, en hoe meer veranderingen je noemt hoe meer doelgroepen je triggert. Hou 'm wel claim-vrij, dus niet 'mijn slaap is genezen' maar 'ik slaap dieper'.",
     },
@@ -262,7 +269,10 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
       id: "core-v9-sideflow-21dagen-4-tekst-schrijven",
       label: "Schrijf je 21-dagen-post met de Mentor (claim-vrij)",
       verplicht: true,
-      actieRoute: "/coach",
+      // Prefill + submit=1: start meteen in de schrijver-stand ("21-dagen-
+      // post" activeert het post-vangnet), Mentor begint direct z'n interview.
+      actieRoute: `/coach?prefill=${encodeURIComponent("Ik wil mijn 21-dagen-post schrijven.")}&submit=1`,
+      actieRouteLabel: "✍️ Schrijf 'm met de Mentor →",
       uitleg:
         "Schrijf je 21-dagen-post als een compleet verhaal dat op zichzelf staat, in jouw stem, volgens de vaste team-opbouw (claimvrije-communicatie). Vijf delen: 1) een scroll-stop opener (er staan er tien klaar, bijvoorbeeld 'Wauw, ik herken mezelf bijna niet meer' of 'Mijn kleding zit losser, mijn hoofd zit rustiger'), 2) hoe het vóór de start was, 3) wat je tijdens de drie weken hebt veranderd, 4) wat het je heeft gebracht, met alle veranderingen die je net hebt geïnventariseerd (gevoel, energie, balans, trots, en hoe meer je er noemt hoe meer mensen zich erin herkennen), en 5) een afsluiting met dankbaarheid. Het verhaal vertelt zichzelf, je hoeft het niet als raadsel te brengen, de reacties en DM's vang je daarna op met je 3-soorten-mensen-script. Claim-vrij: niet 'mijn slaap is genezen' maar 'ik slaap dieper', niet 'door dit product' maar vanuit jouw gevoel en keuzes. Drie iteraties met de Mentor en 'm staat.",
     },
@@ -294,6 +304,8 @@ Niet alleen. Bouwen mag leuk zijn 💟`,
 "${DM_SCRIPT_BLIJ}"
 
 3. LIKERS (alleen een like) → Stuur dezelfde DM als bij reageerders.
+
+4. CODEWOORD-REAGEERDERS → Heeft de Mentor een codewoord in je post gezet (bijvoorbeeld "Reageer met CHECK")? Dan stuur je aan iedereen die dat woord reageert meteen wat je beloofde: het linkje of de info die de Mentor bij je post meegaf. Dit is je warmste groep, die heeft letterlijk om meer gevraagd.
 
 Hier past 'ik heb besloten anderen hier ook mee te helpen' wel, want je hebt het zelf inmiddels ervaren.`,
     },

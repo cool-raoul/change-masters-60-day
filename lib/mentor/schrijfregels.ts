@@ -51,6 +51,14 @@ Schrijf NOOIT een publieke post zonder echte, eigen details van dit teamlid. Gen
 4. Zodra de antwoorden er zijn: schrijf de post copy-paste-klaar, gebruik hun woorden letterlijk waar het kan, zonder uitleg eromheen, met daarna maximaal twee korte aanpas-suggesties.
 `.trim();
 
+export const ANTI_AI_GEUR = `
+DE AI-GEUR-TEST (de laatste en belangrijkste check):
+Iedereen kan tegenwoordig ChatGPT een profiel voeren; het verschil van deze Mentor is dat mensen NIET ruiken dat een tekst door AI is geschreven. AI-tekst verraadt zich door te glad, te compleet en te netjes te zijn. Lees je tekst daarom als de meest sceptische vriendin van deze persoon: zou zij ook maar één zin aanwijzen en zeggen "dit heb jij niet geschreven"? Herschrijf die zin.
+- Perfectie is verdacht. Een zin die gewoon met "dus ja" of "nou" begint, een gedachte die even blijft hangen, een woord dat alleen deze persoon zo gebruikt: dát maakt een tekst menselijk. Laat het staan, poets het niet weg.
+- Mensen schrijven scheef: niet elke alinea even lang, niet elk punt netjes uitgewerkt, geen keurige opsomming van drie voordelen. Twee genoemd en eentje vergeten is menselijker dan drie in perfect ritme.
+- Heeft deze persoon eigen teksten of nooit-woorden in het profiel staan? Dan zijn DIE de maat, niet jouw gevoel voor mooi. Liever een tikje hoekig in hun stem dan vloeiend in de jouwe.
+`.trim();
+
 export const ZELFCHECK_SCHRIJFWERK = `
 ZELFCHECK voordat je de tekst geeft (doe dit stil, lever alleen het resultaat):
 1. Staat er een em-dash, "het is belangrijk", een drie-zinnen-rijtje, "dit is geen X maar Y" of een tijdsbelofte in? Herschrijf die zin.
@@ -69,6 +77,8 @@ export function bouwSchrijfregelsSectie(): string {
     CLAIM_REGELS_PUBLIEK,
     "",
     INTERVIEW_EERST,
+    "",
+    ANTI_AI_GEUR,
     "",
     ZELFCHECK_SCHRIJFWERK,
   ].join("\n");

@@ -455,6 +455,17 @@ Benadruk dat fase 1 het specifieke probleem aanpakt, maar dat blijvende gezondhe
     if (mp.eigenProducten && mp.eigenProducten.length)
       r.push(`Gebruikt zelf: ${mp.eigenProducten.join(", ")}`);
     if (mp.talent) r.push(`Talent: ${mp.talent}`);
+    if (mp.socialSituatie) r.push(`Social-situatie: ${mp.socialSituatie}`);
+    if (mp.grenzen && mp.grenzen.length)
+      r.push(`HARDE GRENZEN (respecteer dit in elk advies, stel nooit iets voor dat hier tegenin gaat): ${mp.grenzen.join("; ")}`);
+    if (mp.praattaal && mp.praattaal.length)
+      r.push(`Typische uitdrukkingen: ${mp.praattaal.join(" | ")}`);
+    if (mp.nooitWoorden && mp.nooitWoorden.length)
+      r.push(`Woorden die ${naam} nooit gebruikt (vermijd ze in alles wat je voor ${naam} schrijft): ${mp.nooitWoorden.join(" | ")}`);
+    if (mp.ritme) r.push(`Beschikbare tijd: ${mp.ritme} (doseer je advies hierop)`);
+    if (mp.eersteFeestje) r.push(`Werkt toe naar: ${mp.eersteFeestje}`);
+    if (mp.vrijeContext)
+      r.push(`Zelf aangegeven, belangrijk om te weten: ${mp.vrijeContext.slice(0, 600)}`);
     if (mp.drieVerhalen) {
       // In de prompt compact (kosten); de volledige tekst staat in het profiel.
       if (mp.drieVerhalen.persoonlijk) r.push(`Persoonlijk verhaal: ${mp.drieVerhalen.persoonlijk.slice(0, 280)}`);
@@ -851,9 +862,9 @@ gevoel, gedrag en bewustwording. De reacties en DM's vangt ${naam} daarna op met
   const profielOpslagSectie = `
 
 PROFIEL BIJWERKEN
-Wordt in dit gesprek iets duidelijk dat de moeite waard is om te onthouden over ${naam} zelf (hun niche, hun ideale klant, een product dat ze zelf gebruiken, een van hun drie verhalen, hun talent, of een typische eigen zin als stem-voorbeeld), voeg dan HELEMAAL AAN HET EIND van je antwoord een blok toe in dit exacte formaat:
+Wordt in dit gesprek iets duidelijk dat de moeite waard is om te onthouden over ${naam} zelf (hun niche, hun ideale klant, een product dat ze zelf gebruiken, een van hun drie verhalen, hun talent, een typische eigen zin als stem-voorbeeld, een typische uitdrukking, een woord dat ze juist nooit zouden gebruiken, een harde grens zoals "geen gezicht op camera", hun social-situatie of hun beschikbare tijd), voeg dan HELEMAAL AAN HET EIND van je antwoord een blok toe in dit exacte formaat:
 [PROFIEL]
-{ "nicheZaadje": "...", "idealeKlant": "...", "eigenProducten": ["..."], "talent": "schrijver", "stemVoorbeelden": ["..."], "historieNotitie": "...", "drieVerhalen": { "persoonlijk": "...", "product": "...", "business": "..." } }
+{ "nicheZaadje": "...", "idealeKlant": "...", "eigenProducten": ["..."], "talent": "schrijver", "stemVoorbeelden": ["..."], "praattaal": ["..."], "nooitWoorden": ["..."], "grenzen": ["..."], "socialSituatie": "...", "ritme": "...", "historieNotitie": "...", "drieVerhalen": { "persoonlijk": "...", "product": "...", "business": "..." } }
 [/PROFIEL]
 Neem alleen de velden op die echt aan de orde zijn, laat de rest weg. talent mag alleen "schrijver", "spreker", "filmer" of "DM-er" zijn. Gebruik historieNotitie voor een korte, lopende samenvatting van waar ${naam} staat in hun reis (wat ze al gedaan hebben, waar ze tegenaan lopen, wat groeit), zodat je later kunt terugblikken. Houd 'm kort en werk 'm bij, niet aanvullen tot een lange lijst. Het blok is voor het systeem, niet voor ${naam}: houd je gewone antwoord erboven normaal en warm en noem het blok niet. Doe dit alleen als er echt iets nieuws of beters te bewaren is, niet bij elk berichtje.`;
 

@@ -51,6 +51,29 @@ export type MentorProfiel = {
   idealeKlant?: string;
   talent?: Talent;
   eersteDoel?: EersteDoel;
+  /** Zelfgeschreven tekstfragmenten (post, lang appje, mailtje). De
+      sterkste stem-bron die er is; alleen ECHT eigen tekst, geen AI. */
+  eigenPosts?: string[];
+  /** Typische uitdrukkingen uit iemands praattaal ("typisch jij"). */
+  praattaal?: string[];
+  /** Woorden of soort zinnen die deze persoon nooit zou gebruiken. */
+  nooitWoorden?: string[];
+  /** Schrijfvoorkeuren: emoji's veel/weinig, korte/lange stukken, spreektaal. */
+  schrijfVoorkeuren?: string;
+  /** Social-situatie: platforms, kijker of plaatser, volgers, durf-niveau. */
+  socialSituatie?: string;
+  /** Harde grenzen: wat diegene pertinent niet wil (gezicht op camera,
+      kinderen in beeld...). De Mentor bewaakt dit in elk advies. */
+  grenzen?: string[];
+  /** Ritme: hoeveel tijd per dag + voorkeursmoment. */
+  ritme?: string;
+  /** Wat over ~90 dagen een feestje waard is, in eigen woorden. */
+  eersteFeestje?: string;
+  /** Vrij blok: alles wat het lid ZELF belangrijk vindt dat de Mentor
+      weet. Alleen door het lid bewerkbaar, de Mentor schrijft hier niet. */
+  vrijeContext?: string;
+  /** Afgeronde kennismakings-rondes (ronde-nummers, 1-6). */
+  kennismakingKlaar?: number[];
   /** Welke ankerstappen de Mentor heeft afgevinkt + bron-context (K5). */
   curatorVoorstellen?: {
     ankerstapNummer: number;

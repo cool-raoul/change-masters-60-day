@@ -15,6 +15,7 @@ import type { Sideflow } from "@/lib/playbook/core-sideflows-v9";
 import type { Blok } from "@/lib/cms/pagina-blokken";
 import { MediaBlokken } from "@/components/cms/MediaBlokken";
 import { useEditModus } from "@/components/cms/EditModeContext";
+import { celebrate } from "@/lib/celebrate";
 
 type Props = {
   sideflow: Sideflow;
@@ -71,6 +72,12 @@ export function SideflowView({
         else next.add(taakId);
         return next;
       });
+      // Je lanceerpost staat live: dat is HET moment van deze flow, dus
+      // een grote viering (zelfde mijlpaal-gevoel als een dag afronden).
+      if (!nu && taakId.endsWith("-plaatsen")) {
+        celebrate("groot");
+        toast.success("Je post staat live, wat een moment! 🎉 Blijf in de buurt voor de reacties.");
+      }
     } catch {
       toast.error("Verbinding kwijt");
     }

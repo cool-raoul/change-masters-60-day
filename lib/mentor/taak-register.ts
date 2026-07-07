@@ -46,6 +46,11 @@ const TAKEN: Record<string, MentorTaak> = {
   // Zwaar redeneerwerk.
   productadvies: { id: "productadvies", model: MODEL_STERK, maxTokens: 2000, schrijfwerk: false, interviewEerst: false },
 
+  // Kennismakings-rondes: eenmalige gesprekken waarin de Mentor het lid
+  // leert kennen (profiel-opbouw + stem-check). Sterk model: de kwaliteit
+  // van deze ene ervaring bepaalt hoe goed alles daarna klinkt.
+  kennismaking: { id: "kennismaking", model: MODEL_STERK, maxTokens: 1200, schrijfwerk: false, interviewEerst: false },
+
   // Gespreks-coaching: snel model volstaat, korte antwoorden zijn hier juist goed.
   bezwaar: { id: "bezwaar", model: MODEL_SNEL, maxTokens: 800, schrijfwerk: false, interviewEerst: false },
   followup: { id: "followup", model: MODEL_SNEL, maxTokens: 800, schrijfwerk: false, interviewEerst: false },

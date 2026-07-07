@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import type { MentorProfiel, Talent } from "@/lib/mentor-profiel/types";
+import {
+  KENNISMAKINGS_RONDES,
+  kennismakingPrefill,
+} from "@/lib/mentor/kennismaking";
 
 const TALENTEN: { waarde: Talent; label: string }[] = [
   { waarde: "schrijver", label: "Schrijver" },
@@ -85,6 +89,56 @@ export default function MentorProfielPagina() {
           Het groeit vanzelf naarmate je met de Mentor werkt, en je mag het hier
           altijd bijschaven of weghalen. Alleen jij ziet dit.
         </p>
+      </div>
+
+      <div className="card border-cm-gold/40 space-y-1">
+        <p className="text-cm-gold font-semibold text-sm">
+          🤝 Laat de Mentor je leren kennen
+        </p>
+        <p className="text-cm-white/70 text-sm leading-relaxed">
+          Zes korte gesprekjes van een paar minuten, één thema per keer. De
+          Mentor stelt je vragen, jij vertelt, en alles landt vanzelf hieronder.
+          Ronde 1 en 2 zijn de gouden start: daarna schrijft hij al in jouw stem
+          en met jouw verhaal.
+        </p>
+        <div className="pt-2 space-y-0.5">
+          {KENNISMAKINGS_RONDES.map((r) => {
+            const klaar = (p.kennismakingKlaar ?? []).includes(r.nummer);
+            return (
+              <Link
+                key={r.nummer}
+                href={`/coach?prefill=${encodeURIComponent(kennismakingPrefill(r))}&submit=1`}
+                className="flex items-center gap-3 py-2 border-b border-white/5 last:border-b-0 group"
+              >
+                <span
+                  className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border text-xs font-bold ${
+                    klaar
+                      ? "border-cm-gold bg-cm-gold text-cm-bg"
+                      : "border-cm-border text-cm-white/50"
+                  }`}
+                >
+                  {klaar ? "✓" : r.nummer}
+                </span>
+                <span className="w-5 text-center">{r.emoji}</span>
+                <span className="flex-1 min-w-0">
+                  <span
+                    className={`block text-sm font-medium ${
+                      klaar ? "text-cm-gold" : "text-cm-white"
+                    } group-hover:text-cm-gold transition-colors`}
+                  >
+                    {r.titel}
+                  </span>
+                  <span className="block text-xs text-cm-white/45">
+                    {r.belofte}
+                  </span>
+                </span>
+                <span className="text-cm-gold text-sm flex-shrink-0">
+                  {klaar ? "opnieuw →" : "start →"}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
       </div>
 
       <Link
@@ -192,6 +246,108 @@ export default function MentorProfielPagina() {
           onChange={(v) => setP({ ...p, passies: v })}
           placeholder="Bv. hardlopen, gezond koken"
         />
+      </div>
+
+      <div className="card space-y-4">
+        <p className="text-cm-gold font-semibold text-sm">✍️ Zo schrijf ik</p>
+        <LijstBewerker
+          label="Eigen teksten (de goudmijn)"
+          hint="Plak een stuk uit een post, lang appje of mailtje dat je ooit zélf schreef. Alleen echte eigen tekst, niets uit ChatGPT of een andere AI, anders leert de Mentor een robot na te doen in plaats van jou."
+          items={p.eigenPosts ?? []}
+          onChange={(v) => setP({ ...p, eigenPosts: v })}
+          placeholder="Plak hier een stuk eigen tekst, van daar tot daar"
+          multiline
+        />
+        <LijstBewerker
+          label="Typische uitdrukkingen"
+          hint="Dingen die je zó vaak zegt dat vrienden zeggen: typisch jij."
+          items={p.praattaal ?? []}
+          onChange={(v) => setP({ ...p, praattaal: v })}
+          placeholder="Bv. komt goed, joh"
+        />
+        <LijstBewerker
+          label="Woorden die ik nóóit gebruik"
+          hint="Te zweverig, te verkoperig, te formeel: de Mentor vermijdt ze altijd."
+          items={p.nooitWoorden ?? []}
+          onChange={(v) => setP({ ...p, nooitWoorden: v })}
+          placeholder="Bv. gamechanger"
+        />
+        <Veld
+          label="Mijn schrijfstijl"
+          hint="Veel of weinig emoji's, korte of lange stukken, spreektaal of netjes."
+        >
+          <input
+            className="input-cm w-full"
+            value={p.schrijfVoorkeuren ?? ""}
+            onChange={(e) => setP({ ...p, schrijfVoorkeuren: e.target.value })}
+            placeholder="Bv. weinig emoji's, korte zinnen, gewoon spreektaal"
+          />
+        </Veld>
+      </div>
+
+      <div className="card space-y-4">
+        <p className="text-cm-gold font-semibold text-sm">📱 Social media & grenzen</p>
+        <Veld
+          label="Jij en social media"
+          hint="Welke platforms, kijker of plaatser, hoeveel volgers ongeveer, en hoe spannend posten voor je is."
+        >
+          <textarea
+            className="input-cm w-full"
+            rows={2}
+            value={p.socialSituatie ?? ""}
+            onChange={(e) => setP({ ...p, socialSituatie: e.target.value })}
+            placeholder="Bv. vooral Instagram, ik kijk meer dan ik plaats, ±300 volgers die ik grotendeels ken"
+          />
+        </Veld>
+        <LijstBewerker
+          label="Wat ik pertinent niet wil"
+          hint="Bijvoorbeeld gezicht op camera of je kinderen in beeld. De Mentor bewaakt dit in elk advies."
+          items={p.grenzen ?? []}
+          onChange={(v) => setP({ ...p, grenzen: v })}
+          placeholder="Bv. mijn kinderen niet in beeld"
+        />
+      </div>
+
+      <div className="card space-y-4">
+        <p className="text-cm-gold font-semibold text-sm">⏰ Je ritme & eerste feestje</p>
+        <Veld
+          label="Mijn tijd"
+          hint="Hoeveel tijd per dag heb je echt, en wanneer werk je het liefst."
+        >
+          <input
+            className="input-cm w-full"
+            value={p.ritme ?? ""}
+            onChange={(e) => setP({ ...p, ritme: e.target.value })}
+            placeholder="Bv. 30 minuten per dag, meestal 's avonds"
+          />
+        </Veld>
+        <Veld
+          label="Wat over 90 dagen een feestje waard is"
+          hint="Zo concreet mogelijk, dan werkt de Mentor er met je naartoe."
+        >
+          <input
+            className="input-cm w-full"
+            value={p.eersteFeestje ?? ""}
+            onChange={(e) => setP({ ...p, eersteFeestje: e.target.value })}
+            placeholder="Bv. mijn eerste drie shoppers"
+          />
+        </Veld>
+      </div>
+
+      <div className="card space-y-4">
+        <p className="text-cm-gold font-semibold text-sm">💛 Goed om te weten</p>
+        <Veld
+          label="Wat de Mentor verder over je moet weten"
+          hint="Alles wat jij zelf belangrijk vindt: je verhaal, je gezin, waar je gevoelig voor bent, hoe je aangesproken wil worden. Vrije ruimte, alleen jij en de Mentor zien dit."
+        >
+          <textarea
+            className="input-cm w-full"
+            rows={4}
+            value={p.vrijeContext ?? ""}
+            onChange={(e) => setP({ ...p, vrijeContext: e.target.value })}
+            placeholder="Schrijf hier wat je kwijt wil..."
+          />
+        </Veld>
       </div>
 
       <div className="card space-y-4">

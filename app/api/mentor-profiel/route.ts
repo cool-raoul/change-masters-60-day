@@ -70,6 +70,7 @@ export async function POST(req: NextRequest) {
     eersteDoel: huidig.eersteDoel,
     curatorVoorstellen: huidig.curatorVoorstellen,
     historieNotitie: huidig.historieNotitie,
+    kennismakingKlaar: huidig.kennismakingKlaar,
     // Bewerkbaar (authoritatief uit het formulier):
     situatie: schoonTekst(inp.situatie, 600),
     nicheZaadje: schoonTekst(inp.nicheZaadje, 400),
@@ -77,6 +78,15 @@ export async function POST(req: NextRequest) {
     eigenProducten: schoonLijst(inp.eigenProducten, 20, 200),
     passies: schoonLijst(inp.passies, 12, 120),
     stemVoorbeelden: schoonLijst(inp.stemVoorbeelden, 6, 600),
+    eigenPosts: schoonLijst(inp.eigenPosts, 5, 1500),
+    praattaal: schoonLijst(inp.praattaal, 12, 200),
+    nooitWoorden: schoonLijst(inp.nooitWoorden, 12, 200),
+    grenzen: schoonLijst(inp.grenzen, 8, 300),
+    schrijfVoorkeuren: schoonTekst(inp.schrijfVoorkeuren, 400),
+    socialSituatie: schoonTekst(inp.socialSituatie, 600),
+    ritme: schoonTekst(inp.ritme, 300),
+    eersteFeestje: schoonTekst(inp.eersteFeestje, 300),
+    vrijeContext: schoonTekst(inp.vrijeContext, 1500),
     talent:
       typeof inp.talent === "string" && TALENTEN.includes(inp.talent as Talent)
         ? (inp.talent as Talent)

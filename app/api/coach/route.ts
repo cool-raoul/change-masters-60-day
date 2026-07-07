@@ -3,6 +3,10 @@ import { createClient } from "@/lib/supabase/server";
 import { bouwCoachSysteemPrompt } from "@/lib/prompts/coach-systeem-prompt";
 import { detecteerVraagType } from "@/lib/knowledge/coach-boeken";
 import { taakVoor, isPostVerzoek } from "@/lib/mentor/taak-register";
+import {
+  detecteerKennismakingsRonde,
+  bouwKennismakingPrompt,
+} from "@/lib/mentor/kennismaking";
 import { bouwSchrijfregelsSectie } from "@/lib/mentor/schrijfregels";
 import { bouwCopywritingSectie } from "@/lib/mentor/copywriting";
 import { bouwPostSchrijverPrompt } from "@/lib/mentor/post-schrijver-prompt";
@@ -200,13 +204,20 @@ export async function POST(request: Request) {
       .filter((b) => b.role === "user")
       .map((b) => b.content)
       .join("\n");
+    // Kennismakings-ronde? Die wint van alles: het gesprek is dan een
+    // profiel-opbouw-interview met een eigen prompt, geen coach-gesprek
+    // en geen schrijfopdracht (ronde 2 vraagt om een geplakte post, dat
+    // mag het post-vangnet niet triggeren).
+    const kennismakingRonde = detecteerKennismakingsRonde(alleUserTekst);
+    const isKennismaking = kennismakingRonde !== null;
     // Een herkenbaar post-verzoek gaat ALTIJD naar de schrijver-taak,
     // ongeacht wat de vraagtype-detectie gokte (Raoul's test bewees:
     // "ik wil een post schrijven..." classificeert als "social", en dan
     // kreeg de coach-rol de copywriting-kennis en gaf die als lesje terug).
     // Alleen "reel" blijft reel: dat is al een schrijver-taak.
-    const taakId =
-      vraagType !== "reel" && isPostVerzoek(alleUserTekst)
+    const taakId = isKennismaking
+      ? "kennismaking"
+      : vraagType !== "reel" && isPostVerzoek(alleUserTekst)
         ? "post"
         : vraagType;
     const taak = taakVoor(taakId);
@@ -226,23 +237,30 @@ export async function POST(request: Request) {
         console.warn("freebie-context ophalen mislukt:", e);
       }
     }
-    let systeemPrompt = isSchrijfPrompt
-      ? bouwPostSchrijverPrompt({
+    let systeemPrompt = isKennismaking
+      ? bouwKennismakingPrompt({
           voornaam: (profile.full_name || "").split(" ")[0] || "daar",
           taal: taal || "nl",
+          rondeNummer: kennismakingRonde as number,
           mentorProfiel,
-          taakId: taak.id,
-          freebies: mentorFreebies,
         })
-      : bouwCoachSysteemPrompt(
-          profile, whyProfile, prospect, taal || "nl", vraagType, niveau, mentorProfiel
-        );
+      : isSchrijfPrompt
+        ? bouwPostSchrijverPrompt({
+            voornaam: (profile.full_name || "").split(" ")[0] || "daar",
+            taal: taal || "nl",
+            mentorProfiel,
+            taakId: taak.id,
+            freebies: mentorFreebies,
+          })
+        : bouwCoachSysteemPrompt(
+            profile, whyProfile, prospect, taal || "nl", vraagType, niveau, mentorProfiel
+          );
 
     // Gevalideerde product-ervarings-kennis (Dr. McKee + jarenlange
     // teamervaring, validated by founder). Faalt stil bij fout zodat
     // coach blijft werken. Voor performance: alleen ophalen wanneer
     // er gevalideerde rijen zijn.
-    if (!isSchrijfPrompt) {
+    if (!isSchrijfPrompt && !isKennismaking) {
       try {
         const { haalGevalideerdeKennis, formatKennisVoorPrompt } = await import(
           "@/lib/cms/mentor-kennis"
@@ -259,7 +277,7 @@ export async function POST(request: Request) {
     // Train-de-Mentor: voeg relevante founder-voorbeelden toe als
     // few-shot context. Faalt stilletjes als de tabel nog niet bestaat
     // (migratie nog niet gerund) zodat coach gewoon blijft werken.
-    if (!isSchrijfPrompt) {
+    if (!isSchrijfPrompt && !isKennismaking) {
       try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const voorbeelden = await pakRelevanteVoorbeelden(
@@ -280,7 +298,7 @@ export async function POST(request: Request) {
     // de gekozen prospect gaan mee het gesprek in (bleef eerder buiten de
     // prompt). Alleen voor coach-gesprekken; de post-schrijver werkt over
     // het lid zelf.
-    if (!isSchrijfPrompt && prospect) {
+    if (!isSchrijfPrompt && !isKennismaking && prospect) {
       try {
         systeemPrompt += await bouwProspectExtraSectie(supabase, user.id, prospect);
       } catch (e) {

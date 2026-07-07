@@ -30,12 +30,21 @@ export function bouwPostSchrijverPrompt(opties: {
   if (p.nicheZaadje) profielRegels.push(`Niche: ${p.nicheZaadje}`);
   if (p.passies?.length) profielRegels.push(`Passies: ${p.passies.join(", ")}`);
   if (p.idealeKlant) profielRegels.push(`Ideale klant: ${p.idealeKlant}`);
+  if (p.socialSituatie)
+    profielRegels.push(
+      `Social-situatie: ${p.socialSituatie} (nooit-of-nauwelijks-poster? Lever alles copy-paste-klaar en voeg één korte moed-zin toe. Ervaren poster? Spar op niveau, geen basisuitleg.)`,
+    );
+  if (p.ritme) profielRegels.push(`Beschikbare tijd: ${p.ritme} (doseer je advies hierop)`);
+  if (p.eersteFeestje) profielRegels.push(`Werkt toe naar: ${p.eersteFeestje}`);
+  if (p.vrijeContext)
+    profielRegels.push(`Zelf aangegeven, belangrijk om te weten: ${p.vrijeContext}`);
   const verhalen = Object.entries(
     (p.drieVerhalen as Record<string, unknown> | undefined) || {},
   )
     .filter(([, v]) => typeof v === "string" && (v as string).trim())
     .map(([k, v]) => `- ${k}: ${v}`);
   const stem = (p.stemVoorbeelden || []).slice(-3);
+  const eigenPosts = (p.eigenPosts || []).slice(-2);
 
   const taalNaam: Record<string, string> = {
     nl: "Nederlands",
@@ -53,6 +62,7 @@ export function bouwPostSchrijverPrompt(opties: {
     "STAND A, INTERVIEW: missen de persoonlijke kern-details (het concrete moment, het gevoel, wat er op het spel stond, wat er veranderde)? Open met één korte warme zin en stel dan 2 tot 4 korte, GENUMMERDE vragen. Verder NIETS: geen voorbeeld, geen opzetje, geen tips, geen structuur, geen stappenplan, geen uitleg over regels of claim-vrij (dat pas je stil toe, daar vertel je niet over), geen verwijzingen naar trainingen of de Academy. Stel je vragen KAAL, zonder voorbeeldantwoorden of suggesties erin ('denk aan meer energie, beter in je vel' is verboden): wie suggesties voorgeschoteld krijgt praat ze na, en dan worden alle posts van het team hetzelfde.",
     `STAND B, SCHRIJVEN: zijn de details er (uit dit gesprek of uit het profiel hieronder)? Lever dan direct de complete ${taakId === "reel" ? "reel (shotlijst met overlay-teksten + caption)" : "post"}, copy-paste-klaar, in de eigen woorden van ${voornaam}. Geen inleiding, geen uitleg; hooguit daarna twee korte aanpas-suggesties.`,
     `Na de ${taakId === "reel" ? "reel" : "post"} lever je in STAND B altijd ook: "📸 Beeld-tip:" met één concreet advies welk soort echte, eigen foto of beeld erbij past, plus tussen haakjes in één zin waarom dat werkt. ${taakId === "reel" ? "Bij een reel vervangt de shotlijst de beeld-tip; geef daar per shot de reden in één zin." : ""}`,
+    `JOUW TEKST IS EEN EERSTE VERSIE, NOOIT EEN EINDPUNT: sluit elke STAND B-beurt (na de beeld-tip) af met één korte zin in deze geest: "Dit is jouw eerste versie. Pas aan wat niet als jij voelt, of zeg het me en ik pas 'm aan." ${voornaam} houdt altijd de laatste hand. Plakt ${voornaam} later een zelf bijgewerkte eindversie terug, reageer dan kort en warm (hun versie wint ALTIJD, nooit kritiek op de wijzigingen) en sla het meest typerende stuk op met [PROFIEL]{ "eigenPosts": ["..."] }[/PROFIEL] helemaal aan het eind van je antwoord, zodat je elke volgende keer beter als ${voornaam} klinkt.`,
     "Helemaal aan het einde van een STAND B-antwoord (na alles) zet je op een eigen regel exact: [POST] . Dat is een onzichtbare systeem-markering; de gebruiker ziet 'm nooit. In STAND A gebruik je deze markering NIET.",
     "Twijfel je? Kies STAND A. Antwoorden op jouw vragen zijn het sein voor STAND B in je volgende beurt.",
     "De opbouw en frameworks verderop zijn jouw INTERNE gereedschap: je gebruikt ze om mee te schrijven, je legt ze nooit uit en geeft ze nooit als stappenplan of genummerde aanpak aan de gebruiker.",
@@ -65,8 +75,28 @@ export function bouwPostSchrijverPrompt(opties: {
         ].join("\n")
       : `Je weet nog weinig over ${voornaam}; begin dus vrijwel altijd in STAND A.`,
     "",
+    eigenPosts.length > 0
+      ? [
+          `=== EIGEN TEKSTEN VAN ${voornaam.toUpperCase()} (de heiligste bron: zo schrijft ${voornaam} ÉCHT; neem ritme, zinslengte, woordkeus en kleine imperfecties over) ===`,
+          ...eigenPosts.map((t) => `"""${t}"""`),
+        ].join("\n")
+      : "",
+    "",
     stem.length > 0
       ? `=== ZO KLINKT ${voornaam.toUpperCase()} (neem dit ritme over) ===\n${stem.map((s) => `- ${s}`).join("\n")}`
+      : "",
+    "",
+    p.praattaal?.length
+      ? `Typische uitdrukkingen van ${voornaam} (gebruik er hooguit één per tekst, alleen waar het vanzelf past): ${p.praattaal.join(" | ")}`
+      : "",
+    p.nooitWoorden?.length
+      ? `WOORDEN/STIJL DIE ${voornaam.toUpperCase()} NOOIT GEBRUIKT (absoluut verboden in alles wat je voor ${voornaam} schrijft): ${p.nooitWoorden.join(" | ")}`
+      : "",
+    p.schrijfVoorkeuren
+      ? `Schrijfvoorkeuren van ${voornaam}: ${p.schrijfVoorkeuren}`
+      : "",
+    p.grenzen?.length
+      ? `HARDE GRENZEN van ${voornaam} (bewaak dit in elke beeld-tip, reel en elk advies; stel nooit iets voor dat hier tegenin gaat): ${p.grenzen.join("; ")}`
       : "",
     "",
     freebies.length > 0

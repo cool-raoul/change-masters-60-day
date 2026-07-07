@@ -5,7 +5,7 @@
 // met het huidige profiel (append + dedupe + cap), scalars overschreven.
 // Defensief: bij twijfel returnt 'ie null en gebeurt er niets.
 
-import type { MentorProfiel, Talent } from "./types";
+import type { FormContext, MentorProfiel, Talent } from "./types";
 
 const GELDIGE_TALENTEN: Talent[] = ["schrijver", "spreker", "filmer", "DM-er"];
 
@@ -13,6 +13,7 @@ function mergeLijst(
   huidig: string[] | undefined,
   nieuw: unknown,
   cap: number,
+  maxLen: number = 600,
 ): string[] | undefined {
   const toe = Array.isArray(nieuw)
     ? nieuw.filter((x): x is string => typeof x === "string")
@@ -27,7 +28,7 @@ function mergeLijst(
     const k = t.toLowerCase();
     if (gezien.has(k)) continue;
     gezien.add(k);
-    resultaat.push(t.slice(0, 600));
+    resultaat.push(t.slice(0, maxLen));
   }
   return resultaat.slice(-cap);
 }
@@ -69,6 +70,22 @@ export function parseProfielBlok(
     patch.talent = data.talent as Talent;
   }
 
+  // Nieuwe scalars uit de kennismakings-rondes (2026-07-07).
+  if (typeof data.schrijfVoorkeuren === "string" && data.schrijfVoorkeuren.trim()) {
+    patch.schrijfVoorkeuren = data.schrijfVoorkeuren.trim().slice(0, 400);
+  }
+  if (typeof data.socialSituatie === "string" && data.socialSituatie.trim()) {
+    patch.socialSituatie = data.socialSituatie.trim().slice(0, 600);
+  }
+  if (typeof data.ritme === "string" && data.ritme.trim()) {
+    patch.ritme = data.ritme.trim().slice(0, 300);
+  }
+  if (typeof data.eersteFeestje === "string" && data.eersteFeestje.trim()) {
+    patch.eersteFeestje = data.eersteFeestje.trim().slice(0, 300);
+  }
+  // Bewust NIET: vrijeContext. Dat blok is van het lid zelf; de Mentor
+  // schrijft er nooit in.
+
   const producten = mergeLijst(huidig.eigenProducten, data.eigenProducten, 20);
   if (producten) patch.eigenProducten = producten;
 
@@ -77,6 +94,67 @@ export function parseProfielBlok(
 
   const stem = mergeLijst(huidig.stemVoorbeelden, data.stemVoorbeelden, 6);
   if (stem) patch.stemVoorbeelden = stem;
+
+  // Zelfgeschreven tekst-fragmenten mogen langer zijn dan losse zinnen:
+  // dit is de sterkste stem-bron (een halve post zegt meer dan tien zinnen).
+  const eigenPosts = mergeLijst(huidig.eigenPosts, data.eigenPosts, 5, 1500);
+  if (eigenPosts) patch.eigenPosts = eigenPosts;
+
+  const praattaal = mergeLijst(huidig.praattaal, data.praattaal, 12, 200);
+  if (praattaal) patch.praattaal = praattaal;
+
+  const nooit = mergeLijst(huidig.nooitWoorden, data.nooitWoorden, 12, 200);
+  if (nooit) patch.nooitWoorden = nooit;
+
+  const grenzen = mergeLijst(huidig.grenzen, data.grenzen, 8, 300);
+  if (grenzen) patch.grenzen = grenzen;
+
+  // FORM-context over eigen top-contacten (kennismakings-ronde 3).
+  // Merge op contactNaam: bestaand contact wordt aangevuld, nieuw contact
+  // toegevoegd. Cap op 10 contacten.
+  if (Array.isArray(data.formContexts)) {
+    const bestaand = Array.isArray(huidig.formContexts)
+      ? [...huidig.formContexts]
+      : [];
+    let veranderd = false;
+    for (const ruw of data.formContexts) {
+      if (!ruw || typeof ruw !== "object") continue;
+      const fc = ruw as Record<string, unknown>;
+      const naam =
+        typeof fc.contactNaam === "string" ? fc.contactNaam.trim().slice(0, 80) : "";
+      if (!naam) continue;
+      const schoon: FormContext = { contactNaam: naam };
+      for (const k of ["family", "occupation", "recreation", "money"] as const) {
+        if (typeof fc[k] === "string" && (fc[k] as string).trim()) {
+          schoon[k] = (fc[k] as string).trim().slice(0, 400);
+        }
+      }
+      const idx = bestaand.findIndex(
+        (b) => b.contactNaam.trim().toLowerCase() === naam.toLowerCase(),
+      );
+      if (idx >= 0) {
+        bestaand[idx] = { ...bestaand[idx], ...schoon };
+      } else {
+        bestaand.push(schoon);
+      }
+      veranderd = true;
+    }
+    if (veranderd) patch.formContexts = bestaand.slice(-10);
+  }
+
+  // Ronde-afronding: de Mentor markeert een kennismakings-ronde als klaar
+  // met { "rondeKlaar": n }. Dedupe + sorteer, zodat de profielpagina de
+  // vinkjes kan tonen.
+  if (
+    typeof data.rondeKlaar === "number" &&
+    Number.isInteger(data.rondeKlaar) &&
+    data.rondeKlaar >= 1 &&
+    data.rondeKlaar <= 6
+  ) {
+    const klaar = new Set(huidig.kennismakingKlaar ?? []);
+    klaar.add(data.rondeKlaar);
+    patch.kennismakingKlaar = Array.from(klaar).sort((a, b) => a - b);
+  }
 
   if (data.drieVerhalen && typeof data.drieVerhalen === "object") {
     const dv = data.drieVerhalen as Record<string, unknown>;
