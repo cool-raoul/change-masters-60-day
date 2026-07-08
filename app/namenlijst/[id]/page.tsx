@@ -86,7 +86,7 @@ export default async function ProspectDetailPagina({
       .order("updated_at", { ascending: false }),
     supabase
       .from("profiles")
-      .select("sponsor_id, role, full_name, modus")
+      .select("sponsor_id, role, full_name, modus, is_tester")
       .eq("id", user.id)
       .single(),
     // Openstaande herinneringen voor deze prospect, toont ze op de kaart
@@ -156,6 +156,16 @@ export default async function ProspectDetailPagina({
       {/* Live: zorgt dat wijzigingen vanuit voice/form/etc. direct zichtbaar
           zijn op deze pagina zonder dat de user moet refreshen. */}
       <RealtimeProspectsRefresh userId={user.id} />
+
+      {/* Preview-ingang nieuwe klantenkaart, alleen founders/testers. */}
+      {(eigenRol === "founder" || (eigenProfiel as any)?.is_tester === true) && (
+        <Link
+          href={`/namenlijst/${id}/nieuw`}
+          className="flex items-center gap-2 rounded-xl border border-cm-gold/40 bg-cm-gold/5 px-4 py-2 text-xs text-cm-gold hover:border-cm-gold transition-colors"
+        >
+          ✨ Bekijk de nieuwe klantenkaart (preview) →
+        </Link>
+      )}
 
       {/* Header, naam BOVEN, knoppen verspreid daaronder zodat het rechts
           niet meer een grote stapel wordt op smalle schermen. */}
