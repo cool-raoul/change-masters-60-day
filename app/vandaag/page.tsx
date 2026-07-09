@@ -611,7 +611,7 @@ export default async function VandaagPagina({
           </a>
         </div>
       )}
-      {modusKeuzeMist && (modus === "sprint" || modus === "core") && (
+      {!lanceerRoute && modusKeuzeMist && (modus === "sprint" || modus === "core") && (
         <ModusSwitchBanner
           modus={modus}
           hadEerderDezeModus={hadEerderDezeModus}
@@ -620,7 +620,7 @@ export default async function VandaagPagina({
           overrides={modusSwitchOverrides}
         />
       )}
-      {adminOpen > 0 && (
+      {!lanceerRoute && adminOpen > 0 && (
         <SetupPopup
           aantalOpen={adminOpen}
           isFounder={isFounder}

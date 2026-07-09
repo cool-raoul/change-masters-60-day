@@ -57,14 +57,46 @@ function uitV10(v10Nummer: number, nieuwNummer: number, fase: 1 | 2 | 3 | 4): Da
 }
 
 /**
- * Dag 1 = de V9-welkomstdag, maar zónder de prepost-keuze-embed: in de
- * lanceer-reis vervangt de route-keuze (A/B bij instroom) die oude keuze,
- * en de posts zelf zitten als reeks ín de dagen.
+ * Dag 1 van de lanceer-reis: eigen welkom-dag. Hergebruikt de Builder-
+ * uitleg en het sponsor-berichtje uit V9-dag-1 (stabiele taak-ids), maar
+ * met een EIGEN dag-tekst: de oude post-keuze (pre-post of 21-dagen-post
+ * via sideflow) bestaat hier niet meer, want de posts zitten als reeks
+ * ín de dagen en de route-keuze is al bij de instroom gemaakt.
  */
-function startDagZonderPostKeuze(nieuwNummer: number, fase: 1 | 2 | 3 | 4): Dag {
+function startDag(
+  nieuwNummer: number,
+  fase: 1 | 2 | 3 | 4,
+  route: "a" | "b",
+): Dag {
   const bron = uitV9(1, nieuwNummer, fase);
+  const lanceerZin =
+    route === "a"
+      ? "Overmorgen begint je lancering: zes dagen, elke dag één post, en de Mentor schrijft ze allemaal met je mee. Je publiek gaat je zien beginnen, en dat is precies de bedoeling."
+      : "Overmorgen begint je lancering: tien dagen rond jouw eigen ervaring, elke dag één post, en de Mentor schrijft ze allemaal met je mee.";
   return {
     ...bron,
+    titel: "🚀 Welkom, jouw lanceer-reis begint",
+    watJeLeert: `Wat fijn dat je er bent 🥰
+
+Dit is dag één van je reis, en die begint rustig: vandaag leer je waar je naartoe werkt, en je stuurt je sponsor één berichtje. Meer hoeft er echt niet.
+
+WAAR JE NAARTOE WERKT
+
+${lanceerZin}
+
+Geen lijstjes bellen, geen ongemakkelijke berichtjes naar mensen die er niet om vroegen. Jij deelt je verhaal, en de mensen die zich erin herkennen komen naar jóu. Elke reactie wordt vanzelf een warm gesprek, en bij elk warm gesprek sta je er niet alleen voor: je sponsor en de Mentor lopen de hele reis mee.
+
+BUILDER, DE RODE DRAAD
+
+Eén woord om mee te dragen, want dit is de rode draad door alles wat hier volgt: Builder.
+
+Builder is een drempel. Op het moment dat jij Builder bent, kunnen de stappen die jou hier hebben gebracht door jou worden doorgegeven aan de drie of vier of vijf mensen die jou zijn gevolgd. Vóór Builder bouw jij in je eentje; vanaf Builder bouwt je team met je mee.
+
+Wat is er nodig? Twee dingen. Eerste drie levels in jouw team samen 1500 IP, jouw eigen bestelling telt mee. En minimaal drie members met een bestelling vanaf 40 IP.
+
+"Succes is geen toeval, succes is ingepland."
+
+Morgen leert de Mentor je kennen (jouw verhaal en jouw stem), zodat elke post die hij straks voor je schrijft klinkt als jij. We gaan samen 💟`,
     vandaagDoen: bron.vandaagDoen.filter(
       (t) => t.inlineEmbed !== "prepost-keuze",
     ),
@@ -727,7 +759,7 @@ De post eindigt met een codewoord voor iedereen die weleens wil zien hoe dit er 
 
 export const LANCEER_ROUTE_A: Dag[] = [
   // Start (1-2)
-  startDagZonderPostKeuze(1, 1),
+  startDag(1, 1, "a"),
   kennismakingsDag(PA, 2, 1),
   // 6-daagse pre-post-lancering (3-8)
   ...zesDaagsePrePost(3, PA, 1),
@@ -771,7 +803,7 @@ export const LANCEER_ROUTE_A: Dag[] = [
 
 export const LANCEER_ROUTE_B: Dag[] = [
   // Start (1-2)
-  startDagZonderPostKeuze(1, 1),
+  startDag(1, 1, "b"),
   kennismakingsDag(PB, 2, 1),
   // 10-daagse resultaten-lancering, VERSE smaak (3-12)
   ...tienDaagseResultaten(3, PB, 1, "vers"),
