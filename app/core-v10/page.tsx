@@ -50,9 +50,11 @@ export default async function CoreV10OverzichtPagina() {
           🔭 Core 2.0 preview, nog niet live
         </p>
         <p className="text-cm-muted text-xs mt-1 leading-relaxed">
-          Dit is een voorproef van de nieuwe 30-daagse Core. De huidige Core
-          (V9) blijft ongewijzigd tot deze preview is goedgekeurd. Niets wat
-          je hier doet raakt de live app.
+          Dit is de eerdere 30-dagen-voorproef. Inmiddels is er een nieuwere
+          opzet met twee routes en de lanceer-reeksen:{" "}
+          <Link href="/lanceer-reis" className="text-cm-gold underline">
+            bekijk de lanceer-reis preview →
+          </Link>
         </p>
       </div>
 

@@ -230,11 +230,27 @@ export async function POST(request: Request) {
     // Deelbare checks (freebies) van dit lid, zodat de schrijver een post
     // aan een check kan koppelen ("reageer met CHECK") met de juiste link.
     let mentorFreebies: Awaited<ReturnType<typeof haalMentorFreebies>> = [];
+    // Eerder geschreven posts (leer-lus): de schrijver gebruikt ze om te
+    // HERVERTELLEN en terug te verwijzen in plaats van te herhalen. Kern
+    // van de vervolg-versie van de resultaten-reeks (lanceer-reis).
+    let eerderePosts: { tekst: string; codewoord?: string | null }[] = [];
     if (isSchrijfPrompt) {
       try {
         mentorFreebies = await haalMentorFreebies(supabase, user.id);
       } catch (e) {
         console.warn("freebie-context ophalen mislukt:", e);
+      }
+      try {
+        const { data: postRijen } = await supabase
+          .from("mentor_posts")
+          .select("tekst, codewoord")
+          .eq("user_id", user.id)
+          .order("created_at", { ascending: false })
+          .limit(4);
+        eerderePosts = ((postRijen ?? []) as { tekst: string; codewoord: string | null }[])
+          .reverse();
+      } catch (e) {
+        console.warn("eerdere mentor_posts ophalen mislukt:", e);
       }
     }
     let systeemPrompt = isKennismaking
@@ -251,6 +267,7 @@ export async function POST(request: Request) {
             mentorProfiel,
             taakId: taak.id,
             freebies: mentorFreebies,
+            eerderePosts,
           })
         : bouwCoachSysteemPrompt(
             profile, whyProfile, prospect, taal || "nl", vraagType, niveau, mentorProfiel

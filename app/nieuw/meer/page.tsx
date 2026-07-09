@@ -31,7 +31,8 @@ const FOUNDER: Item[] = [
   { emoji: "🪴", label: "Mini-ELEVA beheren", href: "/instellingen/mini-eleva-preview" },
   { emoji: "🎙️", label: "Spraak naar Mentor", href: "/founder/spraak-mentor" },
   { emoji: "🧪", label: "Modus-test", href: "/instellingen/modus-test" },
-  { emoji: "🚀", label: "Core 2.0 preview", href: "/core-v10" },
+  { emoji: "🚀", label: "Lanceer-reis preview", sub: "de nieuwe 30/40-dagen-opzet", href: "/lanceer-reis" },
+  { emoji: "🔭", label: "Core 2.0 preview (oud)", href: "/core-v10" },
   { emoji: "📧", label: "Mail-preview", href: "/founder/mail-preview" },
   { emoji: "🩺", label: "Diagnose", href: "/diagnose" },
 ];

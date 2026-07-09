@@ -20,8 +20,11 @@ export function bouwPostSchrijverPrompt(opties: {
   mentorProfiel: MentorProfiel | null | undefined;
   taakId: string;
   freebies?: MentorFreebie[];
+  /** Eerder door de Mentor geschreven posts van dit lid (leer-lus,
+      mentor_posts): de basis voor hervertellen en terugverwijzen. */
+  eerderePosts?: { tekst: string; codewoord?: string | null }[];
 }): string {
-  const { voornaam, taal, mentorProfiel, taakId, freebies = [] } = opties;
+  const { voornaam, taal, mentorProfiel, taakId, freebies = [], eerderePosts = [] } = opties;
   const p = mentorProfiel || {};
 
   const profielRegels: string[] = [];
@@ -97,6 +100,16 @@ export function bouwPostSchrijverPrompt(opties: {
       : "",
     p.grenzen?.length
       ? `HARDE GRENZEN van ${voornaam} (bewaak dit in elke beeld-tip, reel en elk advies; stel nooit iets voor dat hier tegenin gaat): ${p.grenzen.join("; ")}`
+      : "",
+    "",
+    eerderePosts.length > 0
+      ? [
+          `=== EERDERE POSTS VAN ${voornaam.toUpperCase()} (geschreven in eerdere sessies) ===`,
+          "Gebruik dit voor twee dingen. EEN: nooit herhalen. Een nieuwe post mag geen zinnen, scènes of grappen hergebruiken die hier al in staan; zelfde waarheid mag, maar dan HERVERTELD in nieuwe woorden en nieuwe scènes. TWEE: terugverwijzen. Vraagt de opdracht om een vervolg of terugverwijzing (bijvoorbeeld een resultaten-post na een pre-post), verwijs dan kort en herkenbaar terug naar wat hier staat, het liefst met een echo van de eigen woorden van " + voornaam + " (\"21 dagen geleden schreef ik dat het roer omging...\").",
+          ...eerderePosts
+            .slice(-4)
+            .map((post, i) => `--- eerdere post ${i + 1} ---\n${post.tekst.slice(0, 900)}`),
+        ].join("\n")
       : "",
     "",
     freebies.length > 0

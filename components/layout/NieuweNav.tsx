@@ -44,7 +44,7 @@ const DOMEINEN = [
     emoji: "📚",
     label: "Leren",
     href: "/nieuw/leren",
-    routes: ["/nieuw/leren", "/lessen", "/academy", "/core-v10", "/wat-nu"],
+    routes: ["/nieuw/leren", "/lessen", "/academy", "/core-v10", "/lanceer-reis", "/wat-nu"],
   },
   {
     emoji: "⚙️",
