@@ -56,6 +56,21 @@ function uitV10(v10Nummer: number, nieuwNummer: number, fase: 1 | 2 | 3 | 4): Da
   return { ...bron, nummer: nieuwNummer, fase };
 }
 
+/**
+ * Dag 1 = de V9-welkomstdag, maar zónder de prepost-keuze-embed: in de
+ * lanceer-reis vervangt de route-keuze (A/B bij instroom) die oude keuze,
+ * en de posts zelf zitten als reeks ín de dagen.
+ */
+function startDagZonderPostKeuze(nieuwNummer: number, fase: 1 | 2 | 3 | 4): Dag {
+  const bron = uitV9(1, nieuwNummer, fase);
+  return {
+    ...bron,
+    vandaagDoen: bron.vandaagDoen.filter(
+      (t) => t.inlineEmbed !== "prepost-keuze",
+    ),
+  };
+}
+
 // ============================================================
 // GEDEELDE NIEUWE DAG: de Mentor leert jou kennen (dag 2)
 // ============================================================
@@ -98,6 +113,14 @@ En als je vandaag ook je eigen producten-routine start, heb je straks precies wa
         label: "Start (of check) je eigen dagelijkse producten-routine",
         uitleg: "Jouw eigen ervaring is straks de brandstof van je posts. Vandaag beginnen is morgen al iets te vertellen hebben.",
         verplicht: true,
+      },
+      {
+        id: `${prefix}${nummer}-opstart-call`,
+        label: "Plan je opstart-call met je sponsor (± 30 minuten)",
+        uitleg:
+          "Samen je lancering doorlopen: wat ga je posten, wanneer bellen jullie kort bij, en hoe speel je warme reacties door (3-weg of Mini-ELEVA). Spreek meteen een vast wekelijks bel-momentje af; je staat er in deze weken nooit alleen voor.",
+        verplicht: true,
+        inlineEmbed: "sponsor-melding",
       },
       {
         id: `${prefix}${nummer}-profiel-bekijken`,
@@ -704,38 +727,42 @@ De post eindigt met een codewoord voor iedereen die weleens wil zien hoe dit er 
 
 export const LANCEER_ROUTE_A: Dag[] = [
   // Start (1-2)
-  uitV9(1, 1, 1),
+  startDagZonderPostKeuze(1, 1),
   kennismakingsDag(PA, 2, 1),
   // 6-daagse pre-post-lancering (3-8)
   ...zesDaagsePrePost(3, PA, 1),
-  // Oogst & opvolgen (9-12)
+  // Oogst & opvolgen (9-13)
   uitV10(7, 9, 2), // de oogst: warme namenlijst + 3-weg/Mini-ELEVA plannen
   uitV9(10, 10, 2), // FORM-verdieping, nu de eerste DM-gesprekken lopen
-  uitV9(5, 11, 2), // Bezwaren, 3-weg en Mini-ELEVA
+  uitV9(5, 11, 2), // Bezwaren, 3-weg en Mini-ELEVA: leren doorspelen
   uitV9(3, 12, 2), // Productkennis-licht (de eerste productvragen komen binnen)
-  // Opportunity, pioniers-versie (13-16) = de V10-business-boog
-  uitV10(9, 13, 2),
-  uitV10(10, 14, 2),
-  uitV10(11, 15, 2),
-  uitV10(12, 16, 2),
-  // Skills & ritme (17-20), met updates over je eigen 21 dagen
-  uitV9(4, 17, 3), // Drie verhalen + jouw stem + edification
-  uitV9(6, 18, 3), // Social media basis + je eerste freebie
-  uitV9(12, 19, 3), // Stories, reels en je freebie via social
-  uitV9(13, 20, 3), // Niche-aanscherping (nu mét reactie-data)
-  // 10-daagse resultaten-reeks, VERVOLG-smaak (21-30)
-  ...tienDaagseResultaten(21, PA, 3, "vervolg"),
-  // Opportunity, bewezen-versie (31-34)
-  ...bewezenOpportunity(31, PA, 4),
-  uitV9(8, 33, 4), // 3-weg-meesterclass: nu zelf leren inschrijven
-  uitV9(9, 34, 4), // Je volgende 3-weg, in praktijk
-  // Top-20 + verdieping + afronding (35-40)
-  uitV9(2, 35, 4), // De top-20, nú verdiend
-  uitV9(11, 36, 4), // 5 typen prospects + funnel als ritme
-  uitV9(15, 37, 4), // Klantcontact + opvolg-routine
-  uitV9(14, 38, 4), // Members en netwerkers herkennen + ideale klant
-  uitV9(7, 39, 4), // Verdienmodel + jouw Builder-pad
-  uitV9(21, 40, 4), // Eindreflectie, talent en je doel voor maand 2
+  uitV9(7, 13, 2), // Verdienmodel + Builder-pad, vóór de business-boog
+  // Opportunity, pioniers-versie (14-17) = de V10-business-boog
+  uitV10(9, 14, 2),
+  uitV10(10, 15, 2),
+  uitV10(11, 16, 2),
+  uitV10(12, 17, 2),
+  // Skills & ritme (18-21), met updates over je eigen 21 dagen
+  uitV9(4, 18, 3), // Drie verhalen + jouw stem + edification
+  uitV9(6, 19, 3), // Social media basis + je eerste freebie
+  uitV9(12, 20, 3), // Stories, reels en je freebie via social
+  uitV9(13, 21, 3), // Niche-aanscherping (nu mét reactie-data)
+  // 10-daagse resultaten-reeks, VERVOLG-smaak (22-31)
+  ...tienDaagseResultaten(22, PA, 3, "vervolg"),
+  // Opportunity, bewezen-versie + zelf leren inschrijven (32-35)
+  ...bewezenOpportunity(32, PA, 4),
+  uitV9(8, 34, 4), // 3-weg-meesterclass: de 5 stappen
+  uitV9(9, 35, 4), // Je volgende 3-weg, in praktijk
+  // Top-20 + meesterschap + afronding (36-44): alle V9-verdieping
+  uitV9(2, 36, 4), // De top-20, nú verdiend
+  uitV9(11, 37, 4), // 5 typen prospects + funnel als ritme (5 namen/week)
+  uitV9(15, 38, 4), // Klantcontact + opvolg-routine
+  uitV9(14, 39, 4), // Members en netwerkers herkennen + ideale klant
+  uitV9(16, 40, 4), // Tweede 3-weg, met meer eigen leiding
+  uitV9(17, 41, 4), // Edification-verdieping
+  uitV9(19, 42, 4), // Pipeline-check + de moedige vraag
+  uitV9(20, 43, 4), // Builder-status-check + duplicatie
+  uitV9(21, 44, 4), // Eindreflectie, talent en je doel voor maand 2
 ];
 
 // ============================================================
@@ -744,32 +771,38 @@ export const LANCEER_ROUTE_A: Dag[] = [
 
 export const LANCEER_ROUTE_B: Dag[] = [
   // Start (1-2)
-  uitV9(1, 1, 1),
+  startDagZonderPostKeuze(1, 1),
   kennismakingsDag(PB, 2, 1),
   // 10-daagse resultaten-lancering, VERSE smaak (3-12)
   ...tienDaagseResultaten(3, PB, 1, "vers"),
-  // Oogst & opvolgen (13-16)
+  // Oogst & opvolgen (13-17)
   uitV10(7, 13, 2), // de grote oogst
   uitV9(10, 14, 2), // FORM-verdieping
-  uitV9(5, 15, 2), // Bezwaren, 3-weg en Mini-ELEVA
+  uitV9(5, 15, 2), // Bezwaren, 3-weg en Mini-ELEVA: leren doorspelen
   uitV9(3, 16, 2), // Productkennis-licht
-  // Opportunity (17-20) = de V10-business-boog
-  uitV10(9, 17, 3),
-  uitV10(10, 18, 3),
-  uitV10(11, 19, 3),
-  uitV10(12, 20, 3),
-  // Skills & ritme (21-26)
-  uitV9(8, 21, 3), // 3-weg-meesterclass
-  uitV9(9, 22, 3), // Je volgende 3-weg, in praktijk
-  uitV9(4, 23, 4), // Drie verhalen + jouw stem + edification
-  uitV9(6, 24, 4), // Social media basis + je eerste freebie
-  uitV9(12, 25, 4), // Stories, reels en je freebie via social
-  uitV9(13, 26, 4), // Niche-aanscherping
-  // Top-20 + afronding (27-30)
-  uitV9(2, 27, 4), // De top-20, nú verdiend
-  uitV9(15, 28, 4), // Klantcontact + opvolg-routine
-  uitV9(7, 29, 4), // Verdienmodel + jouw Builder-pad
-  uitV9(21, 30, 4), // Eindreflectie, talent en je doel voor maand 2
+  uitV9(7, 17, 2), // Verdienmodel + Builder-pad, vóór de business-boog
+  // Opportunity (18-21) = de V10-business-boog
+  uitV10(9, 18, 3),
+  uitV10(10, 19, 3),
+  uitV10(11, 20, 3),
+  uitV10(12, 21, 3),
+  // Skills & gesprekken (22-27)
+  uitV9(8, 22, 3), // 3-weg-meesterclass
+  uitV9(9, 23, 3), // Je volgende 3-weg, in praktijk
+  uitV9(4, 24, 3), // Drie verhalen + jouw stem + edification
+  uitV9(6, 25, 3), // Social media basis + je eerste freebie
+  uitV9(12, 26, 3), // Stories, reels en je freebie via social
+  uitV9(13, 27, 3), // Niche-aanscherping
+  // Top-20 + meesterschap + afronding (28-36): alle V9-verdieping
+  uitV9(2, 28, 4), // De top-20, nú verdiend
+  uitV9(11, 29, 4), // 5 typen prospects + funnel als ritme (5 namen/week)
+  uitV9(15, 30, 4), // Klantcontact + opvolg-routine
+  uitV9(14, 31, 4), // Members en netwerkers herkennen + ideale klant
+  uitV9(16, 32, 4), // Tweede 3-weg, met meer eigen leiding
+  uitV9(17, 33, 4), // Edification-verdieping
+  uitV9(19, 34, 4), // Pipeline-check + de moedige vraag
+  uitV9(20, 35, 4), // Builder-status-check + duplicatie
+  uitV9(21, 36, 4), // Eindreflectie, talent en je doel voor maand 2
 ];
 
 // ============================================================
@@ -785,23 +818,23 @@ export type LanceerFaseGroep = {
 };
 
 export const ROUTE_A_FASEN: LanceerFaseGroep[] = [
-  { emoji: "🌱", titel: "Start", dagen: [1, 2], detail: "Welkom, producten en de Mentor leert je kennen" },
-  { emoji: "🚀", titel: "6-daagse pre-post-lancering", dagen: [3, 8], detail: "Elke dag één post, de klassieke pre-post is dag 3" },
-  { emoji: "📬", titel: "Oogst & opvolgen", dagen: [9, 12], detail: "DM's, namenlijst, 3-weg en Mini-ELEVA" },
-  { emoji: "🏡", titel: "Opportunity (pionier)", dagen: [13, 16], detail: "Stap vanaf het begin met me in" },
-  { emoji: "🛠️", titel: "Skills & ritme", dagen: [17, 20], detail: "Stem, social, reels en je niche, met updates over je eigen 21 dagen" },
-  { emoji: "✨", titel: "Resultaten-reeks (vervolg)", dagen: [21, 30], detail: "De finale: hervertellen, terugverwijzen, oogsten" },
-  { emoji: "🏡", titel: "Opportunity (bewezen)", dagen: [31, 34], detail: "Business-boog met eigen bewijs + leren inschrijven" },
-  { emoji: "👑", titel: "Top-20 & afronding", dagen: [35, 40], detail: "De namenlijst als kroon, plus je ritme voor daarna" },
+  { emoji: "🌱", titel: "Start", dagen: [1, 2], detail: "Welkom, producten, opstart-call met je sponsor en de Mentor leert je kennen" },
+  { emoji: "🚀", titel: "6-daagse pre-post-lancering", dagen: [3, 8], detail: "Elke dag één post, de klassieke pre-post is dag 5 van je reis" },
+  { emoji: "📬", titel: "Oogst & opvolgen", dagen: [9, 13], detail: "DM's, FORM, 3-weg en Mini-ELEVA leren doorspelen, productkennis, verdienmodel" },
+  { emoji: "🏡", titel: "Opportunity (pionier)", dagen: [14, 17], detail: "Stap vanaf het begin met me in" },
+  { emoji: "🛠️", titel: "Skills & ritme", dagen: [18, 21], detail: "Stem, social, reels en je niche, met updates over je eigen 21 dagen" },
+  { emoji: "✨", titel: "Resultaten-reeks (vervolg)", dagen: [22, 31], detail: "De finale: hervertellen, terugverwijzen, oogsten" },
+  { emoji: "🏡", titel: "Opportunity (bewezen) + inschrijven leren", dagen: [32, 35], detail: "Business-boog met eigen bewijs, 3-weg-meesterclass en je eerste 3-weg" },
+  { emoji: "👑", titel: "Top-20 & meesterschap", dagen: [36, 44], detail: "De verdiende namenlijst, funnel-ritme, tweede 3-weg, pipeline-check en eindreflectie" },
 ];
 
 export const ROUTE_B_FASEN: LanceerFaseGroep[] = [
-  { emoji: "🌱", titel: "Start", dagen: [1, 2], detail: "Welkom, systeem en de Mentor leert je kennen" },
+  { emoji: "🌱", titel: "Start", dagen: [1, 2], detail: "Welkom, opstart-call met je sponsor en de Mentor leert je kennen" },
   { emoji: "✨", titel: "10-daagse resultaten-lancering", dagen: [3, 12], detail: "De grote lancering, meteen: de klassieke 21-dagen-post is dag 6 van je reis" },
-  { emoji: "📬", titel: "Oogst & opvolgen", dagen: [13, 16], detail: "DM's, namenlijst, 3-weg en Mini-ELEVA" },
-  { emoji: "🏡", titel: "Opportunity", dagen: [17, 20], detail: "De business-boog: bouwers vinden" },
-  { emoji: "🛠️", titel: "Skills & ritme", dagen: [21, 26], detail: "3-weg-meesterclass, stem, social en je niche" },
-  { emoji: "👑", titel: "Top-20 & afronding", dagen: [27, 30], detail: "De namenlijst als kroon, plus je ritme voor daarna" },
+  { emoji: "📬", titel: "Oogst & opvolgen", dagen: [13, 17], detail: "DM's, FORM, 3-weg en Mini-ELEVA leren doorspelen, productkennis, verdienmodel" },
+  { emoji: "🏡", titel: "Opportunity", dagen: [18, 21], detail: "De business-boog: bouwers vinden" },
+  { emoji: "🛠️", titel: "Skills & gesprekken", dagen: [22, 27], detail: "3-weg-meesterclass en je eerste 3-weg, stem, social en je niche" },
+  { emoji: "👑", titel: "Top-20 & meesterschap", dagen: [28, 36], detail: "De verdiende namenlijst, funnel-ritme, tweede 3-weg, pipeline-check en eindreflectie" },
 ];
 
 export type LanceerRoute = "a" | "b";

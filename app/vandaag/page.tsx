@@ -26,6 +26,7 @@ import {
 // pivot, FORM-verdieping, etc.) zitten in core-dagen-v9.ts. Verankering
 // (dag 22-40) en lifetime (41+) blijven uit core-dagen.ts.
 import { CORE_V9_STAPPEN } from "@/lib/playbook/core-dagen-v9";
+import { vindLanceerDag, routeDagen } from "@/lib/playbook/lanceer-routes";
 import { detecteerEnVierEerstePartner } from "@/lib/team/mijlpaal-detector";
 import { pakTopRadar, type ProspectInput } from "@/lib/radar/volgende-beste-actie";
 import { haalRadarAfvinkSets } from "@/lib/radar/carry-over";
@@ -64,7 +65,7 @@ export const dynamic = "force-dynamic";
 export default async function VandaagPagina({
   searchParams,
 }: {
-  searchParams: Promise<{ dag?: string }>;
+  searchParams: Promise<{ dag?: string; lanceer?: string }>;
 }) {
   const sp = await searchParams;
   const supabase = await createClient();
@@ -198,6 +199,16 @@ export default async function VandaagPagina({
       ? dagParam
       : null;
 
+  // LANCEER-REIS-BELEVING (preview, founders/testers): ?lanceer=a|b laat
+  // de echte dagflow een dag uit de lanceer-routes draaien in plaats van
+  // de live V9-dag. Zelfde motor, zelfde afvinken, zelfde embeds; alleen
+  // de dag-data komt uit lib/playbook/lanceer-routes.ts. Members negeren
+  // deze param volledig.
+  const lanceerRoute: "a" | "b" | null =
+    (isFounder || isTester) && (sp.lanceer === "a" || sp.lanceer === "b")
+      ? sp.lanceer
+      : null;
+
   // Modus eerst afleiden, want de dag-teller is modus-specifiek.
   const modusVoorDagTeller: Modus =
     ((profile as any)?.modus as string | null) === "core"
@@ -259,7 +270,9 @@ export default async function VandaagPagina({
   // vanaf dag 14 ook de 21-dagen-resultaat-post als banner.
   // ============================================================
   let sideflowAanRaad: { slug: "pre-post" | "21-dagen-post"; titel: string } | null = null;
-  if (modusVoorDagTeller === "core" && dag >= 2) {
+  // In de lanceer-reis-beleving zitten de posts als reeks ín de dagen;
+  // de oude sideflow-banner zou daar dubbelop (en verwarrend) zijn.
+  if (!lanceerRoute && modusVoorDagTeller === "core" && dag >= 2) {
     const eigenResultaat = (profile as { core_eigen_resultaat?: boolean | null } | null)?.core_eigen_resultaat;
     if (eigenResultaat !== null && eigenResultaat !== undefined) {
       const eersteSlug: "pre-post" | "21-dagen-post" = eigenResultaat
@@ -343,7 +356,16 @@ export default async function VandaagPagina({
   });
 
   let dagData;
-  if (modus === "core") {
+  if (lanceerRoute) {
+    // Beleving van de lanceer-reis: dag-data uit de preview-routes.
+    // Geen DMO/afsluit-injectie hier; de geremapte V9-dagen hebben hun
+    // eigen afsluit-stappen al in de data zitten.
+    dagData = vindLanceerDag(lanceerRoute, dag) ?? null;
+    if (!dagData) {
+      const max = routeDagen(lanceerRoute).length;
+      redirect(`/vandaag?lanceer=${lanceerRoute}&dag=${Math.min(dag, max)}`);
+    }
+  } else if (modus === "core") {
     // Core: 21 V9-ankerstappen (skill-fase) + 19 verankering + lifetime.
     if (dag <= 21) {
       dagData = CORE_V9_STAPPEN.find((s) => s.nummer === dag) ?? null;
@@ -396,14 +418,15 @@ export default async function VandaagPagina({
   // en gebruiken namespace "core-v9-stap". Verankering/lifetime
   // (dag 22+) blijven op "core-dag". Pro werkt nu nog niet via deze
   // route.
-  const dagNamespace =
-    modus === "core"
+  const dagNamespace = lanceerRoute
+    ? `lanceer-${lanceerRoute}-dag`
+    : modus === "core"
       ? dag <= 21
         ? "core-v9-stap"
         : "core-dag"
       : "sprint-dag";
 
-  if (modus !== "core") {
+  if (modus !== "core" && !lanceerRoute) {
     // playbook_overrides is een platte tabel zonder modus-veld, dus
     // we passen 'm alleen toe op Sprint (de oorspronkelijke gebruiker).
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -548,8 +571,46 @@ export default async function VandaagPagina({
     "modus-switch",
   );
 
+  const lanceerMaxDag = lanceerRoute ? routeDagen(lanceerRoute).length : 0;
+
   return (
     <>
+      {/* Beleving-strip: alleen zichtbaar tijdens de lanceer-reis-preview.
+          Vaste balk bovenaan met dag-navigatie, zodat je de hele reis
+          in de echte flow kunt doorlopen. */}
+      {lanceerRoute && (
+        <div className="fixed top-0 inset-x-0 z-50 flex items-center justify-center gap-3 flex-wrap border-b border-amber-400/40 bg-[#1a1508]/95 backdrop-blur px-3 py-1.5 text-xs">
+          <span className="text-amber-300 font-semibold">
+            🔭 Beleving route {lanceerRoute.toUpperCase()} · dag {dag} van{" "}
+            {lanceerMaxDag}
+          </span>
+          {dag > 1 && (
+            <a
+              href={`/vandaag?lanceer=${lanceerRoute}&dag=${dag - 1}`}
+              className="text-cm-gold underline"
+            >
+              ← dag {dag - 1}
+            </a>
+          )}
+          {dag < lanceerMaxDag && (
+            <a
+              href={`/vandaag?lanceer=${lanceerRoute}&dag=${dag + 1}`}
+              className="text-cm-gold underline"
+            >
+              dag {dag + 1} →
+            </a>
+          )}
+          <a
+            href={`/lanceer-reis?route=${lanceerRoute}`}
+            className="text-cm-white/60 underline"
+          >
+            overzicht
+          </a>
+          <a href="/vandaag" className="text-cm-white/60 underline">
+            ✕ stop beleving
+          </a>
+        </div>
+      )}
       {modusKeuzeMist && (modus === "sprint" || modus === "core") && (
         <ModusSwitchBanner
           modus={modus}

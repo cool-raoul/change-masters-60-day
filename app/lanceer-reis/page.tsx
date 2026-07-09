@@ -72,6 +72,14 @@ export default async function LanceerReisOverzicht({
         </p>
       </header>
 
+      {/* Beleef-knop: de hele reis in de echte dagflow doorlopen. */}
+      <Link
+        href={`/vandaag?lanceer=${route}&dag=1`}
+        className="mb-6 inline-flex items-center gap-2 rounded-full bg-cm-gold text-cm-bg px-5 py-2.5 text-sm font-bold hover:opacity-90"
+      >
+        ▶️ Beleef deze route in de echte dagflow (vanaf dag 1)
+      </Link>
+
       {/* Route-wissel */}
       <div className="mb-8 flex gap-2">
         <Link

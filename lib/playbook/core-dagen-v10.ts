@@ -481,7 +481,7 @@ De Mentor kent jouw freebies en je persoonlijke linkjes al, dus dit schrijft bij
       {
         actie: "Je freebies en linkjes bekijken",
         menupad: "Menu → Mijn freebies",
-        route: "/instellingen/mijn-freebies",
+        route: "/instellingen/mijn-tracking-links",
       },
     ],
   },

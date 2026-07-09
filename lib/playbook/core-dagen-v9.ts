@@ -140,6 +140,15 @@ Wat fijn dat je er bent. We gaan samen 🥰`,
         uitleg:
           "Eén keuze die bepaalt waar je de komende dagen iets te delen hebt. Heb je al een product van Lifeplus geprobeerd en daar iets van gemerkt? Dan deel je dat eerlijk, en raakt het mensen. Nog geen ervaring? Dan deel je je voornemen open en eerlijk, en bouw je de komende drie weken je eigen ervaring op. Allebei werken, het is geen goed of fout. Twijfel je nog? Sla de keuze voor nu over, hij blijft op je dashboard staan tot je er klaar voor bent. Wat je kiest, opent meteen een aparte stap-voor-stap-flow waarin de Mentor je in jouw stem helpt met de tekst, de DM-scripts en de upline-check.",
       },
+      {
+        id: "core-v9-stap1-kennismaking-verhaal",
+        label: "Laat de Mentor je leren kennen: jouw verhaal (± 5 minuten)",
+        verplicht: false,
+        actieRoute: `/coach?prefill=${encodeURIComponent("Start kennismaking ronde 1: jouw verhaal")}&submit=1`,
+        actieRouteLabel: "Start het gesprek →",
+        uitleg:
+          "De Mentor gaat straks posts en berichtjes voor je schrijven, en die worden pas echt goed als hij jou kent. Dit is een kort gesprekje: hij vraagt naar je gewone dag, de druppel waarom je begon, en wat er over een jaar anders moet zijn. Alles wat je vertelt onthoudt hij, en jij kunt het altijd teruglezen en aanpassen bij Instellingen → Wat de Mentor over je weet.",
+      },
       ...afsluitStappenV9(1),
     ],
     waarInEleva: [
@@ -384,6 +393,15 @@ Snap je waarom dit deel zo belangrijk is? Want straks ga je deze verhalen tien, 
 
 Neem er rustig de tijd voor 🥰`,
     vandaagDoen: [
+      {
+        id: "core-v9-stap4-kennismaking-stem",
+        label: "Laat de Mentor je stem leren kennen (± 5 minuten)",
+        verplicht: false,
+        actieRoute: `/coach?prefill=${encodeURIComponent("Start kennismaking ronde 2: jouw stem")}&submit=1`,
+        actieRouteLabel: "Start het gesprek →",
+        uitleg:
+          "Vandaag ga je verhalen schrijven, dus dit is hét moment om de Mentor jouw stem te geven. Plak een stukje tekst dat je ooit zélf schreef (een post, een lang appje, geen AI-tekst) en vertel welke woorden typisch jij zijn. Hij schrijft daarna een proef-alinea terug en vraagt: klinkt dit als jij? Vanaf dan schrijft hij alles hieronder in jóuw toon.",
+      },
       {
         id: "core-v9-stap4-persoonlijk-verhaal",
         label: "Schrijf je persoonlijke verhaal met de Mentor",

@@ -86,6 +86,16 @@ export default async function LanceerReisDagDetail({
         <h1 className="font-serif-warm text-2xl sm:text-3xl text-cm-white mt-2">
           {dag.titel}
         </h1>
+        <Link
+          href={`/vandaag?lanceer=${route}&dag=${dag.nummer}`}
+          className="mt-3 inline-flex items-center gap-2 rounded-full bg-cm-gold text-cm-bg px-4 py-2 text-sm font-semibold hover:opacity-90"
+        >
+          ▶️ Beleef deze dag in de echte dagflow
+        </Link>
+        <p className="text-cm-muted text-[11px] mt-1.5">
+          Opent /vandaag met deze dag: echte stappen, echt afvinken, echte
+          Mentor-knoppen. Bovenaan zit een strip om door de dagen te lopen.
+        </p>
       </header>
 
       <section className="card mb-4">
