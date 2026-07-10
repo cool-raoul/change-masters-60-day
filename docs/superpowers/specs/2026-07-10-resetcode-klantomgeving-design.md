@@ -69,6 +69,18 @@ programma-momenten.
 - Mentor-prompt hergebruikt ANTI_AI_GEUR uit lib/mentor/schrijfregels.ts en de
   kosten-mitigaties uit de mini-ELEVA-chat (model-router, history-trim, quotum).
 
+## Addendum 10 juli (avond): kennisbron verruimd
+
+Raoul meldde dat de Holistic Reset afstamt van het HCG/Bio-HCG-protocol
+(Simeons) en gaf akkoord: de acht begeleidings-adviezen uit
+docs/resetcode/17-analyse-hcg-achtergrond.md zijn programma-regels geworden
+(correctie-dag fase 3, ±1 kg-anker, onderbrekings-protocol, menstruatie-timing,
+drink-regels, plateau-grens van vier dagen, pauze tussen rondes,
+medicatie-voorbehoud) en de Mentor mag uit dit achtergrond-distillaat putten.
+Grenzen: de namen HCG/Bio-HCG/Simeons nooit actief richting klanten, en in
+fase 2 van de 3.0 worden GEEN calorieën geteld (500/700 kcal is de
+klassieke/2.0-wereld; eten van de fase 2-lijst is de regel).
+
 ## Buiten deze ronde
 
 Bestellen/winkelmandje (geparkeerd), score-bots koppelen, 2017-kennisbank,

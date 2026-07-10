@@ -5,9 +5,13 @@
 > HCG-cure/Bio-HCG-cure en vroeg naar raakvlakken en naar adviezen uit die wereld
 > die het programma nog niet expliciet heeft.
 >
-> AFSPRAAK BLIJFT STAAN: de klant-Mentor put uitsluitend uit het eigen
-> Boardslink-materiaal. Niets uit dit document gaat naar klanten of in de
-> Mentor-kennis voordat Raoul het expliciet tot programma-regel maakt.
+> AKKOORD RAOUL (10 juli 2026, later die dag): alle acht adviezen hieronder
+> zijn programma-regels geworden (verwerkt in lib/resetcode/programma.ts) en
+> de Mentor mag uit deze achtergrond putten (achtergrond-blok in
+> lib/resetcode/mentor-prompt.ts). Grenzen die blijven staan: de naam
+> HCG/Bio-HCG/Simeons nooit actief richting klanten, en in fase 2 van de
+> 3.0 tellen we GEEN calorieën (Raoul: "wij tellen dan niet echt calorieën
+> in fase 2"; de 500/700 kcal is de klassieke/2.0-wereld).
 
 ## Waar het vandaan komt
 

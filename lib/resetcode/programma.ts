@@ -57,6 +57,7 @@ export const RESET_STATIONS: ResetStation[] = [
       "Maak foto's van jezelf: voorkant, zijkant, achterkant en je gezicht. Rustige achtergrond, van hoofd tot voeten. Je maakt ze voor jezelf, straks ben je blij dat je ze hebt.",
       "Meet en noteer: gewicht, taille, heup en borst.",
       "Schrijf voor jezelf op waarom je dit doet en wat je graag anders wilt. Dat lijstje wordt later goud waard.",
+      "Gebruik je medicijnen (bijvoorbeeld voor je schildklier of diabetes, of de pil)? Overleg dan even met je huisarts voordat je start.",
     ],
     welLijst: [],
     nietLijst: [],
@@ -196,6 +197,7 @@ export const RESET_STATIONS: ResetStation[] = [
       "Begin vroeg op de dag met eten, dan haal je je aantal aan het einde van de dag makkelijk.",
       "Druk dagje? Stop een zakje noten in je tas of jaszak, dan kun je overal blijven eten.",
       "Lees het laadtips-document even door, dan weet je precies wat je opties zijn.",
+      "Plan je laaddagen zo dat fase 2 niet precies tijdens je menstruatie start; net erna beginnen geeft het rustigste begin.",
     ],
     veelgesteld: [
       {
@@ -254,7 +256,8 @@ export const RESET_STATIONS: ResetStation[] = [
       "Vetvrij bakken kan prima: fruit ui en knoflook in een laagje water of tomatensap, gebruik een goede antiaanbakpan of de oven. Let op, het gaat sneller dan normaal, dus blijf erbij.",
       "Salade van sla, komkommer en tomaat is vooral water. Voeg zwaardere groente toe zoals broccoli, spinazie of gekookte groente, dan is je maaltijd compleet.",
       "Staat de weegschaal stil of ga je zelfs iets omhoog? Dat is vaak vocht en hoort bij het ritme van je lichaam (het woosh-effect uit je materiaal). Gewoon doorgaan, niet schrikken.",
-      "Een appeldag kan helpen bij langere stilstand: één dag alleen zes Granny Smith-appels naast je producten. Precies zoals het in je boekje staat.",
+      "Pas als je vier dagen of langer helemaal stilstaat spreek je van een plateau. Dan kan een appeldag helpen: één dag alleen zes Granny Smith-appels naast je producten, precies zoals in je boekje. Eerder ingrijpen hoeft niet.",
+      "Rond je menstruatie kan de weegschaal stilstaan of ietsje stijgen door vocht. Hoort erbij en trekt vanzelf weg.",
       "Meer trek in zoet (bijvoorbeeld rond je menstruatie)? Yogi Classic-thee smaakt zoet zonder suiker, en een appeltje uit de pan met kaneel is een feestje.",
       "Merk je dat je moe bent? Geef eraan toe en ga lekker eerder naar bed. Rust helpt dit proces enorm.",
       "Even doorbijten bij een craving hoort erbij: het zijn gedachten die voorbij trekken. Praat tegen je mind, drie weken op een heel leven.",
@@ -279,6 +282,16 @@ export const RESET_STATIONS: ResetStation[] = [
         vraag: "Ik heb bijna geen honger, moet ik toch eten?",
         antwoord:
           "Ja, eet in ieder geval de minimale hoeveelheden uit je boekje. Je lichaam heeft die voeding nodig om goed te kunnen werken, ook als je weinig trek hebt.",
+      },
+      {
+        vraag: "Mag ik koffie of thee?",
+        antwoord:
+          "Ja hoor, koffie en thee mogen gewoon, zonder suiker en zonder gewone melk. Water blijft je basis: minimaal anderhalve liter per dag.",
+      },
+      {
+        vraag: "Ik word ziek of heb een bruiloft midden in fase 2, wat nu?",
+        antwoord:
+          "Dat kan gebeuren en daar is een nette route voor: bewust pauzeren, en daarna bewust weer opstarten en je fase iets verlengen. Half doorgaan werkt niet. Overleg even met je begeleider hoe jullie het voor jouw situatie aanpakken.",
       },
     ],
     contactMoment:
@@ -313,6 +326,8 @@ export const RESET_STATIONS: ResetStation[] = [
       "Alle groente en fruit mag weer, ook wortel, en alle soorten vlees en vis. Zuivel mag ook weer.",
       "Nog steeds geen suikers en geen snelle koolhydraten.",
       "Brood van haverzemelen mag, maximaal drie dagen per week en het liefst om de dag. Week de haverzemelen even, zoals in het document staat.",
+      "Weeg jezelf elke ochtend. Je eindgewicht van fase 2 is je ankerpunt: daar mag je ongeveer een kilo omheen bewegen.",
+      "Kom je meer dan een kilo boven je ankerpunt? Corrigeer dan binnen 48 uur met een correctie-dag: overdag alleen drinken, en 's avonds één grote biefstuk met een appel of een tomaat. Eet je geen vlees, vraag dan je begeleider naar de variant.",
     ],
     welLijst: [
       "Gezonde vetten, rustig opgebouwd: boter, olie, kaas, noten",
@@ -338,6 +353,11 @@ export const RESET_STATIONS: ResetStation[] = [
         vraag: "Hoe zit het precies met haverzemelen?",
         antwoord:
           "Haverzemelen-brood mag in fase 3, maximaal drie dagen per week en bij voorkeur om de dag. Even weken voor je het gebruikt. In het haverzemelen-document staat de uitleg en staan recepten.",
+      },
+      {
+        vraag: "Ik ben toch aangekomen deze week, wat nu?",
+        antwoord:
+          "Daar is deze fase juist voor: bijsturen terwijl je lichaam went. Zit je meer dan een kilo boven je ankerpunt (je eindgewicht van fase 2), doe dan binnen 48 uur een correctie-dag: overdag alleen drinken, 's avonds één grote biefstuk met een appel of een tomaat. Daarna pak je het gewone fase 3-ritme weer op. Lukt het corrigeren niet of eet je geen vlees, schakel dan even met je begeleider.",
       },
     ],
     contactMoment: null,
@@ -391,6 +411,11 @@ export const RESET_STATIONS: ResetStation[] = [
         vraag: "Wat doe ik na deze 21 dagen?",
         antwoord:
           "Dan begint het mooiste deel: je nieuwe ritme vasthouden, tot en met maand 6 en daarna. Plan het vervolg-gesprek met je begeleider, dan kijken jullie samen wat bij jou past qua basis-onderhoud en wat een goed vervolg is. Veel mensen plannen ook een jaarlijks terugkeer-moment, als een soort eigen APK.",
+      },
+      {
+        vraag: "Kan ik de reset later nog een keer doen?",
+        antwoord:
+          "Zeker, veel mensen maken er een jaarlijks terugkeer-moment van, als eigen APK. Houd na een afgeronde reset wel minimaal zes weken je gewone, stabiele ritme aan voordat je opnieuw start, en plan een nieuwe ronde altijd even samen met je begeleider.",
       },
       {
         vraag: "Iemand in mijn omgeving wil dit ook, wat nu?",
