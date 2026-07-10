@@ -1,30 +1,31 @@
 // ============================================================
 // Prompt-bouwer voor de Resetcode-Mentor. Eén kennisbron
-// (lib/resetcode/programma.ts), twee stemmen:
+// (lib/resetcode/programma.ts, twee losse programma's), twee
+// stemmen:
 //
 //   rol "klant"  → warme ELEVA-gids voor de klant op de
 //                  token-link; verwijst persoonlijke, medische
 //                  en buiten-materiaal-vragen actief en met
 //                  naam naar de begeleider (het member).
 //   rol "member" → zelfde kennis voor het teamlid dat het
-//                  programma ZELF doet, in de app; verwijst
-//                  waar passend naar de sponsor en mag benoemen
-//                  dat eigen ervaring straks goud is voor eigen
-//                  klanten.
+//                  programma ZELF doet, in de app.
 //
-// Kennisbron is UITSLUITEND het Boardslink-materiaal zoals
-// gedistilleerd in programma.ts (keuze Raoul 10 juli 2026).
+// Kennisbron: het Boardslink-materiaal (programma.ts) plus het
+// door Raoul goedgekeurde achtergrond-blok (10 juli 2026).
 // Geen medische claims, geen productbeloftes, geen AI-geur.
 // ============================================================
 
-import { RESET_STATIONS, stationVoor } from "./programma";
+import {
+  RESET_PROGRAMMAS,
+  programmaVoor,
+  stationVoor,
+  type ResetStation,
+} from "./programma";
 import { ANTI_AI_GEUR } from "@/lib/mentor/schrijfregels";
 
 export type ResetMentorRol = "klant" | "member";
 
-function stationAlsKennis(slug: string): string {
-  const s = stationVoor(slug);
-  if (!s) return "";
+function stationAlsKennis(s: ResetStation): string {
   const delen = [
     `### ${s.naam} (${s.duur})`,
     s.kern,
@@ -44,22 +45,20 @@ function stationAlsKennis(slug: string): string {
   return delen.filter(Boolean).join("\n\n");
 }
 
-function reisOverzicht(): string {
-  return RESET_STATIONS.map(
-    (s) => `${s.nummer}. ${s.naam} (${s.duur}): ${s.kern}`,
-  ).join("\n");
-}
-
 export function bouwResetMentorPrompt(opties: {
   rol: ResetMentorRol;
   voornaam: string;
   /** Naam van de begeleider (member) bij rol klant; sponsor-naam bij rol member (mag null). */
   begeleiderNaam: string | null;
+  /** Welk programma deze persoon volgt. */
+  programmaSlug: string;
   /** Slug van het station waar deze persoon nu zit. */
   stationSlug: string;
 }): string {
-  const { rol, voornaam, begeleiderNaam, stationSlug } = opties;
-  const station = stationVoor(stationSlug);
+  const { rol, voornaam, begeleiderNaam, programmaSlug, stationSlug } = opties;
+  const programma = programmaVoor(programmaSlug);
+  const station = stationVoor(programmaSlug, stationSlug);
+  const anderProgramma = RESET_PROGRAMMAS.find((p) => p.slug !== programmaSlug);
   const begeleider =
     begeleiderNaam ?? (rol === "klant" ? "je begeleider" : "je sponsor");
 
@@ -67,7 +66,7 @@ export function bouwResetMentorPrompt(opties: {
     rol === "klant"
       ? `
 JOUW ROL:
-Je bent de Mentor van ELEVA en je begeleidt ${voornaam} door de Resetcode. ${voornaam} is klant en doet dit programma samen met een echt mens: ${begeleider}. Jij bent de warme gids die er altijd is voor de praktische vragen; ${begeleider} blijft de persoonlijke begeleider en de relatie.
+Je bent de Mentor van ELEVA en je begeleidt ${voornaam} door het programma ${programma?.naam ?? "de Resetcode"}. ${voornaam} is klant en doet dit programma samen met een echt mens: ${begeleider}. Jij bent de warme gids die er altijd is voor de praktische vragen; ${begeleider} blijft de persoonlijke begeleider en de relatie.
 
 DOORVERWIJZEN (belangrijkste regel):
 - Bij alles wat persoonlijk, medisch of gevoelig is (aanhoudende klachten, medicijnen, zwangerschap, twijfel over meedoen, emoties die groter zijn dan een peptalk): geef GEEN advies maar verwijs warm en met naam: "dat is echt iets om even met ${begeleider} te bespreken". Je mag er wél naast blijven staan als mens.
@@ -75,7 +74,7 @@ DOORVERWIJZEN (belangrijkste regel):
 - Vragen over de volgende stap ná het programma horen bij het gesprek met ${begeleider}; jij mag benoemen DAT dat gesprek waardevol is, niet wat eruit moet komen.`
       : `
 JOUW ROL:
-Je bent de Mentor van ELEVA. ${voornaam} is teamlid (member) en doet de Resetcode ZELF. Je begeleidt als collega die het programma door en door kent: praktisch, warm, zonder omhaal.
+Je bent de Mentor van ELEVA. ${voornaam} is teamlid (member) en doet ${programma?.naam ?? "de Resetcode"} ZELF. Je begeleidt als collega die het programma door en door kent: praktisch, warm, zonder omhaal.
 
 VOOR EEN MEMBER GELDT:
 - Zelfde programma-antwoorden als voor een klant, maar je hoeft niet door te verwijzen voor programma-vragen: ${voornaam} IS straks zelf de begeleider van anderen.
@@ -101,18 +100,25 @@ Het programma bouwt voort op een kuur-protocol dat al tientallen jaren wordt geb
 - FASE 3-ANKER: het eindgewicht van fase 2 is het ankerpunt, met ongeveer een kilo speling. Meer dan een kilo erboven: binnen 48 uur een correctie-dag (overdag alleen drinken, 's avonds één grote biefstuk met appel of tomaat; vegetarische variant via ${begeleider}).
 - ONDERBREKEN: ziekte of een feest midden in fase 2 kan; bewust pauzeren, bewust herstarten en de fase iets verlengen, nooit half doorgaan. Invulling samen met ${begeleider}.
 - HERHALEN: na een afgeronde reset minimaal zes weken stabiel gewoon ritme voor een nieuwe ronde; veel mensen doen een jaarlijkse ronde als eigen APK.
-- MEDICATIE: bij medicijngebruik (schildklier, diabetes, de pil) hoort de huisarts in het rijtje: adviseer overleg vóór de start.
+- MEDICATIE: de intake vóór de bestelling heeft medicijngebruik al uitgevraagd; begin er zelf dus niet over. Begint ${voornaam} er alsnog over, adviseer dan overleg met de huisarts en met ${begeleider}, zonder zelf de programma-regels aan te passen.
 
-=== DE HELE REIS (zodat je weet waar ${voornaam} vandaan komt en naartoe gaat) ===
-${reisOverzicht()}
+=== HET PROGRAMMA VAN ${voornaam.toUpperCase()}: ${(programma?.naam ?? "").toUpperCase()} ===
+${(programma?.stations ?? [])
+  .map((s) => `${s.nummer}. ${s.naam} (${s.duur}): ${s.kern}`)
+  .join("\n")}
+Vervolg na dit programma: ${programma?.vervolg ?? ""}
 
 === WAAR ${voornaam.toUpperCase()} NU ZIT ===
-${station ? stationAlsKennis(station.slug) : "Onbekend station."}
+${station ? stationAlsKennis(station) : "Onbekend station."}
 
-=== REST VAN HET PROGRAMMA (alleen gebruiken als er expliciet naar gevraagd wordt) ===
-${RESET_STATIONS.filter((s) => s.slug !== stationSlug)
-  .map((s) => stationAlsKennis(s.slug))
+=== REST VAN DIT PROGRAMMA (alleen gebruiken als er expliciet naar gevraagd wordt) ===
+${(programma?.stations ?? [])
+  .filter((s) => s.slug !== stationSlug)
+  .map((s) => stationAlsKennis(s))
   .join("\n\n")}
+
+=== HET ANDERE PROGRAMMA (alleen in grote lijnen noemen, details via ${begeleider}) ===
+${anderProgramma ? `${anderProgramma.naam} (${anderProgramma.duur}): ${anderProgramma.payoff} Sommige mensen doen eerst het ene en daarna het andere programma; welke route bij ${voornaam} past is een gesprek met ${begeleider}.` : ""}
 
 ANTWOORD-STIJL:
 - Reageer op wat ${voornaam} echt vraagt, geen standaard-riedels.

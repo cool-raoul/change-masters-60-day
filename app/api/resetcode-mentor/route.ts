@@ -21,7 +21,8 @@ import { stationVoor } from "@/lib/resetcode/programma";
 //
 // Body: {
 //   vraag: string,
-//   station: string,           // slug uit lib/resetcode/programma
+//   programma: string,          // "darm" | "reset"
+//   station: string,            // station-slug binnen dat programma
 //   rol: "klant" | "member",
 //   voornaam?: string,          // demo-naam in de preview
 //   geschiedenis?: { rol: "gebruiker" | "mentor"; tekst: string }[]
@@ -64,6 +65,7 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json().catch(() => ({}));
     const vraag = (body.vraag as string | undefined)?.trim() ?? "";
+    const programmaSlug = (body.programma as string | undefined) ?? "";
     const stationSlug = (body.station as string | undefined) ?? "";
     const rol: ResetMentorRol = body.rol === "member" ? "member" : "klant";
     const voornaam =
@@ -74,8 +76,8 @@ export async function POST(req: NextRequest) {
     if (vraag.length > 2000) {
       return new Response("vraag te lang (max 2000 tekens)", { status: 400 });
     }
-    if (!stationVoor(stationSlug)) {
-      return new Response("onbekend station", { status: 400 });
+    if (!stationVoor(programmaSlug, stationSlug)) {
+      return new Response("onbekend programma of station", { status: 400 });
     }
 
     type HistBericht = { rol: "gebruiker" | "mentor"; tekst: string };
@@ -92,6 +94,7 @@ export async function POST(req: NextRequest) {
       // demo-klant; voor de member-stem laten we de sponsor generiek.
       begeleiderNaam:
         rol === "klant" ? (p?.full_name ?? "").split(" ")[0] || "je begeleider" : null,
+      programmaSlug,
       stationSlug,
     });
 

@@ -1,17 +1,24 @@
 // ============================================================
-// De Resetcode als klant-reis: zes stations, van voorbereiding
-// tot Logisch Leven. Dit is de ENE bron voor wat de klant per
-// fase ziet én voor wat de klant-Mentor mag weten.
+// De Resetcode als klant-reis. TWEE losse programma's (feedback
+// Raoul 10 juli): Darmen in Balans en de Holistic Reset. De
+// klant kiest aan het begin wat hij of zij doet; combinaties
+// (eerst darm, dan reset; of reset en daarna basisproducten)
+// lopen via het vervolg-gesprek met de begeleider, niet via een
+// vaste zes-stappen-lijn.
 //
-// Bron: docs/resetcode/ (Boardslink-materiaal, verbatim
-// veiliggesteld). Alles hier is praktische programma-instructie,
-// claim-vrij geformuleerd: wat je doet, eet en kunt verwachten
-// qua ritme. Nooit wat producten medisch doen.
+// Dit is de ENE bron voor wat de klant per fase ziet én voor
+// wat de klant-Mentor mag weten.
 //
-// Let op (README docs/resetcode): films en documenten spreken
-// elkaar op details tegen; bekende correctie van Raoul is in
-// fase 4 verwerkt (koolhydraten naar trek binnen 80/20, NIET
-// elke dag één testen). Twijfelgevallen aan Raoul voorleggen.
+// Bron: docs/resetcode/ (Boardslink-materiaal, verbatim) plus
+// de acht door Raoul goedgekeurde protocol-adviezen
+// (docs/resetcode/17). Alles claim-vrij: wat je doet en eet,
+// nooit wat producten medisch doen. Medicijn-vragen horen NIET
+// in deze omgeving: die intake is al vóór de bestelling geweest
+// (Raoul 10 juli).
+//
+// Fase 4-correctie van Raoul verwerkt: koolhydraten naar trek
+// binnen 80/20, NIET elke dag één testen. In fase 2 van de 3.0
+// tellen we GEEN calorieën.
 // ============================================================
 
 export type ResetStation = {
@@ -19,29 +26,38 @@ export type ResetStation = {
   nummer: number;
   naam: string;
   emoji: string;
-  /** Hoe lang dit station duurt, in mensentaal. */
   duur: string;
-  /** Eén zin: waar dit station over gaat. */
   kern: string;
-  /** Warme intro bovenaan het klant-scherm. */
   welkom: string;
-  /** De regels van nu, kort en concreet. */
   vandaagBelangrijk: string[];
-  /** Wat mag lekker wel (leeg = geen eetlijst in dit station). */
   welLijst: string[];
-  /** Wat laat je even staan. */
   nietLijst: string[];
   tips: string[];
   veelgesteld: { vraag: string; antwoord: string }[];
-  /** Wanneer je even schakelt met je begeleider (null = geen vast moment). */
   contactMoment: string | null;
-  /** Document-slots: Raoul hangt de echte bestanden er later in. */
   documenten: { titel: string; omschrijving: string }[];
-  /** Video-slots: idem, plek staat klaar. */
   videoSlots: string[];
+  /** In-app graphic die een document vervangt (eerste proef: de LOGI-piramide). */
+  graphic?: "logi-piramide";
 };
 
-export const RESET_STATIONS: ResetStation[] = [
+export type ResetProgramma = {
+  slug: "darm" | "reset";
+  naam: string;
+  emoji: string;
+  /** Korte payoff op de keuze-kaart. */
+  payoff: string;
+  duur: string;
+  /** Kleuren voor de klant-look (inline styles, dus hex). */
+  kleur: { hoofd: string; zacht: string; diep: string };
+  /** Wat er ná dit programma kan; voedt de vervolg-kaart en de Mentor. */
+  vervolg: string;
+  stations: ResetStation[];
+};
+
+// ---------- Darmen in Balans ----------
+
+const DARM_STATIONS: ResetStation[] = [
   {
     slug: "start",
     nummer: 1,
@@ -50,22 +66,20 @@ export const RESET_STATIONS: ResetStation[] = [
     duur: "tot je pakket binnen is",
     kern: "Alles klaarzetten zodat je rustig en goed kunt beginnen.",
     welkom:
-      "Welkom! Wat fijn dat je begint aan de Resetcode. Je hoeft niks te kunnen of te weten, alles staat hier stap voor stap klaar. Deze eerste dagen gebruik je om je voor te bereiden, dan wordt de rest zoveel makkelijker.",
+      "Welkom! Wat fijn dat je begint met Darmen in Balans. Je hoeft niks te kunnen of te weten, alles staat hier stap voor stap klaar. Deze eerste dagen gebruik je om je voor te bereiden, dan wordt de rest zoveel makkelijker.",
     vandaagBelangrijk: [
       "Bewaar deze pagina, hier kun je altijd naar terug.",
       "Laat je begeleider even weten wanneer je bestelling binnen is en wanneer je wilt beginnen.",
       "Maak foto's van jezelf: voorkant, zijkant, achterkant en je gezicht. Rustige achtergrond, van hoofd tot voeten. Je maakt ze voor jezelf, straks ben je blij dat je ze hebt.",
       "Meet en noteer: gewicht, taille, heup en borst.",
       "Schrijf voor jezelf op waarom je dit doet en wat je graag anders wilt. Dat lijstje wordt later goud waard.",
-      "Gebruik je medicijnen (bijvoorbeeld voor je schildklier of diabetes, of de pil)? Overleg dan even met je huisarts voordat je start.",
     ],
     welLijst: [],
     nietLijst: [],
     tips: [
       "Haal alvast in huis: Keltisch zeezout, Herbamare kruidenzout, sojasaus zonder suiker (Kikkoman met rode of blauwe dop) en eventueel erythritol uit de natuurwinkel.",
-      "Zet de FatSecret-app alvast op je telefoon, die ga je bij de laaddagen gebruiken.",
       "Word lid van de support-groep op Facebook. Duizenden mensen doen dit programma, je staat er niet alleen voor. De zoekbalk in de groep is je vriend.",
-      "Plan alvast een contactmoment met je begeleider rond het einde van je eerste 16 dagen.",
+      "Plan alvast een contactmoment met je begeleider rond het einde van je 16 dagen.",
     ],
     veelgesteld: [
       {
@@ -91,12 +105,12 @@ export const RESET_STATIONS: ResetStation[] = [
         omschrijving: "Om je metingen overzichtelijk bij te houden.",
       },
     ],
-    videoSlots: ["Welkom bij de Resetcode (introductie)"],
+    videoSlots: ["Welkom bij Darmen in Balans (introductie)"],
   },
   {
-    slug: "darm",
+    slug: "zestien-dagen",
     nummer: 2,
-    naam: "Darmen in Balans",
+    naam: "De 16 dagen",
     emoji: "🔄",
     duur: "16 dagen (daarna maak je je producten rustig op)",
     kern: "Zestien dagen puur eten volgens jouw schema, met alles op één plek.",
@@ -173,15 +187,73 @@ export const RESET_STATIONS: ResetStation[] = [
       "Dag 10-video (kijk deze rond dag 10)",
     ],
   },
+];
+
+// ---------- Holistic Reset ----------
+
+const RESET_STATIONS_INTERN: ResetStation[] = [
+  {
+    slug: "voorbereiding",
+    nummer: 1,
+    naam: "Jouw voorbereiding",
+    emoji: "📸",
+    duur: "tot je pakket binnen is",
+    kern: "Startpunt vastleggen en alles in huis halen.",
+    welkom:
+      "Welkom bij de Holistic Reset! Voordat je begint leg je je startpunt vast. Dat kost een half uurtje en je hebt er de hele reis plezier van. En stel jezelf de twee vragen uit de startvideo: wil ik een optimale gezondheid, en ben ik bereid mijn leefstijl te veranderen? Zeg je daar ja op (tegen jezelf, niet tegen ons), dan ben je er klaar voor.",
+    vandaagBelangrijk: [
+      "Maak foto's: voorkant, zijkant, achterkant en je gezicht. Rustige achtergrond, hele lichaam. Voor jezelf, niet voor anderen.",
+      "Meet en noteer: gewicht, taille, heup en borst.",
+      "Schrijf je startpunt op: wat wil je graag anders, en hoe voelt het nu? Hoe concreter, hoe leuker het teruglezen straks wordt.",
+      "Zet de FatSecret-app op je telefoon, die gebruik je bij de laaddagen om je calorieën te tellen (alleen dan!).",
+      "Bewaar deze pagina en laat je begeleider weten wanneer je pakket binnen is en wanneer je start.",
+    ],
+    welLijst: [],
+    nietLijst: [],
+    tips: [
+      "Haal alvast in huis: Keltisch zeezout, Herbamare kruidenzout, sojasaus zonder suiker (Kikkoman met rode of blauwe dop) en eventueel erythritol uit de natuurwinkel.",
+      "Word lid van de support-groep op Facebook: zo'n tienduizend mensen die dit ook doen of deden. De zoekbalk daar beantwoordt bijna elke vraag.",
+      "Kijk de startvideo en het resetboekje rustig door, dan weet je precies wat er komt.",
+    ],
+    veelgesteld: [
+      {
+        vraag: "Moet ik die foto's echt maken?",
+        antwoord:
+          "Ja, doe het echt even. Je mind gaat je straks voor de gek houden ('ik zie geen verschil'), en de foto's laten zien wat er wél gebeurd is. Je deelt ze met niemand, ze zijn van jou.",
+      },
+      {
+        vraag: "Hoe lang duurt het hele programma?",
+        antwoord:
+          "Twee laaddagen, dan 21 dagen (verlengbaar tot 40), dan 21 dagen stabiliseren en 21 dagen Logisch Leven. Daarna houd je je eigen ritme aan tot en met maand 6. Je doet het fase voor fase, hier zie je steeds alleen de fase waar je bent.",
+      },
+    ],
+    contactMoment:
+      "Laat je begeleider weten wanneer je pakket binnen is en welke dag je start.",
+    documenten: [
+      {
+        titel: "Resetboekje (3.0)",
+        omschrijving: "Je complete gids voor alle vier de fases.",
+      },
+      {
+        titel: "Benodigdheden en boodschappenlijstje",
+        omschrijving: "Alles wat je in huis wilt hebben.",
+      },
+      {
+        titel: "Meet- en weegschema",
+        omschrijving: "Om je metingen bij te houden.",
+      },
+    ],
+    videoSlots: ["Startvideo: de twee belangrijke vragen"],
+  },
   {
     slug: "laaddagen",
-    nummer: 3,
+    nummer: 2,
     naam: "Fase 1 · De laaddagen",
     emoji: "😋",
     duur: "2 dagen",
     kern: "Twee dagen flink en vooral gezond-vet eten: 3500 tot 5000 kcal per dag.",
     welkom:
-      "Je begint de Holistic Reset met twee laaddagen. Klinkt gek, is bewust: zo zet je de omschakeling van fase 2 goed in gang. Dit hoort er echt bij, dus doe het serieus én met een knipoog. Je mag los!",
+      "Je begint met twee laaddagen. Klinkt gek, is bewust: zo zet je de omschakeling van fase 2 goed in gang. Dit hoort er echt bij, dus doe het serieus én met een knipoog. Je mag los!",
     vandaagBelangrijk: [
       "Eet twee dagen lang minimaal 3500 tot 5000 kcal per dag.",
       "Laad vooral met gezonde vetten: macadamia's, cashews, avocado, banaan, kokosroom, gebakken ei met kaas.",
@@ -217,16 +289,12 @@ export const RESET_STATIONS: ResetStation[] = [
         titel: "Laadtips",
         omschrijving: "Gezonde laad-ideeën, inclusief top-10 vetten.",
       },
-      {
-        titel: "Resetboekje (3.0)",
-        omschrijving: "Je complete gids voor alle vier de fases.",
-      },
     ],
     videoSlots: ["Fase 1-video: de laaddagen"],
   },
   {
-    slug: "vetverbranding",
-    nummer: 4,
+    slug: "omschakeling",
+    nummer: 3,
     naam: "Fase 2 · De omschakeling",
     emoji: "🔥",
     duur: "21 dagen (mag verlengd tot maximaal 40)",
@@ -234,7 +302,7 @@ export const RESET_STATIONS: ResetStation[] = [
     welkom:
       "Dit is de kern van je reset. Eenentwintig dagen super clean eten van de fase 2-lijst uit je boekje. Het is even wennen en daarna verrassend goed te doen, zeker met de recepten en de support-groep erbij. En onthoud: het zijn maar drie weken op je hele leven.",
     vandaagBelangrijk: [
-      "Eet alleen wat op de fase 2-lijst in je boekje staat. Groente en fruit van de lijst mag ongelimiteerd, ook als tussendoortje.",
+      "Eet alleen wat op de fase 2-lijst in je boekje staat. Groente en fruit van de lijst mag ongelimiteerd, ook als tussendoortje. Calorieën tellen doen we in deze fase niet: de lijst is de regel.",
       "Geen koolhydraten (pasta, rijst, aardappelen, brood), geen suikers (ook geen honing of kokosbloesem), geen vetten in je eten.",
       "Ook geen vette verzorging op je huid: kies vetvrije make-up, een shampoo-bar en zeep-bar. De MSM-lotion mag wel.",
       "Neem elke dag één Wasa-cracker of twee grisini's, zoals in je boekje staat.",
@@ -258,7 +326,7 @@ export const RESET_STATIONS: ResetStation[] = [
       "Staat de weegschaal stil of ga je zelfs iets omhoog? Dat is vaak vocht en hoort bij het ritme van je lichaam (het woosh-effect uit je materiaal). Gewoon doorgaan, niet schrikken.",
       "Pas als je vier dagen of langer helemaal stilstaat spreek je van een plateau. Dan kan een appeldag helpen: één dag alleen zes Granny Smith-appels naast je producten, precies zoals in je boekje. Eerder ingrijpen hoeft niet.",
       "Rond je menstruatie kan de weegschaal stilstaan of ietsje stijgen door vocht. Hoort erbij en trekt vanzelf weg.",
-      "Meer trek in zoet (bijvoorbeeld rond je menstruatie)? Yogi Classic-thee smaakt zoet zonder suiker, en een appeltje uit de pan met kaneel is een feestje.",
+      "Meer trek in zoet? Yogi Classic-thee smaakt zoet zonder suiker, en een appeltje uit de pan met kaneel is een feestje.",
       "Merk je dat je moe bent? Geef eraan toe en ga lekker eerder naar bed. Rust helpt dit proces enorm.",
       "Even doorbijten bij een craving hoort erbij: het zijn gedachten die voorbij trekken. Praat tegen je mind, drie weken op een heel leven.",
     ],
@@ -314,7 +382,7 @@ export const RESET_STATIONS: ResetStation[] = [
   },
   {
     slug: "stabilisatie",
-    nummer: 5,
+    nummer: 4,
     naam: "Fase 3 · De stabilisatie",
     emoji: "⚖️",
     duur: "21 dagen",
@@ -375,7 +443,7 @@ export const RESET_STATIONS: ResetStation[] = [
   },
   {
     slug: "logisch-leven",
-    nummer: 6,
+    nummer: 5,
     naam: "Fase 4 · Logisch Leven",
     emoji: "🌳",
     duur: "21 dagen, en daarna je ritme tot en met maand 6",
@@ -385,7 +453,7 @@ export const RESET_STATIONS: ResetStation[] = [
     vandaagBelangrijk: [
       "Voeg koolhydraten toe waar je trek in hebt, binnen de 80/20-regel. Geen trek in koolhydraten? Ook helemaal prima.",
       "Gebruik de weegschaal en je gevoel als feedback: merk je dat iets niet lekker valt of aantikt, doe het dan wat minder vaak of plan er een actieve dag omheen.",
-      "Eet volgens de LOGI-piramide uit je boekje: vaak groente en fruit, regelmatig vis, vlees, eieren en zuivel, met mate granen, zelden zoet en fastfood.",
+      "Eet volgens de LOGI-piramide: vaak groente en fruit, regelmatig vis, vlees, eieren en zuivel, met mate granen, zelden zoet en fastfood.",
       "Beweeg elke dag een beetje meer: pak de trap, loop naar de winkel, twintig minuten wandelen doet al veel.",
     ],
     welLijst: [
@@ -408,14 +476,14 @@ export const RESET_STATIONS: ResetStation[] = [
           "Nee. Je voegt toe waar je trek in hebt en houdt je aan de 80/20-regel. Heb je ergens geen behoefte aan, dan hoef je het ook niet te proberen. Je lichaam is je kompas, niet een schema.",
       },
       {
-        vraag: "Wat doe ik na deze 21 dagen?",
-        antwoord:
-          "Dan begint het mooiste deel: je nieuwe ritme vasthouden, tot en met maand 6 en daarna. Plan het vervolg-gesprek met je begeleider, dan kijken jullie samen wat bij jou past qua basis-onderhoud en wat een goed vervolg is. Veel mensen plannen ook een jaarlijks terugkeer-moment, als een soort eigen APK.",
-      },
-      {
         vraag: "Kan ik de reset later nog een keer doen?",
         antwoord:
           "Zeker, veel mensen maken er een jaarlijks terugkeer-moment van, als eigen APK. Houd na een afgeronde reset wel minimaal zes weken je gewone, stabiele ritme aan voordat je opnieuw start, en plan een nieuwe ronde altijd even samen met je begeleider.",
+      },
+      {
+        vraag: "Wat doe ik na deze 21 dagen?",
+        antwoord:
+          "Dan begint het mooiste deel: je nieuwe ritme vasthouden, tot en met maand 6 en daarna. Plan het vervolg-gesprek met je begeleider, dan kijken jullie samen wat bij jou past qua basis-onderhoud en wat een goed vervolg is.",
       },
       {
         vraag: "Iemand in mijn omgeving wil dit ook, wat nu?",
@@ -427,32 +495,65 @@ export const RESET_STATIONS: ResetStation[] = [
       "Aan het einde van fase 4: plan het vervolg-gesprek met je begeleider over jouw ritme na het programma.",
     documenten: [
       {
-        titel: "LOGI-piramide",
-        omschrijving: "Je 80/20-kompas voor elke dag.",
-      },
-      {
         titel: "Vijf leefstijl-tips",
         omschrijving: "De basis om vast te houden wat je hebt opgebouwd.",
       },
     ],
     videoSlots: ["Fase 4-video: Logisch Leven"],
+    graphic: "logi-piramide",
   },
 ];
 
-/** Station op slug, of null. */
-export function stationVoor(slug: string): ResetStation | null {
-  return RESET_STATIONS.find((s) => s.slug === slug) ?? null;
+// ---------- De twee programma's ----------
+
+export const RESET_PROGRAMMAS: ResetProgramma[] = [
+  {
+    slug: "darm",
+    naam: "Darmen in Balans",
+    emoji: "🌿",
+    payoff: "16 dagen puur eten en je basis opnieuw leggen. Overzichtelijk en goed te doen.",
+    duur: "16 dagen",
+    kleur: { hoofd: "#2F7A4D", zacht: "#EAF4EC", diep: "#1E5434" },
+    vervolg:
+      "Na de 16 dagen kies je samen met je begeleider jouw vervolg: doorpakken met de Holistic Reset, of verder met de basisproducten (het huis). En veel mensen komen jaarlijks even terug voor hun eigen APK.",
+    stations: DARM_STATIONS,
+  },
+  {
+    slug: "reset",
+    naam: "Holistic Reset",
+    emoji: "☀️",
+    payoff:
+      "De complete reis in vier fases: laden, omschakelen, stabiliseren en Logisch Leven.",
+    duur: "±9 weken + je ritme tot maand 6",
+    kleur: { hoofd: "#D97730", zacht: "#FBEFE2", diep: "#A6531B" },
+    vervolg:
+      "Na fase 4 kijk je samen met je begeleider naar jouw ritme voor de lange termijn: de basisproducten als onderhoud, en voor veel mensen een jaarlijkse terugkeer-ronde als eigen APK.",
+    stations: RESET_STATIONS_INTERN,
+  },
+];
+
+export function programmaVoor(slug: string): ResetProgramma | null {
+  return RESET_PROGRAMMAS.find((p) => p.slug === slug) ?? null;
 }
 
-/** Vorige/volgende station voor navigatie. */
-export function buurStations(slug: string): {
-  vorige: ResetStation | null;
-  volgende: ResetStation | null;
-} {
-  const i = RESET_STATIONS.findIndex((s) => s.slug === slug);
+export function stationVoor(
+  programmaSlug: string,
+  stationSlug: string,
+): ResetStation | null {
+  const prog = programmaVoor(programmaSlug);
+  return prog?.stations.find((s) => s.slug === stationSlug) ?? null;
+}
+
+export function buurStations(
+  programmaSlug: string,
+  stationSlug: string,
+): { vorige: ResetStation | null; volgende: ResetStation | null } {
+  const prog = programmaVoor(programmaSlug);
+  if (!prog) return { vorige: null, volgende: null };
+  const i = prog.stations.findIndex((s) => s.slug === stationSlug);
   if (i === -1) return { vorige: null, volgende: null };
   return {
-    vorige: i > 0 ? RESET_STATIONS[i - 1] : null,
-    volgende: i < RESET_STATIONS.length - 1 ? RESET_STATIONS[i + 1] : null,
+    vorige: i > 0 ? prog.stations[i - 1] : null,
+    volgende: i < prog.stations.length - 1 ? prog.stations[i + 1] : null,
   };
 }

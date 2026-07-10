@@ -1,21 +1,19 @@
 // File: app/resetcode-preview/page.tsx
 //
-// Founder-preview van de Resetcode-klantomgeving (ontwerp
-// 2026-07-10, spec docs/superpowers/specs/2026-07-10-resetcode-
-// klantomgeving-design.md). Toont de klant-reis als stations;
-// elke fase klikt door naar het scherm zoals de klant het
-// straks op de token-link ziet, inclusief werkende Mentor.
-// Puur preview: geen database-wijzigingen, niets live.
-// Toegang: alleen founders en testers.
+// De Resetcode-klantomgeving, keuze-scherm. Twee LOSSE
+// programma's (feedback Raoul 10 juli): de klant kiest wat hij
+// of zij doet; combinaties lopen via de begeleider. Eigen
+// frisse klant-look, geen zes-stappen-lijn meer.
+// Founder-preview: toegang alleen founders en testers.
 
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { RESET_STATIONS } from "@/lib/resetcode/programma";
+import { RESET_PROGRAMMAS } from "@/lib/resetcode/programma";
 
 export const dynamic = "force-dynamic";
 
-export default async function ResetcodePreviewOverzicht() {
+export default async function ResetcodeKeuze() {
   const supabase = await createClient();
   const {
     data: { user },
@@ -32,70 +30,112 @@ export default async function ResetcodePreviewOverzicht() {
   if (!magKijken) redirect("/dashboard");
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-8 text-cm-white">
-      <div className="mb-8 rounded-lg border border-amber-400/50 bg-amber-400/10 px-4 py-3">
-        <p className="text-amber-300 text-sm font-semibold">
-          🔭 Resetcode-klantomgeving preview, nog niet live
+    <main className="mx-auto max-w-3xl px-4 py-8">
+      {/* Preview-strip (alleen zichtbaar voor founders/testers) */}
+      <div className="mb-8 rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3">
+        <p className="text-amber-800 text-sm font-semibold">
+          🔭 Founder-preview, nog niet live
         </p>
-        <p className="text-cm-muted text-xs mt-1 leading-relaxed">
-          Dit is wat een klant straks ziet op een persoonlijke link, zonder
-          inlog. Members die het programma zelf doen krijgen dezelfde reis in
-          de app. Documenten en video&apos;s zijn nu lege plekken die jij
-          later vult. Er is nog niets aan de database of aan klanten
-          gekoppeld.
+        <p className="text-amber-700/80 text-xs mt-1 leading-relaxed">
+          Dit is de klantomgeving zoals een klant &apos;m straks op een
+          persoonlijke link ziet, zonder inlog. Nieuw in deze ronde: eigen
+          frisse look, twee losse programma&apos;s met een keuze vooraf,
+          praten tegen de Mentor, en de eerste document-graphic (de
+          LOGI-piramide in fase 4).
         </p>
       </div>
 
-      <header className="mb-6">
-        <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
-          Founder-preview · De Resetcode
+      <header className="text-center mb-10">
+        <p
+          className="text-xs font-bold uppercase tracking-[0.25em] mb-3"
+          style={{ color: "#2F7A4D" }}
+        >
+          De Resetcode
         </p>
-        <h1 className="font-serif-warm text-3xl text-cm-white mt-2">
-          Jouw Resetcode-reis
+        <h1 className="font-serif-warm text-4xl text-stone-800">
+          Welkom bij jouw programma
         </h1>
-        <p className="mt-3 text-cm-muted text-sm leading-relaxed">
-          Eerst 16 dagen Darmen in Balans, daarna de Holistic Reset in vier
-          fases. Altijd maar één fase tegelijk in beeld, met de documenten en
-          de Mentor van dat moment erbij.
+        <p className="mt-3 text-stone-500 text-sm leading-relaxed max-w-md mx-auto">
+          Jij en je begeleider hebben samen gekozen wat bij jou past. Kies
+          hieronder jouw programma, dan zie je altijd precies de fase waar
+          je nu bent. Niet meer, niet minder.
         </p>
       </header>
 
-      <div className="space-y-2">
-        {RESET_STATIONS.map((s) => (
+      <div className="grid gap-5 sm:grid-cols-2">
+        {RESET_PROGRAMMAS.map((prog) => (
           <Link
-            key={s.slug}
-            href={`/resetcode-preview/${s.slug}`}
-            className="card block hover:border-cm-gold/50 transition-colors"
+            key={prog.slug}
+            href={`/resetcode-preview/${prog.slug}/${prog.stations[0].slug}`}
+            className="group rounded-3xl bg-white border border-stone-200/70 shadow-sm hover:shadow-md transition-all overflow-hidden"
           >
-            <div className="flex items-baseline justify-between gap-3">
-              <div>
-                <span className="mr-2">{s.emoji}</span>
-                <span className="text-cm-gold/80 text-xs font-semibold mr-2">
-                  Station {s.nummer}
-                </span>
-                <span className="text-cm-white font-medium text-base">
-                  {s.naam}
-                </span>
-              </div>
-              <span className="text-xs text-cm-gold/70 flex-shrink-0">
-                Bekijk als klant →
+            {/* Kleurige kop */}
+            <div
+              className="px-6 pt-8 pb-6 text-center"
+              style={{
+                background: `linear-gradient(135deg, ${prog.kleur.zacht} 0%, white 100%)`,
+              }}
+            >
+              <span className="text-5xl block group-hover:scale-110 transition-transform">
+                {prog.emoji}
               </span>
+              <h2
+                className="font-serif-warm text-2xl mt-3"
+                style={{ color: prog.kleur.diep }}
+              >
+                {prog.naam}
+              </h2>
+              <p
+                className="text-xs font-semibold mt-1"
+                style={{ color: prog.kleur.hoofd }}
+              >
+                {prog.duur}
+              </p>
             </div>
-            <p className="text-cm-muted text-xs mt-1.5">
-              {s.duur} · {s.kern}
-            </p>
+            <div className="px-6 pb-6">
+              <p className="text-sm text-stone-600 leading-relaxed text-center">
+                {prog.payoff}
+              </p>
+              {/* Mini reis-lijn */}
+              <div className="mt-4 flex items-center justify-center gap-1.5">
+                {prog.stations.map((s, i) => (
+                  <span key={s.slug} className="flex items-center gap-1.5">
+                    <span
+                      className="h-2.5 w-2.5 rounded-full"
+                      style={{
+                        backgroundColor:
+                          i === 0 ? prog.kleur.hoofd : prog.kleur.zacht,
+                        border: `1.5px solid ${prog.kleur.hoofd}`,
+                      }}
+                    />
+                    {i < prog.stations.length - 1 && (
+                      <span
+                        className="h-0.5 w-4 rounded"
+                        style={{ backgroundColor: prog.kleur.zacht }}
+                      />
+                    )}
+                  </span>
+                ))}
+              </div>
+              <p className="text-[11px] text-stone-400 text-center mt-1.5">
+                {prog.stations.length} stappen, één tegelijk
+              </p>
+              <div
+                className="mt-4 rounded-full py-2.5 text-center text-sm font-bold text-white"
+                style={{ backgroundColor: prog.kleur.hoofd }}
+              >
+                Dit is mijn programma →
+              </div>
+            </div>
           </Link>
         ))}
       </div>
 
-      <footer className="mt-12 border-t border-cm-border pt-6 text-center text-xs text-cm-muted">
-        <p>
-          Klik elke fase door en praat vooral even met de Mentor (in beide
-          stemmen). Geef daarna in chat je akkoord of aanpassings-richting;
-          de database-stap en het live koppelen komen daarna als aparte,
-          korte akkoord-ronde.
-        </p>
-      </footer>
+      <p className="mt-8 text-center text-xs text-stone-400 leading-relaxed max-w-md mx-auto">
+        Doe je straks allebei de programma&apos;s, of twijfel je wat bij je
+        past? Je begeleider denkt met je mee en zet de juiste route voor je
+        klaar.
+      </p>
     </main>
   );
 }
