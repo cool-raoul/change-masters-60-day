@@ -74,6 +74,10 @@ export async function updateSession(request: NextRequest) {
     // stuurt de middleware de uitgelogde prospect naar /login, waardoor de
     // omgeving-knop in de freebie-mail op een inlogscherm uitkwam.
     "/m/",
+    // Resetcode-klantomgeving via /k/<token>: de Mentor-wereld voor
+    // klanten (darm/reset/dagelijkse basis). Token-gebaseerd, geen login;
+    // de pagina valideert het token zelf via de admin-client.
+    "/k/",
     // Publieke feature-showcase voor ELEVA, om aan team / prospects /
     // partners te laten zien wat er allemaal mogelijk is.
     "/ontdek-eleva",

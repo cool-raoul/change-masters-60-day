@@ -6,6 +6,11 @@ import {
   type ResetMentorRol,
 } from "@/lib/resetcode/mentor-prompt";
 import { stationVoor } from "@/lib/resetcode/programma";
+import { createAdminClient } from "@/lib/supabase/admin";
+import {
+  pakResetKlantContext,
+  bewaarResetChats,
+} from "@/lib/resetcode/klant-links";
 
 // ============================================================
 // POST /api/resetcode-mentor
@@ -42,35 +47,73 @@ export async function POST(req: NextRequest) {
       return new Response("OPENAI_API_KEY niet ingesteld", { status: 500 });
     }
 
-    // Preview-gate: alleen founders en testers.
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return new Response("Niet ingelogd", { status: 401 });
+    const body = await req.json().catch(() => ({}));
 
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role, is_tester, full_name")
-      .eq("id", user.id)
-      .maybeSingle();
-    const p = profile as {
-      role?: string | null;
-      is_tester?: boolean | null;
-      full_name?: string | null;
-    } | null;
-    if (!(p?.role === "founder" || p?.is_tester === true)) {
-      return new Response("Alleen voor founders en testers", { status: 403 });
+    // Twee toegangs-paden:
+    //   1. TOKEN (echte klant op /k/[token]): gesprek wordt opgeslagen.
+    //   2. Ingelogde founder/tester (preview): stateless.
+    const token = (body.token as string | undefined) ?? "";
+    let klantCtx = null as Awaited<ReturnType<typeof pakResetKlantContext>>;
+    let previewNaam = "";
+    let previewBegeleider = "";
+
+    if (token) {
+      klantCtx = await pakResetKlantContext(token);
+      if (!klantCtx || klantCtx.status !== "actief") {
+        return new Response("Ongeldige link", { status: 401 });
+      }
+      // Kosten-vangnet per klant-link (klantbegeleiding loopt maanden,
+      // dus ruimer dan mini-ELEVA's 50).
+      const admin = createAdminClient();
+      const { count } = await admin
+        .from("resetcode_chats")
+        .select("id", { count: "exact", head: true })
+        .eq("link_id", klantCtx.linkId)
+        .eq("van", "mentor")
+        .eq("soort", "tekst");
+      if ((count ?? 0) >= 300) {
+        return new Response(
+          `Je hebt de Mentor al heel veel gevraagd, wat goed! Voor nu even: stel je volgende vragen aan ${klantCtx.memberVoornaam}, die helpt je persoonlijk verder.`,
+          { status: 429 },
+        );
+      }
+    } else {
+      const supabase = await createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return new Response("Niet ingelogd", { status: 401 });
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role, is_tester, full_name")
+        .eq("id", user.id)
+        .maybeSingle();
+      const p = profile as {
+        role?: string | null;
+        is_tester?: boolean | null;
+        full_name?: string | null;
+      } | null;
+      if (!(p?.role === "founder" || p?.is_tester === true)) {
+        return new Response("Alleen voor founders en testers", { status: 403 });
+      }
+      previewNaam = (p?.full_name ?? "").split(" ")[0] || "kanjer";
+      previewBegeleider = previewNaam || "je begeleider";
     }
 
-    const body = await req.json().catch(() => ({}));
     const vraag = (body.vraag as string | undefined)?.trim() ?? "";
-    const programmaSlug = (body.programma as string | undefined) ?? "";
+    const programmaSlug = klantCtx
+      ? klantCtx.programmaSlug
+      : ((body.programma as string | undefined) ?? "");
     const stationSlug = (body.station as string | undefined) ?? "";
-    const rol: ResetMentorRol = body.rol === "member" ? "member" : "klant";
-    const voornaam =
-      (body.voornaam as string | undefined)?.trim() ||
-      (rol === "klant" ? "Marieke" : (p?.full_name ?? "").split(" ")[0] || "kanjer");
+    const rol: ResetMentorRol = klantCtx
+      ? "klant"
+      : body.rol === "member"
+        ? "member"
+        : "klant";
+    const voornaam = klantCtx
+      ? klantCtx.klantVoornaam
+      : (body.voornaam as string | undefined)?.trim() ||
+        (rol === "klant" ? "Marieke" : previewNaam);
 
     // Optionele foto (etiket-check): data-URL van een afbeelding.
     const foto = typeof body.foto === "string" ? (body.foto as string) : null;
@@ -98,13 +141,23 @@ export async function POST(req: NextRequest) {
     const systeemPrompt = bouwResetMentorPrompt({
       rol,
       voornaam,
-      // In de preview is de ingelogde founder de "begeleider" van de
-      // demo-klant; voor de member-stem laten we de sponsor generiek.
-      begeleiderNaam:
-        rol === "klant" ? (p?.full_name ?? "").split(" ")[0] || "je begeleider" : null,
+      begeleiderNaam: klantCtx
+        ? klantCtx.memberVoornaam
+        : rol === "klant"
+          ? previewBegeleider
+          : null,
       programmaSlug,
       stationSlug,
     });
+
+    // Klant-vraag meteen bewaren (ongeacht of de AI-call slaagt).
+    if (klantCtx) {
+      await bewaarResetChats(klantCtx.linkId, [
+        foto
+          ? { van: "klant", soort: "foto", stationSlug, tekst: vraag || "📷 (foto gestuurd)" }
+          : { van: "klant", soort: "tekst", stationSlug, tekst: vraag },
+      ]);
+    }
 
     // Foto's (etiket-checks) altijd naar het zware model: daar hangt
     // een wel/niet-oordeel voor de klant vanaf.
@@ -146,14 +199,29 @@ export async function POST(req: NextRequest) {
     });
 
     const encoder = new TextEncoder();
+    const ctxVoorOpslag = klantCtx;
     const readable = new ReadableStream({
       async start(controller) {
         try {
+          let volledig = "";
           for await (const chunk of stream) {
             const text = chunk.choices[0]?.delta?.content || "";
-            if (text) controller.enqueue(encoder.encode(text));
+            if (text) {
+              volledig += text;
+              controller.enqueue(encoder.encode(text));
+            }
           }
           controller.close();
+          // Mentor-antwoord bewaren voor het meereizende geheugen.
+          if (ctxVoorOpslag && volledig) {
+            try {
+              await bewaarResetChats(ctxVoorOpslag.linkId, [
+                { van: "mentor", soort: "tekst", stationSlug, tekst: volledig },
+              ]);
+            } catch (e) {
+              console.error("resetcode chat opslaan mislukt:", e);
+            }
+          }
         } catch (err) {
           const foutMsg = err instanceof Error ? err.message : "onbekende fout";
           console.error("resetcode-mentor stream-fout:", foutMsg);

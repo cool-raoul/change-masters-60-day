@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import { createClient } from "@/lib/supabase/server";
+import { pakResetKlantContext } from "@/lib/resetcode/klant-links";
 
 export const maxDuration = 30;
 
@@ -24,22 +25,29 @@ export async function POST(request: Request) {
       );
     }
 
+    const formData = await request.formData();
+    const audio = formData.get("audio");
+    const taalRaw = formData.get("taal");
+    const taal = typeof taalRaw === "string" ? taalRaw : "nl";
+
+    // Auth: ingelogde gebruiker, OF een geldige Resetcode-klant-link
+    // (klanten hebben geen account; hun token is de sleutel).
     const supabase = await createClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return new Response(JSON.stringify({ fout: "Niet ingelogd" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
+      const tokenRaw = formData.get("resetToken");
+      const token = typeof tokenRaw === "string" ? tokenRaw : "";
+      const klantCtx = token ? await pakResetKlantContext(token) : null;
+      if (!klantCtx || klantCtx.status !== "actief") {
+        return new Response(JSON.stringify({ fout: "Niet ingelogd" }), {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
     }
-
-    const formData = await request.formData();
-    const audio = formData.get("audio");
-    const taalRaw = formData.get("taal");
-    const taal = typeof taalRaw === "string" ? taalRaw : "nl";
 
     if (!(audio instanceof Blob)) {
       return new Response(

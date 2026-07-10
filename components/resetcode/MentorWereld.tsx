@@ -22,6 +22,7 @@ import {
   type ResetProgramma,
   type ResetStation,
 } from "@/lib/resetcode/programma";
+import { waLinkNaar } from "@/lib/util/wa-nummer";
 
 type Kaart =
   | "regels"
@@ -53,9 +54,23 @@ const LOGI_LAGEN = [
 
 export default function MentorWereld({
   begeleiderNaam,
+  token,
+  klantVoornaam,
+  programmaSlugVast,
+  stationSlugStart,
+  beginItems,
+  memberTelefoon,
 }: {
   begeleiderNaam: string;
+  /** Klant-modus: token van de klant-link; het gesprek wordt dan op de server bewaard. */
+  token?: string;
+  klantVoornaam?: string;
+  programmaSlugVast?: string;
+  stationSlugStart?: string | null;
+  beginItems?: ChatItem[];
+  memberTelefoon?: string | null;
 }) {
+  const isKlant = Boolean(token);
   const [rol, setRol] = useState<"klant" | "member">("klant");
   const [programma, setProgramma] = useState<ResetProgramma | null>(null);
   const [station, setStation] = useState<ResetStation | null>(null);
@@ -96,10 +111,30 @@ export default function MentorWereld({
     }
   }, [items, mentorTypt]);
 
+  // Klant-modus: gescripte items (welkom, kaartjes, echo's) naar de
+  // server zodat het geheugen over apparaten meereist. Fire-and-forget.
+  function logNaarServer(
+    nieuwe: {
+      van: "klant" | "mentor";
+      soort: "tekst" | "kaart" | "foto";
+      kaart?: string;
+      stationSlug?: string | null;
+      tekst?: string;
+    }[],
+  ) {
+    if (!token) return;
+    fetch("/api/resetcode/log", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token, items: nieuwe }),
+    }).catch(() => {});
+  }
+
   // Geheugen: gesprek + plek bewaren op dit toestel (foto-data niet,
   // die is te groot voor localStorage; er blijft een tekst-spoor).
+  // In klant-modus niet nodig: daar is de server het geheugen.
   useEffect(() => {
-    if (!gestart.current) return;
+    if (!gestart.current || isKlant) return;
     try {
       const opTeSlaan = {
         rol,
@@ -121,6 +156,48 @@ export default function MentorWereld({
   useEffect(() => {
     if (gestart.current) return;
     gestart.current = true;
+
+    // Klant-modus: alles komt van de server (via de pagina-props).
+    if (isKlant && programmaSlugVast) {
+      const prog = programmaVoor(programmaSlugVast);
+      if (!prog) return;
+      setProgramma(prog);
+      const st = stationSlugStart
+        ? stationVoor(prog.slug, stationSlugStart)
+        : null;
+      if (st && beginItems && beginItems.length > 0) {
+        setStation(st);
+        setItems([
+          ...beginItems,
+          {
+            van: "mentor",
+            soort: "tekst",
+            tekst: `Welkom terug! 👋 We waren bij ${st.emoji} ${st.naam}. Waar wil je verder mee? Stel je vraag, stuur een foto van een etiket, of zeg "verder" voor de volgende stap.`,
+          },
+        ]);
+      } else {
+        // Allereerste bezoek: warm welkom + eerste stap.
+        (async () => {
+          await mentorZegt(
+            `Hé ${klantVoornaam ?? ""}, welkom! 🌿 Ik ben je Mentor. Ik ken jouw hele programma van begin tot eind en ik ben er dag en nacht, samen met ${begeleiderNaam}. Praat gewoon tegen me of typ, wat jij fijn vindt.`,
+            1100,
+          );
+          await wacht(600);
+          await introStation(prog, prog.stations[0]);
+          fetch("/api/resetcode/stap", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token, station: prog.stations[0].slug }),
+          }).catch(() => {});
+          await mentorZegt(
+            "Tip: zet deze pagina even op je beginscherm (via delen ▸ zet op beginscherm), dan sta ik altijd tussen je apps. Ik onthoud alles wat we bespreken. 💚",
+            1200,
+          );
+        })();
+      }
+      return;
+    }
+
     try {
       const ruw = localStorage.getItem(OPSLAG_SLEUTEL);
       if (ruw) {
@@ -190,6 +267,7 @@ export default function MentorWereld({
     await wacht(denkMs);
     setMentorTypt(false);
     setItems((b) => [...b, { van: "mentor", soort: "tekst", tekst }]);
+    logNaarServer([{ van: "mentor", soort: "tekst", tekst }]);
   }
 
   async function mentorKaart(kaart: Kaart, stationSlug: string, denkMs = 700) {
@@ -197,6 +275,7 @@ export default function MentorWereld({
     await wacht(denkMs);
     setMentorTypt(false);
     setItems((b) => [...b, { van: "mentor", soort: "kaart", kaart, stationSlug }]);
+    logNaarServer([{ van: "mentor", soort: "kaart", kaart, stationSlug }]);
   }
 
   async function introStation(prog: ResetProgramma, st: ResetStation) {
@@ -235,14 +314,16 @@ export default function MentorWereld({
     if (!programma) return;
     const nieuw = stationVoor(programma.slug, slug);
     if (!nieuw || nieuw.slug === station?.slug) return;
-    setItems((b) => [
-      ...b,
-      {
-        van: "ik",
-        soort: "tekst",
-        tekst: viaMenu ? `Ik wil naar ${nieuw.naam}` : "Verder!",
-      },
-    ]);
+    const echo = viaMenu ? `Ik wil naar ${nieuw.naam}` : "Verder!";
+    setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: echo }]);
+    logNaarServer([{ van: "klant", soort: "tekst", tekst: echo }]);
+    if (token) {
+      fetch("/api/resetcode/stap", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, station: nieuw.slug }),
+      }).catch(() => {});
+    }
     await introStation(programma, nieuw);
   }
 
@@ -251,14 +332,24 @@ export default function MentorWereld({
   async function lokaleIntent(vraag: string): Promise<boolean> {
     if (!programma || !station) return false;
     const t = vraag.toLowerCase();
-    const zeg = () =>
+    const zeg = () => {
       setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: vraag }]);
+      logNaarServer([{ van: "klant", soort: "tekst", tekst: vraag }]);
+    };
 
     if (/\b(verder|volgende( stap| fase)?|door naar de volgende|ik ben klaar met deze)\b/.test(t)) {
       const i = programma.stations.findIndex((s) => s.slug === station.slug);
       if (i < programma.stations.length - 1) {
-        setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: vraag }]);
-        await introStation(programma, programma.stations[i + 1]);
+        zeg();
+        const volgend = programma.stations[i + 1];
+        if (token) {
+          fetch("/api/resetcode/stap", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token, station: volgend.slug }),
+          }).catch(() => {});
+        }
+        await introStation(programma, volgend);
       } else {
         zeg();
         await mentorZegt("Je bent bij de laatste stap van je programma! 🎉", 800);
@@ -337,6 +428,7 @@ export default function MentorWereld({
           const fd = new FormData();
           fd.append("audio", blob);
           fd.append("taal", "nl");
+          if (token) fd.append("resetToken", token);
           const res = await fetch("/api/voice-transcribe", {
             method: "POST",
             body: fd,
@@ -419,9 +511,11 @@ export default function MentorWereld({
         body: JSON.stringify({
           vraag,
           foto: foto ?? undefined,
+          token: token ?? undefined,
+          voornaam: klantVoornaam ?? undefined,
           programma: programma.slug,
           station: station.slug,
-          rol,
+          rol: isKlant ? "klant" : rol,
           geschiedenis: historie,
         }),
       });
@@ -566,13 +660,29 @@ export default function MentorWereld({
           <div className={kader}>
             {kop("🤝", `Samen met ${begeleiderNaam}`)}
             <p className="text-[14px] text-white/85 leading-relaxed">{st.contactMoment}</p>
-            <button
-              className="mt-2.5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-bold text-white opacity-60 cursor-not-allowed"
-              style={{ backgroundColor: "#25D366" }}
-              title="Werkt straks: opent WhatsApp naar de begeleider"
-            >
-              📱 App {begeleiderNaam} <span className="text-[10px] font-normal">(straks)</span>
-            </button>
+            {isKlant && memberTelefoon ? (
+              <a
+                href={waLinkNaar(
+                  memberTelefoon,
+                  `Hoi ${begeleiderNaam}! Ik zit bij ${st.emoji} ${st.naam} in mijn programma. `,
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2.5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-bold text-white hover:opacity-90"
+                style={{ backgroundColor: "#25D366" }}
+              >
+                📱 App {begeleiderNaam}
+              </a>
+            ) : (
+              <button
+                className="mt-2.5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-bold text-white opacity-60 cursor-not-allowed"
+                style={{ backgroundColor: "#25D366" }}
+                title="Opent WhatsApp naar de begeleider (werkt op de echte klant-link)"
+              >
+                📱 App {begeleiderNaam}{" "}
+                <span className="text-[10px] font-normal">(op de klant-link)</span>
+              </button>
+            )}
           </div>
         );
       case "logi":
@@ -663,19 +773,21 @@ export default function MentorWereld({
                 {s.emoji} {s.naam}
               </button>
             ))}
-            <button
-              onClick={() => {
-                setToonReis(false);
-                try {
-                  localStorage.removeItem(OPSLAG_SLEUTEL);
-                } catch {}
-                gestart.current = true;
-                versBeginnen();
-              }}
-              className="rounded-full px-3 py-1.5 text-[12px] font-semibold bg-rose-500/20 text-rose-300 hover:bg-rose-500/30"
-            >
-              ↺ opnieuw beginnen
-            </button>
+            {!isKlant && (
+              <button
+                onClick={() => {
+                  setToonReis(false);
+                  try {
+                    localStorage.removeItem(OPSLAG_SLEUTEL);
+                  } catch {}
+                  gestart.current = true;
+                  versBeginnen();
+                }}
+                className="rounded-full px-3 py-1.5 text-[12px] font-semibold bg-rose-500/20 text-rose-300 hover:bg-rose-500/30"
+              >
+                ↺ opnieuw beginnen
+              </button>
+            )}
           </div>
         </div>
       )}
