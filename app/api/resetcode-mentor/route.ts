@@ -72,7 +72,15 @@ export async function POST(req: NextRequest) {
       (body.voornaam as string | undefined)?.trim() ||
       (rol === "klant" ? "Marieke" : (p?.full_name ?? "").split(" ")[0] || "kanjer");
 
-    if (!vraag) return new Response("vraag is vereist", { status: 400 });
+    // Optionele foto (etiket-check): data-URL van een afbeelding.
+    const foto = typeof body.foto === "string" ? (body.foto as string) : null;
+    if (foto && (!foto.startsWith("data:image/") || foto.length > 6_000_000)) {
+      return new Response("ongeldige of te grote foto", { status: 400 });
+    }
+
+    if (!vraag && !foto) {
+      return new Response("vraag of foto is vereist", { status: 400 });
+    }
     if (vraag.length > 2000) {
       return new Response("vraag te lang (max 2000 tekens)", { status: 400 });
     }
@@ -98,14 +106,13 @@ export async function POST(req: NextRequest) {
       stationSlug,
     });
 
-    const zwaarModel = vraag.length > ZWAAR_MODEL_DREMPEL_TEKENS;
+    // Foto's (etiket-checks) altijd naar het zware model: daar hangt
+    // een wel/niet-oordeel voor de klant vanaf.
+    const zwaarModel = Boolean(foto) || vraag.length > ZWAAR_MODEL_DREMPEL_TEKENS;
     const model = zwaarModel ? "gpt-4o" : "gpt-4o-mini";
     const maxTokens = zwaarModel ? 1000 : 600;
 
-    const apiMessages: {
-      role: "system" | "user" | "assistant";
-      content: string;
-    }[] = [
+    const apiMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
       { role: "system", content: systeemPrompt },
       ...geschiedenis.map((b) => ({
         role: (b.rol === "gebruiker" ? "user" : "assistant") as
@@ -113,7 +120,20 @@ export async function POST(req: NextRequest) {
           | "assistant",
         content: b.tekst,
       })),
-      { role: "user", content: vraag },
+      foto
+        ? {
+            role: "user" as const,
+            content: [
+              {
+                type: "text" as const,
+                text:
+                  vraag ||
+                  "Ik sta in de supermarkt en stuur je een foto van dit product. Kijk je even mee of dit past in mijn programma en fase?",
+              },
+              { type: "image_url" as const, image_url: { url: foto } },
+            ],
+          }
+        : { role: "user" as const, content: vraag },
     ];
 
     const openai = new OpenAI({ apiKey });

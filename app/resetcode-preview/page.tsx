@@ -36,9 +36,12 @@ export default async function ResetcodePreviewPagina() {
   const begeleider = (p?.full_name ?? "").split(" ")[0] || "je begeleider";
 
   return (
-    <div className="relative mx-auto" style={{ maxWidth: 560 }}>
-      {/* Smalle preview-strip, alleen zichtbaar voor founders/testers */}
-      <div className="absolute top-1 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 rounded-full bg-amber-400/95 px-3 py-1 shadow">
+    <div
+      className="mx-auto flex flex-col"
+      style={{ maxWidth: 560, height: "100dvh" }}
+    >
+      {/* Smalle preview-balk boven de app, alleen voor founders/testers */}
+      <div className="flex items-center justify-center gap-3 bg-amber-400/90 px-3 py-1 flex-shrink-0">
         <span className="text-[10px] font-bold text-amber-950">🔭 preview</span>
         <Link
           href="/resetcode-preview/brainstorm"
@@ -47,7 +50,9 @@ export default async function ResetcodePreviewPagina() {
           andere richtingen
         </Link>
       </div>
-      <MentorWereld begeleiderNaam={begeleider} />
+      <div className="flex-1 min-h-0">
+        <MentorWereld begeleiderNaam={begeleider} />
+      </div>
     </div>
   );
 }
