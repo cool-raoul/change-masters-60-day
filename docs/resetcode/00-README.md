@@ -25,6 +25,21 @@ Raoul's eigen framing bij het plakken (verbatim):
 | `07-fase-4-logisch-leven.md` | Fase 4 — Logisch Leven (80/20, koolhydraten stap voor stap, mini-challenge, basis-onderhoud €2,30-3/dag) |
 | `08-support-teksten.md` | WC-tips + lijst met suikernamen + "the woosh"-motivatietekst |
 
+## Video-transcripties
+
+Op 10 juli 2026 plakte Raoul de eerste vier video-transcripties in de chat (tijdstempel-artefacten verwijderd, gesproken tekst verbatim):
+
+| Bestand | Inhoud |
+|---|---|
+| `09-transcript-darmen-opstart-deel-1.md` | Uitlegvideo Darmprogramma opstart, deel 1 |
+| `10-transcript-tips-en-tricks.md` | Uitlegvideo tips en tricks bij de Darmkuur |
+| `11-transcript-dag-10.md` | Uitlegvideo dag 10 (kantelpunt) |
+| `12-transcript-holistic-reset-twee-vragen-ONVOLLEDIG.md` | Uitlegvideo Holistic Reset "twee belangrijke vragen" — ONVOLLEDIG: afgebroken door de lengtelimiet van het chatbericht, eindigt mid-zin; de rest wordt nog aangeleverd |
+
+Raoul's instructie bij de transcripties (verbatim):
+
+> "Wat er in de filmpjes soms besproken wordt, is de 2.0-variant of de 3.0-variant. De 2.0-variant kan je doen alsof die niet bestaat. We hebben het hier over de 3.0-variant van de Holistic Reset."
+
 ## Apart aangeleverd als PDF in chat (niet in repo)
 
 Deze documenten heeft Raoul als losse PDF's in de chat geüpload; ze staan niet in deze map:
@@ -43,6 +58,6 @@ Deze documenten heeft Raoul als losse PDF's in de chat geüpload; ze staan niet 
 
 ## Ontbreekt in extract / kanttekeningen
 
-- Video-transcripties (intro/opstart, tips & tricks, dag 10, fase 1 t/m 4): Raoul heeft ze nog niet kunnen aanleveren ("nog even te veel werk").
+- Video-transcripties fase 1 t/m 4 ontbreken nog; de transcripten van opstart deel 1, tips & tricks en dag 10 zijn binnen (bestanden 09-11), plus het begin van de "twee belangrijke vragen"-video (bestand 12, afgebroken — de rest wordt nog aangeleverd).
 - "The woosh"-tekst eindigt in de chat op "....": mogelijk is de brontekst langer dan wat geplakt is.
 - Het programmaboekje (rode/blauwe innameschema), resetboekje, meet- en weegschema, benodigdheden/boodschappenlijstje en 21-dagen-schema worden in de teksten genoemd maar zijn zelf niet als tekst geplakt (deels wel als PDF geüpload, zie lijst hierboven).
