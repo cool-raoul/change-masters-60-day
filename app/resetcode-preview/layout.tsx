@@ -1,9 +1,8 @@
 // File: app/resetcode-preview/layout.tsx
 //
-// Layout-wrapper voor de Resetcode-klantomgeving: bewust een
-// EIGEN frisse, lichte look (crème + programma-kleuren), los
-// van de donkere member-app. Feedback Raoul 10 juli: de
-// klantomgeving mag hipper en out-of-the-box.
+// Layout-wrapper voor de Mentor-wereld (richting D): diepe
+// warme groentint, de chat vult het scherm. De brainstorm-
+// pagina zet zijn eigen lichte achtergrond.
 
 export default function ResetcodePreviewLayout({
   children,
@@ -11,10 +10,7 @@ export default function ResetcodePreviewLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div
-      className="min-h-screen text-stone-800"
-      style={{ backgroundColor: "#FAF6EF" }}
-    >
+    <div className="min-h-screen" style={{ backgroundColor: "#0A1512" }}>
       {children}
     </div>
   );

@@ -29,7 +29,10 @@ export default async function ResetcodeBrainstorm() {
   if (!(p?.role === "founder" || p?.is_tester === true)) redirect("/dashboard");
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-8">
+    <main
+      className="mx-auto max-w-6xl px-4 py-8 min-h-screen"
+      style={{ backgroundColor: "#FAF6EF" }}
+    >
       <style>{`
         @keyframes zweef { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-8px) } }
         @keyframes wieg { 0%,100% { transform: rotate(-3deg) } 50% { transform: rotate(3deg) } }
