@@ -27,14 +27,18 @@ Raoul's eigen framing bij het plakken (verbatim):
 
 ## Video-transcripties
 
-Op 10 juli 2026 plakte Raoul de eerste vier video-transcripties in de chat (tijdstempel-artefacten verwijderd, gesproken tekst verbatim):
+Op 10 juli 2026 plakte Raoul de video-transcripties in de chat (tijdstempel-artefacten verwijderd, gesproken tekst verbatim):
 
 | Bestand | Inhoud |
 |---|---|
 | `09-transcript-darmen-opstart-deel-1.md` | Uitlegvideo Darmprogramma opstart, deel 1 |
 | `10-transcript-tips-en-tricks.md` | Uitlegvideo tips en tricks bij de Darmkuur |
 | `11-transcript-dag-10.md` | Uitlegvideo dag 10 (kantelpunt) |
-| `12-transcript-holistic-reset-twee-vragen-ONVOLLEDIG.md` | Uitlegvideo Holistic Reset "twee belangrijke vragen" — ONVOLLEDIG: afgebroken door de lengtelimiet van het chatbericht, eindigt mid-zin; de rest wordt nog aangeleverd |
+| `12-transcript-holistic-reset-twee-vragen.md` | Uitlegvideo Holistic Reset "twee belangrijke vragen" (voorbereiding), compleet |
+| `13-transcript-fase-1-laaddagen.md` | Uitlegvideo fase 1, de laaddagen |
+| `14-transcript-fase-2-vetverbranding.md` | Uitlegvideo fase 2, vetverbranding (begint mid-woord "citeerd", zo aangeleverd) |
+| `15-transcript-fase-3-stabilisatie.md` | Uitlegvideo fase 3, stabilisatie |
+| `16-transcript-fase-4-logisch-leven.md` | Uitlegvideo fase 4, Logisch Leven — eindigt mid-zin ("Wil je dat niet? Ook helemaal"), staartje wordt nog aangeleverd |
 
 Raoul's instructie bij de transcripties (verbatim):
 
@@ -58,6 +62,6 @@ Deze documenten heeft Raoul als losse PDF's in de chat geüpload; ze staan niet 
 
 ## Ontbreekt in extract / kanttekeningen
 
-- Video-transcripties fase 1 t/m 4 ontbreken nog; de transcripten van opstart deel 1, tips & tricks en dag 10 zijn binnen (bestanden 09-11), plus het begin van de "twee belangrijke vragen"-video (bestand 12, afgebroken — de rest wordt nog aangeleverd).
+- Alle acht video-transcripties zijn binnen (bestanden 09-16). Alleen het staartje van de fase 4-video ontbreekt nog (bestand 16 eindigt mid-zin); Raoul levert dat nog aan. Fase 2-transcript begint mid-woord ("citeerd", vermoedelijk "Gefeliciteerd"), zo aangeleverd.
 - "The woosh"-tekst eindigt in de chat op "....": mogelijk is de brontekst langer dan wat geplakt is.
 - Het programmaboekje (rode/blauwe innameschema), resetboekje, meet- en weegschema, benodigdheden/boodschappenlijstje en 21-dagen-schema worden in de teksten genoemd maar zijn zelf niet als tekst geplakt (deels wel als PDF geüpload, zie lijst hierboven).

@@ -1,8 +1,6 @@
-# Transcript: Holistic Reset, twee belangrijke vragen (ONVOLLEDIG)
+# Transcript: Holistic Reset, de twee belangrijke vragen (voorbereiding)
 
-Transcript uitlegvideo, aangeleverd in chat 10 juli 2026; tijdstempels verwijderd, tekst verbatim.
-
-> LET OP: dit transcript is AFGEBROKEN door de lengtelimiet van het chatbericht. Het begint mid-video en eindigt mid-zin. De rest van dit transcript wordt nog aangeleverd.
+> Transcript uitlegvideo, aangeleverd in chat 10 juli 2026 (complete tweede aanlevering); tijdstempels verwijderd, tekst verbatim. Betreft de 3.0-variant van de Holistic Reset.
 
 twee belangrijke vragen. En de eerste vraag is super simpel, maar echt belangrijk voor je. Is wil je een optimale gezondheid?
 Nou, wat bedoel je daar precies mee?
@@ -67,4 +65,14 @@ Die leefstijl die je daadwerkelijk voor ogen hebt.
 Ja, want met de keur ga je natuurlijk een enorme zwengel geven aan die gezondheid. En het z maanden traject is ervoor bedoeld dat je dus die leefstijl
 ook daadwerkelijk verandert. En hoe en wat, dat gaan we nog allemaal precies vertellen. Eh vaak we zitten in een grote community, iedereen laat wel eens
 een keer een steekje vallen, hè. En het is ook niet dat we super streng zijn, maar op de lange termijn ga jij en wil
-jij jouw leefstijl veranderen. Dat is wel belangrijk om daa
+jij jouw leefstijl veranderen. Dat is wel belangrijk om daar even bij stil te staan.
+Dus ja, ben je bereid? Let's go. Dan nog een praktisch stukje over de 6 maanden.
+Wat belangrijk is in de 6 maanden. Als het goed is heb je dat al gehoord.
+Misschien niet. Soms blijft het niet hangen. Maar het is een zes maanden traject waarvan de eerste twee maanden hè je krijgt maandproducten, je krijgt
+maandelijks de producten toegestuurd. De eerste twee maanden zijn de pakketten wat groter in omvang, hè, wat meer producten die je nodig hebt. En de
+derde, 4 en 5de en 6de maand kan volstaan met een kleiner.
+Dus ook het commitment financieel is in de eerste twee maanden meer en in de laatste onderhoudfase eh minder.
+Maar neem ook het commitment hè van oké, ik doe dit 6 maanden. Voor wie doe je dit? Voor jezelf. Yes. Dus eh dat wilde jullie nog even meegeven.
+Nou, wij hebben er zin in. Wij gaan in de volgende video je meenemen in de eerste fase stap voor stap, want nu gaan we echt aan naar het praktische stuk. En
+eh we hopen dat je met deze voorbereiding al lekker helemaal in de goede setting bent gekomen om te gaan beginnen.
+Absoluut. Nou, dus we zien je graag in de volgende
