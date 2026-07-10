@@ -1,6 +1,8 @@
 # Transcript: Holistic Reset fase 4, Logisch Leven (21 dagen + tot maand 6)
 
-> Transcript uitlegvideo, aangeleverd in chat 10 juli 2026; tijdstempels verwijderd, tekst verbatim. Eindigt mogelijk mid-zin ('Wil je dat niet? Ook helemaal'), zo aangeleverd. Betreft de 3.0-variant van de Holistic Reset (2.0 negeren, instructie Raoul).
+> Transcript uitlegvideo, aangeleverd in chat 10 juli 2026; tijdstempels verwijderd, tekst verbatim. Slotzin door Raoul bevestigd. Betreft de 3.0-variant van de Holistic Reset (2.0 negeren, instructie Raoul).
+>
+> LET OP, correctie van Raoul (10 juli 2026, verbatim): "Er wordt bijvoorbeeld in de films gezegd: 'Je gaat elke dag 1 koolhydraat testen.' Dat is niet de bedoeling in fase 4. Dat wordt wel in het filmpje gezegd, maar dat is een beetje verkeerd uitgelegd. Dus eigenlijk, je gaat toevoegen waar je trek in hebt aan koolhydraten, maar je houdt je nog steeds aan de 80/20-regel. Als je geen trek hebt in koolhydraten, is dat ook prima."
 
 Dus welkom bij fase 4.
 Hele belangrijke fase. Super belangrijke fase. Omdat dit is wel de aller aller allerbelangrijkste fase van dit programma. Het bestaat uit twee delen.
@@ -98,4 +100,4 @@ Die weet ook precies hoe je dat kan doen.
 Het is ook nog eens leuk. Je helpt iemand anders en daar doe je iemand anders goed mee. Maar het kan ook zo zijn dat je je producten gratis kan krijgen door simpelweg iemand anders blij te
 maken met een goede gezondheid. Nou, zoveel mogelijkheden, zoveel dingen die je kunt doen.
 En dat allemaal vanuit de filosofie. We kunnen niet iedereen helpen, maar iedereen kan één persoon helpen. Als je dat wilt, ga even terug naar de persoon
-die je over uitgenodigd. Wil je dat niet? Ook helemaal
+die je over uitgenodigd. Wil je dat niet? Ook helemaal prima.

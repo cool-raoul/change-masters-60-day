@@ -38,7 +38,7 @@ Op 10 juli 2026 plakte Raoul de video-transcripties in de chat (tijdstempel-arte
 | `13-transcript-fase-1-laaddagen.md` | Uitlegvideo fase 1, de laaddagen |
 | `14-transcript-fase-2-vetverbranding.md` | Uitlegvideo fase 2, vetverbranding (begint mid-woord "citeerd", zo aangeleverd) |
 | `15-transcript-fase-3-stabilisatie.md` | Uitlegvideo fase 3, stabilisatie |
-| `16-transcript-fase-4-logisch-leven.md` | Uitlegvideo fase 4, Logisch Leven — eindigt mid-zin ("Wil je dat niet? Ook helemaal"), staartje wordt nog aangeleverd |
+| `16-transcript-fase-4-logisch-leven.md` | Uitlegvideo fase 4, Logisch Leven (slotzin door Raoul bevestigd; bevat bovenaan zijn correctie op het "elke dag 1 koolhydraat testen"-stuk) |
 
 Raoul's instructie bij de transcripties (verbatim):
 
@@ -62,6 +62,7 @@ Deze documenten heeft Raoul als losse PDF's in de chat geüpload; ze staan niet 
 
 ## Ontbreekt in extract / kanttekeningen
 
-- Alle acht video-transcripties zijn binnen (bestanden 09-16). Alleen het staartje van de fase 4-video ontbreekt nog (bestand 16 eindigt mid-zin); Raoul levert dat nog aan. Fase 2-transcript begint mid-woord ("citeerd", vermoedelijk "Gefeliciteerd"), zo aangeleverd.
-- "The woosh"-tekst eindigt in de chat op "....": mogelijk is de brontekst langer dan wat geplakt is.
+- Alle acht video-transcripties zijn compleet binnen (bestanden 09-16). Fase 2-transcript begint mid-woord ("citeerd", vermoedelijk "Gefeliciteerd"), zo aangeleverd.
+- "The woosh"-tekst is compleet, bevestigd door Raoul ("het woosh-effect heb je voldoende").
+- LET OP bij verwerken: films en documenten spreken elkaar op details tegen. Raoul (verbatim): "Een aantal dingen die tegenstrijdig zijn vanuit de filmpjes en vanuit de overige bestanden, moet je even eruit filteren." Bekend voorbeeld: fase 4 "elke dag 1 koolhydraat testen" uit de video klopt niet; correct is toevoegen waar je trek in hebt binnen de 80/20-regel (correctie staat in bestand 16). Twijfelgevallen per stuk aan Raoul voorleggen.
 - Het programmaboekje (rode/blauwe innameschema), resetboekje, meet- en weegschema, benodigdheden/boodschappenlijstje en 21-dagen-schema worden in de teksten genoemd maar zijn zelf niet als tekst geplakt (deels wel als PDF geüpload, zie lijst hierboven).
