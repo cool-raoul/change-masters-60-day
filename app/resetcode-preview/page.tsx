@@ -38,11 +38,15 @@ export default async function ResetcodeKeuze() {
         </p>
         <p className="text-amber-700/80 text-xs mt-1 leading-relaxed">
           Dit is de klantomgeving zoals een klant &apos;m straks op een
-          persoonlijke link ziet, zonder inlog. Nieuw in deze ronde: eigen
-          frisse look, twee losse programma&apos;s met een keuze vooraf,
-          praten tegen de Mentor, en de eerste document-graphic (de
-          LOGI-piramide in fase 4).
+          persoonlijke link ziet, zonder inlog. De look hieronder is de
+          eerste, brave versie.
         </p>
+        <Link
+          href="/resetcode-preview/brainstorm"
+          className="mt-2 inline-block rounded-full bg-amber-500 text-white text-xs font-bold px-4 py-2 hover:bg-amber-600"
+        >
+          🎨 Bekijk de 5 out-of-the-box design-richtingen →
+        </Link>
       </div>
 
       <header className="text-center mb-10">
