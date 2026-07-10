@@ -42,7 +42,7 @@ export type ResetStation = {
 };
 
 export type ResetProgramma = {
-  slug: "darm" | "reset";
+  slug: "darm" | "reset" | "producten";
   naam: string;
   emoji: string;
   /** Korte payoff op de keuze-kaart. */
@@ -504,6 +504,171 @@ const RESET_STATIONS_INTERN: ResetStation[] = [
   },
 ];
 
+// ---------- Dagelijkse basis (gewoon producten gebruiken) ----------
+// Derde spoor (Raoul 10 juli): klanten die geen kuur doen maar de
+// producten dagelijks gebruiken. Tijdlijn volgt de pulse-momenten
+// (dag 0/5/14/28/56) inclusief de groei-lijn van productgebruiker
+// naar webshophouder.
+
+const PRODUCTEN_STATIONS: ResetStation[] = [
+  {
+    slug: "start",
+    nummer: 1,
+    naam: "Jouw start",
+    emoji: "📦",
+    duur: "de eerste dagen",
+    kern: "Rustig beginnen en je producten leren kennen.",
+    welkom:
+      "Welkom! Jij gaat aan de slag met je dagelijkse producten. Geen fases, geen regels-lijstjes: gewoon een goed ritme opbouwen. Ik ken elk product en help je met alles eromheen.",
+    vandaagBelangrijk: [
+      "Bewaar deze pagina en laat je begeleider even weten wanneer je pakket binnen is.",
+      "Begin rustig: bouw de eerste dagen op naar de dosering op de verpakking, dan kan je lichaam wennen.",
+      "Koppel je producten aan een vast moment, bijvoorbeeld bij je ontbijt. Vaste momenten maken het makkelijk om vol te houden.",
+      "Geef het de tijd: de basis is bedoeld als dagelijkse routine voor minimaal 6 tot 12 maanden, zoals in het materiaal staat.",
+    ],
+    welLijst: [],
+    nietLijst: [],
+    tips: [
+      "Valt een product zwaar (bijvoorbeeld de Daily BioBasics)? Verlaag de dosering even en bouw rustig weer op.",
+      "De Daily BioBasics kun je heerlijk maken: koud water, even goed schudden, of verwerk 'm in een smoothie. Er is een heel shake-receptenboekje.",
+      "Drink er lekker een groot glas water bij, dat maakt het compleet.",
+    ],
+    veelgesteld: [
+      {
+        vraag: "Hoe lang doe ik met een pot?",
+        antwoord:
+          "Vuistregel uit het materiaal: deel de inhoud van de pot door 30, dan weet je je dagdosering en gaat elke pot ongeveer een maand mee.",
+      },
+      {
+        vraag: "Moet ik alles tegelijk innemen?",
+        antwoord:
+          "Dat hoeft niet. Verdeel het gerust over de dag, bijvoorbeeld ochtend en avond. Kies wat jij vol kunt houden, dat is belangrijker dan het perfecte moment.",
+      },
+    ],
+    contactMoment:
+      "Laat je begeleider weten wanneer je pakket binnen is en hoe de eerste dagen voelen.",
+    documenten: [
+      {
+        titel: "Uitleg per product",
+        omschrijving: "Wat elk product is en hoe je het gebruikt.",
+      },
+      {
+        titel: "Shake- en smoothie-recepten",
+        omschrijving: "Om je Daily BioBasics lekker te maken.",
+      },
+    ],
+    videoSlots: ["Zo gebruik je je basisproducten"],
+  },
+  {
+    slug: "eerste-weken",
+    nummer: 2,
+    naam: "De eerste weken",
+    emoji: "🌱",
+    duur: "week 1 en 2",
+    kern: "Je ritme wordt gewoonte.",
+    welkom:
+      "Je bent begonnen, mooi! De eerste weken draaien om één ding: je ritme vasthouden. Wat je merkt verschilt per persoon en per moment, dus vergelijk jezelf vooral niet met anderen.",
+    vandaagBelangrijk: [
+      "Houd je vaste momenten aan, ook op drukke dagen. Halve routine is beter dan geen routine.",
+      "Merk je iets op (goed of onwennig)? Schrijf het even op, dat is goud voor je gesprek met je begeleider.",
+    ],
+    welLijst: [],
+    nietLijst: [],
+    tips: [
+      "Zet je producten op een plek waar je ze ziet, naast de waterkoker doet wonderen.",
+      "Neem je producten mee in een klein doosje als je weg bent, dan sla je geen dag over.",
+    ],
+    veelgesteld: [
+      {
+        vraag: "Ik vergeet het steeds, heb je een trucje?",
+        antwoord:
+          "Plak je routine aan iets wat je al doet: eerst koffie zetten, dan producten. En zet ze in het zicht. Na een week of drie hoef je er niet meer over na te denken.",
+      },
+      {
+        vraag: "Ik merk nog niks, klopt dat wel?",
+        antwoord:
+          "Dat kan helemaal, ieder lichaam heeft z'n eigen tempo en het materiaal rekent met maanden, niet met dagen. Houd je ritme vast en bespreek het gerust even met je begeleider bij jullie contactmoment.",
+      },
+    ],
+    contactMoment:
+      "Rond twee weken: deel je eerste ervaringen even met je begeleider.",
+    documenten: [],
+    videoSlots: [],
+  },
+  {
+    slug: "ritme",
+    nummer: 3,
+    naam: "Jouw ritme",
+    emoji: "⏰",
+    duur: "week 3 tot 8",
+    kern: "Terugkijken, vieren en delen.",
+    welkom:
+      "Drie weken vol, dat is een echte mijlpaal! Dit is een mooi moment om even terug te kijken: hoe voelde je je toen je begon, en hoe is dat nu?",
+    vandaagBelangrijk: [
+      "Kijk je aantekeningen of foto's van het begin nog eens terug. Kleine verschillen tellen ook.",
+      "Ken je iemand die ook wel wat aan deze producten zou kunnen hebben? Zeg het even tegen je begeleider, die helpt diegene op dezelfde goede manier op weg als jij.",
+    ],
+    welLijst: [],
+    nietLijst: [],
+    tips: [
+      "Veel mensen plannen één keer per jaar een opfris-moment, bijvoorbeeld met het darmprogramma als eigen APK. Iets om te onthouden voor later.",
+      "Deel je ervaring gerust in je eigen woorden. Jouw verhaal kan voor iemand anders het zetje zijn.",
+    ],
+    veelgesteld: [
+      {
+        vraag: "Kan ik nog iets toevoegen aan mijn routine?",
+        antwoord:
+          "Dat kan zeker, van een darmprogramma tot gerichte aanvullingen. Wat past hangt af van jouw doelen; neem het mee in het gesprek met je begeleider, dan kijk ik daarna weer met je mee.",
+      },
+    ],
+    contactMoment:
+      "Rond drie weken: plan een momentje met je begeleider om terug te blikken en vooruit te kijken.",
+    documenten: [],
+    videoSlots: [],
+  },
+  {
+    slug: "groeien",
+    nummer: 4,
+    naam: "Groeien",
+    emoji: "🚀",
+    duur: "vanaf maand 2",
+    kern: "Je routine staat; nu kan er meer, als jij dat wilt.",
+    welkom:
+      "Je routine staat als een huis. Vanaf hier is alles optioneel en alles mogelijk: gewoon lekker doorgaan, of er iets meer van maken. Allebei helemaal goed.",
+    vandaagBelangrijk: [
+      "Check even of je maandelijkse bestelling goed staat, dan hoef je er niet meer over na te denken. Je begeleider helpt je daar zo mee.",
+      "Vind je het leuk om anderen te vertellen wat jij gebruikt? Er bestaat een gratis eigen webshop: geen inkoop, geen verkoop, geen risico. Zo kun je je eigen producten terugverdienen, gewoon door je verhaal te delen.",
+    ],
+    welLijst: [],
+    nietLijst: [],
+    tips: [
+      "Van productgebruiker naar webshophouder is een klein stapje: je deelt wat je toch al gebruikt. Vraag je begeleider hoe dat werkt, het is echt laagdrempelig.",
+      "Geen zin in dat alles? Ook prima. Jouw routine is het belangrijkste, de rest is bonus.",
+    ],
+    veelgesteld: [
+      {
+        vraag: "Hoe werkt die gratis webshop precies?",
+        antwoord:
+          "Het bedrijf werkt met aanbevelingsmarketing: producten gaan niet via winkels maar van mens tot mens. Daarom kun jij een eigen gratis webshop krijgen; de logistiek en de financiën worden allemaal geregeld, jij deelt alleen je ervaring. Zo verdien je je eigen producten terug of bouw je er iets naast op. Je begeleider laat je precies zien hoe je start.",
+      },
+      {
+        vraag: "Moet ik daar dan van alles voor kunnen?",
+        antwoord:
+          "Nee. Je begint gewoon met je eigen verhaal delen met mensen die je het gunt. Alles daaromheen (uitleg, materialen, begeleiding) staat al klaar, precies zoals jij nu begeleid wordt.",
+      },
+    ],
+    contactMoment:
+      "Rond twee maanden: bespreek met je begeleider je blijvende routine, en of de webshop iets voor jou is.",
+    documenten: [
+      {
+        titel: "Zo werkt jouw gratis webshop",
+        omschrijving: "De stap van gebruiker naar webshophouder, simpel uitgelegd.",
+      },
+    ],
+    videoSlots: [],
+  },
+];
+
 // ---------- De twee programma's ----------
 
 export const RESET_PROGRAMMAS: ResetProgramma[] = [
@@ -529,6 +694,18 @@ export const RESET_PROGRAMMAS: ResetProgramma[] = [
     vervolg:
       "Na fase 4 kijk je samen met je begeleider naar jouw ritme voor de lange termijn: de basisproducten als onderhoud, en voor veel mensen een jaarlijkse terugkeer-ronde als eigen APK.",
     stations: RESET_STATIONS_INTERN,
+  },
+  {
+    slug: "producten",
+    naam: "Dagelijkse basis",
+    emoji: "🏠",
+    payoff:
+      "Geen kuur, wel elke dag goed voor jezelf zorgen met je producten. Ik help je met ritme, gebruik en slimme vervolgstappen.",
+    duur: "jouw eigen tempo",
+    kleur: { hoofd: "#3E6FA8", zacht: "#E8F0F9", diep: "#27496D" },
+    vervolg:
+      "Vanuit je dagelijkse basis kun je alle kanten op: een jaarlijks darmprogramma als eigen APK, de Holistic Reset als verdieping, of je eigen gratis webshop om je producten terug te verdienen. Je begeleider denkt met je mee.",
+    stations: PRODUCTEN_STATIONS,
   },
 ];
 

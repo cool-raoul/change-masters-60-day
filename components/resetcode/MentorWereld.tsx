@@ -81,12 +81,20 @@ export default function MentorWereld({
     );
   }, []);
 
+  // Scroll alleen wanneer er een NIEUW bericht bijkomt (of de typ-
+  // indicator verschijnt), niet bij elk binnenstromend stukje tekst.
+  // Zo blijf je bij een lang antwoord gewoon BOVENAAN het antwoord
+  // lezen terwijl de rest eronder aangroeit (feedback Raoul).
+  const vorigeAantal = useRef(0);
   useEffect(() => {
-    scrollRef.current?.scrollTo({
-      top: scrollRef.current.scrollHeight,
-      behavior: "smooth",
-    });
-  }, [items, mentorTypt, bezig]);
+    if (items.length !== vorigeAantal.current || mentorTypt) {
+      vorigeAantal.current = items.length;
+      scrollRef.current?.scrollTo({
+        top: scrollRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [items, mentorTypt]);
 
   // Geheugen: gesprek + plek bewaren op dit toestel (foto-data niet,
   // die is te groot voor localStorage; er blijft een tekst-spoor).

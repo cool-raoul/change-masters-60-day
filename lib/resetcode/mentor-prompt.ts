@@ -22,7 +22,7 @@ import {
   type ResetStation,
 } from "./programma";
 import { ANTI_AI_GEUR } from "@/lib/mentor/schrijfregels";
-import { PRODUCT_KENNIS, ETIKET_KENNIS } from "./producten";
+import { PRODUCT_KENNIS, ETIKET_KENNIS, WEBSHOP_KENNIS } from "./producten";
 
 export type ResetMentorRol = "klant" | "member";
 
@@ -59,7 +59,9 @@ export function bouwResetMentorPrompt(opties: {
   const { rol, voornaam, begeleiderNaam, programmaSlug, stationSlug } = opties;
   const programma = programmaVoor(programmaSlug);
   const station = stationVoor(programmaSlug, stationSlug);
-  const anderProgramma = RESET_PROGRAMMAS.find((p) => p.slug !== programmaSlug);
+  const andereProgrammas = RESET_PROGRAMMAS.filter(
+    (p) => p.slug !== programmaSlug,
+  );
   const begeleider =
     begeleiderNaam ?? (rol === "klant" ? "je begeleider" : "je sponsor");
 
@@ -110,6 +112,8 @@ ${PRODUCT_KENNIS}
 
 ${ETIKET_KENNIS}
 
+${WEBSHOP_KENNIS}
+
 === HET PROGRAMMA VAN ${voornaam.toUpperCase()}: ${(programma?.naam ?? "").toUpperCase()} ===
 ${(programma?.stations ?? [])
   .map((s) => `${s.nummer}. ${s.naam} (${s.duur}): ${s.kern}`)
@@ -125,11 +129,14 @@ ${(programma?.stations ?? [])
   .map((s) => stationAlsKennis(s))
   .join("\n\n")}
 
-=== HET ANDERE PROGRAMMA (alleen in grote lijnen noemen, details via ${begeleider}) ===
-${anderProgramma ? `${anderProgramma.naam} (${anderProgramma.duur}): ${anderProgramma.payoff} Sommige mensen doen eerst het ene en daarna het andere programma; welke route bij ${voornaam} past is een gesprek met ${begeleider}.` : ""}
+=== DE ANDERE ROUTES (in grote lijnen noemen mag; welke route past is een gesprek met ${begeleider}) ===
+${andereProgrammas
+  .map((p) => `- ${p.naam} (${p.duur}): ${p.payoff}`)
+  .join("\n")}
+Veel mensen combineren routes: eerst het darmprogramma en dan de reset, of na een programma door met de dagelijkse basis (het huis), en wie wil groeit door naar een eigen gratis webshop.
 
 ANTWOORD-STIJL:
 - Reageer op wat ${voornaam} echt vraagt, geen standaard-riedels.
-- Eén vraag terugstellen mag als dat het antwoord beter maakt, niet als gewoonte.
+- Is een vraag onduidelijk of mis je context om goed te helpen (welk product, welke dag, wat is er precies aan de hand)? Stel dan gerust één of twee korte verhelderingsvragen VOORDAT je uitgebreid antwoordt. Liever even doorvragen dan het verkeerde antwoord geven.
 - Sluit niet elke beurt af met dezelfde aanmoediging; wissel af of laat het gewoon weg.`;
 }

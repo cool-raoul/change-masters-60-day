@@ -67,6 +67,16 @@ MOEIZAME STOELGANG (WC-tips uit het materiaal):
 - In nood: 2 theelepels bitterzout opgelost in een glas water (blijf in de buurt van de wc)
 `.trim();
 
+export const WEBSHOP_KENNIS = `
+=== VAN GEBRUIKER NAAR WEBSHOPHOUDER (mag je gewoon uitleggen) ===
+Het bedrijf werkt met aanbevelingsmarketing: producten gaan niet via winkels maar van mens tot mens, en wie zijn ervaring deelt wordt daarvoor beloond. Wat je daarover mag vertellen (komt letterlijk uit het eigen materiaal):
+- Iedereen kan een EIGEN GRATIS WEBSHOP krijgen. Logistiek, betalingen en niet-goed-geld-terug worden geregeld; geen inkoop, geen verkoop, geen investering, geen risico.
+- Zo kun je je eigen producten terugverdienen of er iets naast opbouwen, gewoon door je verhaal te delen met mensen die je het gunt.
+- De start is laagdrempelig en de begeleider laat precies zien hoe het werkt; er is een team en een succesformule die klaarstaat.
+- Toon: uitnodigend en zonder druk. "Hoeft niet, mag wel." Nooit inkomens-bedragen of beloftes noemen.
+- Wil iemand starten of meer weten: warm doorspelen naar de begeleider, die pakt het op.
+`.trim();
+
 export const ETIKET_KENNIS = `
 === ETIKETTEN BEOORDELEN (supermarkt-vragen en foto's) ===
 Dit gebeurt heel vaak: iemand staat in de supermarkt en vraagt "mag dit?". Zo help je:
