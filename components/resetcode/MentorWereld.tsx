@@ -190,20 +190,16 @@ export default function MentorWereld({
         // Allereerste bezoek: warm welkom + eerste stap.
         (async () => {
           await mentorZegt(
-            `Hé ${klantVoornaam ?? ""}, welkom! 🌿 Ik ben je Mentor. Ik ken jouw hele programma van begin tot eind en ik ben er dag en nacht, samen met ${begeleiderNaam}. Praat gewoon tegen me of typ, wat jij fijn vindt.`,
-            1100,
+            `Hé ${klantVoornaam ?? ""}, welkom! 🌿 Ik ben je Mentor. Ik ken jouw hele programma van begin tot eind en ik ben er dag en nacht, samen met ${begeleiderNaam}. Praat gewoon tegen me of typ, wat jij fijn vindt. En handig: zet deze pagina op je beginscherm (delen ▸ zet op beginscherm), dan sta ik altijd tussen je apps. Ik onthoud alles wat we bespreken. 💚`,
+            1200,
           );
-          await wacht(600);
+          await wacht(700);
           await introStation(prog, prog.stations[0]);
           fetch("/api/resetcode/stap", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ token, station: prog.stations[0].slug }),
           }).catch(() => {});
-          await mentorZegt(
-            "Tip: zet deze pagina even op je beginscherm (via delen ▸ zet op beginscherm), dan sta ik altijd tussen je apps. Ik onthoud alles wat we bespreken. 💚",
-            1200,
-          );
         })();
       }
       return;
@@ -289,27 +285,39 @@ export default function MentorWereld({
     logNaarServer([{ van: "mentor", soort: "kaart", kaart, stationSlug }]);
   }
 
+  // Fase-intro, bewust RUSTIG (feedback Raoul 12 juli: geen spervuur van
+  // berichtjes): één welkom-bericht, de regels, en de documenten worden
+  // VOORGESCHOTELD in plaats van dat iemand erom moet vragen. Alles wat
+  // meer is (tips, video, suikerlijst) komt op het juiste moment of op
+  // verzoek.
   async function introStation(prog: ResetProgramma, st: ResetStation) {
     setStation(st);
-    await mentorZegt(`${st.emoji} ${st.naam} · ${st.duur}`, 800);
-    await wacht(500);
-    await mentorZegt(st.welkom, 1300);
+    await mentorZegt(`${st.emoji} ${st.naam} · ${st.duur}\n\n${st.welkom}`, 1100);
     if (st.vandaagBelangrijk.length) {
-      await wacht(600);
+      await wacht(700);
       await mentorKaart("regels", st.slug, 1000);
     }
-    await wacht(700);
-    await mentorZegt(
-      `Vraag me hier gerust álles over. Je kunt bijvoorbeeld zeggen: "wat mag ik eten", "tips", "documenten" of "video". Sta je in de supermarkt? Stuur een foto van de ingrediëntenlijst, dan kijk ik mee 📷 En zeg "verder" zodra je klaar bent voor de volgende stap.`,
-      1100,
-    );
-    // Proactief het suiker-spiekbriefje neerleggen in de fases waar het
-    // ertoe doet: niemand wéét uit zichzelf dat suiker schuilnamen heeft
-    // (feedback Raoul 12 juli).
-    if (["zestien-dagen", "omschakeling", "stabilisatie"].includes(st.slug)) {
-      await wacht(1000);
+    // Documenten meteen aanreiken, met print-tip bij de start-stations.
+    const heeftDocs =
+      st.documenten.length > 0 ||
+      (mediaBlokken?.[`${prog.slug}/${st.slug}-docs`]?.length ?? 0) > 0;
+    if (heeftDocs) {
+      await wacht(800);
+      const isStart = st.slug === "start" || st.slug === "voorbereiding";
       await mentorZegt(
-        `Oh, en eentje die bijna niemand weet: op etiketten heet suiker zelden gewoon "suiker". Er zijn wel 150 schuilnamen, van agavesiroop tot druivensapconcentraat. Scroll maar eens door dit spiekbriefje, en twijfel je in de winkel: foto sturen, ik kijk mee.`,
+        isStart
+          ? `Dit heb je nodig, ik zet het alvast voor je klaar. 🖨️ Tip: print je boekje en het meet- en weegschema even uit, dat werkt het fijnst. En raak je iets kwijt: gewoon vragen ("stuur het boekje nog eens"), dan hoef je nooit terug te scrollen. Zeg "verder" zodra je klaar bent voor de volgende stap.`
+          : `Dit hoort bij deze fase, alvast voor je klaargezet. Kwijt? Gewoon even vragen, dan stuur ik het opnieuw.`,
+        1000,
+      );
+      await mentorKaart("documenten", st.slug, 700);
+    }
+    // Suiker-spiekbriefje proactief in de fases waar het ertoe doet:
+    // niemand weet uit zichzelf dat suiker schuilnamen heeft.
+    if (["zestien-dagen", "omschakeling"].includes(st.slug)) {
+      await wacht(900);
+      await mentorZegt(
+        `Oh, en eentje die bijna niemand weet: op etiketten heet suiker zelden gewoon "suiker". Er zijn wel 150 schuilnamen. Scroll maar eens door dit spiekbriefje, en twijfel je in de winkel: stuur me een foto van de ingrediëntenlijst, dan kijk ik mee 📷`,
         1200,
       );
       await mentorKaart("suikers", st.slug, 800);
