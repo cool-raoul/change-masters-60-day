@@ -324,6 +324,18 @@ export async function POST(req: NextRequest) {
       prospectId = nieuweProspect?.id ?? null;
     }
 
+    // Koppel de opt-in hard aan de kaart + stempel het invul-moment.
+    // Zonder deze koppeling matchte de klantenkaart op e-mail, waardoor
+    // oude invullingen van verwijderde kaarten meeliftten en her-
+    // invullingen de oude created_at toonden (bug 11 juli).
+    await supabase
+      .from("freebie_opt_ins")
+      .update({
+        prospect_id: prospectId,
+        bijgewerkt_op: new Date().toISOString(),
+      })
+      .eq("id", optIn.id);
+
     // Warm geworden: prospect liet bij de opt-in een contact-intentie achter
     // (telefoon / "ik wil contact") → naar Opvolgen + opvolg-herinnering.
     // Lichte freebies; de zware productadvies-lijst regelt z'n eigen

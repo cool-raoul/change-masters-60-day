@@ -120,25 +120,27 @@ export default async function ProspectDetailPagina({
 
   if (!prospect) notFound();
 
-  // Freebie-uitslagen van deze persoon (antwoorden + advies + film-kijk),
-  // gematcht op e-mail binnen de eigen opt-ins. Los van de Promise.all
-  // hierboven omdat we het e-mailadres van de prospect nodig hebben.
+  // Freebie-uitslagen van deze persoon: hard gekoppeld aan DEZE kaart via
+  // prospect_id (niet op e-mail: dan liften oude invullingen van
+  // verwijderde kaarten met hetzelfde adres mee). Datum = laatste
+  // invul-moment (bijgewerkt_op), niet de aanmaak van de rij.
   let freebieOptIns: {
     titel: string;
     created_at: string;
     bot_antwoorden: Record<string, unknown> | null;
     spiegel_tekst: string | null;
   }[] = [];
-  if (prospect.email) {
+  {
     const { data: optIns } = await supabase
       .from("freebie_opt_ins")
-      .select("created_at, bot_antwoorden, spiegel_tekst, freebies(titel)")
+      .select("created_at, bijgewerkt_op, bot_antwoorden, spiegel_tekst, freebies(titel)")
       .eq("member_id", user.id)
-      .ilike("lead_email", String(prospect.email).replace(/([\\%_])/g, "\\$1"))
-      .order("created_at", { ascending: false })
+      .eq("prospect_id", id)
+      .order("bijgewerkt_op", { ascending: false })
       .limit(5);
     freebieOptIns = ((optIns as unknown as Array<{
       created_at: string;
+      bijgewerkt_op: string | null;
       bot_antwoorden: Record<string, unknown> | null;
       spiegel_tekst: string | null;
       freebies: { titel: string } | { titel: string }[] | null;
@@ -148,7 +150,7 @@ export default async function ProspectDetailPagina({
         titel: Array.isArray(r.freebies)
           ? (r.freebies[0]?.titel ?? "Freebie")
           : (r.freebies?.titel ?? "Freebie"),
-        created_at: r.created_at,
+        created_at: r.bijgewerkt_op ?? r.created_at,
         bot_antwoorden: r.bot_antwoorden,
         spiegel_tekst: r.spiegel_tekst,
       }));

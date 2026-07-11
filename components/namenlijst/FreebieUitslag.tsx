@@ -100,16 +100,43 @@ function menselijkeRegels(antwoorden: Record<string, unknown>): string[] {
     gebruikt.add("warmteScore");
   }
 
-  // Overige (onbekende) velden netjes tonen, zodat nieuwe bots niks kwijtraken.
+  // Overige (onbekende) velden netjes tonen, zodat nieuwe bots niks
+  // kwijtraken. Contactgegevens slaan we over (staan al op de kaart) en
+  // geneste objecten worden leesbaar uitgeschreven i.p.v. [object Object].
+  const STIL = new Set([
+    "filmKijk",
+    "email",
+    "voornaam",
+    "achternaam",
+    "naam",
+    "telefoon",
+  ]);
   for (const [k, v] of Object.entries(antwoorden)) {
-    if (gebruikt.has(k) || k === "filmKijk") continue;
+    if (gebruikt.has(k) || STIL.has(k)) continue;
     if (v === null || v === undefined) continue;
-    const waarde = Array.isArray(v) ? v.map(String).join(", ") : String(v);
+    const waarde = leesbareWaarde(v);
     if (!waarde) continue;
     regels.push(`${k}: ${waarde}`);
   }
 
   return regels;
+}
+
+/** Maak elke waarde leesbaar: arrays met komma's, objecten als "a: 1 · b: 2". */
+function leesbareWaarde(v: unknown): string {
+  if (Array.isArray(v)) return v.map((x) => leesbareWaarde(x)).filter(Boolean).join(", ");
+  if (typeof v === "object" && v !== null) {
+    return Object.entries(v as Record<string, unknown>)
+      .map(([k2, v2]) => {
+        const w =
+          typeof v2 === "object" && v2 !== null ? "" : String(v2 ?? "");
+        return w ? `${k2}: ${w}` : "";
+      })
+      .filter(Boolean)
+      .join(" · ");
+  }
+  if (typeof v === "boolean") return v ? "ja" : "nee";
+  return String(v);
 }
 
 export function FreebieUitslag({ optIns }: { optIns: OptInRij[] }) {
