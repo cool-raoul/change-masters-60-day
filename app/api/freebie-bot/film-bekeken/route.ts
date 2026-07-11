@@ -4,12 +4,16 @@ import { warmNaarOpvolgen } from "@/lib/prospect/warm-naar-opvolgen";
 import { sendPushToUser } from "@/lib/push/sendPush";
 
 // POST /api/freebie-bot/film-bekeken
-// Body: { token, leadEmail }
+// Body: { token, leadEmail, seconden?, duur?, afgekeken? }
 //
-// Wordt aangeroepen door de informatiefilm-speler zodra een prospect de film
-// ~90% / tot het einde heeft bekeken. Zoekt de prospect (lid uit token +
-// e-mail), verschuift 'm naar Opvolgen + herinnering en stuurt het lid een
-// push. Eenmalig: een marker op de prospect voorkomt dubbel afvuren.
+// Twee soorten aanroepen vanuit de informatiefilm-speler:
+//   - VOORTGANG (afgekeken=false): periodieke ping met hoever de prospect
+//     is (seconden + duur). Wordt bewaard in de opt-in (bot_antwoorden.
+//     filmKijk) zodat het member op de klantenkaart ziet hoeveel minuten
+//     er gekeken is. Geen push, geen verschuiving.
+//   - AFGEKEKEN (afgekeken=true of oud formaat zonder veld): prospect →
+//     Opvolgen + herinnering + push naar het lid, met de kijktijd erbij.
+//     Eenmalig: een marker op de prospect voorkomt dubbel afvuren.
 
 const MARKER = "🎬 Info-film bekeken";
 
@@ -18,6 +22,11 @@ export async function POST(req: NextRequest) {
     const body = await req.json().catch(() => ({}));
     const token = (body.token as string | undefined)?.trim();
     const leadEmail = (body.leadEmail as string | undefined)?.trim();
+    // Oude clients stuurden alleen {token, leadEmail} en deden dat pas bij
+    // 90% gekeken: behandel ontbrekend veld daarom als afgekeken.
+    const afgekeken = body.afgekeken === undefined ? true : Boolean(body.afgekeken);
+    const seconden = Math.max(0, Math.round(Number(body.seconden) || 0));
+    const duur = Math.max(0, Math.round(Number(body.duur) || 0));
     if (!token || !leadEmail) {
       return NextResponse.json(
         { error: "token/leadEmail ontbreekt" },
@@ -34,6 +43,57 @@ export async function POST(req: NextRequest) {
       .maybeSingle();
     if (!tokenRow) {
       return NextResponse.json({ error: "Onbekend token" }, { status: 404 });
+    }
+
+    // Kijk-voortgang bewaren op de opt-in (bot_antwoorden.filmKijk), zodat
+    // het member op de kaart ziet hoeveel minuten er gekeken is. Seconden
+    // alleen omhoog bijwerken (pings kunnen elkaar inhalen).
+    try {
+      const { data: freebieRij } = await admin
+        .from("freebies")
+        .select("id")
+        .eq("slug", tokenRow.bot_slug)
+        .maybeSingle();
+      if (freebieRij) {
+        const { data: optIn } = await admin
+          .from("freebie_opt_ins")
+          .select("id, bot_antwoorden")
+          .eq("member_id", tokenRow.member_id)
+          .eq("freebie_id", (freebieRij as { id: string }).id)
+          .ilike("lead_email", leadEmail.replace(/([\\%_])/g, "\\$1"))
+          .maybeSingle();
+        if (optIn) {
+          const huidig =
+            ((optIn as { bot_antwoorden?: Record<string, unknown> | null })
+              .bot_antwoorden ?? {}) as Record<string, unknown>;
+          const oudeKijk = (huidig.filmKijk ?? {}) as {
+            seconden?: number;
+            duur?: number;
+            afgekeken?: boolean;
+          };
+          await admin
+            .from("freebie_opt_ins")
+            .update({
+              bot_antwoorden: {
+                ...huidig,
+                filmKijk: {
+                  seconden: Math.max(oudeKijk.seconden ?? 0, seconden),
+                  duur: duur || oudeKijk.duur || 0,
+                  afgekeken: Boolean(oudeKijk.afgekeken) || afgekeken,
+                  bijgewerkt: new Date().toISOString(),
+                },
+              },
+            })
+            .eq("id", (optIn as { id: string }).id);
+        }
+      }
+    } catch (e) {
+      console.error("filmKijk bijwerken mislukt:", e);
+    }
+
+    // Voortgang-ping: klaar. Push en verschuiving alleen bij afgekeken.
+    if (!afgekeken) {
+      return NextResponse.json({ ok: true, voortgang: true });
     }
 
     const { data: rows } = await admin
@@ -92,19 +152,22 @@ export async function POST(req: NextRequest) {
     }
 
     const naam = (prospect.volledige_naam || "Iemand").split(" ")[0];
+    const kijkTekst =
+      seconden > 0
+        ? `Bekeek ${Math.max(1, Math.round(seconden / 60))}${duur ? ` van de ±${Math.max(1, Math.round(duur / 60))}` : ""} minuten van de informatiefilm en keek 'm af.`
+        : "Heeft de informatiefilm (af)gekeken.";
 
     await warmNaarOpvolgen({
       admin,
       prospectId: prospect.id,
       memberId: tokenRow.member_id,
       reden: `${naam} bekeek de informatiefilm`,
-      beschrijving:
-        "Heeft de informatiefilm van Jouw gezonde start (af)gekeken. Mooi moment om persoonlijk op te volgen.",
+      beschrijving: `${kijkTekst} Mooi moment om persoonlijk op te volgen.`,
     });
 
     await sendPushToUser(tokenRow.member_id, {
-      title: `🎬 ${naam} heeft je film bekeken`,
-      body: "Bekeek de informatiefilm van Jouw gezonde start. Tijd voor een follow-up.",
+      title: `🎬 ${naam} heeft je film afgekeken`,
+      body: `${kijkTekst} Goed moment om contact op te nemen!`,
       url: `/namenlijst/${prospect.id}`,
       tag: `gezonde-start-film-${prospect.id}`,
     });

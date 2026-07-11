@@ -8,6 +8,7 @@ import { ProspectActieForm } from "@/components/namenlijst/ProspectActieForm";
 import { ContactLogLijst } from "@/components/namenlijst/ContactLogLijst";
 import { ContactgegevensForm } from "@/components/namenlijst/ContactgegevensForm";
 import { IngezetteTools } from "@/components/namenlijst/IngezetteTools";
+import { FreebieUitslag } from "@/components/namenlijst/FreebieUitslag";
 import { DriewegGesprekInklapbaar } from "@/components/namenlijst/DriewegGesprek";
 import { MiniElevaUitnodigKnop } from "@/components/namenlijst/MiniElevaUitnodigKnop";
 import { MiniElevaActieveSessies } from "@/components/namenlijst/MiniElevaActieveSessies";
@@ -118,6 +119,40 @@ export default async function ProspectDetailPagina({
   ]);
 
   if (!prospect) notFound();
+
+  // Freebie-uitslagen van deze persoon (antwoorden + advies + film-kijk),
+  // gematcht op e-mail binnen de eigen opt-ins. Los van de Promise.all
+  // hierboven omdat we het e-mailadres van de prospect nodig hebben.
+  let freebieOptIns: {
+    titel: string;
+    created_at: string;
+    bot_antwoorden: Record<string, unknown> | null;
+    spiegel_tekst: string | null;
+  }[] = [];
+  if (prospect.email) {
+    const { data: optIns } = await supabase
+      .from("freebie_opt_ins")
+      .select("created_at, bot_antwoorden, spiegel_tekst, freebies(titel)")
+      .eq("member_id", user.id)
+      .ilike("lead_email", String(prospect.email).replace(/([\\%_])/g, "\\$1"))
+      .order("created_at", { ascending: false })
+      .limit(5);
+    freebieOptIns = ((optIns as unknown as Array<{
+      created_at: string;
+      bot_antwoorden: Record<string, unknown> | null;
+      spiegel_tekst: string | null;
+      freebies: { titel: string } | { titel: string }[] | null;
+    }>) ?? [])
+      .filter((r) => r.bot_antwoorden || r.spiegel_tekst)
+      .map((r) => ({
+        titel: Array.isArray(r.freebies)
+          ? (r.freebies[0]?.titel ?? "Freebie")
+          : (r.freebies?.titel ?? "Freebie"),
+        created_at: r.created_at,
+        bot_antwoorden: r.bot_antwoorden,
+        spiegel_tekst: r.spiegel_tekst,
+      }));
+  }
 
   // Haal sponsor naam op via sponsor_id
   const sponsorId = (eigenProfiel as any)?.sponsor_id;
@@ -329,6 +364,9 @@ export default async function ProspectDetailPagina({
             prospectId={id}
             ingezet={prospect.ingezette_tools || []}
           />
+
+          {/* Freebie-uitslag: antwoorden, advies en film-kijkgedrag */}
+          <FreebieUitslag optIns={freebieOptIns} />
         </div>
 
         {/* Acties + contactlog */}

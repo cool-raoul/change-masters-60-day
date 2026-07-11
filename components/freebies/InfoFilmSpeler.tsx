@@ -59,22 +59,62 @@ export function InfoFilmSpeler({
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const playerRef = useRef<YTPlayer | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  // Kijk-voortgang: verste punt + duur, periodiek naar de server zodat
+  // het member op de kaart ziet hoeveel minuten er gekeken is.
+  const maxSecRef = useRef(0);
+  const durRef = useRef(0);
+  const laatsteMeldRef = useRef(0);
 
-  function vuurAf() {
-    if (gevuurdRef.current) return;
-    if (!leadEmail) return;
-    gevuurdRef.current = true;
+  function stuur(afgekeken: boolean) {
     try {
       void fetch("/api/freebie-bot/film-bekeken", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         keepalive: true,
-        body: JSON.stringify({ token, leadEmail }),
+        body: JSON.stringify({
+          token,
+          leadEmail,
+          seconden: Math.round(maxSecRef.current),
+          duur: Math.round(durRef.current),
+          afgekeken,
+        }),
       });
     } catch {
       /* tracking mag de gebruiker niet storen */
     }
   }
+
+  function noteerVoortgang(sec: number, dur: number) {
+    if (!leadEmail) return;
+    if (sec > maxSecRef.current) maxSecRef.current = sec;
+    if (dur > 0) durRef.current = dur;
+    // Voortgang-ping hooguit elke 15 seconden (tot 'afgekeken' vuurde).
+    const nu = Date.now();
+    if (!gevuurdRef.current && nu - laatsteMeldRef.current > 15000 && maxSecRef.current > 3) {
+      laatsteMeldRef.current = nu;
+      stuur(false);
+    }
+  }
+
+  function vuurAf() {
+    if (gevuurdRef.current) return;
+    if (!leadEmail) return;
+    gevuurdRef.current = true;
+    stuur(true);
+  }
+
+  // Laatste stand meesturen als de prospect wegklikt of het tabblad sluit.
+  useEffect(() => {
+    function bijVertrek() {
+      if (!gevuurdRef.current && leadEmail && maxSecRef.current > 3) stuur(false);
+    }
+    window.addEventListener("pagehide", bijVertrek);
+    return () => {
+      window.removeEventListener("pagehide", bijVertrek);
+      bijVertrek();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [leadEmail]);
 
   const basis = url && soort !== "upload" ? normaliseerNaarEmbed(url) : null;
   const embed = basis ? embedMetOpties(basis) : undefined;
@@ -98,7 +138,9 @@ export function InfoFilmSpeler({
         if (!p) return;
         try {
           const dur = p.getDuration();
-          if (dur && p.getCurrentTime() / dur >= DREMPEL) vuurAf();
+          const sec = p.getCurrentTime();
+          noteerVoortgang(sec, dur || 0);
+          if (dur && sec / dur >= DREMPEL) vuurAf();
         } catch {
           /* negeer */
         }
@@ -169,7 +211,9 @@ export function InfoFilmSpeler({
           dur = 0;
         }
         player.on("timeupdate", (d: { seconds?: number }) => {
-          if (dur && (d?.seconds ?? 0) / dur >= DREMPEL) vuurAf();
+          const sec = d?.seconds ?? 0;
+          noteerVoortgang(sec, dur);
+          if (dur && sec / dur >= DREMPEL) vuurAf();
         });
         player.on("ended", () => vuurAf());
       } catch {
@@ -196,8 +240,9 @@ export function InfoFilmSpeler({
           className="w-full h-full"
           onTimeUpdate={() => {
             const v = videoRef.current;
-            if (v && v.duration && v.currentTime / v.duration >= DREMPEL)
-              vuurAf();
+            if (!v) return;
+            noteerVoortgang(v.currentTime, v.duration || 0);
+            if (v.duration && v.currentTime / v.duration >= DREMPEL) vuurAf();
           }}
           onEnded={vuurAf}
         />

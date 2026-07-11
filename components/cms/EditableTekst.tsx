@@ -77,7 +77,14 @@ function interpoleerVars(tekst: string, vars?: Record<string, string>): string {
   if (!vars) return tekst;
   let resultaat = tekst;
   for (const [sleutel, waarde] of Object.entries(vars)) {
-    resultaat = resultaat.split(`{${sleutel}}`).join(waarde);
+    // Hoofdletter-ongevoelig en tolerant voor spaties: founders typen in
+    // overrides ook {Naam} of { naam }, en die moeten net zo goed werken
+    // als {naam} (bug 11 juli: {Naam} bleef letterlijk staan).
+    const veilig = sleutel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    resultaat = resultaat.replace(
+      new RegExp(`\\{\\s*${veilig}\\s*\\}`, "gi"),
+      waarde,
+    );
   }
   return resultaat;
 }
