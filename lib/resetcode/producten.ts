@@ -67,6 +67,58 @@ MOEIZAME STOELGANG (WC-tips uit het materiaal):
 - In nood: 2 theelepels bitterzout opgelost in een glas water (blijf in de buurt van de wc)
 `.trim();
 
+// WC-tips als kaart-inhoud (uit docs/resetcode/08, support-tekst).
+export const WC_TIPS = [
+  "Natuurlijke stoelgang-thee",
+  "Extra Keltisch zeezout innemen",
+  "Lauw water met citroen en eventueel gember, op de nuchtere maag",
+  "Extra Biotic Blast gebruiken",
+  "In nood: 2 theelepels bitterzout opgelost in een glas water (blijf in de buurt van de wc)",
+];
+
+// De volledige suikernamen-lijst uit het eigen programma-materiaal
+// (docs/resetcode/08). Suiker heet zelden gewoon "suiker".
+export const SUIKER_NAMEN = [
+  "Agavenectar", "Agavesiroop", "Ahorncrème", "Ahornsiroop", "Amazake",
+  "Appelsapconcentraat", "Appelstroop", "'Aroma' (suiker + smaakstof)",
+  "Barbados suiker", "Basterdsuiker", "Beetwortelsap", "Bietenstroop",
+  "Bietsuiker", "Blackstrap Molasses", "Bruine suiker",
+  "Caramel (verhitte / gebrande suiker)", "Carob syrup", "Carobella syrup",
+  "Castor melis", "Cichoreisiroop", "Cichoreistroop", "Cyprus Black Gold",
+  "Confectiesuiker", "D-glucose", "Dadelstroop", "Demerara", "Dextrose",
+  "Diastatisch moutextract", "Diksap", "Donkere basterdsuiker",
+  "Druivensapconcentraat", "Druivensuiker", "Eindmelasse", "Esdoornsiroop",
+  "FOS-stroop", "Fruitconcentraat", "Fruitextract", "Fruitsapconcentraat",
+  "Fruitsuiker", "Fructose", "Fructose-invertsuikerstroop", "Fructosesiroop",
+  "Fructosestroop", "Galactose", "Gebrande suiker", "Gebrande suikerstroop",
+  "Geconcentreerd appelsap", "Geconcentreerd perensap",
+  "Geconcentreerd vruchtensap", "Gekarameliseerde suiker(stroop)",
+  "Geleisuiker", "Gele kandijsiroop", "Geraffineerde suiker", "Gierstsiroop",
+  "Glucose", "Glucosesiroop", "Glucosestroop", "Glucose-fructosestroop",
+  "Gouden siroop", "Gula djawa", "Gula kelapa", "Gula aren",
+  "HFCS (high fructose corn syrup)", "Honing", "Inulinestroop",
+  "Invertsuiker(stroop)", "Invertsiroop", "Isoglucose", "Javaanse palmsuiker",
+  "Johannesbroodsiroop", "Johannesbroodpitsiroop", "Kandij", "Kandijsuiker",
+  "Kandijstroop", "Kaneelsuiker", "Karamelsuikerstroop", "Klappersuiker",
+  "Kokosbloemsuiker", "Kokosbloesemsuiker", "Kristalsuiker",
+  "Kristallijne fructose", "Lactose", "Lichtbruine basterdsuiker",
+  "(Magere) melkpoeder (±50% suiker)", "Maismoutstroop", "Maïssuiker",
+  "Maisstroop", "Malt", "Maltodextrine", "Maltose", "Maltosestroop",
+  "Maple Syrup", "Melasse", "Melksuiker", "Molasses", "Moutextract",
+  "Moutsuiker", "Moutstroop", "Muscovado", "Nectar", "Oersuiker", "OERzoet",
+  "Organische rauwe suiker", "Palmsuiker", "Panocha", "Panela", "Parelsuiker",
+  "Perensapconcentraat", "Piloncillo", "'Poedersneeuw'", "Poedersuiker",
+  "Rapadura", "Rietsap", "Rietsuiker", "Rietsuikerstroop", "Rijststroop",
+  "Rijstsuiker", "Ruwe rietsuiker", "Saccharose", "Sacharose",
+  "(...)sapconcentraat", "Schenkstroop", "Siroop", "Sorghumsiroop",
+  "Speltstroop", "Stroop", "Sucanat", "Sucrose", "Suikerstroop",
+  "Tafelsuiker", "Tarweglucosestroop", "Tarwestroop", "Treacle", "Trehalose",
+  "Turbinado", "Vanillesuiker", "Vruchtenextract", "Vruchtenconcentraat",
+  "Vruchtensapconcentraat", "Vruchtensuiker",
+  "Vruchtensap op basis van extracten of concentraten", "Witte basterdsuiker",
+  "Witte suiker", "Zwarte rietsuikermelasse",
+];
+
 export const WEBSHOP_KENNIS = `
 === VAN GEBRUIKER NAAR WEBSHOPHOUDER (mag je gewoon uitleggen) ===
 Het bedrijf werkt met aanbevelingsmarketing: producten gaan niet via winkels maar van mens tot mens, en wie zijn ervaring deelt wordt daarvoor beloond. Wat je daarover mag vertellen (komt letterlijk uit het eigen materiaal):

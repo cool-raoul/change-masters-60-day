@@ -144,22 +144,16 @@ export function ResetcodeOpKaart({
                   >
                     {gekopieerd === l.token ? "✓ Gekopieerd" : "🔗 Kopieer"}
                   </button>
-                  <a
-                    href={`/k/${l.token}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="rounded-full border border-cm-border px-3.5 py-1.5 text-xs font-semibold text-cm-white/80 hover:text-cm-white"
-                  >
-                    👀 Bekijk
-                  </a>
                 </div>
               </div>
             );
           })}
           <p className="text-[11px] text-cm-muted">
-            Beheer (pauzeren, sluiten of een extra programma) doe je op{" "}
+            Het gesprek met de Mentor is privé tussen {voornaam} en de
+            Mentor; jij krijgt automatisch een seintje op de momenten die
+            ertoe doen. Beheer doe je bij{" "}
             <a href="/resetcode-links" className="text-cm-gold hover:underline">
-              jouw klant-links
+              Mijn klanten
             </a>
             .
           </p>

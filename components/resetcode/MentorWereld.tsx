@@ -25,6 +25,7 @@ import {
 import { waLinkNaar } from "@/lib/util/wa-nummer";
 import { MediaBlokken } from "@/components/cms/MediaBlokken";
 import type { Blok } from "@/lib/cms/pagina-blokken";
+import { SUIKER_NAMEN, WC_TIPS } from "@/lib/resetcode/producten";
 
 type Kaart =
   | "regels"
@@ -35,7 +36,9 @@ type Kaart =
   | "contact"
   | "logi"
   | "vervolg"
-  | "faq";
+  | "faq"
+  | "suikers"
+  | "wctips";
 
 type ChatItem =
   | { van: "mentor"; soort: "tekst"; tekst: string }
@@ -399,6 +402,17 @@ export default function MentorWereld({
       await mentorKaart("logi", station.slug, 800);
       return true;
     }
+    if (/suikerlijst|suikernamen|suiker.*(lijst|namen|spiek)/.test(t)) {
+      zeg();
+      await mentorZegt("Goeie! Hier is het complete spiekbriefje uit jullie materiaal:", 700);
+      await mentorKaart("suikers", station.slug);
+      return true;
+    }
+    if (/\bwc\b|stoelgang|obstipatie|verstopping|poepen/.test(t) && t.length < 80) {
+      zeg();
+      await mentorKaart("wctips", station.slug, 900);
+      return true;
+    }
     return false;
   }
 
@@ -756,6 +770,40 @@ export default function MentorWereld({
           <div className={kader}>
             {kop("🎉", "En daarna?")}
             <p className="text-[14px] text-white/85 leading-relaxed">{programma.vervolg}</p>
+          </div>
+        );
+      case "suikers":
+        return (
+          <div className={kader}>
+            {kop("🍬", "Suiker-spiekbriefje")}
+            <p className="text-[12px] text-white/70 leading-relaxed mb-2">
+              Suiker heet zelden gewoon &quot;suiker&quot;. Zie je één van
+              deze namen in de ingrediëntenlijst, dan is het suiker. Twijfel
+              je? Stuur me een foto van het etiket.
+            </p>
+            <div className="max-h-56 overflow-y-auto chatscroll rounded-xl bg-black/30 px-3 py-2">
+              <p className="text-[11px] text-white/70 leading-relaxed">
+                {SUIKER_NAMEN.join(" · ")}
+              </p>
+            </div>
+          </div>
+        );
+      case "wctips":
+        return (
+          <div className={kader}>
+            {kop("💩", "Moeilijk naar de wc?")}
+            <p className="text-[12px] text-white/70 leading-relaxed mb-1.5">
+              Komt vaker voor tijdens het programma en hoort erbij. Dit
+              helpt, rechtstreeks uit het programma-materiaal:
+            </p>
+            <ul className="space-y-1.5">
+              {WC_TIPS.map((tip, i) => (
+                <li key={i} className="text-[13px] text-white/85 leading-relaxed flex gap-2">
+                  <span className="text-emerald-400 flex-shrink-0">·</span>
+                  {tip}
+                </li>
+              ))}
+            </ul>
           </div>
         );
     }

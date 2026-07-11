@@ -356,6 +356,10 @@ export const t: Vertalingen = {
     nl: "Mijn freebies", en: "My freebies", fr: "Mes freebies",
     es: "Mis freebies", de: "Meine Freebies", pt: "Meus freebies",
   },
+  "nav.mijn_klanten": {
+    nl: "Mijn klanten", en: "My customers", fr: "Mes clients",
+    es: "Mis clientes", de: "Meine Kunden", pt: "Meus clientes",
+  },
   "nav.instellingen": {
     nl: "Instellingen", en: "Settings", fr: "Param\u00e8tres",
     es: "Ajustes", de: "Einstellungen", pt: "Configura\u00e7\u00f5es",

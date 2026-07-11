@@ -34,10 +34,10 @@ export default async function ResetcodeLinksPagina() {
     <main className="mx-auto max-w-3xl px-4 py-8 text-cm-white">
       <header className="mb-6">
         <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
-          Klanten · De Resetcode
+          De Resetcode
         </p>
         <h1 className="font-serif-warm text-3xl text-cm-white mt-2">
-          Jouw klant-links
+          Mijn klanten
         </h1>
         <p className="mt-3 text-cm-muted text-sm leading-relaxed">
           Elke klant krijgt een eigen persoonlijke link met de Mentor-wereld:

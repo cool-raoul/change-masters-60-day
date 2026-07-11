@@ -179,14 +179,6 @@ export default function LinksBeheer() {
               >
                 📱 Deel via WhatsApp
               </a>
-              <a
-                href={`/k/${l.token}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full border border-cm-border px-3.5 py-1.5 text-xs font-semibold text-cm-white/80 hover:text-cm-white"
-              >
-                👀 Bekijk als klant
-              </a>
               {l.status === "actief" ? (
                 <button
                   onClick={() => zetStatus(l.id, "gepauzeerd")}

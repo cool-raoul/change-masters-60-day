@@ -10,6 +10,7 @@
 
 import type { Metadata } from "next";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 import { haalPaginaBlokken, type Blok } from "@/lib/cms/pagina-blokken";
 import {
   pakResetKlantContext,
@@ -49,6 +50,48 @@ export default async function KlantLinkPagina({
 }) {
   const { token } = await params;
   const ctx = await pakResetKlantContext(token);
+
+  // PRIVACY-SCHILD: opent het member (of een andere ingelogde gebruiker)
+  // de klant-link zelf, dan tonen we NIET het gesprek (dat is privé
+  // tussen klant en Mentor, zelfde lijn als mini-ELEVA / AVG Keuze A)
+  // en vuren we ook geen "klant is gestart"-triggers af.
+  if (ctx) {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (user && user.id === ctx.memberId) {
+      return (
+        <main
+          className="flex min-h-screen items-center justify-center px-6 text-center"
+          style={{ backgroundColor: "#0F1B17" }}
+        >
+          <div className="max-w-sm">
+            <p className="text-4xl mb-3">🔒</p>
+            <h1 className="text-white font-bold text-lg">
+              Dit is de omgeving van {ctx.klantVoornaam}
+            </h1>
+            <p className="text-white/60 text-sm mt-2 leading-relaxed">
+              Het gesprek met de Mentor is privé tussen {ctx.klantVoornaam}{" "}
+              en de Mentor. Jij krijgt automatisch een seintje bij de
+              start, bij elke volgende stap en op de contactmomenten. De
+              voortgang zie je op de klantenkaart en bij Mijn klanten.
+            </p>
+            <p className="text-white/40 text-xs mt-3 leading-relaxed">
+              Wil je zelf voelen hoe de omgeving werkt? Gebruik de preview
+              op /resetcode-preview, die staat los van echte klanten.
+            </p>
+            <a
+              href="/resetcode-links"
+              className="inline-block mt-4 rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white"
+            >
+              Naar Mijn klanten
+            </a>
+          </div>
+        </main>
+      );
+    }
+  }
 
   if (!ctx || ctx.status === "gesloten") {
     return (
@@ -100,6 +143,8 @@ export default async function KlantLinkPagina({
     "logi",
     "vervolg",
     "faq",
+    "suikers",
+    "wctips",
   ] as const;
   type KaartNaam = (typeof KAARTEN)[number];
   const beginItems = chats

@@ -15,6 +15,7 @@ export type ResetKlantContext = {
   programmaSlug: "darm" | "reset" | "producten";
   stationSlug: string | null;
   status: "actief" | "gepauzeerd" | "gesloten";
+  prospectId: string | null;
   memberId: string;
   memberNaam: string | null;
   memberVoornaam: string;
@@ -29,7 +30,9 @@ export async function pakResetKlantContext(
 
   const { data: linkRaw } = await admin
     .from("resetcode_klant_links")
-    .select("id, token, member_id, klant_naam, programma, station_slug, status")
+    .select(
+      "id, token, member_id, klant_naam, programma, station_slug, status, prospect_id",
+    )
     .eq("token", token)
     .maybeSingle();
   if (!linkRaw) return null;
@@ -41,6 +44,7 @@ export async function pakResetKlantContext(
     programma: "darm" | "reset" | "producten";
     station_slug: string | null;
     status: "actief" | "gepauzeerd" | "gesloten";
+    prospect_id: string | null;
   };
 
   const { data: memberRaw } = await admin
@@ -62,6 +66,7 @@ export async function pakResetKlantContext(
     programmaSlug: link.programma,
     stationSlug: link.station_slug,
     status: link.status,
+    prospectId: link.prospect_id,
     memberId: link.member_id,
     memberNaam,
     memberVoornaam: (memberNaam ?? "").split(" ")[0] || "je begeleider",
@@ -127,7 +132,9 @@ export async function seintjeNaarMember(
     await sendPushToUser(ctx.memberId, {
       title: titel,
       body: detail,
-      url: "/resetcode-links",
+      // Klik door naar de klantenkaart als de link daaraan hangt,
+      // anders naar het Mijn klanten-overzicht.
+      url: ctx.prospectId ? `/namenlijst/${ctx.prospectId}` : "/resetcode-links",
       tag: `resetcode-${ctx.linkId}`,
     });
   } catch (e) {

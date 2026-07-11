@@ -23,7 +23,6 @@ import { CoachGesprekkenInklapbaar } from "@/components/namenlijst/CoachGesprekk
 import { ProductadviesTestKnop } from "@/components/namenlijst/ProductadviesTestKnop";
 import { StuurFreebieKnop } from "@/components/namenlijst/StuurFreebieKnop";
 import { StuurFilmKnop } from "@/components/namenlijst/StuurFilmKnop";
-import { VoiceUitnodigingKnop } from "@/components/namenlijst/VoiceUitnodigingKnop";
 import { FilmKijkOverzicht } from "@/components/namenlijst/FilmKijkOverzicht";
 import { RealtimeProspectsRefresh } from "@/components/namenlijst/RealtimeProspectsRefresh";
 import { ActiefToggle } from "@/components/namenlijst/ActiefToggle";
@@ -303,10 +302,8 @@ export default async function ProspectDetailPagina({
             </Link>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <VoiceUitnodigingKnop
-              prospectId={id}
-              prospectNaam={prospect.volledige_naam}
-            />
+            {/* Voice-uitnodiging is vervangen door de ELEVA Mentor
+                (feedback Raoul 11 juli): knop verwijderd. */}
             <StuurFilmKnop
               prospectId={id}
               prospectNaam={prospect.volledige_naam}
@@ -385,9 +382,13 @@ export default async function ProspectDetailPagina({
 
           {/* Freebie-uitslag: antwoorden, advies en film-kijkgedrag */}
           <FreebieUitslag optIns={freebieOptIns} />
+        </div>
 
-          {/* Resetcode-omgeving: klant-link met eigen Mentor (pilot:
-              founders + testers, zelfde gate als /resetcode-links) */}
+        {/* Acties + contactlog */}
+        <div className="lg:col-span-2 space-y-4">
+          {/* Resetcode-omgeving: klant-link met eigen Mentor, prominent
+              op de plek waar vroeger de voice-uitnodiging leefde
+              (pilot: founders + testers, zelfde gate als /resetcode-links) */}
           {((eigenProfiel as { role?: string; is_tester?: boolean } | null)
             ?.role === "founder" ||
             (eigenProfiel as { is_tester?: boolean } | null)?.is_tester ===
@@ -399,10 +400,6 @@ export default async function ProspectDetailPagina({
               links={resetLinks}
             />
           )}
-        </div>
-
-        {/* Acties + contactlog */}
-        <div className="lg:col-span-2 space-y-4">
           {/* Openstaande herinneringen, bovenaan zodat ze direct zichtbaar zijn */}
           <HerinneringenOpKaart herinneringen={herinneringen || []} />
           {/* Verzonden films met real-time kijkpercentage. Verbergt zich

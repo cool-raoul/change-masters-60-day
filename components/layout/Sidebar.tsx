@@ -84,6 +84,11 @@ export function Sidebar({
     // Mijn freebies: de eigen deel-links per freebie (lead-gen). Verplaatst
     // uit Instellingen naar het hoofdmenu voor betere vindbaarheid.
     { href: "/instellingen/mijn-tracking-links", labelKey: "nav.freebies", icoon: "🎁" },
+    // Mijn klanten: alle Resetcode-klanten met eigen Mentor-omgeving in
+    // één overzicht (pilot: founders + testers, zelfde gate als de pagina).
+    ...(isFounder || isTester
+      ? [{ href: "/resetcode-links", labelKey: "nav.mijn_klanten", icoon: "🌿" }]
+      : []),
     { href: "/team", labelKey: "nav.team", icoon: "🏆" },
   ];
 
