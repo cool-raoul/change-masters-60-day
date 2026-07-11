@@ -303,6 +303,17 @@ export default function MentorWereld({
       `Vraag me hier gerust álles over. Je kunt bijvoorbeeld zeggen: "wat mag ik eten", "tips", "documenten" of "video". Sta je in de supermarkt? Stuur een foto van de ingrediëntenlijst, dan kijk ik mee 📷 En zeg "verder" zodra je klaar bent voor de volgende stap.`,
       1100,
     );
+    // Proactief het suiker-spiekbriefje neerleggen in de fases waar het
+    // ertoe doet: niemand wéét uit zichzelf dat suiker schuilnamen heeft
+    // (feedback Raoul 12 juli).
+    if (["zestien-dagen", "omschakeling", "stabilisatie"].includes(st.slug)) {
+      await wacht(1000);
+      await mentorZegt(
+        `Oh, en eentje die bijna niemand weet: op etiketten heet suiker zelden gewoon "suiker". Er zijn wel 150 schuilnamen, van agavesiroop tot druivensapconcentraat. Scroll maar eens door dit spiekbriefje, en twijfel je in de winkel: foto sturen, ik kijk mee.`,
+        1200,
+      );
+      await mentorKaart("suikers", st.slug, 800);
+    }
   }
 
   async function kiesProgramma(slug: string) {
