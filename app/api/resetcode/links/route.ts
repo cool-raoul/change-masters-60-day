@@ -48,12 +48,29 @@ export async function POST(req: NextRequest) {
   const t = await checkToegang();
   if ("fout" in t) return t.fout;
   const body = await req.json().catch(() => ({}));
-  const naam = ((body.naam as string | undefined) ?? "").trim().slice(0, 80);
+  let naam = ((body.naam as string | undefined) ?? "").trim().slice(0, 80);
   const programma = (body.programma as string | undefined) ?? "";
-  if (!naam) return new Response("naam is vereist", { status: 400 });
+  const prospectId = (body.prospectId as string | undefined) ?? null;
   if (!["darm", "reset", "producten"].includes(programma)) {
     return new Response("onbekend programma", { status: 400 });
   }
+
+  // Vanaf de klantenkaart: koppel aan de prospect (RLS bewaakt eigendom)
+  // en pak de naam van de kaart als die niet is meegegeven.
+  if (prospectId) {
+    const { data: prospect } = await t.supabase
+      .from("prospects")
+      .select("id, volledige_naam")
+      .eq("id", prospectId)
+      .maybeSingle();
+    if (!prospect) {
+      return new Response("onbekende prospect", { status: 404 });
+    }
+    if (!naam) {
+      naam = ((prospect as { volledige_naam?: string | null }).volledige_naam ?? "").trim();
+    }
+  }
+  if (!naam) return new Response("naam is vereist", { status: 400 });
 
   const token = `k-${randomUUID().replace(/-/g, "")}`;
   const { data, error } = await t.supabase
@@ -63,6 +80,7 @@ export async function POST(req: NextRequest) {
       member_id: t.user.id,
       klant_naam: naam,
       programma,
+      prospect_id: prospectId,
     })
     .select("id, token, klant_naam, programma, status")
     .single();

@@ -9,6 +9,7 @@ import { ContactLogLijst } from "@/components/namenlijst/ContactLogLijst";
 import { ContactgegevensForm } from "@/components/namenlijst/ContactgegevensForm";
 import { IngezetteTools } from "@/components/namenlijst/IngezetteTools";
 import { FreebieUitslag } from "@/components/namenlijst/FreebieUitslag";
+import { ResetcodeOpKaart } from "@/components/namenlijst/ResetcodeOpKaart";
 import { DriewegGesprekInklapbaar } from "@/components/namenlijst/DriewegGesprek";
 import { MiniElevaUitnodigKnop } from "@/components/namenlijst/MiniElevaUitnodigKnop";
 import { MiniElevaActieveSessies } from "@/components/namenlijst/MiniElevaActieveSessies";
@@ -155,6 +156,21 @@ export default async function ProspectDetailPagina({
         spiegel_tekst: r.spiegel_tekst,
       }));
   }
+
+  // Resetcode-klant-links van deze kaart (RLS: alleen eigen links).
+  const { data: resetLinksData } = await supabase
+    .from("resetcode_klant_links")
+    .select("id, token, programma, station_slug, status, laatste_activiteit")
+    .eq("prospect_id", id)
+    .order("created_at", { ascending: false });
+  const resetLinks = (resetLinksData ?? []) as Array<{
+    id: string;
+    token: string;
+    programma: "darm" | "reset" | "producten";
+    station_slug: string | null;
+    status: "actief" | "gepauzeerd" | "gesloten";
+    laatste_activiteit: string;
+  }>;
 
   // Haal sponsor naam op via sponsor_id
   const sponsorId = (eigenProfiel as any)?.sponsor_id;
@@ -369,6 +385,20 @@ export default async function ProspectDetailPagina({
 
           {/* Freebie-uitslag: antwoorden, advies en film-kijkgedrag */}
           <FreebieUitslag optIns={freebieOptIns} />
+
+          {/* Resetcode-omgeving: klant-link met eigen Mentor (pilot:
+              founders + testers, zelfde gate als /resetcode-links) */}
+          {((eigenProfiel as { role?: string; is_tester?: boolean } | null)
+            ?.role === "founder" ||
+            (eigenProfiel as { is_tester?: boolean } | null)?.is_tester ===
+              true) && (
+            <ResetcodeOpKaart
+              prospectId={id}
+              voornaam={(prospect.volledige_naam ?? "").split(" ")[0] || "je klant"}
+              telefoon={prospect.telefoon ?? null}
+              links={resetLinks}
+            />
+          )}
         </div>
 
         {/* Acties + contactlog */}

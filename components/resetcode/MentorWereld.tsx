@@ -23,6 +23,8 @@ import {
   type ResetStation,
 } from "@/lib/resetcode/programma";
 import { waLinkNaar } from "@/lib/util/wa-nummer";
+import { MediaBlokken } from "@/components/cms/MediaBlokken";
+import type { Blok } from "@/lib/cms/pagina-blokken";
 
 type Kaart =
   | "regels"
@@ -60,6 +62,8 @@ export default function MentorWereld({
   stationSlugStart,
   beginItems,
   memberTelefoon,
+  mediaBlokken,
+  isFounder,
 }: {
   begeleiderNaam: string;
   /** Klant-modus: token van de klant-link; het gesprek wordt dan op de server bewaard. */
@@ -69,6 +73,10 @@ export default function MentorWereld({
   stationSlugStart?: string | null;
   beginItems?: ChatItem[];
   memberTelefoon?: string | null;
+  /** Gevulde media per sleutel `${programma}/${station}-video` en `-docs`. */
+  mediaBlokken?: Record<string, Blok[]>;
+  /** Founder in de preview: mag media-plekken vullen (edit-modus). */
+  isFounder?: boolean;
 }) {
   const isKlant = Boolean(token);
   const [rol, setRol] = useState<"klant" | "member">("klant");
@@ -628,33 +636,72 @@ export default function MentorWereld({
             </div>
           </div>
         );
-      case "video":
+      case "video": {
+        const blokken =
+          mediaBlokken?.[`${programma.slug}/${st.slug}-video`] ?? [];
         return (
           <div className={kader}>
             {kop("🎬", "Video bij deze fase")}
-            {st.videoSlots.map((v, i) => (
-              <div key={i} className="mt-1.5 rounded-xl bg-black/40 border border-dashed border-emerald-500/30 px-3 py-7 text-center">
-                <p className="text-[13px] text-white/70">▶️ {v}</p>
-                <p className="text-[10px] text-emerald-400/60 mt-1">plek staat klaar voor jouw video</p>
+            {(blokken.length > 0 || isFounder) && (
+              <div className="mt-1.5">
+                <MediaBlokken
+                  paginaNamespace="resetcode-klant"
+                  paginaId={programma.slug}
+                  positie={`${st.slug}-video`}
+                  blokken={blokken}
+                  isFounder={Boolean(isFounder)}
+                />
               </div>
-            ))}
+            )}
+            {blokken.length === 0 &&
+              st.videoSlots.map((v, i) => (
+                <div key={i} className="mt-1.5 rounded-xl bg-black/40 border border-dashed border-emerald-500/30 px-3 py-7 text-center">
+                  <p className="text-[13px] text-white/70">▶️ {v}</p>
+                  <p className="text-[10px] text-emerald-400/60 mt-1">
+                    {isFounder
+                      ? "vul deze plek via de edit-modus (potlood)"
+                      : "deze video komt er binnenkort aan"}
+                  </p>
+                </div>
+              ))}
           </div>
         );
-      case "documenten":
+      }
+      case "documenten": {
+        const blokken =
+          mediaBlokken?.[`${programma.slug}/${st.slug}-docs`] ?? [];
         return (
           <div className={kader}>
             {kop("📂", "Bij deze fase")}
-            <div className="space-y-1.5">
-              {st.documenten.map((d, i) => (
-                <div key={i} className="rounded-xl bg-black/30 border border-dashed border-emerald-500/25 px-3 py-2">
-                  <p className="text-[13px] font-semibold text-white/90">{d.titel}</p>
-                  <p className="text-[11px] text-white/55">{d.omschrijving}</p>
-                  <p className="text-[10px] text-emerald-400/60 mt-0.5">wordt een mooie in-chat kaart of graphic</p>
-                </div>
-              ))}
-            </div>
+            {(blokken.length > 0 || isFounder) && (
+              <div className="mt-1.5">
+                <MediaBlokken
+                  paginaNamespace="resetcode-klant"
+                  paginaId={programma.slug}
+                  positie={`${st.slug}-docs`}
+                  blokken={blokken}
+                  isFounder={Boolean(isFounder)}
+                />
+              </div>
+            )}
+            {blokken.length === 0 && (
+              <div className="space-y-1.5 mt-1.5">
+                {st.documenten.map((d, i) => (
+                  <div key={i} className="rounded-xl bg-black/30 border border-dashed border-emerald-500/25 px-3 py-2">
+                    <p className="text-[13px] font-semibold text-white/90">{d.titel}</p>
+                    <p className="text-[11px] text-white/55">{d.omschrijving}</p>
+                    <p className="text-[10px] text-emerald-400/60 mt-0.5">
+                      {isFounder
+                        ? "vul deze plek via de edit-modus (potlood)"
+                        : "komt er binnenkort aan"}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         );
+      }
       case "contact":
         return (
           <div className={kader}>

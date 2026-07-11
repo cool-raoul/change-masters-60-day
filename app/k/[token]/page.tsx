@@ -9,6 +9,8 @@
 // geen programma-namen of gezondheids-termen in de metadata.
 
 import type { Metadata } from "next";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { haalPaginaBlokken, type Blok } from "@/lib/cms/pagina-blokken";
 import {
   pakResetKlantContext,
   pakResetChats,
@@ -18,15 +20,27 @@ import MentorWereld from "@/components/resetcode/MentorWereld";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Jouw persoonlijke omgeving",
-  description: "Alles voor jouw programma op één plek, met je eigen Mentor.",
-  robots: { index: false, follow: false },
-  openGraph: {
+// Metadata per token: neutraal en claim-vrij, plus een EIGEN manifest
+// zodat "zet op beginscherm" een app oplevert die op /k/<token> opent
+// (het globale manifest start op /dashboard en dat is voor members).
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ token: string }>;
+}): Promise<Metadata> {
+  const { token } = await params;
+  return {
     title: "Jouw persoonlijke omgeving",
     description: "Alles voor jouw programma op één plek, met je eigen Mentor.",
-  },
-};
+    robots: { index: false, follow: false },
+    manifest: `/k/${token}/manifest`,
+    openGraph: {
+      title: "Jouw persoonlijke omgeving",
+      description:
+        "Alles voor jouw programma op één plek, met je eigen Mentor.",
+    },
+  };
+}
 
 export default async function KlantLinkPagina({
   params,
@@ -114,6 +128,18 @@ export default async function KlantLinkPagina({
     })
     .filter((i): i is NonNullable<typeof i> => i !== null && (i.soort === "kaart" || i.tekst.length > 0));
 
+  // Door Raoul gevulde media (video's, documenten) voor dit programma.
+  const admin = createAdminClient();
+  const blokkenMap = await haalPaginaBlokken(
+    admin,
+    "resetcode-klant",
+    ctx.programmaSlug,
+  );
+  const mediaBlokken: Record<string, Blok[]> = {};
+  blokkenMap.forEach((blokken, positie) => {
+    mediaBlokken[`${ctx.programmaSlug}/${positie}`] = blokken;
+  });
+
   // Eerste bezoek (geen stap, geen gesprek): seintje naar de begeleider.
   if (!ctx.stationSlug && chats.length === 0) {
     await seintjeNaarMember(
@@ -136,6 +162,7 @@ export default async function KlantLinkPagina({
         stationSlugStart={ctx.stationSlug}
         beginItems={beginItems}
         memberTelefoon={ctx.memberTelefoon}
+        mediaBlokken={mediaBlokken}
       />
     </div>
   );

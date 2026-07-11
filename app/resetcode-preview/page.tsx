@@ -11,6 +11,10 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import MentorWereld from "@/components/resetcode/MentorWereld";
+import { EditModeProvider } from "@/components/cms/EditModeContext";
+import { EditModeToggle } from "@/components/cms/EditModeToggle";
+import { haalPaginaBlokken, type Blok } from "@/lib/cms/pagina-blokken";
+import { RESET_PROGRAMMAS } from "@/lib/resetcode/programma";
 
 export const dynamic = "force-dynamic";
 
@@ -34,25 +38,49 @@ export default async function ResetcodePreviewPagina() {
   if (!(p?.role === "founder" || p?.is_tester === true)) redirect("/dashboard");
 
   const begeleider = (p?.full_name ?? "").split(" ")[0] || "je begeleider";
+  const isFounder = p?.role === "founder";
+
+  // Gevulde media-plekken voor alle programma's, zodat de founder ze in
+  // de preview kan vullen (edit-modus) en meteen ziet wat de klant ziet.
+  const mediaBlokken: Record<string, Blok[]> = {};
+  for (const prog of RESET_PROGRAMMAS) {
+    const blokkenMap = await haalPaginaBlokken(
+      supabase,
+      "resetcode-klant",
+      prog.slug,
+    );
+    blokkenMap.forEach((blokken, positie) => {
+      mediaBlokken[`${prog.slug}/${positie}`] = blokken;
+    });
+  }
 
   return (
-    <div
-      className="mx-auto flex flex-col"
-      style={{ maxWidth: 560, height: "100dvh" }}
-    >
-      {/* Smalle preview-balk boven de app, alleen voor founders/testers */}
-      <div className="flex items-center justify-center gap-3 bg-amber-400/90 px-3 py-1 flex-shrink-0">
-        <span className="text-[10px] font-bold text-amber-950">🔭 preview</span>
-        <Link
-          href="/resetcode-preview/brainstorm"
-          className="text-[10px] font-semibold text-amber-900 underline"
-        >
-          andere richtingen
-        </Link>
+    <EditModeProvider>
+      <div
+        className="mx-auto flex flex-col"
+        style={{ maxWidth: 560, height: "100dvh" }}
+      >
+        {/* Smalle preview-balk boven de app, alleen voor founders/testers */}
+        <div className="flex items-center justify-center gap-3 bg-amber-400/90 px-3 py-1 flex-shrink-0">
+          <span className="text-[10px] font-bold text-amber-950">
+            🔭 preview
+          </span>
+          <Link
+            href="/resetcode-preview/brainstorm"
+            className="text-[10px] font-semibold text-amber-900 underline"
+          >
+            andere richtingen
+          </Link>
+        </div>
+        <div className="flex-1 min-h-0">
+          <MentorWereld
+            begeleiderNaam={begeleider}
+            mediaBlokken={mediaBlokken}
+            isFounder={isFounder}
+          />
+        </div>
       </div>
-      <div className="flex-1 min-h-0">
-        <MentorWereld begeleiderNaam={begeleider} />
-      </div>
-    </div>
+      {isFounder && <EditModeToggle isFounder={true} />}
+    </EditModeProvider>
   );
 }
