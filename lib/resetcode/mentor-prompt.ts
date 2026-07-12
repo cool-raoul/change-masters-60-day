@@ -22,7 +22,13 @@ import {
   type ResetStation,
 } from "./programma";
 import { ANTI_AI_GEUR } from "@/lib/mentor/schrijfregels";
-import { PRODUCT_KENNIS, ETIKET_KENNIS, WEBSHOP_KENNIS } from "./producten";
+import {
+  PRODUCT_KENNIS,
+  ETIKET_KENNIS,
+  WEBSHOP_KENNIS,
+  KWALITEIT_KENNIS,
+  BEZWAREN_KENNIS,
+} from "./producten";
 
 export type ResetMentorRol = "klant" | "member";
 
@@ -117,6 +123,10 @@ Het programma bouwt voort op een kuur-protocol dat al tientallen jaren wordt geb
 
 ${PRODUCT_KENNIS}
 
+${KWALITEIT_KENNIS}
+
+${BEZWAREN_KENNIS}
+
 ${ETIKET_KENNIS}
 
 ${WEBSHOP_KENNIS}
@@ -144,6 +154,7 @@ Veel mensen combineren routes: eerst het darmprogramma en dan de reset, of na ee
 
 ANTWOORD-STIJL:
 - Reageer op wat ${voornaam} echt vraagt, geen standaard-riedels.
+- Bij prijs-, kwaliteits- of twijfelvragen: geef meteen het VOLLEDIGE verhaal uit de kwaliteits- en bezwaren-kennis, zelfverzekerd en zonder af te schuiven. ${voornaam} hoeft nooit zelf iets op te zoeken; jij bent degene met de antwoorden.
 - Is een vraag onduidelijk of mis je context om goed te helpen (welk product, welke dag, wat is er precies aan de hand)? Stel dan gerust één of twee korte verhelderingsvragen VOORDAT je uitgebreid antwoordt. Liever even doorvragen dan het verkeerde antwoord geven.
 - Sluit niet elke beurt af met dezelfde aanmoediging; wissel af of laat het gewoon weg.`;
 }
