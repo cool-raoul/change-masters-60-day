@@ -6,8 +6,15 @@
 // meereizend geheugen. Delen gaat via kopiëren of WhatsApp.
 // ============================================================
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { waLinkNaar } from "@/lib/util/wa-nummer";
+
+type ProspectSuggestie = {
+  id: string;
+  naam: string;
+  telefoon: string | null;
+  fase: string | null;
+};
 
 type LinkRij = {
   id: string;
@@ -33,6 +40,44 @@ export default function LinksBeheer() {
   const [isBouwer, setIsBouwer] = useState(false);
   const [bezig, setBezig] = useState(false);
   const [gekopieerd, setGekopieerd] = useState<string | null>(null);
+  // Live-zoeken in de eigen namenlijst: gekozen kaart = automatische
+  // koppeling (seintjes en voortgang landen dan op de juiste kaart).
+  const [suggesties, setSuggesties] = useState<ProspectSuggestie[]>([]);
+  const [gekozenProspect, setGekozenProspect] =
+    useState<ProspectSuggestie | null>(null);
+  const [toonSuggesties, setToonSuggesties] = useState(false);
+  const zoekTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function bijNaamWijziging(waarde: string) {
+    setNaam(waarde);
+    setGekozenProspect(null);
+    if (zoekTimer.current) clearTimeout(zoekTimer.current);
+    if (!waarde.trim()) {
+      setSuggesties([]);
+      setToonSuggesties(false);
+      return;
+    }
+    zoekTimer.current = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `/api/resetcode/prospects?q=${encodeURIComponent(waarde.trim())}`,
+        );
+        const data = await res.json().catch(() => null);
+        if (data?.ok) {
+          setSuggesties(data.prospects);
+          setToonSuggesties(true);
+        }
+      } catch {
+        /* zoeken mag stil falen */
+      }
+    }, 250);
+  }
+
+  function kiesSuggestie(s: ProspectSuggestie) {
+    setNaam(s.naam);
+    setGekozenProspect(s);
+    setToonSuggesties(false);
+  }
 
   async function laad() {
     const res = await fetch("/api/resetcode/links");
@@ -54,11 +99,18 @@ export default function LinksBeheer() {
       const res = await fetch("/api/resetcode/links", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ naam: naam.trim(), programma, isBouwer }),
+        body: JSON.stringify({
+          naam: naam.trim(),
+          programma,
+          isBouwer,
+          prospectId: gekozenProspect?.id ?? null,
+        }),
       });
       if (res.ok) {
         setNaam("");
         setIsBouwer(false);
+        setGekozenProspect(null);
+        setSuggesties([]);
         await laad();
       } else {
         alert(await res.text());
@@ -95,12 +147,47 @@ export default function LinksBeheer() {
           ➕ Nieuwe klant-link
         </h2>
         <div className="flex flex-col sm:flex-row gap-2">
-          <input
-            value={naam}
-            onChange={(e) => setNaam(e.target.value)}
-            placeholder="Naam van je klant"
-            className="flex-1 rounded-lg border border-cm-border bg-transparent px-3 py-2.5 text-sm text-cm-white placeholder:text-cm-muted focus:outline-none focus:border-cm-gold/60"
-          />
+          <div className="relative flex-1">
+            <input
+              value={naam}
+              onChange={(e) => bijNaamWijziging(e.target.value)}
+              onFocus={() => suggesties.length > 0 && setToonSuggesties(true)}
+              onBlur={() => setTimeout(() => setToonSuggesties(false), 200)}
+              placeholder="Naam van je klant (zoekt mee in je namenlijst)"
+              className="w-full rounded-lg border border-cm-border bg-transparent px-3 py-2.5 text-sm text-cm-white placeholder:text-cm-muted focus:outline-none focus:border-cm-gold/60"
+            />
+            {toonSuggesties && suggesties.length > 0 && (
+              <div className="absolute z-20 mt-1 w-full rounded-lg border border-cm-border bg-cm-black shadow-xl overflow-hidden">
+                {suggesties.map((s) => (
+                  <button
+                    key={s.id}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      kiesSuggestie(s);
+                    }}
+                    className="block w-full text-left px-3 py-2 text-sm text-cm-white hover:bg-white/10"
+                  >
+                    👥 {s.naam}
+                    {s.fase && (
+                      <span className="text-cm-muted text-xs ml-2">
+                        {s.fase}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+            {gekozenProspect ? (
+              <p className="mt-1 text-[11px] text-emerald-400">
+                ✓ Gekoppeld aan de kaart van {gekozenProspect.naam} in je
+                namenlijst
+              </p>
+            ) : naam.trim().length > 1 && !toonSuggesties ? (
+              <p className="mt-1 text-[11px] text-cm-muted">
+                Nieuwe naam (nog niet in je namenlijst)
+              </p>
+            ) : null}
+          </div>
           <select
             value={programma}
             onChange={(e) => setProgramma(e.target.value)}
