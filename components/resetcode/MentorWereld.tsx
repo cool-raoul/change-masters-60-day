@@ -957,19 +957,36 @@ export default function MentorWereld({
               </button>
             ))}
             {!isKlant && (
-              <button
-                onClick={() => {
-                  setToonReis(false);
-                  try {
-                    localStorage.removeItem(OPSLAG_SLEUTEL);
-                  } catch {}
-                  gestart.current = true;
-                  versBeginnen();
-                }}
-                className="rounded-full px-3 py-1.5 text-[12px] font-semibold bg-rose-500/20 text-rose-300 hover:bg-rose-500/30"
-              >
-                ↺ opnieuw beginnen
-              </button>
+              <>
+                {/* Tijdmachine (alleen preview): speel het tijd-gebonden
+                    dag 5-7 moment af alsof de klant dan terugkomt. */}
+                {station &&
+                  ["zestien-dagen", "omschakeling"].includes(station.slug) && (
+                    <button
+                      onClick={() => {
+                        setToonReis(false);
+                        verteldRef.current.delete("kern-verhaal");
+                        speelTouchpoint("kern-verhaal");
+                      }}
+                      className="rounded-full px-3 py-1.5 text-[12px] font-semibold bg-sky-500/20 text-sky-300 hover:bg-sky-500/30"
+                    >
+                      ⏩ dag 5-7 moment (webshop-verhaal)
+                    </button>
+                  )}
+                <button
+                  onClick={() => {
+                    setToonReis(false);
+                    try {
+                      localStorage.removeItem(OPSLAG_SLEUTEL);
+                    } catch {}
+                    gestart.current = true;
+                    versBeginnen();
+                  }}
+                  className="rounded-full px-3 py-1.5 text-[12px] font-semibold bg-rose-500/20 text-rose-300 hover:bg-rose-500/30"
+                >
+                  ↺ opnieuw beginnen
+                </button>
+              </>
             )}
           </div>
         </div>

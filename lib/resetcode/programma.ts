@@ -200,7 +200,7 @@ const RESET_STATIONS_INTERN: ResetStation[] = [
     duur: "tot je pakket binnen is",
     kern: "Startpunt vastleggen en alles in huis halen.",
     welkom:
-      "Welkom bij de Holistic Reset! Voordat je begint leg je je startpunt vast. Dat kost een half uurtje en je hebt er de hele reis plezier van. En stel jezelf de twee vragen uit de startvideo: wil ik een optimale gezondheid, en ben ik bereid mijn leefstijl te veranderen? Zeg je daar ja op (tegen jezelf, niet tegen ons), dan ben je er klaar voor.",
+      "Welkom bij de Holistic Reset: een fysieke, mentale en emotionele reset. Gefeliciteerd met je keuze om te starten, het is bijzonder dat je jezelf de komende tijd op de eerste plaats zet. Dit is geen dieet en geen snelle oplossing: je geeft je lichaam de kans om weer te gaan werken zoals het bedoeld is. Alles staat hier voor je klaar, je hoeft zelf niets uit te zoeken. Begin met je startpunt vastleggen (kost een half uurtje, en je hebt er de hele reis plezier van) en stel jezelf de twee vragen uit de video: wil ik een optimale gezondheid, en ben ik bereid mijn leefstijl te veranderen? Zeg je daar ja op, tegen jezelf, dan ben je er klaar voor.",
     vandaagBelangrijk: [
       "Maak foto's: voorkant, zijkant, achterkant en je gezicht. Rustige achtergrond, hele lichaam. Voor jezelf, niet voor anderen.",
       "Meet en noteer: gewicht, taille, heup en borst.",
@@ -557,7 +557,7 @@ const PRODUCTEN_STATIONS: ResetStation[] = [
         omschrijving: "Om je Daily BioBasics lekker te maken.",
       },
     ],
-    videoSlots: ["Zo gebruik je je basisproducten"],
+    videoSlots: [],
   },
   {
     slug: "eerste-weken",
