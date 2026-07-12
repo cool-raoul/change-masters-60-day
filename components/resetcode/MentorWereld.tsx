@@ -26,6 +26,10 @@ import { waLinkNaar } from "@/lib/util/wa-nummer";
 import { MediaBlokken } from "@/components/cms/MediaBlokken";
 import type { Blok } from "@/lib/cms/pagina-blokken";
 import { SUIKER_NAMEN, WC_TIPS } from "@/lib/resetcode/producten";
+import {
+  touchpointTekst,
+  type TouchpointSleutel,
+} from "@/lib/resetcode/touchpoints";
 
 type Kaart =
   | "regels"
@@ -67,6 +71,9 @@ export default function MentorWereld({
   memberTelefoon,
   mediaBlokken,
   isFounder,
+  touchpointsAlVerteld,
+  isBouwer,
+  dueTouchpoint,
 }: {
   begeleiderNaam: string;
   /** Klant-modus: token van de klant-link; het gesprek wordt dan op de server bewaard. */
@@ -80,8 +87,44 @@ export default function MentorWereld({
   mediaBlokken?: Record<string, Blok[]>;
   /** Founder in de preview: mag media-plekken vullen (edit-modus). */
   isFounder?: boolean;
+  /** Business-verhalen die deze klant al kreeg (over programma's heen). */
+  touchpointsAlVerteld?: string[];
+  /** Bouwt zelf al mee: dan geen webshop-verhalen, puur programma-coach. */
+  isBouwer?: boolean;
+  /** Tijd-gebonden touchpoint dat nú aan de beurt is (bijv. kern-verhaal rond dag 7). */
+  dueTouchpoint?: TouchpointSleutel | null;
 }) {
   const isKlant = Boolean(token);
+  const verteldRef = useRef<Set<string>>(new Set(touchpointsAlVerteld ?? []));
+
+  function markeerTouchpoint(sleutel: TouchpointSleutel) {
+    if (!token) return;
+    fetch("/api/resetcode/touchpoint", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token, sleutel }),
+    }).catch(() => {});
+  }
+
+  // Speelt een business-touchpoint, precies één keer per klant (ook over
+  // meerdere programma's heen) en nooit voor bouwers of members.
+  async function speelTouchpoint(sleutel: TouchpointSleutel) {
+    if (isBouwer || rol === "member") return;
+    if (verteldRef.current.has(sleutel)) return;
+    const kernAl = verteldRef.current.has("kern-verhaal");
+    const teksten = touchpointTekst(sleutel, begeleiderNaam, kernAl);
+    verteldRef.current.add(sleutel);
+    // basis-groeien zonder kern-verhaal vertelt het kern-verhaal zelf.
+    const dektKern =
+      sleutel === "kern-verhaal" || (sleutel === "basis-groeien" && !kernAl);
+    if (dektKern) verteldRef.current.add("kern-verhaal");
+    for (const tekst of teksten) {
+      await mentorZegt(tekst, 1400);
+      await wacht(600);
+    }
+    markeerTouchpoint(sleutel);
+    if (dektKern && sleutel !== "kern-verhaal") markeerTouchpoint("kern-verhaal");
+  }
   const [rol, setRol] = useState<"klant" | "member">("klant");
   const [programma, setProgramma] = useState<ResetProgramma | null>(null);
   const [station, setStation] = useState<ResetStation | null>(null);
@@ -186,6 +229,14 @@ export default function MentorWereld({
             tekst: `Welkom terug! 👋 We waren bij ${st.emoji} ${st.naam}. Waar wil je verder mee? Stel je vraag, stuur een foto van een etiket, of zeg "verder" voor de volgende stap.`,
           },
         ]);
+        // Tijd-gebonden touchpoint (bijv. het kern-verhaal rond dag 7 van
+        // de 16 dagen of van fase 2): rustig ná het welkom-terug.
+        if (dueTouchpoint) {
+          (async () => {
+            await wacht(2500);
+            await speelTouchpoint(dueTouchpoint);
+          })();
+        }
       } else {
         // Allereerste bezoek: warm welkom + eerste stap.
         (async () => {
@@ -322,6 +373,20 @@ export default function MentorWereld({
       );
       await mentorKaart("suikers", st.slug, 800);
     }
+    // Business-touchpoints die bij een stap-start horen (eenmalig per
+    // klant, nooit voor bouwers). Het kern-verhaal rond dag 7 komt via
+    // de tijd-gebonden route (dueTouchpoint), niet hier.
+    const TOUCHPOINT_BIJ_STATION: Partial<Record<string, TouchpointSleutel>> = {
+      stabilisatie: "reset-complimenten",
+      "logisch-leven": "reset-afronding",
+      ritme: "basis-week3",
+      groeien: "basis-groeien",
+    };
+    const tp = TOUCHPOINT_BIJ_STATION[st.slug];
+    if (tp) {
+      await wacht(1000);
+      await speelTouchpoint(tp);
+    }
   }
 
   async function kiesProgramma(slug: string) {
@@ -383,6 +448,10 @@ export default function MentorWereld({
       } else {
         zeg();
         await mentorZegt("Je bent bij de laatste stap van je programma! 🎉", 800);
+        // Einde 16 dagen: het eigen-ervaring-moment (eenmalig, geen bouwers).
+        if (programma.slug === "darm") {
+          await speelTouchpoint("darm-einde");
+        }
         await mentorKaart("vervolg", station.slug);
       }
       return true;

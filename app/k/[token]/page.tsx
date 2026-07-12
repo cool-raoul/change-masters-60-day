@@ -185,6 +185,24 @@ export default async function KlantLinkPagina({
     mediaBlokken[`${ctx.programmaSlug}/${positie}`] = blokken;
   });
 
+  // Tijd-gebonden touchpoint: het kern-verhaal komt rond dag 5-7 van de
+  // 16 dagen (darm) of van fase 2 (reset), niet meteen bij de start.
+  const KERN_STATION: Record<string, string> = {
+    darm: "zestien-dagen",
+    reset: "omschakeling",
+  };
+  let dueTouchpoint: "kern-verhaal" | null = null;
+  if (
+    !ctx.isBouwer &&
+    !ctx.touchpoints.includes("kern-verhaal") &&
+    ctx.stationSlug === KERN_STATION[ctx.programmaSlug] &&
+    ctx.stationSinds
+  ) {
+    const dagen =
+      (Date.now() - new Date(ctx.stationSinds).getTime()) / 86_400_000;
+    if (dagen >= 5) dueTouchpoint = "kern-verhaal";
+  }
+
   // Eerste bezoek (geen stap, geen gesprek): seintje naar de begeleider.
   if (!ctx.stationSlug && chats.length === 0) {
     await seintjeNaarMember(
@@ -208,6 +226,9 @@ export default async function KlantLinkPagina({
         beginItems={beginItems}
         memberTelefoon={ctx.memberTelefoon}
         mediaBlokken={mediaBlokken}
+        touchpointsAlVerteld={ctx.touchpoints}
+        isBouwer={ctx.isBouwer}
+        dueTouchpoint={dueTouchpoint}
       />
     </div>
   );

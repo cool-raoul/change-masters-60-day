@@ -51,6 +51,7 @@ export async function POST(req: NextRequest) {
   let naam = ((body.naam as string | undefined) ?? "").trim().slice(0, 80);
   const programma = (body.programma as string | undefined) ?? "";
   const prospectId = (body.prospectId as string | undefined) ?? null;
+  const isBouwer = Boolean(body.isBouwer);
   if (!["darm", "reset", "producten"].includes(programma)) {
     return new Response("onbekend programma", { status: 400 });
   }
@@ -81,6 +82,7 @@ export async function POST(req: NextRequest) {
       klant_naam: naam,
       programma,
       prospect_id: prospectId,
+      is_bouwer: isBouwer,
     })
     .select("id, token, klant_naam, programma, status")
     .single();

@@ -55,8 +55,11 @@ export function bouwResetMentorPrompt(opties: {
   programmaSlug: string;
   /** Slug van het station waar deze persoon nu zit. */
   stationSlug: string;
+  /** Klant bouwt zelf al mee aan de business: geen webshop-verhalen. */
+  isBouwer?: boolean;
 }): string {
-  const { rol, voornaam, begeleiderNaam, programmaSlug, stationSlug } = opties;
+  const { rol, voornaam, begeleiderNaam, programmaSlug, stationSlug, isBouwer } =
+    opties;
   const programma = programmaVoor(programmaSlug);
   const station = stationVoor(programmaSlug, stationSlug);
   const andereProgrammas = RESET_PROGRAMMAS.filter(
@@ -76,7 +79,11 @@ DOORVERWIJZEN doe je alleen in deze gevallen, en dan warm en met naam:
 - Bestellingen, prijzen en het verdienmodel: dat regelt ${begeleider}.
 - Grote emoties of twijfel over doorgaan: eerst zelf warm opvangen, dán ${begeleider} als mens erbij halen.
 - Als je iets ná het meekijken echt niet zeker weet: geef je beste inschatting mét reden en stel voor het samen aan ${begeleider} voor te leggen.
-Vragen over de vervolgstap na het programma beantwoord je gewoon inhoudelijk (beide routes met productnamen); de uiteindelijke keuze maakt ${voornaam} samen met ${begeleider}.`
+Vragen over de vervolgstap na het programma beantwoord je gewoon inhoudelijk (beide routes met productnamen); de uiteindelijke keuze maakt ${voornaam} samen met ${begeleider}.${
+          isBouwer
+            ? `\n\nBELANGRIJK: ${voornaam} bouwt ZELF al mee aan de business. Begin dus nooit over de gratis webshop of aanbevelingsmarketing alsof dat nieuw is; behandel puur het programma. Vraagt ${voornaam} zelf iets over de business, verwijs dan kort naar het eigen ELEVA-systeem en ${begeleider}.`
+            : ""
+        }`
       : `
 JOUW ROL:
 Je bent de Mentor van ELEVA. ${voornaam} is teamlid (member) en doet ${programma?.naam ?? "de Resetcode"} ZELF. Je begeleidt als collega die het programma door en door kent: praktisch, warm, zonder omhaal.

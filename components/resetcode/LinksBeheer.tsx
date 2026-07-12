@@ -30,6 +30,7 @@ export default function LinksBeheer() {
   const [links, setLinks] = useState<LinkRij[]>([]);
   const [naam, setNaam] = useState("");
   const [programma, setProgramma] = useState("darm");
+  const [isBouwer, setIsBouwer] = useState(false);
   const [bezig, setBezig] = useState(false);
   const [gekopieerd, setGekopieerd] = useState<string | null>(null);
 
@@ -53,10 +54,11 @@ export default function LinksBeheer() {
       const res = await fetch("/api/resetcode/links", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ naam: naam.trim(), programma }),
+        body: JSON.stringify({ naam: naam.trim(), programma, isBouwer }),
       });
       if (res.ok) {
         setNaam("");
+        setIsBouwer(false);
         await laad();
       } else {
         alert(await res.text());
@@ -116,6 +118,16 @@ export default function LinksBeheer() {
             Maak link
           </button>
         </div>
+        <label className="mt-2.5 flex items-start gap-2 text-xs text-cm-muted cursor-pointer">
+          <input
+            type="checkbox"
+            checked={isBouwer}
+            onChange={(e) => setIsBouwer(e.target.checked)}
+            className="mt-0.5"
+          />
+          Bouwt zelf al mee aan de business (de Mentor laat het
+          webshop-verhaal dan helemaal weg)
+        </label>
         <p className="text-cm-muted text-xs mt-2">
           Jij kiest het programma samen met je klant; de link zet de Mentor
           meteen in de juiste stand.

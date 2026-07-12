@@ -35,6 +35,7 @@ export function ResetcodeOpKaart({
 }) {
   const router = useRouter();
   const [programma, setProgramma] = useState("darm");
+  const [isBouwer, setIsBouwer] = useState(false);
   const [bezig, setBezig] = useState(false);
   const [gekopieerd, setGekopieerd] = useState<string | null>(null);
 
@@ -51,7 +52,7 @@ export function ResetcodeOpKaart({
       const res = await fetch("/api/resetcode/links", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prospectId, programma }),
+        body: JSON.stringify({ prospectId, programma, isBouwer }),
       });
       if (!res.ok) alert(await res.text());
       router.refresh();
@@ -100,6 +101,16 @@ export function ResetcodeOpKaart({
               {bezig ? "..." : "Maak link"}
             </button>
           </div>
+          <label className="mt-2 flex items-start gap-2 text-xs text-cm-muted cursor-pointer">
+            <input
+              type="checkbox"
+              checked={isBouwer}
+              onChange={(e) => setIsBouwer(e.target.checked)}
+              className="mt-0.5"
+            />
+            Bouwt zelf al mee aan de business (de Mentor laat het
+            webshop-verhaal dan helemaal weg)
+          </label>
         </>
       ) : (
         <div className="space-y-3">

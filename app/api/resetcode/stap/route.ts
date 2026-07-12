@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
     .from("resetcode_klant_links")
     .update({
       station_slug: stationSlug,
+      station_sinds: new Date().toISOString(),
       laatste_activiteit: new Date().toISOString(),
     })
     .eq("id", ctx.linkId);

@@ -1,0 +1,60 @@
+// ============================================================
+// Business-touchpoints: de momenten waarop de Mentor de klant
+// vanzelfsprekend meeneemt in het webshop-verhaal (teksten
+// goedgekeurd door Raoul, 12 juli 2026). Elke touchpoint heeft
+// een vaste sleutel die per klant onthouden wordt (over
+// programma's heen), zodat niemand twee keer hetzelfde verhaal
+// krijgt. Bouwers (is_bouwer) krijgen ze helemaal niet.
+// ============================================================
+
+export type TouchpointSleutel =
+  | "kern-verhaal"
+  | "darm-einde"
+  | "reset-complimenten"
+  | "reset-afronding"
+  | "basis-week3"
+  | "basis-groeien";
+
+/** Het volledige kern-verhaal (dag ~7 darm, ~week 1 fase 2, of groeien-stap). */
+export function kernVerhaal(naam: string): string[] {
+  return [
+    "Wist je trouwens dat deze producten verspreid worden via aanbevelingsmarketing? Dat is gebaseerd op natuurlijk gedrag: als iets ons bevalt, praten we erover. Een goed restaurant, een goeie film, iets wat je moeder je aanraadde. Zo gaat dit al ruim 40 jaar, van mens tot mens, over de hele wereld, en grote kans dat jij er zelf ook zo aan gekomen bent.",
+    "Daarom kan iedereen die de producten gebruikt een gratis eigen webshop krijgen. Super laagdrempelig: je hoeft niks te verkopen en niks in te kopen, je deelt gewoon wat je zelf al gebruikt. Daarmee verdien je om te beginnen je eigen producten terug, en pak je het serieuzer aan, dan bouw je er een echte extra inkomstenstroom mee op, in jouw tempo.",
+    `En je staat er nooit alleen voor. Er is een AI-gedreven online systeem plus een heel team dat je stap voor stap meeneemt: het helpt je met wat je zegt, met het schrijven van je posts, en met alle kennis en vaardigheden die erbij horen. Sterker nog: deze Mentor waar je nu mee praat is daar een klein maar belangrijk onderdeel van. Je ervaart dus nu al precies hoe dat voelt. Meer weten? Vraag het gerust aan ${naam}.`,
+  ];
+}
+
+/** Korte opvolgers per moment, nadat het kern-verhaal (ooit) verteld is. */
+export function touchpointTekst(
+  sleutel: TouchpointSleutel,
+  naam: string,
+  kernAlVerteld: boolean,
+): string[] {
+  switch (sleutel) {
+    case "darm-einde":
+      return [
+        `Je hebt je eigen ervaring nu, en die is meer waard dan welke reclame ook. Denk maar eens aan wie er als eerste in je opkomt: die vriendin die altijd moe is, je collega met dat opgeblazen gevoel na de lunch, je moeder. ${kernAlVerteld ? "Weet je nog, die gratis webshop? Dit is het moment waarop veel mensen 'm aanzetten." : "Goed om te weten: er staat een gratis eigen webshop voor je klaar waarmee je je producten terugverdient door anderen op weg te helpen."} ${naam} zet 'm samen met je aan.`,
+      ];
+    case "reset-complimenten":
+      return [
+        "En? Krijg je al complimenten? Dit is voor de meeste mensen het fijnste moment van de hele reset: je ziet het verschil, je voelt het verschil, en de mensen om je heen zien het ook. Een collega die vraagt wat je toch doet, je zus die zegt dat je straalt, iemand op een verjaardag die naast je komt zitten.",
+        `Goed om te weten: precies hier begint voor veel mensen hun webshop-verhaal. Met jouw resultaten kun je heel veel mensen nieuwsgierig maken, offline én online. En je hoeft daar niks voor te kunnen: er is een stappenplan dat je precies laat zien hoe je het vertelt en deelt, zodat je de juiste geïnteresseerden op de goede manier helpt, net zoals jij geholpen bent. Nieuwsgierig hoe dat eruitziet? Vraag het aan ${naam}.`,
+      ];
+    case "reset-afronding":
+      return [
+        `Jouw verhaal is nu compleet: hoe je begon, wat er onderweg gebeurde en waar je nu staat. Met je gratis webshop, het stappenplan en het team erachter maak je daar iets blijvends van, van producten terugverdienen tot een serieuze extra inkomstenstroom. Vraag ${naam} naar de eerste stap. Die is kleiner dan je denkt.`,
+      ];
+    case "basis-week3":
+      return [
+        "Jij gebruikt de producten nu elke dag. Wist je dat je ze kunt terugverdienen met een gratis eigen webshop? Alles wordt geregeld, jij deelt alleen wat je toch al doet. Handig om te weten, meer niet.",
+      ];
+    case "basis-groeien":
+      return kernAlVerteld
+        ? [
+            `Die gratis webshop ligt er nog steeds. Geen haast, hij loopt niet weg. Maar als je de afgelopen weken weleens een compliment kreeg of iemand nieuwsgierig zag worden: dat was 'm al. Stuur ${naam} gerust een appje als je er meer over wilt weten, of zeg het hier, dan weet je precies waar je aan toe bent.`,
+          ]
+        : kernVerhaal(naam);
+    case "kern-verhaal":
+      return kernVerhaal(naam);
+  }
+}

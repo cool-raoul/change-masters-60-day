@@ -148,6 +148,7 @@ export async function POST(req: NextRequest) {
           : null,
       programmaSlug,
       stationSlug,
+      isBouwer: klantCtx?.isBouwer ?? false,
     });
 
     // Klant-vraag meteen bewaren (ongeacht of de AI-call slaagt).

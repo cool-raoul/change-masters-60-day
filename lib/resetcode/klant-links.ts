@@ -16,6 +16,13 @@ export type ResetKlantContext = {
   stationSlug: string | null;
   status: "actief" | "gepauzeerd" | "gesloten";
   prospectId: string | null;
+  /** Business-verhalen die deze klant al kreeg, samengevoegd over alle
+   *  links van dezelfde prospect (darm → reset → basis telt als één mens). */
+  touchpoints: string[];
+  /** Bouwt zelf al mee aan de business → geen webshop-verhalen. */
+  isBouwer: boolean;
+  /** Sinds wanneer de klant in de huidige stap zit (voor dag 7-momenten). */
+  stationSinds: string | null;
   memberId: string;
   memberNaam: string | null;
   memberVoornaam: string;
@@ -31,7 +38,7 @@ export async function pakResetKlantContext(
   const { data: linkRaw } = await admin
     .from("resetcode_klant_links")
     .select(
-      "id, token, member_id, klant_naam, programma, station_slug, status, prospect_id",
+      "id, token, member_id, klant_naam, programma, station_slug, status, prospect_id, touchpoints, is_bouwer, station_sinds",
     )
     .eq("token", token)
     .maybeSingle();
@@ -45,7 +52,31 @@ export async function pakResetKlantContext(
     station_slug: string | null;
     status: "actief" | "gepauzeerd" | "gesloten";
     prospect_id: string | null;
+    touchpoints: unknown;
+    is_bouwer: boolean | null;
+    station_sinds: string | null;
   };
+
+  // Touchpoints samenvoegen over alle links van dezelfde prospect: wie
+  // eerder het darmprogramma deed en nu de reset, krijgt het kern-verhaal
+  // niet nog een keer.
+  let touchpoints = Array.isArray(link.touchpoints)
+    ? (link.touchpoints as string[])
+    : [];
+  if (link.prospect_id) {
+    const { data: zusterLinks } = await admin
+      .from("resetcode_klant_links")
+      .select("touchpoints")
+      .eq("prospect_id", link.prospect_id)
+      .eq("member_id", link.member_id)
+      .neq("id", link.id);
+    for (const rij of (zusterLinks ?? []) as { touchpoints: unknown }[]) {
+      if (Array.isArray(rij.touchpoints)) {
+        touchpoints = touchpoints.concat(rij.touchpoints as string[]);
+      }
+    }
+    touchpoints = Array.from(new Set(touchpoints));
+  }
 
   const { data: memberRaw } = await admin
     .from("profiles")
@@ -67,6 +98,9 @@ export async function pakResetKlantContext(
     stationSlug: link.station_slug,
     status: link.status,
     prospectId: link.prospect_id,
+    touchpoints,
+    isBouwer: Boolean(link.is_bouwer),
+    stationSinds: link.station_sinds,
     memberId: link.member_id,
     memberNaam,
     memberVoornaam: (memberNaam ?? "").split(" ")[0] || "je begeleider",
