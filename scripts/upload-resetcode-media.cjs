@@ -35,8 +35,10 @@ const NAMESPACE = "resetcode-klant";
 
 // bestand → plek(ken). paginaId = programma-slug, positie = station-docs.
 const PLAATSING = [
+  // Let op: het meet- en weegschema hoort ALLEEN bij de reset (Raoul 13 juli);
+  // bij darm-start staat juist het programmaboekje direct vooraan.
+  { bestand: "darmen in balans.pdf", programma: "darm", positie: "start-docs", titel: "Darmen in Balans programmaboekje + innameschema" },
   { bestand: "extra benodigdheden.pdf", programma: "darm", positie: "start-docs", titel: "Benodigdheden en boodschappenlijstje" },
-  { bestand: "meet en weegschema.pdf", programma: "darm", positie: "start-docs", titel: "Meet- en weegschema" },
   { bestand: "darmen in balans.pdf", programma: "darm", positie: "zestien-dagen-docs", titel: "Darmen in Balans programmaboekje + innameschema" },
   { bestand: "recepten darmen in balans.pdf", programma: "darm", positie: "zestien-dagen-docs", titel: "Receptenboekje 16-daagse darmkuur" },
   { bestand: "Lifeplus groene smoothies v2.pdf", programma: "darm", positie: "zestien-dagen-docs", titel: "Groene smoothies" },

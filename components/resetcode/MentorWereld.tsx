@@ -344,6 +344,15 @@ export default function MentorWereld({
   async function introStation(prog: ResetProgramma, st: ResetStation) {
     setStation(st);
     await mentorZegt(`${st.emoji} ${st.naam} · ${st.duur}\n\n${st.welkom}`, 1100);
+    // Video van deze stap meteen laten zien (Boardslink-stijl:
+    // "start hier de video"), vóór de regels.
+    const heeftVideo =
+      st.videoSlots.length > 0 ||
+      (mediaBlokken?.[`${prog.slug}/${st.slug}-video`]?.length ?? 0) > 0;
+    if (heeftVideo) {
+      await wacht(600);
+      await mentorKaart("video", st.slug, 800);
+    }
     if (st.vandaagBelangrijk.length) {
       await wacht(700);
       await mentorKaart("regels", st.slug, 1000);
@@ -357,8 +366,8 @@ export default function MentorWereld({
       const isStart = st.slug === "start" || st.slug === "voorbereiding";
       await mentorZegt(
         isStart
-          ? `Dit heb je nodig, ik zet het alvast voor je klaar. 🖨️ Tip: print je boekje en het meet- en weegschema even uit, dat werkt het fijnst. En raak je iets kwijt: gewoon vragen ("stuur het boekje nog eens"), dan hoef je nooit terug te scrollen. Zeg "verder" zodra je klaar bent voor de volgende stap.`
-          : `Dit hoort bij deze fase, alvast voor je klaargezet. Kwijt? Gewoon even vragen, dan stuur ik het opnieuw.`,
+          ? `Dit heb je nodig, ik zet het alvast voor je klaar. 🖨️ Tip: print je boekje${prog.slug === "reset" ? " en het meet- en weegschema" : ""} even uit, dat werkt het fijnst. En goed om te weten: ik ken de inhoud van al deze documenten. Doorlezen mag dus, maar hoeft niet, je kunt me er ook gewoon alles over vragen. Ik bedenk trouwens ook recepten voor je, of een dag- of weekschema dat precies in jouw fase past; zeg maar wat je in huis hebt. En zeg "verder" zodra je klaar bent voor de volgende stap.`
+          : `Dit hoort bij deze fase, alvast voor je klaargezet. Ik ken de inhoud, dus vragen mag ook gewoon. Kwijt? Even roepen, dan stuur ik het opnieuw.`,
         1000,
       );
       await mentorKaart("documenten", st.slug, 700);

@@ -97,12 +97,12 @@ const DARM_STATIONS: ResetStation[] = [
       "Laat je begeleider weten wanneer je pakket binnen is en welke dag je start.",
     documenten: [
       {
-        titel: "Benodigdheden en boodschappenlijstje",
-        omschrijving: "Alles wat je in huis wilt hebben voor je begint.",
+        titel: "Darmen in Balans programmaboekje + innameschema",
+        omschrijving: "Het rode en blauwe schema, met uitleg per product.",
       },
       {
-        titel: "Meet- en weegschema",
-        omschrijving: "Om je metingen overzichtelijk bij te houden.",
+        titel: "Benodigdheden en boodschappenlijstje",
+        omschrijving: "Alles wat je in huis wilt hebben voor je begint.",
       },
     ],
     videoSlots: ["Welkom bij Darmen in Balans (introductie)"],
