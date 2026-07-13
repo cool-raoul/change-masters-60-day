@@ -366,7 +366,7 @@ export default function MentorWereld({
     if (st.slug === "laaddagen") {
       await wacht(700);
       await mentorZegt(
-        "En vandaag is het simpel: eten! 😋 Zeg of stuur me gewoon alles wat je eet (een foto van je bord of de verpakking mag ook), dan tel ik je calorieën automatisch mee. Bovenin zie je je teller richting de 3500+ lopen. Foutje gemaakt? Zeg gewoon \"haal die laatste weg\".",
+        "En vandaag is het simpel: eten! 😋 Zeg of stuur me gewoon alles wat je eet (een foto van je bord of de verpakking mag ook), dan tel ik je calorieën automatisch mee. Bovenin zie je je teller richting de 3500+ lopen. Foutje gemaakt? Zeg gewoon \"haal die laatste weg\". Kom je in je documenten nog de FatSecret-app tegen: die zou je kunnen gebruiken, maar dit is makkelijker, ik reken alles voor je uit.",
         1100,
       );
     }
