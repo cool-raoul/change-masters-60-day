@@ -21,7 +21,15 @@ export function VideoBlok({ inhoud }: Props) {
 
   let embed: string | null = null;
   if (vimId) embed = `https://player.vimeo.com/video/${vimId}`;
-  else if (ytId) embed = `https://www.youtube.com/embed/${ytId}`;
+  // youtube-nocookie: het gewone embed-domein stuurt EU-kijkers zonder
+  // consent-cookie naar Google's toestemmingspagina, die in een iframe
+  // in een redirect-lus eindigt ("www.google.com heeft je te vaak
+  // omgeleid"). De privacy-variant slaat die toestemming over.
+  // Opties: rel=0 (geen vreemde suggesties), modestbranding en
+  // playsinline houden de kijker zoveel mogelijk ín de omgeving in
+  // plaats van op YouTube.
+  else if (ytId)
+    embed = `https://www.youtube-nocookie.com/embed/${ytId}?rel=0&modestbranding=1&playsinline=1&iv_load_policy=3`;
 
   if (!embed) {
     return (
