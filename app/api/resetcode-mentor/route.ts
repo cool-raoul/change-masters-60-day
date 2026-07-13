@@ -160,11 +160,12 @@ export async function POST(req: NextRequest) {
       ]);
     }
 
-    // Foto's (etiket-checks) altijd naar het zware model: daar hangt
-    // een wel/niet-oordeel voor de klant vanaf.
-    const zwaarModel = Boolean(foto) || vraag.length > ZWAAR_MODEL_DREMPEL_TEKENS;
-    const model = zwaarModel ? "gpt-4o" : "gpt-4o-mini";
-    const maxTokens = zwaarModel ? 1000 : 600;
+    // ALTIJD het sterke model. Het goedkope model gleed bij korte vragen
+    // af naar generiek dieet-advies dat de fase-regels schond (noten en
+    // "flexibiliteit" in fase 2, bug 13 juli). Fase-discipline is de kern
+    // van dit product; het kosten-vangnet zit al in het vragen-quotum.
+    const model = "gpt-4o";
+    const maxTokens = foto || vraag.length > ZWAAR_MODEL_DREMPEL_TEKENS ? 1000 : 700;
 
     const apiMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
       { role: "system", content: systeemPrompt },

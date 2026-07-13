@@ -339,7 +339,7 @@ const RESET_STATIONS_INTERN: ResetStation[] = [
       {
         vraag: "Ik heb gecheat, is alles nu verpest?",
         antwoord:
-          "Nee, er is niks verpest, en je bent ook niet de eerste. De afspraak uit het programma: verleng deze fase met drie dagen en pak de draad gewoon weer op. En wees lief voor jezelf, dit hoort bij mensen.",
+          "Eén keer? Dan is er niks verpest, en je bent ook niet de eerste. De afspraak uit het programma: verleng deze fase met drie dagen en pak de draad meteen weer op. Maar wees eerlijk naar jezelf: gebeurt het meerdere keren, dan breek je de omschakeling waar deze fase om draait en werkt de reset niet meer zoals bedoeld. Dan is opnieuw beginnen, in overleg met je begeleider, de enige zinvolle route. Dus liever nu even streng dan straks teleurgesteld.",
       },
       {
         vraag: "Mag ik echt geen dagcrème of olie op mijn huid?",
