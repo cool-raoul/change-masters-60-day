@@ -133,9 +133,9 @@ const DARM_STATIONS: ResetStation[] = [
       "Erythritol als je zoetbehoefte hebt",
     ],
     nietLijst: [
-      "Brood, pasta en andere snelle koolhydraten, gluten",
+      "Brood, pasta en andere snelle koolhydraten, gluten (ook rijst, quinoa en haver)",
       "Suikers en E-nummers (check het etiket)",
-      "Bewerkt vlees, bakwaren, tussendoortjes, junkfood",
+      "Bewerkt vlees en varkensvlees, bakwaren, tussendoortjes, junkfood",
       "Zuivel (plantaardig mag wel)",
       "Geraffineerde oliën en kunstmatige zoetstoffen",
       "Nachtschade: paprika, aubergine, tomaat",
@@ -302,16 +302,16 @@ const RESET_STATIONS_INTERN: ResetStation[] = [
     welkom:
       "Dit is de kern van je reset. Eenentwintig dagen super clean eten van de fase 2-lijst uit je boekje. Het is even wennen en daarna verrassend goed te doen, zeker met de recepten en de support-groep erbij. En onthoud: het zijn maar drie weken op je hele leven.",
     vandaagBelangrijk: [
-      "Eet alleen wat op de fase 2-lijst in je boekje staat. Groente van de lijst mag ruim; fruit alleen de soorten én hoeveelheden die je fase 2-lijst aangeeft (dus niet onbeperkt). Calorieën tellen doen we in deze fase niet: de lijst is de regel.",
+      "Eet alleen wat op de fase 2-lijst in je boekje staat (wat er niet op staat, mag niet). Groente: onbeperkt, en minimaal 400 gram per dag. Fruit van de lijst: maximaal 2 stuks per dag. Proteïne: 250 gram per dag (vlees, vis of vega). Calorieën tellen doen we in deze fase niet: de lijst is de regel.",
       "Geen koolhydraten (pasta, rijst, aardappelen, brood), geen suikers (ook geen honing of kokosbloesem), geen vetten in je eten.",
       "Ook geen vette verzorging op je huid: kies vetvrije make-up, een shampoo-bar en zeep-bar. De MSM-lotion mag wel.",
-      "Neem elke dag één Wasa-cracker of twee grisini's, zoals in je boekje staat.",
-      "Drink minimaal anderhalve liter water per dag.",
+      "Je Wasa-cracker of soepstengel hoort erbij: 2 per dag, zoals in je boekje staat.",
+      "Drink 2 liter water per dag, en eet minimaal 3 uur voor het slapen niets meer (bijvoorbeeld vanaf 19.00 uur).",
     ],
     welLijst: [
       "Alles op de fase 2-lijst in je boekje (dat is de enige lijst die nu telt)",
-      "Groente van de fase 2-lijst, daar mag je ruim mee zijn",
-      "Fruit: alleen de soorten en hoeveelheden op je fase 2-lijst",
+      "Groente van de fase 2-lijst: onbeperkt (minimaal 400 gram per dag)",
+      "Fruit van de lijst: maximaal 2 stuks per dag (o.a. appel, bessen, mango, druiven)",
       "Vlees en vis van de lijst, vetvrij bereid",
     ],
     nietLijst: [
@@ -355,7 +355,7 @@ const RESET_STATIONS_INTERN: ResetStation[] = [
       {
         vraag: "Mag ik koffie of thee?",
         antwoord:
-          "Ja hoor, koffie en thee mogen gewoon, zonder suiker en zonder gewone melk. Water blijft je basis: minimaal anderhalve liter per dag.",
+          "Ja hoor, koffie en thee mogen gewoon, zonder suiker en zonder gewone melk. Water blijft je basis: 2 liter per dag.",
       },
       {
         vraag: "Ik word ziek of heb een bruiloft midden in fase 2, wat nu?",
