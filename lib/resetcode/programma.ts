@@ -205,7 +205,7 @@ const RESET_STATIONS_INTERN: ResetStation[] = [
       "Maak foto's: voorkant, zijkant, achterkant en je gezicht. Rustige achtergrond, hele lichaam. Voor jezelf, niet voor anderen.",
       "Meet en noteer: gewicht, taille, heup en borst.",
       "Schrijf je startpunt op: wat wil je graag anders, en hoe voelt het nu? Hoe concreter, hoe leuker het teruglezen straks wordt.",
-      "Zet de FatSecret-app op je telefoon, die gebruik je bij de laaddagen om je calorieën te tellen (alleen dan!).",
+      "Calorieën tellen op de laaddagen doe je straks gewoon bij mij: zeg of stuur wat je eet en ik tel automatisch mee. Geen aparte app nodig.",
       "Bewaar deze pagina en laat je begeleider weten wanneer je pakket binnen is en wanneer je start.",
     ],
     welLijst: [],
@@ -258,7 +258,7 @@ const RESET_STATIONS_INTERN: ResetStation[] = [
       "Eet twee dagen lang minimaal 3500 tot 5000 kcal per dag.",
       "Laad vooral met gezonde vetten: macadamia's, cashews, avocado, banaan, kokosroom, gebakken ei met kaas.",
       "Houd suiker en snelle koolhydraten juist laag tijdens het laden.",
-      "Tel je calorieën met de FatSecret-app, dan weet je zeker dat je genoeg zit.",
+      "Zeg of stuur mij alles wat je eet (foto mag ook), dan tel ik je calorieën automatisch mee en zie je bovenin precies waar je staat.",
     ],
     welLijst: [
       "Gezonde vetten: noten, avocado, kokosproducten, eieren, kaas",
@@ -280,7 +280,7 @@ const RESET_STATIONS_INTERN: ResetStation[] = [
       {
         vraag: "Ik krijg die hoeveelheid bijna niet op, wat nu?",
         antwoord:
-          "Je bent niet de enige! Begin vroeg, kies caloriedichte dingen (noten zijn je beste vriend) en verdeel het over de hele dag. Met de FatSecret-app zie je precies waar je staat.",
+          "Je bent niet de enige! Begin vroeg, kies caloriedichte dingen (noten zijn je beste vriend) en verdeel het over de hele dag. En meld alles gewoon bij mij, dan zie je bovenin precies waar je staat.",
       },
     ],
     contactMoment: "Laat je begeleider even weten dat je gestart bent met de reset.",

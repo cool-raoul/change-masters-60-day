@@ -74,6 +74,7 @@ export default function MentorWereld({
   touchpointsAlVerteld,
   isBouwer,
   dueTouchpoint,
+  kcalStart,
 }: {
   begeleiderNaam: string;
   /** Klant-modus: token van de klant-link; het gesprek wordt dan op de server bewaard. */
@@ -93,6 +94,8 @@ export default function MentorWereld({
   isBouwer?: boolean;
   /** Tijd-gebonden touchpoint dat nú aan de beurt is (bijv. kern-verhaal rond dag 7). */
   dueTouchpoint?: TouchpointSleutel | null;
+  /** Dagtotaal van de calorieteller (laaddagen), server-side berekend. */
+  kcalStart?: number;
 }) {
   const isKlant = Boolean(token);
   const verteldRef = useRef<Set<string>>(new Set(touchpointsAlVerteld ?? []));
@@ -134,6 +137,8 @@ export default function MentorWereld({
   const [mentorTypt, setMentorTypt] = useState(false);
   const [opneemt, setOpneemt] = useState(false);
   const [verwerkt, setVerwerkt] = useState(false);
+  // Calorieteller (alleen actief op de laaddagen).
+  const [kcalTotaal, setKcalTotaal] = useState<number>(kcalStart ?? 0);
   const [kanPraten, setKanPraten] = useState(false);
   const [toonReis, setToonReis] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -356,6 +361,14 @@ export default function MentorWereld({
     if (st.vandaagBelangrijk.length) {
       await wacht(700);
       await mentorKaart("regels", st.slug, 1000);
+    }
+    // Laaddagen: de Mentor ís de calorieteller (route 1, geen FatSecret).
+    if (st.slug === "laaddagen") {
+      await wacht(700);
+      await mentorZegt(
+        "En vandaag is het simpel: eten! 😋 Zeg of stuur me gewoon alles wat je eet (een foto van je bord of de verpakking mag ook), dan tel ik je calorieën automatisch mee. Bovenin zie je je teller richting de 3500+ lopen. Foutje gemaakt? Zeg gewoon \"haal die laatste weg\".",
+        1100,
+      );
     }
     // Documenten meteen aanreiken, met print-tip bij de start-stations.
     const heeftDocs =
@@ -599,7 +612,54 @@ export default function MentorWereld({
       lezer.readAsDataURL(bestand);
     });
     setItems((b) => [...b, { van: "ik", soort: "foto", dataUrl }]);
+    if (await probeerKcal("", dataUrl)) return;
     await roepMentor("", dataUrl);
+  }
+
+  // Laaddagen-calorieteller: eet-meldingen (tekst of foto) worden eerst
+  // door de teller beoordeeld; geen eet-melding → gewone Mentor.
+  async function probeerKcal(vraag: string, foto: string | null): Promise<boolean> {
+    if (station?.slug !== "laaddagen") return false;
+    setBezig(true);
+    setMentorTypt(true);
+    try {
+      const res = await fetch("/api/resetcode/kcal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token: token ?? undefined,
+          vraag,
+          foto: foto ?? undefined,
+        }),
+      });
+      const data = (await res.json().catch(() => null)) as {
+        eten?: boolean;
+        actie?: string;
+        dagTotaal?: number | null;
+        geschat?: number;
+        antwoord?: string;
+      } | null;
+      if (res.ok && data?.eten && data.antwoord) {
+        setItems((b) => [
+          ...b,
+          { van: "mentor", soort: "tekst", tekst: data.antwoord! },
+        ]);
+        setKcalTotaal((huidig) =>
+          typeof data.dagTotaal === "number"
+            ? data.dagTotaal
+            : data.actie === "verwijder_laatste"
+              ? huidig
+              : huidig + (data.geschat ?? 0),
+        );
+        return true;
+      }
+    } catch {
+      /* valt terug op de gewone Mentor */
+    } finally {
+      setMentorTypt(false);
+      setBezig(false);
+    }
+    return false;
   }
 
   async function verstuur(tekstOverride?: string) {
@@ -608,6 +668,7 @@ export default function MentorWereld({
     setInvoer("");
     if (await lokaleIntent(vraag)) return;
     setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: vraag }]);
+    if (await probeerKcal(vraag, null)) return;
     await roepMentor(vraag, null);
   }
 
@@ -936,12 +997,26 @@ export default function MentorWereld({
           </p>
         </div>
         {programma && station && (
-          <button
-            onClick={() => setToonReis((t) => !t)}
-            className="ml-auto rounded-full bg-white/10 px-3 py-1.5 text-[12px] font-semibold text-white/85 hover:bg-white/15 flex-shrink-0"
-          >
-            {station.emoji} {station.nummer}/{programma.stations.length} ▾
-          </button>
+          <div className="ml-auto flex items-center gap-1.5 flex-shrink-0">
+            {station.slug === "laaddagen" && (
+              <span
+                className="rounded-full px-3 py-1.5 text-[11px] font-bold"
+                style={{
+                  backgroundColor: kcalTotaal >= 3500 ? "#065F46" : "#7C2D12",
+                  color: kcalTotaal >= 3500 ? "#6EE7B7" : "#FDBA74",
+                }}
+                title="Jouw laaddag-teller: meld gewoon wat je eet"
+              >
+                🔥 ±{kcalTotaal} / 3500+
+              </span>
+            )}
+            <button
+              onClick={() => setToonReis((t) => !t)}
+              className="rounded-full bg-white/10 px-3 py-1.5 text-[12px] font-semibold text-white/85 hover:bg-white/15"
+            >
+              {station.emoji} {station.nummer}/{programma.stations.length} ▾
+            </button>
+          </div>
         )}
       </header>
 

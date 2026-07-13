@@ -203,6 +203,24 @@ export default async function KlantLinkPagina({
     if (dagen >= 5) dueTouchpoint = "kern-verhaal";
   }
 
+  // Laaddagen-teller: dagtotaal van vandaag (Nederlandse datum) voor de
+  // teller-pill, zodat het meereist over apparaten.
+  let kcalStart = 0;
+  if (ctx.stationSlug === "laaddagen") {
+    const vandaag = new Intl.DateTimeFormat("sv-SE", {
+      timeZone: "Europe/Amsterdam",
+    }).format(new Date());
+    const { data: kcalRijen } = await admin
+      .from("resetcode_kcal_log")
+      .select("kcal")
+      .eq("link_id", ctx.linkId)
+      .eq("datum", vandaag);
+    kcalStart = ((kcalRijen ?? []) as { kcal: number }[]).reduce(
+      (som, r) => som + r.kcal,
+      0,
+    );
+  }
+
   // Eerste bezoek (geen stap, geen gesprek): seintje naar de begeleider.
   if (!ctx.stationSlug && chats.length === 0) {
     await seintjeNaarMember(
@@ -229,6 +247,7 @@ export default async function KlantLinkPagina({
         touchpointsAlVerteld={ctx.touchpoints}
         isBouwer={ctx.isBouwer}
         dueTouchpoint={dueTouchpoint}
+        kcalStart={kcalStart}
       />
     </div>
   );
