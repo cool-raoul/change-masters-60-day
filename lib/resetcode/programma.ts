@@ -302,7 +302,7 @@ const RESET_STATIONS_INTERN: ResetStation[] = [
     welkom:
       "Dit is de kern van je reset. Eenentwintig dagen super clean eten van de fase 2-lijst uit je boekje. Het is even wennen en daarna verrassend goed te doen, zeker met de recepten en de support-groep erbij. En onthoud: het zijn maar drie weken op je hele leven.",
     vandaagBelangrijk: [
-      "Eet alleen wat op de fase 2-lijst in je boekje staat. Groente en fruit van de lijst mag ongelimiteerd, ook als tussendoortje. Calorieën tellen doen we in deze fase niet: de lijst is de regel.",
+      "Eet alleen wat op de fase 2-lijst in je boekje staat. Groente van de lijst mag ruim; fruit alleen de soorten én hoeveelheden die je fase 2-lijst aangeeft (dus niet onbeperkt). Calorieën tellen doen we in deze fase niet: de lijst is de regel.",
       "Geen koolhydraten (pasta, rijst, aardappelen, brood), geen suikers (ook geen honing of kokosbloesem), geen vetten in je eten.",
       "Ook geen vette verzorging op je huid: kies vetvrije make-up, een shampoo-bar en zeep-bar. De MSM-lotion mag wel.",
       "Neem elke dag één Wasa-cracker of twee grisini's, zoals in je boekje staat.",
@@ -310,7 +310,8 @@ const RESET_STATIONS_INTERN: ResetStation[] = [
     ],
     welLijst: [
       "Alles op de fase 2-lijst in je boekje (dat is de enige lijst die nu telt)",
-      "Groente en fruit van de lijst, zoveel je wilt",
+      "Groente van de fase 2-lijst, daar mag je ruim mee zijn",
+      "Fruit: alleen de soorten en hoeveelheden op je fase 2-lijst",
       "Vlees en vis van de lijst, vetvrij bereid",
     ],
     nietLijst: [
