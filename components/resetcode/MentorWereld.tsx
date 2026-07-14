@@ -454,7 +454,14 @@ export default function MentorWereld({
       logNaarServer([{ van: "klant", soort: "tekst", tekst: vraag }]);
     };
 
-    if (/\b(verder|volgende( stap| fase)?|door naar de volgende|ik ben klaar met deze)\b/.test(t)) {
+    // "Verder" alleen als het echt een los commando is: het woord kan ook
+    // gewoon in een vraag zitten ("hoe gaat het verder na fase 2?") en dan
+    // mag de klant NIET zomaar een stap doorschuiven.
+    if (
+      /^\s*(verder|volgende( stap| fase)?|door naar de volgende( stap| fase)?|ik ben klaar met deze( stap| fase)?)\s*[!.]?\s*$/.test(
+        t,
+      )
+    ) {
       const i = programma.stations.findIndex((s) => s.slug === station.slug);
       if (i < programma.stations.length - 1) {
         zeg();
@@ -478,7 +485,9 @@ export default function MentorWereld({
       }
       return true;
     }
-    if (/^tips?\b|\bjouw tips\b|\btips\b/.test(t) && t.length < 40) {
+    // Alleen als los commando ("tips"), niet als onderdeel van een echte
+    // vraag ("heb je tips tegen hoofdpijn?" hoort naar de Mentor zelf).
+    if (/^\s*(je |jouw |de )?tips\s*\??\s*$/.test(t)) {
       zeg();
       await mentorZegt("Zeker! Dit is wat mensen vóór jou het meest hielp:", 800);
       await mentorKaart("tips", station.slug);
@@ -495,7 +504,12 @@ export default function MentorWereld({
       await mentorKaart("video", station.slug, 800);
       return true;
     }
-    if (/(wat mag ik( wel)? eten|wel en niet|eetlijst|voedingslijst|de lijst)/.test(t) && (station.welLijst.length || station.nietLijst.length)) {
+    // Specifieke product-vragen ("staat kwark op de lijst?") horen naar de
+    // Mentor; alleen de brede lijst-vraag krijgt de kaart.
+    if (
+      /^(wat mag ik( wel| allemaal)? eten\??|wel en niet\??|(de |eet|voedings)?lijst\??)\s*$/.test(t) &&
+      (station.welLijst.length || station.nietLijst.length)
+    ) {
       zeg();
       await mentorZegt("Kijk, zo simpel is het eigenlijk:", 800);
       await mentorKaart("welniet", station.slug);
@@ -507,13 +521,16 @@ export default function MentorWereld({
       await mentorKaart("faq", station.slug, 800);
       return true;
     }
-    // Contact met de begeleider: altijd de kaart met de appje-knop
-    // neerleggen (de Mentor kan zelf niets doorgeven).
+    // Contact met de begeleider: de kaart met de appje-knop neerleggen
+    // (de Mentor kan zelf niets doorgeven). Bewust smal gehouden: "mag er
+    // kaas erbij?" is een eet-vraag, geen contact-verzoek.
+    const wilBegeleider =
+      t.includes(begeleiderNaam.toLowerCase()) &&
+      /\b(app|bel|spreek|bereik|erbij|contact|bericht)/.test(t);
     if (
-      /\bcontact\b|\berbij( halen)?\b|appje|bereik(en)? (je )?(begeleider|hem|haar)|\bapp (raoul|gaby|mijn begeleider)\b/.test(
-        t,
-      ) &&
-      t.length < 60
+      wilBegeleider ||
+      /^\s*(contact|appje)\s*\??\s*$/.test(t) ||
+      /(contact opnemen|erbij halen|haal .* erbij|begeleider (erbij|spreken|appen))/.test(t)
     ) {
       zeg();
       await mentorZegt(
@@ -895,7 +912,10 @@ export default function MentorWereld({
         return (
           <div className={kader}>
             {kop("🤝", `Samen met ${begeleiderNaam}`)}
-            <p className="text-[14px] text-white/85 leading-relaxed">{st.contactMoment}</p>
+            <p className="text-[14px] text-white/85 leading-relaxed">
+              {st.contactMoment ??
+                `Even iets delen of sparren? ${begeleiderNaam} is er voor je.`}
+            </p>
             {isKlant && memberTelefoon ? (
               <a
                 href={waLinkNaar(

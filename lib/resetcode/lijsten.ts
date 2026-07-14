@@ -40,7 +40,7 @@ export const DARM_LIJST = `
 WEL ETEN:
 - Groenten: alle slasoorten en bladgroenten, alle koolsoorten, bloemkool, bamboespruiten, andijvie, sojascheuten/taugé, paksoi, broccoli, spruitjes, boerenkool, bietjes, snijbiet, spinazie, paddenstoelen, courgette, wortelen, asperges, artisjok, witlof, venkel, komkommer, (knol)selderij, radijs, rettich, uien, prei, lamsoren, zeewier (nori, kombu, wakame), kiemgroenten, pompoen, zoete aardappel, pastinaak, wortelpeterselie, raapstelen, koolraap, schorseneren, postelein. (Koolsoorten en uien kunnen gasvorming geven; vermijd ze als je daar gevoelig voor bent.)
 - Gefermenteerd: kimchi, zuurkool, tempeh, miso.
-- Fruit: appel, peren, druiven, biologische bananen (niet overrijp), alle bessen, frambozen, aardbeien, kiwi, ananas, sinaasappels, mandarijnen, limoen, citroen, grapefruit, passievrucht, papaja, meloen, mango.
+- Fruit: appel, peren, druiven, biologische bananen (niet overrijp; banaan mag in DIT programma dus WÉL, anders dan in fase 2 van de reset), alle bessen, frambozen, aardbeien, kiwi, ananas, sinaasappels, mandarijnen, limoen, citroen, grapefruit, passievrucht, papaja, meloen, mango.
 - Zaden en pitten: chiazaad, lijnzaad, alle zaden en pitten.
 - Granen/meel: uitsluitend boekweit, amarant, sorghum, teff, meel van onrijpe bakbananen, amandelmeel, kokosmeel, hazelnootmeel.
 - Gezonde vetten: avocado, avocado-olie, kokosolie, druivenpitolie, olijfolie, walnootolie, sesamolie, lijnzaadolie, MCT-olie.
