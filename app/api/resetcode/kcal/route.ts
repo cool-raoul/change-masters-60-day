@@ -46,6 +46,12 @@ export async function POST(req: NextRequest) {
     const token = (body.token as string | undefined) ?? "";
     const vraag = ((body.vraag as string | undefined) ?? "").trim();
     const foto = typeof body.foto === "string" ? (body.foto as string) : null;
+    // Lopend totaal van de client: nodig in de preview (geen database-log)
+    // zodat de antwoord-tekst hetzelfde optelt als de teller-pill.
+    const huidigTotaal = Math.max(
+      0,
+      Math.round(Number(body.huidigTotaal) || 0),
+    );
     if (foto && (!foto.startsWith("data:image/") || foto.length > 6_000_000)) {
       return new Response("ongeldige foto", { status: 400 });
     }
@@ -173,7 +179,8 @@ Bij geen eet-melding: {"eten": false, "actie": "toevoegen", "items": []}.`;
     if (uitkomst.actie === "verwijder_laatste") {
       antwoord = `Gebeurd, de laatste melding is eruit gehaald.${dagTotaal !== null ? ` Je staat nu op ±${dagTotaal} kcal vandaag.` : ""}`;
     } else {
-      const totaalTekst = dagTotaal !== null ? dagTotaal : geschat;
+      const totaalTekst =
+        dagTotaal !== null ? dagTotaal : huidigTotaal + geschat;
       const stand =
         totaalTekst >= DOEL_MIN
           ? `Je zit vandaag al op ±${totaalTekst} kcal, boven de ${DOEL_MIN}. Lekker bezig, aanvullen mag altijd! 💪`

@@ -630,6 +630,7 @@ export default function MentorWereld({
           token: token ?? undefined,
           vraag,
           foto: foto ?? undefined,
+          huidigTotaal: kcalTotaal,
         }),
       });
       const data = (await res.json().catch(() => null)) as {
