@@ -507,6 +507,22 @@ export default function MentorWereld({
       await mentorKaart("faq", station.slug, 800);
       return true;
     }
+    // Contact met de begeleider: altijd de kaart met de appje-knop
+    // neerleggen (de Mentor kan zelf niets doorgeven).
+    if (
+      /\bcontact\b|\berbij( halen)?\b|appje|bereik(en)? (je )?(begeleider|hem|haar)|\bapp (raoul|gaby|mijn begeleider)\b/.test(
+        t,
+      ) &&
+      t.length < 60
+    ) {
+      zeg();
+      await mentorZegt(
+        `Stuur ${begeleiderNaam} gewoon zelf even een appje, dat werkt het snelst en het is meteen persoonlijk. Hier is de knop:`,
+        800,
+      );
+      await mentorKaart("contact", station.slug);
+      return true;
+    }
     if (/piramide|80\/20|kompas/.test(t) && station.graphic === "logi-piramide") {
       zeg();
       await mentorKaart("logi", station.slug, 800);
