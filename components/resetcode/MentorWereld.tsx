@@ -44,12 +44,27 @@ type Kaart =
   | "suikers"
   | "wctips";
 
+// "Verder met [X]"-knop: brengt de informatie geleidelijk (feedback Raoul
+// 18 juli), en toont vóóraf wat het volgende blok is.
+type VerderActie =
+  | { type: "chunk"; index: number; stationSlug: string }
+  | { type: "station"; slug: string };
+
 type ChatItem =
   | { van: "mentor"; soort: "tekst"; tekst: string }
   | { van: "mentor"; soort: "kaart"; kaart: Kaart; stationSlug: string }
   | { van: "mentor"; soort: "programma-keuze" }
+  | { van: "mentor"; soort: "verder-knop"; bid: number; label: string; actie: VerderActie }
   | { van: "ik"; soort: "tekst"; tekst: string }
   | { van: "ik"; soort: "foto"; dataUrl: string };
+
+// Welke business-touchpoint (indien van toepassing) bij een stap-start hoort.
+const TOUCHPOINT_BIJ_STATION: Partial<Record<string, TouchpointSleutel>> = {
+  stabilisatie: "reset-complimenten",
+  "logisch-leven": "reset-afronding",
+  ritme: "basis-week3",
+  groeien: "basis-groeien",
+};
 
 const OPSLAG_SLEUTEL = "resetcode-preview-gesprek-v1";
 const wacht = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -99,6 +114,12 @@ export default function MentorWereld({
 }) {
   const isKlant = Boolean(token);
   const verteldRef = useRef<Set<string>>(new Set(touchpointsAlVerteld ?? []));
+  // Geleidelijke info-flow: het chunk-plan van de huidige stap + een teller
+  // voor unieke "verder"-knop-ids.
+  const chunkPlanRef = useRef<
+    { sleutel: string; knopLabel: string; speel: () => Promise<void> }[]
+  >([]);
+  const bidTeller = useRef(0);
 
   function markeerTouchpoint(sleutel: TouchpointSleutel) {
     if (!token) return;
@@ -199,11 +220,15 @@ export default function MentorWereld({
         rol,
         programmaSlug: programma?.slug ?? null,
         stationSlug: station?.slug ?? null,
-        items: items.map((i) =>
-          i.van === "ik" && i.soort === "foto"
-            ? { van: "ik" as const, soort: "tekst" as const, tekst: "📷 (foto gestuurd)" }
-            : i,
-        ),
+        // Verder-knoppen zijn vluchtige UI (het chunk-plan leeft alleen in
+        // het geheugen), dus die bewaren we niet.
+        items: items
+          .filter((i) => i.soort !== "verder-knop")
+          .map((i) =>
+            i.van === "ik" && i.soort === "foto"
+              ? { van: "ik" as const, soort: "tekst" as const, tekst: "📷 (foto gestuurd)" }
+              : i,
+          ),
       };
       localStorage.setItem(OPSLAG_SLEUTEL, JSON.stringify(opTeSlaan));
     } catch {
@@ -226,13 +251,27 @@ export default function MentorWereld({
         : null;
       if (st && beginItems && beginItems.length > 0) {
         setStation(st);
+        const i = prog.stations.findIndex((s) => s.slug === st.slug);
+        const volgend =
+          i >= 0 && i < prog.stations.length - 1 ? prog.stations[i + 1] : null;
         setItems([
           ...beginItems,
           {
             van: "mentor",
             soort: "tekst",
-            tekst: `Welkom terug! 👋 We waren bij ${st.emoji} ${st.naam}. Waar wil je verder mee? Stel je vraag, stuur een foto van een etiket, of zeg "verder" voor de volgende stap.`,
+            tekst: `Welkom terug! 👋 We waren bij ${st.emoji} ${st.naam}. Waar wil je verder mee? Stel je vraag, stuur een foto van een etiket${volgend ? "" : ", of vraag me van alles"}.`,
           },
+          ...(volgend
+            ? [
+                {
+                  van: "mentor" as const,
+                  soort: "verder-knop" as const,
+                  bid: ++bidTeller.current,
+                  label: `${volgend.emoji} ${volgend.naam}`,
+                  actie: { type: "station" as const, slug: volgend.slug },
+                },
+              ]
+            : []),
         ]);
         // Tijd-gebonden touchpoint (bijv. het kern-verhaal rond dag 7 van
         // de 16 dagen of van fase 2): rustig ná het welkom-terug.
@@ -279,13 +318,27 @@ export default function MentorWereld({
           if (data.rol) setRol(data.rol);
           setProgramma(prog);
           setStation(st);
+          const i = prog.stations.findIndex((s) => s.slug === st.slug);
+          const volgend =
+            i >= 0 && i < prog.stations.length - 1 ? prog.stations[i + 1] : null;
           setItems([
             ...data.items,
             {
               van: "mentor",
               soort: "tekst",
-              tekst: `Welkom terug! 👋 We waren bij ${st.emoji} ${st.naam}. Waar wil je verder mee? Stel je vraag, stuur een foto van een etiket, of zeg "verder" voor de volgende stap.`,
+              tekst: `Welkom terug! 👋 We waren bij ${st.emoji} ${st.naam}. Waar wil je verder mee? Stel je vraag, stuur een foto van een etiket${volgend ? "" : ", of vraag me van alles"}.`,
             },
+            ...(volgend
+              ? [
+                  {
+                    van: "mentor" as const,
+                    soort: "verder-knop" as const,
+                    bid: ++bidTeller.current,
+                    label: `${volgend.emoji} ${volgend.naam}`,
+                    actie: { type: "station" as const, slug: volgend.slug },
+                  },
+                ]
+              : []),
           ]);
           return;
         }
@@ -346,68 +399,181 @@ export default function MentorWereld({
   // VOORGESCHOTELD in plaats van dat iemand erom moet vragen. Alles wat
   // meer is (tips, video, suikerlijst) komt op het juiste moment of op
   // verzoek.
+  // Bouwt het geleidelijke info-plan van een stap: elk blok komt pas na een
+  // "Verder met ..."-knop, zodat de klant weet wat er komt en niet alles in
+  // één keer over zich heen krijgt (feedback Raoul 18 juli).
+  function bouwChunks(prog: ResetProgramma, st: ResetStation) {
+    const chunks: { sleutel: string; knopLabel: string; speel: () => Promise<void> }[] = [];
+
+    if (st.vandaagBelangrijk.length) {
+      chunks.push({
+        sleutel: "regels",
+        knopLabel: "de belangrijkste punten van nu",
+        speel: async () => {
+          await mentorKaart("regels", st.slug, 900);
+        },
+      });
+    }
+
+    if (st.slug === "laaddagen") {
+      chunks.push({
+        sleutel: "kcal",
+        knopLabel: "hoe ik je calorieën tel",
+        speel: async () => {
+          await mentorZegt(
+            "Vandaag is het simpel: eten! 😋 Zeg of stuur me gewoon alles wat je eet (een foto van je bord of de verpakking mag ook), dan tel ik je calorieën automatisch mee. Bovenin zie je je teller richting de 3500+ lopen. Foutje gemaakt? Zeg gewoon \"haal die laatste weg\". Kom je in je documenten nog de FatSecret-app tegen: die zou je kunnen gebruiken, maar dit is makkelijker, ik reken alles voor je uit.",
+            1100,
+          );
+        },
+      });
+    }
+
+    const heeftDocs =
+      st.documenten.length > 0 ||
+      (mediaBlokken?.[`${prog.slug}/${st.slug}-docs`]?.length ?? 0) > 0;
+    if (heeftDocs) {
+      const isStart = st.slug === "start" || st.slug === "voorbereiding";
+      chunks.push({
+        sleutel: "docs",
+        knopLabel: "je documenten voor deze fase",
+        speel: async () => {
+          await mentorZegt(
+            isStart
+              ? `Hier zijn je documenten, alvast voor je klaargezet. 📖 Neem ze even goed door, dan weet je precies wat de bedoeling is en wat er allemaal aankomt.${prog.slug === "reset" ? " Print je boekje en het meet- en weegschema gerust uit, dat werkt het fijnst." : " Je boekje even uitprinten werkt het fijnst."} En het mooie: ik ken al deze documenten van binnen en van buiten, dus alles wat je erin leest kun je me ook gewoon vragen. Ik maak trouwens ook een recept of een dag- of weekschema dat precies in jouw fase past; zeg maar wat je in huis hebt.`
+              : `Dit hoort bij deze fase, alvast klaargezet. 📖 Lees het even rustig door zodat je weet wat er komt. En ik ken alles wat erin staat, dus vraag me gerust van alles, of laat me een recept of dagschema voor je maken.`,
+            1100,
+          );
+          await mentorKaart("documenten", st.slug, 700);
+        },
+      });
+    }
+
+    if (["zestien-dagen", "omschakeling"].includes(st.slug)) {
+      chunks.push({
+        sleutel: "suikers",
+        knopLabel: "een handige suiker-tip",
+        speel: async () => {
+          await mentorZegt(
+            `Eentje die bijna niemand weet: op etiketten heet suiker zelden gewoon "suiker". Er zijn wel 150 schuilnamen. Scroll maar eens door dit spiekbriefje, en twijfel je in de winkel: stuur me een foto van de ingrediëntenlijst, dan kijk ik mee 📷`,
+            1100,
+          );
+          await mentorKaart("suikers", st.slug, 800);
+        },
+      });
+    }
+
+    const tp = TOUCHPOINT_BIJ_STATION[st.slug];
+    if (tp && !isBouwer && rol !== "member" && !verteldRef.current.has(tp)) {
+      chunks.push({
+        sleutel: "touchpoint",
+        knopLabel: "nog iets leuks om te weten",
+        speel: async () => {
+          await speelTouchpoint(tp);
+        },
+      });
+    }
+
+    return chunks;
+  }
+
+  // Toon een "Verder met [het volgende blok]"-knop.
+  function toonVerderKnop(index: number, stationSlug: string) {
+    const chunk = chunkPlanRef.current[index];
+    if (!chunk) return;
+    const bid = ++bidTeller.current;
+    setItems((b) => [
+      ...b,
+      {
+        van: "mentor",
+        soort: "verder-knop",
+        bid,
+        label: chunk.knopLabel,
+        actie: { type: "chunk", index, stationSlug },
+      },
+    ]);
+  }
+
+  // Afsluiten van een stap: rustige slottekst + knop naar de volgende stap
+  // (of, op de laatste darm-stap, het eigen-ervaring-moment + vervolgkaart).
+  async function sluitStationAf(prog: ResetProgramma, st: ResetStation) {
+    const i = prog.stations.findIndex((s) => s.slug === st.slug);
+    const isLaatste = i >= prog.stations.length - 1;
+    await mentorZegt(
+      "Dat was alles voor deze stap 💚 Vraag me gerust van alles, ik ken al je documenten van binnen en van buiten en maak zo een recept of dagschema voor je.",
+      1000,
+    );
+    if (isLaatste) {
+      if (prog.slug === "darm") await speelTouchpoint("darm-einde");
+      await mentorKaart("vervolg", st.slug);
+      return;
+    }
+    const volgend = prog.stations[i + 1];
+    const bid = ++bidTeller.current;
+    setItems((b) => [
+      ...b,
+      {
+        van: "mentor",
+        soort: "verder-knop",
+        bid,
+        label: `${volgend.emoji} ${volgend.naam}`,
+        actie: { type: "station", slug: volgend.slug },
+      },
+    ]);
+  }
+
+  // Klant tikt op een "Verder met"-knop: knop weghalen, blok afspelen, en
+  // daarna de knop voor het volgende blok tonen (of de stap afsluiten).
+  async function klikVerder(item: Extract<ChatItem, { soort: "verder-knop" }>) {
+    if (bezig) return;
+    setItems((b) =>
+      b.filter((x) => !(x.soort === "verder-knop" && x.bid === item.bid)),
+    );
+    if (item.actie.type === "station") {
+      await naarStation(item.actie.slug, true);
+      return;
+    }
+    const { index, stationSlug } = item.actie;
+    if (station?.slug !== stationSlug) return;
+    const chunk = chunkPlanRef.current[index];
+    if (!chunk) return;
+    setItems((b) => [
+      ...b,
+      { van: "ik", soort: "tekst", tekst: `Verder met ${chunk.knopLabel}` },
+    ]);
+    logNaarServer([
+      { van: "klant", soort: "tekst", tekst: `Verder met ${chunk.knopLabel}` },
+    ]);
+    await chunk.speel();
+    if (index + 1 < chunkPlanRef.current.length) {
+      toonVerderKnop(index + 1, stationSlug);
+    } else if (programma && station) {
+      await sluitStationAf(programma, station);
+    }
+  }
+
   async function introStation(prog: ResetProgramma, st: ResetStation) {
     setStation(st);
     await mentorZegt(`${st.emoji} ${st.naam} · ${st.duur}\n\n${st.welkom}`, 1100);
-    // Video van deze stap meteen laten zien (Boardslink-stijl:
-    // "start hier de video"), vóór de regels.
+    // Video meteen bij het welkom (Boardslink-stijl), met de belofte dat de
+    // rest daarna stap voor stap komt.
     const heeftVideo =
       st.videoSlots.length > 0 ||
       (mediaBlokken?.[`${prog.slug}/${st.slug}-video`]?.length ?? 0) > 0;
     if (heeftVideo) {
       await wacht(600);
-      await mentorKaart("video", st.slug, 800);
-    }
-    if (st.vandaagBelangrijk.length) {
-      await wacht(700);
-      await mentorKaart("regels", st.slug, 1000);
-    }
-    // Laaddagen: de Mentor ís de calorieteller (route 1, geen FatSecret).
-    if (st.slug === "laaddagen") {
-      await wacht(700);
       await mentorZegt(
-        "En vandaag is het simpel: eten! 😋 Zeg of stuur me gewoon alles wat je eet (een foto van je bord of de verpakking mag ook), dan tel ik je calorieën automatisch mee. Bovenin zie je je teller richting de 3500+ lopen. Foutje gemaakt? Zeg gewoon \"haal die laatste weg\". Kom je in je documenten nog de FatSecret-app tegen: die zou je kunnen gebruiken, maar dit is makkelijker, ik reken alles voor je uit.",
-        1100,
+        "Kijk deze video even rustig. 👇 Daarna laat ik je stap voor stap zien wat er komt.",
+        900,
       );
+      await mentorKaart("video", st.slug, 700);
     }
-    // Documenten meteen aanreiken, met print-tip bij de start-stations.
-    const heeftDocs =
-      st.documenten.length > 0 ||
-      (mediaBlokken?.[`${prog.slug}/${st.slug}-docs`]?.length ?? 0) > 0;
-    if (heeftDocs) {
-      await wacht(800);
-      const isStart = st.slug === "start" || st.slug === "voorbereiding";
-      await mentorZegt(
-        isStart
-          ? `Dit heb je nodig, ik zet het alvast voor je klaar. 🖨️ Tip: print je boekje${prog.slug === "reset" ? " en het meet- en weegschema" : ""} even uit, dat werkt het fijnst. En goed om te weten: ik ken de inhoud van al deze documenten. Doorlezen mag dus, maar hoeft niet, je kunt me er ook gewoon alles over vragen. Ik bedenk trouwens ook recepten voor je, of een dag- of weekschema dat precies in jouw fase past; zeg maar wat je in huis hebt. En zeg "verder" zodra je klaar bent voor de volgende stap.`
-          : `Dit hoort bij deze fase, alvast voor je klaargezet. Ik ken de inhoud, dus vragen mag ook gewoon. Kwijt? Even roepen, dan stuur ik het opnieuw.`,
-        1000,
-      );
-      await mentorKaart("documenten", st.slug, 700);
-    }
-    // Suiker-spiekbriefje proactief in de fases waar het ertoe doet:
-    // niemand weet uit zichzelf dat suiker schuilnamen heeft.
-    if (["zestien-dagen", "omschakeling"].includes(st.slug)) {
-      await wacht(900);
-      await mentorZegt(
-        `Oh, en eentje die bijna niemand weet: op etiketten heet suiker zelden gewoon "suiker". Er zijn wel 150 schuilnamen. Scroll maar eens door dit spiekbriefje, en twijfel je in de winkel: stuur me een foto van de ingrediëntenlijst, dan kijk ik mee 📷`,
-        1200,
-      );
-      await mentorKaart("suikers", st.slug, 800);
-    }
-    // Business-touchpoints die bij een stap-start horen (eenmalig per
-    // klant, nooit voor bouwers). Het kern-verhaal rond dag 7 komt via
-    // de tijd-gebonden route (dueTouchpoint), niet hier.
-    const TOUCHPOINT_BIJ_STATION: Partial<Record<string, TouchpointSleutel>> = {
-      stabilisatie: "reset-complimenten",
-      "logisch-leven": "reset-afronding",
-      ritme: "basis-week3",
-      groeien: "basis-groeien",
-    };
-    const tp = TOUCHPOINT_BIJ_STATION[st.slug];
-    if (tp) {
-      await wacht(1000);
-      await speelTouchpoint(tp);
+    // De rest van de stap komt geleidelijk, via "Verder met ..."-knoppen.
+    chunkPlanRef.current = bouwChunks(prog, st);
+    if (chunkPlanRef.current.length > 0) {
+      await wacht(500);
+      toonVerderKnop(0, st.slug);
+    } else {
+      await sluitStationAf(prog, st);
     }
   }
 
@@ -1156,6 +1322,21 @@ export default function MentorWereld({
               <div key={i} className="verschijn max-w-[92%]">
                 <Kaartje item={item} />
               </div>
+            );
+          }
+          if (item.soort === "verder-knop") {
+            return (
+              <button
+                key={i}
+                onClick={() => klikVerder(item)}
+                disabled={bezig}
+                className="verschijn w-fit max-w-[92%] flex items-center gap-2 rounded-full border border-emerald-500/50 bg-emerald-500/10 px-5 py-3 text-left hover:bg-emerald-500/20 disabled:opacity-40 transition-colors"
+              >
+                <span className="text-emerald-300 text-[14px] font-semibold">
+                  Verder met: {item.label}
+                </span>
+                <span className="text-emerald-400 text-lg">→</span>
+              </button>
             );
           }
           return (
