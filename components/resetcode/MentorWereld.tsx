@@ -55,7 +55,7 @@ type VerderActie =
 type Checkin = { datum: string; stemming: string | null; gewicht: number | null };
 
 type ChatItem =
-  | { van: "mentor"; soort: "tekst"; tekst: string }
+  | { van: "mentor"; soort: "tekst"; tekst: string; sid?: number }
   | { van: "mentor"; soort: "kaart"; kaart: Kaart; stationSlug: string }
   | { van: "mentor"; soort: "programma-keuze" }
   | { van: "mentor"; soort: "verder-knop"; bid: number; label: string; actie: VerderActie }
@@ -288,6 +288,9 @@ export default function MentorWereld({
   // meteen klopt na een nieuwe check-in.
   const checkinReeksRef = useRef<Checkin[]>(checkinReeks ?? []);
   const checkinGedaanRef = useRef(Boolean(checkinVandaagGedaan));
+  // Waar terwijl de Mentor woord-voor-woord schrijft: dan even geen
+  // localStorage-opslag per woord (na het schrijven één keer).
+  const schrijftRef = useRef(false);
   const [checkinBezig, setCheckinBezig] = useState(false);
 
   function markeerTouchpoint(sleutel: TouchpointSleutel) {
@@ -383,7 +386,7 @@ export default function MentorWereld({
   // die is te groot voor localStorage; er blijft een tekst-spoor).
   // In klant-modus niet nodig: daar is de server het geheugen.
   useEffect(() => {
-    if (!gestart.current || isKlant) return;
+    if (!gestart.current || isKlant || schrijftRef.current) return;
     try {
       const opTeSlaan = {
         rol,
@@ -591,11 +594,32 @@ export default function MentorWereld({
     ]);
   }
 
+  // De Mentor "schrijft" zijn tekst woord voor woord (feedback Raoul:
+  // je leest mee terwijl hij schrijft, in plaats van bloktekst-plof).
+  // Korte adempauze na elke zin, zodat het leest als echt schrijven.
   async function mentorZegt(tekst: string, denkMs = 900) {
     setMentorTypt(true);
     await wacht(denkMs);
     setMentorTypt(false);
-    setItems((b) => [...b, { van: "mentor", soort: "tekst", tekst }]);
+    const sid = ++bidTeller.current;
+    setItems((b) => [...b, { van: "mentor", soort: "tekst", tekst: "", sid }]);
+    const woorden = tekst.split(" ");
+    schrijftRef.current = true;
+    let zin = "";
+    for (const woord of woorden) {
+      zin = zin ? `${zin} ${woord}` : woord;
+      const nu = zin;
+      setItems((b) =>
+        b.map((x) =>
+          x.van === "mentor" && x.soort === "tekst" && x.sid === sid
+            ? { ...x, tekst: nu }
+            : x,
+        ),
+      );
+      await wacht(/[.!?…]["')]?$/.test(woord) ? 260 : 55);
+    }
+    schrijftRef.current = false;
+    setItems((b) => [...b]); // één keer bewaren, nu het af is
     logNaarServer([{ van: "mentor", soort: "tekst", tekst }]);
   }
 
