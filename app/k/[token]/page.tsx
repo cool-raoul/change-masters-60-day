@@ -188,24 +188,6 @@ export default async function KlantLinkPagina({
     mediaBlokken[`${ctx.programmaSlug}/${positie}`] = blokken;
   });
 
-  // Tijd-gebonden touchpoint: het kern-verhaal komt rond dag 5-7 van de
-  // 16 dagen (darm) of van fase 2 (reset), niet meteen bij de start.
-  const KERN_STATION: Record<string, string> = {
-    darm: "zestien-dagen",
-    reset: "omschakeling",
-  };
-  let dueTouchpoint: "kern-verhaal" | null = null;
-  if (
-    !ctx.isBouwer &&
-    !ctx.touchpoints.includes("kern-verhaal") &&
-    ctx.stationSlug === KERN_STATION[ctx.programmaSlug] &&
-    ctx.stationSinds
-  ) {
-    const dagen =
-      (Date.now() - new Date(ctx.stationSinds).getTime()) / 86_400_000;
-    if (dagen >= 5) dueTouchpoint = "kern-verhaal";
-  }
-
   // Laaddagen-teller: dagtotaal van vandaag (Nederlandse datum) voor de
   // teller-pill, zodat het meereist over apparaten.
   let kcalStart = 0;
@@ -224,22 +206,64 @@ export default async function KlantLinkPagina({
     );
   }
 
+  // Dag-nummer binnen de huidige fase. Op de eerste "echte" fase telt
+  // de ZELFGEKOZEN startdatum (feedback Raoul 19 juli): de klant kan
+  // dagen vóór de start al alles lezen zonder dat de teller loopt.
+  const START_STATION: Record<string, string> = {
+    darm: "zestien-dagen",
+    reset: "laaddagen",
+  };
+  const opStartStation = ctx.stationSlug === START_STATION[ctx.programmaSlug];
+  const vandaagStr = new Intl.DateTimeFormat("sv-SE", {
+    timeZone: "Europe/Amsterdam",
+  }).format(new Date());
+  let dagNummerRuw: number | null = null;
+  if (opStartStation && ctx.startDatum) {
+    dagNummerRuw =
+      Math.round(
+        (Date.parse(vandaagStr) - Date.parse(ctx.startDatum)) / 86_400_000,
+      ) + 1;
+  } else if (ctx.stationSinds) {
+    dagNummerRuw =
+      Math.floor(
+        (Date.now() - new Date(ctx.stationSinds).getTime()) / 86_400_000,
+      ) + 1;
+  }
+  // Startdatum in de toekomst: teller staat op 0, aftellen tot de start.
+  const startOverDagen =
+    dagNummerRuw != null && dagNummerRuw < 1 ? 1 - dagNummerRuw : 0;
+  const dagNummer = dagNummerRuw != null && dagNummerRuw >= 1 ? dagNummerRuw : null;
+  const startGekozen = Boolean(ctx.startDatum) || !opStartStation;
+
+  // Tijd-gebonden touchpoint: het kern-verhaal komt rond dag 5-7 van de
+  // 16 dagen (darm) of van fase 2 (reset), niet meteen bij de start.
+  const KERN_STATION: Record<string, string> = {
+    darm: "zestien-dagen",
+    reset: "omschakeling",
+  };
+  let dueTouchpoint: "kern-verhaal" | null = null;
+  if (
+    !ctx.isBouwer &&
+    !ctx.touchpoints.includes("kern-verhaal") &&
+    ctx.stationSlug === KERN_STATION[ctx.programmaSlug] &&
+    dagNummer != null &&
+    dagNummer >= 5
+  ) {
+    dueTouchpoint = "kern-verhaal";
+  }
+
   // Dag 10-video (darm): pas vanaf dag 10 in de fase, eenmalig.
   let dueDag10: number | null = null;
   if (
     ctx.programmaSlug === "darm" &&
     ctx.stationSlug === "zestien-dagen" &&
-    ctx.stationSinds &&
+    dagNummer != null &&
     !ctx.touchpoints.includes("dag10-video")
   ) {
-    const dag =
-      Math.floor(
-        (Date.now() - new Date(ctx.stationSinds).getTime()) / 86_400_000,
-      ) + 1;
-    if (dag >= 10) dueDag10 = Math.min(dag, 16);
+    if (dagNummer >= 10) dueDag10 = Math.min(dagNummer, 16);
   }
 
-  // Dagelijkse check-in + dagboek-reeks + dag-nummer binnen de fase.
+  // Dagelijkse check-in + dagboek-reeks.
   const [checkinVandaagGedaan, checkinRuw] = await Promise.all([
     heeftVandaagIngecheckt(ctx.linkId),
     pakCheckins(ctx.linkId),
@@ -249,11 +273,6 @@ export default async function KlantLinkPagina({
     stemming: c.stemming,
     gewicht: c.gewicht,
   }));
-  const dagNummer = ctx.stationSinds
-    ? Math.floor(
-        (Date.now() - new Date(ctx.stationSinds).getTime()) / 86_400_000,
-      ) + 1
-    : null;
 
   // Programma-einde: pas als de dagen van de laatste fase er écht op
   // zitten (info doorklikken op dag 1 is geen einde). Dan komt het
@@ -303,6 +322,8 @@ export default async function KlantLinkPagina({
         checkinVandaagGedaan={checkinVandaagGedaan}
         checkinReeks={checkinReeks}
         dagNummer={dagNummer}
+        startGekozen={startGekozen}
+        startOverDagen={startOverDagen}
       />
     </div>
   );

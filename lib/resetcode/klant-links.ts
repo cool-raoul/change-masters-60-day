@@ -23,6 +23,8 @@ export type ResetKlantContext = {
   isBouwer: boolean;
   /** Sinds wanneer de klant in de huidige stap zit (voor dag 7-momenten). */
   stationSinds: string | null;
+  /** Zelfgekozen startdatum (YYYY-MM-DD): vanaf dan telt dag 1. */
+  startDatum: string | null;
   memberId: string;
   memberNaam: string | null;
   memberVoornaam: string;
@@ -38,7 +40,7 @@ export async function pakResetKlantContext(
   const { data: linkRaw } = await admin
     .from("resetcode_klant_links")
     .select(
-      "id, token, member_id, klant_naam, programma, station_slug, status, prospect_id, touchpoints, is_bouwer, station_sinds",
+      "id, token, member_id, klant_naam, programma, station_slug, status, prospect_id, touchpoints, is_bouwer, station_sinds, start_datum",
     )
     .eq("token", token)
     .maybeSingle();
@@ -55,6 +57,7 @@ export async function pakResetKlantContext(
     touchpoints: unknown;
     is_bouwer: boolean | null;
     station_sinds: string | null;
+    start_datum: string | null;
   };
 
   // Touchpoints samenvoegen over alle links van dezelfde prospect: wie
@@ -101,6 +104,7 @@ export async function pakResetKlantContext(
     touchpoints,
     isBouwer: Boolean(link.is_bouwer),
     stationSinds: link.station_sinds,
+    startDatum: link.start_datum,
     memberId: link.member_id,
     memberNaam,
     memberVoornaam: (memberNaam ?? "").split(" ")[0] || "je begeleider",

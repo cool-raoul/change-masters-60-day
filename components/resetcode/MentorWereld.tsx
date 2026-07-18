@@ -60,6 +60,7 @@ type ChatItem =
   | { van: "mentor"; soort: "programma-keuze" }
   | { van: "mentor"; soort: "verder-knop"; bid: number; label: string; actie: VerderActie }
   | { van: "mentor"; soort: "checkin-vraag"; bid: number }
+  | { van: "mentor"; soort: "start-keuze"; bid: number }
   | { van: "mentor"; soort: "voortgang" }
   | { van: "mentor"; soort: "push-opt-in"; bid: number }
   | { van: "ik"; soort: "tekst"; tekst: string }
@@ -136,6 +137,66 @@ function CheckinVraag({
             <span className="text-[11px] text-white/80">{s.label}</span>
           </button>
         ))}
+      </div>
+    </div>
+  );
+}
+
+// Startmoment-kaartje: vandaag, morgen of een zelfgekozen dag. De
+// gekozen dag wordt dag 1; alle dag-momenten tellen daarvandaan.
+function StartKeuze({
+  onKies,
+}: {
+  onKies: (datumISO: string, label: string) => void;
+}) {
+  const [eigenDatum, setEigenDatum] = useState("");
+  const naarISO = (d: Date) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+      d.getDate(),
+    ).padStart(2, "0")}`;
+  const vandaag = new Date();
+  const morgen = new Date(vandaag.getTime() + 86_400_000);
+  return (
+    <div className="rounded-2xl bg-[#0A251C] border border-emerald-500/25 px-4 py-3">
+      <p className="text-[13px] font-bold text-emerald-300 mb-2">
+        🚀 Jouw startmoment
+      </p>
+      <div className="flex gap-2 mb-3">
+        <button
+          onClick={() => onKies(naarISO(vandaag), "vandaag")}
+          className="flex-1 rounded-xl bg-emerald-600 py-2.5 text-[14px] font-bold text-white"
+        >
+          Vandaag
+        </button>
+        <button
+          onClick={() => onKies(naarISO(morgen), "morgen")}
+          className="flex-1 rounded-xl bg-white/5 border border-white/10 py-2.5 text-[14px] font-semibold text-white hover:bg-white/10"
+        >
+          Morgen
+        </button>
+      </div>
+      <div className="flex items-center gap-2">
+        <input
+          type="date"
+          value={eigenDatum}
+          min={naarISO(vandaag)}
+          onChange={(e) => setEigenDatum(e.target.value)}
+          className="flex-1 rounded-xl bg-white/5 border border-white/10 px-3 py-2 text-[13px] text-white focus:outline-none [color-scheme:dark]"
+        />
+        <button
+          onClick={() => {
+            if (!eigenDatum) return;
+            const label = new Date(`${eigenDatum}T12:00:00`).toLocaleDateString(
+              "nl-NL",
+              { weekday: "long", day: "numeric", month: "long" },
+            );
+            onKies(eigenDatum, `op ${label}`);
+          }}
+          disabled={!eigenDatum}
+          className="rounded-xl bg-white/5 border border-white/10 px-4 py-2 text-[13px] font-semibold text-emerald-300 disabled:opacity-40"
+        >
+          Kies
+        </button>
       </div>
     </div>
   );
@@ -244,6 +305,8 @@ export default function MentorWereld({
   checkinVandaagGedaan,
   checkinReeks,
   dagNummer,
+  startGekozen,
+  startOverDagen,
 }: {
   begeleiderNaam: string;
   /** Klant-modus: token van de klant-link; het gesprek wordt dan op de server bewaard. */
@@ -275,6 +338,10 @@ export default function MentorWereld({
   checkinReeks?: Checkin[];
   /** Dag-nummer binnen de huidige fase (voor de begroeting en het Groeipad). */
   dagNummer?: number | null;
+  /** Heeft de klant al een startmoment gekozen (of is dat hier niet nodig)? */
+  startGekozen?: boolean;
+  /** Startdatum in de toekomst: over zoveel dagen begint dag 1. */
+  startOverDagen?: number;
 }) {
   const isKlant = Boolean(token);
   const verteldRef = useRef<Set<string>>(new Set(touchpointsAlVerteld ?? []));
@@ -291,6 +358,13 @@ export default function MentorWereld({
   // Waar terwijl de Mentor woord-voor-woord schrijft: dan even geen
   // localStorage-opslag per woord (na het schrijven één keer).
   const schrijftRef = useRef(false);
+  // Startmoment: op de eerste echte fase kiest de klant zelf wanneer
+  // dag 1 is (vandaag/morgen/datum). Eerste fase mét dagen per programma.
+  const startGekozenRef = useRef(Boolean(startGekozen ?? false));
+  const EERSTE_DUUR_STATION: Record<string, string> = {
+    darm: "zestien-dagen",
+    reset: "laaddagen",
+  };
   const [checkinBezig, setCheckinBezig] = useState(false);
 
   function markeerTouchpoint(sleutel: TouchpointSleutel) {
@@ -398,6 +472,7 @@ export default function MentorWereld({
             (i) =>
               i.soort !== "verder-knop" &&
               i.soort !== "checkin-vraag" &&
+              i.soort !== "start-keuze" &&
               i.soort !== "push-opt-in" &&
               i.soort !== "voortgang",
           )
@@ -431,12 +506,15 @@ export default function MentorWereld({
         const i = prog.stations.findIndex((s) => s.slug === st.slug);
         const volgend =
           i >= 0 && i < prog.stations.length - 1 ? prog.stations[i + 1] : null;
+        const teltAf = (startOverDagen ?? 0) > 0;
         setItems([
           ...beginItems,
           {
             van: "mentor",
             soort: "tekst",
-            tekst: `Welkom terug! 👋 We waren bij ${st.emoji} ${st.naam}. Waar wil je verder mee? Stel je vraag, stuur een foto van een etiket${volgend ? "" : ", of vraag me van alles"}.`,
+            tekst: teltAf
+              ? `Welkom terug! 👋 Nog ${startOverDagen === 1 ? "één dag" : `${startOverDagen} dagen`} en dan begint jouw dag 1 🚀 Gebruik de tijd om je documenten rustig door te lezen, en vraag me gerust van alles.`
+              : `Welkom terug! 👋 We waren bij ${st.emoji} ${st.naam}${dagNummer ? ` (dag ${dagNummer})` : ""}. Waar wil je verder mee? Stel je vraag, stuur een foto van een etiket${volgend ? "" : ", of vraag me van alles"}.`,
           },
           ...(volgend
             ? [
@@ -450,9 +528,20 @@ export default function MentorWereld({
               ]
             : []),
         ]);
+        // Startmoment nog niet gekozen op de startfase? Dan eerst dát
+        // vragen; check-ins hebben pas zin als dag 1 vaststaat.
+        const moetStartKiezen =
+          !startGekozenRef.current && EERSTE_DUUR_STATION[prog.slug] === st.slug;
         // Dagelijkse check-in bovenaan (nieuwe dag, nog niet ingecheckt).
-        // Niet op het einde-moment: dan is het feest, geen formulier.
-        if (!checkinGedaanRef.current && !dueEinde) {
+        // Niet op het einde-moment (dan is het feest, geen formulier) en
+        // niet vóór de zelfgekozen startdatum.
+        if (moetStartKiezen) {
+          (async () => {
+            await wacht(1400);
+            await toonStartKeuze(FASE_DAGEN[st.slug]);
+            knoppenNaarOnder();
+          })();
+        } else if (!checkinGedaanRef.current && !dueEinde && !teltAf) {
           (async () => {
             await wacht(1400);
             await toonCheckin(true);
@@ -629,6 +718,48 @@ export default function MentorWereld({
     setMentorTypt(false);
     setItems((b) => [...b, { van: "mentor", soort: "kaart", kaart, stationSlug }]);
     logNaarServer([{ van: "mentor", soort: "kaart", kaart, stationSlug }]);
+  }
+
+  // ---------- Startmoment ----------
+
+  // De klant kiest zelf wanneer dag 1 is (feedback Raoul 19 juli):
+  // fijn voor klant, Mentor én begeleider. Alle dag-momenten
+  // (check-in, dag 10, einde) tellen vanaf deze datum.
+  async function toonStartKeuze(duur?: number) {
+    await mentorZegt(
+      `Dan nu het belangrijkste: wanneer ga jij van start? 🚀 Kies hieronder jouw startmoment, dan weet ${begeleiderNaam} het ook meteen en tel ik ${duur ? `je ${duur} dagen` : "je dagen"} precies vanaf jouw dag 1.`,
+      1000,
+    );
+    const bid = ++bidTeller.current;
+    setItems((b) => [...b, { van: "mentor", soort: "start-keuze", bid }]);
+  }
+
+  async function kiesStart(datumISO: string, label: string) {
+    setItems((b) => b.filter((x) => x.soort !== "start-keuze"));
+    startGekozenRef.current = true;
+    const echo = `Ik start ${label}! 🚀`;
+    setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: echo }]);
+    logNaarServer([{ van: "klant", soort: "tekst", tekst: echo }]);
+    if (token) {
+      fetch("/api/resetcode/start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, datum: datumISO }),
+      }).catch(() => {});
+    }
+    if (label === "vandaag") {
+      await mentorZegt(
+        `Yes! Vandaag is jouw dag 1 💚 Ik heb het aan ${begeleiderNaam} doorgegeven. Vanaf nu zie ik je elke dag bij je check-in en houd ik je voortgang bij. Zet 'm op vandaag, je gaat dit goed doen!`,
+        1000,
+      );
+      await wacht(600);
+      await toonCheckin(true);
+    } else {
+      await mentorZegt(
+        `Genoteerd: ${label} is jouw dag 1 💚 Ik heb het aan ${begeleiderNaam} doorgegeven. Gebruik de tijd tot je start om je documenten rustig door te lezen en alles in huis te halen. Vanaf je startdag zie ik je elke dag bij je check-in!`,
+        1000,
+      );
+    }
   }
 
   // ---------- Dagelijkse check-in (dagboek) ----------
@@ -922,13 +1053,23 @@ export default function MentorWereld({
     // doorklikt krijgt hier een logisch rustpunt, niet het einde-verhaal.
     // Het echte einde (webshop-moment + vervolg) is tijd-gebonden en komt
     // via dueEinde zodra de dagen er echt op zitten.
+    const vraagStart =
+      EERSTE_DUUR_STATION[prog.slug] === st.slug && !startGekozenRef.current;
+
     if (isLaatste) {
       await mentorZegt(
         duur
-          ? `Dat was alle informatie voor deze fase 💚 Nu begint het echte werk: neem er rustig je ${duur} dagen voor, ik zie je elke dag bij je check-in. Vraag me tussendoor van alles, ik ken al je documenten van binnen en van buiten en maak zo een recept of dagschema voor je. En als je dagen erop zitten, vertel ik je alles over je vervolg.`
+          ? `Dat was alle informatie voor deze fase 💚 Vraag me tussendoor van alles, ik ken al je documenten van binnen en van buiten en maak zo een recept of dagschema voor je.`
           : `Dat was alles voor deze stap 💚 Vraag me gerust van alles, ik ken al je documenten van binnen en van buiten en maak zo een recept of dagschema voor je.`,
         1100,
       );
+      if (vraagStart) await toonStartKeuze(duur);
+      else if (duur) {
+        await mentorZegt(
+          `Neem er rustig je ${duur} dagen voor, ik zie je elke dag bij je check-in. En als je dagen erop zitten, vertel ik je alles over je vervolg.`,
+          900,
+        );
+      }
       return;
     }
 
@@ -938,6 +1079,7 @@ export default function MentorWereld({
         : "Dat was alles voor deze stap 💚 Vraag me gerust van alles, ik ken al je documenten van binnen en van buiten en maak zo een recept of dagschema voor je.",
       1000,
     );
+    if (vraagStart) await toonStartKeuze(duur);
     const volgend = prog.stations[i + 1];
     const bid = ++bidTeller.current;
     setItems((b) => [
@@ -1363,15 +1505,43 @@ export default function MentorWereld({
         zetLaatsteMentorTekst(`Er ging iets mis: ${fout}`);
         return;
       }
+      // De tekst komt sneller binnen dan een mens leest: toon 'm in
+      // hetzelfde rustige woord-voor-woord-tempo als de vaste teksten,
+      // terwijl de rest op de achtergrond binnenstroomt.
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
-      let tekst = "";
+      let ontvangen = "";
+      let stroomKlaar = false;
+      const toner = (async () => {
+        let getoond = 0;
+        for (;;) {
+          if (getoond < ontvangen.length) {
+            let grens = ontvangen.indexOf(" ", getoond + 1);
+            if (grens === -1) {
+              if (!stroomKlaar) {
+                await wacht(40);
+                continue;
+              }
+              grens = ontvangen.length;
+            }
+            getoond = grens;
+            zetLaatsteMentorTekst(ontvangen.slice(0, getoond));
+            await wacht(55);
+          } else if (stroomKlaar) {
+            zetLaatsteMentorTekst(ontvangen);
+            break;
+          } else {
+            await wacht(40);
+          }
+        }
+      })();
       for (;;) {
         const { done, value } = await reader.read();
         if (done) break;
-        tekst += decoder.decode(value, { stream: true });
-        zetLaatsteMentorTekst(tekst);
+        ontvangen += decoder.decode(value, { stream: true });
       }
+      stroomKlaar = true;
+      await toner;
     } catch {
       zetLaatsteMentorTekst("De verbinding viel even weg, probeer het nog een keer.");
     } finally {
@@ -2006,6 +2176,13 @@ export default function MentorWereld({
                   bezig={checkinBezig}
                   onKies={(stemming, gewicht) => verstuurCheckin(stemming, gewicht)}
                 />
+              </div>
+            );
+          }
+          if (item.soort === "start-keuze") {
+            return (
+              <div key={i} className="verschijn max-w-[92%]">
+                <StartKeuze onKies={(datum, label) => kiesStart(datum, label)} />
               </div>
             );
           }
