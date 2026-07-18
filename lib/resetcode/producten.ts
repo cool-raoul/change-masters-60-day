@@ -65,6 +65,14 @@ MOEIZAME STOELGANG (WC-tips uit het materiaal):
 - Lauw water met citroen en eventueel gember op de nuchtere maag
 - Extra Biotic Blast gebruiken
 - In nood: 2 theelepels bitterzout opgelost in een glas water (blijf in de buurt van de wc)
+
+SNEL STARTEN (moedig dit warm aan, zonder druk):
+Als iemand twijfelt over het startmoment of het wil uitstellen, moedig dan vriendelijk aan om zo snel mogelijk te beginnen, om deze eerlijke redenen:
+- De 30 dagen niet-goed-geld-terug-garantie van Lifeplus loopt vanaf de BESTELLING, niet vanaf de start. Wie snel start, ervaart het programma ruim binnen die periode; wie weken wacht, laat de garantie ongebruikt weglopen.
+- De vervolg-/herstelbestelling sluit het mooist aan als het programma direct na levering begint: dan zijn de potten op het juiste moment leeg en loopt er niets door elkaar.
+- En eerlijk is eerlijk: de motivatie is nu het grootst. Uitstellen maakt starten zelden makkelijker.
+Toon: warm en zonder druk ("het is jouw moment, maar dit is waarom snel starten slim is"). De keuze blijft altijd aan de klant.
+Wil iemand zijn startmoment aanpassen? Zeg dan dat ze letterlijk "startmoment aanpassen" kunnen typen; dan verschijnt het keuzekaartje vanzelf opnieuw. Beloof NOOIT dat jij het zelf aanpast.
 `.trim();
 
 // WC-tips als kaart-inhoud (uit docs/resetcode/08, support-tekst).

@@ -727,7 +727,7 @@ export default function MentorWereld({
   // (check-in, dag 10, einde) tellen vanaf deze datum.
   async function toonStartKeuze(duur?: number) {
     await mentorZegt(
-      `Dan nu het belangrijkste: wanneer ga jij van start? 🚀 Kies hieronder jouw startmoment, dan weet ${begeleiderNaam} het ook meteen en tel ik ${duur ? `je ${duur} dagen` : "je dagen"} precies vanaf jouw dag 1.`,
+      `Dan nu het belangrijkste: wanneer ga jij van start? 🚀 Kies hieronder jouw startmoment, dan weet ${begeleiderNaam} het ook meteen en tel ik ${duur ? `je ${duur} dagen` : "je dagen"} precies vanaf jouw dag 1. Kleine tip: de meeste mensen starten vandaag of morgen. Je zit er nu helemaal in, en Lifeplus geeft 30 dagen niet-goed-geld-terug-garantie vanaf je bestelling; als je snel start, valt je hele ervaring daar mooi binnen.`,
       1000,
     );
     const bid = ++bidTeller.current;
@@ -759,6 +759,19 @@ export default function MentorWereld({
         `Genoteerd: ${label} is jouw dag 1 💚 Ik heb het aan ${begeleiderNaam} doorgegeven. Gebruik de tijd tot je start om je documenten rustig door te lezen en alles in huis te halen. Vanaf je startdag zie ik je elke dag bij je check-in!`,
         1000,
       );
+      // Verre start: warm aanmoedigen om eerder te beginnen (garantie
+      // loopt vanaf de bestelling; motivatie is nu het grootst).
+      const dagenTotStart = Math.round(
+        (Date.parse(datumISO) - Date.parse(new Date().toISOString().slice(0, 10))) /
+          86_400_000,
+      );
+      if (dagenTotStart > 3) {
+        await wacht(900);
+        await mentorZegt(
+          `Mag ik nog één ding eerlijk zeggen? Als het lukt om eerder te beginnen, zou ik dat doen. Je zit er nú helemaal in, en de 30 dagen niet-goed-geld-terug-garantie van Lifeplus loopt vanaf je bestelling; hoe eerder je start, hoe mooier je ervaring daarbinnen valt. Wil je toch een andere dag kiezen, typ dan gewoon "ik start eerder" en ik pas het aan. En anders: ${label} is helemaal prima, dan zie ik je dan! 💚`,
+          1100,
+        );
+      }
     }
   }
 
@@ -1195,6 +1208,24 @@ export default function MentorWereld({
       setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: vraag }]);
       logNaarServer([{ van: "klant", soort: "tekst", tekst: vraag }]);
     };
+
+    // Startmoment aanpassen: toont het keuzekaartje opnieuw (de belofte
+    // "typ 'ik start eerder'" moet echt werken).
+    if (
+      /^\s*(ik (wil |ga )?(toch )?(eerder|vandaag|later) (starten|beginnen)|ik start (toch )?(eerder|vandaag|later)|start(dag|datum|moment)? (aanpassen|veranderen|wijzigen)|andere start(dag|datum)?)\s*[!.]?\s*$/.test(
+        t,
+      )
+    ) {
+      zeg();
+      startGekozenRef.current = false;
+      await mentorZegt(
+        "Helemaal goed, kies maar: wanneer wordt jouw dag 1? 🚀",
+        800,
+      );
+      const bid = ++bidTeller.current;
+      setItems((b) => [...b, { van: "mentor", soort: "start-keuze", bid }]);
+      return true;
+    }
 
     // "Verder" alleen als het echt een los commando is: het woord kan ook
     // gewoon in een vraag zitten ("hoe gaat het verder na fase 2?") en dan
