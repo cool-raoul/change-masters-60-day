@@ -20,6 +20,7 @@ const GELDIG = [
   "basis-week3",
   "basis-groeien",
   "dag10-video",
+  "programma-einde",
 ];
 
 export async function POST(req: NextRequest) {

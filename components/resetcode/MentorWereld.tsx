@@ -240,6 +240,7 @@ export default function MentorWereld({
   dueTouchpoint,
   kcalStart,
   dueDag10,
+  dueEinde,
   checkinVandaagGedaan,
   checkinReeks,
   dagNummer,
@@ -266,6 +267,8 @@ export default function MentorWereld({
   kcalStart?: number;
   /** Dag-nummer als de dag 10-video nú aan de beurt is (darm, vanaf dag 10). */
   dueDag10?: number | null;
+  /** De dagen van de laatste fase zitten er écht op: nú het einde-moment spelen. */
+  dueEinde?: boolean;
   /** Heeft de klant vandaag al ingecheckt? Zo niet: dagelijkse check-in tonen. */
   checkinVandaagGedaan?: boolean;
   /** Reeks check-ins (oud → nieuw) voor de voortgangs-kaart en streak. */
@@ -445,15 +448,30 @@ export default function MentorWereld({
             : []),
         ]);
         // Dagelijkse check-in bovenaan (nieuwe dag, nog niet ingecheckt).
-        if (!checkinGedaanRef.current) {
+        // Niet op het einde-moment: dan is het feest, geen formulier.
+        if (!checkinGedaanRef.current && !dueEinde) {
           (async () => {
             await wacht(1400);
             await toonCheckin(true);
           })();
         }
-        // Tijd-gebonden momenten, rustig ná het welkom-terug: eerst de
-        // dag 10-video (als die aan de beurt is), dan het kern-verhaal.
-        if (dueDag10 || dueTouchpoint) {
+        // Tijd-gebonden momenten, rustig ná het welkom-terug. Het
+        // programma-einde gaat vóór alles (en dan slaan we dag 10 en
+        // kern-verhaal over, die zijn dan niet meer relevant).
+        if (dueEinde) {
+          (async () => {
+            await wacht(2500);
+            await mentorZegt(
+              `${klantVoornaam ?? "Hé"}... je hebt het gedaan. Álle dagen. 🎉 Ik ben oprecht trots op je, en ${begeleiderNaam} ook. Neem even een moment om dat te voelen: dit heb jíj gedaan.`,
+              1300,
+            );
+            await wacht(1200);
+            if (prog.slug === "darm") await speelTouchpoint("darm-einde");
+            await mentorKaart("vervolg", st.slug, 900);
+            markeerTouchpoint("programma-einde" as TouchpointSleutel);
+            knoppenNaarOnder();
+          })();
+        } else if (dueDag10 || dueTouchpoint) {
           (async () => {
             await wacht(2500);
             if (dueDag10) {
@@ -466,6 +484,7 @@ export default function MentorWereld({
               if (dueTouchpoint) await wacht(1500);
             }
             if (dueTouchpoint) await speelTouchpoint(dueTouchpoint);
+            knoppenNaarOnder();
           })();
         }
       } else {
@@ -653,6 +672,7 @@ export default function MentorWereld({
       await mentorZegt("Genoteerd 💚", 500);
     } finally {
       setCheckinBezig(false);
+      knoppenNaarOnder();
     }
   }
 
@@ -838,6 +858,19 @@ export default function MentorWereld({
     return chunks;
   }
 
+  // Houd openstaande "Verder met"-knoppen altijd ONDERAAN het gesprek:
+  // na een tussendoortje (check-in, vraag aan de Mentor, kcal-melding)
+  // zakt de knop mee, anders raakt hij begraven en weet niemand meer wat
+  // de volgende stap is (bug 18 juli).
+  function knoppenNaarOnder() {
+    setItems((b) => {
+      const knoppen = b.filter((x) => x.soort === "verder-knop");
+      if (knoppen.length === 0) return b;
+      if (b[b.length - 1]?.soort === "verder-knop") return b;
+      return [...b.filter((x) => x.soort !== "verder-knop"), ...knoppen];
+    });
+  }
+
   // Toon een "Verder met [het volgende blok]"-knop.
   function toonVerderKnop(index: number, stationSlug: string) {
     const chunk = chunkPlanRef.current[index];
@@ -855,20 +888,32 @@ export default function MentorWereld({
     ]);
   }
 
-  // Afsluiten van een stap: rustige slottekst + knop naar de volgende stap
-  // (of, op de laatste darm-stap, het eigen-ervaring-moment + vervolgkaart).
+  // Afsluiten van een stap: rustige slottekst + knop naar de volgende stap.
   async function sluitStationAf(prog: ResetProgramma, st: ResetStation) {
     const i = prog.stations.findIndex((s) => s.slug === st.slug);
     const isLaatste = i >= prog.stations.length - 1;
-    await mentorZegt(
-      "Dat was alles voor deze stap 💚 Vraag me gerust van alles, ik ken al je documenten van binnen en van buiten en maak zo een recept of dagschema voor je.",
-      1000,
-    );
+    const duur = FASE_DAGEN[st.slug];
+
+    // Info-klaar is NIET fase-klaar (bug 18 juli): wie op dag 1 alles
+    // doorklikt krijgt hier een logisch rustpunt, niet het einde-verhaal.
+    // Het echte einde (webshop-moment + vervolg) is tijd-gebonden en komt
+    // via dueEinde zodra de dagen er echt op zitten.
     if (isLaatste) {
-      if (prog.slug === "darm") await speelTouchpoint("darm-einde");
-      await mentorKaart("vervolg", st.slug);
+      await mentorZegt(
+        duur
+          ? `Dat was alle informatie voor deze fase 💚 Nu begint het echte werk: neem er rustig je ${duur} dagen voor, ik zie je elke dag bij je check-in. Vraag me tussendoor van alles, ik ken al je documenten van binnen en van buiten en maak zo een recept of dagschema voor je. En als je dagen erop zitten, vertel ik je alles over je vervolg.`
+          : `Dat was alles voor deze stap 💚 Vraag me gerust van alles, ik ken al je documenten van binnen en van buiten en maak zo een recept of dagschema voor je.`,
+        1100,
+      );
       return;
     }
+
+    await mentorZegt(
+      duur
+        ? `Dat was de informatie voor deze fase 💚 Neem er rustig je ${duur === 2 ? "twee laaddagen" : `${duur} dagen`} voor, ik zie je elke dag bij je check-in. Klaar met alle dagen? Tik dan hieronder op de volgende stap.`
+        : "Dat was alles voor deze stap 💚 Vraag me gerust van alles, ik ken al je documenten van binnen en van buiten en maak zo een recept of dagschema voor je.",
+      1000,
+    );
     const volgend = prog.stations[i + 1];
     const bid = ++bidTeller.current;
     setItems((b) => [
@@ -953,11 +998,9 @@ export default function MentorWereld({
     );
     await wacht(500);
     await introStation(prog, prog.stations[0]);
-    // Preview: laat de dagelijkse check-in even zien na het intro.
-    if (!token) {
-      await wacht(700);
-      await toonCheckin(true);
-    }
+    // Bewust GEEN check-in op het allereerste moment (te vroeg, feedback
+    // Raoul): die hoort bij terugkomen op een nieuwe dag. In de preview
+    // zit hij in het Groeipad-menu als tijdmachine-knop.
   }
 
   async function naarStation(slug: string, viaMenu = false) {
@@ -1008,13 +1051,15 @@ export default function MentorWereld({
         }
         await introStation(programma, volgend);
       } else {
+        // Expliciete klaar-route: de klant zégt zelf dat de dagen erop
+        // zitten. Dan mag het einde-moment nu spelen (eenmalig).
         zeg();
         await mentorZegt("Je bent bij de laatste stap van je programma! 🎉", 800);
-        // Einde 16 dagen: het eigen-ervaring-moment (eenmalig, geen bouwers).
         if (programma.slug === "darm") {
           await speelTouchpoint("darm-einde");
         }
         await mentorKaart("vervolg", station.slug);
+        markeerTouchpoint("programma-einde" as TouchpointSleutel);
       }
       return true;
     }
@@ -1247,6 +1292,7 @@ export default function MentorWereld({
     } finally {
       setMentorTypt(false);
       setBezig(false);
+      knoppenNaarOnder();
     }
     return false;
   }
@@ -1306,6 +1352,7 @@ export default function MentorWereld({
       zetLaatsteMentorTekst("De verbinding viel even weg, probeer het nog een keer.");
     } finally {
       setBezig(false);
+      knoppenNaarOnder();
     }
   }
 
@@ -1815,6 +1862,37 @@ export default function MentorWereld({
                       className="rounded-full px-4 py-2 text-[12px] font-semibold bg-sky-500/20 text-sky-300"
                     >
                       ⏩ dag 10-moment
+                    </button>
+                  )}
+                  <button
+                    onClick={async () => {
+                      setToonReis(false);
+                      await wacht(400);
+                      await toonCheckin(true);
+                    }}
+                    className="rounded-full px-4 py-2 text-[12px] font-semibold bg-sky-500/20 text-sky-300"
+                  >
+                    ⏩ ochtend check-in
+                  </button>
+                  {programma.stations[programma.stations.length - 1]?.slug ===
+                    station.slug && (
+                    <button
+                      onClick={async () => {
+                        setToonReis(false);
+                        await mentorZegt(
+                          "...je hebt het gedaan. Álle dagen. 🎉 Ik ben oprecht trots op je. Neem even een moment om dat te voelen: dit heb jíj gedaan.",
+                          900,
+                        );
+                        await wacht(800);
+                        if (programma.slug === "darm") {
+                          verteldRef.current.delete("darm-einde");
+                          await speelTouchpoint("darm-einde");
+                        }
+                        await mentorKaart("vervolg", station.slug, 700);
+                      }}
+                      className="rounded-full px-4 py-2 text-[12px] font-semibold bg-sky-500/20 text-sky-300"
+                    >
+                      ⏩ einde-moment
                     </button>
                   )}
                   <button

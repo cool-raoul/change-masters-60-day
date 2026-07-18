@@ -255,6 +255,22 @@ export default async function KlantLinkPagina({
       ) + 1
     : null;
 
+  // Programma-einde: pas als de dagen van de laatste fase er écht op
+  // zitten (info doorklikken op dag 1 is geen einde). Dan komt het
+  // einde-moment (webshop-verhaal + vervolg) bij het volgende bezoek.
+  const EINDE_NA: Record<string, { station: string; dagen: number }> = {
+    darm: { station: "zestien-dagen", dagen: 16 },
+    reset: { station: "logisch-leven", dagen: 21 },
+  };
+  const einde = EINDE_NA[ctx.programmaSlug];
+  const dueEinde = Boolean(
+    einde &&
+      ctx.stationSlug === einde.station &&
+      dagNummer != null &&
+      dagNummer > einde.dagen &&
+      !ctx.touchpoints.includes("programma-einde"),
+  );
+
   // Eerste bezoek (geen stap, geen gesprek): seintje naar de begeleider.
   if (!ctx.stationSlug && chats.length === 0) {
     await seintjeNaarMember(
@@ -283,6 +299,7 @@ export default async function KlantLinkPagina({
         dueTouchpoint={dueTouchpoint}
         kcalStart={kcalStart}
         dueDag10={dueDag10}
+        dueEinde={dueEinde}
         checkinVandaagGedaan={checkinVandaagGedaan}
         checkinReeks={checkinReeks}
         dagNummer={dagNummer}
