@@ -13,7 +13,8 @@ export type TouchpointSleutel =
   | "reset-complimenten"
   | "reset-afronding"
   | "basis-week3"
-  | "basis-groeien";
+  | "basis-groeien"
+  | "dag10-video";
 
 /** Het volledige kern-verhaal (dag ~7 darm, ~week 1 fase 2, of groeien-stap). */
 export function kernVerhaal(naam: string): string[] {
@@ -54,6 +55,8 @@ export function touchpointTekst(
             `Die gratis webshop ligt er nog steeds. Geen haast, hij loopt niet weg. Maar als je de afgelopen weken weleens een compliment kreeg of iemand nieuwsgierig zag worden: dat was 'm al. Stuur ${naam} gerust een appje als je er meer over wilt weten, of zeg het hier, dan weet je precies waar je aan toe bent.`,
           ]
         : kernVerhaal(naam);
+    case "dag10-video":
+      return []; // geen tekst: de video-kaart doet het werk
     case "kern-verhaal":
       return kernVerhaal(naam);
   }

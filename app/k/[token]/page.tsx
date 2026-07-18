@@ -145,6 +145,8 @@ export default async function KlantLinkPagina({
     "faq",
     "suikers",
     "wctips",
+    "videotips",
+    "videodag10",
   ] as const;
   type KaartNaam = (typeof KAARTEN)[number];
   const beginItems = chats
@@ -221,6 +223,21 @@ export default async function KlantLinkPagina({
     );
   }
 
+  // Dag 10-video (darm): pas vanaf dag 10 in de fase, eenmalig.
+  let dueDag10: number | null = null;
+  if (
+    ctx.programmaSlug === "darm" &&
+    ctx.stationSlug === "zestien-dagen" &&
+    ctx.stationSinds &&
+    !ctx.touchpoints.includes("dag10-video")
+  ) {
+    const dag =
+      Math.floor(
+        (Date.now() - new Date(ctx.stationSinds).getTime()) / 86_400_000,
+      ) + 1;
+    if (dag >= 10) dueDag10 = Math.min(dag, 16);
+  }
+
   // Eerste bezoek (geen stap, geen gesprek): seintje naar de begeleider.
   if (!ctx.stationSlug && chats.length === 0) {
     await seintjeNaarMember(
@@ -248,6 +265,7 @@ export default async function KlantLinkPagina({
         isBouwer={ctx.isBouwer}
         dueTouchpoint={dueTouchpoint}
         kcalStart={kcalStart}
+        dueDag10={dueDag10}
       />
     </div>
   );

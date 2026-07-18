@@ -119,7 +119,7 @@ const DARM_STATIONS: ResetStation[] = [
     vandaagBelangrijk: [
       "Volg het innameschema uit je boekje: het rode schema bij het basispakket (5 producten), het blauwe schema bij het plus-pakket (8 producten). Daar staat per moment van de dag precies wat je neemt.",
       "Eet van de voedingslijst. Geen hoeveelheden-regels, wel: check bij verpakte producten altijd de ingrediëntenlijst (niet de voedingswaarde) op suikers en E-nummers.",
-      "Kijk rond dag 10 de dag 10-video, dat is vaak een kantelpunt.",
+      "Op dag 10 staat er een belangrijke video voor je klaar; ik zet 'm die dag automatisch voor je neer, dat is vaak een kantelpunt.",
       "Na dag 16 maak je je producten rustig op: deel de inhoud van elk potje door 30, dan weet je je dagdosering.",
     ],
     welLijst: [
@@ -181,11 +181,7 @@ const DARM_STATIONS: ResetStation[] = [
         omschrijving: "Heerlijke recepten om te variëren.",
       },
     ],
-    videoSlots: [
-      "Opstart-video Darmen in Balans (deel 1)",
-      "Tips & tricks bij het darmprogramma",
-      "Dag 10-video (kijk deze rond dag 10)",
-    ],
+    videoSlots: [],
   },
 ];
 

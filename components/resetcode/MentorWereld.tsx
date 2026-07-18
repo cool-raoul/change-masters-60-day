@@ -36,6 +36,8 @@ type Kaart =
   | "welniet"
   | "tips"
   | "video"
+  | "videotips"
+  | "videodag10"
   | "documenten"
   | "contact"
   | "logi"
@@ -90,6 +92,7 @@ export default function MentorWereld({
   isBouwer,
   dueTouchpoint,
   kcalStart,
+  dueDag10,
 }: {
   begeleiderNaam: string;
   /** Klant-modus: token van de klant-link; het gesprek wordt dan op de server bewaard. */
@@ -111,6 +114,8 @@ export default function MentorWereld({
   dueTouchpoint?: TouchpointSleutel | null;
   /** Dagtotaal van de calorieteller (laaddagen), server-side berekend. */
   kcalStart?: number;
+  /** Dag-nummer als de dag 10-video nú aan de beurt is (darm, vanaf dag 10). */
+  dueDag10?: number | null;
 }) {
   const isKlant = Boolean(token);
   const verteldRef = useRef<Set<string>>(new Set(touchpointsAlVerteld ?? []));
@@ -273,12 +278,21 @@ export default function MentorWereld({
               ]
             : []),
         ]);
-        // Tijd-gebonden touchpoint (bijv. het kern-verhaal rond dag 7 van
-        // de 16 dagen of van fase 2): rustig ná het welkom-terug.
-        if (dueTouchpoint) {
+        // Tijd-gebonden momenten, rustig ná het welkom-terug: eerst de
+        // dag 10-video (als die aan de beurt is), dan het kern-verhaal.
+        if (dueDag10 || dueTouchpoint) {
           (async () => {
             await wacht(2500);
-            await speelTouchpoint(dueTouchpoint);
+            if (dueDag10) {
+              await mentorZegt(
+                `Trouwens: je zit vandaag op dag ${dueDag10} van je 16 dagen! 🎉 Dit is het moment voor je dag 10-video, die is belangrijk. Kijk 'm even rustig 👇`,
+                1100,
+              );
+              await mentorKaart("videodag10", st.slug, 800);
+              markeerTouchpoint("dag10-video" as TouchpointSleutel);
+              if (dueTouchpoint) await wacht(1500);
+            }
+            if (dueTouchpoint) await speelTouchpoint(dueTouchpoint);
           })();
         }
       } else {
@@ -411,6 +425,21 @@ export default function MentorWereld({
         knopLabel: "de belangrijkste punten van nu",
         speel: async () => {
           await mentorKaart("regels", st.slug, 900);
+        },
+      });
+    }
+
+    // Losse tips & tricks-video (16 dagen): eigen blok, direct aan het begin.
+    if ((mediaBlokken?.[`${prog.slug}/${st.slug}-video-tips`]?.length ?? 0) > 0) {
+      chunks.push({
+        sleutel: "videotips",
+        knopLabel: "de tips & tricks-video",
+        speel: async () => {
+          await mentorZegt(
+            "Deze is goud: de tips & tricks van mensen die dit programma al honderden keren begeleid hebben. Acht minuutjes, kijk 'm even rustig 👇",
+            900,
+          );
+          await mentorKaart("videotips", st.slug, 700);
         },
       });
     }
@@ -1039,6 +1068,46 @@ export default function MentorWereld({
           </div>
         );
       }
+      case "videotips": {
+        // Losse tips & tricks-video (eigen blok, feedback Raoul 18 juli).
+        const blokken =
+          mediaBlokken?.[`${programma.slug}/${st.slug}-video-tips`] ?? [];
+        if (!blokken.length && !isFounder) return null;
+        return (
+          <div className={kader}>
+            {kop("🎬", "Tips & tricks")}
+            <div className="mt-1.5">
+              <MediaBlokken
+                paginaNamespace="resetcode-klant"
+                paginaId={programma.slug}
+                positie={`${st.slug}-video-tips`}
+                blokken={blokken}
+                isFounder={Boolean(isFounder)}
+              />
+            </div>
+          </div>
+        );
+      }
+      case "videodag10": {
+        // De dag 10-video: komt pas op dag 10 in beeld (tijd-gebonden).
+        const blokken =
+          mediaBlokken?.[`${programma.slug}/${st.slug}-video-dag10`] ?? [];
+        if (!blokken.length && !isFounder) return null;
+        return (
+          <div className={kader}>
+            {kop("🎬", "Jouw dag 10-video")}
+            <div className="mt-1.5">
+              <MediaBlokken
+                paginaNamespace="resetcode-klant"
+                paginaId={programma.slug}
+                positie={`${st.slug}-video-dag10`}
+                blokken={blokken}
+                isFounder={Boolean(isFounder)}
+              />
+            </div>
+          </div>
+        );
+      }
       case "documenten": {
         const blokken =
           mediaBlokken?.[`${programma.slug}/${st.slug}-docs`] ?? [];
@@ -1245,8 +1314,8 @@ export default function MentorWereld({
             ))}
             {!isKlant && (
               <>
-                {/* Tijdmachine (alleen preview): speel het tijd-gebonden
-                    dag 5-7 moment af alsof de klant dan terugkomt. */}
+                {/* Tijdmachine (alleen preview): speel tijd-gebonden
+                    momenten af alsof de klant die dag terugkomt. */}
                 {station &&
                   ["zestien-dagen", "omschakeling"].includes(station.slug) && (
                     <button
@@ -1260,6 +1329,21 @@ export default function MentorWereld({
                       ⏩ dag 5-7 moment (webshop-verhaal)
                     </button>
                   )}
+                {station && station.slug === "zestien-dagen" && (
+                  <button
+                    onClick={async () => {
+                      setToonReis(false);
+                      await mentorZegt(
+                        "Trouwens: je zit vandaag op dag 10 van je 16 dagen! 🎉 Dit is het moment voor je dag 10-video, die is belangrijk. Kijk 'm even rustig 👇",
+                        900,
+                      );
+                      await mentorKaart("videodag10", station.slug, 700);
+                    }}
+                    className="rounded-full px-3 py-1.5 text-[12px] font-semibold bg-sky-500/20 text-sky-300 hover:bg-sky-500/30"
+                  >
+                    ⏩ dag 10-moment (video)
+                  </button>
+                )}
                 <button
                   onClick={() => {
                     setToonReis(false);

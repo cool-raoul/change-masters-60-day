@@ -19,6 +19,7 @@ const GELDIG = [
   "reset-afronding",
   "basis-week3",
   "basis-groeien",
+  "dag10-video",
 ];
 
 export async function POST(req: NextRequest) {
