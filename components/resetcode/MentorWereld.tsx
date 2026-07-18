@@ -52,11 +52,16 @@ type VerderActie =
   | { type: "chunk"; index: number; stationSlug: string }
   | { type: "station"; slug: string };
 
+type Checkin = { datum: string; stemming: string | null; gewicht: number | null };
+
 type ChatItem =
   | { van: "mentor"; soort: "tekst"; tekst: string }
   | { van: "mentor"; soort: "kaart"; kaart: Kaart; stationSlug: string }
   | { van: "mentor"; soort: "programma-keuze" }
   | { van: "mentor"; soort: "verder-knop"; bid: number; label: string; actie: VerderActie }
+  | { van: "mentor"; soort: "checkin-vraag"; bid: number }
+  | { van: "mentor"; soort: "voortgang" }
+  | { van: "mentor"; soort: "push-opt-in"; bid: number }
   | { van: "ik"; soort: "tekst"; tekst: string }
   | { van: "ik"; soort: "foto"; dataUrl: string };
 
@@ -78,6 +83,148 @@ const LOGI_LAGEN = [
   { label: "VAAK", inhoud: "groente en fruit", breedte: "100%", kleur: "#4E8F4B" },
 ];
 
+const STEMMINGEN = [
+  { id: "top", emoji: "😃", label: "Top" },
+  { id: "gaatwel", emoji: "🙂", label: "Gaat wel" },
+  { id: "zwaar", emoji: "💛", label: "Zwaar" },
+];
+
+// Hoeveel dagen een fase duurt (voor de dag-balk op het Groeipad).
+const FASE_DAGEN: Record<string, number> = {
+  "zestien-dagen": 16,
+  laaddagen: 2,
+  omschakeling: 21,
+  stabilisatie: 21,
+  "logisch-leven": 21,
+};
+
+// Dagelijkse check-in in de chat: stemming (verplicht om te tikken) +
+// optioneel gewicht. Twintig seconden werk, de reden om elke dag te openen.
+function CheckinVraag({
+  bezig,
+  onKies,
+}: {
+  bezig: boolean;
+  onKies: (stemming: string, gewicht: string) => void;
+}) {
+  const [gewicht, setGewicht] = useState("");
+  return (
+    <div className="rounded-2xl bg-[#0A251C] border border-emerald-500/25 px-4 py-3">
+      <p className="text-[13px] font-bold text-emerald-300 mb-2">
+        📔 Even je check-in
+      </p>
+      <div className="flex items-center gap-2 mb-3">
+        <input
+          value={gewicht}
+          onChange={(e) => setGewicht(e.target.value.replace(/[^0-9,.]/g, ""))}
+          inputMode="decimal"
+          placeholder="gewicht"
+          className="w-24 rounded-full bg-white/10 border border-white/15 px-3 py-1.5 text-[13px] text-white placeholder:text-white/40 focus:outline-none"
+          disabled={bezig}
+        />
+        <span className="text-white/50 text-[12px]">kg (optioneel)</span>
+      </div>
+      <div className="flex gap-2">
+        {STEMMINGEN.map((s) => (
+          <button
+            key={s.id}
+            onClick={() => onKies(s.id, gewicht)}
+            disabled={bezig}
+            className="flex-1 flex flex-col items-center gap-0.5 rounded-xl bg-white/5 border border-white/10 py-2.5 hover:bg-white/10 disabled:opacity-40"
+          >
+            <span className="text-2xl">{s.emoji}</span>
+            <span className="text-[11px] text-white/80">{s.label}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Voortgangs-kaart: gewichtslijntje + gevoels-reeks van begin tot nu.
+function VoortgangKaart({ reeks }: { reeks: Checkin[] }) {
+  const metGewicht = reeks.filter((r) => r.gewicht != null) as (Checkin & {
+    gewicht: number;
+  })[];
+  const stemmingen = reeks.filter((r) => r.stemming);
+  const kader = "rounded-2xl bg-[#0A251C] border border-emerald-500/25 px-4 py-3";
+
+  let lijn = null;
+  if (metGewicht.length >= 2) {
+    const waarden = metGewicht.map((r) => r.gewicht);
+    const min = Math.min(...waarden);
+    const max = Math.max(...waarden);
+    const bereik = max - min || 1;
+    const punten = metGewicht.map((r, idx) => {
+      const x = (idx / (metGewicht.length - 1)) * 100;
+      const y = 100 - ((r.gewicht - min) / bereik) * 100;
+      return `${x},${y}`;
+    });
+    const eerste = waarden[0];
+    const laatste = waarden[waarden.length - 1];
+    const delta = Math.round((laatste - eerste) * 10) / 10;
+    lijn = (
+      <div className="mt-1">
+        <div className="flex items-baseline justify-between mb-1">
+          <span className="text-[12px] text-white/70">Gewicht</span>
+          <span
+            className={`text-[12px] font-semibold ${delta <= 0 ? "text-emerald-300" : "text-amber-300"}`}
+          >
+            {delta <= 0 ? "" : "+"}
+            {delta} kg sinds start
+          </span>
+        </div>
+        <svg viewBox="0 0 100 40" className="w-full h-16" preserveAspectRatio="none">
+          <polyline
+            points={punten.join(" ")}
+            fill="none"
+            stroke="#34D399"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            vectorEffect="non-scaling-stroke"
+            transform="scale(1,0.4)"
+          />
+        </svg>
+        <div className="flex justify-between text-[10px] text-white/40">
+          <span>{eerste} kg</span>
+          <span>nu {laatste} kg</span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={kader}>
+      <p className="text-[13px] font-bold text-emerald-300 mb-1.5">
+        📈 Jouw voortgang
+      </p>
+      {lijn}
+      {stemmingen.length > 0 && (
+        <div className="mt-3">
+          <p className="text-[12px] text-white/70 mb-1">
+            Hoe je je voelde ({stemmingen.length}{" "}
+            {stemmingen.length === 1 ? "dag" : "dagen"})
+          </p>
+          <div className="flex flex-wrap gap-1">
+            {stemmingen.slice(-30).map((r, idx) => (
+              <span key={idx} title={r.datum} className="text-lg leading-none">
+                {STEMMINGEN.find((s) => s.id === r.stemming)?.emoji ?? "·"}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+      {metGewicht.length < 2 && stemmingen.length === 0 && (
+        <p className="text-[13px] text-white/70">
+          Nog niks om te tonen. Doe je dagelijkse check-in, dan groeit dit
+          mee.
+        </p>
+      )}
+    </div>
+  );
+}
+
 export default function MentorWereld({
   begeleiderNaam,
   token,
@@ -93,6 +240,9 @@ export default function MentorWereld({
   dueTouchpoint,
   kcalStart,
   dueDag10,
+  checkinVandaagGedaan,
+  checkinReeks,
+  dagNummer,
 }: {
   begeleiderNaam: string;
   /** Klant-modus: token van de klant-link; het gesprek wordt dan op de server bewaard. */
@@ -116,6 +266,12 @@ export default function MentorWereld({
   kcalStart?: number;
   /** Dag-nummer als de dag 10-video nú aan de beurt is (darm, vanaf dag 10). */
   dueDag10?: number | null;
+  /** Heeft de klant vandaag al ingecheckt? Zo niet: dagelijkse check-in tonen. */
+  checkinVandaagGedaan?: boolean;
+  /** Reeks check-ins (oud → nieuw) voor de voortgangs-kaart en streak. */
+  checkinReeks?: Checkin[];
+  /** Dag-nummer binnen de huidige fase (voor de begroeting en het Groeipad). */
+  dagNummer?: number | null;
 }) {
   const isKlant = Boolean(token);
   const verteldRef = useRef<Set<string>>(new Set(touchpointsAlVerteld ?? []));
@@ -125,6 +281,11 @@ export default function MentorWereld({
     { sleutel: string; knopLabel: string; speel: () => Promise<void> }[]
   >([]);
   const bidTeller = useRef(0);
+  // Check-in / dagboek: reeks in het geheugen zodat de voortgangs-kaart
+  // meteen klopt na een nieuwe check-in.
+  const checkinReeksRef = useRef<Checkin[]>(checkinReeks ?? []);
+  const checkinGedaanRef = useRef(Boolean(checkinVandaagGedaan));
+  const [checkinBezig, setCheckinBezig] = useState(false);
 
   function markeerTouchpoint(sleutel: TouchpointSleutel) {
     if (!token) return;
@@ -225,10 +386,15 @@ export default function MentorWereld({
         rol,
         programmaSlug: programma?.slug ?? null,
         stationSlug: station?.slug ?? null,
-        // Verder-knoppen zijn vluchtige UI (het chunk-plan leeft alleen in
-        // het geheugen), dus die bewaren we niet.
+        // Knoppen en interactieve kaartjes zijn vluchtige UI, die bewaren we niet.
         items: items
-          .filter((i) => i.soort !== "verder-knop")
+          .filter(
+            (i) =>
+              i.soort !== "verder-knop" &&
+              i.soort !== "checkin-vraag" &&
+              i.soort !== "push-opt-in" &&
+              i.soort !== "voortgang",
+          )
           .map((i) =>
             i.van === "ik" && i.soort === "foto"
               ? { van: "ik" as const, soort: "tekst" as const, tekst: "📷 (foto gestuurd)" }
@@ -278,6 +444,13 @@ export default function MentorWereld({
               ]
             : []),
         ]);
+        // Dagelijkse check-in bovenaan (nieuwe dag, nog niet ingecheckt).
+        if (!checkinGedaanRef.current) {
+          (async () => {
+            await wacht(1400);
+            await toonCheckin(true);
+          })();
+        }
         // Tijd-gebonden momenten, rustig ná het welkom-terug: eerst de
         // dag 10-video (als die aan de beurt is), dan het kern-verhaal.
         if (dueDag10 || dueTouchpoint) {
@@ -309,6 +482,13 @@ export default function MentorWereld({
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ token, station: prog.stations[0].slug }),
           }).catch(() => {});
+          // Dag 1: vraag of ik elke ochtend een seintje mag geven.
+          await wacht(900);
+          await mentorZegt(
+            "Nog één ding, en dan laat ik je los 😊 Zal ik je elke ochtend een klein seintje geven voor je dagelijkse check-in? Dan hoef jij niks te onthouden en houd ik je voortgang perfect bij.",
+            1000,
+          );
+          await toonPushOptIn();
         })();
       }
       return;
@@ -406,6 +586,159 @@ export default function MentorWereld({
     setMentorTypt(false);
     setItems((b) => [...b, { van: "mentor", soort: "kaart", kaart, stationSlug }]);
     logNaarServer([{ van: "mentor", soort: "kaart", kaart, stationSlug }]);
+  }
+
+  // ---------- Dagelijkse check-in (dagboek) ----------
+
+  // Toont de check-in als er vandaag nog niet is ingecheckt. De reden om
+  // elke dag te openen: de Mentor houdt gevoel + gewicht bij (feedback
+  // Raoul 18 juli).
+  async function toonCheckin(metGroet: boolean) {
+    if (checkinGedaanRef.current) return;
+    if (metGroet) {
+      await mentorZegt(
+        `Even je dagelijkse check-in${dagNummer ? ` (dag ${dagNummer})` : ""}: hoe voel je je vandaag? 💚 Vul gerust ook je gewicht in, dan houd ik je voortgang voor je bij.`,
+        900,
+      );
+    }
+    const bid = ++bidTeller.current;
+    setItems((b) => [...b, { van: "mentor", soort: "checkin-vraag", bid }]);
+  }
+
+  async function verstuurCheckin(stemming: string, gewichtStr: string) {
+    if (checkinBezig) return;
+    setCheckinBezig(true);
+    setItems((b) => b.filter((x) => x.soort !== "checkin-vraag"));
+    const gewicht = gewichtStr
+      ? Number(gewichtStr.replace(",", "."))
+      : undefined;
+    const woord =
+      stemming === "top" ? "top 😃" : stemming === "gaatwel" ? "gaat wel 🙂" : "zwaar 💛";
+    setItems((b) => [
+      ...b,
+      {
+        van: "ik",
+        soort: "tekst",
+        tekst: `Vandaag: ${woord}${gewicht ? `, ${gewicht} kg` : ""}`,
+      },
+    ]);
+    checkinGedaanRef.current = true;
+    const vandaag = new Intl.DateTimeFormat("sv-SE", {
+      timeZone: "Europe/Amsterdam",
+    }).format(new Date());
+    try {
+      if (token) {
+        const res = await fetch("/api/resetcode/checkin", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token, stemming, gewicht }),
+        });
+        const data = await res.json().catch(() => null);
+        if (data?.ok) {
+          if (Array.isArray(data.reeks)) checkinReeksRef.current = data.reeks;
+          await mentorZegt(data.antwoord ?? "Genoteerd 💚", 800);
+        }
+      } else {
+        // Preview: lokaal bijhouden, zonder server.
+        checkinReeksRef.current = [
+          ...checkinReeksRef.current.filter((c) => c.datum !== vandaag),
+          { datum: vandaag, stemming, gewicht: gewicht ?? null },
+        ];
+        await mentorZegt(
+          `Genoteerd dat het vandaag ${woord.replace(/[^\wà-ü ]/gi, "").trim()} gaat.${gewicht ? " Gewicht opgeslagen." : ""} Ik houd alles voor je bij, vraag me gerust "mijn voortgang".`,
+          800,
+        );
+      }
+    } catch {
+      await mentorZegt("Genoteerd 💚", 500);
+    } finally {
+      setCheckinBezig(false);
+    }
+  }
+
+  // ---------- Push-opt-in (dag 1) ----------
+
+  function abonneerbaar(): boolean {
+    return (
+      typeof window !== "undefined" &&
+      "serviceWorker" in navigator &&
+      "PushManager" in window &&
+      "Notification" in window &&
+      Notification.permission !== "denied"
+    );
+  }
+
+  async function toonPushOptIn() {
+    if (!token || !abonneerbaar()) return;
+    try {
+      if (Notification.permission === "granted") {
+        const reg = await navigator.serviceWorker.ready;
+        if (await reg.pushManager.getSubscription()) return; // al aan
+      }
+      if (localStorage.getItem(`resetcode-push-${token.slice(0, 10)}`)) return;
+    } catch {
+      /* negeer */
+    }
+    const bid = ++bidTeller.current;
+    setItems((b) => [...b, { van: "mentor", soort: "push-opt-in", bid }]);
+  }
+
+  function urlBase64ToUint8Array(base64String: string) {
+    const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+    const raw = window.atob(base64);
+    const arr = new Uint8Array(raw.length);
+    for (let i = 0; i < raw.length; ++i) arr[i] = raw.charCodeAt(i);
+    return arr;
+  }
+
+  async function zetPushAan(bid: number) {
+    setItems((b) => b.filter((x) => !(x.soort === "push-opt-in" && x.bid === bid)));
+    try {
+      localStorage.setItem(`resetcode-push-${token!.slice(0, 10)}`, "1");
+      const perm = await Notification.requestPermission();
+      if (perm !== "granted") {
+        await mentorZegt(
+          "Geen probleem, dan houd ik het hier voor je bij. Je kunt het later altijd nog aanzetten.",
+          600,
+        );
+        return;
+      }
+      let reg = await navigator.serviceWorker.getRegistration();
+      if (!reg) reg = await navigator.serviceWorker.register("/service-worker.js");
+      const ready = await navigator.serviceWorker.ready;
+      let sub = await ready.pushManager.getSubscription();
+      if (!sub) {
+        sub = await ready.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(
+            process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+          ),
+        });
+      }
+      const j = sub.toJSON() as { endpoint: string; keys: { p256dh: string; auth: string } };
+      await fetch("/api/resetcode/push-subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, subscription: j }),
+      });
+      await mentorZegt(
+        "Top, ik geef je elke ochtend een klein seintje voor je check-in en laat je weten als er iets belangrijks klaarstaat 🔔",
+        700,
+      );
+    } catch {
+      await mentorZegt(
+        "Dat lukte net even niet, geen zorgen, ik houd alles gewoon hier voor je bij.",
+        600,
+      );
+    }
+  }
+
+  function weigerPush(bid: number) {
+    setItems((b) => b.filter((x) => !(x.soort === "push-opt-in" && x.bid === bid)));
+    try {
+      if (token) localStorage.setItem(`resetcode-push-${token.slice(0, 10)}`, "1");
+    } catch {}
   }
 
   // Fase-intro, bewust RUSTIG (feedback Raoul 12 juli: geen spervuur van
@@ -620,6 +953,11 @@ export default function MentorWereld({
     );
     await wacht(500);
     await introStation(prog, prog.stations[0]);
+    // Preview: laat de dagelijkse check-in even zien na het intro.
+    if (!token) {
+      await wacht(700);
+      await toonCheckin(true);
+    }
   }
 
   async function naarStation(slug: string, viaMenu = false) {
@@ -749,6 +1087,28 @@ export default function MentorWereld({
     if (/\bwc\b|stoelgang|obstipatie|verstopping|poepen/.test(t) && t.length < 80) {
       zeg();
       await mentorKaart("wctips", station.slug, 900);
+      return true;
+    }
+    // Voortgang / dagboek terugzien.
+    if (/(mijn |m'n )?(voortgang|dagboek|resultaten tot nu|hoe ver|mijn reis|mijn grafiek)/.test(t) && t.length < 45) {
+      zeg();
+      if (checkinReeksRef.current.length === 0) {
+        await mentorZegt(
+          "Je bent net begonnen, dus er is nog niet veel om te laten zien. Doe je dagelijkse check-in, dan bouw ik vanaf nu je voortgang voor je op 💚",
+          800,
+        );
+        await toonCheckin(false);
+      } else {
+        await mentorZegt("Kijk eens, dit heb je tot nu toe opgebouwd:", 700);
+        setItems((b) => [...b, { van: "mentor", soort: "voortgang" }]);
+      }
+      return true;
+    }
+    // Check-in op verzoek.
+    if (/^\s*(check\s?-?in|inchecken|hoe voel ik me)\s*\??\s*$/.test(t)) {
+      zeg();
+      checkinGedaanRef.current = false;
+      await toonCheckin(true);
       return true;
     }
     return false;
@@ -1242,7 +1602,7 @@ export default function MentorWereld({
   // ---------- render ----------
 
   return (
-    <div className="flex h-full flex-col" style={{ backgroundColor: "#0F1B17" }}>
+    <div className="relative flex h-full flex-col" style={{ backgroundColor: "#0F1B17" }}>
       <style>{`
         @keyframes pols { 0%,100% { transform: scale(1) } 50% { transform: scale(1.08) } }
         @keyframes verschijn { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: translateY(0) } }
@@ -1285,80 +1645,194 @@ export default function MentorWereld({
             <button
               onClick={() => setToonReis((t) => !t)}
               className="rounded-full bg-white/10 px-3 py-1.5 text-[12px] font-semibold text-white/85 hover:bg-white/15"
+              title="Bekijk jouw pad"
             >
-              {station.emoji} {station.nummer}/{programma.stations.length} ▾
+              🗺️ {station.nummer}/{programma.stations.length}
             </button>
           </div>
         )}
       </header>
 
-      {/* Reis-overlay */}
-      {toonReis && programma && (
-        <div className="border-b border-white/10 bg-[#0A1512] px-4 py-3">
-          <div className="flex flex-wrap gap-1.5">
-            {programma.stations.map((s) => (
+      {/* Groeipad: het hele pad van A tot Z, met waar je nu bent, wat je al
+          hebt gehad (terug te lezen) en wat er nog komt (met slotje). */}
+      {toonReis && programma && station && (
+        <div className="absolute inset-0 z-30 overflow-y-auto chatscroll" style={{ backgroundColor: "#0A1512" }}>
+          <div className="sticky top-0 flex items-center justify-between px-4 py-3 border-b border-white/10" style={{ backgroundColor: "#0A1512" }}>
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-emerald-400/80">
+                {programma.emoji} {programma.naam}
+              </p>
+              <p className="text-white font-serif-warm text-xl">Jouw pad</p>
+            </div>
+            <button
+              onClick={() => setToonReis(false)}
+              className="rounded-full bg-white/10 px-4 py-2 text-[13px] font-semibold text-white/85"
+            >
+              Sluiten
+            </button>
+          </div>
+
+          <div className="px-5 py-5">
+            {/* Dag-teller van de huidige fase */}
+            {dagNummer && FASE_DAGEN[station.slug] && (
+              <div className="mb-5 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 px-4 py-3 text-center">
+                <p className="text-emerald-200 text-[14px] font-semibold">
+                  Dag {Math.min(dagNummer, FASE_DAGEN[station.slug])} van{" "}
+                  {FASE_DAGEN[station.slug]} · {station.naam}
+                </p>
+                <div className="mt-2 h-2 rounded-full bg-white/10 overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-emerald-400"
+                    style={{
+                      width: `${Math.min(100, (dagNummer / FASE_DAGEN[station.slug]) * 100)}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* De stations, met een verbindingslijn ertussen */}
+            <div className="relative pl-8">
+              <div className="absolute left-[15px] top-2 bottom-2 w-0.5 bg-white/10" />
+              {programma.stations.map((s) => {
+                const gedaan = s.nummer < station.nummer;
+                const nu = s.slug === station.slug;
+                const komt = s.nummer > station.nummer;
+                return (
+                  <button
+                    key={s.slug}
+                    onClick={() => {
+                      if (komt) return; // vooruit kijken mag, niet openen
+                      setToonReis(false);
+                      naarStation(s.slug, true);
+                    }}
+                    disabled={komt}
+                    className="relative flex items-center gap-3 w-full text-left mb-3 last:mb-0"
+                  >
+                    <span
+                      className={`relative z-10 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm ${
+                        nu ? "pols" : ""
+                      }`}
+                      style={{
+                        backgroundColor: nu
+                          ? "#059669"
+                          : gedaan
+                            ? "#0A3D2C"
+                            : "#141f1b",
+                        border: nu
+                          ? "2px solid #6EE7B7"
+                          : gedaan
+                            ? "2px solid #34D39955"
+                            : "2px dashed #ffffff22",
+                      }}
+                    >
+                      {gedaan ? "✓" : komt ? "🔒" : s.emoji}
+                    </span>
+                    <div className="min-w-0">
+                      <p
+                        className={`text-[14px] font-semibold ${nu ? "text-white" : gedaan ? "text-white/80" : "text-white/40"}`}
+                      >
+                        {s.naam}
+                      </p>
+                      <p className="text-[11px] text-white/40">
+                        {nu
+                          ? "je bent hier"
+                          : gedaan
+                            ? "afgerond · tik om terug te lezen"
+                            : "komt eraan"}
+                      </p>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Vergezicht: wat er ná dit programma kan (bergtoppen). */}
+            {RESET_PROGRAMMAS.filter((p) => p.slug !== programma.slug).length >
+              0 && (
+              <div className="mt-6 pt-5 border-t border-white/10">
+                <p className="text-[12px] text-white/50 mb-2">
+                  ⛰️ En daarna kan er nog meer
+                </p>
+                <div className="space-y-2">
+                  {RESET_PROGRAMMAS.filter((p) => p.slug !== programma.slug).map(
+                    (p) => (
+                      <div
+                        key={p.slug}
+                        className="flex items-center gap-3 rounded-2xl bg-white/[0.03] border border-white/10 px-3 py-2.5"
+                      >
+                        <span className="text-xl opacity-60">{p.emoji}</span>
+                        <div className="min-w-0">
+                          <p className="text-[13px] font-semibold text-white/70">
+                            {p.naam}
+                          </p>
+                          <p className="text-[11px] text-white/40 truncate">
+                            {p.duur} · samen te kiezen met {begeleiderNaam}
+                          </p>
+                        </div>
+                      </div>
+                    ),
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Voortgang + preview-extra's */}
+            <div className="mt-6 flex flex-wrap gap-2">
               <button
-                key={s.slug}
                 onClick={() => {
                   setToonReis(false);
-                  naarStation(s.slug, true);
+                  setItems((b) => [...b, { van: "mentor", soort: "voortgang" }]);
                 }}
-                className={`rounded-full px-3 py-1.5 text-[12px] font-semibold ${
-                  s.slug === station?.slug
-                    ? "bg-emerald-600 text-white"
-                    : "bg-white/10 text-white/70 hover:bg-white/15"
-                }`}
+                className="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-4 py-2 text-[12px] font-semibold text-emerald-300"
               >
-                {s.emoji} {s.naam}
+                📈 Mijn voortgang
               </button>
-            ))}
-            {!isKlant && (
-              <>
-                {/* Tijdmachine (alleen preview): speel tijd-gebonden
-                    momenten af alsof de klant die dag terugkomt. */}
-                {station &&
-                  ["zestien-dagen", "omschakeling"].includes(station.slug) && (
+              {!isKlant && (
+                <>
+                  {["zestien-dagen", "omschakeling"].includes(station.slug) && (
                     <button
                       onClick={() => {
                         setToonReis(false);
                         verteldRef.current.delete("kern-verhaal");
                         speelTouchpoint("kern-verhaal");
                       }}
-                      className="rounded-full px-3 py-1.5 text-[12px] font-semibold bg-sky-500/20 text-sky-300 hover:bg-sky-500/30"
+                      className="rounded-full px-4 py-2 text-[12px] font-semibold bg-sky-500/20 text-sky-300"
                     >
-                      ⏩ dag 5-7 moment (webshop-verhaal)
+                      ⏩ dag 5-7 moment
                     </button>
                   )}
-                {station && station.slug === "zestien-dagen" && (
+                  {station.slug === "zestien-dagen" && (
+                    <button
+                      onClick={async () => {
+                        setToonReis(false);
+                        await mentorZegt(
+                          "Trouwens: je zit vandaag op dag 10 van je 16 dagen! 🎉 Dit is het moment voor je dag 10-video, die is belangrijk. Kijk 'm even rustig 👇",
+                          900,
+                        );
+                        await mentorKaart("videodag10", station.slug, 700);
+                      }}
+                      className="rounded-full px-4 py-2 text-[12px] font-semibold bg-sky-500/20 text-sky-300"
+                    >
+                      ⏩ dag 10-moment
+                    </button>
+                  )}
                   <button
-                    onClick={async () => {
+                    onClick={() => {
                       setToonReis(false);
-                      await mentorZegt(
-                        "Trouwens: je zit vandaag op dag 10 van je 16 dagen! 🎉 Dit is het moment voor je dag 10-video, die is belangrijk. Kijk 'm even rustig 👇",
-                        900,
-                      );
-                      await mentorKaart("videodag10", station.slug, 700);
+                      try {
+                        localStorage.removeItem(OPSLAG_SLEUTEL);
+                      } catch {}
+                      gestart.current = true;
+                      versBeginnen();
                     }}
-                    className="rounded-full px-3 py-1.5 text-[12px] font-semibold bg-sky-500/20 text-sky-300 hover:bg-sky-500/30"
+                    className="rounded-full px-4 py-2 text-[12px] font-semibold bg-rose-500/20 text-rose-300"
                   >
-                    ⏩ dag 10-moment (video)
+                    ↺ opnieuw beginnen
                   </button>
-                )}
-                <button
-                  onClick={() => {
-                    setToonReis(false);
-                    try {
-                      localStorage.removeItem(OPSLAG_SLEUTEL);
-                    } catch {}
-                    gestart.current = true;
-                    versBeginnen();
-                  }}
-                  className="rounded-full px-3 py-1.5 text-[12px] font-semibold bg-rose-500/20 text-rose-300 hover:bg-rose-500/30"
-                >
-                  ↺ opnieuw beginnen
-                </button>
-              </>
-            )}
+                </>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -1421,6 +1895,44 @@ export default function MentorWereld({
                 </span>
                 <span className="text-emerald-400 text-lg">→</span>
               </button>
+            );
+          }
+          if (item.soort === "checkin-vraag") {
+            return (
+              <div key={i} className="verschijn max-w-[92%]">
+                <CheckinVraag
+                  bezig={checkinBezig}
+                  onKies={(stemming, gewicht) => verstuurCheckin(stemming, gewicht)}
+                />
+              </div>
+            );
+          }
+          if (item.soort === "voortgang") {
+            return (
+              <div key={i} className="verschijn max-w-[92%]">
+                <VoortgangKaart reeks={checkinReeksRef.current} />
+              </div>
+            );
+          }
+          if (item.soort === "push-opt-in") {
+            return (
+              <div
+                key={i}
+                className="verschijn max-w-[92%] flex flex-wrap gap-2"
+              >
+                <button
+                  onClick={() => zetPushAan(item.bid)}
+                  className="rounded-full bg-emerald-600 px-5 py-2.5 text-[14px] font-bold text-white"
+                >
+                  🔔 Ja, graag een seintje
+                </button>
+                <button
+                  onClick={() => weigerPush(item.bid)}
+                  className="rounded-full border border-white/20 px-5 py-2.5 text-[14px] font-semibold text-white/70"
+                >
+                  Nu even niet
+                </button>
+              </div>
             );
           }
           return (

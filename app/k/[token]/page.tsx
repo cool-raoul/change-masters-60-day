@@ -17,6 +17,7 @@ import {
   pakResetChats,
   seintjeNaarMember,
 } from "@/lib/resetcode/klant-links";
+import { pakCheckins, heeftVandaagIngecheckt } from "@/lib/resetcode/checkin";
 import MentorWereld from "@/components/resetcode/MentorWereld";
 
 export const dynamic = "force-dynamic";
@@ -238,6 +239,22 @@ export default async function KlantLinkPagina({
     if (dag >= 10) dueDag10 = Math.min(dag, 16);
   }
 
+  // Dagelijkse check-in + dagboek-reeks + dag-nummer binnen de fase.
+  const [checkinVandaagGedaan, checkinRuw] = await Promise.all([
+    heeftVandaagIngecheckt(ctx.linkId),
+    pakCheckins(ctx.linkId),
+  ]);
+  const checkinReeks = checkinRuw.map((c) => ({
+    datum: c.datum,
+    stemming: c.stemming,
+    gewicht: c.gewicht,
+  }));
+  const dagNummer = ctx.stationSinds
+    ? Math.floor(
+        (Date.now() - new Date(ctx.stationSinds).getTime()) / 86_400_000,
+      ) + 1
+    : null;
+
   // Eerste bezoek (geen stap, geen gesprek): seintje naar de begeleider.
   if (!ctx.stationSlug && chats.length === 0) {
     await seintjeNaarMember(
@@ -266,6 +283,9 @@ export default async function KlantLinkPagina({
         dueTouchpoint={dueTouchpoint}
         kcalStart={kcalStart}
         dueDag10={dueDag10}
+        checkinVandaagGedaan={checkinVandaagGedaan}
+        checkinReeks={checkinReeks}
+        dagNummer={dagNummer}
       />
     </div>
   );
