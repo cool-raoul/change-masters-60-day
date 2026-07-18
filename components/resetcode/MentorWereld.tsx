@@ -147,15 +147,58 @@ function CheckinVraag({
 function StartKeuze({
   onKies,
 }: {
-  onKies: (datumISO: string, label: string) => void;
+  onKies: (datumISO: string, label: string, alGestart: boolean) => void;
 }) {
   const [eigenDatum, setEigenDatum] = useState("");
+  const [alGestart, setAlGestart] = useState(false);
   const naarISO = (d: Date) =>
     `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
       d.getDate(),
     ).padStart(2, "0")}`;
   const vandaag = new Date();
   const morgen = new Date(vandaag.getTime() + 86_400_000);
+  const gisteren = new Date(vandaag.getTime() - 86_400_000);
+  const datumLabel = (iso: string) =>
+    `op ${new Date(`${iso}T12:00:00`).toLocaleDateString("nl-NL", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+    })}`;
+
+  if (alGestart) {
+    return (
+      <div className="rounded-2xl bg-[#0A251C] border border-emerald-500/25 px-4 py-3">
+        <p className="text-[13px] font-bold text-emerald-300 mb-2">
+          💪 Wanneer ben je gestart?
+        </p>
+        <div className="flex items-center gap-2">
+          <input
+            type="date"
+            value={eigenDatum}
+            max={naarISO(gisteren)}
+            onChange={(e) => setEigenDatum(e.target.value)}
+            className="flex-1 rounded-xl bg-white/5 border border-white/10 px-3 py-2 text-[13px] text-white focus:outline-none [color-scheme:dark]"
+          />
+          <button
+            onClick={() =>
+              eigenDatum && onKies(eigenDatum, datumLabel(eigenDatum), true)
+            }
+            disabled={!eigenDatum}
+            className="rounded-xl bg-emerald-600 px-4 py-2 text-[13px] font-bold text-white disabled:opacity-40"
+          >
+            Kies
+          </button>
+        </div>
+        <button
+          onClick={() => setAlGestart(false)}
+          className="mt-2 text-[12px] text-white/50 underline underline-offset-2"
+        >
+          ← terug
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="rounded-2xl bg-[#0A251C] border border-emerald-500/25 px-4 py-3">
       <p className="text-[13px] font-bold text-emerald-300 mb-2">
@@ -163,19 +206,19 @@ function StartKeuze({
       </p>
       <div className="flex gap-2 mb-3">
         <button
-          onClick={() => onKies(naarISO(vandaag), "vandaag")}
+          onClick={() => onKies(naarISO(vandaag), "vandaag", false)}
           className="flex-1 rounded-xl bg-emerald-600 py-2.5 text-[14px] font-bold text-white"
         >
           Vandaag
         </button>
         <button
-          onClick={() => onKies(naarISO(morgen), "morgen")}
+          onClick={() => onKies(naarISO(morgen), "morgen", false)}
           className="flex-1 rounded-xl bg-white/5 border border-white/10 py-2.5 text-[14px] font-semibold text-white hover:bg-white/10"
         >
           Morgen
         </button>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 mb-3">
         <input
           type="date"
           value={eigenDatum}
@@ -184,20 +227,24 @@ function StartKeuze({
           className="flex-1 rounded-xl bg-white/5 border border-white/10 px-3 py-2 text-[13px] text-white focus:outline-none [color-scheme:dark]"
         />
         <button
-          onClick={() => {
-            if (!eigenDatum) return;
-            const label = new Date(`${eigenDatum}T12:00:00`).toLocaleDateString(
-              "nl-NL",
-              { weekday: "long", day: "numeric", month: "long" },
-            );
-            onKies(eigenDatum, `op ${label}`);
-          }}
+          onClick={() =>
+            eigenDatum && onKies(eigenDatum, datumLabel(eigenDatum), false)
+          }
           disabled={!eigenDatum}
           className="rounded-xl bg-white/5 border border-white/10 px-4 py-2 text-[13px] font-semibold text-emerald-300 disabled:opacity-40"
         >
           Kies
         </button>
       </div>
+      <button
+        onClick={() => {
+          setEigenDatum("");
+          setAlGestart(true);
+        }}
+        className="text-[12px] text-white/60 underline underline-offset-2"
+      >
+        💪 Ik ben al gestart
+      </button>
     </div>
   );
 }
@@ -734,10 +781,12 @@ export default function MentorWereld({
     setItems((b) => [...b, { van: "mentor", soort: "start-keuze", bid }]);
   }
 
-  async function kiesStart(datumISO: string, label: string) {
+  async function kiesStart(datumISO: string, label: string, alGestart = false) {
     setItems((b) => b.filter((x) => x.soort !== "start-keuze"));
     startGekozenRef.current = true;
-    const echo = `Ik start ${label}! 🚀`;
+    const echo = alGestart
+      ? `Ik ben al gestart, ${label}! 💪`
+      : `Ik start ${label}! 🚀`;
     setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: echo }]);
     logNaarServer([{ van: "klant", soort: "tekst", tekst: echo }]);
     if (token) {
@@ -746,6 +795,22 @@ export default function MentorWereld({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, datum: datumISO }),
       }).catch(() => {});
+    }
+    if (alGestart) {
+      const vandaagISO = `${new Date().getFullYear()}-${String(
+        new Date().getMonth() + 1,
+      ).padStart(2, "0")}-${String(new Date().getDate()).padStart(2, "0")}`;
+      const dag =
+        Math.round(
+          (Date.parse(vandaagISO) - Date.parse(datumISO)) / 86_400_000,
+        ) + 1;
+      await mentorZegt(
+        `Kanjer, dan ben je al lekker bezig! 💚 Dan zit je nu op dag ${dag}. Ik heb het aan ${begeleiderNaam} doorgegeven en tel vanaf nu gewoon met je mee vanaf jouw echte startdag. Vanaf nu zie ik je elke dag bij je check-in, en alles wat op jouw dagen hoort zet ik automatisch voor je klaar.`,
+        1100,
+      );
+      await wacht(600);
+      await toonCheckin(true);
+      return;
     }
     if (label === "vandaag") {
       await mentorZegt(
@@ -2213,7 +2278,11 @@ export default function MentorWereld({
           if (item.soort === "start-keuze") {
             return (
               <div key={i} className="verschijn max-w-[92%]">
-                <StartKeuze onKies={(datum, label) => kiesStart(datum, label)} />
+                <StartKeuze
+                  onKies={(datum, label, alGestart) =>
+                    kiesStart(datum, label, alGestart)
+                  }
+                />
               </div>
             );
           }

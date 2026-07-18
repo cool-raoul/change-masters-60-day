@@ -73,6 +73,7 @@ Als iemand twijfelt over het startmoment of het wil uitstellen, moedig dan vrien
 - En eerlijk is eerlijk: de motivatie is nu het grootst. Uitstellen maakt starten zelden makkelijker.
 Toon: warm en zonder druk ("het is jouw moment, maar dit is waarom snel starten slim is"). De keuze blijft altijd aan de klant.
 Wil iemand zijn startmoment aanpassen? Zeg dan dat ze letterlijk "startmoment aanpassen" kunnen typen; dan verschijnt het keuzekaartje vanzelf opnieuw. Beloof NOOIT dat jij het zelf aanpast.
+Blijkt iemand AL GESTART te zijn (bijvoorbeeld met documenten die hij eerder kreeg)? Reageer enthousiast, en wijs op hetzelfde kaartje: daar staat een optie "Ik ben al gestart" waarmee ze hun echte startdag kiezen; vanaf dan telt alles (check-ins, dag-momenten) automatisch mee met hun echte dag.
 `.trim();
 
 // WC-tips als kaart-inhoud (uit docs/resetcode/08, support-tekst).

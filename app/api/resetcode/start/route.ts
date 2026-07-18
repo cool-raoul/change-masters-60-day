@@ -34,9 +34,11 @@ export async function POST(req: NextRequest) {
   const verschilDagen = Math.round(
     (Date.parse(datum) - Date.parse(vandaag)) / 86_400_000,
   );
-  if (verschilDagen < 0 || verschilDagen > 60) {
+  // Ook terugkijkend toegestaan: wie al gestart was vóór hij deze
+  // omgeving kreeg, kiest zijn echte startdag in het verleden.
+  if (verschilDagen < -60 || verschilDagen > 60) {
     return Response.json(
-      { error: "Kies een dag vanaf vandaag" },
+      { error: "Kies een dag dichter bij vandaag" },
       { status: 400 },
     );
   }
@@ -55,24 +57,29 @@ export async function POST(req: NextRequest) {
     })
     .eq("id", ctx.linkId);
 
-  const wanneer =
-    verschilDagen === 0
-      ? "vandaag"
-      : verschilDagen === 1
-        ? "morgen"
-        : `op ${new Intl.DateTimeFormat("nl-NL", {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-            timeZone: "Europe/Amsterdam",
-          }).format(new Date(`${datum}T12:00:00`))}`;
-  await seintjeNaarMember(
-    ctx,
-    `${ctx.klantVoornaam} start ${wanneer} 🚀`,
-    verschilDagen === 0
-      ? `${ctx.klantNaam} begint vandaag aan dag 1. Een persoonlijk succes-berichtje doet nu wonderen.`
-      : `${ctx.klantNaam} heeft ${wanneer} als startmoment gekozen. Even een aanmoedigings-berichtje rond de start doet wonderen.`,
-  );
+  const datumLabel = `op ${new Intl.DateTimeFormat("nl-NL", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    timeZone: "Europe/Amsterdam",
+  }).format(new Date(`${datum}T12:00:00`))}`;
+  if (verschilDagen < 0) {
+    await seintjeNaarMember(
+      ctx,
+      `${ctx.klantVoornaam} is al gestart 💪`,
+      `${ctx.klantNaam} was al begonnen (${datumLabel}) en zit nu op dag ${1 - verschilDagen}. De Mentor telt vanaf nu mee met de echte startdag.`,
+    );
+  } else {
+    const wanneer =
+      verschilDagen === 0 ? "vandaag" : verschilDagen === 1 ? "morgen" : datumLabel;
+    await seintjeNaarMember(
+      ctx,
+      `${ctx.klantVoornaam} start ${wanneer} 🚀`,
+      verschilDagen === 0
+        ? `${ctx.klantNaam} begint vandaag aan dag 1. Een persoonlijk succes-berichtje doet nu wonderen.`
+        : `${ctx.klantNaam} heeft ${wanneer} als startmoment gekozen. Even een aanmoedigings-berichtje rond de start doet wonderen.`,
+    );
+  }
 
   return Response.json({ ok: true });
 }
