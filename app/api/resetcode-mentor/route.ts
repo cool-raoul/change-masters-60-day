@@ -11,6 +11,7 @@ import {
   pakResetKlantContext,
   bewaarResetChats,
 } from "@/lib/resetcode/klant-links";
+import { pakCheckins } from "@/lib/resetcode/checkin";
 
 // ============================================================
 // POST /api/resetcode-mentor
@@ -138,6 +139,32 @@ export async function POST(req: NextRequest) {
       .filter((b) => b && typeof b.tekst === "string" && b.tekst.length > 0)
       .slice(-HISTORY_TRIM);
 
+    // Dagboek-overzicht voor patroon-spiegeling (alleen echte klanten;
+    // compact: laatste 14 check-ins als één regel per dag).
+    let checkinOverzicht: string | null = null;
+    if (klantCtx) {
+      try {
+        const checkins = (await pakCheckins(klantCtx.linkId)).slice(-14);
+        if (checkins.length > 0) {
+          checkinOverzicht = checkins
+            .map((c) => {
+              const delen = [
+                c.stemming,
+                c.energie ? `energie ${c.energie}` : null,
+                c.slaap ? `slaap ${c.slaap}` : null,
+                c.buik ? `buik ${c.buik}` : null,
+                c.gewicht != null ? `${c.gewicht} kg` : null,
+                c.notitie ? `winst: "${c.notitie.slice(0, 80)}"` : null,
+              ].filter(Boolean);
+              return `- ${c.datum}: ${delen.join(", ")}`;
+            })
+            .join("\n");
+        }
+      } catch {
+        // dagboek is nice-to-have; nooit de Mentor blokkeren
+      }
+    }
+
     const systeemPrompt = bouwResetMentorPrompt({
       rol,
       voornaam,
@@ -155,6 +182,7 @@ export async function POST(req: NextRequest) {
         (body.pakket === "basis" || body.pakket === "plus"
           ? (body.pakket as "basis" | "plus")
           : null),
+      checkinOverzicht,
     });
 
     // Klant-vraag meteen bewaren (ongeacht of de AI-call slaagt).

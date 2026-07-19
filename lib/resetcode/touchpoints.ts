@@ -16,7 +16,11 @@ export type TouchpointSleutel =
   | "basis-groeien"
   | "dag10-video"
   | "programma-einde"
-  | "samen-starten";
+  | "samen-starten"
+  // Week-terugblik: elke 7 dagen één keer (week-terugblik-1, -2, ...).
+  // De inhoud wordt client-side uit het dagboek gebouwd; dit is alleen
+  // de eenmaligheids-markering.
+  | `week-terugblik-${number}`;
 
 /** Het volledige kern-verhaal (dag ~7 darm, ~week 1 fase 2, of groeien-stap). */
 export function kernVerhaal(naam: string): string[] {
@@ -71,5 +75,8 @@ export function touchpointTekst(
       return []; // geen tekst: de video-kaart doet het werk
     case "kern-verhaal":
       return kernVerhaal(naam);
+    default:
+      // week-terugblik-N en andere pure markeringen: geen vaste tekst.
+      return [];
   }
 }

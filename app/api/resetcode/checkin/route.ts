@@ -116,6 +116,11 @@ export async function POST(req: NextRequest) {
     ok: true,
     antwoord,
     streak,
-    reeks: reeks.map((r) => ({ datum: r.datum, stemming: r.stemming, gewicht: r.gewicht })),
+    reeks: reeks.map((r) => ({
+      datum: r.datum,
+      stemming: r.stemming,
+      gewicht: r.gewicht,
+      notitie: r.notitie,
+    })),
   });
 }

@@ -66,6 +66,8 @@ export function bouwResetMentorPrompt(opties: {
   isBouwer?: boolean;
   /** Darmen in Balans: welk pakket (basis = rode schema, plus = blauwe schema). */
   pakket?: "basis" | "plus" | null;
+  /** Compact dagboek-overzicht van recente check-ins (voor patroon-spiegeling). */
+  checkinOverzicht?: string | null;
 }): string {
   const {
     rol,
@@ -75,6 +77,7 @@ export function bouwResetMentorPrompt(opties: {
     stationSlug,
     isBouwer,
     pakket,
+    checkinOverzicht,
   } = opties;
   const programma = programmaVoor(programmaSlug);
   const station = stationVoor(programmaSlug, stationSlug);
@@ -118,9 +121,21 @@ VOOR EEN MEMBER GELDT:
         : `\nPAKKET NOG ONBEKEND: ${voornaam} volgt Darmen in Balans maar heeft nog niet doorgegeven welk pakket (basis = rode schema met 5 producten, plus = blauwe schema met 8 producten). Vraag er vriendelijk naar zodra het voor je antwoord uitmaakt, of zeg dat ze even op het pakket-kaartje kunnen tikken.\n`
       : "";
 
+  const dagboekBlok = checkinOverzicht
+    ? `
+DAGBOEK VAN ${voornaam.toUpperCase()} (recente dagelijkse check-ins, nieuwste onderaan):
+${checkinOverzicht}
+Zo gebruik je dit dagboek (kompas-principe: kijken naar wat WÉL werkt):
+- Spiegel af en toe (niet elke beurt) een patroon dat je écht ziet: "valt je op dat je energie beter is sinds je slaap verbeterde?", of verwijs naar een eigen opgeschreven winst. Alleen patronen die er echt staan, nooit verzinnen.
+- Op een zware dag mag je een eerdere winst van ${voornaam} zelf terughalen als bewijs ("weet je nog wat je dinsdag opschreef?").
+- Som nooit het hele dagboek op en noem geen exacte cijferreeksen tenzij ernaar gevraagd wordt; het is achtergrond, geen rapport.
+- Trek NOOIT medische conclusies uit deze data; bij verontrustende patronen: warm doorverwijzen volgens je regels.
+`
+    : "";
+
   return `Je bent de Mentor van ELEVA voor het Resetcode-programma. Je spreekt Nederlands, warm en gewoon, zoals de mensen achter dit programma zelf praten: "je doet het niet alleen", "zet hem op", "wees lief voor jezelf". Kort waar het kan, uitgebreider alleen als de vraag erom vraagt.
 ${rolBlok}
-${pakketBlok}
+${pakketBlok}${dagboekBlok}
 
 FASE-DISCIPLINE (de allerbelangrijkste kwaliteitsregel, gaat vóór alles):
 - Toets ELK voedings- en leefstijladvies eerst stil aan de fase waar ${voornaam} NU zit, en benoem die fase expliciet in je antwoord.

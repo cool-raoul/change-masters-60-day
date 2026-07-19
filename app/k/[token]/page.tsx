@@ -279,7 +279,18 @@ export default async function KlantLinkPagina({
     datum: c.datum,
     stemming: c.stemming,
     gewicht: c.gewicht,
+    notitie: c.notitie,
   }));
+
+  // Week-terugblik: elke 7 dagen in de fase één keer een mini-overzicht
+  // (kompas-principe: bewijs voor jezelf). Alleen als er check-ins zijn.
+  const weekNummer = dagNummer != null ? Math.floor(dagNummer / 7) : 0;
+  const dueWeekTerugblik =
+    weekNummer >= 1 &&
+    checkinReeks.length >= 3 &&
+    !ctx.touchpoints.includes(`week-terugblik-${weekNummer}`)
+      ? weekNummer
+      : null;
 
   // Programma-einde: pas als de dagen van de laatste fase er écht op
   // zitten (info doorklikken op dag 1 is geen einde). Dan komt het
@@ -332,6 +343,7 @@ export default async function KlantLinkPagina({
         startGekozen={startGekozen}
         startOverDagen={startOverDagen}
         pakket={ctx.pakket}
+        dueWeekTerugblik={dueWeekTerugblik}
       />
     </div>
   );

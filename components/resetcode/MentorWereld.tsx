@@ -52,7 +52,12 @@ type VerderActie =
   | { type: "chunk"; index: number; stationSlug: string }
   | { type: "station"; slug: string };
 
-type Checkin = { datum: string; stemming: string | null; gewicht: number | null };
+type Checkin = {
+  datum: string;
+  stemming: string | null;
+  gewicht: number | null;
+  notitie?: string | null;
+};
 
 type ChatItem =
   | { van: "mentor"; soort: "tekst"; tekst: string; sid?: number }
@@ -442,6 +447,7 @@ export default function MentorWereld({
   kcalStart,
   dueDag10,
   dueEinde,
+  dueWeekTerugblik,
   checkinVandaagGedaan,
   checkinReeks,
   dagNummer,
@@ -473,6 +479,8 @@ export default function MentorWereld({
   dueDag10?: number | null;
   /** De dagen van de laatste fase zitten er écht op: nú het einde-moment spelen. */
   dueEinde?: boolean;
+  /** Week-nummer als de week-terugblik nú aan de beurt is (elke 7 dagen). */
+  dueWeekTerugblik?: number | null;
   /** Heeft de klant vandaag al ingecheckt? Zo niet: dagelijkse check-in tonen. */
   checkinVandaagGedaan?: boolean;
   /** Reeks check-ins (oud → nieuw) voor de voortgangs-kaart en streak. */
@@ -732,7 +740,7 @@ export default function MentorWereld({
             markeerTouchpoint("programma-einde" as TouchpointSleutel);
             knoppenNaarOnder();
           })();
-        } else if (dueDag10 || dueTouchpoint) {
+        } else if (dueDag10 || dueTouchpoint || dueWeekTerugblik) {
           (async () => {
             await wacht(2500);
             if (dueDag10) {
@@ -742,9 +750,13 @@ export default function MentorWereld({
               );
               await mentorKaart("videodag10", st.slug, 800);
               markeerTouchpoint("dag10-video" as TouchpointSleutel);
-              if (dueTouchpoint) await wacht(1500);
+              if (dueTouchpoint || dueWeekTerugblik) await wacht(1500);
             }
             if (dueTouchpoint) await speelTouchpoint(dueTouchpoint);
+            if (dueWeekTerugblik) {
+              if (dueTouchpoint) await wacht(1500);
+              await speelWeekTerugblik(dueWeekTerugblik);
+            }
             knoppenNaarOnder();
           })();
         }
@@ -1046,6 +1058,45 @@ export default function MentorWereld({
     }
   }
 
+  // ---------- Week-terugblik (kompas-principe) ----------
+
+  // Elke 7 dagen een mini-overzicht: bewijs voor jezelf. Voortgangs-
+  // kaart + de eigen winsten terug, kijken naar wat wél werkt.
+  async function speelWeekTerugblik(week: number) {
+    const reeks = checkinReeksRef.current;
+    await mentorZegt(
+      `Trouwens: je bent alweer ${week === 1 ? "een hele week" : `${week} weken`} onderweg! 🎉 Tijd voor je week-overzichtje, gewoon als bewijs voor jezelf.`,
+      1100,
+    );
+    setItems((b) => [...b, { van: "mentor", soort: "voortgang" }]);
+    await wacht(1000);
+    const metGewicht = reeks.filter((r) => r.gewicht != null);
+    const delta =
+      metGewicht.length >= 2
+        ? Math.round(
+            ((metGewicht[metGewicht.length - 1].gewicht as number) -
+              (metGewicht[0].gewicht as number)) *
+              10,
+          ) / 10
+        : null;
+    const winsten = reeks
+      .filter((r) => r.notitie)
+      .slice(-3)
+      .map((r) => `"${r.notitie}"`);
+    const delen: string[] = [];
+    if (delta != null && delta < 0)
+      delen.push(`je staat ${Math.abs(delta)} kilo lichter dan bij je start`);
+    if (winsten.length)
+      delen.push(`en dit schreef je zelf op: ${winsten.join(", ")}`);
+    await mentorZegt(
+      delen.length
+        ? `Kijk daar eens rustig naar: ${delen.join(", ")}. Dat is allemaal van jou. Niet omdat je meer doet, maar omdat je bewuster bezig bent. Op naar de volgende week! 💚`
+        : `Elke dag dat je incheckt bouw je aan je eigen verhaal, ook op de dagen dat het zwaar voelt. Op naar de volgende week! 💚`,
+      1100,
+    );
+    markeerTouchpoint(`week-terugblik-${week}` as TouchpointSleutel);
+  }
+
   // ---------- Dagelijkse check-in (dagboek) ----------
 
   // Toont de check-in als er vandaag nog niet is ingecheckt. De reden om
@@ -1114,12 +1165,31 @@ export default function MentorWereld({
         // Preview: lokaal bijhouden, zonder server.
         checkinReeksRef.current = [
           ...checkinReeksRef.current.filter((c) => c.datum !== vandaag),
-          { datum: vandaag, stemming, gewicht: gewicht ?? null },
+          { datum: vandaag, stemming, gewicht: gewicht ?? null, notitie: winst || null },
         ];
         await mentorZegt(
           `Genoteerd dat het vandaag ${woord.replace(/[^\wà-ü ]/gi, "").trim()} gaat.${gewicht ? " Gewicht opgeslagen." : ""}${winst ? ` En mooi wat je opschreef: zo train je jezelf om te zien wat wél werkt. 💚` : ""} Ik houd alles voor je bij, vraag me gerust "mijn voortgang".`,
           800,
         );
+      }
+      // Zware dag? Dan een eigen eerdere winst terughalen: bewijs voor
+      // jezelf, precies waar het dagboek voor is (kompas-principe).
+      if (stemming === "zwaar") {
+        const eerdere = checkinReeksRef.current.filter(
+          (c) => c.notitie && c.datum !== vandaag,
+        );
+        const laatste = eerdere[eerdere.length - 1];
+        if (laatste?.notitie) {
+          const dagWoord = new Date(`${laatste.datum}T12:00:00`).toLocaleDateString(
+            "nl-NL",
+            { weekday: "long", day: "numeric", month: "long" },
+          );
+          await wacht(700);
+          await mentorZegt(
+            `En mag ik je even ergens aan herinneren? Op ${dagWoord} schreef je zelf op: ${JSON.stringify(laatste.notitie)}. Dat was jij ook. Zware dagen horen erbij, je lichaam is gewoon aan het werk. Vertel me gerust wat je merkt, ik denk met je mee. 💚`,
+            1100,
+          );
+        }
       }
     } catch {
       await mentorZegt("Genoteerd 💚", 500);
@@ -2421,6 +2491,16 @@ export default function MentorWereld({
                     className="rounded-full px-4 py-2 text-[12px] font-semibold bg-sky-500/20 text-sky-300"
                   >
                     ⏩ ochtend check-in
+                  </button>
+                  <button
+                    onClick={async () => {
+                      setToonReis(false);
+                      verteldRef.current.delete("week-terugblik-1");
+                      await speelWeekTerugblik(1);
+                    }}
+                    className="rounded-full px-4 py-2 text-[12px] font-semibold bg-sky-500/20 text-sky-300"
+                  >
+                    ⏩ week-overzicht
                   </button>
                   {programma.stations[programma.stations.length - 1]?.slug ===
                     station.slug && (

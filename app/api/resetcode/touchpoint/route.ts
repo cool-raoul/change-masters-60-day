@@ -21,13 +21,16 @@ const GELDIG = [
   "basis-groeien",
   "dag10-video",
   "programma-einde",
+  "samen-starten",
 ];
+// Week-terugblikken zijn genummerd (week-terugblik-1, -2, ...).
+const WEEK_TERUGBLIK = /^week-terugblik-\d{1,2}$/;
 
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => ({}));
   const token = (body.token as string | undefined) ?? "";
   const sleutel = (body.sleutel as string | undefined) ?? "";
-  if (!GELDIG.includes(sleutel)) {
+  if (!GELDIG.includes(sleutel) && !WEEK_TERUGBLIK.test(sleutel)) {
     return Response.json({ error: "Onbekende sleutel" }, { status: 400 });
   }
   const ctx = await pakResetKlantContext(token);
