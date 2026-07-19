@@ -9,6 +9,9 @@ import { createAdminClient } from "@/lib/supabase/admin";
 export type CheckinRij = {
   datum: string;
   stemming: "top" | "gaatwel" | "zwaar" | null;
+  energie: "weinig" | "oke" | "veel" | null;
+  slaap: "slecht" | "oke" | "goed" | null;
+  buik: "onrustig" | "oke" | "rustig" | null;
   gewicht: number | null;
   taille: number | null;
   heup: number | null;
@@ -28,7 +31,7 @@ export async function pakCheckins(linkId: string): Promise<CheckinRij[]> {
   const admin = createAdminClient();
   const { data } = await admin
     .from("resetcode_checkin")
-    .select("datum, stemming, gewicht, taille, heup, borst, notitie")
+    .select("datum, stemming, energie, slaap, buik, gewicht, taille, heup, borst, notitie")
     .eq("link_id", linkId)
     .order("datum", { ascending: true });
   return (data ?? []) as CheckinRij[];

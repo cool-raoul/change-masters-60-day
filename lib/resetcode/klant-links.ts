@@ -25,6 +25,8 @@ export type ResetKlantContext = {
   stationSinds: string | null;
   /** Zelfgekozen startdatum (YYYY-MM-DD): vanaf dan telt dag 1. */
   startDatum: string | null;
+  /** Darmen in Balans: gekozen pakket (basis = rood, plus = blauw). */
+  pakket: "basis" | "plus" | null;
   memberId: string;
   memberNaam: string | null;
   memberVoornaam: string;
@@ -40,7 +42,7 @@ export async function pakResetKlantContext(
   const { data: linkRaw } = await admin
     .from("resetcode_klant_links")
     .select(
-      "id, token, member_id, klant_naam, programma, station_slug, status, prospect_id, touchpoints, is_bouwer, station_sinds, start_datum",
+      "id, token, member_id, klant_naam, programma, station_slug, status, prospect_id, touchpoints, is_bouwer, station_sinds, start_datum, pakket",
     )
     .eq("token", token)
     .maybeSingle();
@@ -58,6 +60,7 @@ export async function pakResetKlantContext(
     is_bouwer: boolean | null;
     station_sinds: string | null;
     start_datum: string | null;
+    pakket: "basis" | "plus" | null;
   };
 
   // Touchpoints samenvoegen over alle links van dezelfde prospect: wie
@@ -105,6 +108,7 @@ export async function pakResetKlantContext(
     isBouwer: Boolean(link.is_bouwer),
     stationSinds: link.station_sinds,
     startDatum: link.start_datum,
+    pakket: link.pakket,
     memberId: link.member_id,
     memberNaam,
     memberVoornaam: (memberNaam ?? "").split(" ")[0] || "je begeleider",

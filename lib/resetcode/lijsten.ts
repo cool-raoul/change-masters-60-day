@@ -43,6 +43,7 @@ WEL ETEN:
 - Fruit: appel, peren, druiven, biologische bananen (niet overrijp; banaan mag in DIT programma dus WÉL, anders dan in fase 2 van de reset), alle bessen, frambozen, aardbeien, kiwi, ananas, sinaasappels, mandarijnen, limoen, citroen, grapefruit, passievrucht, papaja, meloen, mango.
 - Zaden en pitten: chiazaad, lijnzaad, alle zaden en pitten.
 - Granen/meel: uitsluitend boekweit, amarant, sorghum, teff, meel van onrijpe bakbananen, amandelmeel, kokosmeel, hazelnootmeel.
+- BOEKWEIT-TIP (mag je actief geven): boekweit is dé aanrader in dit programma. Het is geen graan of tarwesoort maar een zaadje (pseudograan), van nature glutenvrij en met een relatief lage glycemische index. Denk aan boekweitcrackers, 100% boekweitpasta, boekweitmeel voor pannenkoekjes; alles van pure boekweit past.
 - Gezonde vetten: avocado, avocado-olie, kokosolie, druivenpitolie, olijfolie, walnootolie, sesamolie, lijnzaadolie, MCT-olie.
 - Vis: zalm, tonijn, haring, snoek, heilbot, kabeljauw, dorade, garnalen, kreeft, mosselen, krab, inktvis, zeebaars, makreel, sardientjes.
 - Vlees en eieren: runderfilet, rundersteak, tartaar, extra mager rundergehakt, kalfsschnitzel, kalfsfilet, lamsvlees, kip, kalkoen, eieren.

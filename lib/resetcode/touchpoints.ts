@@ -15,7 +15,8 @@ export type TouchpointSleutel =
   | "basis-week3"
   | "basis-groeien"
   | "dag10-video"
-  | "programma-einde";
+  | "programma-einde"
+  | "samen-starten";
 
 /** Het volledige kern-verhaal (dag ~7 darm, ~week 1 fase 2, of groeien-stap). */
 export function kernVerhaal(naam: string): string[] {
@@ -56,6 +57,14 @@ export function touchpointTekst(
             `Die gratis webshop ligt er nog steeds. Geen haast, hij loopt niet weg. Maar als je de afgelopen weken weleens een compliment kreeg of iemand nieuwsgierig zag worden: dat was 'm al. Stuur ${naam} gerust een appje als je er meer over wilt weten, of zeg het hier, dan weet je precies waar je aan toe bent.`,
           ]
         : kernVerhaal(naam);
+    case "samen-starten":
+      // Rond het startmoment: samen doen + de support-groep. Geen
+      // webshop-verhaal, puur warm en praktisch.
+      return [
+        "Nog iets moois om over na te denken nu je gaat starten: dit soort programma's zijn samen een stuk leuker én makkelijker vol te houden. Grote kans dat jij iemand kent die hier ook mee bezig is. Iemand die vaak praat over een opgeblazen gevoel, brainfog, of gewoon niet lekker in z'n vel zitten. Denk maar even, er komt vast iemand in je op. 😊",
+        `Komt er iemand in je op? Breng die persoon dan gerust alvast in contact met ${naam}. Die zorgt dat diegene de juiste informatie krijgt, zonder verplichtingen, en dan kunnen jullie het misschien wel samen doen. Samen starten is samen volhouden.`,
+        `En je staat er sowieso niet alleen voor: er is een support-groep op Facebook voor de Holistic Reset en het darmprogramma, met ruim 10.000 mensen die deze programma's volgen of gevolgd hebben. Vol ervaringen, recepten en aanmoediging. Vraag ${naam} even om je toe te voegen. En voor al je vragen blijf ik er natuurlijk gewoon, dag en nacht. 💚`,
+      ];
     case "programma-einde":
       return []; // markering; de einde-flow doet zelf het woord
     case "dag10-video":

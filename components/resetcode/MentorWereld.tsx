@@ -61,6 +61,7 @@ type ChatItem =
   | { van: "mentor"; soort: "verder-knop"; bid: number; label: string; actie: VerderActie }
   | { van: "mentor"; soort: "checkin-vraag"; bid: number }
   | { van: "mentor"; soort: "start-keuze"; bid: number }
+  | { van: "mentor"; soort: "pakket-keuze"; bid: number }
   | { van: "mentor"; soort: "voortgang" }
   | { van: "mentor"; soort: "push-opt-in"; bid: number }
   | { van: "ik"; soort: "tekst"; tekst: string }
@@ -99,22 +100,104 @@ const FASE_DAGEN: Record<string, number> = {
   "logisch-leven": 21,
 };
 
-// Dagelijkse check-in in de chat: stemming (verplicht om te tikken) +
-// optioneel gewicht. Twintig seconden werk, de reden om elke dag te openen.
+// Dagelijkse check-in in de chat, journal-stijl (kompas-principe):
+// tik-keuzes voor gevoel, energie, slaap en buik + optioneel gewicht
+// en de kleine winst van de dag. Een halve minuut werk, en het traint
+// om te kijken naar wat wél werkt.
+export type CheckinInvoer = {
+  stemming: string;
+  energie: string;
+  slaap: string;
+  buik: string;
+  gewicht: string;
+  winst: string;
+};
+
+const CHECKIN_RIJEN: {
+  veld: "energie" | "slaap" | "buik";
+  vraag: string;
+  opties: { id: string; emoji: string; label: string }[];
+}[] = [
+  {
+    veld: "energie",
+    vraag: "Energie",
+    opties: [
+      { id: "weinig", emoji: "🔋", label: "Weinig" },
+      { id: "oke", emoji: "🙂", label: "Oké" },
+      { id: "veel", emoji: "⚡", label: "Veel" },
+    ],
+  },
+  {
+    veld: "slaap",
+    vraag: "Geslapen",
+    opties: [
+      { id: "slecht", emoji: "🥱", label: "Slecht" },
+      { id: "oke", emoji: "🙂", label: "Oké" },
+      { id: "goed", emoji: "😴", label: "Goed" },
+    ],
+  },
+  {
+    veld: "buik",
+    vraag: "Je buik",
+    opties: [
+      { id: "onrustig", emoji: "🌀", label: "Onrustig" },
+      { id: "oke", emoji: "🙂", label: "Oké" },
+      { id: "rustig", emoji: "🧘", label: "Rustig" },
+    ],
+  },
+];
+
 function CheckinVraag({
   bezig,
   onKies,
 }: {
   bezig: boolean;
-  onKies: (stemming: string, gewicht: string) => void;
+  onKies: (invoer: CheckinInvoer) => void;
 }) {
   const [gewicht, setGewicht] = useState("");
+  const [winst, setWinst] = useState("");
+  const [stemming, setStemming] = useState("");
+  const [keuzes, setKeuzes] = useState<Record<string, string>>({});
+  const kiesRij =
+    "flex-1 flex flex-col items-center gap-0.5 rounded-xl border py-2 disabled:opacity-40 transition-colors";
   return (
     <div className="rounded-2xl bg-[#0A251C] border border-emerald-500/25 px-4 py-3">
       <p className="text-[13px] font-bold text-emerald-300 mb-2">
         📔 Even je check-in
       </p>
-      <div className="flex items-center gap-2 mb-3">
+      <p className="text-[11px] text-white/50 mb-1">Hoe voel je je vandaag?</p>
+      <div className="flex gap-2 mb-2.5">
+        {STEMMINGEN.map((s) => (
+          <button
+            key={s.id}
+            onClick={() => setStemming(s.id)}
+            disabled={bezig}
+            className={`${kiesRij} ${stemming === s.id ? "bg-emerald-500/25 border-emerald-400/60" : "bg-white/5 border-white/10 hover:bg-white/10"}`}
+          >
+            <span className="text-xl">{s.emoji}</span>
+            <span className="text-[11px] text-white/80">{s.label}</span>
+          </button>
+        ))}
+      </div>
+      {CHECKIN_RIJEN.map((rij) => (
+        <div key={rij.veld} className="mb-2.5">
+          <p className="text-[11px] text-white/50 mb-1">{rij.vraag}</p>
+          <div className="flex gap-2">
+            {rij.opties.map((o) => (
+              <button
+                key={o.id}
+                onClick={() => setKeuzes((k) => ({ ...k, [rij.veld]: o.id }))}
+                disabled={bezig}
+                className={`${kiesRij} ${keuzes[rij.veld] === o.id ? "bg-emerald-500/25 border-emerald-400/60" : "bg-white/5 border-white/10 hover:bg-white/10"}`}
+              >
+                <span className="text-base">{o.emoji}</span>
+                <span className="text-[10px] text-white/75">{o.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      ))}
+      <div className="flex items-center gap-2 mb-2.5">
         <input
           value={gewicht}
           onChange={(e) => setGewicht(e.target.value.replace(/[^0-9,.]/g, ""))}
@@ -125,19 +208,29 @@ function CheckinVraag({
         />
         <span className="text-white/50 text-[12px]">kg (optioneel)</span>
       </div>
-      <div className="flex gap-2">
-        {STEMMINGEN.map((s) => (
-          <button
-            key={s.id}
-            onClick={() => onKies(s.id, gewicht)}
-            disabled={bezig}
-            className="flex-1 flex flex-col items-center gap-0.5 rounded-xl bg-white/5 border border-white/10 py-2.5 hover:bg-white/10 disabled:opacity-40"
-          >
-            <span className="text-2xl">{s.emoji}</span>
-            <span className="text-[11px] text-white/80">{s.label}</span>
-          </button>
-        ))}
-      </div>
+      <input
+        value={winst}
+        onChange={(e) => setWinst(e.target.value.slice(0, 200))}
+        placeholder="kleine winst van vandaag (optioneel) ✨"
+        className="w-full rounded-full bg-white/10 border border-white/15 px-3 py-1.5 text-[13px] text-white placeholder:text-white/40 focus:outline-none mb-2.5"
+        disabled={bezig}
+      />
+      <button
+        onClick={() =>
+          onKies({
+            stemming,
+            energie: keuzes.energie ?? "",
+            slaap: keuzes.slaap ?? "",
+            buik: keuzes.buik ?? "",
+            gewicht,
+            winst,
+          })
+        }
+        disabled={bezig || !stemming}
+        className="w-full rounded-full bg-emerald-600 py-2.5 text-[14px] font-bold text-white disabled:opacity-40"
+      >
+        Check-in klaar ✓
+      </button>
     </div>
   );
 }
@@ -354,6 +447,7 @@ export default function MentorWereld({
   dagNummer,
   startGekozen,
   startOverDagen,
+  pakket,
 }: {
   begeleiderNaam: string;
   /** Klant-modus: token van de klant-link; het gesprek wordt dan op de server bewaard. */
@@ -389,6 +483,8 @@ export default function MentorWereld({
   startGekozen?: boolean;
   /** Startdatum in de toekomst: over zoveel dagen begint dag 1. */
   startOverDagen?: number;
+  /** Darmen in Balans: gekozen pakket (basis of plus), of null. */
+  pakket?: "basis" | "plus" | null;
 }) {
   const isKlant = Boolean(token);
   const verteldRef = useRef<Set<string>>(new Set(touchpointsAlVerteld ?? []));
@@ -405,13 +501,21 @@ export default function MentorWereld({
   // Waar terwijl de Mentor woord-voor-woord schrijft: dan even geen
   // localStorage-opslag per woord (na het schrijven één keer).
   const schrijftRef = useRef(false);
-  // Startmoment: op de eerste echte fase kiest de klant zelf wanneer
-  // dag 1 is (vandaag/morgen/datum). Eerste fase mét dagen per programma.
+  // Startmoment: de klant kiest zelf wanneer dag 1 is (vandaag/morgen/
+  // datum/al gestart). De vraag komt VROEG (feedback Raoul 19 juli): al
+  // na de voorbereidings-info, niet pas na alle fase-informatie.
   const startGekozenRef = useRef(Boolean(startGekozen ?? false));
+  const START_VRAAG_STATION: Record<string, string> = {
+    darm: "start",
+    reset: "voorbereiding",
+  };
   const EERSTE_DUUR_STATION: Record<string, string> = {
     darm: "zestien-dagen",
     reset: "laaddagen",
   };
+  // Darmen in Balans: basis (rode schema, 5 producten) of plus (blauwe
+  // schema, 8 producten). Bepaalt hoe specifiek de Mentor antwoordt.
+  const pakketRef = useRef<"basis" | "plus" | null>(pakket ?? null);
   const [checkinBezig, setCheckinBezig] = useState(false);
 
   function markeerTouchpoint(sleutel: TouchpointSleutel) {
@@ -520,6 +624,7 @@ export default function MentorWereld({
               i.soort !== "verder-knop" &&
               i.soort !== "checkin-vraag" &&
               i.soort !== "start-keuze" &&
+              i.soort !== "pakket-keuze" &&
               i.soort !== "push-opt-in" &&
               i.soort !== "voortgang",
           )
@@ -575,17 +680,34 @@ export default function MentorWereld({
               ]
             : []),
         ]);
-        // Startmoment nog niet gekozen op de startfase? Dan eerst dát
-        // vragen; check-ins hebben pas zin als dag 1 vaststaat.
+        // Volgorde bij terugkomen: eerst pakket (darm, indien onbekend),
+        // dan startmoment (indien nog niet gekozen), dan de check-in.
         const moetStartKiezen =
-          !startGekozenRef.current && EERSTE_DUUR_STATION[prog.slug] === st.slug;
+          !startGekozenRef.current &&
+          (START_VRAAG_STATION[prog.slug] === st.slug ||
+            EERSTE_DUUR_STATION[prog.slug] === st.slug);
+        const moetPakketKiezen = prog.slug === "darm" && !pakketRef.current;
         // Dagelijkse check-in bovenaan (nieuwe dag, nog niet ingecheckt).
         // Niet op het einde-moment (dan is het feest, geen formulier) en
         // niet vóór de zelfgekozen startdatum.
-        if (moetStartKiezen) {
+        if (moetPakketKiezen) {
           (async () => {
             await wacht(1400);
-            await toonStartKeuze(FASE_DAGEN[st.slug]);
+            await toonPakketKeuze(
+              moetStartKiezen
+                ? async () => {
+                    await toonStartKeuze(
+                      FASE_DAGEN[EERSTE_DUUR_STATION[prog.slug] ?? ""],
+                    );
+                  }
+                : null,
+            );
+            knoppenNaarOnder();
+          })();
+        } else if (moetStartKiezen) {
+          (async () => {
+            await wacht(1400);
+            await toonStartKeuze(FASE_DAGEN[EERSTE_DUUR_STATION[prog.slug] ?? ""]);
             knoppenNaarOnder();
           })();
         } else if (!checkinGedaanRef.current && !dueEinde && !teltAf) {
@@ -634,19 +756,27 @@ export default function MentorWereld({
             1200,
           );
           await wacht(700);
-          await introStation(prog, prog.stations[0]);
-          fetch("/api/resetcode/stap", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ token, station: prog.stations[0].slug }),
-          }).catch(() => {});
-          // Dag 1: vraag of ik elke ochtend een seintje mag geven.
-          await wacht(900);
-          await mentorZegt(
-            "Nog één ding, en dan laat ik je los 😊 Zal ik je elke ochtend een klein seintje geven voor je dagelijkse check-in? Dan hoef jij niks te onthouden en houd ik je voortgang perfect bij.",
-            1000,
-          );
-          await toonPushOptIn();
+          const vervolg = async () => {
+            await introStation(prog, prog.stations[0]);
+            fetch("/api/resetcode/stap", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ token, station: prog.stations[0].slug }),
+            }).catch(() => {});
+            // Dag 1: vraag of ik elke ochtend een seintje mag geven.
+            await wacht(900);
+            await mentorZegt(
+              "Nog één ding, en dan laat ik je los 😊 Zal ik je elke ochtend een klein seintje geven voor je dagelijkse check-in? Dan hoef jij niks te onthouden en houd ik je voortgang perfect bij.",
+              1000,
+            );
+            await toonPushOptIn();
+          };
+          // Darmen in Balans: eerst even weten welk pakket (basis/plus).
+          if (prog.slug === "darm" && !pakketRef.current) {
+            await toonPakketKeuze(vervolg);
+          } else {
+            await vervolg();
+          }
         })();
       }
       return;
@@ -808,17 +938,11 @@ export default function MentorWereld({
         `Kanjer, dan ben je al lekker bezig! 💚 Dan zit je nu op dag ${dag}. Ik heb het aan ${begeleiderNaam} doorgegeven en tel vanaf nu gewoon met je mee vanaf jouw echte startdag. Vanaf nu zie ik je elke dag bij je check-in, en alles wat op jouw dagen hoort zet ik automatisch voor je klaar.`,
         1100,
       );
-      await wacht(600);
-      await toonCheckin(true);
-      return;
-    }
-    if (label === "vandaag") {
+    } else if (label === "vandaag") {
       await mentorZegt(
         `Yes! Vandaag is jouw dag 1 💚 Ik heb het aan ${begeleiderNaam} doorgegeven. Vanaf nu zie ik je elke dag bij je check-in en houd ik je voortgang bij. Zet 'm op vandaag, je gaat dit goed doen!`,
         1000,
       );
-      await wacht(600);
-      await toonCheckin(true);
     } else {
       await mentorZegt(
         `Genoteerd: ${label} is jouw dag 1 💚 Ik heb het aan ${begeleiderNaam} doorgegeven. Gebruik de tijd tot je start om je documenten rustig door te lezen en alles in huis te halen. Vanaf je startdag zie ik je elke dag bij je check-in!`,
@@ -837,6 +961,88 @@ export default function MentorWereld({
           1100,
         );
       }
+    }
+
+    // Rond de start: het samen-doen-verhaal + de support-groep
+    // (eenmalig; slaat bouwers automatisch over via speelTouchpoint).
+    if (!alGestart) {
+      await wacht(900);
+      await speelTouchpoint("samen-starten");
+    }
+
+    // Kwam de vraag vroeg (na de voorbereiding)? Dan stroomt het
+    // programma nu vanzelf door naar de eerste echte fase, zonder
+    // extra "Verder met"-knop (feedback Raoul).
+    if (
+      programma &&
+      station &&
+      START_VRAAG_STATION[programma.slug] === station.slug
+    ) {
+      const i = programma.stations.findIndex((s) => s.slug === station.slug);
+      const volgend = programma.stations[i + 1];
+      if (volgend) {
+        await wacht(900);
+        if (token) {
+          fetch("/api/resetcode/stap", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token, station: volgend.slug }),
+          }).catch(() => {});
+        }
+        await introStation(programma, volgend);
+      }
+    }
+
+    // Wie vandaag start of al bezig is: meteen de eerste check-in.
+    if ((alGestart || label === "vandaag") && !checkinGedaanRef.current) {
+      await wacht(700);
+      await toonCheckin(true);
+    }
+  }
+
+  // ---------- Pakket-keuze (Darmen in Balans: basis of plus) ----------
+
+  // Vervolg-actie die na de pakket-keuze verder moet lopen (bijv. de
+  // eerste fase-intro), zodat de flow netjes wacht op het antwoord.
+  const naPakketRef = useRef<(() => Promise<void>) | null>(null);
+
+  async function toonPakketKeuze(vervolg: (() => Promise<void>) | null) {
+    naPakketRef.current = vervolg;
+    await mentorZegt(
+      "Eerst even praktisch: welk pakket heb jij besteld? Dan kloppen al mijn antwoorden precies met jouw schema.",
+      900,
+    );
+    const bid = ++bidTeller.current;
+    setItems((b) => [...b, { van: "mentor", soort: "pakket-keuze", bid }]);
+  }
+
+  async function kiesPakket(keuze: "basis" | "plus") {
+    setItems((b) => b.filter((x) => x.soort !== "pakket-keuze"));
+    pakketRef.current = keuze;
+    const echo =
+      keuze === "plus"
+        ? "Ik heb het plus-pakket (8 producten) 🔵"
+        : "Ik heb het basispakket (5 producten) 🔴";
+    setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: echo }]);
+    logNaarServer([{ van: "klant", soort: "tekst", tekst: echo }]);
+    if (token) {
+      fetch("/api/resetcode/pakket", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, pakket: keuze }),
+      }).catch(() => {});
+    }
+    await mentorZegt(
+      keuze === "plus"
+        ? "Top, het plus-pakket dus: het blauwe schema met 8 producten. Alles wat ik je vertel en uitreken klopt daar vanaf nu precies mee. 💙"
+        : "Top, het basispakket dus: het rode schema met 5 producten. Alles wat ik je vertel en uitreken klopt daar vanaf nu precies mee. ❤️",
+      900,
+    );
+    const vervolg = naPakketRef.current;
+    naPakketRef.current = null;
+    if (vervolg) {
+      await wacht(600);
+      await vervolg();
     }
   }
 
@@ -857,21 +1063,27 @@ export default function MentorWereld({
     setItems((b) => [...b, { van: "mentor", soort: "checkin-vraag", bid }]);
   }
 
-  async function verstuurCheckin(stemming: string, gewichtStr: string) {
+  async function verstuurCheckin(invoer: CheckinInvoer) {
     if (checkinBezig) return;
     setCheckinBezig(true);
     setItems((b) => b.filter((x) => x.soort !== "checkin-vraag"));
-    const gewicht = gewichtStr
-      ? Number(gewichtStr.replace(",", "."))
+    const { stemming, energie, slaap, buik, winst } = invoer;
+    const gewicht = invoer.gewicht
+      ? Number(invoer.gewicht.replace(",", "."))
       : undefined;
     const woord =
       stemming === "top" ? "top 😃" : stemming === "gaatwel" ? "gaat wel 🙂" : "zwaar 💛";
+    const extraDelen = [
+      energie ? `energie ${energie}` : "",
+      slaap ? `slaap ${slaap}` : "",
+      buik ? `buik ${buik}` : "",
+    ].filter(Boolean);
     setItems((b) => [
       ...b,
       {
         van: "ik",
         soort: "tekst",
-        tekst: `Vandaag: ${woord}${gewicht ? `, ${gewicht} kg` : ""}`,
+        tekst: `Vandaag: ${woord}${extraDelen.length ? ` (${extraDelen.join(", ")})` : ""}${gewicht ? `, ${gewicht} kg` : ""}${winst ? `. Winst: ${winst}` : ""}`,
       },
     ]);
     checkinGedaanRef.current = true;
@@ -883,7 +1095,15 @@ export default function MentorWereld({
         const res = await fetch("/api/resetcode/checkin", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token, stemming, gewicht }),
+          body: JSON.stringify({
+            token,
+            stemming,
+            gewicht,
+            energie: energie || undefined,
+            slaap: slaap || undefined,
+            buik: buik || undefined,
+            notitie: winst || undefined,
+          }),
         });
         const data = await res.json().catch(() => null);
         if (data?.ok) {
@@ -897,7 +1117,7 @@ export default function MentorWereld({
           { datum: vandaag, stemming, gewicht: gewicht ?? null },
         ];
         await mentorZegt(
-          `Genoteerd dat het vandaag ${woord.replace(/[^\wà-ü ]/gi, "").trim()} gaat.${gewicht ? " Gewicht opgeslagen." : ""} Ik houd alles voor je bij, vraag me gerust "mijn voortgang".`,
+          `Genoteerd dat het vandaag ${woord.replace(/[^\wà-ü ]/gi, "").trim()} gaat.${gewicht ? " Gewicht opgeslagen." : ""}${winst ? ` En mooi wat je opschreef: zo train je jezelf om te zien wat wél werkt. 💚` : ""} Ik houd alles voor je bij, vraag me gerust "mijn voortgang".`,
           800,
         );
       }
@@ -1036,8 +1256,23 @@ export default function MentorWereld({
         knopLabel: "hoe ik je calorieën tel",
         speel: async () => {
           await mentorZegt(
-            "Vandaag is het simpel: eten! 😋 Zeg of stuur me gewoon alles wat je eet (een foto van je bord of de verpakking mag ook), dan tel ik je calorieën automatisch mee. Bovenin zie je je teller richting de 3500+ lopen. Foutje gemaakt? Zeg gewoon \"haal die laatste weg\". Kom je in je documenten nog de FatSecret-app tegen: die zou je kunnen gebruiken, maar dit is makkelijker, ik reken alles voor je uit.",
+            "Op je laaddagen is het simpel: eten! 😋 Zeg of stuur me gewoon alles wat je eet (een foto van je bord of de verpakking mag ook), dan tel ik je calorieën automatisch mee. Bovenin zie je je teller richting de 3500+ lopen. Foutje gemaakt? Zeg gewoon \"haal die laatste weg\". Kom je in je documenten nog de FatSecret-app tegen: die zou je kunnen gebruiken, maar dit is makkelijker, ik reken alles voor je uit.",
             1100,
+          );
+        },
+      });
+    }
+
+    // De 16 dagen: laten zien wat je allemaal aan de Mentor hebt
+    // (feedback Raoul 19 juli: hij was te bescheiden over zichzelf).
+    if (st.slug === "zestien-dagen") {
+      chunks.push({
+        sleutel: "kan",
+        knopLabel: "wat je allemaal aan mij hebt",
+        speel: async () => {
+          await mentorZegt(
+            "Even zodat je weet wat je de komende 16 dagen allemaal aan me hebt 💪\n\n📷 Twijfel je bij een product, thuis of in de winkel? Stuur een foto van de ingrediëntenlijst en ik zeg je direct of het in jouw programma past.\n🍽️ Zeg wat je in huis hebt en ik maak er een recept, dagschema of weekmenu van dat precies binnen je lijst valt.\n🍬 Suiker heeft ruim 150 schuilnamen op etiketten; ik herken ze allemaal.\n💊 Alles over je producten, je schema en je doseringen weet ik uit je eigen boekje.\n📔 En elke dag doe ik een korte check-in met je, zodat je je voortgang echt ziet groeien.\n\nPraat gewoon tegen me of typ, wat jij fijn vindt. Ik ben er dag en nacht.",
+            1200,
           );
         },
       });
@@ -1131,8 +1366,13 @@ export default function MentorWereld({
     // doorklikt krijgt hier een logisch rustpunt, niet het einde-verhaal.
     // Het echte einde (webshop-moment + vervolg) is tijd-gebonden en komt
     // via dueEinde zodra de dagen er echt op zitten.
+    // De start-vraag komt vroeg (na de voorbereidings-info); op de eerste
+    // duur-fase blijft hij als vangnet voor wie er langs klikte.
     const vraagStart =
-      EERSTE_DUUR_STATION[prog.slug] === st.slug && !startGekozenRef.current;
+      (START_VRAAG_STATION[prog.slug] === st.slug ||
+        EERSTE_DUUR_STATION[prog.slug] === st.slug) &&
+      !startGekozenRef.current;
+    const duurVoorVraag = FASE_DAGEN[EERSTE_DUUR_STATION[prog.slug] ?? ""];
 
     if (isLaatste) {
       await mentorZegt(
@@ -1141,7 +1381,7 @@ export default function MentorWereld({
           : `Dat was alles voor deze stap 💚 Vraag me gerust van alles, ik ken al je documenten van binnen en van buiten en maak zo een recept of dagschema voor je.`,
         1100,
       );
-      if (vraagStart) await toonStartKeuze(duur);
+      if (vraagStart) await toonStartKeuze(duurVoorVraag);
       else if (duur) {
         await mentorZegt(
           `Neem er rustig je ${duur} dagen voor, ik zie je elke dag bij je check-in. En als je dagen erop zitten, vertel ik je alles over je vervolg.`,
@@ -1151,13 +1391,23 @@ export default function MentorWereld({
       return;
     }
 
+    // Na de start-vraag géén "Verder met"-knop: het vervolg stroomt
+    // vanzelf door zodra het startmoment gekozen is (feedback Raoul).
+    if (vraagStart) {
+      await mentorZegt(
+        "Dat was je voorbereidings-informatie 💚 Vraag me gerust van alles, ik ken al je documenten van binnen en van buiten.",
+        1000,
+      );
+      await toonStartKeuze(duurVoorVraag);
+      return;
+    }
+
     await mentorZegt(
       duur
         ? `Dat was de informatie voor deze fase 💚 Neem er rustig je ${duur === 2 ? "twee laaddagen" : `${duur} dagen`} voor, ik zie je elke dag bij je check-in. Klaar met alle dagen? Tik dan hieronder op de volgende stap.`
         : "Dat was alles voor deze stap 💚 Vraag me gerust van alles, ik ken al je documenten van binnen en van buiten en maak zo een recept of dagschema voor je.",
       1000,
     );
-    if (vraagStart) await toonStartKeuze(duur);
     const volgend = prog.stations[i + 1];
     const bid = ++bidTeller.current;
     setItems((b) => [
@@ -1241,7 +1491,14 @@ export default function MentorWereld({
       1000,
     );
     await wacht(500);
-    await introStation(prog, prog.stations[0]);
+    // Darmen in Balans: eerst even weten welk pakket (basis/plus).
+    if (prog.slug === "darm" && !pakketRef.current) {
+      await toonPakketKeuze(async () => {
+        await introStation(prog, prog.stations[0]);
+      });
+    } else {
+      await introStation(prog, prog.stations[0]);
+    }
     // Bewust GEEN check-in op het allereerste moment (te vroeg, feedback
     // Raoul): die hoort bij terugkomen op een nieuwe dag. In de preview
     // zit hij in het Groeipad-menu als tijdmachine-knop.
@@ -1594,6 +1851,7 @@ export default function MentorWereld({
           station: station.slug,
           rol: isKlant ? "klant" : rol,
           geschiedenis: historie,
+          pakket: pakketRef.current ?? undefined,
         }),
       });
       if (!res.ok || !res.body) {
@@ -2270,7 +2528,7 @@ export default function MentorWereld({
               <div key={i} className="verschijn max-w-[92%]">
                 <CheckinVraag
                   bezig={checkinBezig}
-                  onKies={(stemming, gewicht) => verstuurCheckin(stemming, gewicht)}
+                  onKies={(invoer) => verstuurCheckin(invoer)}
                 />
               </div>
             );
@@ -2283,6 +2541,30 @@ export default function MentorWereld({
                     kiesStart(datum, label, alGestart)
                   }
                 />
+              </div>
+            );
+          }
+          if (item.soort === "pakket-keuze") {
+            return (
+              <div key={i} className="verschijn max-w-[92%] space-y-2">
+                <button
+                  onClick={() => kiesPakket("basis")}
+                  className="w-full text-left rounded-2xl bg-[#0A251C] border border-emerald-500/25 px-4 py-3 hover:border-emerald-400/50 transition-colors"
+                >
+                  <p className="text-[15px] font-bold text-white">🔴 Darmen in Balans</p>
+                  <p className="text-[12px] text-white/60">
+                    Het basispakket: 5 producten, het rode schema
+                  </p>
+                </button>
+                <button
+                  onClick={() => kiesPakket("plus")}
+                  className="w-full text-left rounded-2xl bg-[#0A251C] border border-emerald-500/25 px-4 py-3 hover:border-emerald-400/50 transition-colors"
+                >
+                  <p className="text-[15px] font-bold text-white">🔵 Darmen in Balans Plus</p>
+                  <p className="text-[12px] text-white/60">
+                    Het plus-pakket: 8 producten, het blauwe schema
+                  </p>
+                </button>
               </div>
             );
           }

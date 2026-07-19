@@ -145,7 +145,7 @@ const DARM_STATIONS: ResetStation[] = [
       "Neem dagelijks een paar mespuntjes Keltisch zeezout, gewoon los of onder je tong.",
       "Doe minimaal twee keer per week een voetenbadje met een paar eetlepels Keltisch zeezout in warm water.",
       "Plan genoeg rust in, je lichaam is aan het werk en dat mag je voelen.",
-      "Boekweit-producten zijn je vriend: pannenkoekjes van boekweitmeel, 100% boekweitpasta, boekweitcrackers.",
+      "Boekweit is je geheime wapen: boekweitcrackers, boekweitmeel, 100% boekweitpasta, pannenkoekjes van boekweitmeel. Het is geen graan maar een zaadje, van nature glutenvrij en met een lage glycemische index; daarom past het zo goed in dit programma.",
       "Ging er per ongeluk iets verkeerds in? Geen paniek en niks mislukt: draad oppakken en gewoon door.",
     ],
     veelgesteld: [

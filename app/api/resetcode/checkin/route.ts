@@ -35,9 +35,12 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: "Ongeldige link" }, { status: 401 });
   }
 
-  const stemming = ["top", "gaatwel", "zwaar"].includes(body.stemming)
-    ? (body.stemming as string)
-    : null;
+  const keuze = (veld: unknown, opties: string[]) =>
+    typeof veld === "string" && opties.includes(veld) ? veld : null;
+  const stemming = keuze(body.stemming, ["top", "gaatwel", "zwaar"]);
+  const energie = keuze(body.energie, ["weinig", "oke", "veel"]);
+  const slaap = keuze(body.slaap, ["slecht", "oke", "goed"]);
+  const buik = keuze(body.buik, ["onrustig", "oke", "rustig"]);
   const gewicht = getal(body.gewicht);
   const notitie =
     typeof body.notitie === "string" ? body.notitie.trim().slice(0, 500) : null;
@@ -49,6 +52,9 @@ export async function POST(req: NextRequest) {
       link_id: ctx.linkId,
       datum,
       stemming,
+      energie,
+      slaap,
+      buik,
       gewicht,
       taille: getal(body.taille),
       heup: getal(body.heup),
@@ -84,7 +90,16 @@ export async function POST(req: NextRequest) {
     : "Genoteerd voor vandaag.";
   const streakDeel =
     streak >= 3 ? ` En knap: ${streak} dagen op rij ingecheckt! 🔥` : "";
-  const antwoord = `${stemDeel}${gewicht != null ? ` Gewicht van vandaag opgeslagen.${verschilTekst}` : ""}${streakDeel} Ik houd alles voor je bij, vraag me gerust "mijn voortgang".`;
+  // De kleine winst van de dag terugspiegelen: kijken naar wat wél
+  // werkt (journal-principe), niet naar wat nog niet perfect is.
+  const winstDeel = notitie
+    ? ` En wat je opschreef ("${notitie.slice(0, 120)}"): vasthouden die. Zo train je jezelf om te zien wat wél werkt. 💚`
+    : "";
+  const zwaarDeel =
+    stemming === "zwaar" && buik === "onrustig"
+      ? " Zware dag én een onrustige buik: dat mag er zijn, je lichaam is aan het werk. Vertel me gerust wat je merkt, dan kijk ik met je mee."
+      : "";
+  const antwoord = `${stemDeel}${gewicht != null ? ` Gewicht van vandaag opgeslagen.${verschilTekst}` : ""}${streakDeel}${winstDeel}${zwaarDeel} Ik houd alles voor je bij, vraag me gerust "mijn voortgang".`;
 
   // In het gesprek bewaren zodat het meereist.
   await bewaarResetChats(ctx.linkId, [
@@ -92,7 +107,7 @@ export async function POST(req: NextRequest) {
       van: "klant",
       soort: "tekst",
       stationSlug: ctx.stationSlug,
-      tekst: `Check-in: ${stemming ? STEMMING_WOORD[stemming] : "gedaan"}${gewicht != null ? `, ${gewicht} kg` : ""}${notitie ? ` — ${notitie}` : ""}`,
+      tekst: `Check-in: ${stemming ? STEMMING_WOORD[stemming] : "gedaan"}${energie ? `, energie ${energie}` : ""}${slaap ? `, slaap ${slaap}` : ""}${buik ? `, buik ${buik}` : ""}${gewicht != null ? `, ${gewicht} kg` : ""}${notitie ? `. Winst van vandaag: ${notitie}` : ""}`,
     },
     { van: "mentor", soort: "tekst", stationSlug: ctx.stationSlug, tekst: antwoord },
   ]);

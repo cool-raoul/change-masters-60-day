@@ -64,9 +64,18 @@ export function bouwResetMentorPrompt(opties: {
   stationSlug: string;
   /** Klant bouwt zelf al mee aan de business: geen webshop-verhalen. */
   isBouwer?: boolean;
+  /** Darmen in Balans: welk pakket (basis = rode schema, plus = blauwe schema). */
+  pakket?: "basis" | "plus" | null;
 }): string {
-  const { rol, voornaam, begeleiderNaam, programmaSlug, stationSlug, isBouwer } =
-    opties;
+  const {
+    rol,
+    voornaam,
+    begeleiderNaam,
+    programmaSlug,
+    stationSlug,
+    isBouwer,
+    pakket,
+  } = opties;
   const programma = programmaVoor(programmaSlug);
   const station = stationVoor(programmaSlug, stationSlug);
   const andereProgrammas = RESET_PROGRAMMAS.filter(
@@ -102,8 +111,16 @@ VOOR EEN MEMBER GELDT:
 - Bij medische of aanhoudende persoonlijke dingen: adviseer overleg met ${begeleider} of een professional, geen eigen diagnoses.
 - Je mag af en toe (niet elke beurt) benoemen dat eigen ervaring goud is: wat ${voornaam} nu zelf voelt en meemaakt, is straks precies wat eigen klanten gerust gaat stellen. Nooit pushen.`;
 
+  const pakketBlok =
+    programmaSlug === "darm"
+      ? pakket
+        ? `\nPAKKET VAN ${voornaam.toUpperCase()}: het ${pakket === "plus" ? "PLUS-pakket (blauwe schema, 8 producten: de basis vijf plus Be Recharged, Digestive Formula en PH Plus)" : "BASIS-pakket (rode schema, 5 producten: Cogelin, Aloe Vera Caps, MSM Plus, Biotic Blast, Parabalance)"}. Stem al je product- en schema-antwoorden hierop af; noem alleen producten uit dít pakket als dagelijkse routine (extra's mag je als optie noemen via ${begeleider}).\n`
+        : `\nPAKKET NOG ONBEKEND: ${voornaam} volgt Darmen in Balans maar heeft nog niet doorgegeven welk pakket (basis = rode schema met 5 producten, plus = blauwe schema met 8 producten). Vraag er vriendelijk naar zodra het voor je antwoord uitmaakt, of zeg dat ze even op het pakket-kaartje kunnen tikken.\n`
+      : "";
+
   return `Je bent de Mentor van ELEVA voor het Resetcode-programma. Je spreekt Nederlands, warm en gewoon, zoals de mensen achter dit programma zelf praten: "je doet het niet alleen", "zet hem op", "wees lief voor jezelf". Kort waar het kan, uitgebreider alleen als de vraag erom vraagt.
 ${rolBlok}
+${pakketBlok}
 
 FASE-DISCIPLINE (de allerbelangrijkste kwaliteitsregel, gaat vóór alles):
 - Toets ELK voedings- en leefstijladvies eerst stil aan de fase waar ${voornaam} NU zit, en benoem die fase expliciet in je antwoord.

@@ -149,6 +149,12 @@ export async function POST(req: NextRequest) {
       programmaSlug,
       stationSlug,
       isBouwer: klantCtx?.isBouwer ?? false,
+      // Token-modus: pakket uit de database; preview: uit de body.
+      pakket:
+        klantCtx?.pakket ??
+        (body.pakket === "basis" || body.pakket === "plus"
+          ? (body.pakket as "basis" | "plus")
+          : null),
     });
 
     // Klant-vraag meteen bewaren (ongeacht of de AI-call slaagt).

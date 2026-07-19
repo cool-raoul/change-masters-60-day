@@ -206,19 +206,25 @@ export default async function KlantLinkPagina({
     );
   }
 
-  // Dag-nummer binnen de huidige fase. Op de eerste "echte" fase telt
-  // de ZELFGEKOZEN startdatum (feedback Raoul 19 juli): de klant kan
-  // dagen vóór de start al alles lezen zonder dat de teller loopt.
+  // Dag-nummer binnen de huidige fase. Op de vraag-fase (voorbereiding)
+  // en de eerste "echte" fase telt de ZELFGEKOZEN startdatum (feedback
+  // Raoul 19 juli): de klant kan dagen vóór de start al alles lezen
+  // zonder dat de teller loopt.
   const START_STATION: Record<string, string> = {
     darm: "zestien-dagen",
     reset: "laaddagen",
   };
+  const VRAAG_STATION: Record<string, string> = {
+    darm: "start",
+    reset: "voorbereiding",
+  };
   const opStartStation = ctx.stationSlug === START_STATION[ctx.programmaSlug];
+  const opVraagStation = ctx.stationSlug === VRAAG_STATION[ctx.programmaSlug];
   const vandaagStr = new Intl.DateTimeFormat("sv-SE", {
     timeZone: "Europe/Amsterdam",
   }).format(new Date());
   let dagNummerRuw: number | null = null;
-  if (opStartStation && ctx.startDatum) {
+  if ((opStartStation || opVraagStation) && ctx.startDatum) {
     dagNummerRuw =
       Math.round(
         (Date.parse(vandaagStr) - Date.parse(ctx.startDatum)) / 86_400_000,
@@ -233,7 +239,8 @@ export default async function KlantLinkPagina({
   const startOverDagen =
     dagNummerRuw != null && dagNummerRuw < 1 ? 1 - dagNummerRuw : 0;
   const dagNummer = dagNummerRuw != null && dagNummerRuw >= 1 ? dagNummerRuw : null;
-  const startGekozen = Boolean(ctx.startDatum) || !opStartStation;
+  const startGekozen =
+    Boolean(ctx.startDatum) || !(opStartStation || opVraagStation);
 
   // Tijd-gebonden touchpoint: het kern-verhaal komt rond dag 5-7 van de
   // 16 dagen (darm) of van fase 2 (reset), niet meteen bij de start.
@@ -324,6 +331,7 @@ export default async function KlantLinkPagina({
         dagNummer={dagNummer}
         startGekozen={startGekozen}
         startOverDagen={startOverDagen}
+        pakket={ctx.pakket}
       />
     </div>
   );
