@@ -125,7 +125,7 @@ const CHECKIN_RIJEN: {
 }[] = [
   {
     veld: "energie",
-    vraag: "Energie",
+    vraag: "Je energie tot nu toe",
     opties: [
       { id: "weinig", emoji: "🔋", label: "Weinig" },
       { id: "oke", emoji: "🙂", label: "Oké" },
@@ -134,7 +134,7 @@ const CHECKIN_RIJEN: {
   },
   {
     veld: "slaap",
-    vraag: "Geslapen",
+    vraag: "Vannacht geslapen",
     opties: [
       { id: "slecht", emoji: "🥱", label: "Slecht" },
       { id: "oke", emoji: "🙂", label: "Oké" },
@@ -143,7 +143,7 @@ const CHECKIN_RIJEN: {
   },
   {
     veld: "buik",
-    vraag: "Je buik",
+    vraag: "Je buik op dit moment",
     opties: [
       { id: "onrustig", emoji: "🌀", label: "Onrustig" },
       { id: "oke", emoji: "🙂", label: "Oké" },
@@ -170,7 +170,7 @@ function CheckinVraag({
       <p className="text-[13px] font-bold text-emerald-300 mb-2">
         📔 Even je check-in
       </p>
-      <p className="text-[11px] text-white/50 mb-1">Hoe voel je je vandaag?</p>
+      <p className="text-[11px] text-white/50 mb-1">Hoe is het nu met je?</p>
       <div className="flex gap-2 mb-2.5">
         {STEMMINGEN.map((s) => (
           <button
@@ -677,8 +677,8 @@ export default function MentorWereld({
             van: "mentor",
             soort: "tekst",
             tekst: teltAf
-              ? `Welkom terug! 👋 Nog ${startOverDagen === 1 ? "één dag" : `${startOverDagen} dagen`} en dan begint jouw dag 1 🚀 Gebruik de tijd om je documenten rustig door te lezen, en vraag me gerust van alles.`
-              : `Welkom terug! 👋 We waren bij ${st.emoji} ${st.naam}${dagNummer ? ` (dag ${dagNummer})` : ""}. Waar wil je verder mee? Stel je vraag, stuur een foto van een etiket${volgend ? "" : ", of vraag me van alles"}.`,
+              ? `Welkom terug! 👋 Nog ${startOverDagen === 1 ? "één dag" : `${startOverDagen} dagen`} en dan begint jouw dag 1 🚀 Gebruik de tijd om je documenten rustig door te lezen en je boodschappen te doen. En vraag me gerust van alles: ik kijk ook mee met etiket-foto's of een product past, en ik maak alvast een recept of dagschema voor je.`
+              : `Welkom terug! 👋 We waren bij ${st.emoji} ${st.naam}${dagNummer ? ` (dag ${dagNummer})` : ""}. Waar wil je verder mee? Stel je vraag, stuur een foto van een etiket (dan kijk ik met je mee of een product bij jouw programma past), of laat me een recept of dagschema voor je maken.`,
           },
           ...(volgend
             ? [
@@ -821,12 +821,22 @@ export default function MentorWereld({
           const i = prog.stations.findIndex((s) => s.slug === st.slug);
           const volgend =
             i >= 0 && i < prog.stations.length - 1 ? prog.stations[i + 1] : null;
+          // Oude sessie-groeten niet mee terugspelen: anders stapelen de
+          // "Welkom terug!"-berichten op (bug-screenshot Raoul 20 juli).
+          const historie = data.items.filter(
+            (it) =>
+              !(
+                it.van === "mentor" &&
+                it.soort === "tekst" &&
+                it.tekst.startsWith("Welkom terug!")
+              ),
+          );
           setItems([
-            ...data.items,
+            ...historie,
             {
               van: "mentor",
               soort: "tekst",
-              tekst: `Welkom terug! 👋 We waren bij ${st.emoji} ${st.naam}. Waar wil je verder mee? Stel je vraag, stuur een foto van een etiket${volgend ? "" : ", of vraag me van alles"}.`,
+              tekst: `Welkom terug! 👋 We waren bij ${st.emoji} ${st.naam}. Waar wil je verder mee? Stel je vraag, stuur een foto van een etiket (dan kijk ik met je mee of een product bij jouw programma past), of laat me een recept of dagschema voor je maken.`,
             },
             ...(volgend
               ? [
@@ -1119,6 +1129,44 @@ export default function MentorWereld({
     markeerTouchpoint(`week-terugblik-${week}` as TouchpointSleutel);
   }
 
+  // ---------- Tip van de dag + wat de Mentor vandaag kan ----------
+
+  // Na de check-in (feedback Raoul 20 juli): één roterende tip uit het
+  // fase-materiaal + concreet wat de Mentor vandaag kan doen, per fase
+  // verschillend (darm is anders dan de reset).
+  const DAG_KAN: Record<string, string> = {
+    start:
+      "je boodschappenlijst doorlopen, meedenken over je voorbereiding, of alvast een etiket-foto checken",
+    "zestien-dagen":
+      "een etiket-foto checken of een product past, een recept of dagschema maken binnen jouw lijst, of meedenken bij een lastig moment",
+    voorbereiding:
+      "je boodschappenlijst doorlopen, meedenken over je voorbereiding, of alvast een etiket-foto checken",
+    laaddagen:
+      "je calorieën meetellen (zeg gewoon wat je eet, of stuur een foto van je bord) en ideeën geven om aan je 3500+ te komen",
+    omschakeling:
+      "een vetvrij recept binnen je fase 2-lijst maken, meedenken voor onderweg of op je werk, of een etiket-foto checken",
+    stabilisatie:
+      "je uitleggen hoe je nieuwe dingen rustig test, recepten voor deze fase maken, of een etiket-foto checken",
+    "logisch-leven":
+      "een weekmenu volgens de 80/20-piramide maken, of meedenken hoe je dit blijvend volhoudt",
+  };
+
+  async function toonDagTip() {
+    if (!station) return;
+    const tips = station.tips;
+    const draai = (dagNummer ?? new Date().getDate()) - 1;
+    const tip = tips.length
+      ? tips[((draai % tips.length) + tips.length) % tips.length]
+      : null;
+    const kan =
+      DAG_KAN[station.slug] ??
+      "al je vragen over je producten en je dagelijkse routine beantwoorden";
+    await mentorZegt(
+      `${tip ? `💡 Tip voor vandaag: ${tip}\n\n` : ""}En dit kan ik vandaag voor je doen: ${kan}. Zeg het maar! 💚`,
+      1000,
+    );
+  }
+
   // ---------- Dagelijkse check-in (dagboek) ----------
 
   // Toont de check-in als er vandaag nog niet is ingecheckt. De reden om
@@ -1127,8 +1175,13 @@ export default function MentorWereld({
   async function toonCheckin(metGroet: boolean) {
     if (checkinGedaanRef.current) return;
     if (metGroet) {
+      // Dagdeel-bewuste groet: de check-in kan op elk moment (de vragen
+      // zijn moment-neutraal), maar de begroeting mag wel meebewegen.
+      const uur = new Date().getHours();
+      const groet =
+        uur < 12 ? "Goedemorgen! ☀️" : uur < 18 ? "Hoi! 👋" : "Goedenavond! 🌙";
       await mentorZegt(
-        `Even je dagelijkse check-in${dagNummer ? ` (dag ${dagNummer})` : ""}: hoe voel je je vandaag? 💚 Vul gerust ook je gewicht in, dan houd ik je voortgang voor je bij.`,
+        `${groet} Even je dagelijkse check-in${dagNummer ? ` (dag ${dagNummer})` : ""}, je bent er in een halve minuut doorheen. 💚 Vul gerust ook je gewicht in (het eerlijkst is elke dag rond hetzelfde moment wegen), dan houd ik je voortgang voor je bij.`,
         900,
       );
     }
@@ -1196,6 +1249,8 @@ export default function MentorWereld({
       }
       // Zware dag? Dan een eigen eerdere winst terughalen: bewijs voor
       // jezelf, precies waar het dagboek voor is (kompas-principe).
+      // Op zo'n dag géén vrolijke dag-tip erachteraan; het gesprek is
+      // dan belangrijker. Anders: tip van de dag + wat ik vandaag kan.
       if (stemming === "zwaar") {
         const eerdere = checkinReeksRef.current.filter(
           (c) => c.notitie && c.datum !== vandaag,
@@ -1212,6 +1267,9 @@ export default function MentorWereld({
             1100,
           );
         }
+      } else {
+        await wacht(700);
+        await toonDagTip();
       }
     } catch {
       await mentorZegt("Genoteerd 💚", 500);
@@ -1469,8 +1527,8 @@ export default function MentorWereld({
     if (isLaatste) {
       await mentorZegt(
         duur
-          ? `Dat was alle informatie voor deze fase 💚 Vraag me tussendoor van alles, ik ken al je documenten van binnen en van buiten en maak zo een recept of dagschema voor je.`
-          : `Dat was alles voor deze stap 💚 Vraag me gerust van alles, ik ken al je documenten van binnen en van buiten en maak zo een recept of dagschema voor je.`,
+          ? `Dat was alle informatie voor deze fase 💚 Vraag me tussendoor van alles: ik ken al je documenten van binnen en van buiten, ik kijk mee met foto's van etiketten of een product past, en ik maak zo een recept of dagschema voor je.`
+          : `Dat was alles voor deze stap 💚 Vraag me gerust van alles: ik ken al je documenten van binnen en van buiten, ik kijk mee met foto's van etiketten of een product past, en ik maak zo een recept of dagschema voor je.`,
         1100,
       );
       if (vraagStart) await toonStartKeuze(duurVoorVraag);
@@ -1487,7 +1545,7 @@ export default function MentorWereld({
     // vanzelf door zodra het startmoment gekozen is (feedback Raoul).
     if (vraagStart) {
       await mentorZegt(
-        "Dat was je voorbereidings-informatie 💚 Vraag me gerust van alles, ik ken al je documenten van binnen en van buiten.",
+        "Dat was je voorbereidings-informatie 💚 Vraag me gerust van alles: ik ken al je documenten van binnen en van buiten, ik kijk mee met foto's van etiketten of een product past, en ik maak zo een recept of dagschema voor je.",
         1000,
       );
       await toonStartKeuze(duurVoorVraag);
@@ -1497,7 +1555,7 @@ export default function MentorWereld({
     await mentorZegt(
       duur
         ? `Dat was de informatie voor deze fase 💚 Neem er rustig je ${duur === 2 ? "twee laaddagen" : `${duur} dagen`} voor, ik zie je elke dag bij je check-in. Klaar met alle dagen? Tik dan hieronder op de volgende stap.`
-        : "Dat was alles voor deze stap 💚 Vraag me gerust van alles, ik ken al je documenten van binnen en van buiten en maak zo een recept of dagschema voor je.",
+        : "Dat was alles voor deze stap 💚 Vraag me gerust van alles: ik ken al je documenten van binnen en van buiten, ik kijk mee met foto's van etiketten of een product past, en ik maak zo een recept of dagschema voor je.",
       1000,
     );
     const volgend = prog.stations[i + 1];
