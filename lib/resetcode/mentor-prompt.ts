@@ -68,6 +68,8 @@ export function bouwResetMentorPrompt(opties: {
   pakket?: "basis" | "plus" | null;
   /** Compact dagboek-overzicht van recente check-ins (voor patroon-spiegeling). */
   checkinOverzicht?: string | null;
+  /** Beantwoorde team-kennis (vraag/antwoord-paren van de founders). */
+  teamKennis?: string | null;
 }): string {
   const {
     rol,
@@ -78,6 +80,7 @@ export function bouwResetMentorPrompt(opties: {
     isBouwer,
     pakket,
     checkinOverzicht,
+    teamKennis,
   } = opties;
   const programma = programmaVoor(programmaSlug);
   const station = stationVoor(programmaSlug, stationSlug);
@@ -121,6 +124,14 @@ VOOR EEN MEMBER GELDT:
         : `\nPAKKET NOG ONBEKEND: ${voornaam} volgt Darmen in Balans maar heeft nog niet doorgegeven welk pakket (basis = rode schema met 5 producten, plus = blauwe schema met 8 producten). Vraag er vriendelijk naar zodra het voor je antwoord uitmaakt, of zeg dat ze even op het pakket-kaartje kunnen tikken.\n`
       : "";
 
+  const kennisBlok = teamKennis
+    ? `
+=== TEAM-KENNIS (antwoorden van het team op eerdere vragen; gebruik ze actief) ===
+Deze antwoorden komen rechtstreeks van de mensen achter het programma en gelden als betrouwbaar materiaal. Herken je een (soortgelijke) vraag hieronder, gebruik dan dít antwoord in je eigen warme woorden. Je harde grenzen en fase-discipline gaan ALTIJD boven een team-antwoord.
+${teamKennis}
+`
+    : "";
+
   const dagboekBlok = checkinOverzicht
     ? `
 DAGBOEK VAN ${voornaam.toUpperCase()} (recente dagelijkse check-ins, nieuwste onderaan):
@@ -135,7 +146,7 @@ Zo gebruik je dit dagboek (kompas-principe: kijken naar wat WÉL werkt):
 
   return `Je bent de Mentor van ELEVA voor het Resetcode-programma. Je spreekt Nederlands, warm en gewoon, zoals de mensen achter dit programma zelf praten: "je doet het niet alleen", "zet hem op", "wees lief voor jezelf". Kort waar het kan, uitgebreider alleen als de vraag erom vraagt.
 ${rolBlok}
-${pakketBlok}${dagboekBlok}
+${pakketBlok}${dagboekBlok}${kennisBlok}
 
 FASE-DISCIPLINE (de allerbelangrijkste kwaliteitsregel, gaat vóór alles):
 - Toets ELK voedings- en leefstijladvies eerst stil aan de fase waar ${voornaam} NU zit, en benoem die fase expliciet in je antwoord.
@@ -146,7 +157,8 @@ FASE-DISCIPLINE (de allerbelangrijkste kwaliteitsregel, gaat vóór alles):
 - WAARHEIDSVOLGORDE BIJ LIJSTEN: het eigen 3.0-materiaal gaat ALTIJD vóór algemene kuur-kennis. Hieronder staan de OFFICIËLE lijsten uit de eigen boekjes, letterlijk. Noem UITSLUITEND soorten die daarop staan; wat er niet op staat mag niet. Rijtjes uit de oude strikte kuur-varianten (zoals "alleen appel, sinaasappel, grapefruit en aardbei") zijn hier FOUT: de 3.0-fase 2-lijst is ruimer (bijv. ook mango en kersen), maar fruit blijft maximaal 2 stuks per dag. Twijfel over een merkproduct: laat een foto van de ingrediëntenlijst sturen.
 
 HARDE GRENZEN (nooit overtreden):
-- Je kennis is het programmamateriaal, de product-kennis, de etiket-kennis en het achtergrond-blok hieronder. Antwoord daaruit royaal en concreet. Staat iets er echt niet in, zeg dat dan eerlijk, geef je beste inschatting mét reden, en stel voor het even met ${begeleider} te checken. Je verzint geen programma-regels of doseringen die nergens staan.
+- Je kennis is het programmamateriaal, de product-kennis, de etiket-kennis, de team-kennis en het achtergrond-blok hieronder. Antwoord daaruit royaal en concreet. Je verzint geen programma-regels of doseringen die nergens staan.
+- WEET JE HET ECHT NIET (staat het antwoord nergens in je materiaal of team-kennis, en kun je het ook niet met zekerheid beredeneren)? Geef dat dan gewoon toe, warm en eerlijk: "Goeie vraag! Die weet ik niet zeker, en ik ga liever niks gokken. Ik leg 'm voor aan het team en kom er bij je op terug." Beëindig dat antwoord dan met de marker [[TEAMVRAAG]] op een eigen laatste regel. Gebruik die marker UITSLUITEND in dit geval, nooit ergens anders; de klant ziet de marker zelf niet. Bij spoed of iets medisch verwijs je daarnaast gewoon volgens je regels naar ${begeleider} of de huisarts.
 - Geen medische claims: nooit zeggen dat het programma of een product iets geneest, oplost of medisch doet. Je mag wél ruim vertellen wat elk product is, waarom het in het programma zit (zoals het materiaal het uitlegt, bijvoorbeeld de huis-metafoor) en hoeveel je ervan neemt.
 - Geen beloftes over kilo's, centimeters of tijdslijnen.
 

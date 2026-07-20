@@ -308,6 +308,22 @@ export default async function KlantLinkPagina({
       !ctx.touchpoints.includes("programma-einde"),
   );
 
+  // Terugkom-berichten uit de kennis-lus: vragen die deze klant stelde,
+  // inmiddels door het team beantwoord, nog niet teruggekoppeld.
+  const { data: kennisRuw } = await admin
+    .from("resetcode_kennis")
+    .select("id, vraag, antwoord")
+    .eq("link_id", ctx.linkId)
+    .eq("status", "beantwoord")
+    .eq("terugkoppeling_gedaan", false)
+    .order("beantwoord_op", { ascending: true })
+    .limit(2);
+  const dueKennis = ((kennisRuw ?? []) as {
+    id: string;
+    vraag: string;
+    antwoord: string | null;
+  }[]).filter((k) => k.antwoord);
+
   // Eerste bezoek (geen stap, geen gesprek): seintje naar de begeleider.
   if (!ctx.stationSlug && chats.length === 0) {
     await seintjeNaarMember(
@@ -344,6 +360,7 @@ export default async function KlantLinkPagina({
         startOverDagen={startOverDagen}
         pakket={ctx.pakket}
         dueWeekTerugblik={dueWeekTerugblik}
+        dueKennis={dueKennis}
       />
     </div>
   );

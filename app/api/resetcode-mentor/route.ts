@@ -12,6 +12,7 @@ import {
   bewaarResetChats,
 } from "@/lib/resetcode/klant-links";
 import { pakCheckins } from "@/lib/resetcode/checkin";
+import { sendPushToUser } from "@/lib/push/sendPush";
 
 // ============================================================
 // POST /api/resetcode-mentor
@@ -165,6 +166,28 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Team-kennis: beantwoorde vraag/antwoord-paren van de founders voor
+    // dit programma (+ algemeen), compact het brein in.
+    let teamKennis: string | null = null;
+    try {
+      const adminK = createAdminClient();
+      const { data: kennisRijen } = await adminK
+        .from("resetcode_kennis")
+        .select("vraag, antwoord")
+        .eq("status", "beantwoord")
+        .in("programma", [programmaSlug, "algemeen"])
+        .order("beantwoord_op", { ascending: false })
+        .limit(60);
+      const rijen = (kennisRijen ?? []) as { vraag: string; antwoord: string }[];
+      if (rijen.length > 0) {
+        teamKennis = rijen
+          .map((r) => `V: ${r.vraag}\nA: ${r.antwoord}`)
+          .join("\n---\n");
+      }
+    } catch {
+      // kennis is nice-to-have; nooit de Mentor blokkeren
+    }
+
     const systeemPrompt = bouwResetMentorPrompt({
       rol,
       voornaam,
@@ -183,6 +206,7 @@ export async function POST(req: NextRequest) {
           ? (body.pakket as "basis" | "plus")
           : null),
       checkinOverzicht,
+      teamKennis,
     });
 
     // Klant-vraag meteen bewaren (ongeacht of de AI-call slaagt).
@@ -248,14 +272,45 @@ export async function POST(req: NextRequest) {
             }
           }
           controller.close();
-          // Mentor-antwoord bewaren voor het meereizende geheugen.
-          if (ctxVoorOpslag && volledig) {
+          // Weet-niet-marker: de Mentor gaf toe dat hij het niet weet en
+          // legt de vraag bij het team. Marker uit de opslag strippen,
+          // vraag als open kennis-item bewaren en founders een seintje
+          // geven (alleen echte klanten; preview maakt geen ruis).
+          const isTeamvraag = volledig.includes("[[TEAMVRAAG]]");
+          const schoon = volledig.replaceAll("[[TEAMVRAAG]]", "").trimEnd();
+          if (ctxVoorOpslag && schoon) {
             try {
               await bewaarResetChats(ctxVoorOpslag.linkId, [
-                { van: "mentor", soort: "tekst", stationSlug, tekst: volledig },
+                { van: "mentor", soort: "tekst", stationSlug, tekst: schoon },
               ]);
             } catch (e) {
               console.error("resetcode chat opslaan mislukt:", e);
+            }
+          }
+          if (isTeamvraag && ctxVoorOpslag && vraag) {
+            try {
+              const adminT = createAdminClient();
+              await adminT.from("resetcode_kennis").insert({
+                programma: programmaSlug,
+                vraag: vraag.slice(0, 600),
+                bron: "klant",
+                link_id: ctxVoorOpslag.linkId,
+              });
+              // Push naar alle founders (vraag anoniem, geen klantnaam).
+              const { data: founders } = await adminT
+                .from("profiles")
+                .select("id")
+                .eq("role", "founder");
+              for (const f of (founders ?? []) as { id: string }[]) {
+                sendPushToUser(f.id, {
+                  title: "Nieuwe vraag voor het team 🧠",
+                  body: `De Mentor wist dit niet: "${vraag.slice(0, 120)}". Beantwoord 'm en de Mentor leert het direct.`,
+                  url: "/resetcode-kennis",
+                  tag: "resetcode-kennis",
+                }).catch(() => {});
+              }
+            } catch (e) {
+              console.error("resetcode kennis-vraag opslaan mislukt:", e);
             }
           }
         } catch (err) {

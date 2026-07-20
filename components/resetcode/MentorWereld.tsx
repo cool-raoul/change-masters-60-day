@@ -448,6 +448,7 @@ export default function MentorWereld({
   dueDag10,
   dueEinde,
   dueWeekTerugblik,
+  dueKennis,
   checkinVandaagGedaan,
   checkinReeks,
   dagNummer,
@@ -481,6 +482,8 @@ export default function MentorWereld({
   dueEinde?: boolean;
   /** Week-nummer als de week-terugblik nú aan de beurt is (elke 7 dagen). */
   dueWeekTerugblik?: number | null;
+  /** Team-antwoorden op eerdere vragen van déze klant, nog niet teruggekoppeld. */
+  dueKennis?: { id: string; vraag: string; antwoord: string | null }[];
   /** Heeft de klant vandaag al ingecheckt? Zo niet: dagelijkse check-in tonen. */
   checkinVandaagGedaan?: boolean;
   /** Reeks check-ins (oud → nieuw) voor de voortgangs-kaart en streak. */
@@ -704,7 +707,10 @@ export default function MentorWereld({
         // Raoul 20 juli: eerst de video, dan vanzelf de check-in),
         // anders raakt de check-in-kaart begraven boven de video.
         const heeftDueMoment = Boolean(
-          dueDag10 || dueTouchpoint || dueWeekTerugblik,
+          dueDag10 ||
+            dueTouchpoint ||
+            dueWeekTerugblik ||
+            (dueKennis && dueKennis.length > 0),
         );
         // Dagelijkse check-in bovenaan (nieuwe dag, nog niet ingecheckt).
         // Niet op het einde-moment (dan is het feest, geen formulier) en
@@ -756,9 +762,30 @@ export default function MentorWereld({
             markeerTouchpoint("programma-einde" as TouchpointSleutel);
             knoppenNaarOnder();
           })();
-        } else if (dueDag10 || dueTouchpoint || dueWeekTerugblik) {
+        } else if (heeftDueMoment) {
           (async () => {
             await wacht(2500);
+            // Eerst beloftes inlossen: het team heeft geantwoord op wat
+            // deze klant eerder vroeg ("daar kom ik op terug").
+            if (dueKennis && dueKennis.length > 0) {
+              for (const k of dueKennis) {
+                await mentorZegt(
+                  `Trouwens! Je vroeg me laatst: "${k.vraag}". Ik heb het voor je nagevraagd bij het team, en dit is het antwoord: ${k.antwoord} 💚`,
+                  1200,
+                );
+                await wacht(800);
+              }
+              fetch("/api/resetcode/kennis-gezien", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  token,
+                  ids: dueKennis.map((k) => k.id),
+                }),
+              }).catch(() => {});
+              if (dueDag10 || dueTouchpoint || dueWeekTerugblik)
+                await wacht(1200);
+            }
             if (dueDag10) {
               await mentorZegt(
                 `Trouwens: je zit vandaag op dag ${dueDag10} van je 16 dagen! 🎉 Dit is het moment voor je dag 10-video, die is belangrijk. Kijk 'm even rustig 👇`,
@@ -2139,11 +2166,14 @@ export default function MentorWereld({
   }
 
   function zetLaatsteMentorTekst(tekst: string) {
+    // De weet-niet-marker is een intern signaal (server stuurt de vraag
+    // door naar het team); de klant ziet hem nooit.
+    const schoon = tekst.replaceAll("[[TEAMVRAAG]]", "").trimEnd();
     setItems((b) => {
       const kopie = [...b];
       const laatste = kopie[kopie.length - 1];
       if (laatste && laatste.van === "mentor" && laatste.soort === "tekst") {
-        kopie[kopie.length - 1] = { van: "mentor", soort: "tekst", tekst };
+        kopie[kopie.length - 1] = { van: "mentor", soort: "tekst", tekst: schoon };
       }
       return kopie;
     });
