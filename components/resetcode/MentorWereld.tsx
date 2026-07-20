@@ -1151,9 +1151,48 @@ export default function MentorWereld({
       "een weekmenu volgens de 80/20-piramide maken, of meedenken hoe je dit blijvend volhoudt",
   };
 
+  // Gecureerde dag-tips per fase: alléén proactieve tips uit het eigen
+  // materiaal (feedback Raoul 20 juli: situationele zinnen zoals "ging
+  // er iets verkeerd in?" horen niet in de dag-tip-rotatie; die blijven
+  // gewoon in de tips-kaart voor als het moment daar is).
+  const DAG_TIPS: Record<string, string[]> = {
+    "zestien-dagen": [
+      "Neem vandaag een paar mespuntjes Keltisch zeezout, gewoon los of onder je tong.",
+      "Plan vandaag of morgen een voetenbadje: een paar eetlepels Keltisch zeezout in warm water.",
+      "Boekweit is je vriend: boekweitcrackers, 100% boekweitpasta of pannenkoekjes van boekweitmeel.",
+      "Drink vandaag lekker veel water, je lichaam is hard aan het werk.",
+      "Pak het receptenboekje er eens bij en kies alvast iets nieuws voor morgen.",
+      "Check bij verpakte producten de ingrediëntenlijst (niet de voedingswaarde). Twijfel je? Stuur mij een foto.",
+      "Plan vandaag bewust een rustmomentje in, ook als je je goed voelt.",
+      "Kijk eens in de Facebook-groep en typ 'tussendoortje' in de zoekbalk, daar zit goud tussen.",
+    ],
+    laaddagen: [
+      "Eet vandaag écht genoeg: je laaddagen zijn de fundering van je hele reset.",
+      "Zeg me gewoon alles wat je eet (foto mag ook), dan houd ik je teller bij richting de 3500+.",
+    ],
+    omschakeling: [
+      "Drink vandaag je 2 liter water, verspreid over de dag.",
+      "Houd de 3-uur-regel aan tussen je eetmomenten.",
+      "Bereid je maaltijden vetvrij en van je fase 2-lijst; twijfel je ergens over, vraag het me gewoon.",
+      "Fruit vandaag: maximaal 2 stuks, kies iets van je lijst dat je echt lekker vindt.",
+      "Ben je vandaag onderweg of aan het werk? Bereid thuis iets voor van je lijst en neem het mee.",
+      "Zin om te variëren? Zeg wat je in huis hebt, dan maak ik er een fase 2-recept van.",
+    ],
+    stabilisatie: [
+      "Test nieuwe dingen één voor één, dan weet je precies wat bij jou past.",
+      "Weeg jezelf elke dag rond hetzelfde moment, dan is je lijn eerlijk.",
+      "Wil je iets nieuws proberen vandaag? Vraag me eerst even of het in deze fase past.",
+    ],
+    "logisch-leven": [
+      "Denk vandaag in de 80/20-verhouding van de piramide: vaak groente en fruit, zelden zoet.",
+      "Plan je week vooruit; als je wilt maak ik een weekmenu voor je.",
+      "Kies vandaag bewust één gewoonte uit je reset die je wilt vasthouden.",
+    ],
+  };
+
   async function toonDagTip() {
     if (!station) return;
-    const tips = station.tips;
+    const tips = DAG_TIPS[station.slug] ?? [];
     const draai = (dagNummer ?? new Date().getDate()) - 1;
     const tip = tips.length
       ? tips[((draai % tips.length) + tips.length) % tips.length]
