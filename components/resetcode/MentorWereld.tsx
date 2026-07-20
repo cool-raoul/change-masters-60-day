@@ -699,6 +699,13 @@ export default function MentorWereld({
           (START_VRAAG_STATION[prog.slug] === st.slug ||
             EERSTE_DUUR_STATION[prog.slug] === st.slug);
         const moetPakketKiezen = prog.slug === "darm" && !pakketRef.current;
+        // Is er vandaag een speciaal moment (dag 10, kern-verhaal,
+        // week-terugblik)? Dan komt de check-in pas DAARNA (feedback
+        // Raoul 20 juli: eerst de video, dan vanzelf de check-in),
+        // anders raakt de check-in-kaart begraven boven de video.
+        const heeftDueMoment = Boolean(
+          dueDag10 || dueTouchpoint || dueWeekTerugblik,
+        );
         // Dagelijkse check-in bovenaan (nieuwe dag, nog niet ingecheckt).
         // Niet op het einde-moment (dan is het feest, geen formulier) en
         // niet vóór de zelfgekozen startdatum.
@@ -722,7 +729,12 @@ export default function MentorWereld({
             await toonStartKeuze(FASE_DAGEN[EERSTE_DUUR_STATION[prog.slug] ?? ""]);
             knoppenNaarOnder();
           })();
-        } else if (!checkinGedaanRef.current && !dueEinde && !teltAf) {
+        } else if (
+          !checkinGedaanRef.current &&
+          !dueEinde &&
+          !teltAf &&
+          !heeftDueMoment
+        ) {
           (async () => {
             await wacht(1400);
             await toonCheckin(true);
@@ -767,6 +779,16 @@ export default function MentorWereld({
             if (dueWeekTerugblik) {
               if (dueTouchpoint) await wacht(1500);
               await speelWeekTerugblik(dueWeekTerugblik);
+            }
+            // En dan pas de check-in van vandaag, netjes onderaan, zodat
+            // de belofte "je check-in gaat gewoon door" ook klopt.
+            if (!checkinGedaanRef.current && !teltAf) {
+              await wacht(1200);
+              await mentorZegt(
+                "O ja, en je check-in van vandaag staat hier alvast voor je klaar 👇",
+                800,
+              );
+              await toonCheckin(false);
             }
             knoppenNaarOnder();
           })();
