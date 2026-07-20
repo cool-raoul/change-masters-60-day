@@ -625,6 +625,10 @@ export default function MentorWereld({
         rol,
         programmaSlug: programma?.slug ?? null,
         stationSlug: station?.slug ?? null,
+        // Check-in-reeks apart bewaren (typed data, niet uit de chat-tekst
+        // te herleiden), zodat de dagelijkse check-in ook in de preview
+        // op een nieuwe dag terugkomt en de voortgangs-kaart klopt.
+        checkins: checkinReeksRef.current,
         // Knoppen en interactieve kaartjes zijn vluchtige UI, die bewaren we niet.
         items: items
           .filter(
@@ -802,6 +806,7 @@ export default function MentorWereld({
           programmaSlug?: string | null;
           stationSlug?: string | null;
           items?: ChatItem[];
+          checkins?: Checkin[];
         };
         const prog = data.programmaSlug ? programmaVoor(data.programmaSlug) : null;
         const st =
@@ -812,6 +817,7 @@ export default function MentorWereld({
           if (data.rol) setRol(data.rol);
           setProgramma(prog);
           setStation(st);
+          if (Array.isArray(data.checkins)) checkinReeksRef.current = data.checkins;
           const i = prog.stations.findIndex((s) => s.slug === st.slug);
           const volgend =
             i >= 0 && i < prog.stations.length - 1 ? prog.stations[i + 1] : null;
@@ -834,6 +840,22 @@ export default function MentorWereld({
                 ]
               : []),
           ]);
+          // Ook in de preview telt een echte nieuwe dag: is er nog geen
+          // check-in van vandaag, dan komt de dagelijkse vraag gewoon
+          // terug (feedback Raoul 20 juli: gebeurde niet, testbank-gat
+          // want /resetcode-preview heeft geen server-datum).
+          const vandaagNu = new Intl.DateTimeFormat("sv-SE", {
+            timeZone: "Europe/Amsterdam",
+          }).format(new Date());
+          const alVandaag = checkinReeksRef.current.some((c) => c.datum === vandaagNu);
+          checkinGedaanRef.current = alVandaag;
+          if (!alVandaag) {
+            (async () => {
+              await wacht(1400);
+              await toonCheckin(true);
+              knoppenNaarOnder();
+            })();
+          }
           return;
         }
       }
@@ -1723,8 +1745,13 @@ export default function MentorWereld({
       await mentorKaart("wctips", station.slug, 900);
       return true;
     }
-    // Voortgang / dagboek terugzien.
-    if (/(mijn |m'n )?(voortgang|dagboek|resultaten tot nu|hoe ver|mijn reis|mijn grafiek)/.test(t) && t.length < 45) {
+    // Voortgang / dagboek terugzien. "Overzicht" hoort hier ook bij: dat
+    // moet de ECHTE kaart tonen, niet iets dat de vrije Mentor uit het
+    // gesprek terugvertelt (feedback Raoul 20 juli).
+    if (
+      /(mijn |m'n )?(voortgang|overzicht|dagboek|resultaten tot nu|hoe ver|mijn reis|mijn grafiek)/.test(t) &&
+      t.length < 45
+    ) {
       zeg();
       if (checkinReeksRef.current.length === 0) {
         await mentorZegt(
@@ -1738,8 +1765,14 @@ export default function MentorWereld({
       }
       return true;
     }
-    // Check-in op verzoek.
-    if (/^\s*(check\s?-?in|inchecken|hoe voel ik me)\s*\??\s*$/.test(t)) {
+    // Check-in op verzoek. Ruim herkend (niet alleen het kale commando,
+    // ook "wil je mijn check-in doen?" / "kan ik inchecken?"), want een
+    // losse zin mag niet naar de vrije Mentor lekken en daar een
+    // geïmproviseerd "overzicht" opleveren (feedback Raoul 20 juli).
+    if (
+      (/\b(check-?in|inchecken)\b/.test(t) && t.length < 60) ||
+      /^\s*hoe voel ik me( vandaag)?\s*\??\s*$/.test(t)
+    ) {
       zeg();
       checkinGedaanRef.current = false;
       await toonCheckin(true);
@@ -2485,6 +2518,9 @@ export default function MentorWereld({
                   <button
                     onClick={async () => {
                       setToonReis(false);
+                      // Tester-knop simuleert een nieuwe dag: altijd tonen,
+                      // ook als er vandaag al ingecheckt is.
+                      checkinGedaanRef.current = false;
                       await wacht(400);
                       await toonCheckin(true);
                     }}
@@ -2529,6 +2565,10 @@ export default function MentorWereld({
                       try {
                         localStorage.removeItem(OPSLAG_SLEUTEL);
                       } catch {}
+                      checkinReeksRef.current = [];
+                      checkinGedaanRef.current = false;
+                      pakketRef.current = null;
+                      startGekozenRef.current = false;
                       gestart.current = true;
                       versBeginnen();
                     }}
