@@ -271,7 +271,10 @@ export async function POST(req: NextRequest) {
               controller.enqueue(encoder.encode(text));
             }
           }
-          controller.close();
+          // BELANGRIJK: alle opslag afronden VÓÓR controller.close().
+          // Op Vercel kan de functie bevriezen zodra de stream dicht is;
+          // werk dat daarna komt gaat dan stil verloren (dit trof de
+          // kennis-insert in de eerste live-test).
           // Weet-niet-marker: de Mentor gaf toe dat hij het niet weet en
           // legt de vraag bij het team. Marker uit de opslag strippen,
           // vraag als open kennis-item bewaren en founders een seintje
@@ -290,29 +293,37 @@ export async function POST(req: NextRequest) {
           if (isTeamvraag && ctxVoorOpslag && vraag) {
             try {
               const adminT = createAdminClient();
-              await adminT.from("resetcode_kennis").insert({
-                programma: programmaSlug,
-                vraag: vraag.slice(0, 600),
-                bron: "klant",
-                link_id: ctxVoorOpslag.linkId,
-              });
+              const { error: kennisFout } = await adminT
+                .from("resetcode_kennis")
+                .insert({
+                  programma: programmaSlug,
+                  vraag: vraag.slice(0, 600),
+                  bron: "klant",
+                  link_id: ctxVoorOpslag.linkId,
+                });
+              if (kennisFout) {
+                console.error("resetcode kennis-insert:", kennisFout.message);
+              }
               // Push naar alle founders (vraag anoniem, geen klantnaam).
               const { data: founders } = await adminT
                 .from("profiles")
                 .select("id")
                 .eq("role", "founder");
-              for (const f of (founders ?? []) as { id: string }[]) {
-                sendPushToUser(f.id, {
-                  title: "Nieuwe vraag voor het team 🧠",
-                  body: `De Mentor wist dit niet: "${vraag.slice(0, 120)}". Beantwoord 'm en de Mentor leert het direct.`,
-                  url: "/resetcode-kennis",
-                  tag: "resetcode-kennis",
-                }).catch(() => {});
-              }
+              await Promise.allSettled(
+                ((founders ?? []) as { id: string }[]).map((f) =>
+                  sendPushToUser(f.id, {
+                    title: "Nieuwe vraag voor het team 🧠",
+                    body: `De Mentor wist dit niet: "${vraag.slice(0, 120)}". Beantwoord 'm en de Mentor leert het direct.`,
+                    url: "/resetcode-kennis",
+                    tag: "resetcode-kennis",
+                  }),
+                ),
+              );
             } catch (e) {
               console.error("resetcode kennis-vraag opslaan mislukt:", e);
             }
           }
+          controller.close();
         } catch (err) {
           const foutMsg = err instanceof Error ? err.message : "onbekende fout";
           console.error("resetcode-mentor stream-fout:", foutMsg);
