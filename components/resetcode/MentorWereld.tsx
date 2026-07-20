@@ -572,6 +572,7 @@ export default function MentorWereld({
   const [toonReis, setToonReis] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const fotoRef = useRef<HTMLInputElement>(null);
+  const invoerRef = useRef<HTMLTextAreaElement>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const gestart = useRef(false);
@@ -583,6 +584,15 @@ export default function MentorWereld({
         typeof MediaRecorder !== "undefined",
     );
   }, []);
+
+  // Invoerveld groeit mee met de inhoud (ook bij ingesproken tekst, die
+  // komt programmatisch binnen), tot ~5 regels; daarna intern scrollen.
+  useEffect(() => {
+    const el = invoerRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${Math.min(el.scrollHeight, 132)}px`;
+  }, [invoer]);
 
   // Scroll alleen wanneer er een NIEUW bericht bijkomt (of de typ-
   // indicator verschijnt), niet bij elk binnenstromend stukje tekst.
@@ -2903,7 +2913,7 @@ export default function MentorWereld({
 
       {/* Invoer */}
       <div className="px-3 pb-4 pt-2.5 border-t border-white/10">
-        <div className="flex items-center gap-2">
+        <div className="flex items-end gap-2">
           <input
             ref={fotoRef}
             type="file"
@@ -2923,9 +2933,14 @@ export default function MentorWereld({
           >
             📷
           </button>
-          <input
+          {/* Meegroeiend invoerveld (feedback Raoul): ingesproken tekst
+              moet in één oogopslag te checken zijn, dus het vak vouwt
+              uit tot max ~5 regels en scrollt daarna intern. */}
+          <textarea
+            ref={invoerRef}
             value={invoer}
             onChange={(e) => setInvoer(e.target.value)}
+            rows={1}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
@@ -2942,7 +2957,8 @@ export default function MentorWereld({
                     : "Typ of praat..."
             }
             disabled={bezig || !programma}
-            className="min-w-0 flex-1 rounded-full bg-white/10 border border-white/15 px-4 py-3 text-[15px] text-white placeholder:text-white/40 focus:outline-none focus:border-emerald-500/60"
+            className="min-w-0 flex-1 resize-none rounded-3xl bg-white/10 border border-white/15 px-4 py-3 text-[15px] leading-snug text-white placeholder:text-white/40 focus:outline-none focus:border-emerald-500/60 chatscroll"
+            style={{ maxHeight: 132 }}
           />
           {invoer.trim() ? (
             <button
