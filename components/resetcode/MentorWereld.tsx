@@ -1395,17 +1395,24 @@ export default function MentorWereld({
     );
   }
 
-  async function toonPushOptIn() {
-    if (!token || !abonneerbaar()) return;
+  // Mag de push-uitnodiging getoond worden op dit apparaat? Check dit
+  // VÓÓR de aankondigings-tekst, anders belooft de Mentor een knop die
+  // nooit komt (bijv. incognito: meldingen door de browser geblokkeerd).
+  async function magPushVragen(): Promise<boolean> {
+    if (!token || !abonneerbaar()) return false;
     try {
       if (Notification.permission === "granted") {
         const reg = await navigator.serviceWorker.ready;
-        if (await reg.pushManager.getSubscription()) return; // al aan
+        if (await reg.pushManager.getSubscription()) return false; // al aan
       }
-      if (localStorage.getItem(`resetcode-push-${token.slice(0, 10)}`)) return;
+      if (localStorage.getItem(`resetcode-push-${token.slice(0, 10)}`)) return false;
     } catch {
       /* negeer */
     }
+    return true;
+  }
+
+  function toonPushOptIn() {
     const bid = ++bidTeller.current;
     setItems((b) => [...b, { van: "mentor", soort: "push-opt-in", bid }]);
   }
@@ -1696,12 +1703,14 @@ export default function MentorWereld({
     // NA het eerste info-blok van dag 1, niet middenin de intro.
     if (pushNaEersteBlokRef.current) {
       pushNaEersteBlokRef.current = false;
-      await wacht(900);
-      await mentorZegt(
-        "Nog even dit: ik geef je elke ochtend een klein seintje voor je dagelijkse check-in, dan hoef jij niks te onthouden en houd ik je voortgang perfect bij. Tik op de knop hieronder en je seintjes staan aan. 🔔",
-        1000,
-      );
-      await toonPushOptIn();
+      if (await magPushVragen()) {
+        await wacht(900);
+        await mentorZegt(
+          "Nog even dit: ik geef je elke ochtend een klein seintje voor je dagelijkse check-in, dan hoef jij niks te onthouden en houd ik je voortgang perfect bij. Tik op de knop hieronder en je seintjes staan aan. 🔔",
+          1000,
+        );
+        toonPushOptIn();
+      }
     }
     if (index + 1 < chunkPlanRef.current.length) {
       toonVerderKnop(index + 1, stationSlug);
