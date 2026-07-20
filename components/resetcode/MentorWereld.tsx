@@ -512,6 +512,9 @@ export default function MentorWereld({
   // Waar terwijl de Mentor woord-voor-woord schrijft: dan even geen
   // localStorage-opslag per woord (na het schrijven één keer).
   const schrijftRef = useRef(false);
+  // Push-uitnodiging komt pas ná het eerste info-blok van dag 1
+  // (feedback Raoul 20 juli: niet middenin de intro).
+  const pushNaEersteBlokRef = useRef(false);
   // Startmoment: de klant kiest zelf wanneer dag 1 is (vandaag/morgen/
   // datum/al gestart). De vraag komt VROEG (feedback Raoul 19 juli): al
   // na de voorbereidings-info, niet pas na alle fase-informatie.
@@ -839,19 +842,15 @@ export default function MentorWereld({
           );
           await wacht(700);
           const vervolg = async () => {
+            // De push-uitnodiging komt pas na het eerste info-blok
+            // (volgorde-feedback Raoul), via klikVerder.
+            pushNaEersteBlokRef.current = true;
             await introStation(prog, prog.stations[0]);
             fetch("/api/resetcode/stap", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ token, station: prog.stations[0].slug }),
             }).catch(() => {});
-            // Dag 1: vraag of ik elke ochtend een seintje mag geven.
-            await wacht(900);
-            await mentorZegt(
-              "Nog één ding, en dan laat ik je los 😊 Zal ik je elke ochtend een klein seintje geven voor je dagelijkse check-in? Dan hoef jij niks te onthouden en houd ik je voortgang perfect bij.",
-              1000,
-            );
-            await toonPushOptIn();
           };
           // Darmen in Balans: eerst even weten welk pakket (basis/plus).
           if (prog.slug === "darm" && !pakketRef.current) {
@@ -1462,13 +1461,6 @@ export default function MentorWereld({
     }
   }
 
-  function weigerPush(bid: number) {
-    setItems((b) => b.filter((x) => !(x.soort === "push-opt-in" && x.bid === bid)));
-    try {
-      if (token) localStorage.setItem(`resetcode-push-${token.slice(0, 10)}`, "1");
-    } catch {}
-  }
-
   // Fase-intro, bewust RUSTIG (feedback Raoul 12 juli: geen spervuur van
   // berichtjes): één welkom-bericht, de regels, en de documenten worden
   // VOORGESCHOTELD in plaats van dat iemand erom moet vragen. Alles wat
@@ -1700,6 +1692,17 @@ export default function MentorWereld({
       { van: "klant", soort: "tekst", tekst: `Verder met ${chunk.knopLabel}` },
     ]);
     await chunk.speel();
+    // Push-uitnodiging op de juiste plek (feedback Raoul 20 juli): pas
+    // NA het eerste info-blok van dag 1, niet middenin de intro.
+    if (pushNaEersteBlokRef.current) {
+      pushNaEersteBlokRef.current = false;
+      await wacht(900);
+      await mentorZegt(
+        "Nog even dit: ik geef je elke ochtend een klein seintje voor je dagelijkse check-in, dan hoef jij niks te onthouden en houd ik je voortgang perfect bij. Tik op de knop hieronder en je seintjes staan aan. 🔔",
+        1000,
+      );
+      await toonPushOptIn();
+    }
     if (index + 1 < chunkPlanRef.current.length) {
       toonVerderKnop(index + 1, stationSlug);
     } else if (programma && station) {
@@ -2872,22 +2875,16 @@ export default function MentorWereld({
             );
           }
           if (item.soort === "push-opt-in") {
+            // Bewust ÉÉN knop (feedback Raoul 20 juli): de klik is de
+            // toestemming; de browser vraagt daarna zelf nog de
+            // officiële systeem-toestemming.
             return (
-              <div
-                key={i}
-                className="verschijn max-w-[92%] flex flex-wrap gap-2"
-              >
+              <div key={i} className="verschijn max-w-[92%]">
                 <button
                   onClick={() => zetPushAan(item.bid)}
                   className="rounded-full bg-emerald-600 px-5 py-2.5 text-[14px] font-bold text-white"
                 >
-                  🔔 Ja, graag een seintje
-                </button>
-                <button
-                  onClick={() => weigerPush(item.bid)}
-                  className="rounded-full border border-white/20 px-5 py-2.5 text-[14px] font-semibold text-white/70"
-                >
-                  Nu even niet
+                  🔔 Zet mijn dagelijkse check-in-seintje aan
                 </button>
               </div>
             );
