@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { useTaal } from "@/lib/i18n/TaalContext";
 import { PipelineFase, ContactType } from "@/lib/supabase/types";
+import { waLinkNaar } from "@/lib/util/wa-nummer";
 import { gebruikSpraak } from "./gebruikSpraak";
 
 const MAX_SECONDEN = 120;
@@ -185,6 +186,13 @@ type ActieMemberNotitieBulk = {
   namen?: string[];
 };
 
+type ActieResetcodeLink = {
+  type: "resetcode_link";
+  prospect_id: string;
+  volledige_naam?: string;
+  programma?: "darm" | "reset" | "producten" | null;
+};
+
 type Actie =
   | ActieNieuweProspect
   | ActieUpdateProspect
@@ -207,7 +215,8 @@ type Actie =
   | ActieZoek
   | ActieMijnWhyUpdate
   | ActieFaseBatch
-  | ActieMemberNotitieBulk;
+  | ActieMemberNotitieBulk
+  | ActieResetcodeLink;
 
 type Intentie = "data" | "coach" | "mixed";
 
@@ -1216,6 +1225,64 @@ export function VoiceFab() {
       }
     }
 
+    // Resetcode-klantomgeving sturen (spraak: "stuur de klantlink naar X").
+    // Bestaande actieve link hergebruiken, anders aanmaken, en daarna
+    // WhatsApp openen met de link klaar om te versturen.
+    for (const a of acties) {
+      if (a.type === "resetcode_link") {
+        if (!a.prospect_id) {
+          fouten.push("Klantomgeving: geen bestaande klant gevonden");
+          continue;
+        }
+        const programma = a.programma ?? "darm";
+        try {
+          const { data: bestaande } = await supabase
+            .from("resetcode_klant_links")
+            .select("token")
+            .eq("prospect_id", a.prospect_id)
+            .eq("programma", programma)
+            .eq("status", "actief")
+            .order("created_at", { ascending: false })
+            .limit(1);
+          let token =
+            (bestaande as { token: string }[] | null)?.[0]?.token ?? null;
+          if (!token) {
+            const res = await fetch("/api/resetcode/links", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ prospectId: a.prospect_id, programma }),
+            });
+            const data = await res.json().catch(() => null);
+            if (!res.ok || !data?.link?.token) {
+              fouten.push("Klantomgeving aanmaken mislukt");
+              continue;
+            }
+            token = data.link.token as string;
+          }
+          const { data: p } = await supabase
+            .from("prospects")
+            .select("telefoon, volledige_naam")
+            .eq("id", a.prospect_id)
+            .maybeSingle();
+          const voornaam =
+            ((p?.volledige_naam ?? a.volledige_naam ?? "").split(" ")[0]) || "";
+          const url = `${window.location.origin}/k/${token}`;
+          const waUrl = waLinkNaar(
+            (p as { telefoon?: string | null } | null)?.telefoon ?? null,
+            `Hoi ${voornaam}! Hier is jouw persoonlijke omgeving met je eigen Mentor, alles voor jouw programma op één plek: ${url}`,
+          );
+          const venster = window.open(waUrl, "_blank");
+          if (venster) {
+            toast.success("Klantomgeving klaar, WhatsApp staat open om te versturen 📱");
+          } else {
+            toast.success("Klantomgeving klaar! De verstuur-knop staat op de klantenkaart.");
+          }
+        } catch {
+          fouten.push("Klantomgeving sturen mislukt");
+        }
+      }
+    }
+
     return { gemaakt, naamNaarId, fouten };
   }
 
@@ -2130,6 +2197,24 @@ function beschrijfActie(actie: any): { icoon: string; titel: string; details: st
             actie.notities || null,
           ].filter(Boolean) as string[],
         };
+      case "resetcode_link": {
+        const progLabel: Record<string, string> = {
+          darm: "🌿 Darmen in Balans",
+          reset: "☀️ Holistic Reset",
+          producten: "🏠 Dagelijkse basis",
+        };
+        return {
+          icoon: "🌿",
+          titel: `Klantomgeving sturen naar ${actie.volledige_naam || "klant"}`,
+          details: [
+            actie.programma
+              ? `Programma: ${progLabel[actie.programma] ?? actie.programma}`
+              : "Programma: 🌿 Darmen in Balans (niet genoemd, pas aan op de kaart als het anders moet)",
+            "Bestaande actieve link wordt hergebruikt, anders maak ik een nieuwe.",
+            "Na opslaan opent WhatsApp met de link klaar om te versturen.",
+          ],
+        };
+      }
       default:
         return onbekend;
     }

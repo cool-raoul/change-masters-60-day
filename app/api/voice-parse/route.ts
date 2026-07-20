@@ -351,6 +351,13 @@ MOGELIJKE ACTIES:
    - Dezelfde notitie bij meerdere prospects ("Bij alle members noteren dat ik Kerstactie heb aangeboden", "Drie mensen: zelfde notitie dat campagne X loopt").
    - Gebruikt als gebruiker expliciet een groep noemt én een notitie. Niet optelling van losse notitie-acties.
 
+23. { "type": "resetcode_link", "prospect_id": "uuid-uit-lijst", "volledige_naam": "...", "programma": "darm|reset|producten" (optioneel) }
+   - De gebruiker wil een Resetcode-klantomgeving (persoonlijke Mentor-link) naar iemand sturen.
+   - Signaalzinnen: "stuur de klantlink/Resetcode-link/Mentor-link/klantomgeving naar X", "X is klant geworden, stuur zijn programma-link", "maak een darmprogramma-omgeving voor Y", "geef Z de Holistic Reset-link".
+   - programma-mapping: "darm/darmen in balans/darmprogramma/darmkuur" → "darm"; "reset/holistic reset" → "reset"; "basis/basisproducten/dagelijkse basis/het huis" → "producten". Niet genoemd → veld weglaten (gebruiker kiest in de preview).
+   - prospect_id ALTIJD uit de bestaande lijst; geen match → géén actie, vermeld het in "onduidelijk".
+   - Zegt de gebruiker er ook bij dat diegene klant is geworden: combineer met update_prospect (fase "shopper" of "member").
+
 BESTELLING_BEVESTIGEN (samengesteld, niet als nieuwe actie):
    Als een 21/51/81-daagse opvolg-herinnering wordt afgevinkt met een nieuwe bestelling ("Arno's opvolging is gedaan, hij heeft opnieuw basispakket besteld"), geef DAN TWEE acties:
    1. voltooi_herinnering voor de reminder
