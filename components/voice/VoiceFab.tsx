@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useTaal } from "@/lib/i18n/TaalContext";
 import { PipelineFase, ContactType } from "@/lib/supabase/types";
 import { waLinkNaar } from "@/lib/util/wa-nummer";
+import { PROSPECT_FILM_SLUGS } from "@/lib/films/embed";
 import { gebruikSpraak } from "./gebruikSpraak";
 
 const MAX_SECONDEN = 120;
@@ -193,6 +194,46 @@ type ActieResetcodeLink = {
   programma?: "darm" | "reset" | "producten" | null;
 };
 
+type ActieFreebieSturen = {
+  type: "freebie_sturen";
+  prospect_id: string;
+  volledige_naam?: string;
+  freebie: "productadvies" | "energie-en-focus" | "hormonen-en-overgang";
+};
+
+type ActieFilmSturen = {
+  type: "film_sturen";
+  prospect_id: string;
+  volledige_naam?: string;
+  film_nummer?: number;
+};
+
+type ActieMiniElevaUitnodiging = {
+  type: "mini_eleva_uitnodiging";
+  prospect_id: string;
+  volledige_naam?: string;
+  soort?: "product" | "business";
+};
+
+type ActieResetcodeStatus = {
+  type: "resetcode_status";
+  prospect_id: string;
+  volledige_naam?: string;
+  status: "gepauzeerd" | "actief" | "gesloten";
+};
+
+type ActieKennisToevoegen = {
+  type: "kennis_toevoegen";
+  vraag: string;
+  antwoord: string;
+  programma?: "darm" | "reset" | "producten" | "algemeen";
+};
+
+type ActieRapportage = {
+  type: "rapportage";
+  onderwerp: "programma_klanten" | "stille_prospects" | "pipeline_telling";
+};
+
 type Actie =
   | ActieNieuweProspect
   | ActieUpdateProspect
@@ -216,7 +257,13 @@ type Actie =
   | ActieMijnWhyUpdate
   | ActieFaseBatch
   | ActieMemberNotitieBulk
-  | ActieResetcodeLink;
+  | ActieResetcodeLink
+  | ActieFreebieSturen
+  | ActieFilmSturen
+  | ActieMiniElevaUitnodiging
+  | ActieResetcodeStatus
+  | ActieKennisToevoegen
+  | ActieRapportage;
 
 type Intentie = "data" | "coach" | "mixed";
 
@@ -243,6 +290,9 @@ export function VoiceFab() {
   const supabase = createClient();
 
   const [fase, setFase] = useState<Fase>("dicht");
+  // Spraak-rapportage ("hoe gaat het met mijn programma-klanten?"):
+  // het overzicht verschijnt als eigen overlay, los van de fases.
+  const [rapport, setRapport] = useState<string | null>(null);
   const [resultaat, setResultaat] = useState<ParseResultaat | null>(null);
   const [acties, setActies] = useState<Actie[]>([]);
   // Controle-scherm: zelf een gemiste notitie toevoegen.
@@ -1226,38 +1276,61 @@ export function VoiceFab() {
     }
 
     // Resetcode-klantomgeving sturen (spraak: "stuur de klantlink naar X").
-    // Bestaande actieve link hergebruiken, anders aanmaken, en daarna
-    // WhatsApp openen met de link klaar om te versturen.
     for (const a of acties) {
       if (a.type === "resetcode_link") {
         if (!a.prospect_id) {
           fouten.push("Klantomgeving: geen bestaande klant gevonden");
           continue;
         }
-        const programma = a.programma ?? "darm";
+        const gelukt = await stuurKlantomgeving(
+          a.prospect_id,
+          a.programma ?? "darm",
+          a.volledige_naam,
+        );
+        if (!gelukt) fouten.push("Klantomgeving sturen mislukt");
+      }
+    }
+
+    // Freebie sturen: zelfde link-logica als de kaart-knop, daarna
+    // WhatsApp met het standaard-bericht per freebie.
+    for (const a of acties) {
+      if (a.type === "freebie_sturen") {
+        if (!a.prospect_id) {
+          fouten.push("Freebie: geen bestaande prospect gevonden");
+          continue;
+        }
         try {
-          const { data: bestaande } = await supabase
-            .from("resetcode_klant_links")
-            .select("token")
-            .eq("prospect_id", a.prospect_id)
-            .eq("programma", programma)
-            .eq("status", "actief")
-            .order("created_at", { ascending: false })
-            .limit(1);
-          let token =
-            (bestaande as { token: string }[] | null)?.[0]?.token ?? null;
-          if (!token) {
-            const res = await fetch("/api/resetcode/links", {
+          let url: string | null = null;
+          if (a.freebie === "productadvies") {
+            const res = await fetch("/api/productadvies-test/maak-aan", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ prospectId: a.prospect_id, programma }),
+              body: JSON.stringify({ prospectId: a.prospect_id, isSixtyDay: false }),
             });
             const data = await res.json().catch(() => null);
-            if (!res.ok || !data?.link?.token) {
-              fouten.push("Klantomgeving aanmaken mislukt");
-              continue;
+            if (res.ok && data?.token) url = `${window.location.origin}/test/${data.token}`;
+          } else {
+            const { data: bestaand } = await supabase
+              .from("freebie_bot_member_tokens")
+              .select("token")
+              .eq("member_id", user.id)
+              .eq("bot_slug", a.freebie)
+              .maybeSingle();
+            let token = (bestaand as { token?: string } | null)?.token;
+            if (!token) {
+              const res = await fetch("/api/freebie-bot/maak-token", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ botSlug: a.freebie }),
+              });
+              const data = await res.json().catch(() => null);
+              if (res.ok && data?.token) token = data.token as string;
             }
-            token = data.link.token as string;
+            if (token) url = `${window.location.origin}/bot/${a.freebie}/${token}`;
+          }
+          if (!url) {
+            fouten.push("Freebie-link aanmaken mislukt");
+            continue;
           }
           const { data: p } = await supabase
             .from("prospects")
@@ -1266,24 +1339,442 @@ export function VoiceFab() {
             .maybeSingle();
           const voornaam =
             ((p?.volledige_naam ?? a.volledige_naam ?? "").split(" ")[0]) || "";
-          const url = `${window.location.origin}/k/${token}`;
-          const waUrl = waLinkNaar(
-            (p as { telefoon?: string | null } | null)?.telefoon ?? null,
-            `Hoi ${voornaam}! Hier is jouw persoonlijke omgeving met je eigen Mentor, alles voor jouw programma op één plek: ${url}`,
+          const bericht =
+            a.freebie === "productadvies"
+              ? `Hé ${voornaam}!\n\nEr is een korte vragenlijst die je even kan doen waarmee ik kan zien welke ondersteuning het beste bij jou past. Duurt zo'n 3 minuten op je telefoon.\n\nKlik hier: ${url}\n\nAan het eind krijg je een advies dat past bij wat jij aangeeft. Ik kijk daarna graag samen met je naar het resultaat 🥰`
+              : a.freebie === "energie-en-focus"
+                ? `Hé ${voornaam}!\n\nIk heb iets voor je dat in vijf minuten een persoonlijk beeld geeft van waar het op het gebied van energie, slaap en focus voor jou loopt en waar het stroef gaat. Tien korte vragen, daarna een score plus concrete handvatten.\n\nKlik hier: ${url}\n\nJe ontvangt het ook in je mail zodat je het rustig kunt teruglezen ⚡`
+                : `Hé ${voornaam}!\n\nIk heb iets voor je dat in vijf minuten een persoonlijk beeld geeft van wat er speelt rond hormonen en de overgang. Tien korte vragen, daarna een score per thema plus concrete handvatten.\n\nKlik hier: ${url}\n\nJe ontvangt het ook in je mail zodat je het rustig kunt teruglezen 🌸`;
+          window.open(
+            waLinkNaar(
+              (p as { telefoon?: string | null } | null)?.telefoon ?? null,
+              bericht,
+            ),
+            "_blank",
           );
-          const venster = window.open(waUrl, "_blank");
-          if (venster) {
-            toast.success("Klantomgeving klaar, WhatsApp staat open om te versturen 📱");
-          } else {
-            toast.success("Klantomgeving klaar! De verstuur-knop staat op de klantenkaart.");
-          }
+          toast.success("Freebie klaar, WhatsApp staat open 🎁");
         } catch {
-          fouten.push("Klantomgeving sturen mislukt");
+          fouten.push("Freebie sturen mislukt");
         }
       }
     }
 
+    // Film sturen: unieke share-link via de bestaande route.
+    for (const a of acties) {
+      if (a.type === "film_sturen") {
+        if (!a.prospect_id) {
+          fouten.push("Film: geen bestaande prospect gevonden");
+          continue;
+        }
+        try {
+          const slugs = Object.values(PROSPECT_FILM_SLUGS) as string[];
+          const gewenst = a.film_nummer
+            ? slugs[a.film_nummer - 1]
+            : undefined;
+          const { data: films } = await supabase
+            .from("films")
+            .select("slug, video_url, tonen")
+            .in("slug", gewenst ? [gewenst] : slugs);
+          const beschikbaar = ((films ?? []) as {
+            slug: string;
+            video_url: string | null;
+            tonen: boolean;
+          }[])
+            .filter((f) => f.video_url && f.tonen !== false)
+            .sort((x, y) => slugs.indexOf(x.slug) - slugs.indexOf(y.slug));
+          const filmSlug = beschikbaar[0]?.slug;
+          if (!filmSlug) {
+            fouten.push(
+              a.film_nummer
+                ? `Film ${a.film_nummer} is (nog) niet gevuld`
+                : "Geen prospect-film beschikbaar",
+            );
+            continue;
+          }
+          const res = await fetch("/api/prospect-film/share-link", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ prospectId: a.prospect_id, filmSlug }),
+          });
+          const data = await res.json().catch(() => null);
+          if (!res.ok || !data?.url) {
+            fouten.push("Film-link aanmaken mislukt");
+            continue;
+          }
+          const { data: p } = await supabase
+            .from("prospects")
+            .select("telefoon, volledige_naam")
+            .eq("id", a.prospect_id)
+            .maybeSingle();
+          const voornaam =
+            ((p?.volledige_naam ?? a.volledige_naam ?? "").split(" ")[0]) || "";
+          window.open(
+            waLinkNaar(
+              (p as { telefoon?: string | null } | null)?.telefoon ?? null,
+              `Hé ${voornaam}! Ik heb een korte film voor je klaargezet, speciaal voor jou: ${data.url}`,
+            ),
+            "_blank",
+          );
+          toast.success("Film klaar, WhatsApp staat open 🎬");
+        } catch {
+          fouten.push("Film sturen mislukt");
+        }
+      }
+    }
+
+    // Mini-ELEVA-uitnodiging: magic-link via de bestaande route.
+    for (const a of acties) {
+      if (a.type === "mini_eleva_uitnodiging") {
+        if (!a.prospect_id) {
+          fouten.push("Mini-ELEVA: geen bestaande prospect gevonden");
+          continue;
+        }
+        try {
+          const res = await fetch("/api/mini-eleva/uitnodiging", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              prospectId: a.prospect_id,
+              soort: a.soort ?? "product",
+            }),
+          });
+          const data = await res.json().catch(() => null);
+          if (!res.ok || !data?.deelLink) {
+            fouten.push("Mini-ELEVA-uitnodiging aanmaken mislukt");
+            continue;
+          }
+          const { data: p } = await supabase
+            .from("prospects")
+            .select("telefoon, volledige_naam")
+            .eq("id", a.prospect_id)
+            .maybeSingle();
+          const voornaam =
+            ((p?.volledige_naam ?? a.volledige_naam ?? "").split(" ")[0]) || "";
+          window.open(
+            waLinkNaar(
+              (p as { telefoon?: string | null } | null)?.telefoon ?? null,
+              `Hé ${voornaam}! Ik heb een eigen kijk-omgeving voor je klaargezet binnen ELEVA. Daar staan welkomstvideo's van mij, een AI-mentor die 24/7 al je vragen beantwoordt over Lifeplus, en een chat-lijntje met mij voor als je iemand wilt spreken. Geen pitch, geen druk, op je eigen tempo. 14 dagen geldig, geen account nodig.\n\n${data.deelLink}`,
+            ),
+            "_blank",
+          );
+          toast.success("Mini-ELEVA klaar, WhatsApp staat open ✨");
+        } catch {
+          fouten.push("Mini-ELEVA-uitnodiging mislukt");
+        }
+      }
+    }
+
+    // Klantomgeving pauzeren / aanzetten / sluiten.
+    for (const a of acties) {
+      if (a.type === "resetcode_status") {
+        if (!a.prospect_id || !a.status) {
+          fouten.push("Klantomgeving-status: klant of status ontbreekt");
+          continue;
+        }
+        try {
+          const { data: rijen } = await supabase
+            .from("resetcode_klant_links")
+            .select("id")
+            .eq("prospect_id", a.prospect_id)
+            .neq("status", "gesloten")
+            .order("created_at", { ascending: false })
+            .limit(1);
+          const linkId = (rijen as { id: string }[] | null)?.[0]?.id;
+          if (!linkId) {
+            fouten.push("Geen (open) klantomgeving gevonden voor deze klant");
+            continue;
+          }
+          const res = await fetch("/api/resetcode/links", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: linkId, status: a.status }),
+          });
+          if (!res.ok) fouten.push("Status wijzigen mislukt");
+          else toast.success(`Klantomgeving is nu ${a.status}`);
+        } catch {
+          fouten.push("Status wijzigen mislukt");
+        }
+      }
+    }
+
+    // Kennis inspreken voor het Mentor-brein (founders).
+    for (const a of acties) {
+      if (a.type === "kennis_toevoegen") {
+        if (!a.vraag || !a.antwoord) {
+          fouten.push("Mentor-kennis: vraag of antwoord ontbreekt");
+          continue;
+        }
+        const res = await fetch("/api/resetcode/kennis", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            actie: "nieuw",
+            vraag: a.vraag,
+            antwoord: a.antwoord,
+            programma: a.programma ?? "algemeen",
+          }),
+        }).catch(() => null);
+        if (!res || !res.ok) {
+          fouten.push(
+            res && res.status === 403
+              ? "Mentor-kennis toevoegen is alleen voor founders"
+              : "Mentor-kennis opslaan mislukt",
+          );
+        } else {
+          toast.success("Toegevoegd aan het Mentor-brein 🧠");
+        }
+      }
+    }
+
+    // Rapportage: overzicht van eigen data, op het scherm.
+    for (const a of acties) {
+      if (a.type === "rapportage") {
+        try {
+          const tekst = await bouwRapport(a.onderwerp);
+          setRapport(tekst);
+        } catch {
+          fouten.push("Overzicht maken mislukt");
+        }
+      }
+    }
+
+    // AUTO-VOORSTEL: werd iemand zojuist klant (shopper/member) en heeft
+    // die nog geen actieve klantomgeving? Stel dan met één tik voor om
+    // de omgeving te sturen (versturen blijft altijd handmatig via
+    // WhatsApp, dat hoort persoonlijk te blijven).
+    try {
+      const KLANT_FASEN = ["shopper", "member"];
+      const kandidaten = new Map<string, string>(); // prospect_id -> naam
+      for (const a of acties) {
+        if (
+          a.type === "update_prospect" &&
+          a.pipeline_fase &&
+          KLANT_FASEN.includes(a.pipeline_fase)
+        ) {
+          kandidaten.set(a.prospect_id, "");
+        }
+        if (
+          a.type === "contact_log" &&
+          a.nieuwe_fase &&
+          KLANT_FASEN.includes(a.nieuwe_fase)
+        ) {
+          const id = naamNaarId[(a.prospect_naam ?? "").toLowerCase()];
+          if (id) kandidaten.set(id, a.prospect_naam ?? "");
+        }
+        if (a.type === "product_bestelling") {
+          const id = naamNaarId[(a.prospect_naam ?? "").toLowerCase()];
+          if (id) kandidaten.set(id, a.prospect_naam ?? "");
+        }
+        if (
+          a.type === "fase_batch" &&
+          KLANT_FASEN.includes(a.nieuwe_fase ?? "")
+        ) {
+          for (const id of a.prospect_ids ?? []) kandidaten.set(id, "");
+        }
+        // Al expliciet een klantomgeving-actie? Dan geen dubbel voorstel.
+        if (a.type === "resetcode_link") kandidaten.delete(a.prospect_id);
+      }
+      for (const [pid, naamHint] of Array.from(kandidaten.entries())) {
+        const { data: bestaand } = await supabase
+          .from("resetcode_klant_links")
+          .select("id")
+          .eq("prospect_id", pid)
+          .eq("status", "actief")
+          .limit(1);
+        if ((bestaand ?? []).length > 0) continue;
+        const { data: p } = await supabase
+          .from("prospects")
+          .select("volledige_naam")
+          .eq("id", pid)
+          .maybeSingle();
+        const naam =
+          ((p as { volledige_naam?: string } | null)?.volledige_naam ||
+            naamHint ||
+            "deze klant");
+        toast(`🌿 ${naam.split(" ")[0]} is klant geworden`, {
+          description:
+            "Dit is hét moment voor de persoonlijke klantomgeving met eigen Mentor.",
+          duration: 12000,
+          action: {
+            label: "Stuur de omgeving 📱",
+            onClick: () => {
+              void stuurKlantomgeving(pid, "darm", naam);
+            },
+          },
+        });
+      }
+    } catch {
+      // voorstel is een extraatje; nooit de uitvoering laten falen
+    }
+
     return { gemaakt, naamNaarId, fouten };
+  }
+
+  // Klantomgeving sturen: bestaande actieve link hergebruiken of nieuwe
+  // maken, daarna WhatsApp openen. Herbruikt door de spraak-actie én het
+  // automatische voorstel bij "klant geworden".
+  async function stuurKlantomgeving(
+    prospectId: string,
+    programma: string,
+    naamHint?: string,
+  ): Promise<boolean> {
+    try {
+      const { data: bestaande } = await supabase
+        .from("resetcode_klant_links")
+        .select("token")
+        .eq("prospect_id", prospectId)
+        .eq("programma", programma)
+        .eq("status", "actief")
+        .order("created_at", { ascending: false })
+        .limit(1);
+      let token = (bestaande as { token: string }[] | null)?.[0]?.token ?? null;
+      if (!token) {
+        const res = await fetch("/api/resetcode/links", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prospectId, programma }),
+        });
+        const data = await res.json().catch(() => null);
+        if (!res.ok || !data?.link?.token) return false;
+        token = data.link.token as string;
+      }
+      const { data: p } = await supabase
+        .from("prospects")
+        .select("telefoon, volledige_naam")
+        .eq("id", prospectId)
+        .maybeSingle();
+      const voornaam =
+        ((p?.volledige_naam ?? naamHint ?? "").split(" ")[0]) || "";
+      const url = `${window.location.origin}/k/${token}`;
+      const venster = window.open(
+        waLinkNaar(
+          (p as { telefoon?: string | null } | null)?.telefoon ?? null,
+          `Hoi ${voornaam}! Hier is jouw persoonlijke omgeving met je eigen Mentor, alles voor jouw programma op één plek: ${url}`,
+        ),
+        "_blank",
+      );
+      toast.success(
+        venster
+          ? "Klantomgeving klaar, WhatsApp staat open om te versturen 📱"
+          : "Klantomgeving klaar! De verstuur-knop staat op de klantenkaart.",
+      );
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  // Overzichts-rapportage voor spraak-vragen over eigen data.
+  async function bouwRapport(
+    onderwerp: "programma_klanten" | "stille_prospects" | "pipeline_telling",
+  ): Promise<string> {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (onderwerp === "programma_klanten") {
+      const { data } = await supabase
+        .from("resetcode_klant_links")
+        .select("id, klant_naam, programma, station_slug, status, laatste_activiteit")
+        .neq("status", "gesloten")
+        .order("laatste_activiteit", { ascending: false })
+        .limit(12);
+      const links = (data ?? []) as {
+        id: string;
+        klant_naam: string;
+        programma: string;
+        station_slug: string | null;
+        status: string;
+        laatste_activiteit: string;
+      }[];
+      if (links.length === 0)
+        return "🌿 Programma-klanten\n\nJe hebt nog geen (open) klantomgevingen. Maak er eentje via een klantenkaart of zeg: stuur de klantomgeving naar ...";
+      const { data: sData } = await supabase
+        .from("resetcode_seintjes")
+        .select("link_id, titel, created_at")
+        .in(
+          "link_id",
+          links.map((l) => l.id),
+        )
+        .order("created_at", { ascending: false })
+        .limit(50);
+      const laatste: Record<string, string> = {};
+      for (const s of (sData ?? []) as { link_id: string; titel: string }[]) {
+        if (!laatste[s.link_id]) laatste[s.link_id] = s.titel;
+      }
+      const PROG: Record<string, string> = {
+        darm: "🌿",
+        reset: "☀️",
+        producten: "🏠",
+      };
+      return (
+        "🌿 Programma-klanten\n\n" +
+        links
+          .map(
+            (l) =>
+              `${PROG[l.programma] ?? "•"} ${l.klant_naam}${l.status === "gepauzeerd" ? " (⏸)" : ""}\n   ${l.station_slug ? `stap: ${l.station_slug}` : "nog niet geopend"} · actief ${new Date(l.laatste_activiteit).toLocaleDateString("nl-NL")}${laatste[l.id] ? `\n   laatste: ${laatste[l.id]}` : ""}`,
+          )
+          .join("\n\n")
+      );
+    }
+    if (onderwerp === "stille_prospects") {
+      const grens = new Date();
+      grens.setDate(grens.getDate() - 7);
+      const { data } = await supabase
+        .from("prospects")
+        .select("volledige_naam, pipeline_fase, laatste_contact")
+        .eq("user_id", user?.id ?? "")
+        .is("gearchiveerd_op", null)
+        .not("pipeline_fase", "in", '("not_yet")')
+        .order("laatste_contact", { ascending: true, nullsFirst: true })
+        .limit(10);
+      const rijen = ((data ?? []) as {
+        volledige_naam: string;
+        pipeline_fase: string;
+        laatste_contact: string | null;
+      }[]).filter(
+        (r) => !r.laatste_contact || new Date(r.laatste_contact) < grens,
+      );
+      if (rijen.length === 0)
+        return "📊 Stille prospects\n\nNiemand wacht langer dan een week op je, lekker bezig! 💪";
+      return (
+        "📊 Langst niet gesproken\n\n" +
+        rijen
+          .map(
+            (r) =>
+              `• ${r.volledige_naam} (${r.pipeline_fase})${r.laatste_contact ? ` — laatste contact ${new Date(r.laatste_contact).toLocaleDateString("nl-NL")}` : " — nog nooit contact gelogd"}`,
+          )
+          .join("\n")
+      );
+    }
+    // pipeline_telling
+    const { data } = await supabase
+      .from("prospects")
+      .select("pipeline_fase")
+      .eq("user_id", user?.id ?? "")
+      .is("gearchiveerd_op", null);
+    const telling: Record<string, number> = {};
+    for (const r of (data ?? []) as { pipeline_fase: string }[]) {
+      telling[r.pipeline_fase] = (telling[r.pipeline_fase] ?? 0) + 1;
+    }
+    const VOLGORDE = [
+      "prospect",
+      "in_gesprek",
+      "uitgenodigd",
+      "one_pager",
+      "presentatie",
+      "followup",
+      "shopper",
+      "member",
+      "not_yet",
+    ];
+    const regels = VOLGORDE.filter((f) => telling[f]).map(
+      (f) => `• ${f.replace(/_/g, " ")}: ${telling[f]}`,
+    );
+    return (
+      "📊 Jouw pijplijn\n\n" +
+      (regels.length ? regels.join("\n") : "Nog geen prospects op de lijst.") +
+      `\n\nTotaal: ${(data ?? []).length}`
+    );
   }
 
   function sluit() {
@@ -1362,6 +1853,30 @@ export function VoiceFab() {
 
   return (
     <>
+      {/* Spraak-rapportage: overzicht op het scherm ("hoe gaat het met
+          mijn programma-klanten?"). Eigen overlay boven alles. */}
+      {rapport && (
+        <div
+          className="fixed inset-0 z-[60] bg-black/80 flex items-center justify-center p-4"
+          onClick={() => setRapport(null)}
+        >
+          <div
+            className="bg-cm-surface border border-cm-border rounded-2xl w-full max-w-md max-h-[80vh] overflow-y-auto p-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p className="whitespace-pre-wrap text-sm text-cm-white leading-relaxed">
+              {rapport}
+            </p>
+            <button
+              onClick={() => setRapport(null)}
+              className="mt-4 w-full rounded-full bg-cm-gold text-cm-bg py-2.5 text-sm font-bold"
+            >
+              Sluiten
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Floating Action Button, altijd gerenderd, visueel verborgen via CSS */}
       <button
         onClick={openen}
@@ -2213,6 +2728,86 @@ function beschrijfActie(actie: any): { icoon: string; titel: string; details: st
             "Bestaande actieve link wordt hergebruikt, anders maak ik een nieuwe.",
             "Na opslaan opent WhatsApp met de link klaar om te versturen.",
           ],
+        };
+      }
+      case "freebie_sturen": {
+        const fLabel: Record<string, string> = {
+          productadvies: "📋 Productadvies-vragenlijst",
+          "energie-en-focus": "⚡ Energie & Focus",
+          "hormonen-en-overgang": "🌸 Hormonen & Overgang",
+        };
+        return {
+          icoon: "🎁",
+          titel: `Freebie sturen naar ${actie.volledige_naam || "prospect"}`,
+          details: [
+            `Freebie: ${fLabel[actie.freebie] ?? actie.freebie}`,
+            "Na opslaan opent WhatsApp met de link en het standaard-bericht.",
+          ],
+        };
+      }
+      case "film_sturen":
+        return {
+          icoon: "🎬",
+          titel: `Film sturen naar ${actie.volledige_naam || "prospect"}`,
+          details: [
+            actie.film_nummer
+              ? `Film ${actie.film_nummer} (uit je prospect-films)`
+              : "Eerste beschikbare prospect-film",
+            "Unieke kijk-link; je krijgt een seintje als de film is bekeken.",
+            "Na opslaan opent WhatsApp met de link.",
+          ],
+        };
+      case "mini_eleva_uitnodiging":
+        return {
+          icoon: "✨",
+          titel: `Mini-ELEVA-uitnodiging voor ${actie.volledige_naam || "prospect"}`,
+          details: [
+            actie.soort === "business"
+              ? "Soort: business-kant (opportunity)"
+              : "Soort: product-kant (lichtste versie)",
+            "14 dagen geldige kijk-omgeving, geen account nodig.",
+            "Na opslaan opent WhatsApp met de link.",
+          ],
+        };
+      case "resetcode_status": {
+        const sLabel: Record<string, string> = {
+          gepauzeerd: "⏸ pauzeren",
+          actief: "▶️ weer aanzetten",
+          gesloten: "🔒 sluiten",
+        };
+        return {
+          icoon: "🌿",
+          titel: `Klantomgeving ${sLabel[actie.status] ?? actie.status}: ${actie.volledige_naam || "klant"}`,
+          details: [
+            actie.status === "gesloten"
+              ? "De link werkt daarna niet meer voor de klant."
+              : actie.status === "gepauzeerd"
+                ? "De klant ziet dan een nette pauze-melding."
+                : "De klant kan er direct weer in.",
+          ],
+        };
+      }
+      case "kennis_toevoegen":
+        return {
+          icoon: "🧠",
+          titel: "Toevoegen aan het Mentor-brein",
+          details: [
+            actie.vraag ? `V: ${String(actie.vraag).slice(0, 100)}` : "",
+            actie.antwoord ? `A: ${String(actie.antwoord).slice(0, 140)}` : "",
+            `Programma: ${actie.programma ?? "algemeen"}`,
+            "De Mentor kent dit antwoord direct, voor alle klanten.",
+          ].filter(Boolean),
+        };
+      case "rapportage": {
+        const rLabel: Record<string, string> = {
+          programma_klanten: "Hoe gaat het met mijn programma-klanten?",
+          stille_prospects: "Wie heb ik lang niet gesproken?",
+          pipeline_telling: "Hoeveel mensen per fase?",
+        };
+        return {
+          icoon: "📊",
+          titel: rLabel[actie.onderwerp] ?? "Overzicht",
+          details: ["Het overzicht verschijnt na opslaan op je scherm."],
         };
       }
       default:

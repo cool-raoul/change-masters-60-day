@@ -34,12 +34,14 @@ export function ResetcodeOpKaart({
   telefoon,
   links,
   seintjes = [],
+  pipelineFase,
 }: {
   prospectId: string;
   voornaam: string;
   telefoon: string | null;
   links: LinkRij[];
   seintjes?: SeintjeRij[];
+  pipelineFase?: string | null;
 }) {
   const router = useRouter();
   const [programma, setProgramma] = useState("darm");
@@ -87,6 +89,12 @@ export function ResetcodeOpKaart({
 
       {actieveLinks.length === 0 ? (
         <>
+          {(pipelineFase === "shopper" || pipelineFase === "member") && (
+            <p className="mb-2 rounded-lg border border-amber-400/50 bg-amber-400/10 px-3 py-2 text-xs text-amber-300 leading-relaxed">
+              💡 {voornaam} is klant: dit is hét moment voor de persoonlijke
+              omgeving met eigen Mentor.
+            </p>
+          )}
           <p className="text-cm-muted text-xs leading-relaxed mb-3">
             Geef {voornaam} een persoonlijke omgeving met eigen Mentor. Kies
             het programma dat jullie samen hebben afgesproken.

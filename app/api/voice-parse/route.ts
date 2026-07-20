@@ -358,6 +358,33 @@ MOGELIJKE ACTIES:
    - prospect_id ALTIJD uit de bestaande lijst; geen match → géén actie, vermeld het in "onduidelijk".
    - Zegt de gebruiker er ook bij dat diegene klant is geworden: combineer met update_prospect (fase "shopper" of "member").
 
+24. { "type": "freebie_sturen", "prospect_id": "uuid-uit-lijst", "volledige_naam": "...", "freebie": "productadvies|energie-en-focus|hormonen-en-overgang" }
+   - "Stuur de freebie/vragenlijst naar X", "geef Y de energietest", "stuur de hormonen-scan naar Z", "stuur het productadvies naar A".
+   - Mapping: "productadvies/vragenlijst/pakket-advies" → "productadvies"; "energie/focus/energietest" → "energie-en-focus"; "hormonen/overgang" → "hormonen-en-overgang". Freebie niet duidelijk → "productadvies".
+   - prospect_id ALTIJD uit de bestaande lijst; geen match → "onduidelijk".
+
+25. { "type": "film_sturen", "prospect_id": "uuid-uit-lijst", "volledige_naam": "...", "film_nummer": 1 (optioneel, 1-10) }
+   - "Stuur film 1 naar X", "stuur de introductiefilm naar Y", "laat Z de presentatie-video zien".
+   - Nummer-mapping: introductie=1, presentatie=2, testimonial/ervaring=3, product-demo=4, team/support=5. Geen nummer of film genoemd → film_nummer weglaten (eerste beschikbare wordt gebruikt).
+
+26. { "type": "mini_eleva_uitnodiging", "prospect_id": "uuid-uit-lijst", "volledige_naam": "...", "soort": "product|business" (optioneel, default product) }
+   - "Nodig X uit voor mini-ELEVA / de kijk-omgeving / een gesprek met de Mentor", "maak een kennismakings-omgeving voor Y".
+   - "voor de business/opportunity/bouwen" → soort "business", anders "product".
+
+27. { "type": "resetcode_status", "prospect_id": "uuid-uit-lijst", "volledige_naam": "...", "status": "gepauzeerd|actief|gesloten" }
+   - "Pauzeer de klantomgeving van X", "zet de omgeving van Y weer aan" → actief, "sluit de klantomgeving van Z".
+   - Alleen als het duidelijk om de Resetcode-klantomgeving gaat.
+
+28. { "type": "kennis_toevoegen", "vraag": "...", "antwoord": "...", "programma": "darm|reset|producten|algemeen" (optioneel, default algemeen) }
+   - De gebruiker dicteert kennis voor het Mentor-brein: "voeg toe aan het Mentor-brein / de kennisbank: als iemand vraagt ... dan is het antwoord ...", "nieuwe teamkennis: ...".
+   - Splits zelf netjes in een vraag (zoals een klant hem zou stellen) en het antwoord. Programma alleen invullen als genoemd.
+
+29. { "type": "rapportage", "onderwerp": "programma_klanten|stille_prospects|pipeline_telling" }
+   - Vragen over de eigen data, beantwoord met een overzicht op het scherm:
+   - "Hoe gaat het met mijn programma-klanten/resetcode-klanten?" → "programma_klanten".
+   - "Wie heb ik lang niet gesproken?", "wie liet niks meer horen?" → "stille_prospects".
+   - "Hoeveel mensen zitten er per fase / in follow-up?" → "pipeline_telling".
+
 BESTELLING_BEVESTIGEN (samengesteld, niet als nieuwe actie):
    Als een 21/51/81-daagse opvolg-herinnering wordt afgevinkt met een nieuwe bestelling ("Arno's opvolging is gedaan, hij heeft opnieuw basispakket besteld"), geef DAN TWEE acties:
    1. voltooi_herinnering voor de reminder

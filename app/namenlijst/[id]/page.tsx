@@ -419,6 +419,7 @@ export default async function ProspectDetailPagina({
               telefoon={prospect.telefoon ?? null}
               links={resetLinks}
               seintjes={resetSeintjes}
+              pipelineFase={prospect.pipeline_fase ?? null}
             />
           )}
           {/* Openstaande herinneringen, bovenaan zodat ze direct zichtbaar zijn */}
