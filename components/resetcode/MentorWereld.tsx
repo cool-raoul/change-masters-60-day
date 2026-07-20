@@ -754,6 +754,13 @@ export default function MentorWereld({
               );
               await mentorKaart("videodag10", st.slug, 800);
               markeerTouchpoint("dag10-video" as TouchpointSleutel);
+              // Nooit een dood einde na een video (feedback Raoul):
+              // altijd zeggen wat de vervolgstap is.
+              await wacht(1200);
+              await mentorZegt(
+                "Neem er echt even de tijd voor, voor veel mensen is dit een kantelpunt. Ben je klaar met kijken? Vertel me gerust wat je eruit meeneemt, of stel je vragen erover. En verder gaat vandaag gewoon door zoals je gewend bent: je check-in, je vragen, je recepten. Ik ben er. 💚",
+                1000,
+              );
               if (dueTouchpoint || dueWeekTerugblik) await wacht(1500);
             }
             if (dueTouchpoint) await speelTouchpoint(dueTouchpoint);
@@ -1788,6 +1795,11 @@ export default function MentorWereld({
     if (/\bvideo|filmpje\b/.test(t) && t.length < 40 && station.videoSlots.length) {
       zeg();
       await mentorKaart("video", station.slug, 800);
+      await wacht(1000);
+      await mentorZegt(
+        "Kijk 'm rustig terug. En als er iets uit de video is waar je meer over wilt weten: vraag het me gewoon. 💚",
+        800,
+      );
       return true;
     }
     // Specifieke product-vragen ("staat kwark op de lijst?") horen naar de
@@ -2606,6 +2618,11 @@ export default function MentorWereld({
                           900,
                         );
                         await mentorKaart("videodag10", station.slug, 700);
+                        await wacht(1200);
+                        await mentorZegt(
+                          "Neem er echt even de tijd voor, voor veel mensen is dit een kantelpunt. Ben je klaar met kijken? Vertel me gerust wat je eruit meeneemt, of stel je vragen erover. En verder gaat vandaag gewoon door zoals je gewend bent: je check-in, je vragen, je recepten. Ik ben er. 💚",
+                          1000,
+                        );
                       }}
                       className="rounded-full px-4 py-2 text-[12px] font-semibold bg-sky-500/20 text-sky-300"
                     >
