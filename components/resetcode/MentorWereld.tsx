@@ -725,12 +725,13 @@ export default function MentorWereld({
             dueWeekTerugblik ||
             (dueKennis && dueKennis.length > 0),
         );
-        // Dagelijkse check-in bovenaan (nieuwe dag, nog niet ingecheckt).
-        // Niet op het einde-moment (dan is het feest, geen formulier) en
-        // niet vóór de zelfgekozen startdatum.
-        if (moetPakketKiezen) {
-          (async () => {
-            await wacht(1400);
+        // ÉÉN opeenvolgende flow bij terugkomen (voorheen twee parallelle
+        // timers die door elkaar konden schrijven): eerst pakket/start-
+        // vraag, dan het einde-moment óf de speciale dag-momenten, dan
+        // de check-in.
+        (async () => {
+          await wacht(1400);
+          if (moetPakketKiezen) {
             await toonPakketKeuze(
               moetStartKiezen
                 ? async () => {
@@ -741,30 +742,22 @@ export default function MentorWereld({
                 : null,
             );
             knoppenNaarOnder();
-          })();
-        } else if (moetStartKiezen) {
-          (async () => {
-            await wacht(1400);
+          } else if (moetStartKiezen) {
             await toonStartKeuze(FASE_DAGEN[EERSTE_DUUR_STATION[prog.slug] ?? ""]);
             knoppenNaarOnder();
-          })();
-        } else if (
-          !checkinGedaanRef.current &&
-          !dueEinde &&
-          !teltAf &&
-          !heeftDueMoment
-        ) {
-          (async () => {
-            await wacht(1400);
+          } else if (
+            !checkinGedaanRef.current &&
+            !dueEinde &&
+            !teltAf &&
+            !heeftDueMoment
+          ) {
             await toonCheckin(true);
-          })();
-        }
-        // Tijd-gebonden momenten, rustig ná het welkom-terug. Het
-        // programma-einde gaat vóór alles (en dan slaan we dag 10 en
-        // kern-verhaal over, die zijn dan niet meer relevant).
-        if (dueEinde) {
-          (async () => {
-            await wacht(2500);
+          }
+          // Tijd-gebonden momenten, rustig ná het bovenstaande. Het
+          // programma-einde gaat vóór alles (dag 10 en kern-verhaal zijn
+          // dan niet meer relevant).
+          if (dueEinde) {
+            await wacht(1200);
             await mentorZegt(
               `${klantVoornaam ?? "Hé"}... je hebt het gedaan. Álle dagen. 🎉 Ik ben oprecht trots op je, en ${begeleiderNaam} ook. Neem even een moment om dat te voelen: dit heb jíj gedaan.`,
               1300,
@@ -774,10 +767,8 @@ export default function MentorWereld({
             await mentorKaart("vervolg", st.slug, 900);
             markeerTouchpoint("programma-einde" as TouchpointSleutel);
             knoppenNaarOnder();
-          })();
-        } else if (heeftDueMoment) {
-          (async () => {
-            await wacht(2500);
+          } else if (heeftDueMoment) {
+            await wacht(1200);
             // Eerst beloftes inlossen: het team heeft geantwoord op wat
             // deze klant eerder vroeg ("daar kom ik op terug").
             if (dueKennis && dueKennis.length > 0) {
@@ -831,8 +822,8 @@ export default function MentorWereld({
               await toonCheckin(false);
             }
             knoppenNaarOnder();
-          })();
-        }
+          }
+        })();
       } else {
         // Allereerste bezoek: warm welkom + eerste stap.
         (async () => {
@@ -2179,6 +2170,12 @@ export default function MentorWereld({
       }
       stroomKlaar = true;
       await toner;
+      // Belooft de Mentor "de groene knop"? Dan moet die er ook echt
+      // staan (feedback Raoul 20 juli: knop werd genoemd maar
+      // verscheen niet). De contact-kaart is die groene knop.
+      if (/groene knop/i.test(ontvangen) && station) {
+        await mentorKaart("contact", station.slug, 600);
+      }
     } catch {
       zetLaatsteMentorTekst("De verbinding viel even weg, probeer het nog een keer.");
     } finally {

@@ -275,11 +275,16 @@ ${teamKennis ? `\n=== TEAM-KENNIS (ook toegestaan) ===\n${teamKennis}\n` : ""}
 Je krijgt een vraag van een klant en het antwoord van de mentor. Beoordeel of het antwoord CONCRETE BEWERINGEN bevat (producteigenschappen, innametijden, doseringen, termijnen, houdbaarheid, programma-regels, diensten, aanbiedingen) die NIET in het materiaal hierboven staan en er niet strikt uit af te leiden zijn.
 
 Wees extra streng bij:
-- Productnamen die niet in het materiaal voorkomen maar wel besproken worden alsof de mentor ze kent.
+- Productnamen die niet in het materiaal voorkomen maar wel besproken worden alsof de mentor ze kent, en beweringen over SAMENSTELLING van producten (ingrediënten, capsule-materiaal, allergenen) die nergens staan.
 - "Ja, klopt"-bevestigingen van diensten, regelingen of regels die niet in het materiaal staan.
 - Zelfbedachte programma-regels (bijvoorbeeld over onderbreken, opnieuw beginnen, tellen van dagen) en zelfbedachte termijnen ("een paar maanden houdbaar").
 
-NIET verdacht zijn: warme bemoediging zonder feiten, verwijzingen naar de begeleider of huisarts, verhelderingsvragen, toegeven iets niet te weten, en alles wat letterlijk of vrijwel letterlijk uit het materiaal komt.
+NIET verdacht zijn (meld deze NOOIT, de founders moeten alleen echte risico's zien):
+- Recepten, maaltijd-ideeën, dagschema's en combinaties van ingrediënten die op de toegestane lijst staan: dat is de kérntaak van de mentor, creatief combineren binnen de lijst is geen verzinsel.
+- Algemene, ongevaarlijke uitleg van alledaagse begrippen (wat een houdbaarheidsdatum is, hoe je iets klontvrij roert) zolang er geen specifieke product-feiten of termijnen bij verzonnen worden.
+- Warme bemoediging zonder feiten, verwijzingen naar de begeleider of huisarts, verhelderingsvragen, toegeven iets niet te weten, en alles wat letterlijk of vrijwel letterlijk uit het materiaal komt.
+
+Twijfel je of iets verdacht genoeg is? Kies dan NIET verdacht. De mentor heeft zelf al een strenge kennis-grens; jij bent het vangnet voor de echte missers, niet een tweede filter op alles.
 
 Antwoord UITSLUITEND met JSON: {"verdacht": true/false, "reden": "korte uitleg in één zin"}`;
 }
