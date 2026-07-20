@@ -39,7 +39,9 @@ export async function GET() {
   const admin = createAdminClient();
   const { data } = await admin
     .from("resetcode_kennis")
-    .select("id, programma, vraag, antwoord, status, bron, created_at, beantwoord_op")
+    .select(
+      "id, programma, vraag, antwoord, status, bron, created_at, beantwoord_op, gegeven_antwoord, controle_reden",
+    )
     .neq("status", "afgewezen")
     .order("created_at", { ascending: false })
     .limit(200);

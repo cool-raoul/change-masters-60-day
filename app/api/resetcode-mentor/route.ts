@@ -3,6 +3,7 @@ import OpenAI from "openai";
 import { createClient } from "@/lib/supabase/server";
 import {
   bouwResetMentorPrompt,
+  bouwWaakhondPrompt,
   type ResetMentorRol,
 } from "@/lib/resetcode/mentor-prompt";
 import { stationVoor } from "@/lib/resetcode/programma";
@@ -253,7 +254,9 @@ export async function POST(req: NextRequest) {
     const stream = await openai.chat.completions.create({
       model,
       max_tokens: maxTokens,
-      temperature: 0.7,
+      // Laag: fase-discipline en de kennis-grens zijn belangrijker dan
+      // creativiteit (0.7 gokte er te vrolijk op los, test 20 juli).
+      temperature: 0.4,
       messages: apiMessages,
       stream: true,
     });
@@ -321,6 +324,63 @@ export async function POST(req: NextRequest) {
               );
             } catch (e) {
               console.error("resetcode kennis-vraag opslaan mislukt:", e);
+            }
+          } else if (ctxVoorOpslag && vraag && schoon && !foto) {
+            // WAAKHOND: tweede, onafhankelijke check op het antwoord.
+            // Founders zien de gesprekken niet (privacy-schild), dus
+            // riskante antwoorden moeten vanzelf boven water komen.
+            // Foto-antwoorden slaan we over (etiket-analyse is per
+            // definitie buiten het materiaal).
+            try {
+              const check = await openai.chat.completions.create({
+                model: "gpt-4o-mini",
+                max_tokens: 150,
+                temperature: 0,
+                response_format: { type: "json_object" },
+                messages: [
+                  {
+                    role: "system",
+                    content: bouwWaakhondPrompt(programmaSlug, teamKennis),
+                  },
+                  {
+                    role: "user",
+                    content: `VRAAG VAN DE KLANT:\n${vraag}\n\nANTWOORD VAN DE MENTOR:\n${schoon}`,
+                  },
+                ],
+              });
+              const uitslag = JSON.parse(
+                check.choices[0]?.message?.content ?? "{}",
+              ) as { verdacht?: boolean; reden?: string };
+              if (uitslag.verdacht === true) {
+                const adminW = createAdminClient();
+                const { error: wFout } = await adminW
+                  .from("resetcode_kennis")
+                  .insert({
+                    programma: programmaSlug,
+                    vraag: vraag.slice(0, 600),
+                    bron: "controle",
+                    link_id: ctxVoorOpslag.linkId,
+                    gegeven_antwoord: schoon.slice(0, 2000),
+                    controle_reden: (uitslag.reden ?? "").slice(0, 300),
+                  });
+                if (wFout) console.error("waakhond-insert:", wFout.message);
+                const { data: founders } = await adminW
+                  .from("profiles")
+                  .select("id")
+                  .eq("role", "founder");
+                await Promise.allSettled(
+                  ((founders ?? []) as { id: string }[]).map((f) =>
+                    sendPushToUser(f.id, {
+                      title: "Even meekijken 🔍",
+                      body: `De Mentor gaf een antwoord dat mogelijk buiten het materiaal gaat: "${vraag.slice(0, 100)}". Check en corrigeer 'm zo nodig.`,
+                      url: "/resetcode-kennis",
+                      tag: "resetcode-waakhond",
+                    }),
+                  ),
+                );
+              }
+            } catch (e) {
+              console.error("waakhond-check mislukt:", e);
             }
           }
           controller.close();

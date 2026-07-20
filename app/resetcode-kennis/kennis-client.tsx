@@ -12,9 +12,11 @@ type KennisItem = {
   vraag: string;
   antwoord: string | null;
   status: "open" | "beantwoord";
-  bron: "klant" | "founder";
+  bron: "klant" | "founder" | "controle";
   created_at: string;
   beantwoord_op: string | null;
+  gegeven_antwoord: string | null;
+  controle_reden: string | null;
 };
 
 const PROGRAMMA_LABEL: Record<string, string> = {
@@ -108,16 +110,40 @@ export default function KennisClient() {
                 day: "numeric",
                 month: "long",
               })}
+              {item.bron === "controle" && (
+                <span className="ml-2 rounded-full bg-amber-500/20 border border-amber-500/40 px-2 py-0.5 text-[10px] font-bold text-amber-300">
+                  🔍 waakhond: check dit antwoord
+                </span>
+              )}
             </p>
             <p className="text-[15px] font-semibold text-white leading-snug">
               “{item.vraag}”
             </p>
+            {item.bron === "controle" && item.gegeven_antwoord && (
+              <div className="mt-2 rounded-xl bg-amber-500/10 border border-amber-500/25 px-3 py-2">
+                <p className="text-[11px] font-bold text-amber-300 mb-1">
+                  De Mentor antwoordde:
+                </p>
+                <p className="text-[13px] text-amber-100/80 leading-relaxed whitespace-pre-wrap">
+                  {item.gegeven_antwoord}
+                </p>
+                {item.controle_reden && (
+                  <p className="text-[11px] text-amber-300/70 mt-1.5">
+                    Waarom gemeld: {item.controle_reden}
+                  </p>
+                )}
+              </div>
+            )}
             <textarea
               value={antwoorden[item.id] ?? ""}
               onChange={(e) =>
                 setAntwoorden((a) => ({ ...a, [item.id]: e.target.value }))
               }
-              placeholder="Jouw antwoord (de Mentor leert dit direct)…"
+              placeholder={
+                item.bron === "controle"
+                  ? "Het juiste antwoord (gaat ook automatisch naar deze klant)…"
+                  : "Jouw antwoord (de Mentor leert dit direct)…"
+              }
               rows={3}
               className="mt-2 w-full rounded-xl bg-white/10 border border-white/15 px-3 py-2 text-[14px] text-white placeholder:text-white/40 focus:outline-none"
             />
@@ -136,14 +162,14 @@ export default function KennisClient() {
                 disabled={bezig === item.id || !(antwoorden[item.id] ?? "").trim()}
                 className="rounded-full bg-emerald-600 px-4 py-2 text-[13px] font-bold text-white disabled:opacity-40"
               >
-                Beantwoord & leer ✓
+                {item.bron === "controle" ? "Corrigeer & leer ✓" : "Beantwoord & leer ✓"}
               </button>
               <button
                 onClick={() => actie({ actie: "afwijzen", id: item.id }, item.id)}
                 disabled={bezig === item.id}
                 className="rounded-full bg-white/5 border border-white/10 px-4 py-2 text-[13px] text-white/60 disabled:opacity-40"
               >
-                Afwijzen
+                {item.bron === "controle" ? "Antwoord was goed" : "Afwijzen"}
               </button>
             </div>
           </div>
