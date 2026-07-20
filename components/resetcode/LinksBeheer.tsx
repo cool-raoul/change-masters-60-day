@@ -25,6 +25,11 @@ type LinkRij = {
   status: "actief" | "gepauzeerd" | "gesloten";
   laatste_activiteit: string;
   created_at: string;
+  laatste_seintje?: {
+    titel: string;
+    detail: string | null;
+    created_at: string;
+  } | null;
 };
 
 const PROGRAMMA_LABEL: Record<string, string> = {
@@ -259,6 +264,16 @@ export default function LinksBeheer() {
               {" · laatst actief "}
               {new Date(l.laatste_activiteit).toLocaleDateString("nl-NL")}
             </p>
+            {l.laatste_seintje && (
+              <p className="text-xs mt-1.5 rounded-lg bg-cm-black/40 border border-cm-border px-2.5 py-1.5">
+                <span className="text-cm-gold font-semibold">
+                  🔔 {l.laatste_seintje.titel}
+                </span>
+                {l.laatste_seintje.detail && (
+                  <span className="text-cm-muted"> — {l.laatste_seintje.detail}</span>
+                )}
+              </p>
+            )}
             <div className="mt-3 flex flex-wrap gap-2">
               <button
                 onClick={() => kopieer(l.token)}

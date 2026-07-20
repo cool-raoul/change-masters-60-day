@@ -171,6 +171,26 @@ export default async function ProspectDetailPagina({
     laatste_activiteit: string;
   }>;
 
+  // Laatste seintjes bij deze klant-links, zodat een klik op een
+  // pushbericht hier de context terugvindt (RLS: eigen links).
+  let resetSeintjes: Array<{
+    titel: string;
+    detail: string | null;
+    created_at: string;
+  }> = [];
+  if (resetLinks.length > 0) {
+    const { data: seintjesData } = await supabase
+      .from("resetcode_seintjes")
+      .select("titel, detail, created_at")
+      .in(
+        "link_id",
+        resetLinks.map((l) => l.id),
+      )
+      .order("created_at", { ascending: false })
+      .limit(5);
+    resetSeintjes = (seintjesData ?? []) as typeof resetSeintjes;
+  }
+
   // Haal sponsor naam op via sponsor_id
   const sponsorId = (eigenProfiel as any)?.sponsor_id;
   const eigenRol = (eigenProfiel as any)?.role;
@@ -398,6 +418,7 @@ export default async function ProspectDetailPagina({
               voornaam={(prospect.volledige_naam ?? "").split(" ")[0] || "je klant"}
               telefoon={prospect.telefoon ?? null}
               links={resetLinks}
+              seintjes={resetSeintjes}
             />
           )}
           {/* Openstaande herinneringen, bovenaan zodat ze direct zichtbaar zijn */}

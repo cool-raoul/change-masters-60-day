@@ -22,16 +22,24 @@ type LinkRij = {
   laatste_activiteit: string;
 };
 
+type SeintjeRij = {
+  titel: string;
+  detail: string | null;
+  created_at: string;
+};
+
 export function ResetcodeOpKaart({
   prospectId,
   voornaam,
   telefoon,
   links,
+  seintjes = [],
 }: {
   prospectId: string;
   voornaam: string;
   telefoon: string | null;
   links: LinkRij[];
+  seintjes?: SeintjeRij[];
 }) {
   const router = useRouter();
   const [programma, setProgramma] = useState("darm");
@@ -159,6 +167,37 @@ export function ResetcodeOpKaart({
               </div>
             );
           })}
+          {seintjes.length > 0 && (
+            <div className="rounded-xl bg-cm-black/40 border border-cm-border px-3 py-2.5">
+              <p className="text-[11px] font-bold text-cm-gold mb-1.5">
+                🔔 Laatste seintjes
+              </p>
+              <div className="space-y-1.5">
+                {seintjes.map((s, i) => (
+                  <div key={i}>
+                    <p className="text-xs text-cm-white/90 font-semibold">
+                      {s.titel}
+                      <span className="text-cm-muted font-normal ml-1.5">
+                        {new Date(s.created_at).toLocaleDateString("nl-NL", {
+                          day: "numeric",
+                          month: "short",
+                        })}{" "}
+                        {new Date(s.created_at).toLocaleTimeString("nl-NL", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
+                    </p>
+                    {s.detail && (
+                      <p className="text-[11px] text-cm-muted leading-snug">
+                        {s.detail}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           <p className="text-[11px] text-cm-muted">
             Het gesprek met de Mentor is privé tussen {voornaam} en de
             Mentor; jij krijgt automatisch een seintje op de momenten die

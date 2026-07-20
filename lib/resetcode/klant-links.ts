@@ -164,12 +164,26 @@ export async function bewaarResetChats(
     .eq("id", linkId);
 }
 
-/** Push-seintje naar de begeleider (member). Faalt stil. */
+/** Push-seintje naar de begeleider (member). Faalt stil.
+ *  Wordt óók in resetcode_seintjes bewaard, zodat de begeleider op de
+ *  bestemming (klantenkaart / Mijn klanten) terugziet waar de melding
+ *  over ging (feedback Raoul 20 juli: tegel leidde naar een kaart
+ *  zonder spoor van de melding). */
 export async function seintjeNaarMember(
   ctx: ResetKlantContext,
   titel: string,
   detail: string,
 ) {
+  try {
+    const admin = createAdminClient();
+    await admin.from("resetcode_seintjes").insert({
+      link_id: ctx.linkId,
+      titel,
+      detail,
+    });
+  } catch (e) {
+    console.error("resetcode seintje loggen mislukt:", e);
+  }
   try {
     await sendPushToUser(ctx.memberId, {
       title: titel,

@@ -41,7 +41,39 @@ export async function GET() {
     .from("resetcode_klant_links")
     .select("id, token, klant_naam, programma, station_slug, status, laatste_activiteit, created_at")
     .order("created_at", { ascending: false });
-  return Response.json({ ok: true, links: data ?? [] });
+  const links = (data ?? []) as { id: string }[];
+
+  // Laatste seintje per link erbij (RLS: eigen links), zodat een klik
+  // op een pushbericht hier de context terugvindt.
+  let seintjes: {
+    link_id: string;
+    titel: string;
+    detail: string | null;
+    created_at: string;
+  }[] = [];
+  if (links.length > 0) {
+    const { data: sData } = await t.supabase
+      .from("resetcode_seintjes")
+      .select("link_id, titel, detail, created_at")
+      .in(
+        "link_id",
+        links.map((l) => l.id),
+      )
+      .order("created_at", { ascending: false })
+      .limit(100);
+    seintjes = (sData ?? []) as typeof seintjes;
+  }
+  const laatstePerLink: Record<string, (typeof seintjes)[number]> = {};
+  for (const s of seintjes) {
+    if (!laatstePerLink[s.link_id]) laatstePerLink[s.link_id] = s;
+  }
+  return Response.json({
+    ok: true,
+    links: links.map((l) => ({
+      ...l,
+      laatste_seintje: laatstePerLink[l.id] ?? null,
+    })),
+  });
 }
 
 export async function POST(req: NextRequest) {
