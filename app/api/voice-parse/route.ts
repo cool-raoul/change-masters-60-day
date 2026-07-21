@@ -245,12 +245,13 @@ A) INTENTIE, wat wil deze persoon?
 
 BELANGRIJKE REGEL, KLACHTEN ZIJN NIET AUTOMATISCH EEN ADVIES-VRAAG:
 Als het transcript gezondheidsklachten, symptomen of medische context noemt (afvallen, moe, slaap, stress, darmen, hormonen, gewrichten, etc.) is dat ALLEEN ter informatie/notitie bij de prospect. Zet intentie dan = "data" en sla de klachten op als notitie bij de prospect.
-Maak ALLEEN een coach_bericht (intentie = "coach" of "mixed") als de gebruiker EXPLICIET om advies vraagt. Expliciete triggers zijn:
+Maak ALLEEN een coach_bericht (intentie = "coach" of "mixed") als de gebruiker EXPLICIET om advies of kennis vraagt. Expliciete triggers zijn:
 - "advies", "productadvies", "wat raad je aan", "wat past bij"
 - "vraag aan coach", "vraag aan mentor", "stuur naar mentor", "stuur naar coach"
 - "help me met", "hoe ga ik om met", "wat zou jij adviseren"
 - "welk product", "welk pakket", "welke supplementen"
-Als geen van deze expliciete triggers in het transcript staat: GEEN coach_bericht aanmaken, ook niet als er klachten genoemd worden. De gebruiker kan later zelf op de klantenkaart een advies vragen.
+- ELKE echte KENNISVRAAG (vraagvorm!) zonder dat er iets over een prospect wordt vastgelegd: "wat kan iemand gebruiken bij fibromyalgie?", "wat is het advies bij slecht slapen?", "wat doet Proanthenols eigenlijk?", "wat zeg ik als iemand het te duur vindt?", "hoe werkt fase 3 ook alweer?". Dat zijn Mentor-vragen: intentie = "coach", coach_bericht = de vraag (netjes geformuleerd), géén data-acties.
+De grens: een MEDEDELING over iemands klachten ("Johan heeft last van...") = data/notitie. Een VRAAG ("wat kan/moet/past/helpt/zeg ik...?") = Mentor. Als geen trigger en geen vraagvorm: GEEN coach_bericht; de gebruiker kan later zelf op de klantenkaart een advies vragen.
 Voorbeeld: "Nieuwe prospect Johan, heeft last van brain fog en hoge bloeddruk, is 52 jaar." → intentie = "data", GEEN coach_bericht. Notities bij de prospect bevatten "brain fog, hoge bloeddruk, 52 jaar".
 Voorbeeld: "Nieuwe prospect Johan met brain fog, welk advies past?" → intentie = "mixed", coach_bericht = "Welk Lifeplus-advies past bij Johan met brain fog?".
 
