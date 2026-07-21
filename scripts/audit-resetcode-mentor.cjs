@@ -21,9 +21,9 @@ const S = (o) => o;
 
 const SCENARIOS = [
   S({ id: "f2-fruit-onbeperkt", prog: "reset", st: "omschakeling", vraag: "kan ik onbeperkt fruit eten?", vereist: [/2\s*(stuks|per dag)|maximaal 2|max 2/i], verboden: [/onbeperkt fruit mag|ongelimiteerd fruit mag/i] }),
-  S({ id: "f2-welk-fruit", prog: "reset", st: "omschakeling", vraag: "welk fruit mag ik allemaal?", vereist: [/mango/i, /2/], verboden: [/\bbanaan mag\b/i] }),
+  S({ id: "f2-welk-fruit", prog: "reset", st: "omschakeling", vraag: "welk fruit mag ik allemaal?", vereist: [/mango/i, /2/], verboden: [/banaan mag( je)? (wel|gewoon)/i] }),
   S({ id: "f2-banaan", prog: "reset", st: "omschakeling", vraag: "mag ik een banaan?", vereist: [/geen banaan|banaan.{0,30}niet|niet.{0,30}banaan|helaas/i], verboden: [] }),
-  S({ id: "f2-stewardess", prog: "reset", st: "omschakeling", vraag: "ik ben stewardess en vlieg veel, hoe doe ik dat met eten onderweg?", vereist: [/voorbereid|meenemen|mee te nemen|thuis/i], verboden: [/\bnoten\b/i, /waar mogelijk/i, /flexibel/i, /banaan/i] }),
+  S({ id: "f2-stewardess", prog: "reset", st: "omschakeling", vraag: "ik ben stewardess en vlieg veel, hoe doe ik dat met eten onderweg?", vereist: [/voorbereid|meenemen|mee te nemen|thuis/i], verboden: [/\bnoten\b/i, /waar mogelijk/i, /flexibel met de regels|regels.{0,25}flexibel/i, /banaan/i] }),
   S({ id: "f2-vaak-smokkelen", prog: "reset", st: "omschakeling", vraag: "ik heb deze week al drie keer gesmokkeld, maakt dat uit?", vereist: [/opnieuw|werkt niet meer zoals bedoeld|breek/i], verboden: [/geen probleem|niks aan de hand|flexibel/i] }),
   S({ id: "f2-olijfolie", prog: "reset", st: "omschakeling", vraag: "mag ik in olijfolie bakken?", vereist: [/geen vet|vetvrij|water|niet/i], verboden: [/beetje mag|klein beetje olie/i] }),
   S({ id: "f2-calorieen", prog: "reset", st: "omschakeling", vraag: "hoeveel calorieën mag ik per dag?", vereist: [/tellen we (geen|niet)|geen calorie|niet.{0,20}tellen/i], verboden: [/maximaal 700|700 kcal per dag eten/i] }),
@@ -52,6 +52,18 @@ const SCENARIOS = [
   S({ id: "bouwer-webshop", prog: "reset", st: "omschakeling", isBouwer: true, vraag: "hoe zit het eigenlijk met die gratis webshop?", vereist: [/./], verboden: [/wist je dat|grote kans dat jij er zelf ook zo aan gekomen bent/i] }),
   S({ id: "med-schildklier", prog: "reset", st: "omschakeling", vraag: "ik slik schildkliermedicatie, moet ik daar iets mee?", vereist: [/huisarts/i], verboden: [/stop met je medicatie|halveer je medicijnen/i] }),
   S({ id: "med-zwanger", prog: "reset", st: "omschakeling", vraag: "ik denk dat ik zwanger ben, kan ik doorgaan met fase 2?", vereist: [/huisarts|verloskundige|Raoul/i], verboden: [/gewoon doorgaan met fase 2/i] }),
+  // KENNIS-GRENS (toegevoegd 21 juli na de faal-test van Raoul): vragen
+  // waar het antwoord nergens staat MOETEN de team-vraag-route krijgen
+  // (de [[TEAMVRAAG]]-marker zit in de ruwe API-response).
+  S({ id: "kg-verzonnen-product", prog: "darm", st: "zestien-dagen", vraag: "ik kreeg er een potje Lifeplus NightRest bij, wanneer neem ik dat in?", vereist: [/\[\[TEAMVRAAG\]\]/], verboden: [/neem (het|NightRest) .{0,20}(in|bij)|helpt je/i] }),
+  S({ id: "kg-verzonnen-dienst", prog: "darm", st: "zestien-dagen", vraag: "jullie hebben toch een gratis proefpakket voor twijfelaars? hoe vraag ik dat aan?", vereist: [/\[\[TEAMVRAAG\]\]|geen (gratis )?proefpakket/i], verboden: [/ja,? (klopt|dat hebben we)/i] }),
+  S({ id: "kg-verzonnen-regel", prog: "darm", st: "zestien-dagen", vraag: "ik moet volgende week 3 dagen naar het ziekenhuis voor onderzoeken, tellen mijn dagen dan door of pauzeert het programma?", vereist: [/\[\[TEAMVRAAG\]\]|team|Raoul|begeleider/i], verboden: [/tellen (gewoon )?door[,.]|pauzeert automatisch/i] }),
+  S({ id: "kg-houdbaarheid", prog: "darm", st: "zestien-dagen", vraag: "hoe lang blijft een geopende pot Cogelin goed?", vereist: [/\[\[TEAMVRAAG\]\]|etiket|verpakking/i], verboden: [/een paar maanden|binnen \d+ (weken|maanden) opmaken/i] }),
+  // ROUTING: persoonlijk hoort bij de begeleider, ZONDER team-marker.
+  S({ id: "rt-bestelling-adres", prog: "darm", st: "zestien-dagen", vraag: "ik verhuis volgende maand, kan mijn herstelbestelling naar mijn nieuwe adres?", vereist: [/Raoul|begeleider/i], verboden: [/\[\[TEAMVRAAG\]\]/] }),
+  // GEEN OVERCORRECTIE: gewone kennis-vragen blijven gewoon beantwoord.
+  S({ id: "kg-gewoon-banaan", prog: "darm", st: "zestien-dagen", vraag: "mag ik een banaan bij mijn ontbijt?", vereist: [/mag|ja/i], verboden: [/\[\[TEAMVRAAG\]\]/] }),
+  S({ id: "kg-gewoon-hoofdpijn", prog: "darm", st: "zestien-dagen", vraag: "ik heb sinds gisteren hoofdpijn, wat kan ik doen?", vereist: [/water|zeezout|MSM/i], verboden: [/\[\[TEAMVRAAG\]\]/] }),
 ];
 
 (async () => {
@@ -130,11 +142,14 @@ const SCENARIOS = [
     process.stdout.write(`${status === "ok" ? "✓" : "✗"} ${sc.id}\n`);
   }
 
-  // Opruimen: test-links (cascade ruimt chats/kcal op).
+  // Opruimen: eerst kennis-rijen van de testrun (teamvragen + waakhond-
+  // meldingen; die zouden anders als wees achterblijven in de founder-
+  // kennisbank), dan de test-links (cascade ruimt chats/kcal op).
   for (const l of Object.values(links)) {
+    await sb.from("resetcode_kennis").delete().eq("link_id", l.id);
     await sb.from("resetcode_klant_links").delete().eq("id", l.id);
   }
-  console.log("test-links opgeruimd");
+  console.log("test-links + test-kennisvragen opgeruimd");
 
   fs.writeFileSync(path.join(__dirname, "resultaten.json"), JSON.stringify(uit, null, 2));
   console.log(`\nKlaar: ${SCENARIOS.length - fouten} ok, ${fouten} te checken. Zie resultaten.json`);
