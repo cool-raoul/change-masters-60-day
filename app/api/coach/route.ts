@@ -296,7 +296,13 @@ export async function POST(request: Request) {
           const termen = `${(r as { zoekterm?: string }).zoekterm ?? ""} ${(r as { oorspronkelijke_term?: string }).oorspronkelijke_term ?? ""}`
             .toLowerCase()
             .split(/[^a-zà-ÿ0-9]+/)
-            .filter((w) => w.length >= 4);
+            .filter(
+              (w) =>
+                w.length >= 4 &&
+                // Generieke woorden matchen elk gesprek en zouden
+                // willekeurige ziekte-rijen injecteren.
+                !["ziekte", "ziektes", "syndroom", "chronische", "chronisch", "klachten", "aandoening"].includes(w),
+            );
           return termen.some((w) => gespreksTekst.includes(w));
         });
         if (relevant.length > 0) {

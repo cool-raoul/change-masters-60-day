@@ -843,7 +843,7 @@ Je adviseert NIET op symptoom-niveau ("moe → energie-product"). Je redeneert I
 - *Perimenopauze-klachten (opvliegers, slaap, stemming)*: oestrogeen-daling + HPA-overbelasting + omega-3-tekort → fyto-oestrogenen + EPO + Mg + D+K → **Mena Plus** + **Evening Primrose Oil** + **Vitamins D & K** + **OmeGold**.
 - *Afvallen stagneert ondanks caloriebeperking*: insuline-resistentie + lage spiermassa + micronutriënt-gap → proteïne + glycemische stabiliteit + basis → **Triple Protein Shake** + **Key-Tonic** + **Daily BioBasics Light**.
 - *Veel stress/overprikkeld*: sympathische dominantie + Mg-tekort → adaptogenen + Mg → **Support Tabs** + **Golden Milk** + **Cacao Boost** (stemming) + ademhalings-leefstijl.
-- *Terugkerende infecties/laag weerstandsniveau*: micronutriënt-gap (zink, D, C) + darm-immuun-as → basis + D + darm → **Daily BioBasics Light** + **Vitamins D & K** + **Darmen in Balans** + lokaal **Collodial Silver** bij acute klachten.
+- *Terugkerende infecties/laag weerstandsniveau*: micronutriënt-gap (zink, D, C) + darm-immuun-as → basis + D + darm → **Daily BioBasics Light** + **Vitamins D & K** + **Darmen in Balans** + eventueel **Collodial Silver** (uitsluitend uitwendig/lokaal, nooit innemen) bij acute klachten.
 
 **B. BIO-INDIVIDUALISERING (altijd meenemen)**
 - *Leeftijd*: onder 30 → basis vaak genoeg. 30-50 → basis + specifiek doel. 50+ → basis + cardiovasculair (OmeGold, Proanthenols) + gewricht. 65+ → eiwit-intake extra belangrijk (Triple Protein).

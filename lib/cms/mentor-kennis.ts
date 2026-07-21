@@ -46,16 +46,25 @@ export async function haalGevalideerdeKennis(): Promise<
  * Format kennis-rijen als compacte tekst voor injectie in de coach-
  * prompt. Lege string als geen rijen — voorkomt prompt-bloat.
  */
+// Server-side vangrail (gaat boven prompt-gehoorzaamheid): producten die
+// nooit inwendig/bij aandoeningen geadviseerd mogen worden, worden uit de
+// 2017-rijen gefilterd vóór ze het model bereiken. Uitbreidbaar.
+const GEBLOKKEERDE_PRODUCTEN = [/colloidal\s*silver/i, /collo[iï]daal\s*zilver/i, /zilverwater/i];
+
+function zonderGeblokkeerd(producten: string[]): string[] {
+  return (producten ?? []).filter(
+    (p) => !GEBLOKKEERDE_PRODUCTEN.some((rx) => rx.test(p)),
+  );
+}
+
 export function formatKennisVoorPrompt(
   rijen: GevalideerdeKennisRij[],
 ): string {
   if (rijen.length === 0) return "";
 
   const regels = rijen.map((r) => {
-    const aanvul =
-      r.aanvullende_producten && r.aanvullende_producten.length > 0
-        ? ` + ${r.aanvullende_producten.join(", ")}`
-        : "";
+    const veilig = zonderGeblokkeerd(r.aanvullende_producten);
+    const aanvul = veilig.length > 0 ? ` + ${veilig.join(", ")}` : "";
     const tip = r.leefstijl_tip ? ` | tip: ${r.leefstijl_tip}` : "";
     const basis = r.basis_advies ?? "";
     return `• ${r.oorspronkelijke_term}: ${basis}${aanvul}${tip}`;
@@ -65,15 +74,23 @@ export function formatKennisVoorPrompt(
 Deze rijen komen uit jarenlange ELEVA-team-ervaring + Dr. McKee-adviezen.
 Gebruik ze ALLEEN wanneer de member zélf een symptoom of ervaring inbrengt
 (bv. "ik slaap slecht", "mijn moeder heeft last van haar gewrichten",
-"vraag over Pfeiffer voor een vriend"). Als je geen match ziet,
-improviseer je met je algemene Lifeplus-kennis.
+"vraag over Pfeiffer voor een vriend"). Zie je geen match bij een
+aandoening- of ziektevraag? IMPROVISEER DAN NIET met eigen supplement-
+combinaties: geef alleen algemene leefstijl-steun + de arts-disclaimer
+en zeg eerlijk dat je hiervoor geen gevalideerd team-advies hebt; de
+member kan het bij de founders navragen.
 
 REGELS BIJ MATCH (heel belangrijk, geen uitzonderingen):
 
-1. NOEM ALLE PRODUCTEN UIT DE MATCH-RIJ. Niet selectief weglaten omdat
-   een product je onbekend lijkt. De founder heeft ze allemaal expliciet
-   gevalideerd voor 2026. Volgorde: eerst basis_advies, dan álle
-   aanvullende_producten.
+1. NOEM DE PRODUCTEN UIT DE MATCH-RIJ, volgorde: eerst basis_advies, dan
+   de aanvullende_producten. ÉÉN uitzondering, en die gaat vóór alles:
+   is een product volgens jouw kennis in de EU omstreden, niet toegelaten
+   voor inwendig gebruik, of onveilig in deze context (bijvoorbeeld
+   Colloidal Silver: uitsluitend uitwendig, NOOIT adviseren om in te
+   nemen of bij een aandoening)? LAAT HET DAN WEG en meld de member kort
+   dat je één product uit de oude lijst hebt overgeslagen en dat de
+   founder daarover kan meedenken. Veiligheid wint altijd van
+   volledigheid.
 
 2. NOEM DE LEEFSTIJL-TIP ALTIJD APART als die er is. Format:
    "Naast de producten zijn er leefstijl-elementen die mensen ook noemen
@@ -90,8 +107,12 @@ REGELS BIJ MATCH (heel belangrijk, geen uitzonderingen):
      test of sponsor.
    - ALTIJD de standaard arts-disclaimer eronder.
 
-4. BIJ CONFLICT MET JE EIGEN KENNIS: gebruik de match-rij. Founder heeft
-   die voor 2026 gevalideerd, jouw algemene kennis kan verouderd zijn.
+4. BIJ CONFLICT MET JE EIGEN KENNIS: gebruik voor de INHOUD (welke
+   combinatie bij welk thema) de match-rij; die is door de founder
+   gevalideerd. Maar voor VEILIGHEID geldt de uitzondering van regel 1:
+   een product dat volgens jouw kennis omstreden of onveilig is laat je
+   weg, ook al staat het in de rij. De rij wint op ervaring, jij wint
+   op veiligheid.
 
 5. NOOIT ZIEKTENAMEN INTRODUCEREN. Reageer alleen op termen die de
    member zelf gebruikt. Spiegel de term in je antwoord ("Bij Pfeiffer

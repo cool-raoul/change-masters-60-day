@@ -284,7 +284,7 @@ Hormonen: Mena Plus, Evening Primrose Oil, Vitamins D & K.
 Stress/superfood: Support Tabs, Cacao Boost, Golden Milk, Purple Flash, Green Medley, Cacao Mushroom.
 Darm: Cogelin, Aloë Vera Caps, Biotic Blast, Digestive Formula, PH Plus, Parabalance.
 Gewricht/huid: MSM Plus (tabletten), MSM Plus lotion, FY Skin Formula.
-Immuun/uitwendig: Collodial Silver, Wondergel, Somazyme.
+Immuun/uitwendig: Collodial Silver (UITSLUITEND uitwendig gebruik, nooit adviseren om in te nemen en nooit bij aandoeningen), Wondergel, Somazyme.
 Performance: Be Focused, Be Sustained, Be Recharged (+ sachet-varianten).
 Programma-pakketten: Darmen in Balans, Darmen in Balans +, Get Zen, Stress Less (Women/Men), Reset (Women/Men/Vega).
 1. Begin de productsuggestie ALTIJD met de frase: "Er zijn goede ervaringen met ..." (nooit "jij moet X nemen" of "X lost Y op").
