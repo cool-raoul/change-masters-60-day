@@ -800,13 +800,7 @@ export default function MentorWereld({
           // dan niet meer relevant).
           if (dueEinde) {
             await wacht(1200);
-            await mentorZegt(
-              `${klantVoornaam ?? "Hé"}... je hebt het gedaan. Álle dagen. 🎉 Ik ben oprecht trots op je, en ${begeleiderNaam} ook. Neem even een moment om dat te voelen: dit heb jíj gedaan.`,
-              1300,
-            );
-            await wacht(1200);
-            if (prog.slug === "darm") await speelTouchpoint("darm-einde");
-            await mentorKaart("vervolg", st.slug, 900);
+            await speelEindeMoment(prog, st);
             markeerTouchpoint("programma-einde" as TouchpointSleutel);
             knoppenNaarOnder();
           } else if (heeftDueMoment) {
@@ -1313,6 +1307,80 @@ export default function MentorWereld({
       `${tip ? `💡 Tip voor vandaag: ${tip}\n\n` : ""}En dit kan ik vandaag voor je doen: ${kan}. Zeg het maar! 💚`,
       1000,
     );
+  }
+
+  // ---------- Het einde-moment ----------
+
+  // Na de laatste fase-dag: écht feest, een eind-overzicht van alles wat
+  // er is opgebouwd, en de bewustwording dat dit een STARTPUNT is
+  // (feedback Raoul 21 juli: geen bot-trots maar trots-op-jezelf, wel
+  // totalen laten zien, en het 6-tot-9-maanden-verhaal, juist ook als
+  // iemand nog weinig ziet of voelt).
+  async function speelEindeMoment(prog: ResetProgramma, st: ResetStation) {
+    const duur = FASE_DAGEN[st.slug] ?? 16;
+    await mentorZegt(
+      `${klantVoornaam ? `${klantVoornaam}... JE` : "JE"} HEBT HET GEDAAN! 🎉🎊 Álle ${duur} dagen, helemaal uitgelopen. Neem even een moment om dat te laten landen: dit heb jíj gedaan, dag na dag, keuze na keuze. Daar mag je ontzettend trots op jezelf zijn. 🥳`,
+      1300,
+    );
+    // Eind-overzicht uit het eigen dagboek.
+    const reeks = checkinReeksRef.current;
+    if (reeks.length > 0) {
+      await wacht(900);
+      await mentorZegt(
+        "En kijk eens wat je onderweg allemaal hebt opgebouwd 👇",
+        900,
+      );
+      setItems((b) => [...b, { van: "mentor", soort: "voortgang" }]);
+      await wacht(1000);
+      const metGewicht = reeks.filter((r) => r.gewicht != null);
+      const gDelta =
+        metGewicht.length >= 2
+          ? Math.round(
+              ((metGewicht[metGewicht.length - 1].gewicht as number) -
+                (metGewicht[0].gewicht as number)) *
+                10,
+            ) / 10
+          : null;
+      const metTaille = reeks.filter((r) => r.taille != null);
+      const tDelta =
+        metTaille.length >= 2
+          ? Math.round(
+              ((metTaille[metTaille.length - 1].taille as number) -
+                (metTaille[0].taille as number)) *
+                10,
+            ) / 10
+          : null;
+      const winsten = reeks
+        .filter((r) => r.notitie)
+        .slice(-4)
+        .map((r) => `"${r.notitie}"`);
+      const delen: string[] = [
+        `${reeks.length} check-in${reeks.length === 1 ? "" : "s"} trouw ingevuld`,
+      ];
+      if (gDelta != null && gDelta < 0)
+        delen.push(`${Math.abs(gDelta)} kilo lichter`);
+      if (tDelta != null && tDelta < 0)
+        delen.push(`${Math.abs(tDelta)} centimeter van je taille`);
+      await mentorZegt(
+        winsten.length
+          ? `Op een rij: ${delen.join(", ")}. En dit schreef je zélf onderweg op: ${winsten.join(", ")}. Dat is geen toeval, dat ben jij.`
+          : `Op een rij: ${delen.join(", ")}. Stuk voor stuk dagen waarop je voor jezelf koos.`,
+        1100,
+      );
+    }
+    // Startpunt-bewustwording, juist ook zonder zichtbaar resultaat.
+    await wacht(900);
+    await mentorZegt(
+      `En dan iets belangrijks, zeker als je nog niet al het verschil ziet of voelt waar je op hoopte: deze ${duur} dagen waren nooit een quick fix. Zie dit als het stártpunt van jouw gezondheidsreis. Het programma-materiaal is daar eerlijk over: je lichaam heeft 6 tot 9 maanden nodig om tekorten echt aan te vullen. Wat jij nu hebt neergezet is het fundament waar alles op verder bouwt. 🌱`,
+      1200,
+    );
+    await wacht(800);
+    await mentorZegt(
+      `En die volgende stap hoef je niet alleen te kiezen: ${begeleiderNaam} kijkt graag met je mee wat voor jóu de slimste vervolgstap is om dit vast te houden en verder uit te bouwen. Stuur ${begeleiderNaam} gerust een appje (typ "contact" en de groene knop verschijnt), en kijk hieronder alvast wat er kan.`,
+      1100,
+    );
+    if (prog.slug === "darm") await speelTouchpoint("darm-einde");
+    await mentorKaart("vervolg", st.slug, 900);
   }
 
   // ---------- Dagelijkse check-in (dagboek) ----------
@@ -1887,11 +1955,7 @@ export default function MentorWereld({
         // Expliciete klaar-route: de klant zégt zelf dat de dagen erop
         // zitten. Dan mag het einde-moment nu spelen (eenmalig).
         zeg();
-        await mentorZegt("Je bent bij de laatste stap van je programma! 🎉", 800);
-        if (programma.slug === "darm") {
-          await speelTouchpoint("darm-einde");
-        }
-        await mentorKaart("vervolg", station.slug);
+        await speelEindeMoment(programma, station);
         markeerTouchpoint("programma-einde" as TouchpointSleutel);
       }
       return true;
@@ -2784,16 +2848,8 @@ export default function MentorWereld({
                     <button
                       onClick={async () => {
                         setToonReis(false);
-                        await mentorZegt(
-                          "...je hebt het gedaan. Álle dagen. 🎉 Ik ben oprecht trots op je. Neem even een moment om dat te voelen: dit heb jíj gedaan.",
-                          900,
-                        );
-                        await wacht(800);
-                        if (programma.slug === "darm") {
-                          verteldRef.current.delete("darm-einde");
-                          await speelTouchpoint("darm-einde");
-                        }
-                        await mentorKaart("vervolg", station.slug, 700);
+                        verteldRef.current.delete("darm-einde");
+                        await speelEindeMoment(programma, station);
                       }}
                       className="rounded-full px-4 py-2 text-[12px] font-semibold bg-sky-500/20 text-sky-300"
                     >
