@@ -9,6 +9,7 @@ import { useTaal } from "@/lib/i18n/TaalContext";
 import { PipelineFase, ContactType } from "@/lib/supabase/types";
 import { waLinkNaar } from "@/lib/util/wa-nummer";
 import { PROSPECT_FILM_SLUGS } from "@/lib/films/embed";
+import { DeelKnoppen } from "@/components/shared/DeelKnoppen";
 import { gebruikSpraak } from "./gebruikSpraak";
 
 const MAX_SECONDEN = 120;
@@ -294,6 +295,17 @@ export function VoiceFab() {
   // Spraak-rapportage ("hoe gaat het met mijn programma-klanten?"):
   // het overzicht verschijnt als eigen overlay, los van de fases.
   const [rapport, setRapport] = useState<string | null>(null);
+  // Deel-keuze als er geen telefoonnummer op de kaart staat (feedback
+  // Raoul 21 juli): dan kies je zelf het kanaal (WhatsApp, mail,
+  // kopieer voor Facebook/Instagram-DM) via de vertrouwde DeelKnoppen.
+  const [deelDialoog, setDeelDialoog] = useState<{
+    titel: string;
+    url: string;
+    tekst: string;
+    onderwerp?: string;
+    prospectId?: string;
+    prospectNaam?: string;
+  } | null>(null);
   const [resultaat, setResultaat] = useState<ParseResultaat | null>(null);
   const [acties, setActies] = useState<Actie[]>([]);
   // Controle-scherm: zelf een gemiste notitie toevoegen.
@@ -362,6 +374,54 @@ export function VoiceFab() {
     maxSeconden: MAX_SECONDEN,
     onMaxBereikt: () => verwerkHuidig(),
   });
+
+  // Herstel na app-wissel (bug-melding Raoul 21 juli): mobiele browsers
+  // gooien de pagina soms uit het geheugen zodra je even naar een andere
+  // app gaat (camera, WhatsApp). Het controle-scherm met klaarstaande
+  // acties wordt daarom bewaard en bij terugkomst hersteld.
+  const HERSTEL_SLEUTEL = "voicefab-controle-herstel-v1";
+  useEffect(() => {
+    if (fase === "preview" && resultaat) {
+      try {
+        sessionStorage.setItem(
+          HERSTEL_SLEUTEL,
+          JSON.stringify({
+            resultaat,
+            acties,
+            coachProspectId,
+            coachProspectNaam,
+            bewerkTekst,
+          }),
+        );
+      } catch {}
+    }
+  }, [fase, resultaat, acties, coachProspectId, coachProspectNaam, bewerkTekst]);
+  useEffect(() => {
+    try {
+      const ruw = sessionStorage.getItem(HERSTEL_SLEUTEL);
+      if (!ruw) return;
+      const data = JSON.parse(ruw) as {
+        resultaat?: ParseResultaat;
+        acties?: Actie[];
+        coachProspectId?: string | null;
+        coachProspectNaam?: string | null;
+        bewerkTekst?: string;
+      };
+      if (!data?.resultaat) return;
+      setResultaat(data.resultaat);
+      setActies(Array.isArray(data.acties) ? data.acties : []);
+      if (data.coachProspectId) setCoachProspectId(data.coachProspectId);
+      if (data.coachProspectNaam) setCoachProspectNaam(data.coachProspectNaam);
+      if (typeof data.bewerkTekst === "string") setBewerkTekst(data.bewerkTekst);
+      setFase("preview");
+      toast("Je vorige opname stond nog klaar 👇", {
+        description:
+          "Er is niks verloren gegaan: check de acties en verwerk ze alsnog, of annuleer.",
+        duration: 8000,
+      });
+    } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Modal is fixed inset-0 z-50 en main heeft overscroll-y-contain.
   // scroll-chaining wordt daardoor al voorkomen. Geen body-lock nodig;
@@ -1346,10 +1406,16 @@ export function VoiceFab() {
               : a.freebie === "energie-en-focus"
                 ? `Hé ${voornaam}!\n\nIk heb iets voor je dat in vijf minuten een persoonlijk beeld geeft van waar het op het gebied van energie, slaap en focus voor jou loopt en waar het stroef gaat. Tien korte vragen, daarna een score plus concrete handvatten.\n\nKlik hier: ${url}\n\nJe ontvangt het ook in je mail zodat je het rustig kunt teruglezen ⚡`
                 : `Hé ${voornaam}!\n\nIk heb iets voor je dat in vijf minuten een persoonlijk beeld geeft van wat er speelt rond hormonen en de overgang. Tien korte vragen, daarna een score per thema plus concrete handvatten.\n\nKlik hier: ${url}\n\nJe ontvangt het ook in je mail zodat je het rustig kunt teruglezen 🌸`;
-          await openWhatsAppOfKlembord(
+          await openWhatsAppOfDeel(
             (p as { telefoon?: string | null } | null)?.telefoon,
             bericht,
             "Freebie-link klaar 🎁",
+            {
+              url,
+              onderwerp: `Iets voor jou, ${voornaam}`,
+              prospectId: a.prospect_id,
+              prospectNaam: p?.volledige_naam ?? a.volledige_naam,
+            },
           );
         } catch {
           fouten.push("Freebie sturen mislukt");
@@ -1409,10 +1475,16 @@ export function VoiceFab() {
             .maybeSingle();
           const voornaam =
             ((p?.volledige_naam ?? a.volledige_naam ?? "").split(" ")[0]) || "";
-          await openWhatsAppOfKlembord(
+          await openWhatsAppOfDeel(
             (p as { telefoon?: string | null } | null)?.telefoon,
             `Hé ${voornaam}! Ik heb een korte film voor je klaargezet, speciaal voor jou: ${data.url}`,
             "Film-link klaar 🎬",
+            {
+              url: data.url as string,
+              onderwerp: `Een korte film voor jou, ${voornaam}`,
+              prospectId: a.prospect_id,
+              prospectNaam: p?.volledige_naam ?? a.volledige_naam,
+            },
           );
         } catch {
           fouten.push("Film sturen mislukt");
@@ -1448,10 +1520,16 @@ export function VoiceFab() {
             .maybeSingle();
           const voornaam =
             ((p?.volledige_naam ?? a.volledige_naam ?? "").split(" ")[0]) || "";
-          await openWhatsAppOfKlembord(
+          await openWhatsAppOfDeel(
             (p as { telefoon?: string | null } | null)?.telefoon,
             `Hé ${voornaam}! Ik heb een eigen kijk-omgeving voor je klaargezet binnen ELEVA. Daar staan welkomstvideo's van mij, een AI-mentor die 24/7 al je vragen beantwoordt over Lifeplus, en een chat-lijntje met mij voor als je iemand wilt spreken. Geen pitch, geen druk, op je eigen tempo. 14 dagen geldig, geen account nodig.\n\n${data.deelLink}`,
             "Mini-ELEVA-uitnodiging klaar ✨",
+            {
+              url: data.deelLink as string,
+              onderwerp: `Een kijk-omgeving voor jou, ${voornaam}`,
+              prospectId: a.prospect_id,
+              prospectNaam: p?.volledige_naam ?? a.volledige_naam,
+            },
           );
         } catch {
           fouten.push("Mini-ELEVA-uitnodiging mislukt");
@@ -1605,13 +1683,20 @@ export function VoiceFab() {
     return { gemaakt, naamNaarId, fouten };
   }
 
-  // WhatsApp openen als er een nummer is; anders het bericht op het
-  // klembord + duidelijke uitleg (wa.me zonder nummer opent op mobiel
-  // vaak kaal, zonder kiezer en zonder tekst; bug-melding Raoul 21 juli).
-  async function openWhatsAppOfKlembord(
+  // Met telefoonnummer: WhatsApp opent direct bij de persoon. Zonder
+  // nummer: keuzescherm met alle deel-kanalen (WhatsApp-kiezer, mail,
+  // kopieer voor Facebook/Instagram-DM), want niet iedereen staat er
+  // met een nummer in (feedback Raoul 21 juli).
+  async function openWhatsAppOfDeel(
     telefoon: string | null | undefined,
     bericht: string,
     watIsKlaar: string,
+    deel: {
+      url: string;
+      onderwerp?: string;
+      prospectId?: string;
+      prospectNaam?: string;
+    },
   ) {
     if (telefoon && telefoon.trim()) {
       const venster = window.open(waLinkNaar(telefoon, bericht), "_blank");
@@ -1623,16 +1708,13 @@ export function VoiceFab() {
       );
       return;
     }
-    let gekopieerd = false;
-    try {
-      await navigator.clipboard.writeText(bericht);
-      gekopieerd = true;
-    } catch {}
-    toast(`${watIsKlaar}, maar er staat geen telefoonnummer op de kaart`, {
-      description: gekopieerd
-        ? "Het bericht mét link staat op je klembord: open WhatsApp, zoek de persoon op en plak. Tip: zet het nummer op de kaart (mag ook via spraak), dan opent WhatsApp voortaan direct."
-        : "Zet het telefoonnummer op de kaart (mag ook via spraak), of gebruik de verstuur-knop op de klantenkaart.",
-      duration: 15000,
+    setDeelDialoog({
+      titel: watIsKlaar,
+      url: deel.url,
+      tekst: bericht,
+      onderwerp: deel.onderwerp,
+      prospectId: deel.prospectId,
+      prospectNaam: deel.prospectNaam,
     });
   }
 
@@ -1672,10 +1754,16 @@ export function VoiceFab() {
       const voornaam =
         ((p?.volledige_naam ?? naamHint ?? "").split(" ")[0]) || "";
       const url = `${window.location.origin}/k/${token}`;
-      await openWhatsAppOfKlembord(
+      await openWhatsAppOfDeel(
         (p as { telefoon?: string | null } | null)?.telefoon,
         `Hoi ${voornaam}! Hier is jouw persoonlijke omgeving met je eigen Mentor, alles voor jouw programma op één plek: ${url}`,
         "Klantomgeving klaar",
+        {
+          url,
+          onderwerp: `Jouw persoonlijke omgeving, ${voornaam}`,
+          prospectId,
+          prospectNaam: p?.volledige_naam ?? naamHint,
+        },
       );
       return true;
     } catch {
@@ -1799,6 +1887,9 @@ export function VoiceFab() {
   function sluit() {
     spraak.reset();
     toevoegModusRef.current = false;
+    try {
+      sessionStorage.removeItem(HERSTEL_SLEUTEL);
+    } catch {}
     setFase("dicht");
     setResultaat(null);
     setActies([]);
@@ -1891,6 +1982,51 @@ export function VoiceFab() {
               className="mt-4 w-full rounded-full bg-cm-gold text-cm-bg py-2.5 text-sm font-bold"
             >
               Sluiten
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Deel-keuze zonder telefoonnummer: kies zelf het kanaal. */}
+      {deelDialoog && (
+        <div
+          className="fixed inset-0 z-[60] bg-black/80 flex items-center justify-center p-4"
+          onClick={() => setDeelDialoog(null)}
+        >
+          <div
+            className="bg-cm-surface border border-cm-border rounded-2xl w-full max-w-md max-h-[85vh] overflow-y-auto p-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-cm-white font-bold text-base">
+              {deelDialoog.titel}
+            </h3>
+            <p className="text-cm-muted text-xs leading-relaxed mt-1 mb-3">
+              Er staat geen telefoonnummer op de kaart
+              {deelDialoog.prospectNaam ? ` van ${deelDialoog.prospectNaam}` : ""}
+              , dus kies zelf hoe je het verstuurt. Voor Facebook of Instagram:
+              kopieer het bericht en plak het in de DM.
+            </p>
+            <DeelKnoppen
+              url={deelDialoog.url}
+              tekst={deelDialoog.tekst}
+              onderwerp={deelDialoog.onderwerp}
+              variant="donker"
+              prospectId={deelDialoog.prospectId}
+              prospectNaam={deelDialoog.prospectNaam}
+            />
+            <details className="text-xs mt-3">
+              <summary className="cursor-pointer text-cm-muted">
+                Bekijk het bericht
+              </summary>
+              <div className="mt-2 p-3 bg-cm-black/40 rounded-lg border border-cm-border whitespace-pre-wrap text-cm-white/80">
+                {deelDialoog.tekst}
+              </div>
+            </details>
+            <button
+              onClick={() => setDeelDialoog(null)}
+              className="mt-4 w-full rounded-full border border-cm-border py-2.5 text-sm font-semibold text-cm-white/80"
+            >
+              Klaar
             </button>
           </div>
         </div>

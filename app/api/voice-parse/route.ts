@@ -202,6 +202,17 @@ Interpreteer het transcript ALTIJD zo:
    Spraak is vaak stuk: "Jan eh... gesproken vanmiddag... bezwaar tijd weet je... followup volgende week".
    Construeer wat er logisch bedoeld werd: "Ik sprak Jan vanmiddag, hij noemde bezwaar tijd, followup volgende week." Gebruik die SCHONE versie voor de acties én zet hem in het "gecorrigeerd_transcript" veld.
 
+4b. MATCH OP BEDOELING, NIET OP LETTERLIJKE WOORDEN (heel belangrijk!)
+   Mensen zeggen alles in eigen woorden. Kies de actie op basis van wat iemand WIL BEREIKEN. Spreektaal-varianten per verzend-actie:
+   - resetcode_link: "stuur de klantlink / klantomgeving / mentor-link / de omgeving / het programma / de resetcode / zijn eigen mentor naar X", "zet het darmprogramma klaar voor Y", "geef Z toegang tot haar programma", "X mag beginnen, stuur alles".
+   - freebie_sturen: "stuur de test / vragenlijst / scan / check / freebie / weggever", "laat X de energietest doen", "geef Y die hormonen-vragenlijst", "stuur het pakket-advies".
+   - film_sturen: "stuur de film / video / filmpje", "laat X het filmpje over ... zien", "deel de video ... met Y".
+   - mini_eleva_uitnodiging: "nodig X uit voor mini-eleva / de kijk-omgeving", "laat X kennismaken met eleva", "zet een kennismakings-omgeving klaar", "stuur de opportunity-omgeving" (→ soort business).
+   - resetcode_status: "pauzeer / zet stil / zet stop / bevries de omgeving van X", "zet 'm weer aan / activeer weer", "sluit af / maak dicht / beëindig".
+   - kennis_toevoegen: "voeg toe aan het mentor-brein / de kennisbank / de mentor-kennis", "leer de mentor dat...", "nieuwe teamkennis", "als klanten vragen ... moet het antwoord zijn ...".
+   - rapportage: "hoe gaat het met / hoe staat het met / geef me een overzicht van mijn programma-klanten", "wie heb ik verwaarloosd / lang niet gesproken / laten liggen", "hoeveel mensen heb ik in elke fase / hoe staat mijn pijplijn ervoor".
+   Twijfel tussen twee acties? Kies de meest SPECIFIEKE (een genoemde freebie/film/omgeving wint van een algemene notitie of fase-wijziging).
+
 5. PRODUCT-FONETIEK
    Ook producten fonetisch matchen: "life plus" / "life plus basis" / "biobasic" / "dagelijkse basics" → Daily BioBasics. "visolie" / "om ee gold" / "omega" → OmeGold.
    Extra lastige merknaam-mishears (komt ALTIJD voor bij spraak):
@@ -390,7 +401,8 @@ MOGELIJKE ACTIES:
    - Geen film gespecificeerd → beide velden weglaten (eerste beschikbare wordt gebruikt).
 
 26. { "type": "mini_eleva_uitnodiging", "prospect_id": "uuid-uit-lijst", "volledige_naam": "...", "soort": "product|business" (optioneel, default product) }
-   - "Nodig X uit voor mini-ELEVA / de kijk-omgeving / een gesprek met de Mentor", "maak een kennismakings-omgeving voor Y".
+   - "Nodig X uit voor mini-ELEVA / de kijk-omgeving / een gesprek met de Mentor", "maak een kennismakings-omgeving voor Y", "stuur Z een mini-ELEVA".
+   - ⚠️ VOORRANGSREGEL: staat "mini-ELEVA" in de zin (ook verhaspeld door spraakherkenning: "mini eleva", "mini-elever", "mini leva", "mini-elifa", "miniel eva") of "kijk-omgeving"/"kijkomgeving"/"mentor-omgeving"? Dan is dit ALTIJD mini_eleva_uitnodiging. Dus NIET pipeline_fase "uitgenodigd", NIET stats_increment uitnodigingen, NIET een taak "uitnodigen". Het gaat om het VERSTUREN van een digitale kijk-omgeving, niet om een gewone uitnodiging.
    - "voor de business/opportunity/bouwen" → soort "business", anders "product".
 
 27. { "type": "resetcode_status", "prospect_id": "uuid-uit-lijst", "volledige_naam": "...", "status": "gepauzeerd|actief|gesloten" }
