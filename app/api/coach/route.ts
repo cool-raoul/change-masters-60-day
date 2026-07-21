@@ -492,7 +492,11 @@ export async function POST(request: Request) {
     });
   } catch (error: any) {
     console.error("Coach API fout:", error?.message || error);
-    const status = error?.status || 500;
+    // Clamp: een niet-HTTP foutcode zou de Response-constructor zelf
+    // laten crashen en de echte fout maskeren.
+    const ruw = Number(error?.status);
+    const status =
+      Number.isInteger(ruw) && ruw >= 400 && ruw <= 599 ? ruw : 500;
     const bericht =
       status === 401 ? "API sleutel ongeldig" :
       status === 402 ? "API credits op" :

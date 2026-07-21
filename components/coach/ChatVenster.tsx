@@ -590,12 +590,19 @@ export function ChatVenster({
       updateData.titel = autoTitel;
     }
 
-    await supabase
-      .from("ai_gesprekken")
-      .update(updateData)
-      .eq("id", gesprekId);
-
     try {
+      // Opslaan BINNEN de try: een opslag-hik (bijv. Safari-sessie-
+      // eigenaardigheid) mag het versturen zelf nooit stil laten
+      // stranden (bug-melding Raoul 21 juli: vraag verscheen, geen
+      // antwoord, cryptische foutmelding).
+      try {
+        await supabase
+          .from("ai_gesprekken")
+          .update(updateData)
+          .eq("id", gesprekId);
+      } catch (opslaanErr) {
+        console.error("Coach gesprek-opslag hik (gaat door):", opslaanErr);
+      }
       const response = await fetch("/api/coach", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -661,8 +668,11 @@ export function ChatVenster({
         .eq("id", gesprekId);
     } catch (err: any) {
       const melding = err?.message || "Onbekende fout";
-      console.error("Coach fout:", melding);
-      toast.error(melding.length > 80 ? melding.substring(0, 80) + "..." : melding);
+      console.error("Coach fout:", melding, err);
+      toast.error(
+        `Versturen lukte niet: ${melding.length > 70 ? melding.substring(0, 70) + "..." : melding}. Probeer het nog een keer.`,
+        { duration: 8000 },
+      );
     } finally {
       setLaden(false);
     }
