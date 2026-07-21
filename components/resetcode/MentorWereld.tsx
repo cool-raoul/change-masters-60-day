@@ -1374,13 +1374,18 @@ export default function MentorWereld({
       `En dan iets belangrijks, zeker als je nog niet al het verschil ziet of voelt waar je op hoopte: deze ${duur} dagen waren nooit een quick fix. Zie dit als het stártpunt van jouw gezondheidsreis. Het programma-materiaal is daar eerlijk over: je lichaam heeft 6 tot 9 maanden nodig om tekorten echt aan te vullen. Wat jij nu hebt neergezet is het fundament waar alles op verder bouwt. 🌱`,
       1200,
     );
+    if (prog.slug === "darm") {
+      await wacht(800);
+      await speelTouchpoint("darm-einde");
+    }
     await wacht(800);
     await mentorZegt(
-      `En die volgende stap hoef je niet alleen te kiezen: ${begeleiderNaam} kijkt graag met je mee wat voor jóu de slimste vervolgstap is om dit vast te houden en verder uit te bouwen. Stuur ${begeleiderNaam} gerust een appje (typ "contact" en de groene knop verschijnt), en kijk hieronder alvast wat er kan.`,
+      `En die volgende stap hoef je niet alleen te kiezen: ${begeleiderNaam} kijkt graag met je mee wat voor jóu de slimste vervolgstap is om dit vast te houden en verder uit te bouwen. Dit zijn de routes, en daaronder staat de knop om meteen jullie momentje te plannen. 👇`,
       1100,
     );
-    if (prog.slug === "darm") await speelTouchpoint("darm-einde");
-    await mentorKaart("vervolg", st.slug, 900);
+    await mentorKaart("vervolg", st.slug, 800);
+    await wacht(500);
+    await mentorKaart("contact", st.slug, 600);
   }
 
   // ---------- Dagelijkse check-in (dagboek) ----------
