@@ -615,9 +615,20 @@ export function ChatVenster({
       });
 
       if (response.status === 429) {
-        const data = await response.json();
-        setGebruikVandaag(data.gebruik || 20);
-        setUpgradeTonen(true);
+        // Twee smaken 429: het dag-quotum (JSON met gebruik) en "even
+        // te druk" (platte tekst uit de fout-afhandeling). Die tweede
+        // crashte op Safari bij response.json() met het cryptische
+        // "The string did not match the expected pattern" (bug 21 juli).
+        const data = await response.json().catch(() => null);
+        if (data && typeof data.gebruik !== "undefined") {
+          setGebruikVandaag(data.gebruik || 20);
+          setUpgradeTonen(true);
+        } else {
+          toast.error(
+            "De Mentor is even druk (te veel vragen kort achter elkaar). Wacht een halve minuut en probeer het opnieuw.",
+            { duration: 8000 },
+          );
+        }
         setLaden(false);
         return;
       }

@@ -135,6 +135,11 @@ REGELS BIJ MATCH (heel belangrijk, geen uitzonderingen):
    maakt het antwoord rommelig. Alleen als de member zélf over prijs
    of budget begint, mag je goedkopere opties bespreken.
 
+8. GEEN DOORVERWIJZING NAAR "PRODUCTADVIES" NA EEN KENNIS-MATCH. Jouw
+   antwoord IS het productadvies; sluit dus niet af met "wil je een
+   concreet productadvies, gebruik de knop/stel je vraag met...".
+   Alleen doorverwijzen als er GEEN kennis-rij matcht.
+
 KENNIS-RIJEN:
 ${regels.join("\n")}
 
