@@ -283,8 +283,24 @@ export async function POST(request: Request) {
           "@/lib/cms/mentor-kennis"
         );
         const kennisRijen = await haalGevalideerdeKennis();
-        if (kennisRijen.length > 0) {
-          systeemPrompt += formatKennisVoorPrompt(kennisRijen);
+        // Alleen de rijen meesturen die bij dit gesprek passen: sinds
+        // de volledige validatie (127 rijen) maakte alles-tegelijk het
+        // verzoek te groot (OpenAI 429 request-too-large, bug 21 juli)
+        // en het is voor het antwoord ook niet nodig.
+        const gespreksTekst = berichten
+          .filter((b) => b.role === "user")
+          .slice(-3)
+          .map((b) => String(b.content).toLowerCase())
+          .join(" ");
+        const relevant = kennisRijen.filter((r) => {
+          const termen = `${(r as { zoekterm?: string }).zoekterm ?? ""} ${(r as { oorspronkelijke_term?: string }).oorspronkelijke_term ?? ""}`
+            .toLowerCase()
+            .split(/[^a-zà-ÿ0-9]+/)
+            .filter((w) => w.length >= 4);
+          return termen.some((w) => gespreksTekst.includes(w));
+        });
+        if (relevant.length > 0) {
+          systeemPrompt += formatKennisVoorPrompt(relevant.slice(0, 8));
         }
       } catch (e) {
         console.warn("mentor-kennis ophalen mislukt:", e);
