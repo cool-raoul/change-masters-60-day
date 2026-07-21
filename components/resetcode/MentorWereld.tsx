@@ -2506,7 +2506,14 @@ export default function MentorWereld({
           </div>
         );
       }
-      case "contact":
+      case "contact": {
+        // Voorgevuld bericht: kloppend per moment, zonder emoji's (die
+        // raken corrupt in WhatsApp-prefills, bug-melding Raoul 21 juli).
+        const isLaatsteStation =
+          programma.stations[programma.stations.length - 1]?.slug === st.slug;
+        const prefill = isLaatsteStation
+          ? `Hoi ${begeleiderNaam}! Mijn dagen zitten erop en ik zou graag samen met jou kijken naar mijn vervolgstap. Wanneer komt het jou uit voor een belletje of een appje?`
+          : `Hoi ${begeleiderNaam}! Ik ben bezig met ${st.naam.toLowerCase()} van mijn programma en ik wil je graag even iets vragen.`;
         return (
           <div className={kader}>
             {kop("🤝", `Samen met ${begeleiderNaam}`)}
@@ -2516,10 +2523,7 @@ export default function MentorWereld({
             </p>
             {isKlant && memberTelefoon ? (
               <a
-                href={waLinkNaar(
-                  memberTelefoon,
-                  `Hoi ${begeleiderNaam}! Ik zit bij ${st.emoji} ${st.naam} in mijn programma. `,
-                )}
+                href={waLinkNaar(memberTelefoon, prefill)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-2.5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-bold text-white hover:opacity-90"
@@ -2539,6 +2543,7 @@ export default function MentorWereld({
             )}
           </div>
         );
+      }
       case "logi":
         return (
           <div className={kader}>
