@@ -50,7 +50,8 @@ type Kaart =
 // 18 juli), en toont vóóraf wat het volgende blok is.
 type VerderActie =
   | { type: "chunk"; index: number; stationSlug: string }
-  | { type: "station"; slug: string };
+  | { type: "station"; slug: string }
+  | { type: "programma"; slug: string };
 
 type Checkin = {
   datum: string;
@@ -497,6 +498,8 @@ export default function MentorWereld({
   startGekozen,
   startOverDagen,
   pakket,
+  vrijgegeven,
+  dueFaseKeuze,
 }: {
   begeleiderNaam: string;
   /** Klant-modus: token van de klant-link; het gesprek wordt dan op de server bewaard. */
@@ -538,6 +541,10 @@ export default function MentorWereld({
   startOverDagen?: number;
   /** Darmen in Balans: gekozen pakket (basis of plus), of null. */
   pakket?: "basis" | "plus" | null;
+  /** Vervolg-programma's die de begeleider heeft vrijgegeven (doorgroei). */
+  vrijgegeven?: string[];
+  /** Reset-fase-regie: keuze-moment als een fase-duur erop zit. */
+  dueFaseKeuze?: { fase: string; dag: number; max?: boolean } | null;
 }) {
   const isKlant = Boolean(token);
   const verteldRef = useRef<Set<string>>(new Set(touchpointsAlVerteld ?? []));
@@ -765,6 +772,7 @@ export default function MentorWereld({
           dueDag10 ||
             dueTouchpoint ||
             dueWeekTerugblik ||
+            dueFaseKeuze ||
             (dueKennis && dueKennis.length > 0),
         );
         // ÉÉN opeenvolgende flow bij terugkomen (voorheen twee parallelle
@@ -801,7 +809,7 @@ export default function MentorWereld({
           if (dueEinde) {
             await wacht(1200);
             await speelEindeMoment(prog, st);
-            markeerTouchpoint("programma-einde" as TouchpointSleutel);
+            markeerTouchpoint(("programma-einde-" + prog.slug) as TouchpointSleutel);
             knoppenNaarOnder();
           } else if (heeftDueMoment) {
             await wacht(1200);
@@ -846,6 +854,27 @@ export default function MentorWereld({
             if (dueWeekTerugblik) {
               if (dueTouchpoint) await wacht(1500);
               await speelWeekTerugblik(dueWeekTerugblik);
+            }
+            // Reset-fase-regie: de fase-dagen zitten erop, dus de klant
+            // kiest (samen met de begeleider) de volgende stap.
+            if (dueFaseKeuze) {
+              await wacht(1000);
+              if (dueFaseKeuze.fase === "omschakeling") {
+                await mentorZegt(
+                  dueFaseKeuze.max
+                    ? `Belangrijk moment: je zit op dag ${dueFaseKeuze.dag} van fase 2, en 40 dagen is echt het maximum. Het is tijd om door te gaan naar fase 3, de stabilisatie. Overleg vandaag nog even met ${begeleiderNaam}, en druk daarna op de knop hieronder. 👇`
+                    : `Even stilstaan bij een mooi moment: je 21 dagen van fase 2 zitten erop! 🎉 Nu is er een keuze, en die maak je het liefst samen met ${begeleiderNaam}: fase 2 verlengen (dat mag tot maximaal 40 dagen totaal) als je nog even door wilt, óf door naar fase 3, de stabilisatie. Wil je door? Druk op de knop hieronder. Wil je verlengen? Helemaal prima, dan zie ik je morgen gewoon weer bij je check-in. 👇`,
+                  1200,
+                );
+                toonStationKnop("stabilisatie", "🧘 Door naar fase 3 (stabilisatie)");
+              } else if (dueFaseKeuze.fase === "stabilisatie") {
+                await mentorZegt(
+                  `Je 21 dagen van fase 3 zitten erop, netjes volgehouden! 🎉 Bespreek met ${begeleiderNaam} wat jullie plan is: nog een ronde fase 2 en 3, of door naar fase 4, logisch leven. Beide knoppen staan voor je klaar. 👇`,
+                  1200,
+                );
+                toonStationKnop("logisch-leven", "🌿 Door naar fase 4 (logisch leven)");
+                toonStationKnop("omschakeling", "🔄 Nog een ronde fase 2");
+              }
             }
             // En dan pas de check-in van vandaag, netjes onderaan, zodat
             // de belofte "je check-in gaat gewoon door" ook klopt.
@@ -1319,7 +1348,9 @@ export default function MentorWereld({
   async function speelEindeMoment(prog: ResetProgramma, st: ResetStation) {
     const duur = FASE_DAGEN[st.slug] ?? 16;
     await mentorZegt(
-      `${klantVoornaam ? `${klantVoornaam}... JE` : "JE"} HEBT HET GEDAAN! 🎉🎊 Álle ${duur} dagen, helemaal uitgelopen. Neem even een moment om dat te laten landen: dit heb jíj gedaan, dag na dag, keuze na keuze. Daar mag je ontzettend trots op jezelf zijn. 🥳`,
+      prog.slug === "reset"
+        ? `${klantVoornaam ? `${klantVoornaam}... JE` : "JE"} HEBT HET GEDAAN! 🎉🎊 De HELE Holistic Reset: van je laaddagen, door fase 2 en de stabilisatie, tot en met logisch leven. Neem even een moment om dat te laten landen: dit heb jíj gedaan, fase na fase, keuze na keuze. Daar mag je ontzettend trots op jezelf zijn. 🥳`
+        : `${klantVoornaam ? `${klantVoornaam}... JE` : "JE"} HEBT HET GEDAAN! 🎉🎊 Álle ${duur} dagen, helemaal uitgelopen. Neem even een moment om dat te laten landen: dit heb jíj gedaan, dag na dag, keuze na keuze. Daar mag je ontzettend trots op jezelf zijn. 🥳`,
       1300,
     );
     // Eind-overzicht uit het eigen dagboek.
@@ -1392,6 +1423,94 @@ export default function MentorWereld({
       );
       await speelTouchpoint("darm-einde");
     }
+    // Doorgroei: heeft de begeleider het vervolg al vrijgegeven, dan
+    // staat de start-knop hier meteen klaar (zelfde omgeving, zelfde
+    // geheugen).
+    const volgend = volgendVrijgegeven(prog.slug);
+    if (volgend) {
+      await wacht(1000);
+      await mentorZegt(
+        `En goed nieuws: ${begeleiderNaam} heeft ${volgend.emoji} ${volgend.naam} al voor je klaargezet. Zodra jullie samen besluiten dat dit jouw route is, druk je gewoon op de knop en gaan we hier verder, met alles wat ik al van je weet. 👇`,
+        1000,
+      );
+      toonProgrammaStartKnop(volgend.slug);
+    }
+  }
+
+  // ---------- Doorgroei (zelfde omgeving, volgend programma) ----------
+
+  function volgendVrijgegeven(huidigSlug: string) {
+    const vrij = vrijgegeven ?? [];
+    return (
+      RESET_PROGRAMMAS.find(
+        (p) => p.slug !== huidigSlug && vrij.includes(p.slug),
+      ) ?? null
+    );
+  }
+
+  function toonStationKnop(slug: string, label: string) {
+    const bid = ++bidTeller.current;
+    setItems((b) => [
+      ...b,
+      {
+        van: "mentor",
+        soort: "verder-knop",
+        bid,
+        label,
+        actie: { type: "station", slug },
+      },
+    ]);
+  }
+
+  function toonProgrammaStartKnop(slug: string) {
+    const prog = programmaVoor(slug);
+    if (!prog) return;
+    const bid = ++bidTeller.current;
+    setItems((b) => [
+      ...b,
+      {
+        van: "mentor",
+        soort: "verder-knop",
+        bid,
+        label: `🌟 Start ${prog.emoji} ${prog.naam}`,
+        actie: { type: "programma", slug },
+      },
+    ]);
+  }
+
+  async function startNieuwProgramma(slug: string) {
+    const prog = programmaVoor(slug);
+    if (!prog) return;
+    setItems((b) =>
+      b.filter(
+        (x) => !(x.soort === "verder-knop" && x.actie.type === "programma"),
+      ),
+    );
+    const echo = `Ik ga door naar ${prog.naam}! 🌟`;
+    setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: echo }]);
+    logNaarServer([{ van: "klant", soort: "tekst", tekst: echo }]);
+    if (token) {
+      const res = await fetch("/api/resetcode/programma-switch", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, programma: slug }),
+      }).catch(() => null);
+      if (!res || !res.ok) {
+        await mentorZegt(
+          `Hmm, het vervolg staat nog niet open. Vraag ${begeleiderNaam} even om het vrij te geven, dan gaan we daarna meteen van start.`,
+          900,
+        );
+        return;
+      }
+    }
+    startGekozenRef.current = false;
+    setProgramma(prog);
+    await mentorZegt(
+      `Daar gaan we: ${prog.emoji} ${prog.naam}! 🎉 Zelfde plek, zelfde geheugen: alles wat we samen hebben opgebouwd neem ik gewoon mee. Ik loop ook dit hele programma stap voor stap met je door.`,
+      1100,
+    );
+    await wacht(600);
+    await introStation(prog, prog.stations[0]);
   }
 
   // ---------- Dagelijkse check-in (dagboek) ----------
@@ -1809,6 +1928,10 @@ export default function MentorWereld({
     setItems((b) =>
       b.filter((x) => !(x.soort === "verder-knop" && x.bid === item.bid)),
     );
+    if (item.actie.type === "programma") {
+      await startNieuwProgramma(item.actie.slug);
+      return;
+    }
     if (item.actie.type === "station") {
       await naarStation(item.actie.slug, true);
       return;
@@ -1897,10 +2020,35 @@ export default function MentorWereld({
     // zit hij in het Groeipad-menu als tijdmachine-knop.
   }
 
+  // Reset-fase-regie (feedback Raoul 21 juli): fase 3 (stabilisatie)
+  // duurt ALTIJD exact 21 dagen en mag nooit korter, hoe graag iemand
+  // ook wil.
+  function magNaarVolgendeFase(doelSlug: string): { ok: boolean; reden?: string } {
+    if (
+      programma?.slug === "reset" &&
+      station?.slug === "stabilisatie" &&
+      doelSlug === "logisch-leven"
+    ) {
+      const dag = dagNummer ?? 0;
+      if (dag < 21) {
+        return {
+          ok: false,
+          reden: `Ik snap dat je door wilt, maar fase 3 duurt echt de volle 21 dagen; zo werkt de stabilisatie nou eenmaal, korter kan niet. Je zit nu op dag ${dag || "?"}, dus nog ${Math.max(1, 21 - dag)} ${21 - dag === 1 ? "dag" : "dagen"} en dan mag je door naar fase 4. Hou vol, dit stuk is goud waard. 💪`,
+        };
+      }
+    }
+    return { ok: true };
+  }
+
   async function naarStation(slug: string, viaMenu = false) {
     if (!programma) return;
     const nieuw = stationVoor(programma.slug, slug);
     if (!nieuw || nieuw.slug === station?.slug) return;
+    const check = magNaarVolgendeFase(slug);
+    if (!check.ok) {
+      await mentorZegt(check.reden ?? "", 900);
+      return;
+    }
     const echo = viaMenu ? `Ik wil naar ${nieuw.naam}` : "Verder!";
     setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: echo }]);
     logNaarServer([{ van: "klant", soort: "tekst", tekst: echo }]);
@@ -1954,6 +2102,11 @@ export default function MentorWereld({
       if (i < programma.stations.length - 1) {
         zeg();
         const volgend = programma.stations[i + 1];
+        const check = magNaarVolgendeFase(volgend.slug);
+        if (!check.ok) {
+          await mentorZegt(check.reden ?? "", 900);
+          return true;
+        }
         if (token) {
           fetch("/api/resetcode/stap", {
             method: "POST",
@@ -1967,7 +2120,7 @@ export default function MentorWereld({
         // zitten. Dan mag het einde-moment nu spelen (eenmalig).
         zeg();
         await speelEindeMoment(programma, station);
-        markeerTouchpoint("programma-einde" as TouchpointSleutel);
+        markeerTouchpoint(("programma-einde-" + programma.slug) as TouchpointSleutel);
       }
       return true;
     }
@@ -2776,14 +2929,32 @@ export default function MentorWereld({
                         className="flex items-center gap-3 rounded-2xl bg-white/[0.03] border border-white/10 px-3 py-2.5"
                       >
                         <span className="text-xl opacity-60">{p.emoji}</span>
-                        <div className="min-w-0">
+                        <div className="min-w-0 flex-1">
                           <p className="text-[13px] font-semibold text-white/70">
                             {p.naam}
+                            {(vrijgegeven ?? []).includes(p.slug) && (
+                              <span className="ml-2 text-[10px] font-bold text-emerald-300">
+                                🔓 vrijgegeven
+                              </span>
+                            )}
                           </p>
                           <p className="text-[11px] text-white/40 truncate">
-                            {p.duur} · samen te kiezen met {begeleiderNaam}
+                            {(vrijgegeven ?? []).includes(p.slug)
+                              ? `${p.duur} · klaar om te starten`
+                              : `${p.duur} · 🔒 samen te kiezen met ${begeleiderNaam}`}
                           </p>
                         </div>
+                        {(vrijgegeven ?? []).includes(p.slug) && (
+                          <button
+                            onClick={async () => {
+                              setToonReis(false);
+                              await startNieuwProgramma(p.slug);
+                            }}
+                            className="flex-shrink-0 rounded-full bg-emerald-600 px-3 py-1.5 text-[11px] font-bold text-white"
+                          >
+                            🌟 Start
+                          </button>
+                        )}
                       </div>
                     ),
                   )}

@@ -25,12 +25,18 @@ const GELDIG = [
 ];
 // Week-terugblikken zijn genummerd (week-terugblik-1, -2, ...).
 const WEEK_TERUGBLIK = /^week-terugblik-\d{1,2}$/;
+// Einde-markering per programma (doorgroei-route).
+const PROGRAMMA_EINDE = /^programma-einde-(darm|reset|producten)$/;
 
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => ({}));
   const token = (body.token as string | undefined) ?? "";
   const sleutel = (body.sleutel as string | undefined) ?? "";
-  if (!GELDIG.includes(sleutel) && !WEEK_TERUGBLIK.test(sleutel)) {
+  if (
+    !GELDIG.includes(sleutel) &&
+    !WEEK_TERUGBLIK.test(sleutel) &&
+    !PROGRAMMA_EINDE.test(sleutel)
+  ) {
     return Response.json({ error: "Onbekende sleutel" }, { status: 400 });
   }
   const ctx = await pakResetKlantContext(token);

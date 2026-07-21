@@ -61,7 +61,10 @@ export default async function KlantLinkPagina({
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    if (user && user.id === ctx.memberId) {
+    // Uitzondering: een member die zijn EIGEN programma doet (Mijn
+    // programma) is hier de klant zelf; het schild geldt alleen voor
+    // de begeleider.
+    if (user && user.id === ctx.memberId && ctx.klantUserId !== user.id) {
       return (
         <main
           className="flex min-h-screen items-center justify-center px-6 text-center"
@@ -299,14 +302,29 @@ export default async function KlantLinkPagina({
     darm: { station: "zestien-dagen", dagen: 16 },
     reset: { station: "logisch-leven", dagen: 21 },
   };
+  // Einde-markering per programma, zodat op de doorgroei-route (zelfde
+  // link, volgend programma) het volgende einde gewoon wél speelt.
+  const eindeKey = `programma-einde-${ctx.programmaSlug}`;
   const einde = EINDE_NA[ctx.programmaSlug];
   const dueEinde = Boolean(
     einde &&
       ctx.stationSlug === einde.station &&
       dagNummer != null &&
       dagNummer > einde.dagen &&
+      !ctx.touchpoints.includes(eindeKey) &&
       !ctx.touchpoints.includes("programma-einde"),
   );
+
+  // Reset-fase-regie: fase-dagen zitten erop → keuze-moment (verlengen
+  // tot max 40 in fase 2, fase 3 exact 21, daarna kiezen).
+  let dueFaseKeuze: { fase: string; dag: number; max?: boolean } | null = null;
+  if (ctx.programmaSlug === "reset" && dagNummer != null && dagNummer >= 21) {
+    if (ctx.stationSlug === "omschakeling") {
+      dueFaseKeuze = { fase: "omschakeling", dag: dagNummer, max: dagNummer >= 40 };
+    } else if (ctx.stationSlug === "stabilisatie") {
+      dueFaseKeuze = { fase: "stabilisatie", dag: dagNummer };
+    }
+  }
 
   // Terugkom-berichten uit de kennis-lus: vragen die deze klant stelde,
   // inmiddels door het team beantwoord, nog niet teruggekoppeld.
@@ -361,6 +379,8 @@ export default async function KlantLinkPagina({
         pakket={ctx.pakket}
         dueWeekTerugblik={dueWeekTerugblik}
         dueKennis={dueKennis}
+        vrijgegeven={ctx.vrijgegeven}
+        dueFaseKeuze={dueFaseKeuze}
       />
     </div>
   );

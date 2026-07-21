@@ -20,6 +20,17 @@ type LinkRij = {
   station_slug: string | null;
   status: "actief" | "gepauzeerd" | "gesloten";
   laatste_activiteit: string;
+  vrijgegeven?: string[] | null;
+};
+
+// Doorgroei-volgorde: welke vervolg-programma's kun je vrijgeven?
+const VERVOLG_OPTIES: Record<string, { slug: string; label: string }[]> = {
+  darm: [
+    { slug: "reset", label: "☀️ Holistic Reset" },
+    { slug: "producten", label: "🏠 Dagelijkse basis" },
+  ],
+  reset: [{ slug: "producten", label: "🏠 Dagelijkse basis" }],
+  producten: [],
 };
 
 type SeintjeRij = {
@@ -172,6 +183,45 @@ export function ResetcodeOpKaart({
                     {gekopieerd === l.token ? "✓ Gekopieerd" : "🔗 Kopieer"}
                   </button>
                 </div>
+                {/* Doorgroei: vervolg-programma's vrijgeven. Zelfde link,
+                    zelfde geheugen; de klant krijgt de start-knop na het
+                    einde-moment en op het Groeipad. */}
+                {VERVOLG_OPTIES[l.programma].length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {VERVOLG_OPTIES[l.programma].map((v) => {
+                      const vrij = (l.vrijgegeven ?? []).includes(v.slug);
+                      return (
+                        <button
+                          key={v.slug}
+                          onClick={async () => {
+                            await fetch("/api/resetcode/links", {
+                              method: "PATCH",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify(
+                                vrij
+                                  ? { id: l.id, intrekken: v.slug }
+                                  : { id: l.id, vrijgeven: v.slug },
+                              ),
+                            });
+                            router.refresh();
+                          }}
+                          className={`rounded-full px-3 py-1.5 text-[11px] font-semibold border ${
+                            vrij
+                              ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-300"
+                              : "border-cm-border text-cm-white/70 hover:text-cm-white"
+                          }`}
+                          title={
+                            vrij
+                              ? "Klik om weer op slot te zetten"
+                              : "Geeft het vervolg vrij in dezelfde omgeving"
+                          }
+                        >
+                          {vrij ? `✓ ${v.label} vrijgegeven` : `🔓 Geef ${v.label} vrij`}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             );
           })}

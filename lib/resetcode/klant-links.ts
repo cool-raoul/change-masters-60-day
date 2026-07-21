@@ -27,6 +27,10 @@ export type ResetKlantContext = {
   startDatum: string | null;
   /** Darmen in Balans: gekozen pakket (basis = rood, plus = blauw). */
   pakket: "basis" | "plus" | null;
+  /** ELEVA-account waar deze link bij hoort (member doet zelf een programma). */
+  klantUserId: string | null;
+  /** Vervolg-programma's die de begeleider heeft vrijgegeven. */
+  vrijgegeven: string[];
   memberId: string;
   memberNaam: string | null;
   memberVoornaam: string;
@@ -42,7 +46,7 @@ export async function pakResetKlantContext(
   const { data: linkRaw } = await admin
     .from("resetcode_klant_links")
     .select(
-      "id, token, member_id, klant_naam, programma, station_slug, status, prospect_id, touchpoints, is_bouwer, station_sinds, start_datum, pakket",
+      "id, token, member_id, klant_naam, programma, station_slug, status, prospect_id, touchpoints, is_bouwer, station_sinds, start_datum, pakket, klant_user_id, vrijgegeven",
     )
     .eq("token", token)
     .maybeSingle();
@@ -61,6 +65,8 @@ export async function pakResetKlantContext(
     station_sinds: string | null;
     start_datum: string | null;
     pakket: "basis" | "plus" | null;
+    klant_user_id: string | null;
+    vrijgegeven: unknown;
   };
 
   // Touchpoints samenvoegen over alle links van dezelfde prospect: wie
@@ -109,6 +115,10 @@ export async function pakResetKlantContext(
     stationSinds: link.station_sinds,
     startDatum: link.start_datum,
     pakket: link.pakket,
+    klantUserId: link.klant_user_id,
+    vrijgegeven: Array.isArray(link.vrijgegeven)
+      ? (link.vrijgegeven as string[])
+      : [],
     memberId: link.member_id,
     memberNaam,
     memberVoornaam: (memberNaam ?? "").split(" ")[0] || "je begeleider",

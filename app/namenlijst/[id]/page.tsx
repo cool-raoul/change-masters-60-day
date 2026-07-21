@@ -159,7 +159,7 @@ export default async function ProspectDetailPagina({
   // Resetcode-klant-links van deze kaart (RLS: alleen eigen links).
   const { data: resetLinksData } = await supabase
     .from("resetcode_klant_links")
-    .select("id, token, programma, station_slug, status, laatste_activiteit")
+    .select("id, token, programma, station_slug, status, laatste_activiteit, vrijgegeven")
     .eq("prospect_id", id)
     .order("created_at", { ascending: false });
   const resetLinks = (resetLinksData ?? []) as Array<{
@@ -169,6 +169,7 @@ export default async function ProspectDetailPagina({
     station_slug: string | null;
     status: "actief" | "gepauzeerd" | "gesloten";
     laatste_activiteit: string;
+    vrijgegeven: string[] | null;
   }>;
 
   // Laatste seintjes bij deze klant-links, zodat een klik op een

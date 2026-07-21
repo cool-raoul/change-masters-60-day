@@ -20,7 +20,9 @@ export type TouchpointSleutel =
   // Week-terugblik: elke 7 dagen één keer (week-terugblik-1, -2, ...).
   // De inhoud wordt client-side uit het dagboek gebouwd; dit is alleen
   // de eenmaligheids-markering.
-  | `week-terugblik-${number}`;
+  | `week-terugblik-${number}`
+  // Einde-markering per programma (doorgroei-route).
+  | `programma-einde-${string}`;
 
 /** Het volledige kern-verhaal (dag ~7 darm, ~week 1 fase 2, of groeien-stap). */
 export function kernVerhaal(naam: string): string[] {

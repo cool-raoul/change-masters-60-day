@@ -127,9 +127,40 @@ export async function PATCH(req: NextRequest) {
   if ("fout" in t) return t.fout;
   const body = await req.json().catch(() => ({}));
   const id = (body.id as string | undefined) ?? "";
+  if (!id) return new Response("id vereist", { status: 400 });
+
+  // Vervolg-programma vrijgeven of weer op slot (doorgroei-route):
+  // hetzelfde token, de klant krijgt de start-knop na het einde.
+  const vrijgeven = (body.vrijgeven as string | undefined) ?? "";
+  const intrekken = (body.intrekken as string | undefined) ?? "";
+  if (vrijgeven || intrekken) {
+    const slug = vrijgeven || intrekken;
+    if (!["darm", "reset", "producten"].includes(slug)) {
+      return new Response("onbekend programma", { status: 400 });
+    }
+    const { data: rij } = await t.supabase
+      .from("resetcode_klant_links")
+      .select("vrijgegeven")
+      .eq("id", id)
+      .maybeSingle();
+    if (!rij) return new Response("onbekende link", { status: 404 });
+    const huidig = Array.isArray((rij as { vrijgegeven?: unknown }).vrijgegeven)
+      ? ((rij as { vrijgegeven: string[] }).vrijgegeven)
+      : [];
+    const nieuw = vrijgeven
+      ? Array.from(new Set([...huidig, slug]))
+      : huidig.filter((s) => s !== slug);
+    const { error } = await t.supabase
+      .from("resetcode_klant_links")
+      .update({ vrijgegeven: nieuw })
+      .eq("id", id);
+    if (error) return new Response(error.message, { status: 500 });
+    return Response.json({ ok: true, vrijgegeven: nieuw });
+  }
+
   const status = (body.status as string | undefined) ?? "";
-  if (!id || !["actief", "gepauzeerd", "gesloten"].includes(status)) {
-    return new Response("id en geldige status vereist", { status: 400 });
+  if (!["actief", "gepauzeerd", "gesloten"].includes(status)) {
+    return new Response("geldige status vereist", { status: 400 });
   }
   const { error } = await t.supabase
     .from("resetcode_klant_links")
