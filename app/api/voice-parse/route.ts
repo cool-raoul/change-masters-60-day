@@ -117,6 +117,22 @@ export async function POST(request: Request) {
       .map((h) => `- id:${h.id} "${h.titel}" (${h.vervaldatum})`)
       .join("\n");
 
+    // Beschikbare prospect-films (founder-gevuld), zodat "stuur de film
+    // Gezondheid" op TITEL matcht in plaats van terug te vallen op film 1.
+    const { data: filmRijen } = await supabase
+      .from("films")
+      .select("slug, titel, video_url, tonen")
+      .like("slug", "prospect-%");
+    const filmsLijst = ((filmRijen || []) as Array<{
+      slug: string;
+      titel: string;
+      video_url: string | null;
+      tonen: boolean;
+    }>)
+      .filter((f) => f.video_url && f.tonen !== false)
+      .map((f) => `- slug:${f.slug} titel:"${f.titel}"`)
+      .join("\n");
+
     // Europe/Amsterdam-anker: UTC zou tussen 00:00 en 02:00 NL-tijd het LLM
     // een verkeerd "vandaag" geven voor datums/weekdagen.
     const vandaag = new Intl.DateTimeFormat("en-CA", {
@@ -147,6 +163,9 @@ ${archiefLijst || "(geen gearchiveerd)"}
 
 OPENSTAANDE HERINNERINGEN:
 ${herinneringenLijst || "(geen herinneringen)"}
+
+BESCHIKBARE PROSPECT-FILMS (voor film_sturen, match op titel):
+${filmsLijst || "(geen films beschikbaar)"}
 
 LIFEPLUS PRODUCTCATALOGUS (officiële namen + aliassen tussen [haakjes]):
 ${PRODUCT_CATALOGUS_COMPACT}
@@ -363,9 +382,12 @@ MOGELIJKE ACTIES:
    - Mapping: "productadvies/vragenlijst/pakket-advies" → "productadvies"; "energie/focus/energietest" → "energie-en-focus"; "hormonen/overgang" → "hormonen-en-overgang". Freebie niet duidelijk → "productadvies".
    - prospect_id ALTIJD uit de bestaande lijst; geen match → "onduidelijk".
 
-25. { "type": "film_sturen", "prospect_id": "uuid-uit-lijst", "volledige_naam": "...", "film_nummer": 1 (optioneel, 1-10) }
-   - "Stuur film 1 naar X", "stuur de introductiefilm naar Y", "laat Z de presentatie-video zien".
-   - Nummer-mapping: introductie=1, presentatie=2, testimonial/ervaring=3, product-demo=4, team/support=5. Geen nummer of film genoemd → film_nummer weglaten (eerste beschikbare wordt gebruikt).
+25. { "type": "film_sturen", "prospect_id": "uuid-uit-lijst", "volledige_naam": "...", "film_slug": "slug-uit-filmlijst" (optioneel), "film_nummer": 1 (optioneel, 1-10) }
+   - "Stuur film 1 naar X", "stuur de film Gezondheid naar Y", "laat Z de opportunity-film zien".
+   - MATCH EERST OP TITEL tegen de BESCHIKBARE PROSPECT-FILMS lijst (fonetisch/gedeeltelijk mag: "gezondheid" → de film met "GEZONDHEID" in de titel) en vul film_slug in.
+   - Alleen als er echt een NUMMER genoemd wordt ("film 2"): film_nummer gebruiken (slug prospect-N-...).
+   - Genoemde film niet in de lijst → geen actie, meld in "onduidelijk" welke films er wél zijn.
+   - Geen film gespecificeerd → beide velden weglaten (eerste beschikbare wordt gebruikt).
 
 26. { "type": "mini_eleva_uitnodiging", "prospect_id": "uuid-uit-lijst", "volledige_naam": "...", "soort": "product|business" (optioneel, default product) }
    - "Nodig X uit voor mini-ELEVA / de kijk-omgeving / een gesprek met de Mentor", "maak een kennismakings-omgeving voor Y".

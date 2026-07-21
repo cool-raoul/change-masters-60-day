@@ -132,14 +132,49 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
       return false;
     }
 
+    // Restjes van een vorige sessie ALTIJD eerst opruimen. Na een
+    // app-wissel (bijv. WhatsApp openen en terugkomen) kan er nog een
+    // oude stream hangen die de microfoon bezet houdt.
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
+      streamRef.current?.getTracks().forEach((t) => t.stop());
+    } catch {}
+    streamRef.current = null;
+    try {
+      mediaRecorderRef.current?.stop();
+    } catch {}
+    mediaRecorderRef.current = null;
+
+    const vraagStream = () =>
+      navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
           autoGainControl: true,
         },
       });
+
+    try {
+      let stream: MediaStream;
+      try {
+        stream = await vraagStream();
+      } catch (eersteFout: any) {
+        const naam = eersteFout?.name as string | undefined;
+        if (naam === "NotAllowedError" || naam === "SecurityError") {
+          throw eersteFout;
+        }
+        // Microfoon tijdelijk bezet (NotReadable/Abort, bijv. net terug
+        // uit een andere app): heel even wachten en één keer opnieuw.
+        // Dit is een TIJDELIJKE fout; markeer nooit "niet ondersteund",
+        // anders lijkt de spraakfunctie kapot tot een verversing.
+        await new Promise((r) => setTimeout(r, 700));
+        try {
+          stream = await vraagStream();
+        } catch {
+          actiefRef.current = false;
+          setActief(false);
+          return false;
+        }
+      }
       streamRef.current = stream;
 
       const mime = kiesMimeType();
@@ -205,9 +240,10 @@ export function gebruikSpraak({ taal = "nl", maxSeconden, onMaxBereikt }: Opties
     } catch (err: any) {
       if (err?.name === "NotAllowedError" || err?.name === "SecurityError") {
         setToegang(false);
-      } else {
-        setOndersteund(false);
       }
+      // Andere fouten NIET als "niet ondersteund" markeren: dat zette de
+      // spraakfunctie permanent uit na één tijdelijke mic-hapering
+      // (bug-melding Raoul 21 juli). Opnieuw proberen kan gewoon.
       actiefRef.current = false;
       setActief(false);
       return false;

@@ -205,6 +205,7 @@ type ActieFilmSturen = {
   type: "film_sturen";
   prospect_id: string;
   volledige_naam?: string;
+  film_slug?: string;
   film_nummer?: number;
 };
 
@@ -1345,14 +1346,11 @@ export function VoiceFab() {
               : a.freebie === "energie-en-focus"
                 ? `Hé ${voornaam}!\n\nIk heb iets voor je dat in vijf minuten een persoonlijk beeld geeft van waar het op het gebied van energie, slaap en focus voor jou loopt en waar het stroef gaat. Tien korte vragen, daarna een score plus concrete handvatten.\n\nKlik hier: ${url}\n\nJe ontvangt het ook in je mail zodat je het rustig kunt teruglezen ⚡`
                 : `Hé ${voornaam}!\n\nIk heb iets voor je dat in vijf minuten een persoonlijk beeld geeft van wat er speelt rond hormonen en de overgang. Tien korte vragen, daarna een score per thema plus concrete handvatten.\n\nKlik hier: ${url}\n\nJe ontvangt het ook in je mail zodat je het rustig kunt teruglezen 🌸`;
-          window.open(
-            waLinkNaar(
-              (p as { telefoon?: string | null } | null)?.telefoon ?? null,
-              bericht,
-            ),
-            "_blank",
+          await openWhatsAppOfKlembord(
+            (p as { telefoon?: string | null } | null)?.telefoon,
+            bericht,
+            "Freebie-link klaar 🎁",
           );
-          toast.success("Freebie klaar, WhatsApp staat open 🎁");
         } catch {
           fouten.push("Freebie sturen mislukt");
         }
@@ -1368,9 +1366,12 @@ export function VoiceFab() {
         }
         try {
           const slugs = Object.values(PROSPECT_FILM_SLUGS) as string[];
-          const gewenst = a.film_nummer
-            ? slugs[a.film_nummer - 1]
-            : undefined;
+          const gewenst =
+            a.film_slug && slugs.includes(a.film_slug)
+              ? a.film_slug
+              : a.film_nummer
+                ? slugs[a.film_nummer - 1]
+                : undefined;
           const { data: films } = await supabase
             .from("films")
             .select("slug, video_url, tonen")
@@ -1385,8 +1386,8 @@ export function VoiceFab() {
           const filmSlug = beschikbaar[0]?.slug;
           if (!filmSlug) {
             fouten.push(
-              a.film_nummer
-                ? `Film ${a.film_nummer} is (nog) niet gevuld`
+              gewenst
+                ? "Die film is (nog) niet gevuld of staat uit"
                 : "Geen prospect-film beschikbaar",
             );
             continue;
@@ -1408,14 +1409,11 @@ export function VoiceFab() {
             .maybeSingle();
           const voornaam =
             ((p?.volledige_naam ?? a.volledige_naam ?? "").split(" ")[0]) || "";
-          window.open(
-            waLinkNaar(
-              (p as { telefoon?: string | null } | null)?.telefoon ?? null,
-              `Hé ${voornaam}! Ik heb een korte film voor je klaargezet, speciaal voor jou: ${data.url}`,
-            ),
-            "_blank",
+          await openWhatsAppOfKlembord(
+            (p as { telefoon?: string | null } | null)?.telefoon,
+            `Hé ${voornaam}! Ik heb een korte film voor je klaargezet, speciaal voor jou: ${data.url}`,
+            "Film-link klaar 🎬",
           );
-          toast.success("Film klaar, WhatsApp staat open 🎬");
         } catch {
           fouten.push("Film sturen mislukt");
         }
@@ -1450,14 +1448,11 @@ export function VoiceFab() {
             .maybeSingle();
           const voornaam =
             ((p?.volledige_naam ?? a.volledige_naam ?? "").split(" ")[0]) || "";
-          window.open(
-            waLinkNaar(
-              (p as { telefoon?: string | null } | null)?.telefoon ?? null,
-              `Hé ${voornaam}! Ik heb een eigen kijk-omgeving voor je klaargezet binnen ELEVA. Daar staan welkomstvideo's van mij, een AI-mentor die 24/7 al je vragen beantwoordt over Lifeplus, en een chat-lijntje met mij voor als je iemand wilt spreken. Geen pitch, geen druk, op je eigen tempo. 14 dagen geldig, geen account nodig.\n\n${data.deelLink}`,
-            ),
-            "_blank",
+          await openWhatsAppOfKlembord(
+            (p as { telefoon?: string | null } | null)?.telefoon,
+            `Hé ${voornaam}! Ik heb een eigen kijk-omgeving voor je klaargezet binnen ELEVA. Daar staan welkomstvideo's van mij, een AI-mentor die 24/7 al je vragen beantwoordt over Lifeplus, en een chat-lijntje met mij voor als je iemand wilt spreken. Geen pitch, geen druk, op je eigen tempo. 14 dagen geldig, geen account nodig.\n\n${data.deelLink}`,
+            "Mini-ELEVA-uitnodiging klaar ✨",
           );
-          toast.success("Mini-ELEVA klaar, WhatsApp staat open ✨");
         } catch {
           fouten.push("Mini-ELEVA-uitnodiging mislukt");
         }
@@ -1610,6 +1605,37 @@ export function VoiceFab() {
     return { gemaakt, naamNaarId, fouten };
   }
 
+  // WhatsApp openen als er een nummer is; anders het bericht op het
+  // klembord + duidelijke uitleg (wa.me zonder nummer opent op mobiel
+  // vaak kaal, zonder kiezer en zonder tekst; bug-melding Raoul 21 juli).
+  async function openWhatsAppOfKlembord(
+    telefoon: string | null | undefined,
+    bericht: string,
+    watIsKlaar: string,
+  ) {
+    if (telefoon && telefoon.trim()) {
+      const venster = window.open(waLinkNaar(telefoon, bericht), "_blank");
+      toast.success(
+        venster
+          ? `${watIsKlaar} ✅ WhatsApp staat open, alleen nog op verzenden drukken.`
+          : `${watIsKlaar} ✅ Popup werd geblokkeerd; de verstuur-knop staat op de klantenkaart.`,
+        { duration: 9000 },
+      );
+      return;
+    }
+    let gekopieerd = false;
+    try {
+      await navigator.clipboard.writeText(bericht);
+      gekopieerd = true;
+    } catch {}
+    toast(`${watIsKlaar}, maar er staat geen telefoonnummer op de kaart`, {
+      description: gekopieerd
+        ? "Het bericht mét link staat op je klembord: open WhatsApp, zoek de persoon op en plak. Tip: zet het nummer op de kaart (mag ook via spraak), dan opent WhatsApp voortaan direct."
+        : "Zet het telefoonnummer op de kaart (mag ook via spraak), of gebruik de verstuur-knop op de klantenkaart.",
+      duration: 15000,
+    });
+  }
+
   // Klantomgeving sturen: bestaande actieve link hergebruiken of nieuwe
   // maken, daarna WhatsApp openen. Herbruikt door de spraak-actie én het
   // automatische voorstel bij "klant geworden".
@@ -1646,17 +1672,10 @@ export function VoiceFab() {
       const voornaam =
         ((p?.volledige_naam ?? naamHint ?? "").split(" ")[0]) || "";
       const url = `${window.location.origin}/k/${token}`;
-      const venster = window.open(
-        waLinkNaar(
-          (p as { telefoon?: string | null } | null)?.telefoon ?? null,
-          `Hoi ${voornaam}! Hier is jouw persoonlijke omgeving met je eigen Mentor, alles voor jouw programma op één plek: ${url}`,
-        ),
-        "_blank",
-      );
-      toast.success(
-        venster
-          ? "Klantomgeving klaar, WhatsApp staat open om te versturen 📱"
-          : "Klantomgeving klaar! De verstuur-knop staat op de klantenkaart.",
+      await openWhatsAppOfKlembord(
+        (p as { telefoon?: string | null } | null)?.telefoon,
+        `Hoi ${voornaam}! Hier is jouw persoonlijke omgeving met je eigen Mentor, alles voor jouw programma op één plek: ${url}`,
+        "Klantomgeving klaar",
       );
       return true;
     } catch {
@@ -2750,9 +2769,11 @@ function beschrijfActie(actie: any): { icoon: string; titel: string; details: st
           icoon: "🎬",
           titel: `Film sturen naar ${actie.volledige_naam || "prospect"}`,
           details: [
-            actie.film_nummer
-              ? `Film ${actie.film_nummer} (uit je prospect-films)`
-              : "Eerste beschikbare prospect-film",
+            actie.film_slug
+              ? `Film: ${actie.film_slug}`
+              : actie.film_nummer
+                ? `Film ${actie.film_nummer} (uit je prospect-films)`
+                : "Eerste beschikbare prospect-film",
             "Unieke kijk-link; je krijgt een seintje als de film is bekeken.",
             "Na opslaan opent WhatsApp met de link.",
           ],
