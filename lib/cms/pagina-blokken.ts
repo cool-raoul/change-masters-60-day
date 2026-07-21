@@ -82,8 +82,10 @@ export async function haalPaginaBlokken(
       .order("volgorde", { ascending: true });
     if (error || !data) return result;
 
-    // Signed URLs voor upload-types (afbeelding/pdf/audio).
-    // Video gebruikt embed-URL en quote heeft geen storage.
+    // Upload-types (afbeelding/pdf/audio) krijgen een ALTIJD-VERSE
+    // proxy-URL in plaats van een signed URL van 1 uur: een klant-tab
+    // die dagen openstaat hield anders dode document-knoppen over
+    // (bug 21 juli). De route geeft per klik een verse signed URL.
     for (const blok of data as Blok[]) {
       if (
         blok.storage_pad &&
@@ -91,14 +93,7 @@ export async function haalPaginaBlokken(
           blok.type === "pdf" ||
           blok.type === "audio")
       ) {
-        try {
-          const { data: signed } = await supabase.storage
-            .from("pagina-media")
-            .createSignedUrl(blok.storage_pad, 60 * 60);
-          if (signed?.signedUrl) blok.bestand_url = signed.signedUrl;
-        } catch {
-          // Negeer; render-component toont placeholder bij ontbrekende url
-        }
+        blok.bestand_url = `/api/cms/bestand?pad=${encodeURIComponent(blok.storage_pad)}`;
       }
 
       let lijst = result.get(blok.positie);

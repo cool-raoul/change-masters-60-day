@@ -33,6 +33,12 @@ export default async function ResetcodeLinksPagina() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-8 text-cm-white">
       <header className="mb-6">
+        <a
+          href="/dashboard"
+          className="inline-flex items-center gap-1.5 text-sm text-cm-muted hover:text-cm-white mb-3"
+        >
+          ← Terug naar dashboard
+        </a>
         <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
           De Resetcode
         </p>

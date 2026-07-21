@@ -57,6 +57,7 @@ type Checkin = {
   stemming: string | null;
   gewicht: number | null;
   notitie?: string | null;
+  taille?: number | null;
 };
 
 type ChatItem =
@@ -116,6 +117,9 @@ export type CheckinInvoer = {
   buik: string;
   gewicht: string;
   winst: string;
+  taille: string;
+  heup: string;
+  borst: string;
 };
 
 const CHECKIN_RIJEN: {
@@ -154,14 +158,18 @@ const CHECKIN_RIJEN: {
 
 function CheckinVraag({
   bezig,
+  meetDag = false,
   onKies,
 }: {
   bezig: boolean;
+  /** Wekelijks meetmoment (dag 7, 14, ...): vraag ook de centimeters. */
+  meetDag?: boolean;
   onKies: (invoer: CheckinInvoer) => void;
 }) {
   const [gewicht, setGewicht] = useState("");
   const [winst, setWinst] = useState("");
   const [stemming, setStemming] = useState("");
+  const [maten, setMaten] = useState({ taille: "", heup: "", borst: "" });
   const [keuzes, setKeuzes] = useState<Record<string, string>>({});
   const kiesRij =
     "flex-1 flex flex-col items-center gap-0.5 rounded-xl border py-2 disabled:opacity-40 transition-colors";
@@ -213,6 +221,37 @@ function CheckinVraag({
         />
         <span className="text-white/50 text-[12px]">kg (optioneel)</span>
       </div>
+      {meetDag && (
+        <div className="mb-2.5">
+          <p className="text-[11px] text-emerald-300/90 mb-1 font-semibold">
+            📏 Meet-moment! Pak het meetlint erbij (cm, optioneel)
+          </p>
+          <div className="flex gap-2">
+            {(
+              [
+                ["taille", "taille"],
+                ["heup", "heup"],
+                ["borst", "borst"],
+              ] as const
+            ).map(([veld, label]) => (
+              <input
+                key={veld}
+                value={maten[veld]}
+                onChange={(e) =>
+                  setMaten((m) => ({
+                    ...m,
+                    [veld]: e.target.value.replace(/[^0-9,.]/g, ""),
+                  }))
+                }
+                inputMode="decimal"
+                placeholder={label}
+                className="w-0 flex-1 rounded-full bg-white/10 border border-white/15 px-3 py-1.5 text-[13px] text-white placeholder:text-white/40 focus:outline-none"
+                disabled={bezig}
+              />
+            ))}
+          </div>
+        </div>
+      )}
       <input
         value={winst}
         onChange={(e) => setWinst(e.target.value.slice(0, 200))}
@@ -229,6 +268,9 @@ function CheckinVraag({
             buik: keuzes.buik ?? "",
             gewicht,
             winst,
+            taille: maten.taille,
+            heup: maten.heup,
+            borst: maten.borst,
           })
         }
         disabled={bezig || !stemming}
@@ -1171,9 +1213,20 @@ export default function MentorWereld({
       .filter((r) => r.notitie)
       .slice(-3)
       .map((r) => `"${r.notitie}"`);
+    const metTaille = reeks.filter((r) => r.taille != null);
+    const tailleDelta =
+      metTaille.length >= 2
+        ? Math.round(
+            ((metTaille[metTaille.length - 1].taille as number) -
+              (metTaille[0].taille as number)) *
+              10,
+          ) / 10
+        : null;
     const delen: string[] = [];
     if (delta != null && delta < 0)
       delen.push(`je staat ${Math.abs(delta)} kilo lichter dan bij je start`);
+    if (tailleDelta != null && tailleDelta < 0)
+      delen.push(`je taille is ${Math.abs(tailleDelta)} centimeter smaller`);
     if (winsten.length)
       delen.push(`en dit schreef je zelf op: ${winsten.join(", ")}`);
     await mentorZegt(
@@ -1324,6 +1377,9 @@ export default function MentorWereld({
             slaap: slaap || undefined,
             buik: buik || undefined,
             notitie: winst || undefined,
+            taille: invoer.taille ? Number(invoer.taille.replace(",", ".")) : undefined,
+            heup: invoer.heup ? Number(invoer.heup.replace(",", ".")) : undefined,
+            borst: invoer.borst ? Number(invoer.borst.replace(",", ".")) : undefined,
           }),
         });
         const data = await res.json().catch(() => null);
@@ -2833,6 +2889,7 @@ export default function MentorWereld({
               <div key={i} className="verschijn max-w-[92%]">
                 <CheckinVraag
                   bezig={checkinBezig}
+                  meetDag={dagNummer != null && dagNummer % 7 === 0}
                   onKies={(invoer) => verstuurCheckin(invoer)}
                 />
               </div>

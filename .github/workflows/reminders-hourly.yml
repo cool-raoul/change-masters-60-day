@@ -58,6 +58,23 @@ jobs:
             -H "Authorization: Bearer ${CRON_SECRET}" \
             "$ENDPOINT"
 
+      - name: Ping resetcode ochtend-seintjes endpoint
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          ENDPOINT: https://my-eleva.com/api/resetcode/ochtend-cron
+        run: |
+          set -euo pipefail
+          echo "Calling $ENDPOINT"
+          # Dagelijkse check-in-seintjes voor Resetcode-klanten. De
+          # endpoint verstuurt zelf alleen rond 08:00 Europe/Amsterdam
+          # en alleen naar klanten met push aan die nog niet inchecken;
+          # alle andere uren is dit een no-op.
+          curl -fsS \
+            --retry 3 --retry-delay 5 --retry-connrefused \
+            --max-time 60 \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            "$ENDPOINT"
+
       - name: Ping stilte-reminders endpoint
         env:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
