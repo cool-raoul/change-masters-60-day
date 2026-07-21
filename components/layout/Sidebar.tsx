@@ -257,6 +257,14 @@ export function Sidebar({
           )}
           {isFounder && (
             <Link
+              href="/founder/resetcode"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
+            >
+              <span>🌿</span> Resetcode-beheer
+            </Link>
+          )}
+          {isFounder && (
+            <Link
               href="/founder/spraak-mentor"
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
             >
