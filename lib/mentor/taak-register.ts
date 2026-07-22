@@ -31,39 +31,74 @@ export type MentorTaak = {
    * profiel of het gesprek.
    */
   interviewEerst: boolean;
+  /**
+   * Eén-zins-beschrijving voor de receptionist-router (de kleine LLM die
+   * elke vraag naar een taak stuurt). Geen beschrijving = de router kan
+   * deze taak niet kiezen (bv. kennismaking en post: die hebben hun eigen
+   * detectie-vangnet). Nieuwe specialist toevoegen = hier één regel.
+   */
+  routerBeschrijving?: string;
 };
 
 const TAKEN: Record<string, MentorTaak> = {
   // Publieke schrijftaken: sterk model + interview-eerst + volle bewaking.
+  // post heeft bewust GEEN routerBeschrijving: het post-vangnet
+  // (isPostVerzoek) beslist dat gesprek-breed, betrouwbaarder dan de router.
   post: { id: "post", model: MODEL_STERK, maxTokens: 1600, schrijfwerk: true, interviewEerst: true },
-  reel: { id: "reel", model: MODEL_STERK, maxTokens: 1600, schrijfwerk: true, interviewEerst: true },
+  reel: { id: "reel", model: MODEL_STERK, maxTokens: 1600, schrijfwerk: true, interviewEerst: true,
+    routerBeschrijving: "het lid wil een reel, kort filmpje of video-script maken voor social media" },
 
   // Eén-op-één schrijftaken: sterk model, interview alleen bij te weinig context.
-  dm: { id: "dm", model: MODEL_STERK, maxTokens: 1200, schrijfwerk: true, interviewEerst: false },
-  opener: { id: "opener", model: MODEL_STERK, maxTokens: 1200, schrijfwerk: true, interviewEerst: false },
-  drieweg: { id: "drieweg", model: MODEL_STERK, maxTokens: 1200, schrijfwerk: true, interviewEerst: false },
+  dm: { id: "dm", model: MODEL_STERK, maxTokens: 1200, schrijfwerk: true, interviewEerst: false,
+    routerBeschrijving: "het lid wil een persoonlijk bericht (DM, WhatsApp, uitnodiging) schrijven of versturen aan één specifieke persoon" },
+  opener: { id: "opener", model: MODEL_STERK, maxTokens: 1200, schrijfwerk: true, interviewEerst: false,
+    routerBeschrijving: "het lid wil een gesprek beginnen of warm openen met iemand en zoekt een eerste bericht of openingszin" },
+  drieweg: { id: "drieweg", model: MODEL_STERK, maxTokens: 1200, schrijfwerk: true, interviewEerst: false,
+    routerBeschrijving: "het lid wil een 3-weg gesprek of groepje opzetten waarin de sponsor wordt geintroduceerd (edification, aankondiging, introductie)" },
 
   // Zwaar redeneerwerk.
-  productadvies: { id: "productadvies", model: MODEL_STERK, maxTokens: 2000, schrijfwerk: false, interviewEerst: false },
+  productadvies: { id: "productadvies", model: MODEL_STERK, maxTokens: 2000, schrijfwerk: false, interviewEerst: false,
+    routerBeschrijving: "de vraag gaat (ook maar deels) over producten, supplementen, pakketten, voeding, gezondheid, klachten, ziektes, aandoeningen, medicijnen of programma's zoals de Holistic Reset of Darmen in Balans" },
 
   // Kennismakings-rondes: eenmalige gesprekken waarin de Mentor het lid
   // leert kennen (profiel-opbouw + stem-check). Sterk model: de kwaliteit
-  // van deze ene ervaring bepaalt hoe goed alles daarna klinkt.
+  // van deze ene ervaring bepaalt hoe goed alles daarna klinkt. Eigen
+  // detectie (detecteerKennismakingsRonde), dus geen routerBeschrijving.
   kennismaking: { id: "kennismaking", model: MODEL_STERK, maxTokens: 1200, schrijfwerk: false, interviewEerst: false },
 
   // Gespreks-coaching: snel model volstaat, korte antwoorden zijn hier juist goed.
-  bezwaar: { id: "bezwaar", model: MODEL_SNEL, maxTokens: 800, schrijfwerk: false, interviewEerst: false },
-  followup: { id: "followup", model: MODEL_SNEL, maxTokens: 800, schrijfwerk: false, interviewEerst: false },
-  closing: { id: "closing", model: MODEL_SNEL, maxTokens: 800, schrijfwerk: false, interviewEerst: false },
-  motivatie: { id: "motivatie", model: MODEL_SNEL, maxTokens: 800, schrijfwerk: false, interviewEerst: false },
-  accountability: { id: "accountability", model: MODEL_SNEL, maxTokens: 800, schrijfwerk: false, interviewEerst: false },
-  social: { id: "social", model: MODEL_STERK, maxTokens: 1200, schrijfwerk: true, interviewEerst: false },
-  algemeen: { id: "algemeen", model: MODEL_SNEL, maxTokens: 800, schrijfwerk: false, interviewEerst: false },
+  bezwaar: { id: "bezwaar", model: MODEL_SNEL, maxTokens: 800, schrijfwerk: false, interviewEerst: false,
+    routerBeschrijving: "een prospect heeft een bezwaar of twijfel geuit (geen tijd, geen geld, wil nadenken, niks voor mij) en het lid zoekt hoe daarmee om te gaan" },
+  followup: { id: "followup", model: MODEL_SNEL, maxTokens: 800, schrijfwerk: false, interviewEerst: false,
+    routerBeschrijving: "het lid wil opvolgen na eerder contact: iemand reageert niet meer, heeft een video gekeken, of het is tijd voor een vervolgstap" },
+  closing: { id: "closing", model: MODEL_SNEL, maxTokens: 800, schrijfwerk: false, interviewEerst: false,
+    routerBeschrijving: "een prospect is warm en het lid wil helpen beslissen of afronden (starten, commitment, doel-tijd-termijn)" },
+  motivatie: { id: "motivatie", model: MODEL_SNEL, maxTokens: 800, schrijfwerk: false, interviewEerst: false,
+    routerBeschrijving: "het lid zit er zelf doorheen: geen zin, gefrustreerd, twijfelt aan zichzelf, zoekt motivatie of mindset-hulp" },
+  accountability: { id: "accountability", model: MODEL_SNEL, maxTokens: 800, schrijfwerk: false, interviewEerst: false,
+    routerBeschrijving: "het lid wil vertellen of bespreken wat hij/zij gedaan heeft: acties, aantallen, resultaten, weekplanning" },
+  social: { id: "social", model: MODEL_STERK, maxTokens: 1200, schrijfwerk: true, interviewEerst: false,
+    routerBeschrijving: "de vraag gaat over social-media-strategie of online zichtbaarheid in het algemeen (wat posten, hoe attractie werkt), zonder concreet schrijfverzoek" },
+  algemeen: { id: "algemeen", model: MODEL_SNEL, maxTokens: 800, schrijfwerk: false, interviewEerst: false,
+    routerBeschrijving: "alles wat nergens anders past: algemene vragen over de methode, het systeem, of een gewoon gesprek" },
 };
 
 /** Onbekende taak → veilig default (snel model, geen schrijf-bewaking). */
 export function taakVoor(vraagType: string): MentorTaak {
   return TAKEN[vraagType] ?? TAKEN.algemeen;
+}
+
+/**
+ * De taken die de receptionist-router mag kiezen: alles met een
+ * routerBeschrijving. Nieuwe specialist = één registratie hierboven,
+ * de router neemt hem automatisch mee.
+ */
+export function routerOpties(): { id: string; beschrijving: string }[] {
+  return Object.values(TAKEN)
+    .filter((t): t is MentorTaak & { routerBeschrijving: string } =>
+      Boolean(t.routerBeschrijving),
+    )
+    .map((t) => ({ id: t.id, beschrijving: t.routerBeschrijving }));
 }
 
 /**

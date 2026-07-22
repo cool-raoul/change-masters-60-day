@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendPushToUser } from "@/lib/push/sendPush";
 import { bouwCoachSysteemPrompt } from "@/lib/prompts/coach-systeem-prompt";
-import { detecteerVraagType } from "@/lib/knowledge/coach-boeken";
+import { routeerVraag } from "@/lib/mentor/router";
 import { taakVoor, isPostVerzoek } from "@/lib/mentor/taak-register";
 import {
   detecteerKennismakingsRonde,
@@ -192,8 +192,11 @@ export async function POST(request: Request) {
       }
     }
 
-    // Detecteer vraagtype voor slimme prompt selectie
-    let vraagType = detecteerVraagType(berichten);
+    // Receptionist-router (fase 2 agent-architectuur): kleine LLM-call
+    // classificeert de bedoeling; bij een storing beslist de oude regex.
+    const routering = await routeerVraag(openai, berichten);
+    let vraagType = routering.type;
+    console.log(`mentor-router: ${vraagType} (via ${routering.via})`);
 
     // Feature-flag: als productadvies uit staat voor deze rol → downgrade naar algemeen
     if (vraagType === "productadvies" && !productadviesBeschikbaar(profile.role)) {
@@ -587,6 +590,10 @@ export async function POST(request: Request) {
       headers: {
         "Content-Type": "text/plain; charset=utf-8",
         "Transfer-Encoding": "chunked",
+        // Debug/testbank: welke specialist behandelde dit, en hoe is
+        // dat besloten (router of regex-vangnet). Geen persoonsdata.
+        "X-Mentor-Taak": taak.id,
+        "X-Mentor-Route": routering.via,
       },
     });
   } catch (error: any) {
