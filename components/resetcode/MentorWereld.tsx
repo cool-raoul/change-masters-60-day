@@ -54,7 +54,10 @@ type VerderActie =
   | { type: "programma"; slug: string }
   | { type: "verlengen" }
   // Alvast lezen over een volgende fase, zonder er echt naartoe te gaan.
-  | { type: "inkijk"; slug: string };
+  | { type: "inkijk"; slug: string }
+  // Opmaak-dagen (darm): dagelijks contact houden of rustig aan doen.
+  | { type: "opmaak-dagelijks" }
+  | { type: "opmaak-rustig" };
 
 type Checkin = {
   datum: string;
@@ -759,6 +762,13 @@ export default function MentorWereld({
           verteldRef.current.has("fase2-verlengd");
         const toonVolgendKnop =
           Boolean(volgend) && !dueFaseKeuze && !verlengdGekozen;
+        // Opmaak-dagen (darm) met "houd het rustig" gekozen: geen
+        // dagelijkse check-in meer; de Mentor blijft wel bereikbaar.
+        const opmaakRustig =
+          prog.slug === "darm" &&
+          st.slug === "zestien-dagen" &&
+          (dagNummer ?? 0) > 16 &&
+          verteldRef.current.has("darm-opmaak-rustig");
         setItems([
           ...beginItems,
           {
@@ -826,7 +836,8 @@ export default function MentorWereld({
             !checkinGedaanRef.current &&
             !dueEinde &&
             !teltAf &&
-            !heeftDueMoment
+            !heeftDueMoment &&
+            !opmaakRustig
           ) {
             await toonCheckin(true);
           }
@@ -905,16 +916,37 @@ export default function MentorWereld({
                 );
                 markeerTouchpoint("darm-vooruitblik");
               } else if (dueFaseKeuze.fase === "darm-opmaak") {
-                // Eenmalige uitleg van de opmaak-periode na dag 16.
+                // Eenmalige uitleg van de opmaak-periode na dag 16, met
+                // de gesprekspartner-keuze (feedback Raoul 22 juli: de
+                // focus ligt nu op het vervolg, niet op lange begeleiding).
                 await mentorZegt(
-                  `Je zit nu in je opmaak-dagen: je 16 dagen zitten erop en je maakt je producten rustig op. Zo werkt dat: deel de inhoud van elke pot door 30, dan weet je je dagdosering en gaat elke pot ongeveer een maand mee. 💚`,
+                  `Je zit nu in je opmaak-dagen: je 16 dagen zitten erop en je maakt je producten rustig op. Zo werkt dat: deel de inhoud van elke pot door 30, dan weet je je dagdosering en gaat elke pot ongeveer een maand mee. En qua eten hoef je niks in één keer om te gooien: houd de voedingslijst als kompas en verbreed rustig. 💚`,
                   1200,
                 );
                 await wacht(900);
                 await mentorZegt(
-                  `En qua eten hoef je niet van de ene op de andere dag alles om te gooien: veel mensen houden de voedingslijst gewoon als kompas en verbreden rustig, stap voor stap. Goed om te weten: wil je weer bonen eten, dan mag dat nu ook uit pot of blik, maar check wel even de ingrediënten op toegevoegde suiker. Twijfel je ergens over, vraag het mij of bespreek met ${begeleiderNaam} wat bij jou past. Ik blijf er gewoon voor je, elke dag. 💚`,
+                  `Waar het nu vooral om draait: samen met ${begeleiderNaam} jouw vervolg kiezen, zodat je ritme gewoon doorloopt als je potten leeg raken. En dan even praktisch, tussen ons: wil je dat ik er in deze opmaak-dagen elke dag voor je blijf, met je check-in en een dagelijkse tip? Of houd je het liever rustig en pak je het vervolg gewoon met ${begeleiderNaam} op? Kies maar. 👇`,
                   1100,
                 );
+                const bidD = ++bidTeller.current;
+                const bidR = ++bidTeller.current;
+                setItems((b) => [
+                  ...b,
+                  {
+                    van: "mentor",
+                    soort: "verder-knop",
+                    bid: bidD,
+                    label: "💬 Ja, blijf er dagelijks voor me",
+                    actie: { type: "opmaak-dagelijks" },
+                  },
+                  {
+                    van: "mentor",
+                    soort: "verder-knop",
+                    bid: bidR,
+                    label: "🌿 Ik houd het rustig",
+                    actie: { type: "opmaak-rustig" },
+                  },
+                ]);
                 markeerTouchpoint("darm-opmaak-uitleg");
               } else if (dueFaseKeuze.fase === "omschakeling") {
                 await mentorZegt(
@@ -968,7 +1000,7 @@ export default function MentorWereld({
             }
             // En dan pas de check-in van vandaag, netjes onderaan, zodat
             // de belofte "je check-in gaat gewoon door" ook klopt.
-            if (!checkinGedaanRef.current && !teltAf) {
+            if (!checkinGedaanRef.current && !teltAf && !opmaakRustig) {
               await wacht(1200);
               await mentorZegt(
                 "O ja, en je check-in van vandaag staat hier alvast voor je klaar 👇",
@@ -1159,7 +1191,7 @@ export default function MentorWereld({
   // (check-in, dag 10, einde) tellen vanaf deze datum.
   async function toonStartKeuze(duur?: number) {
     await mentorZegt(
-      `Dan nu het belangrijkste: wanneer ga jij van start? 🚀 Kies hieronder jouw startmoment, dan weet ${begeleiderNaam} het ook meteen en tel ik ${duur ? `je ${duur} dagen` : "je dagen"} precies vanaf jouw dag 1. Kleine tip: de meeste mensen starten vandaag of morgen. Je zit er nu helemaal in, en Lifeplus geeft 30 dagen niet-goed-geld-terug-garantie vanaf je bestelling; als je snel start, valt je hele ervaring daar mooi binnen.`,
+      `Dan nu het belangrijkste: wanneer ga jij van start? 🚀 Kies hieronder jouw startmoment, dan weet ${begeleiderNaam} het ook meteen en tel ik ${duur ? `je ${duur} dagen` : "je dagen"} precies vanaf jouw dag 1. Kleine tip: de meeste mensen starten vandaag of morgen. Je zit er nu helemaal in, en je hebt 30 dagen niet-goed-geld-terug-garantie vanaf je bestelling; als je snel start, valt je hele ervaring daar mooi binnen.`,
       1000,
     );
     const bid = ++bidTeller.current;
@@ -1212,7 +1244,7 @@ export default function MentorWereld({
       if (dagenTotStart > 3) {
         await wacht(900);
         await mentorZegt(
-          `Mag ik nog één ding eerlijk zeggen? Als het lukt om eerder te beginnen, zou ik dat doen. Je zit er nú helemaal in, en de 30 dagen niet-goed-geld-terug-garantie van Lifeplus loopt vanaf je bestelling; hoe eerder je start, hoe mooier je ervaring daarbinnen valt. Wil je toch een andere dag kiezen, typ dan gewoon "ik start eerder" en ik pas het aan. En anders: ${label} is helemaal prima, dan zie ik je dan! 💚`,
+          `Mag ik nog één ding eerlijk zeggen? Als het lukt om eerder te beginnen, zou ik dat doen. Je zit er nú helemaal in, en de 30 dagen niet-goed-geld-terug-garantie loopt vanaf je bestelling; hoe eerder je start, hoe mooier je ervaring daarbinnen valt. Wil je toch een andere dag kiezen, typ dan gewoon "ik start eerder" en ik pas het aan. En anders: ${label} is helemaal prima, dan zie ik je dan! 💚`,
           1100,
         );
       }
@@ -1511,11 +1543,15 @@ export default function MentorWereld({
     );
     // Eerlijke bewustwording (Raoul 22 juli): de valkuil "ik weet nu hoe
     // het moet, dus het gaat vanzelf" benoemen, terug naar de start-vraag.
-    await wacht(800);
-    await mentorZegt(
-      `En mag ik heel eerlijk zijn? De grootste valkuil komt nú pas: denken "ik weet hoe het werkt, vanaf hier red ik het wel op de oude manier". Zo ging het vroeger ook, en je weet waar dat eindigde. Weet je nog, de vraag waarmee je begon: ben je bereid je leefstijl aan te passen om echt verschil te maken? Dít is het moment waarop dat antwoord telt. Hou je nieuwe ritme vast, en veel mensen kiezen ervoor ook hun dagelijkse basis gewoon aan te houden; bespreek met ${begeleiderNaam} wat bij jou past. De verleidingen blijven op de loer, maar jij weet nu wat werkt. 💚`,
-      1300,
-    );
+    // Alleen bij de reset: het darm-einde moet compact blijven (dag 17
+    // stapelde te veel).
+    if (prog.slug === "reset") {
+      await wacht(800);
+      await mentorZegt(
+        `En mag ik heel eerlijk zijn? De grootste valkuil komt nú pas: denken "ik weet hoe het werkt, vanaf hier red ik het wel op de oude manier". Zo ging het vroeger ook, en je weet waar dat eindigde. Weet je nog, de vraag waarmee je begon: ben je bereid je leefstijl aan te passen om echt verschil te maken? Dít is het moment waarop dat antwoord telt. Hou je nieuwe ritme vast, en veel mensen kiezen ervoor ook hun dagelijkse basis gewoon aan te houden; bespreek met ${begeleiderNaam} wat bij jou past. De verleidingen blijven op de loer, maar jij weet nu wat werkt. 💚`,
+        1300,
+      );
+    }
     await wacht(800);
     await mentorZegt(
       `Daarom kies je nu, samen met ${begeleiderNaam}, jouw vervolgstap om dit vast te houden en verder uit te bouwen. Dit zijn de routes, en met de groene knop plan je meteen jullie momentje. 👇`,
@@ -1524,16 +1560,9 @@ export default function MentorWereld({
     await mentorKaart("vervolg", st.slug, 800);
     await wacht(500);
     await mentorKaart("contact", st.slug, 600);
-    // Het eigen-ervaring/webshop-verhaal als afsluitende bonus, ná de
-    // vervolg-blokken (feedback Raoul: niet middenin de verhaallijn).
-    if (prog.slug === "darm") {
-      await wacht(1200);
-      await mentorZegt(
-        `O ja, en één ding om mee te nemen in dat gesprek met ${begeleiderNaam}:`,
-        900,
-      );
-      await speelTouchpoint("darm-einde");
-    }
+    // Het eigen-ervaring/webshop-verhaal (darm-einde) speelt NIET meer op
+    // deze dag: dag 17 stapelde te veel (feedback Raoul 22 juli). Het
+    // komt via het dag-systeem op een rustige opmaak-dag terug.
     // Doorgroei: heeft de begeleider het vervolg al vrijgegeven, dan
     // staat de start-knop hier meteen klaar (zelfde omgeving, zelfde
     // geheugen).
@@ -2069,6 +2098,35 @@ export default function MentorWereld({
       setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: echoI }]);
       logNaarServer([{ van: "klant", soort: "tekst", tekst: echoI }]);
       await speelInkijk(item.actie.slug);
+      return;
+    }
+    if (item.actie.type === "opmaak-dagelijks" || item.actie.type === "opmaak-rustig") {
+      const rustig = item.actie.type === "opmaak-rustig";
+      // Beide keuze-knoppen weghalen; er is gekozen.
+      setItems((b) =>
+        b.filter(
+          (x) =>
+            !(
+              x.soort === "verder-knop" &&
+              (x.actie.type === "opmaak-dagelijks" || x.actie.type === "opmaak-rustig")
+            ),
+        ),
+      );
+      const echoO = rustig ? "Ik houd het rustig 🌿" : "Ja, blijf er dagelijks voor me 💬";
+      setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: echoO }]);
+      logNaarServer([{ van: "klant", soort: "tekst", tekst: echoO }]);
+      if (rustig) {
+        markeerTouchpoint("darm-opmaak-rustig");
+        await mentorZegt(
+          `Helemaal goed! Dan laat ik de dagelijkse check-in los en geef ik je rust. Ik blijf hier dag en nacht bereikbaar voor elke vraag, en voor jouw vervolg zit je bij ${begeleiderNaam} helemaal goed. 💚`,
+          1000,
+        );
+      } else {
+        await mentorZegt(
+          "Doen we! Dan zie ik je gewoon elke dag bij je check-in, met een tip waar je wat aan hebt. En alles vragen mag natuurlijk altijd. 💚",
+          1000,
+        );
+      }
       return;
     }
     if (item.actie.type === "programma") {

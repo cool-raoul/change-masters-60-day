@@ -242,15 +242,24 @@ export default async function KlantLinkPagina({
   const startOverDagen =
     dagNummerRuw != null && dagNummerRuw < 1 ? 1 - dagNummerRuw : 0;
   const dagNummer = dagNummerRuw != null && dagNummerRuw >= 1 ? dagNummerRuw : null;
+  // Startmoment-vraag alleen rond het echte begin: wie al dagen bezig is
+  // (dag 2+) krijgt 'm niet meer voorgeschoteld (feedback Raoul 22 juli:
+  // de vraag dook op dag 3, 15 en zelfs 17 nog op).
   const startGekozen =
-    Boolean(ctx.startDatum) || !(opStartStation || opVraagStation);
+    Boolean(ctx.startDatum) ||
+    !(opStartStation || opVraagStation) ||
+    (dagNummer != null && dagNummer > 1);
 
   // Tijd-gebonden touchpoint: het kern-verhaal (aanbevelingsmarketing)
   // komt bij darm rond dag 5-7; bij de reset op dag 22 van fase 2, ná de
   // fase-keuze van dag 20/21 (feedback Raoul 22 juli: dag 22 = het
   // aanbevelen-moment). Wie vóór dag 22 al doorging naar fase 3 of 4,
   // krijgt het daar alsnog bij het eerstvolgende bezoek.
-  let dueTouchpoint: "kern-verhaal" | "reset-complimenten" | null = null;
+  let dueTouchpoint:
+    | "kern-verhaal"
+    | "reset-complimenten"
+    | "darm-einde"
+    | null = null;
   if (!ctx.isBouwer && dagNummer != null) {
     if (!ctx.touchpoints.includes("kern-verhaal")) {
       const kernNu =
@@ -273,6 +282,17 @@ export default async function KlantLinkPagina({
       !ctx.touchpoints.includes("reset-complimenten")
     ) {
       dueTouchpoint = "reset-complimenten";
+    }
+    // Darm eigen-ervaring/webshop-opvolger: niet meer in het einde-feest
+    // (dag 17 stapelde te veel), maar op een rustige opmaak-dag.
+    if (
+      !dueTouchpoint &&
+      ctx.programmaSlug === "darm" &&
+      ctx.stationSlug === "zestien-dagen" &&
+      dagNummer >= 19 &&
+      !ctx.touchpoints.includes("darm-einde")
+    ) {
+      dueTouchpoint = "darm-einde";
     }
   }
 
