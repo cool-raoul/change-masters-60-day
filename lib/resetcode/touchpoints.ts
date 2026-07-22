@@ -30,7 +30,7 @@ export type TouchpointSleutel =
 /** Het volledige kern-verhaal (dag ~7 darm, ~week 1 fase 2, of groeien-stap). */
 export function kernVerhaal(naam: string): string[] {
   return [
-    "Wist je trouwens dat deze producten verspreid worden via aanbevelingsmarketing? Dat is gebaseerd op natuurlijk gedrag: als iets ons bevalt, praten we erover. Een goed restaurant, een goeie film, iets wat je moeder je aanraadde. Zo gaat dit al ruim 40 jaar, van mens tot mens, over de hele wereld, en grote kans dat jij er zelf ook zo aan gekomen bent.",
+    "Wist je trouwens dat deze producten verspreid worden via aanbevelingsmarketing? Dat is gebaseerd op natuurlijk gedrag: als iets ons bevalt, praten we erover. Een goed restaurant, een goeie film, iets wat je moeder je aanraadde. Zo gaat dit al ruim 35 jaar, van mens tot mens, over de hele wereld, en grote kans dat jij er zelf ook zo aan gekomen bent.",
     "Daarom kan iedereen die de producten gebruikt een gratis eigen webshop krijgen. Super laagdrempelig: je hoeft niks te verkopen en niks in te kopen, je deelt gewoon wat je zelf al gebruikt. Daarmee verdien je om te beginnen je eigen producten terug, en pak je het serieuzer aan, dan bouw je er een echte extra inkomstenstroom mee op, in jouw tempo.",
     `En je staat er nooit alleen voor. Er is een AI-gedreven online systeem plus een heel team dat je stap voor stap meeneemt: het helpt je met wat je zegt, met het schrijven van je posts, en met alle kennis en vaardigheden die erbij horen. Sterker nog: deze Mentor waar je nu mee praat is daar een klein maar belangrijk onderdeel van. Je ervaart dus nu al precies hoe dat voelt. Meer weten? Vraag het gerust aan ${naam}.`,
   ];

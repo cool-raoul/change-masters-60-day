@@ -894,7 +894,7 @@ export default function MentorWereld({
               if (dueFaseKeuze.fase === "omschakeling") {
                 await mentorZegt(
                   dueFaseKeuze.max
-                    ? `Belangrijk moment: je zit op dag ${dueFaseKeuze.dag} van fase 2, en 40 dagen is echt het maximum. Het is tijd om door te gaan naar fase 3, de stabilisatie. Overleg vandaag nog even met ${begeleiderNaam}, en druk daarna op de knop hieronder. 👇`
+                    ? `Belangrijk moment: je zit op dag ${dueFaseKeuze.dag} van fase 2, en 40 dagen is echt het maximum. Het is tijd om door te gaan naar fase 3, de stabilisatie. Overleg vandaag nog even met ${begeleiderNaam} als je dat nog niet hebt gedaan, en druk daarna op de knop hieronder. 👇`
                     : dueFaseKeuze.dag <= 20
                       ? `Even vooruitkijken naar iets moois: morgen zitten je 21 dagen van fase 2 erop! 🎉 Dan is er een keuze, en die maak je het liefst samen met ${begeleiderNaam}: nog even doorgaan met fase 2 (dat mag, tot maximaal 40 dagen totaal), of door naar fase 3, de stabilisatie. Wil je alvast lezen wat fase 3 inhoudt? Dat kan met de leesknop, dan verandert er nog niks. Morgen staat ook de knop naar fase 3 voor je klaar. 👇`
                       : `Je 21 dagen van fase 2 zitten erop! 🎉 Kies wanneer jij er klaar voor bent, het liefst samen met ${begeleiderNaam}: doorgaan met fase 2 (tot maximaal 40 dagen) of door naar fase 3. 👇`,
@@ -933,7 +933,7 @@ export default function MentorWereld({
                   inkijkKnop("logisch-leven", "📖 Alvast lezen: wat is fase 4?");
                 } else {
                   await mentorZegt(
-                    `Je 21 dagen van fase 3 zitten erop, netjes volgehouden! 🎉 Bespreek met ${begeleiderNaam} wat jullie plan is: nog een ronde fase 2 en 3, of door naar fase 4, logisch leven. Beide knoppen staan voor je klaar. 👇`,
+                    `Je 21 dagen van fase 3 zitten erop, netjes volgehouden! 🎉 Bespreek met ${begeleiderNaam} wat jullie plan is als jullie dat nog niet gedaan hebben: nog een ronde fase 2 en 3, of door naar fase 4, logisch leven. Beide knoppen staan voor je klaar. 👇`,
                     1200,
                   );
                   toonStationKnop("logisch-leven", "🌿 Door naar fase 4 (logisch leven)");
@@ -2139,7 +2139,7 @@ export default function MentorWereld({
     ) {
       return {
         ok: false,
-        reden: `Ik snap dat je door wilt, maar fase 2 duurt minimaal 21 dagen; die tijd heeft je lichaam echt nodig voor de omschakeling. Je zit nu op dag ${dag || "?"}, dus nog ${Math.max(1, 21 - dag)} ${21 - dag === 1 ? "dag" : "dagen"} en dan mag je door naar fase 3. Wil je alvast weten wat er dan komt? Vraag me gerust om uitleg over fase 3. 💪`,
+        reden: `Ik snap dat je door wilt, maar fase 2 duurt minimaal 21 dagen; die tijd heeft je lichaam echt nodig voor de omschakeling. Je zit nu op dag ${dag || "?"}, dus nog ${Math.max(1, 21 - dag)} ${21 - dag === 1 ? "dag" : "dagen"} en dan mag je door naar fase 3. Wil je alvast weten wat er dan komt? Vraag me gerust om uitleg over fase 3. En gaat het ergens niet lekker en wil je dáárom door? Zeg het me, dan kijken we samen, en met ${begeleiderNaam}, wat je kunt doen om deze fase zo goed mogelijk af te ronden. 💪`,
       };
     }
     if (
@@ -2150,7 +2150,7 @@ export default function MentorWereld({
     ) {
       return {
         ok: false,
-        reden: `Ik snap dat je door wilt, maar fase 3 duurt echt de volle 21 dagen; zo werkt de stabilisatie nou eenmaal, korter kan niet. Je zit nu op dag ${dag || "?"}, dus nog ${Math.max(1, 21 - dag)} ${21 - dag === 1 ? "dag" : "dagen"} en dan mag je door naar fase 4. Wil je alvast weten wat er dan komt? Vraag me gerust om uitleg over fase 4. 💪`,
+        reden: `Ik snap dat je door wilt, maar fase 3 duurt echt de volle 21 dagen; zo werkt de stabilisatie nou eenmaal, korter kan niet. Je zit nu op dag ${dag || "?"}, dus nog ${Math.max(1, 21 - dag)} ${21 - dag === 1 ? "dag" : "dagen"} en dan mag je door naar fase 4. Wil je alvast weten wat er dan komt? Vraag me gerust om uitleg over fase 4. En gaat het ergens niet lekker en wil je dáárom door? Zeg het me, dan kijken we samen, en met ${begeleiderNaam}, wat je kunt doen om deze fase zo goed mogelijk af te ronden. 💪`,
       };
     }
     return { ok: true };
