@@ -699,7 +699,7 @@ const M4: AcademyLes[] = [
     sleutel: "4.1",
     titel: "De pre-post (voor de start van een traject)",
     leestijdMinuten: 9,
-    inhoud: `Een pre-post is een Instagram of Facebook-post die je maakt VOOR je start met een 21-dagen-traject (Reset, Darm-programma, of welk traject dan ook). Doel: laten zien dat je bewust kiest voor verandering.
+    inhoud: `Een pre-post is een Instagram of Facebook-post die je maakt VOOR je start met een traject (de Reset, het darmprogramma, of welk traject dan ook). Doel: laten zien dat je bewust kiest voor verandering.
 
 Pre-posts zijn een mooi instapmoment in gevoel-taal, omdat je nog geen RESULTAAT deelt. Je bent in de "ik ga dit proberen"-fase. Daar zit veel ruimte voor eerlijk schrijven.
 
@@ -741,7 +741,7 @@ Let op: "futloos", "niet in mijn vel", "energie wegzakte" zijn allemaal GEVOEL-w
 
 Twee tot drie zinnen over je plan. Hier mag je producten ondersteunend noemen.
 
-> Voorbeeld: "De komende 21 dagen ga ik een Reset doen, bewust aan de slag met mijn leefstijl: gezonder eten, meer water drinken, beter slapen en meer rustmomenten nemen."
+> Voorbeeld: "De komende weken ga ik een Reset doen, bewust aan de slag met mijn leefstijl: gezonder eten, meer water drinken, beter slapen en meer rustmomenten nemen."
 
 Let op de volgorde: jouw GEDRAG staat voorop (gezonder eten, water, slapen, rust). De Reset is daar onderdeel van. Niet andersom.
 
@@ -768,7 +768,7 @@ Niet verplicht, maar werkt vaak goed sociaal.
 >
 > Toen ik zag wat een verschil het maakte bij [naam vriendin], wist ik: dit wil ik ook proberen.
 >
-> De komende 21 dagen ga ik een Reset doen, bewust aan de slag met mijn leefstijl: gezonder eten, meer water drinken, beter slapen en meer rustmomenten nemen.
+> De komende weken ga ik een Reset doen, bewust aan de slag met mijn leefstijl: gezonder eten, meer water drinken, beter slapen en meer rustmomenten nemen.
 >
 > Ik ben benieuwd wat dit me gaat brengen!
 >
@@ -782,15 +782,15 @@ Loop hem na: geen medische taal (futloos = gevoel). Geen cijfers ("ga 5 kilo afv
 
 Pre-posts werken vaak beter dan resultaat-posts voor het opbouwen van een verhaal. Pre-posts laten mensen meereizen met JOU in plaats van ze te overdonderen met een eindresultaat. Mensen volgen verhalen, niet conclusies.
 
-Wanneer je 21 dagen later je resultaat-post maakt (volgende les), kunnen mensen terug-scrollen naar de pre-post en zien hoe het BEGINT. Dat is veel sterker voor vertrouwen dan een resultaat-post zonder context.`,
+Wanneer je een paar weken later je resultaat-post maakt (volgende les), kunnen mensen terug-scrollen naar de pre-post en zien hoe het BEGINT. Dat is veel sterker voor vertrouwen dan een resultaat-post zonder context.`,
     oefening:
-      "Stel je voor dat je morgen een 21-dagen-Reset start. Schrijf nu jouw eigen pre-post volgens de 4 blokken. Geen Lifeplus-pakket noemen indien dat niet je echte plan is, maar wel het PATROON oefenen. Bewaar 'm in je notitie-app. Zodra je een echt traject doet, heb je de structuur al klaar.",
+      "Stel je voor dat je morgen een Reset start. Schrijf nu jouw eigen pre-post volgens de 4 blokken. Geen Lifeplus-pakket noemen indien dat niet je echte plan is, maar wel het PATROON oefenen. Bewaar 'm in je notitie-app. Zodra je een echt traject doet, heb je de structuur al klaar.",
   },
   {
     sleutel: "4.2",
     titel: "De 21-dagen-resultaatpost (na de start)",
     leestijdMinuten: 10,
-    inhoud: `Na 21 dagen Reset of een ander traject komt de resultaat-post. Dit is de plek waar copywriting echt tot leven komt. Niet omdat het de "moeilijkste" post is, maar omdat hier de meeste kracht van gevoel-taal zichtbaar wordt.
+    inhoud: `Na een Reset of een ander traject komt de resultaat-post. Dit is de plek waar copywriting echt tot leven komt. Niet omdat het de "moeilijkste" post is, maar omdat hier de meeste kracht van gevoel-taal zichtbaar wordt.
 
 We bouwen 'm zorgvuldig op.
 
@@ -967,7 +967,7 @@ Hier mag je in 1-op-1 nuancen aanbrengen die in publieke posts niet kunnen. Je m
 
 Als het natuurlijk aanvoelt, breng je een uitnodiging in:
 
-> "Wat ik deed is een Reset, een 21-dagen-bewustwordings-programma. Wil je dat ik je laat zien wat het is? Geen verplichtingen, gewoon kijken of het iets is voor jou."
+> "Wat ik deed is een Reset, een bewustwordingsprogramma voor je leefstijl. Wil je dat ik je laat zien wat het is? Geen verplichtingen, gewoon kijken of het iets is voor jou."
 
 **Een woord over stories**
 
@@ -1046,7 +1046,7 @@ Hier zijn enkele zinnen die werken om de Mentor optimaal in te zetten:
 
 **Voor een resultaat-post:**
 
-> "Hé Mentor, ik heb net 21 dagen Reset gedaan. Help me een resultaat-post te schrijven. Mijn ervaring: [korte beschrijving]."
+> "Hé Mentor, ik heb net een Reset gedaan. Help me een resultaat-post te schrijven. Mijn ervaring: [korte beschrijving]."
 
 **Voor een DM-antwoord:**
 
@@ -1084,7 +1084,7 @@ In de volgende les gaan we praktisch aan de slag met een resultaat-post laten sc
 
 **Setup**
 
-Stel je voor: je hebt net een 21-dagen-Reset afgerond. Je voelt je beter, je kleding zit losser, je energie is terug. Je wilt een post maken om dit te delen op Instagram en Facebook.
+Stel je voor: je hebt net een Reset afgerond. Je voelt je beter, je kleding zit losser, je energie is terug. Je wilt een post maken om dit te delen op Instagram en Facebook.
 
 Volg deze 5 stappen met de Mentor.
 
@@ -1094,7 +1094,7 @@ In de zijbalk klik op "Mentor" of ga naar /coach. Open een nieuw gesprek.
 
 Je eerste bericht:
 
-> "Hé Mentor, ik heb net een 21-dagen-Reset afgerond. Ik wil hier een post over maken voor Instagram in gevoel-taal. Kun je me helpen?"
+> "Hé Mentor, ik heb net een Reset afgerond. Ik wil hier een post over maken voor Instagram in gevoel-taal. Kun je me helpen?"
 
 De Mentor reageert met een paar opvolg-vragen om je verhaal te begrijpen.
 

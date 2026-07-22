@@ -240,7 +240,7 @@ Taal van gevoel, gedrag en bewustwording:
 > **YES, HET ROER GAAT OM**
 > De laatste tijd voelde ik me futloos, zat niet lekker in mijn vel en merkte dat mijn energie vaak wegzakte.
 > Toen ik zag wat een verschil het maakte bij [naam], wist ik: dit wil ik ook proberen.
-> De komende 21 dagen ga ik een Reset doen, bewust aan de slag met mijn leefstijl, gezonder eten, meer water drinken, beter slapen en meer rustmomenten nemen.
+> De komende weken ga ik een Reset doen, bewust aan de slag met mijn leefstijl, gezonder eten, meer water drinken, beter slapen en meer rustmomenten nemen.
 > Ik ben benieuwd wat dit me gaat brengen!
 > [Naam coach/mentor], bedankt voor je support.
 > Wish me luck.
@@ -351,7 +351,7 @@ Taal van gevoel, gedrag en bewustwording:
 
 | Niet zeggen | Wel zeggen |
 |---|---|
-| ik doe een kuur | ik gun mezelf een reset / ik doe een (16-dagen/21-dagen/90 dagen) bewustwordingsprogramma |
+| ik doe een kuur | ik gun mezelf een reset / ik doe een bewustwordingsprogramma (NB: noem bij de Reset géén dagen-aantal, de reset duurt geen 21 dagen) |
 | genezen, herstellen | ik voel me beter in balans / ik merk positieve veranderingen |
 | klachten, problemen | aandachtspunten / patronen / gewoontes die ik wilde doorbreken |
 | discipline / streng dieet | bewuste keuzes / gezonde routine / stap voor stap gezondere gewoontes |

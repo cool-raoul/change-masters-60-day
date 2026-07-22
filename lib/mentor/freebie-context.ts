@@ -27,7 +27,7 @@ const OMSCHRIJVINGEN: Record<string, string> = {
   "hormonen-en-overgang":
     "korte check voor vrouwen die zichzelf de laatste tijd niet helemaal herkennen",
   "reset-check":
-    "korte check die laat zien of een 21-daagse reset bij je past",
+    "korte check die laat zien of een reset bij je past",
 };
 
 /**

@@ -52,7 +52,9 @@ type VerderActie =
   | { type: "chunk"; index: number; stationSlug: string }
   | { type: "station"; slug: string }
   | { type: "programma"; slug: string }
-  | { type: "verlengen" };
+  | { type: "verlengen" }
+  // Alvast lezen over een volgende fase, zonder er echt naartoe te gaan.
+  | { type: "inkijk"; slug: string };
 
 type Checkin = {
   datum: string;
@@ -583,6 +585,9 @@ export default function MentorWereld({
   const [checkinBezig, setCheckinBezig] = useState(false);
 
   function markeerTouchpoint(sleutel: TouchpointSleutel) {
+    // Ook client-side onthouden, zodat een keuze (zoals "blijf in fase 2")
+    // direct in dit bezoek meetelt en niet pas na een refresh.
+    verteldRef.current.add(sleutel);
     if (!token) return;
     fetch("/api/resetcode/touchpoint", {
       method: "POST",
@@ -737,6 +742,16 @@ export default function MentorWereld({
         const volgend =
           i >= 0 && i < prog.stations.length - 1 ? prog.stations[i + 1] : null;
         const teltAf = (startOverDagen ?? 0) > 0;
+        // Geen dubbele fase-knoppen (feedback Raoul 22 juli): loopt er een
+        // fase-keuzemoment, dan zijn de keuze-knoppen de enige navigatie.
+        // En wie "ik blijf in fase 2" koos, krijgt de fase 3-knop niet
+        // dagelijks terug; typen ("verder") blijft altijd werken.
+        const verlengdGekozen =
+          prog.slug === "reset" &&
+          st.slug === "omschakeling" &&
+          verteldRef.current.has("fase2-verlengd");
+        const toonVolgendKnop =
+          Boolean(volgend) && !dueFaseKeuze && !verlengdGekozen;
         setItems([
           ...beginItems,
           {
@@ -746,7 +761,7 @@ export default function MentorWereld({
               ? `Welkom terug! 👋 Nog ${startOverDagen === 1 ? "één dag" : `${startOverDagen} dagen`} en dan begint jouw dag 1 🚀 Gebruik de tijd om je documenten rustig door te lezen en je boodschappen te doen. En vraag me gerust van alles: ik kijk ook mee met etiket-foto's of een product past, en ik maak alvast een recept of dagschema voor je.`
               : `Welkom terug! 👋 We waren bij ${st.emoji} ${st.naam}${dagNummer ? ` (dag ${dagNummer})` : ""}. Waar wil je verder mee? Stel je vraag, stuur een foto van een etiket (dan kijk ik met je mee of een product bij jouw programma past), of laat me een recept of dagschema voor je maken.`,
           },
-          ...(volgend
+          ...(volgend && toonVolgendKnop
             ? [
                 {
                   van: "mentor" as const,
@@ -852,18 +867,35 @@ export default function MentorWereld({
             } else if (dueWeekTerugblik) {
               await speelWeekTerugblik(dueWeekTerugblik);
             } else if (dueFaseKeuze) {
-              // Reset-fase-regie: dag 20 kondigt de keuze aan, dag 22+
-              // herinnert er rustig aan; wie "blijf in fase 2" koos,
-              // hoort er niets meer over tot het 40-dagen-maximum.
+              // Reset-fase-regie: dag 20 kondigt de keuze aan (met een
+              // alvast-lezen-knop voor wie de info vooruit wil), daarna
+              // een rustige herinnering voor wie nog niet koos; wie
+              // "blijf in fase 2" koos, hoort er niets meer over tot
+              // het 40-dagen-maximum.
+              const inkijkKnop = (slug: string, label: string) => {
+                setItems((b) => [
+                  ...b,
+                  {
+                    van: "mentor",
+                    soort: "verder-knop",
+                    bid: ++bidTeller.current,
+                    label,
+                    actie: { type: "inkijk", slug },
+                  },
+                ]);
+              };
               if (dueFaseKeuze.fase === "omschakeling") {
                 await mentorZegt(
                   dueFaseKeuze.max
                     ? `Belangrijk moment: je zit op dag ${dueFaseKeuze.dag} van fase 2, en 40 dagen is echt het maximum. Het is tijd om door te gaan naar fase 3, de stabilisatie. Overleg vandaag nog even met ${begeleiderNaam}, en druk daarna op de knop hieronder. 👇`
                     : dueFaseKeuze.dag === 20
-                      ? `Even vooruitkijken naar iets moois: morgen zitten je 21 dagen van fase 2 erop! 🎉 Dan is er een keuze, en die maak je het liefst samen met ${begeleiderNaam}: nog even doorgaan met fase 2 (dat mag, tot maximaal 40 dagen totaal), of door naar fase 3, de stabilisatie. Denk er vandaag rustig over na; de knoppen staan alvast klaar. 👇`
+                      ? `Even vooruitkijken naar iets moois: morgen zitten je 21 dagen van fase 2 erop! 🎉 Dan is er een keuze, en die maak je het liefst samen met ${begeleiderNaam}: nog even doorgaan met fase 2 (dat mag, tot maximaal 40 dagen totaal), of door naar fase 3, de stabilisatie. Wil je alvast lezen wat fase 3 inhoudt? Dat kan met de leesknop, dan verandert er nog niks. De keuze-knoppen staan er ook alvast. 👇`
                       : `Ter herinnering: je 21 dagen van fase 2 zitten erop. Kies wanneer jij er klaar voor bent, het liefst samen met ${begeleiderNaam}: doorgaan met fase 2 (tot maximaal 40 dagen) of door naar fase 3. 👇`,
                   1200,
                 );
+                if (!dueFaseKeuze.max) {
+                  inkijkKnop("stabilisatie", "📖 Alvast lezen: wat is fase 3?");
+                }
                 toonStationKnop("stabilisatie", "🧘 Door naar fase 3 (stabilisatie)");
                 if (!dueFaseKeuze.max) {
                   const bidV = ++bidTeller.current;
@@ -879,12 +911,22 @@ export default function MentorWereld({
                   ]);
                 }
               } else if (dueFaseKeuze.fase === "stabilisatie") {
-                await mentorZegt(
-                  `Je 21 dagen van fase 3 zitten erop, netjes volgehouden! 🎉 Bespreek met ${begeleiderNaam} wat jullie plan is: nog een ronde fase 2 en 3, of door naar fase 4, logisch leven. Beide knoppen staan voor je klaar. 👇`,
-                  1200,
-                );
-                toonStationKnop("logisch-leven", "🌿 Door naar fase 4 (logisch leven)");
-                toonStationKnop("omschakeling", "🔄 Nog een ronde fase 2");
+                if (dueFaseKeuze.dag <= 20) {
+                  // Dag 20: vooruitkijken. De echte overstap kan pas na
+                  // de volle 21 dagen; alvast lezen kan wel.
+                  await mentorZegt(
+                    `Even vooruitkijken: morgen zitten je 21 dagen van fase 3 erop! 🎉 Dan kies je, het liefst samen met ${begeleiderNaam}, wat jullie plan is: door naar fase 4 (logisch leven) of nog een ronde fase 2 en 3. Wil je alvast lezen wat fase 4 inhoudt? Dat kan hieronder, dan verandert er nog niks. Morgen staan de keuze-knoppen voor je klaar. 👇`,
+                    1200,
+                  );
+                  inkijkKnop("logisch-leven", "📖 Alvast lezen: wat is fase 4?");
+                } else {
+                  await mentorZegt(
+                    `Je 21 dagen van fase 3 zitten erop, netjes volgehouden! 🎉 Bespreek met ${begeleiderNaam} wat jullie plan is: nog een ronde fase 2 en 3, of door naar fase 4, logisch leven. Beide knoppen staan voor je klaar. 👇`,
+                    1200,
+                  );
+                  toonStationKnop("logisch-leven", "🌿 Door naar fase 4 (logisch leven)");
+                  toonStationKnop("omschakeling", "🔄 Nog een ronde fase 2");
+                }
               }
             }
             // En dan pas de check-in van vandaag, netjes onderaan, zodat
@@ -1413,7 +1455,7 @@ export default function MentorWereld({
     // Startpunt-bewustwording, juist ook zonder zichtbaar resultaat.
     await wacht(900);
     await mentorZegt(
-      `En dan iets belangrijks, zeker als je nog niet al het verschil ziet of voelt waar je op hoopte: deze ${duur} dagen waren nooit een quick fix. Zie dit als het stártpunt van jouw gezondheidsreis. Het programma-materiaal is daar eerlijk over: je lichaam heeft 6 tot 9 maanden nodig om tekorten echt aan te vullen. Wat jij nu hebt neergezet is het fundament waar alles op verder bouwt. 🌱`,
+      `En dan iets belangrijks, zeker als je nog niet al het verschil ziet of voelt waar je op hoopte: ${prog.slug === "reset" ? "deze reis was" : `deze ${duur} dagen waren`} nooit een quick fix. Zie dit als het stártpunt van jouw gezondheidsreis. Het programma-materiaal is daar eerlijk over: je lichaam heeft 6 tot 9 maanden nodig om tekorten echt aan te vullen. Wat jij nu hebt neergezet is het fundament waar alles op verder bouwt. 🌱`,
       1200,
     );
     await wacht(800);
@@ -1948,8 +1990,34 @@ export default function MentorWereld({
       logNaarServer([{ van: "klant", soort: "tekst", tekst: echoV }]);
       markeerTouchpoint("fase2-verlengd" as TouchpointSleutel);
       await mentorZegt(
-        `Helemaal goed, jij bepaalt wanneer fase 2 klaar is (verlengen mag tot maximaal 40 dagen, en overleg gerust met ${begeleiderNaam}). Ik vraag er niet elke dag naar; zeg gewoon "ik ga naar fase 3" of gebruik je Groeipad zodra je zover bent. Ik zie je morgen gewoon weer bij je check-in. 💚`,
+        `Helemaal goed, jij bepaalt wanneer fase 2 klaar is (verlengen mag tot maximaal 40 dagen, en overleg gerust met ${begeleiderNaam}). Ik vraag er niet elke dag naar; typ gewoon "verder" zodra je zover bent, dan gaan we samen naar fase 3. Ik zie je morgen gewoon weer bij je check-in. 💚`,
         1000,
+      );
+      return;
+    }
+    if (item.actie.type === "inkijk") {
+      // Alvast lezen over een volgende fase (feedback Raoul 22 juli):
+      // wél de informatie, géén stap-wissel en géén server-update.
+      const doel = programma ? stationVoor(programma.slug, item.actie.slug) : null;
+      if (!doel) return;
+      const echoI = `Ik wil alvast lezen over ${doel.naam}`;
+      setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: echoI }]);
+      logNaarServer([{ van: "klant", soort: "tekst", tekst: echoI }]);
+      await mentorZegt(
+        `Goed idee, dan weet je wat er komt! 📖 Dit is ${doel.emoji} ${doel.naam} (${doel.duur}):\n\n${doel.welkom}`,
+        1100,
+      );
+      if (doel.vandaagBelangrijk.length > 0) {
+        await wacht(800);
+        await mentorZegt(
+          `De belangrijkste punten van die fase alvast op een rij:\n\n${doel.vandaagBelangrijk.map((p) => `• ${p}`).join("\n")}`,
+          1000,
+        );
+      }
+      await wacht(700);
+      await mentorZegt(
+        `Zo kun je alvast wennen aan wat er komt. Voor nu zit je gewoon nog in ${station ? `${station.emoji} ${station.naam}` : "je huidige fase"}; zodra jouw dagen erop zitten zetten we samen de echte stap. 💚`,
+        900,
       );
       return;
     }

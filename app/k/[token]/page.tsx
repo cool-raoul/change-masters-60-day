@@ -245,21 +245,26 @@ export default async function KlantLinkPagina({
   const startGekozen =
     Boolean(ctx.startDatum) || !(opStartStation || opVraagStation);
 
-  // Tijd-gebonden touchpoint: het kern-verhaal komt rond dag 5-7 van de
-  // 16 dagen (darm) of van fase 2 (reset), niet meteen bij de start.
-  const KERN_STATION: Record<string, string> = {
-    darm: "zestien-dagen",
-    reset: "omschakeling",
-  };
+  // Tijd-gebonden touchpoint: het kern-verhaal (aanbevelingsmarketing)
+  // komt bij darm rond dag 5-7; bij de reset op dag 22 van fase 2, ná de
+  // fase-keuze van dag 20/21 (feedback Raoul 22 juli: dag 22 = het
+  // aanbevelen-moment). Wie vóór dag 22 al doorging naar fase 3 of 4,
+  // krijgt het daar alsnog bij het eerstvolgende bezoek.
   let dueTouchpoint: "kern-verhaal" | null = null;
   if (
     !ctx.isBouwer &&
     !ctx.touchpoints.includes("kern-verhaal") &&
-    ctx.stationSlug === KERN_STATION[ctx.programmaSlug] &&
-    dagNummer != null &&
-    dagNummer >= 5
+    dagNummer != null
   ) {
-    dueTouchpoint = "kern-verhaal";
+    const kernNu =
+      ctx.programmaSlug === "darm"
+        ? ctx.stationSlug === "zestien-dagen" && dagNummer >= 5
+        : ctx.programmaSlug === "reset" &&
+          (ctx.stationSlug === "omschakeling"
+            ? dagNummer >= 22
+            : ctx.stationSlug === "stabilisatie" ||
+              ctx.stationSlug === "logisch-leven");
+    if (kernNu) dueTouchpoint = "kern-verhaal";
   }
 
   // Dag 10-video (darm): pas vanaf dag 10 in de fase, eenmalig.
@@ -328,7 +333,9 @@ export default async function KlantLinkPagina({
       (dagNummer >= 40 || !ctx.touchpoints.includes("fase2-verlengd"))
     ) {
       dueFaseKeuze = { fase: "omschakeling", dag: dagNummer, max: dagNummer >= 40 };
-    } else if (ctx.stationSlug === "stabilisatie" && dagNummer >= 21) {
+    } else if (ctx.stationSlug === "stabilisatie" && dagNummer >= 20) {
+      // Dag 20 = vooruitkijken (alvast lezen over fase 4); de echte
+      // keuze-knoppen komen vanaf dag 21, de fase duurt de volle 21 dagen.
       dueFaseKeuze = { fase: "stabilisatie", dag: dagNummer };
     }
   }

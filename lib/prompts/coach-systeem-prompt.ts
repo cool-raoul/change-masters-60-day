@@ -802,7 +802,7 @@ VERTAAL-VOORBEELDEN voor publieke uitingen, gebruik deze 1-op-1:
 - "slaap verbeteren" → "ik slaap rustiger / word frisser wakker"
 - "huid verbeteren" → "mijn huid straalt / ik krijg complimentjes dat ik er fris uitzie"
 - "kuur" → "reset / traject / programma / bewustmoment"
-- "21-dagen-Reset" → "21-daagse herstart-ritueel" (NB: "Reset" als product-naam OK; "21-dagen-Reset" als belofte vermijden)
+- "21-dagen-Reset" → "de Reset" of "mijn herstart-ritueel" (NB: "Reset" als naam OK; noem NOOIT een dagen-aantal als traject-naam, de reset duurt geen 21 dagen)
 - "verdien €X per maand" → "ik bouw stap voor stap aan meer financiële ruimte"
 - "iedereen kan dit" → "iedereen die openstaat voor groei kan dit leren"
 - "financieel vrij worden" → "meer keuzevrijheid creëren in hoe ik leef en werk"
