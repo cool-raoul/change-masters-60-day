@@ -4,9 +4,14 @@ Levende lijst die Claude bijhoudt. Afspraak: nieuw werk komt hier eerst op,
 en we maken iets ÉCHT af (gebouwd → getest → bevestigd) voordat we iets
 nieuws beginnen. Bijwerken zodra een item van status verandert.
 
-Laatst bijgewerkt: 2026-07-05
+Laatst bijgewerkt: 2026-07-22
 
 ---
+
+## 🌿 Resetcode + Mentor-architectuur (22 juli)
+- ✅ **Fase-keuze op dag 20 + één moment per dag** (live, commit b156197): keuzemoment fase 2→3 vanaf dag 20 met "blijf in fase 2"-knop; due-momenten spelen max. één per dag (kennis > dag 10 > kern-verhaal > week-overzicht > fase-keuze). NOG TE TESTEN door Raoul via de Resetreis-links dag 20/21/22.
+- ✅ **Receptionist-router member-Mentor** (live, commits 6f44ecd + 8749ad3): LLM-classificatie vervangt de vraagtype-regex, regex blijft vangnet. Testbank 18/20 goed; fibromyalgie/Crohn/overgang gaan nu betrouwbaar naar productadvies.
+- ⏳ **Fase 3 agent-architectuur** (spec: docs/superpowers/specs/2026-07-22-mentor-agent-architectuur-design.md): productadvies-specialist uitpakken, opruimlijst (dubbele prompt-regels, dode laag-1/2/3-code), risico-vlaggen kennisbank, coach-teamkennis-injectie.
 
 ## ✅ Af + bevestigd door Raoul
 - **Mijn freebies in het menu** (weg uit Instellingen)
