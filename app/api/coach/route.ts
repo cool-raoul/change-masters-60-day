@@ -290,36 +290,47 @@ export async function POST(request: Request) {
     // er gevalideerde rijen zijn.
     if (!isSchrijfPrompt && !isKennismaking) {
       try {
-        const { haalGevalideerdeKennis, formatKennisVoorPrompt } = await import(
-          "@/lib/cms/mentor-kennis"
-        );
-        const kennisRijen = await haalGevalideerdeKennis();
-        // (flag hieronder gezet bij een echte match)
-        // Alleen de rijen meesturen die bij dit gesprek passen: sinds
-        // de volledige validatie (127 rijen) maakte alles-tegelijk het
-        // verzoek te groot (OpenAI 429 request-too-large, bug 21 juli)
-        // en het is voor het antwoord ook niet nodig.
+        const {
+          haalGevalideerdeKennis,
+          formatKennisVoorPrompt,
+          bevatNooitAdviesAandoening,
+          bouwNooitAdviesBlok,
+        } = await import("@/lib/cms/mentor-kennis");
         const gespreksTekst = berichten
           .filter((b) => b.role === "user")
           .slice(-3)
           .map((b) => String(b.content).toLowerCase())
           .join(" ");
-        const relevant = kennisRijen.filter((r) => {
-          const termen = `${(r as { zoekterm?: string }).zoekterm ?? ""} ${(r as { oorspronkelijke_term?: string }).oorspronkelijke_term ?? ""}`
-            .toLowerCase()
-            .split(/[^a-zà-ÿ0-9]+/)
-            .filter(
-              (w) =>
-                w.length >= 4 &&
-                // Generieke woorden matchen elk gesprek en zouden
-                // willekeurige ziekte-rijen injecteren.
-                !["ziekte", "ziektes", "syndroom", "chronische", "chronisch", "klachten", "aandoening"].includes(w),
-            );
-          return termen.some((w) => gespreksTekst.includes(w));
-        });
-        if (relevant.length > 0) {
-          systeemPrompt += formatKennisVoorPrompt(relevant.slice(0, 8));
+        // Nooit-advies-aandoeningen (Crohn, colitis, diverticulitis,
+        // diabetes type 1): GEEN kennis-rijen meesturen, wél het harde
+        // geen-advies-blok + sterk model + waakhond (besluit Raoul 22 juli).
+        if (bevatNooitAdviesAandoening(gespreksTekst)) {
+          systeemPrompt += bouwNooitAdviesBlok();
           kennisMatchActief = true;
+        } else {
+          const kennisRijen = await haalGevalideerdeKennis();
+          // (flag hieronder gezet bij een echte match)
+          // Alleen de rijen meesturen die bij dit gesprek passen: sinds
+          // de volledige validatie (127 rijen) maakte alles-tegelijk het
+          // verzoek te groot (OpenAI 429 request-too-large, bug 21 juli)
+          // en het is voor het antwoord ook niet nodig.
+          const relevant = kennisRijen.filter((r) => {
+            const termen = `${(r as { zoekterm?: string }).zoekterm ?? ""} ${(r as { oorspronkelijke_term?: string }).oorspronkelijke_term ?? ""}`
+              .toLowerCase()
+              .split(/[^a-zà-ÿ0-9]+/)
+              .filter(
+                (w) =>
+                  w.length >= 4 &&
+                  // Generieke woorden matchen elk gesprek en zouden
+                  // willekeurige ziekte-rijen injecteren.
+                  !["ziekte", "ziektes", "syndroom", "chronische", "chronisch", "klachten", "aandoening"].includes(w),
+              );
+            return termen.some((w) => gespreksTekst.includes(w));
+          });
+          if (relevant.length > 0) {
+            systeemPrompt += formatKennisVoorPrompt(relevant.slice(0, 8));
+            kennisMatchActief = true;
+          }
         }
       } catch (e) {
         console.warn("mentor-kennis ophalen mislukt:", e);
@@ -403,8 +414,17 @@ export async function POST(request: Request) {
     // bereiken, ook niet als het model de prompt-regel negeert. Vervang
     // deterministisch in de stream; de compliance-scan hieronder draait op
     // de ONgefilterde tekst zodat founders de poging alsnog gemeld krijgen.
+    // Drie stappen zodat de zin leesbaar blijft: "het Lifeplus-advies" →
+    // "het advies", "Lifeplus Daily BioBasics" → "Daily BioBasics", en
+    // pas als laatste redmiddel een losse naam → "het merk".
     const zonderMerknaam = (t: string) =>
-      t.replace(/\blife\s*-?\s*plus\b/gi, "het merk");
+      t
+        .replace(
+          /\blife\s*-?\s*plus[-\s]?(advies|adviezen|assortiment|producten?|pakket(?:ten)?|supplementen?)\b/gi,
+          "$1",
+        )
+        .replace(/\bLife\s*-?\s*[Pp]lus\s+(?=[A-Z])/g, "")
+        .replace(/\blife\s*-?\s*plus\b/gi, "het merk");
     // Buffer tegen een merknaam die over een chunk-grens valt: de laatste
     // tekens gaan pas mee zodra er meer tekst is (of aan het einde).
     const MERK_BUFFER = 16;
@@ -530,7 +550,7 @@ export async function POST(request: Request) {
                   messages: [
                     {
                       role: "system",
-                      content: `Je bent de claim-waakhond van een supplementen-Mentor (EU-regels: supplementen mogen geen medische claims). Beoordeel het antwoord. VERDACHT als het: (1) zegt of impliceert dat een product een ziekte geneest/behandelt/verhelpt/aanpakt, (2) doseringen of innameschema's geeft, (3) producten adviseert buiten het Lifeplus-assortiment of colloïdaal zilver inwendig adviseert, (4) een ziektenaam of aandoening laat staan BINNEN een [STUUR]...[/STUUR]-doorstuurblok, (5) bij een ziekte/aandoening-advies GEEN arts-disclaimer bevat, (6) de merknaam "Lifeplus" (elke schrijfwijze) in de zichtbare tekst noemt of een programma/product aan die merknaam koppelt. NIET verdacht: ervaring-taal ("veel mensen merken"), leefstijl-advies, aanwezige disclaimer, doorverwijzing naar arts, gespreks-coaching zonder producten. Twijfel = niet verdacht. Antwoord UITSLUITEND JSON: {"verdacht": true/false, "reden": "één zin"}`,
+                      content: `Je bent de claim-waakhond van een supplementen-Mentor (EU-regels: supplementen mogen geen medische claims). Beoordeel het antwoord. VERDACHT als het: (1) zegt of impliceert dat een product een ziekte geneest/behandelt/verhelpt/aanpakt, (2) doseringen of innameschema's geeft, (3) producten adviseert buiten het Lifeplus-assortiment of colloïdaal zilver inwendig adviseert, (4) een ziektenaam of aandoening laat staan BINNEN een [STUUR]...[/STUUR]-doorstuurblok, (5) bij een ziekte/aandoening-advies GEEN arts-disclaimer bevat, (6) de merknaam "Lifeplus" (elke schrijfwijze) in de zichtbare tekst noemt of een programma/product aan die merknaam koppelt, (7) producten, "goede ervaringen" of een programma noemt bij de ziekte van Crohn, colitis ulcerosa, diverticulitis of diabetes type 1 (daar geeft ELEVA NOOIT advies bij), (8) per product uitlegt wat het doet of waarbij het helpt (alleen namen opsommen is toegestaan). NIET verdacht: ervaring-taal ("veel mensen merken"), leefstijl-advies, aanwezige disclaimer, doorverwijzing naar arts, gespreks-coaching zonder producten. Twijfel = niet verdacht. Antwoord UITSLUITEND JSON: {"verdacht": true/false, "reden": "één zin"}`,
                     },
                     {
                       role: "user",

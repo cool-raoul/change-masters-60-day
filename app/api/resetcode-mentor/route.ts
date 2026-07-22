@@ -268,8 +268,17 @@ export async function POST(req: NextRequest) {
     // deterministisch in de stream, met een kleine buffer tegen een
     // merknaam die over een chunk-grens valt; de waakhond hieronder kijkt
     // naar de ONgefilterde tekst zodat founders de poging gemeld krijgen.
+    // Drie stappen zodat de zin leesbaar blijft: "het Lifeplus-advies" →
+    // "het advies", "Lifeplus Daily BioBasics" → "Daily BioBasics", en
+    // pas als laatste redmiddel een losse naam → "het merk".
     const zonderMerknaam = (t: string) =>
-      t.replace(/\blife\s*-?\s*plus\b/gi, "het merk");
+      t
+        .replace(
+          /\blife\s*-?\s*plus[-\s]?(advies|adviezen|assortiment|producten?|pakket(?:ten)?|supplementen?)\b/gi,
+          "$1",
+        )
+        .replace(/\bLife\s*-?\s*[Pp]lus\s+(?=[A-Z])/g, "")
+        .replace(/\blife\s*-?\s*plus\b/gi, "het merk");
     const MERK_BUFFER = 16;
     const readable = new ReadableStream({
       async start(controller) {

@@ -766,7 +766,11 @@ export default function MentorWereld({
             soort: "tekst",
             tekst: teltAf
               ? `Welkom terug! 👋 Nog ${startOverDagen === 1 ? "één dag" : `${startOverDagen} dagen`} en dan begint jouw dag 1 🚀 Gebruik de tijd om je documenten rustig door te lezen en je boodschappen te doen. En vraag me gerust van alles: ik kijk ook mee met etiket-foto's of een product past, en ik maak alvast een recept of dagschema voor je.`
-              : `Welkom terug! 👋 We waren bij ${st.emoji} ${st.naam}${dagNummer ? ` (dag ${dagNummer})` : ""}. Waar wil je verder mee? Stel je vraag, stuur een foto van een etiket (dan kijk ik met je mee of een product bij jouw programma past), of laat me een recept of dagschema voor je maken.`,
+              : prog.slug === "darm" &&
+                  st.slug === "zestien-dagen" &&
+                  (dagNummer ?? 0) > 16
+                ? `Welkom terug! 👋 Je 16 dagen zitten erop en je bent nu je producten rustig aan het opmaken (opmaak-dag ${(dagNummer ?? 17) - 16}). Waar wil je mee verder? Stel je vraag, stuur een foto van een etiket, of laat me een recept of dagschema voor je maken.`
+                : `Welkom terug! 👋 We waren bij ${st.emoji} ${st.naam}${dagNummer ? ` (dag ${dagNummer})` : ""}. Waar wil je verder mee? Stel je vraag, stuur een foto van een etiket (dan kijk ik met je mee of een product bij jouw programma past), of laat me een recept of dagschema voor je maken.`,
           },
           ...(volgend && toonVolgendKnop
             ? [
@@ -891,7 +895,28 @@ export default function MentorWereld({
                   },
                 ]);
               };
-              if (dueFaseKeuze.fase === "omschakeling") {
+              if (dueFaseKeuze.fase === "darm-vooruitblik") {
+                // Dag 14-16: vervolg-momentje plannen, zoals het
+                // contactmoment al belooft, maar nu actief aangeboden.
+                const rest = Math.max(0, 16 - dueFaseKeuze.dag);
+                await mentorZegt(
+                  `${rest === 0 ? "Vandaag is de laatste van je 16 dagen" : rest === 1 ? "Nog één dag" : `Nog ${rest} dagen`} en dan zitten je 16 dagen erop, wat goed van je! 🎉 Plan alvast een momentje met ${begeleiderNaam} om samen naar jouw vervolg te kijken (dat gesprek is echt de moeite waard), als jullie dat nog niet gedaan hebben. En daarna maak je je producten rustig op; ik help je daar dan gewoon doorheen. 💚`,
+                  1200,
+                );
+                markeerTouchpoint("darm-vooruitblik");
+              } else if (dueFaseKeuze.fase === "darm-opmaak") {
+                // Eenmalige uitleg van de opmaak-periode na dag 16.
+                await mentorZegt(
+                  `Je zit nu in je opmaak-dagen: je 16 dagen zitten erop en je maakt je producten rustig op. Zo werkt dat: deel de inhoud van elke pot door 30, dan weet je je dagdosering en gaat elke pot ongeveer een maand mee. 💚`,
+                  1200,
+                );
+                await wacht(900);
+                await mentorZegt(
+                  `En qua eten hoef je niet van de ene op de andere dag alles om te gooien: veel mensen houden de voedingslijst gewoon als kompas en verbreden rustig, stap voor stap. Goed om te weten: wil je weer bonen eten, dan mag dat nu ook uit pot of blik, maar check wel even de ingrediënten op toegevoegde suiker. Twijfel je ergens over, vraag het mij of bespreek met ${begeleiderNaam} wat bij jou past. Ik blijf er gewoon voor je, elke dag. 💚`,
+                  1100,
+                );
+                markeerTouchpoint("darm-opmaak-uitleg");
+              } else if (dueFaseKeuze.fase === "omschakeling") {
                 await mentorZegt(
                   dueFaseKeuze.max
                     ? `Belangrijk moment: je zit op dag ${dueFaseKeuze.dag} van fase 2, en 40 dagen is echt het maximum. Het is tijd om door te gaan naar fase 3, de stabilisatie. Overleg vandaag nog even met ${begeleiderNaam} als je dat nog niet hebt gedaan, en druk daarna op de knop hieronder. 👇`
@@ -1389,9 +1414,21 @@ export default function MentorWereld({
     ],
   };
 
+  // Opmaak-dagen (darm, na dag 16): eigen tips in plaats van kuur-tips.
+  const OPMAAK_TIPS = [
+    "Deel-door-30-check: inhoud van de pot gedeeld door 30 is je dagdosering, dan gaat elke pot ongeveer een maand mee.",
+    "Houd de voedingslijst als kompas en verbreed rustig, stap voor stap. Je hoeft niks in één keer om te gooien.",
+    "Al een momentje met je begeleider gepland over jouw vervolg? Dat gesprek is echt de moeite waard.",
+    "Merk je dat iets nieuws niet lekker valt? Doe het gewoon wat rustiger aan, je kent je lichaam nu beter dan ooit.",
+  ];
+
   async function toonDagTip() {
     if (!station) return;
-    const tips = DAG_TIPS[station.slug] ?? [];
+    const inOpmaak =
+      programma?.slug === "darm" &&
+      station.slug === "zestien-dagen" &&
+      (dagNummer ?? 0) > 16;
+    const tips = inOpmaak ? OPMAAK_TIPS : DAG_TIPS[station.slug] ?? [];
     const draai = (dagNummer ?? new Date().getDate()) - 1;
     const tip = tips.length
       ? tips[((draai % tips.length) + tips.length) % tips.length]
@@ -2304,8 +2341,19 @@ export default function MentorWereld({
         await naarStation(programma.stations[i + 1].slug, false, false);
       } else {
         // Expliciete klaar-route: de klant zégt zelf dat de dagen erop
-        // zitten. Dan mag het einde-moment nu spelen (eenmalig).
+        // zitten. Maar het einde-feest speelt pas als de dagen er ÉCHT
+        // op zitten (feedback Raoul 22 juli: "verder" op dag 3 gaf het
+        // complete einde-verhaal).
         zeg();
+        const duurLaatste = FASE_DAGEN[station.slug];
+        const dagNu = faseDagRef.current ?? 0;
+        if (duurLaatste && dagNu > 0 && dagNu <= duurLaatste) {
+          await mentorZegt(
+            `Ik snap dat je vooruit wilt, maar deze fase duurt ${duurLaatste} dagen en jij zit nu op dag ${dagNu}. Nog ${Math.max(1, duurLaatste - dagNu + 1)} ${duurLaatste - dagNu + 1 === 1 ? "dag" : "dagen"}, en dan vieren we het hier samen, beloofd. 🎉 En gaat het ergens niet lekker en wil je dáárom stoppen? Zeg het me, dan kijken we samen, en met ${begeleiderNaam}, wat je kunt doen om het goed af te ronden. 💪`,
+            1000,
+          );
+          return true;
+        }
         await speelEindeMoment(programma, station);
         markeerTouchpoint(("programma-einde-" + programma.slug) as TouchpointSleutel);
       }

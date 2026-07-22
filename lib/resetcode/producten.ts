@@ -32,6 +32,14 @@ PRODUCTEN OPMAKEN NA DAG 16 (vuistregel: inhoud van elke pot delen door 30 = dag
 - PH Plus: 3x3 per dag (±14 dagen)
 - Be Recharged: 1 portie van 2 scoops per dag (±14 dagen)
 
+ETEN TIJDENS DE OPMAAK-DAGEN (na dag 16): er is geen apart afbouw-schema.
+Het advies: niet alles in één keer omgooien, de voedingslijst als kompas
+aanhouden en rustig verbreden, stap voor stap. Uit het boekje: wie weer
+bonen wil eten mag ze nu ook uit pot of blik nemen, maar check de
+ingrediënten op toegevoegde suiker. Voor de persoonlijke invulling van
+het vervolg (Holistic Reset of dagelijkse basis): dat momentje plant de
+klant met de begeleider.
+
 HOLISTIC RESET-PAKKET:
 - Daily BioBasics óf (Wo)men's Gold
 - Proanthenols

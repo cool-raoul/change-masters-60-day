@@ -332,6 +332,27 @@ export default async function KlantLinkPagina({
   // Reset-fase-regie: fase-dagen zitten erop → keuze-moment (verlengen
   // tot max 40 in fase 2, fase 3 exact 21, daarna kiezen).
   let dueFaseKeuze: { fase: string; dag: number; max?: boolean } | null = null;
+  // Darm: vooruitblik rond dag 14-16 (vervolg-momentje plannen) en de
+  // eenmalige opmaak-uitleg zodra de 16 dagen erop zitten. Loopt via
+  // hetzelfde fase-momenten-kanaal, één moment per dag.
+  if (
+    ctx.programmaSlug === "darm" &&
+    ctx.stationSlug === "zestien-dagen" &&
+    dagNummer != null
+  ) {
+    if (
+      dagNummer >= 14 &&
+      dagNummer <= 16 &&
+      !ctx.touchpoints.includes("darm-vooruitblik")
+    ) {
+      dueFaseKeuze = { fase: "darm-vooruitblik", dag: dagNummer };
+    } else if (
+      dagNummer > 16 &&
+      !ctx.touchpoints.includes("darm-opmaak-uitleg")
+    ) {
+      dueFaseKeuze = { fase: "darm-opmaak", dag: dagNummer };
+    }
+  }
   if (ctx.programmaSlug === "reset" && dagNummer != null) {
     // Fase 2: keuze-moment vanaf dag 20 (vooruitkijkend, feedback Raoul
     // 22 juli). Wie "ik blijf in fase 2" koos, krijgt de vraag niet

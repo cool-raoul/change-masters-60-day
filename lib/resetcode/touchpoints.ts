@@ -20,6 +20,10 @@ export type TouchpointSleutel =
   // Reset-fase-regie: klant koos bewust "ik blijf nog even in fase 2";
   // het keuzemoment zwijgt dan tot het 40-dagen-maximum.
   | "fase2-verlengd"
+  // Darm: eenmalige vooruitblik rond dag 14-16 (vervolg-gesprek plannen).
+  | "darm-vooruitblik"
+  // Darm: eenmalige uitleg van de opmaak-periode na dag 16.
+  | "darm-opmaak-uitleg"
   // Week-terugblik: elke 7 dagen één keer (week-terugblik-1, -2, ...).
   // De inhoud wordt client-side uit het dagboek gebouwd; dit is alleen
   // de eenmaligheids-markering.

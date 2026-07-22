@@ -51,6 +51,46 @@ export async function haalGevalideerdeKennis(): Promise<
 // 2017-rijen gefilterd vóór ze het model bereiken. Uitbreidbaar.
 const GEBLOKKEERDE_PRODUCTEN = [/colloidal\s*silver/i, /collo[iï]daal\s*zilver/i, /zilverwater/i];
 
+// ============================================================
+// NOOIT-ADVIES-AANDOENINGEN (besluit Raoul, 22 juli 2026).
+// Bij deze ziektebeelden geeft de Mentor GEEN productadvies, in
+// geen enkele vorm: geen producten, geen "goede ervaringen", geen
+// programma-suggestie. Alleen warm erkennen + volledig naar de
+// behandelend arts (en de begeleider voor support). De bij-
+// behorende kennisrijen zijn ook uit de databank verwijderd; deze
+// regex is de deterministische vangrail daarbovenop.
+// ============================================================
+const NOOIT_ADVIES_REGEX =
+  /\b(crohn|colitis(\s+ulcerosa)?|divertic\w+|diabetes\s*(mellitus\s*)?(type\s*)?(1|een|i)\b|type\s*(1|een|i)\s*diabetes|suikerziekte\s*(type\s*)?(1|een|i)\b)/i;
+
+export function bevatNooitAdviesAandoening(tekst: string): boolean {
+  return NOOIT_ADVIES_REGEX.test(tekst);
+}
+
+/**
+ * Prompt-blok voor het geval de vraag over een nooit-advies-aandoening
+ * gaat. Wordt geïnjecteerd IN PLAATS VAN de kennis-rijen.
+ */
+export function bouwNooitAdviesBlok(): string {
+  return `\n\nNOOIT-ADVIES-AANDOENING GEDETECTEERD (harde regel, geen uitzonderingen):
+De vraag raakt aan een ziektebeeld waarbij ELEVA bewust GEEN productadvies
+geeft: de ziekte van Crohn, colitis ulcerosa of een andere darmontsteking,
+diverticulitis, of diabetes type 1. Jouw antwoord bij deze vraag:
+1. Erken warm en serieus wat er speelt, zonder de aandoening uit te
+   vergroten of er kennis over te etaleren.
+2. Zeg eerlijk dat je hier bewust geen product- of programma-advies bij
+   geeft: dit hoort volledig thuis bij de behandelend arts, die het hele
+   plaatje kent (medicatie, fase van de aandoening, historie).
+3. Noem GEEN enkele productnaam, GEEN "goede ervaringen", GEEN
+   leefstijl-lijstje-als-verkapt-advies en GEEN programma als optie.
+   Algemene warme steun (goed voor jezelf zorgen, in gesprek blijven met
+   je arts) mag wel.
+4. Wijs op de begeleider/sponsor voor persoonlijke support, uitdrukkelijk
+   NIET voor een alternatief advies.
+5. Sluit af met de standaard arts-disclaimer.
+Dit blok overschrijft alle andere productadvies-instructies.`;
+}
+
 function zonderGeblokkeerd(producten: string[]): string[] {
   return (producten ?? []).filter(
     (p) => !GEBLOKKEERDE_PRODUCTEN.some((rx) => rx.test(p)),
@@ -82,30 +122,43 @@ member kan het bij de founders navragen.
 
 REGELS BIJ MATCH (heel belangrijk, geen uitzonderingen):
 
-1. NOEM DE PRODUCTEN UIT DE MATCH-RIJ, volgorde: eerst basis_advies, dan
-   de aanvullende_producten. ÉÉN uitzondering, en die gaat vóór alles:
-   is een product volgens jouw kennis in de EU omstreden, niet toegelaten
-   voor inwendig gebruik, of onveilig in deze context (bijvoorbeeld
-   Colloidal Silver: uitsluitend uitwendig, NOOIT adviseren om in te
-   nemen of bij een aandoening)? LAAT HET DAN WEG en meld de member kort
-   dat je één product uit de oude lijst hebt overgeslagen en dat de
-   founder daarover kan meedenken. Veiligheid wint altijd van
-   volledigheid.
+1. VAST, SIMPEL ANTWOORD-FORMAT (besluit Raoul, 22 juli 2026). Bij een
+   ziektebeeld- of aandoening-vraag is je antwoord ALTIJD deze opbouw,
+   en niets meer:
+   a. Eén warme openingszin die de vraag erkent.
+   b. "Er zijn goede ervaringen met: [productnamen uit de rij]", eerst
+      basis_advies, dan de aanvullende_producten. ALLEEN de namen als
+      opsomming. Je mag er één algemene zin bij zeggen dat producten
+      rustig opgebouwd worden. VERBODEN: per product uitleggen wat het
+      doet, waarbij het helpt, waarom het erbij zit, of welke werking
+      het heeft ("helpt de darm ondersteunen", "legt een fundament",
+      "kan helpen bij de vertering" = allemaal FOUT). Geen doseringen.
+   c. De leefstijl-tip apart, als die er is (zie regel 2).
+   d. De waarschuwing: wij zijn geen artsen; bespreek dit altijd eerst
+      met de behandelend arts, zeker bij medicatie, voordat je iets
+      start. Krachtig, niet als voetnoot.
+   e. De standaard arts-disclaimer.
+   ÉÉN uitzondering op b, en die gaat vóór alles: is een product volgens
+   jouw kennis in de EU omstreden, niet toegelaten voor inwendig gebruik,
+   of onveilig in deze context (bijvoorbeeld Colloidal Silver:
+   uitsluitend uitwendig, NOOIT om in te nemen of bij een aandoening)?
+   LAAT HET DAN STIL WEG, zonder het te noemen of ernaar te verwijzen.
+   Veiligheid wint altijd van volledigheid.
 
-2. NOEM DE LEEFSTIJL-TIP ALTIJD APART als die er is. Format:
+2. NOEM DE LEEFSTIJL-TIP APART als die er is. Format:
    "Naast de producten zijn er leefstijl-elementen die mensen ook noemen
     bij dit thema: [leefstijl_tip-tekst]."
-   Als de tip niet-Lifeplus-suggesties bevat (kruiden, dieet,
-   alternatieve middelen): noem ze NEUTRAAL als "wat mensen ook wel
-   doen" zonder zelf advies te formuleren. Verwijs naar arts of
+   Als de tip suggesties buiten het eigen assortiment bevat (kruiden,
+   dieet, alternatieve middelen): noem ze NEUTRAAL als "wat mensen ook
+   wel doen" zonder zelf advies te formuleren. Verwijs naar arts of
    orthomoleculair-deskundige voor de invulling daarvan.
 
 3. CLAIM-VRIJ FORMULEREN:
-   - Nooit "dit product geneest X" of "behandelt Y". Wel: "veel mensen
-     die hier last van hebben starten met... en merken dat...".
-   - Specifieke doseringen NIET noemen — verwijs naar de productadvies-
-     test of sponsor.
-   - ALTIJD de standaard arts-disclaimer eronder.
+   - Nooit "dit product geneest X" of "behandelt Y". De "goede
+     ervaringen met"-frase uit regel 1 is je enige frame.
+   - Specifieke doseringen NIET noemen — verwijs naar de verpakking.
+   - Verwijs NOOIT naar een merk, ook niet omschreven ("het merk-advies",
+     "merkproducten"). Gewoon de productnamen, verder niets.
 
 4. BIJ CONFLICT MET JE EIGEN KENNIS: gebruik voor de INHOUD (welke
    combinatie bij welk thema) de match-rij; die is door de founder
