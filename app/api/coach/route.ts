@@ -1,5 +1,7 @@
 import OpenAI from "openai";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { sendPushToUser } from "@/lib/push/sendPush";
 import { bouwCoachSysteemPrompt } from "@/lib/prompts/coach-systeem-prompt";
 import { detecteerVraagType } from "@/lib/knowledge/coach-boeken";
 import { taakVoor, isPostVerzoek } from "@/lib/mentor/taak-register";
@@ -62,6 +64,12 @@ export async function POST(request: Request) {
     // Coach gaat altijd uit van het meest volledige advies (bestellingen, herinneringen,
     // contactlogs) en vraagt daarna zelf of er behoefte is aan een budget-alternatief.
     const niveau: "light" | "full" = "full";
+
+    // Gezet zodra een gevalideerde ziekte/product-kennisrij in de prompt
+    // gaat: dwingt het sterke model af + activeert de claim-waakhond
+    // (veiligheids-audit 22 juli: het gevoeligste pad liep op het
+    // goedkoopste model zonder controle).
+    let kennisMatchActief = false;
 
     if (!berichten || berichten.length === 0) {
       return new Response("Geen berichten", { status: 400 });
@@ -283,6 +291,7 @@ export async function POST(request: Request) {
           "@/lib/cms/mentor-kennis"
         );
         const kennisRijen = await haalGevalideerdeKennis();
+        // (flag hieronder gezet bij een echte match)
         // Alleen de rijen meesturen die bij dit gesprek passen: sinds
         // de volledige validatie (127 rijen) maakte alles-tegelijk het
         // verzoek te groot (OpenAI 429 request-too-large, bug 21 juli)
@@ -307,6 +316,7 @@ export async function POST(request: Request) {
         });
         if (relevant.length > 0) {
           systeemPrompt += formatKennisVoorPrompt(relevant.slice(0, 8));
+          kennisMatchActief = true;
         }
       } catch (e) {
         console.warn("mentor-kennis ophalen mislukt:", e);
@@ -372,8 +382,13 @@ export async function POST(request: Request) {
     // publiek schrijfwerk krijgt ALTIJD het sterke model, en modellen
     // wisselen kan voortaan op die ene plek.
     const stream = await openai.chat.completions.create({
-      model: taak.model,
-      max_tokens: taak.maxTokens,
+      // Kennis-match = altijd het sterke model met ruimte voor de
+      // volledige disclaimer; het claim-gevoeligste antwoord mag nooit
+      // op het goedkoopste model of tegen een krap token-plafond lopen.
+      model: kennisMatchActief ? "gpt-4o" : taak.model,
+      max_tokens: kennisMatchActief
+        ? Math.max(taak.maxTokens, 1600)
+        : taak.maxTokens,
       messages: apiMessages,
       stream: true,
     });
@@ -458,14 +473,76 @@ export async function POST(request: Request) {
             }
           }
 
-          // Compliance-scan op het zichtbare antwoord. PASSIEF, we
-          // blokkeren niets, we loggen alleen.
-          if (zichtbaarAntwoord && vraagType === "productadvies") {
-            const compliance = checkCompliance(zichtbaarAntwoord);
-            if (!compliance.ok) {
-              console.warn(
-                `[COACH-COMPLIANCE] user=${user.id} prospect=${prospectId || "n/a"} flags=${vatFlagsSamen(compliance.flags)}`
+          // Claim-bewaking (veiligheids-audit 22 juli): de regex-scan
+          // draait nu op ELK zichtbaar antwoord, en bij een kennis-match
+          // of productadvies kijkt ook een onafhankelijke AI-waakhond
+          // mee. Verdachte antwoorden komen als controle-item op het
+          // founder-kennis-scherm (zelfde meldpunt als de klant-Mentor)
+          // met een push. We blokkeren niets; founders zien alles.
+          if (zichtbaarAntwoord) {
+            try {
+              const compliance = checkCompliance(zichtbaarAntwoord);
+              const regexFlags = compliance.ok
+                ? ""
+                : vatFlagsSamen(compliance.flags);
+              const laatsteUserVraag = String(
+                [...berichten].reverse().find((b) => b.role === "user")
+                  ?.content ?? "",
               );
+              let verdacht = false;
+              let reden = "";
+              if (kennisMatchActief || vraagType === "productadvies") {
+                const check = await openai.chat.completions.create({
+                  model: "gpt-4o-mini",
+                  max_tokens: 150,
+                  temperature: 0,
+                  response_format: { type: "json_object" },
+                  messages: [
+                    {
+                      role: "system",
+                      content: `Je bent de claim-waakhond van een supplementen-Mentor (EU-regels: supplementen mogen geen medische claims). Beoordeel het antwoord. VERDACHT als het: (1) zegt of impliceert dat een product een ziekte geneest/behandelt/verhelpt/aanpakt, (2) doseringen of innameschema's geeft, (3) producten adviseert buiten het Lifeplus-assortiment of colloïdaal zilver inwendig adviseert, (4) een ziektenaam of aandoening laat staan BINNEN een [STUUR]...[/STUUR]-doorstuurblok, (5) bij een ziekte/aandoening-advies GEEN arts-disclaimer bevat. NIET verdacht: ervaring-taal ("veel mensen merken"), leefstijl-advies, aanwezige disclaimer, doorverwijzing naar arts, gespreks-coaching zonder producten. Twijfel = niet verdacht. Antwoord UITSLUITEND JSON: {"verdacht": true/false, "reden": "één zin"}`,
+                    },
+                    {
+                      role: "user",
+                      content: `VRAAG VAN DE MEMBER:\n${laatsteUserVraag.slice(0, 800)}\n\nANTWOORD VAN DE MENTOR:\n${volledigAntwoord.slice(0, 6000)}`,
+                    },
+                  ],
+                });
+                const uitslag = JSON.parse(
+                  check.choices[0]?.message?.content ?? "{}",
+                ) as { verdacht?: boolean; reden?: string };
+                verdacht = uitslag.verdacht === true;
+                reden = String(uitslag.reden ?? "");
+              }
+              if (verdacht || regexFlags) {
+                const adminW = createAdminClient();
+                await adminW.from("resetcode_kennis").insert({
+                  programma: "algemeen",
+                  vraag: (laatsteUserVraag || "(member-Mentor)").slice(0, 600),
+                  bron: "controle",
+                  gegeven_antwoord: zichtbaarAntwoord.slice(0, 2000),
+                  controle_reden: (reden || `regex-scan: ${regexFlags}`).slice(
+                    0,
+                    300,
+                  ),
+                });
+                const { data: founders } = await adminW
+                  .from("profiles")
+                  .select("id")
+                  .eq("role", "founder");
+                await Promise.allSettled(
+                  ((founders ?? []) as { id: string }[]).map((f) =>
+                    sendPushToUser(f.id, {
+                      title: "Even meekijken 🔍 (member-Mentor)",
+                      body: `Mogelijk claim-risico in een Mentor-antwoord op: "${laatsteUserVraag.slice(0, 90)}"`,
+                      url: "/resetcode-kennis",
+                      tag: "coach-waakhond",
+                    }),
+                  ),
+                );
+              }
+            } catch (err) {
+              console.warn("coach-waakhond mislukt:", err);
             }
           }
 
