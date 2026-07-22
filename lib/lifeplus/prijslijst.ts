@@ -297,7 +297,9 @@ export function berekenAsapBesparing(item: LifeplusPrijsItem): number | null {
  */
 export function bouwPrijslijstPromptSectie(): string {
   const categorieLabels: Record<LifeplusCategorie, string> = {
-    aanbevolen: "LIFEPLUS BEVEELT AAN (combi-pakketten)",
+    // Merknaam-verbod (Raoul 22 juli 2026): geen "Lifeplus" in labels
+    // die de Mentor kan echoën in zichtbare antwoorden.
+    aanbevolen: "AANBEVOLEN COMBI-PAKKETTEN",
     voedingssupplementen: "VOEDINGSSUPPLEMENTEN",
     solis: "SOLIS SUPERFOODS",
     sportvoeding: "SPORTVOEDING",
@@ -305,7 +307,7 @@ export function bouwPrijslijstPromptSectie(): string {
     "persoonlijke-verzorging": "PERSOONLIJKE VERZORGING",
     accessoires: "ACCESSOIRES",
     drinkwaterfilter: "DRINKWATERFILTERS",
-    pets: "LIFEPLUS PETS",
+    pets: "PETS (dierverzorging)",
   };
 
   const volgorde: LifeplusCategorie[] = [

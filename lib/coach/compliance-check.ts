@@ -47,8 +47,15 @@ const DOSERING_PATRONEN: Array<{ regex: RegExp; label: string }> = [
   { regex: /\b\d+\s+(tabletten|capsules|pillen)\s+(per\s+dag|dagelijks)/i, label: "dosering: 'X tabletten per dag'" },
 ];
 
+// Merknaam-verbod (Raoul, 22 juli 2026): de naam Lifeplus mag nergens
+// in Mentor-output voorkomen; programma's en producten nooit aan de
+// merknaam koppelen. Elke schrijfwijze telt.
+const MERKNAAM_PATRONEN: Array<{ regex: RegExp; label: string }> = [
+  { regex: /\blife\s*-?\s*plus\b/i, label: "merknaam Lifeplus genoemd" },
+];
+
 export type ComplianceFlag = {
-  categorie: "verboden_werkwoord" | "risico_frase" | "dosering";
+  categorie: "verboden_werkwoord" | "risico_frase" | "dosering" | "merknaam";
   label: string;
   matchedText: string;
 };
@@ -97,6 +104,17 @@ export function checkCompliance(antwoord: string): ComplianceResultaat {
     if (match) {
       flags.push({
         categorie: "dosering",
+        label,
+        matchedText: match[0],
+      });
+    }
+  }
+
+  for (const { regex, label } of MERKNAAM_PATRONEN) {
+    const match = antwoord.match(regex);
+    if (match) {
+      flags.push({
+        categorie: "merknaam",
         label,
         matchedText: match[0],
       });

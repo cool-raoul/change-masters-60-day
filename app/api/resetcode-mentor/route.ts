@@ -351,7 +351,10 @@ export async function POST(req: NextRequest) {
               const uitslag = JSON.parse(
                 check.choices[0]?.message?.content ?? "{}",
               ) as { verdacht?: boolean; reden?: string };
-              if (uitslag.verdacht === true) {
+              // Deterministische scan naast de AI-waakhond: de merknaam
+              // mag NOOIT richting de klant (regel Raoul 22 juli 2026).
+              const merknaamTreffer = /\blife\s*-?\s*plus\b/i.test(schoon);
+              if (uitslag.verdacht === true || merknaamTreffer) {
                 const adminW = createAdminClient();
                 const { error: wFout } = await adminW
                   .from("resetcode_kennis")
@@ -361,7 +364,11 @@ export async function POST(req: NextRequest) {
                     bron: "controle",
                     link_id: ctxVoorOpslag.linkId,
                     gegeven_antwoord: schoon.slice(0, 2000),
-                    controle_reden: (uitslag.reden ?? "").slice(0, 300),
+                    controle_reden: (
+                      uitslag.verdacht === true
+                        ? uitslag.reden ?? ""
+                        : "merknaam Lifeplus in antwoord (regex-scan)"
+                    ).slice(0, 300),
                   });
                 if (wFout) console.error("waakhond-insert:", wFout.message);
                 const { data: founders } = await adminW

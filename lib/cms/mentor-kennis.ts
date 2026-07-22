@@ -162,6 +162,11 @@ REGELS BIJ MATCH (heel belangrijk, geen uitzonderingen):
    concreet productadvies, gebruik de knop/stel je vraag met...".
    Alleen doorverwijzen als er GEEN kennis-rij matcht.
 
+9. MERKNAAM-VERBOD (Raoul, 22 juli 2026): noem de merknaam "Lifeplus"
+   (elke schrijfwijze) NOOIT in je antwoord, ook niet als een kennis-rij
+   die naam bevat. Productnamen zonder merknaam; staat er "Lifeplus X"
+   in een rij, dan zeg jij gewoon "X".
+
 KENNIS-RIJEN:
 ${regels.join("\n")}
 
