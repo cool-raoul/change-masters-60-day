@@ -22,6 +22,7 @@ const GELDIG = [
   "dag10-video",
   "programma-einde",
   "samen-starten",
+  "fase2-verlengd",
 ];
 // Week-terugblikken zijn genummerd (week-terugblik-1, -2, ...).
 const WEEK_TERUGBLIK = /^week-terugblik-\d{1,2}$/;

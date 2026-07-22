@@ -51,7 +51,8 @@ type Kaart =
 type VerderActie =
   | { type: "chunk"; index: number; stationSlug: string }
   | { type: "station"; slug: string }
-  | { type: "programma"; slug: string };
+  | { type: "programma"; slug: string }
+  | { type: "verlengen" };
 
 type Checkin = {
   datum: string;
@@ -813,8 +814,11 @@ export default function MentorWereld({
             knoppenNaarOnder();
           } else if (heeftDueMoment) {
             await wacht(1200);
-            // Eerst beloftes inlossen: het team heeft geantwoord op wat
-            // deze klant eerder vroeg ("daar kom ik op terug").
+            // MAXIMAAL ÉÉN groot moment per dag (feedback Raoul 22 juli:
+            // geen "en, en, en" op één dag). Prioriteit: team-antwoord >
+            // dag 10 > kern-verhaal > week-overzicht > fase-keuze. Wat
+            // vandaag niet aan de beurt komt, schuift vanzelf naar de
+            // volgende dag (het blijft "due" tot het gespeeld is).
             if (dueKennis && dueKennis.length > 0) {
               for (const k of dueKennis) {
                 await mentorZegt(
@@ -831,42 +835,49 @@ export default function MentorWereld({
                   ids: dueKennis.map((k) => k.id),
                 }),
               }).catch(() => {});
-              if (dueDag10 || dueTouchpoint || dueWeekTerugblik)
-                await wacht(1200);
-            }
-            if (dueDag10) {
+            } else if (dueDag10) {
               await mentorZegt(
                 `Trouwens: je zit vandaag op dag ${dueDag10} van je 16 dagen! 🎉 Dit is het moment voor je dag 10-video, die is belangrijk. Kijk 'm even rustig 👇`,
                 1100,
               );
               await mentorKaart("videodag10", st.slug, 800);
               markeerTouchpoint("dag10-video" as TouchpointSleutel);
-              // Nooit een dood einde na een video (feedback Raoul):
-              // altijd zeggen wat de vervolgstap is.
               await wacht(1200);
               await mentorZegt(
                 "Neem er echt even de tijd voor, voor veel mensen is dit een kantelpunt. Ben je klaar met kijken? Vertel me gerust wat je eruit meeneemt, of stel je vragen erover. En verder gaat vandaag gewoon door zoals je gewend bent: je check-in, je vragen, je recepten. Ik ben er. 💚",
                 1000,
               );
-              if (dueTouchpoint || dueWeekTerugblik) await wacht(1500);
-            }
-            if (dueTouchpoint) await speelTouchpoint(dueTouchpoint);
-            if (dueWeekTerugblik) {
-              if (dueTouchpoint) await wacht(1500);
+            } else if (dueTouchpoint) {
+              await speelTouchpoint(dueTouchpoint);
+            } else if (dueWeekTerugblik) {
               await speelWeekTerugblik(dueWeekTerugblik);
-            }
-            // Reset-fase-regie: de fase-dagen zitten erop, dus de klant
-            // kiest (samen met de begeleider) de volgende stap.
-            if (dueFaseKeuze) {
-              await wacht(1000);
+            } else if (dueFaseKeuze) {
+              // Reset-fase-regie: dag 20 kondigt de keuze aan, dag 22+
+              // herinnert er rustig aan; wie "blijf in fase 2" koos,
+              // hoort er niets meer over tot het 40-dagen-maximum.
               if (dueFaseKeuze.fase === "omschakeling") {
                 await mentorZegt(
                   dueFaseKeuze.max
                     ? `Belangrijk moment: je zit op dag ${dueFaseKeuze.dag} van fase 2, en 40 dagen is echt het maximum. Het is tijd om door te gaan naar fase 3, de stabilisatie. Overleg vandaag nog even met ${begeleiderNaam}, en druk daarna op de knop hieronder. 👇`
-                    : `Even stilstaan bij een mooi moment: je 21 dagen van fase 2 zitten erop! 🎉 Nu is er een keuze, en die maak je het liefst samen met ${begeleiderNaam}: fase 2 verlengen (dat mag tot maximaal 40 dagen totaal) als je nog even door wilt, óf door naar fase 3, de stabilisatie. Wil je door? Druk op de knop hieronder. Wil je verlengen? Helemaal prima, dan zie ik je morgen gewoon weer bij je check-in. 👇`,
+                    : dueFaseKeuze.dag === 20
+                      ? `Even vooruitkijken naar iets moois: morgen zitten je 21 dagen van fase 2 erop! 🎉 Dan is er een keuze, en die maak je het liefst samen met ${begeleiderNaam}: nog even doorgaan met fase 2 (dat mag, tot maximaal 40 dagen totaal), of door naar fase 3, de stabilisatie. Denk er vandaag rustig over na; de knoppen staan alvast klaar. 👇`
+                      : `Ter herinnering: je 21 dagen van fase 2 zitten erop. Kies wanneer jij er klaar voor bent, het liefst samen met ${begeleiderNaam}: doorgaan met fase 2 (tot maximaal 40 dagen) of door naar fase 3. 👇`,
                   1200,
                 );
                 toonStationKnop("stabilisatie", "🧘 Door naar fase 3 (stabilisatie)");
+                if (!dueFaseKeuze.max) {
+                  const bidV = ++bidTeller.current;
+                  setItems((b) => [
+                    ...b,
+                    {
+                      van: "mentor",
+                      soort: "verder-knop",
+                      bid: bidV,
+                      label: "🔄 Ik blijf nog even in fase 2",
+                      actie: { type: "verlengen" },
+                    },
+                  ]);
+                }
               } else if (dueFaseKeuze.fase === "stabilisatie") {
                 await mentorZegt(
                   `Je 21 dagen van fase 3 zitten erop, netjes volgehouden! 🎉 Bespreek met ${begeleiderNaam} wat jullie plan is: nog een ronde fase 2 en 3, of door naar fase 4, logisch leven. Beide knoppen staan voor je klaar. 👇`,
@@ -1928,6 +1939,20 @@ export default function MentorWereld({
     setItems((b) =>
       b.filter((x) => !(x.soort === "verder-knop" && x.bid === item.bid)),
     );
+    if (item.actie.type === "verlengen") {
+      // "Ik blijf in fase 2": klant bepaalt zelf het moment (tot max 40
+      // dagen); we vragen er niet dagelijks opnieuw naar.
+      setItems((b) => b.filter((x) => x.soort !== "verder-knop"));
+      const echoV = "Ik ga nog even door met fase 2 🔄";
+      setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: echoV }]);
+      logNaarServer([{ van: "klant", soort: "tekst", tekst: echoV }]);
+      markeerTouchpoint("fase2-verlengd" as TouchpointSleutel);
+      await mentorZegt(
+        `Helemaal goed, jij bepaalt wanneer fase 2 klaar is (verlengen mag tot maximaal 40 dagen, en overleg gerust met ${begeleiderNaam}). Ik vraag er niet elke dag naar; zeg gewoon "ik ga naar fase 3" of gebruik je Groeipad zodra je zover bent. Ik zie je morgen gewoon weer bij je check-in. 💚`,
+        1000,
+      );
+      return;
+    }
     if (item.actie.type === "programma") {
       await startNieuwProgramma(item.actie.slug);
       return;

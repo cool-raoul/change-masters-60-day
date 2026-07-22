@@ -318,10 +318,17 @@ export default async function KlantLinkPagina({
   // Reset-fase-regie: fase-dagen zitten erop → keuze-moment (verlengen
   // tot max 40 in fase 2, fase 3 exact 21, daarna kiezen).
   let dueFaseKeuze: { fase: string; dag: number; max?: boolean } | null = null;
-  if (ctx.programmaSlug === "reset" && dagNummer != null && dagNummer >= 21) {
-    if (ctx.stationSlug === "omschakeling") {
+  if (ctx.programmaSlug === "reset" && dagNummer != null) {
+    // Fase 2: keuze-moment vanaf dag 20 (vooruitkijkend, feedback Raoul
+    // 22 juli). Wie "ik blijf in fase 2" koos, krijgt de vraag niet
+    // dagelijks opnieuw; alleen het 40-dagen-maximum komt dan nog.
+    if (
+      ctx.stationSlug === "omschakeling" &&
+      dagNummer >= 20 &&
+      (dagNummer >= 40 || !ctx.touchpoints.includes("fase2-verlengd"))
+    ) {
       dueFaseKeuze = { fase: "omschakeling", dag: dagNummer, max: dagNummer >= 40 };
-    } else if (ctx.stationSlug === "stabilisatie") {
+    } else if (ctx.stationSlug === "stabilisatie" && dagNummer >= 21) {
       dueFaseKeuze = { fase: "stabilisatie", dag: dagNummer };
     }
   }
