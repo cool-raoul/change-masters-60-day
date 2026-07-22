@@ -399,6 +399,16 @@ export async function POST(request: Request) {
     const encoder = new TextEncoder();
     let volledigAntwoord = "";
 
+    // Merknaam-verbod (Raoul, 22 juli 2026): de naam mag de member nooit
+    // bereiken, ook niet als het model de prompt-regel negeert. Vervang
+    // deterministisch in de stream; de compliance-scan hieronder draait op
+    // de ONgefilterde tekst zodat founders de poging alsnog gemeld krijgen.
+    const zonderMerknaam = (t: string) =>
+      t.replace(/\blife\s*-?\s*plus\b/gi, "het merk");
+    // Buffer tegen een merknaam die over een chunk-grens valt: de laatste
+    // tekens gaan pas mee zodra er meer tekst is (of aan het einde).
+    const MERK_BUFFER = 16;
+
     const readable = new ReadableStream({
       async start(controller) {
         try {
@@ -410,17 +420,30 @@ export async function POST(request: Request) {
               // De systeem-blokken ([PROFIEL] / [PROSPECT]) en alles erna
               // houden we ACHTER, zodat de gebruiker de opslag-JSON nooit ziet.
               // We streamen alleen het zichtbare deel vóór het eerste blok.
-              const zichtbaar = zichtbaarTotMarker(volledigAntwoord);
-              if (zichtbaar.length > verzondenLengte) {
+              const zichtbaar = zonderMerknaam(
+                zichtbaarTotMarker(volledigAntwoord),
+              );
+              const flushTot = Math.max(0, zichtbaar.length - MERK_BUFFER);
+              if (flushTot > verzondenLengte) {
                 controller.enqueue(
-                  encoder.encode(zichtbaar.slice(verzondenLengte)),
+                  encoder.encode(zichtbaar.slice(verzondenLengte, flushTot)),
                 );
-                verzondenLengte = zichtbaar.length;
+                verzondenLengte = flushTot;
               }
             }
           }
-          // Het zichtbare antwoord = alles vóór het eerste systeem-blok.
-          const zichtbaarAntwoord = zichtbaarTotMarker(volledigAntwoord).trimEnd();
+          // Het zichtbare antwoord = alles vóór het eerste systeem-blok,
+          // met de merknaam-vervanging erop (dit is wat de member zag).
+          const zichtbaarEind = zonderMerknaam(
+            zichtbaarTotMarker(volledigAntwoord),
+          );
+          if (zichtbaarEind.length > verzondenLengte) {
+            controller.enqueue(
+              encoder.encode(zichtbaarEind.slice(verzondenLengte)),
+            );
+            verzondenLengte = zichtbaarEind.length;
+          }
+          const zichtbaarAntwoord = zichtbaarEind.trimEnd();
 
           // De opslag gebeurt VÓÓR controller.close() en wordt geawait. Op
           // serverless (Vercel) kan de functie na de close bevriezen, waardoor
@@ -484,7 +507,11 @@ export async function POST(request: Request) {
           // met een push. We blokkeren niets; founders zien alles.
           if (zichtbaarAntwoord) {
             try {
-              const compliance = checkCompliance(zichtbaarAntwoord);
+              // Scan op de ONgefilterde tekst: een merknaam-poging is dan
+              // zichtbaar voor de founders, ook al zag de member hem niet.
+              const compliance = checkCompliance(
+                zichtbaarTotMarker(volledigAntwoord).trimEnd(),
+              );
               const regexFlags = compliance.ok
                 ? ""
                 : vatFlagsSamen(compliance.flags);

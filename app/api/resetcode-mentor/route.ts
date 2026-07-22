@@ -263,16 +263,37 @@ export async function POST(req: NextRequest) {
 
     const encoder = new TextEncoder();
     const ctxVoorOpslag = klantCtx;
+    // Merknaam-verbod (Raoul, 22 juli 2026): de naam mag de klant nooit
+    // bereiken, ook niet als het model de prompt-regel negeert. Vervang
+    // deterministisch in de stream, met een kleine buffer tegen een
+    // merknaam die over een chunk-grens valt; de waakhond hieronder kijkt
+    // naar de ONgefilterde tekst zodat founders de poging gemeld krijgen.
+    const zonderMerknaam = (t: string) =>
+      t.replace(/\blife\s*-?\s*plus\b/gi, "het merk");
+    const MERK_BUFFER = 16;
     const readable = new ReadableStream({
       async start(controller) {
         try {
           let volledig = "";
+          let verzonden = 0;
           for await (const chunk of stream) {
             const text = chunk.choices[0]?.delta?.content || "";
             if (text) {
               volledig += text;
-              controller.enqueue(encoder.encode(text));
+              const gefilterd = zonderMerknaam(volledig);
+              const flushTot = Math.max(0, gefilterd.length - MERK_BUFFER);
+              if (flushTot > verzonden) {
+                controller.enqueue(
+                  encoder.encode(gefilterd.slice(verzonden, flushTot)),
+                );
+                verzonden = flushTot;
+              }
             }
+          }
+          const gefilterdEind = zonderMerknaam(volledig);
+          if (gefilterdEind.length > verzonden) {
+            controller.enqueue(encoder.encode(gefilterdEind.slice(verzonden)));
+            verzonden = gefilterdEind.length;
           }
           // BELANGRIJK: alle opslag afronden VÓÓR controller.close().
           // Op Vercel kan de functie bevriezen zodra de stream dicht is;
@@ -283,7 +304,10 @@ export async function POST(req: NextRequest) {
           // vraag als open kennis-item bewaren en founders een seintje
           // geven (alleen echte klanten; preview maakt geen ruis).
           const isTeamvraag = volledig.includes("[[TEAMVRAAG]]");
-          const schoon = volledig.replaceAll("[[TEAMVRAAG]]", "").trimEnd();
+          // ruwSchoon = wat het model zei (voor waakhond/detectie);
+          // schoon = wat de klant zag (merknaam al vervangen), voor opslag.
+          const ruwSchoon = volledig.replaceAll("[[TEAMVRAAG]]", "").trimEnd();
+          const schoon = zonderMerknaam(ruwSchoon);
           if (ctxVoorOpslag && schoon) {
             try {
               await bewaarResetChats(ctxVoorOpslag.linkId, [
@@ -344,7 +368,7 @@ export async function POST(req: NextRequest) {
                   },
                   {
                     role: "user",
-                    content: `VRAAG VAN DE KLANT:\n${vraag}\n\nANTWOORD VAN DE MENTOR:\n${schoon}`,
+                    content: `VRAAG VAN DE KLANT:\n${vraag}\n\nANTWOORD VAN DE MENTOR:\n${ruwSchoon}`,
                   },
                 ],
               });
@@ -353,7 +377,8 @@ export async function POST(req: NextRequest) {
               ) as { verdacht?: boolean; reden?: string };
               // Deterministische scan naast de AI-waakhond: de merknaam
               // mag NOOIT richting de klant (regel Raoul 22 juli 2026).
-              const merknaamTreffer = /\blife\s*-?\s*plus\b/i.test(schoon);
+              // Op de ruwe tekst: in `schoon` is hij al weggefilterd.
+              const merknaamTreffer = /\blife\s*-?\s*plus\b/i.test(ruwSchoon);
               if (uitslag.verdacht === true || merknaamTreffer) {
                 const adminW = createAdminClient();
                 const { error: wFout } = await adminW
@@ -363,7 +388,7 @@ export async function POST(req: NextRequest) {
                     vraag: vraag.slice(0, 600),
                     bron: "controle",
                     link_id: ctxVoorOpslag.linkId,
-                    gegeven_antwoord: schoon.slice(0, 2000),
+                    gegeven_antwoord: ruwSchoon.slice(0, 2000),
                     controle_reden: (
                       uitslag.verdacht === true
                         ? uitslag.reden ?? ""
