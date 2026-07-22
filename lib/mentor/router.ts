@@ -21,7 +21,10 @@ import OpenAI from "openai";
 import { detecteerVraagType, VraagType } from "@/lib/knowledge/coach-boeken";
 import { MODEL_SNEL, routerOpties } from "@/lib/mentor/taak-register";
 
-const ROUTER_TIMEOUT_MS = 4000;
+// Ruim genoeg voor een trage OpenAI-piek (testbank 22 juli: bij 4000ms
+// viel 1 op 20 calls in het regex-vangnet), krap genoeg om de member
+// niet te laten wachten bovenop de echte generatie.
+const ROUTER_TIMEOUT_MS = 6000;
 
 export type RouterUitkomst = {
   type: VraagType;
