@@ -250,21 +250,30 @@ export default async function KlantLinkPagina({
   // fase-keuze van dag 20/21 (feedback Raoul 22 juli: dag 22 = het
   // aanbevelen-moment). Wie vóór dag 22 al doorging naar fase 3 of 4,
   // krijgt het daar alsnog bij het eerstvolgende bezoek.
-  let dueTouchpoint: "kern-verhaal" | null = null;
-  if (
-    !ctx.isBouwer &&
-    !ctx.touchpoints.includes("kern-verhaal") &&
-    dagNummer != null
-  ) {
-    const kernNu =
-      ctx.programmaSlug === "darm"
-        ? ctx.stationSlug === "zestien-dagen" && dagNummer >= 5
-        : ctx.programmaSlug === "reset" &&
-          (ctx.stationSlug === "omschakeling"
-            ? dagNummer >= 22
-            : ctx.stationSlug === "stabilisatie" ||
-              ctx.stationSlug === "logisch-leven");
-    if (kernNu) dueTouchpoint = "kern-verhaal";
+  let dueTouchpoint: "kern-verhaal" | "reset-complimenten" | null = null;
+  if (!ctx.isBouwer && dagNummer != null) {
+    if (!ctx.touchpoints.includes("kern-verhaal")) {
+      const kernNu =
+        ctx.programmaSlug === "darm"
+          ? ctx.stationSlug === "zestien-dagen" && dagNummer >= 5
+          : ctx.programmaSlug === "reset" &&
+            (ctx.stationSlug === "omschakeling"
+              ? dagNummer >= 22
+              : ctx.stationSlug === "stabilisatie" ||
+                ctx.stationSlug === "logisch-leven");
+      if (kernNu) dueTouchpoint = "kern-verhaal";
+    }
+    // Complimenten-opvolger: niet meer bij de fase 3-intro (stapelde op
+    // het dag 22-aanbevelen-moment), maar rustig rond dag 5 van fase 3.
+    if (
+      !dueTouchpoint &&
+      ctx.programmaSlug === "reset" &&
+      ctx.stationSlug === "stabilisatie" &&
+      dagNummer >= 5 &&
+      !ctx.touchpoints.includes("reset-complimenten")
+    ) {
+      dueTouchpoint = "reset-complimenten";
+    }
   }
 
   // Dag 10-video (darm): pas vanaf dag 10 in de fase, eenmalig.

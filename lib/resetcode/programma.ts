@@ -387,18 +387,15 @@ const RESET_STATIONS_INTERN: ResetStation[] = [
     welkom:
       "Fase 2 is gelukt, echt knap van je! In fase 3 mag er weer meer. Je voegt vetten stap voor stap toe en geeft je lichaam drie weken de tijd om te wennen aan waar je nu staat. Deze fase draait niet om verder omlaag, maar om stevig staan.",
     vandaagBelangrijk: [
-      "Voeg vetten langzaam toe: één nieuw dingetje per dag. Dag één je eitje in boter, dag twee een stukje kaas door de salade, en zo verder.",
-      "Alle groente en fruit mag weer, ook wortel, en alle soorten vlees en vis. Zuivel mag ook weer.",
+      "Voeg vetten langzaam toe: één nieuw dingetje per dag. Dag één je eitje in boter, dag twee een stukje kaas door de salade, daarna eens een yoghurt, en zo bouw je rustig op.",
+      "Alle groente en fruit mag weer, ook wortel, en alle soorten vlees en vis.",
       "Nog steeds geen suikers en geen snelle koolhydraten.",
-      "Brood van haverzemelen mag, maximaal drie dagen per week en het liefst om de dag. Week de haverzemelen even, zoals in het document staat.",
-      "Weeg jezelf elke ochtend. Je eindgewicht van fase 2 is je ankerpunt: daar mag je ongeveer een kilo omheen bewegen.",
-      "Kom je meer dan een kilo boven je ankerpunt? Corrigeer dan binnen 48 uur met een correctie-dag: overdag alleen drinken, en 's avonds één grote biefstuk met een appel of een tomaat. Eet je geen vlees, vraag dan je begeleider naar de variant.",
+      "Weeg jezelf elke ochtend. Je eindgewicht van fase 2 is je ankerpunt: daar mag je ongeveer een kilo omheen bewegen. Schommelt het meer? Vraag het me gerust, dan kijken we samen hoe je bijstuurt.",
     ],
     welLijst: [
-      "Gezonde vetten, rustig opgebouwd: boter, olie, kaas, noten",
+      "Gezonde vetten, rustig opgebouwd: boter, olie, kaas, yoghurt, noten",
       "Alle groente en alle fruit",
-      "Alle vlees en vis, eieren, zuivel",
-      "Haverzemelen-brood (max drie dagen per week, geweekt)",
+      "Alle vlees en vis, en eieren",
     ],
     nietLijst: [
       "Suikers, ook verstopte (blijf etiketten lezen)",
@@ -490,12 +487,7 @@ const RESET_STATIONS_INTERN: ResetStation[] = [
     ],
     contactMoment:
       "Aan het einde van fase 4: plan het vervolg-gesprek met je begeleider over jouw ritme na het programma.",
-    documenten: [
-      {
-        titel: "Vijf leefstijl-tips",
-        omschrijving: "De basis om vast te houden wat je hebt opgebouwd.",
-      },
-    ],
+    documenten: [],
     videoSlots: ["Fase 4-video: Logisch Leven"],
     graphic: "logi-piramide",
   },
