@@ -179,6 +179,20 @@ export default async function KlantLinkPagina({
     })
     .filter((i): i is NonNullable<typeof i> => i !== null && (i.soort === "kaart" || i.tekst.length > 0));
 
+  // Testmodus (laatste testronde, 23 juli): reis-links van een founder
+  // krijgen dag-spring-knoppen zodat het team de reis dag voor dag,
+  // versneld, kan beleven. Echte klant-links kunnen dit nooit krijgen.
+  let testModus = false;
+  if (token.startsWith("reis")) {
+    const adminT = createAdminClient();
+    const { data: eigenaarRij } = await adminT
+      .from("profiles")
+      .select("role")
+      .eq("id", ctx.memberId)
+      .maybeSingle();
+    testModus = (eigenaarRij as { role?: string } | null)?.role === "founder";
+  }
+
   // Door Raoul gevulde media (video's, documenten) voor ALLE programma's:
   // bij een doorgroei-klik (darm → reset) wisselt de klant client-side
   // van programma, en dan moeten de reset-video's er al zijn (bug 23
@@ -484,6 +498,7 @@ export default async function KlantLinkPagina({
         vrijgegeven={ctx.vrijgegeven}
         dueFaseKeuze={dueFaseKeuze}
         innamesVandaag={innamesVandaag}
+        testModus={testModus}
       />
     </div>
   );

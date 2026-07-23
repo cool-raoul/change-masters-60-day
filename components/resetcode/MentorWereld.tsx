@@ -510,6 +510,7 @@ export default function MentorWereld({
   vrijgegeven,
   dueFaseKeuze,
   innamesVandaag,
+  testModus,
 }: {
   begeleiderNaam: string;
   /** Klant-modus: token van de klant-link; het gesprek wordt dan op de server bewaard. */
@@ -557,6 +558,8 @@ export default function MentorWereld({
   dueFaseKeuze?: { fase: string; dag: number; max?: boolean } | null;
   /** Vandaag al afgevinkte inname-momenten (darm-innameschema). */
   innamesVandaag?: string[];
+  /** Test-reis-link van een founder: toont de dag-spring-balk. */
+  testModus?: boolean;
 }) {
   const isKlant = Boolean(token);
   const verteldRef = useRef<Set<string>>(new Set(touchpointsAlVerteld ?? []));
@@ -3184,8 +3187,69 @@ export default function MentorWereld({
     }
   };
 
+  // Testmodus: dag-springen. Eén klik = één dag beleven zoals de klant
+  // die beleeft; de pagina herlaadt zodat de server de dag-momenten
+  // opnieuw berekent, precies als bij een echt nieuw bezoek.
+  const testSpring = async (actie: "vooruit" | "terug" | "reset") => {
+    if (!token) return;
+    if (
+      actie === "reset" &&
+      !window.confirm("De hele testreis terug naar dag 1? Alle gesprekken en vinkjes van deze testlink worden gewist.")
+    )
+      return;
+    try {
+      await fetch("/api/resetcode/test-spring", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, actie }),
+      });
+    } catch {
+      // herladen toont vanzelf de actuele stand
+    }
+    try {
+      localStorage.removeItem(OPSLAG_SLEUTEL);
+    } catch {}
+    window.location.reload();
+  };
+
   return (
     <div className="relative flex h-full flex-col" style={{ backgroundColor: "#0F1B17" }}>
+      {testModus && (
+        <div
+          className="flex items-center justify-between gap-2 px-4 py-2 text-[12px]"
+          style={{ backgroundColor: "#3B2667", color: "#DDD6FE" }}
+        >
+          <span className="font-bold">
+            🧪 Testmodus · {station ? `${station.emoji} ${station.naam}` : ""} · dag {dagNummer ?? "—"}
+          </span>
+          <span className="flex items-center gap-1.5">
+            <button
+              onClick={() => testSpring("terug")}
+              className="rounded-full px-2.5 py-1 font-semibold"
+              style={{ backgroundColor: "rgba(255,255,255,0.14)" }}
+              title="Eén dag terug"
+            >
+              ◀ dag terug
+            </button>
+            <button
+              onClick={() => testSpring("vooruit")}
+              className="rounded-full px-2.5 py-1 font-bold"
+              style={{ backgroundColor: "#7C3AED", color: "#fff" }}
+              title="Beleef de volgende dag"
+            >
+              volgende dag ▶
+            </button>
+            <button
+              onClick={() => testSpring("reset")}
+              className="rounded-full px-2.5 py-1 font-semibold"
+              style={{ backgroundColor: "rgba(255,255,255,0.14)" }}
+              title="Hele reis opnieuw vanaf dag 1"
+            >
+              ⏮
+            </button>
+          </span>
+        </div>
+      )}
       <style>{`
         @keyframes pols { 0%,100% { transform: scale(1) } 50% { transform: scale(1.08) } }
         @keyframes verschijn { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: translateY(0) } }
