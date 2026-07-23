@@ -3039,17 +3039,26 @@ export default function MentorWereld({
         );
       }
       case "documenten": {
-        const blokken =
-          mediaBlokken?.[`${programma.slug}/${st.slug}-docs`] ?? [];
+        // Heeft deze fase zelf geen documenten? Val dan terug op de
+        // start-documenten: daar staat alles bij elkaar (feedback Raoul
+        // 23 juli: geen losse documenten-stapjes per fase).
+        let docStation = st;
+        let blokken = mediaBlokken?.[`${programma.slug}/${st.slug}-docs`] ?? [];
+        if (blokken.length === 0 && st.documenten.length === 0) {
+          docStation = programma.stations[0] ?? st;
+          blokken =
+            mediaBlokken?.[`${programma.slug}/${docStation.slug}-docs`] ?? [];
+        }
+        const stDocs = docStation;
         return (
           <div className={kader}>
-            {kop("📂", "Bij deze fase")}
+            {kop("📂", stDocs.slug === st.slug ? "Bij deze fase" : "Jouw documenten")}
             {(blokken.length > 0 || isFounder) && (
               <div className="mt-1.5">
                 <MediaBlokken
                   paginaNamespace="resetcode-klant"
                   paginaId={programma.slug}
-                  positie={`${st.slug}-docs`}
+                  positie={`${stDocs.slug}-docs`}
                   blokken={blokken}
                   isFounder={Boolean(isFounder)}
                 />
@@ -3057,7 +3066,7 @@ export default function MentorWereld({
             )}
             {blokken.length === 0 && (
               <div className="space-y-1.5 mt-1.5">
-                {st.documenten.map((d, i) => (
+                {stDocs.documenten.map((d, i) => (
                   <div key={i} className="rounded-xl bg-black/30 border border-dashed border-emerald-500/25 px-3 py-2">
                     <p className="text-[13px] font-semibold text-white/90">{d.titel}</p>
                     <p className="text-[11px] text-white/55">{d.omschrijving}</p>

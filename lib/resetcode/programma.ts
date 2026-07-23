@@ -104,6 +104,10 @@ const DARM_STATIONS: ResetStation[] = [
         titel: "Benodigdheden en boodschappenlijstje",
         omschrijving: "Alles wat je in huis wilt hebben voor je begint.",
       },
+      {
+        titel: "Receptenboekje",
+        omschrijving: "Heerlijke recepten om te variëren.",
+      },
     ],
     videoSlots: ["Welkom bij Darmen in Balans (introductie)"],
   },
@@ -167,20 +171,10 @@ const DARM_STATIONS: ResetStation[] = [
     ],
     contactMoment:
       "Rond het einde van de 16 dagen: plan een momentje met je begeleider over jouw vervolgstap.",
-    documenten: [
-      {
-        titel: "Darmen in Balans programmaboekje + innameschema",
-        omschrijving: "Het rode en blauwe schema, met uitleg per product.",
-      },
-      {
-        titel: "Voedingslijst",
-        omschrijving: "Wat je wel en even niet eet, uitgebreid per categorie.",
-      },
-      {
-        titel: "Receptenboekje",
-        omschrijving: "Heerlijke recepten om te variëren.",
-      },
-    ],
+    // Documenten staan allemaal bij "Jouw start" (feedback Raoul 23 juli:
+    // het receptenboekje verdient geen eigen stap); de documenten-kaart
+    // valt in deze fase automatisch terug op de start-documenten.
+    documenten: [],
     videoSlots: [],
   },
 ];

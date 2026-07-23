@@ -14,5 +14,12 @@ export function createAdminClient() {
       autoRefreshToken: false,
       persistSession: false,
     },
+    // Database-data mag NOOIT uit de Next/Vercel-datacache komen: die
+    // cachete supabase-GET's dwars door force-dynamic heen, waardoor
+    // pagina's met verouderde klant-data renderden (bug 23 juli: de
+    // dag-teller bleef op 1 staan terwijl de database al verder was).
+    global: {
+      fetch: (input, init) => fetch(input, { ...init, cache: "no-store" }),
+    },
   });
 }
