@@ -1904,8 +1904,13 @@ export default function MentorWereld({
     if (!token || !abonneerbaar()) return false;
     try {
       if (Notification.permission === "granted") {
-        const reg = await navigator.serviceWorker.ready;
-        if (await reg.pushManager.getSubscription()) return false; // al aan
+        // getRegistration, NIET .ready: .ready wacht eeuwig als er (nog)
+        // geen service worker op deze pagina is, en dan bevroor de hele
+        // vervolg-flow na het eerste info-blok (bug Raoul 23 juli: de
+        // chat stopte na "de regels van nu" zodra meldingen al eerder
+        // waren toegestaan).
+        const reg = await navigator.serviceWorker.getRegistration();
+        if (reg && (await reg.pushManager.getSubscription())) return false; // al aan
       }
       if (localStorage.getItem(`resetcode-push-${token.slice(0, 10)}`)) return false;
     } catch {
