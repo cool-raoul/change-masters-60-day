@@ -470,9 +470,6 @@ export default async function KlantLinkPagina({
   return (
     <div
       className="mx-auto"
-      data-dag={dagNummer ?? 0}
-      data-sinds={ctx.stationSinds ?? ""}
-      data-gerenderd={new Date().toISOString()}
       style={{ maxWidth: 560, height: "100dvh", backgroundColor: "#0F1B17" }}
     >
       <MentorWereld
