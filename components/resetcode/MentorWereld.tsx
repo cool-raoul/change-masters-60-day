@@ -1873,6 +1873,16 @@ export default function MentorWereld({
     try {
       localStorage.setItem(`resetcode-push-${token!.slice(0, 10)}`, "1");
       const perm = await Notification.requestPermission();
+      if (perm === "denied") {
+        // De browser blokkeert meldingen (bijv. incognito-venster, of
+        // eerder voor deze site uitgezet). Eerlijk zeggen wat er
+        // gebeurde, anders lijkt de klik genegeerd.
+        await mentorZegt(
+          "Ah, je browser blokkeert meldingen voor deze pagina op dit moment (dat gebeurt bijvoorbeeld in een incognito-venster, of als ze eerder zijn uitgezet). Geen zorgen: ik houd alles gewoon hier voor je bij. Wil je de seintjes later toch? Zet meldingen voor deze site aan via het slotje bij de adresbalk, en zeg het me dan even. 💚",
+          700,
+        );
+        return;
+      }
       if (perm !== "granted") {
         await mentorZegt(
           "Geen probleem, dan houd ik het hier voor je bij. Je kunt het later altijd nog aanzetten.",
@@ -3208,6 +3218,11 @@ export default function MentorWereld({
     }
     try {
       localStorage.removeItem(OPSLAG_SLEUTEL);
+      // Bij een volledige reset ook de "push al gevraagd"-markering weg,
+      // zodat het seintjes-moment opnieuw te testen is.
+      if (actie === "reset" && token) {
+        localStorage.removeItem(`resetcode-push-${token.slice(0, 10)}`);
+      }
     } catch {}
     window.location.reload();
   };
