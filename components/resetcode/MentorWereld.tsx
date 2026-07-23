@@ -1264,11 +1264,7 @@ export default function MentorWereld({
     setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: echo }]);
     logNaarServer([{ van: "klant", soort: "tekst", tekst: echo }]);
     if (token) {
-      fetch("/api/resetcode/start", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, datum: datumISO }),
-      }).catch(() => {});
+      await postMetHerkansing("/api/resetcode/start", { token, datum: datumISO });
     }
     if (alGestart) {
       const vandaagISO = `${new Date().getFullYear()}-${String(
@@ -1360,6 +1356,30 @@ export default function MentorWereld({
     setItems((b) => [...b, { van: "mentor", soort: "pakket-keuze", bid }]);
   }
 
+  // Belangrijke keuzes (pakket, startmoment) met herkansing opslaan: een
+  // enkele stille netwerk-fout mag niet betekenen dat de vraag bij het
+  // volgende bezoek opnieuw komt (gebeurde Raoul, 23 juli).
+  async function postMetHerkansing(url: string, body: Record<string, unknown>) {
+    const doe = () =>
+      fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+    try {
+      const r = await doe();
+      if (r.ok) return;
+    } catch {
+      /* herkansing hieronder */
+    }
+    await wacht(1200);
+    try {
+      await doe();
+    } catch {
+      /* volgende bezoek stelt de vraag gewoon opnieuw */
+    }
+  }
+
   async function kiesPakket(keuze: "basis" | "plus") {
     setItems((b) => b.filter((x) => x.soort !== "pakket-keuze"));
     pakketRef.current = keuze;
@@ -1370,11 +1390,7 @@ export default function MentorWereld({
     setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: echo }]);
     logNaarServer([{ van: "klant", soort: "tekst", tekst: echo }]);
     if (token) {
-      fetch("/api/resetcode/pakket", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, pakket: keuze }),
-      }).catch(() => {});
+      await postMetHerkansing("/api/resetcode/pakket", { token, pakket: keuze });
     }
     await mentorZegt(
       keuze === "plus"

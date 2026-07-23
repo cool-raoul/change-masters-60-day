@@ -19,7 +19,14 @@ export function PdfBlok({ inhoud, bestandUrl }: Props) {
       href={bestandUrl}
       target="_blank"
       rel="noopener noreferrer"
-      download={inhoud.bestandsnaam}
+      onClick={(e) => {
+        // Expliciet een nieuw venster afdwingen: het download-attribuut
+        // + de verse-URL-redirect liet sommige browsers (vooral mobiel/
+        // beginscherm-weergave) in hetzelfde venster navigeren, waardoor
+        // de klant zijn chat kwijtraakte (feedback Raoul 23 juli).
+        e.preventDefault();
+        window.open(bestandUrl, "_blank", "noopener");
+      }}
       className="flex items-center gap-3 p-4 rounded-xl border border-cm-border bg-cm-surface hover:border-cm-gold-dim transition-colors"
     >
       <span className="text-3xl flex-shrink-0">📄</span>
