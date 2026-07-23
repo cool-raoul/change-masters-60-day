@@ -116,6 +116,43 @@ const FASE_DAGEN: Record<string, number> = {
   "logisch-leven": 21,
 };
 
+// Mijlpalen op het Groeipad (feedback Raoul 23 juli: het pad had geen
+// beleving). Alleen momenten die ÉCHT in de reis gebeuren, per fase.
+const FASE_MIJLPALEN: Record<string, { dag: number; label: string }[]> = {
+  "darm/zestien-dagen": [
+    { dag: 1, label: "Start: je eerste check-in en je dagschema" },
+    { dag: 7, label: "Week 1 vol · je week-overzicht" },
+    { dag: 10, label: "De belangrijke dag 10-video" },
+    { dag: 14, label: "Vooruitblik: samen je vervolg plannen" },
+    { dag: 16, label: "Laatste dag + je opmaak-uitleg" },
+    { dag: 17, label: "🎉 Feest: jouw resultaten op een rij" },
+  ],
+  "reset/laaddagen": [
+    { dag: 1, label: "Eten maar! Je teller loopt vanzelf mee" },
+    { dag: 2, label: "Laatste laaddag, morgen begint fase 2" },
+  ],
+  "reset/omschakeling": [
+    { dag: 1, label: "Start: je eerste check-in" },
+    { dag: 7, label: "Week 1 vol · je week-overzicht" },
+    { dag: 14, label: "Week 2 vol · je week-overzicht" },
+    { dag: 20, label: "Vooruitkijken: jouw fase 3-keuze" },
+    { dag: 21, label: "21 dagen vol: door of verlengen (tot 40)" },
+  ],
+  "reset/stabilisatie": [
+    { dag: 1, label: "Start: vetten rustig terugbrengen" },
+    { dag: 7, label: "Week 1 vol · je week-overzicht" },
+    { dag: 14, label: "Week 2 vol · je week-overzicht" },
+    { dag: 20, label: "Vooruitkijken: fase 4 komt eraan" },
+    { dag: 21, label: "21 dagen vol: samen jullie plan kiezen" },
+  ],
+  "reset/logisch-leven": [
+    { dag: 1, label: "Start: jouw 80/20-leefstijl" },
+    { dag: 7, label: "Week 1 vol · je week-overzicht" },
+    { dag: 14, label: "Week 2 vol · je week-overzicht" },
+    { dag: 21, label: "🎉 Het grote einde-feest" },
+  ],
+};
+
 // Dagelijkse check-in in de chat, journal-stijl (kompas-principe):
 // tik-keuzes voor gevoel, energie, slaap en buik + optioneel gewicht
 // en de kleine winst van de dag. Een halve minuut werk, en het traint
@@ -2625,6 +2662,44 @@ export default function MentorWereld({
       } else {
         await mentorZegt("Kijk eens, dit heb je tot nu toe opgebouwd:", 700);
         setItems((b) => [...b, { van: "mentor", soort: "voortgang" }]);
+        // Echte conclusies bij de kaart (feedback Raoul 23 juli: alleen
+        // een kaartje voelde te summier): totalen + eigen winsten terug.
+        const reeks = checkinReeksRef.current;
+        const metGewicht = reeks.filter((r) => r.gewicht != null);
+        const gDelta =
+          metGewicht.length >= 2
+            ? Math.round(
+                ((metGewicht[metGewicht.length - 1].gewicht as number) -
+                  (metGewicht[0].gewicht as number)) *
+                  10,
+              ) / 10
+            : null;
+        const metTailleV = reeks.filter((r) => r.taille != null);
+        const tDeltaV =
+          metTailleV.length >= 2
+            ? Math.round(
+                ((metTailleV[metTailleV.length - 1].taille as number) -
+                  (metTailleV[0].taille as number)) *
+                  10,
+              ) / 10
+            : null;
+        const winstenV = reeks
+          .filter((r) => r.notitie)
+          .slice(-3)
+          .map((r) => `"${r.notitie}"`);
+        const delenV: string[] = [
+          `${reeks.length} check-in${reeks.length === 1 ? "" : "s"} gedaan${dagNummer ? ` in ${dagNummer} ${dagNummer === 1 ? "dag" : "dagen"}` : ""}`,
+        ];
+        if (gDelta != null && gDelta < 0) delenV.push(`${Math.abs(gDelta)} kilo eraf`);
+        if (gDelta != null && gDelta > 0) delenV.push(`${Math.abs(gDelta)} kilo erbij (schommelingen zijn normaal, vaak vocht)`);
+        if (tDeltaV != null && tDeltaV < 0) delenV.push(`${Math.abs(tDeltaV)} centimeter van je taille`);
+        await wacht(600);
+        await mentorZegt(
+          winstenV.length
+            ? `Op een rij: ${delenV.join(", ")}. En dit schreef je zélf onderweg op: ${winstenV.join(", ")}. Hou dat vast, dat is geen toeval. 💚`
+            : `Op een rij: ${delenV.join(", ")}. En vergeet niet: ook de dagen dat je gewoon doorging tellen mee. 💚`,
+          1000,
+        );
       }
       return true;
     }
@@ -3462,51 +3537,110 @@ export default function MentorWereld({
                 const gedaan = s.nummer < station.nummer;
                 const nu = s.slug === station.slug;
                 const komt = s.nummer > station.nummer;
+                const mijlpalen =
+                  FASE_MIJLPALEN[`${programma.slug}/${s.slug}`] ?? [];
                 return (
-                  <button
-                    key={s.slug}
-                    onClick={() => {
-                      if (komt) return; // vooruit kijken mag, niet openen
-                      setToonReis(false);
-                      naarStation(s.slug, true);
-                    }}
-                    disabled={komt}
-                    className="relative flex items-center gap-3 w-full text-left mb-3 last:mb-0"
-                  >
-                    <span
-                      className={`relative z-10 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm ${
-                        nu ? "pols" : ""
-                      }`}
-                      style={{
-                        backgroundColor: nu
-                          ? "#059669"
-                          : gedaan
-                            ? "#0A3D2C"
-                            : "#141f1b",
-                        border: nu
-                          ? "2px solid #6EE7B7"
-                          : gedaan
-                            ? "2px solid #34D39955"
-                            : "2px dashed #ffffff22",
+                  <div key={s.slug} className="mb-3 last:mb-0">
+                    <button
+                      onClick={() => {
+                        if (komt) return; // vooruit kijken mag, niet openen
+                        setToonReis(false);
+                        naarStation(s.slug, true);
                       }}
+                      disabled={komt}
+                      className="relative flex items-center gap-3 w-full text-left"
                     >
-                      {gedaan ? "✓" : komt ? "🔒" : s.emoji}
-                    </span>
-                    <div className="min-w-0">
-                      <p
-                        className={`text-[14px] font-semibold ${nu ? "text-white" : gedaan ? "text-white/80" : "text-white/40"}`}
+                      <span
+                        className={`relative z-10 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm ${
+                          nu ? "pols" : ""
+                        }`}
+                        style={{
+                          backgroundColor: nu
+                            ? "#059669"
+                            : gedaan
+                              ? "#0A3D2C"
+                              : "#141f1b",
+                          border: nu
+                            ? "2px solid #6EE7B7"
+                            : gedaan
+                              ? "2px solid #34D39955"
+                              : "2px dashed #ffffff22",
+                        }}
                       >
-                        {s.naam}
-                      </p>
-                      <p className="text-[11px] text-white/40">
-                        {nu
-                          ? "je bent hier"
-                          : gedaan
-                            ? "afgerond · tik om terug te lezen"
-                            : "komt eraan"}
-                      </p>
-                    </div>
-                  </button>
+                        {gedaan ? "✓" : komt ? "🔒" : s.emoji}
+                      </span>
+                      <div className="min-w-0">
+                        <p
+                          className={`text-[14px] font-semibold ${nu ? "text-white" : gedaan ? "text-white/80" : "text-white/40"}`}
+                        >
+                          {s.naam}
+                        </p>
+                        <p className="text-[11px] text-white/40">
+                          {nu
+                            ? "je bent hier"
+                            : gedaan
+                              ? "afgerond · tik om terug te lezen"
+                              : "komt eraan"}
+                        </p>
+                      </div>
+                    </button>
+                    {/* Mijlpalen langs de lijn: geeft het pad beleving.
+                        Afgeronde fases blijven compact (alleen de fase-rij). */}
+                    {!gedaan && mijlpalen.length > 0 && (
+                      <div className="mt-2 mb-1 space-y-2">
+                        {mijlpalen.map((m) => {
+                          const dagNu = nu ? (dagNummer ?? 0) : 0;
+                          const bereikt = nu && dagNu > m.dag;
+                          const vandaagHier = nu && dagNu === m.dag;
+                          return (
+                            <div
+                              key={m.dag}
+                              className="relative flex items-center gap-2.5"
+                            >
+                              <span
+                                className={`relative z-10 ml-[9px] h-3 w-3 flex-shrink-0 rounded-full ${vandaagHier ? "pols" : ""}`}
+                                style={{
+                                  backgroundColor: vandaagHier
+                                    ? "#6EE7B7"
+                                    : bereikt
+                                      ? "#34D399"
+                                      : "#1e2b26",
+                                  border: vandaagHier
+                                    ? "2px solid #ECFDF5"
+                                    : bereikt
+                                      ? "2px solid #34D399"
+                                      : "2px solid #ffffff22",
+                                }}
+                              />
+                              <span
+                                className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold flex-shrink-0 ${
+                                  vandaagHier
+                                    ? "bg-emerald-500/25 text-emerald-200"
+                                    : bereikt
+                                      ? "bg-white/10 text-white/60"
+                                      : "bg-white/5 text-white/35"
+                                }`}
+                              >
+                                dag {m.dag}
+                              </span>
+                              <span
+                                className={`text-[12px] leading-snug ${
+                                  vandaagHier
+                                    ? "text-white font-semibold"
+                                    : bereikt
+                                      ? "text-white/65"
+                                      : "text-white/40"
+                                }`}
+                              >
+                                {m.label}
+                                {vandaagHier ? " · vandaag" : ""}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </div>
@@ -3729,7 +3863,10 @@ export default function MentorWereld({
               <div key={i} className="verschijn max-w-[92%]">
                 <CheckinVraag
                   bezig={checkinBezig}
-                  meetDag={dagNummer != null && dagNummer % 7 === 0}
+                  meetDag={
+                    dagNummer != null &&
+                    (dagNummer === 1 || dagNummer % 7 === 0)
+                  }
                   onKies={(invoer) => verstuurCheckin(invoer)}
                 />
               </div>

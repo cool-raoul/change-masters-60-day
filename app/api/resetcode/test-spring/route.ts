@@ -97,16 +97,27 @@ export async function POST(req: NextRequest) {
       .update(updates)
       .eq("id", ctx.linkId);
   }
-  // Elke testdag vers: de check-in en vinkjes van "vandaag" mogen weer.
-  await admin
-    .from("resetcode_checkin")
-    .delete()
-    .eq("link_id", ctx.linkId)
-    .eq("datum", vandaag);
-  await admin
-    .from("resetcode_innames")
-    .delete()
-    .eq("link_id", ctx.linkId)
-    .eq("datum", vandaag);
+  // Check-ins en schema-vinkjes schuiven MEE met de sprong (de check-in
+  // van "vandaag" wordt gisteren, enz.): zo bouwt de voortgangs-reeks
+  // zich op zoals bij een echte klant, en is vandaag weer vrij voor een
+  // verse check-in (feedback Raoul 23 juli: de voortgang bleef leeg).
+  // Volgorde is belangrijk vanwege de unieke datum per link: bij vooruit
+  // eerst de oudste rij verschuiven, bij terug eerst de nieuwste.
+  const schuif = async (tabel: string) => {
+    const { data } = await admin
+      .from(tabel)
+      .select("id, datum")
+      .eq("link_id", ctx.linkId)
+      .order("datum", { ascending: delta < 0 });
+    for (const rij of (data ?? []) as { id: string; datum: string }[]) {
+      const nieuw = new Intl.DateTimeFormat("sv-SE", { timeZone: "UTC" }).format(
+        new Date(Date.parse(rij.datum) + delta * 86_400_000),
+      );
+      await admin.from(tabel).update({ datum: nieuw }).eq("id", rij.id);
+    }
+  };
+  await schuif("resetcode_checkin");
+  await schuif("resetcode_innames");
+  void vandaag;
   return Response.json({ ok: true });
 }

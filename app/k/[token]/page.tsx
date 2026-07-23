@@ -355,6 +355,7 @@ export default async function KlantLinkPagina({
     stemming: c.stemming,
     gewicht: c.gewicht,
     notitie: c.notitie,
+    taille: (c as { taille?: number | null }).taille ?? null,
   }));
 
   // Week-terugblik: elke 7 dagen in de fase één keer een mini-overzicht
