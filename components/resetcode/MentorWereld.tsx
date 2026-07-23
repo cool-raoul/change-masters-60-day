@@ -719,11 +719,18 @@ export default function MentorWereld({
   const vorigeAantal = useRef(0);
   useEffect(() => {
     if (items.length !== vorigeAantal.current || mentorTypt) {
+      const laatsteVanMij = items[items.length - 1]?.van === "ik";
       vorigeAantal.current = items.length;
-      scrollRef.current?.scrollTo({
-        top: scrollRef.current.scrollHeight,
-        behavior: "smooth",
-      });
+      const el = scrollRef.current;
+      if (!el) return;
+      // Alleen automatisch meescrollen als de lezer al (bijna) onderaan
+      // zit, of net zelf iets stuurde. Wie omhoog aan het teruglezen is,
+      // wordt niet meer naar beneden getrokken (feedback Raoul 23 juli).
+      const bijOnderkant =
+        el.scrollHeight - el.scrollTop - el.clientHeight < 260;
+      if (bijOnderkant || laatsteVanMij) {
+        el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+      }
     }
   }, [items, mentorTypt]);
 
@@ -1948,26 +1955,41 @@ export default function MentorWereld({
       const ready = await navigator.serviceWorker.ready;
       let sub = await ready.pushManager.getSubscription();
       if (!sub) {
-        sub = await ready.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: urlBase64ToUint8Array(
-            process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
-          ),
-        });
+        const abonneer = () =>
+          ready.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(
+              process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+            ),
+          });
+        try {
+          sub = await abonneer();
+        } catch {
+          // Eén herkansing: op sommige telefoons faalt de allereerste
+          // aanmelding bij de push-dienst net na het toestemmings-moment.
+          await wacht(800);
+          sub = await abonneer();
+        }
       }
       const j = sub.toJSON() as { endpoint: string; keys: { p256dh: string; auth: string } };
-      await fetch("/api/resetcode/push-subscribe", {
+      const opslag = await fetch("/api/resetcode/push-subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, subscription: j }),
       });
+      if (!opslag.ok) {
+        throw new Error(`opslag mislukt (${opslag.status})`);
+      }
       await mentorZegt(
         "Top, ik geef je elke ochtend een klein seintje voor je check-in en laat je weten als er iets belangrijks klaarstaat 🔔",
         700,
       );
-    } catch {
+    } catch (e) {
+      // In testmodus de technische reden erbij, zodat we precies zien
+      // waar het stukloopt op welk toestel (feedback Raoul 23 juli).
+      const reden = e instanceof Error ? e.message : String(e);
       await mentorZegt(
-        "Dat lukte net even niet, geen zorgen, ik houd alles gewoon hier voor je bij.",
+        `Dat lukte net even niet, geen zorgen, ik houd alles gewoon hier voor je bij.${testModus ? ` (technisch: ${reden.slice(0, 140)})` : ""}`,
         600,
       );
     }
@@ -3049,7 +3071,7 @@ export default function MentorWereld({
           <div className={kader}>
             {kop("🎬", "Video bij deze fase")}
             {(blokken.length > 0 || isFounder) && (
-              <div className="mt-1.5">
+              <div className="mt-1.5 -mx-2">
                 <MediaBlokken
                   paginaNamespace="resetcode-klant"
                   paginaId={programma.slug}
@@ -3081,7 +3103,7 @@ export default function MentorWereld({
         return (
           <div className={kader}>
             {kop("🎬", "Tips & tricks")}
-            <div className="mt-1.5">
+            <div className="mt-1.5 -mx-2">
               <MediaBlokken
                 paginaNamespace="resetcode-klant"
                 paginaId={programma.slug}
@@ -3101,7 +3123,7 @@ export default function MentorWereld({
         return (
           <div className={kader}>
             {kop("🎬", "Jouw dag 10-video")}
-            <div className="mt-1.5">
+            <div className="mt-1.5 -mx-2">
               <MediaBlokken
                 paginaNamespace="resetcode-klant"
                 paginaId={programma.slug}
@@ -3837,8 +3859,12 @@ export default function MentorWereld({
             );
           }
           if (item.soort === "kaart") {
+            // Video-kaarten krijgen de volle breedte: op een telefoon
+            // moet de video gewoon lekker kijkbaar zijn in de chat
+            // (feedback Raoul 23 juli: kijkvak te klein).
+            const volleBreedte = item.kaart.startsWith("video");
             return (
-              <div key={i} className="verschijn max-w-[92%]">
+              <div key={i} className={`verschijn ${volleBreedte ? "w-full" : "max-w-[92%]"}`}>
                 <Kaartje item={item} />
               </div>
             );
