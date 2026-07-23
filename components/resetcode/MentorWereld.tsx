@@ -355,8 +355,11 @@ function StartKeuze({
   if (alGestart) {
     return (
       <div className="rounded-2xl bg-[#0A251C] border border-emerald-500/25 px-4 py-3">
-        <p className="text-[13px] font-bold text-emerald-300 mb-2">
+        <p className="text-[13px] font-bold text-emerald-300 mb-1">
           💪 Wanneer ben je gestart?
+        </p>
+        <p className="text-[12px] text-white/60 mb-1">
+          📅 Tik hieronder en kies de dag op de kalender:
         </p>
         <div className="flex items-center gap-2">
           <input
@@ -364,6 +367,7 @@ function StartKeuze({
             value={eigenDatum}
             max={naarISO(gisteren)}
             onChange={(e) => setEigenDatum(e.target.value)}
+            aria-label="Kies je startdag op de kalender"
             className="flex-1 rounded-xl bg-white/5 border border-white/10 px-3 py-2 text-[13px] text-white focus:outline-none [color-scheme:dark]"
           />
           <button
@@ -405,12 +409,16 @@ function StartKeuze({
           Morgen
         </button>
       </div>
+      <p className="text-[12px] text-white/60 mb-1">
+        📅 Of tik hieronder en kies zelf een dag op de kalender:
+      </p>
       <div className="flex items-center gap-2 mb-3">
         <input
           type="date"
           value={eigenDatum}
           min={naarISO(vandaag)}
           onChange={(e) => setEigenDatum(e.target.value)}
+          aria-label="Kies een startdag op de kalender"
           className="flex-1 rounded-xl bg-white/5 border border-white/10 px-3 py-2 text-[13px] text-white focus:outline-none [color-scheme:dark]"
         />
         <button
