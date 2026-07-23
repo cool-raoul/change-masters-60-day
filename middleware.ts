@@ -7,6 +7,10 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    // service-worker.js en manifest.json zijn publieke systeembestanden:
+    // de auth-middleware stuurde ze voor niet-ingelogde bezoekers naar de
+    // login-pagina, waardoor push-seintjes op klant-links nooit konden
+    // registreren ("Script load failed", bug Raoul 23 juli).
+    "/((?!_next/static|_next/image|favicon.ico|service-worker\\.js|manifest\\.json|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
