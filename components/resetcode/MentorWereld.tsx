@@ -920,7 +920,9 @@ export default function MentorWereld({
                 // de gesprekspartner-keuze (feedback Raoul 22 juli: de
                 // focus ligt nu op het vervolg, niet op lange begeleiding).
                 await mentorZegt(
-                  `Je zit nu in je opmaak-dagen: je 16 dagen zitten erop en je maakt je producten rustig op. Zo werkt dat: deel de inhoud van elke pot door 30, dan weet je je dagdosering en gaat elke pot ongeveer een maand mee. En qua eten hoef je niks in één keer om te gooien: houd de voedingslijst als kompas en verbreed rustig. 💚`,
+                  dueFaseKeuze.dag <= 16
+                    ? `${dueFaseKeuze.dag === 16 ? "Vandaag is de laatste van je 16 dagen, wat een prestatie!" : "Je 16 dagen zitten er bijna op!"} 🎉 Daarna begint je opmaak-tijd: je maakt je producten rustig op. Zo werkt dat: deel de inhoud van elke pot door 30, dan weet je je dagdosering en gaat elke pot ongeveer een maand mee. En qua eten hoef je niks in één keer om te gooien: houd de voedingslijst als kompas en verbreed rustig. 💚`
+                    : `Je zit nu in je opmaak-dagen: je 16 dagen zitten erop en je maakt je producten rustig op. Zo werkt dat: deel de inhoud van elke pot door 30, dan weet je je dagdosering en gaat elke pot ongeveer een maand mee. En qua eten hoef je niks in één keer om te gooien: houd de voedingslijst als kompas en verbreed rustig. 💚`,
                   1200,
                 );
                 await wacht(900);

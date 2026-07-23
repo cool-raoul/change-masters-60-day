@@ -283,13 +283,15 @@ export default async function KlantLinkPagina({
     ) {
       dueTouchpoint = "reset-complimenten";
     }
-    // Darm eigen-ervaring/webshop-opvolger: niet meer in het einde-feest
-    // (dag 17 stapelde te veel), maar op een rustige opmaak-dag.
+    // Darm eigen-ervaring/webshop-opvolger: op dag 15, vóór mensen na
+    // hun 16 dagen afhaken (feedback Raoul 23 juli: verdeling over dag
+    // 14/15/16/17, want daarna logt een deel niet meer in). Wie dag 15
+    // mist, krijgt het bij het eerstvolgende bezoek alsnog als eerste.
     if (
       !dueTouchpoint &&
       ctx.programmaSlug === "darm" &&
       ctx.stationSlug === "zestien-dagen" &&
-      dagNummer >= 19 &&
+      dagNummer >= 15 &&
       !ctx.touchpoints.includes("darm-einde")
     ) {
       dueTouchpoint = "darm-einde";
@@ -321,11 +323,20 @@ export default async function KlantLinkPagina({
 
   // Week-terugblik: elke 7 dagen in de fase één keer een mini-overzicht
   // (kompas-principe: bewijs voor jezelf). Alleen als er check-ins zijn.
+  // Bij darm vanaf dag 14 niet meer: die dagen zijn voor de eindreeks
+  // (vooruitblik/aanbevelen/opmaak/feest) en het einde-feest bevat zelf
+  // al het volledige eigen-overzicht.
   const weekNummer = dagNummer != null ? Math.floor(dagNummer / 7) : 0;
   const dueWeekTerugblik =
     weekNummer >= 1 &&
     checkinReeks.length >= 3 &&
-    !ctx.touchpoints.includes(`week-terugblik-${weekNummer}`)
+    !ctx.touchpoints.includes(`week-terugblik-${weekNummer}`) &&
+    !(
+      ctx.programmaSlug === "darm" &&
+      ctx.stationSlug === "zestien-dagen" &&
+      dagNummer != null &&
+      dagNummer >= 14
+    )
       ? weekNummer
       : null;
 
@@ -355,22 +366,27 @@ export default async function KlantLinkPagina({
   // Darm: vooruitblik rond dag 14-16 (vervolg-momentje plannen) en de
   // eenmalige opmaak-uitleg zodra de 16 dagen erop zitten. Loopt via
   // hetzelfde fase-momenten-kanaal, één moment per dag.
+  // Verdeling van de darm-eindreeks (Raoul 23 juli): dag 14 vooruitblik,
+  // dag 15 aanbevelen (via dueTouchpoint), dag 16 opmaak-uitleg + de
+  // gesprekspartner-keuze, dag 17 het einde-feest. Alles due-gebaseerd:
+  // wie dagen overslaat krijgt bij het volgende bezoek het belangrijkste
+  // nog-niet-vertelde moment eerst.
   if (
     ctx.programmaSlug === "darm" &&
     ctx.stationSlug === "zestien-dagen" &&
     dagNummer != null
   ) {
     if (
-      dagNummer >= 14 &&
-      dagNummer <= 16 &&
-      !ctx.touchpoints.includes("darm-vooruitblik")
-    ) {
-      dueFaseKeuze = { fase: "darm-vooruitblik", dag: dagNummer };
-    } else if (
-      dagNummer > 16 &&
+      dagNummer >= 16 &&
       !ctx.touchpoints.includes("darm-opmaak-uitleg")
     ) {
       dueFaseKeuze = { fase: "darm-opmaak", dag: dagNummer };
+    } else if (
+      dagNummer >= 14 &&
+      dagNummer <= 15 &&
+      !ctx.touchpoints.includes("darm-vooruitblik")
+    ) {
+      dueFaseKeuze = { fase: "darm-vooruitblik", dag: dagNummer };
     }
   }
   if (ctx.programmaSlug === "reset" && dagNummer != null) {
