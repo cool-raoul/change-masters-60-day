@@ -26,6 +26,7 @@ import { waLinkNaar } from "@/lib/util/wa-nummer";
 import { MediaBlokken } from "@/components/cms/MediaBlokken";
 import type { Blok } from "@/lib/cms/pagina-blokken";
 import { SUIKER_NAMEN, WC_TIPS } from "@/lib/resetcode/producten";
+import { innameVoorDag, formatInname } from "@/lib/resetcode/inname-schema";
 import {
   touchpointTekst,
   type TouchpointSleutel,
@@ -818,6 +819,25 @@ export default function MentorWereld({
         // de check-in.
         (async () => {
           await wacht(1400);
+          // Dagelijks innameschema (darm, dag 1-16): toont vanzelf zodra
+          // de schema-data gevuld is; tot die tijd stil.
+          if (
+            prog.slug === "darm" &&
+            st.slug === "zestien-dagen" &&
+            !teltAf &&
+            dagNummer != null &&
+            dagNummer >= 1 &&
+            dagNummer <= 16
+          ) {
+            const schemaVandaag = innameVoorDag(pakketRef.current, dagNummer);
+            if (schemaVandaag) {
+              await mentorZegt(
+                `📋 Jouw innames voor dag ${dagNummer}:\n\n${formatInname(schemaVandaag)}`,
+                900,
+              );
+              await wacht(600);
+            }
+          }
           if (moetPakketKiezen) {
             await toonPakketKeuze(
               moetStartKiezen
@@ -921,9 +941,32 @@ export default function MentorWereld({
                 // focus ligt nu op het vervolg, niet op lange begeleiding).
                 await mentorZegt(
                   dueFaseKeuze.dag <= 16
-                    ? `${dueFaseKeuze.dag === 16 ? "Vandaag is de laatste van je 16 dagen, wat een prestatie!" : "Je 16 dagen zitten er bijna op!"} 🎉 Daarna begint je opmaak-tijd: je maakt je producten rustig op. Zo werkt dat: deel de inhoud van elke pot door 30, dan weet je je dagdosering en gaat elke pot ongeveer een maand mee. En qua eten hoef je niks in één keer om te gooien: houd de voedingslijst als kompas en verbreed rustig. 💚`
-                    : `Je zit nu in je opmaak-dagen: je 16 dagen zitten erop en je maakt je producten rustig op. Zo werkt dat: deel de inhoud van elke pot door 30, dan weet je je dagdosering en gaat elke pot ongeveer een maand mee. En qua eten hoef je niks in één keer om te gooien: houd de voedingslijst als kompas en verbreed rustig. 💚`,
+                    ? `${dueFaseKeuze.dag === 16 ? "Vandaag is de laatste van je 16 dagen, wat een prestatie!" : "Je 16 dagen zitten er bijna op!"} 🎉 Daarna begint je opmaak-tijd: je maakt je producten rustig op. De vuistregel: deel de inhoud van elke pot door 30, dan weet je je dagdosering en gaat elke pot ongeveer een maand mee.`
+                    : `Je zit nu in je opmaak-dagen: je 16 dagen zitten erop en je maakt je producten rustig op. De vuistregel: deel de inhoud van elke pot door 30, dan weet je je dagdosering en gaat elke pot ongeveer een maand mee.`,
                   1200,
+                );
+                await wacht(800);
+                // De genoteerde opmaak-hoeveelheden per product (Cogelin
+                // wijkt af van de deel-door-30-regel), pakket-bewust.
+                const opmaakBasis = [
+                  "Cogelin: halve tot 1 scoop per dag",
+                  "Aloë Vera Caps: 2 per dag (±6 dagen mee)",
+                  "MSM Plus: 2x4 (ochtend en avond), of 8 in één keer 's ochtends (±10 dagen)",
+                  "Biotic Blast: 2 per dag (±14 dagen)",
+                  "Parabalance: 2x3 (ochtend en avond)",
+                ];
+                const opmaakPlus = [
+                  "PH Plus: 3x3 per dag (±14 dagen)",
+                  "Be Recharged: 1 portie van 2 scoops per dag (±14 dagen)",
+                  "Digestive Formula: hier geldt gewoon de deel-door-30-regel",
+                ];
+                const opmaakLijst =
+                  pakketRef.current === "plus"
+                    ? [...opmaakBasis, ...opmaakPlus]
+                    : opmaakBasis;
+                await mentorZegt(
+                  `Voor jouw producten hebben we het al voor je op een rij gezet:\n\n${opmaakLijst.map((p) => `• ${p}`).join("\n")}\n\nEn qua eten hoef je niks in één keer om te gooien: houd de voedingslijst als kompas en verbreed rustig. 💚`,
+                  1100,
                 );
                 await wacht(900);
                 await mentorZegt(
@@ -2352,6 +2395,33 @@ export default function MentorWereld({
       return true;
     }
 
+    // "Wat neem ik vandaag?": het dagelijkse innameschema (darm). Toont
+    // de dag zodra de schema-data gevuld is; tot die tijd warm verwijzen
+    // naar het schema in het boekje (nooit doseringen gokken).
+    if (
+      programma.slug === "darm" &&
+      /\b(wat (moet|mag|neem) ik (vandaag|nu|deze dag)|inname[s]?( van| voor)? vandaag|schema( van| voor)? vandaag|welke producten (neem|moet) ik vandaag)\b/.test(
+        t,
+      )
+    ) {
+      zeg();
+      const dagS = dagNummer ?? 0;
+      const s =
+        dagS >= 1 && dagS <= 16 ? innameVoorDag(pakketRef.current, dagS) : null;
+      if (s) {
+        await mentorZegt(
+          `📋 Jouw innames voor dag ${dagS}:\n\n${formatInname(s)}`,
+          900,
+        );
+      } else {
+        await mentorZegt(
+          "Je precieze aantallen per dag staan in het innameschema in je programmaboekje: het rode schema bij het basispakket, het blauwe bij het plus-pakket. De aantallen lopen per dag op, dus kijk even bij jouw dag. Twijfel je ergens over? Stuur gerust een foto van je schema, dan kijk ik met je mee. 💚",
+          900,
+        );
+      }
+      return true;
+    }
+
     // Expliciete fase-intenties (feedback Raoul 22 juli: "verder" alleen
     // is te vaag). "Ik wil door naar fase 3" wisselt echt (met de
     // 21-dagen-rem als vangnet), "uitleg over fase 3" speelt de inkijk.
@@ -2408,8 +2478,13 @@ export default function MentorWereld({
         const duurLaatste = FASE_DAGEN[station.slug];
         const dagNu = faseDagRef.current ?? 0;
         if (duurLaatste && dagNu > 0 && dagNu <= duurLaatste) {
+          // Darm kent geen "volgende fase" om naartoe te willen; leg dat
+          // gewoon warm uit (feedback Raoul 23 juli). De reset (fase 4)
+          // houdt de fase-rem.
           await mentorZegt(
-            `Ik snap dat je vooruit wilt, maar deze fase duurt ${duurLaatste} dagen en jij zit nu op dag ${dagNu}. Nog ${Math.max(1, duurLaatste - dagNu + 1)} ${duurLaatste - dagNu + 1 === 1 ? "dag" : "dagen"}, en dan vieren we het hier samen, beloofd. 🎉 En gaat het ergens niet lekker en wil je dáárom stoppen? Zeg het me, dan kijken we samen, en met ${begeleiderNaam}, wat je kunt doen om het goed af te ronden. 💪`,
+            programma.slug === "darm"
+              ? `Goed nieuws: er valt hier niks door te klikken 😄 Je 16 dagen lopen gewoon vanzelf door, dag voor dag, en jij zit nu op dag ${dagNu}. Ik loop elke dag met je mee: je check-in, je vragen, je recepten. Gaat het ergens niet lekker, of twijfel je ergens over? Zeg het me gewoon, dan kijken we samen, en met ${begeleiderNaam}, hoe we het fijn maken. 💪`
+              : `Ik snap dat je vooruit wilt, maar deze fase duurt ${duurLaatste} dagen en jij zit nu op dag ${dagNu}. Nog ${Math.max(1, duurLaatste - dagNu + 1)} ${duurLaatste - dagNu + 1 === 1 ? "dag" : "dagen"}, en dan vieren we het hier samen, beloofd. 🎉 En gaat het ergens niet lekker en wil je dáárom stoppen? Zeg het me, dan kijken we samen, en met ${begeleiderNaam}, wat je kunt doen om het goed af te ronden. 💪`,
             1000,
           );
           return true;
