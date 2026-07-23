@@ -320,6 +320,22 @@ export default async function KlantLinkPagina({
     heeftVandaagIngecheckt(ctx.linkId),
     pakCheckins(ctx.linkId),
   ]);
+
+  // Afgevinkte inname-momenten van vandaag (darm-innameschema).
+  let innamesVandaag: string[] = [];
+  if (ctx.programmaSlug === "darm") {
+    const vandaagNL = new Intl.DateTimeFormat("sv-SE", {
+      timeZone: "Europe/Amsterdam",
+    }).format(new Date());
+    const { data: innameRuw } = await admin
+      .from("resetcode_innames")
+      .select("moment")
+      .eq("link_id", ctx.linkId)
+      .eq("datum", vandaagNL);
+    innamesVandaag = ((innameRuw ?? []) as { moment: string }[]).map(
+      (r) => r.moment,
+    );
+  }
   const checkinReeks = checkinRuw.map((c) => ({
     datum: c.datum,
     stemming: c.stemming,
@@ -467,6 +483,7 @@ export default async function KlantLinkPagina({
         dueKennis={dueKennis}
         vrijgegeven={ctx.vrijgegeven}
         dueFaseKeuze={dueFaseKeuze}
+        innamesVandaag={innamesVandaag}
       />
     </div>
   );

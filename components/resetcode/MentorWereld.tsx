@@ -509,6 +509,7 @@ export default function MentorWereld({
   pakket,
   vrijgegeven,
   dueFaseKeuze,
+  innamesVandaag,
 }: {
   begeleiderNaam: string;
   /** Klant-modus: token van de klant-link; het gesprek wordt dan op de server bewaard. */
@@ -554,6 +555,8 @@ export default function MentorWereld({
   vrijgegeven?: string[];
   /** Reset-fase-regie: keuze-moment als een fase-duur erop zit. */
   dueFaseKeuze?: { fase: string; dag: number; max?: boolean } | null;
+  /** Vandaag al afgevinkte inname-momenten (darm-innameschema). */
+  innamesVandaag?: string[];
 }) {
   const isKlant = Boolean(token);
   const verteldRef = useRef<Set<string>>(new Set(touchpointsAlVerteld ?? []));
@@ -639,6 +642,12 @@ export default function MentorWereld({
   const [kcalTotaal, setKcalTotaal] = useState<number>(kcalStart ?? 0);
   const [kanPraten, setKanPraten] = useState(false);
   const [toonReis, setToonReis] = useState(false);
+  // Innameschema-afvinken (darm): vinkjes van vandaag + paneel open/dicht.
+  // Puur voor de klant zelf, digitale versie van het geprinte formulier.
+  const [innamesGedaan, setInnamesGedaan] = useState<Set<string>>(
+    () => new Set(innamesVandaag ?? []),
+  );
+  const [toonSchemaPaneel, setToonSchemaPaneel] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const fotoRef = useRef<HTMLInputElement>(null);
   const invoerRef = useRef<HTMLTextAreaElement>(null);
@@ -832,7 +841,7 @@ export default function MentorWereld({
             const schemaVandaag = innameVoorDag(pakketRef.current, dagNummer);
             if (schemaVandaag) {
               await mentorZegt(
-                `📋 Jouw innames voor dag ${dagNummer}:\n\n${formatInname(schemaVandaag)}`,
+                `📋 Jouw innames voor dag ${dagNummer}:\n\n${formatInname(schemaVandaag)}\n\nAfvinken kan de hele dag door via het 📋-knopje hierboven, dan weet je altijd waar je staat.`,
                 900,
               );
               await wacht(600);
@@ -3138,6 +3147,43 @@ export default function MentorWereld({
 
   // ---------- render ----------
 
+  // Innameschema-pill + paneel (darm, dag 1-16): altijd bereikbaar
+  // bovenin, zodat afvinken nooit terugscrollen kost.
+  const dagSchemaVandaag =
+    programma?.slug === "darm" &&
+    station?.slug === "zestien-dagen" &&
+    dagNummer != null &&
+    dagNummer >= 1 &&
+    dagNummer <= 16
+      ? innameVoorDag(pakketRef.current ?? pakket, dagNummer)
+      : null;
+  const MOMENT_VOLGORDE: { sleutel: "nuchter" | "ochtend" | "lunch" | "avond" | "slapen"; label: string }[] = [
+    { sleutel: "nuchter", label: "🌅 Nuchter" },
+    { sleutel: "ochtend", label: "☀️ Ochtend" },
+    { sleutel: "lunch", label: "🥗 Lunch" },
+    { sleutel: "avond", label: "🌙 Avond" },
+    { sleutel: "slapen", label: "😴 Voor het slapen" },
+  ];
+  const schemaMomenten = dagSchemaVandaag
+    ? MOMENT_VOLGORDE.filter((m) => (dagSchemaVandaag[m.sleutel]?.length ?? 0) > 0)
+    : [];
+  const vinkInname = (moment: string) => {
+    const wordtGedaan = !innamesGedaan.has(moment);
+    setInnamesGedaan((oud) => {
+      const nieuw = new Set(oud);
+      if (wordtGedaan) nieuw.add(moment);
+      else nieuw.delete(moment);
+      return nieuw;
+    });
+    if (token) {
+      fetch("/api/resetcode/inname", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, moment, gedaan: wordtGedaan }),
+      }).catch(() => {});
+    }
+  };
+
   return (
     <div className="relative flex h-full flex-col" style={{ backgroundColor: "#0F1B17" }}>
       <style>{`
@@ -3179,6 +3225,21 @@ export default function MentorWereld({
                 🔥 ±{kcalTotaal} / 3500+
               </span>
             )}
+            {schemaMomenten.length > 0 && (
+              <button
+                onClick={() => setToonSchemaPaneel((t) => !t)}
+                className="rounded-full px-3 py-1.5 text-[12px] font-bold"
+                style={{
+                  backgroundColor:
+                    innamesGedaan.size >= schemaMomenten.length ? "#065F46" : "rgba(255,255,255,0.1)",
+                  color:
+                    innamesGedaan.size >= schemaMomenten.length ? "#6EE7B7" : "rgba(255,255,255,0.85)",
+                }}
+                title="Jouw innames van vandaag: bekijken en afvinken"
+              >
+                📋 {Math.min(innamesGedaan.size, schemaMomenten.length)}/{schemaMomenten.length}
+              </button>
+            )}
             <button
               onClick={() => setToonReis((t) => !t)}
               className="rounded-full bg-white/10 px-3 py-1.5 text-[12px] font-semibold text-white/85 hover:bg-white/15"
@@ -3189,6 +3250,68 @@ export default function MentorWereld({
           </div>
         )}
       </header>
+
+      {/* Innameschema-paneel: afvinken zonder terug te scrollen. */}
+      {toonSchemaPaneel && dagSchemaVandaag && (
+        <div
+          className="absolute right-3 top-16 z-40 w-[330px] max-w-[92vw] rounded-2xl border border-emerald-500/25 p-3 shadow-2xl verschijn"
+          style={{ backgroundColor: "#0A1512" }}
+        >
+          <div className="flex items-center justify-between pb-2">
+            <p className="text-[13px] font-bold text-white">
+              📋 Jouw innames · dag {dagNummer}
+            </p>
+            <button
+              onClick={() => setToonSchemaPaneel(false)}
+              className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-semibold text-white/80"
+            >
+              Sluiten
+            </button>
+          </div>
+          <div className="space-y-1.5">
+            {schemaMomenten.map((m) => {
+              const gedaan = innamesGedaan.has(m.sleutel);
+              return (
+                <button
+                  key={m.sleutel}
+                  onClick={() => vinkInname(m.sleutel)}
+                  className="w-full rounded-xl border px-3 py-2 text-left transition-colors"
+                  style={{
+                    borderColor: gedaan ? "rgba(52,211,153,0.4)" : "rgba(255,255,255,0.12)",
+                    backgroundColor: gedaan ? "rgba(6,95,70,0.35)" : "rgba(255,255,255,0.04)",
+                  }}
+                >
+                  <span className="flex items-start gap-2">
+                    <span
+                      className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-[11px] font-bold"
+                      style={{
+                        backgroundColor: gedaan ? "#059669" : "rgba(255,255,255,0.12)",
+                        color: gedaan ? "#ECFDF5" : "rgba(255,255,255,0.5)",
+                      }}
+                    >
+                      {gedaan ? "✓" : ""}
+                    </span>
+                    <span className="min-w-0">
+                      <span
+                        className="block text-[12px] font-semibold"
+                        style={{ color: gedaan ? "#6EE7B7" : "rgba(255,255,255,0.9)" }}
+                      >
+                        {m.label}
+                      </span>
+                      <span className="block text-[11px] leading-snug text-white/55">
+                        {(dagSchemaVandaag[m.sleutel] ?? []).join(" + ")}
+                      </span>
+                    </span>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          <p className="pt-2 text-[10px] text-white/40">
+            Alleen voor jou, als geheugensteuntje. Morgen begint de teller gewoon opnieuw.
+          </p>
+        </div>
+      )}
 
       {/* Groeipad: het hele pad van A tot Z, met waar je nu bent, wat je al
           hebt gehad (terug te lezen) en wat er nog komt (met slotje). */}
