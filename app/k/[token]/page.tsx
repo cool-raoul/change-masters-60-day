@@ -179,16 +179,22 @@ export default async function KlantLinkPagina({
     })
     .filter((i): i is NonNullable<typeof i> => i !== null && (i.soort === "kaart" || i.tekst.length > 0));
 
-  // Door Raoul gevulde media (video's, documenten) voor dit programma.
+  // Door Raoul gevulde media (video's, documenten) voor ALLE programma's:
+  // bij een doorgroei-klik (darm → reset) wisselt de klant client-side
+  // van programma, en dan moeten de reset-video's er al zijn (bug 23
+  // juli: de reset-intro toonde "komt er binnenkort aan" na doorgroei).
   const admin = createAdminClient();
-  const blokkenMap = await haalPaginaBlokken(
-    admin,
-    "resetcode-klant",
-    ctx.programmaSlug,
-  );
   const mediaBlokken: Record<string, Blok[]> = {};
-  blokkenMap.forEach((blokken, positie) => {
-    mediaBlokken[`${ctx.programmaSlug}/${positie}`] = blokken;
+  const alleProgSlugs = ["darm", "reset", "producten"] as const;
+  const blokkenMaps = await Promise.all(
+    alleProgSlugs.map((slugP) =>
+      haalPaginaBlokken(admin, "resetcode-klant", slugP),
+    ),
+  );
+  alleProgSlugs.forEach((slugP, i) => {
+    blokkenMaps[i].forEach((blokken, positie) => {
+      mediaBlokken[`${slugP}/${positie}`] = blokken;
+    });
   });
 
   // Laaddagen-teller: dagtotaal van vandaag (Nederlandse datum) voor de

@@ -29,6 +29,7 @@ import {
   KWALITEIT_KENNIS,
   BEZWAREN_KENNIS,
 } from "./producten";
+import { innameSchemaAlsKennis } from "@/lib/resetcode/inname-schema";
 import { FASE2_LIJST, DARM_LIJST } from "./lijsten";
 
 export type ResetMentorRol = "klant" | "member";
@@ -198,6 +199,7 @@ ${FASE2_LIJST}
 ${DARM_LIJST}
 
 ${PRODUCT_KENNIS}
+${innameSchemaAlsKennis()}
 
 ${KWALITEIT_KENNIS}
 
@@ -267,6 +269,7 @@ export function bouwWaakhondPrompt(
 ${stationsKennis}
 
 ${PRODUCT_KENNIS}
+${innameSchemaAlsKennis()}
 
 ${programmaSlug === "darm" ? DARM_LIJST : FASE2_LIJST}
 
