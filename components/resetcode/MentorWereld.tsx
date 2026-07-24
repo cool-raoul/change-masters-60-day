@@ -1059,7 +1059,7 @@ export default function MentorWereld({
                 );
                 await wacht(900);
                 await mentorZegt(
-                  `Waar het nu vooral om draait: samen met ${begeleiderNaam} jouw vervolg kiezen, zodat je ritme gewoon doorloopt als je potten leeg raken. En dan even praktisch, tussen ons: dagelijks inloggen hoeft vanaf nu niet meer, maar je mag me natuurlijk gewoon blijven gebruiken voor al je vragen en recepten. Dus zeg het maar: zal ik er in deze opmaak-dagen elke dag voor je blijven, met je check-in en een dagelijkse tip? Of doe je het rustig aan en kom je langs wanneer jij dat wilt? 👇`,
+                  `Waar het nu vooral om draait: samen met ${begeleiderNaam} jouw vervolg kiezen, zodat je ritme gewoon doorloopt als je potten leeg raken.${dueFaseKeuze.dag <= 16 ? ` En log morgen zeker nog even in: dan staat je eind-moment voor je klaar, met jouw resultaten op een rij. 🎉` : ""} Dan even praktisch, tussen ons: dagelijks inloggen hoeft daarna niet meer, maar je mag me natuurlijk gewoon blijven gebruiken voor al je vragen en recepten. Dus zeg het maar: zal ik er in deze opmaak-dagen elke dag voor je blijven, met je check-in en een dagelijkse tip? Of kom je gewoon langs wanneer jij dat wilt? 👇`,
                   1100,
                 );
                 const bidD = ++bidTeller.current;
@@ -1077,7 +1077,7 @@ export default function MentorWereld({
                     van: "mentor",
                     soort: "verder-knop",
                     bid: bidR,
-                    label: "🌿 Ik houd het rustig",
+                    label: "🌿 Ik kom langs wanneer ik wil",
                     actie: { type: "opmaak-rustig" },
                   },
                 ]);
@@ -2301,13 +2301,13 @@ export default function MentorWereld({
             ),
         ),
       );
-      const echoO = rustig ? "Ik houd het rustig 🌿" : "Ja, blijf er dagelijks voor me 💬";
+      const echoO = rustig ? "Ik kom langs wanneer ik wil 🌿" : "Ja, blijf er dagelijks voor me 💬";
       setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: echoO }]);
       logNaarServer([{ van: "klant", soort: "tekst", tekst: echoO }]);
       if (rustig) {
         markeerTouchpoint("darm-opmaak-rustig");
         await mentorZegt(
-          `Helemaal goed! Dan laat ik de dagelijkse check-in los en geef ik je rust. Ik blijf hier dag en nacht bereikbaar voor elke vraag, en voor jouw vervolg zit je bij ${begeleiderNaam} helemaal goed. 💚`,
+          `Helemaal goed! Dan laat ik de dagelijkse check-in los. Ik blijf hier dag en nacht voor je klaarstaan, dus loop gewoon binnen wanneer je me nodig hebt, voor een vraag, een recept of wat dan ook. En voor jouw vervolg zit je bij ${begeleiderNaam} helemaal goed. 💚`,
           1000,
         );
       } else {
