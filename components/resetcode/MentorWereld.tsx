@@ -1059,7 +1059,7 @@ export default function MentorWereld({
                 );
                 await wacht(900);
                 await mentorZegt(
-                  `Waar het nu vooral om draait: samen met ${begeleiderNaam} jouw vervolg kiezen, zodat je ritme gewoon doorloopt als je potten leeg raken. En dan even praktisch, tussen ons: wil je dat ik er in deze opmaak-dagen elke dag voor je blijf, met je check-in en een dagelijkse tip? Of houd je het liever rustig en pak je het vervolg gewoon met ${begeleiderNaam} op? Kies maar. 👇`,
+                  `Waar het nu vooral om draait: samen met ${begeleiderNaam} jouw vervolg kiezen, zodat je ritme gewoon doorloopt als je potten leeg raken. En dan even praktisch, tussen ons: dagelijks inloggen hoeft vanaf nu niet meer, maar je mag me natuurlijk gewoon blijven gebruiken voor al je vragen en recepten. Dus zeg het maar: zal ik er in deze opmaak-dagen elke dag voor je blijven, met je check-in en een dagelijkse tip? Of doe je het rustig aan en kom je langs wanneer jij dat wilt? 👇`,
                   1100,
                 );
                 const bidD = ++bidTeller.current;
