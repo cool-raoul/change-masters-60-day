@@ -991,7 +991,19 @@ export default function MentorWereld({
             // dag 10 > kern-verhaal > week-overzicht > fase-keuze. Wat
             // vandaag niet aan de beurt komt, schuift vanzelf naar de
             // volgende dag (het blijft "due" tot het gespeeld is).
-            if (dueKennis && dueKennis.length > 0) {
+            // UITZONDERING (feedback Raoul 24 juli): zodra de fase-keuze
+            // écht te maken is (dag 21+ of het 40-dagen-maximum), gaat
+            // die vóór alles en komt hij elke dag terug tot er echt
+            // gekozen is. Anders drukten de week-terugblik (dag 21) en
+            // het kern-verhaal (dag 22) de keuze dagenlang weg en bleef
+            // iemand ongemerkt in fase 2 hangen.
+            const faseKeuzeNu = Boolean(
+              dueFaseKeuze &&
+                (dueFaseKeuze.fase === "omschakeling" ||
+                  dueFaseKeuze.fase === "stabilisatie") &&
+                (dueFaseKeuze.max || dueFaseKeuze.dag >= 21),
+            );
+            if (dueKennis && dueKennis.length > 0 && !faseKeuzeNu) {
               for (const k of dueKennis) {
                 await mentorZegt(
                   `Trouwens! Je vroeg me laatst: "${k.vraag}". Ik heb het voor je nagevraagd bij het team, en dit is het antwoord: ${k.antwoord} 💚`,
@@ -1007,7 +1019,7 @@ export default function MentorWereld({
                   ids: dueKennis.map((k) => k.id),
                 }),
               }).catch(() => {});
-            } else if (dueDag10) {
+            } else if (dueDag10 && !faseKeuzeNu) {
               await mentorZegt(
                 `Trouwens: je zit vandaag op dag ${dueDag10} van je 16 dagen! 🎉 Dit is het moment voor je dag 10-video, die is belangrijk. Kijk 'm even rustig 👇`,
                 1100,
@@ -1019,9 +1031,9 @@ export default function MentorWereld({
                 "Neem er echt even de tijd voor, voor veel mensen is dit een kantelpunt. Ben je klaar met kijken? Vertel me gerust wat je eruit meeneemt, of stel je vragen erover. En verder gaat vandaag gewoon door zoals je gewend bent: je check-in, je vragen, je recepten. Ik ben er. 💚",
                 1000,
               );
-            } else if (dueTouchpoint) {
+            } else if (dueTouchpoint && !faseKeuzeNu) {
               await speelTouchpoint(dueTouchpoint);
-            } else if (dueWistje) {
+            } else if (dueWistje && !faseKeuzeNu) {
               // Wist-je-moment: geruststelling/tip uit het eigen materiaal
               // op de dag dat die relevant wordt (akkoord Raoul 24 juli).
               await mentorZegt(
@@ -1029,7 +1041,7 @@ export default function MentorWereld({
                 1200,
               );
               markeerTouchpoint(dueWistje.sleutel as TouchpointSleutel);
-            } else if (dueWeekTerugblik) {
+            } else if (dueWeekTerugblik && !faseKeuzeNu) {
               await speelWeekTerugblik(dueWeekTerugblik);
             } else if (dueFaseKeuze) {
               // Reset-fase-regie: dag 20 kondigt de keuze aan (met een
