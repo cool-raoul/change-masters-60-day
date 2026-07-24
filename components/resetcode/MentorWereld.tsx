@@ -1648,7 +1648,7 @@ export default function MentorWereld({
     omschakeling: [
       "Drink vandaag je 2 liter water, verspreid over de dag.",
       "Neem vandaag je extra Keltisch zeezout (± 3 mespuntjes). Hoe maakt niet uit: onder of op je tong, extra door je eten, of opgelost in een glas water.",
-      "Houd de 3-uur-regel aan tussen je eetmomenten.",
+      "Eet vanavond minimaal 3 uur voor het slapen niets meer, bijvoorbeeld vanaf 19.00 uur.",
       "Bereid je maaltijden vetvrij en van je fase 2-lijst; twijfel je ergens over, vraag het me gewoon.",
       "Fruit vandaag: maximaal 2 stuks, kies iets van je lijst dat je echt lekker vindt.",
       "Ben je vandaag onderweg of aan het werk? Bereid thuis iets voor van je lijst en neem het mee.",
@@ -2334,23 +2334,31 @@ export default function MentorWereld({
       duur
         ? dagenVol
           ? `Dat was de informatie voor deze fase 💚 ${duur === 2 ? "Klaar met je twee laaddagen?" : "Klaar met al je dagen?"} Tik dan hieronder op de volgende stap.`
-          : `Dat was de informatie voor deze fase 💚 Neem er rustig je ${duurWoord} voor, ik zie je elke dag bij je check-in. En tussendoor ben ik er voor alles: vragen over je producten of je lijst, meekijken met een etiket-foto, of een recept of dagschema op maat. Wil je alvast vooruitkijken naar wat er daarna komt? Dat kan met de leesknop hieronder, dan verandert er nog niks.`
+          : `Dat was de informatie voor deze fase 💚 Neem er rustig je ${duurWoord} voor, ik zie je elke dag bij je check-in. En tussendoor ben ik er voor alles: vragen over je producten of je lijst, meekijken met een etiket-foto, of een recept of dagschema op maat.${duur === 2 ? " Wil je alvast vooruitkijken naar wat er daarna komt? Dat kan met de leesknop hieronder, dan verandert er nog niks." : ""}`
         : "Dat was alles voor deze stap 💚 Vraag me gerust van alles: ik ken al je documenten van binnen en van buiten, ik kijk mee met foto's van etiketten of een product past, en ik maak zo een recept of dagschema voor je.",
       1000,
     );
     const volgend = prog.stations[i + 1];
     if (!dagenVol) {
-      const bidI = ++bidTeller.current;
-      setItems((b) => [
-        ...b,
-        {
-          van: "mentor",
-          soort: "verder-knop",
-          bid: bidI,
-          label: `📖 Alvast lezen: ${volgend.emoji} ${volgend.naam}`,
-          actie: { type: "inkijk", slug: volgend.slug },
-        },
-      ]);
+      // Alleen bij de korte laaddagen een "alvast lezen"-knop (fase 2
+      // begint daar al na twee dagen). Na de fase 2-informatie GEEN
+      // vooruitkijk-aanbod naar fase 3 (feedback Raoul 24 juli): laat
+      // mensen eerst gewoon beginnen, het vooruitkijken zit al gepland
+      // aan het einde van de fase (dag 20-omgeving). Typen ("uitleg
+      // over fase 3") werkt altijd.
+      if (duur === 2) {
+        const bidI = ++bidTeller.current;
+        setItems((b) => [
+          ...b,
+          {
+            van: "mentor",
+            soort: "verder-knop",
+            bid: bidI,
+            label: `📖 Alvast lezen: ${volgend.emoji} ${volgend.naam}`,
+            actie: { type: "inkijk", slug: volgend.slug },
+          },
+        ]);
+      }
       return;
     }
     const bid = ++bidTeller.current;
