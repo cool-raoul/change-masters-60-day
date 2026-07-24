@@ -91,9 +91,21 @@ export async function POST(req: NextRequest) {
   const streakDeel =
     streak >= 3 ? ` En knap: ${streak} dagen op rij ingecheckt! 🔥` : "";
   // De kleine winst van de dag terugspiegelen: kijken naar wat wél
-  // werkt (journal-principe), niet naar wat nog niet perfect is.
+  // werkt (journal-principe), niet naar wat nog niet perfect is. De
+  // afsluiter wisselt per dag, anders wordt het eentonig (feedback
+  // Raoul 24 juli: elke dag "vasthouden die" ging vervelen).
+  const WINST_AFSLUITERS = [
+    "Mooi om te lezen, en genoteerd. 💚",
+    "Die schrijf ik met een glimlach op. 💚",
+    "Kijk, dit zijn de dingen die tellen. 💚",
+    "Weer een streepje aan de goede kant. 💚",
+    "Dit soort dingen ga je er straks steeds meer zien, let maar op. 💚",
+    "Precies hiervoor doe je het. 💚",
+    "Genoteerd in je dagboek, daar ga je nog blij mee terugkijken. 💚",
+  ];
+  const dagIndex = Math.floor(Date.parse(datum) / 86_400_000);
   const winstDeel = notitie
-    ? ` En wat je opschreef ("${notitie.slice(0, 120)}"): vasthouden die. Zo train je jezelf om te zien wat wél werkt. 💚`
+    ? ` En wat je opschreef ("${notitie.slice(0, 120)}"): ${WINST_AFSLUITERS[dagIndex % WINST_AFSLUITERS.length]}`
     : "";
   const zwaarDeel =
     stemming === "zwaar" && buik === "onrustig"

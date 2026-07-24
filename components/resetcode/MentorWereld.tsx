@@ -1579,6 +1579,7 @@ export default function MentorWereld({
     ],
     omschakeling: [
       "Drink vandaag je 2 liter water, verspreid over de dag.",
+      "Neem vandaag je extra Keltisch zeezout (± 3 mespuntjes). Hoe maakt niet uit: onder of op je tong, extra door je eten, of opgelost in een glas water.",
       "Houd de 3-uur-regel aan tussen je eetmomenten.",
       "Bereid je maaltijden vetvrij en van je fase 2-lijst; twijfel je ergens over, vraag het me gewoon.",
       "Fruit vandaag: maximaal 2 stuks, kies iets van je lijst dat je echt lekker vindt.",
@@ -2085,15 +2086,18 @@ export default function MentorWereld({
       });
     }
 
-    // De 16 dagen: laten zien wat je allemaal aan de Mentor hebt
-    // (feedback Raoul 19 juli: hij was te bescheiden over zichzelf).
-    if (st.slug === "zestien-dagen") {
+    // Laten zien wat je allemaal aan de Mentor hebt (feedback Raoul 19
+    // juli: hij was te bescheiden over zichzelf). Darm bij De 16 dagen,
+    // reset bij de start van fase 2 (feedback 24 juli: ook daar).
+    if (st.slug === "zestien-dagen" || st.slug === "omschakeling") {
       chunks.push({
         sleutel: "kan",
         knopLabel: "wat je allemaal aan mij als Mentor hebt",
         speel: async () => {
           await mentorZegt(
-            "Even zodat je weet wat je de komende 16 dagen allemaal aan me hebt 💪\n\n📷 Twijfel je bij een product, thuis of in de winkel? Stuur een foto van de ingrediëntenlijst en ik zeg je direct of het in jouw programma past.\n🍽️ Zeg wat je in huis hebt en ik maak er een recept, dagschema of weekmenu van dat precies binnen je lijst valt.\n🍬 Suiker heeft ruim 150 schuilnamen op etiketten; ik herken ze allemaal.\n💊 Alles over je producten, je schema en je doseringen weet ik uit je eigen boekje.\n📔 En elke dag doe ik een korte check-in met je, zodat je je voortgang echt ziet groeien.\n\nPraat gewoon tegen me of typ, wat jij fijn vindt. Ik ben er dag en nacht.",
+            st.slug === "omschakeling"
+              ? "Even zodat je weet wat je tijdens je hele reset allemaal aan me hebt 💪\n\n📷 Twijfel je bij een product, thuis of in de winkel? Stuur een foto van de ingrediëntenlijst en ik zeg je direct of het in jouw fase past.\n🍽️ Zeg wat je in huis hebt en ik maak er een recept, dagschema of weekmenu van dat precies binnen jouw fase valt.\n🍬 Suiker heeft ruim 150 schuilnamen op etiketten; ik herken ze allemaal.\n💊 Alles over je producten en alle vier de fases weet ik uit je eigen boekje.\n📔 En elke dag doe ik een korte check-in met je, zodat je je voortgang echt ziet groeien.\n\nPraat gewoon tegen me of typ, wat jij fijn vindt. Ik ben er dag en nacht."
+              : "Even zodat je weet wat je de komende 16 dagen allemaal aan me hebt 💪\n\n📷 Twijfel je bij een product, thuis of in de winkel? Stuur een foto van de ingrediëntenlijst en ik zeg je direct of het in jouw programma past.\n🍽️ Zeg wat je in huis hebt en ik maak er een recept, dagschema of weekmenu van dat precies binnen je lijst valt.\n🍬 Suiker heeft ruim 150 schuilnamen op etiketten; ik herken ze allemaal.\n💊 Alles over je producten, je schema en je doseringen weet ik uit je eigen boekje.\n📔 En elke dag doe ik een korte check-in met je, zodat je je voortgang echt ziet groeien.\n\nPraat gewoon tegen me of typ, wat jij fijn vindt. Ik ben er dag en nacht.",
             1200,
           );
         },
