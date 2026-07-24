@@ -69,10 +69,15 @@ export async function POST(req: NextRequest) {
     return Response.json({ ok: true });
   }
 
-  // vooruit = de reis één dag ouder maken (alles schuift 1 dag terug in
-  // de tijd), terug = één dag jonger. Beide datums schuiven mee zodat de
-  // dag-berekening klopt op elk station.
-  const delta = actie === "vooruit" ? -1 : 1;
+  // vooruit = de reis ouder maken (alles schuift terug in de tijd),
+  // terug = jonger. Optioneel meerdere dagen tegelijk (body.dagen), om
+  // direct naar een volgend bijzonder moment te springen.
+  const aantalRuw = Number(body.dagen);
+  const aantal =
+    Number.isFinite(aantalRuw) && aantalRuw >= 1 && aantalRuw <= 45
+      ? Math.floor(aantalRuw)
+      : 1;
+  const delta = (actie === "vooruit" ? -1 : 1) * aantal;
   const { data: rij } = await admin
     .from("resetcode_klant_links")
     .select("station_sinds, start_datum")

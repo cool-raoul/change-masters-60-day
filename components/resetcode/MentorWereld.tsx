@@ -45,7 +45,9 @@ type Kaart =
   | "vervolg"
   | "faq"
   | "suikers"
-  | "wctips";
+  | "wctips"
+  | "docs-veg"
+  | "docs-sport";
 
 // "Verder met [X]"-knop: brengt de informatie geleidelijk (feedback Raoul
 // 18 juli), en toont vóóraf wat het volgende blok is.
@@ -58,7 +60,10 @@ type VerderActie =
   | { type: "inkijk"; slug: string }
   // Opmaak-dagen (darm): dagelijks contact houden of rustig aan doen.
   | { type: "opmaak-dagelijks" }
-  | { type: "opmaak-rustig" };
+  | { type: "opmaak-rustig" }
+  // Fase 2 (reset): korte profiel-vragen (veg/vegan en sporten).
+  | { type: "veg-antwoord"; ja: boolean }
+  | { type: "sport-antwoord"; ja: boolean };
 
 type Checkin = {
   datum: string;
@@ -622,8 +627,16 @@ export default function MentorWereld({
   // Geleidelijke info-flow: het chunk-plan van de huidige stap + een teller
   // voor unieke "verder"-knop-ids.
   const chunkPlanRef = useRef<
-    { sleutel: string; knopLabel: string; speel: () => Promise<void> }[]
+    {
+      sleutel: string;
+      knopLabel: string;
+      speel: () => Promise<void>;
+      /** True = dit blok stelt zelf vragen; het vervolg komt pas na de antwoorden. */
+      pauzeerVervolg?: boolean;
+    }[]
   >([]);
+  // Vervolg-punt van de profiel-vragen (veg/sport) in de fase 2-flow.
+  const profielVervolgRef = useRef<{ index: number; stationSlug: string } | null>(null);
   const bidTeller = useRef(0);
   // Check-in / dagboek: reeks in het geheugen zodat de voortgangs-kaart
   // meteen klopt na een nieuwe check-in.
@@ -850,8 +863,14 @@ export default function MentorWereld({
           prog.slug === "reset" &&
           st.slug === "omschakeling" &&
           verteldRef.current.has("fase2-verlengd");
+        // Lange fases: de volgende-fase-knop pas als de dagen er echt op
+        // zitten (feedback Raoul 24 juli: op dag 2 stond er al een knop
+        // naar fase 3, die bij het klikken geblokkeerd bleek).
+        const duurHuidig = FASE_DAGEN[st.slug];
+        const faseDagenVol =
+          !duurHuidig || duurHuidig < 21 || (dagNummer ?? 0) >= duurHuidig;
         const toonVolgendKnop =
-          Boolean(volgend) && !dueFaseKeuze && !verlengdGekozen;
+          Boolean(volgend) && !dueFaseKeuze && !verlengdGekozen && faseDagenVol;
         // Opmaak-dagen (darm) met "houd het rustig" gekozen: geen
         // dagelijkse check-in meer; de Mentor blijft wel bereikbaar.
         const opmaakRustig =
@@ -2073,7 +2092,12 @@ export default function MentorWereld({
   // "Verder met ..."-knop, zodat de klant weet wat er komt en niet alles in
   // één keer over zich heen krijgt (feedback Raoul 18 juli).
   function bouwChunks(prog: ResetProgramma, st: ResetStation) {
-    const chunks: { sleutel: string; knopLabel: string; speel: () => Promise<void> }[] = [];
+    const chunks: {
+      sleutel: string;
+      knopLabel: string;
+      speel: () => Promise<void>;
+      pauzeerVervolg?: boolean;
+    }[] = [];
 
     if (st.vandaagBelangrijk.length) {
       chunks.push({
@@ -2147,6 +2171,30 @@ export default function MentorWereld({
             1100,
           );
           await mentorKaart("documenten", st.slug, 700);
+        },
+      });
+    }
+
+    // Fase 2 (reset): twee korte profiel-vragen. De veg- en sport-
+    // documenten komen alleen bij wie ze nodig heeft (feedback Raoul
+    // 24 juli: de standaard documenten-lijst was veel te lang).
+    if (st.slug === "omschakeling") {
+      chunks.push({
+        sleutel: "profiel",
+        knopLabel: "twee korte vragen voor jou",
+        pauzeerVervolg: true,
+        speel: async () => {
+          await mentorZegt(
+            "Nog twee korte vragen, dan stem ik alles nog beter op jou af. De eerste: eet je vegetarisch of vegan? 👇",
+            1000,
+          );
+          const bidJa = ++bidTeller.current;
+          const bidNee = ++bidTeller.current;
+          setItems((b) => [
+            ...b,
+            { van: "mentor", soort: "verder-knop", bid: bidJa, label: "🌱 Ja, vegetarisch of vegan", actie: { type: "veg-antwoord", ja: true } },
+            { van: "mentor", soort: "verder-knop", bid: bidNee, label: "🍽️ Nee, ik eet alles", actie: { type: "veg-antwoord", ja: false } },
+          ]);
         },
       });
     }
@@ -2343,6 +2391,63 @@ export default function MentorWereld({
       }
       return;
     }
+    if (item.actie.type === "veg-antwoord") {
+      const jaVeg = item.actie.ja;
+      setItems((b) =>
+        b.filter((x) => !(x.soort === "verder-knop" && x.actie.type === "veg-antwoord")),
+      );
+      const echoVeg = jaVeg ? "Ja, ik eet vegetarisch of vegan 🌱" : "Nee, ik eet alles";
+      setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: echoVeg }]);
+      logNaarServer([{ van: "klant", soort: "tekst", tekst: echoVeg }]);
+      if (jaVeg) {
+        await mentorZegt(
+          "Goed om te weten! Dan staan deze speciaal voor jou klaar: weekmenu's en recepten voor fase 2, helemaal vegetarisch en vegan. En vraag me gerust om recepten, ik houd er vanaf nu rekening mee. 👇",
+          1000,
+        );
+        await mentorKaart("docs-veg", "omschakeling", 600);
+      } else {
+        await mentorZegt("Helder! Dan gelden de gewone lijsten en recepten voor jou.", 800);
+      }
+      await wacht(700);
+      await mentorZegt("En de tweede: sport je, of wil je tijdens de reset blijven sporten? 👇", 900);
+      const bidSJ = ++bidTeller.current;
+      const bidSN = ++bidTeller.current;
+      setItems((b) => [
+        ...b,
+        { van: "mentor", soort: "verder-knop", bid: bidSJ, label: "💪 Ja, ik sport", actie: { type: "sport-antwoord", ja: true } },
+        { van: "mentor", soort: "verder-knop", bid: bidSN, label: "🚶 Nee, niet echt", actie: { type: "sport-antwoord", ja: false } },
+      ]);
+      return;
+    }
+    if (item.actie.type === "sport-antwoord") {
+      const jaSport = item.actie.ja;
+      setItems((b) =>
+        b.filter((x) => !(x.soort === "verder-knop" && x.actie.type === "sport-antwoord")),
+      );
+      const echoSport = jaSport ? "Ja, ik sport 💪" : "Nee, niet echt";
+      setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: echoSport }]);
+      logNaarServer([{ van: "klant", soort: "tekst", tekst: echoSport }]);
+      if (jaSport) {
+        await mentorZegt(
+          "Top, blijven doen! Belangrijk om te weten: ook voor sporters tellen we tijdens de reset géén calorieën. Waar het wél om draait: zorg voor voldoende eiwitten, eet op sportdagen wat méér van je lijst (je mag geen honger hebben) en luister goed naar je lichaam. Deze twee documenten helpen je daarbij. 👇",
+          1100,
+        );
+        await mentorKaart("docs-sport", "omschakeling", 600);
+      } else {
+        await mentorZegt("Helemaal prima! Bewegen mag altijd, maar niks moet. 💚", 800);
+      }
+      // Vervolg van de fase-flow oppakken waar we gebleven waren.
+      const vervolgP = profielVervolgRef.current;
+      profielVervolgRef.current = null;
+      if (vervolgP) {
+        if (vervolgP.index + 1 < chunkPlanRef.current.length) {
+          toonVerderKnop(vervolgP.index + 1, vervolgP.stationSlug);
+        } else if (programma && station) {
+          await sluitStationAf(programma, station);
+        }
+      }
+      return;
+    }
     if (item.actie.type === "programma") {
       await startNieuwProgramma(item.actie.slug);
       return;
@@ -2375,6 +2480,12 @@ export default function MentorWereld({
         );
         toonPushOptIn();
       }
+    }
+    if (chunk.pauzeerVervolg) {
+      // Dit blok stelt zelf vragen (veg/sport); het vervolg van de flow
+      // komt pas nadat de antwoorden binnen zijn.
+      profielVervolgRef.current = { index, stationSlug };
+      return;
     }
     if (index + 1 < chunkPlanRef.current.length) {
       toonVerderKnop(index + 1, stationSlug);
@@ -2752,6 +2863,29 @@ export default function MentorWereld({
     if (/piramide|80\/20|kompas/.test(t) && station.graphic === "logi-piramide") {
       zeg();
       await mentorKaart("logi", station.slug, 800);
+      return true;
+    }
+    // Veg-recepten en sport-uitleg (reset): ook later gewoon opvraagbaar.
+    if (
+      programma.slug === "reset" &&
+      /(vegetari|vegan|plantaardig)/.test(t) &&
+      (/(recept|menu|document|lijst)/.test(t) || /^\s*ik (ben|eet) (vegetari\w+|vegan|plantaardig)\s*[!.]?\s*$/.test(t))
+    ) {
+      zeg();
+      await mentorZegt(
+        "Goed om te weten! Deze staan speciaal voor jou klaar, en ik houd er in mijn recepten rekening mee. 👇",
+        900,
+      );
+      await mentorKaart("docs-veg", "omschakeling");
+      return true;
+    }
+    if (programma.slug === "reset" && /\bsport/.test(t) && t.length < 45) {
+      zeg();
+      await mentorZegt(
+        "Sporten tijdens de reset? Blijven doen! Belangrijk om te weten: ook voor sporters tellen we géén calorieën. Waar het wél om draait: zorg voor voldoende eiwitten, eet op sportdagen wat méér van je lijst (je mag geen honger hebben) en luister goed naar je lichaam. Deze twee documenten helpen je daarbij. 👇",
+        1100,
+      );
+      await mentorKaart("docs-sport", "omschakeling");
       return true;
     }
     if (/suikerlijst|suikernamen|suiker.*(lijst|namen|spiek)/.test(t)) {
@@ -3308,6 +3442,44 @@ export default function MentorWereld({
           </div>
         );
       }
+      case "docs-veg": {
+        const blokkenVeg =
+          mediaBlokken?.[`${programma.slug}/omschakeling-docs-veg`] ?? [];
+        if (!blokkenVeg.length && !isFounder) return null;
+        return (
+          <div className={kader}>
+            {kop("🌱", "Vegetarisch & vegan")}
+            <div className="mt-1.5">
+              <MediaBlokken
+                paginaNamespace="resetcode-klant"
+                paginaId={programma.slug}
+                positie="omschakeling-docs-veg"
+                blokken={blokkenVeg}
+                isFounder={Boolean(isFounder)}
+              />
+            </div>
+          </div>
+        );
+      }
+      case "docs-sport": {
+        const blokkenSport =
+          mediaBlokken?.[`${programma.slug}/omschakeling-docs-sport`] ?? [];
+        if (!blokkenSport.length && !isFounder) return null;
+        return (
+          <div className={kader}>
+            {kop("💪", "Voor sporters")}
+            <div className="mt-1.5">
+              <MediaBlokken
+                paginaNamespace="resetcode-klant"
+                paginaId={programma.slug}
+                positie="omschakeling-docs-sport"
+                blokken={blokkenSport}
+                isFounder={Boolean(isFounder)}
+              />
+            </div>
+          </div>
+        );
+      }
       case "contact": {
         // Voorgevuld bericht: kloppend per moment, zonder emoji's (die
         // raken corrupt in WhatsApp-prefills, bug-melding Raoul 21 juli).
@@ -3456,7 +3628,10 @@ export default function MentorWereld({
   // Testmodus: dag-springen. Eén klik = één dag beleven zoals de klant
   // die beleeft; de pagina herlaadt zodat de server de dag-momenten
   // opnieuw berekent, precies als bij een echt nieuw bezoek.
-  const testSpring = async (actie: "vooruit" | "terug" | "reset") => {
+  const testSpring = async (
+    actie: "vooruit" | "terug" | "reset",
+    dagen = 1,
+  ) => {
     if (!token) return;
     if (
       actie === "reset" &&
@@ -3467,7 +3642,7 @@ export default function MentorWereld({
       await fetch("/api/resetcode/test-spring", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, actie }),
+        body: JSON.stringify({ token, actie, dagen }),
       });
     } catch {
       // herladen toont vanzelf de actuele stand
@@ -3509,6 +3684,30 @@ export default function MentorWereld({
               title="Beleef de volgende dag"
             >
               volgende dag ▶
+            </button>
+            <button
+              onClick={() => {
+                // Direct naar de eerstvolgende bijzondere dag springen;
+                // de standaard-dagen ertussen zijn identiek (feedback
+                // Raoul 24 juli: niet 15x hoeven klikken).
+                const MOMENT_DAGEN: Record<string, number[]> = {
+                  "darm/zestien-dagen": [1, 5, 7, 10, 14, 15, 16, 17, 18],
+                  "reset/laaddagen": [1, 2],
+                  "reset/omschakeling": [1, 7, 14, 20, 21, 22, 40],
+                  "reset/stabilisatie": [1, 5, 7, 14, 20, 21, 22],
+                  "reset/logisch-leven": [1, 7, 14, 21, 22],
+                };
+                const lijst =
+                  MOMENT_DAGEN[`${programma?.slug}/${station?.slug}`];
+                const dagNu = dagNummer ?? 0;
+                const doel = lijst?.find((dg) => dg > dagNu);
+                testSpring("vooruit", doel ? doel - dagNu : 1);
+              }}
+              className="rounded-full px-2.5 py-1 font-bold"
+              style={{ backgroundColor: "#A855F7", color: "#fff" }}
+              title="Spring naar de eerstvolgende bijzondere dag"
+            >
+              ⏭ moment
             </button>
             <button
               onClick={() => testSpring("reset")}
