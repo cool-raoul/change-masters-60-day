@@ -48,6 +48,7 @@ export function touchpointTekst(
   sleutel: TouchpointSleutel,
   naam: string,
   kernAlVerteld: boolean,
+  programmaSlug?: string,
 ): string[] {
   switch (sleutel) {
     case "darm-einde":
@@ -75,9 +76,15 @@ export function touchpointTekst(
         : kernVerhaal(naam);
     case "samen-starten":
       // Rond het startmoment: samen doen + de support-groep. Geen
-      // webshop-verhaal, puur warm en praktisch.
+      // webshop-verhaal, puur warm en praktisch. De herkenning is
+      // programma-bewust: de reset is breder dan darm-signalen alleen
+      // (feedback Raoul 24 juli).
       return [
-        "Nog iets moois om over na te denken nu je gaat starten: dit soort programma's zijn samen een stuk leuker én makkelijker vol te houden. Grote kans dat jij iemand kent die hier wel oren naar zou hebben. Iemand die vaak praat over een opgeblazen gevoel, brainfog, of gewoon niet lekker in z'n vel zitten. Denk maar even, er komt vast iemand in je op. 😊",
+        `Nog iets moois om over na te denken nu je gaat starten: dit soort programma's zijn samen een stuk leuker én makkelijker vol te houden. Grote kans dat jij iemand kent die hier wel oren naar zou hebben. ${
+          programmaSlug === "reset"
+            ? "Iemand die al langer met z'n gewicht worstelt, steeds moe is, blijft hangen in allerlei vage klachten, of gewoon niet lekker in z'n vel zit."
+            : "Iemand die vaak praat over een opgeblazen gevoel, brainfog, of gewoon niet lekker in z'n vel zitten."
+        } Denk maar even, er komt vast iemand in je op. 😊`,
         `Komt er iemand in je op? Breng die persoon dan gerust alvast in contact met ${naam}. Die zorgt dat diegene de juiste informatie krijgt, zonder verplichtingen, en dan kunnen jullie het misschien wel samen doen. Samen starten is samen volhouden.`,
         `En je staat er sowieso niet alleen voor: er is een support-groep op Facebook voor de Holistic Reset en het darmprogramma, met ruim 10.000 mensen die deze programma's volgen of gevolgd hebben. Vol ervaringen, recepten en aanmoediging. Vraag ${naam} even om je toe te voegen. En voor al je vragen blijf ik er natuurlijk gewoon, dag en nacht. 💚`,
       ];

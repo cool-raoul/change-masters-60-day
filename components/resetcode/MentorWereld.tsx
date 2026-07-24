@@ -664,7 +664,12 @@ export default function MentorWereld({
     if (isBouwer || rol === "member") return;
     if (verteldRef.current.has(sleutel)) return;
     const kernAl = verteldRef.current.has("kern-verhaal");
-    const teksten = touchpointTekst(sleutel, begeleiderNaam, kernAl);
+    const teksten = touchpointTekst(
+      sleutel,
+      begeleiderNaam,
+      kernAl,
+      programma?.slug,
+    );
     verteldRef.current.add(sleutel);
     // basis-groeien zonder kern-verhaal vertelt het kern-verhaal zelf.
     const dektKern =
