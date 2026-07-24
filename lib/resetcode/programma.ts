@@ -193,7 +193,6 @@ const RESET_STATIONS_INTERN: ResetStation[] = [
       "Maak foto's: voorkant, zijkant, achterkant en je gezicht. Rustige achtergrond, hele lichaam, en draag kleding waarin je contouren goed te zien zijn. Voor jezelf, niet voor anderen.",
       "Meet en noteer: gewicht, taille, heup en borst.",
       "Schrijf je startpunt op: wat wil je graag anders, en hoe voelt het nu? Hoe concreter, hoe leuker het teruglezen straks wordt.",
-      "Calorieën tellen op de laaddagen doe je straks gewoon bij mij: zeg of stuur wat je eet en ik tel automatisch mee. Geen aparte app nodig.",
       "Bewaar deze pagina en kom hier elke dag even terug: dit is jouw vaste plek tijdens de hele reset. En laat je begeleider even weten wanneer je pakket binnen is en wanneer je start.",
     ],
     welLijst: [],
