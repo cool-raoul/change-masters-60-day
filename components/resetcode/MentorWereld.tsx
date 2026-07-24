@@ -2100,7 +2100,7 @@ export default function MentorWereld({
         speel: async () => {
           await mentorZegt(
             isStart
-              ? `Hier zijn je documenten, alvast voor je klaargezet. 📖 Neem ze even goed door, dan weet je precies wat de bedoeling is en wat er allemaal aankomt.${prog.slug === "reset" ? " Print je boekje en het meet- en weegschema gerust uit, dat werkt het fijnst." : " Je boekje even uitprinten werkt het fijnst."} En het mooie: ik ken al deze documenten van binnen en van buiten, dus alles wat je erin leest kun je me ook gewoon vragen. Ik maak trouwens ook een recept of een dag- of weekschema dat precies in jouw fase past; zeg maar wat je in huis hebt.`
+              ? `Hier zijn je documenten, alvast voor je klaargezet. 📖 Neem ze even goed door, dan weet je precies wat de bedoeling is en wat er allemaal aankomt.${prog.slug === "reset" ? " Print je boekje en het meet- en weegschema gerust uit, dat werkt het fijnst." : " Je boekje even uitprinten werkt het fijnst."} En het mooie: ik ken al deze documenten van binnen en van buiten, dus alles wat je erin leest kun je me ook gewoon vragen. Ik maak trouwens ook een recept of een dag- of weekschema dat precies in ${prog.slug === "reset" ? "jouw fase" : "het programma"} past; zeg maar wat je in huis hebt.`
               : `Dit hoort bij deze fase, alvast klaargezet. 📖 Lees het even rustig door zodat je weet wat er komt. En ik ken alles wat erin staat, dus vraag me gerust van alles, of laat me een recept of dagschema voor je maken.`,
             1100,
           );
