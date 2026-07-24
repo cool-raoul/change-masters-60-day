@@ -66,6 +66,8 @@ type Checkin = {
   gewicht: number | null;
   notitie?: string | null;
   taille?: number | null;
+  heup?: number | null;
+  borst?: number | null;
 };
 
 type ChatItem =
@@ -2736,43 +2738,74 @@ export default function MentorWereld({
       } else {
         await mentorZegt("Kijk eens, dit heb je tot nu toe opgebouwd:", 700);
         setItems((b) => [...b, { van: "mentor", soort: "voortgang" }]);
-        // Echte conclusies bij de kaart (feedback Raoul 23 juli: alleen
-        // een kaartje voelde te summier): totalen + eigen winsten terug.
+        // Echte mini-analyse bij de kaart (feedback Raoul 24 juli: het
+        // lijntje en de smileys alleen zeggen niks). Alles deterministisch
+        // uit het eigen dagboek, claim-vrij.
         const reeks = checkinReeksRef.current;
-        const metGewicht = reeks.filter((r) => r.gewicht != null);
-        const gDelta =
-          metGewicht.length >= 2
-            ? Math.round(
-                ((metGewicht[metGewicht.length - 1].gewicht as number) -
-                  (metGewicht[0].gewicht as number)) *
-                  10,
-              ) / 10
+        const delta = (waardes: (number | null | undefined)[]) => {
+          const echt = waardes.filter((w): w is number => w != null);
+          return echt.length >= 2
+            ? Math.round((echt[echt.length - 1] - echt[0]) * 10) / 10
             : null;
-        const metTailleV = reeks.filter((r) => r.taille != null);
-        const tDeltaV =
-          metTailleV.length >= 2
-            ? Math.round(
-                ((metTailleV[metTailleV.length - 1].taille as number) -
-                  (metTailleV[0].taille as number)) *
-                  10,
-              ) / 10
-            : null;
+        };
+        const gDelta = delta(reeks.map((r) => r.gewicht));
+        const gLaatste = reeks.filter((r) => r.gewicht != null).slice(-1)[0]?.gewicht;
+        const gEerste = reeks.filter((r) => r.gewicht != null)[0]?.gewicht;
+        const tDeltaV = delta(reeks.map((r) => r.taille));
+        const hDeltaV = delta(reeks.map((r) => r.heup));
+        const bDeltaV = delta(reeks.map((r) => r.borst));
+        const topDagen = reeks.filter((r) => r.stemming === "top").length;
+        const zwaarDagen = reeks.filter((r) => r.stemming === "zwaar").length;
+        // Reeks-op-rij tot en met de laatste check-in.
+        const datumsSet = new Set(reeks.map((r) => r.datum));
+        let streakV = 0;
+        if (reeks.length > 0) {
+          const dLoop = new Date(`${reeks[reeks.length - 1].datum}T12:00:00`);
+          while (
+            datumsSet.has(
+              new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Amsterdam" }).format(dLoop),
+            )
+          ) {
+            streakV++;
+            dLoop.setDate(dLoop.getDate() - 1);
+          }
+        }
         const winstenV = reeks
           .filter((r) => r.notitie)
           .slice(-3)
           .map((r) => `"${r.notitie}"`);
-        const delenV: string[] = [
-          `${reeks.length} check-in${reeks.length === 1 ? "" : "s"} gedaan${dagNummer ? ` in ${dagNummer} ${dagNummer === 1 ? "dag" : "dagen"}` : ""}`,
-        ];
-        if (gDelta != null && gDelta < 0) delenV.push(`${Math.abs(gDelta)} kilo eraf`);
-        if (gDelta != null && gDelta > 0) delenV.push(`${Math.abs(gDelta)} kilo erbij (schommelingen zijn normaal, vaak vocht)`);
-        if (tDeltaV != null && tDeltaV < 0) delenV.push(`${Math.abs(tDeltaV)} centimeter van je taille`);
+        const regelsV: string[] = [];
+        if (gDelta != null && gEerste != null && gLaatste != null) {
+          regelsV.push(
+            gDelta < 0
+              ? `⚖️ Gewicht: van ${gEerste} naar ${gLaatste} kg, dat is ${Math.abs(gDelta)} kilo eraf sinds je start.`
+              : gDelta > 0
+                ? `⚖️ Gewicht: ${gLaatste} kg (${gDelta} kilo boven je start). Schommelingen horen erbij, vaak is het vocht; kijk naar de lijn over meerdere dagen.`
+                : `⚖️ Gewicht: stabiel op ${gLaatste} kg.`,
+          );
+        }
+        const cmDelen = [
+          tDeltaV != null && tDeltaV !== 0 ? `taille ${tDeltaV < 0 ? "-" : "+"}${Math.abs(tDeltaV)} cm` : null,
+          hDeltaV != null && hDeltaV !== 0 ? `heup ${hDeltaV < 0 ? "-" : "+"}${Math.abs(hDeltaV)} cm` : null,
+          bDeltaV != null && bDeltaV !== 0 ? `borst ${bDeltaV < 0 ? "-" : "+"}${Math.abs(bDeltaV)} cm` : null,
+        ].filter(Boolean);
+        if (cmDelen.length > 0) {
+          regelsV.push(`📏 Centimeters sinds je start-meting: ${cmDelen.join(", ")}. Dat zegt vaak meer dan de weegschaal.`);
+        }
+        regelsV.push(
+          `📔 Trouw: ${reeks.length} check-in${reeks.length === 1 ? "" : "s"} gedaan${streakV >= 3 ? `, en je staat nu op ${streakV} dagen op rij 🔥` : ""}. ${topDagen > 0 ? `Daarvan voelden ${topDagen} ${topDagen === 1 ? "dag" : "dagen"} top` : "Elke ingevulde dag telt"}${zwaarDagen > 0 ? `, en de ${zwaarDagen} zwaardere ${zwaarDagen === 1 ? "dag" : "dagen"} heb je ook gewoon doorstaan` : ""}.`,
+        );
+        if (winstenV.length > 0) {
+          regelsV.push(`✨ En dit schreef je zélf onderweg op: ${winstenV.join(", ")}. Dat is geen toeval, dat ben jij.`);
+        }
+        const afsluiterV =
+          gDelta != null && gDelta < 0
+            ? "Kortom: het werkt, en jij doet het. Gewoon doorgaan zoals je bezig bent. 💚"
+            : "Kortom: je bent aan het bouwen, en dat zie je terug in je trouw. De resultaten volgen het ritme. 💚";
         await wacht(600);
         await mentorZegt(
-          winstenV.length
-            ? `Op een rij: ${delenV.join(", ")}. En dit schreef je zélf onderweg op: ${winstenV.join(", ")}. Hou dat vast, dat is geen toeval. 💚`
-            : `Op een rij: ${delenV.join(", ")}. En vergeet niet: ook de dagen dat je gewoon doorging tellen mee. 💚`,
-          1000,
+          `📊 Even alles op een rij${dagNummer && station ? ` (dag ${dagNummer} · ${station.naam})` : ""}:\n\n${regelsV.join("\n\n")}\n\n${afsluiterV}`,
+          1200,
         );
       }
       return true;
