@@ -58,7 +58,9 @@ export function touchpointTekst(
     case "reset-complimenten":
       return [
         "En? Krijg je al complimenten? Dit is voor de meeste mensen het fijnste moment van de hele reset: je ziet het verschil, je voelt het verschil, en de mensen om je heen zien het ook. Een collega die vraagt wat je toch doet, je zus die zegt dat je straalt, iemand op een verjaardag die naast je komt zitten.",
-        `Goed om te weten: precies hier begint voor veel mensen hun webshop-verhaal. Met jouw resultaten kun je heel veel mensen nieuwsgierig maken, offline én online. En je hoeft daar niks voor te kunnen: er is een stappenplan dat je precies laat zien hoe je het vertelt en deelt, zodat je de juiste geïnteresseerden op de goede manier helpt, net zoals jij geholpen bent. Nieuwsgierig hoe dat eruitziet? Vraag het aan ${naam}.`,
+        kernAlVerteld
+          ? `Goed om te weten: precies hier begint voor veel mensen hun webshop-verhaal. Met jouw resultaten kun je heel veel mensen nieuwsgierig maken, offline én online. En je hoeft daar niks voor te kunnen: er is een stappenplan dat je precies laat zien hoe je het vertelt en deelt, zodat je de juiste geïnteresseerden op de goede manier helpt, net zoals jij geholpen bent. Nieuwsgierig hoe dat eruitziet? Vraag het aan ${naam}.`
+          : `Goed om te weten: iedereen die deze producten gebruikt kan een gratis eigen webshop krijgen, en precies bij die eerste complimenten begint voor veel mensen dat verhaal. Met jouw resultaten kun je heel veel mensen nieuwsgierig maken, offline én online, en je hoeft daar niks voor te kunnen: er is een stappenplan dat je precies laat zien hoe je het vertelt en deelt. Nieuwsgierig hoe dat eruitziet? Vraag het aan ${naam}.`,
       ];
     case "reset-afronding":
       return [

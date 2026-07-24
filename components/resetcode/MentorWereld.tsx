@@ -3693,8 +3693,8 @@ export default function MentorWereld({
                 const MOMENT_DAGEN: Record<string, number[]> = {
                   "darm/zestien-dagen": [1, 5, 7, 10, 14, 15, 16, 17, 18],
                   "reset/laaddagen": [1, 2],
-                  "reset/omschakeling": [1, 7, 14, 20, 21, 22, 40],
-                  "reset/stabilisatie": [1, 5, 7, 14, 20, 21, 22],
+                  "reset/omschakeling": [1, 7, 14, 16, 20, 21, 22, 40],
+                  "reset/stabilisatie": [1, 7, 14, 20, 21, 22],
                   "reset/logisch-leven": [1, 7, 14, 21, 22],
                 };
                 const lijst =

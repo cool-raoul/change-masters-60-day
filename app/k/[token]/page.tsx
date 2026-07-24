@@ -292,13 +292,14 @@ export default async function KlantLinkPagina({
                 ctx.stationSlug === "logisch-leven");
       if (kernNu) dueTouchpoint = "kern-verhaal";
     }
-    // Complimenten-opvolger: niet meer bij de fase 3-intro (stapelde op
-    // het dag 22-aanbevelen-moment), maar rustig rond dag 5 van fase 3.
+    // Complimenten-moment: op dag 16 van fase 2 (feedback Raoul 24 juli:
+    // mensen krijgen al veel eerder complimenten dan fase 3). Wie het
+    // mist of al doorging, krijgt het in fase 3 alsnog als inhaal.
     if (
       !dueTouchpoint &&
       ctx.programmaSlug === "reset" &&
-      ctx.stationSlug === "stabilisatie" &&
-      dagNummer >= 5 &&
+      ((ctx.stationSlug === "omschakeling" && dagNummer >= 16) ||
+        ctx.stationSlug === "stabilisatie") &&
       !ctx.touchpoints.includes("reset-complimenten")
     ) {
       dueTouchpoint = "reset-complimenten";
