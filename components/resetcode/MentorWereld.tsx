@@ -912,7 +912,7 @@ export default function MentorWereld({
           // de schema-data gevuld is; tot die tijd stil.
           if (
             prog.slug === "darm" &&
-            st.slug === "zestien-dagen" &&
+            (st.slug === "zestien-dagen" || st.slug === "start") &&
             !teltAf &&
             dagNummer != null &&
             dagNummer >= 1 &&
@@ -1415,10 +1415,35 @@ export default function MentorWereld({
       }
     }
 
-    // Wie vandaag start of al bezig is: meteen de eerste check-in.
-    if ((alGestart || label === "vandaag") && !checkinGedaanRef.current) {
-      await wacht(700);
-      await toonCheckin(true);
+    // Wie vandaag start of al bezig is: meteen het dagschema van vandaag
+    // (feedback Raoul 24 juli: dat kwam pas bij het volgende bezoek) en
+    // daarna de eerste check-in.
+    if (alGestart || label === "vandaag") {
+      const vandaagISO2 = new Intl.DateTimeFormat("sv-SE", {
+        timeZone: "Europe/Amsterdam",
+      }).format(new Date());
+      const effectieveDag = alGestart
+        ? Math.round((Date.parse(vandaagISO2) - Date.parse(datumISO)) / 86_400_000) + 1
+        : 1;
+      faseDagRef.current = effectieveDag;
+      if (
+        programma?.slug === "darm" &&
+        effectieveDag >= 1 &&
+        effectieveDag <= 16
+      ) {
+        const schemaNu = innameVoorDag(pakketRef.current, effectieveDag);
+        if (schemaNu) {
+          await wacht(700);
+          await mentorZegt(
+            `📋 Jouw innames voor dag ${effectieveDag}:\n\n${formatInname(schemaNu)}\n\nHandig om te weten: via het 📋-knopje bovenaan kun je per moment afvinken wat je al genomen hebt. Zo hoef je nooit te twijfelen of je de ochtend of de lunch al had. Puur voor jouw gemak, ik kijk niet mee.`,
+            1000,
+          );
+        }
+      }
+      if (!checkinGedaanRef.current) {
+        await wacht(700);
+        await toonCheckin(true);
+      }
     }
   }
 
