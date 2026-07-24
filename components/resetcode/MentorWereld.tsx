@@ -1460,8 +1460,8 @@ export default function MentorWereld({
     }
     await mentorZegt(
       keuze === "plus"
-        ? "Top, het plus-pakket dus: het blauwe schema met 8 producten. Alles wat ik je vertel en uitreken klopt daar vanaf nu precies mee. 💙"
-        : "Top, het basispakket dus: het rode schema met 5 producten. Alles wat ik je vertel en uitreken klopt daar vanaf nu precies mee. ❤️",
+        ? "Top, het plus-pakket dus: het blauwe schema met 8 producten. Alles in deze chat wordt daar vanaf nu op afgestemd. 💙"
+        : "Top, het basispakket dus: het rode schema met 5 producten. Alles in deze chat wordt daar vanaf nu op afgestemd. ❤️",
       900,
     );
     const vervolg = naPakketRef.current;
