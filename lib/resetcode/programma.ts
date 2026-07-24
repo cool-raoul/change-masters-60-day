@@ -101,10 +101,6 @@ const DARM_STATIONS: ResetStation[] = [
         omschrijving: "Het rode en blauwe schema, met uitleg per product.",
       },
       {
-        titel: "Benodigdheden en boodschappenlijstje",
-        omschrijving: "Alles wat je in huis wilt hebben voor je begint.",
-      },
-      {
         titel: "Receptenboekje",
         omschrijving: "Heerlijke recepten om te variëren.",
       },
