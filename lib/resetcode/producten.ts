@@ -33,6 +33,14 @@ PRODUCTEN OPMAKEN NA DAG 16 (vuistregel: inhoud van elke pot delen door 30 = dag
 - Be Recharged: 1 portie van 2 scoops per dag (±14 dagen)
 - Digestive Formula: gebruik verder zoals op de verpakking staat
 
+SPORTEN TIJDENS DE HOLISTIC RESET (letterlijk uit het resetboekje, blz. 17):
+- Fase 2: uitsluitend krachttraining op 60% intensiteit; GEEN cardio of duursport (geen aanspraak maken op de spieren).
+- Trainingsdagen fase 2: halve tot hele portie extra eiwit vóór de training; ná de training een (halve) portie Triple Protein Shake. Geen maaltijden of tussendoortjes overslaan (anders spaarstand), minstens 6x per dag eten, om de 2 uur een klein beetje; wie sport mag méér van de toegestane lijst en mag geen honger hebben.
+- Fase 3: weer intensiever trainen (ook cardio), rustig opbouwen, goed naar het lichaam luisteren.
+- Fase 4: weer trainen zoals voorheen.
+- Tip: laat de sportinstructeur een alternatief schema maken dat mee opbouwt door de fasen. De BE-lijn is de sportlijn (document staat bij de sport-documenten).
+- We tellen GEEN calorieën, ook niet voor sporters.
+
 ETEN TIJDENS DE OPMAAK-DAGEN (na dag 16): er is geen apart afbouw-schema.
 Het advies: niet alles in één keer omgooien, de voedingslijst als kompas
 aanhouden en rustig verbreden, stap voor stap. Uit het boekje: wie weer

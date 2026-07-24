@@ -2452,11 +2452,7 @@ export default function MentorWereld({
       setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: echoSport }]);
       logNaarServer([{ van: "klant", soort: "tekst", tekst: echoSport }]);
       if (jaSport) {
-        await mentorZegt(
-          "Top, blijven doen! Belangrijk om te weten: ook voor sporters tellen we tijdens de reset géén calorieën. Waar het wél om draait: zorg voor voldoende eiwitten, eet op sportdagen wat méér van je lijst (je mag geen honger hebben) en luister goed naar je lichaam. Deze twee documenten helpen je daarbij. 👇",
-          1100,
-        );
-        await mentorKaart("docs-sport", "omschakeling", 600);
+        await speelSportUitleg();
       } else {
         await mentorZegt("Helemaal prima! Bewegen mag altijd, maar niks moet. 💚", 800);
       }
@@ -2608,6 +2604,22 @@ export default function MentorWereld({
       };
     }
     return { ok: true };
+  }
+
+  // Sport-uitleg (reset): samenvatting van de sport-sectie uit het
+  // resetboekje (blz. 17), voor normaal tot voluit sporten. Gedeeld
+  // tussen de profiel-vraag en de typ-intentie.
+  async function speelSportUitleg() {
+    await mentorZegt(
+      "Top dat je sport, blijven doen! En goed dat je het zegt, want tijdens de reset gelden er een paar duidelijke sport-regels uit je boekje. In fase 2 doe je uitsluitend krachttraining, op zo'n 60% van je gewone intensiteit, en even géén cardio of duursport: je wilt in deze fase geen aanspraak maken op je spieren. Vanaf fase 3 mag je weer intensiever trainen (ook cardio) zolang je rustig opbouwt en goed naar je lichaam luistert, en in fase 4 train je gewoon weer zoals je gewend was.",
+      1200,
+    );
+    await wacht(900);
+    await mentorZegt(
+      "Eten op trainingsdagen is minstens zo belangrijk: sla géén maaltijden of tussendoortjes over (anders schiet je lichaam in de spaarstand), eet minstens 6 keer per dag, steeds om de 2 uur een klein beetje, en als je sport mag je méér van je toegestane lijst; je mag geen honger hebben. Vóór het trainen neem je een halve tot hele portie extra eiwit, en ná het trainen een (halve) portie Triple Protein Shake. De BE-lijn is er speciaal voor sporters, het overzicht staat hieronder. En een fijne tip: vraag je sportinstructeur om een schema dat mee opbouwt door de fasen heen. 👇",
+      1100,
+    );
+    await mentorKaart("docs-sport", "omschakeling", 600);
   }
 
   // Alvast lezen over een (volgende) fase: wél de informatie, géén
@@ -2905,11 +2917,7 @@ export default function MentorWereld({
     }
     if (programma.slug === "reset" && /\bsport/.test(t) && t.length < 45) {
       zeg();
-      await mentorZegt(
-        "Sporten tijdens de reset? Blijven doen! Belangrijk om te weten: ook voor sporters tellen we géén calorieën. Waar het wél om draait: zorg voor voldoende eiwitten, eet op sportdagen wat méér van je lijst (je mag geen honger hebben) en luister goed naar je lichaam. Deze twee documenten helpen je daarbij. 👇",
-        1100,
-      );
-      await mentorKaart("docs-sport", "omschakeling");
+      await speelSportUitleg();
       return true;
     }
     if (/suikerlijst|suikernamen|suiker.*(lijst|namen|spiek)/.test(t)) {
