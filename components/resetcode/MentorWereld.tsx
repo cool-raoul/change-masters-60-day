@@ -1047,7 +1047,7 @@ export default function MentorWereld({
                 const opmaakPlus = [
                   "PH Plus: 3x3 per dag (±14 dagen)",
                   "Be Recharged: 1 portie van 2 scoops per dag (±14 dagen)",
-                  "Digestive Formula: hier geldt gewoon de deel-door-30-regel",
+                  "Digestive Formula: gebruik verder zoals op de verpakking staat",
                 ];
                 const opmaakLijst =
                   pakketRef.current === "plus"

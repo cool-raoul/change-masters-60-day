@@ -31,6 +31,7 @@ PRODUCTEN OPMAKEN NA DAG 16 (vuistregel: inhoud van elke pot delen door 30 = dag
 - Cogelin: halve tot 1 scoop per dag
 - PH Plus: 3x3 per dag (±14 dagen)
 - Be Recharged: 1 portie van 2 scoops per dag (±14 dagen)
+- Digestive Formula: gebruik verder zoals op de verpakking staat
 
 ETEN TIJDENS DE OPMAAK-DAGEN (na dag 16): er is geen apart afbouw-schema.
 Het advies: niet alles in één keer omgooien, de voedingslijst als kompas
