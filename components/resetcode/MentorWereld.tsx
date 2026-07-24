@@ -2079,7 +2079,7 @@ export default function MentorWereld({
     if (st.slug === "zestien-dagen") {
       chunks.push({
         sleutel: "kan",
-        knopLabel: "wat je allemaal aan mij hebt",
+        knopLabel: "wat je allemaal aan mij als Mentor hebt",
         speel: async () => {
           await mentorZegt(
             "Even zodat je weet wat je de komende 16 dagen allemaal aan me hebt 💪\n\n📷 Twijfel je bij een product, thuis of in de winkel? Stuur een foto van de ingrediëntenlijst en ik zeg je direct of het in jouw programma past.\n🍽️ Zeg wat je in huis hebt en ik maak er een recept, dagschema of weekmenu van dat precies binnen je lijst valt.\n🍬 Suiker heeft ruim 150 schuilnamen op etiketten; ik herken ze allemaal.\n💊 Alles over je producten, je schema en je doseringen weet ik uit je eigen boekje.\n📔 En elke dag doe ik een korte check-in met je, zodat je je voortgang echt ziet groeien.\n\nPraat gewoon tegen me of typ, wat jij fijn vindt. Ik ben er dag en nacht.",
