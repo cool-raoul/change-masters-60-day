@@ -120,7 +120,7 @@ const DARM_STATIONS: ResetStation[] = [
       "Volg het innameschema uit je boekje: het rode schema bij het basispakket (5 producten), het blauwe schema bij het plus-pakket (8 producten). Daar staat per moment van de dag precies wat je neemt.",
       "Eet van de voedingslijst. Geen hoeveelheden-regels, wel: check bij verpakte producten altijd de ingrediëntenlijst (niet de voedingswaarde) op suikers en E-nummers.",
       "Op dag 10 staat er een belangrijke video voor je klaar; ik zet 'm die dag automatisch voor je neer, dat is vaak een kantelpunt.",
-      "Na dag 16 maak je je producten rustig op: deel de inhoud van elk potje door 30, dan weet je je dagdosering.",
+      "Na dag 16 maak je je producten rustig op. Daar hoef je nu nog niks mee: tegen die tijd help ik je er gewoon doorheen, met per product hoeveel je dan neemt.",
     ],
     welLijst: [
       "Alle groenten behalve nachtschade, ook zuurkool en gefermenteerde groenten",

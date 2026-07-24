@@ -2341,9 +2341,16 @@ export default function MentorWereld({
     }
   }
 
+  // Kop van een fase: naam + duur, maar zonder dubbelop ("De 16 dagen ·
+  // 16 dagen" voelde overbodig, feedback Raoul 24 juli).
+  function faseKop(st: ResetStation): string {
+    const naamZegtDuur = st.naam.toLowerCase().includes("dag");
+    return naamZegtDuur ? `${st.emoji} ${st.naam}` : `${st.emoji} ${st.naam} · ${st.duur}`;
+  }
+
   async function introStation(prog: ResetProgramma, st: ResetStation) {
     setStation(st);
-    await mentorZegt(`${st.emoji} ${st.naam} · ${st.duur}\n\n${st.welkom}`, 1100);
+    await mentorZegt(`${faseKop(st)}\n\n${st.welkom}`, 1100);
     // Video meteen bij het welkom (Boardslink-stijl), met de belofte dat de
     // rest daarna stap voor stap komt.
     const heeftVideo =
