@@ -2616,10 +2616,15 @@ export default function MentorWereld({
     );
     await wacht(900);
     await mentorZegt(
-      "Eten op trainingsdagen is minstens zo belangrijk: sla géén maaltijden of tussendoortjes over (anders schiet je lichaam in de spaarstand), eet minstens 6 keer per dag, steeds om de 2 uur een klein beetje, en als je sport mag je méér van je toegestane lijst; je mag geen honger hebben. Vóór het trainen neem je een halve tot hele portie extra eiwit, en ná het trainen een (halve) portie Triple Protein Shake. De BE-lijn is er speciaal voor sporters, het overzicht staat hieronder. En een fijne tip: vraag je sportinstructeur om een schema dat mee opbouwt door de fasen heen. 👇",
+      "Eten op trainingsdagen is minstens zo belangrijk: sla géén maaltijden of tussendoortjes over (anders schiet je lichaam in de spaarstand), eet minstens 6 keer per dag, steeds om de 2 uur een klein beetje, en als je sport mag je méér van je toegestane lijst; je mag geen honger hebben. Vóór het trainen neem je een halve tot hele portie extra eiwit, en ná het trainen een (halve) portie Triple Protein Shake. De BE-lijn is er speciaal voor sporters, het overzicht staat hieronder. 👇",
       1100,
     );
     await mentorKaart("docs-sport", "omschakeling", 600);
+    await wacht(700);
+    await mentorZegt(
+      "En zal ik een opbouw-schema voor jouw sport maken, dat precies met de fases meegroeit? Vertel me gewoon wat je normaal doet, dan stel ik je eerst een paar korte vragen. Je kunt het daarna ook altijd nog naast het advies van je eigen sportinstructeur leggen. 💪",
+      900,
+    );
   }
 
   // Alvast lezen over een (volgende) fase: wél de informatie, géén
