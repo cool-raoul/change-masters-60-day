@@ -894,18 +894,21 @@ export default function MentorWereld({
                 ? `Welkom terug! 👋 Je 16 dagen zitten erop en je bent nu je producten rustig aan het opmaken (opmaak-dag ${(dagNummer ?? 17) - 16}). Waar wil je mee verder? Stel je vraag, stuur een foto van een etiket, of laat me een recept of dagschema voor je maken.`
                 : `Welkom terug! 👋 We waren bij ${st.emoji} ${st.naam}${dagNummer ? ` (dag ${dagNummer})` : ""}. Waar wil je verder mee? Stel je vraag, stuur een foto van een etiket (dan kijk ik met je mee of een product bij jouw programma past), of laat me een recept of dagschema voor je maken.`,
           },
-          ...(volgend && toonVolgendKnop
-            ? [
-                {
-                  van: "mentor" as const,
-                  soort: "verder-knop" as const,
-                  bid: ++bidTeller.current,
-                  label: `${volgend.emoji} ${volgend.naam}`,
-                  actie: { type: "station" as const, slug: volgend.slug },
-                },
-              ]
-            : []),
         ]);
+        // De "Verder met"-knop NIET direct bij het welkom (feedback Raoul
+        // 24 juli: de knop hing verwarrend tussen "Welkom terug" en de
+        // check-in in). Hij komt aan het einde van de binnenkomst-flow,
+        // dus ná de check-in of het dag-moment, netjes onderaan.
+        const volgendKnopItem =
+          volgend && toonVolgendKnop
+            ? {
+                van: "mentor" as const,
+                soort: "verder-knop" as const,
+                bid: ++bidTeller.current,
+                label: `${volgend.emoji} ${volgend.naam}`,
+                actie: { type: "station" as const, slug: volgend.slug },
+              }
+            : null;
         // Volgorde bij terugkomen: eerst pakket (darm, indien onbekend),
         // dan startmoment (indien nog niet gekozen), dan de check-in.
         const moetStartKiezen =
@@ -1173,6 +1176,13 @@ export default function MentorWereld({
               );
               await toonCheckin(false);
             }
+            knoppenNaarOnder();
+          }
+          // Helemaal aan het einde: de "Verder met"-knop naar de volgende
+          // fase, onder de check-in (en na inchecken zakt hij vanzelf mee
+          // naar onderen via knoppenNaarOnder).
+          if (volgendKnopItem) {
+            setItems((b) => [...b, volgendKnopItem]);
             knoppenNaarOnder();
           }
         })();
