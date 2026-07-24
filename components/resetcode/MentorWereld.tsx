@@ -2106,7 +2106,7 @@ export default function MentorWereld({
         knopLabel: "hoe ik je calorieën tel",
         speel: async () => {
           await mentorZegt(
-            "Op je laaddagen is het simpel: eten! 😋 Zeg of stuur me gewoon alles wat je eet (een foto van je bord of de verpakking mag ook), dan tel ik je calorieën automatisch mee. Bovenin zie je je teller richting de 3500+ lopen. Foutje gemaakt? Zeg gewoon \"haal die laatste weg\". Kom je in je documenten nog de FatSecret-app tegen: die zou je kunnen gebruiken, maar dit is makkelijker, ik reken alles voor je uit.",
+            "Op je laaddagen is het simpel: eten! 😋 Zeg of stuur me gewoon alles wat je eet (een foto van je bord of de verpakking mag ook), dan tel ik je calorieën automatisch mee. Bovenin zie je je teller richting de 3500+ lopen. Foutje gemaakt? Zeg gewoon \"haal die laatste weg\". En goed om te weten: in je documenten wordt nog gesproken over de FatSecret-app. Die kun je gebruiken, maar je mag 'm ook gewoon negeren: ik neem alle functies over die je nodig hebt.",
             1100,
           );
         },
