@@ -272,12 +272,10 @@ const RESET_STATIONS_INTERN: ResetStation[] = [
       },
     ],
     contactMoment: "Laat je begeleider even weten dat je gestart bent met de reset.",
-    documenten: [
-      {
-        titel: "Laadtips",
-        omschrijving: "Gezonde laad-ideeën, inclusief top-10 vetten.",
-      },
-    ],
+    // De laadtips zitten al bij de voorbereidings-documenten (feedback
+    // Raoul 24 juli: niet nog een keer); de documenten-kaart valt hier
+    // automatisch terug op die start-documenten.
+    documenten: [],
     videoSlots: ["Fase 1-video: de laaddagen"],
   },
   {
