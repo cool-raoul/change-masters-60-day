@@ -225,7 +225,7 @@ function CheckinVraag({
       <p className="text-[13px] font-bold text-emerald-300 mb-2">
         📔 Even je check-in
       </p>
-      <p className="text-[11px] text-white/50 mb-1">Hoe is het nu met je?</p>
+      <p className="text-[13px] font-semibold text-white/90 mb-1">Hoe is het nu met je?</p>
       <div className="flex gap-2 mb-2.5">
         {STEMMINGEN.map((s) => (
           <button
@@ -241,7 +241,7 @@ function CheckinVraag({
       </div>
       {CHECKIN_RIJEN.map((rij) => (
         <div key={rij.veld} className="mb-2.5">
-          <p className="text-[11px] text-white/50 mb-1">{rij.vraag}</p>
+          <p className="text-[13px] font-semibold text-white/90 mb-1">{rij.vraag}</p>
           <div className="flex gap-2">
             {rij.opties.map((o) => (
               <button
@@ -299,10 +299,19 @@ function CheckinVraag({
           </div>
         </div>
       )}
+      <p className="text-[13px] font-semibold text-white/90 mb-0.5">
+        ✨ Kleine winst van vandaag
+      </p>
+      <p className="text-[11px] text-white/55 mb-1 leading-snug">
+        Iets wat vandaag nét beter ging of goed voelde: fitter wakker, geen
+        gesnaai, een compliment gekregen, iets lekkers gemaakt van je lijst.
+        Door het op te schrijven zie je straks zwart op wit wat er allemaal
+        wél lukt.
+      </p>
       <input
         value={winst}
         onChange={(e) => setWinst(e.target.value.slice(0, 200))}
-        placeholder="kleine winst van vandaag (optioneel) ✨"
+        placeholder="jouw kleine winst (optioneel)"
         className="w-full rounded-full bg-white/10 border border-white/15 px-3 py-1.5 text-[13px] text-white placeholder:text-white/40 focus:outline-none mb-2.5"
         disabled={bezig}
       />
