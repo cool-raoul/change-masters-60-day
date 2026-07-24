@@ -2098,8 +2098,8 @@ export default function MentorWereld({
         speel: async () => {
           await mentorZegt(
             st.slug === "omschakeling"
-              ? "Even zodat je weet wat je tijdens je hele reset allemaal aan me hebt 💪\n\n📷 Twijfel je bij een product, thuis of in de winkel? Stuur een foto van de ingrediëntenlijst en ik zeg je direct of het in jouw fase past.\n🍽️ Zeg wat je in huis hebt en ik maak er een recept, dagschema of weekmenu van dat precies binnen jouw fase valt.\n🍬 Suiker heeft ruim 150 schuilnamen op etiketten; ik herken ze allemaal.\n💊 Alles over je producten en alle vier de fases weet ik uit je eigen boekje.\n📔 En elke dag doe ik een korte check-in met je, zodat je je voortgang echt ziet groeien.\n\nPraat gewoon tegen me of typ, wat jij fijn vindt. Ik ben er dag en nacht."
-              : "Even zodat je weet wat je de komende 16 dagen allemaal aan me hebt 💪\n\n📷 Twijfel je bij een product, thuis of in de winkel? Stuur een foto van de ingrediëntenlijst en ik zeg je direct of het in jouw programma past.\n🍽️ Zeg wat je in huis hebt en ik maak er een recept, dagschema of weekmenu van dat precies binnen je lijst valt.\n🍬 Suiker heeft ruim 150 schuilnamen op etiketten; ik herken ze allemaal.\n💊 Alles over je producten, je schema en je doseringen weet ik uit je eigen boekje.\n📔 En elke dag doe ik een korte check-in met je, zodat je je voortgang echt ziet groeien.\n\nPraat gewoon tegen me of typ, wat jij fijn vindt. Ik ben er dag en nacht.",
+              ? "Even zodat je weet wat je tijdens je hele reset allemaal aan me hebt 💪\n\n📷 Twijfel je bij een product, thuis of in de winkel? Stuur een foto van de ingrediëntenlijst en ik zeg je direct of het in jouw fase past.\n🍽️ Zeg wat je in huis hebt en ik maak er een recept, dagschema of weekmenu van dat precies binnen jouw fase valt.\n🍬 Suiker heeft ruim 150 schuilnamen op etiketten; ik herken ze allemaal.\n💊 Alles over je producten en alle vier de fases weet ik uit je eigen boekje.\n💬 En stel me ál je vragen waar je dagelijks tegenaan loopt: gebruik me gerust als sparringpartner en buddy.\n📔 Elke dag doe ik een korte check-in met je, zodat je je voortgang echt ziet groeien.\n\nPraat gewoon tegen me of typ, wat jij fijn vindt. Ik ben er dag en nacht."
+              : "Even zodat je weet wat je de komende 16 dagen allemaal aan me hebt 💪\n\n📷 Twijfel je bij een product, thuis of in de winkel? Stuur een foto van de ingrediëntenlijst en ik zeg je direct of het in jouw programma past.\n🍽️ Zeg wat je in huis hebt en ik maak er een recept, dagschema of weekmenu van dat precies binnen je lijst valt.\n🍬 Suiker heeft ruim 150 schuilnamen op etiketten; ik herken ze allemaal.\n💊 Alles over je producten, je schema en je doseringen weet ik uit je eigen boekje.\n💬 En stel me ál je vragen waar je dagelijks tegenaan loopt: gebruik me gerust als sparringpartner en buddy.\n📔 Elke dag doe ik een korte check-in met je, zodat je je voortgang echt ziet groeien.\n\nPraat gewoon tegen me of typ, wat jij fijn vindt. Ik ben er dag en nacht.",
             1200,
           );
         },
@@ -2367,7 +2367,10 @@ export default function MentorWereld({
 
   async function introStation(prog: ResetProgramma, st: ResetStation) {
     setStation(st);
-    await mentorZegt(`${faseKop(st)}\n\n${st.welkom}`, 1100);
+    await mentorZegt(
+      st.welkom ? `${faseKop(st)}\n\n${st.welkom}` : faseKop(st),
+      1100,
+    );
     // Video meteen bij het welkom (Boardslink-stijl), met de belofte dat de
     // rest daarna stap voor stap komt.
     const heeftVideo =
@@ -2453,7 +2456,7 @@ export default function MentorWereld({
     const doel = programma ? stationVoor(programma.slug, slug) : null;
     if (!doel) return;
     await mentorZegt(
-      `Goed idee, dan weet je wat er komt! 📖 Dit is ${doel.emoji} ${doel.naam} (${doel.duur}):\n\n${doel.welkom}`,
+      `Goed idee, dan weet je wat er komt! 📖 Dit is ${doel.emoji} ${doel.naam} (${doel.duur}):\n\n${doel.welkom || doel.kern}`,
       1100,
     );
     if (doel.vandaagBelangrijk.length > 0) {

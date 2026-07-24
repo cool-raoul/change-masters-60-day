@@ -114,8 +114,9 @@ const DARM_STATIONS: ResetStation[] = [
     emoji: "🔄",
     duur: "16 dagen (daarna maak je je producten rustig op)",
     kern: "Zestien dagen puur eten volgens jouw schema, met alles op één plek.",
-    welkom:
-      "Daar ga je! De komende 16 dagen volg je het schema uit je programmaboekje en eet je van de voedingslijst. Het is echt goed te doen: je mag veel, je hebt geen honger en er is een heel receptenboekje om uit te kiezen. Gooi er gerust je eigen sausje overheen, als de ingrediënten maar van de lijst komen.",
+    // Geen aparte welkom-bubbel: alles hierin was al verteld bij de start
+    // (feedback Raoul 24 juli); de sausje-tip leeft door in de tips.
+    welkom: "",
     vandaagBelangrijk: [
       "Volg het innameschema uit je boekje: het rode schema bij het basispakket (5 producten), het blauwe schema bij het plus-pakket (8 producten). Daar staat per moment van de dag precies wat je neemt.",
       "Eet van de voedingslijst. Geen hoeveelheden-regels, wel: check bij verpakte producten altijd de ingrediëntenlijst (niet de voedingswaarde) op suikers en E-nummers.",
@@ -142,6 +143,7 @@ const DARM_STATIONS: ResetStation[] = [
       "Peulvruchten zoals erwten en linzen",
     ],
     tips: [
+      "Je mag veel en je hoeft geen honger te hebben; er is een heel receptenboekje om uit te kiezen. Gooi er gerust je eigen sausje overheen, als de ingrediënten maar van de lijst komen.",
       "Neem dagelijks een paar mespuntjes Keltisch zeezout. Hoe maakt niet uit: onder of op je tong, extra door je eten, of opgelost in een glas water.",
       "Doe minimaal twee keer per week een voetenbadje met een paar eetlepels Keltisch zeezout in warm water.",
       "Plan genoeg rust in, je lichaam is aan het werk en dat mag je voelen.",
