@@ -1578,38 +1578,13 @@ export default function MentorWereld({
     );
     setItems((b) => [...b, { van: "mentor", soort: "voortgang" }]);
     await wacht(1000);
-    const metGewicht = reeks.filter((r) => r.gewicht != null);
-    const delta =
-      metGewicht.length >= 2
-        ? Math.round(
-            ((metGewicht[metGewicht.length - 1].gewicht as number) -
-              (metGewicht[0].gewicht as number)) *
-              10,
-          ) / 10
-        : null;
-    const winsten = reeks
-      .filter((r) => r.notitie)
-      .slice(-3)
-      .map((r) => `"${r.notitie}"`);
-    const metTaille = reeks.filter((r) => r.taille != null);
-    const tailleDelta =
-      metTaille.length >= 2
-        ? Math.round(
-            ((metTaille[metTaille.length - 1].taille as number) -
-              (metTaille[0].taille as number)) *
-              10,
-          ) / 10
-        : null;
-    const delen: string[] = [];
-    if (delta != null && delta < 0)
-      delen.push(`je staat ${Math.abs(delta)} kilo lichter dan bij je start`);
-    if (tailleDelta != null && tailleDelta < 0)
-      delen.push(`je taille is ${Math.abs(tailleDelta)} centimeter smaller`);
-    if (winsten.length)
-      delen.push(`en dit schreef je zelf op: ${winsten.join(", ")}`);
+    // Volwaardige analyse bij de kaart (feedback Raoul 24 juli: het
+    // lijntje en de smileys alleen zeggen niks), gedeeld met de
+    // voortgang-vraag en het einde-moment.
+    const { regels } = bouwVoortgangsRegels();
     await mentorZegt(
-      delen.length
-        ? `Kijk daar eens rustig naar: ${delen.join(", ")}. Dat is allemaal van jou. Niet omdat je meer doet, maar omdat je bewuster bezig bent. Op naar de volgende week! 💚`
+      reeks.length > 0 && regels.length > 0
+        ? `Kijk daar eens rustig naar:\n\n${regels.join("\n\n")}\n\nDat is allemaal van jou. Niet omdat je meer doet, maar omdat je bewuster bezig bent. Op naar de volgende week! 💚`
         : `Elke dag dat je incheckt bouw je aan je eigen verhaal, ook op de dagen dat het zwaar voelt. Op naar de volgende week! 💚`,
       1100,
     );
@@ -1708,6 +1683,70 @@ export default function MentorWereld({
     );
   }
 
+  // Gedeelde mini-analyse uit het eigen dagboek (feedback Raoul 24 juli:
+  // het lijntje en de smileys alleen zeggen niks). Deterministisch en
+  // claim-vrij; gebruikt door de voortgang-vraag én het einde-moment.
+  function bouwVoortgangsRegels(): { regels: string[]; gDelta: number | null } {
+    const reeks = checkinReeksRef.current;
+    const delta = (waardes: (number | null | undefined)[]) => {
+      const echt = waardes.filter((w): w is number => w != null);
+      return echt.length >= 2
+        ? Math.round((echt[echt.length - 1] - echt[0]) * 10) / 10
+        : null;
+    };
+    const gDelta = delta(reeks.map((r) => r.gewicht));
+    const gLaatste = reeks.filter((r) => r.gewicht != null).slice(-1)[0]?.gewicht;
+    const gEerste = reeks.filter((r) => r.gewicht != null)[0]?.gewicht;
+    const tDelta = delta(reeks.map((r) => r.taille));
+    const hDelta = delta(reeks.map((r) => r.heup));
+    const bDelta = delta(reeks.map((r) => r.borst));
+    const topDagen = reeks.filter((r) => r.stemming === "top").length;
+    const zwaarDagen = reeks.filter((r) => r.stemming === "zwaar").length;
+    // Reeks-op-rij tot en met de laatste check-in.
+    const datumsSet = new Set(reeks.map((r) => r.datum));
+    let streak = 0;
+    if (reeks.length > 0) {
+      const dLoop = new Date(`${reeks[reeks.length - 1].datum}T12:00:00`);
+      while (
+        datumsSet.has(
+          new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Amsterdam" }).format(dLoop),
+        )
+      ) {
+        streak++;
+        dLoop.setDate(dLoop.getDate() - 1);
+      }
+    }
+    const winsten = reeks
+      .filter((r) => r.notitie)
+      .slice(-3)
+      .map((r) => `"${r.notitie}"`);
+    const regels: string[] = [];
+    if (gDelta != null && gEerste != null && gLaatste != null) {
+      regels.push(
+        gDelta < 0
+          ? `⚖️ Gewicht: van ${gEerste} naar ${gLaatste} kg, dat is ${Math.abs(gDelta)} kilo eraf sinds je start.`
+          : gDelta > 0
+            ? `⚖️ Gewicht: ${gLaatste} kg (${gDelta} kilo boven je start). Schommelingen horen erbij, vaak is het vocht; kijk naar de lijn over meerdere dagen.`
+            : `⚖️ Gewicht: stabiel op ${gLaatste} kg.`,
+      );
+    }
+    const cmDelen = [
+      tDelta != null && tDelta !== 0 ? `taille ${tDelta < 0 ? "-" : "+"}${Math.abs(tDelta)} cm` : null,
+      hDelta != null && hDelta !== 0 ? `heup ${hDelta < 0 ? "-" : "+"}${Math.abs(hDelta)} cm` : null,
+      bDelta != null && bDelta !== 0 ? `borst ${bDelta < 0 ? "-" : "+"}${Math.abs(bDelta)} cm` : null,
+    ].filter(Boolean);
+    if (cmDelen.length > 0) {
+      regels.push(`📏 Centimeters sinds je start-meting: ${cmDelen.join(", ")}. Dat zegt vaak meer dan de weegschaal.`);
+    }
+    regels.push(
+      `📔 Trouw: ${reeks.length} check-in${reeks.length === 1 ? "" : "s"} gedaan${streak >= 3 ? `, en je staat nu op ${streak} dagen op rij 🔥` : ""}. ${topDagen > 0 ? `Daarvan voelden ${topDagen} ${topDagen === 1 ? "dag" : "dagen"} top` : "Elke ingevulde dag telt"}${zwaarDagen > 0 ? `, en de ${zwaarDagen} zwaardere ${zwaarDagen === 1 ? "dag" : "dagen"} heb je ook gewoon doorstaan` : ""}.`,
+    );
+    if (winsten.length > 0) {
+      regels.push(`✨ En dit schreef je zélf onderweg op: ${winsten.join(", ")}. Dat is geen toeval, dat ben jij.`);
+    }
+    return { regels, gDelta };
+  }
+
   // ---------- Het einde-moment ----------
 
   // Na de laatste fase-dag: écht feest, een eind-overzicht van alles wat
@@ -1733,41 +1772,19 @@ export default function MentorWereld({
       );
       setItems((b) => [...b, { van: "mentor", soort: "voortgang" }]);
       await wacht(1000);
-      const metGewicht = reeks.filter((r) => r.gewicht != null);
-      const gDelta =
-        metGewicht.length >= 2
-          ? Math.round(
-              ((metGewicht[metGewicht.length - 1].gewicht as number) -
-                (metGewicht[0].gewicht as number)) *
-                10,
-            ) / 10
-          : null;
-      const metTaille = reeks.filter((r) => r.taille != null);
-      const tDelta =
-        metTaille.length >= 2
-          ? Math.round(
-              ((metTaille[metTaille.length - 1].taille as number) -
-                (metTaille[0].taille as number)) *
-                10,
-            ) / 10
-          : null;
-      const winsten = reeks
-        .filter((r) => r.notitie)
-        .slice(-4)
-        .map((r) => `"${r.notitie}"`);
-      const delen: string[] = [
-        `${reeks.length} check-in${reeks.length === 1 ? "" : "s"} trouw ingevuld`,
-      ];
-      if (gDelta != null && gDelta < 0)
-        delen.push(`${Math.abs(gDelta)} kilo lichter`);
-      if (tDelta != null && tDelta < 0)
-        delen.push(`${Math.abs(tDelta)} centimeter van je taille`);
-      await mentorZegt(
-        winsten.length
-          ? `Op een rij: ${delen.join(", ")}. En dit schreef je zélf onderweg op: ${winsten.join(", ")}. Dat is geen toeval, dat ben jij.`
-          : `Op een rij: ${delen.join(", ")}. Stuk voor stuk dagen waarop je voor jezelf koos.`,
-        1100,
-      );
+      // Volwaardige eind-analyse in plaats van één dun zinnetje (feedback
+      // Raoul 24 juli: de kaart met het lijntje en de smileys zegt niks).
+      const { regels, gDelta } = bouwVoortgangsRegels();
+      if (regels.length > 0) {
+        await mentorZegt(
+          `📊 Jouw hele reis op een rij:\n\n${regels.join("\n\n")}\n\n${
+            gDelta != null && gDelta < 0
+              ? "Stuk voor stuk dagen waarop je voor jezelf koos. Dit deed jíj, en dat neemt niemand je meer af."
+              : "Stuk voor stuk dagen waarop je voor jezelf koos. Dat fundament neemt niemand je meer af."
+          }`,
+          1200,
+        );
+      }
     }
     // Startpunt-bewustwording, juist ook zonder zichtbaar resultaat.
     await wacht(900);
@@ -2984,65 +3001,9 @@ export default function MentorWereld({
         await mentorZegt("Kijk eens, dit heb je tot nu toe opgebouwd:", 700);
         setItems((b) => [...b, { van: "mentor", soort: "voortgang" }]);
         // Echte mini-analyse bij de kaart (feedback Raoul 24 juli: het
-        // lijntje en de smileys alleen zeggen niks). Alles deterministisch
-        // uit het eigen dagboek, claim-vrij.
-        const reeks = checkinReeksRef.current;
-        const delta = (waardes: (number | null | undefined)[]) => {
-          const echt = waardes.filter((w): w is number => w != null);
-          return echt.length >= 2
-            ? Math.round((echt[echt.length - 1] - echt[0]) * 10) / 10
-            : null;
-        };
-        const gDelta = delta(reeks.map((r) => r.gewicht));
-        const gLaatste = reeks.filter((r) => r.gewicht != null).slice(-1)[0]?.gewicht;
-        const gEerste = reeks.filter((r) => r.gewicht != null)[0]?.gewicht;
-        const tDeltaV = delta(reeks.map((r) => r.taille));
-        const hDeltaV = delta(reeks.map((r) => r.heup));
-        const bDeltaV = delta(reeks.map((r) => r.borst));
-        const topDagen = reeks.filter((r) => r.stemming === "top").length;
-        const zwaarDagen = reeks.filter((r) => r.stemming === "zwaar").length;
-        // Reeks-op-rij tot en met de laatste check-in.
-        const datumsSet = new Set(reeks.map((r) => r.datum));
-        let streakV = 0;
-        if (reeks.length > 0) {
-          const dLoop = new Date(`${reeks[reeks.length - 1].datum}T12:00:00`);
-          while (
-            datumsSet.has(
-              new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Amsterdam" }).format(dLoop),
-            )
-          ) {
-            streakV++;
-            dLoop.setDate(dLoop.getDate() - 1);
-          }
-        }
-        const winstenV = reeks
-          .filter((r) => r.notitie)
-          .slice(-3)
-          .map((r) => `"${r.notitie}"`);
-        const regelsV: string[] = [];
-        if (gDelta != null && gEerste != null && gLaatste != null) {
-          regelsV.push(
-            gDelta < 0
-              ? `⚖️ Gewicht: van ${gEerste} naar ${gLaatste} kg, dat is ${Math.abs(gDelta)} kilo eraf sinds je start.`
-              : gDelta > 0
-                ? `⚖️ Gewicht: ${gLaatste} kg (${gDelta} kilo boven je start). Schommelingen horen erbij, vaak is het vocht; kijk naar de lijn over meerdere dagen.`
-                : `⚖️ Gewicht: stabiel op ${gLaatste} kg.`,
-          );
-        }
-        const cmDelen = [
-          tDeltaV != null && tDeltaV !== 0 ? `taille ${tDeltaV < 0 ? "-" : "+"}${Math.abs(tDeltaV)} cm` : null,
-          hDeltaV != null && hDeltaV !== 0 ? `heup ${hDeltaV < 0 ? "-" : "+"}${Math.abs(hDeltaV)} cm` : null,
-          bDeltaV != null && bDeltaV !== 0 ? `borst ${bDeltaV < 0 ? "-" : "+"}${Math.abs(bDeltaV)} cm` : null,
-        ].filter(Boolean);
-        if (cmDelen.length > 0) {
-          regelsV.push(`📏 Centimeters sinds je start-meting: ${cmDelen.join(", ")}. Dat zegt vaak meer dan de weegschaal.`);
-        }
-        regelsV.push(
-          `📔 Trouw: ${reeks.length} check-in${reeks.length === 1 ? "" : "s"} gedaan${streakV >= 3 ? `, en je staat nu op ${streakV} dagen op rij 🔥` : ""}. ${topDagen > 0 ? `Daarvan voelden ${topDagen} ${topDagen === 1 ? "dag" : "dagen"} top` : "Elke ingevulde dag telt"}${zwaarDagen > 0 ? `, en de ${zwaarDagen} zwaardere ${zwaarDagen === 1 ? "dag" : "dagen"} heb je ook gewoon doorstaan` : ""}.`,
-        );
-        if (winstenV.length > 0) {
-          regelsV.push(`✨ En dit schreef je zélf onderweg op: ${winstenV.join(", ")}. Dat is geen toeval, dat ben jij.`);
-        }
+        // lijntje en de smileys alleen zeggen niks). Gedeeld met het
+        // einde-moment via bouwVoortgangsRegels.
+        const { regels: regelsV, gDelta } = bouwVoortgangsRegels();
         const afsluiterV =
           gDelta != null && gDelta < 0
             ? "Kortom: het werkt, en jij doet het. Gewoon doorgaan zoals je bezig bent. 💚"
@@ -3695,11 +3656,17 @@ export default function MentorWereld({
   // Testmodus: dag-springen. Eén klik = één dag beleven zoals de klant
   // die beleeft; de pagina herlaadt zodat de server de dag-momenten
   // opnieuw berekent, precies als bij een echt nieuw bezoek.
+  const springBezigRef = useRef(false);
   const testSpring = async (
     actie: "vooruit" | "terug" | "reset",
     dagen = 1,
   ) => {
     if (!token) return;
+    // Eén sprong tegelijk: zonder dit slot stapelen snelle dubbelklikken
+    // (terwijl de pagina nog herlaadt) meerdere sprongen op elkaar en
+    // schiet de teller ineens van dag 7 naar dag 26 (bug Raoul 24 juli).
+    if (springBezigRef.current) return;
+    springBezigRef.current = true;
     if (
       actie === "reset" &&
       !window.confirm("De hele testreis terug naar dag 1? Alle gesprekken en vinkjes van deze testlink worden gewist.")
