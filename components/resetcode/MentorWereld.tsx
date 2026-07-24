@@ -2315,22 +2315,34 @@ export default function MentorWereld({
       return;
     }
 
-    // Lange fases (21+ dagen): géén door-knop zolang de fase-dagen er
-    // niet op zitten (feedback Raoul 22 juli: wie net voor fase 3 koos,
-    // moet niet meteen een fase 4-knop zien, en al helemaal niet eentje
-    // die bij het klikken geblokkeerd blijkt). De info eindigt dan rustig
-    // met wat de Mentor in deze fase kan doen.
-    const dagenVol = !duur || duur < 21 || (faseDagRef.current ?? 0) >= duur;
+    // Géén door-knop zolang de fase-dagen er niet op zitten (feedback
+    // Raoul 22-24 juli): wel een alvast-lezen-knop, want vooruitkijken
+    // mag altijd; echt overstappen pas als de dagen om zijn.
+    const dagenVol = !duur || (faseDagRef.current ?? 0) >= duur;
+    const duurWoord = duur === 2 ? "twee laaddagen" : `${duur} dagen`;
     await mentorZegt(
       duur
         ? dagenVol
-          ? `Dat was de informatie voor deze fase 💚 Neem er rustig je ${duur === 2 ? "twee laaddagen" : `${duur} dagen`} voor, ik zie je elke dag bij je check-in. Klaar met alle dagen? Tik dan hieronder op de volgende stap.`
-          : `Dat was de informatie voor deze fase 💚 Neem er rustig je ${duur} dagen voor, ik zie je elke dag bij je check-in. En tussendoor ben ik er voor alles: vragen over je producten of je lijst, meekijken met een etiket-foto, of een recept of dagschema op maat. Zodra jouw dagen erop zitten, bespreken we samen de volgende stap.`
+          ? `Dat was de informatie voor deze fase 💚 ${duur === 2 ? "Klaar met je twee laaddagen?" : "Klaar met al je dagen?"} Tik dan hieronder op de volgende stap.`
+          : `Dat was de informatie voor deze fase 💚 Neem er rustig je ${duurWoord} voor, ik zie je elke dag bij je check-in. En tussendoor ben ik er voor alles: vragen over je producten of je lijst, meekijken met een etiket-foto, of een recept of dagschema op maat. Wil je alvast vooruitkijken naar wat er daarna komt? Dat kan met de leesknop hieronder, dan verandert er nog niks.`
         : "Dat was alles voor deze stap 💚 Vraag me gerust van alles: ik ken al je documenten van binnen en van buiten, ik kijk mee met foto's van etiketten of een product past, en ik maak zo een recept of dagschema voor je.",
       1000,
     );
-    if (!dagenVol) return;
     const volgend = prog.stations[i + 1];
+    if (!dagenVol) {
+      const bidI = ++bidTeller.current;
+      setItems((b) => [
+        ...b,
+        {
+          van: "mentor",
+          soort: "verder-knop",
+          bid: bidI,
+          label: `📖 Alvast lezen: ${volgend.emoji} ${volgend.naam}`,
+          actie: { type: "inkijk", slug: volgend.slug },
+        },
+      ]);
+      return;
+    }
     const bid = ++bidTeller.current;
     setItems((b) => [
       ...b,
