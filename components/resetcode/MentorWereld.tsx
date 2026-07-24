@@ -1147,8 +1147,13 @@ export default function MentorWereld({
         // Allereerste bezoek: warm welkom + eerste stap.
         (async () => {
           await mentorZegt(
-            `Hé ${klantVoornaam ?? ""}, welkom! 🌿 Ik ben je Mentor. Ik ken jouw hele programma van begin tot eind en ik ben er dag en nacht, samen met ${begeleiderNaam}. Praat gewoon tegen me of typ, wat jij fijn vindt. En handig: zet deze pagina op je beginscherm (delen ▸ zet op beginscherm), dan sta ik altijd tussen je apps. Ik onthoud alles wat we bespreken. 💚`,
+            `Hé ${klantVoornaam ?? ""}, welkom! 🌿 Ik ben je Mentor. Ik ken jouw hele programma van begin tot eind en ik ben er dag en nacht, samen met ${begeleiderNaam}. Ik onthoud alles wat we bespreken. 💚`,
             1200,
+          );
+          await wacht(700);
+          await mentorZegt(
+            `Zo praat je met me: typ gewoon, of tik op de 🎙️ microfoon rechtsonder en spreek alles lekker in, wat jij fijn vindt. En met het 📷 fototoestelletje linksonder stuur je me foto's: van een etiket of product (dan zeg ik je of het past), of gewoon van wat er in je kast of koelkast staat, dan maak ik er een recept van. Handig trouwens: zet deze pagina op je beginscherm (delen ▸ zet op beginscherm), dan sta ik altijd tussen je apps.`,
+            1100,
           );
           await wacht(700);
           const vervolg = async () => {
@@ -1809,13 +1814,10 @@ export default function MentorWereld({
   async function toonCheckin(metGroet: boolean) {
     if (checkinGedaanRef.current) return;
     if (metGroet) {
-      // Dagdeel-bewuste groet: de check-in kan op elk moment (de vragen
-      // zijn moment-neutraal), maar de begroeting mag wel meebewegen.
-      const uur = new Date().getHours();
-      const groet =
-        uur < 12 ? "Goedemorgen! ☀️" : uur < 18 ? "Hoi! 👋" : "Goedenavond! 🌙";
+      // Geen tweede begroeting: de klant is bij binnenkomst al welkom
+      // geheten (feedback Raoul 24 juli, dubbel "Goedenavond" voelde gek).
       await mentorZegt(
-        `${groet} Even je dagelijkse check-in${dagNummer ? ` (dag ${dagNummer})` : ""}, je bent er in een halve minuut doorheen. 💚 Vul gerust ook je gewicht in: het beste weegmoment is 's ochtends op een lege maag, na het plassen. Dan houd ik je voortgang voor je bij.`,
+        `Even je dagelijkse check-in${dagNummer ? ` (dag ${dagNummer})` : ""}, je bent er in een halve minuut doorheen. 💚 Vul gerust ook je gewicht in: het beste weegmoment is 's ochtends op een lege maag, na het plassen. Dan houd ik je voortgang voor je bij.`,
         900,
       );
     }
