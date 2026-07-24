@@ -68,9 +68,9 @@ const DARM_STATIONS: ResetStation[] = [
     welkom:
       "Welkom! Wat fijn dat je begint met Darmen in Balans. Je hoeft niks te kunnen of te weten, alles staat hier stap voor stap klaar. Deze eerste dagen gebruik je om je voor te bereiden, dan wordt de rest zoveel makkelijker.",
     vandaagBelangrijk: [
-      "Bewaar deze pagina, hier kun je altijd naar terug.",
+      "Bewaar deze pagina en kom hier elke dag even terug: dit is jouw vaste plek tijdens het hele programma.",
       "Laat je begeleider even weten wanneer je bestelling binnen is en wanneer je wilt beginnen.",
-      "Maak foto's van jezelf: voorkant, zijkant, achterkant en je gezicht. Rustige achtergrond, van hoofd tot voeten. Je maakt ze voor jezelf, straks ben je blij dat je ze hebt.",
+      "Maak foto's van jezelf: voorkant, zijkant, achterkant en je gezicht. Rustige achtergrond, van hoofd tot voeten, en draag kleding waarin je contouren goed te zien zijn. Je maakt ze voor jezelf, straks ben je blij dat je ze hebt.",
       "Meet en noteer: gewicht, taille, heup en borst.",
       "Schrijf voor jezelf op waarom je dit doet en wat je graag anders wilt. Dat lijstje wordt later goud waard.",
     ],
@@ -192,11 +192,11 @@ const RESET_STATIONS_INTERN: ResetStation[] = [
     welkom:
       "Welkom bij de Holistic Reset: een fysieke, mentale en emotionele reset. Gefeliciteerd met je keuze om te starten, het is bijzonder dat je jezelf de komende tijd op de eerste plaats zet. Dit is geen dieet en geen snelle oplossing: je geeft je lichaam de kans om weer te gaan werken zoals het bedoeld is. Alles staat hier voor je klaar, je hoeft zelf niets uit te zoeken. Begin met je startpunt vastleggen (kost een half uurtje, en je hebt er de hele reis plezier van) en stel jezelf de twee vragen uit de video: wil ik een optimale gezondheid, en ben ik bereid mijn leefstijl te veranderen? Zeg je daar ja op, tegen jezelf, dan ben je er klaar voor.",
     vandaagBelangrijk: [
-      "Maak foto's: voorkant, zijkant, achterkant en je gezicht. Rustige achtergrond, hele lichaam. Voor jezelf, niet voor anderen.",
+      "Maak foto's: voorkant, zijkant, achterkant en je gezicht. Rustige achtergrond, hele lichaam, en draag kleding waarin je contouren goed te zien zijn. Voor jezelf, niet voor anderen.",
       "Meet en noteer: gewicht, taille, heup en borst.",
       "Schrijf je startpunt op: wat wil je graag anders, en hoe voelt het nu? Hoe concreter, hoe leuker het teruglezen straks wordt.",
       "Calorieën tellen op de laaddagen doe je straks gewoon bij mij: zeg of stuur wat je eet en ik tel automatisch mee. Geen aparte app nodig.",
-      "Bewaar deze pagina en laat je begeleider weten wanneer je pakket binnen is en wanneer je start.",
+      "Bewaar deze pagina en kom hier elke dag even terug: dit is jouw vaste plek tijdens de hele reset. En laat je begeleider even weten wanneer je pakket binnen is en wanneer je start.",
     ],
     welLijst: [],
     nietLijst: [],
