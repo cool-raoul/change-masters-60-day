@@ -1559,7 +1559,7 @@ export default function MentorWereld({
   // gewoon in de tips-kaart voor als het moment daar is).
   const DAG_TIPS: Record<string, string[]> = {
     "zestien-dagen": [
-      "Neem vandaag een paar mespuntjes Keltisch zeezout, gewoon los of onder je tong.",
+      "Neem vandaag een paar mespuntjes Keltisch zeezout. Hoe maakt niet uit: onder of op je tong, extra door je eten, of opgelost in een glas water.",
       "Plan vandaag of morgen een voetenbadje: een paar eetlepels Keltisch zeezout in warm water.",
       "Boekweit is je vriend: boekweitcrackers, 100% boekweitpasta of pannenkoekjes van boekweitmeel.",
       "Drink vandaag lekker veel water, je lichaam is hard aan het werk.",

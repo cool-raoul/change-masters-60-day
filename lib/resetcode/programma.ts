@@ -142,7 +142,7 @@ const DARM_STATIONS: ResetStation[] = [
       "Peulvruchten zoals erwten en linzen",
     ],
     tips: [
-      "Neem dagelijks een paar mespuntjes Keltisch zeezout, gewoon los of onder je tong.",
+      "Neem dagelijks een paar mespuntjes Keltisch zeezout. Hoe maakt niet uit: onder of op je tong, extra door je eten, of opgelost in een glas water.",
       "Doe minimaal twee keer per week een voetenbadje met een paar eetlepels Keltisch zeezout in warm water.",
       "Plan genoeg rust in, je lichaam is aan het werk en dat mag je voelen.",
       "Boekweit is je geheime wapen: boekweitcrackers, boekweitmeel, 100% boekweitpasta, pannenkoekjes van boekweitmeel. Het is geen graan maar een zaadje, van nature glutenvrij en met een lage glycemische index; daarom past het zo goed in dit programma.",
