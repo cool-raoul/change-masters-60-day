@@ -727,13 +727,22 @@ export default function MentorWereld({
   const vorigeAantal = useRef(0);
   useEffect(() => {
     if (items.length !== vorigeAantal.current || mentorTypt) {
+      const eersteVulling = vorigeAantal.current === 0 && items.length > 0;
       const laatsteVanMij = items[items.length - 1]?.van === "ik";
       vorigeAantal.current = items.length;
       const el = scrollRef.current;
       if (!el) return;
-      // Alleen automatisch meescrollen als de lezer al (bijna) onderaan
-      // zit, of net zelf iets stuurde. Wie omhoog aan het teruglezen is,
-      // wordt niet meer naar beneden getrokken (feedback Raoul 23 juli).
+      // Bij binnenkomst DIRECT onderaan staan (geen tour langs de hele
+      // historie, feedback Raoul 24 juli); de tweede sprong vangt kaarten
+      // en video's op die net iets later hun hoogte krijgen.
+      if (eersteVulling) {
+        el.scrollTo({ top: el.scrollHeight });
+        setTimeout(() => el.scrollTo({ top: el.scrollHeight }), 350);
+        return;
+      }
+      // Daarna: alleen automatisch meescrollen als de lezer al (bijna)
+      // onderaan zit, of net zelf iets stuurde. Wie omhoog aan het
+      // teruglezen is, wordt niet naar beneden getrokken (23 juli).
       const bijOnderkant =
         el.scrollHeight - el.scrollTop - el.clientHeight < 260;
       if (bijOnderkant || laatsteVanMij) {
@@ -2006,6 +2015,9 @@ export default function MentorWereld({
         600,
       );
     }
+    // De "Verder met"-knop hoort ONDER de bevestiging te blijven staan
+    // (feedback Raoul 24 juli), anders lijkt de flow terug te springen.
+    knoppenNaarOnder();
   }
 
   // Fase-intro, bewust RUSTIG (feedback Raoul 12 juli: geen spervuur van
