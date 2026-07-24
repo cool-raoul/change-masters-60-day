@@ -3289,11 +3289,16 @@ export default function MentorWereld({
               deze namen in de ingrediëntenlijst, dan is het suiker. Twijfel
               je? Stuur me een foto van het etiket.
             </p>
-            <div className="max-h-56 overflow-y-auto chatscroll rounded-xl bg-black/30 px-3 py-2">
+            <div className="max-h-56 overflow-y-auto rounded-xl bg-black/30 px-3 py-2">
               <p className="text-[11px] text-white/70 leading-relaxed">
                 {SUIKER_NAMEN.join(" · ")}
               </p>
             </div>
+            <p className="text-[11px] text-emerald-300/80 mt-1.5">
+              ↕️ Scroll door het lijstje, er staan er ruim 150 in. Later nog
+              eens nodig? Typ gewoon &quot;suikerlijst&quot; en ik zet 'm
+              weer voor je klaar.
+            </p>
           </div>
         );
       case "wctips":

@@ -140,7 +140,9 @@ export function formatInname(d: DagInname): string {
     blok("😴 Voor het slapen", d.slapen),
   ]
     .filter(Boolean)
-    .join("\n");
+    // Witregel tussen de momenten: leesbaarder dan één blok tekst
+    // (feedback Raoul 24 juli).
+    .join("\n\n");
 }
 
 /**
