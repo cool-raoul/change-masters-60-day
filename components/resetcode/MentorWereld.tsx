@@ -1582,7 +1582,7 @@ export default function MentorWereld({
     ],
     stabilisatie: [
       "Test nieuwe dingen één voor één, dan weet je precies wat bij jou past.",
-      "Weeg jezelf elke dag rond hetzelfde moment, dan is je lijn eerlijk.",
+      "Weeg jezelf elke ochtend op een lege maag, na het plassen: dan is je lijn eerlijk.",
       "Wil je iets nieuws proberen vandaag? Vraag me eerst even of het in deze fase past.",
     ],
     "logisch-leven": [
@@ -1815,7 +1815,7 @@ export default function MentorWereld({
       const groet =
         uur < 12 ? "Goedemorgen! ☀️" : uur < 18 ? "Hoi! 👋" : "Goedenavond! 🌙";
       await mentorZegt(
-        `${groet} Even je dagelijkse check-in${dagNummer ? ` (dag ${dagNummer})` : ""}, je bent er in een halve minuut doorheen. 💚 Vul gerust ook je gewicht in (het eerlijkst is elke dag rond hetzelfde moment wegen), dan houd ik je voortgang voor je bij.`,
+        `${groet} Even je dagelijkse check-in${dagNummer ? ` (dag ${dagNummer})` : ""}, je bent er in een halve minuut doorheen. 💚 Vul gerust ook je gewicht in: het beste weegmoment is 's ochtends op een lege maag, na het plassen. Dan houd ik je voortgang voor je bij.`,
         900,
       );
     }
