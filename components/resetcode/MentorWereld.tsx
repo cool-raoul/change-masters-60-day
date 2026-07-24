@@ -2531,6 +2531,22 @@ export default function MentorWereld({
       logNaarServer([{ van: "klant", soort: "tekst", tekst: vraag }]);
     };
 
+    // Expliciete startdag in de chat ("ik wil morgen starten"): meteen
+    // écht doorvoeren in het systeem, niet alleen erover praten (bug 24
+    // juli: de teller bleef aftellen naar de oude datum en de begeleider
+    // kreeg geen seintje). kiesStart regelt opslag + seintje + vervolg.
+    const startWoord = t.match(
+      /^\s*ik\s+(?:wil|ga|start|begin)\s+(?:toch\s+)?(?:graag\s+)?(?:(?:starten|beginnen)\s+)?(vandaag|morgen|overmorgen)\s*(?:starten|beginnen)?\s*[!.]?\s*$/,
+    );
+    if (startWoord) {
+      const dagenErbij =
+        startWoord[1] === "vandaag" ? 0 : startWoord[1] === "morgen" ? 1 : 2;
+      const d = new Date(Date.now() + dagenErbij * 86_400_000);
+      const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      await kiesStart(iso, startWoord[1], false);
+      return true;
+    }
+
     // Startmoment aanpassen: toont het keuzekaartje opnieuw (de belofte
     // "typ 'ik start eerder'" moet echt werken).
     if (
