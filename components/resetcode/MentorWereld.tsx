@@ -2187,10 +2187,10 @@ export default function MentorWereld({
       });
     }
 
-    // Fase 2 (reset): twee korte profiel-vragen. De veg- en sport-
-    // documenten komen alleen bij wie ze nodig heeft (feedback Raoul
-    // 24 juli: de standaard documenten-lijst was veel te lang).
-    if (st.slug === "omschakeling") {
+    // Reset-voorbereiding: twee korte profiel-vragen, direct na de
+    // documenten (feedback Raoul 24 juli: dat is de logische plek). De
+    // veg- en sport-documenten komen alleen bij wie ze nodig heeft.
+    if (st.slug === "voorbereiding") {
       chunks.push({
         sleutel: "profiel",
         knopLabel: "twee korte vragen voor jou",
@@ -2413,7 +2413,7 @@ export default function MentorWereld({
       logNaarServer([{ van: "klant", soort: "tekst", tekst: echoVeg }]);
       if (jaVeg) {
         await mentorZegt(
-          "Goed om te weten! Dan staan deze speciaal voor jou klaar: weekmenu's en recepten voor fase 2, helemaal vegetarisch en vegan. En vraag me gerust om recepten, ik houd er vanaf nu rekening mee. 👇",
+          "Goed om te weten! Dan staan deze alvast speciaal voor jou klaar: weekmenu's en recepten voor fase 2, helemaal vegetarisch en vegan. En vraag me gerust om recepten, ik houd er vanaf nu rekening mee. 👇",
           1000,
         );
         await mentorKaart("docs-veg", "omschakeling", 600);
