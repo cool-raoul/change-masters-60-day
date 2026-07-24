@@ -919,7 +919,7 @@ export default function MentorWereld({
             const schemaVandaag = innameVoorDag(pakketRef.current, dagNummer);
             if (schemaVandaag) {
               await mentorZegt(
-                `📋 Jouw innames voor dag ${dagNummer}:\n\n${formatInname(schemaVandaag)}\n\nAfvinken kan de hele dag door via het 📋-knopje hierboven, dan weet je altijd waar je staat.`,
+                `📋 Jouw innames voor dag ${dagNummer}:\n\n${formatInname(schemaVandaag)}\n\nHandig om te weten: via het 📋-knopje bovenaan kun je per moment afvinken wat je al genomen hebt. Zo hoef je nooit te twijfelen of je de ochtend of de lunch al had, dat vergeet je anders zomaar. Puur voor jouw gemak, ik kijk niet mee.`,
                 900,
               );
               await wacht(600);
