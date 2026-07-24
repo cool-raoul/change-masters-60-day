@@ -1379,7 +1379,7 @@ export default function MentorWereld({
       if (dagenTotStart > 3) {
         await wacht(900);
         await mentorZegt(
-          `Mag ik nog één ding eerlijk zeggen? Als het lukt om eerder te beginnen, zou ik dat doen. Je zit er nú helemaal in, en lang vooruitschuiven maakt starten vaak alleen maar lastiger. Wat uit ervaring het fijnst werkt: voorbereiden terwijl je bestelling onderweg is, en starten zodra je producten binnen zijn. Wil je toch een andere dag kiezen, typ dan gewoon "ik start eerder" en ik pas het aan. En anders: ${label} is helemaal prima, dan zie ik je dan! 💚`,
+          `Mag ik nog één ding meegeven? Grote kans dat je deze datum bewust hebt gekozen, bijvoorbeeld omdat je producten er dan zijn, en dat is helemaal prima. Maar zijn ze eerder in huis dan je dacht? Begin dan gerust eerder: je zin is er nu al, dus waarom wachten. Typ dan gewoon "ik start eerder" en ik zet alles voor je klaar. En zo niet: dan staan we ${label} allebei klaar! 💚`,
           1100,
         );
       }
