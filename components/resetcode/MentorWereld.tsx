@@ -572,6 +572,7 @@ export default function MentorWereld({
   dueFaseKeuze,
   innamesVandaag,
   testModus,
+  dueWistje,
 }: {
   begeleiderNaam: string;
   /** Klant-modus: token van de klant-link; het gesprek wordt dan op de server bewaard. */
@@ -621,6 +622,8 @@ export default function MentorWereld({
   innamesVandaag?: string[];
   /** Test-reis-link van een founder: toont de dag-spring-balk. */
   testModus?: boolean;
+  /** Wist-je-moment dat vandaag aan de beurt is (eenmalige dag-tip). */
+  dueWistje?: { sleutel: string; tekst: string } | null;
 }) {
   const isKlant = Boolean(token);
   const verteldRef = useRef<Set<string>>(new Set(touchpointsAlVerteld ?? []));
@@ -919,6 +922,7 @@ export default function MentorWereld({
             dueTouchpoint ||
             dueWeekTerugblik ||
             dueFaseKeuze ||
+            dueWistje ||
             (dueKennis && dueKennis.length > 0),
         );
         // ÉÉN opeenvolgende flow bij terugkomen (voorheen twee parallelle
@@ -1014,6 +1018,14 @@ export default function MentorWereld({
               );
             } else if (dueTouchpoint) {
               await speelTouchpoint(dueTouchpoint);
+            } else if (dueWistje) {
+              // Wist-je-moment: geruststelling/tip uit het eigen materiaal
+              // op de dag dat die relevant wordt (akkoord Raoul 24 juli).
+              await mentorZegt(
+                dueWistje.tekst.replaceAll("{{naam}}", begeleiderNaam),
+                1200,
+              );
+              markeerTouchpoint(dueWistje.sleutel as TouchpointSleutel);
             } else if (dueWeekTerugblik) {
               await speelWeekTerugblik(dueWeekTerugblik);
             } else if (dueFaseKeuze) {
@@ -1349,7 +1361,7 @@ export default function MentorWereld({
   // (check-in, dag 10, einde) tellen vanaf deze datum.
   async function toonStartKeuze(duur?: number) {
     await mentorZegt(
-      `Dan nu het belangrijkste: wanneer ga jij van start? 🚀 Kies hieronder jouw startmoment, dan weet ${begeleiderNaam} het ook meteen en tel ik ${duur ? `je ${duur} dagen` : "je dagen"} precies vanaf jouw dag 1. Kleine tip: de meeste mensen starten vandaag of morgen. Je zit er nu helemaal in, en lang vooruitschuiven maakt starten vaak alleen maar lastiger. Wat uit ervaring het fijnst werkt: gebruik de dagen dat je bestelling onderweg is voor je voorbereiding, en start zodra je producten binnen zijn.`,
+      `Dan nu het belangrijkste: wanneer ga jij van start? 🚀 Kies hieronder jouw startmoment, dan weet ${begeleiderNaam} het ook meteen en ${duur === 2 ? "beginnen we op jouw dag 1 gewoon met je twee laaddagen" : duur ? `tel ik je ${duur} dagen precies vanaf jouw dag 1` : "tel ik je dagen precies vanaf jouw dag 1"}. Kleine tip: de meeste mensen starten vandaag of morgen. Je zit er nu helemaal in, en lang vooruitschuiven maakt starten vaak alleen maar lastiger. Wat uit ervaring het fijnst werkt: gebruik de dagen dat je bestelling onderweg is voor je voorbereiding, en start zodra je producten binnen zijn.`,
       1000,
     );
     const bid = ++bidTeller.current;
@@ -3691,10 +3703,10 @@ export default function MentorWereld({
                 // de standaard-dagen ertussen zijn identiek (feedback
                 // Raoul 24 juli: niet 15x hoeven klikken).
                 const MOMENT_DAGEN: Record<string, number[]> = {
-                  "darm/zestien-dagen": [1, 5, 7, 10, 14, 15, 16, 17, 18],
+                  "darm/zestien-dagen": [1, 2, 5, 7, 10, 14, 15, 16, 17, 18],
                   "reset/laaddagen": [1, 2],
-                  "reset/omschakeling": [1, 7, 14, 16, 20, 21, 22, 40],
-                  "reset/stabilisatie": [1, 7, 14, 20, 21, 22],
+                  "reset/omschakeling": [1, 2, 7, 9, 12, 14, 16, 17, 20, 21, 22, 40],
+                  "reset/stabilisatie": [1, 3, 7, 10, 14, 20, 21, 22],
                   "reset/logisch-leven": [1, 7, 14, 21, 22],
                 };
                 const lijst =

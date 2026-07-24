@@ -278,6 +278,7 @@ export default async function KlantLinkPagina({
   let dueTouchpoint:
     | "kern-verhaal"
     | "reset-complimenten"
+    | "reset-doorgeven"
     | "darm-einde"
     | null = null;
   if (!ctx.isBouwer && dagNummer != null) {
@@ -303,6 +304,17 @@ export default async function KlantLinkPagina({
       !ctx.touchpoints.includes("reset-complimenten")
     ) {
       dueTouchpoint = "reset-complimenten";
+    }
+    // Fase 3, dag 10: subtiel doorgeef-moment (feedback Raoul 24 juli:
+    // ook in fase 3 heel licht iets over aanbevelen).
+    if (
+      !dueTouchpoint &&
+      ctx.programmaSlug === "reset" &&
+      ctx.stationSlug === "stabilisatie" &&
+      dagNummer >= 10 &&
+      !ctx.touchpoints.includes("reset-doorgeven")
+    ) {
+      dueTouchpoint = "reset-doorgeven";
     }
     // Darm eigen-ervaring/webshop-opvolger: op dag 15, vóór mensen na
     // hun 16 dagen afhaken (feedback Raoul 23 juli: verdeling over dag
@@ -429,6 +441,13 @@ export default async function KlantLinkPagina({
       dueFaseKeuze = { fase: "darm-vooruitblik", dag: dagNummer };
     }
   }
+  // Wist-je-momenten: geruststellingen/tips uit het eigen materiaal op
+  // de dag waarop ze relevant worden (akkoord Raoul 24 juli).
+  const { bepaalDueWistje } = await import("@/lib/resetcode/wistjes");
+  const dueWistje = !ctx.isBouwer
+    ? bepaalDueWistje(ctx.programmaSlug, ctx.stationSlug, dagNummer, ctx.touchpoints)
+    : null;
+
   if (ctx.programmaSlug === "reset" && dagNummer != null) {
     // Fase 2: keuze-moment vanaf dag 20 (vooruitkijkend, feedback Raoul
     // 22 juli). Wie "ik blijf in fase 2" koos, krijgt de vraag niet
@@ -503,6 +522,7 @@ export default async function KlantLinkPagina({
         dueFaseKeuze={dueFaseKeuze}
         innamesVandaag={innamesVandaag}
         testModus={testModus}
+        dueWistje={dueWistje ? { sleutel: dueWistje.sleutel, tekst: dueWistje.tekst } : null}
       />
     </div>
   );

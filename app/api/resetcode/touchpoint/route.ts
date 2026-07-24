@@ -16,6 +16,7 @@ const GELDIG = [
   "kern-verhaal",
   "darm-einde",
   "reset-complimenten",
+  "reset-doorgeven",
   "reset-afronding",
   "basis-week3",
   "basis-groeien",
@@ -31,6 +32,8 @@ const GELDIG = [
 const WEEK_TERUGBLIK = /^week-terugblik-\d{1,2}$/;
 // Einde-markering per programma (doorgroei-route).
 const PROGRAMMA_EINDE = /^programma-einde-(darm|reset|producten)$/;
+// Wist-je-momenten (lib/resetcode/wistjes.ts).
+const WISTJE = /^wistje-[a-z0-9-]{1,40}$/;
 
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => ({}));
@@ -39,7 +42,8 @@ export async function POST(req: NextRequest) {
   if (
     !GELDIG.includes(sleutel) &&
     !WEEK_TERUGBLIK.test(sleutel) &&
-    !PROGRAMMA_EINDE.test(sleutel)
+    !PROGRAMMA_EINDE.test(sleutel) &&
+    !WISTJE.test(sleutel)
   ) {
     return Response.json({ error: "Onbekende sleutel" }, { status: 400 });
   }

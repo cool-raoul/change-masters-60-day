@@ -11,6 +11,8 @@ export type TouchpointSleutel =
   | "kern-verhaal"
   | "darm-einde"
   | "reset-complimenten"
+  // Fase 3, subtiel: iets moois doorgeven aan iemand die het gunt.
+  | "reset-doorgeven"
   | "reset-afronding"
   | "basis-week3"
   | "basis-groeien"
@@ -32,7 +34,9 @@ export type TouchpointSleutel =
   // de eenmaligheids-markering.
   | `week-terugblik-${number}`
   // Einde-markering per programma (doorgroei-route).
-  | `programma-einde-${string}`;
+  | `programma-einde-${string}`
+  // Wist-je-momenten (lib/resetcode/wistjes.ts): eenmalige dag-tips.
+  | `wistje-${string}`;
 
 /** Het volledige kern-verhaal (dag ~7 darm, ~week 1 fase 2, of groeien-stap). */
 export function kernVerhaal(naam: string): string[] {
@@ -61,6 +65,10 @@ export function touchpointTekst(
         kernAlVerteld
           ? `Goed om te weten: precies hier begint voor veel mensen hun webshop-verhaal. Met jouw resultaten kun je heel veel mensen nieuwsgierig maken, offline én online. En je hoeft daar niks voor te kunnen: er is een stappenplan dat je precies laat zien hoe je het vertelt en deelt, zodat je de juiste geïnteresseerden op de goede manier helpt, net zoals jij geholpen bent. Nieuwsgierig hoe dat eruitziet? Vraag het aan ${naam}.`
           : `Goed om te weten: iedereen die deze producten gebruikt kan een gratis eigen webshop krijgen, en precies bij die eerste complimenten begint voor veel mensen dat verhaal. Met jouw resultaten kun je heel veel mensen nieuwsgierig maken, offline én online, en je hoeft daar niks voor te kunnen: er is een stappenplan dat je precies laat zien hoe je het vertelt en deelt. Nieuwsgierig hoe dat eruitziet? Vraag het aan ${naam}.`,
+      ];
+    case "reset-doorgeven":
+      return [
+        `Kleine gedachte nu je zo stevig bezig bent: grote kans dat er de afgelopen weken iemand in je omgeving iets aan je gemerkt heeft. Denk je bij iemand weleens "dit gun ik jou ook"? Dan is dat heel makkelijk door te geven: breng diegene gewoon even in contact met ${naam}, net zoals jij ooit op weg geholpen bent. Meer hoeft het niet te zijn. 💚`,
       ];
     case "reset-afronding":
       return [
