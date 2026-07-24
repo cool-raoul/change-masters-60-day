@@ -1903,7 +1903,7 @@ export default function MentorWereld({
           );
           await wacht(700);
           await mentorZegt(
-            `En mag ik je even ergens aan herinneren? Op ${dagWoord} schreef je zelf op: ${JSON.stringify(laatste.notitie)}. Dat was jij ook. Zware dagen horen erbij, je lichaam is gewoon aan het werk. Vertel me gerust wat je merkt, ik denk met je mee. 💚`,
+            `En mag ik je even ergens aan herinneren? Op ${dagWoord} schreef je zelf op: ${JSON.stringify(laatste.notitie)}. Dat was jij ook, en dat komt terug. Wees vandaag gewoon lief voor jezelf. 💚`,
             1100,
           );
         }
