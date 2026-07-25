@@ -3225,6 +3225,15 @@ export default function MentorWereld({
     if (station?.slug !== "laaddagen") return false;
     setBezig(true);
     setMentorTypt(true);
+    // Gesprek-context mee: "ik heb het ontbijt gegeten dat jij voorstelde"
+    // is zonder de eerdere berichten onherleidbaar (feedback Raoul 25 juli).
+    const historieK = items
+      .filter((i): i is Extract<ChatItem, { soort: "tekst" }> => i.soort === "tekst")
+      .slice(-8)
+      .map((i) => ({
+        rol: i.van === "ik" ? ("gebruiker" as const) : ("mentor" as const),
+        tekst: i.tekst,
+      }));
     try {
       const res = await fetch("/api/resetcode/kcal", {
         method: "POST",
@@ -3234,6 +3243,7 @@ export default function MentorWereld({
           vraag,
           foto: foto ?? undefined,
           huidigTotaal: kcalTotaal,
+          geschiedenis: historieK,
         }),
       });
       const data = (await res.json().catch(() => null)) as {

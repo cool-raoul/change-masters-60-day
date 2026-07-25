@@ -56,6 +56,19 @@ export async function POST(req: NextRequest) {
       return new Response("ongeldige foto", { status: 400 });
     }
     if (!vraag && !foto) return new Response("leeg bericht", { status: 400 });
+    // Recente gespreksgeschiedenis: nodig om verwijzingen te herleiden
+    // ("ik heb het ontbijt gegeten dat jij voorstelde" → de onderdelen
+    // uit dat eerdere voorstel).
+    type HistBericht = { rol?: string; tekst?: string };
+    const geschiedenis = (
+      Array.isArray(body.geschiedenis) ? (body.geschiedenis as HistBericht[]) : []
+    )
+      .filter((b) => b && typeof b.tekst === "string" && b.tekst.length > 0)
+      .slice(-8)
+      .map((b) => ({
+        rol: b.rol === "gebruiker" ? ("user" as const) : ("assistant" as const),
+        tekst: String(b.tekst).slice(0, 1500),
+      }));
 
     // Auth: token (echte klant) of founder/tester (preview).
     let klantCtx = null as Awaited<ReturnType<typeof pakResetKlantContext>>;
@@ -88,6 +101,7 @@ Beoordeel het bericht (en eventuele foto van eten of een verpakking):
 - Is dit een melding van iets dat de persoon GEGETEN/GEDRONKEN heeft (of nu gaat eten)? Dan is het een eet-melding.
 - Vragen ("mag ik...", "hoeveel kcal zit er in...?" zonder dat het gegeten is), twijfel of iets anders: GEEN eet-melding.
 - Correcties op het laatst gemelde item ("dat was een grote", "haal die laatste weg") herken je ook.
+- Verwijst het bericht naar iets uit het eerdere gesprek ("ik heb het ontbijt gegeten dat jij voorstelde", "de lunch van je dagschema")? Zoek dan in de gespreksgeschiedenis op wélke onderdelen dat waren en schat dié. Alleen wat de persoon zegt gegeten te hebben; niet het hele voorstel als er maar een deel is gegeten.
 Schat per gegeten onderdeel de kcal realistisch (Nederlandse porties; bij een verpakkingsfoto: lees de voedingswaarde af en reken de portie om).
 Antwoord UITSLUITEND met JSON: {"eten": boolean, "actie": "toevoegen" | "verwijder_laatste", "items": [{"omschrijving": string, "kcal": number}]}
 Bij geen eet-melding: {"eten": false, "actie": "toevoegen", "items": []}.`;
@@ -104,6 +118,7 @@ Bij geen eet-melding: {"eten": false, "actie": "toevoegen", "items": []}.`;
       response_format: { type: "json_object" },
       messages: [
         { role: "system", content: systeem },
+        ...geschiedenis.map((b) => ({ role: b.rol, content: b.tekst })),
         { role: "user", content: userContent },
       ],
     });
