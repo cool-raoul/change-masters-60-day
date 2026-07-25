@@ -58,7 +58,7 @@ export const WISTJES: Wistje[] = [
     station: "stabilisatie",
     dag: 3,
     tekst:
-      "Goed om te onthouden in deze fase: schommelen rond je ankerpunt is precies de bedoeling. Fase 3 draait niet om verder omlaag, maar om stevig staan: rond een kilo om je eindgewicht van fase 2 bewegen is gewoon goed bezig. 💚",
+      "Even goed om te weten nu je in fase 3 zit: je hoeft hier niet verder af te vallen. Je gewicht aan het einde van fase 2 is je ankerpunt, en daar mag je ongeveer een kilo omheen schommelen. Blijf je daar in de buurt? Dan doe je het gewoon goed. 💚",
   },
   {
     sleutel: "wistje-darm-wennen",

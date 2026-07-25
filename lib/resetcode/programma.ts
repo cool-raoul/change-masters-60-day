@@ -375,7 +375,7 @@ const RESET_STATIONS_INTERN: ResetStation[] = [
     duur: "21 dagen",
     kern: "Vetten rustig terugbrengen en je nieuwe balans laten wennen.",
     welkom:
-      "Fase 2 is gelukt, echt knap van je! In fase 3 mag er weer meer. Je voegt vetten stap voor stap toe en geeft je lichaam drie weken de tijd om te wennen aan waar je nu staat. Deze fase draait niet om verder omlaag, maar om stevig staan.",
+      "Fase 2 is gelukt, echt knap van je! In fase 3 mag er weer meer. Je voegt vetten stap voor stap toe en geeft je lichaam drie weken de tijd om te wennen aan waar je nu staat. Je hoeft in deze fase niet verder af te vallen; het gaat erom dat je gewicht blijft staan waar het nu is.",
     vandaagBelangrijk: [
       "Voeg vetten langzaam toe: één nieuw dingetje per dag. Dag één je eitje in boter, dag twee een stukje kaas door de salade, daarna eens een yoghurt, en zo bouw je rustig op.",
       "Alle groente en fruit mag weer, ook wortel, en alle soorten vlees en vis.",
