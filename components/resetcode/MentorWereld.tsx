@@ -63,7 +63,9 @@ type VerderActie =
   | { type: "opmaak-rustig" }
   // Fase 2 (reset): korte profiel-vragen (veg/vegan en sporten).
   | { type: "veg-antwoord"; ja: boolean }
-  | { type: "sport-antwoord"; ja: boolean };
+  | { type: "sport-antwoord"; ja: boolean }
+  // Wil je dat de Mentor een opbouw-schema voor jouw sport maakt?
+  | { type: "sportschema-antwoord"; ja: boolean };
 
 type Checkin = {
   datum: string;
@@ -640,6 +642,10 @@ export default function MentorWereld({
   >([]);
   // Vervolg-punt van de profiel-vragen (veg/sport) in de fase 2-flow.
   const profielVervolgRef = useRef<{ index: number; stationSlug: string } | null>(null);
+  // Waar terwijl de klant sport-vragen beantwoordt voor het opbouw-schema:
+  // de fase-flow pakt de draad pas op na het eerstvolgende Mentor-antwoord
+  // (feedback Raoul 25 juli: de schema-vraag moet een echt pauzemoment zijn).
+  const sportSchemaVervolgRef = useRef(false);
   const bidTeller = useRef(0);
   // Check-in / dagboek: reeks in het geheugen zodat de voortgangs-kaart
   // meteen klopt na een nieuwe check-in.
@@ -2499,20 +2505,38 @@ export default function MentorWereld({
       setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: echoSport }]);
       logNaarServer([{ van: "klant", soort: "tekst", tekst: echoSport }]);
       if (jaSport) {
+        // De flow pauzeert hier: eerst de schema-vraag (met knoppen)
+        // beantwoorden, dan pas verder (feedback Raoul 25 juli).
         await speelSportUitleg();
-      } else {
-        await mentorZegt("Helemaal prima! Bewegen mag altijd, maar niks moet. 💚", 800);
+        return;
       }
-      // Vervolg van de fase-flow oppakken waar we gebleven waren.
-      const vervolgP = profielVervolgRef.current;
-      profielVervolgRef.current = null;
-      if (vervolgP) {
-        if (vervolgP.index + 1 < chunkPlanRef.current.length) {
-          toonVerderKnop(vervolgP.index + 1, vervolgP.stationSlug);
-        } else if (programma && station) {
-          await sluitStationAf(programma, station);
-        }
+      await mentorZegt("Helemaal prima! Bewegen mag altijd, maar niks moet. 💚", 800);
+      await hervatProfielFlow();
+      return;
+    }
+    if (item.actie.type === "sportschema-antwoord") {
+      const jaSchema = item.actie.ja;
+      setItems((b) =>
+        b.filter((x) => !(x.soort === "verder-knop" && x.actie.type === "sportschema-antwoord")),
+      );
+      const echoSchema = jaSchema ? "Ja, maak mijn opbouw-schema 📋" : "Nee, dit is genoeg zo";
+      setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: echoSchema }]);
+      logNaarServer([{ van: "klant", soort: "tekst", tekst: echoSchema }]);
+      if (jaSchema) {
+        await mentorZegt(
+          "Kom maar door! 💪 Drie korte vragen:\n\n1. Wat voor sport doe je normaal, en hoe vaak per week?\n2. Op welk niveau train je: rustig voor jezelf, fanatiek, of voluit?\n3. Op welke dagen train je het liefst?\n\nTyp of spreek je antwoorden gewoon in één bericht, dan maak ik jouw opbouw-schema.",
+          1000,
+        );
+        // De fase-flow wacht nu tot het schema er is: hij pakt de draad
+        // vanzelf op na het eerstvolgende Mentor-antwoord.
+        sportSchemaVervolgRef.current = profielVervolgRef.current != null;
+        return;
       }
+      await mentorZegt(
+        "Helemaal goed! De sport-regels hierboven zijn genoeg om op te varen, en wil je later alsnog een schema: zeg het gewoon. 💪",
+        900,
+      );
+      await hervatProfielFlow();
       return;
     }
     if (item.actie.type === "programma") {
@@ -2669,9 +2693,30 @@ export default function MentorWereld({
     await mentorKaart("docs-sport", "omschakeling", 600);
     await wacht(700);
     await mentorZegt(
-      "En zal ik een opbouw-schema voor jouw sport maken, dat precies met de fases meegroeit? Vertel me gewoon wat je normaal doet, dan stel ik je eerst een paar korte vragen. Je kunt het daarna ook altijd nog naast het advies van je eigen sportinstructeur leggen. 💪",
+      "En zal ik een opbouw-schema voor jouw sport maken, dat precies met de fases meegroeit? Dan stel ik je eerst drie korte vragen. Je kunt het daarna ook altijd nog naast het advies van je eigen sportinstructeur leggen. 👇",
       900,
     );
+    const bidJa = ++bidTeller.current;
+    const bidNee = ++bidTeller.current;
+    setItems((b) => [
+      ...b,
+      { van: "mentor", soort: "verder-knop", bid: bidJa, label: "📋 Ja, maak mijn opbouw-schema", actie: { type: "sportschema-antwoord", ja: true } },
+      { van: "mentor", soort: "verder-knop", bid: bidNee, label: "👍 Nee, dit is genoeg zo", actie: { type: "sportschema-antwoord", ja: false } },
+    ]);
+  }
+
+  // Vervolg van de fase-flow oppakken waar de profiel-vragen (veg/sport)
+  // hem pauzeerden.
+  async function hervatProfielFlow() {
+    const vervolgP = profielVervolgRef.current;
+    profielVervolgRef.current = null;
+    if (vervolgP) {
+      if (vervolgP.index + 1 < chunkPlanRef.current.length) {
+        toonVerderKnop(vervolgP.index + 1, vervolgP.stationSlug);
+      } else if (programma && station) {
+        await sluitStationAf(programma, station);
+      }
+    }
   }
 
   // Alvast lezen over een (volgende) fase: wél de informatie, géén
@@ -3261,6 +3306,13 @@ export default function MentorWereld({
     } finally {
       setBezig(false);
       knoppenNaarOnder();
+    }
+    // Stond de fase-flow in de wacht voor het sport-schema? Dan nu, na
+    // het Mentor-antwoord (het schema), de draad weer oppakken.
+    if (sportSchemaVervolgRef.current) {
+      sportSchemaVervolgRef.current = false;
+      await wacht(1200);
+      await hervatProfielFlow();
     }
   }
 
