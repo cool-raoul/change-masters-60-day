@@ -71,6 +71,10 @@ export function bouwResetMentorPrompt(opties: {
   checkinOverzicht?: string | null;
   /** Beantwoorde team-kennis (vraag/antwoord-paren van de founders). */
   teamKennis?: string | null;
+  /** Klant gaf door vegetarisch/vegan te eten: alles plantaardig afstemmen. */
+  profielVeg?: boolean;
+  /** Klant gaf door te (blijven) sporten tijdens het programma. */
+  profielSport?: boolean;
 }): string {
   const {
     rol,
@@ -82,6 +86,8 @@ export function bouwResetMentorPrompt(opties: {
     pakket,
     checkinOverzicht,
     teamKennis,
+    profielVeg,
+    profielSport,
   } = opties;
   const programma = programmaVoor(programmaSlug);
   const station = stationVoor(programmaSlug, stationSlug);
@@ -125,6 +131,15 @@ VOOR EEN MEMBER GELDT:
         : `\nPAKKET NOG ONBEKEND: ${voornaam} volgt Darmen in Balans maar heeft nog niet doorgegeven welk pakket (basis = rode schema met 5 producten, plus = blauwe schema met 8 producten). Vraag er vriendelijk naar zodra het voor je antwoord uitmaakt, of zeg dat ze even op het pakket-kaartje kunnen tikken.\n`
       : "";
 
+  const profielBlok = [
+    profielVeg
+      ? `\nVEGETARISCH/VEGAN (harde randvoorwaarde): ${voornaam} heeft doorgegeven vegetarisch of vegan te eten. ALLES wat jij voorstelt (recepten, dagschema's, weekmenu's, voorbeelden, tussendoortjes) is vegetarisch: nooit vlees, vis of gevogelte voorstellen, ook niet terloops als voorbeeld. Gebruik de vegetarische en vegan weekmenu's van het programma als basis en blijf tegelijk ALTIJD binnen de fase-regels (die gaan voor). Vraagt ${voornaam} zelf expliciet om iets met vlees of vis (bijvoorbeeld voor huisgenoten), dan mag je daarbij helpen, maar begin er nooit zelf over.\n`
+      : "",
+    profielSport
+      ? `\nSPORTER: ${voornaam} heeft doorgegeven te (blijven) sporten. Houd hier actief rekening mee: pas de sport-regels van het programma toe (fase 2 uitsluitend krachttraining op zo'n 60%, géén cardio; extra eiwit vóór en (een halve) Triple Protein Shake ná het trainen; minstens 6x per dag eten; fase 3 rustig opbouwen, ook cardio; fase 4 vrij) en denk mee over eten rond trainingsdagen.\n`
+      : "",
+  ].join("");
+
   const kennisBlok = teamKennis
     ? `
 === TEAM-KENNIS (antwoorden van het team op eerdere vragen; gebruik ze actief) ===
@@ -147,7 +162,7 @@ Zo gebruik je dit dagboek (kompas-principe: kijken naar wat WÉL werkt):
 
   return `Je bent de Mentor van ELEVA voor het Resetcode-programma. Je spreekt Nederlands, warm en gewoon, zoals de mensen achter dit programma zelf praten: "je doet het niet alleen", "zet hem op", "wees lief voor jezelf". Kort waar het kan, uitgebreider alleen als de vraag erom vraagt.
 ${rolBlok}
-${pakketBlok}${dagboekBlok}${kennisBlok}
+${pakketBlok}${profielBlok}${dagboekBlok}${kennisBlok}
 
 FASE-DISCIPLINE (de allerbelangrijkste kwaliteitsregel, gaat vóór alles):
 - Toets ELK voedings- en leefstijladvies eerst stil aan de fase waar ${voornaam} NU zit, en benoem die fase expliciet in je antwoord.

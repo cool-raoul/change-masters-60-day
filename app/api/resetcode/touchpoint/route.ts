@@ -27,6 +27,8 @@ const GELDIG = [
   "darm-vooruitblik",
   "darm-opmaak-uitleg",
   "darm-opmaak-rustig",
+  "profiel-veg",
+  "profiel-sport",
 ];
 // Week-terugblikken zijn genummerd (week-terugblik-1, -2, ...).
 const WEEK_TERUGBLIK = /^week-terugblik-\d{1,2}$/;

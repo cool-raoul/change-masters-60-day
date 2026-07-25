@@ -208,6 +208,10 @@ export async function POST(req: NextRequest) {
           : null),
       checkinOverzicht,
       teamKennis,
+      // Profiel-antwoorden (veg/sport) reizen mee via de touchpoints op
+      // de klant-link: één keer gekozen = de Mentor weet het overal.
+      profielVeg: klantCtx?.touchpoints.includes("profiel-veg") ?? false,
+      profielSport: klantCtx?.touchpoints.includes("profiel-sport") ?? false,
     });
 
     // Klant-vraag meteen bewaren (ongeacht of de AI-call slaagt).

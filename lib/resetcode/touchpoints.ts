@@ -36,7 +36,11 @@ export type TouchpointSleutel =
   // Einde-markering per programma (doorgroei-route).
   | `programma-einde-${string}`
   // Wist-je-momenten (lib/resetcode/wistjes.ts): eenmalige dag-tips.
-  | `wistje-${string}`;
+  | `wistje-${string}`
+  // Profiel-antwoorden (reset): eenmaal gegeven, overal onthouden.
+  // De Mentor-AI en de documenten-kaarten stemmen hierop af.
+  | "profiel-veg"
+  | "profiel-sport";
 
 /** Het volledige kern-verhaal (dag ~7 darm, ~week 1 fase 2, of groeien-stap). */
 export function kernVerhaal(naam: string): string[] {

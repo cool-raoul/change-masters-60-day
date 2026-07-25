@@ -2248,6 +2248,21 @@ export default function MentorWereld({
             1100,
           );
           await mentorKaart("documenten", st.slug, 700);
+          // Vegetariër/veganist? Dan horen de veg-documenten er bij elke
+          // reset-fase gewoon bij (feedback Raoul 25 juli: één keer
+          // gekozen = overal doorgevoerd).
+          if (
+            prog.slug === "reset" &&
+            st.slug !== "voorbereiding" &&
+            verteldRef.current.has("profiel-veg")
+          ) {
+            await wacht(600);
+            await mentorZegt(
+              "En omdat jij vegetarisch of vegan eet, staan deze er speciaal voor jou bij. 👇",
+              800,
+            );
+            await mentorKaart("docs-veg", "omschakeling", 600);
+          }
         },
       });
     }
@@ -2508,6 +2523,9 @@ export default function MentorWereld({
       setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: echoVeg }]);
       logNaarServer([{ van: "klant", soort: "tekst", tekst: echoVeg }]);
       if (jaVeg) {
+        // Blijvend onthouden: documenten-kaarten én de Mentor-AI stemmen
+        // vanaf nu alles op vegetarisch/vegan af (feedback Raoul 25 juli).
+        markeerTouchpoint("profiel-veg");
         await mentorZegt(
           "Goed om te weten! Dan staan deze alvast speciaal voor jou klaar: weekmenu's en recepten voor fase 2, helemaal vegetarisch en vegan. En vraag me gerust om recepten, ik houd er vanaf nu rekening mee. 👇",
           1000,
@@ -2536,6 +2554,8 @@ export default function MentorWereld({
       setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: echoSport }]);
       logNaarServer([{ van: "klant", soort: "tekst", tekst: echoSport }]);
       if (jaSport) {
+        // Blijvend onthouden voor de Mentor-AI (sport-regels per fase).
+        markeerTouchpoint("profiel-sport");
         // De flow pauzeert hier: eerst de schema-vraag (met knoppen)
         // beantwoorden, dan pas verder (feedback Raoul 25 juli).
         await speelSportUitleg();
@@ -3036,6 +3056,7 @@ export default function MentorWereld({
       (/(recept|menu|document|lijst)/.test(t) || /^\s*ik (ben|eet) (vegetari\w+|vegan|plantaardig)\s*[!.]?\s*$/.test(t))
     ) {
       zeg();
+      markeerTouchpoint("profiel-veg");
       await mentorZegt(
         "Goed om te weten! Deze staan speciaal voor jou klaar, en ik houd er in mijn recepten rekening mee. 👇",
         900,

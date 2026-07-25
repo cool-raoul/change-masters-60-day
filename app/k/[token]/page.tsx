@@ -151,6 +151,10 @@ export default async function KlantLinkPagina({
     "wctips",
     "videotips",
     "videodag10",
+    // Ontbraken eerst: veg- en sport-documenten verdwenen daardoor uit
+    // de historie bij elke herlaad (bug Raoul 25 juli).
+    "docs-veg",
+    "docs-sport",
   ] as const;
   type KaartNaam = (typeof KAARTEN)[number];
   const beginItems = chats
