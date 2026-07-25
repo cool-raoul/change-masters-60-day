@@ -82,7 +82,13 @@ export async function POST(req: NextRequest) {
     const eerste = metGewicht[0].gewicht as number;
     const delta = Math.round((gewicht - eerste) * 10) / 10;
     if (delta < 0) verschilTekst = ` Je bent al ${Math.abs(delta)} kilo lichter dan bij je start 💪`;
-    else if (delta > 0) verschilTekst = ` (${delta} kilo t.o.v. je start; schommelen hoort erbij, wacht rustig op de woosh)`;
+    else if (delta > 0)
+      // Fase-bewust (feedback Raoul 25 juli): op de laaddagen is aankomen
+      // juist de bedoeling; daarbuiten geen onverklaard "woosh"-jargon.
+      verschilTekst =
+        ctx.stationSlug === "laaddagen"
+          ? ` En ${delta} kilo erbij sinds je start: helemaal normaal, dat hoort bij je laaddagen (sommigen komen er wel 2 of 3 kilo bij). Zodra fase 2 begint gaat dat er snel weer af, dus maak je geen zorgen.`
+          : ` (${delta} kilo t.o.v. je start; schommelen hoort erbij, vaak is het vocht. Kijk naar de lijn over meerdere dagen, niet naar één ochtend.)`;
   }
 
   const stemDeel = stemming
