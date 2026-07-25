@@ -1142,10 +1142,13 @@ export default function MentorWereld({
                     ? `Belangrijk moment: je zit op dag ${dueFaseKeuze.dag} van fase 2, en 40 dagen is echt het maximum. Het is tijd om door te gaan naar fase 3, de stabilisatie. Overleg vandaag nog even met ${begeleiderNaam} als je dat nog niet hebt gedaan, en druk daarna op de knop hieronder. 👇`
                     : dueFaseKeuze.dag <= 20
                       ? `Even vooruitkijken naar iets moois: morgen zitten je 21 dagen van fase 2 erop! 🎉 Dan is er een keuze, en die maak je het liefst samen met ${begeleiderNaam}: nog even doorgaan met fase 2 (dat mag, tot maximaal 40 dagen totaal), of door naar fase 3, de stabilisatie. Wil je alvast lezen wat fase 3 inhoudt? Dat kan met de leesknop, dan verandert er nog niks. Morgen staat ook de knop naar fase 3 voor je klaar. 👇`
-                      : `Je 21 dagen van fase 2 zitten erop! 🎉 Kies wanneer jij er klaar voor bent, het liefst samen met ${begeleiderNaam}: doorgaan met fase 2 (tot maximaal 40 dagen) of door naar fase 3. 👇`,
+                      : `Je 21 dagen van fase 2 zitten erop! 🎉 Kies wanneer jij er klaar voor bent, het liefst samen met ${begeleiderNaam}: doorgaan met fase 2 (tot maximaal 40 dagen) of door naar fase 3. Wil je eerst nog eens nalezen wat fase 3 inhoudt? Vraag me gewoon om "uitleg over fase 3". 👇`,
                   1200,
                 );
-                if (!dueFaseKeuze.max) {
+                // De leesknop hoort bij de vooruitblik van dag 20; staat
+                // de echte keuze er (dag 21+), dan alleen de twee keuzes
+                // (feedback Raoul 25 juli: drie knoppen is te druk).
+                if (!dueFaseKeuze.max && dueFaseKeuze.dag <= 20) {
                   inkijkKnop("stabilisatie", "📖 Alvast lezen: wat is fase 3?");
                 }
                 // De echte fase 3-knop pas vanaf dag 21: fase 2 duurt
