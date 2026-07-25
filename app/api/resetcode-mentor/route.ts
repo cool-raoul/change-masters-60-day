@@ -228,7 +228,10 @@ export async function POST(req: NextRequest) {
     // "flexibiliteit" in fase 2, bug 13 juli). Fase-discipline is de kern
     // van dit product; het kosten-vangnet zit al in het vragen-quotum.
     const model = "gpt-4o";
-    const maxTokens = foto || vraag.length > ZWAAR_MODEL_DREMPEL_TEKENS ? 1000 : 700;
+    // Ruime antwoord-limiet (feedback Raoul 25 juli): recepten en
+    // weekmenu's moeten zo compleet kunnen zijn als ChatGPT zelf zou
+    // geven; de oude 700 knelde en maakte de Mentor summier.
+    const maxTokens = foto || vraag.length > ZWAAR_MODEL_DREMPEL_TEKENS ? 1800 : 1200;
 
     const apiMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
       { role: "system", content: systeemPrompt },
