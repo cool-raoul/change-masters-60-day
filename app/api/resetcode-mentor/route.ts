@@ -14,6 +14,7 @@ import {
 } from "@/lib/resetcode/klant-links";
 import { pakCheckins } from "@/lib/resetcode/checkin";
 import { sendPushToUser } from "@/lib/push/sendPush";
+import { checkCompliance, vatFlagsSamen } from "@/lib/coach/compliance-check";
 
 // ============================================================
 // POST /api/resetcode-mentor
@@ -395,7 +396,16 @@ export async function POST(req: NextRequest) {
               // mag NOOIT richting de klant (regel Raoul 22 juli 2026).
               // Op de ruwe tekst: in `schoon` is hij al weggefilterd.
               const merknaamTreffer = /\blife\s*-?\s*plus\b/i.test(ruwSchoon);
-              if (uitslag.verdacht === true || merknaamTreffer) {
+              // Regex-vanglaag (zelfde set als de member-coach): verboden
+              // claim-werkwoorden en risico-frases deterministisch vangen,
+              // ook als de AI-waakhond ze mist. Dosering-flags slaan we
+              // hier bewust over: innameschema's zijn de kerntaak van de
+              // klant-Mentor, geen risico.
+              const regexFlagsLijst = checkCompliance(ruwSchoon).flags.filter(
+                (f) => f.categorie !== "dosering" && f.categorie !== "merknaam",
+              );
+              const regexFlags = vatFlagsSamen(regexFlagsLijst);
+              if (uitslag.verdacht === true || merknaamTreffer || regexFlags) {
                 const adminW = createAdminClient();
                 const { error: wFout } = await adminW
                   .from("resetcode_kennis")
@@ -408,7 +418,9 @@ export async function POST(req: NextRequest) {
                     controle_reden: (
                       uitslag.verdacht === true
                         ? uitslag.reden ?? ""
-                        : "merknaam Lifeplus in antwoord (regex-scan)"
+                        : merknaamTreffer
+                          ? "merknaam Lifeplus in antwoord (regex-scan)"
+                          : `regex-scan: ${regexFlags}`
                     ).slice(0, 300),
                   });
                 if (wFout) console.error("waakhond-insert:", wFout.message);
