@@ -1584,6 +1584,33 @@ export default function MentorWereld({
     }
   }
 
+  // Volledige voortgang: kaart + mini-analyse. Gedeeld tussen de
+  // getypte vraag ("mijn voortgang") en de menu-knop, zodat beide
+  // hetzelfde volwaardige overzicht geven (feedback Raoul 25 juli:
+  // de knop toonde alleen het kale lijntje met smileys).
+  async function speelVoortgang() {
+    if (checkinReeksRef.current.length === 0) {
+      await mentorZegt(
+        "Je bent net begonnen, dus er is nog niet veel om te laten zien. Doe je dagelijkse check-in, dan bouw ik vanaf nu je voortgang voor je op 💚",
+        800,
+      );
+      await toonCheckin(false);
+      return;
+    }
+    await mentorZegt("Kijk eens, dit heb je tot nu toe opgebouwd:", 700);
+    setItems((b) => [...b, { van: "mentor", soort: "voortgang" }]);
+    const { regels: regelsV, gDelta } = bouwVoortgangsRegels();
+    const afsluiterV =
+      gDelta != null && gDelta < 0
+        ? "Kortom: het werkt, en jij doet het. Gewoon doorgaan zoals je bezig bent. 💚"
+        : "Kortom: je bent aan het bouwen, en dat zie je terug in je trouw. De resultaten volgen het ritme. 💚";
+    await wacht(600);
+    await mentorZegt(
+      `📊 Even alles op een rij${dagNummer && station ? ` (dag ${dagNummer} · ${station.naam})` : ""}:\n\n${regelsV.join("\n\n")}\n\n${afsluiterV}`,
+      1200,
+    );
+  }
+
   // ---------- Week-terugblik (kompas-principe) ----------
 
   // Elke 7 dagen een mini-overzicht: bewijs voor jezelf. Voortgangs-
@@ -3091,29 +3118,7 @@ export default function MentorWereld({
       t.length < 45
     ) {
       zeg();
-      if (checkinReeksRef.current.length === 0) {
-        await mentorZegt(
-          "Je bent net begonnen, dus er is nog niet veel om te laten zien. Doe je dagelijkse check-in, dan bouw ik vanaf nu je voortgang voor je op 💚",
-          800,
-        );
-        await toonCheckin(false);
-      } else {
-        await mentorZegt("Kijk eens, dit heb je tot nu toe opgebouwd:", 700);
-        setItems((b) => [...b, { van: "mentor", soort: "voortgang" }]);
-        // Echte mini-analyse bij de kaart (feedback Raoul 24 juli: het
-        // lijntje en de smileys alleen zeggen niks). Gedeeld met het
-        // einde-moment via bouwVoortgangsRegels.
-        const { regels: regelsV, gDelta } = bouwVoortgangsRegels();
-        const afsluiterV =
-          gDelta != null && gDelta < 0
-            ? "Kortom: het werkt, en jij doet het. Gewoon doorgaan zoals je bezig bent. 💚"
-            : "Kortom: je bent aan het bouwen, en dat zie je terug in je trouw. De resultaten volgen het ritme. 💚";
-        await wacht(600);
-        await mentorZegt(
-          `📊 Even alles op een rij${dagNummer && station ? ` (dag ${dagNummer} · ${station.naam})` : ""}:\n\n${regelsV.join("\n\n")}\n\n${afsluiterV}`,
-          1200,
-        );
-      }
+      await speelVoortgang();
       return true;
     }
     // Check-in op verzoek. Ruim herkend (niet alleen het kale commando,
@@ -4207,7 +4212,7 @@ export default function MentorWereld({
               <button
                 onClick={() => {
                   setToonReis(false);
-                  setItems((b) => [...b, { van: "mentor", soort: "voortgang" }]);
+                  speelVoortgang();
                 }}
                 className="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-4 py-2 text-[12px] font-semibold text-emerald-300"
               >
