@@ -646,6 +646,8 @@ export default function MentorWereld({
   // de fase-flow pakt de draad pas op na het eerstvolgende Mentor-antwoord
   // (feedback Raoul 25 juli: de schema-vraag moet een echt pauzemoment zijn).
   const sportSchemaVervolgRef = useRef(false);
+  // "Verder met"-knoppen die wachten tot de check-in is gedaan.
+  const knoppenWachtkamerRef = useRef<ChatItem[]>([]);
   const bidTeller = useRef(0);
   // Check-in / dagboek: reeks in het geheugen zodat de voortgangs-kaart
   // meteen klopt na een nieuwe check-in.
@@ -1197,11 +1199,18 @@ export default function MentorWereld({
             knoppenNaarOnder();
           }
           // Helemaal aan het einde: de "Verder met"-knop naar de volgende
-          // fase, onder de check-in (en na inchecken zakt hij vanzelf mee
-          // naar onderen via knoppenNaarOnder).
+          // fase. Staat de check-in nog open, dan wacht de knop in de
+          // wachtkamer en komt hij ná het inchecken tevoorschijn
+          // (feedback Raoul 25 juli: niet allebei tegelijk in beeld).
           if (volgendKnopItem) {
-            setItems((b) => [...b, volgendKnopItem]);
-            knoppenNaarOnder();
+            const checkinNogOpen =
+              !checkinGedaanRef.current && !teltAf && !opmaakRustig && !dueEinde;
+            if (checkinNogOpen) {
+              knoppenWachtkamerRef.current.push(volgendKnopItem);
+            } else {
+              setItems((b) => [...b, volgendKnopItem]);
+              knoppenNaarOnder();
+            }
           }
         })();
       } else {
@@ -1917,6 +1926,17 @@ export default function MentorWereld({
   // Raoul 18 juli).
   async function toonCheckin(metGroet: boolean) {
     if (checkinGedaanRef.current) return;
+    // Openstaande "Verder met"-knoppen even naar de wachtkamer: eerst de
+    // check-in, daarna komt de knop vanzelf terug (feedback Raoul 25 juli:
+    // knop + check-in tegelijk in beeld is te veel en verwarrend).
+    setItems((b) => {
+      const knoppen = b.filter((x) => x.soort === "verder-knop");
+      if (knoppen.length > 0) {
+        knoppenWachtkamerRef.current.push(...knoppen);
+        return b.filter((x) => x.soort !== "verder-knop");
+      }
+      return b;
+    });
     if (metGroet) {
       // Geen tweede begroeting: de klant is bij binnenkomst al welkom
       // geheten (feedback Raoul 24 juli, dubbel "Goedenavond" voelde gek).
@@ -2018,7 +2038,7 @@ export default function MentorWereld({
       await mentorZegt("Genoteerd 💚", 500);
     } finally {
       setCheckinBezig(false);
-      knoppenNaarOnder();
+      laatKnoppenTerug();
     }
   }
 
@@ -2282,6 +2302,17 @@ export default function MentorWereld({
     }
 
     return chunks;
+  }
+
+  // Knoppen uit de check-in-wachtkamer terugzetten (na het inchecken, of
+  // zodra de klant de check-in overslaat en iets anders doet), onderaan.
+  function laatKnoppenTerug() {
+    const wachters = knoppenWachtkamerRef.current;
+    if (wachters.length > 0) {
+      knoppenWachtkamerRef.current = [];
+      setItems((b) => [...b, ...wachters]);
+    }
+    knoppenNaarOnder();
   }
 
   // Houd openstaande "Verder met"-knoppen altijd ONDERAAN het gesprek:
@@ -3305,7 +3336,10 @@ export default function MentorWereld({
       zetLaatsteMentorTekst("De verbinding viel even weg, probeer het nog een keer.");
     } finally {
       setBezig(false);
-      knoppenNaarOnder();
+      // Ook knoppen uit de check-in-wachtkamer terug: wie de check-in
+      // overslaat en gewoon een vraag stelt, raakt zijn vervolg-knop
+      // niet kwijt.
+      laatKnoppenTerug();
     }
     // Stond de fase-flow in de wacht voor het sport-schema? Dan nu, na
     // het Mentor-antwoord (het schema), de draad weer oppakken.
