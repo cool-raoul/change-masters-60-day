@@ -2832,6 +2832,12 @@ export default function MentorWereld({
       await mentorZegt(check.reden ?? "", 900);
       return;
     }
+    // De keuze is gemaakt: ALLE openstaande navigatie-knoppen opruimen
+    // (feedback Raoul 25 juli: na "nog een ronde fase 2" bleef de knop
+    // "Door naar fase 4" rondzweven, en andersom net zo). Ook de
+    // wachtkamer leeg, anders komt zo'n oude knop na de check-in terug.
+    setItems((b) => b.filter((x) => x.soort !== "verder-knop"));
+    knoppenWachtkamerRef.current = [];
     if (metEcho) {
       const echo = viaMenu ? `Ik wil naar ${nieuw.naam}` : "Verder!";
       setItems((b) => [...b, { van: "ik", soort: "tekst", tekst: echo }]);
