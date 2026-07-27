@@ -216,9 +216,9 @@ export async function POST(req: NextRequest) {
     });
 
     // Klant-vraag meteen bewaren (ongeacht of de AI-call slaagt).
-    // "[dagtip]" is een intern systeem-verzoek (dag-tip na de check-in),
-    // geen klant-bericht: niet in het gesprek-log zetten.
-    const isDagtip = vraag === "[dagtip]";
+    // "[dagtip]" en "[zware-dag]" zijn interne systeem-verzoeken (na de
+    // check-in), geen klant-berichten: niet in het gesprek-log zetten.
+    const isDagtip = vraag === "[dagtip]" || vraag === "[zware-dag]";
     if (klantCtx && !isDagtip) {
       await bewaarResetChats(klantCtx.linkId, [
         foto

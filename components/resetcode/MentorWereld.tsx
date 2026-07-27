@@ -2103,34 +2103,14 @@ export default function MentorWereld({
       // jezelf, precies waar het dagboek voor is (kompas-principe).
       // Op zo'n dag géén vrolijke dag-tip erachteraan; het gesprek is
       // dan belangrijker. Anders: tip van de dag + wat ik vandaag kan.
-      if (
-        stemming === "zwaar" &&
-        // Niet dubbelen: als de server-reactie de eerdere winst al
-        // terughaalde (2e-zware-dag-conclusie), geen tweede herinnering
-        // met exact dezelfde quote (feedback Raoul 27 juli).
-        !serverAntwoord.includes("weet je nog wat je zelf opschreef")
-      ) {
-        // Alleen échte winsten terughalen: een eerdere frustratie-notitie
-        // ("ik baal") is geen opsteker (feedback Raoul 27 juli).
-        const negatieveNotitie =
-          /(baal|balen|klote|kut|moeilijk|zwaar|slecht|niet goed|niet gelukt|jammer|verdriet|huil|boos|gefrustreerd|frustr|lukt niet|gesmokkeld|pijn|somber|moedeloos|geen zin|opgeven|teleurgesteld|mislukt)/i;
-        const eerdere = checkinReeksRef.current.filter(
-          (c) =>
-            c.notitie &&
-            c.datum !== vandaag &&
-            !negatieveNotitie.test(c.notitie),
-        );
-        const laatste = eerdere[eerdere.length - 1];
-        if (laatste?.notitie) {
-          const dagWoord = new Date(`${laatste.datum}T12:00:00`).toLocaleDateString(
-            "nl-NL",
-            { weekday: "long", day: "numeric", month: "long" },
-          );
+      if (stemming === "zwaar") {
+        // Geen blinde quote van een eerdere notitie meer (een woordfilter
+        // kan niet zien of "geen idee" een winst was): de AI leest het
+        // dagboek en beslist zélf of er iets waardevols terug te halen
+        // valt (feedback Raoul 28 juli).
+        if (token) {
           await wacht(700);
-          await mentorZegt(
-            `En mag ik je even ergens aan herinneren? Op ${dagWoord} schreef je zelf op: ${JSON.stringify(laatste.notitie)}. Dat was jij ook, en dat komt terug. Wees vandaag gewoon lief voor jezelf. 💚`,
-            1100,
-          );
+          await roepMentor("[zware-dag]", null);
         }
       } else {
         await wacht(700);
