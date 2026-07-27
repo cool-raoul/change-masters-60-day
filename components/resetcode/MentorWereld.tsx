@@ -889,6 +889,19 @@ export default function MentorWereld({
           st.slug === "zestien-dagen" &&
           (dagNummer ?? 0) > 16 &&
           verteldRef.current.has("darm-opmaak-rustig");
+        // Terug na een paar dagen stilte (feedback Raoul 27 juli): geen
+        // verwijt, wél herkenning, in plaats van doen alsof er niks was.
+        const laatsteCheckinDatum =
+          checkinReeksRef.current[checkinReeksRef.current.length - 1]?.datum;
+        const vandaagStr = new Intl.DateTimeFormat("sv-SE", {
+          timeZone: "Europe/Amsterdam",
+        }).format(new Date());
+        const dagenStil = laatsteCheckinDatum
+          ? Math.round(
+              (Date.parse(vandaagStr) - Date.parse(laatsteCheckinDatum)) /
+                86_400_000,
+            )
+          : 0;
         setItems([
           ...beginItems,
           {
@@ -900,7 +913,9 @@ export default function MentorWereld({
                   st.slug === "zestien-dagen" &&
                   (dagNummer ?? 0) > 16
                 ? `Welkom terug! 👋 Je 16 dagen zitten erop en je bent nu je producten rustig aan het opmaken (opmaak-dag ${(dagNummer ?? 17) - 16}). Waar wil je mee verder? Stel je vraag, stuur een foto van een etiket, of laat me een recept of dagschema voor je maken.`
-                : `Welkom terug! 👋 We waren bij ${st.emoji} ${st.naam}${dagNummer ? ` (dag ${dagNummer})` : ""}. Waar wil je verder mee? Stel je vraag, stuur een foto van een etiket (dan kijk ik met je mee of een product bij jouw programma past), of laat me een recept of dagschema voor je maken.`,
+                : dagenStil >= 3 && !checkinGedaanRef.current
+                  ? `Hé, daar ben je weer! 👋 Je was een paar dagen niet ingecheckt, en dat is helemaal oké: fijn dat je er weer bent. Vertel eens, hoe waren die dagen? We waren bij ${st.emoji} ${st.naam}${dagNummer ? ` (dag ${dagNummer})` : ""}, en zo pakken we het ritme gewoon samen weer op. 💚`
+                  : `Welkom terug! 👋 We waren bij ${st.emoji} ${st.naam}${dagNummer ? ` (dag ${dagNummer})` : ""}. Waar wil je verder mee? Stel je vraag, stuur een foto van een etiket (dan kijk ik met je mee of een product bij jouw programma past), of laat me een recept of dagschema voor je maken.`,
           },
         ]);
         // De "Verder met"-knop NIET direct bij het welkom (feedback Raoul
