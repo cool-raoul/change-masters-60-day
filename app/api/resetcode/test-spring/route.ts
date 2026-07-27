@@ -86,8 +86,14 @@ export async function POST(req: NextRequest) {
   const r = rij as { station_sinds: string | null; start_datum: string | null } | null;
   const updates: Record<string, string> = {};
   if (r?.station_sinds) {
-    updates.station_sinds = new Date(
+    const nieuw = new Date(
       new Date(r.station_sinds).getTime() + delta * 86_400_000,
+    );
+    // Vloer op dag 1: "dag terug" mag de fase-start nooit voorbij "nu"
+    // duwen, anders wordt de dag-teller "—" en speelt het aftel-welkom
+    // van de voorbereiding midden in een latere fase (bug Raoul 27 juli).
+    updates.station_sinds = (
+      delta > 0 && nieuw.getTime() > Date.now() ? new Date() : nieuw
     ).toISOString();
   }
   if (r?.start_datum) {

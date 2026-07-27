@@ -263,9 +263,19 @@ export default async function KlantLinkPagina({
       ) + 1;
   }
   // Startdatum in de toekomst: teller staat op 0, aftellen tot de start.
+  // Alleen zinvol op de start-/vraag-stations; in een latere fase kan
+  // station_sinds nooit "in de toekomst" horen te liggen (vangnet tegen
+  // de dag-terug-bug van 27 juli): daar klemmen we op dag 1.
   const startOverDagen =
-    dagNummerRuw != null && dagNummerRuw < 1 ? 1 - dagNummerRuw : 0;
-  const dagNummer = dagNummerRuw != null && dagNummerRuw >= 1 ? dagNummerRuw : null;
+    (opStartStation || opVraagStation) && dagNummerRuw != null && dagNummerRuw < 1
+      ? 1 - dagNummerRuw
+      : 0;
+  const dagNummer =
+    dagNummerRuw != null && dagNummerRuw >= 1
+      ? dagNummerRuw
+      : !(opStartStation || opVraagStation) && ctx.stationSinds
+        ? 1
+        : null;
   // Startmoment-vraag alleen rond het echte begin: wie al dagen bezig is
   // (dag 2+) krijgt 'm niet meer voorgeschoteld (feedback Raoul 22 juli:
   // de vraag dook op dag 3, 15 en zelfs 17 nog op).
