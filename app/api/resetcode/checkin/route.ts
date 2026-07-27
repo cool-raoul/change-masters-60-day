@@ -91,6 +91,43 @@ export async function POST(req: NextRequest) {
           : ` (${delta} kilo t.o.v. je start; schommelen hoort erbij, vaak is het vocht. Kijk naar de lijn over meerdere dagen, niet naar één ochtend.)`;
   }
 
+  // Patroon-conclusies uit het dagboek (feedback Raoul 27 juli): de
+  // Mentor moet zelf zien wat er gebeurt en erop reageren, niet alleen
+  // registreren. Twee patronen, deterministisch uit het boekje:
+  // (1) fase 2-plateau: 4 metingen vrijwel gelijk -> appeldag-route
+  //     aanreiken + voetenbadjes/water checken (eenmalig, niet elke dag
+  //     herhalen zolang het plateau duurt);
+  // (2) plotse sprong omhoog t.o.v. de vorige weging -> geruststellen
+  //     (vocht) en uitvragen wat er anders was.
+  let patroonTekst = "";
+  const metGewichtReeks = reeks.filter((r) => r.gewicht != null);
+  if (
+    gewicht != null &&
+    metGewichtReeks.length >= 2 &&
+    ctx.stationSlug !== "laaddagen"
+  ) {
+    const gewichten = metGewichtReeks.map((r) => r.gewicht as number);
+    const spreiding = (lijst: number[]) =>
+      Math.max(...lijst) - Math.min(...lijst);
+    const laatste4 = gewichten.slice(-4);
+    const laatste5 = gewichten.slice(-5);
+    const plateauNu = laatste4.length === 4 && spreiding(laatste4) <= 0.2;
+    const plateauAlGemeld = laatste5.length === 5 && spreiding(laatste5) <= 0.2;
+    const dagDelta =
+      Math.round((gewicht - gewichten[gewichten.length - 2]) * 10) / 10;
+    if (ctx.stationSlug === "omschakeling" && plateauNu && !plateauAlGemeld) {
+      patroonTekst =
+        " Mij valt trouwens iets op: je gewicht staat nu vier dagen zo goed als stil. Dat heet een plateau en het hoort erbij: je lichaam slaat tijdelijk vocht op terwijl de verbranding gewoon doorloopt, en daarna kan er ineens een halve tot ruim een kilo af zijn. Vanaf nu mag je wel bijsturen met een appeldag uit je boekje. Maar eerst even checken: doe je je voetenbadjes met Keltisch zeezout nog (2 tot 3 keer per week), en haal je je 2 liter water? Vraag me gerust hoe de appeldag precies werkt, dan leg ik het je stap voor stap uit.";
+    } else if (dagDelta >= 0.8) {
+      patroonTekst = ` En schrik niet van die ${String(dagDelta).replace(".", ",")} kilo erbij sinds je vorige weging: zo'n sprong is bijna altijd vocht, niet ineens vet. Was er gisteren iets anders dan anders (zouter gegeten, korter geslapen, menstruatie op komst)? Vertel het me gerust, dan kijk ik met je mee.`;
+    }
+    // Eén boodschap over hetzelfde thema: de specifieke patroon-tekst
+    // vervangt de algemene schommel-zin (het lichter-compliment blijft).
+    if (patroonTekst && !verschilTekst.startsWith(" Je bent al")) {
+      verschilTekst = "";
+    }
+  }
+
   const stemDeel = stemming
     ? `Fijn dat je het deelt dat het vandaag ${STEMMING_WOORD[stemming]} gaat.`
     : "Genoteerd voor vandaag.";
@@ -117,7 +154,7 @@ export async function POST(req: NextRequest) {
     stemming === "zwaar" && buik === "onrustig"
       ? " Zware dag én een onrustige buik: dat mag er zijn, je lichaam is aan het werk. Vertel me gerust wat je merkt, dan kijk ik met je mee."
       : "";
-  const antwoord = `${stemDeel}${gewicht != null ? ` Gewicht van vandaag opgeslagen.${verschilTekst}` : ""}${streakDeel}${winstDeel}${zwaarDeel} Ik houd alles voor je bij, vraag me gerust "mijn voortgang".`;
+  const antwoord = `${stemDeel}${gewicht != null ? ` Gewicht van vandaag opgeslagen.${verschilTekst}` : ""}${patroonTekst}${streakDeel}${winstDeel}${zwaarDeel} Ik houd alles voor je bij, vraag me gerust "mijn voortgang".`;
 
   // In het gesprek bewaren zodat het meereist.
   await bewaarResetChats(ctx.linkId, [
