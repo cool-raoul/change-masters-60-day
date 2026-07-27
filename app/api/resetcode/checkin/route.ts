@@ -125,7 +125,7 @@ export async function POST(req: NextRequest) {
       const vorige = inFase3[inFase3.length - 2].gewicht as number;
       const boven = Math.round((gewicht - anker) * 10) / 10;
       if (boven > 1 && vorige - anker <= 1) {
-        patroonTekst = ` En hier moeten we even samen naar kijken: je zit nu ${komma(boven)} kilo boven je ankerpunt (je gewicht aan de start van fase 3), en de grens uit je boekje is één kilo. Daar is de correctie-dag voor, het liefst binnen 48 uur: overdag alleen drinken, en 's avonds één grote biefstuk met een appel of een tomaat erbij. Eet je geen vlees, overleg dan even met ${begeleider} over de variant. En vraag me gerust, dan help ik je er doorheen.`;
+        patroonTekst = ` En hier moeten we even samen naar kijken: je zit nu ${komma(boven)} kilo boven je ankerpunt (je gewicht aan de start van fase 3), en de grens uit je boekje is één kilo. Daar is de correctie-dag voor, het liefst binnen 48 uur. De kern: één dag vrijwel alleen eiwit en veel drinken. Dat kan klassiek (overdag alleen drinken, 's avonds één grote eiwit-maaltijd met een appel of tomaat erbij) of verdeeld over de dag, en de eiwit-bron kies je zelf: biefstuk, kip of vis, een eiwit-omelet, of tempeh of seitan. Vraag me gerust, dan help ik je er doorheen.`;
       }
     }
   }
