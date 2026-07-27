@@ -203,7 +203,7 @@ Bij geen eet-melding: {"eten": false, "actie": "toevoegen", "items": []}.`;
         totaalTekst > DOEL_MAX
           ? `Je zit vandaag al op ±${totaalTekst} kcal, en daarmee boven je hele laad-doel (${DOEL_MIN} tot ${DOEL_MAX}): missie geslaagd! 💪 Je hoeft niks meer aan te vullen; eet gewoon nog gewoon als je honger hebt, maar proppen hoeft niet.`
           : totaalTekst >= DOEL_MIN
-            ? `Je zit vandaag op ±${totaalTekst} kcal, mooi binnen je laad-doel van ${DOEL_MIN} tot ${DOEL_MAX}. Lekker bezig! Aanvullen mag nog tot zo'n ${DOEL_MAX}. 💪`
+            ? `Je zit vandaag op ±${totaalTekst} kcal, mooi binnen je laad-doel van ${DOEL_MIN} tot ${DOEL_MAX}. Lekker bezig! 💪 Meer hoeft niet, maar ben je een grote eter en kun je nog wat op? Dan mag je aanvullen tot zo'n ${DOEL_MAX}.`
             : `Daarmee sta je vandaag op ±${totaalTekst} kcal. Nog ${DOEL_MIN - totaalTekst} te gaan tot de ${DOEL_MIN}, blijf lekker dooreten (vooral gezonde vetten).`;
       antwoord = `Genoteerd: ${lijst}. ${stand}`;
     }
