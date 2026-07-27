@@ -4,7 +4,36 @@ Levende lijst die Claude bijhoudt. Afspraak: nieuw werk komt hier eerst op,
 en we maken iets ÉCHT af (gebouwd → getest → bevestigd) voordat we iets
 nieuws beginnen. Bijwerken zodra een item van status verandert.
 
-Laatst bijgewerkt: 2026-07-22
+Laatst bijgewerkt: 2026-07-27
+
+---
+
+## 🎢 Wachtrij grote bouwrondes (verzameld 2026-07-27, volgorde = niets)
+1. **Webinar-systeem** (NIEUW): evergreen webinar per member — inschrijfpagina met
+   member-token (lead → Opvolgen), tijdslot-keuze rond opgenomen video, mails via
+   Resend (bevestiging/herinnering/terugkijk/actie), kijkpagina + actie-knop.
+   Bewust EERLIJK ("opgenomen masterclass, kies je moment"), geen nep-live.
+2. **Fase 3 Mentor agent-architectuur** (spec klaar: docs/superpowers/specs/2026-07-22-mentor-agent-architectuur-design.md).
+3. **Freebie-generalisatie**: founder-edit/films/slugs/uitslag-knoppen naar álle
+   freebies; eerst kiezen: gedeeld flow-framework of per freebie.
+4. **Leader-track** (train-the-trainer, leader-cockpit, voice-eigening) — na pilot-validatie.
+5. **6 bewaker-agents** (Nachtwacht/Data-wachter/Claim-bewaker/Doorloper/Poortwachter/Redacteur).
+6. **Core V10 (30 dagen)** — staat klaar als /core-v10-preview.
+7. **Visuele wegwijzing** (kleur per context) + klantenkaart-ontwerp (klantenkaart-voorstel.html).
+8. **Sprint-team-overview** (gedeelde voortgang voor sprint-teams).
+9. **Mini-ELEVA vervolgvisie**: rename, content-films, vragen-bibliotheek, train-je-mentor.
+10. **Eigen-freebie-maker** (import eigen content, claim-bewaker verplicht eroverheen).
+11. **Scripts op telefoon** (wa.me-prefill vanuit Mentor tot keyboard-app).
+12. **Spraak-mentor pratende video** (D-ID; 1 regel om terug te halen, wacht op stabieler/goedkoper).
+13. **Mentor-kennisbank 2017-CSV** (aandoening→tips) — wacht op claims-grens-ontwerpronde.
+14. **Winkelmandje/bestellen-closing** — terug bij thema "bestellingen plaatsen".
+15. **Filter-per-freebie** op de namenlijst + bulk-actie.
+16. **Eigen uitslag-mail voor energie/hormonen-bots** (sturen nu bewust geen directe mail).
+
+Kleinere klussen in de rij: claims-audit-pass over alle vaste klant-teksten
+(aangeboden 25 juli), Fable-review-restpunten (hieronder), podcast-funnel-rest
+(medische zelf-check, privacybeleid-gegevens, fase 4-vrijgave), opruimronde
+em-dashes/AI-isms, uitnodig-scripts her-brainstorm, TeamBoom-foto's.
 
 ---
 
