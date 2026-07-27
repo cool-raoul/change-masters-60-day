@@ -156,7 +156,30 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // 3 + 4. Fase 2-plateau (4 dagen vrijwel gelijk -> appeldag-route) en
+  // 3. Terug rond het startgewicht na een eerdere echte daling (bijv.
+  //    75 -> 70 -> weer 75): dat voelt als "terug bij af" en verdient
+  //    échte erkenning mét de hele lijn, niet een luchtig vocht-zinnetje
+  //    (feedback Raoul 27 juli). Vuurt één keer, bij het terug-kruisen.
+  if (
+    !patroonTekst &&
+    gewicht != null &&
+    metGewichtReeks.length >= 3 &&
+    ctx.stationSlug !== "laaddagen"
+  ) {
+    const eersteG = gewichten[0];
+    const laagste = Math.min(...gewichten);
+    const vorigeG = gewichten[gewichten.length - 2];
+    const eerderEraf = Math.round((eersteG - laagste) * 10) / 10;
+    if (
+      gewicht >= eersteG - 0.2 &&
+      eerderEraf >= 2 &&
+      vorigeG < eersteG - 0.2
+    ) {
+      patroonTekst = ` En nu even over je gewicht, want ik kijk verder dan alleen vandaag: je zit weer rond je startgewicht, terwijl je al ${komma(eerderEraf)} kilo eraf had. Ik snap heel goed dat dat voelt als terug bij af, en dat mag je balen. Maar onthoud dit: die ${komma(eerderEraf)} kilo ging er eerder wél af, dus jouw lichaam kan het. Zo'n terugloop is meestal vocht plus een paar dagen waarin er iets insloop. Wees even eerlijk naar jezelf: is er de afgelopen dagen iets tussendoor geslopen (iets buiten de lijst, zouter gegeten, minder water)? Vertel het me gewoon, dan maken we samen een plan om de draai terug te pakken, en neem ${begeleider} er even in mee.`;
+    }
+  }
+
+  // 4 + 5. Fase 2-plateau (4 dagen vrijwel gelijk -> appeldag-route) en
   //        plotse sprong omhoog (-> geruststellen: vocht).
   if (
     !patroonTekst &&
@@ -170,11 +193,12 @@ export async function POST(req: NextRequest) {
     const plateauAlGemeld = laatste5.length === 5 && spreiding(laatste5) <= 0.2;
     const dagDelta =
       Math.round((gewicht - gewichten[gewichten.length - 2]) * 10) / 10;
+    const startDelta = Math.round((gewicht - gewichten[0]) * 10) / 10;
     if (ctx.stationSlug === "omschakeling" && plateauNu && !plateauAlGemeld) {
       patroonTekst =
         " Mij valt trouwens iets op: je gewicht staat nu vier dagen zo goed als stil. Dat heet een plateau en het hoort erbij: je lichaam slaat tijdelijk vocht op terwijl de verbranding gewoon doorloopt, en daarna kan er ineens een halve tot ruim een kilo af zijn. Vanaf nu mag je wel bijsturen met een appeldag uit je boekje. Maar eerst even checken: doe je je voetenbadjes met Keltisch zeezout nog (2 tot 3 keer per week), en haal je je 2 liter water? Vraag me gerust hoe de appeldag precies werkt, dan leg ik het je stap voor stap uit.";
     } else if (dagDelta >= 0.8) {
-      patroonTekst = ` En schrik niet van die ${komma(dagDelta)} kilo erbij sinds je vorige weging: zo'n sprong is bijna altijd vocht, niet ineens vet. Was er gisteren iets anders dan anders (zouter gegeten, korter geslapen, menstruatie op komst)? Vertel het me gerust, dan kijk ik met je mee.`;
+      patroonTekst = ` En schrik niet van die ${komma(dagDelta)} kilo erbij sinds je vorige weging: zo'n sprong is bijna altijd vocht, niet ineens vet.${startDelta < -0.2 ? ` Vergeet ook niet: je staat nog altijd ${komma(Math.abs(startDelta))} kilo onder je startgewicht, die winst is niet weg.` : ""} Was er gisteren iets anders dan anders (zouter gegeten, korter geslapen, menstruatie op komst)? Vertel het me gerust, dan kijk ik met je mee.`;
     }
   }
 
@@ -274,8 +298,18 @@ export async function POST(req: NextRequest) {
     "Genoteerd in je dagboek, daar ga je nog blij mee terugkijken. 💚",
   ];
   const dagIndex = Math.floor(Date.parse(datum) / 86_400_000);
+  // Het winst-veld eerst INTERPRETEREN (feedback Raoul 27 juli): mensen
+  // schrijven er soms juist frustratie of verdriet in ("ik baal"), en
+  // daar hoort geen vrolijke afsluiter achter maar erkenning.
+  const winstNegatief =
+    notitie != null &&
+    /(baal|balen|klote|kut|moeilijk|zwaar|slecht|niet goed|niet gelukt|jammer|verdriet|huil|boos|gefrustreerd|frustr|lukt niet|gesmokkeld|vals gespeeld|pijn|somber|moedeloos|geen zin|wil stoppen|opgeven|teleurgesteld|mislukt)/i.test(
+      notitie,
+    );
   const winstDeel = notitie
-    ? ` En wat je opschreef ("${notitie.slice(0, 120)}"): ${WINST_AFSLUITERS[dagIndex % WINST_AFSLUITERS.length]}`
+    ? winstNegatief
+      ? ` En ik lees goed wat je opschreef ("${notitie.slice(0, 120)}"). Dat klinkt niet als een winst maar als iets dat er gewoon even uit moest, en dat mag hier ook. Vertel me er gerust meer over, dan kijk ik met je mee.`
+      : ` En wat je opschreef ("${notitie.slice(0, 120)}"): ${WINST_AFSLUITERS[dagIndex % WINST_AFSLUITERS.length]}`
     : "";
   const zwaarDeel =
     stemming === "zwaar" && buik === "onrustig" && !patroonTekst

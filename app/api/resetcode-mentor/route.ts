@@ -216,7 +216,10 @@ export async function POST(req: NextRequest) {
     });
 
     // Klant-vraag meteen bewaren (ongeacht of de AI-call slaagt).
-    if (klantCtx) {
+    // "[dagtip]" is een intern systeem-verzoek (dag-tip na de check-in),
+    // geen klant-bericht: niet in het gesprek-log zetten.
+    const isDagtip = vraag === "[dagtip]";
+    if (klantCtx && !isDagtip) {
       await bewaarResetChats(klantCtx.linkId, [
         foto
           ? { van: "klant", soort: "foto", stationSlug, tekst: vraag || "📷 (foto gestuurd)" }

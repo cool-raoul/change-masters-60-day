@@ -2104,7 +2104,13 @@ export default function MentorWereld({
         }
       } else {
         await wacht(700);
-        await toonDagTip();
+        if (token) {
+          // Persoonlijke dag-tip op basis van het dagboek van vandaag
+          // (feedback Raoul 27 juli), in plaats van de vaste rotatie.
+          await roepMentor("[dagtip]", null);
+        } else {
+          await toonDagTip();
+        }
       }
     } catch {
       await mentorZegt("Genoteerd 💚", 500);
