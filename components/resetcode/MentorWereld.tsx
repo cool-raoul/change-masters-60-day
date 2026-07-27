@@ -2040,6 +2040,7 @@ export default function MentorWereld({
     const vandaag = new Intl.DateTimeFormat("sv-SE", {
       timeZone: "Europe/Amsterdam",
     }).format(new Date());
+    let serverAntwoord = "";
     try {
       if (token) {
         const res = await fetch("/api/resetcode/checkin", {
@@ -2061,7 +2062,8 @@ export default function MentorWereld({
         const data = await res.json().catch(() => null);
         if (data?.ok) {
           if (Array.isArray(data.reeks)) checkinReeksRef.current = data.reeks;
-          await mentorZegt(data.antwoord ?? "Genoteerd 💚", 800);
+          serverAntwoord = String(data.antwoord ?? "");
+          await mentorZegt(serverAntwoord || "Genoteerd 💚", 800);
         }
       } else {
         // Preview: lokaal bijhouden, zonder server.
@@ -2078,7 +2080,13 @@ export default function MentorWereld({
       // jezelf, precies waar het dagboek voor is (kompas-principe).
       // Op zo'n dag géén vrolijke dag-tip erachteraan; het gesprek is
       // dan belangrijker. Anders: tip van de dag + wat ik vandaag kan.
-      if (stemming === "zwaar") {
+      if (
+        stemming === "zwaar" &&
+        // Niet dubbelen: als de server-reactie de eerdere winst al
+        // terughaalde (2e-zware-dag-conclusie), geen tweede herinnering
+        // met exact dezelfde quote (feedback Raoul 27 juli).
+        !serverAntwoord.includes("weet je nog wat je zelf opschreef")
+      ) {
         const eerdere = checkinReeksRef.current.filter(
           (c) => c.notitie && c.datum !== vandaag,
         );

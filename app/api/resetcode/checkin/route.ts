@@ -188,7 +188,12 @@ export async function POST(req: NextRequest) {
     const eerdereWinst = [...reeks.slice(0, -1)]
       .reverse()
       .find((r) => r.notitie)?.notitie;
-    patroonTekst = ` Ik zie dat dit je tweede zware dag op rij is, en die mag er gewoon zijn: je lichaam is hard aan het werk.${eerdereWinst ? ` Maar weet je nog wat je zelf opschreef: "${eerdereWinst.slice(0, 100)}"? Dat was jij ook, en dat komt terug.` : ""} Check voor vandaag even de basis: eet je genoeg (je mag geen honger hebben) en haal je je 2 liter water? En stuur gerust een berichtje naar ${begeleider}, zo'n dag hoef je niet alleen te dragen.`;
+    // Op de laaddagen betekent "zwaar" meestal: vol zitten van al het
+    // eten. Dan geen fase 2-checks ("eet je genoeg?"), maar laad-taal.
+    patroonTekst =
+      ctx.stationSlug === "laaddagen"
+        ? ` Ik zie dat dit je tweede zware dag op rij is, en dat op je laaddagen: heel begrijpelijk, zoveel eten is voor veel mensen echt even doorbijten. Wat helpt: verdeel het over heel veel kleine momenten, de hele dag door tot je gaat slapen, in plaats van jezelf vol te proppen. En onthoud: dit duurt maar twee dagen, daarna begint fase 2 en valt dit weg. Stuur ook gerust een berichtje naar ${begeleider}, zo'n dag hoef je niet alleen te dragen.`
+        : ` Ik zie dat dit je tweede zware dag op rij is, en die mag er gewoon zijn: je lichaam is hard aan het werk.${eerdereWinst ? ` Maar weet je nog wat je zelf opschreef: "${eerdereWinst.slice(0, 100)}"? Dat was jij ook, en dat komt terug.` : ""} Check voor vandaag even de basis: eet je genoeg (je mag geen honger hebben) en haal je je 2 liter water? En stuur gerust een berichtje naar ${begeleider}, zo'n dag hoef je niet alleen te dragen.`;
   }
 
   // 5. Drie dagen weinig energie in fase 2 -> omschakel-dip + basis-check.
