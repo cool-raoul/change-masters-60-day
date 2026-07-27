@@ -22,6 +22,11 @@ const STEMMING_WOORD: Record<string, string> = {
   zwaar: "zwaar",
 };
 
+// Notities die frustratie of verdriet uiten: nooit als "winst"
+// terugspiegelen (feedback Raoul 27 juli: "ik baal" is geen opsteker).
+const WINST_NEGATIEF =
+  /(baal|balen|klote|kut|moeilijk|zwaar|slecht|niet goed|niet gelukt|jammer|verdriet|huil|boos|gefrustreerd|frustr|lukt niet|gesmokkeld|vals gespeeld|pijn|somber|moedeloos|geen zin|wil stoppen|opgeven|teleurgesteld|mislukt)/i;
+
 function getal(v: unknown): number | null {
   const n = Number(v);
   return Number.isFinite(n) && n > 0 && n < 1000 ? Math.round(n * 10) / 10 : null;
@@ -211,7 +216,7 @@ export async function POST(req: NextRequest) {
   ) {
     const eerdereWinst = [...reeks.slice(0, -1)]
       .reverse()
-      .find((r) => r.notitie)?.notitie;
+      .find((r) => r.notitie && !WINST_NEGATIEF.test(r.notitie))?.notitie;
     // Op de laaddagen betekent "zwaar" meestal: vol zitten van al het
     // eten. Dan geen fase 2-checks ("eet je genoeg?"), maar laad-taal.
     patroonTekst =
@@ -301,11 +306,7 @@ export async function POST(req: NextRequest) {
   // Het winst-veld eerst INTERPRETEREN (feedback Raoul 27 juli): mensen
   // schrijven er soms juist frustratie of verdriet in ("ik baal"), en
   // daar hoort geen vrolijke afsluiter achter maar erkenning.
-  const winstNegatief =
-    notitie != null &&
-    /(baal|balen|klote|kut|moeilijk|zwaar|slecht|niet goed|niet gelukt|jammer|verdriet|huil|boos|gefrustreerd|frustr|lukt niet|gesmokkeld|vals gespeeld|pijn|somber|moedeloos|geen zin|wil stoppen|opgeven|teleurgesteld|mislukt)/i.test(
-      notitie,
-    );
+  const winstNegatief = notitie != null && WINST_NEGATIEF.test(notitie);
   const winstDeel = notitie
     ? winstNegatief
       ? ` En ik lees goed wat je opschreef ("${notitie.slice(0, 120)}"). Dat klinkt niet als een winst maar als iets dat er gewoon even uit moest, en dat mag hier ook. Vertel me er gerust meer over, dan kijk ik met je mee.`

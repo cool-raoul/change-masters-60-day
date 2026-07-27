@@ -1612,9 +1612,14 @@ export default function MentorWereld({
       await toonCheckin(false);
       return;
     }
-    await mentorZegt("Kijk eens, dit heb je tot nu toe opgebouwd:", 700);
-    setItems((b) => [...b, { van: "mentor", soort: "voortgang" }]);
     const { regels: regelsV, beeld } = bouwVoortgangsRegels();
+    await mentorZegt(
+      beeld === "zwaar"
+        ? "Ik heb alles eerlijk voor je op een rij gezet, ook het stuk dat tegenzit:"
+        : "Kijk eens, dit heb je tot nu toe opgebouwd:",
+      700,
+    );
+    setItems((b) => [...b, { van: "mentor", soort: "voortgang" }]);
     const afsluiterV =
       beeld === "goed"
         ? "Kortom: het werkt, en jij doet het. Gewoon doorgaan zoals je bezig bent. 💚"
@@ -1791,14 +1796,30 @@ export default function MentorWereld({
       .filter((r) => r.notitie)
       .slice(-3)
       .map((r) => `"${r.notitie}"`);
+    // Hele-lijn-kijken (feedback Raoul 27 juli): wie eerst 5 kilo kwijt
+    // was en weer terug is bij start, hoort niet "stabiel" of "vocht",
+    // maar het echte verhaal: het ging er eerder wél af.
+    const gewichtWaardes = reeks
+      .filter((r) => r.gewicht != null)
+      .map((r) => r.gewicht as number);
+    const gLaagste2 =
+      gewichtWaardes.length > 0 ? Math.min(...gewichtWaardes) : null;
+    const eerderEraf =
+      gEerste != null && gLaagste2 != null
+        ? Math.round((gEerste - gLaagste2) * 10) / 10
+        : 0;
+    const terugBijStart =
+      gDelta != null && gDelta >= -0.2 && eerderEraf >= 2;
     const regels: string[] = [];
     if (gDelta != null && gEerste != null && gLaatste != null) {
       regels.push(
-        gDelta < 0
+        gDelta < 0 && !terugBijStart
           ? `⚖️ Gewicht: van ${gEerste} naar ${gLaatste} kg, dat is ${Math.abs(gDelta)} kilo eraf sinds je start.`
-          : gDelta > 0
-            ? `⚖️ Gewicht: ${gLaatste} kg (${gDelta} kilo boven je start). Schommelingen horen erbij, vaak is het vocht; kijk naar de lijn over meerdere dagen.`
-            : `⚖️ Gewicht: stabiel op ${gLaatste} kg.`,
+          : terugBijStart
+            ? `⚖️ Gewicht: je startte op ${gEerste} kg, zat tussendoor op ${gLaagste2} kg (${String(eerderEraf).replace(".", ",")} kilo eraf) en staat nu op ${gLaatste} kg. Dat voelt vast als terug bij af, en dat mag je balen. Maar die ${String(eerderEraf).replace(".", ",")} kilo ging er eerder wél af: je lichaam kan het dus. Laten we samen kijken wat er de laatste dagen insloop.`
+            : gDelta > 0
+              ? `⚖️ Gewicht: ${gLaatste} kg (${gDelta} kilo boven je start). Schommelingen horen erbij, vaak is het vocht; kijk naar de lijn over meerdere dagen.`
+              : `⚖️ Gewicht: stabiel op ${gLaatste} kg.`,
       );
     }
     const cmDelen = [
@@ -1818,11 +1839,13 @@ export default function MentorWereld({
     const zwaarRecent =
       reeks.slice(-3).filter((r) => r.stemming === "zwaar").length >= 2;
     const beeld: "goed" | "neutraal" | "zwaar" =
-      gDelta != null && gDelta < 0
-        ? "goed"
-        : zwaarRecent
-          ? "zwaar"
-          : "neutraal";
+      terugBijStart
+        ? "zwaar"
+        : gDelta != null && gDelta < 0
+          ? "goed"
+          : zwaarRecent
+            ? "zwaar"
+            : "neutraal";
     return { regels, gDelta, beeld };
   }
 
@@ -2087,8 +2110,15 @@ export default function MentorWereld({
         // met exact dezelfde quote (feedback Raoul 27 juli).
         !serverAntwoord.includes("weet je nog wat je zelf opschreef")
       ) {
+        // Alleen échte winsten terughalen: een eerdere frustratie-notitie
+        // ("ik baal") is geen opsteker (feedback Raoul 27 juli).
+        const negatieveNotitie =
+          /(baal|balen|klote|kut|moeilijk|zwaar|slecht|niet goed|niet gelukt|jammer|verdriet|huil|boos|gefrustreerd|frustr|lukt niet|gesmokkeld|pijn|somber|moedeloos|geen zin|opgeven|teleurgesteld|mislukt)/i;
         const eerdere = checkinReeksRef.current.filter(
-          (c) => c.notitie && c.datum !== vandaag,
+          (c) =>
+            c.notitie &&
+            c.datum !== vandaag &&
+            !negatieveNotitie.test(c.notitie),
         );
         const laatste = eerdere[eerdere.length - 1];
         if (laatste?.notitie) {
