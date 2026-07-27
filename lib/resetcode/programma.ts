@@ -244,6 +244,7 @@ const RESET_STATIONS_INTERN: ResetStation[] = [
       "Je begint met twee laaddagen. Klinkt gek, is bewust: zo zet je de omschakeling van fase 2 goed in gang. Dit hoort er echt bij, dus doe het serieus én met een knipoog. Je mag los!",
     vandaagBelangrijk: [
       "Eet twee dagen lang minimaal 3500 tot 5000 kcal per dag.",
+      "Begin 's ochtends vroeg en eet de hele dag door, tot je gaat slapen: veel kleine eetmomenten werken veel fijner dan jezelf drie keer per dag volproppen.",
       "Laad vooral met gezonde vetten: macadamia's, cashews, avocado, banaan, kokosroom, gebakken ei met kaas.",
       "Houd suiker en snelle koolhydraten juist laag tijdens het laden.",
       "Zeg of stuur mij alles wat je eet (foto mag ook), dan tel ik je calorieën automatisch mee en zie je bovenin precies waar je staat.",

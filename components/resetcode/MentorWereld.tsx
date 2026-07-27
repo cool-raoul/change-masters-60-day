@@ -1694,6 +1694,7 @@ export default function MentorWereld({
     ],
     laaddagen: [
       "Eet vandaag écht genoeg: je laaddagen zijn de fundering van je hele reset.",
+      "Begin vroeg met eten en eet de hele dag door, tot je gaat slapen: veel kleine momenten werken veel fijner dan drie keer volproppen.",
       "Zeg me gewoon alles wat je eet (foto mag ook), dan houd ik je teller bij richting de 3500+.",
     ],
     omschakeling: [
