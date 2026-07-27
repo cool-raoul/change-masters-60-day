@@ -196,10 +196,15 @@ Bij geen eet-melding: {"eten": false, "actie": "toevoegen", "items": []}.`;
     } else {
       const totaalTekst =
         dagTotaal !== null ? dagTotaal : huidigTotaal + geschat;
+      // Drie zones (feedback Raoul 27 juli): onder de 3500 aanmoedigen,
+      // tussen 3500 en 5000 is de bandbreedte, en daarboven niet blijven
+      // aansporen om aan te vullen.
       const stand =
-        totaalTekst >= DOEL_MIN
-          ? `Je zit vandaag al op ±${totaalTekst} kcal, boven de ${DOEL_MIN}. Lekker bezig, aanvullen mag altijd! 💪`
-          : `Daarmee sta je vandaag op ±${totaalTekst} kcal. Nog ${DOEL_MIN - totaalTekst} te gaan tot de ${DOEL_MIN}, blijf lekker dooreten (vooral gezonde vetten).`;
+        totaalTekst > DOEL_MAX
+          ? `Je zit vandaag al op ±${totaalTekst} kcal, en daarmee boven je hele laad-doel (${DOEL_MIN} tot ${DOEL_MAX}): missie geslaagd! 💪 Je hoeft niks meer aan te vullen; eet gewoon nog gewoon als je honger hebt, maar proppen hoeft niet.`
+          : totaalTekst >= DOEL_MIN
+            ? `Je zit vandaag op ±${totaalTekst} kcal, mooi binnen je laad-doel van ${DOEL_MIN} tot ${DOEL_MAX}. Lekker bezig! Aanvullen mag nog tot zo'n ${DOEL_MAX}. 💪`
+            : `Daarmee sta je vandaag op ±${totaalTekst} kcal. Nog ${DOEL_MIN - totaalTekst} te gaan tot de ${DOEL_MIN}, blijf lekker dooreten (vooral gezonde vetten).`;
       antwoord = `Genoteerd: ${lijst}. ${stand}`;
     }
 
