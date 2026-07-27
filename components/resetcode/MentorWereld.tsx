@@ -1792,8 +1792,18 @@ export default function MentorWereld({
         dLoop.setDate(dLoop.getDate() - 1);
       }
     }
+    // Alleen notities citeren die plausibel een échte winst zijn: geen
+    // frustratie ("ik baal") en geen lege invullingen ("geen idee").
+    // Bij twijfel niets terughalen (feedback Raoul 28 juli); de AI-kant
+    // doet het genuanceerde terughaal-werk.
+    const winstBruikbaar = (n: string) =>
+      n.trim().length >= 12 &&
+      n.trim().split(/\s+/).length >= 3 &&
+      !/(baal|balen|klote|kut|moeilijk|zwaar|slecht|niet goed|niet gelukt|jammer|verdriet|huil|boos|gefrustreerd|frustr|lukt niet|gesmokkeld|pijn|somber|moedeloos|geen zin|opgeven|teleurgesteld|mislukt|geen idee|weet (ik |het )?niet|\bnvt\b|n\.v\.t\.)/i.test(
+        n,
+      );
     const winsten = reeks
-      .filter((r) => r.notitie)
+      .filter((r) => r.notitie && winstBruikbaar(r.notitie))
       .slice(-3)
       .map((r) => `"${r.notitie}"`);
     // Hele-lijn-kijken (feedback Raoul 27 juli): wie eerst 5 kilo kwijt

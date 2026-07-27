@@ -307,10 +307,20 @@ export async function POST(req: NextRequest) {
   // schrijven er soms juist frustratie of verdriet in ("ik baal"), en
   // daar hoort geen vrolijke afsluiter achter maar erkenning.
   const winstNegatief = notitie != null && WINST_NEGATIEF.test(notitie);
+  // Lege invullingen ("geen idee", "nvt", één woordje): gewoon niets
+  // over zeggen; alleen echte inhoud verdient een reactie.
+  const winstJunk =
+    notitie != null &&
+    !winstNegatief &&
+    (notitie.trim().length < 12 ||
+      notitie.trim().split(/\s+/).length < 3 ||
+      /(geen idee|weet (ik |het )?niet|\bnvt\b|n\.v\.t\.)/i.test(notitie));
   const winstDeel = notitie
     ? winstNegatief
       ? ` En ik lees goed wat je opschreef ("${notitie.slice(0, 120)}"). Dat klinkt niet als een winst maar als iets dat er gewoon even uit moest, en dat mag hier ook. Vertel me er gerust meer over, dan kijk ik met je mee.`
-      : ` En wat je opschreef ("${notitie.slice(0, 120)}"): ${WINST_AFSLUITERS[dagIndex % WINST_AFSLUITERS.length]}`
+      : winstJunk
+        ? ""
+        : ` En wat je opschreef ("${notitie.slice(0, 120)}"): ${WINST_AFSLUITERS[dagIndex % WINST_AFSLUITERS.length]}`
     : "";
   const zwaarDeel =
     stemming === "zwaar" && buik === "onrustig" && !patroonTekst
