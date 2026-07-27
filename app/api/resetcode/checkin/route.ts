@@ -130,7 +130,33 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // 2 + 3. Fase 2-plateau (4 dagen vrijwel gelijk -> appeldag-route) en
+  // 2. Centimeters eraf terwijl de weegschaal stilstaat -> juist vieren.
+  //    Bewust VÓÓR de plateau-check: lopen de centimeters, dan is dát de
+  //    verklaring van de stilstand en is vieren beter dan een appeldag.
+  if (!patroonTekst) {
+    const metTaille = reeks.filter((r) => r.taille != null);
+    if (metTaille.length >= 2 && metTaille[metTaille.length - 1].datum === datum) {
+      const tVorig = metTaille[metTaille.length - 2];
+      const cmEraf =
+        Math.round(
+          ((tVorig.taille as number) -
+            (metTaille[metTaille.length - 1].taille as number)) * 10,
+        ) / 10;
+      const gVorig = metGewichtReeks
+        .filter((r) => r.datum <= tVorig.datum)
+        .slice(-1)[0]?.gewicht;
+      if (
+        cmEraf >= 1 &&
+        gewicht != null &&
+        gVorig != null &&
+        gVorig - gewicht < 0.5
+      ) {
+        patroonTekst = ` En kijk hier eens: je weegschaal zegt deze periode weinig, maar je taille is ${komma(cmEraf)} centimeter smaller dan bij je vorige meting. Dit is precies waarom we meten: je lichaam verandert óók als de weegschaal even zwijgt.`;
+      }
+    }
+  }
+
+  // 3 + 4. Fase 2-plateau (4 dagen vrijwel gelijk -> appeldag-route) en
   //        plotse sprong omhoog (-> geruststellen: vocht).
   if (
     !patroonTekst &&
@@ -195,30 +221,6 @@ export async function POST(req: NextRequest) {
     netBereikt(3, (r) => r.buik === "onrustig")
   ) {
     patroonTekst = ` Je buik is nu drie dagen onrustig, dus laten we bijsturen: je mag je MSM Plus verhogen, neem extra Keltisch zeezout en drink genoeg water. Doe dat vandaag en morgen, en blijft het daarna nog zo, overleg dan even met ${begeleider}, die kent dit soort dagen goed.`;
-  }
-
-  // 8. Centimeters eraf terwijl de weegschaal stilstaat -> juist vieren.
-  if (!patroonTekst) {
-    const metTaille = reeks.filter((r) => r.taille != null);
-    if (metTaille.length >= 2 && metTaille[metTaille.length - 1].datum === datum) {
-      const tVorig = metTaille[metTaille.length - 2];
-      const cmEraf =
-        Math.round(
-          ((tVorig.taille as number) -
-            (metTaille[metTaille.length - 1].taille as number)) * 10,
-        ) / 10;
-      const gVorig = metGewichtReeks
-        .filter((r) => r.datum <= tVorig.datum)
-        .slice(-1)[0]?.gewicht;
-      if (
-        cmEraf >= 1 &&
-        gewicht != null &&
-        gVorig != null &&
-        gVorig - gewicht < 0.5
-      ) {
-        patroonTekst = ` En kijk hier eens: je weegschaal zegt deze periode weinig, maar je taille is ${komma(cmEraf)} centimeter smaller dan bij je vorige meting. Dit is precies waarom we meten: je lichaam verandert óók als de weegschaal even zwijgt.`;
-      }
-    }
   }
 
   // 9. Een paar dagen geen gewicht ingevuld -> vriendelijk herinneren
