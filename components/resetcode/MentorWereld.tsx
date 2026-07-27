@@ -1614,11 +1614,13 @@ export default function MentorWereld({
     }
     await mentorZegt("Kijk eens, dit heb je tot nu toe opgebouwd:", 700);
     setItems((b) => [...b, { van: "mentor", soort: "voortgang" }]);
-    const { regels: regelsV, gDelta } = bouwVoortgangsRegels();
+    const { regels: regelsV, beeld } = bouwVoortgangsRegels();
     const afsluiterV =
-      gDelta != null && gDelta < 0
+      beeld === "goed"
         ? "Kortom: het werkt, en jij doet het. Gewoon doorgaan zoals je bezig bent. 💚"
-        : "Kortom: je bent aan het bouwen, en dat zie je terug in je trouw. De resultaten volgen het ritme. 💚";
+        : beeld === "zwaar"
+          ? "En eerlijk: dit is even een taai stuk, dat zie ik ook. Het zegt niks over hoe dit afloopt, maar laten we wel samen kijken wat jou nu kan helpen: eet je genoeg, en haal je je water en je extra zeezout? Vertel me wat het zwaar maakt, dan denk ik met je mee. 💪"
+          : "Kortom: je bent aan het bouwen, en dat zie je terug in je trouw. De resultaten volgen het ritme. 💚";
     await wacht(600);
     await mentorZegt(
       `📊 Even alles op een rij${dagNummer && station ? ` (dag ${dagNummer} · ${station.naam})` : ""}:\n\n${regelsV.join("\n\n")}\n\n${afsluiterV}`,
@@ -1641,10 +1643,12 @@ export default function MentorWereld({
     // Volwaardige analyse bij de kaart (feedback Raoul 24 juli: het
     // lijntje en de smileys alleen zeggen niks), gedeeld met de
     // voortgang-vraag en het einde-moment.
-    const { regels } = bouwVoortgangsRegels();
+    const { regels, beeld } = bouwVoortgangsRegels();
     await mentorZegt(
       reeks.length > 0 && regels.length > 0
-        ? `Kijk daar eens rustig naar:\n\n${regels.join("\n\n")}\n\nDat is allemaal van jou. Niet omdat je meer doet, maar omdat je bewuster bezig bent. Op naar de volgende week! 💚`
+        ? beeld === "zwaar"
+          ? `Ik ga niet doen alsof dit een makkelijke week was:\n\n${regels.join("\n\n")}\n\nJe dagen voelden zwaar en de weegschaal zit even niet mee, en dat mag er gewoon zijn. Belangrijk om te weten: dit zegt niks over hoe het afloopt, vaak is dit vocht en omschakel-werk dat later in één keer loslaat. Maar laten we wel samen scherp kijken: eet je genoeg, haal je je 2 liter water en je extra zeezout? Vertel me wat je dagen zwaar maakt, en stuur ook ${begeleiderNaam} gerust een berichtje. Je doet dit niet alleen. 💪`
+          : `Kijk daar eens rustig naar:\n\n${regels.join("\n\n")}\n\nDat is allemaal van jou. Niet omdat je meer doet, maar omdat je bewuster bezig bent. Op naar de volgende week! 💚`
         : `Elke dag dat je incheckt bouw je aan je eigen verhaal, ook op de dagen dat het zwaar voelt. Op naar de volgende week! 💚`,
       1100,
     );
@@ -1746,7 +1750,13 @@ export default function MentorWereld({
   // Gedeelde mini-analyse uit het eigen dagboek (feedback Raoul 24 juli:
   // het lijntje en de smileys alleen zeggen niks). Deterministisch en
   // claim-vrij; gebruikt door de voortgang-vraag én het einde-moment.
-  function bouwVoortgangsRegels(): { regels: string[]; gDelta: number | null } {
+  function bouwVoortgangsRegels(): {
+    regels: string[];
+    gDelta: number | null;
+    // Situatie-beeld voor de toon (feedback Raoul 27 juli: bij aankomen
+    // + zware dagen niet jubelen maar erkennen en bijsturen).
+    beeld: "goed" | "neutraal" | "zwaar";
+  } {
     const reeks = checkinReeksRef.current;
     const delta = (waardes: (number | null | undefined)[]) => {
       const echt = waardes.filter((w): w is number => w != null);
@@ -1804,7 +1814,15 @@ export default function MentorWereld({
     if (winsten.length > 0) {
       regels.push(`✨ En dit schreef je zélf onderweg op: ${winsten.join(", ")}. Dat is geen toeval, dat ben jij.`);
     }
-    return { regels, gDelta };
+    const zwaarRecent =
+      reeks.slice(-3).filter((r) => r.stemming === "zwaar").length >= 2;
+    const beeld: "goed" | "neutraal" | "zwaar" =
+      gDelta != null && gDelta < 0
+        ? "goed"
+        : zwaarRecent
+          ? "zwaar"
+          : "neutraal";
+    return { regels, gDelta, beeld };
   }
 
   // ---------- Het einde-moment ----------
