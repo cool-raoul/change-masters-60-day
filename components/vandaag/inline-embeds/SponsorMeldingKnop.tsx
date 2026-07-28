@@ -155,9 +155,8 @@ function pakBericht(taakId: string | undefined, sponsorVoornaam: string): string
     case "dag1-sponsor":
     default:
       return (
-        `Hoi${naamDeel}! Ik ben gestart in ELEVA 🚀 Vanaf nu zie je in het ` +
-        `systeem mijn dagelijkse stappen, fijn om je rugdekking te hebben. ` +
-        `Spreek je snel!`
+        `Hoi${naamDeel}! Ik ben gestart in ELEVA 🚀 Fijn om jou als ` +
+        `rugdekking te hebben. Spreek je snel!`
       );
   }
 }

@@ -37,7 +37,7 @@ export const DAGEN: Dag[] = [
         id: "dag1-sponsor",
         label: "Stuur je sponsor een kort bericht: 'Ik ben gestart'",
         uitleg:
-          "Geen lang verhaal nodig, gewoon even laten weten dat je vertrokken bent. Vanaf nu kijkt je sponsor in ELEVA vriendelijk mee of je dagelijks je stappen zet. Niet om te beoordelen. Gewoon om je rugdekking te geven.",
+          "Geen lang verhaal nodig, gewoon even laten weten dat je vertrokken bent. Zo weet je sponsor dat je onderweg bent en kan die er voor je zijn op de momenten dat het telt. Niet om te beoordelen. Gewoon rugdekking.",
         verplicht: true,
         inlineEmbed: "sponsor-melding",
       },
@@ -87,7 +87,7 @@ Met 20 namen ga je het niet redden. Niet omdat je faalt, maar omdat een gemiddel
 
 JE SPONSOR INLICHTEN
 
-Een sponsor is geen baas, het is je rugdekking. Eén kort "ik ben gestart"-berichtje is genoeg. Vanaf nu kijkt 'ie in ELEVA mee en ziet wat er gebeurt. Vele momenten van steun in de komende weken, vanuit één bericht.
+Een sponsor is geen baas, het is je rugdekking. Eén kort "ik ben gestart"-berichtje is genoeg: vanaf dat moment weet je sponsor dat je onderweg bent en staat de deur voor je open. Vele momenten van steun in de komende weken, vanuit één bericht.
 
 JIJ LAAT ZIEN, ZIJ BESLISSEN
 
