@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { NextRequest, NextResponse } from "next/server";
 import { sendPushToUser, sendPushToLeiders } from "@/lib/push/sendPush";
+import { logTeamSeintje } from "@/lib/team/seintjes";
 
 export async function POST(request: NextRequest) {
   try {
@@ -53,9 +54,15 @@ export async function POST(request: NextRequest) {
       tag: "onboarding",
     };
 
-    // 1. Stuur naar directe sponsor (als die bestaat)
+    // 1. Stuur naar directe sponsor (als die bestaat) + teruglees-log
     if (profile?.sponsor_id) {
       await sendPushToUser(profile.sponsor_id, payload);
+      await logTeamSeintje(
+        profile.sponsor_id,
+        user.id,
+        payload.title,
+        payload.body,
+      );
     }
 
     // 2. Stuur naar alle leiders, maar sluit sponsor + user zelf uit

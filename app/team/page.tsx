@@ -2,6 +2,10 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import KopieerLink from "@/components/team/KopieerLink";
 import { TeamBoom } from "@/components/team/TeamBoom";
+import {
+  TeamSeintjesUitklap,
+  type TeamSeintje,
+} from "@/components/team/TeamSeintjesUitklap";
 import { PremiumToggleKnop } from "@/components/team/PremiumToggleKnop";
 import { RolToggleKnop } from "@/components/team/RolToggleKnop";
 import { Reveal } from "@/components/ui/Reveal";
@@ -185,6 +189,28 @@ export default async function TeamPagina({ searchParams }: { searchParams: { lid
   const dag =
     profielModus === "sprint" ? Math.max(1, Math.min(60, ruweDag)) : ruweDag;
   const dagLabel = topbarLabelVoorModus(profielModus, dag);
+
+  // Seintjes-historie: de volledige pushberichten over teamleden,
+  // gegroepeerd per lid (max 10 per lid), terug te lezen in de
+  // voortgang-kaart (akkoord Raoul 28 juli).
+  const { data: seintjesRuw } = await supabase
+    .from("team_seintjes")
+    .select("lid_id, titel, detail, created_at")
+    .eq("ontvanger_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(150);
+  const seintjesPerLid: Record<string, TeamSeintje[]> = {};
+  for (const s of (seintjesRuw ?? []) as Array<
+    TeamSeintje & { lid_id: string | null }
+  >) {
+    const sleutel = s.lid_id ?? "algemeen";
+    if ((seintjesPerLid[sleutel]?.length ?? 0) >= 10) continue;
+    (seintjesPerLid[sleutel] ??= []).push({
+      titel: s.titel,
+      detail: s.detail,
+      created_at: s.created_at,
+    });
+  }
 
   const teamboom = await haalTeamBoomOp(supabase, user.id);
   const totaalLeden = telTotaal(teamboom);
@@ -419,6 +445,13 @@ export default async function TeamPagina({ searchParams }: { searchParams: { lid
                       })}
                     </div>
                   </div>
+
+                  {/* Volledige pushberichten over dit lid, terug te lezen.
+                      Via een push-klik (?lid=...) staat dit direct open. */}
+                  <TeamSeintjesUitklap
+                    seintjes={seintjesPerLid[lid.id] ?? []}
+                    standaardOpen={isUitgelicht}
+                  />
                 </div>
               );
             })}

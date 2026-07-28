@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendPushToUser } from "@/lib/push/sendPush";
+import { logTeamSeintje } from "@/lib/team/seintjes";
 import { dagVoorModusEnNummer } from "@/lib/playbook/dagen-voor-modus";
 import type { Modus } from "@/lib/onboarding/voltooiingen";
 
@@ -105,9 +106,17 @@ export async function POST(req: NextRequest) {
             await sendPushToUser(sponsorId, {
               title: `${memberNaam} · dag ${dagNummer} ✅`,
               body: taakLabel,
-              url: "/team",
+              // Direct naar het juiste teamlid: /team licht de kaart op
+              // en toont daar de seintjes (feedback Raoul 28 juli).
+              url: `/team?lid=${user.id}`,
               tag: `playbook-${user.id}-dag${dagNummer}`,
             });
+            await logTeamSeintje(
+              sponsorId,
+              user.id,
+              `${memberNaam} · dag ${dagNummer} ✅`,
+              taakLabel,
+            );
           }
         }
       } catch (pushErr) {
