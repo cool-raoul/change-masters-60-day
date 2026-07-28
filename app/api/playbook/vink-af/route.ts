@@ -64,8 +64,10 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      // Sponsor-push, best-effort. We sturen één push per voltooide taak.
-      // De sponsor ziet zo realtime hoe de eerste 21 dagen verlopen.
+      // Sponsor-push, best-effort. ÉÉN rustig bericht per dag (feedback
+      // Raoul 28 juli): pas als ALLE stappen van de dag zijn afgevinkt,
+      // in resultaat-taal. Elke losse stap pushen was te onrustig, en de
+      // taak-instructietekst las als een opdracht aan de sponsor.
       try {
         const { data: profile } = await supabase
           .from("profiles")
@@ -75,22 +77,28 @@ export async function POST(req: NextRequest) {
         const sponsorId = (profile as any)?.sponsor_id as string | null;
         const memberNaam = (profile as any)?.full_name as string | null;
         if (sponsorId && memberNaam) {
-          // Label van de taak MODUS-BEWUST opzoeken (bug Raoul 28 juli:
-          // de Sprint-lijst kende de Core-taken niet, waardoor de sponsor
-          // een rauw taak-id als pushbericht kreeg). Nooit het kale id
-          // naar een mens sturen: dan liever een nette algemene zin.
+          // Dag-taken MODUS-BEWUST opzoeken (Core en Sprint hebben elk
+          // hun eigen lijsten).
           const modus = (((profile as any)?.modus as string | null) ??
             "sprint") as Modus;
           const dag = dagVoorModusEnNummer(modus, dagNummer);
-          const taak = dag?.vandaagDoen.find((t) => t.id === taakId);
-          const taakLabel = taak?.label || "een stap van vandaag afgerond";
+          const taken = dag?.vandaagDoen ?? [];
           const adminClient = createAdminClient();
-          // Vermijd dubbele pushes: alleen sturen als we via de admin-
-          // client zien dat dit de EERSTE keer is dat deze taak op deze
-          // dag voor deze user is voltooid. We checken op count = 1
-          // (eigenlijk net na de upsert is het 1; bij her-vinken stopt de
-          // upsert via onconflict en is count nog steeds 1, maar dan
-          // is voltooid_op niet net nu, dus checken we daarop).
+          // Is de dag hiermee compleet?
+          const { data: klaarRijen } = await adminClient
+            .from("dag_voltooiingen")
+            .select("taak_id")
+            .eq("user_id", user.id)
+            .eq("dag_nummer", dagNummer);
+          const klaarSet = new Set(
+            ((klaarRijen ?? []) as { taak_id: string }[]).map(
+              (r) => r.taak_id,
+            ),
+          );
+          const dagCompleet =
+            taken.length > 0 && taken.every((t) => klaarSet.has(t.id));
+          // Dedup: alleen pushen als DEZE afvink (die de dag compleet
+          // maakte) net gebeurde; bij her-vinken is voltooid_op ouder.
           const tienSecondenGeleden = new Date(
             Date.now() - 10_000,
           ).toISOString();
@@ -102,10 +110,11 @@ export async function POST(req: NextRequest) {
             .eq("taak_id", taakId)
             .gte("voltooid_op", tienSecondenGeleden)
             .maybeSingle();
-          if (rij) {
+          if (dagCompleet && rij) {
+            const titel = `${memberNaam} heeft dag ${dagNummer} afgerond 🎉`;
             await sendPushToUser(sponsorId, {
-              title: `${memberNaam} · dag ${dagNummer} ✅`,
-              body: taakLabel,
+              title: titel,
+              body: `Alle ${taken.length} stappen van dag ${dagNummer} zijn gedaan. Tik om de voortgang te bekijken.`,
               // Direct naar het juiste teamlid: /team licht de kaart op
               // en toont daar de seintjes (feedback Raoul 28 juli).
               url: `/team?lid=${user.id}`,
@@ -114,8 +123,8 @@ export async function POST(req: NextRequest) {
             await logTeamSeintje(
               sponsorId,
               user.id,
-              `${memberNaam} · dag ${dagNummer} ✅`,
-              taakLabel,
+              titel,
+              `Gedaan: ${taken.map((t) => t.label).join(" · ")}`.slice(0, 500),
             );
           }
         }
