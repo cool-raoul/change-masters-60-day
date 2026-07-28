@@ -16,6 +16,7 @@ import { haalOverrides, pasOverrideToe } from "@/lib/playbook/overrides";
 import { pasTempoToeOpDag } from "@/lib/playbook/tempo-aware";
 import { genereerWeekritmeDag } from "@/lib/playbook/weekritme";
 import { berekenHuidigeDag } from "@/lib/playbook/bereken-dag";
+import { haalAlleVoltooiingenVoorUser } from "@/lib/onboarding/voltooiingen";
 import { startdatumVoorModus } from "@/lib/playbook/dag-teller";
 import { dagVoorModusEnNummer } from "@/lib/playbook/dagen-voor-modus";
 import type { CommitmentUren } from "@/lib/dagdoelen";
@@ -495,12 +496,18 @@ export default async function DashboardPagina({
     setupSlug: string;
   };
   const openAdminReminders: OpenReminder[] = [];
+  // Afvinken op /setup schrijft naar onboarding_voltooiingen (per slug),
+  // de dag-checklist naar dag_voltooiingen (per dag|taak). De tegel telt
+  // BEIDE bronnen, anders blijft een op /setup afgevinkte stap hier
+  // eeuwig "open" staan (bug Raoul 28 juli).
+  const setupVoltooidMap = await haalAlleVoltooiingenVoorUser(supabase, user.id);
   for (const d of DAGEN) {
     if (d.nummer >= dag) break; // alleen verleden dagen
     for (const taak of d.vandaagDoen) {
       const meta = ADMIN_TAKEN[taak.id];
       if (!meta) continue;
       if (voltooidSet.has(`${d.nummer}|${taak.id}`)) continue;
+      if (setupVoltooidMap.get(meta.setupSlug)?.voltooid) continue;
       openAdminReminders.push({
         dagNummer: d.nummer,
         taakId: taak.id,
