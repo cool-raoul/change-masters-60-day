@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendPushToUser } from "@/lib/push/sendPush";
-import { DAGEN } from "@/lib/playbook/dagen";
+import { dagVoorModusEnNummer } from "@/lib/playbook/dagen-voor-modus";
+import type { Modus } from "@/lib/onboarding/voltooiingen";
 
 // ============================================================
 // POST /api/playbook/vink-af
@@ -67,16 +68,21 @@ export async function POST(req: NextRequest) {
       try {
         const { data: profile } = await supabase
           .from("profiles")
-          .select("full_name, sponsor_id")
+          .select("full_name, sponsor_id, modus")
           .eq("id", user.id)
           .maybeSingle();
         const sponsorId = (profile as any)?.sponsor_id as string | null;
         const memberNaam = (profile as any)?.full_name as string | null;
         if (sponsorId && memberNaam) {
-          // Vind label van de taak in DAGEN voor in de push-tekst.
-          const dag = DAGEN.find((d) => d.nummer === dagNummer);
+          // Label van de taak MODUS-BEWUST opzoeken (bug Raoul 28 juli:
+          // de Sprint-lijst kende de Core-taken niet, waardoor de sponsor
+          // een rauw taak-id als pushbericht kreeg). Nooit het kale id
+          // naar een mens sturen: dan liever een nette algemene zin.
+          const modus = (((profile as any)?.modus as string | null) ??
+            "sprint") as Modus;
+          const dag = dagVoorModusEnNummer(modus, dagNummer);
           const taak = dag?.vandaagDoen.find((t) => t.id === taakId);
-          const taakLabel = taak?.label || taakId;
+          const taakLabel = taak?.label || "een stap van vandaag afgerond";
           const adminClient = createAdminClient();
           // Vermijd dubbele pushes: alleen sturen als we via de admin-
           // client zien dat dit de EERSTE keer is dat deze taak op deze
@@ -97,7 +103,7 @@ export async function POST(req: NextRequest) {
             .maybeSingle();
           if (rij) {
             await sendPushToUser(sponsorId, {
-              title: `${memberNaam}, dag ${dagNummer} stap voltooid`,
+              title: `${memberNaam} · dag ${dagNummer} ✅`,
               body: taakLabel,
               url: "/team",
               tag: `playbook-${user.id}-dag${dagNummer}`,

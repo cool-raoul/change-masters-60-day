@@ -29,9 +29,26 @@ export async function POST(request: NextRequest) {
 
     const naam = profile?.full_name || "Een teamlid";
 
+    // Sommige aanroepen sturen een leesbare zin mee ("heeft de app
+    // geïnstalleerd 📱"), andere een rauwe kolom-sleutel (stap_1_welkom).
+    // Een rauwe sleutel mag NOOIT in een pushbericht landen (bug Raoul
+    // 28 juli): vertaal bekende sleutels, en val anders netjes terug.
+    const STAP_LABELS: Record<string, string> = {
+      stap_1_welkom: 'heeft "Welkom & uitleg onboarding" doorlopen ✅',
+      stap_2_run: "snapt de 60-dagenrun (3 fasen + dagdoelen) ✅",
+      stap_3_namen: "heeft de eerste namen op de lijst gezet ✅",
+      stap_4_script: "heeft het uitnodigingsscript gelezen en geoefend ✅",
+      stap_5_doelen: "heeft de dagdoelen ingesteld ✅",
+    };
+    const leesbaar =
+      STAP_LABELS[stap] ??
+      (/^[a-z0-9_-]+$/i.test(stap)
+        ? "heeft een onboarding-stap afgerond ✅"
+        : stap);
+
     const payload = {
       title: "⚡ ELEVA Team Update",
-      body: `${naam} ${stap}`,
+      body: `${naam} ${leesbaar}`,
       url: `/team?lid=${user.id}`,
       tag: "onboarding",
     };
