@@ -110,7 +110,7 @@ export default async function LessenPagina() {
           (feedback Raoul 28 juli: de onboarding hoort in de dag-flow
           en moet altijd terug te vinden zijn). */}
       <Link
-        href="/lessen/0"
+        href="/vandaag?dag=0"
         className="card flex items-center justify-between gap-3 hover:bg-cm-surface-2 transition-colors border border-cm-gold/25"
       >
         <div className="min-w-0">

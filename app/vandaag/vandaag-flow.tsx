@@ -396,7 +396,7 @@ function VandaagFlowInner({
             {dag.nummer === 1 && (
               <div className="text-center pt-3">
                 <Link
-                  href="/lessen/0"
+                  href="/vandaag?dag=0"
                   className="inline-flex items-center gap-1.5 text-xs text-cm-white/50 hover:text-cm-gold transition-colors"
                 >
                   ← Dag 0 · jouw voorbereiding (terugkijken of afronden)

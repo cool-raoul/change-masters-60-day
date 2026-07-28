@@ -33,6 +33,12 @@ export function TesterToolbar({
 
   async function springNaar(dag: number) {
     if (bezig) return;
+    if (dag === 0) {
+      // Dag 0 · Jouw voorbereiding: altijd via de query-param (er is
+      // geen startdatum-verzetting die "vóór dag 1" kan uitdrukken).
+      router.push("/vandaag?dag=0");
+      return;
+    }
     if (urlModus === "queryparam") {
       // Pure URL-navigatie, geen server-call. /vandaag/page.tsx leest
       // ?dag=N voor founders en toont die dag.
@@ -79,8 +85,8 @@ export function TesterToolbar({
 
   function springCustom() {
     const d = Number(dagInput);
-    if (!Number.isFinite(d) || d < 1 || d > 60) {
-      toast.error("Kies een dag tussen 1 en 60");
+    if (!Number.isFinite(d) || d < 0 || d > 60) {
+      toast.error("Kies een dag tussen 0 en 60");
       return;
     }
     springNaar(d);
@@ -120,7 +126,7 @@ export function TesterToolbar({
               <span className="text-[10px] uppercase tracking-wider text-purple-300 mr-1">
                 Week 1-3
               </span>
-              {[1, 5, 10, 15, 18, 21].map((d) => (
+              {[0, 1, 5, 10, 15, 18, 21].map((d) => (
                 <button
                   key={d}
                   type="button"

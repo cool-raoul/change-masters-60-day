@@ -34,6 +34,7 @@ import { bracketVoorDTT, type DTTInput } from "@/lib/dtt/advies";
 import { genereerDMOStappen } from "@/lib/dtt/dmo-stappen";
 import { haalAlleVoltooiingenVoorUser, type Modus } from "@/lib/onboarding/voltooiingen";
 import { TAAK_NAAR_CROSS_MODUS_SLUG } from "@/lib/onboarding/taak-cross-modus";
+import { DAG_NUL, dag0TaakKlaarVolgensOnboarding } from "@/lib/onboarding/dag-nul";
 import type { CommitmentUren } from "@/lib/dagdoelen";
 import { VandaagFlow } from "./vandaag-flow";
 import { ADMIN_ITEMS } from "@/lib/setup/admin-items";
@@ -191,11 +192,14 @@ export default async function VandaagPagina({
   const isTester = (profile as any)?.is_tester === true;
 
   // Founder mag via ?dag=N elke dag bekijken zonder z'n eigen voortgang
-  // aan te raken. Member negeert de query-param (security).
+  // aan te raken. Member negeert de query-param (security), met ÉÉN
+  // uitzondering: ?dag=0 (Dag 0 · jouw voorbereiding) mag iedereen
+  // altijd openen — dat is teruggaan, geen vooruit-bladeren.
+  const dagParamRuw = sp.dag ? Number.parseInt(sp.dag, 10) : NaN;
   const dagParam =
-    (isFounder || isTester) && sp.dag ? Number.parseInt(sp.dag, 10) : NaN;
+    isFounder || isTester ? dagParamRuw : dagParamRuw === 0 ? 0 : NaN;
   const dagOverride =
-    Number.isFinite(dagParam) && dagParam >= 1 && dagParam <= 60
+    Number.isFinite(dagParam) && dagParam >= 0 && dagParam <= 60
       ? dagParam
       : null;
 
@@ -247,8 +251,8 @@ export default async function VandaagPagina({
       { isTester: isTester || isFounder, modus: modusVoorDagTeller },
     );
 
-  // Buiten dag 1-60 → terug naar dashboard
-  if (dag < 1 || dag > 60) {
+  // Buiten dag 0-60 → terug naar dashboard (0 = Dag 0 · voorbereiding)
+  if (dag < 0 || dag > 60) {
     redirect("/dashboard");
   }
 
@@ -356,7 +360,47 @@ export default async function VandaagPagina({
   });
 
   let dagData;
-  if (lanceerRoute) {
+  if (dag === 0) {
+    // Dag 0 · Jouw voorbereiding: volwaardige dag in de flow (zelfde
+    // motor als elke dag). Vinkjes syncen eenmalig vanuit de bestaande
+    // onboarding-administratie, zodat al-gedane stappen afgevinkt staan;
+    // daarna loopt afvinken gewoon via dag_voltooiingen (dag_nummer 0).
+    dagData = DAG_NUL;
+    const onboardingMap = await haalAlleVoltooiingenVoorUser(
+      supabase,
+      user.id,
+    );
+    const alVoltooid = new Set(
+      (
+        (alleVoltooiingen as Array<{ dag_nummer: number; taak_id: string }>) ||
+        []
+      )
+        .filter((v) => v.dag_nummer === 0)
+        .map((v) => v.taak_id),
+    );
+    const teSyncen = DAG_NUL.vandaagDoen
+      .map((t) => t.id)
+      .filter(
+        (id) =>
+          !alVoltooid.has(id) &&
+          dag0TaakKlaarVolgensOnboarding(id, onboardingMap),
+      );
+    if (teSyncen.length > 0) {
+      await supabase.from("dag_voltooiingen").upsert(
+        teSyncen.map((taakId) => ({
+          user_id: user.id,
+          dag_nummer: 0,
+          taak_id: taakId,
+        })),
+        { onConflict: "user_id,dag_nummer,taak_id" },
+      );
+      for (const taakId of teSyncen) {
+        (alleVoltooiingen as Array<{ dag_nummer: number; taak_id: string }>)?.push(
+          { dag_nummer: 0, taak_id: taakId },
+        );
+      }
+    }
+  } else if (lanceerRoute) {
     // Beleving van de lanceer-reis: dag-data uit de preview-routes.
     // Geen DMO/afsluit-injectie hier; de geremapte V9-dagen hebben hun
     // eigen afsluit-stappen al in de data zitten.

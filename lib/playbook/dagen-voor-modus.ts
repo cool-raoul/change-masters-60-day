@@ -5,6 +5,7 @@ import {
   genereerLifetimeDag,
 } from "./core-dagen";
 import { CORE_V9_STAPPEN } from "./core-dagen-v9";
+import { DAG_NUL } from "@/lib/onboarding/dag-nul";
 import type { Dag } from "./types";
 
 // ============================================================
@@ -25,6 +26,8 @@ export function dagVoorModusEnNummer(
   modus: Modus,
   dagNummer: number,
 ): Dag | null {
+  // Dag 0 · Jouw voorbereiding: gedeeld over Sprint en Core.
+  if (dagNummer === 0 && modus !== "pro") return DAG_NUL;
   if (modus === "core") {
     if (dagNummer <= 21) {
       // V9-stappen: dezelfde array die /vandaag toont (consistent met de

@@ -1,115 +1,160 @@
 import { ITEM_SLUGS } from "./sleutels";
 import type { VoltooiingStatus } from "./voltooiingen";
+import type { Dag } from "@/lib/playbook/types";
 
 // ============================================================
 // Dag 0 · Jouw voorbereiding — de onboarding- en setup-stappen
-// als onderdeel van de dag-flow (feedback Raoul 28 juli: niet
-// meer los van dag 1, altijd terug te vinden op /lessen/0).
+// als VOLWAARDIGE dag in de dag-flow (feedback Raoul 28 juli:
+// zelfde opbouw als elke andere dag: les + taken + afvinken,
+// bereikbaar via /vandaag?dag=0 en de dag-springer).
 //
-// Eén centrale definitie; de vink-status komt uit de bestaande
-// onboarding_voltooiingen (cross-modus), er is GEEN nieuwe
-// opslag. Volgorde en inhoud zijn hier in één bestand aan te
-// passen zodra Raoul de definitieve dag-indeling vastlegt.
+// De vink-status synct met de bestaande onboarding-administratie
+// (onboarding_voltooiingen); afvinken gaat daarna gewoon via
+// dag_voltooiingen met dag_nummer 0, zoals elke dag.
+// Inhoud en volgorde: hier in één bestand aan te passen.
 // ============================================================
 
-export type DagNulStap = {
-  id: string;
-  icoon: string;
-  label: string;
-  uitleg: string;
-  href: string;
-  /** Onboarding-slugs die deze stap dekken. */
-  slugs: string[];
-  /** true = één van de slugs is genoeg (bijv. tempo-keuze per modus). */
-  eenVanDe?: boolean;
-};
-
-export const DAG_NUL_STAPPEN: DagNulStap[] = [
-  {
-    id: "app",
-    icoon: "📱",
-    label: "ELEVA op je beginscherm + meldingen aan",
-    uitleg:
-      "Zo staat ELEVA altijd tussen je apps en mis je geen enkel seintje.",
-    href: "/onboarding",
+/** Welke onboarding-slugs dekken welke dag 0-taak (voor auto-sync). */
+export const DAG0_TAAK_SLUGS: Record<
+  string,
+  { slugs: string[]; eenVanDe?: boolean }
+> = {
+  "dag0-app": {
     slugs: [ITEM_SLUGS.appGeinstalleerd, ITEM_SLUGS.pushAan],
     eenVanDe: true,
   },
-  {
-    id: "why",
-    icoon: "💛",
-    label: "Jouw WHY vastleggen",
-    uitleg:
-      "Waarom doe jij dit? Je WHY is wat je draagt op de dagen dat het even taai is.",
-    href: "/mijn-why",
-    slugs: [ITEM_SLUGS.why],
-  },
-  {
-    id: "namen",
-    icoon: "✍️",
-    label: "Je eerste 5 namen op de lijst",
-    uitleg: "Vijf mensen die je dit gunt. Meer hoeft nog niet.",
-    href: "/namenlijst",
-    slugs: [ITEM_SLUGS.eersteVijfNamen],
-  },
-  {
-    id: "tempo",
-    icoon: "⚡",
-    label: "Je tempo kiezen",
-    uitleg:
-      "Hoeveel tijd heb je per dag? Daar past ELEVA je aantallen op aan.",
-    href: "/onboarding",
+  "dag0-why": { slugs: [ITEM_SLUGS.why] },
+  "dag0-namen": { slugs: [ITEM_SLUGS.eersteVijfNamen] },
+  "dag0-tempo": {
     slugs: [ITEM_SLUGS.modusKeuzeTempo, ITEM_SLUGS.modusKeuzeDtt],
     eenVanDe: true,
   },
-  {
-    id: "webshop",
-    icoon: "🛒",
-    label: "Je eigen webshop aanmaken",
-    uitleg: "Jouw webshop is de plek waar klanten straks bestellen.",
-    href: "/setup/webshop-aangemaakt",
-    slugs: [ITEM_SLUGS.webshopAangemaakt],
-  },
-  {
-    id: "krediet",
-    icoon: "✅",
-    label: "Kredietformulier invullen",
-    uitleg: "Eenmalig regelen, dan staat je account administratief goed.",
-    href: "/setup/kredietformulier-ingevuld",
-    slugs: [ITEM_SLUGS.kredietformulierIngevuld],
-  },
-  {
-    id: "teams-admin",
-    icoon: "📋",
-    label: "Administratiesysteem inrichten",
-    uitleg: "Zo houd je vanaf dag één overzicht over je mensen.",
-    href: "/setup/teams-admin-ingericht",
-    slugs: [ITEM_SLUGS.teamsAdminIngericht],
-  },
-  {
-    id: "bestellinks",
-    icoon: "🔗",
-    label: "Bestellinks koppelen aan ELEVA",
-    uitleg: "Dan kan ELEVA jouw links gebruiken in adviezen en freebies.",
-    href: "/setup/bestellinks-gekoppeld",
-    slugs: [ITEM_SLUGS.bestellinksGekoppeld],
-  },
-  {
-    id: "productadvies",
-    icoon: "🧪",
-    label: "De productadvies-test zelf doen",
-    uitleg:
-      "Ervaar zelf wat je prospects straks ervaren, dan kun je er ook over vertellen.",
-    href: "/setup/productadvies-test-gedaan",
-    slugs: [ITEM_SLUGS.productadviesTestGedaan],
-  },
-];
+  "dag0-webshop": { slugs: [ITEM_SLUGS.webshopAangemaakt] },
+  "dag0-krediet": { slugs: [ITEM_SLUGS.kredietformulierIngevuld] },
+  "dag0-teams-admin": { slugs: [ITEM_SLUGS.teamsAdminIngericht] },
+  "dag0-bestellinks": { slugs: [ITEM_SLUGS.bestellinksGekoppeld] },
+  "dag0-productadvies": { slugs: [ITEM_SLUGS.productadviesTestGedaan] },
+};
 
-/** Is een dag 0-stap klaar volgens de (cross-modus) voltooiingen-map? */
-export function dagNulStapKlaar(
-  stap: DagNulStap,
+/** Is een dag 0-taak al gedaan volgens de (cross-modus) onboarding-administratie? */
+export function dag0TaakKlaarVolgensOnboarding(
+  taakId: string,
   voltooiingen: Map<string, VoltooiingStatus>,
 ): boolean {
+  const def = DAG0_TAAK_SLUGS[taakId];
+  if (!def) return false;
   const check = (slug: string) => voltooiingen.get(slug)?.voltooid === true;
-  return stap.eenVanDe ? stap.slugs.some(check) : stap.slugs.every(check);
+  return def.eenVanDe ? def.slugs.some(check) : def.slugs.every(check);
 }
+
+/** Dag 0 als volwaardige dag voor de vandaag-flow. */
+export const DAG_NUL: Dag = {
+  nummer: 0,
+  titel: "Jouw voorbereiding: alles klaarzetten voor je start",
+  fase: 1,
+  vandaagDoen: [
+    {
+      id: "dag0-app",
+      label: "Zet ELEVA op je beginscherm en zet je meldingen aan",
+      uitleg:
+        "Zo staat ELEVA altijd tussen je apps en mis je geen enkel seintje van je Mentor of je sponsor.",
+      verplicht: true,
+      actieRoute: "/onboarding",
+      actieRouteLabel: "Open de start-stappen →",
+    },
+    {
+      id: "dag0-why",
+      label: "Leg jouw WHY vast",
+      uitleg:
+        "Waarom doe jij dit? Je WHY is wat je draagt op de dagen dat het even taai is. Vijf minuten met de Mentor en hij staat.",
+      verplicht: true,
+      actieRoute: "/mijn-why",
+      actieRouteLabel: "Naar mijn WHY →",
+    },
+    {
+      id: "dag0-namen",
+      label: "Zet je eerste 5 namen op de lijst",
+      uitleg:
+        "Vijf mensen die je dit gunt. Meer hoeft nog niet: de rest komt vanzelf in de eerste dagen.",
+      verplicht: true,
+      actieRoute: "/namenlijst",
+      actieRouteLabel: "Naar mijn namenlijst →",
+    },
+    {
+      id: "dag0-tempo",
+      label: "Kies je tempo",
+      uitleg:
+        "Hoeveel tijd heb je per dag? Daar past ELEVA je aantallen en je dag-stappen op aan.",
+      verplicht: true,
+      actieRoute: "/onboarding",
+      actieRouteLabel: "Open de start-stappen →",
+    },
+    {
+      id: "dag0-webshop",
+      label: "Maak je eigen webshop aan",
+      uitleg:
+        "Jouw webshop is de plek waar klanten straks bestellen. Eenmalig aanmaken, daarna werkt alles vanzelf.",
+      verplicht: true,
+      actieRoute: "/setup/webshop-aangemaakt",
+      actieRouteLabel: "Open de uitleg + film →",
+    },
+    {
+      id: "dag0-krediet",
+      label: "Vul het kredietformulier in",
+      uitleg: "Eenmalig regelen, dan staat je account administratief goed.",
+      verplicht: true,
+      actieRoute: "/setup/kredietformulier-ingevuld",
+      actieRouteLabel: "Open de uitleg + film →",
+    },
+    {
+      id: "dag0-teams-admin",
+      label: "Richt je administratiesysteem in",
+      uitleg: "Zo houd je vanaf dag één overzicht over je mensen.",
+      verplicht: true,
+      actieRoute: "/setup/teams-admin-ingericht",
+      actieRouteLabel: "Open de uitleg + film →",
+    },
+    {
+      id: "dag0-bestellinks",
+      label: "Koppel je bestellinks aan ELEVA",
+      uitleg:
+        "Dan kan ELEVA jouw links gebruiken in adviezen en freebies, zodat bestellingen bij jou landen.",
+      verplicht: true,
+      actieRoute: "/setup/bestellinks-gekoppeld",
+      actieRouteLabel: "Open de uitleg + film →",
+    },
+    {
+      id: "dag0-productadvies",
+      label: "Doe zelf de productadvies-test",
+      uitleg:
+        "Ervaar zelf wat je prospects straks ervaren, dan kun je er ook over vertellen.",
+      verplicht: false,
+      actieRoute: "/setup/productadvies-test-gedaan",
+      actieRouteLabel: "Open de uitleg + film →",
+    },
+  ],
+  faseDoel:
+    "Alles staat klaar voordat je dag 1 begint: je fundament, je gereedschap en je eerste vijf namen.",
+  waarInEleva: [
+    {
+      actie: "Start-stappen opnieuw doorlopen",
+      menupad: "Deze pagina → open een stap",
+      route: "/onboarding",
+    },
+    {
+      actie: "Administratieve stappen met uitleg-films",
+      menupad: "Instellingen → Administratieve stappen",
+      route: "/setup",
+    },
+  ],
+  watJeLeert: `Dit is je dag 0: de dag vóór je eerste echte dag.
+
+Vandaag bouw je nog niks aan je business, vandaag zet je alles klaar. Je WHY, je eerste vijf namen, je webshop, je administratie. Saai werk? Misschien. Maar wie dit nu regelt, hoeft er straks nooit meer over na te denken en kan vanaf dag 1 al zijn aandacht aan mensen geven.
+
+Alles wat je hier afvinkt, blijft geregeld. En je kunt hier altijd terugkomen: dag 0 blijft gewoon staan, ook als je al onderweg bent.`,
+  waaromWerktDit: {
+    tekst:
+      "Een goede voorbereiding wint niet omdat 'ie perfect is, maar omdat je 'm maar één keer hoeft te doen.",
+    bron: "eigen",
+  },
+};

@@ -32,7 +32,8 @@ export async function POST(req: NextRequest) {
     const taakId: string = body.taakId;
     const vink: boolean = body.vink;
 
-    if (!Number.isFinite(dagNummer) || dagNummer < 1 || dagNummer > 60) {
+    // Dag 0 = Jouw voorbereiding (volwaardige dag in de flow).
+    if (!Number.isFinite(dagNummer) || dagNummer < 0 || dagNummer > 60) {
       return NextResponse.json(
         { error: "Ongeldig dagNummer" },
         { status: 400 },
