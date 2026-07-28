@@ -6,6 +6,7 @@ import {
   TeamSeintjesUitklap,
   type TeamSeintje,
 } from "@/components/team/TeamSeintjesUitklap";
+import { ScrollNaarLid } from "@/components/team/ScrollNaarLid";
 import { PremiumToggleKnop } from "@/components/team/PremiumToggleKnop";
 import { RolToggleKnop } from "@/components/team/RolToggleKnop";
 import { Reveal } from "@/components/ui/Reveal";
@@ -462,18 +463,7 @@ export default async function TeamPagina({ searchParams }: { searchParams: { lid
           </p>
 
           {/* Auto-scroll naar uitgelicht lid (via push melding) */}
-          {uitgelichtLid && (
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `
-                  (function() {
-                    var el = document.getElementById('lid-${uitgelichtLid}');
-                    if (el) { setTimeout(function() { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); }
-                  })();
-                `,
-              }}
-            />
-          )}
+          {uitgelichtLid && <ScrollNaarLid lidId={uitgelichtLid} />}
         </div>
         </Reveal>
       )}
