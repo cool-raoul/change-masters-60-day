@@ -7,6 +7,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import LinksBeheer from "@/components/resetcode/LinksBeheer";
 
 export const dynamic = "force-dynamic";
@@ -33,12 +34,15 @@ export default async function ResetcodeLinksPagina() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-8 text-cm-white">
       <header className="mb-6">
-        <a
+        {/* Next-Link i.p.v. kale <a>: die deed een volledige herlaad van
+            het zware dashboard zonder klik-feedback, waardoor het leek
+            alsof de knop niet reageerde (feedback Raoul 28 juli). */}
+        <Link
           href="/dashboard"
-          className="inline-flex items-center gap-1.5 text-sm text-cm-muted hover:text-cm-white mb-3"
+          className="inline-flex items-center gap-1.5 text-sm text-cm-muted hover:text-cm-white mb-3 active:opacity-60"
         >
           ← Terug naar dashboard
-        </a>
+        </Link>
         <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
           De Resetcode
         </p>
