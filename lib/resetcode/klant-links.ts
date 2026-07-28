@@ -198,10 +198,10 @@ export async function seintjeNaarMember(
     await sendPushToUser(ctx.memberId, {
       title: titel,
       body: detail,
-      // Altijd naar Mijn klanten: daar staat het volledige bericht (de
-      // push zelf wordt vaak afgekapt) plus de seintjes-historie per
-      // klant (feedback Raoul 28 juli).
-      url: "/resetcode-links",
+      // Naar Mijn klanten mét focus op déze klant: de kaart scrollt in
+      // beeld, klapt de seintjes open en licht even op, zodat je bij
+      // een lange lijst niet hoeft te zoeken (feedback Raoul 28 juli).
+      url: `/resetcode-links?focus=${ctx.linkId}`,
       tag: `resetcode-${ctx.linkId}`,
     });
   } catch (e) {

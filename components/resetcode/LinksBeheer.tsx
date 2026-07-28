@@ -59,7 +59,31 @@ export default function LinksBeheer() {
   const [toonSuggesties, setToonSuggesties] = useState(false);
   // Uitgeklapte seintjes-historie (link-id of null).
   const [openSeintjes, setOpenSeintjes] = useState<string | null>(null);
+  // Focus-kaart vanuit een pushbericht (?focus=<linkId>): ernaartoe
+  // scrollen, seintjes openklappen en even gouden laten oplichten,
+  // zodat je bij 100 klanten niet hoeft te zoeken (Raoul 28 juli).
+  const [focusId, setFocusId] = useState<string | null>(null);
   const zoekTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    try {
+      const f = new URLSearchParams(window.location.search).get("focus");
+      if (f) {
+        setFocusId(f);
+        setOpenSeintjes(f);
+      }
+    } catch {
+      /* geen querystring, geen focus */
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!focusId || links.length === 0) return;
+    const el = document.getElementById(`klant-${focusId}`);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+    const t = setTimeout(() => setFocusId(null), 6000);
+    return () => clearTimeout(t);
+  }, [focusId, links.length]);
 
   function bijNaamWijziging(waarde: string) {
     setNaam(waarde);
@@ -243,7 +267,15 @@ export default function LinksBeheer() {
           </p>
         )}
         {links.map((l) => (
-          <div key={l.id} className="card">
+          <div
+            key={l.id}
+            id={`klant-${l.id}`}
+            className={`card transition-all ${
+              focusId === l.id
+                ? "ring-2 ring-cm-gold shadow-lg shadow-cm-gold/20 animate-pulse"
+                : ""
+            }`}
+          >
             <div className="flex items-baseline justify-between gap-3 flex-wrap">
               <div>
                 <span className="text-cm-white font-semibold text-base">
