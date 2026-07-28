@@ -10,9 +10,26 @@
 // rejecteerde ankerstap < 1, waardoor sideflow-vinking effectief faalde.
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { NextResponse } from "next/server";
+import { sendPushToUser } from "@/lib/push/sendPush";
+import { logTeamSeintje } from "@/lib/team/seintjes";
 
 const SIDEFLOW_ANKERSTAP_MARKER = 0;
+
+// Cruciale momenten waar de sponsor van wil weten (feedback Raoul 28
+// juli: geen ruis per stap, wél de betekenisvolle keuzes en resultaten,
+// in resultaat-taal). {n} = voornaam/naam van het teamlid.
+const CRUCIALE_MOMENTEN: Record<string, string> = {
+  "core-v9-sideflow-prepost-1-uitleg":
+    "{n} heeft gekozen voor de pre-post 🌱",
+  "core-v9-sideflow-21dagen-1-uitleg":
+    "{n} heeft gekozen voor de 21-dagen-post 🌱",
+  "core-v9-sideflow-prepost-5-plaatsen":
+    "{n} heeft de pre-post geplaatst op social media 🎉",
+  "core-v9-sideflow-21dagen-6-plaatsen":
+    "{n} heeft de 21-dagen-post geplaatst op social media 🎉",
+};
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -48,6 +65,15 @@ export async function POST(request: Request) {
 
   try {
     if (voltooid) {
+      // Voor de cruciale-momenten-melding: was deze stap al eens gedaan?
+      // (Alleen bij de EERSTE keer een sponsor-seintje, her-vinken niet.)
+      const { data: bestond } = await supabase
+        .from("core_v6_substep_voltooiingen")
+        .select("taak_id")
+        .eq("user_id", user.id)
+        .eq("ankerstap_nummer", SIDEFLOW_ANKERSTAP_MARKER)
+        .eq("taak_id", taakId)
+        .maybeSingle();
       const { error } = await supabase
         .from("core_v6_substep_voltooiingen")
         .upsert(
@@ -64,6 +90,33 @@ export async function POST(request: Request) {
           { ok: false, error: error.message },
           { status: 500 },
         );
+      }
+      // Cruciaal moment + eerste keer -> sponsor weet wat er ECHT is
+      // gedaan ("heeft gekozen voor de 21-dagen-post"), met teruglees-log.
+      if (!bestond && CRUCIALE_MOMENTEN[taakId]) {
+        try {
+          const admin = createAdminClient();
+          const { data: profiel } = await admin
+            .from("profiles")
+            .select("full_name, sponsor_id")
+            .eq("id", user.id)
+            .maybeSingle();
+          const sponsorId = (profiel as any)?.sponsor_id as string | null;
+          const naam =
+            ((profiel as any)?.full_name as string | null) || "Een teamlid";
+          if (sponsorId) {
+            const titel = CRUCIALE_MOMENTEN[taakId].replaceAll("{n}", naam);
+            await sendPushToUser(sponsorId, {
+              title: titel,
+              body: "Tik om de voortgang te bekijken.",
+              url: `/team?lid=${user.id}`,
+              tag: `sideflow-${user.id}-${taakId}`,
+            });
+            await logTeamSeintje(sponsorId, user.id, titel, null);
+          }
+        } catch (e) {
+          console.warn("cruciaal-moment-seintje mislukt (niet fataal):", e);
+        }
       }
     } else {
       const { error } = await supabase
