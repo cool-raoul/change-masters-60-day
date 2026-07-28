@@ -251,11 +251,16 @@ export default async function KlantLinkPagina({
     timeZone: "Europe/Amsterdam",
   }).format(new Date());
   let dagNummerRuw: number | null = null;
-  if ((opStartStation || opVraagStation) && ctx.startDatum) {
-    dagNummerRuw =
-      Math.round(
-        (Date.parse(vandaagStr) - Date.parse(ctx.startDatum)) / 86_400_000,
-      ) + 1;
+  if (opStartStation || opVraagStation) {
+    // Vóór het gekozen startmoment loopt er GEEN dag-teller: de leeftijd
+    // van de link is niet de dag van de klant (bug Suus 28 juli: "dag 5"-
+    // innames en "check-in (dag 5)" terwijl ze nog moest beginnen).
+    if (ctx.startDatum) {
+      dagNummerRuw =
+        Math.round(
+          (Date.parse(vandaagStr) - Date.parse(ctx.startDatum)) / 86_400_000,
+        ) + 1;
+    }
   } else if (ctx.stationSinds) {
     dagNummerRuw =
       Math.floor(
