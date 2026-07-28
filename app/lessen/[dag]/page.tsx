@@ -6,6 +6,8 @@ import { startdatumVoorModus } from "@/lib/playbook/dag-teller";
 import { CORE_V9_STAPPEN } from "@/lib/playbook/core-dagen-v9";
 import { DAGEN } from "@/lib/playbook/dagen";
 import type { Modus } from "@/lib/onboarding/voltooiingen";
+import { haalAlleVoltooiingenVoorUser } from "@/lib/onboarding/voltooiingen";
+import { DAG_NUL_STAPPEN, dagNulStapKlaar } from "@/lib/onboarding/dag-nul";
 
 // ============================================================
 // /lessen/[dag], één eerdere les terug-lezen (read-only).
@@ -32,7 +34,94 @@ export default async function LesDetailPagina({
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  if (!Number.isFinite(dagNr) || dagNr < 1 || dagNr > 21) {
+  // Dag 0 · Jouw voorbereiding: de onboarding- en setup-stappen als
+  // onderdeel van de dag-flow (feedback Raoul 28 juli). Altijd terug
+  // te vinden en opnieuw te openen; vinkjes komen uit de bestaande
+  // onboarding-administratie, elke stap linkt naar zijn eigen plek.
+  if (dagNr === 0) {
+    const voltooiingen = await haalAlleVoltooiingenVoorUser(supabase, user.id);
+    const stappen = DAG_NUL_STAPPEN.map((s) => ({
+      ...s,
+      klaar: dagNulStapKlaar(s, voltooiingen),
+    }));
+    const aantalKlaar = stappen.filter((s) => s.klaar).length;
+    return (
+      <div className="max-w-3xl mx-auto space-y-6">
+        <div className="flex items-start justify-between gap-3 flex-wrap">
+          <div>
+            <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
+              Dag 0 · Jouw voorbereiding
+            </p>
+            <h1 className="font-serif-warm text-3xl text-cm-white leading-tight mt-1">
+              Alles klaarzetten voor je start
+            </h1>
+            <p className="text-cm-white opacity-60 mt-2 text-sm leading-relaxed max-w-xl">
+              Dit zijn de stappen van vóór je dag 1: je fundament. Alles wat je
+              al deed staat afgevinkt; tik op een stap om &apos;m te openen,
+              af te ronden of gewoon terug te kijken.
+            </p>
+          </div>
+          <Link href="/lessen" className="btn-secondary text-sm">
+            ← Lessen
+          </Link>
+        </div>
+
+        <div className="card">
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-cm-white text-sm font-semibold">
+              {aantalKlaar} van {stappen.length} stappen klaar
+            </p>
+            <span className="text-cm-gold text-xs font-bold">
+              {Math.round((aantalKlaar / stappen.length) * 100)}%
+            </span>
+          </div>
+          <div className="w-full h-1.5 bg-cm-surface-2 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-gold rounded-full"
+              style={{
+                width: `${Math.round((aantalKlaar / stappen.length) * 100)}%`,
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          {stappen.map((s) => (
+            <Link
+              key={s.id}
+              href={s.href}
+              className="card flex items-center gap-3 hover:bg-cm-surface-2 transition-colors"
+            >
+              <span className="text-xl">{s.klaar ? "✅" : s.icoon}</span>
+              <div className="min-w-0 flex-1">
+                <p
+                  className={`text-sm font-semibold ${s.klaar ? "text-cm-white/60" : "text-cm-white"}`}
+                >
+                  {s.label}
+                </p>
+                <p className="text-cm-white/45 text-xs leading-relaxed">
+                  {s.uitleg}
+                </p>
+              </div>
+              <span className="text-cm-gold text-xs whitespace-nowrap">
+                {s.klaar ? "Bekijk →" : "Doen →"}
+              </span>
+            </Link>
+          ))}
+        </div>
+
+        <p className="text-cm-white/35 text-xs leading-relaxed">
+          Klaar met alles? Dan begint jouw reis gewoon op{" "}
+          <Link href="/vandaag" className="text-cm-gold underline underline-offset-2">
+            je dag van vandaag
+          </Link>
+          .
+        </p>
+      </div>
+    );
+  }
+
+  if (!Number.isFinite(dagNr) || dagNr < 0 || dagNr > 21) {
     redirect("/lessen");
   }
 

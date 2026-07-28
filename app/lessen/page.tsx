@@ -106,6 +106,23 @@ export default async function LessenPagina() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <Header />
+      {/* Dag 0 · Jouw voorbereiding: altijd bovenaan, ook vóór dag 1
+          (feedback Raoul 28 juli: de onboarding hoort in de dag-flow
+          en moet altijd terug te vinden zijn). */}
+      <Link
+        href="/lessen/0"
+        className="card flex items-center justify-between gap-3 hover:bg-cm-surface-2 transition-colors border border-cm-gold/25"
+      >
+        <div className="min-w-0">
+          <p className="text-cm-gold text-xs font-semibold">Dag 0</p>
+          <p className="text-cm-white text-sm font-semibold truncate">
+            Jouw voorbereiding: alles klaarzetten voor je start
+          </p>
+        </div>
+        <span className="text-cm-gold text-xs whitespace-nowrap">
+          Bekijk →
+        </span>
+      </Link>
       {lessen.length === 0 ? (
         <div className="card border-dashed">
           <p className="text-cm-white opacity-70 text-sm">

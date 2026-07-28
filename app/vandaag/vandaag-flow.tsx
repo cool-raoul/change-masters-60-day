@@ -391,6 +391,18 @@ function VandaagFlowInner({
               blokken={blokkenOpPositie("boven-titel")}
               isFounder={isFounder}
             />
+            {/* Dag 0-anker: vanaf dag 1 is de voorbereiding altijd één tik
+                terug (feedback Raoul 28 juli: onboarding hoort in de flow). */}
+            {dag.nummer === 1 && (
+              <div className="text-center pt-3">
+                <Link
+                  href="/lessen/0"
+                  className="inline-flex items-center gap-1.5 text-xs text-cm-white/50 hover:text-cm-gold transition-colors"
+                >
+                  ← Dag 0 · jouw voorbereiding (terugkijken of afronden)
+                </Link>
+              </div>
+            )}
             <div className="text-center space-y-2 pt-4">
               <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
                 Dag {dag.nummer} · Fase {dag.fase}
