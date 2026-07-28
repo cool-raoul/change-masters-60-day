@@ -63,15 +63,19 @@ export async function GET() {
       .limit(100);
     seintjes = (sData ?? []) as typeof seintjes;
   }
-  const laatstePerLink: Record<string, (typeof seintjes)[number]> = {};
+  // Per link de recente seintjes (nieuwste eerst): het overzicht toont
+  // de laatste inline en de rest uitklapbaar, zodat een afgekapt
+  // pushbericht altijd volledig terug te lezen is (Raoul 28 juli).
+  const perLink: Record<string, typeof seintjes> = {};
   for (const s of seintjes) {
-    if (!laatstePerLink[s.link_id]) laatstePerLink[s.link_id] = s;
+    (perLink[s.link_id] ??= []).push(s);
   }
   return Response.json({
     ok: true,
     links: links.map((l) => ({
       ...l,
-      laatste_seintje: laatstePerLink[l.id] ?? null,
+      laatste_seintje: perLink[l.id]?.[0] ?? null,
+      seintjes: (perLink[l.id] ?? []).slice(0, 8),
     })),
   });
 }

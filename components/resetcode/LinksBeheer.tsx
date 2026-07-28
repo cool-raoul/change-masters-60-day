@@ -30,6 +30,12 @@ type LinkRij = {
     detail: string | null;
     created_at: string;
   } | null;
+  // Recente seintjes (nieuwste eerst), volledig terug te lezen.
+  seintjes?: {
+    titel: string;
+    detail: string | null;
+    created_at: string;
+  }[];
 };
 
 const PROGRAMMA_LABEL: Record<string, string> = {
@@ -51,6 +57,8 @@ export default function LinksBeheer() {
   const [gekozenProspect, setGekozenProspect] =
     useState<ProspectSuggestie | null>(null);
   const [toonSuggesties, setToonSuggesties] = useState(false);
+  // Uitgeklapte seintjes-historie (link-id of null).
+  const [openSeintjes, setOpenSeintjes] = useState<string | null>(null);
   const zoekTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function bijNaamWijziging(waarde: string) {
@@ -264,7 +272,7 @@ export default function LinksBeheer() {
               {" · laatst actief "}
               {new Date(l.laatste_activiteit).toLocaleDateString("nl-NL")}
             </p>
-            {l.laatste_seintje && (
+            {l.laatste_seintje && openSeintjes !== l.id && (
               <p className="text-xs mt-1.5 rounded-lg bg-cm-black/40 border border-cm-border px-2.5 py-1.5">
                 <span className="text-cm-gold font-semibold">
                   🔔 {l.laatste_seintje.titel}
@@ -273,6 +281,48 @@ export default function LinksBeheer() {
                   <span className="text-cm-muted"> — {l.laatste_seintje.detail}</span>
                 )}
               </p>
+            )}
+            {(l.seintjes?.length ?? 0) > 0 && (
+              <button
+                onClick={() =>
+                  setOpenSeintjes(openSeintjes === l.id ? null : l.id)
+                }
+                className="text-xs text-cm-gold mt-1.5 underline underline-offset-2"
+              >
+                {openSeintjes === l.id
+                  ? "Verberg seintjes"
+                  : `📥 Alle seintjes teruglezen (${l.seintjes!.length})`}
+              </button>
+            )}
+            {openSeintjes === l.id && (
+              <div className="mt-2 space-y-1.5">
+                {l.seintjes!.map((s, i) => (
+                  <div
+                    key={i}
+                    className="text-xs rounded-lg bg-cm-black/40 border border-cm-border px-2.5 py-1.5"
+                  >
+                    <p className="text-cm-gold font-semibold">
+                      🔔 {s.titel}{" "}
+                      <span className="text-cm-muted font-normal">
+                        ·{" "}
+                        {new Date(s.created_at).toLocaleDateString("nl-NL", {
+                          day: "numeric",
+                          month: "short",
+                        })}{" "}
+                        {new Date(s.created_at).toLocaleTimeString("nl-NL", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
+                    </p>
+                    {s.detail && (
+                      <p className="text-cm-white/85 mt-0.5 leading-relaxed">
+                        {s.detail}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
             )}
             <div className="mt-3 flex flex-wrap gap-2">
               <button
