@@ -664,7 +664,9 @@ export default async function VandaagPagina({
           overrides={modusSwitchOverrides}
         />
       )}
-      {!lanceerRoute && adminOpen > 0 && (
+      {/* Niet op dag 0: daar staan deze stappen al in de dagflow zelf,
+          een pop-up erbovenop is dubbelop (Raoul 29 juli). */}
+      {!lanceerRoute && dag !== 0 && adminOpen > 0 && (
         <SetupPopup
           aantalOpen={adminOpen}
           isFounder={isFounder}

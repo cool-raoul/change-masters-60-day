@@ -45,6 +45,11 @@ export default function OnboardingPagina() {
   // Members krijgen lege map + isFounder=false → niets visueel.
   const [overrides, setOverrides] = useState<Record<string, string>>({});
   const [isFounder, setIsFounder] = useState(false);
+  // Kwam je hier vanuit de dagflow (?van=vandaag&dag=N) voor ÉÉN stap?
+  // Dan ga je na die stap terug naar je dag, in plaats van de hele
+  // wizard door te moeten (feedback Raoul 29 juli: "dan kom ik weer
+  // op een vervolgstap uit en moet ik wéér klikken").
+  const [terugNaarDag, setTerugNaarDag] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const supabase = createClient();
@@ -81,6 +86,9 @@ export default function OnboardingPagina() {
       Number.isFinite(stapParam) && stapParam >= 1 && stapParam <= 4
         ? stapParam
         : null;
+    if (params.get("van") === "vandaag") {
+      setTerugNaarDag(params.get("dag") ?? "0");
+    }
 
     async function laadGegevens() {
       const { data: { user } } = await supabase.auth.getUser();
@@ -263,6 +271,12 @@ export default function OnboardingPagina() {
         await markeerCrossModusVoltooid(ITEM_SLUGS.pushAan);
       }
     }
+    // Voor één stap gekomen vanuit de dagflow? Dan meteen terug naar je
+    // dag, niet de rest van de wizard door.
+    if (terugNaarDag !== null) {
+      router.push(`/vandaag?dag=${terugNaarDag}`);
+      return;
+    }
     setStap(nieuweStap);
     setBezig(false);
     scrollNaarBoven();
@@ -313,11 +327,30 @@ export default function OnboardingPagina() {
           {isPreview && (
             <span className="text-xs bg-amber-900/40 border border-amber-600/30 text-amber-400 px-2 py-1 rounded-full">Preview</span>
           )}
-          {stap <= totaalStappen && (
+          {stap <= totaalStappen && terugNaarDag === null && (
             <span className="text-sm text-cm-white opacity-60">Stap {stap} van {totaalStappen}</span>
           )}
         </div>
       </div>
+
+      {/* Kwam je hier voor één stap uit je dagflow? Dan zeggen we dat,
+          en kun je altijd in één klik terug zonder de stap te doen. */}
+      {terugNaarDag !== null && (
+        <div className="px-4 pt-3 max-w-2xl mx-auto w-full">
+          <div className="rounded-lg border border-cm-gold/40 bg-cm-gold/10 px-4 py-3 flex items-center justify-between gap-3 flex-wrap">
+            <p className="text-sm text-cm-white">
+              Je kwam hier voor deze ene stap. Zodra je klaar bent, sta je
+              weer bij je dag.
+            </p>
+            <Link
+              href={`/vandaag?dag=${terugNaarDag}`}
+              className="text-sm font-semibold text-cm-gold hover:underline whitespace-nowrap"
+            >
+              ↩ Terug naar mijn dag
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* Founder edit-modus toggle */}
       {isFounder && (

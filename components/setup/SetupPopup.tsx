@@ -62,7 +62,7 @@ export function SetupPopup({ aantalOpen, isFounder, overrides }: Props) {
         <EditableBlok
           namespace="setup-popup"
           sleutel="body"
-          standaard={`Er staan nog ${aantalOpen} administratieve stappen klaar (webshop, kredietformulier, teams-admin, bestellinks). Doe ze rustig binnen de eerste paar dagen, ze zijn nodig om straks commissies te ontvangen en je producten goed te delen.`}
+          standaard={`Er staan nog ${aantalOpen} administratieve stappen open (webshop, kredietformulier, teams-admin, bestellinks). Ze houden je nergens van tegen: ga rustig door met je dag en pak ze op een moment dat het uitkomt. Wel goed om ze deze week te doen, want ze zijn nodig om straks commissies te ontvangen en je producten te kunnen delen.`}
           overrides={overrides}
           isFounder={isFounder}
           as="p"
@@ -87,7 +87,7 @@ export function SetupPopup({ aantalOpen, isFounder, overrides }: Props) {
             <EditableTekst
               namespace="setup-popup"
               sleutel="cta_later"
-              standaard="Later vandaag"
+              standaard="Nu even niet"
               overrides={overrides}
               isFounder={isFounder}
               as="span"

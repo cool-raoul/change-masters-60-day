@@ -76,6 +76,21 @@ export function BestellinkRow({
 
       setOpgeslagen(true);
       setTimeout(() => setOpgeslagen(false), 2000);
+
+      // Zelf afvinken (Raoul 29 juli): wie hier een link opslaat, hééft
+      // z'n bestellinks gekoppeld. Zonder deze markering bleef de stap
+      // openstaan in dag 0 en in de setup-pop-up, en moest je apart
+      // terug naar /setup om alsnog een vinkje te zetten.
+      if (url.trim().length > 0) {
+        fetch("/api/setup/markeer", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ slug: "bestellinks-gekoppeld" }),
+        }).catch(() => {
+          // Niet fataal: de link staat opgeslagen, het vinkje kan
+          // altijd nog handmatig.
+        });
+      }
     } catch (e: any) {
       setFout(e?.message ?? "Opslaan mislukt");
     }

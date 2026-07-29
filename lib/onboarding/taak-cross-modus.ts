@@ -39,4 +39,18 @@ export const TAAK_NAAR_CROSS_MODUS_SLUG: Record<string, ItemSlug> = {
   "core3-krediet": ITEM_SLUGS.kredietformulierIngevuld,
   "core3-teams": ITEM_SLUGS.teamsAdminIngericht,
   "core4-bestellinks": ITEM_SLUGS.bestellinksGekoppeld,
+
+  // Dag 0 (jouw voorbereiding), toegevoegd 2026-07-29. De sync liep tot
+  // nu toe één kant op (onboarding → dag 0), waardoor afvinken ÍN dag 0
+  // de admin-rail niet bijwerkte: de setup-pop-up bleef er dan om vragen
+  // en dezelfde stap kwam later in het playbook nog eens voorbij.
+  // dag0-app en dag0-tempo staan hier bewust niet in: die dekken twee
+  // mogelijke slugs (app/push, tempo/DTT) en worden op /onboarding zelf
+  // correct gemarkeerd.
+  "dag0-why": ITEM_SLUGS.why,
+  "dag0-namen": ITEM_SLUGS.eersteVijfNamen,
+  "dag0-webshop": ITEM_SLUGS.webshopAangemaakt,
+  "dag0-krediet": ITEM_SLUGS.kredietformulierIngevuld,
+  "dag0-teams-admin": ITEM_SLUGS.teamsAdminIngericht,
+  "dag0-bestellinks": ITEM_SLUGS.bestellinksGekoppeld,
 };

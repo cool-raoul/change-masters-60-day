@@ -925,9 +925,14 @@ function VandaagFlowInner({
                     onClick={gaNaarVolgende}
                     className="text-cm-white opacity-60 hover:opacity-100 text-sm"
                   >
-                    {huidigeTaak.inlineEmbed
-                      ? "Doe later, ga verder →"
-                      : "Sla over →"}
+                    {/* Niet-verplichte stappen (zoals de administratie op
+                        dag 0) mogen zonder schuldgevoel wachten; zeg dat
+                        dan ook letterlijk (Raoul 29 juli). */}
+                    {!huidigeTaak.verplicht
+                      ? "Doe ik later deze week →"
+                      : huidigeTaak.inlineEmbed
+                        ? "Doe later, ga verder →"
+                        : "Sla over →"}
                   </button>
                 )}
               </div>
