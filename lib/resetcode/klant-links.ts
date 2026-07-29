@@ -158,16 +158,55 @@ export async function bewaarResetChats(
 ) {
   if (!items.length) return;
   const admin = createAdminClient();
-  await admin.from("resetcode_chats").insert(
-    items.map((i) => ({
-      link_id: linkId,
-      van: i.van,
-      soort: i.soort,
-      kaart: i.kaart ?? null,
-      station_slug: i.stationSlug ?? null,
-      tekst: i.tekst ?? null,
-    })),
+  // Dubbel-log-rem (bug Kim 29 juli: 5x dezelfde pakket-vraag): vaste
+  // flow-teksten (welkom, pakket-vraag, check-in-intro) spelen bij elk
+  // bezoek opnieuw en werden ook elke keer opnieuw gelogd. Een exact
+  // identieke mentor-tekst die de afgelopen 12 uur al is opgeslagen,
+  // slaan we niet nóg een keer op. Klant-berichten altijd bewaren.
+  let teBewaren = items;
+  const mentorTeksten = items.filter(
+    (i) => i.van === "mentor" && i.soort === "tekst" && i.tekst,
   );
+  if (mentorTeksten.length > 0) {
+    try {
+      const sinds = new Date(Date.now() - 12 * 3600_000).toISOString();
+      const { data: recente } = await admin
+        .from("resetcode_chats")
+        .select("tekst")
+        .eq("link_id", linkId)
+        .eq("van", "mentor")
+        .eq("soort", "tekst")
+        .gte("created_at", sinds)
+        .order("created_at", { ascending: false })
+        .limit(40);
+      const alGezegd = new Set(
+        ((recente ?? []) as { tekst: string | null }[]).map((r) => r.tekst),
+      );
+      teBewaren = items.filter(
+        (i) =>
+          !(
+            i.van === "mentor" &&
+            i.soort === "tekst" &&
+            i.tekst &&
+            alGezegd.has(i.tekst)
+          ),
+      );
+    } catch {
+      // Dedupe is nice-to-have; bij twijfel gewoon opslaan.
+    }
+  }
+  if (teBewaren.length > 0) {
+    await admin.from("resetcode_chats").insert(
+      teBewaren.map((i) => ({
+        link_id: linkId,
+        van: i.van,
+        soort: i.soort,
+        kaart: i.kaart ?? null,
+        station_slug: i.stationSlug ?? null,
+        tekst: i.tekst ?? null,
+      })),
+    );
+  }
   await admin
     .from("resetcode_klant_links")
     .update({ laatste_activiteit: new Date().toISOString() })

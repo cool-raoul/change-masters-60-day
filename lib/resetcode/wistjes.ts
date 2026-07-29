@@ -16,6 +16,13 @@ export type Wistje = {
   programma: "darm" | "reset";
   station: string;
   dag: number;
+  /**
+   * Houdbaarheid: uiterlijk tot en met deze dag mag het moment (als
+   * inhaal) nog spelen. Daarna vervalt het stil: "de eerste dagen
+   * kunnen onwennig zijn" slaat op dag 11 nergens meer op
+   * (bug Sandy 29 juli).
+   */
+  totDag: number;
   tekst: string;
 };
 
@@ -25,6 +32,7 @@ export const WISTJES: Wistje[] = [
     programma: "reset",
     station: "omschakeling",
     dag: 2,
+    totDag: 6,
     tekst:
       "Even goed om te weten: de eerste dagen kunnen wat onwennig zijn. Vermoeidheid, wat hoofdpijn, een veranderde stoelgang of cravings kán erbij horen, en het is bij iedereen anders. Wat helpt: extra Keltisch zeezout, extra water drinken, en je mag je MSM Plus verhogen. Merk je iets? Zeg het me gerust, dan kijk ik met je mee. 💚",
   },
@@ -33,6 +41,7 @@ export const WISTJES: Wistje[] = [
     programma: "reset",
     station: "omschakeling",
     dag: 9,
+    totDag: 14,
     tekst:
       "Sta je stil op de weegschaal? Heel normaal, en het heeft zelfs een naam. In week 2 is stilstand of zelfs iets aankomen heel gewoon: je lichaam houdt vocht vast in de lege vetcellen terwijl de verbranding gewoon doorloopt. Na 3 à 4 dagen kan er dan ineens een halve tot ruim een kilo af zijn: de \"woosh\". Bij vrouwen hoort stilstand rond de menstruatie er ook gewoon bij. Pas bij meer dan 4 dagen totale stilstand kijken we samen naar een appeldag. Dus: geen paniek, de aanhouder verliest... kilo's. 😉",
   },
@@ -41,6 +50,7 @@ export const WISTJES: Wistje[] = [
     programma: "reset",
     station: "omschakeling",
     dag: 12,
+    totDag: 16,
     tekst:
       "Kleine reminder voor vandaag: stress remt, rust helpt. Je lichaam is hard aan het werk, dus gun jezelf rustmomenten als het daarom vraagt en wees lief voor je lijf. Fijne tip uit je boekje: neem 2 à 3 keer per week een basisch (voeten)bad van 20 minuten met 4 à 5 eetlepels Keltisch zeezout. 💚",
   },
@@ -49,6 +59,7 @@ export const WISTJES: Wistje[] = [
     programma: "reset",
     station: "omschakeling",
     dag: 17,
+    totDag: 21,
     tekst:
       "Eerlijk moment: iedereen krijgt ergens een dag waarop het even lastig is. Niks gaat vanzelf, maar de aanhouder wint. En je hoeft het niet alleen te doen: ik ben er dag en nacht, en {{naam}} is dichtbij. Vraag gerust hulp. 💪",
   },
@@ -57,6 +68,7 @@ export const WISTJES: Wistje[] = [
     programma: "reset",
     station: "stabilisatie",
     dag: 3,
+    totDag: 8,
     tekst:
       "Even goed om te weten nu je in fase 3 zit: je hoeft hier niet verder af te vallen. Je gewicht aan het einde van fase 2 is je ankerpunt, en daar mag je ongeveer een kilo omheen schommelen. Blijf je daar in de buurt? Dan doe je het gewoon goed. 💚",
   },
@@ -65,6 +77,7 @@ export const WISTJES: Wistje[] = [
     programma: "darm",
     station: "zestien-dagen",
     dag: 2,
+    totDag: 5,
     tekst:
       "Even goed om te weten: de eerste dagen kunnen wat onwennig zijn. Wat hoofdpijn, een veranderde stoelgang of cravings kán erbij horen, bij iedereen anders. Wat helpt: extra Keltisch zeezout, extra water drinken, en je mag je MSM Plus verhogen. Merk je iets? Zeg het me gerust, dan kijk ik met je mee. 💚",
   },
@@ -87,6 +100,9 @@ export function bepaalDueWistje(
         w.programma === programmaSlug &&
         w.station === stationSlug &&
         dagNummer >= w.dag &&
+        // Houdbaarheid: na totDag vervalt het moment stil (geen inhaal
+        // met "eerste dagen"-teksten op dag 11+, bug Sandy 29 juli).
+        dagNummer <= w.totDag &&
         !touchpoints.includes(w.sleutel),
     ).sort((a, b) => a.dag - b.dag)[0] ?? null
   );

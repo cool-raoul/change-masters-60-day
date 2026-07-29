@@ -181,7 +181,25 @@ export default async function KlantLinkPagina({
         tekst: c.tekst ?? "",
       };
     })
-    .filter((i): i is NonNullable<typeof i> => i !== null && (i.soort === "kaart" || i.tekst.length > 0));
+    .filter((i): i is NonNullable<typeof i> => i !== null && (i.soort === "kaart" || i.tekst.length > 0))
+    // Dubbel-weergave-rem (bug Kim 29 juli): oudere logs bevatten door
+    // herhaalde bezoeken dezelfde vaste flow-tekst meerdere keren. Een
+    // exact identieke mentor-tekst binnen een venster van 6 items tonen
+    // we maar één keer.
+    .filter((item, idx, alles) => {
+      if (item.soort !== "tekst" || item.van !== "mentor") return true;
+      for (let j = Math.max(0, idx - 6); j < idx; j++) {
+        const eerder = alles[j];
+        if (
+          eerder.soort === "tekst" &&
+          eerder.van === "mentor" &&
+          eerder.tekst === item.tekst
+        ) {
+          return false;
+        }
+      }
+      return true;
+    });
 
   // Testmodus (laatste testronde, 23 juli): reis-links van een founder
   // krijgen dag-spring-knoppen zodat het team de reis dag voor dag,
