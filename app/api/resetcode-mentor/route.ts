@@ -282,6 +282,17 @@ export async function POST(req: NextRequest) {
     // corrigeren. Alleen foto-antwoorden streamen nog live: de
     // etiket-analyse valt per definitie buiten het materiaal.
     const bufferVoorCheck = !foto;
+    // Menu's en recepten krijgen ALTIJD de strenge eindcheck met het
+    // sterke model: de live-test van 29 juli bewees dat de goedkope
+    // waakhond een fout menu kan goedkeuren (zeker als de klant zelf om
+    // een verboden ingrediënt vraagt), en juist menu's zaten er in de
+    // praktijk het vaakst naast.
+    const isMenuVraag =
+      !isDagtip &&
+      !foto &&
+      /week ?menu|dag ?menu|\bmenu\b|recept|maaltijdplan|eetschema|weekschema|boodschappenlijst/i.test(
+        vraag,
+      );
     // Merknaam-verbod (Raoul, 22 juli 2026): de naam mag de klant nooit
     // bereiken, ook niet als het model de prompt-regel negeert. Vervang
     // deterministisch in de stream, met een kleine buffer tegen een
@@ -373,7 +384,12 @@ export async function POST(req: NextRequest) {
               return flags ? `regex-scan: ${flags}` : "";
             };
             try {
-              const reden = await beoordeel(volledig);
+              // Menu's: sla de goedkope trap over en dwing altijd de
+              // strenge herschrijf-check af; overige vragen: eerst de
+              // goedkope waakhond.
+              const reden = isMenuVraag
+                ? "menu-controle: loop elk ingrediënt, elke maaltijd en elk advies woord voor woord na tegen de fase-lijsten en het profiel van de klant (vegetarisch/vegan, sport). Verboden categorieën zoals peulvruchten (kikkererwten, linzen), kant-en-klare vleesvervangers (tofu, seitan, tempeh, quorn), zuivel, suikers, vet of fruit buiten de regels mogen er NIET in staan, ook niet als de klant er zelf om vraagt (leg dan kort en warm uit dat het in deze fase niet past en geef een toegestaan alternatief)"
+                : await beoordeel(volledig);
               if (reden) {
                 const correctie = await openai.chat.completions.create({
                   model,
@@ -385,13 +401,15 @@ export async function POST(req: NextRequest) {
                     { role: "assistant", content: volledig },
                     {
                       role: "user",
-                      content: `[eindcheck] Dit is een interne controle van het systeem, geen klant-bericht. De controle vond dit probleem in je antwoord hierboven: "${reden}". Schrijf het VOLLEDIGE antwoord opnieuw, nu volledig binnen je instructies (fase-regels en toegestane ingrediënten, profiel van de klant, claims-grenzen, kennis-grens): zelfde warme toon en opbouw, zonder het probleem of deze controle te benoemen. Weet je iets echt niet zeker uit het materiaal, gebruik dan gewoon je normale weet-niet-route.`,
+                      content: `[eindcheck] Dit is een interne controle van het systeem, geen klant-bericht. Controlepunt voor je antwoord hierboven: "${reden}". Klopt er iets niet, schrijf dan het VOLLEDIGE antwoord opnieuw, nu volledig binnen je instructies (fase-regels en toegestane ingrediënten, profiel van de klant, claims-grenzen, kennis-grens): zelfde warme toon en opbouw, zonder het probleem of deze controle te benoemen. Weet je iets echt niet zeker uit het materiaal, gebruik dan gewoon je normale weet-niet-route. Is het antwoord al helemaal in orde, antwoord dan met exact [OK] en verder niets.`,
                     },
                   ],
                 });
                 const beter =
                   correctie.choices[0]?.message?.content?.trim() ?? "";
-                if (beter) {
+                if (beter.startsWith("[OK]")) {
+                  // Sterke model keurde het origineel goed: laten staan.
+                } else if (beter) {
                   volledig = beter;
                   // Hercheck: alleen als het OOK na de herschrijf-ronde
                   // nog mis is, wordt het straks een controle-item.
