@@ -27,8 +27,15 @@ export async function POST(request: Request) {
     ];
 
     const stream = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      // Sterk model (Raoul 29 juli): het WHY-gesprek moet écht doorvragen
+      // op wat iemand zegt in plaats van een vragenlijstje afwerken. Dat
+      // lukt mini niet. De kosten blijven laag, want dit gesprek voert
+      // een member normaal gesproken één keer.
+      model: "gpt-4o",
       max_tokens: 1000,
+      // Warmer dan de kennis-gestuurde routes: hier is variatie in de
+      // vraagstelling juist de bedoeling.
+      temperature: 0.8,
       messages: apiMessages,
       stream: true,
     });
