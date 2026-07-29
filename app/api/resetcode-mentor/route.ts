@@ -428,10 +428,11 @@ export async function POST(req: NextRequest) {
                   ? `menu-controle: loop elk ingrediënt, elke maaltijd en elk advies woord voor woord na tegen de OFFICIËLE lijst van het programma en de fase waar de klant nu in zit, plus het profiel (vegetarisch/vegan, sport). De lijst is bindend: wat er niet op staat mag er NIET in (bij reset-fase 2 bijvoorbeeld geen tempeh, quorn, kikkererwten of andere peulvruchten; in Darmen in Balans geen enkele nachtschade zoals tomaat, paprika of aubergine - kijk altijd naar de lijst van het programma van deze klant). Ook niet toestaan als de klant er zelf om vraagt: leg dan kort en warm uit dat het in dit programma niet past en geef een toegestaan alternatief.${treffers ? ` EXTRA ALARM: het antwoord noemt "${treffers}". Controleer of die woorden uitsluitend voorkomen in een uitleg wáárom ze niet mogen; staan ze in een gerecht, schema, boodschappenlijst of aanbeveling, dan MOET je herschrijven.` : ""}`
                   : await beoordeel(volledig);
               if (reden) {
-                const correctie = await openai.chat.completions.create({
+                const correctieStream = await openai.chat.completions.create({
                   model,
                   max_tokens: maxTokens,
                   temperature: 0,
+                  stream: true,
                   messages: [
                     { role: "system", content: systeemPrompt },
                     { role: "user", content: vraag },
@@ -442,17 +443,37 @@ export async function POST(req: NextRequest) {
                     },
                   ],
                 });
-                const beter =
-                  correctie.choices[0]?.message?.content?.trim() ?? "";
-                if (beter.startsWith("[OK]")) {
-                  // Sterke model keurde het origineel goed: laten staan.
+                // De herschrijving wordt LIVE doorgestreamd (Raoul 29
+                // juli: de stilte duurde anders 30-60 seconden en liep
+                // soms tegen de Vercel-limiet van 60s aan → time-out).
+                // Alleen de eerste paar tekens houden we vast om het
+                // [OK]-protocol te herkennen: zegt het model [OK], dan
+                // was het origineel goed en sturen we dát.
+                let beter = "";
+                let okDetectie = true;
+                for await (const chunk of correctieStream) {
+                  const t = chunk.choices[0]?.delta?.content || "";
+                  if (!t) continue;
+                  beter += t;
+                  if (okDetectie) {
+                    if (beter.trimStart().startsWith("[OK]")) break;
+                    if (beter.trimStart().length < 4) continue;
+                    okDetectie = false;
+                  }
+                  const gefilterd = zonderMerknaam(beter);
+                  const flushTot = Math.max(0, gefilterd.length - MERK_BUFFER);
+                  if (flushTot > verzonden) {
+                    controller.enqueue(
+                      encoder.encode(gefilterd.slice(verzonden, flushTot)),
+                    );
+                    verzonden = flushTot;
+                  }
+                }
+                if (beter.trimStart().startsWith("[OK]")) {
+                  // Sterke model keurde het origineel goed: laten staan
+                  // (er is nog niets verzonden, de eind-flush stuurt het).
                 } else if (beter) {
                   volledig = beter;
-                  // Hercheck: alleen als het OOK na de herschrijf-ronde
-                  // nog mis is, wordt het straks een controle-item.
-                  restProbleem = beter.includes("[[TEAMVRAAG]]")
-                    ? ""
-                    : await beoordeel(beter).catch(() => "");
                 } else {
                   restProbleem = reden;
                 }
