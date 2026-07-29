@@ -178,10 +178,27 @@ function CoreBlock({
 
       <DTTOnboardingEmbed alVoltooid={voltooid} opVoltooid={naDTT} />
 
+      {/* DOODLOPER-FIX (Raoul 29 juli): wie zijn Doel-Tijd-Termijn al
+          eerder invulde, kreeg hier alleen "✓ al ingevuld" te zien en
+          verder niets: geen formulier meer om af te ronden, en dus ook
+          nooit de automatische doorstap. Je zat muurvast, vooruit noch
+          achteruit. Nu is er altijd een knop die de stap afrondt en je
+          doorzet. */}
       {voltooid && (
-        <p className="text-emerald-300 text-sm text-center font-semibold">
-          ✓ Doel-Tijd-Termijn opgeslagen, je gaat door naar dag 1...
-        </p>
+        <div className="space-y-3 text-center">
+          <p className="text-emerald-300 text-sm font-semibold">
+            ✓ Doel-Tijd-Termijn opgeslagen
+          </p>
+          <button
+            type="button"
+            onClick={naDTT}
+            className="btn-gold w-full py-4 text-base font-bold"
+          >
+            {naVoltooien.includes("dag=")
+              ? "Klaar, terug naar mijn dag →"
+              : "Klaar, door naar dag 1 →"}
+          </button>
+        </div>
       )}
 
       <EditableBlok
@@ -387,7 +404,9 @@ function SprintTempoBlock({
         {bezig
           ? "Laden..."
           : commitmentUren
-            ? "Te gek, door naar dag 1 →"
+            ? naVoltooien.includes("dag=")
+              ? "Te gek, terug naar mijn dag →"
+              : "Te gek, door naar dag 1 →"
             : "Kies eerst je tempo hierboven"}
       </button>
     </div>

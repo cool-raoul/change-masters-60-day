@@ -686,7 +686,12 @@ export default function OnboardingPagina() {
                 />
               </div>
 
-              <div className="card space-y-3">
+              {/* Uitleg vooraf; na afloop is 'm doorgelopen. */}
+              <div
+                className={`card space-y-3${
+                  voltooiingen["why"]?.voltooid ? " hidden" : ""
+                }`}
+              >
                 <EditableTekst
                   namespace="onboarding"
                   sleutel="stap2.how_titel"
@@ -710,7 +715,16 @@ export default function OnboardingPagina() {
                 />
               </div>
 
-              <div className="bg-[#D4AF37]/10 border-2 border-[#D4AF37]/40 rounded-xl p-5 text-center space-y-3">
+              {/* Start-CTA alleen zolang de WHY er nog NIET is. Wie 'm
+                  net gedaan heeft, kreeg hier nog een tweede gouden
+                  "Start het WHY-gesprek"-knop naast de doorgaan-knop
+                  (Raoul 29 juli: "die is op die plek al niet meer nodig
+                  omdat ik hem net al heb gedaan"). */}
+              <div
+                className={`bg-[#D4AF37]/10 border-2 border-[#D4AF37]/40 rounded-xl p-5 text-center space-y-3${
+                  voltooiingen["why"]?.voltooid ? " hidden" : ""
+                }`}
+              >
                 <EditableTekst
                   namespace="onboarding"
                   sleutel="stap2.cta_titel"
@@ -747,8 +761,9 @@ export default function OnboardingPagina() {
                 </Link>
               </div>
 
-              {/* Sponsor contact */}
-              {toonSponsorNaam && (
+              {/* Sponsor contact: hoort bij twijfelen VOORAF. Wie z'n
+                  WHY al heeft, twijfelt niet meer (Raoul 29 juli). */}
+              {toonSponsorNaam && !voltooiingen["why"]?.voltooid && (
                 <div className="bg-blue-900/20 border border-blue-600/30 rounded-xl p-4">
                   <div className="flex gap-3 items-start">
                     <span className="text-2xl flex-shrink-0">💬</span>
@@ -768,7 +783,9 @@ export default function OnboardingPagina() {
                 disabled={bezig || (!isFounder && !voltooiingen["why"]?.voltooid)}
                 className="btn-gold w-full py-3 text-base disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                {voltooiingen["why"]?.voltooid ? (
+                {voltooiingen["why"]?.voltooid && terugNaarDag !== null ? (
+                  <span>Klaar, terug naar mijn dag →</span>
+                ) : voltooiingen["why"]?.voltooid ? (
                   <EditableTekst
                     namespace="onboarding"
                     sleutel="stap2.knop"
@@ -871,7 +888,9 @@ export default function OnboardingPagina() {
                 className="btn-gold w-full py-3 text-base font-bold disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {voltooiingen["eerste-5-namen"]?.voltooid
-                  ? "Verder naar stap 4 →"
+                  ? terugNaarDag !== null
+                    ? "Klaar, terug naar mijn dag →"
+                    : "Verder naar stap 4 →"
                   : isFounder
                     ? "Door naar stap 4 (founder-skip) →"
                     : "Vul eerst 5 namen hierboven in"}
