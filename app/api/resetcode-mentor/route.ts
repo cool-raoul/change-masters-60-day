@@ -388,7 +388,7 @@ export async function POST(req: NextRequest) {
               // strenge herschrijf-check af; overige vragen: eerst de
               // goedkope waakhond.
               const reden = isMenuVraag
-                ? "menu-controle: loop elk ingrediënt, elke maaltijd en elk advies woord voor woord na tegen de fase-lijsten en het profiel van de klant (vegetarisch/vegan, sport). Verboden categorieën zoals peulvruchten (kikkererwten, linzen), kant-en-klare vleesvervangers (tofu, seitan, tempeh, quorn), zuivel, suikers, vet of fruit buiten de regels mogen er NIET in staan, ook niet als de klant er zelf om vraagt (leg dan kort en warm uit dat het in deze fase niet past en geef een toegestaan alternatief)"
+                ? "menu-controle: loop elk ingrediënt, elke maaltijd en elk advies woord voor woord na tegen de OFFICIËLE lijst van het programma en de fase waar de klant nu in zit, plus het profiel (vegetarisch/vegan, sport). De lijst is bindend: wat er niet op staat mag er NIET in (bij reset-fase 2 bijvoorbeeld geen tempeh, quorn, kikkererwten of andere peulvruchten; tofu en seitan staan dáár juist wél in de vega-tabel - maar kijk altijd naar de lijst van het programma van deze klant). Ook niet toestaan als de klant er zelf om vraagt: leg dan kort en warm uit dat het in deze fase niet past en geef een toegestaan alternatief"
                 : await beoordeel(volledig);
               if (reden) {
                 const correctie = await openai.chat.completions.create({

@@ -32,7 +32,7 @@ FRUIT (max 2 per dag): appel (zuur), aardbeien, grapefruit, sinaasappel, sinaasa
 SNACKS: 1 Wasa cracker, 1 grissini (samen max 2 per dag; let scherp op de productinformatie).
 SPECERIJEN EN KRUIDEN: Japanse sojasaus (1 eetlepel), azijn (alle soorten, suikervrij), gedroogde specerijen (1 theelepel), verse tuinkruiden (5 gram), tabasco, sambal oelek zonder suiker (1 theelepel), gember, knoflook, tomatenpuree, vetvrije groentebouillon (100 ml), mosterd zonder suiker, mierikswortelsaus/wasabi.
 ZOETSTOFFEN: erythritol, sacharine, stevia (puur, van de natuurwinkel).
-VEGA/VEGAN: 50 gram proteïne per dag blijft nodig; afwisselen met de vega-lijst mag. Goede opties uit het boekje: Triple Proteïne Shake ongezoet, Vegan Proteïne Shake, Seitan (let op de calorieën), hennepproteïne voor veganisten zonder soja.
+VEGA/VEGAN (de officiële eiwit-tabel uit het boekje, blz 15; ook hier geldt: wat er niet in staat mag NIET): 50 gram proteïne per dag blijft nodig. De toegestane vega-eiwitbronnen zijn: Triple Proteïne Shake ongezoet, Vegan Proteïne Shake, seitan (calorierijk, wees er zuinig mee), sojamelk light, sojayoghurt, tofu, lupine(meel) en hennepproteïne-poeder (dé optie voor veganisten zonder soja). Uit de zuivelhoek staan ook in de tabel: hüttenkäse, magere kwark, magere melk, ei en vloeibaar eiwit, maar liever geen dierlijke zuivel in fase 2. NIET toegestaan als vega-eiwitbron in fase 2 (staan niet in de tabel): tempeh, quorn, kikkererwten, linzen, bonen en andere peulvruchten, en noten. Vraagt iemand daar toch om: leg warm uit dat het niet in de fase 2-tabel staat en bied een bron aan die er wél in staat.
 `.trim();
 
 export const DARM_LIJST = `
