@@ -166,13 +166,13 @@ function CoreBlock({
           namespace="onboarding"
           sleutel="stap4.core.uitleg"
           standaard={
-            "Drie korte vragen. Hoeveel inkomen wil je over een jaar, hoeveel tijd kan je realistisch investeren, en in hoeveel maanden moet het er staan om de moeite waard te zijn. Op basis hiervan krijg je je dagelijkse aantallen op maat en zie je welke rank je nastreeft. Geen vast schema, wel een richtlijn die past bij jouw leven."
+            "Je hebt net opgeschreven waaróm je dit doet. Nu maken we daar iets praktisch van, want een WHY die alleen in je hoofd zit verandert je week nog niet.\n\nDrie korte vragen. Wat wil je maandelijks overhouden om dat waar te maken, hoeveel tijd heb je er echt voor naast alles wat je al doet, en binnen hoeveel maanden wil je dat het zover is.\n\nMet die drie antwoorden weet ELEVA wat een normale dag voor jou is. Je krijgt aantallen die bij jouw leven passen in plaats van bij dat van iemand anders, en je ziet in welke richting je moet denken. Geen schema waar je aan vastzit: aanpassen kan altijd, want het leven verandert en jouw plan mag meebewegen."
           }
           overrides={overrides}
           isFounder={isFounder}
-          as="p"
-          className="text-cm-white text-sm opacity-80 leading-relaxed"
-          rows={4}
+          as="div"
+          className="text-cm-white text-sm opacity-80 leading-relaxed text-left whitespace-pre-line"
+          rows={8}
         />
       </div>
 
