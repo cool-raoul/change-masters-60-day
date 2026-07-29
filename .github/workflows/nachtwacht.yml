@@ -1,0 +1,56 @@
+name: Nachtwacht (dagelijkse nachtronde)
+
+# De automatische bewaker-ronde: elke nacht draait /api/cron/nachtwacht
+# de stille-ramp-checks (dag-1-hang, mail-queue, gestopte check-ins,
+# open teamvragen, push, deploy-status). Bij bevindingen krijgen de
+# founders zelf een push + mail vanuit het endpoint; deze workflow hoeft
+# alleen te pingen en het rapport in de log te tonen.
+#
+# Zelfde patroon als reminders-hourly.yml: GitHub Actions-cron omdat
+# Vercel Hobby geen betrouwbare cron heeft.
+
+on:
+  schedule:
+    # 03:30 UTC = 05:30 NL (zomertijd). Ruim voor de ochtend, ruim na
+    # de avond-mails van 18:00 UTC.
+    - cron: "30 3 * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: nachtwacht
+  cancel-in-progress: false
+
+jobs:
+  ronde:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Nachtronde draaien (data-checks)
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          ENDPOINT: https://my-eleva.com/api/cron/nachtwacht
+        run: |
+          set -euo pipefail
+          echo "Nachtronde starten: $ENDPOINT"
+          curl -fsS \
+            --retry 3 --retry-delay 10 --retry-connrefused \
+            --max-time 120 \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            "$ENDPOINT" | tee rapport.json
+          echo ""
+          echo "── Rapport ──"
+          # Leesbaar overzicht in de Actions-log (jq zit standaard op de runner)
+          jq -r '.bevindingen[] | "\(.niveau)\t\(.check)\t\(.detail)"' rapport.json || true
+
+      - name: Publieke pagina's bereikbaar
+        run: |
+          set -euo pipefail
+          for pad in "/" "/login"; do
+            echo "Check https://my-eleva.com${pad}"
+            code=$(curl -sS -o /dev/null -w "%{http_code}" --max-time 30 "https://my-eleva.com${pad}")
+            echo "  → HTTP ${code}"
+            if [ "$code" != "200" ]; then
+              echo "::error::Publieke pagina ${pad} gaf HTTP ${code}"
+              exit 1
+            fi
+          done
