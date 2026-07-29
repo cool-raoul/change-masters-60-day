@@ -274,18 +274,14 @@ export async function POST(req: NextRequest) {
 
     const encoder = new TextEncoder();
     const ctxVoorOpslag = klantCtx;
-    // Menu-zelfcorrectie (feedback Raoul 29 juli): bij menu's en recepten
-    // eerst het HELE antwoord binnenhalen, zelf nalopen tegen de fase- en
-    // programma-regels, en pas daarna naar de klant sturen. Zo bereikt
-    // een menu met bijvoorbeeld kikkererwten of quorn in fase 2 de klant
-    // niet meer, en hoeft Raoul het niet meer als controle-item op te
-    // ruimen: de waakhond laat het niet door en de Mentor herstelt zelf.
-    const isMenuVraag =
-      !isDagtip &&
-      !foto &&
-      /week ?menu|dag ?menu|\bmenu\b|recept|maaltijdplan|eetschema|weekschema|boodschappenlijst/i.test(
-        vraag,
-      );
+    // Zelfcorrectie vóór verzending (feedback Raoul 29 juli): ALLE
+    // tekst-antwoorden worden eerst in hun geheel binnengehaald en
+    // gecontroleerd, en gaan pas daarna naar de klant. Zo bereikt een
+    // fout antwoord (kikkererwten in fase 2, een claim, verzonnen
+    // regels) de klant niet meer, en hoeft Raoul niets achteraf te
+    // corrigeren. Alleen foto-antwoorden streamen nog live: de
+    // etiket-analyse valt per definitie buiten het materiaal.
+    const bufferVoorCheck = !foto;
     // Merknaam-verbod (Raoul, 22 juli 2026): de naam mag de klant nooit
     // bereiken, ook niet als het model de prompt-regel negeert. Vervang
     // deterministisch in de stream, met een kleine buffer tegen een
@@ -314,10 +310,10 @@ export async function POST(req: NextRequest) {
             const text = chunk.choices[0]?.delta?.content || "";
             if (text) {
               volledig += text;
-              // Menu-vragen worden NIET live gestreamd: het antwoord gaat
-              // eerst door de eindcheck hieronder en pas daarna in één
-              // keer naar de klant.
-              if (isMenuVraag) continue;
+              // Tekst-antwoorden worden NIET live gestreamd: het antwoord
+              // gaat eerst door de eindcheck hieronder en pas daarna in
+              // één keer naar de klant.
+              if (bufferVoorCheck) continue;
               const gefilterd = zonderMerknaam(volledig);
               const flushTot = Math.max(0, gefilterd.length - MERK_BUFFER);
               if (flushTot > verzonden) {
@@ -328,35 +324,86 @@ export async function POST(req: NextRequest) {
               }
             }
           }
-          // Eindcheck voor menu's: zelfde model, zelfde volledige
-          // instructies (fase-regels, verboden ingrediënten, veg/sport-
-          // profiel), temperatuur 0. Klopt alles → "[OK]" en het origineel
-          // gaat door; klopt iets niet → het gecorrigeerde antwoord
-          // vervangt het origineel, zonder dat de klant iets merkt.
-          if (isMenuVraag && volledig.trim()) {
-            try {
-              const controle = await openai.chat.completions.create({
-                model,
-                max_tokens: maxTokens,
+          // Eindcheck vóór verzending, in twee trappen zodat de goede
+          // antwoorden (de overgrote meerderheid) snel en goedkoop
+          // blijven. Trap 1: de goedkope waakhond (mini) + merknaam- en
+          // regex-scan over het complete antwoord. Trap 2: alleen als
+          // trap 1 iets ziet, schrijft het sterke model het antwoord
+          // opnieuw binnen alle regels (fase-lijsten, profiel, claims),
+          // en gaat de herschreven versie naar de klant. Teamvragen
+          // slaan we over: dat is al een eerlijk "weet ik niet".
+          let restProbleem = "";
+          if (
+            bufferVoorCheck &&
+            volledig.trim() &&
+            !volledig.includes("[[TEAMVRAAG]]")
+          ) {
+            const beoordeel = async (tekst: string): Promise<string> => {
+              if (/\blife\s*-?\s*plus\b/i.test(tekst)) {
+                return "merknaam Lifeplus in antwoord (regex-scan)";
+              }
+              const check = await openai.chat.completions.create({
+                model: "gpt-4o-mini",
+                max_tokens: 150,
                 temperature: 0,
+                response_format: { type: "json_object" },
                 messages: [
-                  { role: "system", content: systeemPrompt },
-                  { role: "user", content: vraag },
-                  { role: "assistant", content: volledig },
+                  {
+                    role: "system",
+                    content: bouwWaakhondPrompt(programmaSlug, teamKennis),
+                  },
                   {
                     role: "user",
-                    content:
-                      "[menu-controle] Dit is een interne eindcheck van het systeem, geen klant-bericht. Loop je eigen antwoord hierboven woord voor woord na tegen de fase- en programma-regels uit je instructies: elk ingrediënt, elke maaltijd, elk advies. Denk aan verboden categorieën voor de huidige fase (zoals peulvruchten, kant-en-klare vleesvervangers, zuivel, suikers, vet of fruit waar dat niet mag) en aan het profiel van de klant (vegetarisch/vegan, sport). Staat er ook maar één ding in dat niet past, geef dan het VOLLEDIGE gecorrigeerde antwoord terug: zelfde opbouw en warme toon, met een passende vervanging binnen de regels, zonder de correctie te benoemen. Klopt alles, antwoord dan met exact [OK] en verder niets.",
+                    content: `VRAAG VAN DE KLANT:\n${vraag}\n\nANTWOORD VAN DE MENTOR:\n${tekst}`,
                   },
                 ],
               });
-              const naCheck =
-                controle.choices[0]?.message?.content?.trim() ?? "";
-              if (naCheck && !naCheck.startsWith("[OK]")) {
-                volledig = naCheck;
+              const uitslag = JSON.parse(
+                check.choices[0]?.message?.content ?? "{}",
+              ) as { verdacht?: boolean; reden?: string };
+              if (uitslag.verdacht === true) {
+                return uitslag.reden || "verdacht volgens waakhond";
+              }
+              const flags = vatFlagsSamen(
+                checkCompliance(tekst).flags.filter(
+                  (f) =>
+                    f.categorie !== "dosering" && f.categorie !== "merknaam",
+                ),
+              );
+              return flags ? `regex-scan: ${flags}` : "";
+            };
+            try {
+              const reden = await beoordeel(volledig);
+              if (reden) {
+                const correctie = await openai.chat.completions.create({
+                  model,
+                  max_tokens: maxTokens,
+                  temperature: 0,
+                  messages: [
+                    { role: "system", content: systeemPrompt },
+                    { role: "user", content: vraag },
+                    { role: "assistant", content: volledig },
+                    {
+                      role: "user",
+                      content: `[eindcheck] Dit is een interne controle van het systeem, geen klant-bericht. De controle vond dit probleem in je antwoord hierboven: "${reden}". Schrijf het VOLLEDIGE antwoord opnieuw, nu volledig binnen je instructies (fase-regels en toegestane ingrediënten, profiel van de klant, claims-grenzen, kennis-grens): zelfde warme toon en opbouw, zonder het probleem of deze controle te benoemen. Weet je iets echt niet zeker uit het materiaal, gebruik dan gewoon je normale weet-niet-route.`,
+                    },
+                  ],
+                });
+                const beter =
+                  correctie.choices[0]?.message?.content?.trim() ?? "";
+                if (beter) {
+                  volledig = beter;
+                  // Hercheck: alleen als het OOK na de herschrijf-ronde
+                  // nog mis is, wordt het straks een controle-item.
+                  restProbleem = beter.includes("[[TEAMVRAAG]]")
+                    ? ""
+                    : await beoordeel(beter).catch(() => "");
+                } else {
+                  restProbleem = reden;
+                }
               }
             } catch (e) {
-              console.error("menu-eindcheck mislukt:", e);
+              console.error("eindcheck vóór verzending mislukt:", e);
             }
           }
           const gefilterdEind = zonderMerknaam(volledig);
@@ -434,81 +481,44 @@ export async function POST(req: NextRequest) {
             } catch (e) {
               console.error("resetcode kennis-vraag opslaan mislukt:", e);
             }
-          } else if (ctxVoorOpslag && vraag && schoon && !foto) {
-            // WAAKHOND: tweede, onafhankelijke check op het antwoord.
-            // Founders zien de gesprekken niet (privacy-schild), dus
-            // riskante antwoorden moeten vanzelf boven water komen.
-            // Foto-antwoorden slaan we over (etiket-analyse is per
-            // definitie buiten het materiaal).
+          } else if (ctxVoorOpslag && vraag && schoon && restProbleem) {
+            // VANGNET: de zelfcorrectie hierboven heeft het antwoord al
+            // herschreven, maar de hercheck vond nóg steeds een probleem.
+            // Alleen dan komt er een controle-item + founder-push;
+            // gecorrigeerde antwoorden maken geen ruis meer (feedback
+            // Raoul 29 juli: niet achteraf een stapel om door te nemen).
             try {
-              const check = await openai.chat.completions.create({
-                model: "gpt-4o-mini",
-                max_tokens: 150,
-                temperature: 0,
-                response_format: { type: "json_object" },
-                messages: [
-                  {
-                    role: "system",
-                    content: bouwWaakhondPrompt(programmaSlug, teamKennis),
-                  },
-                  {
-                    role: "user",
-                    content: `VRAAG VAN DE KLANT:\n${vraag}\n\nANTWOORD VAN DE MENTOR:\n${ruwSchoon}`,
-                  },
-                ],
-              });
-              const uitslag = JSON.parse(
-                check.choices[0]?.message?.content ?? "{}",
-              ) as { verdacht?: boolean; reden?: string };
-              // Deterministische scan naast de AI-waakhond: de merknaam
-              // mag NOOIT richting de klant (regel Raoul 22 juli 2026).
-              // Op de ruwe tekst: in `schoon` is hij al weggefilterd.
-              const merknaamTreffer = /\blife\s*-?\s*plus\b/i.test(ruwSchoon);
-              // Regex-vanglaag (zelfde set als de member-coach): verboden
-              // claim-werkwoorden en risico-frases deterministisch vangen,
-              // ook als de AI-waakhond ze mist. Dosering-flags slaan we
-              // hier bewust over: innameschema's zijn de kerntaak van de
-              // klant-Mentor, geen risico.
-              const regexFlagsLijst = checkCompliance(ruwSchoon).flags.filter(
-                (f) => f.categorie !== "dosering" && f.categorie !== "merknaam",
-              );
-              const regexFlags = vatFlagsSamen(regexFlagsLijst);
-              if (uitslag.verdacht === true || merknaamTreffer || regexFlags) {
-                const adminW = createAdminClient();
-                const { error: wFout } = await adminW
-                  .from("resetcode_kennis")
-                  .insert({
-                    programma: programmaSlug,
-                    vraag: vraag.slice(0, 600),
-                    bron: "controle",
-                    link_id: ctxVoorOpslag.linkId,
-                    gegeven_antwoord: ruwSchoon.slice(0, 2000),
-                    controle_reden: (
-                      uitslag.verdacht === true
-                        ? uitslag.reden ?? ""
-                        : merknaamTreffer
-                          ? "merknaam Lifeplus in antwoord (regex-scan)"
-                          : `regex-scan: ${regexFlags}`
-                    ).slice(0, 300),
-                  });
-                if (wFout) console.error("waakhond-insert:", wFout.message);
-                const { data: founders } = await adminW
-                  .from("profiles")
-                  .select("id")
-                  .eq("role", "founder");
-                await Promise.allSettled(
-                  ((founders ?? []) as { id: string }[]).map((f) =>
-                    sendPushToUser(f.id, {
-                      title: "Even meekijken 🔍",
-                      body: `De Mentor gaf een antwoord dat mogelijk buiten het materiaal gaat: "${vraag.slice(0, 100)}". Check en corrigeer 'm zo nodig.`,
-                      url: "/resetcode-kennis",
-                      tag: "resetcode-waakhond",
-                    }),
+              const adminW = createAdminClient();
+              const { error: wFout } = await adminW
+                .from("resetcode_kennis")
+                .insert({
+                  programma: programmaSlug,
+                  vraag: vraag.slice(0, 600),
+                  bron: "controle",
+                  link_id: ctxVoorOpslag.linkId,
+                  gegeven_antwoord: ruwSchoon.slice(0, 2000),
+                  controle_reden: `na zelfcorrectie nog: ${restProbleem}`.slice(
+                    0,
+                    300,
                   ),
-                );
-              }
+                });
+              if (wFout) console.error("waakhond-insert:", wFout.message);
+              const { data: founders } = await adminW
+                .from("profiles")
+                .select("id")
+                .eq("role", "founder");
+              await Promise.allSettled(
+                ((founders ?? []) as { id: string }[]).map((f) =>
+                  sendPushToUser(f.id, {
+                    title: "Even meekijken 🔍",
+                    body: `De Mentor kon een antwoord niet zelf binnen de regels krijgen: "${vraag.slice(0, 100)}". Check en corrigeer 'm zo nodig.`,
+                    url: "/resetcode-kennis",
+                    tag: "resetcode-waakhond",
+                  }),
+                ),
+              );
             } catch (e) {
-              console.error("waakhond-check mislukt:", e);
+              console.error("waakhond-vangnet mislukt:", e);
             }
           }
           controller.close();
