@@ -80,18 +80,29 @@ export async function GET(request: Request) {
     });
     const hangers: string[] = [];
     for (const lid of kandidaten) {
-      const { count } = await admin
+      const { count: voorbij } = await admin
         .from("dag_voltooiingen")
         .select("id", { count: "exact", head: true })
         .eq("user_id", lid.id)
         .gte("dag_nummer", 2);
-      if ((count ?? 0) === 0) hangers.push(lid.full_name ?? lid.id);
+      if ((voorbij ?? 0) > 0) continue;
+      // Alleen wie de AFGELOPEN 3 DAGEN nog actief afvinkte maar op
+      // dag 0/1 blijft, zit vast - dat was de 19-juni-ramp (dagelijks
+      // bezig, nooit verder). Wie gestopt is met afvinken is inactief,
+      // geen systeembug (feedback Raoul 29 juli: Juan doet niks, Sandy
+      // test alleen de klanten-kant; die horen niet in dit alarm).
+      const { count: recent } = await admin
+        .from("dag_voltooiingen")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", lid.id)
+        .gte("voltooid_op", new Date(nu - 3 * DAG_MS).toISOString());
+      if ((recent ?? 0) > 0) hangers.push(lid.full_name ?? lid.id);
     }
     if (hangers.length > 0) {
       meld(
         "dag-1-hang",
         "rood",
-        `${hangers.length} member(s) 5+ dagen gestart maar nooit voorbij dag 1: ${hangers.slice(0, 5).join(", ")}${hangers.length > 5 ? ", ..." : ""}`,
+        `${hangers.length} member(s) actief op dag 1 maar na 5+ dagen nooit verder gekomen: ${hangers.slice(0, 5).join(", ")}${hangers.length > 5 ? ", ..." : ""}`,
       );
     } else {
       meld("dag-1-hang", "ok", `${kandidaten.length} gestarte member(s) gecheckt`);
