@@ -39,7 +39,11 @@ import { checkCompliance, vatFlagsSamen } from "@/lib/coach/compliance-check";
 // Response: streaming text.
 // ============================================================
 
-export const maxDuration = 60;
+// 120s budget: de eindcheck kan twee volledige AI-rondes vergen
+// (antwoord + herschrijving) en bij trage OpenAI-momenten paste dat
+// niet altijd in 60s (504 bij de klant, 29 juli). Vercel staat >60s
+// toe met Fluid Compute.
+export const maxDuration = 120;
 
 const HISTORY_TRIM = 8;
 const ZWAAR_MODEL_DREMPEL_TEKENS = 300;
