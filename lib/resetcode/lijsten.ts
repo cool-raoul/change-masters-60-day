@@ -55,7 +55,7 @@ WEL ETEN:
 - Zoetstoffen: erythritol, stevia van de natuurwinkel.
 
 LIEVER ZOVEEL MOGELIJK VERMIJDEN:
-- Bonen en peulvruchten (alle soorten), erwten, linzen, aardappelen, maïs, nachtschadegroenten.
+- Bonen en peulvruchten (alle soorten), erwten, linzen, aardappelen, maïs, nachtschadegroenten. NACHTSCHADE betekent concreet: GEEN tomaat, GEEN paprika (geen enkele kleur), GEEN aubergine, GEEN witte aardappel en GEEN Spaanse peper/chilipeper/cayenne, in geen enkel gerecht of recept. (Enige uitzondering uit het boekje zelf: tomatenpuree met mate, zie de kruidenlijst.)
 - Alles op tarwebasis (brood, pasta, ontbijtgranen, tarwemeel) en glutenbevattende granen: tarwe, gerst, rogge, maïs, couscous, spelt, griesmeel, RIJST, durum, kamut, bulgur, seitan, triticale, HAVER, QUINOA, sojameel.
 - Bewerkt vlees (vleeswaren, worst, bacon, vleesvervangers) en varkensvlees (moeilijk verteerbaar).
 - Bakwaren, tussendoortjes (crackers, mueslirepen, popcorn, zoutjes, gedroogd fruit), junkfood.

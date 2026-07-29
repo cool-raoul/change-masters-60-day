@@ -349,6 +349,41 @@ export async function POST(req: NextRequest) {
             volledig.trim() &&
             !volledig.includes("[[TEAMVRAAG]]")
           ) {
+            // Deterministische alarm-scan (Raoul 29 juli: rode paprika
+            // kwam nog door in een darm-recept). Bekende overtreders per
+            // programma triggeren ALTIJD de strenge controle. Let op:
+            // een treffer is nog geen fout - het woord mag voorkomen in
+            // een uitleg wáárom iets niet mag; de strenge check
+            // beoordeelt de context.
+            const VERBODEN_SCAN: { test: RegExp; label: string }[] =
+              programmaSlug === "darm"
+                ? [
+                    { test: /paprika/i, label: "paprika (nachtschade)" },
+                    { test: /aubergine/i, label: "aubergine (nachtschade)" },
+                    { test: /tomaten(?!puree)|\btomaat\b/i, label: "tomaat (nachtschade)" },
+                    { test: /chili|spaanse peper|cayenne/i, label: "hete peper (nachtschade)" },
+                    { test: /quinoa/i, label: "quinoa (vermijd-lijst)" },
+                    { test: /seitan/i, label: "seitan (tarwe)" },
+                    { test: /havermout|\bhaver\b/i, label: "haver (gluten-lijst)" },
+                    { test: /couscous|bulgur|\bspelt\b/i, label: "glutengraan" },
+                    { test: /varkens|\bspek\b|bacon/i, label: "varkensvlees" },
+                  ]
+                : programmaSlug === "reset" && stationSlug === "omschakeling"
+                  ? [
+                      { test: /kikkererwt/i, label: "kikkererwten (peulvrucht)" },
+                      { test: /\blinzen\b/i, label: "linzen (peulvrucht)" },
+                      { test: /quorn/i, label: "quorn (niet in de tabel)" },
+                      { test: /tempeh/i, label: "tempeh (niet in de tabel)" },
+                      { test: /havermout|muesli/i, label: "havermout/muesli" },
+                      { test: /\bbanaan|bananen/i, label: "banaan" },
+                      { test: /pindakaas|\bnoten\b|walnoot|amandel/i, label: "noten" },
+                      { test: /olijfolie|kokosolie|roomboter|avocado/i, label: "vetten" },
+                    ]
+                  : [];
+            const verbodenScan = (tekst: string) =>
+              VERBODEN_SCAN.filter((v) => v.test.test(tekst))
+                .map((v) => v.label)
+                .join(", ");
             const beoordeel = async (tekst: string): Promise<string> => {
               if (/\blife\s*-?\s*plus\b/i.test(tekst)) {
                 return "merknaam Lifeplus in antwoord (regex-scan)";
@@ -384,12 +419,14 @@ export async function POST(req: NextRequest) {
               return flags ? `regex-scan: ${flags}` : "";
             };
             try {
-              // Menu's: sla de goedkope trap over en dwing altijd de
-              // strenge herschrijf-check af; overige vragen: eerst de
-              // goedkope waakhond.
-              const reden = isMenuVraag
-                ? "menu-controle: loop elk ingrediënt, elke maaltijd en elk advies woord voor woord na tegen de OFFICIËLE lijst van het programma en de fase waar de klant nu in zit, plus het profiel (vegetarisch/vegan, sport). De lijst is bindend: wat er niet op staat mag er NIET in (bij reset-fase 2 bijvoorbeeld geen tempeh, quorn, kikkererwten of andere peulvruchten; tofu en seitan staan dáár juist wél in de vega-tabel - maar kijk altijd naar de lijst van het programma van deze klant). Ook niet toestaan als de klant er zelf om vraagt: leg dan kort en warm uit dat het in deze fase niet past en geef een toegestaan alternatief"
-                : await beoordeel(volledig);
+              // Menu's en scan-treffers: sla de goedkope trap over en
+              // dwing altijd de strenge herschrijf-check af; overige
+              // vragen: eerst de goedkope waakhond.
+              const treffers = verbodenScan(volledig);
+              const reden =
+                isMenuVraag || treffers
+                  ? `menu-controle: loop elk ingrediënt, elke maaltijd en elk advies woord voor woord na tegen de OFFICIËLE lijst van het programma en de fase waar de klant nu in zit, plus het profiel (vegetarisch/vegan, sport). De lijst is bindend: wat er niet op staat mag er NIET in (bij reset-fase 2 bijvoorbeeld geen tempeh, quorn, kikkererwten of andere peulvruchten; in Darmen in Balans geen enkele nachtschade zoals tomaat, paprika of aubergine - kijk altijd naar de lijst van het programma van deze klant). Ook niet toestaan als de klant er zelf om vraagt: leg dan kort en warm uit dat het in dit programma niet past en geef een toegestaan alternatief.${treffers ? ` EXTRA ALARM: het antwoord noemt "${treffers}". Controleer of die woorden uitsluitend voorkomen in een uitleg wáárom ze niet mogen; staan ze in een gerecht, schema, boodschappenlijst of aanbeveling, dan MOET je herschrijven.` : ""}`
+                  : await beoordeel(volledig);
               if (reden) {
                 const correctie = await openai.chat.completions.create({
                   model,
