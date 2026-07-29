@@ -333,24 +333,6 @@ export default function OnboardingPagina() {
         </div>
       </div>
 
-      {/* Kwam je hier voor één stap uit je dagflow? Dan zeggen we dat,
-          en kun je altijd in één klik terug zonder de stap te doen. */}
-      {terugNaarDag !== null && (
-        <div className="px-4 pt-3 max-w-2xl mx-auto w-full">
-          <div className="rounded-lg border border-cm-gold/40 bg-cm-gold/10 px-4 py-3 flex items-center justify-between gap-3 flex-wrap">
-            <p className="text-sm text-cm-white">
-              Je kwam hier voor deze ene stap. Zodra je klaar bent, sta je
-              weer bij je dag.
-            </p>
-            <Link
-              href={`/vandaag?dag=${terugNaarDag}`}
-              className="text-sm font-semibold text-cm-gold hover:underline whitespace-nowrap"
-            >
-              ↩ Terug naar mijn dag
-            </Link>
-          </div>
-        </div>
-      )}
 
       {/* Founder edit-modus toggle */}
       {isFounder && (
@@ -359,15 +341,17 @@ export default function OnboardingPagina() {
         </div>
       )}
 
-      {/* Progress bar */}
-      {stap <= totaalStappen && (
+      {/* Progress bar + stap-bollen alleen in de échte wizard. Kom je
+          vanuit je dagflow voor ÉÉN stap, dan is "stap 1 van 4" niet
+          waar en leidt het alleen maar af (Raoul 29 juli). */}
+      {stap <= totaalStappen && terugNaarDag === null && (
         <div className="h-1 bg-cm-surface">
           <div className="h-1 bg-cm-gold transition-all duration-500" style={{ width: `${voortgang}%` }} />
         </div>
       )}
 
       {/* Stap bollen */}
-      {stap <= totaalStappen && (
+      {stap <= totaalStappen && terugNaarDag === null && (
         <div className="flex justify-center gap-2 py-4 px-6">
           {[1, 2, 3, 4].map((n) => (
             <div key={n} className={`flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold transition-all ${
@@ -415,17 +399,24 @@ export default function OnboardingPagina() {
                   />
                   , {gebruikersnaam}!
                 </h2>
-                <EditableTekst
-                  namespace="onboarding"
-                  sleutel="stap1.intro"
-                  standaard="In vier rustige stappen leggen we samen je fundament."
-                  overrides={overrides}
-                  isFounder={isFounder}
-                  as="p"
-                  className="text-cm-white opacity-60 text-sm"
-                  multiline
-                  rows={2}
-                />
+                {terugNaarDag !== null ? (
+                  <p className="text-cm-white opacity-60 text-sm">
+                    Eén stap: zet ELEVA op je beginscherm en je meldingen
+                    aan. Daarna sta je weer bij je dag.
+                  </p>
+                ) : (
+                  <EditableTekst
+                    namespace="onboarding"
+                    sleutel="stap1.intro"
+                    standaard="In vier rustige stappen leggen we samen je fundament."
+                    overrides={overrides}
+                    isFounder={isFounder}
+                    as="p"
+                    className="text-cm-white opacity-60 text-sm"
+                    multiline
+                    rows={2}
+                  />
+                )}
               </div>
 
               {/* App installeren */}
@@ -532,8 +523,11 @@ export default function OnboardingPagina() {
                 <PushNotificationToggle />
               </div>
 
-              {/* Wat je gaat doen */}
-              <div className="card space-y-3">
+              {/* Wat je gaat doen. Niet tonen in één-stap-modus: die
+                  lijst (WHY, namen, tempo) staat dan al als aparte
+                  stappen in dag 0 en belooft hier een wizard die je
+                  niet gaat doen (Raoul 29 juli). */}
+              <div className={`card space-y-3${terugNaarDag !== null ? " hidden" : ""}`}>
                 <EditableTekst
                   namespace="onboarding"
                   sleutel="stap1.checklijst.titel"
@@ -585,16 +579,23 @@ export default function OnboardingPagina() {
                 />
               </div>
 
+              {/* Eén knop, één richting. In één-stap-modus zegt hij
+                  waar je heen gaat (terug naar je dag), zodat er geen
+                  concurrerende "terug"-optie nodig is. */}
               <button onClick={() => gaNaarStap(2)} disabled={bezig} className="btn-gold w-full py-4 text-base font-bold">
-                <EditableTekst
-                  namespace="onboarding"
-                  sleutel="stap1.knop"
-                  standaard="App geïnstalleerd, aan de slag →"
-                  overrides={overrides}
-                  isFounder={isFounder}
-                  as="span"
-                  hint="Tekst van de knop onderaan stap 1 (door-naar-stap-2)"
-                />
+                {terugNaarDag !== null ? (
+                  <span>Klaar, terug naar mijn dag →</span>
+                ) : (
+                  <EditableTekst
+                    namespace="onboarding"
+                    sleutel="stap1.knop"
+                    standaard="App geïnstalleerd, aan de slag →"
+                    overrides={overrides}
+                    isFounder={isFounder}
+                    as="span"
+                    hint="Tekst van de knop onderaan stap 1 (door-naar-stap-2)"
+                  />
+                )}
               </button>
             </div>
           )}
@@ -891,6 +892,7 @@ export default function OnboardingPagina() {
               isFounder={isFounder}
               overrides={overrides}
               dttAlIngevuld={dttAlIngevuld}
+              terugNaarDag={terugNaarDag}
             />
           )}
 

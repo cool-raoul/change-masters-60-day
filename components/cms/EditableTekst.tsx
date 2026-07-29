@@ -89,6 +89,18 @@ function interpoleerVars(tekst: string, vars?: Record<string, string>): string {
   return resultaat;
 }
 
+/**
+ * Sommige opgeslagen overrides bevatten een LETTERLIJKE backslash-n in
+ * plaats van een echt regeleinde (ontstaan bij plakken vanuit code of
+ * JSON). Die verschenen zichtbaar in beeld als "\n2." midden in een
+ * instructie-lijstje (Raoul 29 juli, onboarding-stap 1). Hier zetten we
+ * ze om naar echte regeleindes; de `whitespace-pre-line`-styling doet
+ * de rest.
+ */
+function normaliseerRegeleindes(tekst: string): string {
+  return tekst.replace(/\\r\\n|\\n/g, "\n");
+}
+
 export function EditableTekst({
   namespace,
   sleutel,
@@ -105,7 +117,7 @@ export function EditableTekst({
 }: Props) {
   const overrideWaarde = overrides[sleutel];
   const [actueleTekst, setActueleTekst] = useState(
-    overrideWaarde?.trim() || standaard,
+    normaliseerRegeleindes(overrideWaarde?.trim() || standaard),
   );
   const [bewerken, setBewerken] = useState(false);
   const [buffer, setBuffer] = useState("");
@@ -120,7 +132,7 @@ export function EditableTekst({
   // sleutel + standaard + overrideWaarde te luisteren, vangen we zowel
   // taak-wissels (sleutel verandert) als content-updates op.
   useEffect(() => {
-    setActueleTekst(overrideWaarde?.trim() || standaard);
+    setActueleTekst(normaliseerRegeleindes(overrideWaarde?.trim() || standaard));
     // Bewerk-modus reset zodra je naar een ander veld navigeert, anders
     // zit je per ongeluk een andere taak te bewerken dan je dacht.
     setBewerken(false);

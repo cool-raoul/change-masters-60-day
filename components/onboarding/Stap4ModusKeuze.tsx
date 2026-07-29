@@ -29,6 +29,13 @@ type Props = {
   isFounder: boolean;
   overrides: Record<string, string>;
   dttAlIngevuld: boolean;
+  /**
+   * Kwam de member hier vanuit zijn dagflow voor alléén deze stap
+   * (?van=vandaag&dag=N)? Dan landt hij na het opslaan weer op die dag
+   * in plaats van op de standaard-/vandaag (Raoul 29 juli: niet ergens
+   * anders uitkomen dan waar je vandaan kwam).
+   */
+  terugNaarDag?: string | null;
 };
 
 export function Stap4ModusKeuze({
@@ -37,7 +44,12 @@ export function Stap4ModusKeuze({
   isFounder,
   overrides,
   dttAlIngevuld,
+  terugNaarDag = null,
 }: Props) {
+  const naVoltooien =
+    terugNaarDag !== null
+      ? `/vandaag?dag=${terugNaarDag}`
+      : "/vandaag?via=onboarding";
   if (modus === "core") {
     return (
       <CoreBlock
@@ -45,6 +57,7 @@ export function Stap4ModusKeuze({
         isFounder={isFounder}
         overrides={overrides}
         dttAlIngevuld={dttAlIngevuld}
+        naVoltooien={naVoltooien}
       />
     );
   }
@@ -53,6 +66,7 @@ export function Stap4ModusKeuze({
       isPreview={isPreview}
       isFounder={isFounder}
       overrides={overrides}
+      naVoltooien={naVoltooien}
     />
   );
 }
@@ -62,11 +76,13 @@ function CoreBlock({
   isFounder,
   overrides,
   dttAlIngevuld,
+  naVoltooien,
 }: {
   isPreview: boolean;
   isFounder: boolean;
   overrides: Record<string, string>;
   dttAlIngevuld: boolean;
+  naVoltooien: string;
 }) {
   const router = useRouter();
   const supabase = createClient();
@@ -129,7 +145,7 @@ function CoreBlock({
     // Automatisch doorlopen naar /vandaag (consistent met Sprint-tak,
     // voorkomt hang-staat waarin gebruiker op een knop moet wachten
     // terwijl middleware al door kan).
-    router.push("/vandaag?via=onboarding");
+    router.push(naVoltooien);
     router.refresh();
   }
 
@@ -186,10 +202,12 @@ function SprintTempoBlock({
   isPreview,
   isFounder,
   overrides,
+  naVoltooien,
 }: {
   isPreview: boolean;
   isFounder: boolean;
   overrides: Record<string, string>;
+  naVoltooien: string;
 }) {
   const [commitmentUren, setCommitmentUren] = useState<CommitmentUren | null>(null);
   const [bezig, setBezig] = useState(false);
@@ -262,7 +280,7 @@ function SprintTempoBlock({
       }
     }
     setBezig(false);
-    router.push("/vandaag?via=onboarding");
+    router.push(naVoltooien);
     router.refresh();
   }
 
