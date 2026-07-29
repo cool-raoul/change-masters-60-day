@@ -691,12 +691,12 @@ export const t: Vertalingen = {
     es: "Tu POR QU\u00c9", de: "Dein WARUM", pt: "Seu PORQU\u00ca",
   },
   "why.subtitel": {
-    nl: "Ontdek wat jou \u00e9cht drijft \u2014 de basis van Project Meer Tijd en Vrijheid",
-    en: "Discover what truly drives you \u2014 the foundation of your project",
-    fr: "D\u00e9couvre ce qui te motive vraiment \u2014 la base de ton projet",
-    es: "Descubre lo que realmente te impulsa \u2014 la base de tu proyecto",
-    de: "Entdecke was dich wirklich antreibt \u2014 die Basis deines Projekts",
-    pt: "Descubra o que realmente te motiva \u2014 a base do seu projeto",
+    nl: "Ontdek wat jou \u00e9cht drijft. De basis van Project Meer Tijd en Vrijheid",
+    en: "Discover what truly drives you. The foundation of your project",
+    fr: "D\u00e9couvre ce qui te motive vraiment. La base de ton projet",
+    es: "Descubre lo que realmente te impulsa. La base de tu proyecto",
+    de: "Entdecke was dich wirklich antreibt. Die Basis deines Projekts",
+    pt: "Descubra o que realmente te motiva. A base do seu projeto",
   },
   "why.huidige": {
     nl: "Jouw huidige WHY", en: "Your current WHY", fr: "Ton POURQUOI actuel",
