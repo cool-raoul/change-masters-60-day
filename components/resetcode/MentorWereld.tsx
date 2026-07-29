@@ -3230,7 +3230,16 @@ export default function MentorWereld({
       await mentorKaart("suikers", station.slug);
       return true;
     }
-    if (/\bwc\b|stoelgang|obstipatie|verstopping|poepen/.test(t) && t.length < 80) {
+    // Alleen bij een expliciete vraag om het tips-lijstje zelf ("wc tips",
+    // "tips voor de stoelgang") komt de vaste kaart. Elke echte vraag of
+    // klacht gaat naar de vrije Mentor: die kent dezelfde tips uit het
+    // materiaal en kan ook het hele verhaal beantwoorden ("en ik plas
+    // juist heel veel, hoe kan dat?") in plaats van een standaard-blokje
+    // (feedback Raoul 29 juli).
+    if (
+      /(wc|stoelgang|poep)[- ]?tips\b|\btips\b.*(wc|stoelgang)/.test(t) &&
+      t.length < 40
+    ) {
       zeg();
       await mentorKaart("wctips", station.slug, 900);
       return true;
