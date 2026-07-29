@@ -16,6 +16,7 @@ KERNREGELS FASE 2:
 - Minimaal 3 uur voor het slapen niet meer eten (bijv. vanaf 19.00 uur niets meer).
 - Dagelijks extra zout (liefst Keltisch zeezout), bijv. 3 mespuntjes, voor de mineralen.
 - Liever geen dierlijke zuivel in fase 2 (tenzij iemand de reset al eerder deed en precies weet wat hij verdraagt). Afwisselen met de vega-lijst mag.
+- JE VERMIJDT in fase 2 (letterlijk uit het boekje): brood, pasta, rijst, aardappelen en andere granen (dus ook geen havermout, muesli of ontbijtgranen), bewerkte producten, sauzen, frisdrank, zuivel, suiker, alcohol en vetten. De enige uitzonderingen op granen zijn de 2 toegestane snacks (Wasa cracker/soepstengel).
 
 SLA: ijsberg, andijvie, kropsla, radicchio, rucola, andere bladsla.
 KOOLSOORTEN: bloemkool, broccoli, paksoi, rode kool, witte kool, savooiekool.
