@@ -56,6 +56,7 @@ export async function POST(req: NextRequest) {
     await admin.from("resetcode_chats").delete().eq("link_id", ctx.linkId);
     await admin.from("resetcode_checkin").delete().eq("link_id", ctx.linkId);
     await admin.from("resetcode_innames").delete().eq("link_id", ctx.linkId);
+    await admin.from("resetcode_kcal_log").delete().eq("link_id", ctx.linkId);
     await admin
       .from("resetcode_klant_links")
       .update({
@@ -98,9 +99,14 @@ export async function POST(req: NextRequest) {
   }
   if (r?.start_datum) {
     const d = new Date(Date.parse(r.start_datum) + delta * 86_400_000);
+    // Zelfde vloer als station_sinds: "dag terug" mag de startdatum
+    // nooit voorbij vandaag duwen, anders speelt het aftel-welkom
+    // midden in de 16 dagen (agent-jacht 29 juli).
+    const vandaagD = new Date(`${vandaag}T00:00:00Z`);
+    const geklemd = delta > 0 && d.getTime() > vandaagD.getTime() ? vandaagD : d;
     updates.start_datum = new Intl.DateTimeFormat("sv-SE", {
       timeZone: "UTC",
-    }).format(d);
+    }).format(geklemd);
   }
   if (Object.keys(updates).length > 0) {
     await admin
@@ -129,6 +135,7 @@ export async function POST(req: NextRequest) {
   };
   await schuif("resetcode_checkin");
   await schuif("resetcode_innames");
+  await schuif("resetcode_kcal_log");
   void vandaag;
   return Response.json({ ok: true });
 }

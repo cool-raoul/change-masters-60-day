@@ -113,6 +113,18 @@ export async function POST(req: NextRequest) {
         { status: 400 },
       );
     }
+    // Guard (agent-jacht 29 juli): audio_path komt uit de body, maar
+    // voice-upload zet bestanden altijd onder <invitationId>/... . Zonder
+    // deze check kon iemand een pad van een ándere uitnodiging aan zijn
+    // eigen bericht hangen en zo andermans spraakbericht afspelen via
+    // /api/mini-eleva/voice (die alleen de uitnodiging van het bericht
+    // controleert, niet de herkomst van het pad).
+    if (audioPath && !audioPath.startsWith(`${auth.invitationId}/`)) {
+      return NextResponse.json(
+        { error: "audio_path hoort niet bij deze uitnodiging" },
+        { status: 403 },
+      );
+    }
 
     const admin = createAdminClient();
 

@@ -293,8 +293,10 @@ export async function POST(req: NextRequest) {
     const MERK_BUFFER = 16;
     const readable = new ReadableStream({
       async start(controller) {
+        // Buiten de try, zodat de catch een half ontvangen antwoord
+        // alsnog kan bewaren.
+        let volledig = "";
         try {
-          let volledig = "";
           let verzonden = 0;
           for await (const chunk of stream) {
             const text = chunk.choices[0]?.delta?.content || "";
@@ -330,9 +332,13 @@ export async function POST(req: NextRequest) {
           const schoon = zonderMerknaam(ruwSchoon);
           if (ctxVoorOpslag && schoon) {
             try {
-              await bewaarResetChats(ctxVoorOpslag.linkId, [
-                { van: "mentor", soort: "tekst", stationSlug, tekst: schoon },
-              ]);
+              // dedupe:false — het 300-antwoorden-quotum telt bewaarde
+              // mentor-rijen; wegdedupen zou de teller ondermijnen.
+              await bewaarResetChats(
+                ctxVoorOpslag.linkId,
+                [{ van: "mentor", soort: "tekst", stationSlug, tekst: schoon }],
+                { dedupe: false },
+              );
             } catch (e) {
               console.error("resetcode chat opslaan mislukt:", e);
             }
@@ -340,32 +346,44 @@ export async function POST(req: NextRequest) {
           if (isTeamvraag && ctxVoorOpslag && vraag) {
             try {
               const adminT = createAdminClient();
-              const { error: kennisFout } = await adminT
+              // Dedupe (agent-jacht 29 juli): dezelfde open vraag van
+              // dezelfde klant niet dubbel in de kennis-lus + geen
+              // dubbele founder-push.
+              const { data: alOpen } = await adminT
                 .from("resetcode_kennis")
-                .insert({
-                  programma: programmaSlug,
-                  vraag: vraag.slice(0, 600),
-                  bron: "klant",
-                  link_id: ctxVoorOpslag.linkId,
-                });
-              if (kennisFout) {
-                console.error("resetcode kennis-insert:", kennisFout.message);
-              }
-              // Push naar alle founders (vraag anoniem, geen klantnaam).
-              const { data: founders } = await adminT
-                .from("profiles")
                 .select("id")
-                .eq("role", "founder");
-              await Promise.allSettled(
-                ((founders ?? []) as { id: string }[]).map((f) =>
-                  sendPushToUser(f.id, {
-                    title: "Nieuwe vraag voor het team 🧠",
-                    body: `De Mentor wist dit niet: "${vraag.slice(0, 120)}". Beantwoord 'm en de Mentor leert het direct.`,
-                    url: "/resetcode-kennis",
-                    tag: "resetcode-kennis",
-                  }),
-                ),
-              );
+                .eq("link_id", ctxVoorOpslag.linkId)
+                .eq("vraag", vraag.slice(0, 600))
+                .eq("status", "open")
+                .limit(1);
+              if (!alOpen || alOpen.length === 0) {
+                const { error: kennisFout } = await adminT
+                  .from("resetcode_kennis")
+                  .insert({
+                    programma: programmaSlug,
+                    vraag: vraag.slice(0, 600),
+                    bron: "klant",
+                    link_id: ctxVoorOpslag.linkId,
+                  });
+                if (kennisFout) {
+                  console.error("resetcode kennis-insert:", kennisFout.message);
+                }
+                // Push naar alle founders (vraag anoniem, geen klantnaam).
+                const { data: founders } = await adminT
+                  .from("profiles")
+                  .select("id")
+                  .eq("role", "founder");
+                await Promise.allSettled(
+                  ((founders ?? []) as { id: string }[]).map((f) =>
+                    sendPushToUser(f.id, {
+                      title: "Nieuwe vraag voor het team 🧠",
+                      body: `De Mentor wist dit niet: "${vraag.slice(0, 120)}". Beantwoord 'm en de Mentor leert het direct.`,
+                      url: "/resetcode-kennis",
+                      tag: "resetcode-kennis",
+                    }),
+                  ),
+                );
+              }
             } catch (e) {
               console.error("resetcode kennis-vraag opslaan mislukt:", e);
             }
@@ -450,8 +468,37 @@ export async function POST(req: NextRequest) {
         } catch (err) {
           const foutMsg = err instanceof Error ? err.message : "onbekende fout";
           console.error("resetcode-mentor stream-fout:", foutMsg);
+          // Half antwoord alsnog bewaren (agent-jacht 29 juli): de klant
+          // zág de gestreamde tekst al, dus die hoort ook in het log te
+          // staan; anders mist het antwoord na een herlaad terwijl de
+          // vraag er wél staat. En géén rauwe interne foutmelding tonen.
           try {
-            controller.enqueue(encoder.encode(`\n\n[Mentor-fout: ${foutMsg}]`));
+            const deel = zonderMerknaam(
+              volledig.replaceAll("[[TEAMVRAAG]]", ""),
+            ).trim();
+            if (ctxVoorOpslag && deel.length > 0) {
+              await bewaarResetChats(
+                ctxVoorOpslag.linkId,
+                [
+                  {
+                    van: "mentor",
+                    soort: "tekst",
+                    stationSlug,
+                    tekst: `${deel} …(de verbinding viel hier even weg)`,
+                  },
+                ],
+                { dedupe: false },
+              );
+            }
+          } catch {
+            // opslag is best-effort
+          }
+          try {
+            controller.enqueue(
+              encoder.encode(
+                "\n\nDe verbinding viel even weg. Stel je vraag gerust opnieuw, ik sta klaar. 💚",
+              ),
+            );
             controller.close();
           } catch {
             // controller was al gesloten
@@ -469,6 +516,10 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     const msg = error instanceof Error ? error.message : "onbekend";
     console.error("resetcode-mentor exception:", msg);
-    return new Response(`Mentor-fout: ${msg}`, { status: 500 });
+    // Geen interne foutmeldingen richting de klant.
+    return new Response(
+      "De Mentor is heel even niet bereikbaar. Probeer het zo nog een keer.",
+      { status: 500 },
+    );
   }
 }

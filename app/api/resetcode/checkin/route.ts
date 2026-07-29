@@ -52,6 +52,16 @@ export async function POST(req: NextRequest) {
 
   const admin = createAdminClient();
   const datum = vandaagNL();
+  // Her-check-in op dezelfde dag? Dan geen tweede ronde patroon-
+  // conclusies, mijlpaal-vieringen en log-regels (agent-jacht 29 juli:
+  // een gewicht-correctie 's middags herhaalde alles nog een keer).
+  const { data: bestaandeRij } = await admin
+    .from("resetcode_checkin")
+    .select("id")
+    .eq("link_id", ctx.linkId)
+    .eq("datum", datum)
+    .maybeSingle();
+  const herCheckin = Boolean(bestaandeRij);
   await admin.from("resetcode_checkin").upsert(
     {
       link_id: ctx.linkId,
@@ -103,17 +113,38 @@ export async function POST(req: NextRequest) {
   // zorgt dat een reeks-melding één keer komt en zich niet elke dag
   // herhaalt zolang de reeks doorloopt.
   let patroonTekst = "";
-  const metGewichtReeks = reeks.filter((r) => r.gewicht != null);
+  // Patroon-hygiëne (agent-jacht 29 juli): alleen rijen tot en met
+  // vandaag meenemen (test-sprongen kunnen toekomst-datums achterlaten
+  // die anders als "laatste weging" gelden).
+  const reeksP = reeks.filter((r) => r.datum <= datum);
+  const metGewichtReeks = reeksP.filter((r) => r.gewicht != null);
   const gewichten = metGewichtReeks.map((r) => r.gewicht as number);
   const spreiding = (lijst: number[]) =>
     Math.max(...lijst) - Math.min(...lijst);
   const komma = (n: number) => String(n).replace(".", ",");
   const begeleider = ctx.memberVoornaam || "je begeleider";
-  const laatsteOpRij = (n: number, test: (r: CheckinRij) => boolean) =>
-    reeks.length >= n && reeks.slice(-n).every(test);
-  const netBereikt = (n: number, test: (r: CheckinRij) => boolean) =>
-    laatsteOpRij(n, test) &&
-    (reeks.length === n || !test(reeks[reeks.length - n - 1]));
+  // "Op rij" betekent échte opeenvolgende kalenderdagen (agent-jacht
+  // 29 juli): ma/wo/vr met dezelfde score is géén "drie dagen op rij".
+  const opeenvolgend = (rijen: CheckinRij[]) =>
+    rijen.every(
+      (r, i) =>
+        i === 0 ||
+        Date.parse(r.datum) - Date.parse(rijen[i - 1].datum) === 86_400_000,
+    );
+  const laatsteOpRij = (n: number, test: (r: CheckinRij) => boolean) => {
+    const staart = reeksP.slice(-n);
+    return staart.length === n && opeenvolgend(staart) && staart.every(test);
+  };
+  const netBereikt = (n: number, test: (r: CheckinRij) => boolean) => {
+    if (!laatsteOpRij(n, test)) return false;
+    const vorige = reeksP[reeksP.length - n - 1];
+    if (!vorige) return true;
+    const sluitAan =
+      Date.parse(reeksP[reeksP.length - n].datum) -
+        Date.parse(vorige.datum) ===
+      86_400_000;
+    return !(sluitAan && test(vorige));
+  };
 
   // 1. Fase 3-anker: meer dan een kilo boven het startgewicht van fase 3
   //    -> de correctie-dag uit het boekje (eenmalig bij het overschrijden).
@@ -139,7 +170,7 @@ export async function POST(req: NextRequest) {
   //    Bewust VÓÓR de plateau-check: lopen de centimeters, dan is dát de
   //    verklaring van de stilstand en is vieren beter dan een appeldag.
   if (!patroonTekst) {
-    const metTaille = reeks.filter((r) => r.taille != null);
+    const metTaille = reeksP.filter((r) => r.taille != null);
     if (metTaille.length >= 2 && metTaille[metTaille.length - 1].datum === datum) {
       const tVorig = metTaille[metTaille.length - 2];
       const cmEraf =
@@ -192,10 +223,27 @@ export async function POST(req: NextRequest) {
     metGewichtReeks.length >= 2 &&
     ctx.stationSlug !== "laaddagen"
   ) {
-    const laatste4 = gewichten.slice(-4);
-    const laatste5 = gewichten.slice(-5);
-    const plateauNu = laatste4.length === 4 && spreiding(laatste4) <= 0.2;
-    const plateauAlGemeld = laatste5.length === 5 && spreiding(laatste5) <= 0.2;
+    // Plateau alleen op metingen SINDS deze fase begon (laaddag-kilo's
+    // tellen niet mee) en alleen op échte opeenvolgende kalenderdagen
+    // (agent-jacht 29 juli).
+    const faseStartStr = ctx.stationSinds
+      ? new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Amsterdam" }).format(
+          new Date(ctx.stationSinds),
+        )
+      : null;
+    const inFase = faseStartStr
+      ? metGewichtReeks.filter((r) => r.datum >= faseStartStr)
+      : metGewichtReeks;
+    const rijen4 = inFase.slice(-4);
+    const rijen5 = inFase.slice(-5);
+    const plateauNu =
+      rijen4.length === 4 &&
+      opeenvolgend(rijen4) &&
+      spreiding(rijen4.map((r) => r.gewicht as number)) <= 0.2;
+    const plateauAlGemeld =
+      rijen5.length === 5 &&
+      opeenvolgend(rijen5) &&
+      spreiding(rijen5.map((r) => r.gewicht as number)) <= 0.2;
     const dagDelta =
       Math.round((gewicht - gewichten[gewichten.length - 2]) * 10) / 10;
     const startDelta = Math.round((gewicht - gewichten[0]) * 10) / 10;
@@ -269,6 +317,12 @@ export async function POST(req: NextRequest) {
       " Kleine tip tussendoor: je hebt een paar dagen geen gewicht ingevuld. Geen enkel verwijt, maar dagelijks even wegen ('s ochtends, lege maag, na het plassen) is juist je bijstuur-instrument: zo zien we samen op tijd of er iets nodig is, bijvoorbeeld voor een appeldag. Doe je morgen weer mee?";
   }
 
+  // Her-check-in op dezelfde dag: alles al gezegd, dus geen tweede
+  // ronde conclusies (de cijfers worden wél gewoon bijgewerkt).
+  if (herCheckin) {
+    patroonTekst = "";
+  }
+
   // Eén boodschap over hetzelfde thema: de specifieke patroon-tekst
   // vervangt de algemene schommel-zin (het lichter-compliment blijft).
   if (patroonTekst && !verschilTekst.startsWith(" Je bent al")) {
@@ -286,9 +340,10 @@ export async function POST(req: NextRequest) {
     21: " Eenentwintig dagen op rij ingecheckt! 🎉 Drie weken lang elke dag voor jezelf kiezen: dat is geen toeval meer, dat ben jij.",
     30: " Dertig dagen op rij ingecheckt! 🎉 Dit ritme is nu gewoon van jou.",
   };
-  const streakDeel =
-    MIJLPAAL_TEKST[streak] ??
-    (streak >= 3 ? ` En knap: ${streak} dagen op rij ingecheckt! 🔥` : "");
+  const streakDeel = herCheckin
+    ? "" // mijlpaal/vlammetje is vandaag al gevierd
+    : (MIJLPAAL_TEKST[streak] ??
+      (streak >= 3 ? ` En knap: ${streak} dagen op rij ingecheckt! 🔥` : ""));
   // De kleine winst van de dag terugspiegelen: kijken naar wat wél
   // werkt (journal-principe), niet naar wat nog niet perfect is. De
   // afsluiter wisselt per dag, anders wordt het eentonig (feedback
@@ -328,20 +383,40 @@ export async function POST(req: NextRequest) {
       : "";
   const antwoord = `${stemDeel}${gewicht != null ? ` Gewicht van vandaag opgeslagen.${verschilTekst}` : ""}${patroonTekst}${streakDeel}${winstDeel}${zwaarDeel} Ik houd alles voor je bij, vraag me gerust "mijn voortgang".`;
 
-  // In het gesprek bewaren zodat het meereist.
-  await bewaarResetChats(ctx.linkId, [
-    {
-      van: "klant",
-      soort: "tekst",
-      stationSlug: ctx.stationSlug,
-      tekst: `Check-in: ${stemming ? STEMMING_WOORD[stemming] : "gedaan"}${energie ? `, energie ${energie}` : ""}${slaap ? `, slaap ${slaap}` : ""}${buik ? `, buik ${buik}` : ""}${gewicht != null ? `, ${gewicht} kg` : ""}${notitie ? `. Winst van vandaag: ${notitie}` : ""}`,
-    },
-    { van: "mentor", soort: "tekst", stationSlug: ctx.stationSlug, tekst: antwoord },
-  ]);
+  // In het gesprek bewaren zodat het meereist. Zelfde tekst als de
+  // klant in beeld ziet (agent-jacht 29 juli: "Vandaag: top 😃" in
+  // beeld werd na een herlaad ineens "Check-in: top"). Bij een her-
+  // check-in op dezelfde dag geen tweede stel log-regels.
+  if (!herCheckin) {
+    const stemmingEmoji =
+      stemming === "top"
+        ? "top 😃"
+        : stemming === "gaatwel"
+          ? "gaat wel 🙂"
+          : stemming === "zwaar"
+            ? "zwaar 💛"
+            : "gedaan";
+    const extraDelen = [
+      energie ? `energie ${energie}` : "",
+      slaap ? `slaap ${slaap}` : "",
+      buik ? `buik ${buik}` : "",
+    ].filter(Boolean);
+    await bewaarResetChats(ctx.linkId, [
+      {
+        van: "klant",
+        soort: "tekst",
+        stationSlug: ctx.stationSlug,
+        tekst: `Vandaag: ${stemmingEmoji}${extraDelen.length ? ` (${extraDelen.join(", ")})` : ""}${gewicht != null ? `, ${gewicht} kg` : ""}${notitie ? `. Winst: ${notitie}` : ""}`,
+      },
+      { van: "mentor", soort: "tekst", stationSlug: ctx.stationSlug, tekst: antwoord },
+    ]);
+  }
 
   return Response.json({
     ok: true,
     antwoord,
+    patroon: Boolean(patroonTekst),
+    herCheckin,
     streak,
     reeks: reeks.map((r) => ({
       datum: r.datum,

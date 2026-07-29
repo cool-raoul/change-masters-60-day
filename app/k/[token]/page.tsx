@@ -280,9 +280,17 @@ export default async function KlantLinkPagina({
         ) + 1;
     }
   } else if (ctx.stationSinds) {
+    // Kalenderdag-berekening (agent-jacht 29 juli): wie om 23:30 een
+    // fase instapte, bleef anders tot 23:30 de volgende dag "dag 1"
+    // zien terwijl de check-in al een nieuwe datum had. De fase-dag
+    // tikt nu gewoon om middernacht (Nederlandse tijd), net als de
+    // check-ins en innames.
+    const faseStartStr = new Intl.DateTimeFormat("sv-SE", {
+      timeZone: "Europe/Amsterdam",
+    }).format(new Date(ctx.stationSinds));
     dagNummerRuw =
-      Math.floor(
-        (Date.now() - new Date(ctx.stationSinds).getTime()) / 86_400_000,
+      Math.round(
+        (Date.parse(vandaagStr) - Date.parse(faseStartStr)) / 86_400_000,
       ) + 1;
   }
   // Startdatum in de toekomst: teller staat op 0, aftellen tot de start.
@@ -446,7 +454,15 @@ export default async function KlantLinkPagina({
       dagNummer != null &&
       dagNummer > einde.dagen &&
       !ctx.touchpoints.includes(eindeKey) &&
-      !ctx.touchpoints.includes("programma-einde"),
+      !ctx.touchpoints.includes("programma-einde") &&
+      // Darm: eerst de opmaak-uitleg (deel-door-30 + gesprekspartner-
+      // keuze), dán pas het einde-feest. Wie dag 16 oversloeg en op
+      // dag 17+ binnenkomt, kreeg anders het feest vóór de doseer-
+      // uitleg (agent-jacht 29 juli).
+      !(
+        ctx.programmaSlug === "darm" &&
+        !ctx.touchpoints.includes("darm-opmaak-uitleg")
+      ),
   );
 
   // Reset-fase-regie: fase-dagen zitten erop → keuze-moment (verlengen

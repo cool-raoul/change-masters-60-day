@@ -59,14 +59,23 @@ export async function POST(req: NextRequest) {
   if (ctx.stationSlug === stationSlug) return Response.json({ ok: true });
 
   const admin = createAdminClient();
-  await admin
+  // Conditionele update (agent-jacht 29 juli): twee snelle klikken op
+  // dezelfde stap passeerden beide de no-op-guard hierboven (die de
+  // vooraf gelezen ctx gebruikt) en stuurden de begeleider twee
+  // identieke seintjes. Alleen als er écht een rij wijzigt, seinen we.
+  const { data: gewijzigd } = await admin
     .from("resetcode_klant_links")
     .update({
       station_slug: stationSlug,
       station_sinds: new Date().toISOString(),
       laatste_activiteit: new Date().toISOString(),
     })
-    .eq("id", ctx.linkId);
+    .eq("id", ctx.linkId)
+    .neq("station_slug", stationSlug)
+    .select("id");
+  if (!gewijzigd || gewijzigd.length === 0) {
+    return Response.json({ ok: true });
+  }
 
   const programma = programmaVoor(ctx.programmaSlug);
   const cm = station.contactMoment;

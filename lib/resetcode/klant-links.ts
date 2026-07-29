@@ -155,6 +155,15 @@ export async function bewaarResetChats(
     stationSlug?: string | null;
     tekst?: string | null;
   }[],
+  opties?: {
+    /**
+     * false = altijd opslaan, ook als dezelfde tekst recent al is
+     * gelogd. Nodig voor AI-antwoorden: het 300-antwoorden-quotum telt
+     * opgeslagen mentor-rijen, dus wegdedupen zou de teller ondermijnen
+     * (agent-jacht 29 juli).
+     */
+    dedupe?: boolean;
+  },
 ) {
   if (!items.length) return;
   const admin = createAdminClient();
@@ -163,7 +172,25 @@ export async function bewaarResetChats(
   // bezoek opnieuw en werden ook elke keer opnieuw gelogd. Een exact
   // identieke mentor-tekst die de afgelopen 12 uur al is opgeslagen,
   // slaan we niet nóg een keer op. Klant-berichten altijd bewaren.
+  const dedupeAan = opties?.dedupe !== false;
   let teBewaren = items;
+  if (!dedupeAan) {
+    await admin.from("resetcode_chats").insert(
+      items.map((i) => ({
+        link_id: linkId,
+        van: i.van,
+        soort: i.soort,
+        kaart: i.kaart ?? null,
+        station_slug: i.stationSlug ?? null,
+        tekst: i.tekst ?? null,
+      })),
+    );
+    await admin
+      .from("resetcode_klant_links")
+      .update({ laatste_activiteit: new Date().toISOString() })
+      .eq("id", linkId);
+    return;
+  }
   const mentorTeksten = items.filter(
     (i) => i.van === "mentor" && i.soort === "tekst" && i.tekst,
   );

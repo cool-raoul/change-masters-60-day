@@ -77,6 +77,22 @@ export async function POST(req: NextRequest) {
       if (!klantCtx || klantCtx.status !== "actief") {
         return new Response("Ongeldige link", { status: 401 });
       }
+      // Kosten-vangnet (agent-jacht 29 juli): de teller draait op het
+      // sterke vision-model en had als enige route géén limiet. Ruim
+      // genoeg voor twee serieuze laaddagen, maar niet onbeperkt.
+      const adminCap = createAdminClient();
+      const vandaagCap = vandaagNL();
+      const { count: kcalVandaag } = await adminCap
+        .from("resetcode_kcal_log")
+        .select("id", { count: "exact", head: true })
+        .eq("link_id", klantCtx.linkId)
+        .eq("datum", vandaagCap);
+      if ((kcalVandaag ?? 0) >= 60) {
+        return new Response(
+          "Je teller staat vol voor vandaag, wat een inzet! Tel de rest gerust zelf even op, of vraag het morgen weer aan mij.",
+          { status: 429 },
+        );
+      }
     } else {
       const supabase = await createClient();
       const {

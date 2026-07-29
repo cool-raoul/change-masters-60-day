@@ -648,6 +648,10 @@ export default function MentorWereld({
   const sportSchemaVervolgRef = useRef(false);
   // "Verder met"-knoppen die wachten tot de check-in is gedaan.
   const knoppenWachtkamerRef = useRef<ChatItem[]>([]);
+  // Touchpoint-markeringen serieel wegschrijven (nooit twee tegelijk).
+  const touchpointKetenRef = useRef<Promise<void>>(Promise.resolve());
+  // Staat er al een check-in-kaart open? (Nooit twee tegelijk.)
+  const checkinKaartOpenRef = useRef(false);
   const bidTeller = useRef(0);
   // Check-in / dagboek: reeks in het geheugen zodat de voortgangs-kaart
   // meteen klopt na een nieuwe check-in.
@@ -657,6 +661,12 @@ export default function MentorWereld({
   // anders op de oude fase-dag staan, waardoor iemand op "dag 41" direct
   // door fase 3 én 4 kon klikken).
   const faseDagRef = useRef<number | null>(dagNummer ?? null);
+  // Live dag-teller voor alle labels (agent-jacht 29 juli): de server-
+  // prop dagNummer veroudert zodra de klant in dít bezoek van fase
+  // wisselt of een startmoment kiest; faseDagRef bewoog al mee maar de
+  // labels (Groeipad, check-in, innames-pill, testbalk) niet. Eén
+  // state-bron die bij zulke keuzes wordt bijgewerkt lost dat op.
+  const [dagLive, setDagLive] = useState<number | null>(dagNummer ?? null);
   const checkinGedaanRef = useRef(Boolean(checkinVandaagGedaan));
   // Waar terwijl de Mentor woord-voor-woord schrijft: dan even geen
   // localStorage-opslag per woord (na het schrijven één keer).
@@ -686,11 +696,15 @@ export default function MentorWereld({
     // direct in dit bezoek meetelt en niet pas na een refresh.
     verteldRef.current.add(sleutel);
     if (!token) return;
-    fetch("/api/resetcode/touchpoint", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token, sleutel }),
-    }).catch(() => {});
+    // SERIEEL + met herkansing (agent-jacht 29 juli): twee bijna-
+    // gelijktijdige markeringen overschreven elkaars touchpoints-array
+    // op de server (lees-schrijf-race), waardoor een groot moment (dag
+    // 10-video, einde-feest) bij het volgende bezoek opnieuw speelde.
+    // De keten garandeert één POST tegelijk; de herkansing vangt een
+    // netwerk-hapering.
+    touchpointKetenRef.current = touchpointKetenRef.current.then(() =>
+      postMetHerkansing("/api/resetcode/touchpoint", { token, sleutel }),
+    );
   }
 
   // Speelt een business-touchpoint, precies één keer per klant (ook over
@@ -987,9 +1001,15 @@ export default function MentorWereld({
                 : null,
             );
             knoppenNaarOnder();
+            // EERST de keuze (agent-jacht 29 juli): due-momenten en
+            // check-in stapelden er anders bovenop terwijl de vraag
+            // nog open stond. Ze komen vanzelf ná de keuze (kiesStart)
+            // of bij het volgende bezoek.
+            return;
           } else if (moetStartKiezen) {
             await toonStartKeuze(FASE_DAGEN[EERSTE_DUUR_STATION[prog.slug] ?? ""]);
             knoppenNaarOnder();
+            return;
           } else if (
             !checkinGedaanRef.current &&
             !dueEinde &&
@@ -1026,7 +1046,10 @@ export default function MentorWereld({
                   dueFaseKeuze.fase === "stabilisatie") &&
                 (dueFaseKeuze.max || dueFaseKeuze.dag >= 21),
             );
-            if (dueKennis && dueKennis.length > 0 && !faseKeuzeNu) {
+            // Team-antwoorden zijn tijdgevoelig en eenmalig: die laten
+            // we NIET dagenlang verdringen door de fase-keuze (agent-
+            // jacht 29 juli); de keuze komt dan gewoon morgen terug.
+            if (dueKennis && dueKennis.length > 0) {
               for (const k of dueKennis) {
                 await mentorZegt(
                   `Trouwens! Je vroeg me laatst: "${k.vraag}". Ik heb het voor je nagevraagd bij het team, en dit is het antwoord: ${k.antwoord} 💚`,
@@ -1034,14 +1057,12 @@ export default function MentorWereld({
                 );
                 await wacht(800);
               }
-              fetch("/api/resetcode/kennis-gezien", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  token,
-                  ids: dueKennis.map((k) => k.id),
-                }),
-              }).catch(() => {});
+              // Met herkansing (agent-jacht 29 juli): faalde deze markering
+              // stil, dan herhaalde het team-antwoord elk volgend bezoek.
+              postMetHerkansing("/api/resetcode/kennis-gezien", {
+                token,
+                ids: dueKennis.map((k) => k.id),
+              });
             } else if (dueDag10 && !faseKeuzeNu) {
               await mentorZegt(
                 `Trouwens: je zit vandaag op dag ${dueDag10} van je 16 dagen! 🎉 Dit is het moment voor je dag 10-video, die is belangrijk. Kijk 'm even rustig 👇`,
@@ -1375,7 +1396,7 @@ export default function MentorWereld({
   // De Mentor "schrijft" zijn tekst woord voor woord (feedback Raoul:
   // je leest mee terwijl hij schrijft, in plaats van bloktekst-plof).
   // Korte adempauze na elke zin, zodat het leest als echt schrijven.
-  async function mentorZegt(tekst: string, denkMs = 900) {
+  async function mentorZegt(tekst: string, denkMs = 900, logMee = true) {
     setMentorTypt(true);
     await wacht(denkMs);
     setMentorTypt(false);
@@ -1398,7 +1419,9 @@ export default function MentorWereld({
     }
     schrijftRef.current = false;
     setItems((b) => [...b]); // één keer bewaren, nu het af is
-    logNaarServer([{ van: "mentor", soort: "tekst", tekst }]);
+    // logMee=false voor teksten die de server zelf al bewaarde (zoals
+    // het check-in-antwoord): anders staat hij dubbel in het log.
+    if (logMee) logNaarServer([{ van: "mentor", soort: "tekst", tekst }]);
   }
 
   async function mentorKaart(kaart: Kaart, stationSlug: string, denkMs = 700) {
@@ -1512,6 +1535,7 @@ export default function MentorWereld({
         ? Math.round((Date.parse(vandaagISO2) - Date.parse(datumISO)) / 86_400_000) + 1
         : 1;
       faseDagRef.current = effectieveDag;
+      setDagLive(effectieveDag); // alle dag-labels direct mee (agent-jacht 29 juli)
       if (
         programma?.slug === "darm" &&
         effectieveDag >= 1 &&
@@ -1628,7 +1652,7 @@ export default function MentorWereld({
           : "Kortom: je bent aan het bouwen, en dat zie je terug in je trouw. De resultaten volgen het ritme. 💚";
     await wacht(600);
     await mentorZegt(
-      `📊 Even alles op een rij${dagNummer && station ? ` (dag ${dagNummer} · ${station.naam})` : ""}:\n\n${regelsV.join("\n\n")}\n\n${afsluiterV}`,
+      `📊 Even alles op een rij${dagLive && station ? ` (dag ${dagLive} · ${station.naam})` : ""}:\n\n${regelsV.join("\n\n")}\n\n${afsluiterV}`,
       1200,
     );
   }
@@ -2023,13 +2047,28 @@ export default function MentorWereld({
   // Raoul 18 juli).
   async function toonCheckin(metGroet: boolean) {
     if (checkinGedaanRef.current) return;
+    // Nooit twee check-in-kaarten tegelijk (agent-jacht 29 juli: de
+    // start-keuze-flow en het dag-moment konden er elk één neerzetten).
+    if (checkinKaartOpenRef.current) return;
+    checkinKaartOpenRef.current = true;
     // Openstaande "Verder met"-knoppen even naar de wachtkamer: eerst de
     // check-in, daarna komt de knop vanzelf terug (feedback Raoul 25 juli:
     // knop + check-in tegelijk in beeld is te veel en verwarrend).
     setItems((b) => {
       const knoppen = b.filter((x) => x.soort === "verder-knop");
       if (knoppen.length > 0) {
-        knoppenWachtkamerRef.current.push(...knoppen);
+        // Idempotent (StrictMode draait updaters dubbel): alleen knoppen
+        // toevoegen die nog niet in de wachtkamer staan.
+        for (const k of knoppen) {
+          if (
+            k.soort === "verder-knop" &&
+            !knoppenWachtkamerRef.current.some(
+              (w) => w.soort === "verder-knop" && w.bid === k.bid,
+            )
+          ) {
+            knoppenWachtkamerRef.current.push(k);
+          }
+        }
         return b.filter((x) => x.soort !== "verder-knop");
       }
       return b;
@@ -2038,7 +2077,7 @@ export default function MentorWereld({
       // Geen tweede begroeting: de klant is bij binnenkomst al welkom
       // geheten (feedback Raoul 24 juli, dubbel "Goedenavond" voelde gek).
       await mentorZegt(
-        `Even je dagelijkse check-in${dagNummer ? ` (dag ${dagNummer})` : ""}, je bent er in een halve minuut doorheen. 💚 Vul gerust ook je gewicht in: het beste weegmoment is 's ochtends op een lege maag, na het plassen. Dan houd ik je voortgang voor je bij.`,
+        `Even je dagelijkse check-in${dagLive ? ` (dag ${dagLive})` : ""}, je bent er in een halve minuut doorheen. 💚 Vul gerust ook je gewicht in: het beste weegmoment is 's ochtends op een lege maag, na het plassen. Dan houd ik je voortgang voor je bij.`,
         900,
       );
     }
@@ -2049,6 +2088,7 @@ export default function MentorWereld({
   async function verstuurCheckin(invoer: CheckinInvoer) {
     if (checkinBezig) return;
     setCheckinBezig(true);
+    checkinKaartOpenRef.current = false;
     setItems((b) => b.filter((x) => x.soort !== "checkin-vraag"));
     const { stemming, energie, slaap, buik, winst } = invoer;
     const gewicht = invoer.gewicht
@@ -2074,6 +2114,8 @@ export default function MentorWereld({
       timeZone: "Europe/Amsterdam",
     }).format(new Date());
     let serverAntwoord = "";
+    let serverPatroon = false;
+    let herCheckin = false;
     try {
       if (token) {
         const res = await fetch("/api/resetcode/checkin", {
@@ -2096,7 +2138,10 @@ export default function MentorWereld({
         if (data?.ok) {
           if (Array.isArray(data.reeks)) checkinReeksRef.current = data.reeks;
           serverAntwoord = String(data.antwoord ?? "");
-          await mentorZegt(serverAntwoord || "Genoteerd 💚", 800);
+          serverPatroon = Boolean(data.patroon);
+          herCheckin = Boolean(data.herCheckin);
+          // logMee=false: de server bewaarde dit antwoord al zelf.
+          await mentorZegt(serverAntwoord || "Genoteerd 💚", 800, false);
         }
       } else {
         // Preview: lokaal bijhouden, zonder server.
@@ -2113,16 +2158,21 @@ export default function MentorWereld({
       // jezelf, precies waar het dagboek voor is (kompas-principe).
       // Op zo'n dag géén vrolijke dag-tip erachteraan; het gesprek is
       // dan belangrijker. Anders: tip van de dag + wat ik vandaag kan.
+      // GEEN dubbel AI-nabericht (agent-jacht 29 juli): gaf de server al
+      // een patroon-conclusie (tweede zware dag, plateau, anker...), dan
+      // is dát de boodschap van de dag; een AI-tip erbovenop herhaalde
+      // hetzelfde met andere woorden. Ook bij een her-check-in op
+      // dezelfde dag komt er geen tweede nabericht.
       if (stemming === "zwaar") {
         // Geen blinde quote van een eerdere notitie meer (een woordfilter
         // kan niet zien of "geen idee" een winst was): de AI leest het
         // dagboek en beslist zélf of er iets waardevols terug te halen
         // valt (feedback Raoul 28 juli).
-        if (token) {
+        if (token && !serverPatroon && !herCheckin) {
           await wacht(700);
           await roepMentor("[zware-dag]", null);
         }
-      } else {
+      } else if (!serverPatroon && !herCheckin) {
         await wacht(700);
         if (token) {
           // Persoonlijke dag-tip op basis van het dagboek van vandaag
@@ -2926,6 +2976,7 @@ export default function MentorWereld({
       }).catch(() => {});
     }
     faseDagRef.current = 1;
+    setDagLive(1); // fase-wissel = dag 1 in álle labels (agent-jacht 29 juli)
     if (isTerug) {
       setStation(nieuw);
       await mentorZegt(
@@ -2999,7 +3050,7 @@ export default function MentorWereld({
       )
     ) {
       zeg();
-      const dagS = dagNummer ?? 0;
+      const dagS = dagLive ?? 0;
       const s =
         dagS >= 1 && dagS <= 16 ? innameVoorDag(pakketRef.current, dagS) : null;
       if (s) {
@@ -3820,10 +3871,10 @@ export default function MentorWereld({
   const dagSchemaVandaag =
     programma?.slug === "darm" &&
     station?.slug === "zestien-dagen" &&
-    dagNummer != null &&
-    dagNummer >= 1 &&
-    dagNummer <= 16
-      ? innameVoorDag(pakketRef.current ?? pakket, dagNummer)
+    dagLive != null &&
+    dagLive >= 1 &&
+    dagLive <= 16
+      ? innameVoorDag(pakketRef.current ?? pakket, dagLive)
       : null;
   const MOMENT_VOLGORDE: { sleutel: "nuchter" | "ochtend" | "lunch" | "avond" | "slapen"; label: string }[] = [
     { sleutel: "nuchter", label: "🌅 Nuchter" },
@@ -3865,12 +3916,12 @@ export default function MentorWereld({
     // (terwijl de pagina nog herlaadt) meerdere sprongen op elkaar en
     // schiet de teller ineens van dag 7 naar dag 26 (bug Raoul 24 juli).
     if (springBezigRef.current) return;
-    springBezigRef.current = true;
     if (
       actie === "reset" &&
       !window.confirm("De hele testreis terug naar dag 1? Alle gesprekken en vinkjes van deze testlink worden gewist.")
     )
-      return;
+      return; // slot nog niet gezet: annuleren laat de knoppen werken
+    springBezigRef.current = true;
     try {
       await fetch("/api/resetcode/test-spring", {
         method: "POST",
@@ -3899,7 +3950,7 @@ export default function MentorWereld({
           style={{ backgroundColor: "#3B2667", color: "#DDD6FE" }}
         >
           <span className="font-bold">
-            🧪 Testmodus · {station ? `${station.emoji} ${station.naam}` : ""} · dag {dagNummer ?? "—"}
+            🧪 Testmodus · {station ? `${station.emoji} ${station.naam}` : ""} · dag {dagLive ?? "—"}
           </span>
           <span className="flex items-center gap-1.5">
             <button
@@ -3932,7 +3983,7 @@ export default function MentorWereld({
                 };
                 const lijst =
                   MOMENT_DAGEN[`${programma?.slug}/${station?.slug}`];
-                const dagNu = dagNummer ?? 0;
+                const dagNu = dagLive ?? 0;
                 const doel = lijst?.find((dg) => dg > dagNu);
                 testSpring("vooruit", doel ? doel - dagNu : 1);
               }}
@@ -4026,7 +4077,7 @@ export default function MentorWereld({
         >
           <div className="flex items-center justify-between pb-2">
             <p className="text-[13px] font-bold text-white">
-              📋 Jouw innames · dag {dagNummer}
+              📋 Jouw innames · dag {dagLive}
             </p>
             <button
               onClick={() => setToonSchemaPaneel(false)}
@@ -4101,17 +4152,17 @@ export default function MentorWereld({
 
           <div className="px-5 py-5">
             {/* Dag-teller van de huidige fase */}
-            {dagNummer && FASE_DAGEN[station.slug] && (
+            {dagLive && FASE_DAGEN[station.slug] && (
               <div className="mb-5 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 px-4 py-3 text-center">
                 <p className="text-emerald-200 text-[14px] font-semibold">
-                  Dag {Math.min(dagNummer, FASE_DAGEN[station.slug])} van{" "}
+                  Dag {Math.min(dagLive, FASE_DAGEN[station.slug])} van{" "}
                   {FASE_DAGEN[station.slug]} · {station.naam}
                 </p>
                 <div className="mt-2 h-2 rounded-full bg-white/10 overflow-hidden">
                   <div
                     className="h-full rounded-full bg-emerald-400"
                     style={{
-                      width: `${Math.min(100, (dagNummer / FASE_DAGEN[station.slug]) * 100)}%`,
+                      width: `${Math.min(100, (dagLive / FASE_DAGEN[station.slug]) * 100)}%`,
                     }}
                   />
                 </div>
@@ -4177,7 +4228,7 @@ export default function MentorWereld({
                     {!gedaan && mijlpalen.length > 0 && (
                       <div className="mt-2 mb-1 space-y-2">
                         {mijlpalen.map((m) => {
-                          const dagNu = nu ? (dagNummer ?? 0) : 0;
+                          const dagNu = nu ? (dagLive ?? 0) : 0;
                           const bereikt = nu && dagNu > m.dag;
                           const vandaagHier = nu && dagNu === m.dag;
                           return (
@@ -4456,8 +4507,8 @@ export default function MentorWereld({
                 <CheckinVraag
                   bezig={checkinBezig}
                   meetDag={
-                    dagNummer != null &&
-                    (dagNummer === 1 || dagNummer % 7 === 0)
+                    dagLive != null &&
+                    (dagLive === 1 || dagLive % 7 === 0)
                   }
                   onKies={(invoer) => verstuurCheckin(invoer)}
                 />
