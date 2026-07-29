@@ -194,7 +194,11 @@ export function DTTOnboardingEmbed({ alVoltooid, opVoltooid }: Props) {
             type="number"
             min="0"
             step="1"
-            placeholder="bv. 5"
+            /* 10 in plaats van 5 (Raoul 29 juli): wie de voorbeelden
+               letterlijk invulde (500 / 5 / 12) kreeg meteen de
+               te-weinig-uren-opmerking. Voorbeelden moeten onderling
+               kloppen. */
+            placeholder="bv. 10"
             value={uren}
             onChange={(e) => setUren(e.target.value)}
             className="input-cm"
@@ -269,9 +273,11 @@ export function DTTOnboardingEmbed({ alVoltooid, opVoltooid }: Props) {
               {/* "Rank" zegt een starter niets (Raoul 29 juli). Dus geen
                   jargon, maar uitleggen wat je eraan hebt. */}
               <span className="text-cm-white/50">
-                Zo&apos;n niveau is niets meer dan een richtingaanwijzer. Je
-                hoeft er nu niets mee, het geeft je alleen een idee van waar
-                je aan moet denken bij het bedrag dat je invulde.
+                Deze getallen zijn puur indicatief, zodat je weet in welke
+                richting je moet denken qua status om de komende tijd te
+                behalen. Later gaan we hier verder op in. Je kunt dit ook
+                alvast bespreken met je sponsor of upline, degene via wie jij
+                bent gestart.
               </span>
             </p>
           )}

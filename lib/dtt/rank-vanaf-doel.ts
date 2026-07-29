@@ -1,6 +1,20 @@
 // ============================================================
-// Doel-bedrag (euro per maand) naar rank-suggestie met minimum-vereisten.
-// Officiele cijfers uit kennisbank/verdienmodel-commissieplan.md.
+// Doel-bedrag (euro per maand) naar rank-richting met minimum-vereisten.
+// De vereisten (IP / QGV / members) komen uit
+// kennisbank/verdienmodel-commissieplan.md.
+//
+// De euro-bandbreedtes zijn INDICATIEF, op 29 juli 2026 door Raoul
+// bijgesteld. Ze overlappen bewust: wat iemand bij een status verdient
+// hangt af van de opbouw van de groep, niet van een vast tarief. Ze
+// dienen één doel: een idee geven in welke richting je moet denken.
+// Bij overlap kiezen we de laagste status die het bedrag dekt, dat is
+// de eerlijkste richting om op te koersen.
+//
+//   Bronze        300 tot 1200 per maand
+//   Silver        500 tot 1500
+//   Gold          900 tot 2000
+//   Diamond       1200 tot 5000
+//   Star-Diamond  vanaf 2000
 // ============================================================
 
 export type RankSuggestie = {
@@ -18,27 +32,27 @@ export function rankVanafDoel(doelPerMaand: number): RankSuggestie {
   if (doelPerMaand < 100) {
     return {
       rank: "believer",
-      label: "Believer (start-rank)",
+      label: "Believer (start-status)",
       toelichting:
-        "Eerste rank na aanmelding. Hier verdien je nog niet veel. Focus op je eigen ervaring opbouwen en je eerste paar mensen helpen.",
+        "De eerste status na je aanmelding. Hier verdien je nog niet veel. Je focus ligt op je eigen ervaring opbouwen en je eerste paar mensen helpen.",
       vereisten: { eigenIP: 40, qgv: 500, members: 3 },
     };
   }
   if (doelPerMaand < 300) {
     return {
       rank: "builder",
-      label: "Builder (bouwsteen voor duplicatie)",
+      label: "Builder",
       toelichting:
-        "Vanaf hier kun je iemand anders ook Builder maken. Dit is de sleutel tot een schaalbaar inkomen.",
+        "Vanaf hier kun je iemand anders ook Builder maken. Daar begint het schaalbare deel.",
       vereisten: { eigenIP: 40, qgv: 1500, members: 3 },
     };
   }
-  if (doelPerMaand < 600) {
+  if (doelPerMaand < 500) {
     return {
       rank: "bronze",
       label: "Bronze",
       toelichting:
-        "Vanaf 300 tot 600 euro per maand. Eerste serieuze inkomensstroom.",
+        "Indicatief zo'n 300 tot 1200 euro per maand. Je eerste serieuze inkomensstroom.",
       vereisten: { eigenIP: 100, qgv: 3000, members: 3 },
     };
   }
@@ -47,7 +61,7 @@ export function rankVanafDoel(doelPerMaand: number): RankSuggestie {
       rank: "silver",
       label: "Silver",
       toelichting:
-        "Vanaf 600 euro per maand. Stabiele bij-inkomensstroom.",
+        "Indicatief zo'n 500 tot 1500 euro per maand. Een stabiele bij-inkomensstroom.",
       vereisten: { eigenIP: 100, qgv: 6000, members: 6 },
     };
   }
@@ -56,16 +70,16 @@ export function rankVanafDoel(doelPerMaand: number): RankSuggestie {
       rank: "gold",
       label: "Gold",
       toelichting:
-        "Vanaf 900 euro per maand. Een halve dag werk minder per week wordt realistisch.",
+        "Indicatief zo'n 900 tot 2000 euro per maand. Een halve dag minder werken per week komt hier in zicht.",
       vereisten: { eigenIP: 150, qgv: 9000, members: 9 },
     };
   }
-  if (doelPerMaand < 2500) {
+  if (doelPerMaand < 2000) {
     return {
       rank: "diamond",
       label: "Diamond",
       toelichting:
-        "Vanaf 1200 euro per maand. Naar een dag werk minder per week of meer.",
+        "Indicatief zo'n 1200 tot 5000 euro per maand. Richting een hele dag minder werken per week, of meer.",
       vereisten: { eigenIP: 150, qgv: 15000, members: 12 },
     };
   }
@@ -73,7 +87,7 @@ export function rankVanafDoel(doelPerMaand: number): RankSuggestie {
     rank: "ster-diamond",
     label: "Star-Diamond (1ster / 2ster / 3ster)",
     toelichting:
-      "Voor doelen vanaf 2500 euro per maand. Vereist Diamonds in verschillende benen onder je.",
+      "Indicatief vanaf 2000 euro per maand, en daarboven geen vast plafond. Hiervoor heb je Diamonds in verschillende benen onder je.",
     vereisten: { eigenIP: 150, qgv: 15000, members: 12 },
   };
 }
