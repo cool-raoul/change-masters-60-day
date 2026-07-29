@@ -17,7 +17,11 @@ Laatst bijgewerkt: 2026-07-27
 3. **Freebie-generalisatie**: founder-edit/films/slugs/uitslag-knoppen naar álle
    freebies; eerst kiezen: gedeeld flow-framework of per freebie.
 4. **Leader-track** (train-the-trainer, leader-cockpit, voice-eigening) — na pilot-validatie.
-5. **6 bewaker-agents** (Nachtwacht/Data-wachter/Claim-bewaker/Doorloper/Poortwachter/Redacteur).
+5. ~~**6 bewaker-agents**~~ ✅ INGERICHT 2026-07-29: agent-definities in
+   .claude/agents/ (nachtwacht/data-wachter/claim-bewaker/doorloper/
+   poortwachter/redacteur) + automatische nachtronde elke nacht 05:30 NL
+   (.github/workflows/nachtwacht.yml → /api/cron/nachtwacht → push+mail
+   naar founders bij bevindingen, stilte bij groen).
 6. **Core V10 (30 dagen)** — staat klaar als /core-v10-preview.
 7. **Visuele wegwijzing** (kleur per context) + klantenkaart-ontwerp (klantenkaart-voorstel.html).
 8. **Sprint-team-overview** (gedeelde voortgang voor sprint-teams).
