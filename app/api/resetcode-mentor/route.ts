@@ -274,6 +274,18 @@ export async function POST(req: NextRequest) {
 
     const encoder = new TextEncoder();
     const ctxVoorOpslag = klantCtx;
+    // Menu-zelfcorrectie (feedback Raoul 29 juli): bij menu's en recepten
+    // eerst het HELE antwoord binnenhalen, zelf nalopen tegen de fase- en
+    // programma-regels, en pas daarna naar de klant sturen. Zo bereikt
+    // een menu met bijvoorbeeld kikkererwten of quorn in fase 2 de klant
+    // niet meer, en hoeft Raoul het niet meer als controle-item op te
+    // ruimen: de waakhond laat het niet door en de Mentor herstelt zelf.
+    const isMenuVraag =
+      !isDagtip &&
+      !foto &&
+      /week ?menu|dag ?menu|\bmenu\b|recept|maaltijdplan|eetschema|weekschema|boodschappenlijst/i.test(
+        vraag,
+      );
     // Merknaam-verbod (Raoul, 22 juli 2026): de naam mag de klant nooit
     // bereiken, ook niet als het model de prompt-regel negeert. Vervang
     // deterministisch in de stream, met een kleine buffer tegen een
@@ -302,6 +314,10 @@ export async function POST(req: NextRequest) {
             const text = chunk.choices[0]?.delta?.content || "";
             if (text) {
               volledig += text;
+              // Menu-vragen worden NIET live gestreamd: het antwoord gaat
+              // eerst door de eindcheck hieronder en pas daarna in één
+              // keer naar de klant.
+              if (isMenuVraag) continue;
               const gefilterd = zonderMerknaam(volledig);
               const flushTot = Math.max(0, gefilterd.length - MERK_BUFFER);
               if (flushTot > verzonden) {
@@ -310,6 +326,37 @@ export async function POST(req: NextRequest) {
                 );
                 verzonden = flushTot;
               }
+            }
+          }
+          // Eindcheck voor menu's: zelfde model, zelfde volledige
+          // instructies (fase-regels, verboden ingrediënten, veg/sport-
+          // profiel), temperatuur 0. Klopt alles → "[OK]" en het origineel
+          // gaat door; klopt iets niet → het gecorrigeerde antwoord
+          // vervangt het origineel, zonder dat de klant iets merkt.
+          if (isMenuVraag && volledig.trim()) {
+            try {
+              const controle = await openai.chat.completions.create({
+                model,
+                max_tokens: maxTokens,
+                temperature: 0,
+                messages: [
+                  { role: "system", content: systeemPrompt },
+                  { role: "user", content: vraag },
+                  { role: "assistant", content: volledig },
+                  {
+                    role: "user",
+                    content:
+                      "[menu-controle] Dit is een interne eindcheck van het systeem, geen klant-bericht. Loop je eigen antwoord hierboven woord voor woord na tegen de fase- en programma-regels uit je instructies: elk ingrediënt, elke maaltijd, elk advies. Denk aan verboden categorieën voor de huidige fase (zoals peulvruchten, kant-en-klare vleesvervangers, zuivel, suikers, vet of fruit waar dat niet mag) en aan het profiel van de klant (vegetarisch/vegan, sport). Staat er ook maar één ding in dat niet past, geef dan het VOLLEDIGE gecorrigeerde antwoord terug: zelfde opbouw en warme toon, met een passende vervanging binnen de regels, zonder de correctie te benoemen. Klopt alles, antwoord dan met exact [OK] en verder niets.",
+                  },
+                ],
+              });
+              const naCheck =
+                controle.choices[0]?.message?.content?.trim() ?? "";
+              if (naCheck && !naCheck.startsWith("[OK]")) {
+                volledig = naCheck;
+              }
+            } catch (e) {
+              console.error("menu-eindcheck mislukt:", e);
             }
           }
           const gefilterdEind = zonderMerknaam(volledig);
