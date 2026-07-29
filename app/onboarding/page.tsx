@@ -136,11 +136,14 @@ export default function OnboardingPagina() {
           setSponsorNaam(s.full_name);
           // Met sponsor-nummer opent WhatsApp DIRECT bij de sponsor (geen
           // contact-zoeker). Zonder nummer valt 'ie terug op tekst-only.
+          // De tekst is stap-specifiek: "ik heb een vraag over de setup"
+          // is geen vraag die iemand écht zou stellen (Raoul 29 juli).
+          // De knop staat bij de WHY-stap, dus schrijft 'ie dát.
           const voornaam = s.full_name.split(" ")[0];
           setSponsorWaLink(
             waLinkNaar(
               s.telefoon,
-              `Hoi ${voornaam}, ik heb een vraag over de setup`,
+              `Hoi ${voornaam}, ik ben bezig met mijn WHY en ik kom er niet helemaal uit. Kun je me er even bij helpen?`,
             ),
           );
         }
