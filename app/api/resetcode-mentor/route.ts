@@ -404,7 +404,7 @@ export async function POST(req: NextRequest) {
                   },
                   {
                     role: "user",
-                    content: `VRAAG VAN DE KLANT:\n${vraag}\n\nANTWOORD VAN DE MENTOR:\n${tekst}`,
+                    content: `VRAAG VAN DE KLANT:\n${vraag}\n\nANTWOORD VAN DE MENTOR:\n${tekst}\n\nKALIBRATIE: markeer alleen als het antwoord ECHT buiten het materiaal gaat of een risico vormt (verboden ingrediënt aangeraden, medische claim, verzonnen regel of dienst, merknaam). Normale programma-uitleg - fase-regels, "met mate"-adviezen, waarom iets wel of niet op de lijst staat, warme aanmoediging - is NIET verdacht. Elke onterechte markering kost de klant lange wachttijd.`,
                   },
                 ],
               });
