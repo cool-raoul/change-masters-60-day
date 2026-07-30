@@ -86,9 +86,13 @@ export default function OnboardingPagina() {
       Number.isFinite(stapParam) && stapParam >= 1 && stapParam <= 4
         ? stapParam
         : null;
-    if (params.get("van") === "vandaag") {
-      setTerugNaarDag(params.get("dag") ?? "0");
-    }
+    // De "voor één stap gekomen"-modus wordt hieronder pas aangezet, en
+    // alleen als /vandaag echt bereikbaar is (zie laadGegevens). De
+    // middleware kaatst /vandaag namelijk terug naar /onboarding zolang
+    // de onboarding niet formeel is afgerond; dan lijkt de knop niets te
+    // doen (Raoul 30 juli).
+    const wilTerug = params.get("van") === "vandaag";
+    const terugDag = params.get("dag") ?? "0";
 
     async function laadGegevens() {
       const { data: { user } } = await supabase.auth.getUser();
@@ -104,14 +108,30 @@ export default function OnboardingPagina() {
       // Modus + sponsor + DTT-status laden uit profiles
       const { data: prof } = await supabase
         .from("profiles")
-        .select("modus, sponsor_id, core_dtt")
+        .select("modus, sponsor_id, core_dtt, onboarding_klaar")
         .eq("id", user.id)
         .maybeSingle();
       const profData = (prof as {
         modus?: string | null;
         sponsor_id?: string | null;
         core_dtt?: unknown;
+        onboarding_klaar?: boolean | null;
       } | null) ?? {};
+
+      // Alleen terugkeren naar de dagflow als /vandaag ook echt open
+      // staat. Zit iemand nog midden in zijn eerste onboarding (klaar =
+      // false, of onboarding_stap < 99), dan stuurt de middleware hem
+      // meteen weer hierheen en lijkt de knop kapot. Die persoon loopt
+      // gewoon de wizard af, dat is precies waar hij hoort te zijn.
+      // Pro hoort er ook niet in: die modus heeft geen dagflow, /vandaag
+      // stuurt Pro-leden door naar /welkom-pro.
+      const stapMeta = Number(user.user_metadata?.onboarding_stap);
+      const onboardingRond =
+        profData.onboarding_klaar === true &&
+        (!Number.isFinite(stapMeta) || stapMeta >= 99);
+      const heeftDagflow =
+        profData.modus === "core" || profData.modus === "sprint";
+      if (wilTerug && onboardingRond && heeftDagflow) setTerugNaarDag(terugDag);
 
       // Per 2026-05-19 (fase 3b): geen impliciete Sprint-fallback meer.
       // Gebruikers zonder modus moeten eerst expliciet kiezen via
@@ -275,8 +295,11 @@ export default function OnboardingPagina() {
       }
     }
     // Voor één stap gekomen vanuit de dagflow? Dan meteen terug naar je
-    // dag, niet de rest van de wizard door.
+    // dag, niet de rest van de wizard door. setBezig(false) blijft
+    // staan: als de navigatie om wat voor reden ook niet doorgaat, mag
+    // de knop niet voor eeuwig uitgeschakeld blijven.
     if (terugNaarDag !== null) {
+      setBezig(false);
       router.push(`/vandaag?dag=${terugNaarDag}`);
       return;
     }
