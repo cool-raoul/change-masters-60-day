@@ -138,7 +138,7 @@ Wat fijn dat je er bent. We gaan samen 🥰`,
         verplicht: true,
         inlineEmbed: "sponsor-melding",
         uitleg:
-          "Laat je sponsor weten dat je gestart bent, meer hoeft echt niet. Geen lang verhaal, gewoon 'ik ben begonnen in Core'. Vanaf dat moment kijkt 'ie in ELEVA met je mee en ziet 'ie wanneer het loopt of wanneer je even iets nodig hebt. Die ene zin opent de deur, en je hoeft dit dus niet alleen te doen, en dat scheelt enorm. Tik de knop hieronder, jouw sponsor staat er klaar voor.",
+          "Laat je sponsor weten dat je gestart bent, meer hoeft echt niet. Geen lang verhaal, gewoon 'ik ben begonnen in Core'. Vanaf dat moment kijkt 'ie in ELEVA met je mee en ziet 'ie wanneer het loopt of wanneer je even iets nodig hebt. Uiteraard geen gegevens, details of aantekeningen die je zelf maakt in jouw systeem: hij ziet alleen wanneer je iets afvinkt en waar je bent, zodat hij je zo goed mogelijk kan ondersteunen. Die ene zin opent de deur, en je hoeft dit dus niet alleen te doen, en dat scheelt enorm. Tik de knop hieronder, jouw sponsor staat er klaar voor.",
       },
       {
         id: "core-v9-stap1-post-keuze",
