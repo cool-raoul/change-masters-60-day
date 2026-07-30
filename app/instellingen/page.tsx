@@ -243,6 +243,21 @@ export default async function InstellingenPagina() {
         </Link>
       </div>
 
+      {/* Masterclass: eigen deel-link + (founder) de video instellen. */}
+      <div className="card space-y-3">
+        <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
+          🎥 Masterclass
+        </h2>
+        <p className="text-cm-white text-sm opacity-60">
+          Deel de opgenomen masterclass met je eigen link. Mensen kiezen zelf
+          een kijkmoment, krijgen een herinnering, en komen bij jou in de
+          namenlijst.
+        </p>
+        <Link href="/instellingen/webinar" className="btn-secondary text-sm inline-block">
+          Naar de masterclass →
+        </Link>
+      </div>
+
       {/* "Mijn freebies" is verplaatst naar het hoofdmenu (🎁 Mijn freebies)
           voor betere vindbaarheid; daarom hier weggehaald. De pagina zelf
           blijft op /instellingen/mijn-tracking-links. */}
