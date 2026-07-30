@@ -238,7 +238,7 @@ export function DTTOnboardingEmbed({ alVoltooid, opVoltooid }: Props) {
           )}
           {bracket === "minimaal" && (
             <p className="text-amber-200/80 text-[11px] italic">
-              Met minder dan 3u per week kun je je producten terugverdienen, je inkomsten zullen ongeveer gelijk zijn aan wat je zelf bestelt. Een netwerk opbouwen waarmee je serieus inkomen genereert is in dit tempo niet realistisch. Overweeg 4 tot 6 uur per week.
+              Met minder dan 3 uur per week houd je het klein: zelf ervaren en af en toe delen. Een netwerk opbouwen vraagt meer tijd dan dit, denk aan 4 tot 6 uur per week. Wat het oplevert verschilt per persoon en hangt af van je inzet.
             </p>
           )}
           {toonEerlijkheidsCheck && (
@@ -251,9 +251,11 @@ export function DTTOnboardingEmbed({ alVoltooid, opVoltooid }: Props) {
                 {termijnNum > 0 ? ` binnen ${Math.round(termijnNum)} maanden` : ""}
                 {urenNum > 0 ? ` met ${Math.round(urenNum)} uur per week` : ""}. Dat
                 is een stevige combinatie. Niets is onmogelijk, maar er moet
-                wel tijd tegenover staan: dit soort doelen vragen meestal zo
-                rond de {urenRichtlijn} uur per week en {maandenRichtlijn}{" "}
-                maanden waarin je gewoon elke week blijft bouwen.
+                wel tijd tegenover staan. Mensen die zoiets voor elkaar
+                krijgen, hebben er meestal rond de {urenRichtlijn} uur per week
+                voor vrijgemaakt en zijn er langer dan {maandenRichtlijn}{" "}
+                maanden mee bezig. Dat is geen rekensom en geen belofte, wel
+                wat we in de praktijk zien.
               </p>
               <p className="text-cm-white/70 text-[11px] leading-relaxed">
                 Je mag het zo laten staan, dan weet je in elk geval waar je ja
@@ -273,14 +275,21 @@ export function DTTOnboardingEmbed({ alVoltooid, opVoltooid }: Props) {
               {/* "Rank" zegt een starter niets (Raoul 29 juli). Dus geen
                   jargon, maar uitleggen wat je eraan hebt. */}
               <span className="text-cm-white/50">
-                Deze getallen zijn puur indicatief, zodat je weet in welke
-                richting je moet denken qua status om de komende tijd te
-                behalen. Later gaan we hier verder op in. Je kunt dit ook
-                alvast bespreken met je sponsor of upline, degene via wie jij
-                bent gestart.
+                Deze getallen zijn puur indicatief, ze geven je een idee welke
+                status voor de komende tijd realistisch is om op te koersen.
+                Later gaan we hier verder op in. Je kunt dit ook alvast
+                bespreken met je sponsor of upline, degene via wie jij bent
+                gestart.
               </span>
             </p>
           )}
+          {/* Verplichte nuance bij alles wat naar inkomen verwijst
+              (claim-ronde 30 juli, ACM). Eén keer onderaan het blok. */}
+          <p className="text-cm-white/45 text-[11px] leading-relaxed border-t border-cm-border pt-2">
+            Wat iemand opbouwt hangt af van eigen inzet, consistentie en hoe de
+            groep zich ontwikkelt. Er is geen garantie en het verschilt per
+            persoon.
+          </p>
         </div>
       )}
 
@@ -290,7 +299,9 @@ export function DTTOnboardingEmbed({ alVoltooid, opVoltooid }: Props) {
         disabled={bezig}
         className="btn-gold w-full py-2.5 text-sm font-semibold"
       >
-        {bezig ? "Bezig..." : "✓ DTT vastleggen"}
+        {/* Geen afkorting op de knop: "DTT" heeft een nieuw lid nog
+            nooit gezien (claim-ronde 30 juli). */}
+        {bezig ? "Bezig..." : "✓ Mijn doel vastleggen"}
       </button>
     </div>
   );

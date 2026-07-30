@@ -51,6 +51,9 @@ export default function OnboardingPagina() {
   // op een vervolgstap uit en moet ik wéér klikken").
   const [terugNaarDag, setTerugNaarDag] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  // Hoogste stap die dit account al bereikt had (uit user_metadata), zodat
+  // gaNaarStap die waarde nooit naar beneden schrijft.
+  const bereikteStapRef = useRef<number | null>(null);
   const router = useRouter();
   const supabase = createClient();
 
@@ -126,6 +129,7 @@ export default function OnboardingPagina() {
       // Pro hoort er ook niet in: die modus heeft geen dagflow, /vandaag
       // stuurt Pro-leden door naar /welkom-pro.
       const stapMeta = Number(user.user_metadata?.onboarding_stap);
+      bereikteStapRef.current = Number.isFinite(stapMeta) ? stapMeta : null;
       const onboardingRond =
         profData.onboarding_klaar === true &&
         (!Number.isFinite(stapMeta) || stapMeta >= 99);
@@ -178,6 +182,32 @@ export default function OnboardingPagina() {
         }
       } catch {
         // netwerk-fout, gewoon geen skip-detectie
+      }
+
+      // VANGNET (flow-audit 30 juli): de doorgaan-knop van stap 2 hing
+      // volledig aan de losse "why"-markering. Die wordt op één plek
+      // gezet en kan stil mislukken, of ontbreken bij leden die hun WHY
+      // eerder deden. Dan zat iemand met een prima WHY toch klem op stap
+      // 2. Staat er een WHY in why_profiles, dan is de stap gedaan.
+      try {
+        const { data: whyRij } = await supabase
+          .from("why_profiles")
+          .select("why_samenvatting")
+          .eq("user_id", user.id)
+          .maybeSingle();
+        const heeftWhy = Boolean(
+          (whyRij as { why_samenvatting?: string | null } | null)
+            ?.why_samenvatting?.trim(),
+        );
+        if (heeftWhy) {
+          setVoltooiingen((v) =>
+            v["why"]?.voltooid
+              ? v
+              : { ...v, why: { voltooid: true, modus: null, datum: null } },
+          );
+        }
+      } catch {
+        // geen vangnet beschikbaar, verder met de normale detectie
       }
 
       const huidigStap = Number(user?.user_metadata?.onboarding_stap || 1);
@@ -244,7 +274,15 @@ export default function OnboardingPagina() {
   async function gaNaarStap(nieuweStap: number, voltooid: boolean = true) {
     setBezig(true);
     if (!isPreview) {
-      await supabase.auth.updateUser({ data: { onboarding_stap: nieuweStap } });
+      // NOOIT terugzetten (flow-audit 30 juli): wie al klaar was staat op
+      // 99. Kwam die persoon hier voor één losse stap uit zijn dagflow en
+      // schreven we hier stap 2, dan sloot de middleware hem uit de hele
+      // app (elke route kaatst dan naar /onboarding tot hij de wizard
+      // opnieuw afmaakt). Alleen vooruit, nooit achteruit.
+      const huidigeMeta = bereikteStapRef.current;
+      const doelStap =
+        huidigeMeta !== null ? Math.max(nieuweStap, huidigeMeta) : nieuweStap;
+      await supabase.auth.updateUser({ data: { onboarding_stap: doelStap } });
 
       // Mapping: WANNEER je naar stap N gaat, dan was stap N-1 (deze actie)
       // dus zojuist afgerond. Veldnaam = welke kolom in onboarding_voortgang
@@ -921,6 +959,40 @@ export default function OnboardingPagina() {
                     ? "Door naar stap 4 (founder-skip) →"
                     : "Vul eerst 5 namen hierboven in"}
               </button>
+
+              {/* UITWEG (flow-audit 30 juli): wie er nu geen vijf kan
+                  bedenken, kwam de app helemaal niet binnen. De
+                  middleware houdt hem in de wizard, en deze knop bleef
+                  uit. Terwijl we elders zelf zeggen: je lijst is nooit
+                  af, je vult elke dag aan. Dus: doorlaten. */}
+              {!isFounder && !voltooiingen["eerste-5-namen"]?.voltooid && (
+                <div className="space-y-2 text-center">
+                  <p className="text-cm-white/60 text-xs leading-relaxed">
+                    Kom je nu niet aan vijf namen? Dat is niet erg. Je lijst is
+                    nooit af, je vult 'm de komende dagen gewoon aan.
+                  </p>
+                  <button
+                    onClick={async () => {
+                      await markeerCrossModusVoltooid(
+                        ITEM_SLUGS.eersteVijfNamen,
+                      );
+                      setVoltooiingen((v) => ({
+                        ...v,
+                        "eerste-5-namen": {
+                          voltooid: true,
+                          modus,
+                          datum: new Date().toISOString(),
+                        },
+                      }));
+                      await gaNaarStap(4);
+                    }}
+                    disabled={bezig}
+                    className="text-cm-gold text-sm font-semibold hover:underline disabled:opacity-40"
+                  >
+                    Ik vul de rest later aan →
+                  </button>
+                </div>
+              )}
             </div>
           )}
 

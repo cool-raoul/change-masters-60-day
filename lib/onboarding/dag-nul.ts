@@ -67,7 +67,7 @@ export function dag0TaakKlaarVolgensOnboarding(
 /** Dag 0 als volwaardige dag voor de vandaag-flow. */
 export const DAG_NUL: Dag = {
   nummer: 0,
-  titel: "Jouw voorbereiding: in tien minuten startklaar",
+  titel: "Jouw voorbereiding: alles klaarzetten om te starten",
   fase: 1,
   vandaagDoen: [
     // ── Vier stappen die je nodig hebt om te kunnen starten ──
@@ -75,7 +75,7 @@ export const DAG_NUL: Dag = {
       id: "dag0-app",
       label: "Zet ELEVA op je beginscherm en je meldingen aan",
       uitleg:
-        "Zo staat ELEVA tussen je apps en mis je geen seintje van je Mentor of je sponsor. Eén minuutje.",
+        "Zo staat ELEVA tussen je apps en mis je geen seintje van je Mentor of je sponsor.",
       verplicht: true,
       actieRoute: "/onboarding?stap=1",
       actieRouteLabel: "Zet mijn meldingen aan →",
@@ -84,7 +84,7 @@ export const DAG_NUL: Dag = {
       id: "dag0-why",
       label: "Leg jouw WHY vast",
       uitleg:
-        "Waarom doe jij dit? Je WHY is wat je draagt op de dagen dat het even taai is. Vijf minuten met de Mentor en hij staat.",
+        "Waarom doe jij dit? Je WHY is wat je draagt op de dagen dat het even taai is. Een kort gesprek met de Mentor en hij staat.",
       verplicht: true,
       actieRoute: "/mijn-why",
       actieRouteLabel: "Schrijf mijn WHY →",
@@ -102,7 +102,7 @@ export const DAG_NUL: Dag = {
       id: "dag0-tempo",
       label: "Kies je tempo",
       uitleg:
-        "Hoeveel tijd heb je per dag? Daar past ELEVA je aantallen en je dag-stappen op aan. Aanpassen kan later altijd.",
+        "Hoeveel tijd heb je hiervoor? Daar past ELEVA je aantallen en je dag-stappen op aan. Aanpassen kan later altijd.",
       verplicht: true,
       actieRoute: "/onboarding?stap=4",
       actieRouteLabel: "Kies mijn tempo →",
@@ -113,7 +113,7 @@ export const DAG_NUL: Dag = {
       id: "dag0-webshop",
       label: "Maak je eigen webshop aan (mag ook later deze week)",
       uitleg:
-        "Dit hoeft vandaag nog niet. Je webshop is de plek waar klanten straks bestellen: eenmalig aanmaken, daarna werkt het vanzelf. De film hieronder laat precies zien hoe. Klaar? Vink 'm hier af.",
+        "Dit hoeft vandaag nog niet. Je webshop is de plek waar klanten straks bestellen: eenmalig aanmaken, daarna werkt het vanzelf. Staat er hieronder een film, dan laat die precies zien hoe. Klaar? Vink 'm hier af.",
       verplicht: false,
       filmSlug: "onboarding-stap-6-webshop",
     },
@@ -121,7 +121,7 @@ export const DAG_NUL: Dag = {
       id: "dag0-krediet",
       label: "Vul het kredietformulier in (mag ook later deze week)",
       uitleg:
-        "Dit hoeft vandaag nog niet, maar wel voordat er commissies binnenkomen: zonder dit formulier kan er niet uitbetaald worden. De film hieronder loopt het met je door. Klaar? Vink 'm hier af.",
+        "Dit hoeft vandaag nog niet, maar het moet wel staan vóórdat er commissie naar je toe kan: zonder dit formulier kan er niet uitbetaald worden. Staat er hieronder een film, dan loopt die het met je door. Klaar? Vink 'm hier af.",
       verplicht: false,
       filmSlug: "onboarding-stap-8-kredietformulier",
     },
@@ -129,7 +129,7 @@ export const DAG_NUL: Dag = {
       id: "dag0-teams-admin",
       label: "Richt je administratiesysteem in (mag ook later deze week)",
       uitleg:
-        "Dit hoeft vandaag nog niet. Hier houd je straks je team-structuur en je cijfers bij. De film hieronder laat de stappen zien. Klaar? Vink 'm hier af.",
+        "Dit hoeft vandaag nog niet. Hier houd je straks bij wie er in je team zitten en hoe het loopt. Staat er hieronder een film, dan laat die de stappen zien. Klaar? Vink 'm hier af.",
       verplicht: false,
       filmSlug: "core-dag3-teams-admin",
     },
@@ -162,15 +162,19 @@ export const DAG_NUL: Dag = {
       route: "/instellingen/bestellinks",
     },
   ],
-  watJeLeert: `Dit is je dag 0: de dag vóór je eerste echte dag. Vandaag bouw je nog niets aan je business, vandaag zet je klaar wat je nodig hebt.
+  watJeLeert: `Dit is je voorbereiding. Hier bouw je nog niets aan je business, hier zet je klaar wat je nodig hebt.
 
-**Vier dingen zijn nu nodig, samen zo'n tien minuten.** Je meldingen aan, je WHY, je eerste vijf namen en je tempo. Daarmee kun je morgen gewoon beginnen, en weet ELEVA hoe het met je mee moet lopen.
+WAT NU NODIG IS, SAMEN ZO'N TIEN MINUTEN
+Je meldingen aan, je WHY, je eerste vijf namen en je tempo. Daarmee kun je gewoon beginnen, en weet ELEVA hoe het met je mee moet lopen.
 
-**De administratie mag ook later deze week.** Je webshop, het kredietformulier, je administratiesysteem en je bestellinks: die staan hieronder, maar ze houden je nergens van tegen. Dat is bewust. Wie eerst uren met formulieren bezig moet voordat hij mag starten, is zijn energie kwijt aan het verkeerde. Regel ze op een rustig moment in je eerste dagen; ELEVA herinnert je er zelf één keer per dag aan tot ze staan, en die herinnering kun je altijd wegklikken met "Later vandaag".
+DE ADMINISTRATIE MAG OOK LATER DEZE WEEK
+Je webshop, het kredietformulier, je administratiesysteem en je bestellinks: die staan hieronder, maar ze houden je nergens van tegen. Dat is bewust. Wie eerst uren met formulieren bezig moet voordat hij mag starten, is zijn energie kwijt aan het verkeerde. Regel ze op een rustig moment in je eerste dagen. ELEVA herinnert je er zelf één keer per dag aan tot ze staan, en die herinnering kun je altijd wegklikken met "Nu even niet".
 
 Eén ding om te weten: het kredietformulier is de enige die op tijd moet staan, want zonder dat formulier kan er geen commissie naar je toe. Verder bepaal jij het moment.
 
-Alles wat je hier afvinkt, blijft geregeld. En je kunt hier altijd terugkomen: dag 0 blijft gewoon staan, ook als je al onderweg bent.`,
+Nog even over je privacy, want je vult hier persoonlijke dingen in. Je sponsor krijgt een seintje zodra je een stap afrondt, zodat hij weet wanneer je hulp kunt gebruiken. Wát je opschrijft blijft van jou: je WHY, je namen en je notities kan hij niet lezen.
+
+Alles wat je hier afvinkt, blijft geregeld. En je kunt hier altijd terugkomen: deze pagina blijft gewoon staan, ook als je al onderweg bent.`,
   waaromWerktDit: {
     tekst:
       "Een goede voorbereiding wint niet omdat 'ie perfect is, maar omdat je 'm maar één keer hoeft te doen. En omdat je er niet in blijft hangen.",

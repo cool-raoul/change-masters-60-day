@@ -152,8 +152,59 @@ function pakBericht(taakId: string | undefined, sponsorVoornaam: string): string
         `Hoi${naamDeel}! Dag 21, week 1 t/m 3 voltooid 🏆 Klaar voor onze ` +
         `40-min call over hoe ik de volgende 40 dagen ga vormgeven?`
       );
+    // CORE (flow-audit 30 juli): alle Core-taken vielen door naar het
+    // dag-1-bericht, dus een Core-member stuurde zijn sponsor 21 dagen
+    // lang "ik ben gestart in ELEVA", ook bij een upline-check op stap 18.
+    case "core-v9-stap1-sponsor":
+      return (
+        `Hoi${naamDeel}! Ik ben gestart in Core 🚀 Fijn om jou als ` +
+        `rugdekking te hebben. Spreek je snel!`
+      );
+    case "core-v9-stap2-sponsor-call":
+      return (
+        `Hoi${naamDeel}! Ik zit in mijn tweede stap. Zullen we een korte ` +
+        `call doen? Even mijn WHY met je delen en samen naar mijn eerste ` +
+        `mensen kijken. Wanneer schikt het bij jou?`
+      );
+    case "core-v9-stap5-sponsor-3weg-beschikbaar":
+      return (
+        `Hoi${naamDeel}! Ik ga binnenkort een 3-weg-gesprek doen. Kun je ` +
+        `beschikbaar zijn als ik je erbij haal? Dan stem ik het moment ` +
+        `met je af.`
+      );
+    case "core-v9-stap8-sponsor-bevestigen":
+      return (
+        `Hoi${naamDeel}! Even afstemmen: kun jij erbij zijn als ik iemand ` +
+        `wil laten kijken? Ik geef het tijdig door.`
+      );
+    case "core-v9-stap18-upline-check":
+      return (
+        `Hoi${naamDeel}! Ik heb een post klaar en wil 'm graag door jou ` +
+        `laten nakijken voordat ik 'm plaats. Kun je even meelezen?`
+      );
+    case "core-v9-stap20-kennisdeling":
+      return (
+        `Hoi${naamDeel}! Ik heb iets gemerkt in mijn gesprekken dat ik graag ` +
+        `met je deel, misschien heeft de rest van het team er ook iets aan. ` +
+        `Kunnen we kort bellen?`
+      );
+    case "core-v9-stap21-sponsor-call-plannen":
+      return (
+        `Hoi${naamDeel}! Mijn eerste 21 stappen zitten erop 🏆 Zullen we een ` +
+        `call plannen over hoe ik het vanaf hier ga vormgeven?`
+      );
     case "dag1-sponsor":
     default:
+      // Dagelijkse Core-check-ins (core-v9-stapN-sponsor-checkin) komen
+      // hier terecht; die krijgen een neutrale check-in in plaats van
+      // een start-bericht.
+      if (taakId && /^core-v9-stap\d+-sponsor-checkin$/.test(taakId)) {
+        return (
+          `Hoi${naamDeel}! Korte check-in: ik heb mijn stappen van vandaag ` +
+          `gedaan. Als je iets ziet wat ik anders kan doen, hoor ik het ` +
+          `graag. Spreek je snel!`
+        );
+      }
       return (
         `Hoi${naamDeel}! Ik ben gestart in ELEVA 🚀 Fijn om jou als ` +
         `rugdekking te hebben. Spreek je snel!`
@@ -190,8 +241,19 @@ function pakTitel(taakId: string | undefined): string {
     case "dag7-sponsor-call":
     case "dag14-sponsor-call":
     case "dag21-sponsor-call":
+    case "core-v9-stap2-sponsor-call":
+    case "core-v9-stap21-sponsor-call-plannen":
+    case "core-v9-stap20-kennisdeling":
       return "📞 Plan je sponsor-call in";
+    case "core-v9-stap5-sponsor-3weg-beschikbaar":
+    case "core-v9-stap8-sponsor-bevestigen":
+      return "🤝 Stem af of je sponsor beschikbaar is";
+    case "core-v9-stap18-upline-check":
+      return "👀 Laat je post nakijken";
     default:
+      if (taakId && /^core-v9-stap\d+-sponsor-checkin$/.test(taakId)) {
+        return "📩 Stuur een korte check-in naar je sponsor";
+      }
       return "📩 Stuur je sponsor een bericht";
   }
 }
@@ -275,7 +337,11 @@ export function SponsorMeldingKnop({ opVoltooid, alVoltooid, taakId }: Props) {
           ✓ Bericht verstuurd
         </p>
         <p className="text-cm-white opacity-80 text-xs">
-          Top, je sponsor weet dat je vertrokken bent. Door naar de volgende stap.
+          {/* Zonder sponsor niet beweren dat er iemand op de hoogte is
+              (flow-audit 30 juli). */}
+          {sponsor?.naam
+            ? "Top, je sponsor is op de hoogte. Door naar de volgende stap."
+            : "Genoteerd. Door naar de volgende stap."}
         </p>
       </div>
     );

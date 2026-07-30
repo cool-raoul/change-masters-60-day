@@ -135,7 +135,11 @@ Wat fijn dat je er bent. We gaan samen 🥰`,
       {
         id: "core-v9-stap1-post-keuze",
         label: "Maak je eerste post-keuze: pre-post, 21-dagen-post, of voor nu skippen",
-        verplicht: true,
+        // NIET verplicht (flow-audit 30 juli): de tekst nodigt uit om deze
+        // keuze over te slaan, maar de embed kan alleen afvinken bij een
+        // échte keuze. Wie de uitnodiging aannam, kwam nooit voorbij dag 1
+        // omdat de dag-teller elke verplichte taak eist.
+        verplicht: false,
         inlineEmbed: "prepost-keuze",
         uitleg:
           "Eén keuze die bepaalt waar je de komende dagen iets te delen hebt. Heb je al een product van Lifeplus geprobeerd en daar iets van gemerkt? Dan deel je dat eerlijk, en raakt het mensen. Nog geen ervaring? Dan deel je je voornemen open en eerlijk, en bouw je de komende drie weken je eigen ervaring op. Allebei werken, het is geen goed of fout. Twijfel je nog? Sla de keuze voor nu over, hij blijft op je dashboard staan tot je er klaar voor bent. Wat je kiest, opent meteen een aparte stap-voor-stap-flow waarin de Mentor je in jouw stem helpt met de tekst, de DM-scripts en de upline-check.",

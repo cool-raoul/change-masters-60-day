@@ -513,6 +513,41 @@ export default async function VandaagPagina({
     .eq("sponsor_id", user.id);
   const heeftPartners = (partnerCount ?? 0) > 0;
 
+  // BLOKKER-FIX (flow-audit 30 juli): een taak die we hier wegfilterden
+  // omdat de stap elders al is gedaan (cross-modus-slug), bleef wél
+  // meetellen in berekenHuidigeDag. Die eist elke verplichte taak in
+  // dag_voltooiingen. Gevolg: de member zag dezelfde dag eeuwig opnieuw,
+  // vinkte alles af, en stond de volgende dag weer op dezelfde dag.
+  // Daarom leggen we zo'n taak nu ook vast als voltooid vóór we hem
+  // verbergen. Zelfde patroon als de dag-0-sync hierboven.
+  const crossModusKlaar = dagData.vandaagDoen
+    .filter((t) => {
+      const slug = TAAK_NAAR_CROSS_MODUS_SLUG[t.id];
+      return Boolean(slug && crossModusVoltooiingenMap.get(slug)?.voltooid);
+    })
+    .map((t) => t.id);
+  const alGelogd = new Set(
+    ((alleVoltooiingen as Array<{ dag_nummer: number; taak_id: string }>) || [])
+      .filter((v) => v.dag_nummer === dag)
+      .map((v) => v.taak_id),
+  );
+  const nogLoggen = crossModusKlaar.filter((id) => !alGelogd.has(id));
+  if (nogLoggen.length > 0) {
+    await supabase.from("dag_voltooiingen").upsert(
+      nogLoggen.map((taakId) => ({
+        user_id: user.id,
+        dag_nummer: dag,
+        taak_id: taakId,
+      })),
+      { onConflict: "user_id,dag_nummer,taak_id" },
+    );
+    for (const taakId of nogLoggen) {
+      (alleVoltooiingen as Array<{ dag_nummer: number; taak_id: string }>)?.push(
+        { dag_nummer: dag, taak_id: taakId },
+      );
+    }
+  }
+
   dagData = {
     ...dagData,
     vandaagDoen: dagData.vandaagDoen.filter((t) => {

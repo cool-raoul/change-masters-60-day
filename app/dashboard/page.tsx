@@ -329,7 +329,15 @@ export default async function DashboardPagina({
   // We checken of ALLE verplichte taken van die mijlpaal-dag gedaan zijn.
   function mijlpaalVoltooid(mijlpaalDag: number): boolean {
     if (dag < mijlpaalDag) return false;
-    const mijlpaalData = DAGEN.find((d) => d.nummer === mijlpaalDag);
+    // MODUS-BEWUST (flow-audit 30 juli): hier stond onvoorwaardelijk de
+    // Sprint-array. Een Core-member heeft core-v9-stap7-* in
+    // dag_voltooiingen, nooit dag7-*, dus de vergelijking kon nooit
+    // kloppen: geen "eerste week klaar", geen halverwege-moment, geen
+    // vuurwerk op dag 21. Stil verlies, precies waar de pilot op afhaakt.
+    const mijlpaalData = dagVoorModusEnNummer(
+      huidigeModus === "core" ? "core" : "sprint",
+      mijlpaalDag,
+    );
     if (!mijlpaalData) return false;
     const verplichteTaken = mijlpaalData.vandaagDoen.filter((t) => t.verplicht);
     return verplichteTaken.every((t) =>

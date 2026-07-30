@@ -1035,7 +1035,7 @@ export const t: Vertalingen = {
   "stats.verwacht_einde": { nl: "Verwacht bij dag 60", en: "Expected at day 60", fr: "Prévu au jour 60", es: "Esperado en el día 60", de: "Erwartet am Tag 60", pt: "Esperado no dia 60" },
 
   // Leeg
-  "stats.geen_data": { nl: "Nog geen data beschikbaar. Begin met het bijhouden van je dagelijkse activiteiten op het dashboard!", en: "No data available yet. Start tracking your daily activities on the dashboard!", fr: "Pas encore de données disponibles. Commencez à suivre vos activités quotidiennes !", es: "Aún no hay datos disponibles. ¡Comienza a registrar tus actividades diarias!", de: "Noch keine Daten verfügbar. Beginne mit dem Erfassen deiner täglichen Aktivitäten!", pt: "Nenhum dado disponível ainda. Comece a registrar suas atividades diárias!" },
+  "stats.geen_data": { nl: "Hier komen je cijfers te staan. Ze vullen zich vanzelf zodra je je dagelijkse stappen doet op Vandaag.", en: "Your numbers will appear here. They fill up automatically as you complete your daily steps.", fr: "Pas encore de données disponibles. Commencez à suivre vos activités quotidiennes !", es: "Aún no hay datos disponibles. ¡Comienza a registrar tus actividades diarias!", de: "Noch keine Daten verfügbar. Beginne mit dem Erfassen deiner täglichen Aktivitäten!", pt: "Nenhum dado disponível ainda. Comece a registrar suas atividades diárias!" },
 
   // DagStatForm labels
   "stats.contacten": { nl: "Contacten", en: "Contacts", fr: "Contacts", es: "Contactos", de: "Kontakte", pt: "Contatos" },

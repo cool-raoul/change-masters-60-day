@@ -23,8 +23,10 @@ export const BRACKETS: Record<Bracket, BracketDefinitie> = {
     bracket: "minimaal",
     label: "Minimaal",
     urenPerWeekRange: "<3u",
+    // Geen bedragen of terugverdien-beloftes (claim-ronde 30 juli): dit
+    // tempo beschrijft wat je DOET, niet wat het oplevert.
     verwachting:
-      "Je producten terugverdienen. Inkomsten ongeveer gelijk aan je eigen maandelijkse bestellingen, dus je product wordt voor jou gratis.",
+      "Rustig meelopen en het zelf ervaren. Wat je hiermee opbouwt verschilt per persoon en hangt af van je inzet.",
     dmoMinimums: {
       contactenPerDag: 0,
       socialPostsPerWeek: 0,
@@ -50,7 +52,7 @@ export const BRACKETS: Record<Bracket, BracketDefinitie> = {
     label: "Gestaag",
     urenPerWeekRange: "6-10u",
     verwachting:
-      "Eerste members aanbrengen. Builder-rank wordt realistisch doel.",
+      "Eerste members aanbrengen en je eerste duplicatie op gang brengen.",
     dmoMinimums: {
       contactenPerDag: 3,
       socialPostsPerWeek: 3,
@@ -63,7 +65,7 @@ export const BRACKETS: Record<Bracket, BracketDefinitie> = {
     label: "Serieus",
     urenPerWeekRange: "10-16u",
     verwachting:
-      "Builder-rank opbouwen en eerste duplicatie starten (een andere Builder helpen worden).",
+      "Meerdere mensen helpen zelf Builder te worden, zodat het door kan lopen zonder jou.",
     dmoMinimums: {
       contactenPerDag: 5,
       socialPostsPerWeek: 5,
