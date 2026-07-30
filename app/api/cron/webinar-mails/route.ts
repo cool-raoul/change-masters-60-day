@@ -35,18 +35,26 @@ export async function GET(request: Request) {
   const admin = createAdminClient();
   const nu = Date.now();
 
-  const { data: configRij } = await admin
-    .from("webinar_config")
-    .select("titel, duur_minuten, actief")
-    .eq("id", "standaard")
-    .maybeSingle();
-  const config = (configRij ?? {}) as {
-    titel?: string;
-    duur_minuten?: number;
-    actief?: boolean;
-  };
-  if (config.actief === false) {
-    return NextResponse.json({ ok: true, overgeslagen: "webinar staat uit" });
+  // Titels en duur per webinar, zodat elke mail over het juiste webinar
+  // gaat. Webinars die op non-actief staan slaan we over.
+  const { data: webinarRijen } = await admin
+    .from("webinars")
+    .select("id, titel, duur_minuten, actief");
+  const webinarMap = new Map<
+    string,
+    { titel: string; duur: number; actief: boolean }
+  >();
+  for (const w of (webinarRijen ?? []) as {
+    id: string;
+    titel: string;
+    duur_minuten: number;
+    actief: boolean;
+  }[]) {
+    webinarMap.set(w.id, {
+      titel: w.titel,
+      duur: w.duur_minuten,
+      actief: w.actief,
+    });
   }
 
   // Alles van de afgelopen twee dagen en de komende twee dagen; daar
@@ -54,7 +62,7 @@ export async function GET(request: Request) {
   const { data: rijen } = await admin
     .from("webinar_inschrijvingen")
     .select(
-      "id, member_id, naam, email, token, slot_start, status, gekeken_op, mail_herinnering_op, mail_kijklink_op, mail_terugkijk_op",
+      "id, member_id, webinar_id, naam, email, token, slot_start, status, gekeken_op, mail_herinnering_op, mail_kijklink_op, mail_terugkijk_op",
     )
     .gte("slot_start", new Date(nu - 48 * UUR).toISOString())
     .lte("slot_start", new Date(nu + 48 * UUR).toISOString())
@@ -63,6 +71,7 @@ export async function GET(request: Request) {
   type Rij = {
     id: string;
     member_id: string;
+    webinar_id: string | null;
     naam: string;
     email: string;
     token: string;
@@ -110,6 +119,8 @@ export async function GET(request: Request) {
   const teDoen: { rij: Rij; soort: MailSoort; kolom: string }[] = [];
 
   for (const r of (rijen ?? []) as Rij[]) {
+    const info = r.webinar_id ? webinarMap.get(r.webinar_id) : undefined;
+    if (!info || !info.actief) continue;
     const slot = Date.parse(r.slot_start);
     const gekeken = Boolean(r.gekeken_op) || r.status !== "ingeschreven";
 
@@ -138,13 +149,16 @@ export async function GET(request: Request) {
 
   for (const item of teDoen.slice(0, BATCH)) {
     const info = await memberInfo(item.rij.member_id);
+    const webinar = item.rij.webinar_id
+      ? webinarMap.get(item.rij.webinar_id)
+      : undefined;
     const mail = bouwMail(item.soort, {
       naam: item.rij.naam,
       token: item.rij.token,
       slotStart: item.rij.slot_start,
       memberVoornaam: info.voornaam,
-      titel: config.titel ?? "de masterclass",
-      duurMinuten: config.duur_minuten ?? 45,
+      titel: webinar?.titel ?? "het webinar",
+      duurMinuten: webinar?.duur ?? 45,
     });
     const resultaat = await verstuurMail({
       naar: item.rij.email,

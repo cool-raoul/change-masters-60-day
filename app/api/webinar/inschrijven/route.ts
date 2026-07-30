@@ -36,16 +36,18 @@ export async function POST(req: NextRequest) {
 
     const admin = createAdminClient();
 
-    const { data: tokenRij } = await admin
-      .from("freebie_bot_member_tokens")
-      .select("member_id")
+    const { data: linkRij } = await admin
+      .from("webinar_member_links")
+      .select("member_id, webinar_id")
       .eq("token", token)
-      .eq("bot_slug", "webinar")
       .maybeSingle();
-    if (!tokenRij) {
+    if (!linkRij) {
       return NextResponse.json({ error: "Onbekende link" }, { status: 404 });
     }
-    const memberId = (tokenRij as { member_id: string }).member_id;
+    const { member_id: memberId, webinar_id: webinarId } = linkRij as {
+      member_id: string;
+      webinar_id: string;
+    };
 
     const { data: memberProfiel } = await admin
       .from("profiles")
@@ -61,9 +63,9 @@ export async function POST(req: NextRequest) {
     const memberVoornaam = (member.full_name ?? "").split(" ")[0] || "ELEVA";
 
     const { data: configRij } = await admin
-      .from("webinar_config")
+      .from("webinars")
       .select("titel, duur_minuten")
-      .eq("id", "standaard")
+      .eq("id", webinarId)
       .maybeSingle();
     const config = (configRij ?? {}) as {
       titel?: string;
@@ -81,7 +83,7 @@ export async function POST(req: NextRequest) {
       .ilike("email", veiligEmail)
       .maybeSingle();
 
-    const notitieRegel = `Aangemeld voor de masterclass, gekozen moment: ${slotTekst(slotStart)}.`;
+    const notitieRegel = `Aangemeld voor het webinar "${config.titel ?? "webinar"}", gekozen moment: ${slotTekst(slotStart)}.`;
     let prospectId: string | null =
       (bestaand as { id?: string } | null)?.id ?? null;
 
@@ -106,7 +108,7 @@ export async function POST(req: NextRequest) {
           volledige_naam: naam,
           email,
           telefoon,
-          bron: "Masterclass",
+          bron: "Webinar",
           pipeline_fase: "prospect",
           notities: notitieRegel,
         })
@@ -121,6 +123,7 @@ export async function POST(req: NextRequest) {
       .from("webinar_inschrijvingen")
       .insert({
         member_id: memberId,
+        webinar_id: webinarId,
         prospect_id: prospectId,
         token: kijkToken,
         naam,
@@ -164,7 +167,7 @@ export async function POST(req: NextRequest) {
     // 4. Seintje naar de member.
     try {
       await sendPushToUser(memberId, {
-        title: `${naam} meldde zich aan voor de masterclass 🎥`,
+        title: `${naam} meldde zich aan voor je webinar 🎥`,
         body: `Gekozen moment: ${slotTekst(slotStart)}. Staat op je namenlijst.`,
         url: prospectId ? `/namenlijst/${prospectId}` : "/namenlijst",
         tag: `webinar-${kijkToken}`,

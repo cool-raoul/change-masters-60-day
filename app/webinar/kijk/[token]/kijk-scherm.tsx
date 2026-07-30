@@ -22,6 +22,8 @@ type Props = {
   alGedaan: boolean;
   memberVoornaam: string;
   memberTelefoon: string | null;
+  bestellinks: { id: string; label: string; url: string }[];
+  bestellinkUitleg: string;
 };
 
 export function KijkScherm({
@@ -34,6 +36,8 @@ export function KijkScherm({
   alGedaan,
   memberVoornaam,
   memberTelefoon,
+  bestellinks,
+  bestellinkUitleg,
 }: Props) {
   const [kijken, setKijken] = useState(begonnen);
   const [actieGedaan, setActieGedaan] = useState(alGedaan);
@@ -114,6 +118,36 @@ export function KijkScherm({
       <p className="text-center text-cm-white/50 text-xs">
         Reken op ongeveer {duurMinuten} minuten. Kijk 'm liefst in één keer.
       </p>
+
+      {/* Bestellinks van dit teamlid bij dit webinar. Alleen tonen als
+          hij ze heeft ingevuld; een leeg kopje "bestellen" is erger dan
+          geen kopje. */}
+      {bestellinks.length > 0 && (
+        <div className="card space-y-3">
+          <h2 className="text-cm-gold font-semibold text-sm">
+            🛒 Direct bestellen
+          </h2>
+          <p className="text-cm-white/75 text-sm leading-relaxed">
+            {bestellinkUitleg}
+          </p>
+          <div className="space-y-2">
+            {bestellinks.map((b) => (
+              <a
+                key={b.id}
+                href={b.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-secondary w-full py-3 inline-block text-center text-sm font-semibold"
+              >
+                {b.label} →
+              </a>
+            ))}
+          </div>
+          <p className="text-cm-white/45 text-xs">
+            Je bestelt rechtstreeks in de webshop van {memberVoornaam}.
+          </p>
+        </div>
+      )}
 
       {actieGedaan ? (
         <div className="card border-2 border-emerald-500/50 text-center space-y-3">

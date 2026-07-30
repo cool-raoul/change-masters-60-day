@@ -2,29 +2,27 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { bouwSlots } from "@/lib/webinar/slots";
+import { haalWebinar } from "@/lib/webinar/data";
 import { InschrijfFormulier } from "./inschrijf-formulier";
 
 // ============================================================
-// /webinar/[token] — de publieke inschrijfpagina.
+// /webinar/[token] — de publieke aanmeldpagina van één webinar.
 //
-// Token = de persoonlijke link van een member. Wie zich hier
-// aanmeldt, komt in de namenlijst van díe member terecht.
+// Token = de persoonlijke link van een teamlid voor dát webinar.
+// Wie zich hier aanmeldt, komt in de namenlijst van díe persoon.
 //
-// Bewust eerlijk: we zeggen dat het een opgenomen masterclass is
-// en dat de bezoeker zelf zijn moment kiest. Geen nep-live, geen
-// aftelklok die iets suggereert wat niet waar is.
+// Bewust eerlijk: we zeggen dat het een opname is en dat de bezoeker
+// zelf zijn moment kiest. Geen nep-live, geen valse aftelklok.
 // ============================================================
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Masterclass aanmelden",
-  description:
-    "Een opgenomen masterclass. Kies zelf het moment dat jou uitkomt.",
+  title: "Webinar aanmelden",
+  description: "Een opgenomen webinar. Kies zelf het moment dat jou uitkomt.",
   openGraph: {
-    title: "Masterclass aanmelden",
-    description:
-      "Een opgenomen masterclass. Kies zelf het moment dat jou uitkomt.",
+    title: "Webinar aanmelden",
+    description: "Een opgenomen webinar. Kies zelf het moment dat jou uitkomt.",
   },
 };
 
@@ -36,37 +34,25 @@ export default async function WebinarInschrijfPagina({
   const { token } = await params;
   const admin = createAdminClient();
 
-  const { data: tokenRij } = await admin
-    .from("freebie_bot_member_tokens")
-    .select("member_id")
+  const { data: linkRij } = await admin
+    .from("webinar_member_links")
+    .select("member_id, webinar_id")
     .eq("token", token)
-    .eq("bot_slug", "webinar")
     .maybeSingle();
-  if (!tokenRij) notFound();
+  if (!linkRij) notFound();
+  const link = linkRij as { member_id: string; webinar_id: string };
+
+  const webinar = await haalWebinar(link.webinar_id);
+  if (!webinar || !webinar.actief) notFound();
 
   const { data: member } = await admin
     .from("profiles")
-    .select("full_name, foto_url")
-    .eq("id", (tokenRij as { member_id: string }).member_id)
+    .select("full_name")
+    .eq("id", link.member_id)
     .maybeSingle();
   const memberNaam =
     (member as { full_name?: string | null } | null)?.full_name ?? "";
   const memberVoornaam = memberNaam.split(" ")[0] || "je contactpersoon";
-
-  const { data: configRij } = await admin
-    .from("webinar_config")
-    .select("*")
-    .eq("id", "standaard")
-    .maybeSingle();
-  const config = (configRij ?? {}) as {
-    titel?: string;
-    ondertitel?: string;
-    duur_minuten?: number;
-    intro_tekst?: string;
-    actief?: boolean;
-  };
-
-  if (config.actief === false) notFound();
 
   const slots = bouwSlots();
 
@@ -75,21 +61,20 @@ export default async function WebinarInschrijfPagina({
       <div className="max-w-2xl mx-auto px-5 py-10 space-y-7">
         <div className="text-center space-y-3">
           <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider">
-            Opgenomen masterclass
+            Opgenomen webinar
           </p>
           <h1 className="text-3xl font-display font-bold leading-tight">
-            {config.titel ?? "Masterclass: meer tijd en vrijheid"}
+            {webinar.titel}
           </h1>
           <p className="text-cm-white/80 leading-relaxed">
-            {config.ondertitel ??
-              `Een opgenomen masterclass van ongeveer ${config.duur_minuten ?? 45} minuten. Jij kiest wanneer je kijkt.`}
+            {webinar.ondertitel}
           </p>
         </div>
 
-        {config.intro_tekst && (
+        {webinar.intro_tekst && (
           <div className="card">
             <p className="text-cm-white/85 text-sm leading-relaxed whitespace-pre-line">
-              {config.intro_tekst}
+              {webinar.intro_tekst}
             </p>
           </div>
         )}
@@ -108,7 +93,7 @@ export default async function WebinarInschrijfPagina({
           token={token}
           slots={slots}
           memberVoornaam={memberVoornaam}
-          duurMinuten={config.duur_minuten ?? 45}
+          duurMinuten={webinar.duur_minuten}
         />
 
         <p className="text-center text-cm-white/45 text-xs leading-relaxed">
