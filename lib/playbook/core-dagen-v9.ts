@@ -203,6 +203,14 @@ Schrijf eerst tot je op twintig namen zit. Filteren komt later, en doe je nooit 
 
 Vier bronnen helpen je vullen. Familie en directe vrienden. Oude collega's, oud-klasgenoten, oud-buren. Ouders bij school, sportclub, vereniging, hobby. En de mensen die je via social al een tijd volgt of die jou volgen.
 
+NIVEA: NIET INVULLEN VOOR EEN ANDER
+
+Dit is de regel die de meeste starters vergeten, en daardoor filteren ze hun beste mensen er vooraf al uit. Jij weet namelijk niet wat er in iemand omgaat. Niet wat zijn financiële situatie is, niet of hij zijn werk nog leuk vindt, niet of zijn gezondheid hem uitput. Je hebt een momentopname in je hoofd, vaak van jaren geleden, en daarop baseer je "die zit hier niet op te wachten". Dat is zelden waar.
+
+En zelfs als die persoon het écht niet voor zichzelf wil: hij kent vast iemand voor wie het wél past. Een schoonzus die net moeder is geworden, een oud-collega die ontslag kreeg, een buurman die met pensioen wil maar financieel net niet uitkomt. Jij kunt dat niet weten. Daarom: alle namen op de lijst. Filteren doe je later, als je échte signalen hebt, niet vooraf in je eigen hoofd 😉
+
+Drie voorbeelden uit de praktijk. "Die zwager heeft een goede baan" stond zes maanden later open toen er een herstructurering kwam. "Die moeder bij voetbal is zo druk" was de eerste die ja zei, want ze zocht juist iets dat naast haar gezin paste. "Die oud-collega zie ik nooit meer" had een netwerk van 200 ondernemers en de perfecte introductie. Het patroon: jouw oordeel zegt meer over jouw beeld dan over hun werkelijkheid.
+
 HET WEBSHOP-FRAME
 
 Dan het frame waarmee je ze straks gaat benaderen: de webshop.
@@ -235,7 +243,7 @@ Gewoon doen, jij kan dit 💪🏽`,
         verplicht: true,
         actieRoute: "/namenlijst",
         uitleg:
-          "Schrijf twintig namen op die spontaan in je hoofd opkomen, dat is je Top-20. Twee soorten door elkaar: mensen waarvan jij denkt dat ze baat zouden hebben bij een product (slecht slaapt, weinig energie, hormonen die schuiven), én mensen die het werk zelf misschien zouden willen doen (ondernemend, mensen-mens, iemand die je iets gunt). Geen filter, zet ook die ene erop waarvan je denkt 'die past nooit', want juist die verrast vaak. Loop je telefoon, je social en je dagelijkse omgeving even langs als je vastzit, dan komen de namen vanzelf. Markeer daarna vijf binnen je twintig waar je gevoel zegt 'die gun ik dit het meest', dat zijn je kandidaten voor de drie oefen-uitnodigingen samen met je sponsor. Lukt twintig niet in één keer? Geen probleem, je vult elke dag aan, je lijst is nooit af.",
+          "Schrijf twintig namen op die spontaan in je hoofd opkomen, dat is je Top-20. Twee soorten door elkaar: mensen waarvan jij denkt dat ze baat zouden hebben bij een product (slecht slaapt, weinig energie, hormonen die schuiven), én mensen die het werk zelf misschien zouden willen doen (ondernemend, mensen-mens, iemand die je iets gunt). Geen filter, zet ook die ene erop waarvan je denkt 'die past nooit', want juist die verrast vaak. Loop je telefoon, je social en je dagelijkse omgeving even langs als je vastzit, dan komen de namen vanzelf. Markeer daarna vijf binnen je twintig waar je gevoel zegt 'die gun ik dit het meest', dat zijn je kandidaten voor de drie oefen-uitnodigingen samen met je sponsor. Zit je vast? Loop de categorieën even langs: familie, partners van familie, oude vrienden, huidige vrienden, ondernemers die je kent, collega's van nu, collega's van vroeger, sport of hobby, ouders bij school of club, en je buurt. Dan komen de namen vanzelf. Lukt twintig niet in één keer? Geen probleem, je vult elke dag aan, je lijst is nooit af.",
       },
       {
         id: "core-v9-stap2-vcard",
@@ -1076,6 +1084,24 @@ De Mentor noteert per type een passende vervolgactie en koppelt dat aan elke pro
 JE LIJST IS NOOIT KLAAR
 
 Spreek vandaag iets met jezelf af, minimaal vijf nieuwe namen per week. Geen "ik zal proberen", wel concreet vijf per week. Eén nieuwe via een gesprek met iemand uit je netwerk, eentje via een Story-reactie, eentje via een freebie-lead, en zo door.
+
+HOE JE ZE HERKENT
+
+De typen zeggen wát iemand is. Nu even hoe je het hóórt, want dat is het stuk waar je in de praktijk op vaart.
+
+Iemand die nu actief zoekt, zit meestal in een kantelmoment. Werk verloren, scheiding, kind geboren, business gestopt, of een gezondheidsschrik. Je hoort het aan zinnen als "ik zoek al een tijdje naar iets", "ik wilde net beginnen met" of gewoon "wat doe jij eigenlijk?". Bij zo iemand hoef je geen weken op te bouwen. Zijn moment is nu, en als jij wacht start hij bij iemand anders.
+
+Iemand die open maar voorzichtig is, hoor je aan doorvragen. Die wil meer weten, blijft in contact zonder dat jij hoeft te duwen. Daar bouw je rustig verder, met FORM-vragen en een paar contactmomenten. Die beslist als hij er klaar voor is, en dat is prima.
+
+En een echte nee klinkt ook als een echte nee: stevig, zonder twijfel, soms uit een oude ervaring met netwerkmarketing. Erken dat warm en volledig, en laat het los.
+
+WAAR JE JE ENERGIE LAAT
+
+Het grootste deel van je aandacht gaat naar de mensen die direct geïnteresseerd of open zijn. Een klein deel naar wie later terugkomt. En bij wie duidelijk nee zegt houd je de relatie warm zonder er tijd in te stoppen.
+
+Twee fouten die bijna iedereen maakt. De eerste: een stevige nee blijven behandelen als een misschien, en blijven hopen op die ene oude vriend die "echt ooit ja gaat zeggen". Die uren gaan ten koste van de mensen die nu wél zoeken. De tweede: iemand die juist nu zoekt met rust laten omdat je denkt dat hij het te druk heeft.
+
+En onthoud: typen verschuiven. Wie vandaag niet kan, kan over drie maanden precies de juiste zijn. Daarom warm houden, niet afschrijven 🥰
 
 Snap je waarom dat ritme zo belangrijk is? Want zonder die regelmatige instroom droogt je lijst op. En met type 5 erin die je actief loslaat, moet er aan de bovenkant net zoveel bijkomen als er aan de onderkant uitgaat.
 
