@@ -109,7 +109,9 @@ Snap je waarom dat zo belangrijk is? Vóór Builder bouw jij in je eentje. Vanaf
 
 Wat is er nodig? Twee dingen. Eerste drie levels in jouw team samen 1500 IP, jouw eigen bestelling telt mee. En minimaal drie members met een bestelling vanaf 40 IP. Concreet: jij bestelt voor jezelf, drie mensen die jij hebt uitgenodigd worden member, samen kom je op het volume.
 
-Even de woorden erbij, want je hoort ze hier voor het eerst. IP staat voor Internationale Punten, de rekeneenheid voor bestellingen: één normale maandbestelling voor jezelf is ongeveer 40 IP. Levels zijn de lagen onder je: de mensen die jij uitnodigt (level 1), de mensen die zij uitnodigen (level 2), en zo verder. Een member is iemand die zelf een account heeft en bestelt, een klant koopt alleen bij je in de webshop. En duplicatie betekent simpelweg dat de stappen die jij doet doorgegeven kunnen worden aan de mensen na jou, zodat het niet allemaal van jou hoeft te komen.
+Even de woorden erbij, want je hoort ze hier voor het eerst. IP staat voor Internationale Punten, de rekeneenheid voor bestellingen. Die 40 IP is geen gemiddelde bestelling: het is het minimum dat je zelf per maand besteld moet hebben om uitbetaald te kunnen krijgen. Levels zijn de lagen onder je: de mensen die jij uitnodigt (level 1), de mensen die zij uitnodigen (level 2), en zo verder. Een member is iemand die zelf een account heeft en bestelt, een klant koopt alleen bij je in de webshop. En duplicatie betekent dat de stappen die jij doet doorgegeven kunnen worden aan de mensen na jou, zodat het niet allemaal van jou hoeft te komen.
+
+En dan het stukje dat vaak onderschat wordt: hoe meer je zelf gebruikt, hoe meer je kunt aanbevelen. Dat is geen verkooptruc, dat is gewoon hoe het werkt. Wie zelf met een programma of een combinatiepakket bezig is, heeft er zelf het meeste aan en kan er ook het makkelijkst over vertellen. Daarom zijn de programma's en de basisproducten onze paradepaardjes: jij ervaart er zelf het meeste van, en daardoor groeit je organisatie ook sneller.
 
 "Succes is geen toeval, succes is ingepland."
 
@@ -121,12 +123,14 @@ Wat fijn dat je er bent. We gaan samen 🥰`,
     vandaagDoen: [
       {
         id: "core-v9-stap1-builder-uitleg",
-        // Was "Bekijk de ...": er is hier niets te bekijken, geen film en
-        // geen route. Het staat in de les bovenaan (flow-audit 30 juli).
-        label: "Lees waar je naartoe werkt: de Builder-status",
+        label: "Bekijk de korte Builder-status-uitleg",
         verplicht: true,
+        // Film-slot staat klaar (Raoul 30 juli: de film komt hier nog).
+        // Zolang er geen film hangt, toont FilmInBlok een nette
+        // "film volgt"-melding in plaats van een lege plek.
+        filmSlug: "core-v9-stap1-builder",
         uitleg:
-          "Builder is je eerste mijlpaal én de rode draad door alles wat hierna komt. In de les bovenaan (\"Wat je leert\") staat wat 'ie precies inhoudt, waarom dat belangrijk is, en wat er nodig is om 'm te halen. Twee voorwaarden: je eerste drie levels samen 1500 IP (jouw eigen bestelling telt mee), en minimaal drie members met een bestelling van 40 IP of meer. IP staat voor Internationale Punten, de rekeneenheid voor bestellingen: één maandbestelling voor jezelf is ongeveer 40 IP. Levels zijn de lagen onder je: wie jij uitnodigt, en wie zij uitnodigen. Snap je waarom dit jouw eerste anker is? Vanaf Builder gaat duplicatie werken, dus alles wat je hier leert kun jij straks doorgeven aan de drie of vier mensen die jou zijn gevolgd.",
+          "Builder is je eerste mijlpaal én de rode draad door alles wat hierna komt. Je ziet hier wat 'ie inhoudt, waarom dat belangrijk is, en wat er nodig is om 'm te halen. Twee voorwaarden: je eerste drie levels samen 1500 IP (jouw eigen bestelling telt mee), en minimaal drie members met een bestelling van 40 IP of meer. IP staat voor Internationale Punten, de rekeneenheid voor bestellingen. Let op: die 40 IP is geen gemiddelde bestelling, het is het minimum dat je zelf per maand besteld moet hebben om uitbetaald te kunnen krijgen. Levels zijn de lagen onder je: wie jij uitnodigt, en wie zij uitnodigen. Snap je waarom dit jouw eerste anker is? Vanaf Builder gaat duplicatie werken, dus alles wat je hier leert kun jij straks doorgeven aan de drie of vier mensen die jou zijn gevolgd.",
       },
       {
         id: "core-v9-stap1-sponsor",

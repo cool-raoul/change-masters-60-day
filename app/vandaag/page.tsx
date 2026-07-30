@@ -462,13 +462,20 @@ export default async function VandaagPagina({
   // en gebruiken namespace "core-v9-stap". Verankering/lifetime
   // (dag 22+) blijven op "core-dag". Pro werkt nu nog niet via deze
   // route.
+  // Dag 0 is GEDEELD tussen Sprint en Core en de editor in de dagflow
+  // schrijft altijd naar "sprint-dag". Las een Core-member (of founder)
+  // hier "core-v9-stap", dan werden zijn eigen tekstaanpassingen op dag 0
+  // nooit teruggelezen: opgeslagen, maar onvindbaar (Raoul 30 juli).
+  // Eén namespace voor dag 0, gelijk aan waar de editor 'm neerzet.
   const dagNamespace = lanceerRoute
     ? `lanceer-${lanceerRoute}-dag`
-    : modus === "core"
-      ? dag <= 21
-        ? "core-v9-stap"
-        : "core-dag"
-      : "sprint-dag";
+    : dag === 0
+      ? "sprint-dag"
+      : modus === "core"
+        ? dag <= 21
+          ? "core-v9-stap"
+          : "core-dag"
+        : "sprint-dag";
 
   if (modus !== "core" && !lanceerRoute) {
     // playbook_overrides is een platte tabel zonder modus-veld, dus
