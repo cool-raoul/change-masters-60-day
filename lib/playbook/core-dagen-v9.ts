@@ -17,7 +17,7 @@
 //   - Stap 7: verdienmodel + Builder-status-pad als rode draad
 //   - Stap 8-9: 3-weg-meesterclass + 3-weg starten (niet "eerste")
 //   - Stap 10: FORM-verdieping
-//   - Stap 11: 5 typen prospects + funnel
+//   - Stap 11: 6 typen prospects + funnel
 //   - Stap 12: Stories + Reels (verdieping van 6)
 //   - Stap 13: niche-aanscherping met Mentor (tweede freebie verschoven)
 //   - Stap 14: members/netwerkers herkennen + ideale klant (geen "builder energie")
@@ -1059,15 +1059,15 @@ Doe het op jouw manier, dat werkt het beste 🥰`,
   },
   {
     nummer: 11,
-    titel: "📊 5 typen prospects + funnel als ritme",
+    titel: "📊 6 typen prospects + funnel als ritme",
     fase: 2,
     faseDoel:
-      "Top-20 en freebie-leads categoriseren in vijf typen, en afspreken dat je minimaal 5 nieuwe namen per week toevoegt. Lijst is nooit klaar.",
+      "Top-20 en freebie-leads categoriseren in zes typen, en afspreken dat je minimaal 5 nieuwe namen per week toevoegt. Lijst is nooit klaar.",
     watJeLeert: `Tijd om overzicht te maken 🥰
 
 Inmiddels heb je behoorlijk wat mensen in beeld. Top-20 verstuurd. Eerste brede post heeft mensen binnengebracht. Freebie zorgt voor wat instroom. Zonder structuur wordt dat al snel een wirwar van wie-staat-waar.
 
-Niet iedereen is op hetzelfde punt, en niet iedereen verdient dezelfde aandacht. Vijf typen helpen je om je tijd in te delen 👍🏽
+Niet iedereen is op hetzelfde punt, en niet iedereen verdient dezelfde aandacht. Zes typen helpen je om je tijd in te delen 👍🏽
 
 1. Direct geïnteresseerd. Stelt vragen, vraagt zelf info, lijkt klaar om mee te kijken. Plan een 3-weg, of stuur Mini-ELEVA. Niet uitstellen.
 
@@ -1078,6 +1078,8 @@ Niet iedereen is op hetzelfde punt, en niet iedereen verdient dezelfde aandacht.
 4. Vriendelijk niet bezig. Reageert beleefd maar duidelijk niets voor nu. Loslaten, contact warm houden via socials, geen actieve uitnodiging.
 
 5. Niet voor jou bedoeld. Reageert niet, of negatief. Loslaten. Je verdient je tijd niet aan trekken zonder beweging.
+
+6. Productkoper. Geen interesse in het werk, wel in de producten. Je hoort het aan "de business is niets voor mij, maar dat product klinkt wel interessant". Dit is geen afwijzing, dit is een klant. Ga met ze naar de producten, zet ze op shopper en zet een herinnering over drie weken om te vragen hoe het bevalt. Juist in onze route is dit een van de mooiste typen: iemand die zelf ervaart wat het brengt, komt soms een half jaar later alsnog terug met "vertel eens, hoe doe jij dat eigenlijk?".
 
 De Mentor noteert per type een passende vervolgactie en koppelt dat aan elke prospect in jouw namenlijst 🥰
 
@@ -1119,7 +1121,7 @@ Lekker bezig, ga zo door 💪🏽`,
         verplicht: true,
         actieRoute: "/namenlijst",
         uitleg:
-          "Loop je top-20 en freebie-leads langs en geef elk een van de vijf typen: direct geïnteresseerd, open maar voorzichtig, nieuwsgierig maar niet beschikbaar, vriendelijk niet bezig, of niet voor jou bedoeld. De Mentor licht elk type kort toe en geeft per type een passende vervolgactie aan je. Type 1 binnen 48 uur opvolgen met een concrete vervolgstap. Type 2 ruimte geven en over een paar dagen iets sturen om over na te denken. Type 3 markeren voor over een maand, contact warm houden zonder duwen. Type 4 en 5 los je rustig als business-prospect, en hou je warm als vriend.",
+          "Loop je top-20 en freebie-leads langs en geef elk een van de zes typen: direct geïnteresseerd, open maar voorzichtig, nieuwsgierig maar niet beschikbaar, vriendelijk niet bezig, niet voor jou bedoeld, of productkoper. De Mentor licht elk type kort toe en geeft per type een passende vervolgactie aan je. Type 1 binnen 48 uur opvolgen met een concrete vervolgstap. Type 2 ruimte geven en over een paar dagen iets sturen om over na te denken. Type 3 markeren voor over een maand, contact warm houden zonder duwen. Type 4 en 5 los je rustig als business-prospect, en hou je warm als vriend. Type 6 gaat naar de producten: zet 'm op shopper en zet een herinnering over drie weken om te vragen hoe het bevalt.",
       },
       {
         id: "core-v9-stap11-spreek-af",
