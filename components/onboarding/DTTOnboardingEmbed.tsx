@@ -238,7 +238,7 @@ export function DTTOnboardingEmbed({ alVoltooid, opVoltooid }: Props) {
           )}
           {bracket === "minimaal" && (
             <p className="text-amber-200/80 text-[11px] italic">
-              Met minder dan 3 uur per week houd je het klein: zelf ervaren en af en toe delen. Een netwerk opbouwen vraagt meer tijd dan dit, denk aan 4 tot 6 uur per week. Wat het oplevert verschilt per persoon en hangt af van je inzet.
+              Met minder dan 3 uur per week kun je je producten terugverdienen: je inkomsten zijn dan ongeveer gelijk aan wat je zelf bestelt. Een netwerk opbouwen waarmee je meer doet dan dat, is in dit tempo niet realistisch. Overweeg 4 tot 6 uur per week.
             </p>
           )}
           {toonEerlijkheidsCheck && (

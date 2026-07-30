@@ -109,6 +109,8 @@ Snap je waarom dat zo belangrijk is? Vóór Builder bouw jij in je eentje. Vanaf
 
 Wat is er nodig? Twee dingen. Eerste drie levels in jouw team samen 1500 IP, jouw eigen bestelling telt mee. En minimaal drie members met een bestelling vanaf 40 IP. Concreet: jij bestelt voor jezelf, drie mensen die jij hebt uitgenodigd worden member, samen kom je op het volume.
 
+Even de woorden erbij, want je hoort ze hier voor het eerst. IP staat voor Internationale Punten, de rekeneenheid voor bestellingen: één normale maandbestelling voor jezelf is ongeveer 40 IP. Levels zijn de lagen onder je: de mensen die jij uitnodigt (level 1), de mensen die zij uitnodigen (level 2), en zo verder. Een member is iemand die zelf een account heeft en bestelt, een klant koopt alleen bij je in de webshop. En duplicatie betekent simpelweg dat de stappen die jij doet doorgegeven kunnen worden aan de mensen na jou, zodat het niet allemaal van jou hoeft te komen.
+
 "Succes is geen toeval, succes is ingepland."
 
 ALLES WAT JE HIER LEERT, IS ER TWEE KEER. Eén keer voor jou. Eén keer voor wie na jou komt 💪🏽
@@ -119,10 +121,12 @@ Wat fijn dat je er bent. We gaan samen 🥰`,
     vandaagDoen: [
       {
         id: "core-v9-stap1-builder-uitleg",
-        label: "Bekijk de korte Builder-status-uitleg",
+        // Was "Bekijk de ...": er is hier niets te bekijken, geen film en
+        // geen route. Het staat in de les bovenaan (flow-audit 30 juli).
+        label: "Lees waar je naartoe werkt: de Builder-status",
         verplicht: true,
         uitleg:
-          "Builder is je eerste mijlpaal én de rode draad door alles wat hierna komt. Vandaag krijg je in een paar minuten te zien wat 'ie precies inhoudt, waarom dat zo belangrijk is, en wat er nodig is om 'm te halen. Twee voorwaarden: je eerste drie levels samen 1500 IP (jouw eigen bestelling telt mee), en minimaal drie members met een bestelling van 40 IP of meer. Snap je waarom dit jouw eerste anker is? Vanaf Builder gaat duplicatie werken, dus alles wat je hier leert kun jij straks doorgeven aan de drie of vier mensen die jou zijn gevolgd.",
+          "Builder is je eerste mijlpaal én de rode draad door alles wat hierna komt. In de les bovenaan (\"Wat je leert\") staat wat 'ie precies inhoudt, waarom dat belangrijk is, en wat er nodig is om 'm te halen. Twee voorwaarden: je eerste drie levels samen 1500 IP (jouw eigen bestelling telt mee), en minimaal drie members met een bestelling van 40 IP of meer. IP staat voor Internationale Punten, de rekeneenheid voor bestellingen: één maandbestelling voor jezelf is ongeveer 40 IP. Levels zijn de lagen onder je: wie jij uitnodigt, en wie zij uitnodigen. Snap je waarom dit jouw eerste anker is? Vanaf Builder gaat duplicatie werken, dus alles wat je hier leert kun jij straks doorgeven aan de drie of vier mensen die jou zijn gevolgd.",
       },
       {
         id: "core-v9-stap1-sponsor",

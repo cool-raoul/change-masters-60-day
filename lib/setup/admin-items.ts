@@ -27,34 +27,34 @@ export const ADMIN_ITEMS: AdminItem[] = [
     emoji: "🛒",
     titel: "Webshop aanmaken",
     uitleg:
-      "Maak je eigen Lifeplus-webshop aan via de officiële backoffice. Bekijk de instructiefilm hieronder en volg de stappen. Eenmalige stap, hierna is je shop online en kun je hem delen.",
+      "Maak je eigen webshop aan in de backoffice, dat is de website van het bedrijf waar je je eigen gegevens en je shop beheert. Bekijk de instructiefilm hieronder en volg de stappen. Eenmalige stap, hierna is je shop online en kun je hem delen. Je inloggegevens heb je bij je aanmelding gekregen; kun je ze niet vinden, vraag ze dan even aan je sponsor.",
     filmSlug: "onboarding-stap-6-webshop",
-    externeLink: null,
+    externeLink: "https://team.lifeplus.com/",
   },
   {
     slug: ITEM_SLUGS.kredietformulierIngevuld,
     emoji: "✅",
     titel: "Kredietformulier invullen",
     uitleg:
-      "Zonder dit formulier kunnen je commissies niet worden uitbetaald. Vul 'm in via de Lifeplus-backoffice. De korte instructie staat in de film hieronder.",
+      "Zonder dit formulier kan er geen commissie naar je toe. Vul 'm in in de backoffice, de website van het bedrijf waar je je gegevens beheert. De korte instructie staat in de film hieronder.",
     filmSlug: "onboarding-stap-8-kredietformulier",
-    externeLink: null,
+    externeLink: "https://team.lifeplus.com/",
   },
   {
     slug: ITEM_SLUGS.teamsAdminIngericht,
     emoji: "📋",
-    titel: "Teams-administratie inrichten",
+    titel: "Je administratiesysteem inrichten",
     uitleg:
-      "Hier wordt je team-structuur en business-data bijgehouden. Volg de instructie in de film hieronder voor de exacte stappen.",
+      "Hier houd je bij wie er in je team zitten en hoe het loopt (dit heet ook wel je teams-administratie). Volg de instructie in de film hieronder voor de exacte stappen.",
     filmSlug: "core-dag3-teams-admin",
-    externeLink: null,
+    externeLink: "https://team.lifeplus.com/",
   },
   {
     slug: ITEM_SLUGS.bestellinksGekoppeld,
     emoji: "🔗",
     titel: "Bestellinks koppelen",
     uitleg:
-      "Plak je eigen Lifeplus-bestellinks per pakket in ELEVA. Hierna gebruikt het systeem ze automatisch in productadvies-flows.",
+      "Plak je eigen bestellinks per pakket in ELEVA: dat zijn de links naar je eigen webshop met dat pakket er al in. Hierna gebruikt het systeem ze automatisch in je productadviezen, zodat bestellingen bij jou landen.",
     filmSlug: null,
     externeLink: "/instellingen/bestellinks",
   },

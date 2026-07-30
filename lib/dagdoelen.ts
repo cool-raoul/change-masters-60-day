@@ -164,13 +164,13 @@ export function bouwblokkenVoorTempo(uren: CommitmentUren): Bouwblok[] {
         emoji: "📨",
         naam: "2 mensen uitnodigen voor een presentatie",
         beschrijving:
-          "Mensen die je al goed kent en waarvan je weet wat ze belangrijk vinden. Daar mag je direct uitnodigen voor een one-pager-moment of presentatie, geen lange aanloop nodig.",
+          "Mensen die je al goed kent en waarvan je weet wat ze belangrijk vinden. Daar mag je direct uitnodigen voor een one-pager-moment of presentatie, geen lange aanloop nodig. Een one-pager is één pagina waarop iemand in tien minuten ziet hoe het werkt; een presentatie is het uitgebreide verhaal, samen of via een film.",
       },
       {
         emoji: "🔄",
         naam: "Doe je openstaande follow-ups",
         beschrijving:
-          "Mensen die jouw uitnodiging hebben aangenomen en de film/one-pager/presentatie hebben gezien, wachten op opvolging. Geen vast getal, afhankelijk van wie er open staat. Per persoon kies je de aanpak: een 3-weg-gesprek samen met je sponsor (klassiek, persoonlijk) óf Mini-ELEVA waarbij iemand 14 dagen zelf kan rondkijken. Openingszin: 'Wat spreekt je hier het meeste in aan?' (niet 'wat vond je ervan?').",
+          "Mensen die jouw uitnodiging hebben aangenomen en de film/one-pager/presentatie hebben gezien, wachten op opvolging. Geen vast getal, afhankelijk van wie er open staat. Per persoon kies je de aanpak: een 3-weg-gesprek samen met je sponsor (dat is een gesprek met drie mensen, jij, de ander en je sponsor die het verhaal doet) óf Mini-ELEVA, een eigen omgeving waarin iemand 14 dagen zelf kan rondkijken. Openingszin: 'Wat spreekt je hier het meeste in aan?' (niet 'wat vond je ervan?').",
       },
       {
         emoji: "📱",

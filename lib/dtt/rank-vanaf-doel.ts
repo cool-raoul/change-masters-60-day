@@ -70,7 +70,7 @@ export function rankVanafDoel(doelPerMaand: number): RankSuggestie {
       rank: "gold",
       label: "Gold",
       toelichting:
-        "Indicatief zo'n 900 tot 2000 euro per maand. Wat dit voor jouw week betekent hangt af van je situatie; sommigen kiezen ervoor om dan een dag minder te gaan werken.",
+        "Indicatief zo'n 900 tot 2000 euro per maand. Voor veel mensen komt hier een halve dag minder werken per week in zicht.",
       vereisten: { eigenIP: 150, qgv: 9000, members: 9 },
     };
   }
@@ -79,7 +79,7 @@ export function rankVanafDoel(doelPerMaand: number): RankSuggestie {
       rank: "diamond",
       label: "Diamond",
       toelichting:
-        "Indicatief zo'n 1200 tot 5000 euro per maand. Hoe dat jouw week verandert bepaal je zelf, en het verschilt per persoon.",
+        "Indicatief zo'n 1200 tot 5000 euro per maand. Daarmee komt een hele dag minder werken per week in zicht, of meer.",
       vereisten: { eigenIP: 150, qgv: 15000, members: 12 },
     };
   }

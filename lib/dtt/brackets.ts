@@ -23,10 +23,13 @@ export const BRACKETS: Record<Bracket, BracketDefinitie> = {
     bracket: "minimaal",
     label: "Minimaal",
     urenPerWeekRange: "<3u",
-    // Geen bedragen of terugverdien-beloftes (claim-ronde 30 juli): dit
-    // tempo beschrijft wat je DOET, niet wat het oplevert.
+    // BEWUSTE KEUZE RAOUL (30 juli): deze verwachtingen mogen concreet
+    // zijn. Dit staat achter de inlog, bij iemand die al gestart is en
+    // in de presentatie al weet dat er een eigen maandbestelling is. Het
+    // is geen prospect-tekst en geen belofte, het is wat dit tempo in de
+    // praktijk oplevert. Zo weet een member waar hij aan toe is.
     verwachting:
-      "Rustig meelopen en het zelf ervaren. Wat je hiermee opbouwt verschilt per persoon en hangt af van je inzet.",
+      "Je producten terugverdienen. Inkomsten ongeveer gelijk aan je eigen maandelijkse bestellingen, dus je product wordt voor jou gratis.",
     dmoMinimums: {
       contactenPerDag: 0,
       socialPostsPerWeek: 0,
