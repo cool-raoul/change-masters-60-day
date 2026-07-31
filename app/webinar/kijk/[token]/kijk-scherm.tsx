@@ -28,6 +28,7 @@ type Props = {
   webinarTitel: string;
   slotStart: string;
   kijkUrl: string;
+  thumbnail: string | null;
 };
 
 export function KijkScherm({
@@ -45,6 +46,7 @@ export function KijkScherm({
   webinarTitel,
   slotStart,
   kijkUrl,
+  thumbnail,
 }: Props) {
   const [kijken, setKijken] = useState(begonnen);
   const [actieGedaan, setActieGedaan] = useState(alGedaan);
@@ -79,7 +81,14 @@ export function KijkScherm({
   if (!kijken) {
     return (
       <div className="card space-y-4 text-center">
-        <p className="text-4xl">⏳</p>
+        {thumbnail ? (
+          <div className="rounded-lg overflow-hidden border border-cm-border -mx-1">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={thumbnail} alt="" className="w-full block opacity-70" />
+          </div>
+        ) : (
+          <p className="text-4xl">⏳</p>
+        )}
         <h2 className="text-xl font-display font-bold">
           Je moment is nog niet begonnen
         </h2>

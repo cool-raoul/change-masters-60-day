@@ -108,6 +108,7 @@ export default async function WebinarKijkPagina({
           webinarTitel={webinar.titel}
           slotStart={inschrijving.slot_start}
           kijkUrl={`${SITE_URL}/webinar/kijk/${token}`}
+          thumbnail={webinar.thumbnail_url}
         />
       </div>
     </div>

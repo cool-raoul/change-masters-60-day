@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { haalVideoInfo } from "@/lib/webinar/thumbnail";
 
 // ============================================================
 // POST /api/webinar/config — founder-only.
@@ -59,6 +60,16 @@ export async function POST(req: NextRequest) {
   }
   const duur = Number(body.duur_minuten);
 
+  // Voorproef-afbeelding: liet de founder 'm leeg, dan halen we 'm bij
+  // de video op (Vimeo of YouTube). Zo staat er nooit een kale
+  // tekstpagina, en tonen WhatsApp en socials een plaatje in de
+  // link-preview. Zelf een plaatje ingevuld? Dan laten we dat met rust.
+  const videoUrl = String(body.video_url ?? "").trim();
+  let thumbnail = String(body.thumbnail_url ?? "").trim();
+  if (!thumbnail && videoUrl) {
+    thumbnail = (await haalVideoInfo(videoUrl)).thumbnail ?? "";
+  }
+
   const { error } = await admin
     .from("webinars")
     .update({
@@ -66,7 +77,8 @@ export async function POST(req: NextRequest) {
       ondertitel:
         String(body.ondertitel ?? "").slice(0, 400) ||
         "Een opgenomen webinar. Jij kiest zelf wanneer je kijkt.",
-      video_url: String(body.video_url ?? "").slice(0, 500) || null,
+      video_url: videoUrl.slice(0, 500) || null,
+      thumbnail_url: thumbnail.slice(0, 800) || null,
       duur_minuten:
         Number.isFinite(duur) && duur >= 5 && duur <= 180 ? Math.round(duur) : 45,
       intro_tekst: String(body.intro_tekst ?? "").slice(0, 4000) || null,

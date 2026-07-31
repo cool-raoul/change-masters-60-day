@@ -318,6 +318,35 @@ export function WebinarKaart({
                   />
                   <div className="space-y-1">
                     <label className="text-xs text-cm-white/80">
+                      Voorproef-afbeelding
+                    </label>
+                    {w.thumbnail_url ? (
+                      <div className="rounded-lg overflow-hidden border border-cm-border">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={w.thumbnail_url}
+                          alt=""
+                          className="w-full block"
+                        />
+                      </div>
+                    ) : null}
+                    <input
+                      className="input-cm w-full text-sm"
+                      value={w.thumbnail_url ?? ""}
+                      placeholder="Laat leeg, dan pakken we 'm uit de video"
+                      onChange={(e) =>
+                        setW({ ...w, thumbnail_url: e.target.value })
+                      }
+                    />
+                    <p className="text-cm-white/45 text-xs leading-relaxed">
+                      Leeg laten is prima: bij opslaan halen we het beeld uit
+                      je Vimeo- of YouTube-video. Wil je een eigen plaatje,
+                      plak dan de URL. Dit is ook wat mensen zien als je de
+                      link in WhatsApp of op socials deelt.
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-cm-white/80">
                       Duur in minuten
                     </label>
                     <input

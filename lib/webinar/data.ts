@@ -15,12 +15,13 @@ export type Webinar = {
   actie_label: string;
   actie_uitleg: string | null;
   bestellink_uitleg: string | null;
+  thumbnail_url: string | null;
   actief: boolean;
   volgorde: number;
 };
 
 const VELDEN =
-  "id, titel, ondertitel, video_url, duur_minuten, intro_tekst, actie_label, actie_uitleg, bestellink_uitleg, actief, volgorde";
+  "id, titel, ondertitel, video_url, duur_minuten, intro_tekst, actie_label, actie_uitleg, bestellink_uitleg, thumbnail_url, actief, volgorde";
 
 /** Alle webinars, nieuwste bovenaan binnen de handmatige volgorde. */
 export async function haalWebinars(alleenActief = false): Promise<Webinar[]> {
