@@ -3499,11 +3499,32 @@ export default function MentorWereld({
       }
       stroomKlaar = true;
       await toner;
-      // Belooft de Mentor "de groene knop"? Dan moet die er ook echt
-      // staan (feedback Raoul 20 juli: knop werd genoemd maar
-      // verscheen niet). De contact-kaart is die groene knop.
-      if (/groene knop/i.test(ontvangen) && station) {
-        await mentorKaart("contact", station.slug, 600);
+      // Verwijst de Mentor naar de begeleider of naar een knop om
+      // contact te leggen? Dan moet die knop er ook echt staan.
+      // Eerst alleen "groene knop" (Raoul 20 juli), maar de Mentor
+      // schrijft het op tien manieren op: "overleg even met Raoul",
+      // "via de contact-knop", "laat het je begeleider weten". Suus
+      // kreeg zo een verwijzing naar een knop die er niet was (Raoul
+      // 31 juli). Nu: noemt hij een knop, of noemt hij de begeleider
+      // in een contact-zin, dan verschijnt de kaart.
+      if (station) {
+        const naamDeel = begeleiderNaam
+          ? begeleiderNaam.split(" ")[0].replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+          : "";
+        const noemtKnop = /(groene|contact)[- ]?knop|knop hier(onder|boven)?|de knop hieronder/i.test(
+          ontvangen,
+        );
+        const noemtPersoon = new RegExp(
+          `\\b(begeleider|sponsor${naamDeel ? `|${naamDeel}` : ""})\\b`,
+          "i",
+        ).test(ontvangen);
+        const contactBedoeling =
+          /(contact|overleg|appje|berichtje|app(?:pen)?\b|bericht|laat\w* .{0,30}weten|vraag\w* .{0,20}(aan|het)|even vragen|plan .{0,25}(moment|gesprek|call|belletje)|schakel|voorleg|leg .{0,20}voor|meekijk|mee kijk|kijkt .{0,20}mee)/i.test(
+            ontvangen,
+          );
+        if (noemtKnop || (noemtPersoon && contactBedoeling)) {
+          await mentorKaart("contact", station.slug, 600);
+        }
       }
     } catch {
       zetLaatsteMentorTekst("De verbinding viel even weg, probeer het nog een keer.");
