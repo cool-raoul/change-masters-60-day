@@ -83,7 +83,10 @@ export async function POST(req: NextRequest) {
       .ilike("email", veiligEmail)
       .maybeSingle();
 
-    const notitieRegel = `Aangemeld voor het webinar "${config.titel ?? "webinar"}", gekozen moment: ${slotTekst(slotStart)}.`;
+    // De naam erbij: komt iemand binnen op een e-mailadres dat al op een
+    // andere kaart staat (bijvoorbeeld een eerdere freebie), dan zou de
+    // aanmelding anders onzichtbaar zijn onder een andere naam.
+    const notitieRegel = `🎥 WEBINAR-AANMELDING (${new Date().toLocaleDateString("nl-NL")})\nAangemeld als "${naam}" voor "${config.titel ?? "webinar"}".\nGekozen kijkmoment: ${slotTekst(slotStart)}.`;
     let prospectId: string | null =
       (bestaand as { id?: string } | null)?.id ?? null;
 
@@ -101,19 +104,27 @@ export async function POST(req: NextRequest) {
         })
         .eq("id", prospectId);
     } else {
-      const { data: nieuw } = await admin
+      // bron MOET een van warm/social/doorverwijzing/koud zijn (check-
+      // constraint op de tabel). Stond hier eerst "Webinar", waardoor
+      // élke nieuwe kaart stil faalde en de aanmelding nergens landde.
+      // De freebie-bots gebruiken om dezelfde reden "social"; waar de
+      // lead vandaan komt staat in de notitie.
+      const { data: nieuw, error: prospectFout } = await admin
         .from("prospects")
         .insert({
           user_id: memberId,
           volledige_naam: naam,
           email,
           telefoon,
-          bron: "Webinar",
+          bron: "social",
           pipeline_fase: "prospect",
           notities: notitieRegel,
         })
         .select("id")
         .maybeSingle();
+      if (prospectFout) {
+        console.error("webinar prospect-insert:", prospectFout.message);
+      }
       prospectId = (nieuw as { id?: string } | null)?.id ?? null;
     }
 
@@ -158,7 +169,11 @@ export async function POST(req: NextRequest) {
         html: mail.html,
         van: `${memberVoornaam} <${process.env.RESEND_FROM_EMAIL ?? "team@mail.my-eleva.com"}>`,
         replyTo: member.notificatie_email ?? member.email ?? undefined,
-        apiKey: member.resend_api_key ?? undefined,
+        // GEEN eigen sleutel van de member meegeven: het afzender-domein
+        // (mail.my-eleva.com) is alleen geverifieerd op het gedeelde
+        // ELEVA-account. Met een persoonlijke sleutel weigert Resend de
+        // mail, en dan vertrekt er stil niets. Zelfde keuze als bij de
+        // freebie-mails.
       });
     } catch (e) {
       console.error("webinar bevestigingsmail:", e);

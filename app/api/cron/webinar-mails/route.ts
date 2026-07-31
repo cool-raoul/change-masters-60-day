@@ -88,7 +88,6 @@ export async function GET(request: Request) {
     {
       voornaam: string;
       replyTo?: string;
-      apiKey?: string;
     }
   >();
 
@@ -109,7 +108,6 @@ export async function GET(request: Request) {
     const info = {
       voornaam: (p.full_name ?? "").split(" ")[0] || "ELEVA",
       replyTo: p.notificatie_email ?? p.email ?? undefined,
-      apiKey: p.resend_api_key ?? undefined,
     };
     memberCache.set(id, info);
     return info;
@@ -166,7 +164,8 @@ export async function GET(request: Request) {
       html: mail.html,
       van: `${info.voornaam} <${process.env.RESEND_FROM_EMAIL ?? "team@mail.my-eleva.com"}>`,
       replyTo: info.replyTo,
-      apiKey: info.apiKey,
+      // Bewust zonder persoonlijke sleutel: het afzender-domein is
+      // alleen op het gedeelde ELEVA-account geverifieerd.
     });
     if (resultaat.ok) {
       await admin
