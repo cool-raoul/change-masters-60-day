@@ -162,6 +162,13 @@ export async function GET(request: Request) {
       naar: item.rij.email,
       onderwerp: mail.onderwerp,
       html: mail.html,
+      tekst: mail.tekst,
+      headers: info.replyTo
+        ? {
+            "List-Unsubscribe": `<mailto:${info.replyTo}?subject=Afmelden>`,
+            "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+          }
+        : undefined,
       van: `${info.voornaam} <${process.env.RESEND_FROM_EMAIL ?? "team@mail.my-eleva.com"}>`,
       replyTo: info.replyTo,
       // Bewust zonder persoonlijke sleutel: het afzender-domein is

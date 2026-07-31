@@ -163,12 +163,23 @@ export async function POST(req: NextRequest) {
         titel: config.titel ?? "de masterclass",
         duurMinuten: config.duur_minuten ?? 45,
       });
+      const antwoordAdres = member.notificatie_email ?? member.email ?? undefined;
       await verstuurMail({
         naar: email,
         onderwerp: mail.onderwerp,
         html: mail.html,
+        // Platte tekst + afmeld-header: beide wegen mee in de
+        // spam-beoordeling, en zonder die twee belandt een mail met
+        // knoppen en links sneller in de ongewenste map.
+        tekst: mail.tekst,
+        headers: antwoordAdres
+          ? {
+              "List-Unsubscribe": `<mailto:${antwoordAdres}?subject=Afmelden>`,
+              "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+            }
+          : undefined,
         van: `${memberVoornaam} <${process.env.RESEND_FROM_EMAIL ?? "team@mail.my-eleva.com"}>`,
-        replyTo: member.notificatie_email ?? member.email ?? undefined,
+        replyTo: antwoordAdres,
         // GEEN eigen sleutel van de member meegeven: het afzender-domein
         // (mail.my-eleva.com) is alleen geverifieerd op het gedeelde
         // ELEVA-account. Met een persoonlijke sleutel weigert Resend de

@@ -30,6 +30,18 @@ export type MailRequest = {
   naar: string;
   onderwerp: string;
   html: string;
+  /**
+   * Platte-tekst-versie. Belangrijk voor bezorging: een mail zonder
+   * tekst-deel scoort bij spamfilters (zeker iCloud en Gmail) meetbaar
+   * slechter. Laat je 'm weg, dan gaat de mail gewoon HTML-only.
+   */
+  tekst?: string;
+  /**
+   * Extra headers, bijvoorbeeld List-Unsubscribe. Filters verwachten
+   * die bij mail die op een serie lijkt; ontbreekt hij, dan telt dat
+   * tegen je.
+   */
+  headers?: Record<string, string>;
   /** Optioneel: reply-to-adres, bijvoorbeeld member's eigen e-mail. */
   replyTo?: string;
   /**
@@ -78,6 +90,8 @@ export async function verstuurMail(req: MailRequest): Promise<MailResultaat> {
         to: [req.naar],
         subject: req.onderwerp,
         html: req.html,
+        ...(req.tekst ? { text: req.tekst } : {}),
+        ...(req.headers ? { headers: req.headers } : {}),
         reply_to: req.replyTo,
       }),
     });

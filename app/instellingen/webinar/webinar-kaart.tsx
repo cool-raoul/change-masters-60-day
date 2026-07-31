@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import type { Webinar, Bestellink } from "@/lib/webinar/data";
+import { DeelKnoppen } from "@/components/shared/DeelKnoppen";
 
 // ============================================================
 // Eén webinar-blok. Voor iedereen: je deel-link, je eigen
@@ -40,7 +41,12 @@ export function WebinarKaart({
   >(bestellinks.length > 0 ? bestellinks : [{ label: "", url: "" }]);
   const [bezig, setBezig] = useState(false);
 
-  const bericht = `Ik zag een webinar over ${w.titel} en moest aan je denken. Het is een opname van ongeveer ${w.duur_minuten} minuten, dus je kiest zelf wanneer je kijkt. Helemaal vrijblijvend, als het niets voor je is is dat ook prima: ${url}`;
+  // Twee teksten, want de link gaat twee kanten op (Raoul 31 juli).
+  // 1-op-1 stuur je 'm naar iemand die je kent; via een post komen ook
+  // mensen binnen die jou niet kennen. Geen "ik moest aan je denken":
+  // dit is jouw webinar dat je deelt, niet iets dat je toevallig zag.
+  const persoonlijk = `Ik deel een webinar met je over ${w.titel}. Er wordt rustig uitgelegd wat het is en hoe je het gebruikt, in ongeveer ${w.duur_minuten} minuten. Het is een opname, dus je kiest zelf wanneer je kijkt. Helemaal vrijblijvend, als het niets voor je is is dat ook prima.`;
+  const socialTekst = `${w.titel}\n\nIn dit webinar wordt in ongeveer ${w.duur_minuten} minuten rustig uitgelegd wat het is en hoe je het gebruikt. Het is een opname, dus je kiest zelf je moment. Wil je meekijken? Meld je hieronder aan, dan krijg je de link in je mail.`;
 
   async function kopieer(tekst: string, wat: string) {
     try {
@@ -127,28 +133,40 @@ export function WebinarKaart({
             <div className="bg-cm-surface-2 rounded-lg px-3 py-2 break-all text-cm-white text-xs">
               {url}
             </div>
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => kopieer(url, "Link")}
-                className="btn-gold px-3 py-2 text-xs font-semibold"
-              >
-                Kopieer link
-              </button>
-              <button
-                onClick={() => kopieer(bericht, "Uitnodiging")}
-                className="btn-secondary px-3 py-2 text-xs font-semibold"
-              >
-                Kopieer uitnodiging
-              </button>
-              <a
-                href={`https://wa.me/?text=${encodeURIComponent(bericht)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-secondary px-3 py-2 text-xs font-semibold"
-              >
-                💬 WhatsApp
-              </a>
-            </div>
+
+            {/* Zelfde deel-mogelijkheden als bij de freebies: op de
+                telefoon alle apps die je hebt (WhatsApp, Messenger,
+                Instagram-DM, Signal, mail), op de computer de losse
+                knoppen plus kopiëren en een QR-code. */}
+            <p className="text-cm-white/60 text-xs">
+              1-op-1 sturen naar iemand die je kent:
+            </p>
+            <DeelKnoppen
+              url={url}
+              tekst={persoonlijk}
+              onderwerp={w.titel}
+            />
+
+            <details className="pt-1">
+              <summary className="text-cm-gold text-xs cursor-pointer">
+                Of plaats 'm als bericht op social media
+              </summary>
+              <div className="mt-2 space-y-2">
+                <p className="text-cm-white/60 text-xs leading-relaxed">
+                  Voor een post of story: mensen die jou nog niet kennen
+                  melden zich dan zelf aan via jouw link.
+                </p>
+                <div className="bg-cm-surface-2 rounded-lg px-3 py-2 text-cm-white/85 text-xs whitespace-pre-line">
+                  {socialTekst}
+                </div>
+                <button
+                  onClick={() => kopieer(`${socialTekst}\n\n${url}`, "Post-tekst")}
+                  className="btn-secondary px-3 py-2 text-xs font-semibold"
+                >
+                  Kopieer post-tekst
+                </button>
+              </div>
+            </details>
           </div>
 
           {/* Eigen bestellinks */}
