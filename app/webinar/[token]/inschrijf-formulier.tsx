@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Slot } from "@/lib/webinar/slots";
+import { AgendaKnoppen } from "@/components/webinar/AgendaKnoppen";
 
 // ============================================================
 // Het aanmeldformulier: naam, e-mail, telefoon (optioneel) en een
@@ -15,6 +16,7 @@ type Props = {
   slots: Slot[];
   memberVoornaam: string;
   duurMinuten: number;
+  webinarTitel: string;
 };
 
 export function InschrijfFormulier({
@@ -22,6 +24,7 @@ export function InschrijfFormulier({
   slots,
   memberVoornaam,
   duurMinuten,
+  webinarTitel,
 }: Props) {
   const [naam, setNaam] = useState("");
   const [email, setEmail] = useState("");
@@ -29,9 +32,12 @@ export function InschrijfFormulier({
   const [gekozen, setGekozen] = useState<string>(slots[0]?.start ?? "");
   const [bezig, setBezig] = useState(false);
   const [fout, setFout] = useState<string | null>(null);
-  const [klaar, setKlaar] = useState<{ kijkUrl: string; direct: boolean } | null>(
-    null,
-  );
+  const [klaar, setKlaar] = useState<{
+    kijkUrl: string;
+    direct: boolean;
+    kijkToken: string;
+    slotStart: string;
+  } | null>(null);
 
   async function verstuur() {
     setFout(null);
@@ -62,6 +68,8 @@ export function InschrijfFormulier({
       setKlaar({
         kijkUrl: data.kijkUrl,
         direct: Boolean(slots.find((s) => s.start === gekozen)?.isDirect),
+        kijkToken: String(data.kijkUrl).split("/").pop() ?? "",
+        slotStart: gekozen,
       });
     } catch {
       setFout("Geen verbinding. Probeer het zo nog eens.");
@@ -85,8 +93,22 @@ export function InschrijfFormulier({
           href={klaar.kijkUrl}
           className="btn-gold w-full py-3 inline-block text-center font-semibold"
         >
-          {klaar.direct ? "Start de masterclass →" : "Bewaar je kijklink →"}
+          {klaar.direct ? "Start het webinar →" : "Bewaar je kijklink →"}
         </a>
+
+        {/* Agenda-knoppen alleen bij een gepland moment; wie nu meteen
+            kijkt heeft er niets aan. */}
+        {!klaar.direct && (
+          <div className="pt-2 text-left">
+            <AgendaKnoppen
+              token={klaar.kijkToken}
+              titel={webinarTitel}
+              startIso={klaar.slotStart}
+              duurMinuten={duurMinuten}
+              kijkUrl={klaar.kijkUrl}
+            />
+          </div>
+        )}
       </div>
     );
   }

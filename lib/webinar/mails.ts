@@ -1,5 +1,6 @@
 import { SITE_URL } from "@/lib/site";
 import { slotTekst } from "./slots";
+import { googleAgendaUrl, outlookAgendaUrl } from "./agenda";
 
 // ============================================================
 // De vier mails rond de masterclass. Toon: warm, kort, en eerlijk
@@ -44,8 +45,16 @@ export function bouwMail(
         `<p>Hoi ${voornaam},</p>
 <p>Fijn dat je erbij wilt zijn. Je hebt gekozen voor <strong>${moment}</strong>.</p>
 <p>Even eerlijk over wat het is: dit is een opgenomen masterclass van ongeveer ${ctx.duurMinuten} minuten. Geen live-uitzending, dus je hoeft niet bang te zijn dat je iets mist of dat er iemand op je zit te wachten. Je kijkt gewoon op het moment dat jij hebt gekozen, in je eigen tempo.</p>
-<p>Zet het even in je agenda, dat helpt echt. Ik stuur je vlak van tevoren nog een herinnering met de kijklink.</p>
 ${knop(kijkUrl, "Bewaar je kijklink")}
+<p style="margin:18px 0 6px"><strong>Zet 'm even in je agenda</strong>, dat helpt echt. Kies wat jij gebruikt:</p>
+<p style="margin:0 0 18px">
+  <a href="${SITE_URL}/api/webinar/agenda/${ctx.token}.ics" style="color:#8a6d1f">Apple Agenda of ander programma</a>
+  &nbsp;·&nbsp;
+  <a href="${googleAgendaUrl({ titel: ctx.titel, startIso: ctx.slotStart, duurMinuten: ctx.duurMinuten, kijkUrl })}" style="color:#8a6d1f">Google Agenda</a>
+  &nbsp;·&nbsp;
+  <a href="${outlookAgendaUrl({ titel: ctx.titel, startIso: ctx.slotStart, duurMinuten: ctx.duurMinuten, kijkUrl })}" style="color:#8a6d1f">Outlook</a>
+</p>
+<p>Ik stuur je vlak van tevoren ook nog een herinnering met de kijklink.</p>
 <p>Kan het toch niet doorgaan op dat moment? Geen probleem, dezelfde link blijft gewoon werken.</p>`,
         ctx.memberVoornaam,
       ),

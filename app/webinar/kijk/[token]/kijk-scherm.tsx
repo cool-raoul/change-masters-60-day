@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { waLinkNaar } from "@/lib/util/wa-nummer";
+import { AgendaKnoppen } from "@/components/webinar/AgendaKnoppen";
 
 // ============================================================
 // Het kijkscherm. Meldt bij openen dat er gekeken wordt (zodat de
@@ -24,6 +25,9 @@ type Props = {
   memberTelefoon: string | null;
   bestellinks: { id: string; label: string; url: string }[];
   bestellinkUitleg: string;
+  webinarTitel: string;
+  slotStart: string;
+  kijkUrl: string;
 };
 
 export function KijkScherm({
@@ -38,6 +42,9 @@ export function KijkScherm({
   memberTelefoon,
   bestellinks,
   bestellinkUitleg,
+  webinarTitel,
+  slotStart,
+  kijkUrl,
 }: Props) {
   const [kijken, setKijken] = useState(begonnen);
   const [actieGedaan, setActieGedaan] = useState(alGedaan);
@@ -87,6 +94,16 @@ export function KijkScherm({
         >
           Toch nu beginnen →
         </button>
+
+        <div className="pt-2 text-left border-t border-cm-border">
+          <AgendaKnoppen
+            token={token}
+            titel={webinarTitel}
+            startIso={slotStart}
+            duurMinuten={duurMinuten}
+            kijkUrl={kijkUrl}
+          />
+        </div>
       </div>
     );
   }

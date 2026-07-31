@@ -94,6 +94,7 @@ export default async function WebinarInschrijfPagina({
           slots={slots}
           memberVoornaam={memberVoornaam}
           duurMinuten={webinar.duur_minuten}
+          webinarTitel={webinar.titel}
         />
 
         <p className="text-center text-cm-white/45 text-xs leading-relaxed">

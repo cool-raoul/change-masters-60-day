@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { normaliseerNaarEmbed } from "@/lib/films/embed";
 import { slotIsBegonnen, slotTekst } from "@/lib/webinar/slots";
 import { haalWebinar, haalBestellinks } from "@/lib/webinar/data";
+import { SITE_URL } from "@/lib/site";
 import { KijkScherm } from "./kijk-scherm";
 
 // ============================================================
@@ -104,6 +105,9 @@ export default async function WebinarKijkPagina({
             webinar.bestellink_uitleg ??
             "Wil je meteen bestellen wat je net gezien hebt? Dat kan hieronder."
           }
+          webinarTitel={webinar.titel}
+          slotStart={inschrijving.slot_start}
+          kijkUrl={`${SITE_URL}/webinar/kijk/${token}`}
         />
       </div>
     </div>
