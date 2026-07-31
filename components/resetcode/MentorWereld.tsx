@@ -41,6 +41,7 @@ type Kaart =
   | "videodag10"
   | "documenten"
   | "contact"
+  | "contact-vraag"
   | "logi"
   | "vervolg"
   | "faq"
@@ -3196,7 +3197,9 @@ export default function MentorWereld({
         `Stuur ${begeleiderNaam} gewoon zelf even een appje, dat werkt het snelst en het is meteen persoonlijk. Hier is de knop:`,
         800,
       );
-      await mentorKaart("contact", station.slug);
+      // Iemand die nú om contact vraagt, krijgt niet het geplande
+      // eind-moment te lezen.
+      await mentorKaart("contact-vraag", station.slug);
       return true;
     }
     if (/piramide|80\/20|kompas/.test(t) && station.graphic === "logi-piramide") {
@@ -3523,7 +3526,8 @@ export default function MentorWereld({
             ontvangen,
           );
         if (noemtKnop || (noemtPersoon && contactBedoeling)) {
-          await mentorKaart("contact", station.slug, 600);
+          // Over wat er NU speelt, niet het geplande eind-moment.
+          await mentorKaart("contact-vraag", station.slug, 600);
         }
       }
     } catch {
@@ -3788,20 +3792,33 @@ export default function MentorWereld({
           </div>
         );
       }
-      case "contact": {
+      case "contact":
+      case "contact-vraag": {
+        // Twee smaken (Raoul 31 juli). "contact" is het GEPLANDE moment
+        // van dit station ("rond het einde van de 16 dagen..."), dat
+        // hoort bij de reis. "contact-vraag" verschijnt wanneer de
+        // Mentor in zijn antwoord naar de begeleider verwijst; dan gaat
+        // het over wat er NU speelt, en zou dat geplande moment een
+        // vreemd antwoord zijn op "ik heb al drie dagen een opgeblazen
+        // buik".
+        const isNuVraag = item.kaart === "contact-vraag";
         // Voorgevuld bericht: kloppend per moment, zonder emoji's (die
         // raken corrupt in WhatsApp-prefills, bug-melding Raoul 21 juli).
         const isLaatsteStation =
           programma.stations[programma.stations.length - 1]?.slug === st.slug;
-        const prefill = isLaatsteStation
-          ? `Hoi ${begeleiderNaam}! Mijn dagen zitten erop en ik zou graag samen met jou kijken naar mijn vervolgstap. Wanneer komt het jou uit voor een belletje of een appje?`
-          : `Hoi ${begeleiderNaam}! Ik ben bezig met ${st.naam.toLowerCase()} van mijn programma en ik wil je graag even iets vragen.`;
+        const prefill = isNuVraag
+          ? `Hoi ${begeleiderNaam}! Ik loop tegen iets aan in mijn programma en zou het graag even met je overleggen.`
+          : isLaatsteStation
+            ? `Hoi ${begeleiderNaam}! Mijn dagen zitten erop en ik zou graag samen met jou kijken naar mijn vervolgstap. Wanneer komt het jou uit voor een belletje of een appje?`
+            : `Hoi ${begeleiderNaam}! Ik ben bezig met ${st.naam.toLowerCase()} van mijn programma en ik wil je graag even iets vragen.`;
         return (
           <div className={kader}>
             {kop("🤝", `Samen met ${begeleiderNaam}`)}
             <p className="text-[14px] text-white/85 leading-relaxed">
-              {st.contactMoment ??
-                `Even iets delen of sparren? ${begeleiderNaam} is er voor je.`}
+              {isNuVraag
+                ? `Even overleggen over waar je nu tegenaan loopt? Stuur ${begeleiderNaam} gerust een berichtje, hij kijkt met je mee.`
+                : (st.contactMoment ??
+                  `Even iets delen of sparren? ${begeleiderNaam} is er voor je.`)}
             </p>
             {isKlant && memberTelefoon ? (
               <a
