@@ -9,10 +9,12 @@ Laatst bijgewerkt: 2026-07-27
 ---
 
 ## 🎢 Wachtrij grote bouwrondes (verzameld 2026-07-27, volgorde = niets)
-1. **Webinar-systeem** (NIEUW): evergreen webinar per member — inschrijfpagina met
-   member-token (lead → Opvolgen), tijdslot-keuze rond opgenomen video, mails via
-   Resend (bevestiging/herinnering/terugkijk/actie), kijkpagina + actie-knop.
-   Bewust EERLIJK ("opgenomen masterclass, kies je moment"), geen nep-live.
+1. ~~**Webinar-systeem**~~ ✅ GEBOUWD 2026-07-31: bibliotheek van webinars met
+   plus-knop (founder), per teamlid een eigen deel-link en eigen bestellinks
+   onder de video, tijdslot-keuze, agenda-knoppen met herinnering (Google /
+   Apple .ics met VALARM / Outlook), mails via Resend (bevestiging,
+   herinnering, kijklink, terugkijk) en de actie-knop die de prospect naar
+   Opvolgen schuift. Eerlijke opname-variant, geen nep-live.
 2. **Fase 3 Mentor agent-architectuur** (spec klaar: docs/superpowers/specs/2026-07-22-mentor-agent-architectuur-design.md).
 3. **Freebie-generalisatie**: founder-edit/films/slugs/uitslag-knoppen naar álle
    freebies; eerst kiezen: gedeeld flow-framework of per freebie.
