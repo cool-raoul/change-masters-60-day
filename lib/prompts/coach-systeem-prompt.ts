@@ -3,6 +3,7 @@ import { SCRIPTS_DATA } from "@/lib/scripts-data";
 import { VraagType, getKennisbankVoorVraag } from "@/lib/knowledge/coach-boeken";
 import type { MentorProfiel } from "@/lib/mentor-profiel/types";
 import { bouwAdviesgidsPromptSectie } from "@/lib/lifeplus/adviesgids";
+import { bouwProgrammaKennisSectie } from "@/lib/knowledge/programma-kennis";
 import { bouwPrijslijstPromptSectie } from "@/lib/lifeplus/prijslijst";
 import { differenceInDays } from "date-fns";
 
@@ -72,7 +73,15 @@ export function bouwCoachSysteemPrompt(
   taal: string = "nl",
   vraagType: VraagType = "algemeen",
   contextNiveau: "light" | "full" = "light",
-  mentorProfiel: MentorProfiel | null = null
+  mentorProfiel: MentorProfiel | null = null,
+  /**
+   * De letterlijke vraag van de member. Nodig om te bepalen of er
+   * programma-kennis bij moet (voedingslijsten, innameschema,
+   * producten). Die kennis hangt aan het ONDERWERP, niet aan het
+   * vraagtype: "mag mijn klant een banaan in fase 2" is qua type een
+   * gewone vraag, maar heeft de fase 2-lijst nodig.
+   */
+  vraag: string = ""
 ): string {
   const dag = getDagVanRun(profile.run_startdatum);
   const fase = getFaseVanRun(dag);
@@ -549,6 +558,13 @@ Benadruk dat fase 1 het specifieke probleem aanpakt, maar dat blijvende gezondhe
   // Sectie D: Kennisbank (SLIM, alleen relevante secties)
   const kennisbankSectie = getKennisbankVoorVraag(vraagType);
 
+  // Sectie D1b: programma-kennis (voedingslijsten, innameschema,
+  // producten). Zelfde bronbestanden als de klant-Mentor, zodat een
+  // begeleider dezelfde antwoorden kan geven als zijn klant krijgt.
+  // Alleen bij een programma-onderwerp; anders scheelt dat duizenden
+  // tokens per vraag.
+  const programmaKennisSectie = bouwProgrammaKennisSectie(vraag);
+
   // Sectie D2: Productadvies-gids (alleen bij productvraag)
   const adviesgidsSectie = vraagType === "productadvies" ? `\n\n${bouwAdviesgidsPromptSectie()}` : "";
 
@@ -888,7 +904,7 @@ Er is nu een prospect in beeld. Leer je in dit gesprek iets over deze prospect o
 Alleen de velden die echt aan de orde zijn. Dit komt op de prospect-kaart te staan zodat ${naam} het kan gebruiken bij een 3-weg of uitnodiging. Het blok is voor het systeem, noem het niet in je gewone antwoord.`
     : "";
 
-  return `${rolSectie}${contextSectie}${mentorProfielSectie}${prospectSectie}${reelSectie}${kennisbankSectie}${adviesgidsSectie}${prijslijstSectie}${scriptSectie}${voorbeeldenSectie}${werkwijze}${profielOpslagSectie}${prospectOpslagSectie}${claimvrijSectie}`;
+  return `${rolSectie}${contextSectie}${mentorProfielSectie}${prospectSectie}${reelSectie}${kennisbankSectie}${programmaKennisSectie}${adviesgidsSectie}${prijslijstSectie}${scriptSectie}${voorbeeldenSectie}${werkwijze}${profielOpslagSectie}${prospectOpslagSectie}${claimvrijSectie}`;
 }
 
 // WHY Coach system prompt (ongewijzigd)

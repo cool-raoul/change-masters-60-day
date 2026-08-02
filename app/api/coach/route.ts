@@ -281,7 +281,23 @@ export async function POST(request: Request) {
             eerderePosts,
           })
         : bouwCoachSysteemPrompt(
-            profile, whyProfile, prospect, taal || "nl", vraagType, niveau, mentorProfiel
+            profile,
+            whyProfile,
+            prospect,
+            taal || "nl",
+            vraagType,
+            niveau,
+            mentorProfiel,
+            // De laatste vragen van de member meegeven: daaruit bepaalt
+            // de prompt of er programma-kennis bij moet (voedingslijsten,
+            // innameschema, producten). Zo kan een begeleider dezelfde
+            // vragen beantwoorden die zijn klant aan de klant-Mentor
+            // stelt (Raoul 2 augustus).
+            berichten
+              .filter((b) => b.role === "user")
+              .slice(-2)
+              .map((b) => String(b.content))
+              .join(" "),
           );
 
     // Gevalideerde product-ervarings-kennis (Dr. McKee + jarenlange
