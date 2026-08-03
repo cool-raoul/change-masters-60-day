@@ -400,7 +400,11 @@ export async function POST(req: NextRequest) {
                 messages: [
                   {
                     role: "system",
-                    content: bouwWaakhondPrompt(programmaSlug, teamKennis),
+                    content: bouwWaakhondPrompt(
+                      programmaSlug,
+                      teamKennis,
+                      ctxVoorOpslag?.memberVoornaam ?? null,
+                    ),
                   },
                   {
                     role: "user",

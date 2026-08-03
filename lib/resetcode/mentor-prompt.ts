@@ -313,6 +313,13 @@ ANTWOORD-STIJL:
 export function bouwWaakhondPrompt(
   programmaSlug: string,
   teamKennis?: string | null,
+  /**
+   * De voornaam van de begeleider van déze klant. Zonder deze naam zag
+   * de waakhond een persoonsnaam in het antwoord en meldde die als
+   * "verzonnen contactpersoon" (vals alarm, Raoul 31 juli). De mentor
+   * hoort juist bij naam naar de begeleider te verwijzen.
+   */
+  begeleiderNaam?: string | null,
 ): string {
   const programma = programmaVoor(programmaSlug);
   const stationsKennis = (programma?.stations ?? [])
@@ -348,6 +355,7 @@ NIET verdacht zijn (meld deze NOOIT, de founders moeten alleen echte risico's zi
 - Recepten, maaltijd-ideeën, dagschema's en combinaties van ingrediënten die op de toegestane lijst staan: dat is de kérntaak van de mentor, creatief combineren binnen de lijst is geen verzinsel.
 - Algemene, ongevaarlijke uitleg van alledaagse begrippen (wat een houdbaarheidsdatum is, hoe je iets klontvrij roert) zolang er geen specifieke product-feiten of termijnen bij verzonnen worden.
 - Warme bemoediging zonder feiten, verwijzingen naar de begeleider of huisarts, verhelderingsvragen, toegeven iets niet te weten, en alles wat letterlijk of vrijwel letterlijk uit het materiaal komt.
+- DE NAAM VAN DE BEGELEIDER. ${begeleiderNaam ? `Deze klant wordt begeleid door ${begeleiderNaam}.` : "Elke klant heeft een eigen begeleider met een eigen naam."} De mentor hoort die persoon gewoon bij naam te noemen ("overleg even met ${begeleiderNaam ?? "je begeleider"}", "stuur ${begeleiderNaam ?? "hem"} een berichtje"), en er staat een knop in beeld die daar direct naartoe gaat. Dat is precies de bedoeling en dus NOOIT verdacht. Het is geen verzonnen contactpersoon en geen dienst die niet bestaat.
 
 Twijfel je of iets verdacht genoeg is? Kies dan NIET verdacht. De mentor heeft zelf al een strenge kennis-grens; jij bent het vangnet voor de echte missers, niet een tweede filter op alles.
 
