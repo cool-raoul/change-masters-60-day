@@ -8,6 +8,10 @@ import {
 } from "@/lib/resetcode/producten";
 import { FASE2_LIJST, DARM_LIJST } from "@/lib/resetcode/lijsten";
 import { innameSchemaAlsKennis } from "@/lib/resetcode/inname-schema";
+import {
+  BEGELEIDER_KENNIS,
+  heeftBegeleiderKennisNodig,
+} from "./begeleider-kennis";
 
 // ============================================================
 // PROGRAMMA-KENNIS VOOR DE MEMBER-MENTOR
@@ -116,9 +120,12 @@ Dit is materiaal uit de programma's zelf. De begeleider krijgt deze vragen van z
  */
 export function bouwProgrammaKennisSectie(vraag: string): string {
   const onderwerpen = onderwerpenIn(vraag);
-  if (onderwerpen.length === 0) return "";
+  const gedragsregels = heeftBegeleiderKennisNodig(vraag);
+  // Gezondheidsvragen (aandoening, zwangerschap, medicatie, alarm) hebben
+  // de gedragsregels nodig, ook als er geen programma-onderwerp in zit.
+  if (onderwerpen.length === 0 && !gedragsregels) return "";
 
-  const blokken: string[] = [WERKWIJZE];
+  const blokken: string[] = [WERKWIJZE, BEGELEIDER_KENNIS];
   const heeft = (o: Onderwerp) => onderwerpen.includes(o);
 
   // Voeding: bij twijfel over welk programma geven we ze allebei, dan
