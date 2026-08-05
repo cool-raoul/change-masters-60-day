@@ -80,6 +80,10 @@ export function Sidebar({
     { href: "/instellingen/mijn-tracking-links", labelKey: "nav.freebies", icoon: "🎁" },
     { href: "/uitnodigingen", labelKey: "nav.uitnodigingen", icoon: "✨" },
     { href: "/instellingen/webinar", labelKey: "nav.masterclasses", icoon: "🎥" },
+    // Prospect-films: film-eerst delen. De knop "📺 Stuur film" op de kaart
+    // van een prospect blijft bestaan (persoon-eerst); dit is dezelfde
+    // functie vanaf de andere kant.
+    { href: "/prospect-films", labelKey: "nav.prospect_films", icoon: "📺" },
     { href: "/scripts", labelKey: "nav.scripts", icoon: "📋" },
     { href: "/mijn-zinnen", labelKey: "nav.zinnen", icoon: "📝" },
     { href: "/60-day-run", labelKey: "nav.project_tijd_vrijheid", icoon: "🚀" },

@@ -367,6 +367,10 @@ export const t: Vertalingen = {
     nl: "Mijn tools", en: "My tools", fr: "Mes outils",
     es: "Mis herramientas", de: "Meine Tools", pt: "Minhas ferramentas",
   },
+  "nav.prospect_films": {
+    nl: "Films versturen", en: "Send films", fr: "Envoyer des films",
+    es: "Enviar películas", de: "Filme senden", pt: "Enviar filmes",
+  },
   "nav.masterclasses": {
     nl: "Masterclasses", en: "Masterclasses", fr: "Masterclasses",
     es: "Masterclasses", de: "Masterclasses", pt: "Masterclasses",
