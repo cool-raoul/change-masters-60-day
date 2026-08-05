@@ -11,9 +11,12 @@ import { nl, enUS, fr, es, de, pt } from "date-fns/locale";
 import { useTaal } from "@/lib/i18n/TaalContext";
 import { Locale } from "date-fns";
 import { KanaalIconen } from "@/components/gedeeld/KanaalIconen";
+import { filterOpZoek } from "@/lib/namenlijst/zoek";
 
 interface Props {
   prospects: Prospect[];
+  /** Zoekterm uit de balk bovenaan. Leeg = alles tonen. */
+  zoek?: string;
 }
 
 const FASE_KLEUREN: Record<PipelineFase, string> = {
@@ -210,7 +213,7 @@ function ProspectKaart({
 
 const DATE_LOCALES: Record<string, Locale> = { nl, en: enUS, fr, es, de, pt };
 
-export function PipelineKanban({ prospects }: Props) {
+export function PipelineKanban({ prospects, zoek = "" }: Props) {
   const [lokaleProspects, setLokaleProspects] = useState(prospects);
   const [dragOverFase, setDragOverFase] = useState<PipelineFase | null>(null);
   const [draggingId, setDraggingId] = useState<string | null>(null);
@@ -426,6 +429,17 @@ export function PipelineKanban({ prospects }: Props) {
     scrollRef.current?.scrollBy({ left: 280, behavior: "smooth" });
   }
 
+  // Wat er in de kolommen komt. Zoeken filtert alleen wat je ziet; de
+  // volledige lijst blijft de basis voor slepen en volgorde-berekening.
+  const zichtbaar = filterOpZoek(lokaleProspects, zoek);
+  // Tijdens het zoeken alleen kolommen tonen waar een match in zit, anders
+  // scroll je langs zeven keer "Leeg" om je ene naam te vinden.
+  const zichtbareFasen = zoek.trim()
+    ? PIPELINE_FASEN.filter((f) =>
+        zichtbaar.some((p) => p.pipeline_fase === f.fase),
+      )
+    : PIPELINE_FASEN;
+
   return (
     <div className="space-y-2">
       {/* Scroll pijlen rechtsboven */}
@@ -447,8 +461,8 @@ export function PipelineKanban({ prospects }: Props) {
       {/* Kanban scroll container */}
       <div ref={scrollRef} className="overflow-x-auto pb-2">
         <div className="flex gap-4 min-w-max">
-          {PIPELINE_FASEN.map(({ fase, label }) => {
-            const faseProspects = lokaleProspects
+          {zichtbareFasen.map(({ fase, label }) => {
+            const faseProspects = zichtbaar
               .filter((p) => p.pipeline_fase === fase)
               .sort((a, b) => {
                 // Member/shopper: actieve eerst, inactieve onderaan alfabetisch.

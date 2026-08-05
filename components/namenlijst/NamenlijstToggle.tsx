@@ -9,6 +9,7 @@ import { useTaal } from "@/lib/i18n/TaalContext";
 import { Prospect, PIPELINE_FASEN } from "@/lib/supabase/types";
 import { PipelineKanban } from "@/components/namenlijst/PipelineKanban";
 import { KanaalIconen } from "@/components/gedeeld/KanaalIconen";
+import { filterOpZoek } from "@/lib/namenlijst/zoek";
 
 interface Props {
   prospects: Prospect[];
@@ -18,19 +19,28 @@ export function NamenlijstToggle({ prospects }: Props) {
   const [weergave, setWeergave] = useState<"pipeline" | "lijst">("pipeline");
   const [lokaleProspects, setLokaleProspects] = useState(prospects);
   const [bevestigenId, setBevestigenId] = useState<string | null>(null);
+  const [zoek, setZoek] = useState("");
   const { v } = useTaal();
   const router = useRouter();
   const supabase = createClient();
 
+  // Het filter geldt voor BEIDE weergaven: of je nu in de pijplijn of in
+  // de lijst staat, je zoekt in hetzelfde (Raoul 5 augustus). Beste
+  // matches (naam begint met wat je typt) komen bovenaan.
+  const gefilterd = filterOpZoek(lokaleProspects, zoek);
+  const zoektNu = zoek.trim().length > 0;
+
   // Sorteer: actieve prospects eerst alfabetisch, daarna niet-actieve onderaan
   // (ook alfabetisch). Zo blijven afgesloten members/shoppers vindbaar maar niet
-  // in de weg.
-  const gesorteerd = [...lokaleProspects].sort((a, b) => {
-    const aActief = a.actief !== false;
-    const bActief = b.actief !== false;
-    if (aActief !== bActief) return aActief ? -1 : 1;
-    return a.volledige_naam.localeCompare(b.volledige_naam, "nl");
-  });
+  // in de weg. Tijdens het zoeken houden we de zoek-volgorde aan.
+  const gesorteerd = zoektNu
+    ? gefilterd
+    : [...gefilterd].sort((a, b) => {
+        const aActief = a.actief !== false;
+        const bActief = b.actief !== false;
+        if (aActief !== bActief) return aActief ? -1 : 1;
+        return a.volledige_naam.localeCompare(b.volledige_naam, "nl");
+      });
 
   async function verwijder(id: string, naam: string) {
     const { error } = await supabase.from("prospects").delete().eq("id", id);
@@ -46,6 +56,47 @@ export function NamenlijstToggle({ prospects }: Props) {
 
   return (
     <div className="space-y-4">
+      {/* Zoekbalk: filtert live terwijl je typt, in beide weergaven.
+          Bij "c" zie je iedereen met een naam die op een c begint, bij
+          "co" wordt het smaller, enzovoort. Je hoeft dus nooit een hele
+          naam te typen. */}
+      <div className="relative">
+        <span
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-cm-muted pointer-events-none"
+          aria-hidden="true"
+        >
+          🔍
+        </span>
+        <input
+          type="search"
+          inputMode="search"
+          value={zoek}
+          onChange={(e) => setZoek(e.target.value)}
+          placeholder="Zoek een naam..."
+          aria-label="Zoek in je namenlijst"
+          className="input-cm pl-10 pr-10"
+        />
+        {zoektNu && (
+          <button
+            type="button"
+            onClick={() => setZoek("")}
+            aria-label="Zoekopdracht wissen"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-cm-muted hover:text-cm-white transition-colors text-lg leading-none"
+          >
+            ✕
+          </button>
+        )}
+      </div>
+      {zoektNu && (
+        <p className="text-xs text-cm-muted -mt-2">
+          {gefilterd.length === 0
+            ? `Geen naam gevonden met "${zoek.trim()}"`
+            : `${gefilterd.length} van ${lokaleProspects.length} ${
+                lokaleProspects.length === 1 ? "naam" : "namen"
+              }`}
+        </p>
+      )}
+
       {/* Toggle knoppen + Nieuw toevoegen */}
       <div className="flex items-center gap-2">
         <button
@@ -74,8 +125,11 @@ export function NamenlijstToggle({ prospects }: Props) {
         </Link>
       </div>
 
-      {/* Pipeline weergave */}
-      {weergave === "pipeline" && <PipelineKanban prospects={prospects} />}
+      {/* Pipeline weergave. Krijgt lokaleProspects (niet de originele prop)
+          zodat een naam die je in de lijst verwijdert hier ook echt weg is. */}
+      {weergave === "pipeline" && (
+        <PipelineKanban prospects={lokaleProspects} zoek={zoek} />
+      )}
 
       {/* Lijst weergave */}
       {weergave === "lijst" && (
