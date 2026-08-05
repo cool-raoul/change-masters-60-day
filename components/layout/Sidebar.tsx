@@ -222,17 +222,11 @@ export function Sidebar({
           >
             <span>⚙️</span> {v("nav.instellingen")}
           </Link>
-          {/* Nieuwe layout-preview: founders én testers (de preview-groep).
-              Eén klik in /nieuw/meer zet de nieuwe schil aan voor het
-              hele account; terugwisselen kan daar ook. */}
-          {(isFounder || isTester) && (
-            <Link
-              href="/nieuw"
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cm-gold opacity-90 hover:opacity-100 hover:bg-cm-surface-2 transition-colors"
-            >
-              <span>✨</span> Nieuwe layout
-            </Link>
-          )}
+          {/* De "Nieuwe layout"-preview is op 5 augustus 2026 verwijderd.
+              Die schil was een vooruitbouw op het meegroeiende menu; dat
+              idee blijft, maar wordt vanaf nul opnieuw ontworpen zodra de
+              Core-dagindeling staat. Alles wat vooruit was gebouwd is
+              eruit gehaald, zodat niemand op een half pad landt. */}
           {/* Diagnose-link: alleen voor founders zichtbaar. Members
               zien 'm niet meer (push + voice werken). Founders kunnen
               'm gebruiken om iemand op afstand te debuggen of zelf te

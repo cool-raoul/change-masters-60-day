@@ -52,29 +52,18 @@ export default async function DashboardPagina({
   // de query een error en blijft modus undefined, dan door naar dashboard.
   const { data: modusProfiel, error: modusError } = await supabase
     .from("profiles")
-    .select("modus, nieuwe_layout, role, is_tester")
+    .select("modus, role, is_tester")
     .eq("id", user.id)
     .maybeSingle();
   let huidigeModus: "sprint" | "core" | "pro" | null = null;
   if (!modusError) {
     const mp = modusProfiel as {
       modus?: string | null;
-      nieuwe_layout?: boolean | null;
       role?: string | null;
       is_tester?: boolean | null;
     } | null;
-    // Nieuwe layout aan? Dan is /nieuw het thuis-scherm, óók voor Pro
-    // (daarom staat deze check VÓÓR de pro-redirect). Alle oude "terug
-    // naar dashboard"-links landen hier en gaan zo vanzelf goed. Bewuste
-    // gedragswijziging: de eerste-bezoek-per-dag auto-sprong naar /vandaag
-    // (AutoNaarVandaag) vervalt in de nieuwe schil; het thuis-scherm toont
-    // de dag-kaart en laat de member zelf op "Start je dag" tikken.
-    if (
-      mp?.nieuwe_layout === true &&
-      (mp?.role === "founder" || mp?.is_tester === true)
-    ) {
-      redirect("/nieuw");
-    }
+    // De redirect naar de nieuwe schil (/nieuw) is op 5 augustus 2026
+    // verwijderd, samen met de rest van die vooruitbouw.
     const modus = mp?.modus;
     if (modus === "pro") redirect("/welkom-pro");
     if (modus === null || modus === undefined) {
@@ -98,7 +87,7 @@ export default async function DashboardPagina({
     { data: testsRecent },
     { data: openHerinneringenAlle },
   ] = await Promise.all([
-    supabase.from("profiles").select("full_name, run_startdatum, sprint_startdatum, core_startdatum, created_at, modus, role, is_tester, dagelijkse_push_aan, dagelijkse_push_uur, sponsor_id, nieuwe_layout").eq("id", user.id).maybeSingle(),
+    supabase.from("profiles").select("full_name, run_startdatum, sprint_startdatum, core_startdatum, created_at, modus, role, is_tester, dagelijkse_push_aan, dagelijkse_push_uur, sponsor_id").eq("id", user.id).maybeSingle(),
     supabase.from("why_profiles").select("*").eq("user_id", user.id).maybeSingle(),
     supabase.from("dagelijkse_stats").select("*").eq("user_id", user.id).eq("stat_datum", vandaagStr).maybeSingle(),
     supabase.from("herinneringen").select("*, prospect:prospects(id, volledige_naam)").eq("user_id", user.id).lte("vervaldatum", vandaagStr).eq("voltooid", false).order("vervaldatum", { ascending: true }).limit(5),
@@ -152,8 +141,6 @@ export default async function DashboardPagina({
   const isFounder = (profile as any)?.role === "founder";
   const isTester = (profile as any)?.is_tester === true;
 
-  // (Nieuwe-layout-redirect zit bovenin bij de modus-check, vóór de
-  // pro-redirect, zodat ook Pro-accounts met de vlag aan op /nieuw landen.)
   const pushAan = (profile as any)?.dagelijkse_push_aan ?? false;
   const pushUur = (profile as any)?.dagelijkse_push_uur ?? 7;
 
