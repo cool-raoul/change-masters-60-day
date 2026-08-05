@@ -360,6 +360,32 @@ export const t: Vertalingen = {
     nl: "Mijn klanten", en: "My customers", fr: "Mes clients",
     es: "Mis clientes", de: "Meine Kunden", pt: "Meus clientes",
   },
+  // "Mijn tools": uitklapbare groep in het menu met alles wat je pakt om
+  // naar buiten te sturen (freebies, Mini-ELEVA, masterclasses, scripts,
+  // zinnen, de one-pagers en je bestellinks).
+  "nav.mijn_tools": {
+    nl: "Mijn tools", en: "My tools", fr: "Mes outils",
+    es: "Mis herramientas", de: "Meine Tools", pt: "Minhas ferramentas",
+  },
+  "nav.masterclasses": {
+    nl: "Masterclasses", en: "Masterclasses", fr: "Masterclasses",
+    es: "Masterclasses", de: "Masterclasses", pt: "Masterclasses",
+  },
+  "nav.project_tijd_vrijheid": {
+    nl: "Project Meer Tijd en Vrijheid", en: "Project More Time and Freedom",
+    fr: "Projet Plus de Temps et Liberté",
+    es: "Proyecto Más Tiempo y Libertad",
+    de: "Projekt Mehr Zeit und Freiheit",
+    pt: "Projeto Mais Tempo e Liberdade",
+  },
+  "nav.pro_uitnodiging": {
+    nl: "Pro-uitnodiging", en: "Pro invitation", fr: "Invitation Pro",
+    es: "Invitación Pro", de: "Pro-Einladung", pt: "Convite Pro",
+  },
+  "nav.bestellinks": {
+    nl: "Bestellinks", en: "Order links", fr: "Liens de commande",
+    es: "Enlaces de pedido", de: "Bestell-Links", pt: "Links de pedido",
+  },
   "nav.instellingen": {
     nl: "Instellingen", en: "Settings", fr: "Param\u00e8tres",
     es: "Ajustes", de: "Einstellungen", pt: "Configura\u00e7\u00f5es",

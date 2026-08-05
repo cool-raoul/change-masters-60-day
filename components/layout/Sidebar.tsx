@@ -25,6 +25,7 @@ export function Sidebar({
   const supabase = createClient();
   const [mobielmenuOpen, setMobielmenuOpen] = useState(false);
   const [aantalChatsOngelezen, setAantalChatsOngelezen] = useState(0);
+  const [toolsOpen, setToolsOpen] = useState(false);
   const { v } = useTaal();
 
   // Poll mini-ELEVA-chats teller elke 30 sec zodat de sidebar-badge
@@ -51,7 +52,8 @@ export function Sidebar({
     };
   }, [pathname]);
 
-  const navigatie = [
+  // Bovenste blok: je dagelijkse werk met mensen.
+  const navigatieBoven = [
     { href: "/dashboard", labelKey: "nav.dashboard", icoon: "⚡" },
     // ELEVA Mentor direct onder Dashboard: dagelijks startpunt voor
     // sparren, scripts laten genereren, etc.
@@ -67,8 +69,26 @@ export function Sidebar({
     // bij elkaar staat. Zoekfunctie zit op de namenlijst-pagina zelf,
     // niet meer als aparte menu-link.
     { href: "/herinneringen", labelKey: "nav.herinneringen", icoon: "🔔" },
+  ];
+
+  // "Mijn tools" (2026-08-06): één uitklapbaar kopje met alles wat je pakt
+  // om naar buiten te sturen. Stond hiervoor los door het hoofdmenu heen
+  // (Scripts, Mijn zinnen, Mini-ELEVA, Freebies) of was alleen via
+  // Instellingen te vinden (Masterclasses, Bestellinks). De one-pagers
+  // stonden helemaal nergens: je moest de URL uit je hoofd kennen.
+  const toolItems = [
+    { href: "/instellingen/mijn-tracking-links", labelKey: "nav.freebies", icoon: "🎁" },
+    { href: "/uitnodigingen", labelKey: "nav.uitnodigingen", icoon: "✨" },
+    { href: "/instellingen/webinar", labelKey: "nav.masterclasses", icoon: "🎥" },
     { href: "/scripts", labelKey: "nav.scripts", icoon: "📋" },
     { href: "/mijn-zinnen", labelKey: "nav.zinnen", icoon: "📝" },
+    { href: "/60-day-run", labelKey: "nav.project_tijd_vrijheid", icoon: "🚀" },
+    { href: "/pro-uitnodiging", labelKey: "nav.pro_uitnodiging", icoon: "💼" },
+    { href: "/instellingen/bestellinks", labelKey: "nav.bestellinks", icoon: "🛒" },
+  ];
+
+  // Onderste blok: leren en overzicht.
+  const navigatieOnder = [
     // Lessen: terug naar eerdere lessen uit je playbook. Achteruit-only
     // (dag 1 t/m je huidige dag); vooruit blijft dicht om het ritme te
     // bewaren. Just-in-time vooruit-vragen lopen via "Wat nu?".
@@ -78,12 +98,6 @@ export function Sidebar({
     // (Frazer Brookes-principes). Wordt later uitgebreid met meer
     // trainingen (leiderschap, mindset, productkennis).
     { href: "/academy", labelKey: "nav.academy", icoon: "📚" },
-    // Mini-ELEVA uitnodigingen in hoofdnav: dagelijkse actie. Statistieken
-    // is verschoven naar onderkant (analyse-moment, niet dagelijks).
-    { href: "/uitnodigingen", labelKey: "nav.uitnodigingen", icoon: "✨" },
-    // Mijn freebies: de eigen deel-links per freebie (lead-gen). Verplaatst
-    // uit Instellingen naar het hoofdmenu voor betere vindbaarheid.
-    { href: "/instellingen/mijn-tracking-links", labelKey: "nav.freebies", icoon: "🎁" },
     // Mijn klanten: alle Resetcode-klanten met eigen Mentor-omgeving in
     // één overzicht (pilot: founders + testers, zelfde gate als de pagina).
     ...(isFounder || isTester
@@ -92,10 +106,36 @@ export function Sidebar({
     { href: "/team", labelKey: "nav.team", icoon: "🏆" },
   ];
 
+  const staatInTools = toolItems.some((t) => pathname.startsWith(t.href));
+
   // Sluit menu bij navigatie
   useEffect(() => {
     setMobielmenuOpen(false);
   }, [pathname]);
+
+  // "Mijn tools" onthoudt of je 'm open had staan, en klapt sowieso open
+  // als je op een van de tool-pagina's bent. Anders zie je niet waar je zit.
+  useEffect(() => {
+    if (staatInTools) {
+      setToolsOpen(true);
+      return;
+    }
+    try {
+      setToolsOpen(localStorage.getItem("eleva-tools-open") === "ja");
+    } catch {
+      // localStorage geblokkeerd (privé-modus): dan gewoon dicht.
+    }
+  }, [staatInTools]);
+
+  function wisselTools() {
+    const nieuw = !toolsOpen;
+    setToolsOpen(nieuw);
+    try {
+      localStorage.setItem("eleva-tools-open", nieuw ? "ja" : "nee");
+    } catch {
+      // negeer
+    }
+  }
 
   // Luister naar het 'open'-event vanuit de BottomNav 'Meer'-knop.
   // Custom event-pattern is bewust gekozen: zo hoeven we geen Context
@@ -169,7 +209,7 @@ export function Sidebar({
 
       {/* Navigatie, scrollbaar zodat alles bereikbaar is op kleine schermen */}
       <nav className="flex-1 overflow-y-auto p-4 space-y-1">
-        {navigatie.map((item) => {
+        {navigatieBoven.map((item) => {
           const actief = pathname.startsWith(item.href);
           const badge =
             item.href === "/mijn-chats" && aantalChatsOngelezen > 0
@@ -192,6 +232,82 @@ export function Sidebar({
                   {badge > 9 ? "9+" : badge}
                 </span>
               )}
+            </Link>
+          );
+        })}
+
+        {/* Mijn tools: uitklapper mét eigen kleurvlak, zodat je meteen ziet
+            dat dit een groep is en niet zomaar de volgende menu-regel. Het
+            submenu blijft binnen het menu staan, het schuift niet over de
+            pagina heen. */}
+        <div
+          className={`my-1.5 rounded-xl transition-colors duration-200 ${
+            toolsOpen
+              ? "bg-cm-surface-2/70 border border-cm-border"
+              : "bg-cm-surface-2/40 border border-transparent"
+          }`}
+        >
+          <button
+            onClick={wisselTools}
+            aria-expanded={toolsOpen}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+              staatInTools && !toolsOpen
+                ? "text-cm-gold"
+                : "text-cm-white opacity-80 hover:opacity-100"
+            }`}
+          >
+            <span className="text-base">🧰</span>
+            <span className="flex-1 text-left">{v("nav.mijn_tools")}</span>
+            {/* Stipje als je in een tool zit terwijl de groep dicht staat,
+                anders zie je niet meer waar je bent. */}
+            {staatInTools && !toolsOpen && (
+              <span className="w-1.5 h-1.5 rounded-full bg-cm-gold" />
+            )}
+            <span
+              className={`text-cm-white opacity-50 text-xs transition-transform duration-200 ${
+                toolsOpen ? "rotate-180" : ""
+              }`}
+            >
+              ▼
+            </span>
+          </button>
+          {toolsOpen && (
+            <div className="px-1.5 pb-1.5 space-y-0.5">
+              {toolItems.map((item) => {
+                const actief = pathname.startsWith(item.href);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`flex items-center gap-3 pl-5 pr-3 py-2 rounded-lg text-[13px] transition-all duration-200 ${
+                      actief
+                        ? "bg-gold-subtle border border-gold-subtle text-cm-gold font-medium"
+                        : "text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface"
+                    }`}
+                  >
+                    <span className="text-sm">{item.icoon}</span>
+                    <span className="flex-1">{v(item.labelKey)}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {navigatieOnder.map((item) => {
+          const actief = pathname.startsWith(item.href);
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+                actief
+                  ? "bg-gold-subtle border border-gold-subtle text-cm-gold"
+                  : "text-cm-white opacity-70 hover:opacity-100 hover:bg-cm-surface-2"
+              }`}
+            >
+              <span className="text-base">{item.icoon}</span>
+              <span className="flex-1">{v(item.labelKey)}</span>
             </Link>
           );
         })}

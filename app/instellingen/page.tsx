@@ -215,52 +215,14 @@ export default async function InstellingenPagina() {
         </Link>
       </div>
 
-      {/* Bestellinks (per pakket) */}
-      <div className="card space-y-3">
-        <EditableTekst
-          namespace="instellingen"
-          sleutel="bestellinks.titel"
-          standaard="🛒 Bestellinks"
-          overrides={overrides}
-          isFounder={isFounder}
-          as="h2"
-          className="text-sm font-semibold text-cm-white uppercase tracking-wider"
-          hint="Titel van de bestellinks-sectie"
-        />
-        <EditableBlok
-          namespace="instellingen"
-          sleutel="bestellinks.uitleg"
-          standaard="Koppel je Lifeplus-webshop URL aan elk pakket. ELEVA gebruikt die links automatisch in productadvies-flows."
-          overrides={overrides}
-          isFounder={isFounder}
-          as="p"
-          className="text-cm-white text-sm opacity-60"
-          rows={2}
-          hint="Uitleg van de bestellinks-sectie"
-        />
-        <Link href="/instellingen/bestellinks" className="btn-secondary text-sm inline-block">
-          Beheer bestellinks →
-        </Link>
-      </div>
-
-      {/* Masterclass: eigen deel-link + (founder) de video instellen. */}
-      <div className="card space-y-3">
-        <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
-          🎥 Masterclass
-        </h2>
-        <p className="text-cm-white text-sm opacity-60">
-          Deel de opgenomen masterclass met je eigen link. Mensen kiezen zelf
-          een kijkmoment, krijgen een herinnering, en komen bij jou in de
-          namenlijst.
-        </p>
-        <Link href="/instellingen/webinar" className="btn-secondary text-sm inline-block">
-          Naar de masterclass →
-        </Link>
-      </div>
-
-      {/* "Mijn freebies" is verplaatst naar het hoofdmenu (🎁 Mijn freebies)
-          voor betere vindbaarheid; daarom hier weggehaald. De pagina zelf
-          blijft op /instellingen/mijn-tracking-links. */}
+      {/* Bestellinks, Masterclass en Mijn freebies stonden hier als kaart.
+          Ze zijn op 2026-08-06 verhuisd naar het menu-kopje "🧰 Mijn tools",
+          samen met Scripts, Mijn zinnen, Mini-ELEVA en de twee one-pagers.
+          Reden: het zijn tools die je pakt om naar buiten te sturen, geen
+          instellingen die je één keer zet. De pagina's zelf zijn ongewijzigd
+          (/instellingen/bestellinks, /instellingen/webinar en
+          /instellingen/mijn-tracking-links), alleen de ingang is verplaatst
+          zodat je ze niet op twee plekken tegenkomt. */}
 
       {/* Film-CMS, alleen voor leiders/founders.
           Sinds 2026-05-20 is Films-CMS NIET meer voor Sprint-dag-films
