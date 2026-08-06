@@ -1,16 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { BRACKETS } from "@/lib/dtt/brackets";
-import { bracketVoorUren } from "@/lib/dtt/advies";
-import { createClient } from "@/lib/supabase/client";
+import { DTTFormulier } from "@/components/dtt/DTTFormulier";
 
 // ============================================================
-// Core Tempo-sectie op /instellingen.
-// Member kan op elk moment z'n DTT (Doel-Tijd-Termijn) aanpassen.
-// Wijziging is direct van kracht op de aantal-richtlijnen in de DMO-blok.
+// Core Doel-Tijd-Termijn op /instellingen.
+//
+// Was tot 2026-08-06 een eigen formuliertje met drie kale nummervelden.
+// Dat botste met wat je op dag 0 te zien kreeg (je WHY erbij, de
+// eerlijkheidscheck, de status-richting), terwijl daar juist beloofd
+// wordt dat je het hier kunt bijstellen. Nu draaien beide plekken op
+// dezelfde component; hier alleen in "bijstellen"-stand, met je huidige
+// antwoorden er al in.
 // ============================================================
 
 type Props = {
@@ -24,97 +24,16 @@ export function CoreTempoSectie({
   initieleUren,
   initieleTermijn,
 }: Props) {
-  const [doel, setDoel] = useState(initieelDoel?.toString() ?? "");
-  const [uren, setUren] = useState(initieleUren?.toString() ?? "");
-  const [termijn, setTermijn] = useState(initieleTermijn?.toString() ?? "");
-  const [bezig, setBezig] = useState(false);
-  const router = useRouter();
+  // Alleen voorvullen als het compleet is. Half ingevulde waarden zouden
+  // de tempo-berekening op een half getal baseren.
+  const beginwaarden =
+    initieelDoel !== null && initieleUren !== null && initieleTermijn !== null
+      ? {
+          doel_per_maand: initieelDoel,
+          uren_per_week: initieleUren,
+          termijn_maanden: initieleTermijn,
+        }
+      : null;
 
-  const urenNum = parseFloat(uren);
-  const bracket = !isNaN(urenNum) ? bracketVoorUren(urenNum) : null;
-  const def = bracket ? BRACKETS[bracket] : null;
-
-  async function opslaan(e: React.FormEvent) {
-    e.preventDefault();
-    setBezig(true);
-
-    const res = await fetch("/api/dtt/update", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        doel_per_maand: parseFloat(doel),
-        uren_per_week: parseFloat(uren),
-        termijn_maanden: parseFloat(termijn),
-      }),
-    });
-
-    if (res.ok) {
-      // Sessie verfrissen voor consistente banner-check op /vandaag (K3).
-      // core_dtt zit in profiles, niet in JWT, maar refreshSession()
-      // forceert ook een server-component-rerender van pages die het
-      // profile opnieuw uitlezen.
-      const supabase = createClient();
-      await supabase.auth.refreshSession();
-      toast.success("Tempo bijgewerkt");
-      router.refresh();
-    } else {
-      toast.error("Opslaan mislukt");
-    }
-    setBezig(false);
-  }
-
-  return (
-    <form onSubmit={opslaan} className="card space-y-4">
-      <div>
-        <h2 className="text-sm font-semibold text-cm-white uppercase tracking-wider">
-          🎯 Core Doel-Tijd-Termijn
-        </h2>
-        <p className="text-cm-white opacity-70 text-sm mt-1">
-          Pas je doel, uren of termijn aan. De dagelijkse aantallen in je DMO-blok schuiven mee.
-        </p>
-      </div>
-      <div className="grid sm:grid-cols-3 gap-3">
-        <div>
-          <label className="block text-sm text-cm-white mb-1.5">Doel (euro/maand)</label>
-          <input
-            type="number"
-            value={doel}
-            onChange={(e) => setDoel(e.target.value)}
-            className="input-cm"
-            min="0"
-          />
-        </div>
-        <div>
-          <label className="block text-sm text-cm-white mb-1.5">Uren/week</label>
-          <input
-            type="number"
-            value={uren}
-            onChange={(e) => setUren(e.target.value)}
-            className="input-cm"
-            min="0"
-          />
-        </div>
-        <div>
-          <label className="block text-sm text-cm-white mb-1.5">Termijn (maanden)</label>
-          <input
-            type="number"
-            value={termijn}
-            onChange={(e) => setTermijn(e.target.value)}
-            className="input-cm"
-            min="1"
-          />
-        </div>
-      </div>
-      {def && (
-        <p className="text-cm-white/85 text-xs">
-          Tempo: <strong className="text-cm-white">{def.label}</strong> ({def.urenPerWeekRange}/week)
-          <br />
-          <span className="text-cm-white/60">{def.verwachting}</span>
-        </p>
-      )}
-      <button type="submit" disabled={bezig} className="btn-gold">
-        {bezig ? "Bezig..." : "Tempo bijwerken"}
-      </button>
-    </form>
-  );
+  return <DTTFormulier modus="bijstellen" beginwaarden={beginwaarden} />;
 }
