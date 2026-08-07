@@ -211,12 +211,16 @@ export function DTTFormulier({
       )}
 
       {/* Je eigen WHY erbij, zodat je een bedrag invult vanuit waar je
-          het vóór doet en niet vanuit een slag in de lucht. */}
+          het vóór doet en niet vanuit een slag in de lucht. Op dag 0
+          staat 'ie open (je bent 'm net aan het formuleren), in
+          Instellingen ingeklapt: daar kom je voor de getallen en wil je
+          niet eerst langs een lap tekst scrollen. */}
       {why && (
-        <div className="rounded-md border border-cm-gold/30 bg-cm-gold/5 px-3 py-3">
-          <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider mb-1">
-            💛 Even je WHY erbij
-          </p>
+        <Uitklapbaar
+          ingeklapt={!isStart}
+          titel="💛 Even je WHY erbij"
+          klasse="rounded-md border border-cm-gold/30 bg-cm-gold/5 px-3 py-3"
+        >
           <p className="text-cm-white/80 text-xs leading-relaxed whitespace-pre-line">
             {why}
           </p>
@@ -225,7 +229,7 @@ export function DTTFormulier({
               ? `Houd dit vast bij de vragen hieronder. Het gaat je om ${kern}, en dat vertaal je nu naar wat je daarvoor nodig hebt.`
               : "Houd dit vast bij de vragen hieronder, dan vul je in wat je nodig hebt om dit mogelijk te maken."}
           </p>
-        </div>
+        </Uitklapbaar>
       )}
 
       <div className="space-y-3">
@@ -353,24 +357,44 @@ export function DTTFormulier({
               </p>
             </div>
           )}
-          {rankSug && (
-            <p className="text-cm-white/85 text-xs">
-              Richting waar je aan kunt denken:{" "}
-              <strong className="text-cm-white">{rankSug.label}</strong>
-              <br />
-              <span className="text-cm-white/60">{rankSug.toelichting}</span>
-              <br />
-              {/* "Rank" zegt een starter niets (Raoul 29 juli). Dus geen
-                  jargon, maar uitleggen wat je eraan hebt. */}
-              <span className="text-cm-white/50">
-                Deze getallen zijn puur indicatief, ze geven je een idee welke
-                status voor de komende tijd realistisch is om op te koersen.
-                Later gaan we hier verder op in. Je kunt dit ook alvast
-                bespreken met je sponsor of upline, degene via wie jij bent
-                gestart.
-              </span>
-            </p>
-          )}
+          {rankSug &&
+            (isStart ? (
+              <p className="text-cm-white/85 text-xs">
+                Richting waar je aan kunt denken:{" "}
+                <strong className="text-cm-white">{rankSug.label}</strong>
+                <br />
+                <span className="text-cm-white/60">{rankSug.toelichting}</span>
+                <br />
+                {/* "Rank" zegt een starter niets (Raoul 29 juli). Dus geen
+                    jargon, maar uitleggen wat je eraan hebt. */}
+                <span className="text-cm-white/50">
+                  Deze getallen zijn puur indicatief, ze geven je een idee welke
+                  status voor de komende tijd realistisch is om op te koersen.
+                  Later gaan we hier verder op in. Je kunt dit ook alvast
+                  bespreken met je sponsor of upline, degene via wie jij bent
+                  gestart.
+                </span>
+              </p>
+            ) : (
+              // In Instellingen ingeklapt: de status-richting is de langste
+              // lap tekst van het blok en je hebt 'm niet nodig om je uren
+              // bij te stellen. De richting zelf staat in de titel, dus je
+              // ziet 'm ook zonder open te klappen.
+              <Uitklapbaar
+                ingeklapt
+                titel={`🎯 Richting: ${rankSug.label}`}
+                klasse="rounded-md border border-cm-border bg-cm-surface-2/40 px-3 py-2.5"
+              >
+                <p className="text-cm-white/60 text-xs">{rankSug.toelichting}</p>
+                <p className="text-cm-white/50 text-xs mt-1.5">
+                  Deze getallen zijn puur indicatief, ze geven je een idee welke
+                  status voor de komende tijd realistisch is om op te koersen.
+                  Later gaan we hier verder op in. Je kunt dit ook alvast
+                  bespreken met je sponsor of upline, degene via wie jij bent
+                  gestart.
+                </p>
+              </Uitklapbaar>
+            ))}
           {/* Verplichte nuance bij alles wat naar inkomen verwijst
               (claim-ronde 30 juli, ACM). Eén keer onderaan het blok. */}
           <p className="text-cm-white/45 text-[11px] leading-relaxed border-t border-cm-border pt-2">
@@ -396,6 +420,52 @@ export function DTTFormulier({
             : "✓ Bijwerken"}
       </button>
     </div>
+  );
+}
+
+/**
+ * Blokje dat open of dicht kan. Met `ingeklapt` start het dicht en zie je
+ * alleen de titel; zonder staat het gewoon open en gedraagt het zich als
+ * een normale div. Zo kan hetzelfde blok op dag 0 helemaal openliggen en
+ * in Instellingen opgevouwen staan.
+ *
+ * <details> in plaats van eigen state: werkt zonder JavaScript, is
+ * toetsenbord-toegankelijk en onthoudt zichzelf tijdens de sessie.
+ */
+function Uitklapbaar({
+  ingeklapt,
+  titel,
+  klasse,
+  children,
+}: {
+  ingeklapt: boolean;
+  titel: string;
+  klasse: string;
+  children: React.ReactNode;
+}) {
+  if (!ingeklapt) {
+    return (
+      <div className={klasse}>
+        <p className="text-cm-gold text-xs font-semibold uppercase tracking-wider mb-1">
+          {titel}
+        </p>
+        {children}
+      </div>
+    );
+  }
+
+  return (
+    <details className={`${klasse} group`}>
+      {/* list-none plus de webkit-regel: anders houdt Safari zijn eigen
+          driehoekje naast onze pijl. */}
+      <summary className="flex items-center gap-2 cursor-pointer list-none [&::-webkit-details-marker]:hidden text-cm-gold text-xs font-semibold uppercase tracking-wider">
+        <span className="flex-1">{titel}</span>
+        <span className="opacity-50 text-[10px] transition-transform duration-200 group-open:rotate-180">
+          ▼
+        </span>
+      </summary>
+      <div className="mt-2">{children}</div>
+    </details>
   );
 }
 
