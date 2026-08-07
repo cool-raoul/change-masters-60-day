@@ -29,7 +29,11 @@ export const ADMIN_ITEMS: AdminItem[] = [
     uitleg:
       "Maak je eigen webshop aan in de backoffice, dat is de website van het bedrijf waar je je eigen gegevens en je shop beheert. Bekijk de instructiefilm hieronder en volg de stappen. Eenmalige stap, hierna is je shop online en kun je hem delen. Je inloggegevens heb je bij je aanmelding gekregen; kun je ze niet vinden, vraag ze dan even aan je sponsor.",
     filmSlug: "onboarding-stap-6-webshop",
-    externeLink: "https://team.lifeplus.com/",
+    // Twee verschillende plekken (Raoul, 4 augustus): de webshop en het
+    // kredietformulier regel je op www.lifeplus.com; team.lifeplus.com is
+    // alleen het administratiesysteem. Stonden hiervoor alle drie op
+    // team., waardoor je op de verkeerde site uitkwam.
+    externeLink: "https://www.lifeplus.com/",
   },
   {
     slug: ITEM_SLUGS.kredietformulierIngevuld,
@@ -38,7 +42,7 @@ export const ADMIN_ITEMS: AdminItem[] = [
     uitleg:
       "Zonder dit formulier kan er geen commissie naar je toe. Vul 'm in in de backoffice, de website van het bedrijf waar je je gegevens beheert. De korte instructie staat in de film hieronder.",
     filmSlug: "onboarding-stap-8-kredietformulier",
-    externeLink: "https://team.lifeplus.com/",
+    externeLink: "https://www.lifeplus.com/",
   },
   {
     slug: ITEM_SLUGS.teamsAdminIngericht,
