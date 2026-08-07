@@ -86,13 +86,25 @@ export function Sidebar({
     { href: "/prospect-films", labelKey: "nav.prospect_films", icoon: "📺" },
     { href: "/scripts", labelKey: "nav.scripts", icoon: "📋" },
     { href: "/mijn-zinnen", labelKey: "nav.zinnen", icoon: "📝" },
-    { href: "/60-day-run", labelKey: "nav.project_tijd_vrijheid", icoon: "🚀" },
-    { href: "/pro-uitnodiging", labelKey: "nav.pro_uitnodiging", icoon: "💼" },
+    // Project Meer Tijd en Vrijheid (/60-day-run) en de Pro-uitnodiging
+    // (/pro-uitnodiging) stonden hier ook, maar zijn er op verzoek van
+    // Raoul (6 augustus) voor nu uitgehaald. De pagina's blijven gewoon
+    // bestaan en werken; alleen de menu-ingang is weg. Terugzetten is
+    // deze twee regels: de vertaalsleutels nav.project_tijd_vrijheid en
+    // nav.pro_uitnodiging staan er nog.
     { href: "/instellingen/bestellinks", labelKey: "nav.bestellinks", icoon: "🛒" },
   ];
 
-  // Onderste blok: leren en overzicht.
+  // Onderste blok: eerst je mensen, dan pas leren (Raoul 6 augustus).
+  // Je team en je klanten zijn dagelijks werk, lessen sla je erbij op
+  // wanneer je iets wilt terugzoeken.
   const navigatieOnder = [
+    // Mijn klanten: alle Resetcode-klanten met eigen Mentor-omgeving in
+    // één overzicht (pilot: founders + testers, zelfde gate als de pagina).
+    ...(isFounder || isTester
+      ? [{ href: "/resetcode-links", labelKey: "nav.mijn_klanten", icoon: "🌿" }]
+      : []),
+    { href: "/team", labelKey: "nav.team", icoon: "🏆" },
     // Lessen: terug naar eerdere lessen uit je playbook. Achteruit-only
     // (dag 1 t/m je huidige dag); vooruit blijft dicht om het ritme te
     // bewaren. Just-in-time vooruit-vragen lopen via "Wat nu?".
@@ -102,12 +114,6 @@ export function Sidebar({
     // (Frazer Brookes-principes). Wordt later uitgebreid met meer
     // trainingen (leiderschap, mindset, productkennis).
     { href: "/academy", labelKey: "nav.academy", icoon: "📚" },
-    // Mijn klanten: alle Resetcode-klanten met eigen Mentor-omgeving in
-    // één overzicht (pilot: founders + testers, zelfde gate als de pagina).
-    ...(isFounder || isTester
-      ? [{ href: "/resetcode-links", labelKey: "nav.mijn_klanten", icoon: "🌿" }]
-      : []),
-    { href: "/team", labelKey: "nav.team", icoon: "🏆" },
   ];
 
   const staatInTools = toolItems.some((t) => pathname.startsWith(t.href));
